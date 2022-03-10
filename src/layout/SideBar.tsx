@@ -26,6 +26,8 @@ const NavBar = ({ navItems }: NavBarProps) => {
   );
 };
 
-const SideBar = () => <PageSidebar nav={<NavBar navItems={RoutesProps} />} theme="dark" />;
+const SideBar = () => (
+  <PageSidebar className="pf-u-w-auto" nav={<NavBar navItems={RoutesProps} />} theme="dark" />
+);
 
 export default SideBar;

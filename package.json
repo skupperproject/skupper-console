@@ -68,7 +68,7 @@
   "lint-staged": {
     "src/*.{ts,tsx,json,js,jsx}": [
       "prettier --write",
-      "eslint src --fix"
+      "eslint --color --fix"
     ],
     "src/*.{html,css,scss}": [
       "prettier --write"
