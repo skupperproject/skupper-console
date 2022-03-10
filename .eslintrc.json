@@ -2,10 +2,10 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [".ts", ".tsx"]
       }
     },
-    "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "import/extensions": [".ts", ".tsx"],
     "react": {
       "version": "detect"
     }

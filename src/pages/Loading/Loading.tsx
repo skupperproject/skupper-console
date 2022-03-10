@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 
+// eslint-disable-next-line import/no-unresolved
 import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
-import BrandImg from '../assets/skupper.svg';
+import BrandImg from '../../assets/skupper.svg';
+import { TEXT_CONTENT, TITLE } from './Loading.constant';
 
 import './Loading.scss';
-
-const TEXT_CONTENT = 'A Skupper network management and visualization tool.';
-const TITLE = 'Connect';
 
 function PleaseWait() {
   return (
@@ -39,11 +38,11 @@ function PleaseWait() {
   );
 }
 
-const LoadingPage = () => {
+const LoadingPage = memo(() => {
   return (
     <Grid className=" pf-u-p-4xl sk-loading-page">
       <GridItem span={6} className=" pf-u-p-2xl">
-        <TextContent>
+        <TextContent className="pf-u-text-align-center">
           <Text component={TextVariants.h1}>{TITLE}</Text>
         </TextContent>
         <PleaseWait />
@@ -56,6 +55,6 @@ const LoadingPage = () => {
       </GridItem>
     </Grid>
   );
-};
+});
 
 export default LoadingPage;
