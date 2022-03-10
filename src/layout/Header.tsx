@@ -13,6 +13,10 @@ import {
 
 import Logo from '../assets/skupper.svg';
 
+import './Header.scss';
+
+const SKUPPER_TEXT_LOGO = 'Skupper';
+
 const HeaderToolbar = (
   <PageHeaderTools>
     <PageHeaderToolsGroup>
@@ -29,7 +33,17 @@ const HeaderToolbar = (
 
 const Header = () => (
   <PageHeader
-    logo={<Brand src={Logo} alt="Logo" className="pf-u-w-100" />}
+    className="sk-header"
+    logo={
+      <>
+        <Brand src={Logo} alt="skupper logo" className="sk-logo__img" />
+        <TextContent>
+          <Text component={TextVariants.h4} className="pf-u-pl-md pf-u-font-weight-bold">
+            {SKUPPER_TEXT_LOGO}
+          </Text>
+        </TextContent>
+      </>
+    }
     headerTools={HeaderToolbar}
     showNavToggle
   />
