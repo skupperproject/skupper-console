@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const Monitoring = () => {
-  return <div>Monitoring</div>;
-};
+const Monitoring = memo(() => {
+  return <>Monitoring</>;
+});
 
 export default Monitoring;

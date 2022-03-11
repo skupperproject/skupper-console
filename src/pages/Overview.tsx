@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const Overview = () => {
-  return <div>Overview</div>;
-};
+const Overview = memo(() => {
+  return <>Overview</>;
+});
 
 export default Overview;

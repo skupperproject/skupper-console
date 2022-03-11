@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const Sites = () => {
-  return <div>Sites</div>;
-};
+import { useDataVAN } from '../contexts/Data';
+
+const Sites = memo(() => {
+  const { dataVAN } = useDataVAN();
+  return <pre>{JSON.stringify(dataVAN?.sites, null, 2)}</pre>;
+});
 
 export default Sites;

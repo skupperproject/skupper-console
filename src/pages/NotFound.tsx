@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const NotFound = () => {
+const NotFound = memo(() => {
   return <div>NotFound</div>;
-};
+});
 
 export default NotFound;
