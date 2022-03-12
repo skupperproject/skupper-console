@@ -12,4 +12,6 @@ export enum RoutesPaths {
   Sites = 'sites',
   Deployments = 'deployments',
   Monitoring = 'monitoring',
+  ErrServer = 'error-server',
+  ErrConnection = 'error-connection',
 }

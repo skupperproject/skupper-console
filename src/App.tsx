@@ -1,47 +1,61 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 
 import { Page } from '@patternfly/react-core';
+import { useNavigate } from 'react-router-dom';
 
-import { CONNECT_TIMEOUT, MSG_TIMEOUT_ERROR, UPDATE_INTERVAL } from './App.constant';
+import { CONNECTION_TIMEOUT, MSG_TIMEOUT_ERROR, UPDATE_INTERVAL } from './App.constant';
 import { ErrorTypes } from './App.enum';
-import { useConnectionErrMsg, useConnectionErrType, useDataVAN } from './contexts/Data';
+import { useConnectionErrType, useDataVAN } from './contexts/Data';
 import AppContent from './layout/AppContent';
 import Header from './layout/Header';
 import SideBar from './layout/SideBar';
 import LoadingPage from './pages/Loading/Loading';
 import Routes from './routes';
+import { RoutesPaths } from './routes/routes.enum';
 import restService from './services/REST';
+import { wait } from './utils/wait';
 
 import './App.scss';
 
 function App() {
-  const prevDataVan = useRef(null);
+  const prevDataVan = useRef({});
   const { connectionErrType, setConnectionErrType } = useConnectionErrType();
-  const { setConnectionErrMsg } = useConnectionErrMsg();
   const { dataVAN, setDataVAN } = useDataVAN();
 
-  const setConnectTimeout = useCallback(() => {
-    setConnectionErrType(ErrorTypes.Timeout);
-    setConnectionErrMsg(MSG_TIMEOUT_ERROR);
-  }, [setConnectionErrMsg, setConnectionErrType]);
+  const navigate = useNavigate();
 
   const handleFetchData = useCallback(async () => {
-    const connectTimer: number = window.setTimeout(setConnectTimeout, CONNECT_TIMEOUT);
-
     try {
-      const data = await restService.fetchData();
-      if (JSON.stringify(data) !== JSON.stringify(prevDataVan.current)) {
+      const data = await Promise.race([
+        restService.fetchData(),
+        wait(CONNECTION_TIMEOUT, ErrorTypes.Server),
+      ]);
+
+      if (data === ErrorTypes.Server) {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        throw new Error(MSG_TIMEOUT_ERROR);
+      }
+
+      if (data && JSON.stringify(data) !== JSON.stringify(prevDataVan.current)) {
         prevDataVan.current = data;
         setDataVAN(data);
         setConnectionErrType('');
       }
-    } catch (error: any) {
-      setConnectionErrType(ErrorTypes.HTTP);
-      setConnectionErrMsg(error);
-    } finally {
-      clearTimeout(connectTimer);
+    } catch ({ httpStatus, message }) {
+      const type = httpStatus ? ErrorTypes.Server : ErrorTypes.Connection;
+
+      setConnectionErrType(type);
     }
-  }, [setConnectTimeout, setConnectionErrMsg, setConnectionErrType, setDataVAN]);
+  }, [setConnectionErrType, setDataVAN]);
+
+  useEffect(() => {
+    if (connectionErrType) {
+      const route =
+        connectionErrType === ErrorTypes.Server ? RoutesPaths.ErrServer : RoutesPaths.ErrConnection;
+      navigate(route);
+    }
+  }, [connectionErrType, navigate]);
 
   useEffect(() => {
     handleFetchData();
@@ -51,8 +65,8 @@ function App() {
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar>
       <AppContent>
+        {(dataVAN || connectionErrType) && <Routes />}
         {!dataVAN && !connectionErrType && <LoadingPage />}
-        {dataVAN && <Routes />}
       </AppContent>
     </Page>
   );

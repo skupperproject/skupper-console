@@ -1,22 +1,29 @@
 import React, { createContext, useMemo, useState, useContext } from 'react';
 
-import { GlobalStateProviderProps } from './Data.interfaces';
+import {
+  ConnectionDataVANState,
+  ConnectionErrMsgState,
+  ConnectionErrTypeState,
+  GlobalStateProviderProps,
+} from './Data.interfaces';
 
 //Initial States
-const dataVANInitialState: any = { dataVAN: null, setDataVAN: undefined } as any;
-const connectionErrTypeInitialState: any = {
+const dataVANInitialState = { dataVAN: null, setDataVAN: () => null };
+const connectionErrTypeInitialState = {
   connectionErrType: '',
-  setConnectionErrType: undefined,
+  setConnectionErrType: () => null,
 };
-const connectionErrMsgInitialState: any = {
+const connectionErrMsgInitialState = {
   connectionErrMsg: '',
-  setConnectionErrMsg: undefined,
+  setConnectionErrMsg: () => null,
 };
 
 // Contexts
-const DataVANContext = createContext(dataVANInitialState);
-const ConnectionErrTypeContext = createContext(connectionErrTypeInitialState);
-const ConnectionErrMsgContext = createContext(connectionErrMsgInitialState);
+const DataVANContext = createContext<ConnectionDataVANState>(dataVANInitialState);
+const ConnectionErrTypeContext = createContext<ConnectionErrTypeState>(
+  connectionErrTypeInitialState,
+);
+const ConnectionErrMsgContext = createContext<ConnectionErrMsgState>(connectionErrMsgInitialState);
 
 //Provider
 const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
@@ -25,7 +32,7 @@ const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
     connectionErrTypeInitialState.connectionErrType,
   );
   const [connectionErrMsg, setConnectionErrMsg] = useState(
-    connectionErrMsgInitialState.connectionErrMessage,
+    connectionErrMsgInitialState.connectionErrMsg,
   );
 
   // Contexts values

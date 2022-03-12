@@ -1,4 +1,4 @@
 export enum ErrorTypes {
-  Timeout = 'timeout',
-  HTTP = 'http',
+  Server = 'Server',
+  Connection = 'connection',
 }

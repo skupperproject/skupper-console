@@ -1,6 +1,6 @@
 import { createServer } from 'miragejs';
 
-import * as data from './DATA.json';
+import * as data from './data/DATA.json';
 
 const DELAY_RESPONSE = 1000;
 
