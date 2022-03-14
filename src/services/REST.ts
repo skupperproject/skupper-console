@@ -1,25 +1,18 @@
-const DATA_PATH = '/DATA';
-
-const URL = `${window.location.protocol}//${window.location.host}`;
+import { DATA_URL } from './REST.constant';
+import { DataResponse } from './REST.interfaces';
 
 class RESTService {
-  fetchData = async () => {
-    const url = `${URL}${DATA_PATH}`;
+  fetchData = async (): Promise<DataResponse> => {
+    const response = await fetch(DATA_URL);
 
-    const response = await fetch(url);
+    const data = await response.json();
 
-    try {
-      const data = await response.json();
-
-      if (!response.ok) {
-        const message = `An error occured: ${response.status}`;
-        throw new Error(message);
-      }
-
-      return data;
-    } catch (error: unknown) {
-      throw new Error(error as string);
+    if (!response.ok) {
+      const message = `${response.status}: ${response.statusText}`;
+      throw { httpStatus: response.status, message };
     }
+
+    return data;
   };
 }
 
