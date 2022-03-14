@@ -12,7 +12,7 @@ import SideBar from './layout/SideBar';
 import LoadingPage from './pages/Loading/Loading';
 import Routes from './routes';
 import { RoutesPaths } from './routes/routes.enum';
-import restService from './services/REST';
+import { RESTServices } from './services/REST';
 import { wait } from './utils/wait';
 
 import './App.scss';
@@ -27,7 +27,7 @@ function App() {
   const handleFetchData = useCallback(async () => {
     try {
       const data = await Promise.race([
-        restService.fetchData(),
+        RESTServices.fetchData(),
         wait(CONNECTION_TIMEOUT, ErrorTypes.Server),
       ]);
 

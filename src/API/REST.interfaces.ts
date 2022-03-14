@@ -1,4 +1,4 @@
-export interface Data {
+export interface DataResponse {
   sites: [
     {
       site_name: string;
