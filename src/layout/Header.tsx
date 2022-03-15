@@ -12,24 +12,29 @@ import {
 } from '@patternfly/react-core';
 
 import Logo from '../assets/skupper.svg';
+import { useSiteInfo } from '../contexts/Data';
 
 import './Header.scss';
 
 const SKUPPER_TEXT_LOGO = 'Skupper';
 
-const HeaderToolbar = (
-  <PageHeaderTools>
-    <PageHeaderToolsGroup>
-      <PageHeaderToolsItem>
-        <TextContent>
-          <Text component={TextVariants.h4}>
-            Site <span className="pf-u-font-weight-bold">Private 1</span>
-          </Text>
-        </TextContent>
-      </PageHeaderToolsItem>
-    </PageHeaderToolsGroup>
-  </PageHeaderTools>
-);
+const HeaderToolbar = () => {
+  const { siteInfo } = useSiteInfo();
+
+  return (
+    <PageHeaderTools>
+      <PageHeaderToolsGroup>
+        <PageHeaderToolsItem>
+          <TextContent>
+            <Text component={TextVariants.h4}>
+              Site <span className="pf-u-font-weight-bold">{siteInfo?.siteName}</span>
+            </Text>
+          </TextContent>
+        </PageHeaderToolsItem>
+      </PageHeaderToolsGroup>
+    </PageHeaderTools>
+  );
+};
 
 const Header = () => (
   <PageHeader
@@ -44,7 +49,7 @@ const Header = () => (
         </TextContent>
       </>
     }
-    headerTools={HeaderToolbar}
+    headerTools={<HeaderToolbar />}
     showNavToggle
   />
 );

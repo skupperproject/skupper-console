@@ -1,0 +1,12 @@
+[
+  {
+    "name": "nginx",
+    "type": "deployment",
+    "ports": [
+      {
+        "name": "web",
+        "port": 8080
+      }
+    ]
+  }
+]
