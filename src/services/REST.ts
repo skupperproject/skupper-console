@@ -1,8 +1,11 @@
-import RESTApi from '../API/REST';
-import { Data } from './REST.interfaces';
+import { RESTApi } from '../API/REST';
 
 export const RESTServices = {
-  fetchData: async (): Promise<Data> => {
-    return RESTApi.fetchData();
+  fetchData: async (): Promise<any> => {
+    const data = await RESTApi.fetchData();
+    const siteId = await RESTApi.getSiteId();
+
+    console.log(siteId);
+    return data;
   },
 };
