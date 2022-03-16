@@ -5,22 +5,25 @@ import { useNavigate } from 'react-router-dom';
 
 import { CONNECTION_TIMEOUT, MSG_TIMEOUT_ERROR, UPDATE_INTERVAL } from './App.constant';
 import { ErrorTypes } from './App.enum';
-import { useConnectionErrType, useDataVAN } from './contexts/Data';
+import { useConnectionErrType, useDataVAN, useSiteInfo } from './contexts/Data';
 import AppContent from './layout/AppContent';
 import Header from './layout/Header';
 import SideBar from './layout/SideBar';
+import { RESTServices } from './models/services/REST';
 import LoadingPage from './pages/Loading/Loading';
 import Routes from './routes';
 import { RoutesPaths } from './routes/routes.enum';
-import { RESTServices } from './services/REST';
 import { wait } from './utils/wait';
 
 import './App.scss';
 
 function App() {
   const prevDataVan = useRef({});
+  const fetchDataTimerId = useRef(-1);
+
   const { connectionErrType, setConnectionErrType } = useConnectionErrType();
   const { dataVAN, setDataVAN } = useDataVAN();
+  const { setSiteInfo } = useSiteInfo();
 
   const navigate = useNavigate();
 
@@ -32,22 +35,25 @@ function App() {
       ]);
 
       if (data === ErrorTypes.Server) {
-        // eslint-disable-next-line no-debugger
-        debugger;
         throw new Error(MSG_TIMEOUT_ERROR);
       }
 
-      if (data && JSON.stringify(data) !== JSON.stringify(prevDataVan.current)) {
-        prevDataVan.current = data;
-        setDataVAN(data);
-        setConnectionErrType('');
+      if (typeof data !== 'string') {
+        const { data: dataVan, siteInfo } = data;
+        if (dataVan && JSON.stringify(dataVan) !== JSON.stringify(prevDataVan.current)) {
+          prevDataVan.current = dataVan;
+          setDataVAN(dataVan);
+          setSiteInfo(siteInfo);
+          setConnectionErrType('');
+        }
       }
     } catch ({ httpStatus, message }) {
       const type = httpStatus ? ErrorTypes.Server : ErrorTypes.Connection;
 
       setConnectionErrType(type);
+      clearInterval(fetchDataTimerId.current);
     }
-  }, [setConnectionErrType, setDataVAN]);
+  }, [setConnectionErrType, setDataVAN, setSiteInfo]);
 
   useEffect(() => {
     if (connectionErrType) {
@@ -59,7 +65,7 @@ function App() {
 
   useEffect(() => {
     handleFetchData();
-    setInterval(handleFetchData, UPDATE_INTERVAL);
+    fetchDataTimerId.current = window.setInterval(handleFetchData, UPDATE_INTERVAL);
   }, [handleFetchData]);
 
   return (

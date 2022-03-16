@@ -11,7 +11,9 @@
     {
       "site_name": "site-b",
       "site_id": "m32q5a0vtb",
-      "connected": ["7hZ9GQzD6u"],
+      "connected": [
+        "7hZ9GQzD6u"
+      ],
       "namespace": "pub2",
       "url": "grs-test-2.devcluster.openshift.com",
       "edge": false
@@ -19,7 +21,9 @@
     {
       "site_name": "mini1",
       "site_id": "aArHqpCWpc",
-      "connected": ["7hZ9GQzD6u"],
+      "connected": [
+        "7hZ9GQzD6u"
+      ],
       "namespace": "default",
       "url": "10.107.63.213",
       "edge": false

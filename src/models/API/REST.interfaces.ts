@@ -55,3 +55,52 @@ export interface DataResponse {
     },
   ];
 }
+
+export interface LinksResponse {
+  Name: string;
+  Url: string;
+  Cost: string;
+  Connected: boolean;
+  Configured: boolean;
+  Description: string;
+  Created: string;
+}
+
+export interface TargetsResponse {
+  name: string;
+  type: string;
+  ports: {
+    name: string;
+    port: number;
+  };
+}
+
+export interface ServicesResponse {
+  name: string;
+  protocol: string;
+  ports: number[];
+  endpoints: [
+    {
+      name: string;
+      target: string;
+      ports: {
+        [port: string]: number;
+      };
+    },
+  ];
+}
+
+export interface FlowsResponse {
+  name: string;
+  protocol: string;
+  ports: number[];
+  endpoints: [
+    {
+      name: string;
+      target: string;
+      ports: {
+        [port: string]: number;
+      };
+    },
+  ];
+}

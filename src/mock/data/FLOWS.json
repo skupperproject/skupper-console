@@ -1,0 +1,36 @@
+[
+  {
+    "hostname": "tross-lg",
+    "name": "Site-A",
+    "component": {
+      "type": "listener",
+      "name": "hello",
+      "protocol": "tcp",
+      "destination_port": 8888,
+      "van_address": "hello-world-backend",
+      "van_port": 8080,
+      "id": "2:5:1",
+      "trace": null,
+      "flow": [
+        {
+          "source_host": "127.0.0.1",
+          "source_port": 40846,
+          "id": "2:5:2",
+          "counterflow": "null"
+        },
+        {
+          "source_host": "127.0.0.1",
+          "source_port": 40848,
+          "id": "2:5:3",
+          "counterflow": "null"
+        },
+        {
+          "source_host": "127.0.0.1",
+          "source_port": 40850,
+          "id": "2:5:4",
+          "counterflow": "null"
+        }
+      ]
+    }
+  }
+]

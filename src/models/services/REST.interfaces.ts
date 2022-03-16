@@ -1,4 +1,6 @@
-export interface Data {
+import { LinksResponse, ServicesResponse, TargetsResponse } from '../API/REST.interfaces';
+
+export interface DataVAN {
   sites: [
     {
       site_name: string;
@@ -54,4 +56,40 @@ export interface Data {
       ];
     },
   ];
+}
+
+export type Service =
+  | ServicesResponse
+  | {
+      name: string;
+      protocol?: string;
+      ports?: {
+        name: string;
+        port: number;
+      };
+      endpoints?: [
+        {
+          name: string;
+          target: string;
+          ports: {
+            [port: string]: number;
+          };
+        },
+      ];
+      exposed: boolean;
+      type: string;
+    };
+
+export interface SiteInfo {
+  links: LinksResponse[];
+  targets: TargetsResponse[];
+  services: Service[];
+  siteId: string;
+  siteName: string;
+  namespace: string;
+}
+
+export interface Data {
+  data: DataVAN;
+  siteInfo: SiteInfo;
 }

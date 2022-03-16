@@ -37,6 +37,22 @@
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
+    "padding-line-between-statements": "off",
+    "@typescript-eslint/padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "next": "*",
+        "prev": ["interface", "type", "function"]
+      }
+    ],
+    "import/no-cycle": [
+      "error",
+      {
+        "maxDepth": 10,
+        "ignoreExternal": true
+      }
+    ],
     "no-console": 1,
     "semi": [1, "always"],
     "eol-last": 2,
@@ -57,6 +73,7 @@
     "import/no-unresolved": ["error"],
     "import/no-duplicates": ["error"],
     "max-nested-callbacks": [1, 4],
+    "newline-before-return": "error",
     "no-alert": 2,
     "no-caller": 2,
     "no-constant-condition": 2,
@@ -124,7 +141,7 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-use-before-define": 2,
+    "@typescript-eslint/no-use-before-define": 0,
     "@typescript-eslint/no-unused-vars": [
       "error",
       {

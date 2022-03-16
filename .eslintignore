@@ -2,3 +2,4 @@
 **/public
 **/build
 **/@types
+./src/mocks/data/*
