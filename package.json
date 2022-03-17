@@ -34,8 +34,7 @@
     "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "husky": "^4.3.8",
-    "lint-staged": "^12.3.6",
+    "husky": "^7.0.4",
     "miragejs": "^0.1.43",
     "prettier": "^2.6.0",
     "react-scripts": "^5.0.0",
@@ -47,8 +46,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --ext .ts,.tsx",
-    "prettier-all": "prettier --write '**/*.{ts,tsx,json,html,scss}'"
+    "lint-fix": "eslint src --ext .ts,.tsx --fix --ignore-path .gitignore",
+    "prettier-all": "prettier --write '**/*.{ts,tsx,json,html,scss}' --ignore-path .gitignore",
+    "prepare": "husky install"
   },
   "browserslist": {
     "production": [
@@ -60,20 +60,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/*.{ts,tsx,json}": [
-      "prettier --write",
-      "eslint --color --fix"
-    ],
-    "src/*.{html,css,scss}": [
-      "prettier --write"
     ]
   }
 }
