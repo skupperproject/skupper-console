@@ -1,4 +1,9 @@
-import { LinksResponse, ServicesResponse, TargetsResponse } from '../API/REST.interfaces';
+import {
+  FlowsResponse,
+  LinksResponse,
+  ServicesResponse,
+  TargetsResponse,
+} from '../API/REST.interfaces';
 
 export interface DataVAN {
   sites: [
@@ -93,3 +98,5 @@ export interface Data {
   data: DataVAN;
   siteInfo: SiteInfo;
 }
+
+export type Flow = FlowsResponse;

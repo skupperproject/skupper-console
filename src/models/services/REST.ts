@@ -1,6 +1,6 @@
 import { RESTApi } from '../API/REST';
 import { ServicesResponse, TargetsResponse } from '../API/REST.interfaces';
-import { Data, Service } from './REST.interfaces';
+import { Data, Flow, Service } from './REST.interfaces';
 
 export const RESTServices = {
   fetchData: async (): Promise<Data> => {
@@ -26,6 +26,9 @@ export const RESTServices = {
         namespace,
       },
     };
+  },
+  fetchFlows: async (): Promise<Flow[]> => {
+    return RESTApi.fetchFlows();
   },
 };
 
