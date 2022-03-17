@@ -90,17 +90,24 @@ export interface ServicesResponse {
   ];
 }
 
+interface FlowResponse {
+  source_host: string;
+  source_port: string;
+  id: string;
+  counterflow?: string | null;
+  connected_to?: FlowResponse;
+}
+
 export interface FlowsResponse {
+  hostname: string;
+  siteName: string;
   name: string;
+  rtype: string;
   protocol: string;
-  ports: number[];
-  endpoints: [
-    {
-      name: string;
-      target: string;
-      ports: {
-        [port: string]: number;
-      };
-    },
-  ];
+  dest_host: string;
+  dest_port: number;
+  van_address: string;
+  van_port: string;
+  id: string;
+  flows: FlowResponse[];
 }

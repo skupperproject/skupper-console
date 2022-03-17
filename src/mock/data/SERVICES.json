@@ -2,9 +2,7 @@
   {
     "name": "nginx",
     "protocol": "tcp",
-    "ports": [
-      8080
-    ],
+    "ports": [8080],
     "endpoints": [
       {
         "name": "nginx-868574d97b-t2n2x",
@@ -18,10 +16,7 @@
   {
     "name": "qdrouterd",
     "protocol": "tcp",
-    "ports": [
-      5672,
-      9090
-    ],
+    "ports": [5672, 9090],
     "endpoints": null
   }
 ]

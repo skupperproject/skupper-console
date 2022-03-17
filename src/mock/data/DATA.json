@@ -4,10 +4,7 @@
       "site_name": "private1",
       "site_id": "cf79d94b-4248-44f5-b8f2-e07697b13047",
       "version": "3c025c0",
-      "connected": [
-        "94830b1e-c32f-4180-8cef-06cf48592803",
-        "aae23611-d2a8-4745-995b-c76cfc40a440"
-      ],
+      "connected": ["94830b1e-c32f-4180-8cef-06cf48592803", "aae23611-d2a8-4745-995b-c76cfc40a440"],
       "namespace": "private1",
       "url": "10.97.89.51",
       "edge": false
@@ -25,9 +22,7 @@
       "site_name": "public1",
       "site_id": "94830b1e-c32f-4180-8cef-06cf48592803",
       "version": "3c025c0",
-      "connected": [
-        "aae23611-d2a8-4745-995b-c76cfc40a440"
-      ],
+      "connected": ["aae23611-d2a8-4745-995b-c76cfc40a440"],
       "namespace": "public1",
       "url": "10.101.87.23",
       "edge": false
