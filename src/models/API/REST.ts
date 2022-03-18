@@ -1,4 +1,5 @@
-import { DATA_URL, FLOWS, LINKS, SERVICES, SITE_URL, TARGETS } from './REST.constant';
+import { fetchWithTimeout } from './Middleware';
+import { DATA_URL, FLOWS, LINKS, SITE_URL, SERVICES, TARGETS } from './REST.constant';
 import {
   DataResponse,
   FlowsResponse,
@@ -7,70 +8,34 @@ import {
   TargetsResponse,
 } from './REST.interfaces';
 
-function handleErrorMessage(status: number, statusText: string) {
-  const message = `${status}: ${statusText}`;
-  throw { httpStatus: status, message };
-}
-
 export const RESTApi = {
   fetchData: async (): Promise<DataResponse> => {
-    const response = await fetch(DATA_URL);
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      handleErrorMessage(response.status, response.statusText);
-    }
+    const { data } = await fetchWithTimeout(DATA_URL);
 
     return data;
   },
   fetchSite: async (): Promise<string> => {
-    const response = await fetch(SITE_URL);
-
-    const data = await response.text();
-    if (!response.ok) {
-      handleErrorMessage(response.status, response.statusText);
-    }
+    const { data } = await fetchWithTimeout(SITE_URL);
 
     return data;
   },
   fetchLinks: async (): Promise<LinksResponse[]> => {
-    const response = await fetch(LINKS);
-    const data = await response.json();
-
-    if (!response.ok) {
-      handleErrorMessage(response.status, response.statusText);
-    }
+    const { data } = await fetchWithTimeout(LINKS);
 
     return data;
   },
   fetchTargets: async (): Promise<TargetsResponse[]> => {
-    const response = await fetch(TARGETS);
-    const data = await response.json();
-
-    if (!response.ok) {
-      handleErrorMessage(response.status, response.statusText);
-    }
+    const { data } = await fetchWithTimeout(TARGETS);
 
     return data;
   },
   fetchServices: async (): Promise<ServicesResponse[]> => {
-    const response = await fetch(SERVICES);
-    const data = await response.json();
-
-    if (!response.ok) {
-      handleErrorMessage(response.status, response.statusText);
-    }
+    const { data } = await fetchWithTimeout(SERVICES);
 
     return data;
   },
   fetchFlows: async (): Promise<FlowsResponse[]> => {
-    const response = await fetch(FLOWS);
-    const data = await response.json();
-
-    if (!response.ok) {
-      handleErrorMessage(response.status, response.statusText);
-    }
+    const { data } = await fetchWithTimeout(FLOWS);
 
     return data;
   },

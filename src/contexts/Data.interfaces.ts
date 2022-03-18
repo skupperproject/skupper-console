@@ -1,19 +1,19 @@
 import React from 'react';
 
-import { DataVAN, SiteInfo } from '../models/services/REST.interfaces';
+import { SiteInfo } from '../models/services/REST.interfaces';
 
 export interface GlobalStateProviderProps {
   children: React.ReactNode;
 }
 
-export interface ConnectionDataVANState {
-  dataVAN: DataVAN | null;
-  setDataVAN: Function;
-}
-
 export interface ConnectionSiteInfoState {
   siteInfo: SiteInfo | null;
   setSiteInfo: Function;
+}
+
+export interface ConnectionIsLoadingDataState {
+  isLoadingData: boolean | null;
+  setIsLoadingData: Function;
 }
 
 export interface ConnectionErrTypeState {

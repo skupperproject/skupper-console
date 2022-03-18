@@ -1,3 +1,7 @@
+export const CONNECTION_TIMEOUT = 10 * 1000;
+export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
+
+//HTTP URLs
 export const BASE_URL = `${window.location.protocol}//${window.location.host}`;
 
 export const DATA_URL = `${BASE_URL}/data`;

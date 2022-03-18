@@ -11,6 +11,7 @@
     "@patternfly/react-table": "^4.67.19",
     "@patternfly/react-topology": "^4.45.19",
     "@plotly/d3-sankey-circular": "^0.33.1",
+    "axios": "^0.26.1",
     "d3": "7.3.0",
     "d3-interpolate-path": "^2.2.3",
     "d3-queue": "^3.0.7",
@@ -47,8 +48,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint-fix": "eslint src --ext .ts,.tsx --fix --ignore-path .gitignore",
-    "prettier-all": "prettier --write '**/*.{ts,tsx,json,html,scss}' --ignore-path .gitignore",
-    "prepare": "husky install"
+    "prettier-all": "prettier --write '**/*.{ts,tsx,json,html,scss}' --ignore-path .gitignore"
   },
   "browserslist": {
     "production": [

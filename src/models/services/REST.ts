@@ -30,6 +30,9 @@ export const RESTServices = {
   fetchFlows: async (): Promise<Flow[]> => {
     return RESTApi.fetchFlows();
   },
+  isConnected(): Promise<string> {
+    return RESTApi.fetchSite();
+  },
 };
 
 function normalizeServices(targets: TargetsResponse[], services: ServicesResponse[]): Service[] {

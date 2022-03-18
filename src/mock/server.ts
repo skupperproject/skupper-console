@@ -1,4 +1,4 @@
-import { createServer } from 'miragejs';
+import { createServer, Response } from 'miragejs';
 
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
@@ -7,13 +7,16 @@ import services from './data/SERVICES.json';
 import site from './data/SITE.json';
 import targets from './data/TARGETS.json';
 
-const DELAY_RESPONSE = 1000;
+const DELAY_RESPONSE = 2000;
 
 export function loadMockServerInDev() {
   if (process.env.NODE_ENV === 'development') {
     createServer({
       routes() {
         this.timing = DELAY_RESPONSE;
+        this.get('/error', () => {
+          return new Response(500, { some: 'header' }, { errors: ['Server Error'] });
+        });
         this.get('/data', () => {
           return VANdata;
         });

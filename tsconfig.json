@@ -17,6 +17,6 @@
     "sourceMap": true,
     "typeRoots": ["node_modules/@types", "@types"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "src/models/API/Network.tx"],
   "exclude": ["**/node_modules"]
 }

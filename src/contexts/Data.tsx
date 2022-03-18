@@ -1,16 +1,19 @@
 import React, { createContext, useMemo, useState, useContext } from 'react';
 
 import {
-  ConnectionDataVANState,
   ConnectionErrMsgState,
   ConnectionErrTypeState,
+  ConnectionIsLoadingDataState,
   ConnectionSiteInfoState,
   GlobalStateProviderProps,
 } from './Data.interfaces';
 
 //Initial States
-const dataVANInitialState = { dataVAN: null, setDataVAN: () => null };
 const siteInfoInitialState = { siteInfo: null, setSiteInfo: () => null };
+const isLoadingDataInitialState = {
+  isLoadingData: null,
+  setIsLoadingData: () => null,
+};
 
 const connectionErrTypeInitialState = {
   connectionErrType: '',
@@ -22,8 +25,9 @@ const connectionErrMsgInitialState = {
 };
 
 // Contexts
-const DataVANContext = createContext<ConnectionDataVANState>(dataVANInitialState);
 const SiteInfoContext = createContext<ConnectionSiteInfoState>(siteInfoInitialState);
+const IsLoadingDataContext = createContext<ConnectionIsLoadingDataState>(isLoadingDataInitialState);
+
 const ConnectionErrTypeContext = createContext<ConnectionErrTypeState>(
   connectionErrTypeInitialState,
 );
@@ -31,8 +35,8 @@ const ConnectionErrMsgContext = createContext<ConnectionErrMsgState>(connectionE
 
 //Provider
 const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
-  const [dataVAN, setDataVAN] = useState(dataVANInitialState.dataVAN);
   const [siteInfo, setSiteInfo] = useState(siteInfoInitialState.siteInfo);
+  const [isLoadingData, setIsLoadingData] = useState(isLoadingDataInitialState.isLoadingData);
   const [connectionErrType, setConnectionErrType] = useState(
     connectionErrTypeInitialState.connectionErrType,
   );
@@ -41,8 +45,11 @@ const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
   );
 
   // Contexts values
-  const dataVANContextValue = useMemo(() => ({ dataVAN, setDataVAN }), [dataVAN]);
   const siteInfoContextValue = useMemo(() => ({ siteInfo, setSiteInfo }), [siteInfo]);
+  const isLoadingDataContextValue = useMemo(
+    () => ({ isLoadingData, setIsLoadingData }),
+    [isLoadingData],
+  );
   const connectionErrTypeContextValue = useMemo(
     () => ({
       connectionErrType,
@@ -61,18 +68,19 @@ const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
   return (
     <ConnectionErrTypeContext.Provider value={connectionErrTypeContextValue}>
       <ConnectionErrMsgContext.Provider value={connectionErrMsgContextValue}>
-        <SiteInfoContext.Provider value={siteInfoContextValue}>
-          <DataVANContext.Provider value={dataVANContextValue}>{children}</DataVANContext.Provider>
-        </SiteInfoContext.Provider>
+        <IsLoadingDataContext.Provider value={isLoadingDataContextValue}>
+          <SiteInfoContext.Provider value={siteInfoContextValue}>
+            {children}
+          </SiteInfoContext.Provider>
+        </IsLoadingDataContext.Provider>
       </ConnectionErrMsgContext.Provider>
     </ConnectionErrTypeContext.Provider>
   );
 };
 
 // custom hooks
-export const useDataVAN = () => useContext(DataVANContext);
 export const useSiteInfo = () => useContext(SiteInfoContext);
-export const useDataServices = () => useContext(DataVANContext);
+export const useIsLoadingData = () => useContext(IsLoadingDataContext);
 export const useConnectionErrMsg = () => useContext(ConnectionErrMsgContext);
 export const useConnectionErrType = () => useContext(ConnectionErrTypeContext);
 
