@@ -2,6 +2,7 @@ import { createServer, Response } from 'miragejs';
 
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
+import flowsVANAddresses from './data/FLOWS_VAN_ADDRESSES.json';
 import links from './data/LINKS.json';
 import services from './data/SERVICES.json';
 import site from './data/SITE.json';
@@ -33,13 +34,10 @@ export function loadMockServerInDev() {
           return targets;
         });
         this.get('/flows', () => {
-          const normalizedData = normalizeFlows(
-            list_to_tree(mapFlowsWithListenersConnectors(flowsData)),
-          );
-
-          console.log(groupByVanAddress(normalizedData));
-
-          return normalizedData;
+          return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(flowsData)));
+        });
+        this.get('/flows/addresses', () => {
+          return flowsVANAddresses;
         });
       },
     });
@@ -107,12 +105,12 @@ function mapFlowsWithListenersConnectors(flows: any) {
   });
 }
 
-const groupByVanAddress = (data: any) => {
-  const groupedData = data.reduce((acc: any, item: any) => {
-    (acc[item.van_address] = acc[item.van_address] || []).push(item);
+// const groupByVanAddress = (data: any) => {
+//   const groupedData = data.reduce((acc: any, item: any) => {
+//     (acc[item.van_address] = acc[item.van_address] || []).push(item);
 
-    return acc;
-  }, {});
+//     return acc;
+//   }, {});
 
-  return Object.values(groupedData);
-};
+//   return Object.values(groupedData);
+// };

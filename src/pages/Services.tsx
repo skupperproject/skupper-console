@@ -23,8 +23,6 @@ const Services = memo(() => {
     setRefetchInterval(0);
   }
 
-  console.log(isLoading);
-
   if (isLoading) {
     return <LoadingPage />;
   }

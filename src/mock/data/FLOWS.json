@@ -8,149 +8,6 @@
   },
   {
     "hostname": "tross-lg",
-    "name": "0/Site-A",
-    "build_version": "2.0.0-SNAPSHOT",
-    "rtype": "ROUTER",
-    "id": "2:5:0"
-  },
-  {
-    "parent": "2:5:0",
-    "dest_host": "0.0.0.0",
-    "protocol": "tcp",
-    "dest_port": "8888",
-    "van_address": "hello-world-backend:8080",
-    "name": "hello",
-    "rtype": "LISTENER",
-    "id": "2:5:1"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "45592",
-    "counterflow": "1:1:8",
-    "rtype": "FLOW",
-    "id": "2:5:8"
-  },
-  {
-    "parent": "2:5:1",
-    "source_host": "127.0.0.1",
-    "source_port": "45594",
-    "octets": 87,
-    "counterflow": "1:1:9",
-    "rtype": "FLOW",
-    "id": "2:5:9"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "45596",
-    "counterflow": "1:1:10",
-    "rtype": "FLOW",
-    "id": "2:5:10"
-  },
-  {
-    "parent": "2:5:0",
-    "dest_host": "0.0.0.0",
-    "protocol": "tcp",
-    "dest_port": "8886",
-    "van_address": "service-foo",
-    "name": "tcpListener/0.0.0.0:8886",
-    "rtype": "LISTENER",
-    "id": "2:5:2"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "59890",
-    "counterflow": "1:1:5",
-    "rtype": "FLOW",
-    "id": "2:5:5"
-  },
-  {
-    "parent": "2:5:0",
-    "dest_host": "10.103.12.24",
-    "protocol": "tcp",
-    "dest_port": "8080",
-    "van_address": "service-bar",
-    "name": "tcpConnector/10.103.12.24:8080",
-    "rtype": "CONNECTOR",
-    "id": "2:5:3"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33076",
-    "counterflow": "1:1:11",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:11"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33078",
-    "counterflow": "1:1:12",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:12"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33080",
-    "counterflow": "1:1:13",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:13"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33082",
-    "counterflow": "1:1:14",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:14"
-  },
-  {
-    "parent": "2:5:0",
-    "dest_host": "10.103.19.112",
-    "protocol": "tcp",
-    "dest_port": "8080",
-    "van_address": "service-baz",
-    "name": "tcpConnector/10.103.19.112:8080",
-    "rtype": "CONNECTOR",
-    "id": "2:5:4"
-  },
-  {
-    "parent": "2:5:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33864",
-    "counterflow": "1:1:6",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:6"
-  },
-  {
-    "parent": "2:5:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33866",
-    "counterflow": "1:1:7",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:7"
-  },
-  {
-    "hostname": "tross-lg",
     "name": "0/Site-B",
     "build_version": "2.0.0-SNAPSHOT",
     "rtype": "ROUTER",
@@ -170,37 +27,37 @@
     "parent": "1:1:1",
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "38744",
-    "counterflow": "2:5:11",
+    "source_port": "38800",
+    "counterflow": "2:5:45",
     "rtype": "FLOW",
-    "id": "1:1:11"
+    "id": "1:1:45"
   },
   {
     "parent": "1:1:1",
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "38746",
-    "counterflow": "2:5:12",
+    "source_port": "38802",
+    "counterflow": "2:5:46",
     "rtype": "FLOW",
-    "id": "1:1:12"
+    "id": "1:1:46"
+  },
+  {
+    "parent": "1:1:1",
+    "source_host": "127.0.0.1",
+    "source_port": "38804",
+    "octets": 87,
+    "counterflow": "2:5:47",
+    "rtype": "FLOW",
+    "id": "1:1:47"
   },
   {
     "parent": "1:1:1",
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "38748",
-    "counterflow": "2:5:13",
+    "source_port": "38806",
+    "counterflow": "2:5:48",
     "rtype": "FLOW",
-    "id": "1:1:13"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "38750",
-    "counterflow": "2:5:14",
-    "rtype": "FLOW",
-    "id": "1:1:14"
+    "id": "1:1:48"
   },
   {
     "parent": "1:1:0",
@@ -216,19 +73,19 @@
     "parent": "1:1:2",
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "40320",
-    "counterflow": "2:5:6",
+    "source_port": "40506",
+    "counterflow": "2:5:40",
     "rtype": "FLOW",
-    "id": "1:1:6"
+    "id": "1:1:40"
   },
   {
     "parent": "1:1:2",
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "40322",
-    "counterflow": "2:5:7",
+    "source_port": "40508",
+    "counterflow": "2:5:41",
     "rtype": "FLOW",
-    "id": "1:1:7"
+    "id": "1:1:41"
   },
   {
     "parent": "1:1:0",
@@ -244,31 +101,31 @@
     "parent": "1:1:3",
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "46244",
-    "counterflow": "2:5:8",
+    "source_port": "46302",
+    "counterflow": "2:5:42",
     "trace": "0/Site-A|0/Hub",
     "rtype": "FLOW",
-    "id": "1:1:8"
+    "id": "1:1:42"
   },
   {
     "parent": "1:1:3",
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "46246",
-    "counterflow": "2:5:9",
+    "source_port": "46304",
+    "counterflow": "2:5:43",
     "trace": "0/Site-A|0/Hub",
     "rtype": "FLOW",
-    "id": "1:1:9"
+    "id": "1:1:43"
   },
   {
     "parent": "1:1:3",
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "46248",
-    "counterflow": "2:5:10",
+    "source_port": "46306",
+    "counterflow": "2:5:44",
     "trace": "0/Site-A|0/Hub",
     "rtype": "FLOW",
-    "id": "1:1:10"
+    "id": "1:1:44"
   },
   {
     "parent": "1:1:0",
@@ -284,10 +141,153 @@
     "parent": "1:1:4",
     "octets": 206,
     "source_host": "192.168.50.1",
-    "source_port": "55266",
-    "counterflow": "2:5:5",
+    "source_port": "55322",
+    "counterflow": "2:5:39",
     "trace": "0/Site-A|0/Hub",
     "rtype": "FLOW",
-    "id": "1:1:5"
+    "id": "1:1:39"
+  },
+  {
+    "hostname": "tross-lg",
+    "name": "0/Site-A",
+    "build_version": "2.0.0-SNAPSHOT",
+    "rtype": "ROUTER",
+    "id": "2:5:0"
+  },
+  {
+    "parent": "2:5:0",
+    "dest_host": "0.0.0.0",
+    "protocol": "tcp",
+    "dest_port": "8888",
+    "van_address": "hello-world-backend:8080",
+    "name": "hello",
+    "rtype": "LISTENER",
+    "id": "2:5:1"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "45642",
+    "counterflow": "1:1:42",
+    "rtype": "FLOW",
+    "id": "2:5:42"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "45644",
+    "counterflow": "1:1:43",
+    "rtype": "FLOW",
+    "id": "2:5:43"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "45646",
+    "counterflow": "1:1:44",
+    "rtype": "FLOW",
+    "id": "2:5:44"
+  },
+  {
+    "parent": "2:5:0",
+    "dest_host": "0.0.0.0",
+    "protocol": "tcp",
+    "dest_port": "8886",
+    "van_address": "service-foo",
+    "name": "tcpListener/0.0.0.0:8886",
+    "rtype": "LISTENER",
+    "id": "2:5:2"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60024",
+    "counterflow": "1:1:39",
+    "rtype": "FLOW",
+    "id": "2:5:39"
+  },
+  {
+    "parent": "2:5:0",
+    "dest_host": "10.103.12.24",
+    "protocol": "tcp",
+    "dest_port": "8080",
+    "van_address": "service-bar",
+    "name": "tcpConnector/10.103.12.24:8080",
+    "rtype": "CONNECTOR",
+    "id": "2:5:3"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33196",
+    "counterflow": "1:1:45",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:45"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33198",
+    "counterflow": "1:1:46",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:46"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33200",
+    "counterflow": "1:1:47",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:47"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33202",
+    "counterflow": "1:1:48",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:48"
+  },
+  {
+    "parent": "2:5:0",
+    "dest_host": "10.103.19.112",
+    "protocol": "tcp",
+    "dest_port": "8080",
+    "van_address": "service-baz",
+    "name": "tcpConnector/10.103.19.112:8080",
+    "rtype": "CONNECTOR",
+    "id": "2:5:4"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33936",
+    "counterflow": "1:1:40",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:40"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33938",
+    "counterflow": "1:1:41",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:41"
   }
 ]
