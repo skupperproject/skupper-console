@@ -33,7 +33,13 @@ export function loadMockServerInDev() {
           return targets;
         });
         this.get('/flows', () => {
-          return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(flowsData)));
+          const normalizedData = normalizeFlows(
+            list_to_tree(mapFlowsWithListenersConnectors(flowsData)),
+          );
+
+          console.log(groupByVanAddress(normalizedData));
+
+          return normalizedData;
         });
       },
     });
@@ -56,16 +62,18 @@ const list_to_tree = (dataset: any) => {
 
 function normalizeFlows(data: any) {
   return data
-    .map(({ childNodes, hostname, name }: any) => {
+    .flatMap(({ childNodes, hostname, name }: any) => {
       if (childNodes.length) {
-        const { childNodes: flows, ...rest } = childNodes[0];
+        return childNodes.flatMap((node: any) => {
+          const { childNodes: flows, ...rest } = node;
 
-        return {
-          ...rest,
-          hostname,
-          siteName: name,
-          flows,
-        };
+          return {
+            ...rest,
+            hostname,
+            siteName: name,
+            flows,
+          };
+        });
       }
 
       return undefined;
@@ -98,3 +106,13 @@ function mapFlowsWithListenersConnectors(flows: any) {
     return data;
   });
 }
+
+const groupByVanAddress = (data: any) => {
+  const groupedData = data.reduce((acc: any, item: any) => {
+    (acc[item.van_address] = acc[item.van_address] || []).push(item);
+
+    return acc;
+  }, {});
+
+  return Object.values(groupedData);
+};

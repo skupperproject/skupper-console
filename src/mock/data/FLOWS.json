@@ -26,122 +26,128 @@
   {
     "parent": "2:5:1",
     "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:19",
     "source_host": "127.0.0.1",
-    "source_port": "44882"
+    "source_port": "45592",
+    "counterflow": "1:1:8",
+    "rtype": "FLOW",
+    "id": "2:5:8"
+  },
+  {
+    "parent": "2:5:1",
+    "source_host": "127.0.0.1",
+    "source_port": "45594",
+    "octets": 87,
+    "counterflow": "1:1:9",
+    "rtype": "FLOW",
+    "id": "2:5:9"
   },
   {
     "parent": "2:5:1",
     "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:20",
     "source_host": "127.0.0.1",
-    "source_port": "44884"
+    "source_port": "45596",
+    "counterflow": "1:1:10",
+    "rtype": "FLOW",
+    "id": "2:5:10"
   },
   {
-    "parent": "2:5:1",
-    "source_host": "127.0.0.1",
-    "source_port": "44886",
+    "parent": "2:5:0",
+    "dest_host": "0.0.0.0",
+    "protocol": "tcp",
+    "dest_port": "8886",
+    "van_address": "service-foo",
+    "name": "tcpListener/0.0.0.0:8886",
+    "rtype": "LISTENER",
+    "id": "2:5:2"
+  },
+  {
+    "parent": "2:5:2",
     "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "59890",
+    "counterflow": "1:1:5",
     "rtype": "FLOW",
-    "id": "2:5:21"
+    "id": "2:5:5"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:22",
-    "source_host": "127.0.0.1",
-    "source_port": "44888"
+    "parent": "2:5:0",
+    "dest_host": "10.103.12.24",
+    "protocol": "tcp",
+    "dest_port": "8080",
+    "van_address": "service-bar",
+    "name": "tcpConnector/10.103.12.24:8080",
+    "rtype": "CONNECTOR",
+    "id": "2:5:3"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
+    "parent": "2:5:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33076",
+    "counterflow": "1:1:11",
+    "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
-    "id": "2:5:23",
-    "source_host": "127.0.0.1",
-    "source_port": "44890"
+    "id": "2:5:11"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
+    "parent": "2:5:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33078",
+    "counterflow": "1:1:12",
+    "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
-    "id": "2:5:24",
-    "source_host": "127.0.0.1",
-    "source_port": "44900"
+    "id": "2:5:12"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
+    "parent": "2:5:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33080",
+    "counterflow": "1:1:13",
+    "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
-    "id": "2:5:25",
-    "source_host": "127.0.0.1",
-    "source_port": "44902"
+    "id": "2:5:13"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
+    "parent": "2:5:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33082",
+    "counterflow": "1:1:14",
+    "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
-    "id": "2:5:26",
-    "source_host": "127.0.0.1",
-    "source_port": "44904"
+    "id": "2:5:14"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:27",
-    "source_host": "127.0.0.1",
-    "source_port": "44906"
+    "parent": "2:5:0",
+    "dest_host": "10.103.19.112",
+    "protocol": "tcp",
+    "dest_port": "8080",
+    "van_address": "service-baz",
+    "name": "tcpConnector/10.103.19.112:8080",
+    "rtype": "CONNECTOR",
+    "id": "2:5:4"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
+    "parent": "2:5:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33864",
+    "counterflow": "1:1:6",
+    "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
-    "id": "2:5:28",
-    "source_host": "127.0.0.1",
-    "source_port": "44908"
+    "id": "2:5:6"
   },
   {
-    "parent": "2:5:1",
-    "octets": 87,
+    "parent": "2:5:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "33866",
+    "counterflow": "1:1:7",
+    "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
-    "id": "2:5:29",
-    "source_host": "127.0.0.1",
-    "source_port": "44910"
-  },
-  {
-    "parent": "2:5:1",
-    "rtype": "FLOW",
-    "id": "2:5:30",
-    "source_host": "127.0.0.1",
-    "source_port": "44912",
-    "octets": 87
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:31",
-    "source_host": "127.0.0.1",
-    "source_port": "44916"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:32",
-    "source_host": "127.0.0.1",
-    "source_port": "44918"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "rtype": "FLOW",
-    "id": "2:5:33",
-    "source_host": "127.0.0.1",
-    "source_port": "44920"
+    "id": "2:5:7"
   },
   {
     "hostname": "tross-lg",
@@ -152,162 +158,136 @@
   },
   {
     "parent": "1:1:0",
+    "dest_host": "0.0.0.0",
+    "protocol": "tcp",
+    "dest_port": "8889",
+    "van_address": "service-bar",
+    "name": "tcpListener/0.0.0.0:8889",
+    "rtype": "LISTENER",
+    "id": "1:1:1"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "38744",
+    "counterflow": "2:5:11",
+    "rtype": "FLOW",
+    "id": "1:1:11"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "38746",
+    "counterflow": "2:5:12",
+    "rtype": "FLOW",
+    "id": "1:1:12"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "38748",
+    "counterflow": "2:5:13",
+    "rtype": "FLOW",
+    "id": "1:1:13"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "38750",
+    "counterflow": "2:5:14",
+    "rtype": "FLOW",
+    "id": "1:1:14"
+  },
+  {
+    "parent": "1:1:0",
+    "dest_host": "0.0.0.0",
+    "protocol": "tcp",
+    "dest_port": "8887",
+    "van_address": "service-baz",
+    "name": "tcpListener/0.0.0.0:8887",
+    "rtype": "LISTENER",
+    "id": "1:1:2"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "40320",
+    "counterflow": "2:5:6",
+    "rtype": "FLOW",
+    "id": "1:1:6"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "40322",
+    "counterflow": "2:5:7",
+    "rtype": "FLOW",
+    "id": "1:1:7"
+  },
+  {
+    "parent": "1:1:0",
     "dest_host": "10.102.77.17",
     "protocol": "tcp",
     "dest_port": "8080",
     "van_address": "hello-world-backend:8080",
     "name": "tcpConnector/10.102.77.17:8080",
     "rtype": "CONNECTOR",
-    "id": "1:1:1"
+    "id": "1:1:3"
   },
   {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:19",
+    "parent": "1:1:3",
+    "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "45742",
-    "counterflow": "2:5:19",
-    "trace": "0/Site-A|0/Hub"
+    "source_port": "46244",
+    "counterflow": "2:5:8",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:8"
   },
   {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:20",
+    "parent": "1:1:3",
+    "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "45744",
-    "counterflow": "2:5:20",
-    "trace": "0/Site-A|0/Hub"
+    "source_port": "46246",
+    "counterflow": "2:5:9",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:9"
   },
   {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:21",
+    "parent": "1:1:3",
+    "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "45746",
-    "counterflow": "2:5:21",
-    "trace": "0/Site-A|0/Hub"
+    "source_port": "46248",
+    "counterflow": "2:5:10",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:10"
   },
   {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:22",
-    "source_host": "192.168.50.1",
-    "source_port": "45748",
-    "counterflow": "2:5:22",
-    "trace": "0/Site-A|0/Hub"
+    "parent": "1:1:0",
+    "dest_host": "10.107.120.162",
+    "protocol": "tcp",
+    "dest_port": "8080",
+    "van_address": "service-foo",
+    "name": "tcpConnector/10.107.120.162:8080",
+    "rtype": "CONNECTOR",
+    "id": "1:1:4"
   },
   {
-    "parent": "1:1:1",
+    "parent": "1:1:4",
     "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:23",
     "source_host": "192.168.50.1",
-    "source_port": "45750",
-    "counterflow": "2:5:23",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
+    "source_port": "55266",
+    "counterflow": "2:5:5",
+    "trace": "0/Site-A|0/Hub",
     "rtype": "FLOW",
-    "id": "1:1:24",
-    "source_host": "192.168.50.1",
-    "source_port": "45754",
-    "counterflow": "2:5:24",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:25",
-    "source_host": "192.168.50.1",
-    "source_port": "45756",
-    "counterflow": "2:5:25",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:26",
-    "source_host": "192.168.50.1",
-    "source_port": "45758",
-    "counterflow": "2:5:26",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:27",
-    "source_host": "192.168.50.1",
-    "source_port": "45760",
-    "counterflow": "2:5:27",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:28",
-    "source_host": "192.168.50.1",
-    "source_port": "45762",
-    "counterflow": "2:5:28",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:29",
-    "source_host": "192.168.50.1",
-    "source_port": "45764",
-    "counterflow": "2:5:29",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:30",
-    "source_host": "192.168.50.1",
-    "source_port": "45766",
-    "counterflow": "2:5:30",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:31",
-    "source_host": "192.168.50.1",
-    "source_port": "45768",
-    "counterflow": "2:5:31",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:32",
-    "source_host": "192.168.50.1",
-    "source_port": "45772",
-    "counterflow": "2:5:32",
-    "trace": "0/Site-A|0/Hub"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 206,
-    "rtype": "FLOW",
-    "id": "1:1:33",
-    "source_host": "192.168.50.1",
-    "source_port": "45774",
-    "counterflow": "2:5:33",
-    "trace": "0/Site-A|0/Hub"
+    "id": "1:1:5"
   }
 ]
