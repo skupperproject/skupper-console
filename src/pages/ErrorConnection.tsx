@@ -11,6 +11,7 @@ import {
   ListItem,
   Button,
 } from '@patternfly/react-core';
+import { useNavigate } from 'react-router-dom';
 
 import BrandImg from '../assets/skupper.svg';
 import { TEXT_CONTENT } from './Loading/Loading.constant';
@@ -18,6 +19,12 @@ import { TEXT_CONTENT } from './Loading/Loading.constant';
 const ERR_CONNECTION_TITLE = 'Connection error';
 
 const ErrorConnection = memo(() => {
+  const navigate = useNavigate();
+
+  function handleRetryConnection() {
+    navigate(-1);
+  }
+
   return (
     <Grid className=" pf-u-p-4xl">
       <GridItem span={6} className=" pf-u-p-2xl">
@@ -29,7 +36,7 @@ const ErrorConnection = memo(() => {
         </TextContent>
         <List>
           <ListItem>
-            <Button id="sk-try-again" variant="primary">
+            <Button id="sk-try-again" variant="primary" onClick={handleRetryConnection}>
               Try again
             </Button>
           </ListItem>
