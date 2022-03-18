@@ -27,10 +27,10 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RESTServices } from '../models/services/REST';
-import { Flow } from '../models/services/REST.interfaces';
-import { RoutesPaths } from '../routes/routes.enum';
-import LoadingPage from './Loading/Loading';
+import { RESTServices } from '../../models/services/REST';
+import { Flow } from '../../models/services/REST.interfaces';
+import { RoutesPaths } from '../../routes/routes.enum';
+import LoadingPage from '../Loading/Loading';
 import { MAX_WITH_CELL } from './Monitoring.constant';
 import { Columns, DeviceStatus, DeviceTypes } from './Monitoring.enum';
 import { Row } from './Monitoring.interfaces';

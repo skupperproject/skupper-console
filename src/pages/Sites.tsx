@@ -11,7 +11,7 @@ import LoadingPage from './Loading/Loading';
 const Sites = memo(() => {
   const navigate = useNavigate();
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-  const { data, isLoading } = useQuery('sites', RESTServices.fetchData, {
+  const { data, isLoading } = useQuery('flows', RESTServices.fetchData, {
     refetchInterval,
     onError: handleError,
   });

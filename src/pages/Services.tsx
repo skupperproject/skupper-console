@@ -11,7 +11,7 @@ import LoadingPage from './Loading/Loading';
 const Services = memo(() => {
   const navigate = useNavigate();
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-  const { data, isLoading } = useQuery('sites', RESTServices.fetchData, {
+  const { data, isLoading } = useQuery('services', RESTServices.fetchData, {
     refetchInterval,
     onError: handleError,
   });
@@ -22,6 +22,8 @@ const Services = memo(() => {
     navigate(route);
     setRefetchInterval(0);
   }
+
+  console.log(isLoading);
 
   if (isLoading) {
     return <LoadingPage />;
