@@ -21,7 +21,7 @@ axios.interceptors.response.use(
       error.message = MSG_TIMEOUT_ERROR;
     }
 
-    if (error.response.status) {
+    if (error.response?.status) {
       const {
         response: { status, statusText },
       } = error;

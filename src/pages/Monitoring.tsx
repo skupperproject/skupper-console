@@ -24,9 +24,13 @@ import {
   Thead,
   Tr,
 } from '@patternfly/react-table';
+import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 import { RESTServices } from '../models/services/REST';
 import { Flow } from '../models/services/REST.interfaces';
+import { RoutesPaths } from '../routes/routes.enum';
+import LoadingPage from './Loading/Loading';
 import { MAX_WITH_CELL } from './Monitoring.constant';
 import { Columns, DeviceStatus, DeviceTypes } from './Monitoring.enum';
 import { Row } from './Monitoring.interfaces';
@@ -34,19 +38,20 @@ import { Row } from './Monitoring.interfaces';
 import './Monitoring.scss';
 
 const Monitoring = memo(() => {
+  const navigate = useNavigate();
   const [rows, setRows] = useState<Row[]>();
   const [expandedRowsIds, setExpandedRowsIds] = useState<string[]>([]);
   const [isOpenTypeFilter, setIsOpenTypeFilter] = useState(false);
   const [filterType, setFilterType] = useState({ selection: '', isPlaceholder: true });
+  const { data, isLoading } = useQuery('sites', RESTServices.fetchFlows, {
+    onError: handleError,
+  });
 
-  const handleFetch = useCallback(async () => {
-    try {
-      const data = await RESTServices.fetchFlows();
-      setRows(buildRows(data));
-    } catch {
-      console.log('error');
-    }
-  }, []);
+  function handleError({ httpStatus }: { httpStatus?: number }) {
+    const route = httpStatus ? RoutesPaths.ErrServer : RoutesPaths.ErrConnection;
+
+    navigate(route);
+  }
 
   const handleCollapse = useCallback(
     (id: string, isExpanding = true) => {
@@ -70,11 +75,16 @@ const Monitoring = memo(() => {
     setFilterType({ selection, isPlaceholder });
   }, []);
 
+  useEffect(() => {
+    if (data) {
+      setRows(buildRows(data));
+    }
+  }, [data]);
   const isRowExpanded = (row: Flow) => expandedRowsIds.includes(row.id);
 
-  useEffect(() => {
-    handleFetch();
-  }, [handleFetch]);
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <>

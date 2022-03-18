@@ -1,1 +1,1 @@
-export const UPDATE_INTERVAL = 5 * 1000;
+export const UPDATE_INTERVAL = 3 * 1000;
