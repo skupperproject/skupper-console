@@ -3,10 +3,10 @@ import React, { memo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { UPDATE_INTERVAL } from '../App.constant';
-import { RESTServices } from '../models/services/REST';
-import { RoutesPaths } from '../routes/routes.enum';
-import LoadingPage from './Loading/Loading';
+import { UPDATE_INTERVAL } from '../../App.constant';
+import { RESTServices } from '../../models/services/REST';
+import { RoutesPaths } from '../../routes/routes.enum';
+import LoadingPage from '../Loading/Loading';
 
 const Services = memo(() => {
   const navigate = useNavigate();

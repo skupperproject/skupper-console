@@ -1,4 +1,4 @@
-import { Flow } from '../../models/services/REST.interfaces';
+import { Flow } from './services/services.interfaces';
 
 export type Row = {
   details: {

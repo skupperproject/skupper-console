@@ -27,13 +27,13 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RESTServices } from '../../models/services/REST';
-import { Flow } from '../../models/services/REST.interfaces';
 import { RoutesPaths } from '../../routes/routes.enum';
 import LoadingPage from '../Loading/Loading';
 import { MAX_WITH_CELL } from './Monitoring.constant';
 import { Columns, DeviceStatus, DeviceTypes } from './Monitoring.enum';
 import { Row } from './Monitoring.interfaces';
+import { MonitorServices } from './services';
+import { Flow } from './services/services.interfaces';
 
 import './Monitoring.scss';
 
@@ -43,7 +43,7 @@ const Monitoring = memo(() => {
   const [expandedRowsIds, setExpandedRowsIds] = useState<string[]>([]);
   const [isOpenTypeFilter, setIsOpenTypeFilter] = useState(false);
   const [filterType, setFilterType] = useState({ selection: '', isPlaceholder: true });
-  const { data, isLoading } = useQuery('sites', RESTServices.fetchFlows, {
+  const { data, isLoading } = useQuery('sites', MonitorServices.fetchFlows, {
     onError: handleError,
   });
 
