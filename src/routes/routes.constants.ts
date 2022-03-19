@@ -3,16 +3,16 @@ import { RouteProps } from './routes.interfaces';
 
 export const RoutesProps: RouteProps[] = [
   {
-    path: RoutesPaths.Overview,
-    name: RoutesNames.Overview,
+    path: RoutesPaths.Site,
+    name: RoutesNames.Site,
+  },
+  {
+    path: RoutesPaths.Network,
+    name: RoutesNames.Network,
   },
   {
     path: RoutesPaths.Services,
     name: RoutesNames.Services,
-  },
-  {
-    path: RoutesPaths.Sites,
-    name: RoutesNames.Sites,
   },
   {
     path: RoutesPaths.Deployments,

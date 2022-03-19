@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { UPDATE_INTERVAL } from '../../App.constant';
+import AppContent from '../../layout/AppContent';
 import { RESTServices } from '../../models/services/REST';
 import { RoutesPaths } from '../../routes/routes.enum';
 import LoadingPage from '../Loading/Loading';
@@ -27,7 +28,11 @@ const Services = memo(() => {
     return <LoadingPage />;
   }
 
-  return <pre>{JSON.stringify(data?.data?.services, null, 2)}</pre>;
+  return (
+    <AppContent header={<div>Header</div>}>
+      <pre>{JSON.stringify(data?.data?.services, null, 2)}</pre>
+    </AppContent>
+  );
 });
 
 export default Services;

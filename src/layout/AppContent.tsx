@@ -1,11 +1,21 @@
 import React from 'react';
 
+import { Stack, StackItem } from '@patternfly/react-core';
+
 interface AppContentProps {
+  header?: React.ReactNode;
   children: React.ReactNode;
 }
 
-const AppContent = ({ children }: AppContentProps) => {
-  return <div className="pf-u-p-md pf-u-h-100">{children}</div>;
+const AppContent = ({ header, children }: AppContentProps) => {
+  return (
+    <Stack>
+      <StackItem className="pf-u-px-md pf-u-py-md">{header}</StackItem>
+      <StackItem className="pf-u-px-md pf-u-py-md" isFilled>
+        {children}
+      </StackItem>
+    </Stack>
+  );
 };
 
 export default AppContent;
