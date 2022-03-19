@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SiteInfo } from '../models/services/REST.interfaces';
+import { SiteInfo } from '@models/services/REST.interfaces';
 
 export interface GlobalStateProviderProps {
   children: React.ReactNode;

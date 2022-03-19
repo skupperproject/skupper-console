@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ loadMockServerInDev();
 
 const queryClient = new QueryClient();
 
-ReactDOM.render(
+render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <GlobalStateProvider>

@@ -4,8 +4,9 @@ import React from 'react';
 import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
+import BrandImg from '@assets/skupper.svg';
+
 import { Labels } from '../../App.enum';
-import BrandImg from '../../assets/skupper.svg';
 
 import './Loading.scss';
 

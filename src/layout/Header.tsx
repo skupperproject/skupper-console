@@ -11,7 +11,8 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 
-import Logo from '../assets/skupper.svg';
+import Logo from '@assets/skupper.svg';
+
 import { useSiteInfo } from '../contexts/Data';
 
 import './Header.scss';

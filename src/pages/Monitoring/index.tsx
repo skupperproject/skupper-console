@@ -27,7 +27,8 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RoutesPaths } from '../../routes/routes.enum';
+import { RoutesPaths } from '@routes/routes.enum';
+
 import LoadingPage from '../Loading';
 import { MAX_WITH_CELL } from './Monitoring.constant';
 import { Columns, DeviceStatus, DeviceTypes, QueriesMonitoring } from './Monitoring.enum';

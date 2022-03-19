@@ -8,15 +8,23 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
     "sourceMap": true,
-    "typeRoots": ["node_modules/@types", "@types"]
+    "typeRoots": ["node_modules/@types", "@types"],
+    "baseUrl": "./src",
+    "paths": {
+      "@layout/*": ["layout/*"],
+      "@assets/*": ["assets/*"],
+      "@models/*": ["models/*"],
+      "@pages/*": ["pages/*"],
+      "@routes/*": ["routes/*"]
+    }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "src/models/API/Network.tx"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
   "exclude": ["**/node_modules"]
 }

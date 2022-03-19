@@ -13,8 +13,9 @@ import {
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
+import BrandImg from '@assets/skupper.svg';
+
 import { Labels } from '../../App.enum';
-import BrandImg from '../../assets/skupper.svg';
 
 const ErrorConnection = function () {
   const navigate = useNavigate();

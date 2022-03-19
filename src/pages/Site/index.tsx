@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import AppContent from '@layout/AppContent';
+import { RoutesPaths } from '@routes/routes.enum';
+
 import { UPDATE_INTERVAL } from '../../App.constant';
-import AppContent from '../../layout/AppContent';
-import { RoutesPaths } from '../../routes/routes.enum';
 import LoadingPage from '../Loading';
 import Overview from './components/Overview';
 import SiteMenu from './components/SiteMenu';

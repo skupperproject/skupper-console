@@ -1,4 +1,5 @@
-import { RESTServices } from '../../../models/services/REST';
+import { RESTServices } from '@models/services/REST';
+
 import { SiteData } from './services.interfaces';
 
 export const SitesServices = {
