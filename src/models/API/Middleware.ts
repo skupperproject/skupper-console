@@ -1,12 +1,15 @@
 import axios from 'axios';
 
 import { CONNECTION_TIMEOUT, MSG_TIMEOUT_ERROR } from './REST.constant';
+import { FetchWithTimeoutOptions } from './REST.interfaces';
 
-export async function fetchWithTimeout(url: string, options: any = {}) {
+export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOptions = {}) {
   const { timeout = CONNECTION_TIMEOUT } = options;
 
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
+  const id = setTimeout(() => {
+    return controller.abort();
+  }, timeout);
 
   const response = await axios(url, { ...options, signal: controller.signal });
   clearTimeout(id);
@@ -15,8 +18,12 @@ export async function fetchWithTimeout(url: string, options: any = {}) {
 }
 
 axios.interceptors.response.use(
-  (config) => config,
-  (error) => {
+  (config) => {
+    return config;
+  },
+  (e) => {
+    const error = e;
+
     if (!error.response) {
       error.message = MSG_TIMEOUT_ERROR;
     }

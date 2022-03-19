@@ -13,7 +13,9 @@ export const RESTServices = {
     ]);
 
     const { site_id, site_name, namespace } =
-      data.sites.find(({ site_id: id }) => id === siteId) || data.sites[0];
+      data.sites.find(({ site_id: id }) => {
+        return id === siteId;
+      }) || data.sites[0];
 
     return {
       data,
@@ -33,7 +35,9 @@ function normalizeServices(targets: TargetsResponse[], services: ServicesRespons
   const servicesNormalized: Service[] = [];
 
   services.forEach((service) => {
-    const serviceTarget = targets.find(({ name }) => name === service.name);
+    const serviceTarget = targets.find(({ name }) => {
+      return name === service.name;
+    });
 
     if (!serviceTarget) {
       servicesNormalized.push(service);
@@ -42,7 +46,9 @@ function normalizeServices(targets: TargetsResponse[], services: ServicesRespons
     }
 
     targets.forEach(({ name, type, ports }) => {
-      const endpoint = service?.endpoints?.find(({ target }) => target === name);
+      const endpoint = service?.endpoints?.find(({ target }) => {
+        return target === name;
+      });
 
       if (service && endpoint) {
         servicesNormalized.push({ ...service, type, exposed: true, ports });

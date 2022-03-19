@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import React from 'react';
 
-const Deployments = memo(() => {
+const Deployments = function () {
   return <>Deployments</>;
-});
+};
 
 export default Deployments;

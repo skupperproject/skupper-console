@@ -1,3 +1,7 @@
+import { AxiosRequestConfig } from 'axios';
+
+export type FetchWithTimeoutOptions = AxiosRequestConfig;
+
 export interface DataResponse {
   sites: [
     {

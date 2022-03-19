@@ -18,7 +18,7 @@ import './Header.scss';
 
 const SKUPPER_TEXT_LOGO = 'Skupper';
 
-const HeaderToolbar = () => {
+const HeaderToolbar = function () {
   const { siteInfo } = useSiteInfo();
 
   return (
@@ -36,22 +36,24 @@ const HeaderToolbar = () => {
   );
 };
 
-const Header = () => (
-  <PageHeader
-    className="sk-header"
-    logo={
-      <>
-        <Brand src={Logo} alt="skupper logo" className="sk-logo__img" />
-        <TextContent>
-          <Text component={TextVariants.h4} className="pf-u-pl-md pf-u-font-weight-bold">
-            {SKUPPER_TEXT_LOGO}
-          </Text>
-        </TextContent>
-      </>
-    }
-    headerTools={<HeaderToolbar />}
-    showNavToggle
-  />
-);
+const Header = function () {
+  return (
+    <PageHeader
+      className="sk-header"
+      logo={
+        <>
+          <Brand src={Logo} alt="skupper logo" className="sk-logo__img" />
+          <TextContent>
+            <Text component={TextVariants.h4} className="pf-u-pl-md pf-u-font-weight-bold">
+              {SKUPPER_TEXT_LOGO}
+            </Text>
+          </TextContent>
+        </>
+      }
+      headerTools={<HeaderToolbar />}
+      showNavToggle
+    />
+  );
+};
 
 export default Header;

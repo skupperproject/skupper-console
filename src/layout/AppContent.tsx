@@ -3,11 +3,11 @@ import React from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 interface AppContentProps {
-  header?: React.ReactNode;
+  header: React.ReactNode;
   children: React.ReactNode;
 }
 
-const AppContent = ({ header, children }: AppContentProps) => {
+const AppContent = function ({ header, children }: AppContentProps) {
   return (
     <Stack>
       <StackItem className="pf-u-px-md pf-u-py-md">{header}</StackItem>

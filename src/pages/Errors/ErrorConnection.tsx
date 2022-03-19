@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 
 import {
   Brand,
@@ -13,23 +13,21 @@ import {
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import BrandImg from '../assets/skupper.svg';
-import { TEXT_CONTENT } from './Loading/Loading.constant';
+import { Labels } from '../../App.enum';
+import BrandImg from '../../assets/skupper.svg';
 
-const ERR_CONNECTION_TITLE = 'Connection error';
-
-const ErrorConnection = memo(() => {
+const ErrorConnection = function () {
   const navigate = useNavigate();
 
-  function handleRetryConnection() {
+  const handleRetryConnection = () => {
     navigate(-1);
-  }
+  };
 
   return (
     <Grid className=" pf-u-p-4xl">
       <GridItem span={6} className=" pf-u-p-2xl">
         <TextContent className="pf-u-text-align-center pf-u-mb-4xl">
-          <Text component={TextVariants.h1}>{ERR_CONNECTION_TITLE}</Text>
+          <Text component={TextVariants.h1}>{Labels.ErrorConnectionTitle}</Text>
         </TextContent>
         <TextContent>
           <Text component={TextVariants.p}>Here are some things to try:</Text>
@@ -50,11 +48,11 @@ const ErrorConnection = memo(() => {
       <GridItem span={6} className=" pf-u-p-2xl">
         <Brand src={BrandImg} alt="skupper brand" />
         <TextContent>
-          <Text>{TEXT_CONTENT}</Text>
+          <Text>{Labels.LoadingBrandMessage}</Text>
         </TextContent>
       </GridItem>
     </Grid>
   );
-});
+};
 
 export default ErrorConnection;

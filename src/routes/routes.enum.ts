@@ -1,11 +1,3 @@
-export enum RoutesNames {
-  Network = 'Network',
-  Services = 'Services',
-  Site = 'Site',
-  Deployments = 'Deployments',
-  Monitoring = 'Monitoring',
-}
-
 export enum RoutesPaths {
   Network = 'network',
   Services = 'services',

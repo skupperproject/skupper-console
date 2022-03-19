@@ -18,3 +18,7 @@ export enum DeviceStatus {
   InProgress = 'In progress',
   Connected = 'Connected',
 }
+
+export enum QueriesMonitoring {
+  getFlows = 'flows-query',
+}

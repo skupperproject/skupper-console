@@ -8,7 +8,7 @@ import services from './data/SERVICES.json';
 import site from './data/SITE.json';
 import targets from './data/TARGETS.json';
 
-const DELAY_RESPONSE = 2000;
+const DELAY_RESPONSE = 3000;
 
 export function loadMockServerInDev() {
   if (process.env.NODE_ENV === 'development') {
@@ -48,7 +48,9 @@ const list_to_tree = (dataset: any) => {
   const hashTable = Object.create(null);
   const dataTree: any = [];
 
-  dataset.forEach((data: any) => (hashTable[data.id] = { ...data, childNodes: [] }));
+  dataset.forEach((data: any) => {
+    return (hashTable[data.id] = { ...data, childNodes: [] });
+  });
   dataset.forEach((data: any) => {
     data.parent
       ? hashTable[data.parent].childNodes.push(hashTable[data.id])
@@ -82,9 +84,10 @@ function normalizeFlows(data: any) {
 function mapFlowsWithListenersConnectors(flows: any) {
   return flows.map((data: any) => {
     const listenersBound = flows.reduce((acc: any, item: any) => {
-      acc[item.id] = item;
-
-      return acc;
+      return {
+        ...acc,
+        [item.id]: item,
+      };
     }, {});
 
     const connectorsBound = flows.reduce((acc: any, item: any) => {
@@ -97,7 +100,8 @@ function mapFlowsWithListenersConnectors(flows: any) {
 
     if (data.counterflow) {
       return { ...data, connected_to: listenersBound[data.counterflow] };
-    } else if (data.rtype === 'FLOW' && !data.counterflow) {
+    }
+    if (data.rtype === 'FLOW' && !data.counterflow) {
       return { ...data, connected_to: connectorsBound[data.id] };
     }
 

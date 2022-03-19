@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import React from 'react';
 
-const Network = memo(() => {
+const Network = function () {
   return <>Network</>;
-});
+};
 
 export default Network;

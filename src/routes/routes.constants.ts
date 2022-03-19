@@ -1,25 +1,26 @@
-import { RoutesNames, RoutesPaths } from './routes.enum';
+import { Labels } from '../App.enum';
+import { RoutesPaths } from './routes.enum';
 import { RouteProps } from './routes.interfaces';
 
 export const RoutesProps: RouteProps[] = [
   {
     path: RoutesPaths.Site,
-    name: RoutesNames.Site,
+    name: Labels.Site,
   },
   {
     path: RoutesPaths.Network,
-    name: RoutesNames.Network,
+    name: Labels.Network,
   },
   {
     path: RoutesPaths.Services,
-    name: RoutesNames.Services,
+    name: Labels.Services,
   },
   {
     path: RoutesPaths.Deployments,
-    name: RoutesNames.Deployments,
+    name: Labels.Deployments,
   },
   {
     path: RoutesPaths.Monitoring,
-    name: RoutesNames.Monitoring,
+    name: Labels.Monitoring,
   },
 ];

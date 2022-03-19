@@ -8,12 +8,12 @@ import Routes from './routes';
 
 import './App.scss';
 
-function App() {
+const App = function () {
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
       <Routes />
     </Page>
   );
-}
+};
 
 export default App;

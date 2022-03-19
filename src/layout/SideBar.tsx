@@ -10,24 +10,28 @@ interface NavBarProps {
   navItems: RouteProps[];
 }
 
-const NavBar = ({ navItems }: NavBarProps) => {
+const NavBar = function ({ navItems }: NavBarProps) {
   const { pathname } = useLocation();
 
   return (
     <Nav>
       <NavList>
-        {navItems.map((navItem) => (
-          <NavItem key={navItem.path} isActive={pathname === `/${navItem.path}`}>
-            <Link to={`${navItem.path}`}>{navItem.name}</Link>
-          </NavItem>
-        ))}
+        {navItems.map((navItem) => {
+          return (
+            <NavItem key={navItem.path} isActive={pathname === `/${navItem.path}`}>
+              <Link to={`${navItem.path}`}>{navItem.name}</Link>
+            </NavItem>
+          );
+        })}
       </NavList>
     </Nav>
   );
 };
 
-const SideBar = () => (
-  <PageSidebar className="pf-u-w-auto" nav={<NavBar navItems={RoutesProps} />} theme="dark" />
-);
+const SideBar = function () {
+  return (
+    <PageSidebar className="pf-u-w-auto" nav={<NavBar navItems={RoutesProps} />} theme="dark" />
+  );
+};
 
 export default SideBar;
