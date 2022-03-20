@@ -2,14 +2,18 @@ import React, { lazy, Suspense } from 'react';
 
 import { Routes as PageRoutes, Route, Navigate } from 'react-router-dom';
 
-const Site = lazy(() => import('@pages/Site'));
-const Network = lazy(() => import('@pages/Network'));
-const Services = lazy(() => import('@pages/Services'));
-const Deployments = lazy(() => import('@pages/Deployments'));
-const Monitoring = lazy(() => import('@pages/Monitoring'));
-const ErrorConnection = lazy(() => import('@pages/Errors/ErrorConnection'));
-const ErrorServer = lazy(() => import('@pages/Errors/ErrorServer'));
-const NotFound = lazy(() => import('@pages/NotFound'));
+const Site = lazy(() => import(/* webpackChunkName: "sites" */ '@pages/Site'));
+const Network = lazy(() => import(/* webpackChunkName: "network" */ '@pages/Network'));
+const Services = lazy(() => import(/* webpackChunkName: "services" */ '@pages/Services'));
+const Deployments = lazy(() => import(/* webpackChunkName: "deployments" */ '@pages/Deployments'));
+const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ '@pages/Monitoring'));
+const NotFound = lazy(() => import(/* webpackChunkName: "not found" */ '@pages/NotFound'));
+const ErrorConnection = lazy(
+  () => import(/* webpackChunkName: "connection-error" */ '@pages/Errors/ErrorConnection'),
+);
+const ErrorServer = lazy(
+  () => import(/* webpackChunkName: "server error" */ '@pages/Errors/ErrorServer'),
+);
 
 import { RoutesPaths } from './routes.enum';
 
