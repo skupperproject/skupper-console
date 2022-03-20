@@ -11,7 +11,7 @@ import targets from './data/TARGETS.json';
 const DELAY_RESPONSE = 3000;
 
 export function loadMockServerInDev() {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER) {
     createServer({
       routes() {
         this.timing = DELAY_RESPONSE;

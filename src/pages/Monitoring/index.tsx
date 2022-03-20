@@ -36,8 +36,6 @@ import { Row } from './Monitoring.interfaces';
 import { MonitorServices } from './services';
 import { Flow } from './services/services.interfaces';
 
-import './Monitoring.scss';
-
 const Monitoring = function () {
   const navigate = useNavigate();
   const [rows, setRows] = useState<Row[]>();
@@ -57,9 +55,7 @@ const Monitoring = function () {
   const handleCollapse = useCallback(
     (id: string, isExpanding = true) => {
       if (isExpanding) {
-        const otherRowsIds = expandedRowsIds.filter((ids) => {
-          return ids !== id;
-        });
+        const otherRowsIds = expandedRowsIds.filter((ids) => ids !== id);
         setExpandedRowsIds(otherRowsIds);
 
         return;
@@ -83,9 +79,7 @@ const Monitoring = function () {
       setRows(buildRows(data));
     }
   }, [data]);
-  const isRowExpanded = (row: Flow) => {
-    return expandedRowsIds.includes(row.id);
-  };
+  const isRowExpanded = (row: Flow) => expandedRowsIds.includes(row.id);
 
   if (isLoading) {
     return <LoadingPage />;
@@ -128,96 +122,90 @@ const Monitoring = function () {
           </Tr>
         </Thead>
         {rowsFilteredByType(rows, filterType.selection, filterType.isPlaceholder)?.map(
-          ({ data: row, details }, rowIndex) => {
-            return (
-              <Tbody key={row.id} isExpanded={isRowExpanded(row)}>
-                <Tr>
-                  <Td
-                    expand={
-                      details
-                        ? {
-                            rowIndex,
-                            isExpanded: isRowExpanded(row),
-                            onToggle: () => {
-                              return handleCollapse(row.id, isRowExpanded(row));
-                            },
-                          }
-                        : undefined
-                    }
-                  />
-                  <Td>
-                    <Tooltip content={DeviceStatus.Connected}>
-                      <CircleIcon
-                        color={
-                          Math.round(Math.random())
-                            ? 'var(--pf-global--success-color--100)'
-                            : 'var(--pf-global--warning-color--100)'
+          ({ data: row, details }, rowIndex) => (
+            <Tbody key={row.id} isExpanded={isRowExpanded(row)}>
+              <Tr>
+                <Td
+                  expand={
+                    details
+                      ? {
+                          rowIndex,
+                          isExpanded: isRowExpanded(row),
+                          onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
                         }
-                      />
-                    </Tooltip>
-                  </Td>
-                  <Td dataLabel={Columns.Type} className="pf-u-display-flex">
-                    <span className="pf-u-mr-sm">
-                      {row.rtype.toLocaleLowerCase() === DeviceTypes.Listener ? (
-                        <ConnectedIcon />
-                      ) : (
-                        <PluggedIcon />
-                      )}
-                    </span>
-                    {row.rtype}
-                  </Td>
-                  <Td dataLabel={Columns.DeviceName}>
-                    <Tooltip content={row.name}>
-                      <div className="text-ellipsis" style={{ maxWidth: `${MAX_WITH_CELL}px` }}>
-                        {row.name}
-                      </div>
-                    </Tooltip>
-                  </Td>
-                  <Td dataLabel={Columns.Hostname}>{row.hostname}</Td>
-                  <Td dataLabel={Columns.SiteName}>{row.siteName}</Td>
-                  <Td dataLabel={Columns.Protocol}>{row.protocol}</Td>
-                  <Td dataLabel={Columns.VanAddress}>
-                    <Tooltip content={row.van_address}>
-                      <div className="text-ellipsis" style={{ maxWidth: `${MAX_WITH_CELL}px` }}>
-                        {row.van_address}
-                      </div>
-                    </Tooltip>
-                  </Td>
-                  <Td dataLabel={Columns.DestinationHost}>{row.dest_host}</Td>
-                  <Td dataLabel={Columns.DestinationPort}>{row.dest_port}</Td>
+                      : undefined
+                  }
+                />
+                <Td>
+                  <Tooltip content={DeviceStatus.Connected}>
+                    <CircleIcon
+                      color={
+                        Math.round(Math.random())
+                          ? 'var(--pf-global--success-color--100)'
+                          : 'var(--pf-global--warning-color--100)'
+                      }
+                    />
+                  </Tooltip>
+                </Td>
+                <Td dataLabel={Columns.Type} className="pf-u-display-flex">
+                  <span className="pf-u-mr-sm">
+                    {row.rtype.toLocaleLowerCase() === DeviceTypes.Listener ? (
+                      <ConnectedIcon />
+                    ) : (
+                      <PluggedIcon />
+                    )}
+                  </span>
+                  {row.rtype}
+                </Td>
+                <Td dataLabel={Columns.DeviceName}>
+                  <Tooltip content={row.name}>
+                    <div className="text-ellipsis" style={{ maxWidth: `${MAX_WITH_CELL}px` }}>
+                      {row.name}
+                    </div>
+                  </Tooltip>
+                </Td>
+                <Td dataLabel={Columns.Hostname}>{row.hostname}</Td>
+                <Td dataLabel={Columns.SiteName}>{row.siteName}</Td>
+                <Td dataLabel={Columns.Protocol}>{row.protocol}</Td>
+                <Td dataLabel={Columns.VanAddress}>
+                  <Tooltip content={row.van_address}>
+                    <div className="text-ellipsis" style={{ maxWidth: `${MAX_WITH_CELL}px` }}>
+                      {row.van_address}
+                    </div>
+                  </Tooltip>
+                </Td>
+                <Td dataLabel={Columns.DestinationHost}>{row.dest_host}</Td>
+                <Td dataLabel={Columns.DestinationPort}>{row.dest_port}</Td>
+              </Tr>
+              {details ? (
+                <Tr isExpanded={isRowExpanded(row)}>
+                  {details ? (
+                    <Td dataLabel={`${row.id}`} colSpan={12}>
+                      <ExpandableRowContent>
+                        <TextContent className="pf-u-mb-md">
+                          <Text component={TextVariants.h1}>{details.host}</Text>
+                        </TextContent>
+                        <Flex>
+                          {details.ports.map(({ portSource, portDest }) => (
+                            <TextContent key={portSource}>
+                              <Text component={TextVariants.small}>
+                                <span>Source Port: {portSource}</span>{' '}
+                                {portDest && (
+                                  <span>
+                                    is connected to {row.dest_host}:{row.dest_port}:{portDest}
+                                  </span>
+                                )}
+                              </Text>
+                            </TextContent>
+                          ))}
+                        </Flex>
+                      </ExpandableRowContent>
+                    </Td>
+                  ) : null}
                 </Tr>
-                {details ? (
-                  <Tr isExpanded={isRowExpanded(row)}>
-                    {details ? (
-                      <Td dataLabel={`${row.id}`} colSpan={12}>
-                        <ExpandableRowContent>
-                          <TextContent className="pf-u-mb-md">
-                            <Text component={TextVariants.h1}>{details.host}</Text>
-                          </TextContent>
-                          <Flex>
-                            {details.ports.map(({ portSource, portDest }) => {
-                              return (
-                                <TextContent key={portSource}>
-                                  <Text component={TextVariants.small}>
-                                    <span>Source Port: {portSource}</span>{' '}
-                                    {portDest && (
-                                      <span>
-                                        is connected to {row.dest_host}:{row.dest_port}:{portDest}
-                                      </span>
-                                    )}
-                                  </Text>
-                                </TextContent>
-                              );
-                            })}
-                          </Flex>
-                        </ExpandableRowContent>
-                      </Td>
-                    ) : null}
-                  </Tr>
-                ) : null}
-              </Tbody>
-            );
-          },
+              ) : null}
+            </Tbody>
+          ),
         )}
       </TableComposable>
     </>
@@ -230,20 +218,15 @@ function buildRows(data: Flow[]): Row[] {
   return data?.flatMap((item) => {
     const details = {
       host: item.flows[0].source_host,
-      ports: item.flows.map((block) => {
-        return {
-          portSource: block.source_port,
-          portDest: block.connected_to?.source_port,
-        };
-      }),
+      ports: item.flows.map((block) => ({
+        portSource: block.source_port,
+        portDest: block.connected_to?.source_port,
+      })),
     };
 
     return { details, data: item, isOpen: false };
   });
 }
 
-const rowsFilteredByType = (rows: Row[] | undefined, selection: string, isPlaceholder: boolean) => {
-  return rows?.filter(({ data: row }) => {
-    return row.rtype.toLowerCase() === selection || isPlaceholder;
-  });
-};
+const rowsFilteredByType = (rows: Row[] | undefined, selection: string, isPlaceholder: boolean) =>
+  rows?.filter(({ data: row }) => row.rtype.toLowerCase() === selection || isPlaceholder);

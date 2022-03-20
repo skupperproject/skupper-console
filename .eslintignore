@@ -1,5 +1,8 @@
 **/node_modules
 **/public
 **/build
+**/config
 **/@types
-./src/mocks/data/*
+./public/mocks/data/*
+jest.*
+

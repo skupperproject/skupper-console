@@ -7,9 +7,7 @@ export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOpt
   const { timeout = CONNECTION_TIMEOUT } = options;
 
   const controller = new AbortController();
-  const id = setTimeout(() => {
-    return controller.abort();
-  }, timeout);
+  const id = setTimeout(() => controller.abort(), timeout);
 
   const response = await axios(url, { ...options, signal: controller.signal });
   clearTimeout(id);
@@ -18,9 +16,7 @@ export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOpt
 }
 
 axios.interceptors.response.use(
-  (config) => {
-    return config;
-  },
+  (config) => config,
   (e) => {
     const error = e;
 

@@ -41,7 +41,7 @@
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
-    "arrow-body-style": ["error", "always"],
+    "arrow-body-style": ["error", "as-needed"],
     "padding-line-between-statements": "off",
     "import/prefer-default-export": "off",
     "import/no-cycle": [

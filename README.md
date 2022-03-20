@@ -2,9 +2,8 @@
 
 ## Development
 
-To develop the console code
+To develop the console type
 
 > `npm i`
 
 > `npm run start`
-

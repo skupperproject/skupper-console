@@ -7,6 +7,9 @@ import SideBar from '@layout/SideBar';
 
 import Routes from './routes';
 
+import '@patternfly/patternfly/patternfly.scss';
+import '@patternfly/patternfly/patternfly-addons.scss';
+
 import './App.scss';
 
 const App = function () {

@@ -1,7 +1,5 @@
 import React, { memo } from 'react';
 
-const SiteMenu = memo(() => {
-  return <>SiteMenu</>;
-});
+const SiteMenu = memo(() => <>SiteMenu</>);
 
 export default SiteMenu;

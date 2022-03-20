@@ -6,8 +6,6 @@ interface OverviewProps {
   data: SiteData | undefined;
 }
 
-const Overview = memo(({ data }: OverviewProps) => {
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
-});
+const Overview = memo(({ data }: OverviewProps) => <pre>{JSON.stringify(data, null, 2)}</pre>);
 
 export default Overview;
