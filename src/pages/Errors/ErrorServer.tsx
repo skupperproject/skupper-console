@@ -3,8 +3,7 @@ import React from 'react';
 import { Brand, Grid, GridItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import BrandImg from '@assets/skupper.svg';
-
-import { Labels } from '../../App.enum';
+import { Labels } from 'App.enum';
 
 const ErrorServer = function () {
   return (

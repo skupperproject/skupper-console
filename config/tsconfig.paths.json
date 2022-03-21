@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@layout/*": ["layout/*"],
+      "@assets/*": ["assets/*"],
+      "@models/*": ["models/*"],
+      "@pages/*": ["pages/*"],
+      "@routes/*": ["routes/*"]
+    }
+  }
+}

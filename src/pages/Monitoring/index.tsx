@@ -27,7 +27,7 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RoutesPaths } from '@routes/routes.enum';
+import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 
 import LoadingPage from '../Loading';
 import { MAX_WITH_CELL } from './Monitoring.constant';
@@ -47,7 +47,7 @@ const Monitoring = function () {
   });
 
   function handleError({ httpStatus }: { httpStatus?: number }) {
-    const route = httpStatus ? RoutesPaths.ErrServer : RoutesPaths.ErrConnection;
+    const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
 
     navigate(route);
   }

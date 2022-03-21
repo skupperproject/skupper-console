@@ -4,8 +4,9 @@ import { render } from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
 
+import App from 'App';
+
 import { loadMockServerInDev } from '../public/mocks/server';
-import App from './App';
 import GlobalStateProvider from './contexts/Data';
 
 loadMockServerInDev();

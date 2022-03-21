@@ -1,17 +1,13 @@
 const { ROOT, path } = require('./webpack.constant');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   entry: path.join(ROOT, 'src/index.tsx'),
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    alias: {
-      '@assets': path.join(ROOT, 'src/assets'),
-      '@layout': path.join(ROOT, 'src/layout'),
-      '@models': path.join(ROOT, 'src/models'),
-      '@pages': path.join(ROOT, 'src/pages'),
-      '@routes': path.join(ROOT, 'src/routes'),
-    },
+    plugins: [new TsConfigPathsPlugin({ configFile: path.join(ROOT, 'tsconfig.json') })],
   },
   module: {
     rules: [

@@ -3,11 +3,11 @@ import React from 'react';
 import { Nav, NavItem, NavList, PageSidebar } from '@patternfly/react-core';
 import { Link, useLocation } from 'react-router-dom';
 
-import { RoutesProps } from '@routes/routes.constants';
-import { RouteProps } from '@routes/routes.interfaces';
+import { RoutesProps } from './SideBar.constants';
+import { SideBarRouteProps } from './SideBar.interfaces';
 
 interface NavBarProps {
-  navItems: RouteProps[];
+  navItems: SideBarRouteProps[];
 }
 
 const NavBar = function ({ navItems }: NavBarProps) {

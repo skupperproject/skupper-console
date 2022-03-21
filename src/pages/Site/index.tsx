@@ -1,40 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
-import { RoutesPaths } from '@routes/routes.enum';
 
-import { UPDATE_INTERVAL } from '../../App.constant';
-import LoadingPage from '../Loading';
-import Overview from './components/Overview';
 import SiteMenu from './components/SiteMenu';
-import { SitesServices } from './services';
-import { QuerySite } from './site.enum';
+import { SiteLabels, SiteRoutesPaths } from './site.enum';
 
 const Site = function () {
-  const navigate = useNavigate();
-  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-  const { data: site, isLoading } = useQuery(QuerySite.getSiteInfo, SitesServices.fetchData, {
-    refetchInterval,
-    onError: handleError,
-  });
-
-  function handleError({ httpStatus }: { httpStatus?: number }) {
-    const route = httpStatus ? RoutesPaths.ErrServer : RoutesPaths.ErrConnection;
-
-    setRefetchInterval(0);
-    navigate(route);
-  }
-
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   return (
     <AppContent header={<SiteMenu />}>
-      <Overview data={site} />
+      <div>
+        <Link to={SiteRoutesPaths.Overview}>{SiteLabels.RouteOverview}</Link>
+        <Link to={SiteRoutesPaths.Deployments}>{SiteLabels.RouteDeployments}</Link>
+        <Link to={SiteRoutesPaths.Links}>{SiteLabels.RouteLinks}</Link>
+      </div>
+      <Outlet />
     </AppContent>
   );
 };

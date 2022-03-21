@@ -1,3 +1,7 @@
+export enum MonitoringRoutesPaths {
+  Monitoring = '/monitoring',
+}
+
 export enum Columns {
   Type = 'Type',
   DeviceName = 'Device Name',

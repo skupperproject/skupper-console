@@ -11,6 +11,7 @@ const prodConfig = {
   output: {
     path: path.join(ROOT, '/build'),
     filename: 'sk-[name].[contenthash].min.js',
+    publicPath: '/',
     clean: true,
   },
   performance: {
