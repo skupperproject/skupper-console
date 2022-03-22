@@ -1,8 +1,8 @@
 const { ROOT, path } = require('./webpack.constant');
 
-const TS_CONFIG_PATH = path.join(ROOT, '/tsconfig.json');
 const SRC_PATH = `${ROOT}/src`;
 const CONFIG_PATH = `${ROOT}/config`;
+const TS_CONFIG_PATH = path.join(CONFIG_PATH, '/tsconfig.paths.json');
 
 const SVG_TRANSFORM_FILENAME = 'jest.config.svgTransform';
 const FILE_MOCK_TRANSFORM_FILENAME = 'jest.config.fileMock';

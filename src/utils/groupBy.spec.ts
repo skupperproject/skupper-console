@@ -6,18 +6,12 @@ describe('groupBy groupBy', () => {
       {
         title: 'title 1',
         description: 'description 1',
-        items: {
-          first: 'item 1',
-          second: 'item 2',
-        },
+        items: 'item 1',
       },
       {
         title: 'title 2',
         description: 'description 2',
-        items: {
-          first: 'item 3',
-          second: 'item 4',
-        },
+        items: 'item 2',
       },
     ];
 
