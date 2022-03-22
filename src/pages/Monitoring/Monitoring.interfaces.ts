@@ -1,10 +1,10 @@
-import { Flow } from './services/services.interfaces';
+// import { Flow } from './services/services.interfaces';
 
-export type Row = {
-  details: {
+export type Row<T> = {
+  details?: {
     host: string;
     ports: Array<{ portSource: string; portDest: string | undefined }>;
   };
-  data: Flow;
-  isOpen: boolean;
+  data: T;
+  isOpen?: boolean;
 };

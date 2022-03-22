@@ -5,7 +5,7 @@
       "@assets/*": ["assets/*"],
       "@models/*": ["models/*"],
       "@pages/*": ["pages/*"],
-      "@routes/*": ["routes/*"]
+      "@utils/*": ["utils/*"]
     }
   }
 }

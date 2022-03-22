@@ -10,11 +10,9 @@ import { SiteLabels, SiteRoutesPaths } from './site.enum';
 const Site = function () {
   return (
     <AppContent header={<SiteMenu />}>
-      <div>
-        <Link to={SiteRoutesPaths.Overview}>{SiteLabels.RouteOverview}</Link>
-        <Link to={SiteRoutesPaths.Deployments}>{SiteLabels.RouteDeployments}</Link>
-        <Link to={SiteRoutesPaths.Links}>{SiteLabels.RouteLinks}</Link>
-      </div>
+      <Link to={SiteRoutesPaths.Overview}>{SiteLabels.RouteOverview}</Link>
+      <Link to={SiteRoutesPaths.Deployments}>{SiteLabels.RouteDeployments}</Link>
+      <Link to={SiteRoutesPaths.Links}>{SiteLabels.RouteLinks}</Link>
       <Outlet />
     </AppContent>
   );

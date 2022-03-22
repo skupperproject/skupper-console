@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from 'App';
 
-import { loadMockServerInDev } from '../public/mocks/server';
+import { loadMockServerInDev } from '../public/mocks/server.js';
 import GlobalStateProvider from './contexts/Data';
 
 loadMockServerInDev();

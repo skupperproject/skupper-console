@@ -16,6 +16,7 @@ const extensionsAllowed = {
 function makeModuleNameMapper(srcPath, tsconfigPath) {
   const { paths } = require(tsconfigPath).compilerOptions;
   const aliases = {};
+  console.log(srcPath, paths);
 
   Object.keys(paths).forEach((item) => {
     const key = item.replace('/*', '/(.*)');

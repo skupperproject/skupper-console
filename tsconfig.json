@@ -1,5 +1,4 @@
 {
-  "extends": "./config/tsconfig.paths.json",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -17,7 +16,14 @@
     "jsx": "react",
     "sourceMap": true,
     "typeRoots": ["node_modules/@types", "@types"],
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@layout/*": ["layout/*"],
+      "@assets/*": ["assets/*"],
+      "@models/*": ["models/*"],
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
   "exclude": ["**/node_modules", "**/build"]

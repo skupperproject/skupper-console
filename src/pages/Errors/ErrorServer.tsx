@@ -3,7 +3,8 @@ import React from 'react';
 import { Brand, Grid, GridItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import BrandImg from '@assets/skupper.svg';
-import { Labels } from 'App.enum';
+
+import { Labels } from './errors.enum';
 
 const ErrorServer = function () {
   return (
@@ -19,7 +20,7 @@ const ErrorServer = function () {
       <GridItem span={6} className=" pf-u-p-2xl">
         <Brand src={BrandImg} alt="skupper brand" />
         <TextContent>
-          <Text>{Labels.LoadingBrandMessage}</Text>
+          <Text>{Labels.ErrorBrandMessage}</Text>
         </TextContent>
       </GridItem>
     </Grid>

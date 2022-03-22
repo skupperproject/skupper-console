@@ -157,6 +157,13 @@
     "require-atomic-updates": 0,
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": ["enum", "enumMember"],
+        "format": ["PascalCase"]
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-use-before-define": 0,
     "@typescript-eslint/no-unused-vars": ["error"]

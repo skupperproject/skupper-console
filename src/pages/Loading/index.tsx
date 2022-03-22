@@ -5,9 +5,9 @@ import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@pattern
 import { CogIcon } from '@patternfly/react-icons';
 
 import BrandImg from '@assets/skupper.svg';
-import { Labels } from 'App.enum';
 
 import './Loading.scss';
+import { Labels } from './Loading.enum';
 
 const PleaseWait = function () {
   return (

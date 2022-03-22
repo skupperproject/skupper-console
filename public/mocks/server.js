@@ -2,13 +2,13 @@ import { createServer, Response } from 'miragejs';
 
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
-import flowsVANAddresses from './data/FLOWS_VAN_ADDRESSES.json';
+import flowsDataForVan from './data/FLOWS_BY_VAN.json';
 import links from './data/LINKS.json';
 import services from './data/SERVICES.json';
 import site from './data/SITE.json';
 import targets from './data/TARGETS.json';
 
-const DELAY_RESPONSE = 3000;
+const DELAY_RESPONSE = 1000;
 
 export function loadMockServerInDev() {
   if (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER) {
@@ -33,25 +33,31 @@ export function loadMockServerInDev() {
         this.get('/targets', () => {
           return targets;
         });
-        this.get('/flows', () => {
+        this.get('/flows', (_, { queryParams }) => {
+          let data = flowsData;
+
+          if (queryParams.vanaddr) {
+            return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(flowsData))).filter(
+              (flow) => flow.van_address === queryParams.vanaddr,
+            );
+          }
+
           return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(flowsData)));
-        });
-        this.get('/flows/addresses', () => {
-          return flowsVANAddresses;
         });
       },
     });
   }
 }
 
-const list_to_tree = (dataset: any) => {
+const list_to_tree = (dataset) => {
   const hashTable = Object.create(null);
-  const dataTree: any = [];
+  const dataTree = [];
 
-  dataset.forEach((data: any) => {
-    return (hashTable[data.id] = { ...data, childNodes: [] });
+  dataset.forEach((data) => {
+    hashTable[data.id] = { ...data, childNodes: [] };
   });
-  dataset.forEach((data: any) => {
+
+  dataset.forEach((data) => {
     data.parent
       ? hashTable[data.parent].childNodes.push(hashTable[data.id])
       : dataTree.push(hashTable[data.id]);
@@ -60,11 +66,11 @@ const list_to_tree = (dataset: any) => {
   return dataTree;
 };
 
-function normalizeFlows(data: any) {
+function normalizeFlows(data) {
   return data
-    .flatMap(({ childNodes, hostname, name }: any) => {
+    .flatMap(({ childNodes, hostname, name }) => {
       if (childNodes.length) {
-        return childNodes.flatMap((node: any) => {
+        return childNodes.flatMap((node) => {
           const { childNodes: flows, ...rest } = node;
 
           return {
@@ -81,16 +87,16 @@ function normalizeFlows(data: any) {
     .filter(Boolean);
 }
 
-function mapFlowsWithListenersConnectors(flows: any) {
-  return flows.map((data: any) => {
-    const listenersBound = flows.reduce((acc: any, item: any) => {
+function mapFlowsWithListenersConnectors(flows) {
+  return flows.map((data) => {
+    const listenersBound = flows.reduce((acc, item) => {
       return {
         ...acc,
         [item.id]: item,
       };
     }, {});
 
-    const connectorsBound = flows.reduce((acc: any, item: any) => {
+    const connectorsBound = flows.reduce((acc, item) => {
       if (item.counterflow) {
         acc[item.counterflow] = item;
       }
@@ -108,13 +114,3 @@ function mapFlowsWithListenersConnectors(flows: any) {
     return data;
   });
 }
-
-// const groupByVanAddress = (data: any) => {
-//   const groupedData = data.reduce((acc: any, item: any) => {
-//     (acc[item.van_address] = acc[item.van_address] || []).push(item);
-
-//     return acc;
-//   }, {});
-
-//   return Object.values(groupedData);
-// };

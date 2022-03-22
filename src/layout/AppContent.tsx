@@ -3,14 +3,14 @@ import React from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 interface AppContentProps {
-  header: React.ReactNode;
+  header?: React.ReactNode;
   children: React.ReactNode;
 }
 
 const AppContent = function ({ header, children }: AppContentProps) {
   return (
     <Stack>
-      <StackItem className="pf-u-px-md pf-u-py-md">{header}</StackItem>
+      {header && <StackItem className="pf-u-px-md pf-u-py-md">{header}</StackItem>}
       <StackItem className="pf-u-px-md pf-u-py-md" isFilled>
         {children}
       </StackItem>
