@@ -14,7 +14,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import BrandImg from '@assets/skupper.svg';
-import { Labels } from 'App.enum';
+
+import { Labels } from './errors.enum';
 
 const ErrorConnection = function () {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const ErrorConnection = function () {
       <GridItem span={6} className=" pf-u-p-2xl">
         <Brand src={BrandImg} alt="skupper brand" />
         <TextContent>
-          <Text>{Labels.LoadingBrandMessage}</Text>
+          <Text>{Labels.ErrorBrandMessage}</Text>
         </TextContent>
       </GridItem>
     </Grid>

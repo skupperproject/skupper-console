@@ -1,5 +1,7 @@
 export enum MonitoringRoutesPaths {
   Monitoring = '/monitoring',
+  VANs = '/monitoring/vans',
+  Devices = '/monitoring/devices',
 }
 
 export enum Columns {
@@ -13,6 +15,12 @@ export enum Columns {
   DestinationPort = 'Destination Port',
 }
 
+export enum VansColumns {
+  Name = 'name',
+  NumDevices = 'Devices',
+  NumFLows = 'Flows',
+}
+
 export enum DeviceTypes {
   Listener = 'listener',
   Connector = 'connector',
@@ -24,5 +32,6 @@ export enum DeviceStatus {
 }
 
 export enum QueriesMonitoring {
-  getFlows = 'flows-query',
+  GetFlows = 'monitoring-query',
+  GetVans = 'monitoring-vans',
 }

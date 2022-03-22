@@ -60,6 +60,96 @@
     "id": "1:1:48"
   },
   {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39206",
+    "counterflow": "2:5:79",
+    "rtype": "FLOW",
+    "id": "1:1:79"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39208",
+    "counterflow": "2:5:80",
+    "rtype": "FLOW",
+    "id": "1:1:80"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39210",
+    "counterflow": "2:5:81",
+    "rtype": "FLOW",
+    "id": "1:1:81"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39212",
+    "counterflow": "2:5:82",
+    "rtype": "FLOW",
+    "id": "1:1:82"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39214",
+    "counterflow": "2:5:83",
+    "rtype": "FLOW",
+    "id": "1:1:83"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39216",
+    "counterflow": "2:5:84",
+    "rtype": "FLOW",
+    "id": "1:1:84"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39218",
+    "counterflow": "2:5:85",
+    "rtype": "FLOW",
+    "id": "1:1:85"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39220",
+    "counterflow": "2:5:86",
+    "rtype": "FLOW",
+    "id": "1:1:86"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39222",
+    "counterflow": "2:5:87",
+    "rtype": "FLOW",
+    "id": "1:1:87"
+  },
+  {
+    "parent": "1:1:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "39224",
+    "counterflow": "2:5:88",
+    "rtype": "FLOW",
+    "id": "1:1:88"
+  },
+  {
     "parent": "1:1:0",
     "dest_host": "0.0.0.0",
     "protocol": "tcp",
@@ -86,6 +176,96 @@
     "counterflow": "2:5:41",
     "rtype": "FLOW",
     "id": "1:1:41"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54896",
+    "counterflow": "2:5:59",
+    "rtype": "FLOW",
+    "id": "1:1:59"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54898",
+    "counterflow": "2:5:60",
+    "rtype": "FLOW",
+    "id": "1:1:60"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54900",
+    "counterflow": "2:5:61",
+    "rtype": "FLOW",
+    "id": "1:1:61"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54902",
+    "counterflow": "2:5:62",
+    "rtype": "FLOW",
+    "id": "1:1:62"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54904",
+    "counterflow": "2:5:63",
+    "rtype": "FLOW",
+    "id": "1:1:63"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54906",
+    "counterflow": "2:5:64",
+    "rtype": "FLOW",
+    "id": "1:1:64"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54908",
+    "counterflow": "2:5:65",
+    "rtype": "FLOW",
+    "id": "1:1:65"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54910",
+    "counterflow": "2:5:66",
+    "rtype": "FLOW",
+    "id": "1:1:66"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54912",
+    "counterflow": "2:5:67",
+    "rtype": "FLOW",
+    "id": "1:1:67"
+  },
+  {
+    "parent": "1:1:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "54914",
+    "counterflow": "2:5:68",
+    "rtype": "FLOW",
+    "id": "1:1:68"
   },
   {
     "parent": "1:1:0",
@@ -128,6 +308,106 @@
     "id": "1:1:44"
   },
   {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47090",
+    "counterflow": "2:5:69",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:69"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47092",
+    "counterflow": "2:5:70",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:70"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47094",
+    "counterflow": "2:5:71",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:71"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47096",
+    "counterflow": "2:5:72",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:72"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47098",
+    "counterflow": "2:5:73",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:73"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47100",
+    "counterflow": "2:5:74",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:74"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47104",
+    "counterflow": "2:5:75",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:75"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47106",
+    "counterflow": "2:5:76",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:76"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47108",
+    "counterflow": "2:5:77",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:77"
+  },
+  {
+    "parent": "1:1:3",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "47110",
+    "counterflow": "2:5:78",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:78"
+  },
+  {
     "parent": "1:1:0",
     "dest_host": "10.107.120.162",
     "protocol": "tcp",
@@ -146,6 +426,106 @@
     "trace": "0/Site-A|0/Hub",
     "rtype": "FLOW",
     "id": "1:1:39"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 206,
+    "source_host": "192.168.50.1",
+    "source_port": "55630",
+    "counterflow": "2:5:49",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:49"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 206,
+    "source_host": "192.168.50.1",
+    "source_port": "55632",
+    "counterflow": "2:5:50",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:50"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 206,
+    "source_host": "192.168.50.1",
+    "source_port": "55634",
+    "counterflow": "2:5:51",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:51"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55636",
+    "counterflow": "2:5:52",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:52"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55638",
+    "counterflow": "2:5:53",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:53"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55642",
+    "counterflow": "2:5:54",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:54"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55644",
+    "counterflow": "2:5:55",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:55"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55646",
+    "counterflow": "2:5:56",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:56"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55648",
+    "counterflow": "2:5:57",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:57"
+  },
+  {
+    "parent": "1:1:4",
+    "octets": 207,
+    "source_host": "192.168.50.1",
+    "source_port": "55650",
+    "counterflow": "2:5:58",
+    "trace": "0/Site-A|0/Hub",
+    "rtype": "FLOW",
+    "id": "1:1:58"
   },
   {
     "hostname": "tross-lg",
@@ -192,6 +572,96 @@
     "id": "2:5:44"
   },
   {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46184",
+    "counterflow": "1:1:69",
+    "rtype": "FLOW",
+    "id": "2:5:69"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46186",
+    "counterflow": "1:1:70",
+    "rtype": "FLOW",
+    "id": "2:5:70"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46188",
+    "counterflow": "1:1:71",
+    "rtype": "FLOW",
+    "id": "2:5:71"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46190",
+    "counterflow": "1:1:72",
+    "rtype": "FLOW",
+    "id": "2:5:72"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46192",
+    "counterflow": "1:1:73",
+    "rtype": "FLOW",
+    "id": "2:5:73"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46194",
+    "counterflow": "1:1:74",
+    "rtype": "FLOW",
+    "id": "2:5:74"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46196",
+    "counterflow": "1:1:75",
+    "rtype": "FLOW",
+    "id": "2:5:75"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46198",
+    "counterflow": "1:1:76",
+    "rtype": "FLOW",
+    "id": "2:5:76"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46200",
+    "counterflow": "1:1:77",
+    "rtype": "FLOW",
+    "id": "2:5:77"
+  },
+  {
+    "parent": "2:5:1",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "46202",
+    "counterflow": "1:1:78",
+    "rtype": "FLOW",
+    "id": "2:5:78"
+  },
+  {
     "parent": "2:5:0",
     "dest_host": "0.0.0.0",
     "protocol": "tcp",
@@ -209,6 +679,96 @@
     "counterflow": "1:1:39",
     "rtype": "FLOW",
     "id": "2:5:39"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60658",
+    "counterflow": "1:1:49",
+    "rtype": "FLOW",
+    "id": "2:5:49"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60660",
+    "counterflow": "1:1:50",
+    "rtype": "FLOW",
+    "id": "2:5:50"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60662",
+    "counterflow": "1:1:51",
+    "rtype": "FLOW",
+    "id": "2:5:51"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60664",
+    "counterflow": "1:1:52",
+    "rtype": "FLOW",
+    "id": "2:5:52"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60666",
+    "counterflow": "1:1:53",
+    "rtype": "FLOW",
+    "id": "2:5:53"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60668",
+    "counterflow": "1:1:54",
+    "rtype": "FLOW",
+    "id": "2:5:54"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60670",
+    "counterflow": "1:1:55",
+    "rtype": "FLOW",
+    "id": "2:5:55"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60672",
+    "counterflow": "1:1:56",
+    "rtype": "FLOW",
+    "id": "2:5:56"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60674",
+    "counterflow": "1:1:57",
+    "rtype": "FLOW",
+    "id": "2:5:57"
+  },
+  {
+    "parent": "2:5:2",
+    "octets": 87,
+    "source_host": "127.0.0.1",
+    "source_port": "60676",
+    "counterflow": "1:1:58",
+    "rtype": "FLOW",
+    "id": "2:5:58"
   },
   {
     "parent": "2:5:0",
@@ -261,6 +821,106 @@
     "id": "2:5:48"
   },
   {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33532",
+    "counterflow": "1:1:79",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:79"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33534",
+    "counterflow": "1:1:80",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:80"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33538",
+    "counterflow": "1:1:81",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:81"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33540",
+    "counterflow": "1:1:82",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:82"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33542",
+    "counterflow": "1:1:83",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:83"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33544",
+    "counterflow": "1:1:84",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:84"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33546",
+    "counterflow": "1:1:85",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:85"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33548",
+    "counterflow": "1:1:86",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:86"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33550",
+    "counterflow": "1:1:87",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:87"
+  },
+  {
+    "parent": "2:5:3",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "33552",
+    "counterflow": "1:1:88",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:88"
+  },
+  {
     "parent": "2:5:0",
     "dest_host": "10.103.19.112",
     "protocol": "tcp",
@@ -289,5 +949,105 @@
     "trace": "0/Site-B|0/Hub",
     "rtype": "FLOW",
     "id": "2:5:41"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34352",
+    "counterflow": "1:1:59",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:59"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34354",
+    "counterflow": "1:1:60",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:60"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34356",
+    "counterflow": "1:1:61",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:61"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34358",
+    "counterflow": "1:1:62",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:62"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34360",
+    "counterflow": "1:1:63",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:63"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34362",
+    "counterflow": "1:1:64",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:64"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34364",
+    "counterflow": "1:1:65",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:65"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34366",
+    "counterflow": "1:1:66",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:66"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34368",
+    "counterflow": "1:1:67",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:67"
+  },
+  {
+    "parent": "2:5:4",
+    "octets": 208,
+    "source_host": "192.168.50.1",
+    "source_port": "34370",
+    "counterflow": "1:1:68",
+    "trace": "0/Site-B|0/Hub",
+    "rtype": "FLOW",
+    "id": "2:5:68"
   }
 ]

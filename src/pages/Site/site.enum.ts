@@ -1,7 +1,7 @@
 export enum QuerySite {
-  getOverview = 'site-overview-query',
-  getDeployments = 'site-deployments-query',
-  getLinks = 'site-links-query',
+  GetOverview = 'site-overview-query',
+  GetDeployments = 'site-deployments-query',
+  GetLinks = 'site-links-query',
 }
 
 export enum SiteLabels {

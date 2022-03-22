@@ -39,6 +39,11 @@ export const RESTApi = {
 
     return data;
   },
+  fetchFlowsByVanId: async (vanaddr: string): Promise<FlowsResponse[]> => {
+    const { data } = await fetchWithTimeout(FLOWS, { params: { vanaddr } });
+
+    return data;
+  },
   fetchVANAddresses: async (): Promise<FlowsResponse[]> => {
     const { data } = await fetchWithTimeout(FLOWS);
 
