@@ -58,7 +58,7 @@ export interface DataVAN {
   ];
 }
 
-export type Service =
+export type SiteInfoService =
   | ServicesResponse
   | {
       name: string;
@@ -83,7 +83,7 @@ export type Service =
 export interface SiteInfo {
   links: LinksResponse[];
   targets: TargetsResponse[];
-  services: Service[];
+  services: SiteInfoService[];
   siteId: string;
   siteName: string;
   namespace: string;

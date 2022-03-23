@@ -1,11 +1,22 @@
 import { RESTServices } from '@models/services/REST';
 
-import { SiteData } from './services.interfaces';
+import { getServicesDeployed } from '../utils';
+import { OverviewData } from './services.interfaces';
 
 export const SitesServices = {
-  fetchData: async (): Promise<SiteData> => {
-    const data = await RESTServices.fetchData();
+  fetchOverview: async (): Promise<OverviewData> => {
+    const { data, siteInfo } = await RESTServices.fetchData();
+    const deployments = getServicesDeployed(data.services as any, data.sites);
 
-    return data.data.sites[0];
+    return {
+      site: { id: siteInfo.siteId, name: siteInfo.siteName },
+      sites: data.sites,
+      services: deployments.map((deployment) => ({
+        address: deployment.service.address,
+        protocol: deployment.service.protocol,
+        siteName: deployment.site.site_name,
+        siteId: deployment.site.site_id,
+      })),
+    };
   },
 };

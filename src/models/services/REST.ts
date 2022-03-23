@@ -1,6 +1,6 @@
 import { RESTApi } from '../API/REST';
 import { ServicesResponse, TargetsResponse } from '../API/REST.interfaces';
-import { Data, Service } from './REST.interfaces';
+import { Data, SiteInfoService } from './REST.interfaces';
 
 export const RESTServices = {
   fetchData: async (): Promise<Data> => {
@@ -29,8 +29,11 @@ export const RESTServices = {
   },
 };
 
-function normalizeServices(targets: TargetsResponse[], services: ServicesResponse[]): Service[] {
-  const servicesNormalized: Service[] = [];
+function normalizeServices(
+  targets: TargetsResponse[],
+  services: ServicesResponse[],
+): SiteInfoService[] {
+  const servicesNormalized: SiteInfoService[] = [];
 
   services.forEach((service) => {
     const serviceTarget = targets.find(({ name }) => name === service.name);
