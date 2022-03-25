@@ -10,7 +10,7 @@ interface AppContentProps {
 const AppContent = function ({ header, children }: AppContentProps) {
   return (
     <Stack>
-      {header && <StackItem className="pf-u-px-md pf-u-py-md">{header}</StackItem>}
+      {header && <StackItem>{header}</StackItem>}
       <StackItem className="pf-u-px-md pf-u-py-md" isFilled>
         {children}
       </StackItem>

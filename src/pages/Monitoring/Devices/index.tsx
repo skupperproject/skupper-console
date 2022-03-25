@@ -29,6 +29,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
+import { UPDATE_INTERVAL } from 'config';
 
 import { MAX_WITH_CELL } from '../Monitoring.constant';
 import { Columns, DeviceStatus, DeviceTypes, QueriesMonitoring } from '../Monitoring.enum';
@@ -43,11 +44,13 @@ const Devices = function () {
   const [expandedRowsIds, setExpandedRowsIds] = useState<string[]>([]);
   const [isOpenTypeFilter, setIsOpenTypeFilter] = useState(false);
   const [filterType, setFilterType] = useState({ selection: '', isPlaceholder: true });
+  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
   const { data, isLoading } = useQuery(
     [QueriesMonitoring.GetFlows, vanId],
     () => MonitorServices.fetchFlowsByVanId(vanId),
     {
+      refetchInterval,
       onError: handleError,
     },
   );
@@ -55,6 +58,7 @@ const Devices = function () {
   function handleError({ httpStatus }: { httpStatus?: number }) {
     const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
 
+    setRefetchInterval(0);
     navigate(route);
   }
 

@@ -17,13 +17,13 @@ import './App.scss';
 const App = function () {
   const appRoutes = useRoutes(routes);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       navigate(SiteRoutesPaths.Site);
     }
-  }, [location.pathname, navigate]);
+  }, [pathname, navigate]);
 
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
