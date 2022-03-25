@@ -28,7 +28,7 @@ const HeaderToolbar = function () {
         <PageHeaderToolsItem>
           <TextContent>
             <Text component={TextVariants.h4}>
-              Site <span className="pf-u-font-weight-bold">{siteInfo?.siteName}</span>
+              <span className="pf-u-font-weight-bold">{siteInfo?.siteName}</span>
             </Text>
           </TextContent>
         </PageHeaderToolsItem>

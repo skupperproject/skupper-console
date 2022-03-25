@@ -1,4 +1,5 @@
 export enum QuerySite {
+  GetSiteMenu = 'get-site-menun',
   GetOverview = 'get-overview-query',
   GetDeployments = 'get-deployments-query',
   GetLinks = 'get-links-query',

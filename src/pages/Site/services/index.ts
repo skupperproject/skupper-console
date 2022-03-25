@@ -1,5 +1,5 @@
 import { RESTServices } from '@models/services/REST';
-import { DeploymentLinks } from '@models/services/REST.interfaces';
+import { DeploymentLinks, SiteInfo } from '@models/services/REST.interfaces';
 
 import { getServicesExposed } from '../utils';
 import { OverviewData, TotalBytesBySite } from './services.interfaces';
@@ -29,6 +29,11 @@ export const SitesServices = {
         siteId: deployment.site.site_id,
       })),
     };
+  },
+  fetchSiteInfo: async (): Promise<SiteInfo> => {
+    const { siteInfo } = await RESTServices.fetchData();
+
+    return siteInfo;
   },
 };
 
