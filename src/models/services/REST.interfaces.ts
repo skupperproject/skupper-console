@@ -8,7 +8,6 @@ import {
 } from '../API/REST.interfaces';
 
 export type DataServices = DataServicesResponse;
-export type DataVan = DataResponse;
 
 export type SiteInfoService =
   | ServicesResponse
@@ -57,12 +56,11 @@ export interface DeploymentLinks {
   source: DeploymentLinksStreamPoints;
   target: DeploymentLinksStreamPoints;
 }
-export interface DataNormalized extends DataVan {
+export interface DataVAN extends DataResponse {
   deployments: Deployments;
   deploymentLinks: DeploymentLinks[];
 }
 export interface Data {
-  data: DataVan;
-  dataNormalized: DataNormalized;
+  data: DataVAN;
   siteInfo: SiteInfo;
 }

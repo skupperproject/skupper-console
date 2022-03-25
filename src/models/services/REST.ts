@@ -1,26 +1,24 @@
 import { RESTApi } from '../API/REST';
 import { ServicesResponse, TargetsResponse } from '../API/REST.interfaces';
 import Adapter from './adapter';
-import { Data, DataNormalized, SiteInfoService } from './REST.interfaces';
+import { Data, DataVAN, SiteInfoService } from './REST.interfaces';
 
 export const RESTServices = {
   fetchData: async (): Promise<Data> => {
-    const [data, siteId, links, targets, services] = await Promise.all([
+    const [dataVAN, siteId, links, targets, services] = await Promise.all([
       RESTApi.fetchData(),
       RESTApi.fetchSite(),
       RESTApi.fetchLinks(),
       RESTApi.fetchTargets(),
       RESTApi.fetchServices(),
     ]);
+    const data: DataVAN = new Adapter(dataVAN).getData();
 
     const { site_id, site_name, namespace } =
       data.sites.find(({ site_id: id }) => id === siteId) || data.sites[0];
 
-    const dataNormalized: DataNormalized = new Adapter(data).getData();
-
     return {
       data,
-      dataNormalized,
       siteInfo: {
         links,
         targets,

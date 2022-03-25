@@ -6,18 +6,22 @@ import { OverviewData, TotalBytesBySite } from './services.interfaces';
 
 export const SitesServices = {
   fetchOverview: async (): Promise<OverviewData> => {
-    const { data, siteInfo, dataNormalized } = await RESTServices.fetchData();
-    const deployments = getServicesExposed(data.services, data.sites);
+    const {
+      siteInfo,
+      data: { services, sites, deploymentLinks },
+    } = await RESTServices.fetchData();
+
+    const deployments = getServicesExposed(services, sites);
 
     const totalBytesBySites = getTotalBytesBySite({
       direction: 'in',
-      deploymentLinks: dataNormalized.deploymentLinks,
+      deploymentLinks,
       siteId: siteInfo.siteId,
     });
 
     return {
       site: { id: siteInfo.siteId, name: siteInfo.siteName, totalBytesBySites },
-      sites: data.sites,
+      sites,
       services: deployments.map((deployment) => ({
         address: deployment.service.address,
         protocol: deployment.service.protocol,
