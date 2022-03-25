@@ -13,7 +13,7 @@ import { QuerySite } from '../site.enum';
 const Links = function () {
   const navigate = useNavigate();
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-  const { data: site, isLoading } = useQuery(QuerySite.GetLinks, SitesServices.fetchOverview, {
+  const { data, isLoading } = useQuery(QuerySite.GetLinks, SitesServices.fetchOverview, {
     refetchInterval,
     onError: handleError,
   });
@@ -29,7 +29,7 @@ const Links = function () {
     return <LoadingPage />;
   }
 
-  return <pre>{JSON.stringify(site, null, 2)}</pre>;
+  return <pre>{JSON.stringify(data?.site, null, 2)}</pre>;
 };
 
 export default Links;

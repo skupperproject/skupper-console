@@ -13,14 +13,10 @@ import { QuerySite } from '../site.enum';
 const Deployments = function () {
   const navigate = useNavigate();
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-  const { data: site, isLoading } = useQuery(
-    QuerySite.GetDeployments,
-    SitesServices.fetchOverview,
-    {
-      refetchInterval,
-      onError: handleError,
-    },
-  );
+  const { data, isLoading } = useQuery(QuerySite.GetDeployments, SitesServices.fetchOverview, {
+    refetchInterval,
+    onError: handleError,
+  });
 
   function handleError({ httpStatus }: { httpStatus?: number }) {
     const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
@@ -33,7 +29,7 @@ const Deployments = function () {
     return <LoadingPage />;
   }
 
-  return <pre>{JSON.stringify(site, null, 2)}</pre>;
+  return <pre>{JSON.stringify(data?.services, null, 2)}</pre>;
 };
 
 export default Deployments;

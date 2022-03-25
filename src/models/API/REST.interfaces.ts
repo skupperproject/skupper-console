@@ -2,62 +2,73 @@ import { AxiosRequestConfig } from 'axios';
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
-export interface DataResponse {
-  sites: [
+export interface ServiceConnections {
+  id: string;
+  client: string;
+  start_time: number;
+  last_out: number;
+  last_in: number;
+  bytes_in: number;
+  bytes_out: number;
+}
+
+interface ServiceDetails {
+  [key: string]: {
+    [key: string]: {
+      request: number;
+      bytes_in: number;
+      bytes_out: number;
+      latency_max: number;
+      details: {
+        'POST:200': number;
+      };
+    };
+  };
+}
+
+interface ServiceRequest {
+  site_id: string;
+  [key: symbol]: ServiceDetails;
+}
+
+export interface DataServicesResponse {
+  address: string;
+  protocol: string;
+  targets: [
     {
-      site_name: string;
+      name: string;
+      target: string;
       site_id: string;
-      version: string;
-      connected: string[];
-      namespace: string;
-      url: string;
-      edge: boolean;
     },
   ];
-  services: [
-    {
-      address: string;
-      protocol: string;
-      targets: [
-        {
-          name: string;
-          target: string;
-          site_id: string;
-        },
-      ];
-      connections_ingress: [
-        {
-          site_id: string;
-          connections: {
-            [address: string]: {
-              id: string;
-              start_time: number;
-              last_out: number;
-              last_in: number;
-              bytes_in: number;
-              bytes_out: number;
-              client: string;
-            };
-          };
-        },
-      ];
-      connections_egress: [
-        {
-          site_id: string;
-          connections: {
-            [address: string]: {
-              start_time: number;
-              last_out: number;
-              last_in: number;
-              bytes_in: number;
-              bytes_out: number;
-              server: string;
-            };
-          };
-        },
-      ];
-    },
-  ];
+  connections_ingress:
+    | {
+        site_id: string;
+        connections: ServiceConnections;
+      }[]
+    | null;
+  connections_egress:
+    | {
+        site_id: string;
+        connections: ServiceConnections;
+      }[]
+    | null;
+  requests_handled: ServiceRequest[] | null;
+  requests_received: ServiceRequest[] | null;
+}
+
+export interface DataSiteResponse {
+  site_name: string;
+  site_id: string;
+  version: string;
+  connected: string[];
+  namespace: string;
+  url: string;
+  edge: boolean;
+}
+export interface DataResponse {
+  sites: DataSiteResponse[];
+  services: DataServicesResponse[];
 }
 
 export interface LinksResponse {

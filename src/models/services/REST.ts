@@ -1,6 +1,7 @@
 import { RESTApi } from '../API/REST';
 import { ServicesResponse, TargetsResponse } from '../API/REST.interfaces';
-import { Data, SiteInfoService } from './REST.interfaces';
+import Adapter from './adapter';
+import { Data, DataNormalized, SiteInfoService } from './REST.interfaces';
 
 export const RESTServices = {
   fetchData: async (): Promise<Data> => {
@@ -15,8 +16,11 @@ export const RESTServices = {
     const { site_id, site_name, namespace } =
       data.sites.find(({ site_id: id }) => id === siteId) || data.sites[0];
 
+    const dataNormalized: DataNormalized = new Adapter(data).getData();
+
     return {
       data,
+      dataNormalized,
       siteInfo: {
         links,
         targets,

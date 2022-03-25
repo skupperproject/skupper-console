@@ -1,3 +1,5 @@
+import { DataServices } from '@models/services/REST.interfaces';
+
 import { ServiceData, SiteData } from '../services/services.interfaces';
 
 const TCP_PROTOCOL = 'tcp';
@@ -5,14 +7,15 @@ const TCP_PROTOCOL = 'tcp';
 /**
  * It returns the list of the services exposed in the Skupper network.
  */
-export function getServicesDeployed(services: ServiceData[], allSites: SiteData[]) {
+export function getServicesExposed(services: DataServices[], allSites: SiteData[]) {
   const deployments: { service: ServiceData; site: SiteData }[] = [];
 
   services.forEach((service) => {
     const sites = getSitesPerService(service, allSites);
+
     sites.forEach((site: SiteData) => {
       deployments.push({
-        service,
+        service: { ...service, siteId: site.site_id },
         site,
       });
     });
@@ -24,7 +27,7 @@ export function getServicesDeployed(services: ServiceData[], allSites: SiteData[
 /**
  * It returns every site connected with a service based on the communication protocol.
  */
-export function getSitesPerService(service: ServiceData, allSites: SiteData[]) {
+export function getSitesPerService(service: DataServices, allSites: SiteData[]) {
   const sites: SiteData[] = [];
 
   if (service.protocol === TCP_PROTOCOL) {
@@ -44,6 +47,7 @@ export function getSitesPerService(service: ServiceData, allSites: SiteData[]) {
     if (targets) {
       targets.forEach(({ site_id }) => {
         const site = findSite(site_id, allSites);
+
         if (site) {
           sites.push(site);
         }
@@ -100,6 +104,6 @@ export function findSite(site_id: string, sites: SiteData[]) {
 /**
  * It returns all the targets that match with the service address name.
  */
-export function findAllTargetsPerService(service: ServiceData) {
+export function findAllTargetsPerService(service: DataServices) {
   return service.targets?.filter(({ name }) => name.startsWith(service.address));
 }

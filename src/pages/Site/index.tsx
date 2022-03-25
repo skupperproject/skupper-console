@@ -22,7 +22,7 @@ const Site = function () {
   return (
     <AppContent header={<SiteMenu />}>
       <Stack>
-        <StackItem className="pf-u-mb-2xl">
+        <StackItem className="pf-u-mb-xl">
           <NavBarSite />
         </StackItem>
         <StackItem>
