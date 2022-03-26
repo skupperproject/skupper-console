@@ -2,7 +2,6 @@ import { createServer, Response } from 'miragejs';
 
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
-import flowsDataForVan from './data/FLOWS_BY_VAN.json';
 import links from './data/LINKS.json';
 import services from './data/SERVICES.json';
 import site from './data/SITE.json';

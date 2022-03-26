@@ -3,8 +3,7 @@
 export type Row<T> = {
   details?: {
     host: string;
-    ports: Array<{ portSource: string; portDest: string | undefined }>;
+    ports: Array<{ id: string; portSource: string; portDest: string | undefined; octets: number }>;
   };
   data: T;
-  isOpen?: boolean;
 };

@@ -109,6 +109,7 @@ interface FlowResponse {
   source_host: string;
   source_port: string;
   id: string;
+  octets: number;
   counterflow?: string | null;
   connected_to?: FlowResponse;
 }

@@ -3,8 +3,8 @@ import React, { lazy } from 'react';
 import { MonitoringRoutesPaths } from './Monitoring.enum';
 
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './'));
-const VANs = lazy(() => import(/* webpackChunkName: "monitoring-vans" */ './VANs'));
-const Devices = lazy(() => import(/* webpackChunkName: "monitoring-devices" */ './Devices'));
+const VANs = lazy(() => import(/* webpackChunkName: "monitoring-vans" */ './views/VANs'));
+const Devices = lazy(() => import(/* webpackChunkName: "monitoring-devices" */ './views/Devices'));
 
 export const monitoringRoutes = [
   {
