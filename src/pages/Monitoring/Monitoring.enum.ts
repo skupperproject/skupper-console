@@ -25,11 +25,13 @@ export enum DeviceColumns {
   VanAddress = 'VAN Address',
   DestinationHost = 'Destination Host',
   DestinationPort = 'Destination Port',
+  DeviceStatus = 'Status',
   // nested table  Columns
   Ports = 'Ports',
   FromPort = 'Source',
   ToPort = 'Destination',
   Traffic = 'Traffic',
+  TrafficPercentage = '% Traffic',
   ConnectionState = 'Connection State',
 }
 

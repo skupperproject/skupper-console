@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
+import { Chart, ChartAxis, ChartBar, ChartThemeColor } from '@patternfly/react-charts';
 import {
   Breadcrumb,
   BreadcrumbHeading,
@@ -8,6 +9,8 @@ import {
   Select,
   SelectOption,
   SelectVariant,
+  Split,
+  SplitItem,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -16,7 +19,6 @@ import {
 } from '@patternfly/react-core';
 import { CircleIcon, ConnectedIcon, PluggedIcon } from '@patternfly/react-icons';
 import {
-  Caption,
   ExpandableRowContent,
   InnerScrollContainer,
   TableComposable,
@@ -33,27 +35,29 @@ import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { MAX_HEIGHT_DETAILS_TABLE, MAX_WITH_CELL } from '../../Monitoring.constant';
+import {
+  MAX_HEIGHT_DETAILS_TABLE,
+  MAX_WIDTH_DETAILS_TABLE,
+  MAX_WITH_CELL,
+} from '../../Monitoring.constant';
 import {
   DeviceColumns,
-  DeviceLabels,
   DeviceStatus,
   DeviceTypes,
   MonitoringRoutesPaths,
   QueriesMonitoring,
 } from '../../Monitoring.enum';
-import { Row } from '../../Monitoring.interfaces';
+import { Port, Row } from '../../Monitoring.interfaces';
 import { MonitorServices } from '../../services';
 import { Flow } from '../../services/services.interfaces';
-
-const Pluralize = require('pluralize');
 
 const Devices = function () {
   const navigate = useNavigate();
   const { id: vanId } = useParams();
+  const [rows, setRows] = useState<Row<Flow>[]>();
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, dataUpdatedAt } = useQuery(
     [QueriesMonitoring.GetFlows, vanId],
     () => MonitorServices.fetchFlowsByVanId(vanId),
     {
@@ -69,11 +73,17 @@ const Devices = function () {
     navigate(route);
   }
 
+  useEffect(() => {
+    if (data) {
+      setRows(buildRows(data));
+    }
+  }, [data, dataUpdatedAt]);
+
   if (isLoading) {
     return <LoadingPage />;
   }
 
-  if (!data) {
+  if (!rows) {
     return null;
   }
 
@@ -86,14 +96,14 @@ const Devices = function () {
         </BreadcrumbItem>
         <BreadcrumbHeading to="#">{vanId}</BreadcrumbHeading>
       </Breadcrumb>
-      <Table rows={buildRows(data)} />
+      <DevicesTable rows={rows} />
     </>
   );
 };
 
 export default Devices;
 
-const Table = function ({ rows }: { rows: Row<Flow>[] }) {
+const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
   const [expandedRowsIds, setExpandedRowsIds] = useState<string[]>([]);
   const [isOpenTypeFilter, setIsOpenTypeFilter] = useState(false);
   const [filterType, setFilterType] = useState({ selection: '', isPlaceholder: true });
@@ -166,7 +176,7 @@ const Table = function ({ rows }: { rows: Row<Flow>[] }) {
             <Th>{DeviceColumns.Hostname}</Th>
             <Th>{DeviceColumns.Protocol}</Th>
             <Th>{DeviceColumns.DestinationHost}</Th>
-            <Th />
+            <Th>{DeviceColumns.DeviceStatus}</Th>
           </Tr>
         </Thead>
         {rowsFilteredByType(rows, filterType.selection, filterType.isPlaceholder)?.map(
@@ -177,10 +187,10 @@ const Table = function ({ rows }: { rows: Row<Flow>[] }) {
                   expand={
                     details
                       ? {
-                          rowIndex,
-                          isExpanded: isRowExpanded(row),
-                          onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
-                        }
+                        rowIndex,
+                        isExpanded: isRowExpanded(row),
+                        onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
+                      }
                       : undefined
                   }
                 />
@@ -223,49 +233,29 @@ const Table = function ({ rows }: { rows: Row<Flow>[] }) {
                 <Tr isExpanded={isRowExpanded(row)}>
                   <Td dataLabel={`${row.id}`} colSpan={12}>
                     <ExpandableRowContent>
-                      <div style={{ height: MAX_HEIGHT_DETAILS_TABLE, overflow: 'hidden' }}>
-                        <InnerScrollContainer>
-                          <TableComposable
-                            className="flows-table"
-                            aria-label="flows table"
-                            borders
-                            variant="compact"
-                            gridBreakPoint=""
-                          >
-                            <Caption>
-                              The host <Label color="blue">{details.host}</Label> has{' '}
-                              {Pluralize(DeviceLabels.FlowDetails, details.ports.length, true)}
-                            </Caption>
-                            <Thead hasNestedHeader>
-                              <Tr>
-                                <Th colSpan={2} hasRightBorder>
-                                  {DeviceColumns.Ports}
-                                </Th>
-                                <Th rowSpan={2}>{DeviceColumns.Traffic}</Th>
-                                <Th rowSpan={2}>{DeviceColumns.ConnectionState}</Th>
-                              </Tr>
-                              <Tr>
-                                <Th modifier="fitContent" isSubheader>
-                                  {DeviceColumns.FromPort}
-                                </Th>
-                                <Th modifier="fitContent" isSubheader hasRightBorder>
-                                  {DeviceColumns.ToPort}
-                                </Th>
-                              </Tr>
-                            </Thead>
-                            <Tbody>
-                              {details.ports.map(({ id, portSource, portDest, octets }) => (
-                                <Tr key={id}>
-                                  <Td dataLabel={DeviceColumns.FromPort}>{portSource}</Td>
-                                  <Td dataLabel={DeviceColumns.ToPort}>{portDest}</Td>
-                                  <Td dataLabel={DeviceColumns.Traffic}>{octets}</Td>
-                                  <Td dataLabel={DeviceColumns.ConnectionState}>Established</Td>
-                                </Tr>
-                              ))}
-                            </Tbody>
-                          </TableComposable>
-                        </InnerScrollContainer>
-                      </div>
+                      <Label
+                        color="green"
+                        className="pf-u-mb-xl"
+                      >{`${details.ports.length} Ports connected to ${details.host}`}</Label>
+                      <Split
+                        hasGutter
+                        style={{
+                          height: MAX_HEIGHT_DETAILS_TABLE,
+                          overflow: 'hidden',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <SplitItem isFilled>
+                          <DeviceDetailsTable
+                            ports={details.ports}
+                            totalBytes={details.totalBytes}
+                          />
+                        </SplitItem>
+                        <SplitItem style={{ width: MAX_WIDTH_DETAILS_TABLE }}>
+                          <DeviceTrafficChart ports={details.ports} />
+                        </SplitItem>
+                      </Split>
                     </ExpandableRowContent>
                   </Td>
                 </Tr>
@@ -276,12 +266,109 @@ const Table = function ({ rows }: { rows: Row<Flow>[] }) {
       </TableComposable>
     </>
   );
+});
+
+const DeviceDetailsTable = function ({ ports, totalBytes }: { ports: Port[]; totalBytes: number }) {
+  return (
+    <InnerScrollContainer>
+      <TableComposable
+        isStickyHeader
+        className="flows-table"
+        aria-label="flows table"
+        borders
+        variant="compact"
+        gridBreakPoint=""
+      >
+        <Thead>
+          <Tr>
+            <Th modifier="fitContent" hasRightBorder>
+              {DeviceColumns.FromPort}
+            </Th>
+            <Th modifier="fitContent" hasRightBorder>
+              {DeviceColumns.ToPort}
+            </Th>
+            <Th hasRightBorder>{DeviceColumns.ConnectionState}</Th>
+            <Th width={20} hasRightBorder>
+              {DeviceColumns.Traffic}
+            </Th>
+            <Th width={20}>{DeviceColumns.TrafficPercentage}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {ports.map(({ id, portSource, portDest, octets }) => (
+            <Tr key={id}>
+              <Th hasRightBorder dataLabel={DeviceColumns.FromPort}>
+                {portSource}
+              </Th>
+              <Td dataLabel={DeviceColumns.ToPort}>{portDest}</Td>
+              <Td dataLabel={DeviceColumns.ConnectionState}>Established</Td>
+              <Td className="pf-u-text-align-right" dataLabel={DeviceColumns.Traffic}>
+                {formatBytes(octets)}
+              </Td>
+              <Td className="pf-u-text-align-right" dataLabel={DeviceColumns.Traffic}>
+                {((octets / totalBytes) * 100).toFixed(1)}
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </TableComposable>
+    </InnerScrollContainer>
+  );
+};
+const DeviceTrafficChart = function ({ ports }: { ports: Port[] }) {
+  return (
+    <Chart
+      ariaDesc="Bytes traffic for each port of the host"
+      ariaTitle="Bytes chart"
+      domainPadding={{ x: [30, 25] }}
+      height={MAX_HEIGHT_DETAILS_TABLE}
+      padding={{
+        bottom: 35,
+        left: 65,
+        right: 0,
+        top: 40,
+      }}
+      width={MAX_WIDTH_DETAILS_TABLE}
+      themeColor={ChartThemeColor.green}
+    >
+      <ChartAxis
+        style={{
+          tickLabels: { fontSize: 10 },
+        }}
+        tickFormat={(tick) => formatBytes(tick)}
+        dependentAxis
+      />
+      <ChartAxis
+        style={{
+          axisLabel: {
+            padding: 60,
+          },
+          tickLabels: {
+            fontSize: 10,
+            padding: 1,
+            angle: -45,
+            verticalAnchor: 'end',
+            textAnchor: 'end',
+          },
+        }}
+      />
+      <ChartBar
+        data={getBytes(ports)}
+        animate={{
+          duration: 1000,
+          onLoad: { duration: 1000 },
+        }}
+      />
+    </Chart>
+  );
 };
 
 function buildRows(data: Flow[]): Row<Flow>[] {
   return data?.flatMap((item) => {
+    const totalBytes = item.flows.reduce((acc, flow) => (acc += flow.octets), 0);
     const details = {
       host: item.flows[0].source_host,
+      totalBytes,
       ports: item.flows.map(({ id, connected_to, source_port, octets }) => ({
         id,
         portSource: source_port,
@@ -299,3 +386,26 @@ const rowsFilteredByType = (
   selection: string,
   isPlaceholder: boolean,
 ) => rows?.filter(({ data: row }) => row.rtype.toLowerCase() === selection || isPlaceholder);
+
+/**
+ *  Converts input bytes in the most appropriate format
+ */
+function formatBytes(bytes: number, decimals = 2) {
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+const getBytes = (ports: any[]) =>
+  ports.map(({ portSource, octets }) => ({
+    x: portSource,
+    y: octets,
+  }));

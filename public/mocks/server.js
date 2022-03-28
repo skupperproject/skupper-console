@@ -33,15 +33,15 @@ export function loadMockServerInDev() {
           return targets;
         });
         this.get('/flows', (_, { queryParams }) => {
-          let data = flowsData;
+          let data = generateDynamicBytes(flowsData);
 
           if (queryParams.vanaddr) {
-            return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(flowsData))).filter(
+            return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data))).filter(
               (flow) => flow.van_address === queryParams.vanaddr,
             );
           }
 
-          return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(flowsData)));
+          return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data)));
         });
       },
     });
@@ -111,5 +111,13 @@ function mapFlowsWithListenersConnectors(flows) {
     }
 
     return data;
+  });
+}
+// TODO: simulate dynamic bytes flow
+function generateDynamicBytes(flows) {
+  return flows.map((item) => {
+    return item.rtype === 'FLOW'
+      ? { ...item, octets: item.octets + Math.random() * (1024 * 1024 * 10) }
+      : item;
   });
 }
