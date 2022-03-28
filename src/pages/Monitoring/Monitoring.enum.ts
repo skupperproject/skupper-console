@@ -4,7 +4,19 @@ export enum MonitoringRoutesPaths {
   Devices = '/monitoring/devices',
 }
 
-export enum Columns {
+// VAN  section
+export enum VansColumns {
+  Name = 'name',
+  NumDevices = 'Devices',
+  NumFLows = 'Flows',
+}
+
+// VAN details section
+export enum DeviceLabels {
+  FlowDetails = 'connection',
+}
+
+export enum DeviceColumns {
   Type = 'Type',
   DeviceName = 'Device Name',
   Hostname = 'Hostname',
@@ -13,12 +25,14 @@ export enum Columns {
   VanAddress = 'VAN Address',
   DestinationHost = 'Destination Host',
   DestinationPort = 'Destination Port',
-}
-
-export enum VansColumns {
-  Name = 'name',
-  NumDevices = 'Devices',
-  NumFLows = 'Flows',
+  DeviceStatus = 'Status',
+  // nested table  Columns
+  Ports = 'Ports',
+  FromPort = 'Source',
+  ToPort = 'Destination',
+  Traffic = 'Traffic',
+  TrafficPercentage = '% Traffic',
+  ConnectionState = 'Connection State',
 }
 
 export enum DeviceTypes {

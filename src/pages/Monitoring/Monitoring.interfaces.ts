@@ -1,10 +1,16 @@
-// import { Flow } from './services/services.interfaces';
+export interface Port {
+  id: string;
+  portSource: string;
+  portDest: string | undefined;
+  octets: number;
+}
+export interface RowDetails {
+  host: string;
+  totalBytes: number;
+  ports: Port[];
+}
 
 export type Row<T> = {
-  details?: {
-    host: string;
-    ports: Array<{ portSource: string; portDest: string | undefined }>;
-  };
+  details?: RowDetails;
   data: T;
-  isOpen?: boolean;
 };

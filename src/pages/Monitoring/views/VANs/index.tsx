@@ -7,10 +7,10 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 
-import { MonitoringRoutesPaths, QueriesMonitoring, VansColumns } from '../Monitoring.enum';
-import { Row } from '../Monitoring.interfaces';
-import { MonitorServices } from '../services';
-import { VansInfo } from '../services/services.interfaces';
+import { MonitoringRoutesPaths, QueriesMonitoring, VansColumns } from '../../Monitoring.enum';
+import { Row } from '../../Monitoring.interfaces';
+import { MonitorServices } from '../../services';
+import { VansInfo } from '../../services/services.interfaces';
 
 const VANs = function () {
   const navigate = useNavigate();
