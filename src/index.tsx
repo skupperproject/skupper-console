@@ -2,7 +2,7 @@ import React from 'react';
 
 import { render } from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 import App from 'App';
 
@@ -15,11 +15,11 @@ const queryClient = new QueryClient();
 
 render(
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+    <HashRouter>
       <GlobalStateProvider>
         <App />
       </GlobalStateProvider>
-    </BrowserRouter>
+    </HashRouter>
   </QueryClientProvider>,
   document.getElementById('app'),
 );

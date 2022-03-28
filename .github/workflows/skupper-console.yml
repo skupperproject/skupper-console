@@ -1,4 +1,4 @@
-name: skupper console
+name: skupper-console
 on:
   push:
     branches: [ main ]
@@ -17,9 +17,4 @@ jobs:
         run: |
           npm ci
           npm run build
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
-        with:
-          branch: gh-pages
-          folder: build
+        
