@@ -32,6 +32,77 @@ export function loadMockServerInDev() {
         this.get('/targets', () => {
           return targets;
         });
+        this.get('/monitoring-stats', () => {
+          let data = generateDynamicBytes(flowsData);
+
+          const stats = {
+            totalBytes: 0,
+            totalFlows: 0,
+            totalVanAddress: 0,
+          };
+
+          const monitoringStats = data.forEach((item) => {
+            if (item.octets) {
+              stats.totalFlows++;
+              stats.totalBytes += item.octets;
+            } else if (item.van_address) {
+              stats.totalVanAddress++;
+            }
+          });
+
+          return [monitoringStats];
+        });
+        this.get('/routers-stats', () => {
+          let data = generateDynamicBytes(flowsData);
+
+          let current;
+          const routersStats = data.reduce((acc, item) => {
+            if (item.rtype === 'ROUTER') {
+              current = item.id;
+              acc[current] = {
+                id: item.id,
+                name: item.name,
+                totalBytes: 0,
+                totalFlows: 0,
+                totalVanAddress: 0,
+              };
+            } else if (item.octets) {
+              acc[current].totalFlows++;
+              acc[current].totalBytes += item.octets;
+            } else if (item.van_address) {
+              acc[current].totalVanAddress++;
+            }
+
+            return acc;
+          }, {});
+
+          return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
+        });
+        this.get('/vans-stats', () => {
+          let data = generateDynamicBytes(flowsData);
+
+          let current;
+          const routersStats = data.reduce((acc, item) => {
+            if (item.van_address) {
+              current = item.van_address;
+              acc[current] = {
+                id: item.id,
+                name: item.van_address,
+                totalBytes: 0,
+                totalFlows: (acc[current] && acc[current].totalFlows) || 0,
+                totalDevices: ((acc[current] && acc[current].totalDevices) || 0) + 1,
+              };
+            } else if (item.octets) {
+              acc[current].totalFlows++;
+              acc[current].totalBytes += item.octets;
+            }
+
+            return acc;
+          }, {});
+
+          return Object.values(routersStats);
+        });
+
         this.get('/flows', (_, { queryParams }) => {
           let data = generateDynamicBytes(flowsData);
 
