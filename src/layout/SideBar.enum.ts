@@ -5,11 +5,3 @@ export enum SideBarLabels {
   SideBarDeployments = 'Deployments',
   SideBarMonitoring = 'Monitoring',
 }
-
-export enum SideBarRoutesPaths {
-  Network = '/network',
-  Services = '/services',
-  SiteLinks = 'links',
-  Deployments = '/deployments',
-  Monitoring = '/monitoring',
-}

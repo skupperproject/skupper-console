@@ -5,7 +5,7 @@ export interface SummaryCardColumn {
   name: string;
 }
 
-export interface SummaryCardCell<T> {
+interface SummaryCardCell<T> {
   id: string;
   data: T;
   value: any;

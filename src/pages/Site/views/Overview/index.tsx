@@ -24,7 +24,11 @@ import { QuerySite } from '../../site.enum';
 import LinksTable from './components/LinksTable';
 import TokenTable from './components/TokensTable';
 import TrafficChart from './components/TrafficChart';
-import { OVERVIEW_HEADER_SERVICES, OVERVIEW_HEADER_SITES } from './Overview.constants';
+import {
+  OVERVIEW_HEADER_GATEWAY,
+  OVERVIEW_HEADER_SERVICES,
+  OVERVIEW_HEADER_SITES,
+} from './Overview.constants';
 import { OverviewLabels } from './Overview.enum';
 
 const Pluralize = require('pluralize');
@@ -84,7 +88,7 @@ const Overview = function () {
           </SplitItem>
           <SplitItem isFilled>
             <OverviewCard
-              columns={OVERVIEW_HEADER_SERVICES}
+              columns={OVERVIEW_HEADER_GATEWAY}
               data={[]}
               label={Pluralize('Gateway', [], true)}
               color={SummaryCardColors.Green}

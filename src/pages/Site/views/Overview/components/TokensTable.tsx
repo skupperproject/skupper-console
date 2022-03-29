@@ -12,7 +12,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 const Pluralize = require('pluralize');
 
-export enum TokenColumns {
+enum TokenColumns {
   Name = 'Name',
   ClaimsMade = 'Claims Made',
   ClaimsRemaining = 'Claims Remaining',
@@ -20,7 +20,7 @@ export enum TokenColumns {
   ClaimExpiration = 'Claim expiration',
 }
 
-export const TOKENS_HEADER_TABLE = [
+const TOKENS_HEADER_TABLE = [
   { property: 'name', name: TokenColumns.Name },
   { property: 'claimsMade', name: TokenColumns.ClaimsMade },
   { property: 'claimsRemaining', name: TokenColumns.ClaimsRemaining },

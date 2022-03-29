@@ -12,27 +12,27 @@ import { UPDATE_INTERVAL } from 'config';
 
 const Pluralize = require('pluralize');
 
-export enum LinkMessages {
+enum LinkMessages {
   NotConnected = 'No Connected',
   ConnectedTo = 'Connected to',
   NoConfigured = 'Connected but not configured',
 }
 
-export enum LinkColumns {
+enum LinkColumns {
   Name = 'Name',
   Cost = 'Cost',
   Status = 'Status',
   Created = 'Created',
 }
 
-export const LINKS_HEADER_TABLE = [
+const LINKS_HEADER_TABLE = [
   { property: 'name', name: LinkColumns.Name },
   { property: 'status', name: LinkColumns.Status },
   { property: 'cost', name: LinkColumns.Cost },
   { property: 'created', name: LinkColumns.Created },
 ];
 
-export interface LinkRow {
+interface LinkRow {
   status: string;
   name: string;
   created: string;

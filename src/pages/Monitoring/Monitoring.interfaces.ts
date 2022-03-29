@@ -4,7 +4,7 @@ export interface Port {
   portDest: string | undefined;
   octets: number;
 }
-export interface RowDetails {
+interface RowDetails {
   host: string;
   totalBytes: number;
   ports: Port[];

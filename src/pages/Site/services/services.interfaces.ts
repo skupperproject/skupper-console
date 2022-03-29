@@ -27,11 +27,12 @@ export interface TotalBytesBySite {
   totalBytes: number;
 }
 
-export interface SiteInfo {
+interface SiteInfo {
   id: string;
   name: string;
   totalBytesBySites: TotalBytesBySite[];
 }
+
 export interface OverviewData {
   site: SiteInfo;
   sites: OverviewSite[];

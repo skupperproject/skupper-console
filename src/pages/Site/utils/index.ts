@@ -27,7 +27,7 @@ export function getServicesExposed(services: DataServices[], allSites: SiteData[
 /**
  * It returns every site connected with a service based on the communication protocol.
  */
-export function getSitesPerService(service: DataServices, allSites: SiteData[]) {
+function getSitesPerService(service: DataServices, allSites: SiteData[]) {
   const sites: SiteData[] = [];
 
   if (service.protocol === TCP_PROTOCOL) {
@@ -97,13 +97,13 @@ export function getSitesPerService(service: DataServices, allSites: SiteData[]) 
 /**
  * It returns the site that corresponds to a service.
  */
-export function findSite(site_id: string, sites: SiteData[]) {
+function findSite(site_id: string, sites: SiteData[]) {
   return sites.find((site) => site.site_id === site_id);
 }
 
 /**
  * It returns all the targets that match with the service address name.
  */
-export function findAllTargetsPerService(service: DataServices) {
+function findAllTargetsPerService(service: DataServices) {
   return service.targets?.filter(({ name }) => name.startsWith(service.address));
 }

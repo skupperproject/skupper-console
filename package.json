@@ -9,7 +9,8 @@
     "test": "jest --config config/jest.config.js",
     "lint-fix": "eslint src --ext .ts,.tsx --fix --ignore-path .gitignore",
     "prettier-all": "prettier --write '**/*.{js,ts,tsx,json,html,scss}' --ignore-path .gitignore",
-    "bundle-report": "STATS=server npm run build"
+    "bundle-report": "STATS=server npm run build",
+    "find-deadcode": "ts-prune"
   },
   "dependencies": {
     "@patternfly/patternfly": "^4.183.1",
@@ -57,6 +58,7 @@
     "ts-jest": "^27.1.4",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
+    "ts-prune": "^0.10.3",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.6.3",
     "webpack": "^5.70.0",

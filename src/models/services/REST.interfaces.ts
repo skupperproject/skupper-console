@@ -36,13 +36,13 @@ export interface SiteInfo {
   siteName: string;
 }
 
-export interface Deployments {
+interface Deployments {
   key: string;
   service: any;
   site: any;
 }
 
-export interface DeploymentLinksStreamPoints {
+interface DeploymentLinksStreamPoints {
   site: { site_id: string; site_name: string };
 }
 
@@ -55,9 +55,6 @@ export interface DeploymentLinks {
 export interface DataVAN extends DataResponse {
   deployments: Deployments;
   deploymentLinks: DeploymentLinks[];
-}
-export interface Data {
-  data: DataVAN;
 }
 
 export type Tokens = TokenResponse;

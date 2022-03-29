@@ -9,13 +9,6 @@ export type Flow = FlowsResponse;
 export type RoutersStats = RoutersStatsResponse;
 export type MonitoringStats = MonitoringStatsResponse;
 export type VansStats = VansStatsResponse;
-
-export interface VansInfo {
-  id: string;
-  name: string;
-  nunDevices: number;
-  numFlows: number;
-}
 export interface MonitoringInfo {
   vansStats: VansStats[];
   routersStats: RoutersStats[];

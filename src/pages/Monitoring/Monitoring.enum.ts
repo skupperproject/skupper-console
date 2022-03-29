@@ -22,10 +22,6 @@ export enum VansColumns {
 }
 
 // VAN details section
-export enum DeviceLabels {
-  FlowDetails = 'connection',
-}
-
 export enum DeviceColumns {
   Type = 'Type',
   DeviceName = 'Device Name',

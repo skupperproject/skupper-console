@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState, useContext } from 'react';
+import React, { createContext, useMemo, useState } from 'react';
 
 import { ConnectionSiteInfoState, GlobalStateProviderProps } from './Data.interfaces';
 
@@ -24,6 +24,6 @@ const GlobalStateProvider = function ({ children }: GlobalStateProviderProps) {
 };
 
 // custom hooks
-export const useSiteInfo = () => useContext(SiteInfoContext);
+//const useSiteInfo = () => useContext(SiteInfoContext);
 
 export default GlobalStateProvider;

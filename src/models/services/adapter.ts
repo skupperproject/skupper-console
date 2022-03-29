@@ -7,7 +7,7 @@ import { DataServices } from './REST.interfaces';
 import { utils } from './utilities';
 
 let INSTANCE = 0;
-export const SHOW_EXTERNAL = true;
+const SHOW_EXTERNAL = true;
 
 class Adapter {
   data: any;

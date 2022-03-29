@@ -57,7 +57,7 @@ export interface DataServicesResponse {
   requests_received: ServiceRequest[] | null;
 }
 
-export interface DataSiteResponse {
+interface DataSiteResponse {
   site_name: string;
   site_id: string;
   version: string;
@@ -66,6 +66,7 @@ export interface DataSiteResponse {
   url: string;
   edge: boolean;
 }
+
 export interface DataResponse {
   sites: DataSiteResponse[];
   services: DataServicesResponse[];
