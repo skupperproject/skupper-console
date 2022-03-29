@@ -146,7 +146,7 @@ const VANs = function () {
                 <OverviewCard
                   columns={ROUTERS_STATS_HEADER}
                   data={routersStats}
-                  label={Pluralize('Router', routersStats.length, true)}
+                  label={Pluralize('Router', routersStats.length, false)}
                 />
               </SplitItem>
             )}
@@ -156,7 +156,7 @@ const VANs = function () {
                 <OverviewCard
                   columns={VANS_STATS_HEADER}
                   data={vans}
-                  label={Pluralize('Van', vans.length, true)}
+                  label={Pluralize('Van', vans.length, false)}
                   color={SummaryCardColors.Purple}
                 />
               </SplitItem>

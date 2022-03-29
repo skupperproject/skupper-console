@@ -1,15 +1,14 @@
+import { RESTApi } from '@models/API/REST';
 import { RESTServices } from '@models/services/REST';
-import { DeploymentLinks, SiteInfo } from '@models/services/REST.interfaces';
+import { DeploymentLinks, Links, SiteInfo, Tokens } from '@models/services/REST.interfaces';
 
 import { getServicesExposed } from '../utils';
 import { OverviewData, TotalBytesBySite } from './services.interfaces';
 
 export const SitesServices = {
   fetchOverview: async (): Promise<OverviewData> => {
-    const {
-      siteInfo,
-      data: { services, sites, deploymentLinks },
-    } = await RESTServices.fetchData();
+    const { services, sites, deploymentLinks } = await RESTServices.fetchData();
+    const siteInfo = await RESTServices.fetchSiteInfo();
 
     const deployments = getServicesExposed(services, sites);
 
@@ -31,9 +30,19 @@ export const SitesServices = {
     };
   },
   fetchSiteInfo: async (): Promise<SiteInfo> => {
-    const { siteInfo } = await RESTServices.fetchData();
+    const data = await RESTServices.fetchSiteInfo();
 
-    return siteInfo;
+    return data;
+  },
+  fetchTokens: async (): Promise<Tokens[]> => {
+    const data = await RESTApi.fetchTokens();
+
+    return data;
+  },
+  fetchLinks: async (): Promise<Links[]> => {
+    const data = await RESTApi.fetchLinks();
+
+    return data;
   },
 };
 

@@ -5,11 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { SiteLabels, SiteRoutesPaths } from '../site.enum';
 
-const navItems = [
-  { pathname: SiteRoutesPaths.Overview, label: SiteLabels.RouteOverview },
-  { pathname: SiteRoutesPaths.Deployments, label: SiteLabels.RouteDeployments },
-  { pathname: SiteRoutesPaths.Links, label: SiteLabels.RouteLinks },
-];
+const navItems = [{ pathname: SiteRoutesPaths.Overview, label: SiteLabels.RouteOverview }];
 
 const NavBarSite = function () {
   const [activeItem, setActiveItem] = useState<string | number>(0);

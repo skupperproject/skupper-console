@@ -72,13 +72,19 @@ export interface DataResponse {
 }
 
 export interface LinksResponse {
+  name: string;
+  siteConnected: string;
+  connected: boolean;
+  configured: boolean;
+  created: string;
+}
+
+export interface TokenResponse {
   Name: string;
-  Url: string;
-  Cost: string;
-  Connected: boolean;
-  Configured: boolean;
-  Description: string;
-  Created: string;
+  claimsMade: number;
+  claimsRemaining: number;
+  claimsExpiration: string;
+  created: string;
 }
 
 export interface TargetsResponse {
@@ -131,6 +137,7 @@ export interface FlowsResponse {
 export interface VansStatsResponse {
   id: string;
   name: string;
+  routerName: string;
   totalDevices: number;
   totalFlows: number;
   totalBytes: number;

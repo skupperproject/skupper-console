@@ -9,6 +9,7 @@ import {
   ROUTERS_STAT,
   MONITORING_STATS,
   VANS_STAT,
+  TOKENS,
 } from './REST.constant';
 import {
   DataResponse,
@@ -18,6 +19,7 @@ import {
   RoutersStatsResponse,
   ServicesResponse,
   TargetsResponse,
+  TokenResponse,
   VansStatsResponse,
 } from './REST.interfaces';
 
@@ -34,6 +36,11 @@ export const RESTApi = {
   },
   fetchLinks: async (): Promise<LinksResponse[]> => {
     const { data } = await fetchWithTimeout(LINKS);
+
+    return data;
+  },
+  fetchTokens: async (): Promise<TokenResponse[]> => {
+    const { data } = await fetchWithTimeout(TOKENS);
 
     return data;
   },

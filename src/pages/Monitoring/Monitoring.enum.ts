@@ -6,7 +6,7 @@ export enum MonitoringRoutesPaths {
 
 // Routers  section
 export enum RoutersColumns {
-  Name = 'name',
+  Name = 'Name',
   NumRouters = 'Routers',
   NumVans = 'Vans',
   NumFLows = 'Connections',
@@ -15,7 +15,7 @@ export enum RoutersColumns {
 
 // VAN  section
 export enum VansColumns {
-  Name = 'name',
+  Name = 'Name',
   NumDevices = 'Devices',
   NumFLows = 'Connections',
   TotalBytes = 'TotalBytes',

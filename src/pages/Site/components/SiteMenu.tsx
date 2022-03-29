@@ -1,16 +1,6 @@
 import React from 'react';
 
-import {
-  TextContent,
-  Text,
-  TextVariants,
-  ActionList,
-  ActionListItem,
-  Button,
-  Flex,
-  Tooltip,
-} from '@patternfly/react-core';
-import { PencilAltIcon } from '@patternfly/react-icons';
+import { TextContent, Text, TextVariants, Flex } from '@patternfly/react-core';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,19 +22,10 @@ const SiteMenu = function () {
   }
 
   return (
-    <Flex className="pf-u-box-shadow-sm-bottom pf-u-py-sm pf-u-px-xl">
+    <Flex className="pf-u-box-shadow-sm-bottom pf-u-py-md pf-u-px-xl">
       <TextContent>
         <Text component={TextVariants.h3}>{data?.siteName}</Text>
       </TextContent>
-      <ActionList isIconList>
-        <ActionListItem>
-          <Tooltip content="Edit the site name">
-            <Button variant="plain" aria-label="Edit name icon button">
-              <PencilAltIcon />
-            </Button>
-          </Tooltip>
-        </ActionListItem>
-      </ActionList>
     </Flex>
   );
 };

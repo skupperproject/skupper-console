@@ -3,6 +3,7 @@ import { createServer, Response } from 'miragejs';
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
 import links from './data/LINKS.json';
+import tokens from './data/TOKENS.json';
 import services from './data/SERVICES.json';
 import site from './data/SITE.json';
 import targets from './data/TARGETS.json';
@@ -27,7 +28,23 @@ export function loadMockServerInDev() {
           return services;
         });
         this.get('/links', () => {
-          return links;
+          return links.map(({ Name, Url, Cost, Connected, Configured, Description, Created }) => {
+            const sites = VANdata.sites.filter((site) => site.url === Url.split(':')[0]);
+
+            const site = sites[0];
+
+            return {
+              name: Name,
+              cost: Cost,
+              siteConnected: site && site.site_name,
+              connected: Connected,
+              configured: Configured,
+              created: Created,
+            };
+          });
+        });
+        this.get('/tokens', () => {
+          return tokens;
         });
         this.get('/targets', () => {
           return targets;
@@ -84,7 +101,11 @@ export function loadMockServerInDev() {
           let data = generateDynamicBytes(flowsData);
 
           let current;
+          let currentRouterName;
           const routersStats = data.reduce((acc, item) => {
+            if (item.rtype === 'ROUTER') {
+              currentRouterName = item.name;
+            }
             if (item.van_address) {
               current = item.van_address;
               acc[current] = {
@@ -93,6 +114,7 @@ export function loadMockServerInDev() {
                 totalBytes: 0,
                 totalFlows: (acc[current] && acc[current].totalFlows) || 0,
                 totalDevices: ((acc[current] && acc[current].totalDevices) || 0) + 1,
+                routerName: currentRouterName,
               };
             } else if (item.octets) {
               acc[current].totalFlows++;

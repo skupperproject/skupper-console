@@ -2,9 +2,9 @@ import {
   DataResponse,
   LinksResponse,
   ServicesResponse,
-  TargetsResponse,
   ServiceConnections,
   DataServicesResponse,
+  TokenResponse,
 } from '../API/REST.interfaces';
 
 export type DataServices = DataServicesResponse;
@@ -32,12 +32,8 @@ export type SiteInfoService =
     };
 
 export interface SiteInfo {
-  links: LinksResponse[];
-  targets: TargetsResponse[];
-  services: SiteInfoService[];
   siteId: string;
   siteName: string;
-  namespace: string;
 }
 
 export interface Deployments {
@@ -62,5 +58,7 @@ export interface DataVAN extends DataResponse {
 }
 export interface Data {
   data: DataVAN;
-  siteInfo: SiteInfo;
 }
+
+export type Tokens = TokenResponse;
+export type Links = LinksResponse;
