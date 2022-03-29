@@ -8,7 +8,7 @@ import {
 export type Flow = FlowsResponse;
 export type RoutersStats = RoutersStatsResponse;
 export type MonitoringStats = MonitoringStatsResponse;
-export type vansStats = VansStatsResponse;
+export type VansStats = VansStatsResponse;
 
 export interface VansInfo {
   id: string;
@@ -17,7 +17,7 @@ export interface VansInfo {
   numFlows: number;
 }
 export interface MonitoringInfo {
-  vansStats: vansStats[];
+  vansStats: VansStats[];
   routersStats: RoutersStats[];
   monitoringStats: MonitoringStats[];
 }

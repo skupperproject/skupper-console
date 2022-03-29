@@ -37,7 +37,7 @@ const OverviewCard = function <T>({
   }, [cols, data]);
 
   return (
-    <Card isCompact isPlain>
+    <Card isCompact isPlain isFullHeight>
       <CardBody className={`sk-overview-table sk-table-border-${color || SummaryCardColors.Gray}`}>
         <Label
           className={`pf-m-${

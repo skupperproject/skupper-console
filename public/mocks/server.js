@@ -41,7 +41,7 @@ export function loadMockServerInDev() {
             totalVanAddress: 0,
           };
 
-          const monitoringStats = data.forEach((item) => {
+          data.forEach((item) => {
             if (item.octets) {
               stats.totalFlows++;
               stats.totalBytes += item.octets;
@@ -50,7 +50,9 @@ export function loadMockServerInDev() {
             }
           });
 
-          return [monitoringStats];
+          return [stats];
+
+          return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
         });
         this.get('/routers-stats', () => {
           let data = generateDynamicBytes(flowsData);
