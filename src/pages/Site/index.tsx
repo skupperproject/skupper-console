@@ -14,7 +14,6 @@ const Site = function () {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    console.log(location)
     if (location.pathname === '/') {
       navigate(SiteRoutesPaths.Overview);
     }

@@ -11,3 +11,6 @@ export const TARGETS = `${BASE_URL}/targets`;
 export const SERVICES = `${BASE_URL}/services`;
 export const FLOWS = `${BASE_URL}/flows`;
 export const FLOWS_VAN_ADDRESSES = `${BASE_URL}/flows/addresses`;
+export const MONITORING_STATS = `${BASE_URL}/monitoring-stats`;
+export const ROUTERS_STAT = `${BASE_URL}/routers-stats`;
+export const VANS_STAT = `${BASE_URL}/vans-stats`;

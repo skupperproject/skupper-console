@@ -127,3 +127,26 @@ export interface FlowsResponse {
   id: string;
   flows: FlowResponse[];
 }
+
+export interface VansStatsResponse {
+  id: string;
+  name: string;
+  totalDevices: number;
+  totalFlows: number;
+  totalBytes: number;
+}
+
+export interface RoutersStatsResponse {
+  id: string;
+  name: string;
+  totalVanAddress: number;
+  totalFlows: number;
+  totalBytes: number;
+}
+
+export interface MonitoringStatsResponse {
+  name: string;
+  totalVanAddress: number;
+  totalFlows: number;
+  totalBytes: number;
+}

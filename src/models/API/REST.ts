@@ -1,11 +1,24 @@
 import { fetchWithTimeout } from './Middleware';
-import { DATA_URL, FLOWS, LINKS, SITE_URL, SERVICES, TARGETS } from './REST.constant';
+import {
+  DATA_URL,
+  FLOWS,
+  LINKS,
+  SITE_URL,
+  SERVICES,
+  TARGETS,
+  ROUTERS_STAT,
+  MONITORING_STATS,
+  VANS_STAT,
+} from './REST.constant';
 import {
   DataResponse,
   FlowsResponse,
   LinksResponse,
+  MonitoringStatsResponse,
+  RoutersStatsResponse,
   ServicesResponse,
   TargetsResponse,
+  VansStatsResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -46,6 +59,21 @@ export const RESTApi = {
   },
   fetchVANAddresses: async (): Promise<FlowsResponse[]> => {
     const { data } = await fetchWithTimeout(FLOWS);
+
+    return data;
+  },
+  fetchMonitoringStats: async (): Promise<MonitoringStatsResponse[]> => {
+    const { data } = await fetchWithTimeout(MONITORING_STATS);
+
+    return data;
+  },
+  fetchRoutersStats: async (): Promise<RoutersStatsResponse[]> => {
+    const { data } = await fetchWithTimeout(ROUTERS_STAT);
+
+    return data;
+  },
+  fetchVansStats: async (): Promise<VansStatsResponse[]> => {
+    const { data } = await fetchWithTimeout(VANS_STAT);
 
     return data;
   },

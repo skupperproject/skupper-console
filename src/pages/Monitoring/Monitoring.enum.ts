@@ -4,11 +4,21 @@ export enum MonitoringRoutesPaths {
   Devices = '/monitoring/devices',
 }
 
+// Routers  section
+export enum RoutersColumns {
+  Name = 'name',
+  NumRouters = 'Routers',
+  NumVans = 'Vans',
+  NumFLows = 'Connections',
+  TotalBytes = 'Bytes',
+}
+
 // VAN  section
 export enum VansColumns {
   Name = 'name',
   NumDevices = 'Devices',
-  NumFLows = 'Flows',
+  NumFLows = 'Connections',
+  TotalBytes = 'TotalBytes',
 }
 
 // VAN details section
@@ -48,4 +58,5 @@ export enum DeviceStatus {
 export enum QueriesMonitoring {
   GetFlows = 'monitoring-query',
   GetVans = 'monitoring-vans',
+  GetMonitoringStats = 'monitoring-stats-query',
 }
