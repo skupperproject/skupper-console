@@ -7,7 +7,8 @@
       "connected": ["94830b1e-c32f-4180-8cef-06cf48592803", "aae23611-d2a8-4745-995b-c76cfc40a440"],
       "namespace": "private1",
       "url": "10.97.89.51",
-      "edge": false
+      "edge": false,
+      "gateway": false
     },
     {
       "site_name": "public2",
@@ -16,7 +17,8 @@
       "connected": [],
       "namespace": "public2",
       "url": "10.105.226.136",
-      "edge": false
+      "edge": false,
+      "gateway": false
     },
     {
       "site_name": "public1",
@@ -25,7 +27,8 @@
       "connected": ["aae23611-d2a8-4745-995b-c76cfc40a440"],
       "namespace": "public1",
       "url": "10.101.87.23",
-      "edge": false
+      "edge": false,
+      "gateway": false
     }
   ],
   "services": [

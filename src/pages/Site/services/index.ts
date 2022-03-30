@@ -1,9 +1,9 @@
 import { RESTApi } from '@models/API/REST';
 import { RESTServices } from '@models/services/REST';
-import { DeploymentLinks, Links, Tokens } from '@models/services/REST.interfaces';
+import { DeploymentLinks } from '@models/services/REST.interfaces';
 
 import { getServicesExposed } from '../utils';
-import { SiteData, SiteInfo, SiteServices } from './services.interfaces';
+import { SiteData, SiteInfo, SiteServices, Token, Link } from './services.interfaces';
 
 export const SitesServices = {
   fetchSiteId: async (): Promise<string> => {
@@ -48,12 +48,12 @@ export const SitesServices = {
       numSitesConnected: connected.length,
     };
   },
-  fetchTokens: async (): Promise<Tokens[]> => {
+  fetchTokens: async (): Promise<Token[]> => {
     const data = await RESTApi.fetchTokens();
 
     return data;
   },
-  fetchLinks: async (): Promise<Links[]> => {
+  fetchLinks: async (): Promise<Link[]> => {
     const data = await RESTApi.fetchLinks();
 
     return data;

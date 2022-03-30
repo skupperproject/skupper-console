@@ -1,6 +1,6 @@
 import { SiteData } from '@pages/Site/services/services.interfaces';
 
-export interface SitesTableProps {
+export interface GatewaysTableProps {
   siteId: string;
-  sites: SiteData[];
+  gateways: SiteData[];
 }

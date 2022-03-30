@@ -1,15 +1,11 @@
-import { DataServicesResponse } from '@models/API/REST.interfaces';
-import { SiteInfoData } from '@models/services/REST.interfaces';
+import {
+  DataServicesResponse,
+  DataSiteResponse,
+  TokenResponse,
+  LinkResponse,
+} from '@models/API/REST.interfaces';
 
-export type SiteData = {
-  site_name: string;
-  site_id: string;
-  version: string;
-  connected: string[];
-  namespace: string;
-  url: string;
-  edge: boolean;
-};
+export type SiteData = DataSiteResponse;
 
 export interface ServiceData extends DataServicesResponse {
   siteId: string;
@@ -20,10 +16,16 @@ export interface SiteServices {
   siteName: string;
   siteId: string;
 }
-export interface TotalBytesBySite {
+
+export interface SiteInfo {
+  siteId: string;
   siteName: string;
-  totalBytes: number;
-}
-export interface SiteInfo extends SiteInfoData {
+  edge: boolean;
+  version: string;
+  url: string;
+  connected: string[];
   numSitesConnected: number;
 }
+
+export type Token = TokenResponse;
+export type Link = LinkResponse;

@@ -1,5 +1,5 @@
-import { Tokens } from '@models/services/REST.interfaces';
+import { Token } from '@pages/Site/services/services.interfaces';
 
 export interface TokensTableProps {
-  tokens: Tokens[];
+  tokens: Token[];
 }

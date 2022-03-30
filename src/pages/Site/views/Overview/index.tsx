@@ -19,6 +19,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 import { SitesServices } from '../../services';
 import { QuerySite } from '../../site.enum';
+import GatewaysTable from './components/GatewayTable';
 import LinksTable from './components/LinksTable';
 import ServicesTable from './components/ServicesTable';
 import SiteInfo from './components/SiteInfo';
@@ -148,10 +149,13 @@ const Overview = function () {
         <StackItem className="pf-u-mb-xl">
           <Split hasGutter>
             <SplitItem isFilled>
-              <SitesTable siteId={siteId} sites={sites} />
+              <SitesTable siteId={siteId} sites={sites.filter(({ gateway }) => !gateway)} />
             </SplitItem>
             <SplitItem isFilled>
               <ServicesTable siteId={siteId} services={services} />
+            </SplitItem>
+            <SplitItem isFilled>
+              <GatewaysTable siteId={siteId} gateways={sites.filter(({ gateway }) => !gateway)} />
             </SplitItem>
           </Split>
         </StackItem>

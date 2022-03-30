@@ -65,6 +65,7 @@ export interface DataSiteResponse {
   namespace: string;
   url: string;
   edge: boolean;
+  gateway: boolean;
 }
 
 export interface DataResponse {
@@ -72,7 +73,7 @@ export interface DataResponse {
   services: DataServicesResponse[];
 }
 
-export interface LinksResponse {
+export interface LinkResponse {
   name: string;
   siteConnected: string;
   connected: boolean;
@@ -88,7 +89,7 @@ export interface TokenResponse {
   created: string;
 }
 
-export interface TargetsResponse {
+export interface TargetResponse {
   name: string;
   type: string;
   ports: {
@@ -97,7 +98,7 @@ export interface TargetsResponse {
   };
 }
 
-export interface ServicesResponse {
+export interface ServiceResponse {
   name: string;
   protocol: string;
   ports: number[];
@@ -135,7 +136,7 @@ export interface FlowsResponse {
   flows: FlowResponse[];
 }
 
-export interface VansStatsResponse {
+export interface VanAddressStatsResponse {
   id: string;
   name: string;
   routerName: string;
@@ -144,7 +145,7 @@ export interface VansStatsResponse {
   totalBytes: number;
 }
 
-export interface RoutersStatsResponse {
+export interface RouterStatsResponse {
   id: string;
   name: string;
   totalVanAddress: number;

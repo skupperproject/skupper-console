@@ -1,4 +1,4 @@
-import { Links } from '@models/services/REST.interfaces';
+import { Link } from '@pages/Site/services/services.interfaces';
 
 export interface LinkRow {
   status: string;
@@ -7,5 +7,5 @@ export interface LinkRow {
 }
 
 export interface LinksTableProps {
-  links: Links[];
+  links: Link[];
 }

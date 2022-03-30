@@ -14,13 +14,13 @@ import {
 import {
   DataResponse,
   FlowsResponse,
-  LinksResponse,
+  LinkResponse,
   MonitoringStatsResponse,
-  RoutersStatsResponse,
-  ServicesResponse,
-  TargetsResponse,
+  RouterStatsResponse,
+  ServiceResponse,
+  TargetResponse,
   TokenResponse,
-  VansStatsResponse,
+  VanAddressStatsResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -34,7 +34,7 @@ export const RESTApi = {
 
     return data;
   },
-  fetchLinks: async (): Promise<LinksResponse[]> => {
+  fetchLinks: async (): Promise<LinkResponse[]> => {
     const { data } = await fetchWithTimeout(LINKS);
 
     return data;
@@ -44,12 +44,12 @@ export const RESTApi = {
 
     return data;
   },
-  fetchTargets: async (): Promise<TargetsResponse[]> => {
+  fetchTargets: async (): Promise<TargetResponse[]> => {
     const { data } = await fetchWithTimeout(TARGETS);
 
     return data;
   },
-  fetchServices: async (): Promise<ServicesResponse[]> => {
+  fetchServices: async (): Promise<ServiceResponse[]> => {
     const { data } = await fetchWithTimeout(SERVICES);
 
     return data;
@@ -74,12 +74,12 @@ export const RESTApi = {
 
     return data;
   },
-  fetchRoutersStats: async (): Promise<RoutersStatsResponse[]> => {
+  fetchRoutersStats: async (): Promise<RouterStatsResponse[]> => {
     const { data } = await fetchWithTimeout(ROUTERS_STAT);
 
     return data;
   },
-  fetchVansStats: async (): Promise<VansStatsResponse[]> => {
+  fetchVansStats: async (): Promise<VanAddressStatsResponse[]> => {
     const { data } = await fetchWithTimeout(VANS_STAT);
 
     return data;
