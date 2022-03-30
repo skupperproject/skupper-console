@@ -12,6 +12,7 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { DeploymentLinks } from '@models/services/REST.interfaces';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import { UPDATE_INTERVAL } from 'config';
@@ -77,6 +78,16 @@ const Overview = function () {
       onError: handleError,
     },
   );
+
+  const {
+    data: deploymentLinks,
+    isLoading: isLoadingDeploymentLinks,
+    dataUpdatedAt,
+  } = useQuery(QuerySite.GetDeploymentLinks, SitesServices.fetchDeploymentLinks, {
+    refetchInterval,
+    onError: handleError,
+  });
+
   function handleError({ httpStatus }: { httpStatus?: number }) {
     const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
 
@@ -90,7 +101,8 @@ const Overview = function () {
     isLoadingServices ||
     isLoadingSites ||
     isLoadingTokens ||
-    isLoadingSiteInfo
+    isLoadingSiteInfo ||
+    isLoadingDeploymentLinks
   ) {
     return <LoadingPage />;
   }
@@ -152,10 +164,41 @@ const Overview = function () {
       </StackItem>
 
       <StackItem>
-        <TrafficChart siteId={siteId} />
+        {deploymentLinks && (
+          <TrafficChart
+            totalBytes={getTotalBytesBySite({ direction: 'in', deploymentLinks, siteId })}
+            timestamp={dataUpdatedAt}
+          />
+        )}
       </StackItem>
     </Stack>
   );
 };
 
 export default Overview;
+
+function getTotalBytesBySite({
+  direction,
+  deploymentLinks,
+  siteId,
+}: {
+  direction: string;
+  deploymentLinks: DeploymentLinks[];
+  siteId: string;
+}) {
+  const stat = 'bytes_out';
+  const from = direction === 'out' ? 'source' : 'target';
+  const to = direction === 'out' ? 'target' : 'source';
+
+  const bytesBySite = deploymentLinks.reduce((acc, deploymentLink) => {
+    const idFrom = deploymentLink[from].site.site_id;
+    const idTo = deploymentLink[to].site.site_id;
+    if (idFrom !== idTo && idFrom === siteId) {
+      acc.push(deploymentLink.request[stat]);
+    }
+
+    return acc;
+  }, [] as number[]);
+
+  return bytesBySite;
+}

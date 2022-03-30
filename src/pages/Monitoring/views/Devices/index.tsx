@@ -191,10 +191,10 @@ const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                     expand={
                       details
                         ? {
-                          rowIndex,
-                          isExpanded: isRowExpanded(row),
-                          onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
-                        }
+                            rowIndex,
+                            isExpanded: isRowExpanded(row),
+                            onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
+                          }
                         : undefined
                     }
                   />

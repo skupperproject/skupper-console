@@ -17,6 +17,7 @@ import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
+import TrafficChart from '@pages/Site/views/Overview/components/TrafficChart';
 import { UPDATE_INTERVAL } from 'config';
 
 import {
@@ -38,7 +39,7 @@ const Overview = function () {
 
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, dataUpdatedAt } = useQuery(
     QueriesMonitoring.GetMonitoringStats,
     MonitorServices.fetchMonitoringStats,
     {
@@ -106,6 +107,7 @@ const Overview = function () {
                   </TextContent>
                 </Card>
               </SplitItem>
+
               <SplitItem isFilled>
                 <Card className="pf-u-p-md" isRounded>
                   <TextContent>
@@ -116,6 +118,7 @@ const Overview = function () {
                   </TextContent>
                 </Card>
               </SplitItem>
+
               <SplitItem isFilled>
                 <Card className="pf-u-p-md" isRounded>
                   <TextContent>
@@ -126,6 +129,7 @@ const Overview = function () {
                   </TextContent>
                 </Card>
               </SplitItem>
+
               <SplitItem isFilled>
                 <Card className="pf-u-p-md" isRounded>
                   <TextContent>
@@ -139,6 +143,7 @@ const Overview = function () {
             </Split>
           </StackItem>
         )}
+
         <StackItem className="pf-u-py-xl">
           <Split hasGutter>
             {routersStats && (
@@ -148,6 +153,21 @@ const Overview = function () {
                   data={routersStats}
                   label={Pluralize('Router', routersStats.length, false)}
                 />
+                {data && (
+                  <Card>
+                    <TrafficChart
+                      timestamp={dataUpdatedAt}
+                      totalBytes={[
+                        Math.floor(
+                          data.routersStats.reduce(
+                            (acc, routerStat) => (acc = acc + routerStat.totalBytes),
+                            0,
+                          ),
+                        ),
+                      ]}
+                    />
+                  </Card>
+                )}
               </SplitItem>
             )}
 
@@ -159,6 +179,18 @@ const Overview = function () {
                   label={Pluralize('Service', vans.length, false)}
                   color={SummaryCardColors.Blue}
                 />
+                {data && (
+                  <Card>
+                    <TrafficChart
+                      timestamp={dataUpdatedAt}
+                      totalBytes={[
+                        Math.floor(
+                          data.vansStats.reduce((acc, van) => (acc = acc + van.totalBytes), 0),
+                        ),
+                      ]}
+                    />
+                  </Card>
+                )}
               </SplitItem>
             )}
           </Split>

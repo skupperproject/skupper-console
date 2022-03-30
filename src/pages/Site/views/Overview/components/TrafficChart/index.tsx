@@ -11,10 +11,8 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyStateSpinner from '@core/components/EmptyStateSpinner';
-import { DeploymentLinks } from '@models/services/REST.interfaces';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import { SitesServices } from '@pages/Site/services';
-import { TotalBytesBySite } from '@pages/Site/services/services.interfaces';
 import { QuerySite } from '@pages/Site/site.enum';
 import { UPDATE_INTERVAL } from 'config';
 
@@ -22,8 +20,11 @@ import { chartConfig } from './TrafficChart.constants';
 import { TrafficChartLabels } from './TrafficChart.enum';
 import { SampleProps, TrafficChartProps } from './TrafficChart.interfaces';
 
-const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
-  const [lastTimestamp, setLastTimestamp] = useState(0);
+const TrafficChart = memo(function ({
+  totalBytes: totalBytesBySites,
+  timestamp,
+}: TrafficChartProps) {
+  const [lastTimestamp, setLastTimestamp] = useState(timestamp);
   const [samples, setSamples] = useState<SampleProps[][] | null>(null);
 
   const navigate = useNavigate();
@@ -47,20 +48,12 @@ const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
 
   useEffect(() => {
     if (deploymentLinks) {
-      const timestamp = dataUpdatedAt;
       const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
 
-      const totalBytesBySites = getTotalBytesBySite({
-        direction: 'in',
-        deploymentLinks,
-        siteId,
-      });
-
-      const newSamplesBySite = totalBytesBySites.map(({ totalBytes, siteName }, index) => {
+      const newSamplesBySite = totalBytesBySites.map((totalBytes, index) => {
         const sample = {
           y: totalBytes,
           x: `${timestamp - lastTimestamp}`,
-          name: siteName,
           timestamp,
         };
 
@@ -74,7 +67,7 @@ const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
 
       setSamples(newSamplesBySite);
     }
-  }, [deploymentLinks, dataUpdatedAt]);
+  }, [totalBytesBySites, dataUpdatedAt]);
 
   useEffect(() => {
     setLastTimestamp(Date.now());
@@ -91,22 +84,20 @@ const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
   return (
     <div style={{ height: `${chartConfig.height}px`, width: `${chartConfig.width}px` }}>
       <Chart
-        ariaDesc="byte sents for the selected site"
-        ariaTitle="Byte sents"
         containerComponent={
           <ChartVoronoiContainer
             labels={({ datum }) => `${datum.name}: ${datum.y}`}
             constrainToVisibleArea
           />
         }
-        legendData={[{ name: 'Bytes sent during the last minute' }]}
+        legendData={[{ name: 'Traffic during the last minute' }]}
         legendOrientation="vertical"
         legendPosition="bottom"
         height={chartConfig.height}
         domainPadding={{ y: [10, 10] }}
         padding={{
           bottom: 70,
-          left: 70,
+          left: 90,
           right: 50,
           top: 20,
         }}
@@ -122,9 +113,8 @@ const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
             // After X seconds, it stops to show the calculated time from now (i.e., 25 secs ago). Instead, it shows a default label (i.e., 1 min ago)
             if (index === 0) {
               return Number(ticks[ticks.length - 1]) <= chartConfig.timestampWindowUpperBound
-                ? `${Math.floor(ticks[ticks.length - 1] / 1000)} ${
-                    TrafficChartLabels.TickFormatLowerBoundLabel
-                  }`
+                ? `${Math.floor(ticks[ticks.length - 1] / 1000)} ${TrafficChartLabels.TickFormatLowerBoundLabel
+                }`
                 : TrafficChartLabels.TickFormatLowerBoundLabelOverflow;
             }
 
@@ -145,7 +135,6 @@ const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
             <ChartLine
               key={index}
               data={sampleGroup}
-              interpolation="natural"
               animate={{
                 duration: 1000,
                 onLoad: { duration: 1000 },
@@ -175,33 +164,4 @@ function formatBytes(bytes: number, decimals = 2) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}
-
-function getTotalBytesBySite({
-  direction,
-  deploymentLinks,
-  siteId,
-}: {
-  direction: string;
-  deploymentLinks: DeploymentLinks[];
-  siteId: string;
-}) {
-  const stat = 'bytes_out';
-  const from = direction === 'out' ? 'source' : 'target';
-  const to = direction === 'out' ? 'target' : 'source';
-
-  const bytesBySite = deploymentLinks.reduce((acc, deploymentLink) => {
-    const idFrom = deploymentLink[from].site.site_id;
-    const idTo = deploymentLink[to].site.site_id;
-    if (idFrom !== idTo && idFrom === siteId) {
-      acc.push({
-        siteName: deploymentLink[to].site.site_name,
-        totalBytes: deploymentLink.request[stat],
-      });
-    }
-
-    return acc;
-  }, [] as TotalBytesBySite[]);
-
-  return bytesBySite;
 }

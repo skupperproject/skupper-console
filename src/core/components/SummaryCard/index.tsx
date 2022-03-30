@@ -64,8 +64,9 @@ const OverviewCard = function <T>({
       >
         {label && (
           <Label
-            className={`pf-m-${color || SummaryCardColors.Gray
-              } sk-overview-table-label pf-u-box-shadow-md-bottom`}
+            className={`pf-m-${
+              color || SummaryCardColors.Gray
+            } sk-overview-table-label pf-u-box-shadow-md-bottom`}
           >
             {label}
           </Label>

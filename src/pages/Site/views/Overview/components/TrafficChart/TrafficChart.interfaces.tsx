@@ -1,9 +1,9 @@
 export interface TrafficChartProps {
-  siteId: string;
+  totalBytes: number[];
+  timestamp: number;
 }
 
 export interface SampleProps {
-  name: string;
   x: string;
   y: number;
   timestamp: number;
