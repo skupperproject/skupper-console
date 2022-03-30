@@ -113,8 +113,9 @@ const TrafficChart = memo(function ({
             // After X seconds, it stops to show the calculated time from now (i.e., 25 secs ago). Instead, it shows a default label (i.e., 1 min ago)
             if (index === 0) {
               return Number(ticks[ticks.length - 1]) <= chartConfig.timestampWindowUpperBound
-                ? `${Math.floor(ticks[ticks.length - 1] / 1000)} ${TrafficChartLabels.TickFormatLowerBoundLabel
-                }`
+                ? `${Math.floor(ticks[ticks.length - 1] / 1000)} ${
+                    TrafficChartLabels.TickFormatLowerBoundLabel
+                  }`
                 : TrafficChartLabels.TickFormatLowerBoundLabelOverflow;
             }
 
@@ -136,7 +137,7 @@ const TrafficChart = memo(function ({
               key={index}
               data={sampleGroup}
               animate={{
-                duration: 1000,
+                duration: 2000,
                 onLoad: { duration: 1000 },
               }}
             />
