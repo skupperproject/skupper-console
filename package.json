@@ -10,7 +10,8 @@
     "lint-fix": "eslint src --ext .ts,.tsx --fix --ignore-path .gitignore",
     "prettier-all": "prettier --write '**/*.{js,ts,tsx,json,html,scss}' --ignore-path .gitignore",
     "bundle-report": "STATS=server npm run build",
-    "find-deadcode": "ts-prune"
+    "find-deadcode": "ts-prune",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@patternfly/patternfly": "^4.183.1",
