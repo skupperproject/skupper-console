@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 import { MonitoringRoutesPaths } from './Monitoring.enum';
 
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './'));
-const VANs = lazy(() => import(/* webpackChunkName: "monitoring-vans" */ './views/VANs'));
+const Overview = lazy(() => import(/* webpackChunkName: "monitoring-vans" */ './views/Overview'));
 const Devices = lazy(() => import(/* webpackChunkName: "monitoring-devices" */ './views/Devices'));
 
 export const monitoringRoutes = [
@@ -11,10 +11,10 @@ export const monitoringRoutes = [
     path: MonitoringRoutesPaths.Monitoring,
     element: <Monitoring />,
     children: [
-      { index: true, element: <VANs /> },
+      { index: true, element: <Overview /> },
       {
         path: MonitoringRoutesPaths.VANs,
-        element: <VANs />,
+        element: <Overview />,
       },
       {
         path: `${MonitoringRoutesPaths.Devices}/:id`,

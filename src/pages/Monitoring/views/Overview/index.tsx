@@ -23,14 +23,14 @@ import {
   MonitoringRoutesPaths,
   QueriesMonitoring,
   RoutersColumns,
-  VansColumns,
+  ServicesColumns,
 } from '../../Monitoring.enum';
 import { MonitorServices } from '../../services';
 import { MonitoringStats, RoutersStats, VansStats } from '../../services/services.interfaces';
 
 const Pluralize = require('pluralize');
 
-const VANs = function () {
+const Overview = function () {
   const navigate = useNavigate();
   const [vans, setVans] = useState<VansStats[]>();
   const [routersStats, setRoutersStats] = useState<RoutersStats[]>();
@@ -79,15 +79,15 @@ const VANs = function () {
 
   const ROUTERS_STATS_HEADER = [
     { property: 'name', name: RoutersColumns.Name },
-    { property: 'totalVanAddress', name: RoutersColumns.NumVans },
+    { property: 'totalVanAddress', name: RoutersColumns.NumServices },
     { property: 'totalFlows', name: RoutersColumns.NumFLows },
     { property: 'totalBytes', name: RoutersColumns.TotalBytes },
   ];
   const VANS_STATS_HEADER = [
-    { property: 'name', name: VansColumns.Name },
-    { property: 'totalDevices', name: VansColumns.NumDevices },
-    { property: 'totalFlows', name: VansColumns.NumFLows },
-    { property: 'totalBytes', name: VansColumns.TotalBytes },
+    { property: 'name', name: ServicesColumns.Name },
+    { property: 'totalDevices', name: ServicesColumns.NumDevices },
+    { property: 'totalFlows', name: ServicesColumns.NumFLows },
+    { property: 'totalBytes', name: ServicesColumns.TotalBytes },
   ];
 
   return (
@@ -109,7 +109,7 @@ const VANs = function () {
               <SplitItem isFilled>
                 <Card className="pf-u-background-color-200 pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.p}>{RoutersColumns.NumVans}</Text>
+                    <Text component={TextVariants.p}>{RoutersColumns.NumServices}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
                       {monitoringStats.totalVanAddress / 2}
                     </Text>
@@ -156,8 +156,8 @@ const VANs = function () {
                 <OverviewCard
                   columns={VANS_STATS_HEADER}
                   data={vans}
-                  label={Pluralize('Van', vans.length, false)}
-                  color={SummaryCardColors.Purple}
+                  label={Pluralize('Service', vans.length, false)}
+                  color={SummaryCardColors.Blue}
                 />
               </SplitItem>
             )}
@@ -169,11 +169,7 @@ const VANs = function () {
   );
 };
 
-export default VANs;
-
-// function buildVanRows(data: VansInfo[]): Row<VansInfo>[] {
-//   return data?.flatMap((item) => ({ data: item }));
-// }
+export default Overview;
 
 /**
  *  Converts input bytes in the most appropriate format
