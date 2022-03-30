@@ -14,6 +14,7 @@ import { TableComposable, Th, Tr, Thead, Tbody, Td } from '@patternfly/react-tab
 
 import { generateUUID } from '@utils/generateUUID';
 
+import EmptyStateSpinner from '../EmptyStateSpinner';
 import { SummaryCardColors, SummaryCardEmptyStatus } from './SummaryCard.enum';
 import { SummaryCardProps, SummaryCardColumn, SummaryCardRow } from './SummaryCard.interfaces';
 
@@ -26,6 +27,8 @@ const OverviewCard = function <T>({
   color,
   emptyMessage,
   styleCell,
+  isLoading,
+  noBorder = false,
 }: SummaryCardProps<T>) {
   const [rows, setRows] = useState<SummaryCardRow<T>[]>();
   const [columns, setColumns] = useState<string[]>();
@@ -36,16 +39,38 @@ const OverviewCard = function <T>({
     setRows(dataNormalized);
   }, [cols, data]);
 
+  if (isLoading) {
+    return (
+      <Card isCompact isPlain isFullHeight>
+        <CardBody
+          className={`sk-overview-table sk-table-border-${color || SummaryCardColors.Gray}`}
+        >
+          <EmptyStateSpinner />
+        </CardBody>
+      </Card>
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
   return (
     <Card isCompact isPlain isFullHeight>
-      <CardBody className={`sk-overview-table sk-table-border-${color || SummaryCardColors.Gray}`}>
-        <Label
-          className={`pf-m-${
-            color || SummaryCardColors.Gray
-          } sk-overview-table-label pf-u-box-shadow-md-bottom`}
-        >
-          {label}
-        </Label>
+      <CardBody
+        className={
+          !noBorder ? `sk-overview-table sk-table-border-${color || SummaryCardColors.Gray}` : ''
+        }
+      >
+        {label && (
+          <Label
+            className={`pf-m-${
+              color || SummaryCardColors.Gray
+            } sk-overview-table-label pf-u-box-shadow-md-bottom`}
+          >
+            {label}
+          </Label>
+        )}
         {columns && rows && (
           <TableComposable aria-label="Simple table" variant="compact" borders={false}>
             <Thead>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import {
   Chart,
@@ -7,47 +7,86 @@ import {
   ChartLine,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
+import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
+import EmptyStateSpinner from '@core/components/EmptyStateSpinner';
+import { DeploymentLinks } from '@models/services/REST.interfaces';
+import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
+import { SitesServices } from '@pages/Site/services';
 import { TotalBytesBySite } from '@pages/Site/services/services.interfaces';
+import { QuerySite } from '@pages/Site/site.enum';
+import { UPDATE_INTERVAL } from 'config';
 
 import { chartConfig } from './TrafficChart.constants';
 import { TrafficChartLabels } from './TrafficChart.enum';
-import { SampleProps } from './TrafficChart.interfaces';
+import { SampleProps, TrafficChartProps } from './TrafficChart.interfaces';
 
-const TrafficChart = function ({
-  totalBytesBySites,
-  timestamp,
-}: {
-  totalBytesBySites: TotalBytesBySite[];
-  timestamp: number;
-}) {
-  const [lastTimestamp, setLastTimestamp] = useState(timestamp);
+const TrafficChart = memo(function ({ siteId }: TrafficChartProps) {
+  const [lastTimestamp, setLastTimestamp] = useState(0);
   const [samples, setSamples] = useState<SampleProps[][] | null>(null);
 
+  const navigate = useNavigate();
+
+  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+  const {
+    data: deploymentLinks,
+    isLoading,
+    dataUpdatedAt,
+  } = useQuery(QuerySite.GetDeploymentLinks, SitesServices.fetchDeploymentLinks, {
+    refetchInterval,
+    onError: handleError,
+  });
+
+  function handleError({ httpStatus }: { httpStatus?: number }) {
+    const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
+
+    setRefetchInterval(0);
+    navigate(route);
+  }
+
   useEffect(() => {
-    const lowerBoundTimestamp = Date.now() - chartConfig.timestampWindowUpperBound;
-    const newSamplesBySite = totalBytesBySites.map(({ totalBytes, siteName }, index) => {
-      const sample = {
-        y: totalBytes,
-        x: `${timestamp - lastTimestamp}`,
-        name: siteName,
-        timestamp,
-      };
+    if (deploymentLinks) {
+      const timestamp = dataUpdatedAt;
+      const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
 
-      const newSamples = [
-        ...((samples && samples[index]) || [{ name: ' ', x: '0', y: 0, timestamp: 0 }]),
-        sample,
-      ];
+      const totalBytesBySites = getTotalBytesBySite({
+        direction: 'in',
+        deploymentLinks,
+        siteId,
+      });
 
-      return newSamples.filter((newSample) => newSample.timestamp - lowerBoundTimestamp > 0);
-    });
+      const newSamplesBySite = totalBytesBySites.map(({ totalBytes, siteName }, index) => {
+        const sample = {
+          y: totalBytes,
+          x: `${timestamp - lastTimestamp}`,
+          name: siteName,
+          timestamp,
+        };
 
-    setSamples(newSamplesBySite);
-  }, [timestamp]);
+        const newSamples = [
+          ...((samples && samples[index]) || [{ name: ' ', x: '0', y: 0, timestamp: 0 }]),
+          sample,
+        ];
+
+        return newSamples.filter((newSample) => newSample.timestamp - lowerBoundTimestamp > 0);
+      });
+
+      setSamples(newSamplesBySite);
+    }
+  }, [deploymentLinks, dataUpdatedAt]);
 
   useEffect(() => {
     setLastTimestamp(Date.now());
   }, []);
+
+  if (isLoading) {
+    return <EmptyStateSpinner />;
+  }
+
+  if (!deploymentLinks) {
+    return null;
+  }
 
   return (
     <div style={{ height: `${chartConfig.height}px`, width: `${chartConfig.width}px` }}>
@@ -117,7 +156,7 @@ const TrafficChart = function ({
       </Chart>
     </div>
   );
-};
+});
 
 export default TrafficChart;
 
@@ -136,4 +175,33 @@ function formatBytes(bytes: number, decimals = 2) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+function getTotalBytesBySite({
+  direction,
+  deploymentLinks,
+  siteId,
+}: {
+  direction: string;
+  deploymentLinks: DeploymentLinks[];
+  siteId: string;
+}) {
+  const stat = 'bytes_out';
+  const from = direction === 'out' ? 'source' : 'target';
+  const to = direction === 'out' ? 'target' : 'source';
+
+  const bytesBySite = deploymentLinks.reduce((acc, deploymentLink) => {
+    const idFrom = deploymentLink[from].site.site_id;
+    const idTo = deploymentLink[to].site.site_id;
+    if (idFrom !== idTo && idFrom === siteId) {
+      acc.push({
+        siteName: deploymentLink[to].site.site_name,
+        totalBytes: deploymentLink.request[stat],
+      });
+    }
+
+    return acc;
+  }, [] as TotalBytesBySite[]);
+
+  return bytesBySite;
 }

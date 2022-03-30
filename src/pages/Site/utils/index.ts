@@ -10,16 +10,18 @@ const TCP_PROTOCOL = 'tcp';
 export function getServicesExposed(services: DataServices[], allSites: SiteData[]) {
   const deployments: { service: ServiceData; site: SiteData }[] = [];
 
-  services.forEach((service) => {
-    const sites = getSitesPerService(service, allSites);
+  services
+    .filter((service) => !service.derived)
+    .forEach((service) => {
+      const sites = getSitesPerService(service, allSites);
 
-    sites.forEach((site: SiteData) => {
-      deployments.push({
-        service: { ...service, siteId: site.site_id },
-        site,
+      sites.forEach((site: SiteData) => {
+        deployments.push({
+          service: { ...service, siteId: site.site_id },
+          site,
+        });
       });
     });
-  });
 
   return deployments;
 }

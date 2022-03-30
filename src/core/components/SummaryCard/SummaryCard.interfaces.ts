@@ -18,7 +18,7 @@ export interface SummaryCardRow<T> {
 
 export interface SummaryCardProps<T> {
   columns: SummaryCardColumn[];
-  data: T[];
+  data?: T[];
   color?: SummaryCardColors;
   label?: string;
   emptyMessage?: {
@@ -26,4 +26,6 @@ export interface SummaryCardProps<T> {
     description?: string;
   };
   styleCell?: Function;
+  isLoading?: boolean;
+  noBorder?: boolean;
 }

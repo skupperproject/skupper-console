@@ -57,7 +57,7 @@ export interface DataServicesResponse {
   requests_received: ServiceRequest[] | null;
 }
 
-interface DataSiteResponse {
+export interface DataSiteResponse {
   site_name: string;
   site_id: string;
   version: string;

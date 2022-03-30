@@ -1,4 +1,5 @@
 import { DataServicesResponse } from '@models/API/REST.interfaces';
+import { SiteInfoData } from '@models/services/REST.interfaces';
 
 export type SiteData = {
   site_name: string;
@@ -13,28 +14,16 @@ export type SiteData = {
 export interface ServiceData extends DataServicesResponse {
   siteId: string;
 }
-export interface OverviewService {
+export interface SiteServices {
   address: string;
   protocol: string;
   siteName: string;
   siteId: string;
 }
-
-export type OverviewSite = SiteData;
-
 export interface TotalBytesBySite {
   siteName: string;
   totalBytes: number;
 }
-
-interface SiteInfo {
-  id: string;
-  name: string;
-  totalBytesBySites: TotalBytesBySite[];
-}
-
-export interface OverviewData {
-  site: SiteInfo;
-  sites: OverviewSite[];
-  services: OverviewService[];
+export interface SiteInfo extends SiteInfoData {
+  numSitesConnected: number;
 }

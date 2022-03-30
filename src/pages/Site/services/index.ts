@@ -1,38 +1,52 @@
 import { RESTApi } from '@models/API/REST';
 import { RESTServices } from '@models/services/REST';
-import { DeploymentLinks, Links, SiteInfo, Tokens } from '@models/services/REST.interfaces';
+import { DeploymentLinks, Links, Tokens } from '@models/services/REST.interfaces';
 
 import { getServicesExposed } from '../utils';
-import { OverviewData, TotalBytesBySite } from './services.interfaces';
+import { SiteData, SiteInfo, SiteServices } from './services.interfaces';
 
 export const SitesServices = {
-  fetchOverview: async (): Promise<OverviewData> => {
-    const { services, sites, deploymentLinks } = await RESTServices.fetchData();
-    const siteInfo = await RESTServices.fetchSiteInfo();
+  fetchSiteId: async (): Promise<string> => {
+    const siteId = await RESTApi.fetchSite();
 
-    const deployments = getServicesExposed(services, sites);
+    return siteId;
+  },
+  fetchDeploymentLinks: async (): Promise<DeploymentLinks[]> => {
+    const { deploymentLinks } = await RESTServices.fetchData();
 
-    const totalBytesBySites = getTotalBytesBySite({
-      direction: 'in',
-      deploymentLinks,
-      siteId: siteInfo.siteId,
-    });
+    return deploymentLinks;
+  },
+  fetchServices: async (): Promise<SiteServices[]> => {
+    const { services, sites } = await RESTServices.fetchData();
+    const servicesExposed = getServicesExposed(services, sites);
 
-    return {
-      site: { id: siteInfo.siteId, name: siteInfo.siteName, totalBytesBySites },
-      sites,
-      services: deployments.map((deployment) => ({
-        address: deployment.service.address,
-        protocol: deployment.service.protocol,
-        siteName: deployment.site.site_name,
-        siteId: deployment.site.site_id,
-      })),
-    };
+    return servicesExposed.map((deployment) => ({
+      address: deployment.service.address,
+      protocol: deployment.service.protocol,
+      siteName: deployment.site.site_name,
+      siteId: deployment.site.site_id,
+    }));
+  },
+  fetchSites: async (): Promise<SiteData[]> => {
+    const { sites } = await RESTApi.fetchData();
+
+    return sites;
   },
   fetchSiteInfo: async (): Promise<SiteInfo> => {
-    const data = await RESTServices.fetchSiteInfo();
+    const [data, siteId] = await Promise.all([RESTApi.fetchData(), RESTApi.fetchSite()]);
 
-    return data;
+    const { site_id, site_name, edge, version, url, connected } =
+      data.sites.find(({ site_id: id }) => id === siteId) || data.sites[0];
+
+    return {
+      siteId: site_id,
+      siteName: site_name,
+      edge,
+      version,
+      url,
+      connected,
+      numSitesConnected: connected.length,
+    };
   },
   fetchTokens: async (): Promise<Tokens[]> => {
     const data = await RESTApi.fetchTokens();
@@ -45,32 +59,3 @@ export const SitesServices = {
     return data;
   },
 };
-
-function getTotalBytesBySite({
-  direction,
-  deploymentLinks,
-  siteId,
-}: {
-  direction: string;
-  deploymentLinks: DeploymentLinks[];
-  siteId: string;
-}) {
-  const stat = 'bytes_out';
-  const from = direction === 'out' ? 'source' : 'target';
-  const to = direction === 'out' ? 'target' : 'source';
-
-  const bytesBySite = deploymentLinks.reduce((acc, deploymentLink) => {
-    const idFrom = deploymentLink[from].site.site_id;
-    const idTo = deploymentLink[to].site.site_id;
-    if (idFrom !== idTo && idFrom === siteId) {
-      acc.push({
-        siteName: deploymentLink[to].site.site_name,
-        totalBytes: deploymentLink.request[stat],
-      });
-    }
-
-    return acc;
-  }, [] as TotalBytesBySite[]);
-
-  return bytesBySite;
-}

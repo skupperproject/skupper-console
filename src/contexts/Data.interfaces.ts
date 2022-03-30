@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { SiteInfo } from '@models/services/REST.interfaces';
+import { SiteInfoData } from '@models/services/REST.interfaces';
 
 export interface GlobalStateProviderProps {
   children: React.ReactNode;
 }
 export interface ConnectionSiteInfoState {
-  siteInfo: SiteInfo | null;
+  siteInfo: SiteInfoData | null;
   setSiteInfo: Function;
 }

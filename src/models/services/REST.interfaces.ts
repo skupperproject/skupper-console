@@ -1,39 +1,24 @@
 import {
   DataResponse,
   LinksResponse,
-  ServicesResponse,
   ServiceConnections,
   DataServicesResponse,
   TokenResponse,
+  DataSiteResponse,
 } from '../API/REST.interfaces';
 
-export type DataServices = DataServicesResponse;
+export interface DataServices extends DataServicesResponse {
+  derived?: boolean;
+  isExternal?: boolean;
+}
 
-export type SiteInfoService =
-  | ServicesResponse
-  | {
-      name: string;
-      protocol?: string;
-      ports?: {
-        name: string;
-        port: number;
-      };
-      endpoints?: [
-        {
-          name: string;
-          target: string;
-          ports: {
-            [port: string]: number;
-          };
-        },
-      ];
-      exposed: boolean;
-      type: string;
-    };
-
-export interface SiteInfo {
+export interface SiteInfoData {
   siteId: string;
   siteName: string;
+  edge: boolean;
+  version: string;
+  url: string;
+  connected: string[];
 }
 
 interface Deployments {
@@ -57,5 +42,6 @@ export interface DataVAN extends DataResponse {
   deploymentLinks: DeploymentLinks[];
 }
 
+export type SitesData = DataSiteResponse;
 export type Tokens = TokenResponse;
 export type Links = LinksResponse;
