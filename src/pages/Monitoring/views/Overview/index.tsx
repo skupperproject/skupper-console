@@ -97,9 +97,9 @@ const Overview = function () {
           <StackItem>
             <Split hasGutter>
               <SplitItem isFilled>
-                <Card className="pf-u-background-color-200 pf-u-p-md" isRounded>
+                <Card className=" pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.p}>{RoutersColumns.NumRouters}</Text>
+                    <Text component={TextVariants.small}>{RoutersColumns.NumRouters}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
                       2
                     </Text>
@@ -107,9 +107,9 @@ const Overview = function () {
                 </Card>
               </SplitItem>
               <SplitItem isFilled>
-                <Card className="pf-u-background-color-200 pf-u-p-md" isRounded>
+                <Card className="pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.p}>{RoutersColumns.NumServices}</Text>
+                    <Text component={TextVariants.small}>{RoutersColumns.NumServices}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
                       {monitoringStats.totalVanAddress / 2}
                     </Text>
@@ -117,9 +117,9 @@ const Overview = function () {
                 </Card>
               </SplitItem>
               <SplitItem isFilled>
-                <Card className="pf-u-background-color-200 pf-u-p-md" isRounded>
+                <Card className="pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.p}>{RoutersColumns.NumFLows}</Text>
+                    <Text component={TextVariants.small}>{RoutersColumns.NumFLows}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
                       {monitoringStats.totalFlows}
                     </Text>
@@ -127,9 +127,9 @@ const Overview = function () {
                 </Card>
               </SplitItem>
               <SplitItem isFilled>
-                <Card className="pf-u-background-color-200 pf-u-p-md" isRounded>
+                <Card className="pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.p}>{RoutersColumns.TotalBytes}</Text>
+                    <Text component={TextVariants.small}>{RoutersColumns.TotalBytes}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
                       {formatBytes(monitoringStats.totalBytes)}
                     </Text>

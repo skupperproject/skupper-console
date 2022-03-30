@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   BreadcrumbHeading,
   BreadcrumbItem,
+  Card,
   Label,
   Select,
   SelectOption,
@@ -138,132 +139,136 @@ const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
 
   return (
     <>
-      <Toolbar
-        id="toolbar-component-managed-toggle-groups"
-        className="pf-m-toggle-group-container pf-u-mt-md pf-u-mb-xl"
-      >
-        <ToolbarContent>
-          <ToolbarGroup variant="filter-group">
-            <ToolbarItem>
-              <Select
-                isOpen={isOpenTypeFilter}
-                variant={SelectVariant.single}
-                onSelect={handleTypeFilterSelect}
-                onToggle={handleTypeFilterToggle}
-                selections={filterType.selection}
-              >
-                <SelectOption key={0} value="Select a Device" isPlaceholder />
-                <SelectOption key={1} value={DeviceTypes.Listener} />
-                <SelectOption key={2} value={DeviceTypes.Connector} />
-              </Select>
-            </ToolbarItem>
-          </ToolbarGroup>
-        </ToolbarContent>
-      </Toolbar>
-      <TableComposable
-        className="flows-table"
-        aria-label="flows table"
-        borders
-        variant="compact"
-        isStickyHeader
-      >
-        <Thead>
-          <Tr>
-            <Th />
-            <Th>{DeviceColumns.SiteName}</Th>
-            <Th>{DeviceColumns.Type}</Th>
-            <Th>{DeviceColumns.DeviceName}</Th>
-            <Th>{DeviceColumns.Hostname}</Th>
-            <Th>{DeviceColumns.Protocol}</Th>
-            <Th>{DeviceColumns.DestinationHost}</Th>
-            <Th>{DeviceColumns.DeviceStatus}</Th>
-          </Tr>
-        </Thead>
-        {rowsFilteredByType(rows, filterType.selection, filterType.isPlaceholder)?.map(
-          ({ data: row, details }, rowIndex) => (
-            <Tbody key={row.id} isExpanded={isRowExpanded(row)}>
-              <Tr>
-                <Td
-                  expand={
-                    details
-                      ? {
+      <Card className="pf-u-mb-xl pf-u-mt-md">
+        <Toolbar
+          id="toolbar-component-managed-toggle-groups"
+          className="pf-m-toggle-group-container"
+        >
+          <ToolbarContent>
+            <ToolbarGroup variant="filter-group">
+              <ToolbarItem>
+                <Select
+                  isOpen={isOpenTypeFilter}
+                  variant={SelectVariant.single}
+                  onSelect={handleTypeFilterSelect}
+                  onToggle={handleTypeFilterToggle}
+                  selections={filterType.selection}
+                >
+                  <SelectOption key={0} value="Select a Device" isPlaceholder />
+                  <SelectOption key={1} value={DeviceTypes.Listener} />
+                  <SelectOption key={2} value={DeviceTypes.Connector} />
+                </Select>
+              </ToolbarItem>
+            </ToolbarGroup>
+          </ToolbarContent>
+        </Toolbar>
+      </Card>
+      <Card>
+        <TableComposable
+          className="flows-table"
+          aria-label="flows table"
+          borders
+          variant="compact"
+          isStickyHeader
+        >
+          <Thead>
+            <Tr>
+              <Th />
+              <Th>{DeviceColumns.SiteName}</Th>
+              <Th>{DeviceColumns.Type}</Th>
+              <Th>{DeviceColumns.DeviceName}</Th>
+              <Th>{DeviceColumns.Hostname}</Th>
+              <Th>{DeviceColumns.Protocol}</Th>
+              <Th>{DeviceColumns.DestinationHost}</Th>
+              <Th>{DeviceColumns.DeviceStatus}</Th>
+            </Tr>
+          </Thead>
+          {rowsFilteredByType(rows, filterType.selection, filterType.isPlaceholder)?.map(
+            ({ data: row, details }, rowIndex) => (
+              <Tbody key={row.id} isExpanded={isRowExpanded(row)}>
+                <Tr>
+                  <Td
+                    expand={
+                      details
+                        ? {
                           rowIndex,
                           isExpanded: isRowExpanded(row),
                           onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
                         }
-                      : undefined
-                  }
-                />
-                <Td dataLabel={DeviceColumns.SiteName}>{row.siteName}</Td>
-                <Td dataLabel={DeviceColumns.Type} className="pf-u-display-flex">
-                  <span className="pf-u-mr-sm">
-                    {row.rtype.toLocaleLowerCase() === DeviceTypes.Listener ? (
-                      <ConnectedIcon />
-                    ) : (
-                      <PluggedIcon />
-                    )}
-                  </span>
-                  {row.rtype}
-                </Td>
-                <Td dataLabel={DeviceColumns.DeviceName}>
-                  <Tooltip content={row.name}>
-                    <div className="text-ellipsis" style={{ maxWidth: `${MAX_WITH_CELL}px` }}>
-                      {row.name}
-                    </div>
-                  </Tooltip>
-                </Td>
-                <Td dataLabel={DeviceColumns.Hostname}>{row.hostname}</Td>
-                <Td dataLabel={DeviceColumns.Protocol}>{row.protocol}</Td>
-                <Td dataLabel={DeviceColumns.DestinationHost}>
-                  {row.dest_host}: {row.dest_port}
-                </Td>
-                <Td>
-                  <Tooltip content={DeviceStatus.Connected}>
-                    <CircleIcon
-                      color={
-                        Math.round(Math.random())
-                          ? 'var(--pf-global--success-color--100)'
-                          : 'var(--pf-global--warning-color--100)'
-                      }
-                    />
-                  </Tooltip>
-                </Td>
-              </Tr>
-              {details ? (
-                <Tr isExpanded={isRowExpanded(row)}>
-                  <Td dataLabel={`${row.id}`} colSpan={12}>
-                    <ExpandableRowContent>
-                      <Label
-                        color="green"
-                        className="pf-u-mb-xl"
-                      >{`${details.ports.length} Ports connected to ${details.host}`}</Label>
-                      <Split
-                        hasGutter
-                        style={{
-                          height: MAX_HEIGHT_DETAILS_TABLE,
-                          overflow: 'hidden',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <SplitItem isFilled>
-                          <DeviceDetailsTable
-                            ports={details.ports}
-                            totalBytes={details.totalBytes}
-                          />
-                        </SplitItem>
-                        <SplitItem style={{ width: MAX_WIDTH_DETAILS_TABLE }}>
-                          <DeviceTrafficChart ports={details.ports} />
-                        </SplitItem>
-                      </Split>
-                    </ExpandableRowContent>
+                        : undefined
+                    }
+                  />
+                  <Td dataLabel={DeviceColumns.SiteName}>{row.siteName}</Td>
+                  <Td dataLabel={DeviceColumns.Type} className="pf-u-display-flex">
+                    <span className="pf-u-mr-sm">
+                      {row.rtype.toLocaleLowerCase() === DeviceTypes.Listener ? (
+                        <ConnectedIcon />
+                      ) : (
+                        <PluggedIcon />
+                      )}
+                    </span>
+                    {row.rtype}
+                  </Td>
+                  <Td dataLabel={DeviceColumns.DeviceName}>
+                    <Tooltip content={row.name}>
+                      <div className="text-ellipsis" style={{ maxWidth: `${MAX_WITH_CELL}px` }}>
+                        {row.name}
+                      </div>
+                    </Tooltip>
+                  </Td>
+                  <Td dataLabel={DeviceColumns.Hostname}>{row.hostname}</Td>
+                  <Td dataLabel={DeviceColumns.Protocol}>{row.protocol}</Td>
+                  <Td dataLabel={DeviceColumns.DestinationHost}>
+                    {`${row.dest_host}: ${row.dest_port} -> ${details?.host}`}
+                  </Td>
+                  <Td>
+                    <Tooltip content={DeviceStatus.Connected}>
+                      <CircleIcon
+                        color={
+                          Math.round(Math.random())
+                            ? 'var(--pf-global--success-color--100)'
+                            : 'var(--pf-global--warning-color--100)'
+                        }
+                      />
+                    </Tooltip>
                   </Td>
                 </Tr>
-              ) : null}
-            </Tbody>
-          ),
-        )}
-      </TableComposable>
+                {details ? (
+                  <Tr isExpanded={isRowExpanded(row)}>
+                    <Td dataLabel={`${row.id}`} colSpan={12}>
+                      <ExpandableRowContent>
+                        <Label
+                          color="green"
+                          className="pf-u-mb-xl"
+                        >{`${details.ports.length} Ports connected`}</Label>
+                        <Split
+                          hasGutter
+                          style={{
+                            height: MAX_HEIGHT_DETAILS_TABLE,
+                            overflow: 'hidden',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <SplitItem isFilled>
+                            <DeviceDetailsTable
+                              ports={details.ports}
+                              totalBytes={details.totalBytes}
+                            />
+                          </SplitItem>
+                          <SplitItem style={{ width: MAX_WIDTH_DETAILS_TABLE }}>
+                            <DeviceTrafficChart ports={details.ports} />
+                          </SplitItem>
+                        </Split>
+                      </ExpandableRowContent>
+                    </Td>
+                  </Tr>
+                ) : null}
+              </Tbody>
+            ),
+          )}
+        </TableComposable>
+      </Card>
     </>
   );
 });

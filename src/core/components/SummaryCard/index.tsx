@@ -56,7 +56,7 @@ const OverviewCard = function <T>({
   }
 
   return (
-    <Card isCompact isPlain isFullHeight>
+    <Card isCompact isFullHeight>
       <CardBody
         className={
           !noBorder ? `sk-overview-table sk-table-border-${color || SummaryCardColors.Gray}` : ''
@@ -64,9 +64,8 @@ const OverviewCard = function <T>({
       >
         {label && (
           <Label
-            className={`pf-m-${
-              color || SummaryCardColors.Gray
-            } sk-overview-table-label pf-u-box-shadow-md-bottom`}
+            className={`pf-m-${color || SummaryCardColors.Gray
+              } sk-overview-table-label pf-u-box-shadow-md-bottom`}
           >
             {label}
           </Label>
