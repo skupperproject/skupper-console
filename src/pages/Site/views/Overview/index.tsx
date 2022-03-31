@@ -155,7 +155,7 @@ const Overview = function () {
               <ServicesTable siteId={siteId} services={services} />
             </SplitItem>
             <SplitItem isFilled>
-              <GatewaysTable siteId={siteId} gateways={sites.filter(({ gateway }) => !gateway)} />
+              <GatewaysTable siteId={siteId} gateways={sites.filter(({ gateway }) => gateway)} />
             </SplitItem>
           </Split>
         </StackItem>

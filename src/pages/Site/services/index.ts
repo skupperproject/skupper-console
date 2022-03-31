@@ -3,7 +3,7 @@ import { RESTServices } from '@models/services/REST';
 import { DeploymentLinks } from '@models/services/REST.interfaces';
 
 import { getServicesExposed } from '../utils';
-import { SiteData, SiteInfo, SiteServices, Token, Link } from './services.interfaces';
+import { SiteInfo, SiteService, Token, Link } from './services.interfaces';
 
 export const SitesServices = {
   fetchSiteId: async (): Promise<string> => {
@@ -16,7 +16,7 @@ export const SitesServices = {
 
     return deploymentLinks;
   },
-  fetchServices: async (): Promise<SiteServices[]> => {
+  fetchServices: async (): Promise<SiteService[]> => {
     const { services, sites } = await RESTServices.fetchData();
     const servicesExposed = getServicesExposed(services, sites);
 
@@ -27,15 +27,27 @@ export const SitesServices = {
       siteId: deployment.site.site_id,
     }));
   },
-  fetchSites: async (): Promise<SiteData[]> => {
+  fetchSites: async (): Promise<SiteInfo[]> => {
     const { sites } = await RESTApi.fetchData();
 
-    return sites;
+    return sites.map(
+      ({ site_id, site_name, edge, version, url, connected, gateway, namespace }) => ({
+        siteId: site_id,
+        siteName: site_name,
+        edge,
+        version,
+        url,
+        connected,
+        namespace,
+        numSitesConnected: connected.length,
+        gateway,
+      }),
+    );
   },
   fetchSiteInfo: async (): Promise<SiteInfo> => {
     const [data, siteId] = await Promise.all([RESTApi.fetchData(), RESTApi.fetchSite()]);
 
-    const { site_id, site_name, edge, version, url, connected } =
+    const { site_id, site_name, edge, version, url, connected, gateway, namespace } =
       data.sites.find(({ site_id: id }) => id === siteId) || data.sites[0];
 
     return {
@@ -45,7 +57,9 @@ export const SitesServices = {
       version,
       url,
       connected,
+      namespace,
       numSitesConnected: connected.length,
+      gateway,
     };
   },
   fetchTokens: async (): Promise<Token[]> => {

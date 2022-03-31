@@ -1,9 +1,12 @@
-import { DataResponse, DataServicesResponse, ServiceConnections } from '../API/REST.interfaces';
+import {
+  DataResponse,
+  DataServicesResponse,
+  DataSiteResponse,
+  ServiceConnections,
+} from '../API/REST.interfaces';
 
-export interface DataServices extends DataServicesResponse {
-  derived?: boolean;
-  isExternal?: boolean;
-}
+export type DataServices = DataServicesResponse;
+export type SiteData = DataSiteResponse;
 
 interface DeploymentLinksStreamPoints {
   site: { site_id: string; site_name: string };

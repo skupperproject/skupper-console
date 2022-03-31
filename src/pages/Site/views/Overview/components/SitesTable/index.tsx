@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
-import { SiteData } from '@pages/Site/services/services.interfaces';
+import { SiteInfo } from '@pages/Site/services/services.interfaces';
 
 import { SITE_HEADER_TABLE } from './SitesTable.constants';
 import { SitesTableProps } from './SitesTable.interfaces';
@@ -16,7 +16,7 @@ const SitesTable = memo(function ({ siteId, sites }: SitesTableProps) {
       data={sites}
       label={Pluralize('Site', sites?.length, true)}
       color={SummaryCardColors.Blue}
-      styleCell={(cell: SiteData) => (cell.site_id === siteId ? 'sk-table-bg-blue' : '')}
+      styleCell={(cell: SiteInfo) => (cell.siteId === siteId ? 'sk-table-bg-gray' : '')}
     />
   );
 });

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
-import { ServiceData } from '@pages/Site/services/services.interfaces';
+import { SiteService } from '@pages/Site/services/services.interfaces';
 
 import { SERVICES_HEADER_TABLE } from './ServicesTable.constants';
 import { ServicesTableProps } from './ServicesTable.interfaces';
@@ -16,7 +16,7 @@ const ServicesTable = memo(function ({ siteId, services }: ServicesTableProps) {
       data={services}
       label={Pluralize('exposed Service', services?.length, true)}
       color={SummaryCardColors.Blue}
-      styleCell={(cell: ServiceData) => (cell.siteId === siteId ? 'sk-table-bg-blue' : '')}
+      styleCell={(cell: SiteService) => (cell.siteId === siteId ? 'sk-table-bg-blue' : '')}
     />
   );
 });

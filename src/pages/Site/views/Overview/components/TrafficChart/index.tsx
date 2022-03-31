@@ -7,14 +7,6 @@ import {
   ChartLine,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
-import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-
-import EmptyStateSpinner from '@core/components/EmptyStateSpinner';
-import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
-import { SitesServices } from '@pages/Site/services';
-import { QuerySite } from '@pages/Site/site.enum';
-import { UPDATE_INTERVAL } from 'config';
 
 import { chartConfig } from './TrafficChart.constants';
 import { TrafficChartLabels } from './TrafficChart.enum';
@@ -27,59 +19,30 @@ const TrafficChart = memo(function ({
   const [lastTimestamp, setLastTimestamp] = useState(timestamp);
   const [samples, setSamples] = useState<SampleProps[][] | null>(null);
 
-  const navigate = useNavigate();
-
-  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-  const {
-    data: deploymentLinks,
-    isLoading,
-    dataUpdatedAt,
-  } = useQuery(QuerySite.GetDeploymentLinks, SitesServices.fetchDeploymentLinks, {
-    refetchInterval,
-    onError: handleError,
-  });
-
-  function handleError({ httpStatus }: { httpStatus?: number }) {
-    const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
-
-    setRefetchInterval(0);
-    navigate(route);
-  }
-
   useEffect(() => {
-    if (deploymentLinks) {
-      const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
+    const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
 
-      const newSamplesBySite = totalBytesBySites.map((totalBytes, index) => {
-        const sample = {
-          y: totalBytes,
-          x: `${timestamp - lastTimestamp}`,
-          timestamp,
-        };
+    const newSamplesBySite = totalBytesBySites.map((totalBytes, index) => {
+      const sample = {
+        y: totalBytes,
+        x: `${timestamp - lastTimestamp}`,
+        timestamp,
+      };
 
-        const newSamples = [
-          ...((samples && samples[index]) || [{ name: ' ', x: '0', y: 0, timestamp: 0 }]),
-          sample,
-        ];
+      const newSamples = [
+        ...((samples && samples[index]) || [{ name: ' ', x: '0', y: 0, timestamp: 0 }]),
+        sample,
+      ];
 
-        return newSamples.filter((newSample) => newSample.timestamp - lowerBoundTimestamp > 0);
-      });
+      return newSamples.filter((newSample) => newSample.timestamp - lowerBoundTimestamp > 0);
+    });
 
-      setSamples(newSamplesBySite);
-    }
-  }, [totalBytesBySites, dataUpdatedAt]);
+    setSamples(newSamplesBySite);
+  }, [lastTimestamp, timestamp, totalBytesBySites]);
 
   useEffect(() => {
     setLastTimestamp(Date.now());
   }, []);
-
-  if (isLoading) {
-    return <EmptyStateSpinner />;
-  }
-
-  if (!deploymentLinks) {
-    return null;
-  }
 
   return (
     <div style={{ height: `${chartConfig.height}px`, width: `${chartConfig.width}px` }}>

@@ -1,6 +1,4 @@
-import { DataServices } from '@models/services/REST.interfaces';
-
-import { ServiceData, SiteData } from '../services/services.interfaces';
+import { DataServices, SiteData } from '@models/services/REST.interfaces';
 
 const TCP_PROTOCOL = 'tcp';
 
@@ -8,7 +6,7 @@ const TCP_PROTOCOL = 'tcp';
  * It returns the list of the services exposed in the Skupper network.
  */
 export function getServicesExposed(services: DataServices[], allSites: SiteData[]) {
-  const deployments: { service: ServiceData; site: SiteData }[] = [];
+  const deployments: { service: DataServices; site: SiteData }[] = [];
 
   services
     .filter((service) => !service.derived)
@@ -17,7 +15,7 @@ export function getServicesExposed(services: DataServices[], allSites: SiteData[
 
       sites.forEach((site: SiteData) => {
         deployments.push({
-          service: { ...service, siteId: site.site_id },
+          service,
           site,
         });
       });

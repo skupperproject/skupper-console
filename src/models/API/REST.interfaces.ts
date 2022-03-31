@@ -55,6 +55,8 @@ export interface DataServicesResponse {
     | null;
   requests_handled: ServiceRequest[] | null;
   requests_received: ServiceRequest[] | null;
+  derived?: boolean;
+  isExternal?: boolean;
 }
 
 export interface DataSiteResponse {

@@ -1,16 +1,6 @@
-import {
-  DataServicesResponse,
-  DataSiteResponse,
-  TokenResponse,
-  LinkResponse,
-} from '@models/API/REST.interfaces';
+import { TokenResponse, LinkResponse } from '@models/API/REST.interfaces';
 
-export type SiteData = DataSiteResponse;
-
-export interface ServiceData extends DataServicesResponse {
-  siteId: string;
-}
-export interface SiteServices {
+export interface SiteService {
   address: string;
   protocol: string;
   siteName: string;
@@ -24,7 +14,9 @@ export interface SiteInfo {
   version: string;
   url: string;
   connected: string[];
+  namespace: string;
   numSitesConnected: number;
+  gateway: boolean;
 }
 
 export type Token = TokenResponse;
