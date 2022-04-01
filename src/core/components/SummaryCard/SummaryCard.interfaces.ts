@@ -28,4 +28,5 @@ export interface SummaryCardProps<T> {
   styleCell?: Function;
   isLoading?: boolean;
   noBorder?: boolean;
+  isPlain?: boolean;
 }

@@ -8,23 +8,23 @@ import {
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
 
+import { formatBytes } from '@utils/formatBytes';
+
 import { chartConfig } from './TrafficChart.constants';
 import { TrafficChartLabels } from './TrafficChart.enum';
 import { SampleProps, TrafficChartProps } from './TrafficChart.interfaces';
 
-const TrafficChart = memo(function ({
-  totalBytes: totalBytesBySites,
-  timestamp,
-}: TrafficChartProps) {
+const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: TrafficChartProps) {
   const [lastTimestamp, setLastTimestamp] = useState(timestamp);
   const [samples, setSamples] = useState<SampleProps[][] | null>(null);
 
   useEffect(() => {
     const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
 
-    const newSamplesBySite = totalBytesBySites.map((totalBytes, index) => {
+    const newSamplesBySite = totalBytesProps.map(({ totalBytes, name }, index) => {
       const sample = {
         y: totalBytes,
+        name,
         x: `${timestamp - lastTimestamp}`,
         timestamp,
       };
@@ -38,7 +38,7 @@ const TrafficChart = memo(function ({
     });
 
     setSamples(newSamplesBySite);
-  }, [lastTimestamp, timestamp, totalBytesBySites]);
+  }, [timestamp]);
 
   useEffect(() => {
     setLastTimestamp(Date.now());
@@ -49,31 +49,29 @@ const TrafficChart = memo(function ({
       <Chart
         containerComponent={
           <ChartVoronoiContainer
-            labels={({ datum }) => `${datum.name}: ${datum.y}`}
+            labels={({ datum }) => `${datum.name}: ${formatBytes(datum.y)}`}
             constrainToVisibleArea
           />
         }
         legendData={[{ name: 'Traffic during the last minute' }]}
-        legendOrientation="vertical"
+        legendOrientation="horizontal"
         legendPosition="bottom"
         height={chartConfig.height}
         domainPadding={{ y: [10, 10] }}
         padding={{
-          bottom: 70,
+          bottom: 40,
           left: 90,
           right: 50,
           top: 20,
         }}
         width={chartConfig.width}
+        themeColor={options?.chartColor ? options.chartColor : 'blue'}
       >
         <ChartAxis // X axis
           tickFormat={(_, index, ticks) => {
-            // first one
             if (index === ticks.length - 1) {
               return TrafficChartLabels.TickFormatUpperBoundLabel;
             }
-            // last one.
-            // After X seconds, it stops to show the calculated time from now (i.e., 25 secs ago). Instead, it shows a default label (i.e., 1 min ago)
             if (index === 0) {
               return Number(ticks[ticks.length - 1]) <= chartConfig.timestampWindowUpperBound
                 ? `${Math.floor(ticks[ticks.length - 1] / 1000)} ${
@@ -112,20 +110,3 @@ const TrafficChart = memo(function ({
 });
 
 export default TrafficChart;
-
-/**
- *  Converts input bytes in the most appropriate format
- */
-function formatBytes(bytes: number, decimals = 2) {
-  if (bytes === 0) {
-    return '0 Bytes';
-  }
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}

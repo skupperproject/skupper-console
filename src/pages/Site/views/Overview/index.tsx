@@ -26,6 +26,7 @@ import SiteInfo from './components/SiteInfo';
 import SitesTable from './components/SitesTable';
 import TokenTable from './components/TokensTable';
 import TrafficChart from './components/TrafficChart';
+import { TotalByteProps } from './components/TrafficChart/TrafficChart.interfaces';
 import { OverviewLabels } from './Overview.enum';
 
 const Overview = function () {
@@ -154,6 +155,7 @@ const Overview = function () {
             <SplitItem isFilled>
               <ServicesTable siteId={siteId} services={services} />
             </SplitItem>
+
             <SplitItem isFilled>
               <GatewaysTable siteId={siteId} gateways={sites.filter(({ gateway }) => gateway)} />
             </SplitItem>
@@ -170,7 +172,7 @@ const Overview = function () {
       <StackItem>
         {deploymentLinks && (
           <TrafficChart
-            totalBytes={getTotalBytesBySite({ direction: 'in', deploymentLinks, siteId })}
+            totalBytesProps={getTotalBytesBySite({ direction: 'in', deploymentLinks, siteId })}
             timestamp={dataUpdatedAt}
           />
         )}
@@ -198,11 +200,11 @@ function getTotalBytesBySite({
     const idFrom = deploymentLink[from].site.site_id;
     const idTo = deploymentLink[to].site.site_id;
     if (idFrom !== idTo && idFrom === siteId) {
-      acc.push(deploymentLink.request[stat]);
+      acc.push({ name: '', totalBytes: deploymentLink.request[stat] });
     }
 
     return acc;
-  }, [] as number[]);
+  }, [] as TotalByteProps[]);
 
   return bytesBySite;
 }

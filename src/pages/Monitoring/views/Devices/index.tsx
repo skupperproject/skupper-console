@@ -34,6 +34,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
+import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import {
@@ -391,23 +392,6 @@ const rowsFilteredByType = (
   selection: string,
   isPlaceholder: boolean,
 ) => rows?.filter(({ data: row }) => row.rtype.toLowerCase() === selection || isPlaceholder);
-
-/**
- *  Converts input bytes in the most appropriate format
- */
-function formatBytes(bytes: number, decimals = 2) {
-  if (bytes === 0) {
-    return '0 Bytes';
-  }
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}
 
 const getBytes = (ports: any[]) =>
   ports.map(({ portSource, octets }) => ({

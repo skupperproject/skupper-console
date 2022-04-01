@@ -18,6 +18,8 @@ import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import TrafficChart from '@pages/Site/views/Overview/components/TrafficChart';
+import { ChartThemeColors } from '@pages/Site/views/Overview/components/TrafficChart/TrafficChart.enum';
+import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import {
@@ -144,56 +146,65 @@ const Overview = function () {
           </StackItem>
         )}
 
-        <StackItem className="pf-u-py-xl">
-          <Split hasGutter>
-            {routersStats && (
-              <SplitItem isFilled>
-                <OverviewCard
-                  columns={ROUTERS_STATS_HEADER}
-                  data={routersStats}
-                  label={Pluralize('Router', routersStats.length, false)}
-                />
-                {data && (
-                  <Card>
-                    <TrafficChart
-                      timestamp={dataUpdatedAt}
-                      totalBytes={[
-                        Math.floor(
-                          data.routersStats.reduce(
-                            (acc, routerStat) => (acc = acc + routerStat.totalBytes),
-                            0,
-                          ),
-                        ),
-                      ]}
-                    />
-                  </Card>
-                )}
-              </SplitItem>
-            )}
+        <StackItem className="pf-u-py-md">
+          <Card>
+            <Split hasGutter>
+              {routersStats && (
+                <SplitItem isFilled>
+                  <OverviewCard
+                    color={SummaryCardColors.Blue}
+                    noBorder={true}
+                    isPlain={true}
+                    columns={ROUTERS_STATS_HEADER}
+                    data={routersStats}
+                    label={Pluralize('Router', routersStats.length, false)}
+                  />
+                </SplitItem>
+              )}
+              {data && (
+                <SplitItem>
+                  <TrafficChart
+                    timestamp={dataUpdatedAt}
+                    totalBytesProps={data.routersStats.map((routerStat) => ({
+                      name: routerStat.name,
+                      totalBytes: routerStat.totalBytes,
+                    }))}
+                  />
+                </SplitItem>
+              )}
+            </Split>
+          </Card>
+        </StackItem>
 
-            {vans && (
-              <SplitItem isFilled>
-                <OverviewCard
-                  columns={VANS_STATS_HEADER}
-                  data={vans}
-                  label={Pluralize('Service', vans.length, false)}
-                  color={SummaryCardColors.Blue}
-                />
-                {data && (
-                  <Card>
-                    <TrafficChart
-                      timestamp={dataUpdatedAt}
-                      totalBytes={[
-                        Math.floor(
-                          data.vansStats.reduce((acc, van) => (acc = acc + van.totalBytes), 0),
-                        ),
-                      ]}
-                    />
-                  </Card>
-                )}
-              </SplitItem>
-            )}
-          </Split>
+        <StackItem>
+          <Card>
+            <Split hasGutter>
+              {vans && (
+                <SplitItem isFilled>
+                  <OverviewCard
+                    color={SummaryCardColors.Purple}
+                    noBorder={true}
+                    isPlain={true}
+                    columns={VANS_STATS_HEADER}
+                    data={vans}
+                    label={Pluralize('Service', vans.length, false)}
+                  />
+                </SplitItem>
+              )}
+              {data && (
+                <SplitItem>
+                  <TrafficChart
+                    options={{ chartColor: ChartThemeColors.Purple }}
+                    timestamp={dataUpdatedAt}
+                    totalBytesProps={data.vansStats.map((van) => ({
+                      name: van.name,
+                      totalBytes: van.totalBytes,
+                    }))}
+                  />
+                </SplitItem>
+              )}
+            </Split>
+          </Card>
         </StackItem>
       </Stack>
       <Outlet />
@@ -202,20 +213,3 @@ const Overview = function () {
 };
 
 export default Overview;
-
-/**
- *  Converts input bytes in the most appropriate format
- */
-function formatBytes(bytes: number, decimals = 2) {
-  if (bytes === 0) {
-    return '0 Bytes';
-  }
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}

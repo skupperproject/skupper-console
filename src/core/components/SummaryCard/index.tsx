@@ -29,6 +29,7 @@ const OverviewCard = function <T>({
   styleCell,
   isLoading,
   noBorder = false,
+  isPlain = false,
 }: SummaryCardProps<T>) {
   const [rows, setRows] = useState<SummaryCardRow<T>[]>();
   const [columns, setColumns] = useState<string[]>();
@@ -56,7 +57,7 @@ const OverviewCard = function <T>({
   }
 
   return (
-    <Card isCompact isFullHeight>
+    <Card isCompact isFullHeight isPlain={isPlain}>
       <CardBody
         className={
           !noBorder ? `sk-overview-table sk-table-border-${color || SummaryCardColors.Gray}` : ''
