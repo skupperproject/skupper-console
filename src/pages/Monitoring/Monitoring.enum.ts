@@ -6,6 +6,11 @@ export enum MonitoringRoutesPaths {
 }
 
 // Routers  section
+export enum SectionsStatsLabels {
+  Service = 'Service',
+  Router = 'Router',
+}
+
 export enum RoutersColumns {
   Name = 'Name',
   NumRouters = 'Routers',
@@ -47,12 +52,13 @@ export enum DeviceTypes {
 }
 
 export enum DeviceStatus {
-  InProgress = 'In progress',
-  Connected = 'Connected',
+  AllFlowsOpen = 'All flow are open',
+  SomeFlowIsClosed = 'Some flow is closed',
 }
 
 export enum QueriesMonitoring {
-  GetFlows = 'monitoring-query',
+  GetFlows = 'monitoring-flows-query',
   GetServices = 'monitoring-services',
   GetMonitoringStats = 'monitoring-stats-query',
+  GetTolopologyRoutersLinks = 'monitoring-topoogy-routers-links-query',
 }

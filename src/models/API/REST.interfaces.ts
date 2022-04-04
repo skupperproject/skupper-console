@@ -122,6 +122,8 @@ interface FlowResponse {
   octets: number;
   counterflow?: string | null;
   connected_to?: FlowResponse & { parent: string };
+  startTime: number;
+  endTime: number;
 }
 
 export interface FlowsResponse {
@@ -136,6 +138,9 @@ export interface FlowsResponse {
   van_port: string;
   id: string;
   flows: FlowResponse[];
+  parent: string;
+  startTime: number;
+  endTime?: number;
 }
 
 export interface VanAddressStatsResponse {
@@ -160,4 +165,16 @@ export interface MonitoringStatsResponse {
   totalVanAddress: number;
   totalFlows: number;
   totalBytes: number;
+}
+
+interface FLowTopologyRoutersLink {
+  source: string;
+  target: string;
+  mode: string;
+  cost: number;
+}
+
+export interface FLowTopologyRoutersLinksResponse {
+  nodes: FlowsResponse[];
+  links: FLowTopologyRoutersLink[];
 }

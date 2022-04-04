@@ -68,8 +68,6 @@ export function loadMockServerInDev() {
           });
 
           return [stats];
-
-          return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
         });
         this.get('/routers-stats', () => {
           let data = generateDynamicBytes(flowsData);
@@ -91,7 +89,6 @@ export function loadMockServerInDev() {
             } else if (item.van_address) {
               acc[current].totalVanAddress++;
             }
-
             return acc;
           }, {});
 
@@ -137,6 +134,30 @@ export function loadMockServerInDev() {
           }
 
           return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data)));
+        });
+        this.get('/flows/topology/routers/links', (_, { queryParams }) => {
+          const routers = flowsData.filter((data) => data.rtype === 'ROUTER');
+          const routersMap = routers.reduce((acc, router) => {
+            acc[router.name] = router;
+
+            return acc;
+          }, {});
+
+          const linksData = flowsData.filter((data) => data.rtype === 'LINK');
+
+          const links = linksData.reduce((acc, link) => {
+            const target = routersMap[link.name];
+            acc.push({
+              source: link.parent,
+              target: target.id,
+              mode: link.mode,
+              cost: link.link_cost,
+            });
+
+            return acc;
+          }, []);
+
+          return { links, nodes: routers };
         });
       },
     });

@@ -223,10 +223,16 @@ const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                     {`${row.dest_host}: ${row.dest_port} -> ${details?.host}`}
                   </Td>
                   <Td>
-                    <Tooltip content={DeviceStatus.Connected}>
+                    <Tooltip
+                      content={
+                        row.flows.some((flow) => flow.endTime)
+                          ? DeviceStatus.SomeFlowIsClosed
+                          : DeviceStatus.AllFlowsOpen
+                      }
+                    >
                       <CircleIcon
                         color={
-                          Math.round(Math.random())
+                          !row.flows.some((flow) => flow.endTime)
                             ? 'var(--pf-global--success-color--100)'
                             : 'var(--pf-global--warning-color--100)'
                         }
@@ -241,7 +247,7 @@ const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                         <Label
                           color="green"
                           className="pf-u-mb-xl"
-                        >{`${details.ports.length} Ports connected`}</Label>
+                        >{`${details.ports.length} connections`}</Label>
                         <Split
                           hasGutter
                           style={{
@@ -301,13 +307,13 @@ const DeviceDetailsTable = function ({ ports, totalBytes }: { ports: Port[]; tot
           </Tr>
         </Thead>
         <Tbody>
-          {ports.map(({ id, portSource, portDest, octets }) => (
+          {ports.map(({ id, portSource, portDest, octets, endTime }) => (
             <Tr key={id}>
               <Th hasRightBorder dataLabel={DeviceColumns.FromPort}>
                 {portSource}
               </Th>
               <Td dataLabel={DeviceColumns.ToPort}>{portDest}</Td>
-              <Td dataLabel={DeviceColumns.ConnectionState}>Established</Td>
+              <Td dataLabel={DeviceColumns.ConnectionState}>{endTime ? 'Closed' : 'Open'}</Td>
               <Td className="pf-u-text-align-right" dataLabel={DeviceColumns.Traffic}>
                 {formatBytes(octets)}
               </Td>
@@ -375,11 +381,12 @@ function buildRows(data: Flow[]): Row<Flow>[] {
     const details = {
       host: item.flows[0].source_host,
       totalBytes,
-      ports: item.flows.map(({ id, connected_to, source_port, octets }) => ({
+      ports: item.flows.map(({ id, connected_to, source_port, octets, endTime }) => ({
         id,
         portSource: source_port,
         portDest: connected_to?.source_port,
         octets,
+        endTime,
       })),
     };
 

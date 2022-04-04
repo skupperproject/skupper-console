@@ -1,5 +1,6 @@
 [
   {
+    "startTime": 1649081250914065,
     "hostname": "tross-lg",
     "name": "0/Hub",
     "build_version": "2.0.0-SNAPSHOT",
@@ -7,6 +8,27 @@
     "id": "3:7:0"
   },
   {
+    "parent": "3:7:0",
+    "startTime": 1649081251925463,
+    "mode": "interior",
+    "name": "0/Site-A",
+    "link_cost": 1,
+    "direction": "incoming",
+    "rtype": "LINK",
+    "id": "3:7:1"
+  },
+  {
+    "parent": "3:7:0",
+    "startTime": 1649081254522711,
+    "mode": "interior",
+    "name": "0/Site-B",
+    "link_cost": 5,
+    "direction": "incoming",
+    "rtype": "LINK",
+    "id": "3:7:2"
+  },
+  {
+    "startTime": 1649081248517470,
     "hostname": "tross-lg",
     "name": "0/Site-B",
     "build_version": "2.0.0-SNAPSHOT",
@@ -15,6 +37,7 @@
   },
   {
     "parent": "1:1:0",
+    "startTime": 1649081248529854,
     "dest_host": "0.0.0.0",
     "protocol": "tcp",
     "dest_port": "8889",
@@ -25,132 +48,73 @@
   },
   {
     "parent": "1:1:1",
+    "startTime": 1649086022314046,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "38800",
-    "counterflow": "2:5:45",
+    "source_port": "42404",
+    "counterflow": "2:5:20",
+    "endTime": 1649086022324993,
     "rtype": "FLOW",
-    "id": "1:1:45"
+    "id": "1:1:20"
   },
   {
     "parent": "1:1:1",
+    "startTime": 1649086022575929,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "38802",
-    "counterflow": "2:5:46",
+    "source_port": "42406",
+    "counterflow": "2:5:21",
+    "endTime": 1649086022584429,
     "rtype": "FLOW",
-    "id": "1:1:46"
+    "id": "1:1:21"
   },
   {
     "parent": "1:1:1",
-    "source_host": "127.0.0.1",
-    "source_port": "38804",
+    "startTime": 1649086022840691,
     "octets": 87,
-    "counterflow": "2:5:47",
+    "source_host": "127.0.0.1",
+    "source_port": "42408",
+    "counterflow": "2:5:22",
+    "endTime": 1649086022850284,
     "rtype": "FLOW",
-    "id": "1:1:47"
+    "id": "1:1:22"
   },
   {
     "parent": "1:1:1",
+    "startTime": 1649086023105228,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "38806",
-    "counterflow": "2:5:48",
+    "source_port": "42410",
+    "counterflow": "2:5:23",
+    "endTime": 1649086023114334,
     "rtype": "FLOW",
-    "id": "1:1:48"
+    "id": "1:1:23"
   },
   {
     "parent": "1:1:1",
+    "startTime": 1649086023344362,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "39206",
-    "counterflow": "2:5:79",
+    "source_port": "42412",
+    "counterflow": "2:5:24",
+    "endTime": 1649086023353379,
     "rtype": "FLOW",
-    "id": "1:1:79"
+    "id": "1:1:24"
   },
   {
     "parent": "1:1:1",
+    "startTime": 1649086023580505,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "39208",
-    "counterflow": "2:5:80",
+    "source_port": "42414",
+    "counterflow": "2:5:25",
+    "endTime": 1649086023588957,
     "rtype": "FLOW",
-    "id": "1:1:80"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39210",
-    "counterflow": "2:5:81",
-    "rtype": "FLOW",
-    "id": "1:1:81"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39212",
-    "counterflow": "2:5:82",
-    "rtype": "FLOW",
-    "id": "1:1:82"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39214",
-    "counterflow": "2:5:83",
-    "rtype": "FLOW",
-    "id": "1:1:83"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39216",
-    "counterflow": "2:5:84",
-    "rtype": "FLOW",
-    "id": "1:1:84"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39218",
-    "counterflow": "2:5:85",
-    "rtype": "FLOW",
-    "id": "1:1:85"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39220",
-    "counterflow": "2:5:86",
-    "rtype": "FLOW",
-    "id": "1:1:86"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39222",
-    "counterflow": "2:5:87",
-    "rtype": "FLOW",
-    "id": "1:1:87"
-  },
-  {
-    "parent": "1:1:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "39224",
-    "counterflow": "2:5:88",
-    "rtype": "FLOW",
-    "id": "1:1:88"
+    "id": "1:1:25"
   },
   {
     "parent": "1:1:0",
+    "startTime": 1649081248530656,
     "dest_host": "0.0.0.0",
     "protocol": "tcp",
     "dest_port": "8887",
@@ -161,114 +125,62 @@
   },
   {
     "parent": "1:1:2",
+    "startTime": 1649086017399431,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "40506",
-    "counterflow": "2:5:40",
+    "source_port": "49198",
+    "counterflow": "2:5:10",
+    "endTime": 1649086017406220,
     "rtype": "FLOW",
-    "id": "1:1:40"
+    "id": "1:1:10"
   },
   {
     "parent": "1:1:2",
+    "startTime": 1649086017681097,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "40508",
-    "counterflow": "2:5:41",
+    "source_port": "49200",
+    "counterflow": "2:5:11",
+    "endTime": 1649086017685016,
     "rtype": "FLOW",
-    "id": "1:1:41"
+    "id": "1:1:11"
   },
   {
     "parent": "1:1:2",
+    "startTime": 1649086017952177,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "54896",
-    "counterflow": "2:5:59",
+    "source_port": "49202",
+    "counterflow": "2:5:12",
+    "endTime": 1649086017967722,
     "rtype": "FLOW",
-    "id": "1:1:59"
+    "id": "1:1:12"
   },
   {
     "parent": "1:1:2",
-    "octets": 87,
+    "startTime": 1649086018177575,
     "source_host": "127.0.0.1",
-    "source_port": "54898",
-    "counterflow": "2:5:60",
+    "source_port": "49204",
+    "octets": 87,
+    "counterflow": "2:5:13",
+    "endTime": 1649086018180647,
     "rtype": "FLOW",
-    "id": "1:1:60"
+    "id": "1:1:13"
   },
   {
     "parent": "1:1:2",
+    "startTime": 1649086018431833,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "54900",
-    "counterflow": "2:5:61",
+    "source_port": "49208",
+    "counterflow": "2:5:14",
+    "endTime": 1649086018440561,
     "rtype": "FLOW",
-    "id": "1:1:61"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54902",
-    "counterflow": "2:5:62",
-    "rtype": "FLOW",
-    "id": "1:1:62"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54904",
-    "counterflow": "2:5:63",
-    "rtype": "FLOW",
-    "id": "1:1:63"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54906",
-    "counterflow": "2:5:64",
-    "rtype": "FLOW",
-    "id": "1:1:64"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54908",
-    "counterflow": "2:5:65",
-    "rtype": "FLOW",
-    "id": "1:1:65"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54910",
-    "counterflow": "2:5:66",
-    "rtype": "FLOW",
-    "id": "1:1:66"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54912",
-    "counterflow": "2:5:67",
-    "rtype": "FLOW",
-    "id": "1:1:67"
-  },
-  {
-    "parent": "1:1:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "54914",
-    "counterflow": "2:5:68",
-    "rtype": "FLOW",
-    "id": "1:1:68"
+    "id": "1:1:14"
   },
   {
     "parent": "1:1:0",
+    "startTime": 1649081248531360,
     "dest_host": "10.102.77.17",
     "protocol": "tcp",
     "dest_port": "8080",
@@ -279,136 +191,67 @@
   },
   {
     "parent": "1:1:3",
+    "startTime": 1649086019834230,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "46302",
-    "counterflow": "2:5:42",
+    "source_port": "50016",
+    "counterflow": "2:5:15",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086019837046,
     "rtype": "FLOW",
-    "id": "1:1:42"
+    "id": "1:1:15"
   },
   {
     "parent": "1:1:3",
+    "startTime": 1649086020100085,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "46304",
-    "counterflow": "2:5:43",
+    "source_port": "50018",
+    "counterflow": "2:5:16",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086020106810,
     "rtype": "FLOW",
-    "id": "1:1:43"
+    "id": "1:1:16"
   },
   {
     "parent": "1:1:3",
+    "startTime": 1649086020355122,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "46306",
-    "counterflow": "2:5:44",
+    "source_port": "50020",
+    "counterflow": "2:5:17",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086020359168,
     "rtype": "FLOW",
-    "id": "1:1:44"
+    "id": "1:1:17"
   },
   {
     "parent": "1:1:3",
+    "startTime": 1649086020594708,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "47090",
-    "counterflow": "2:5:69",
+    "source_port": "50024",
+    "counterflow": "2:5:18",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086020600892,
     "rtype": "FLOW",
-    "id": "1:1:69"
+    "id": "1:1:18"
   },
   {
     "parent": "1:1:3",
+    "startTime": 1649086020842772,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "47092",
-    "counterflow": "2:5:70",
+    "source_port": "50026",
+    "counterflow": "2:5:19",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086020849966,
     "rtype": "FLOW",
-    "id": "1:1:70"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47094",
-    "counterflow": "2:5:71",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:71"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47096",
-    "counterflow": "2:5:72",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:72"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47098",
-    "counterflow": "2:5:73",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:73"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47100",
-    "counterflow": "2:5:74",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:74"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47104",
-    "counterflow": "2:5:75",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:75"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47106",
-    "counterflow": "2:5:76",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:76"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47108",
-    "counterflow": "2:5:77",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:77"
-  },
-  {
-    "parent": "1:1:3",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "47110",
-    "counterflow": "2:5:78",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:78"
+    "id": "1:1:19"
   },
   {
     "parent": "1:1:0",
+    "startTime": 1649081248532580,
     "dest_host": "10.107.120.162",
     "protocol": "tcp",
     "dest_port": "8080",
@@ -419,115 +262,64 @@
   },
   {
     "parent": "1:1:4",
-    "octets": 206,
-    "source_host": "192.168.50.1",
-    "source_port": "55322",
-    "counterflow": "2:5:39",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:39"
-  },
-  {
-    "parent": "1:1:4",
-    "octets": 206,
-    "source_host": "192.168.50.1",
-    "source_port": "55630",
-    "counterflow": "2:5:49",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:49"
-  },
-  {
-    "parent": "1:1:4",
-    "octets": 206,
-    "source_host": "192.168.50.1",
-    "source_port": "55632",
-    "counterflow": "2:5:50",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:50"
-  },
-  {
-    "parent": "1:1:4",
-    "octets": 206,
-    "source_host": "192.168.50.1",
-    "source_port": "55634",
-    "counterflow": "2:5:51",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:51"
-  },
-  {
-    "parent": "1:1:4",
+    "startTime": 1649086013704354,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "55636",
-    "counterflow": "2:5:52",
+    "source_port": "57938",
+    "counterflow": "2:5:6",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086013711596,
     "rtype": "FLOW",
-    "id": "1:1:52"
+    "id": "1:1:6"
   },
   {
     "parent": "1:1:4",
+    "startTime": 1649086014484620,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "55638",
-    "counterflow": "2:5:53",
+    "source_port": "57942",
+    "counterflow": "2:5:7",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086014492200,
     "rtype": "FLOW",
-    "id": "1:1:53"
+    "id": "1:1:7"
   },
   {
     "parent": "1:1:4",
+    "startTime": 1649086015542071,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "55642",
-    "counterflow": "2:5:54",
+    "source_port": "57944",
+    "counterflow": "2:5:8",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086015547479,
     "rtype": "FLOW",
-    "id": "1:1:54"
+    "id": "1:1:8"
   },
   {
     "parent": "1:1:4",
+    "startTime": 1649086015835591,
     "octets": 207,
     "source_host": "192.168.50.1",
-    "source_port": "55644",
-    "counterflow": "2:5:55",
+    "source_port": "57946",
+    "counterflow": "2:5:9",
     "trace": "0/Site-A|0/Hub",
+    "endTime": 1649086015838567,
     "rtype": "FLOW",
-    "id": "1:1:55"
+    "id": "1:1:9"
   },
   {
-    "parent": "1:1:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "55646",
-    "counterflow": "2:5:56",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:56"
+    "parent": "1:1:0",
+    "startTime": 1649081254920122,
+    "mode": "interior",
+    "name": "0/Hub",
+    "link_cost": 5,
+    "direction": "outgoing",
+    "rtype": "LINK",
+    "id": "1:1:5"
   },
   {
-    "parent": "1:1:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "55648",
-    "counterflow": "2:5:57",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:57"
-  },
-  {
-    "parent": "1:1:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "55650",
-    "counterflow": "2:5:58",
-    "trace": "0/Site-A|0/Hub",
-    "rtype": "FLOW",
-    "id": "1:1:58"
-  },
-  {
+    "startTime": 1649081245907946,
     "hostname": "tross-lg",
     "name": "0/Site-A",
     "build_version": "2.0.0-SNAPSHOT",
@@ -536,6 +328,7 @@
   },
   {
     "parent": "2:5:0",
+    "startTime": 1649081245930429,
     "dest_host": "0.0.0.0",
     "protocol": "tcp",
     "dest_port": "8888",
@@ -546,123 +339,62 @@
   },
   {
     "parent": "2:5:1",
+    "startTime": 1649086019833077,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "45642",
-    "counterflow": "1:1:42",
+    "source_port": "49868",
+    "counterflow": "1:1:15",
+    "endTime": 1649086019836854,
     "rtype": "FLOW",
-    "id": "2:5:42"
+    "id": "2:5:15"
   },
   {
     "parent": "2:5:1",
+    "startTime": 1649086020097249,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "45644",
-    "counterflow": "1:1:43",
+    "source_port": "49870",
+    "counterflow": "1:1:16",
+    "endTime": 1649086020106155,
     "rtype": "FLOW",
-    "id": "2:5:43"
+    "id": "2:5:16"
   },
   {
     "parent": "2:5:1",
+    "startTime": 1649086020354016,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "45646",
-    "counterflow": "1:1:44",
+    "source_port": "49872",
+    "counterflow": "1:1:17",
+    "endTime": 1649086020358949,
     "rtype": "FLOW",
-    "id": "2:5:44"
+    "id": "2:5:17"
   },
   {
     "parent": "2:5:1",
+    "startTime": 1649086020592089,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "46184",
-    "counterflow": "1:1:69",
+    "source_port": "49874",
+    "counterflow": "1:1:18",
+    "endTime": 1649086020600010,
     "rtype": "FLOW",
-    "id": "2:5:69"
+    "id": "2:5:18"
   },
   {
     "parent": "2:5:1",
+    "startTime": 1649086020840133,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "46186",
-    "counterflow": "1:1:70",
+    "source_port": "49876",
+    "counterflow": "1:1:19",
+    "endTime": 1649086020849530,
     "rtype": "FLOW",
-    "id": "2:5:70"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46188",
-    "counterflow": "1:1:71",
-    "rtype": "FLOW",
-    "id": "2:5:71"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46190",
-    "counterflow": "1:1:72",
-    "rtype": "FLOW",
-    "id": "2:5:72"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46192",
-    "counterflow": "1:1:73",
-    "rtype": "FLOW",
-    "id": "2:5:73"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46194",
-    "counterflow": "1:1:74",
-    "rtype": "FLOW",
-    "id": "2:5:74"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46196",
-    "counterflow": "1:1:75",
-    "rtype": "FLOW",
-    "id": "2:5:75"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46198",
-    "counterflow": "1:1:76",
-    "rtype": "FLOW",
-    "id": "2:5:76"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46200",
-    "counterflow": "1:1:77",
-    "rtype": "FLOW",
-    "id": "2:5:77"
-  },
-  {
-    "parent": "2:5:1",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "46202",
-    "counterflow": "1:1:78",
-    "rtype": "FLOW",
-    "id": "2:5:78"
+    "id": "2:5:19"
   },
   {
     "parent": "2:5:0",
+    "startTime": 1649081245931324,
     "dest_host": "0.0.0.0",
     "protocol": "tcp",
     "dest_port": "8886",
@@ -673,105 +405,51 @@
   },
   {
     "parent": "2:5:2",
+    "startTime": 1649086013697707,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "60024",
-    "counterflow": "1:1:39",
+    "source_port": "36412",
+    "counterflow": "1:1:6",
+    "endTime": 1649086013710892,
     "rtype": "FLOW",
-    "id": "2:5:39"
+    "id": "2:5:6"
   },
   {
     "parent": "2:5:2",
+    "startTime": 1649086014481363,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "60658",
-    "counterflow": "1:1:49",
+    "source_port": "36414",
+    "counterflow": "1:1:7",
+    "endTime": 1649086014491531,
     "rtype": "FLOW",
-    "id": "2:5:49"
+    "id": "2:5:7"
   },
   {
     "parent": "2:5:2",
+    "startTime": 1649086015535786,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "60660",
-    "counterflow": "1:1:50",
+    "source_port": "36418",
+    "counterflow": "1:1:8",
+    "endTime": 1649086015547093,
     "rtype": "FLOW",
-    "id": "2:5:50"
+    "id": "2:5:8"
   },
   {
     "parent": "2:5:2",
+    "startTime": 1649086015834304,
     "octets": 87,
     "source_host": "127.0.0.1",
-    "source_port": "60662",
-    "counterflow": "1:1:51",
+    "source_port": "36420",
+    "counterflow": "1:1:9",
+    "endTime": 1649086015838215,
     "rtype": "FLOW",
-    "id": "2:5:51"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60664",
-    "counterflow": "1:1:52",
-    "rtype": "FLOW",
-    "id": "2:5:52"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60666",
-    "counterflow": "1:1:53",
-    "rtype": "FLOW",
-    "id": "2:5:53"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60668",
-    "counterflow": "1:1:54",
-    "rtype": "FLOW",
-    "id": "2:5:54"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60670",
-    "counterflow": "1:1:55",
-    "rtype": "FLOW",
-    "id": "2:5:55"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60672",
-    "counterflow": "1:1:56",
-    "rtype": "FLOW",
-    "id": "2:5:56"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60674",
-    "counterflow": "1:1:57",
-    "rtype": "FLOW",
-    "id": "2:5:57"
-  },
-  {
-    "parent": "2:5:2",
-    "octets": 87,
-    "source_host": "127.0.0.1",
-    "source_port": "60676",
-    "counterflow": "1:1:58",
-    "rtype": "FLOW",
-    "id": "2:5:58"
+    "id": "2:5:9"
   },
   {
     "parent": "2:5:0",
+    "startTime": 1649081245932201,
     "dest_host": "10.103.12.24",
     "protocol": "tcp",
     "dest_port": "8080",
@@ -782,146 +460,79 @@
   },
   {
     "parent": "2:5:3",
+    "startTime": 1649086022317967,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "33196",
-    "counterflow": "1:1:45",
+    "source_port": "35990",
+    "counterflow": "1:1:20",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086022325382,
     "rtype": "FLOW",
-    "id": "2:5:45"
+    "id": "2:5:20"
   },
   {
     "parent": "2:5:3",
+    "startTime": 1649086022578636,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "33198",
-    "counterflow": "1:1:46",
+    "source_port": "35992",
+    "counterflow": "1:1:21",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086022584808,
     "rtype": "FLOW",
-    "id": "2:5:46"
+    "id": "2:5:21"
   },
   {
     "parent": "2:5:3",
+    "startTime": 1649086022843808,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "33200",
-    "counterflow": "1:1:47",
+    "source_port": "35994",
+    "counterflow": "1:1:22",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086022850709,
     "rtype": "FLOW",
-    "id": "2:5:47"
+    "id": "2:5:22"
   },
   {
     "parent": "2:5:3",
+    "startTime": 1649086023108280,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "33202",
-    "counterflow": "1:1:48",
+    "source_port": "35996",
+    "counterflow": "1:1:23",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086023115187,
     "rtype": "FLOW",
-    "id": "2:5:48"
+    "id": "2:5:23"
   },
   {
     "parent": "2:5:3",
+    "startTime": 1649086023347242,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "33532",
-    "counterflow": "1:1:79",
+    "source_port": "35998",
+    "counterflow": "1:1:24",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086023354005,
     "rtype": "FLOW",
-    "id": "2:5:79"
+    "id": "2:5:24"
   },
   {
     "parent": "2:5:3",
+    "startTime": 1649086023583251,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "33534",
-    "counterflow": "1:1:80",
+    "source_port": "36000",
+    "counterflow": "1:1:25",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086023589645,
     "rtype": "FLOW",
-    "id": "2:5:80"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33538",
-    "counterflow": "1:1:81",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:81"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33540",
-    "counterflow": "1:1:82",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:82"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33542",
-    "counterflow": "1:1:83",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:83"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33544",
-    "counterflow": "1:1:84",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:84"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33546",
-    "counterflow": "1:1:85",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:85"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33548",
-    "counterflow": "1:1:86",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:86"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33550",
-    "counterflow": "1:1:87",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:87"
-  },
-  {
-    "parent": "2:5:3",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "33552",
-    "counterflow": "1:1:88",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:88"
+    "id": "2:5:25"
   },
   {
     "parent": "2:5:0",
+    "startTime": 1649081245933289,
     "dest_host": "10.103.19.112",
     "protocol": "tcp",
     "dest_port": "8080",
@@ -932,122 +543,83 @@
   },
   {
     "parent": "2:5:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33936",
-    "counterflow": "1:1:40",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:40"
-  },
-  {
-    "parent": "2:5:4",
-    "octets": 207,
-    "source_host": "192.168.50.1",
-    "source_port": "33938",
-    "counterflow": "1:1:41",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:41"
-  },
-  {
-    "parent": "2:5:4",
+    "startTime": 1649086017400724,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "34352",
-    "counterflow": "1:1:59",
+    "source_port": "36676",
+    "counterflow": "1:1:10",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086017407157,
     "rtype": "FLOW",
-    "id": "2:5:59"
+    "id": "2:5:10"
   },
   {
     "parent": "2:5:4",
+    "startTime": 1649086017682407,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "34354",
-    "counterflow": "1:1:60",
+    "source_port": "36678",
+    "counterflow": "1:1:11",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086017685164,
     "rtype": "FLOW",
-    "id": "2:5:60"
+    "id": "2:5:11"
   },
   {
     "parent": "2:5:4",
+    "startTime": 1649086017954701,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "34356",
-    "counterflow": "1:1:61",
+    "source_port": "36680",
+    "counterflow": "1:1:12",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086017968244,
     "rtype": "FLOW",
-    "id": "2:5:61"
+    "id": "2:5:12"
   },
   {
     "parent": "2:5:4",
+    "startTime": 1649086018178519,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "34358",
-    "counterflow": "1:1:62",
+    "source_port": "36682",
+    "counterflow": "1:1:13",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086018180934,
     "rtype": "FLOW",
-    "id": "2:5:62"
+    "id": "2:5:13"
   },
   {
     "parent": "2:5:4",
+    "startTime": 1649086018434491,
     "octets": 208,
     "source_host": "192.168.50.1",
-    "source_port": "34360",
-    "counterflow": "1:1:63",
+    "source_port": "36684",
+    "counterflow": "1:1:14",
     "trace": "0/Site-B|0/Hub",
+    "endTime": 1649086018441611,
     "rtype": "FLOW",
-    "id": "2:5:63"
+    "id": "2:5:14"
   },
   {
-    "parent": "2:5:4",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "34362",
-    "counterflow": "1:1:64",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:64"
+    "parent": "2:5:0",
+    "startTime": 1649081252918501,
+    "mode": "interior",
+    "name": "0/Hub",
+    "link_cost": 1,
+    "direction": "outgoing",
+    "rtype": "LINK",
+    "id": "2:5:5"
   },
   {
-    "parent": "2:5:4",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "34364",
-    "counterflow": "1:1:65",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:65"
-  },
-  {
-    "parent": "2:5:4",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "34366",
-    "counterflow": "1:1:66",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:66"
-  },
-  {
-    "parent": "2:5:4",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "34368",
-    "counterflow": "1:1:67",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:67"
-  },
-  {
-    "parent": "2:5:4",
-    "octets": 208,
-    "source_host": "192.168.50.1",
-    "source_port": "34370",
-    "counterflow": "1:1:68",
-    "trace": "0/Site-B|0/Hub",
-    "rtype": "FLOW",
-    "id": "2:5:68"
+    "parent": "2:5:0",
+    "startTime": 1649081245931324,
+    "dest_host": "0.0.0.0",
+    "protocol": "tcp",
+    "dest_port": "88844",
+    "van_address": "service-foo",
+    "name": "tcpListedner/0.0.0.0:8886",
+    "rtype": "CONNETCTOR",
+    "id": "2:5:44"
   }
 ]

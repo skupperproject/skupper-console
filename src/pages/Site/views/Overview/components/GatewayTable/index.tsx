@@ -14,7 +14,7 @@ const GatewaysTable = memo(function ({ siteId, gateways }: GatewaysTableProps) {
     <OverviewCard
       columns={GATEWAYS_HEADER_TABLE}
       data={gateways}
-      label={Pluralize('exposed Service', gateways?.length, true)}
+      label={Pluralize('Gateway', gateways?.length, true)}
       color={SummaryCardColors.Green}
       styleCell={(cell: SiteInfo) => (cell.siteId === siteId ? 'sk-table-bg-green' : '')}
     />

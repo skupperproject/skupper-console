@@ -30,6 +30,15 @@ const MonitoringTopology = function () {
     },
   );
 
+  const { data: routersLinks, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
+    [QueriesMonitoring.GetTolopologyRoutersLinks],
+    () => MonitorServices.fetchTopologyRoutersLinks(),
+    {
+      refetchInterval,
+      onError: handleError,
+    },
+  );
+
   function handleError({ httpStatus }: { httpStatus?: number }) {
     const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
 
@@ -37,7 +46,7 @@ const MonitoringTopology = function () {
     navigate(route);
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingTopologyRoutersLinks) {
     return <LoadingPage />;
   }
 
@@ -45,39 +54,52 @@ const MonitoringTopology = function () {
 
   const sideBar = <div>sidebar</div>;
 
+  const routerNodes = routersLinks?.nodes?.map((node, index) => ({
+    id: node.id,
+    name: node.name,
+    x: index === 0 ? 400 : index * 300,
+    y: index === 0 ? 100 : 150 + index * 150,
+    width: 60,
+    type: 'router',
+  }));
+
   const nodes = data?.reduce((acc, service, index) => {
+    const router = routerNodes?.find(({ name }) => name === service.siteName);
+
     acc[service.id] = {
       id: service.id,
       name: service.name,
-      x: 200 + index * 200,
-      y: 330,
-      width: 60,
-      type: 'device',
+      x: (router?.x || 0) - 30 + index * 30,
+      y: (router?.y || 0) + 80,
+      width: 20,
+      height: 20,
+      type: 'flow',
     };
 
-    service.flows.forEach((flow, index2) => {
-      acc[flow.id] = {
-        id: flow.id,
-        x: index * 700 + 30,
-        y: index2 * 30 + 150,
-        r: 6,
-        name: flow.source_port,
-        type: 'flow',
-      };
-    });
+    // service.flows.forEach((flow, index2) => {
+    //   const bb = routerNodes?.find(a => a.name === service.siteName);
+
+    //   acc[flow.id] = {
+    //     id: flow.id,
+    //     x: (bb?.x || 0) - 40 + index2 * 30,
+    //     y: (bb?.y || 0) + 80,
+    //     r: 7,
+    //     name: flow.source_port,
+    //     type: 'flow',
+    //   };
+    // });
 
     return acc;
   }, {} as any);
 
   const links = data?.flatMap((service) => {
     const flows = service.flows.map((flow) => ({
-      source: flow.id,
       target: service.id,
-      connectedTo: flow?.connected_to?.parent,
       octets: flow?.connected_to?.octets,
+      type: 'flow',
     }));
 
-    return [{ source: service.id, target: flows[0].connectedTo }, ...flows];
+    return [{ source: service.parent, target: flows[0].target, type: 'device' }];
   });
 
   return (
@@ -86,9 +108,12 @@ const MonitoringTopology = function () {
       sideBar={sideBar}
       sideBarOpen={false}
     >
-      <div>
-        <TopologyTest nodesData={Object.values(nodes)} linksData={links} />
-      </div>
+      <TopologyTest
+        nodesData={Object.values(nodes)}
+        linksData={links}
+        routersNodes={routerNodes}
+        routersLinks={routersLinks?.links}
+      />
     </TopologyView>
   );
 };

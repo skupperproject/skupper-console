@@ -26,6 +26,7 @@ import {
   MonitoringRoutesPaths,
   QueriesMonitoring,
   RoutersColumns,
+  SectionsStatsLabels,
   ServicesColumns,
 } from '../../Monitoring.enum';
 import { MonitorServices } from '../../services';
@@ -157,7 +158,7 @@ const Overview = function () {
                     isPlain={true}
                     columns={ROUTERS_STATS_HEADER}
                     data={routersStats}
-                    label={Pluralize('Router', routersStats.length, false)}
+                    label={Pluralize(`${SectionsStatsLabels.Router}`, routersStats.length, false)}
                   />
                 </SplitItem>
               )}
@@ -187,7 +188,7 @@ const Overview = function () {
                     isPlain={true}
                     columns={VANS_STATS_HEADER}
                     data={vans}
-                    label={Pluralize('Service', vans.length, false)}
+                    label={Pluralize(`${SectionsStatsLabels.Service}`, vans.length, false)}
                   />
                 </SplitItem>
               )}
