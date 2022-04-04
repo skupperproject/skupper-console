@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 
 import { MonitoringRoutesPaths } from './Monitoring.enum';
+import MonitoringTopology from './views/Overview/components/topology';
 
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './'));
 const Overview = lazy(() => import(/* webpackChunkName: "monitoring-vans" */ './views/Overview'));
@@ -13,8 +14,12 @@ export const monitoringRoutes = [
     children: [
       { index: true, element: <Overview /> },
       {
-        path: MonitoringRoutesPaths.VANs,
+        path: MonitoringRoutesPaths.OverviewTable,
         element: <Overview />,
+      },
+      {
+        path: `${MonitoringRoutesPaths.OverviewTopology}/:id`,
+        element: <MonitoringTopology />,
       },
       {
         path: `${MonitoringRoutesPaths.Devices}/:id`,

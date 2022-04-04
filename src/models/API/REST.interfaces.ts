@@ -121,7 +121,7 @@ interface FlowResponse {
   id: string;
   octets: number;
   counterflow?: string | null;
-  connected_to?: FlowResponse;
+  connected_to?: FlowResponse & { parent: string };
 }
 
 export interface FlowsResponse {
