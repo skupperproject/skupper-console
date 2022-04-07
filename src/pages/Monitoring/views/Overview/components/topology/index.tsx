@@ -54,74 +54,78 @@ const MonitoringTopology = function () {
   const controlButtons = createTopologyControlButtons();
   const sideBar = <div>sidebar</div>;
 
-  const routerNodes = routers?.nodes?.map((node) => ({
-    id: node.id,
-    name: node.name,
-    x: 0,
-    y: 0,
-    width: 50,
-    type: 'router',
-  })) || [];
-
-  const deviceNodes = devices?.map(({ id, name, rtype, flows }) => {
-    const totalLatency = flows.reduce((acc, flow) => (acc + flow.latency), 0);
-    const avgLatency = totalLatency / flows.length;
-    const node = {
-      id,
-      name,
-      type: 'flow',
-      rtype,
-      avgLatency,
-      numFlows: flows.length,
+  const routerNodes =
+    routers?.nodes?.map((node) => ({
+      id: node.id,
+      name: node.name,
       x: 0,
       y: 0,
-    };
+      width: 50,
+      type: 'router',
+    })) || [];
 
-    return node;
-  }) || [];
+  const deviceNodes =
+    devices?.map(({ id, name, rtype, flows }) => {
+      const totalLatency = flows.reduce((acc, flow) => acc + flow.latency, 0);
+      const avgLatency = totalLatency / flows.length;
+      const node = {
+        id,
+        name,
+        type: 'flow',
+        rtype,
+        avgLatency,
+        numFlows: flows.length,
+        x: 0,
+        y: 0,
+      };
 
-  const deviceLinks = devices?.flatMap(({ id, rtype, parent, flows }) => {
-    const bytes = flows.reduce((acc, flow) => acc + (flow.octets || 0), 0);
+      return node;
+    }) || [];
 
-    return [{
-      source: parent,
-      target: id,
-      type: rtype,
-      pType: 'device',
-      bytes: formatBytes(bytes)
-    }];
-  }) || [];
+  const deviceLinks =
+    devices?.flatMap(({ id, rtype, parent, flows }) => {
+      const bytes = flows.reduce((acc, flow) => acc + (flow.octets || 0), 0);
 
+      return [
+        {
+          source: parent,
+          target: id,
+          type: rtype,
+          pType: 'device',
+          bytes: formatBytes(bytes),
+        },
+      ];
+    }) || [];
 
-  const panelRef = useCallback(node => {
+  const panelRef = useCallback((node) => {
     if (node !== null) {
       setBoxWidth(node.getBoundingClientRect().width);
       setBoxHeight(node.getBoundingClientRect().height);
     }
   }, []);
 
-
   if (isLoading || isLoadingTopologyRoutersLinks) {
     return <LoadingPage />;
   }
-
 
   const routerLinks = routers?.links || [];
 
   return (
     <div ref={panelRef} style={{ width: '100%', height: '100%' }}>
       <TopologyView
-        className='cio'
+        className="cio"
         controlBar={<TopologyControlBar controlButtons={controlButtons} />}
         sideBar={sideBar}
         sideBarOpen={false}
       >
-        {boxWidth && boxHeight && <TopologyMonitoringService
-          nodes={[...routerNodes, ...deviceNodes]}
-          links={[...routerLinks, ...deviceLinks]}
-          boxWidth={boxWidth}
-          boxHeight={boxHeight}
-        />}
+        {boxWidth && boxHeight && (
+          <TopologyMonitoringService
+            nodes={[...routerNodes, ...deviceNodes]}
+            links={[...routerLinks, ...deviceLinks]}
+            boxWidth={boxWidth}
+            boxHeight={boxHeight}
+          />
+        )}
       </TopologyView>
     </div>
   );

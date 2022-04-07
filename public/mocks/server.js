@@ -143,11 +143,13 @@ export function loadMockServerInDev() {
             return acc;
           }, {});
 
-          const links = flowsData.filter((data) => data.rtype === 'LINK').filter(link => link.direction !== 'outgoing');
+          const links = flowsData
+            .filter((data) => data.rtype === 'LINK')
+            .filter((link) => link.direction !== 'outgoing');
           const linkRouters = links.reduce((acc, link) => {
             const target = routersMap[link.name];
 
-            console.log(target)
+            console.log(target);
             acc.push({
               source: link.parent,
               target: target.id,
