@@ -62,7 +62,7 @@ export function loadMockServerInDev() {
             if (item.octets) {
               stats.totalFlows++;
               stats.totalBytes += item.octets;
-            } else if (item.van_address) {
+            } else if (item.vanAddress) {
               stats.totalVanAddress++;
             }
           });
@@ -86,7 +86,7 @@ export function loadMockServerInDev() {
             } else if (item.octets) {
               acc[current].totalFlows++;
               acc[current].totalBytes += item.octets;
-            } else if (item.van_address) {
+            } else if (item.vanAddress) {
               acc[current].totalVanAddress++;
             }
             return acc;
@@ -103,17 +103,17 @@ export function loadMockServerInDev() {
             if (item.rtype === 'ROUTER') {
               currentRouterName = item.name;
             }
-            if (item.van_address) {
-              current = item.van_address;
+            if (item.vanAddress) {
+              current = item.vanAddress;
               acc[current] = {
                 id: item.id,
-                name: item.van_address,
+                name: item.vanAddress,
                 totalBytes: 0,
                 totalFlows: (acc[current] && acc[current].totalFlows) || 0,
                 totalDevices: ((acc[current] && acc[current].totalDevices) || 0) + 1,
                 routerName: currentRouterName,
               };
-            } else if (item.octets) {
+            } else if (acc[current] && item.octets) {
               acc[current].totalFlows++;
               acc[current].totalBytes += item.octets;
             }
@@ -129,35 +129,36 @@ export function loadMockServerInDev() {
 
           if (queryParams.vanaddr) {
             return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data))).filter(
-              (flow) => flow.van_address === queryParams.vanaddr,
+              (flow) => flow.vanAddress === queryParams.vanaddr,
             );
           }
 
           return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data)));
         });
-        this.get('/flows/topology/routers/links', (_, { queryParams }) => {
-          const routers = flowsData.filter((data) => data.rtype === 'ROUTER');
-          const routersMap = routers.reduce((acc, router) => {
+        this.get('/flows/topology/routers/links', () => {
+          const routerNodes = flowsData.filter((data) => data.rtype === 'ROUTER');
+          const routersMap = routerNodes.reduce((acc, router) => {
             acc[router.name] = router;
 
             return acc;
           }, {});
 
-          const linksData = flowsData.filter((data) => data.rtype === 'LINK');
-
-          const links = linksData.reduce((acc, link) => {
+          const links = flowsData.filter((data) => data.rtype === 'LINK').filter(link => link.direction !== 'outgoing');
+          const linkRouters = links.reduce((acc, link) => {
             const target = routersMap[link.name];
+
+            console.log(target)
             acc.push({
               source: link.parent,
               target: target.id,
               mode: link.mode,
-              cost: link.link_cost,
+              cost: link.linkCost,
             });
 
             return acc;
           }, []);
 
-          return { links, nodes: routers };
+          return { links: linkRouters, nodes: routerNodes };
         });
       },
     });
@@ -220,10 +221,10 @@ function mapFlowsWithListenersConnectors(flows) {
     }, {});
 
     if (data.counterflow) {
-      return { ...data, connected_to: listenersBound[data.counterflow] };
+      return { ...data, connectedTo: listenersBound[data.counterflow] };
     }
     if (data.rtype === 'FLOW' && !data.counterflow) {
-      return { ...data, connected_to: connectorsBound[data.id] };
+      return { ...data, connectedTo: connectorsBound[data.id] };
     }
 
     return data;

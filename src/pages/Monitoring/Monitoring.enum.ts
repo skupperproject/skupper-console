@@ -1,7 +1,7 @@
 export enum MonitoringRoutesPaths {
   Monitoring = '/monitoring',
   OverviewTable = '/monitoring/vans',
-  OverviewTopology = '/monitoring/overview/topology',
+  OverviewTopology = '/monitoring/service/topology',
   Devices = '/monitoring/devices',
 }
 

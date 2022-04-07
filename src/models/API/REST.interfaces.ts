@@ -42,17 +42,17 @@ export interface DataServicesResponse {
     },
   ];
   connections_ingress:
-    | {
-        site_id: string;
-        connections: ServiceConnections;
-      }[]
-    | null;
+  | {
+    site_id: string;
+    connections: ServiceConnections;
+  }[]
+  | null;
   connections_egress:
-    | {
-        site_id: string;
-        connections: ServiceConnections;
-      }[]
-    | null;
+  | {
+    site_id: string;
+    connections: ServiceConnections;
+  }[]
+  | null;
   requests_handled: ServiceRequest[] | null;
   requests_received: ServiceRequest[] | null;
   derived?: boolean;
@@ -116,14 +116,18 @@ export interface ServiceResponse {
 }
 
 interface FlowResponse {
-  source_host: string;
-  source_port: string;
+  sourceHost: string;
+  sourcePort: string;
   id: string;
   octets: number;
+  latency: number;
   counterflow?: string | null;
-  connected_to?: FlowResponse & { parent: string };
+  connectedTo?: FlowResponse & { parent: string };
   startTime: number;
   endTime: number;
+  parent: string;
+  rtype: string;
+  trace: string;
 }
 
 export interface FlowsResponse {
@@ -132,10 +136,9 @@ export interface FlowsResponse {
   name: string;
   rtype: string;
   protocol: string;
-  dest_host: string;
-  dest_port: number;
-  van_address: string;
-  van_port: string;
+  destHost: string;
+  destPort: number;
+  vanAddress: string;
   id: string;
   flows: FlowResponse[];
   parent: string;

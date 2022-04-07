@@ -192,10 +192,10 @@ const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                     expand={
                       details
                         ? {
-                            rowIndex,
-                            isExpanded: isRowExpanded(row),
-                            onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
-                          }
+                          rowIndex,
+                          isExpanded: isRowExpanded(row),
+                          onToggle: () => handleCollapse(row.id, isRowExpanded(row)),
+                        }
                         : undefined
                     }
                   />
@@ -220,7 +220,7 @@ const DevicesTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                   <Td dataLabel={DeviceColumns.Hostname}>{row.hostname}</Td>
                   <Td dataLabel={DeviceColumns.Protocol}>{row.protocol}</Td>
                   <Td dataLabel={DeviceColumns.DestinationHost}>
-                    {`${row.dest_host}: ${row.dest_port} -> ${details?.host}`}
+                    {`${row.destHost}: ${row.destPort} -> ${details?.host}`}
                   </Td>
                   <Td>
                     <Tooltip
@@ -379,12 +379,12 @@ function buildRows(data: Flow[]): Row<Flow>[] {
   return data?.flatMap((item) => {
     const totalBytes = item.flows.reduce((acc, flow) => (acc += flow.octets), 0);
     const details = {
-      host: item.flows[0].source_host,
+      host: item.flows[0].sourceHost,
       totalBytes,
-      ports: item.flows.map(({ id, connected_to, source_port, octets, endTime }) => ({
+      ports: item.flows.map(({ id, connectedTo, sourcePort, octets, endTime }) => ({
         id,
-        portSource: source_port,
-        portDest: connected_to?.source_port,
+        portSource: sourcePort,
+        portDest: connectedTo?.sourcePort,
         octets,
         endTime,
       })),
