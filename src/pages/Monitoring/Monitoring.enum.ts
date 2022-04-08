@@ -1,8 +1,13 @@
 export enum MonitoringRoutesPaths {
   Monitoring = '/monitoring',
   OverviewTable = '/monitoring/vans',
-  OverviewTopology = '/monitoring/service/topology',
   Devices = '/monitoring/devices',
+  DevicesTopology = '/topology',
+  DevicesTable = '/table',
+}
+
+export enum MonitoringRoutesPathLabel {
+  Monitoring = 'Monitoring',
 }
 
 // Routers  section
@@ -11,6 +16,10 @@ export enum SectionsStatsLabels {
   Router = 'Router',
 }
 
+export enum DevicesNavMenu {
+  Topology = 'Topology',
+  Table = 'Table',
+}
 export enum RoutersColumns {
   Name = 'Name',
   NumRouters = 'Routers',

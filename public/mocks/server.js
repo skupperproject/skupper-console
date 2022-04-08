@@ -149,7 +149,6 @@ export function loadMockServerInDev() {
           const linkRouters = links.reduce((acc, link) => {
             const target = routersMap[link.name];
 
-            console.log(target);
             acc.push({
               source: link.parent,
               target: target.id,

@@ -22,7 +22,7 @@
     "@patternfly/react-topology": "^4.45.19",
     "@plotly/d3-sankey-circular": "^0.33.1",
     "axios": "^0.26.1",
-    "d3": "7.4.0",
+    "d3": "7.4.3",
     "d3-interpolate-path": "^2.2.3",
     "d3-queue": "^3.0.7",
     "pluralize": "^8.0.0",

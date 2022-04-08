@@ -170,11 +170,11 @@ export interface MonitoringStatsResponse {
   totalBytes: number;
 }
 
-interface FLowTopologyRoutersLink {
+export interface FLowTopologyRoutersLink {
   source: string;
   target: string;
   mode: string;
-  cost: number;
+  cost: string;
 }
 
 export interface FLowTopologyRoutersLinksResponse {
