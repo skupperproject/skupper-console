@@ -39,6 +39,8 @@ function TopologyMonitoringService(
     return;
   }
 
+  let isDragging = false;
+
   const simulation = d3
     .forceSimulation(nodes)
     .force('center', d3.forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2))
@@ -66,7 +68,6 @@ function TopologyMonitoringService(
     });
   });
 
-  console.log('soo');
   // root
   const svgElement = d3
     .select($node)
@@ -223,7 +224,7 @@ function TopologyMonitoringService(
           <p>Avg Latency: ${formatTime(avgLatency)}</p>
           `);
 
-          return tooltip.style('visibility', 'visible');
+          return tooltip.style('visibility', isDragging ? 'hidden' : 'visible');
         })
         .on('mousemove', function (event: any) {
           return tooltip
@@ -235,39 +236,43 @@ function TopologyMonitoringService(
         });
     });
 
+  // drag util
+  function drag(forceSimulatio: any) {
+    function dragstarted(event: any, d: any) {
+      if (!event.active) {
+        forceSimulatio.alphaTarget(0.3).restart();
+      }
+      d.fx = d.x;
+      d.fy = d.y;
+
+      isDragging = true;
+    }
+
+    function dragged(event: any, d: any) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event: any, d: any) {
+      if (!event.active) {
+        forceSimulatio.alphaTarget(0);
+        forceSimulatio.stop();
+      }
+      d.fx = null;
+      d.fy = null;
+
+      isDragging = false;
+    }
+
+    return d3
+      .drag<any, any, MonitoringTopologyLink>()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended);
+  }
+
   simulation.nodes(nodes);
   simulation.force<any>('link')?.links(links);
-}
-
-// drag util
-function drag(simulation: any) {
-  function dragstarted(event: any, d: any) {
-    if (!event.active) {
-      simulation.alphaTarget(0.3).restart();
-    }
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(event: any, d: any) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-
-  function dragended(event: any, d: any) {
-    if (!event.active) {
-      simulation.alphaTarget(0);
-      simulation.stop();
-    }
-    d.fx = null;
-    d.fy = null;
-  }
-
-  return d3
-    .drag<any, any, MonitoringTopologyLink>()
-    .on('start', dragstarted)
-    .on('drag', dragged)
-    .on('end', dragended);
 }
 
 export default TopologyMonitoringService;
