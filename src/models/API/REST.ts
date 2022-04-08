@@ -1,3 +1,5 @@
+import { FlowTopologyRoutersLinks } from '@pages/Monitoring/services/services.interfaces';
+
 import { fetchWithTimeout } from './Middleware';
 import {
   DATA_URL,
@@ -10,6 +12,7 @@ import {
   MONITORING_STATS,
   VANS_STAT,
   TOKENS,
+  FLOWS_TOPOLOGY_ROUTERS_LINKS,
 } from './REST.constant';
 import {
   DataResponse,
@@ -81,6 +84,11 @@ export const RESTApi = {
   },
   fetchVansStats: async (): Promise<VanAddressStatsResponse[]> => {
     const { data } = await fetchWithTimeout(VANS_STAT);
+
+    return data;
+  },
+  fetchTopologyRoutersLinks: async (): Promise<FlowTopologyRoutersLinks> => {
+    const { data } = await fetchWithTimeout(FLOWS_TOPOLOGY_ROUTERS_LINKS);
 
     return data;
   },

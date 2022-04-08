@@ -116,12 +116,18 @@ export interface ServiceResponse {
 }
 
 interface FlowResponse {
-  source_host: string;
-  source_port: string;
+  sourceHost: string;
+  sourcePort: string;
   id: string;
   octets: number;
+  latency: number;
   counterflow?: string | null;
-  connected_to?: FlowResponse;
+  connectedTo?: FlowResponse & { parent: string };
+  startTime: number;
+  endTime: number;
+  parent: string;
+  rtype: string;
+  trace: string;
 }
 
 export interface FlowsResponse {
@@ -130,12 +136,14 @@ export interface FlowsResponse {
   name: string;
   rtype: string;
   protocol: string;
-  dest_host: string;
-  dest_port: number;
-  van_address: string;
-  van_port: string;
+  destHost: string;
+  destPort: number;
+  vanAddress: string;
   id: string;
   flows: FlowResponse[];
+  parent: string;
+  startTime: number;
+  endTime?: number;
 }
 
 export interface VanAddressStatsResponse {
@@ -160,4 +168,16 @@ export interface MonitoringStatsResponse {
   totalVanAddress: number;
   totalFlows: number;
   totalBytes: number;
+}
+
+export interface FLowTopologyRoutersLink {
+  source: string;
+  target: string;
+  mode: string;
+  cost: string;
+}
+
+export interface FLowTopologyRoutersLinksResponse {
+  nodes: FlowsResponse[];
+  links: FLowTopologyRoutersLink[];
 }

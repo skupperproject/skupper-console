@@ -3,6 +3,7 @@ export interface Port {
   portSource: string;
   portDest: string | undefined;
   octets: number;
+  endTime: number;
 }
 interface RowDetails {
   host: string;
