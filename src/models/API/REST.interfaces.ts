@@ -170,7 +170,7 @@ export interface MonitoringStatsResponse {
   totalBytes: number;
 }
 
-export interface FLowTopologyRoutersLink {
+export interface FlowTopologyRoutersLink {
   source: string;
   target: string;
   mode: string;
@@ -179,5 +179,5 @@ export interface FLowTopologyRoutersLink {
 
 export interface FLowTopologyRoutersLinksResponse {
   nodes: FlowsResponse[];
-  links: FLowTopologyRoutersLink[];
+  links: FlowTopologyRoutersLink[];
 }

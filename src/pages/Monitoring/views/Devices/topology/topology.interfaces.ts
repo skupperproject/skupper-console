@@ -1,4 +1,4 @@
-import { FLowTopologyRoutersLink } from '@models/API/REST.interfaces';
+import { FlowTopologyRoutersLink } from '@models/API/REST.interfaces';
 
 export interface MonitoringTopologyDeviceLink {
   source: string;
@@ -8,7 +8,7 @@ export interface MonitoringTopologyDeviceLink {
   bytes: string;
 }
 
-export type MonitoringTopologyRouterLink = FLowTopologyRoutersLink;
+export type MonitoringTopologyRouterLink = FlowTopologyRoutersLink;
 
 export type MonitoringTopologyLink = MonitoringTopologyRouterLink | MonitoringTopologyDeviceLink;
 
