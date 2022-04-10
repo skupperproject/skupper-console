@@ -2,7 +2,7 @@
 **/public
 **/build
 **/config
-**/@types
+**/@types_app
 ./public/mocks/data/*
 jest.*
 

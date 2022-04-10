@@ -28,6 +28,16 @@
     "id": "3:7:2"
   },
   {
+    "parent": "3:7:0",
+    "startTime": 1649193806016948,
+    "mode": "interior",
+    "name": "0/Site-C",
+    "linkCost": 4,
+    "direction": "incoming",
+    "rtype": "LINK",
+    "id": "3:7:12"
+  },
+  {
     "startTime": 1649193800006683,
     "hostname": "tross-lg",
     "name": "0/Site-A",
@@ -45,17 +55,6 @@
     "name": "hello",
     "rtype": "LISTENER",
     "id": "2:5:1"
-  },
-  {
-    "parent": "2:5:0",
-    "startTime": 1649193800015364,
-    "destHost": "0.0.0.0",
-    "protocol": "tcp",
-    "destPort": "8886",
-    "vanAddress": "service-foo",
-    "name": "tcpListener/0.0.0.0:8886",
-    "rtype": "LISTENER",
-    "id": "2:5:2"
   },
   {
     "parent": "2:5:0",
@@ -634,6 +633,18 @@
     "id": "1:1:26"
   },
   {
+    "parent": "1:1:1",
+    "startTime": 1649193822361311,
+    "octets": 87,
+    "sourceHost": "127.0.0.1",
+    "sourcePort": "00001",
+    "counterflow": "3:5:6",
+    "latency": 2170,
+    "endTime": 1649193822364756,
+    "rtype": "FLOW",
+    "id": "1:1:267"
+  },
+  {
     "parent": "1:1:0",
     "startTime": 1649193802510107,
     "destHost": "0.0.0.0",
@@ -675,5 +686,46 @@
     "direction": "outgoing",
     "rtype": "LINK",
     "id": "1:1:5"
+  },
+  {
+    "startTime": 1649193800006683,
+    "hostname": "tross-lg",
+    "name": "0/Site-C",
+    "buildVersion": "2.0.0-SNAPSHOT",
+    "rtype": "ROUTER",
+    "id": "3:5:0"
+  },
+  {
+    "parent": "3:5:0",
+    "startTime": 1649193800016113,
+    "destHost": "10.103.12.26",
+    "protocol": "tcp",
+    "destPort": "8080",
+    "vanAddress": "service-bar",
+    "name": "tcpConnector/10.103.12.26:8080",
+    "rtype": "CONNECTOR",
+    "id": "3:5:3"
+  },
+  {
+    "parent": "3:5:3",
+    "startTime": 1649193822204185,
+    "octets": 210,
+    "sourceHost": "22.22.22.11",
+    "sourcePort": "1234",
+    "counterflow": "1:1:267",
+    "trace": "0/Site-C|0/Hub",
+    "latency": 1228,
+    "rtype": "FLOW",
+    "id": "3:5:6"
+  },
+  {
+    "parent": "3:5:0",
+    "startTime": 1649193806399081,
+    "mode": "interior",
+    "name": "0/Hub",
+    "linkCost": 4,
+    "direction": "outgoing",
+    "rtype": "LINK",
+    "id": "3:5:55"
   }
 ]

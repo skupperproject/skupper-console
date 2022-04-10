@@ -1,13 +1,13 @@
 import {
   FlowsResponse,
-  FLowTopologyRoutersLinksResponse,
+  MonitoringRoutersTopologyResponse,
   MonitoringStatsResponse,
   RouterStatsResponse,
   VanAddressStatsResponse,
 } from '@models/API/REST.interfaces';
 
 export type Flow = FlowsResponse;
-export type FlowTopologyRoutersLinks = FLowTopologyRoutersLinksResponse;
+export type MonitoringRoutersTopology = MonitoringRoutersTopologyResponse;
 
 export type RoutersStats = RouterStatsResponse;
 export type MonitoringStats = MonitoringStatsResponse;

@@ -12,7 +12,7 @@ const devConfig = {
     publicPath: '/',
   },
   devServer: {
-    port: 8081,
+    port: 3000,
     open: true,
     historyApiFallback: true,
   },

@@ -1,9 +1,9 @@
 export enum MonitoringRoutesPaths {
   Monitoring = '/monitoring',
   OverviewTable = '/monitoring/vans',
-  Devices = '/monitoring/devices',
-  DevicesTopology = '/topology',
-  DevicesTable = '/table',
+  Connections = '/monitoring/connections',
+  ConnectionsTopology = '/topology',
+  ConnectionsTable = '/table',
 }
 
 export enum MonitoringRoutesPathLabel {
@@ -16,58 +16,70 @@ export enum SectionsStatsLabels {
   Router = 'Router',
 }
 
-export enum DevicesNavMenu {
+export enum ConnectionsNavMenu {
   Topology = 'Topology',
-  Table = 'Table',
+  Table = 'Details',
 }
+
+export enum OverviewColumns {
+  Name = 'Name',
+  NumRouters = 'Routers',
+  NumServices = 'Services',
+  NumConnections = 'Flows',
+  NumLinks = 'Links',
+  TotalBytes = 'Traffic',
+}
+
 export enum RoutersColumns {
   Name = 'Name',
   NumRouters = 'Routers',
   NumServices = 'Services',
-  NumFLows = 'Connections',
-  TotalBytes = 'Bytes',
+  NumFLows = 'Flows',
+  TotalBytes = 'Traffic',
 }
 
 // Services  section
 export enum ServicesColumns {
   Name = 'Name',
+  RoutersAssociated = 'Routers Associated',
   NumDevices = 'Devices',
   NumFLows = 'Connections',
-  TotalBytes = 'TotalBytes',
+  TotalBytes = 'Traffic',
 }
 
-// Devices details section
-export enum DeviceColumns {
-  Type = 'Type',
-  DeviceName = 'Device Name',
+// Connection details section
+export enum ConnectionColumns {
+  To = 'To',
   Hostname = 'Hostname',
-  SiteName = 'Site Name',
+  From = 'From',
   Protocol = 'Protocol',
+  TotalBytes = 'Traffic Out',
+  TotalBytesIn = 'Traffic In',
   DestinationHost = 'Destination Host',
   DestinationPort = 'Destination Port',
-  DeviceStatus = 'Status',
+  ConnectionStatus = 'Status',
+  Connections = 'Connections',
   // nested table  Columns
   Ports = 'Ports',
   FromPort = 'Source',
   ToPort = 'Destination',
-  Traffic = 'Traffic',
-  TrafficPercentage = '% Traffic',
+  Traffic = 'Traffic Out',
+  TrafficIn = 'Traffic In',
+  Latency = 'Latency Out',
+  LatencyIn = 'Latency In',
+  TrafficPercentage = '% Traffic Out',
   ConnectionState = 'Connection State',
 }
 
-export enum DeviceTypes {
-  Listener = 'listener',
-  Connector = 'connector',
-}
-
-export enum DeviceStatus {
-  AllFlowsOpen = 'All flow are open',
-  SomeFlowIsClosed = 'Some flow is closed',
+export enum ConnectionStatus {
+  SomeFlowsOpen = 'Traffic is flowing',
+  AllFlowsClosed = 'No connections opened',
 }
 
 export enum QueriesMonitoring {
-  GetFlows = 'monitoring-flows-query',
-  GetServices = 'monitoring-services',
-  GetMonitoringStats = 'monitoring-stats-query',
-  GetTolopologyRoutersLinks = 'monitoring-topoogy-routers-links-query',
+  GetMonitoringConnectionsByServiceName = 'monitoring-connections-by-service-name-query',
+  GetMonitoringServices = 'monitoring-services-query',
+  GetMonitoringNetworkStats = 'network-stats-query',
+  GetMonitoringTopologyFlows = 'monitoring-topology-flows-query',
+  GetMonitoringTopologyNetwork = 'monitoring-topology-network-query',
 }

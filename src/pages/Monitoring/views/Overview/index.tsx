@@ -24,6 +24,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 import {
   MonitoringRoutesPaths,
+  OverviewColumns,
   QueriesMonitoring,
   RoutersColumns,
   SectionsStatsLabels,
@@ -43,7 +44,7 @@ const Overview = function () {
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
   const { data, isLoading, dataUpdatedAt } = useQuery(
-    QueriesMonitoring.GetMonitoringStats,
+    QueriesMonitoring.GetMonitoringNetworkStats,
     MonitorServices.fetchMonitoringStats,
     {
       refetchInterval,
@@ -63,7 +64,7 @@ const Overview = function () {
       const vanStatsRow = data.vansStats.map(({ name, totalBytes, ...rest }) => ({
         ...rest,
         totalBytes: formatBytes(totalBytes),
-        name: <Link to={`${MonitoringRoutesPaths.Devices}/${name}`}>{name}</Link>,
+        name: <Link to={`${MonitoringRoutesPaths.Connections}/${name}`}>{name}</Link>,
       }));
 
       const routersRow = data.routersStats.map(({ totalBytes, ...rest }) => ({
@@ -83,15 +84,16 @@ const Overview = function () {
 
   const ROUTERS_STATS_HEADER = [
     { property: 'name', name: RoutersColumns.Name },
+    { property: 'totalBytes', name: RoutersColumns.TotalBytes },
     { property: 'totalVanAddress', name: RoutersColumns.NumServices },
     { property: 'totalFlows', name: RoutersColumns.NumFLows },
-    { property: 'totalBytes', name: RoutersColumns.TotalBytes },
   ];
   const VANS_STATS_HEADER = [
     { property: 'name', name: ServicesColumns.Name },
+    { property: 'routersAssociated', name: ServicesColumns.RoutersAssociated },
+    { property: 'totalBytes', name: ServicesColumns.TotalBytes },
     { property: 'totalDevices', name: ServicesColumns.NumDevices },
     { property: 'totalFlows', name: ServicesColumns.NumFLows },
-    { property: 'totalBytes', name: ServicesColumns.TotalBytes },
   ];
 
   return (
@@ -103,9 +105,9 @@ const Overview = function () {
               <SplitItem isFilled>
                 <Card className=" pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.small}>{RoutersColumns.NumRouters}</Text>
+                    <Text component={TextVariants.small}>{OverviewColumns.NumRouters}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
-                      2
+                      {monitoringStats.totalRouters}
                     </Text>
                   </TextContent>
                 </Card>
@@ -114,9 +116,9 @@ const Overview = function () {
               <SplitItem isFilled>
                 <Card className="pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.small}>{RoutersColumns.NumServices}</Text>
+                    <Text component={TextVariants.small}>{OverviewColumns.NumLinks}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
-                      {monitoringStats.totalVanAddress / 2}
+                      {monitoringStats.totalLinks}
                     </Text>
                   </TextContent>
                 </Card>
@@ -125,20 +127,20 @@ const Overview = function () {
               <SplitItem isFilled>
                 <Card className="pf-u-p-md" isRounded>
                   <TextContent>
-                    <Text component={TextVariants.small}>{RoutersColumns.NumFLows}</Text>
+                    <Text component={TextVariants.small}>{OverviewColumns.NumServices}</Text>
+                    <Text className="pf-u-text-align-center" component={TextVariants.h1}>
+                      {monitoringStats.totalVanAddress}
+                    </Text>
+                  </TextContent>
+                </Card>
+              </SplitItem>
+
+              <SplitItem isFilled>
+                <Card className="pf-u-p-md" isRounded>
+                  <TextContent>
+                    <Text component={TextVariants.small}>{OverviewColumns.NumConnections}</Text>
                     <Text className="pf-u-text-align-center" component={TextVariants.h1}>
                       {monitoringStats.totalFlows}
-                    </Text>
-                  </TextContent>
-                </Card>
-              </SplitItem>
-
-              <SplitItem isFilled>
-                <Card className="pf-u-p-md" isRounded>
-                  <TextContent>
-                    <Text component={TextVariants.small}>{RoutersColumns.TotalBytes}</Text>
-                    <Text className="pf-u-text-align-center" component={TextVariants.h1}>
-                      {formatBytes(monitoringStats.totalBytes)}
                     </Text>
                   </TextContent>
                 </Card>

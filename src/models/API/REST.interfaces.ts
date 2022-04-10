@@ -140,6 +140,7 @@ export interface FlowsResponse {
   destPort: number;
   vanAddress: string;
   id: string;
+  deviceNameConnectedTo: string;
   flows: FlowResponse[];
   parent: string;
   startTime: number;
@@ -168,16 +169,18 @@ export interface MonitoringStatsResponse {
   totalVanAddress: number;
   totalFlows: number;
   totalBytes: number;
+  totalRouters: number;
+  totalLinks: number;
 }
 
-export interface FlowTopologyRoutersLink {
+export interface MonitoringRoutersTopologyLink {
   source: string;
   target: string;
   mode: string;
   cost: string;
 }
 
-export interface FLowTopologyRoutersLinksResponse {
+export interface MonitoringRoutersTopologyResponse {
   nodes: FlowsResponse[];
-  links: FlowTopologyRoutersLink[];
+  links: MonitoringRoutersTopologyLink[];
 }

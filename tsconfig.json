@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react",
     "sourceMap": true,
-    "typeRoots": ["node_modules/@types", "@types"],
+    "typeRoots": ["node_modules/@types", "@types_app"],
     "baseUrl": "./src",
     "downlevelIteration": true
   },

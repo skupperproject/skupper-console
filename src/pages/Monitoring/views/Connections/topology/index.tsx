@@ -9,21 +9,18 @@ import LoadingPage from '@pages/Loading';
 import { QueriesMonitoring } from '@pages/Monitoring/Monitoring.enum';
 import { MonitorServices } from '@pages/Monitoring/services';
 import { formatBytes } from '@utils/formatBytes';
-// import { UPDATE_INTERVAL } from 'config';
 
-import TopologyMonitoringService from './services';
+import TopologyMonitoringService from './FlowsTopology';
+
+// import { UPDATE_INTERVAL } from 'config';
 
 const MonitoringTopology = function () {
   const navigate = useNavigate();
   const { id: vanId } = useParams();
   const [refetchInterval, setRefetchInterval] = useState(0);
 
-  const {
-    data: devices,
-    isLoading,
-    isFetching,
-  } = useQuery(
-    [QueriesMonitoring.GetFlows, vanId],
+  const { data: devices, isLoading } = useQuery(
+    [QueriesMonitoring.GetMonitoringTopologyFlows, vanId],
     () => MonitorServices.fetchFlowsByVanId(vanId),
     {
       refetchOnWindowFocus: false,
@@ -32,13 +29,9 @@ const MonitoringTopology = function () {
     },
   );
 
-  const {
-    data: routers,
-    isLoading: isLoadingTopologyRoutersLinks,
-    isFetching: isFetchingRoutersLink,
-  } = useQuery(
-    [QueriesMonitoring.GetTolopologyRoutersLinks],
-    () => MonitorServices.fetchTopologyRoutersLinks(),
+  const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
+    [QueriesMonitoring.GetMonitoringTopologyNetwork],
+    () => MonitorServices.fetchMonitoringRoutersTopology(),
     {
       refetchOnWindowFocus: false,
       refetchInterval,
@@ -68,7 +61,7 @@ const MonitoringTopology = function () {
 
   const deviceNodes = useMemo(
     () =>
-      devices?.map(({ id, name, rtype, flows }) => {
+      devices?.map(({ id, name, rtype, flows, protocol }) => {
         const totalLatency = flows.reduce((acc, flow) => acc + flow.latency, 0);
         const avgLatency = totalLatency / flows.length;
         const node = {
@@ -77,6 +70,7 @@ const MonitoringTopology = function () {
           type: 'flow',
           rtype,
           avgLatency,
+          protocol,
           numFlows: flows.length,
           x: 0,
           y: 0,
@@ -89,7 +83,7 @@ const MonitoringTopology = function () {
 
   const deviceLinks = useMemo(
     () =>
-      devices?.flatMap(({ id, rtype, parent, flows }) => {
+      devices?.flatMap(({ id, rtype, parent, flows, protocol }) => {
         const bytes = flows.reduce((acc, flow) => acc + (flow.octets || 0), 0);
 
         return [
@@ -98,6 +92,7 @@ const MonitoringTopology = function () {
             target: id,
             type: rtype,
             pType: 'device',
+            protocol,
             bytes: formatBytes(bytes),
           },
         ];
@@ -108,15 +103,7 @@ const MonitoringTopology = function () {
   const panelRef = useCallback(
     (node) => {
       const routerLinks = routers?.links || [];
-      if (
-        node &&
-        deviceLinks &&
-        deviceNodes &&
-        routerNodes &&
-        routerLinks &&
-        !isFetching &&
-        !isFetchingRoutersLink
-      ) {
+      if (node && deviceLinks && deviceNodes && routerNodes && routerLinks) {
         TopologyMonitoringService(
           node,
           [...routerNodes, ...deviceNodes],

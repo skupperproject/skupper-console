@@ -4,12 +4,17 @@ import { MonitoringRoutesPaths } from './Monitoring.enum';
 
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './'));
 const Overview = lazy(() => import(/* webpackChunkName: "monitoring-vans" */ './views/Overview'));
-const Devices = lazy(() => import(/* webpackChunkName: "monitoring-devices" */ './views/Devices'));
-const DevicesTable = lazy(
-  () => import(/* webpackChunkName: "monitoring-devices-table" */ './views/Devices/table'),
+const Connections = lazy(
+  () => import(/* webpackChunkName: "monitoring-connections" */ './views/Connections'),
 );
-const DevicesTopology = lazy(
-  () => import(/* webpackChunkName: "monitoring-devices-topology" */ './views/Devices/topology'),
+const ConnectionsTable = lazy(
+  () => import(/* webpackChunkName: "monitoring-connections-table" */ './views/Connections/table'),
+);
+const ConnectionsTopology = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "monitoring-connections-topology" */ './views/Connections/topology'
+    ),
 );
 
 export const monitoringRoutes = [
@@ -23,17 +28,17 @@ export const monitoringRoutes = [
         element: <Overview />,
       },
       {
-        path: `${MonitoringRoutesPaths.Devices}/:id`,
-        element: <Devices />,
+        path: `${MonitoringRoutesPaths.Connections}/:id`,
+        element: <Connections />,
         children: [
-          { index: true, element: <DevicesTable /> },
+          { index: true, element: <ConnectionsTable /> },
           {
-            path: `${MonitoringRoutesPaths.Devices}/:id/${MonitoringRoutesPaths.DevicesTopology}`,
-            element: <DevicesTopology />,
+            path: `${MonitoringRoutesPaths.Connections}/:id/${MonitoringRoutesPaths.ConnectionsTopology}`,
+            element: <ConnectionsTopology />,
           },
           {
-            path: `${MonitoringRoutesPaths.Devices}/:id/${MonitoringRoutesPaths.DevicesTable}`,
-            element: <DevicesTable />,
+            path: `${MonitoringRoutesPaths.Connections}/:id/${MonitoringRoutesPaths.ConnectionsTable}`,
+            element: <ConnectionsTable />,
           },
         ],
       },

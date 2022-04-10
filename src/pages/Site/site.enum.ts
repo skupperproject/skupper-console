@@ -8,12 +8,6 @@ export enum QuerySite {
   GetTokens = 'get-tokens-query',
 }
 
-export enum SiteLabels {
-  RouteOverview = 'Overview',
-  RouteDeployments = 'Deployments',
-  RouteLinks = 'Links',
-}
-
 export enum SiteRoutesPaths {
   Site = '/site',
   Links = 'links',

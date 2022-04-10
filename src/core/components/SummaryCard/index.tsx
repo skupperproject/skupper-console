@@ -90,7 +90,7 @@ const OverviewCard = function <T>({
                     <Td
                       key={cellId}
                       dataLabel={columns[cellIndex]}
-                      className={styleCell && styleCell(cell)}
+                      className={styleCell && styleCell(cell, value)}
                     >
                       {value}
                     </Td>

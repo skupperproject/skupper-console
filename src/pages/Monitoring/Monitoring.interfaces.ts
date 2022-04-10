@@ -3,7 +3,10 @@ export interface Port {
   portSource: string;
   portDest: string | undefined;
   octets: number;
-  endTime: number;
+  octetsIn: number;
+  endTime?: number;
+  latency: number;
+  latencyIn: number;
 }
 interface RowDetails {
   host: string;
@@ -14,4 +17,7 @@ interface RowDetails {
 export type Row<T> = {
   details?: RowDetails;
   data: T;
+  totalBytes: number;
+  totalBytesIn: number;
+  avgLatency: number;
 };

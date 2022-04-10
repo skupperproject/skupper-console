@@ -10,8 +10,10 @@ export const LINKS = `${BASE_URL}/links`;
 export const TOKENS = `${BASE_URL}/tokens`;
 export const TARGETS = `${BASE_URL}/targets`;
 export const SERVICES = `${BASE_URL}/services`;
-export const FLOWS = `${BASE_URL}/flows`;
-export const MONITORING_STATS = `${BASE_URL}/monitoring-stats`;
-export const ROUTERS_STAT = `${BASE_URL}/routers-stats`;
-export const VANS_STAT = `${BASE_URL}/vans-stats`;
-export const FLOWS_TOPOLOGY_ROUTERS_LINKS = `${BASE_URL}/flows/topology/routers/links`;
+
+export const MONITORING_FLOWS = `${BASE_URL}/flows`;
+export const MONITORING_CONNECTIONS = `${MONITORING_FLOWS}/connections`;
+export const MONITORING_STATS = `${MONITORING_FLOWS}/network-stats`;
+export const MONITORING_ROUTERS_STAT = `${MONITORING_FLOWS}/routers-stats`;
+export const MONITORING_SERVICES_STATS = `${MONITORING_FLOWS}/services-stats`;
+export const MONITORING_ROUTERS_TOPOLOGY = `${MONITORING_FLOWS}/topology/network`;

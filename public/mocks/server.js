@@ -49,27 +49,47 @@ export function loadMockServerInDev() {
         this.get('/targets', () => {
           return targets;
         });
-        this.get('/monitoring-stats', () => {
+
+        //Flows APIs
+
+        this.get('/flows/network-stats', () => {
           let data = generateDynamicBytes(flowsData);
 
-          const stats = {
-            totalBytes: 0,
-            totalFlows: 0,
-            totalVanAddress: 0,
-          };
-
-          data.forEach((item) => {
-            if (item.octets) {
-              stats.totalFlows++;
-              stats.totalBytes += item.octets;
-            } else if (item.vanAddress) {
-              stats.totalVanAddress++;
+          const stats = data.reduce((acc, item) => {
+            if (item.vanAddress && !acc[item.vanAddress]) {
+              acc[item.vanAddress] = true;
+              acc['totalVanAddress'] = (acc['totalVanAddress'] || 0) + 1;
             }
-          });
+            if (item.octets && acc[item.counterflow] !== item.id) {
+              acc[item.id] = item.counterflow;
+              acc['totalFlows'] = (acc['totalFlows'] || 0) + 1;
+            }
 
-          return [stats];
+            if (item.octets) {
+              acc['totalBytes'] = (acc['totalFlows'] || 0) + item.octets;
+            }
+
+            if (item.rtype === 'ROUTER') {
+              acc['totalRouters'] = (acc['totalRouters'] || 0) + 1;
+            }
+
+            if (item.rtype === 'LINK') {
+              acc['totalLinks'] = (acc['totalLinks'] || 0) + 1;
+            }
+            return acc;
+          }, {});
+
+          return [
+            {
+              totalRouters: stats.totalRouters - 1, // ignore the first route (hub)
+              totalBytes: stats.totalBytes,
+              totalFlows: stats.totalFlows,
+              totalVanAddress: stats.totalVanAddress,
+              totalLinks: stats.totalLinks / 2, // the json data give us 2 endpoints for each link
+            },
+          ];
         });
-        this.get('/routers-stats', () => {
+        this.get('/flows/routers-stats', () => {
           let data = generateDynamicBytes(flowsData);
 
           let current;
@@ -94,27 +114,35 @@ export function loadMockServerInDev() {
 
           return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
         });
-        this.get('/vans-stats', () => {
+        this.get('/flows/services-stats', () => {
           let data = generateDynamicBytes(flowsData);
 
           let current;
           let currentRouterName;
+          let connections = {};
           const routersStats = data.reduce((acc, item) => {
             if (item.rtype === 'ROUTER') {
               currentRouterName = item.name;
             }
+
             if (item.vanAddress) {
               current = item.vanAddress;
+              const routersAssociated = acc[current]
+                ? `${acc[current].routersAssociated} - ${currentRouterName}`
+                : currentRouterName;
+
               acc[current] = {
                 id: item.id,
-                name: item.vanAddress,
+                name: current,
                 totalBytes: 0,
                 totalFlows: (acc[current] && acc[current].totalFlows) || 0,
                 totalDevices: ((acc[current] && acc[current].totalDevices) || 0) + 1,
-                routerName: currentRouterName,
+                routersAssociated,
               };
+            } else if (acc[current] && item.octets && connections[item.counterflow] !== item.id) {
+              connections[item.id] = item.counterflow;
+              acc[current].totalFlows = (acc[current].totalFlows || 0) + 1;
             } else if (acc[current] && item.octets) {
-              acc[current].totalFlows++;
               acc[current].totalBytes += item.octets;
             }
 
@@ -125,17 +153,35 @@ export function loadMockServerInDev() {
         });
 
         this.get('/flows', (_, { queryParams }) => {
-          let data = generateDynamicBytes(flowsData);
-
           if (queryParams.vanaddr) {
-            return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data))).filter(
+            return normalizeFlows(getFlowsTree(flowsData)).filter(
               (flow) => flow.vanAddress === queryParams.vanaddr,
             );
           }
 
-          return normalizeFlows(list_to_tree(mapFlowsWithListenersConnectors(data)));
+          return normalizeFlows(getFlowsTree(generateDynamicBytes(flowsData)));
         });
-        this.get('/flows/topology/routers/links', () => {
+        this.get('/flows/connections', (_, { queryParams }) => {
+          let data = generateDynamicBytes(flowsData);
+
+          const flows = normalizeFlows(getFlowsTree(data)).filter(
+            (flow) => flow.vanAddress === queryParams.vanaddr && flow.rtype === 'CONNECTOR',
+          );
+
+          return flows.flatMap((item) => {
+            let group = {};
+            item.flows?.forEach(({ deviceNameConnectedTo, ...rest }) => {
+              (group[deviceNameConnectedTo] = group[deviceNameConnectedTo] || []).push(rest);
+            });
+            return Object.entries(group).map(([k, v]) => ({
+              ...item,
+              deviceNameConnectedTo: k,
+              flows: v,
+            }));
+          });
+        });
+
+        this.get('/flows/topology/network', () => {
           const routerNodes = flowsData.filter((data) => data.rtype === 'ROUTER');
           const routersMap = routerNodes.reduce((acc, router) => {
             acc[router.name] = router;
@@ -164,7 +210,11 @@ export function loadMockServerInDev() {
   }
 }
 
-const list_to_tree = (dataset) => {
+/******************
+ * UTILS
+ *****************/
+
+function list_to_tree(dataset) {
   const hashTable = Object.create(null);
   const dataTree = [];
 
@@ -179,7 +229,7 @@ const list_to_tree = (dataset) => {
   });
 
   return dataTree;
-};
+}
 
 function normalizeFlows(data) {
   return data
@@ -187,7 +237,6 @@ function normalizeFlows(data) {
       if (childNodes.length) {
         return childNodes.flatMap((node) => {
           const { childNodes: flows, ...rest } = node;
-
           return {
             ...rest,
             hostname,
@@ -220,8 +269,17 @@ function mapFlowsWithListenersConnectors(flows) {
     }, {});
 
     if (data.counterflow) {
-      return { ...data, connectedTo: listenersBound[data.counterflow] };
+      const deviceConnectedTo = flows.find(
+        (flow) => flow.id === listenersBound[data.counterflow]?.parent,
+      );
+
+      return {
+        ...data,
+        connectedTo: listenersBound[data.counterflow],
+        deviceNameConnectedTo: deviceConnectedTo.name,
+      };
     }
+
     if (data.rtype === 'FLOW' && !data.counterflow) {
       return { ...data, connectedTo: connectorsBound[data.id] };
     }
@@ -229,6 +287,11 @@ function mapFlowsWithListenersConnectors(flows) {
     return data;
   });
 }
+
+function getFlowsTree(data) {
+  return list_to_tree(mapFlowsWithListenersConnectors(data));
+}
+
 // TODO: simulate dynamic bytes flow
 function generateDynamicBytes(flows) {
   return flows.map((item) => {
