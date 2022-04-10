@@ -1,6 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { TopologyView } from '@patternfly/react-topology';
+import {
+  createTopologyControlButtons,
+  defaultControlButtonsOptions,
+  TopologyControlBar,
+  TopologyView,
+} from '@patternfly/react-topology';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -18,6 +23,7 @@ const MonitoringTopology = function () {
   const navigate = useNavigate();
   const { id: vanId } = useParams();
   const [refetchInterval, setRefetchInterval] = useState(0);
+  const [svgTopologyComponent, setSvgTopologyComponent] = useState<any>();
 
   const { data: devices, isLoading } = useQuery(
     [QueriesMonitoring.GetMonitoringTopologyFlows, vanId],
@@ -104,13 +110,15 @@ const MonitoringTopology = function () {
     (node) => {
       const routerLinks = routers?.links || [];
       if (node && deviceLinks && deviceNodes && routerNodes && routerLinks) {
-        TopologyMonitoringService(
+        const topologyServiceRef = TopologyMonitoringService(
           node,
           [...routerNodes, ...deviceNodes],
           [...routerLinks, ...deviceLinks],
           node.getBoundingClientRect().width,
           node.getBoundingClientRect().height,
         );
+
+        setSvgTopologyComponent(topologyServiceRef);
       }
     },
     [deviceLinks, deviceNodes, routerNodes, routers?.links],
@@ -120,8 +128,29 @@ const MonitoringTopology = function () {
     return <LoadingPage />;
   }
 
+  function handleZoomIn() {
+    svgTopologyComponent?.zoomIn();
+  }
+
+  function handleZoomOut() {
+    svgTopologyComponent?.zoomOut();
+  }
+
+  function handleResetView() {
+    svgTopologyComponent?.reset();
+  }
+
+  const controlButtons = createTopologyControlButtons({
+    ...defaultControlButtonsOptions,
+    zoomInCallback: handleZoomIn,
+    zoomOutCallback: handleZoomOut,
+    resetViewCallback: handleResetView,
+    fitToScreenHidden: true,
+    legendHidden: true,
+  });
+
   return (
-    <TopologyView>
+    <TopologyView controlBar={<TopologyControlBar controlButtons={controlButtons} />}>
       <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
     </TopologyView>
   );

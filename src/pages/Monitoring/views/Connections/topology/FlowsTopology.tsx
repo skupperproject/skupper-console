@@ -1,6 +1,7 @@
 import { drag } from 'd3-drag';
 import { forceSimulation, forceCenter, forceManyBody, forceCollide, forceLink } from 'd3-force';
 import { select } from 'd3-selection';
+import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
 import router from '@assets/router.svg';
 import { formatTime } from '@utils/formatTime';
@@ -8,6 +9,7 @@ import { formatTime } from '@utils/formatTime';
 import {
   MonitoringTopologyDeviceNode,
   MonitoringTopologyLink,
+  MonitoringTopologyLinkNormalized,
   MonitoringTopologyNode,
   MonitoringTopologyRouterNode,
 } from './topology.interfaces';
@@ -49,34 +51,35 @@ function TopologyMonitoringService(
     .force('collide', forceCollide(0.9).radius(50).iterations(1))
     .force(
       'link',
-      forceLink()
-        .strength(({ pType }: any) => (pType ? 0.015 : 0.001))
-        .id(function ({ id }: any) {
+      forceLink<MonitoringTopologyNode, MonitoringTopologyLink>()
+        .strength(({ pType }) => (pType ? 0.015 : 0.001))
+        .id(function ({ id }) {
           return id;
         }),
     )
     .on('tick', ticked);
 
-  const linksWithNodes: MonitoringTopologyLink[] = [];
-  links.some(function (link) {
+  const linksWithNodes: MonitoringTopologyLinkNormalized[] = [];
+  links.some(function ({ source, target, ...rest }) {
     nodes.some(function (node) {
-      if (link.source === node.id) {
-        linksWithNodes.push({ ...link, source: node });
+      if (source === node.id) {
+        linksWithNodes.push({ ...rest, target, source: node });
       }
-      if (link.target === node.id) {
-        linksWithNodes.push({ ...link, target: node });
+      if (target === node.id) {
+        linksWithNodes.push({ ...rest, source, target: node });
       }
     });
   });
 
   // root
-  const svgElement = select($node)
+  const svgContainer = select($node)
     .append('svg')
     .attr('id', 'topology-draw-panel')
     .attr('width', boxWidth)
     .attr('height', boxHeight)
     .style('background-color', 'var(--pf-global--BackgroundColor--100)');
 
+  const svgElement = svgContainer.append('g').attr('width', boxWidth).attr('height', boxHeight);
   // arrow
   svgElement
     .append('svg:defs')
@@ -144,16 +147,22 @@ function TopologyMonitoringService(
   const routerNodes = nodes.filter(
     (node) => node.type !== 'flow',
   ) as MonitoringTopologyRouterNode[];
+
   svgElement
     .selectAll('.routerImg')
     .data(routerNodes)
     .enter()
     .call(function (p) {
-      p.append('svg:image')
+      p.append('image')
         .attr('xlink:href', router)
         .attr('width', ROUTER_IMG_WIDTH)
         .attr('class', 'routerImg')
-        .call(dragSvg() as any);
+        .call(
+          drag<SVGImageElement, MonitoringTopologyRouterNode>()
+            .on('start', dragStarted)
+            .on('drag', dragged)
+            .on('end', dragEnded),
+        );
 
       // label
       p.append('text')
@@ -182,7 +191,12 @@ function TopologyMonitoringService(
             ? 'var(--pf-global--palette--light-blue-500)'
             : 'var(--pf-global--BackgroundColor--100)',
         )
-        .call(dragSvg() as any)
+        .call(
+          drag<SVGCircleElement, MonitoringTopologyDeviceNode>()
+            .on('start', dragStarted)
+            .on('drag', dragged)
+            .on('end', dragEnded),
+        )
         .on('mouseover', function (_, { name, protocol, rtype, numFlows, avgLatency }) {
           tooltip.html(`
           <b>${name}</b>
@@ -206,36 +220,31 @@ function TopologyMonitoringService(
     });
 
   simulation.nodes(nodes).force<any>('link').links(linksWithNodes);
-
   // drag util
-  function dragSvg() {
-    function dragStarted(event: any, d: any) {
-      if (!event.active) {
-        simulation.alphaTarget(0.3).restart();
-      }
-      d.fx = d.x;
-      d.fy = d.y;
-
-      isDragging = true;
+  function dragStarted(event: any, node: MonitoringTopologyNode) {
+    if (!event.active) {
+      simulation.alphaTarget(0.3).restart();
     }
+    node.fx = node.x;
+    node.fy = node.y;
 
-    function dragged(event: any, d: any) {
-      d.fx = event.x;
-      d.fy = event.y;
+    isDragging = true;
+  }
+
+  function dragged(event: any, node: MonitoringTopologyNode) {
+    node.fx = event.x;
+    node.fy = event.y;
+  }
+
+  function dragEnded(event: any, node: MonitoringTopologyNode) {
+    if (!event.active) {
+      simulation.alphaTarget(0);
+      simulation.stop();
     }
+    node.fx = null;
+    node.fy = null;
 
-    function dragEnded(event: any, d: any) {
-      if (!event.active) {
-        simulation.alphaTarget(0);
-        simulation.stop();
-      }
-      d.fx = null;
-      d.fy = null;
-
-      isDragging = false;
-    }
-
-    return drag().on('start', dragStarted).on('drag', dragged).on('end', dragEnded);
+    isDragging = false;
   }
 
   function ticked() {
@@ -258,71 +267,116 @@ function TopologyMonitoringService(
     }
 
     svgElement
-      .selectAll('.routerImg')
-      .attr('x', ({ x }: any) => validatePosition(x, maxSvgPosX, minSvgPosX))
-      .attr('y', ({ y }: any) => validatePosition(y, maxSvgPosY, minSvgPosY));
+      .selectAll<SVGSVGElement, MonitoringTopologyNode>('.routerImg')
+      .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
+      .attr('y', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
 
     svgElement
-      .selectAll('.devicesImg')
-      .attr('cx', ({ x }: any) => validatePosition(x, maxSvgPosX, minSvgPosX))
-      .attr('cy', ({ y }: any) => validatePosition(y, maxSvgPosY, minSvgPosY));
+      .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImg')
+      .attr('cx', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
+      .attr('cy', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
 
     svgElement
-      .selectAll('.routerLink')
-      .attr('x1', ({ source: { x } }: any) =>
-        validatePosition(x + ROUTER_IMG_CENTER_X, maxSvgPosX, minSvgPosX),
-      )
-      .attr('y1', ({ source: { y } }: any) =>
-        validatePosition(y + ROUTER_IMG_CENTER_X, maxSvgPosY, minSvgPosY),
-      )
-      .attr('x2', (d: any) =>
+      .selectAll<SVGSVGElement, MonitoringTopologyLinkNormalized>('.routerLink')
+      .attr('x1', ({ source }) =>
         validatePosition(
-          !d.pType ? d.target.x + ROUTER_IMG_CENTER_X : d.target.x,
+          (source as MonitoringTopologyRouterNode).x + ROUTER_IMG_CENTER_X,
           maxSvgPosX,
           minSvgPosX,
         ),
       )
-      .attr('y2', (d: any) =>
+      .attr('y1', ({ source }) =>
         validatePosition(
-          !d.pType ? d.target.y + ROUTER_IMG_CENTER_X : d.target.y,
+          (source as MonitoringTopologyRouterNode).y + ROUTER_IMG_CENTER_X,
+          maxSvgPosY,
+          minSvgPosY,
+        ),
+      )
+      .attr('x2', ({ target, pType }) =>
+        validatePosition(
+          !pType
+            ? (target as MonitoringTopologyRouterNode).x + ROUTER_IMG_CENTER_X
+            : (target as MonitoringTopologyRouterNode).x,
+          maxSvgPosX,
+          minSvgPosX,
+        ),
+      )
+      .attr('y2', ({ target, pType }) =>
+        validatePosition(
+          !pType
+            ? (target as MonitoringTopologyRouterNode).y + ROUTER_IMG_CENTER_X
+            : (target as MonitoringTopologyRouterNode).y,
           maxSvgPosY,
           minSvgPosY,
         ),
       );
 
     svgElement
-      .selectAll('.routerLinkL')
-      .attr('x', (d: any) => {
-        if (d.target.x > d.source.x) {
+      .selectAll<SVGSVGElement, MonitoringTopologyLinkNormalized>('.routerLinkL')
+      .attr('x', ({ target: t, source: s }) => {
+        const target = t as MonitoringTopologyRouterNode;
+        const source = s as MonitoringTopologyRouterNode;
+
+        if (target.x > source.x) {
           return validatePosition(
-            d.source.x + (d.target.x - d.source.x) / 2 + ROUTER_IMG_CENTER_X,
+            source.x + (target.x - source.x) / 2 + ROUTER_IMG_CENTER_X,
             maxSvgPosX,
             minSvgPosY,
           );
         }
 
         return validatePosition(
-          d.target.x + (d.source.x - d.target.x) / 2 + ROUTER_IMG_CENTER_X,
+          target.x + (source.x - target.x) / 2 + ROUTER_IMG_CENTER_X,
           maxSvgPosX,
           minSvgPosX,
         );
       })
-      .attr('y', (d: any) => {
-        if (d.target.y > d.source.y) {
+      .attr('y', ({ target: t, source: s }) => {
+        const target = t as MonitoringTopologyRouterNode;
+        const source = s as MonitoringTopologyRouterNode;
+
+        if (target.y > source.y) {
           return validatePosition(
-            d.source.y + (d.target.y - d.source.y) / 2 + ROUTER_IMG_CENTER_X,
+            source.y + (target.y - source.y) / 2 + ROUTER_IMG_CENTER_X,
             maxSvgPosY,
             minSvgPosY,
           );
         }
 
         return validatePosition(
-          d.target.y + (d.source.y - d.target.y) / 2 + ROUTER_IMG_CENTER_X,
+          target.y + (source.y - target.y) / 2 + ROUTER_IMG_CENTER_X,
           maxSvgPosY,
           minSvgPosY,
         );
       });
   }
+
+  // zoom
+  const handleZoom = (e: any) => svgElement.attr('transform', e.transform);
+  const initZoom = zoom<SVGSVGElement, unknown>().scaleExtent([0.5, 6]).on('zoom', handleZoom);
+
+  svgContainer.call(initZoom);
+
+  function reset() {
+    const $parent = svgContainer.node();
+
+    if ($parent) {
+      svgContainer
+        .transition()
+        .duration(750)
+        .call(
+          initZoom.transform,
+          zoomIdentity,
+          zoomTransform($parent).invert([boxWidth / 2, boxHeight / 2]),
+        );
+    }
+  }
+
+  return Object.assign(svgContainer.node(), {
+    zoomIn: () => svgContainer.transition().duration(750).call(initZoom.scaleBy, 1.5),
+    zoomOut: () => svgContainer.transition().duration(750).call(initZoom.scaleBy, 0.5),
+    reset,
+  });
 }
 
 export default TopologyMonitoringService;

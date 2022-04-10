@@ -12,8 +12,8 @@ export interface MonitoringTopologyDeviceLink {
 export type MonitoringTopologyRouterLink = MonitoringRoutersTopologyLink;
 
 export interface MonitoringTopologyLink {
-  source: string | MonitoringTopologyNode;
-  target: string | MonitoringTopologyNode;
+  source: string;
+  target: string;
   type?: string;
   pType?: string;
   bytes?: string;
@@ -22,11 +22,24 @@ export interface MonitoringTopologyLink {
   cost?: string;
 }
 
+export interface MonitoringTopologyLinkNormalized {
+  type?: string;
+  pType?: string;
+  bytes?: string;
+  protocol?: string;
+  mode?: string;
+  cost?: string;
+  source: MonitoringTopologyNode | string;
+  target: MonitoringTopologyNode | string;
+}
+
 export interface MonitoringTopologyRouterNode {
   id: string;
   name: string;
   x: number;
   y: number;
+  fx?: number | null;
+  fy?: number | null;
   width: number;
   type: string;
 }
@@ -36,6 +49,8 @@ export interface MonitoringTopologyDeviceNode {
   name: string;
   x: number;
   y: number;
+  fx?: number | null;
+  fy?: number | null;
   type: string;
   rtype: string;
   protocol: string;
