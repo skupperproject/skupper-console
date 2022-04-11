@@ -70,8 +70,6 @@ export enum ConnectionColumns {
   Connections = 'Connections',
   // nested table  Columns
   Ports = 'Ports',
-  ConnectorFlow = 'Connector flows',
-  ListenerFlow = 'Listener flows',
   Traffic = 'Traffic',
   TrafficIn = 'Traffic',
   Latency = 'Latency',

@@ -53,7 +53,7 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
             constrainToVisibleArea
           />
         }
-        legendData={[{ name: 'Traffic during the last minute' }]}
+        legendData={options?.dataLegend}
         legendOrientation="horizontal"
         legendPosition="bottom"
         height={chartConfig.height}

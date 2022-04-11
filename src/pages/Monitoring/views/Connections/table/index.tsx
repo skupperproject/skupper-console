@@ -1,11 +1,9 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 
-import { Chart, ChartAxis, ChartBar, ChartThemeColor } from '@patternfly/react-charts';
 import { Split, SplitItem, Tooltip } from '@patternfly/react-core';
 import { CircleIcon, ConnectedIcon, PluggedIcon } from '@patternfly/react-icons';
 import {
   ExpandableRowContent,
-  InnerScrollContainer,
   TableComposable,
   Tbody,
   Td,
@@ -18,15 +16,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
+import TrafficChart from '@pages/Site/views/Overview/components/TrafficChart';
+import { ChartThemeColors } from '@pages/Site/views/Overview/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@utils/formatBytes';
-import { formatTime } from '@utils/formatTime';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MAX_HEIGHT_DETAILS_TABLE, MAX_WIDTH_DETAILS_TABLE } from '../../../Monitoring.constant';
 import { ConnectionColumns, ConnectionStatus, QueriesMonitoring } from '../../../Monitoring.enum';
-import { Port, Row } from '../../../Monitoring.interfaces';
+import { Row } from '../../../Monitoring.interfaces';
 import { MonitorServices } from '../../../services';
 import { Flow } from '../../../services/services.interfaces';
+import ConnectionDetailsTable from './Details';
 
 const ConnectionsTableVIew = function () {
   const navigate = useNavigate();
@@ -66,12 +66,18 @@ const ConnectionsTableVIew = function () {
     return null;
   }
 
-  return <ConnectionsTable rows={rows} />;
+  return <ConnectionsTable rows={rows} dataUpdatedAt={dataUpdatedAt} />;
 };
 
 export default ConnectionsTableVIew;
 
-const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
+const ConnectionsTable = memo(function ({
+  rows,
+  dataUpdatedAt,
+}: {
+  rows: Row<Flow>[];
+  dataUpdatedAt: number;
+}) {
   const [expandedRowsIds, setExpandedRowsIds] = useState<string[]>([]);
 
   const isRowExpanded = (row: Flow) => expandedRowsIds.includes(row.id);
@@ -88,12 +94,6 @@ const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
     },
     [expandedRowsIds],
   );
-
-  useEffect(() => {
-    if (rows.length) {
-      setExpandedRowsIds([rows[0].data.id]);
-    }
-  }, []);
 
   return (
     <TableComposable
@@ -182,14 +182,33 @@ const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                     }}
                   >
                     <SplitItem isFilled>
-                      <DeviceDetailsTable
-                        ports={details.ports}
+                      <ConnectionDetailsTable
+                        connection={details.connection}
                         totalBytes={details.totalBytes}
                         totalBytesIn={details.totalBytesIn}
+                        connectorName={details.connectorName}
+                        listenerName={details.listenerName}
                       />
                     </SplitItem>
                     <SplitItem style={{ width: MAX_WIDTH_DETAILS_TABLE }}>
-                      <DeviceTrafficChart ports={details.ports} />
+                      <TrafficChart
+                        options={{
+                          chartColor: ChartThemeColors.Purple,
+                          showLegend: true,
+                          dataLegend: [{ name: 'Connector' }, { name: 'Listener' }],
+                        }}
+                        timestamp={dataUpdatedAt}
+                        totalBytesProps={[
+                          {
+                            name: details.connectorName,
+                            totalBytes: details.totalBytes,
+                          },
+                          {
+                            name: details.listenerName,
+                            totalBytes: details.totalBytesIn,
+                          },
+                        ]}
+                      />
                     </SplitItem>
                   </Split>
                 </ExpandableRowContent>
@@ -201,149 +220,6 @@ const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
     </TableComposable>
   );
 });
-
-const DeviceDetailsTable = function ({
-  ports,
-  totalBytes,
-  totalBytesIn,
-}: {
-  ports: Port[];
-  totalBytes: number;
-  totalBytesIn: number;
-}) {
-  return (
-    <InnerScrollContainer>
-      <TableComposable
-        isStickyHeader
-        className="flows-table"
-        aria-label="flows table"
-        borders
-        variant="compact"
-        gridBreakPoint=""
-      >
-        <Thead hasNestedHeader>
-          <Tr>
-            <Th hasRightBorder>{ConnectionColumns.ConnectionStatus}</Th>
-            <Th hasRightBorder colSpan={3}>
-              {ConnectionColumns.ConnectorFlow}
-            </Th>
-
-            <Th hasRightBorder colSpan={3}>
-              {ConnectionColumns.ListenerFlow}
-            </Th>
-          </Tr>
-          <Tr>
-            <Th hasRightBorder />
-            <Th hasRightBorder isSubheader>
-              {ConnectionColumns.Traffic}
-            </Th>
-            <Th hasRightBorder width={10} isSubheader>
-              {ConnectionColumns.TrafficPercentage}
-            </Th>
-            <Th hasRightBorder isSubheader>
-              {ConnectionColumns.Latency}
-            </Th>
-            <Th hasRightBorder isSubheader>
-              {ConnectionColumns.TrafficIn}
-            </Th>
-            <Th hasRightBorder isSubheader>
-              {ConnectionColumns.TrafficPercentage}
-            </Th>
-            <Th hasRightBorder isSubheader>
-              {ConnectionColumns.LatencyIn}
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {ports.map(({ id, octets, latency, latencyIn, endTime, octetsIn }) => (
-            <Tr key={id}>
-              <Th hasRightBorder dataLabel={ConnectionColumns.ConnectionStatus}>
-                {endTime ? 'Closed' : 'Open'}
-              </Th>
-              <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.Traffic}>
-                {formatBytes(octets)}
-              </Td>
-              <Td
-                modifier="fitContent"
-                className="pf-u-text-align-right"
-                dataLabel={ConnectionColumns.TrafficPercentage}
-              >
-                {((octetsIn / totalBytesIn) * 100).toFixed(1)}
-              </Td>
-              <Th
-                hasRightBorder
-                className="pf-u-text-align-right"
-                dataLabel={ConnectionColumns.Latency}
-              >
-                {formatTime(latency)}
-              </Th>
-              <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.TrafficIn}>
-                {formatBytes(octetsIn)}
-              </Td>
-              <Td
-                modifier="fitContent"
-                className="pf-u-text-align-right"
-                dataLabel={ConnectionColumns.TrafficPercentage}
-              >
-                {((octets / totalBytes) * 100).toFixed(1)}
-              </Td>
-              <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.LatencyIn}>
-                {formatTime(latencyIn)}
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </TableComposable>
-    </InnerScrollContainer>
-  );
-};
-const DeviceTrafficChart = function ({ ports }: { ports: Port[] }) {
-  return (
-    <Chart
-      ariaDesc="Bytes traffic for each port of the host"
-      ariaTitle="Bytes chart"
-      domainPadding={{ x: [30, 25] }}
-      height={MAX_HEIGHT_DETAILS_TABLE}
-      padding={{
-        bottom: 35,
-        left: 65,
-        right: 0,
-        top: 40,
-      }}
-      width={MAX_WIDTH_DETAILS_TABLE}
-      themeColor={ChartThemeColor.green}
-    >
-      <ChartAxis
-        style={{
-          tickLabels: { fontSize: 10 },
-        }}
-        tickFormat={(tick) => formatBytes(tick)}
-        dependentAxis
-      />
-      <ChartAxis
-        style={{
-          axisLabel: {
-            padding: 60,
-          },
-          tickLabels: {
-            fontSize: 10,
-            padding: 1,
-            angle: -45,
-            verticalAnchor: 'end',
-            textAnchor: 'end',
-          },
-        }}
-      />
-      <ChartBar
-        data={getBytes(ports)}
-        animate={{
-          duration: 1000,
-          onLoad: { duration: 1000 },
-        }}
-      />
-    </Chart>
-  );
-};
 
 function buildRows(data: Flow[]): Row<Flow>[] {
   return data?.flatMap((item) => {
@@ -364,7 +240,9 @@ function buildRows(data: Flow[]): Row<Flow>[] {
       host: item.flows[0]?.sourceHost,
       totalBytes,
       totalBytesIn,
-      ports: item.flows.map(({ id, connectedTo, sourcePort, octets, endTime, latency }) => ({
+      connectorName: item.name,
+      listenerName: item.deviceNameConnectedTo,
+      connection: item.flows.map(({ id, connectedTo, sourcePort, octets, endTime, latency }) => ({
         id,
         portSource: sourcePort,
         portDest: connectedTo?.sourcePort,
@@ -379,15 +257,3 @@ function buildRows(data: Flow[]): Row<Flow>[] {
     return { details, data: item, totalBytes, totalBytesIn, avgLatency };
   });
 }
-
-// const rowsFilteredByType = (
-//   rows: Row<Flow>[] | undefined,
-//   selection: string,
-//   isPlaceholder: boolean,
-// ) => rows?.filter(({ data: row }) => row.rtype.toLowerCase() === selection || isPlaceholder);
-
-const getBytes = (ports: any[]) =>
-  ports.map(({ portSource, octets }) => ({
-    x: portSource,
-    y: octets,
-  }));

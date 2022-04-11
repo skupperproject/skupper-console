@@ -1,4 +1,4 @@
-export interface Port {
+export interface Connection {
   id: string;
   portSource: string;
   portDest: string | undefined;
@@ -12,7 +12,9 @@ interface RowDetails {
   host: string;
   totalBytes: number;
   totalBytesIn: number;
-  ports: Port[];
+  connectorName: string;
+  listenerName: string;
+  connection: Connection[];
 }
 
 export type Row<T> = {

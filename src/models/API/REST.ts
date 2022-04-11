@@ -24,7 +24,7 @@ import {
   ServiceResponse,
   TargetResponse,
   TokenResponse,
-  VanAddressStatsResponse,
+  ServicesStatsResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -88,7 +88,7 @@ export const RESTApi = {
 
     return data;
   },
-  fetchFlowsServicesStats: async (): Promise<VanAddressStatsResponse[]> => {
+  fetchFlowsServicesStats: async (): Promise<ServicesStatsResponse[]> => {
     const { data } = await fetchWithTimeout(MONITORING_SERVICES_STATS);
 
     return data;

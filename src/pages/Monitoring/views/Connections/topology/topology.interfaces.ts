@@ -1,16 +1,3 @@
-import { MonitoringRoutersTopologyLink } from '@models/API/REST.interfaces';
-
-export interface MonitoringTopologyDeviceLink {
-  source: string;
-  target: string;
-  type: string;
-  pType: string;
-  bytes: string;
-  protocol: string;
-}
-
-export type MonitoringTopologyRouterLink = MonitoringRoutersTopologyLink;
-
 export interface MonitoringTopologyLink {
   source: string;
   target: string;

@@ -20,7 +20,7 @@ import {
 import ConnectionsTableVIew from './table';
 import ConnectionsTopology from './topology';
 
-const Connnections = function () {
+const Connections = function () {
   const [activeItem, setActiveItem] = useState(0);
   const { id: vanId } = useParams();
 
@@ -61,4 +61,4 @@ const Connnections = function () {
   );
 };
 
-export default Connnections;
+export default Connections;

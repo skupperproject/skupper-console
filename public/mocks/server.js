@@ -233,6 +233,7 @@ function list_to_tree(dataset) {
 }
 
 function normalizeFlows(data) {
+  console.log(data);
   return data
     .flatMap(({ childNodes, hostname, name }) => {
       if (childNodes.length) {

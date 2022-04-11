@@ -124,10 +124,10 @@ interface FlowResponse {
   counterflow?: string | null;
   connectedTo?: FlowResponse & { parent: string };
   startTime: number;
-  endTime: number;
+  endTime?: number;
   parent: string;
   rtype: string;
-  trace: string;
+  trace?: string;
 }
 
 export interface FlowsResponse {
@@ -147,7 +147,7 @@ export interface FlowsResponse {
   endTime?: number;
 }
 
-export interface VanAddressStatsResponse {
+export interface ServicesStatsResponse {
   id: string;
   name: string;
   routerName: string;
@@ -156,7 +156,7 @@ export interface VanAddressStatsResponse {
   totalBytes: number;
 }
 
-export interface LinkStatsResponse {
+interface LinkStatsResponse {
   direction: string;
   id: string;
   linkCost: number;
@@ -166,6 +166,7 @@ export interface LinkStatsResponse {
   rtype: string;
   startTime: number;
 }
+
 export interface RouterStatsResponse {
   id: string;
   name: string;
@@ -184,7 +185,7 @@ export interface MonitoringStatsResponse {
   totalLinks: number;
 }
 
-export interface MonitoringRoutersTopologyLink {
+interface MonitoringRoutersTopologyLink {
   source: string;
   target: string;
   mode: string;
