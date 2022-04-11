@@ -156,12 +156,23 @@ export interface VanAddressStatsResponse {
   totalBytes: number;
 }
 
+export interface LinkStatsResponse {
+  direction: string;
+  id: string;
+  linkCost: number;
+  mode: string;
+  name: string;
+  parent: string;
+  rtype: string;
+  startTime: number;
+}
 export interface RouterStatsResponse {
   id: string;
   name: string;
   totalVanAddress: number;
   totalFlows: number;
   totalBytes: number;
+  connectedTo: LinkStatsResponse[];
 }
 
 export interface MonitoringStatsResponse {

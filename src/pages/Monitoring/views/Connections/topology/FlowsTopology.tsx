@@ -127,8 +127,10 @@ function TopologyMonitoringService(
         .attr('class', 'routerLink')
         .style('stroke', 'var(--pf-global--palette--black-400)')
         .style('stroke-width', '1px')
-        .attr('marker-end', ({ type }) => type === 'CONNECTOR' && 'url(#arrow)')
-        .attr('marker-start', ({ type }) => type === 'LISTENER' && 'url(#arrow)');
+        .attr(
+          'marker-start',
+          ({ type }) => (type === 'LISTENER' || type === 'CONNECTOR') && 'url(#arrow)',
+        );
 
       // label
       p.append('text')

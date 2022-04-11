@@ -10,10 +10,11 @@ export type Flow = FlowsResponse;
 export type MonitoringRoutersTopology = MonitoringRoutersTopologyResponse;
 
 export type RoutersStats = RouterStatsResponse;
+
 export type MonitoringStats = MonitoringStatsResponse;
-export type VansStats = VanAddressStatsResponse;
+export type VanStats = VanAddressStatsResponse;
 export interface MonitoringInfo {
-  vansStats: VansStats[];
+  vansStats: VanStats[];
   routersStats: RoutersStats[];
   monitoringStats: MonitoringStats[];
 }

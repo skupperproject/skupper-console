@@ -17,6 +17,11 @@ import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
+import {
+  LINKS_STATS_HEADER,
+  ROUTERS_STATS_HEADER,
+  VANS_STATS_HEADER,
+} from '@pages/Monitoring/Monitoring.constant';
 import TrafficChart from '@pages/Site/views/Overview/components/TrafficChart';
 import { ChartThemeColors } from '@pages/Site/views/Overview/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@utils/formatBytes';
@@ -26,19 +31,19 @@ import {
   MonitoringRoutesPaths,
   OverviewColumns,
   QueriesMonitoring,
-  RoutersColumns,
   SectionsStatsLabels,
-  ServicesColumns,
 } from '../../Monitoring.enum';
 import { MonitorServices } from '../../services';
-import { MonitoringStats, RoutersStats, VansStats } from '../../services/services.interfaces';
+import { MonitoringStats } from '../../services/services.interfaces';
+import { RouterStatsRow, VanStatsRow, LinkStatsRow } from './Overview.interfaces';
 
 const Pluralize = require('pluralize');
 
 const Overview = function () {
   const navigate = useNavigate();
-  const [vans, setVans] = useState<VansStats[]>();
-  const [routersStats, setRoutersStats] = useState<RoutersStats[]>();
+  const [vans, setVans] = useState<VanStatsRow[]>();
+  const [routersStats, setRoutersStats] = useState<RouterStatsRow[]>();
+  const [linksStats, setLinksStats] = useState<LinkStatsRow[]>();
   const [monitoringStats, setMonitoringStats] = useState<MonitoringStats>();
 
   const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
@@ -72,8 +77,19 @@ const Overview = function () {
         totalBytes: formatBytes(totalBytes),
       }));
 
-      setVans(vanStatsRow as any);
-      setRoutersStats(routersRow as any);
+      const linksRows = data.routersStats.flatMap(({ connectedTo, name }) =>
+        connectedTo.map(({ linkCost, name: routerNameLinked, mode, direction }) => ({
+          routerNameStart: name,
+          routerNameEnd: routerNameLinked,
+          cost: linkCost,
+          mode,
+          direction,
+        })),
+      );
+
+      setVans(vanStatsRow);
+      setRoutersStats(routersRow);
+      setLinksStats(linksRows);
       setMonitoringStats(data.monitoringStats[0]);
     }
   }, [data]);
@@ -81,20 +97,6 @@ const Overview = function () {
   if (isLoading) {
     return <LoadingPage />;
   }
-
-  const ROUTERS_STATS_HEADER = [
-    { property: 'name', name: RoutersColumns.Name },
-    { property: 'totalBytes', name: RoutersColumns.TotalBytes },
-    { property: 'totalVanAddress', name: RoutersColumns.NumServices },
-    { property: 'totalFlows', name: RoutersColumns.NumFLows },
-  ];
-  const VANS_STATS_HEADER = [
-    { property: 'name', name: ServicesColumns.Name },
-    { property: 'routersAssociated', name: ServicesColumns.RoutersAssociated },
-    { property: 'totalBytes', name: ServicesColumns.TotalBytes },
-    { property: 'totalDevices', name: ServicesColumns.NumDevices },
-    { property: 'totalFlows', name: ServicesColumns.NumFLows },
-  ];
 
   return (
     <>
@@ -150,10 +152,10 @@ const Overview = function () {
         )}
 
         <StackItem className="pf-u-py-md">
-          <Card>
-            <Split hasGutter>
-              {routersStats && (
-                <SplitItem isFilled>
+          <Split hasGutter>
+            {routersStats && (
+              <SplitItem isFilled>
+                <Card>
                   <OverviewCard
                     color={SummaryCardColors.Blue}
                     noBorder={true}
@@ -162,21 +164,24 @@ const Overview = function () {
                     data={routersStats}
                     label={Pluralize(`${SectionsStatsLabels.Router}`, routersStats.length, false)}
                   />
-                </SplitItem>
-              )}
-              {data && (
-                <SplitItem>
-                  <TrafficChart
-                    timestamp={dataUpdatedAt}
-                    totalBytesProps={data.routersStats.map((routerStat) => ({
-                      name: routerStat.name,
-                      totalBytes: routerStat.totalBytes,
-                    }))}
+                </Card>
+              </SplitItem>
+            )}
+            {linksStats && (
+              <SplitItem isFilled>
+                <Card>
+                  <OverviewCard
+                    color={SummaryCardColors.Green}
+                    noBorder={true}
+                    isPlain={true}
+                    columns={LINKS_STATS_HEADER}
+                    data={linksStats}
+                    label={Pluralize(`${SectionsStatsLabels.Link}`, linksStats.length, false)}
                   />
-                </SplitItem>
-              )}
-            </Split>
-          </Card>
+                </Card>
+              </SplitItem>
+            )}
+          </Split>
         </StackItem>
 
         <StackItem>

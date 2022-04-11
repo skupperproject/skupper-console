@@ -91,7 +91,6 @@ export function loadMockServerInDev() {
         });
         this.get('/flows/routers-stats', () => {
           let data = generateDynamicBytes(flowsData);
-
           let current;
           const routersStats = data.reduce((acc, item) => {
             if (item.rtype === 'ROUTER') {
@@ -103,6 +102,8 @@ export function loadMockServerInDev() {
                 totalFlows: 0,
                 totalVanAddress: 0,
               };
+            } else if (item.rtype === 'LINK') {
+              (acc[current]['connectedTo'] = acc[current]['connectedTo'] || []).push(item);
             } else if (item.octets) {
               acc[current].totalFlows++;
               acc[current].totalBytes += item.octets;
