@@ -11,6 +11,7 @@ export interface Port {
 interface RowDetails {
   host: string;
   totalBytes: number;
+  totalBytesIn: number;
   ports: Port[];
 }
 

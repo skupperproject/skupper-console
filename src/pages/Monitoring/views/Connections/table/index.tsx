@@ -182,7 +182,11 @@ const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
                     }}
                   >
                     <SplitItem isFilled>
-                      <DeviceDetailsTable ports={details.ports} totalBytes={details.totalBytes} />
+                      <DeviceDetailsTable
+                        ports={details.ports}
+                        totalBytes={details.totalBytes}
+                        totalBytesIn={details.totalBytesIn}
+                      />
                     </SplitItem>
                     <SplitItem style={{ width: MAX_WIDTH_DETAILS_TABLE }}>
                       <DeviceTrafficChart ports={details.ports} />
@@ -198,7 +202,15 @@ const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[] }) {
   );
 });
 
-const DeviceDetailsTable = function ({ ports, totalBytes }: { ports: Port[]; totalBytes: number }) {
+const DeviceDetailsTable = function ({
+  ports,
+  totalBytes,
+  totalBytesIn,
+}: {
+  ports: Port[];
+  totalBytes: number;
+  totalBytesIn: number;
+}) {
   return (
     <InnerScrollContainer>
       <TableComposable
@@ -209,60 +221,77 @@ const DeviceDetailsTable = function ({ ports, totalBytes }: { ports: Port[]; tot
         variant="compact"
         gridBreakPoint=""
       >
-        <Thead>
+        <Thead hasNestedHeader>
           <Tr>
-            <Th modifier="fitContent" hasRightBorder>
-              {ConnectionColumns.FromPort}
+            <Th hasRightBorder>{ConnectionColumns.ConnectionStatus}</Th>
+            <Th hasRightBorder colSpan={3}>
+              {ConnectionColumns.ConnectorFlow}
             </Th>
-            <Th modifier="fitContent" hasRightBorder>
-              {ConnectionColumns.ToPort}
+
+            <Th hasRightBorder colSpan={3}>
+              {ConnectionColumns.ListenerFlow}
             </Th>
-            <Th hasRightBorder>{ConnectionColumns.ConnectionState}</Th>
-            <Th width={20} hasRightBorder>
+          </Tr>
+          <Tr>
+            <Th hasRightBorder />
+            <Th hasRightBorder isSubheader>
               {ConnectionColumns.Traffic}
             </Th>
-            <Th hasRightBorder width={20}>
+            <Th hasRightBorder width={10} isSubheader>
               {ConnectionColumns.TrafficPercentage}
             </Th>
-            <Th width={20} hasRightBorder>
-              {ConnectionColumns.TrafficIn}
-            </Th>
-            <Th width={20} hasRightBorder>
+            <Th hasRightBorder isSubheader>
               {ConnectionColumns.Latency}
             </Th>
-            <Th width={20}>{ConnectionColumns.LatencyIn}</Th>
+            <Th hasRightBorder isSubheader>
+              {ConnectionColumns.TrafficIn}
+            </Th>
+            <Th hasRightBorder isSubheader>
+              {ConnectionColumns.TrafficPercentage}
+            </Th>
+            <Th hasRightBorder isSubheader>
+              {ConnectionColumns.LatencyIn}
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
-          {ports.map(
-            ({ id, portSource, portDest, octets, latency, latencyIn, endTime, octetsIn }) => (
-              <Tr key={id}>
-                <Th hasRightBorder dataLabel={ConnectionColumns.FromPort}>
-                  {portSource}
-                </Th>
-                <Td dataLabel={ConnectionColumns.ToPort}>{portDest}</Td>
-                <Td dataLabel={ConnectionColumns.ConnectionState}>{endTime ? 'Closed' : 'Open'}</Td>
-                <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.Traffic}>
-                  {formatBytes(octets)}
-                </Td>
-                <Td
-                  className="pf-u-text-align-right"
-                  dataLabel={ConnectionColumns.TrafficPercentage}
-                >
-                  {((octets / totalBytes) * 100).toFixed(1)}
-                </Td>
-                <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.TrafficIn}>
-                  {formatBytes(octetsIn)}
-                </Td>
-                <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.Latency}>
-                  {formatTime(latency)}
-                </Td>
-                <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.LatencyIn}>
-                  {formatTime(latencyIn)}
-                </Td>
-              </Tr>
-            ),
-          )}
+          {ports.map(({ id, octets, latency, latencyIn, endTime, octetsIn }) => (
+            <Tr key={id}>
+              <Th hasRightBorder dataLabel={ConnectionColumns.ConnectionStatus}>
+                {endTime ? 'Closed' : 'Open'}
+              </Th>
+              <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.Traffic}>
+                {formatBytes(octets)}
+              </Td>
+              <Td
+                modifier="fitContent"
+                className="pf-u-text-align-right"
+                dataLabel={ConnectionColumns.TrafficPercentage}
+              >
+                {((octetsIn / totalBytesIn) * 100).toFixed(1)}
+              </Td>
+              <Th
+                hasRightBorder
+                className="pf-u-text-align-right"
+                dataLabel={ConnectionColumns.Latency}
+              >
+                {formatTime(latency)}
+              </Th>
+              <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.TrafficIn}>
+                {formatBytes(octetsIn)}
+              </Td>
+              <Td
+                modifier="fitContent"
+                className="pf-u-text-align-right"
+                dataLabel={ConnectionColumns.TrafficPercentage}
+              >
+                {((octets / totalBytes) * 100).toFixed(1)}
+              </Td>
+              <Td className="pf-u-text-align-right" dataLabel={ConnectionColumns.LatencyIn}>
+                {formatTime(latencyIn)}
+              </Td>
+            </Tr>
+          ))}
         </Tbody>
       </TableComposable>
     </InnerScrollContainer>
@@ -334,6 +363,7 @@ function buildRows(data: Flow[]): Row<Flow>[] {
     const details = {
       host: item.flows[0]?.sourceHost,
       totalBytes,
+      totalBytesIn,
       ports: item.flows.map(({ id, connectedTo, sourcePort, octets, endTime, latency }) => ({
         id,
         portSource: sourcePort,
