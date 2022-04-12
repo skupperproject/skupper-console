@@ -42,17 +42,17 @@ export interface DataServicesResponse {
     },
   ];
   connections_ingress:
-    | {
-        site_id: string;
-        connections: ServiceConnections;
-      }[]
-    | null;
+  | {
+    site_id: string;
+    connections: ServiceConnections;
+  }[]
+  | null;
   connections_egress:
-    | {
-        site_id: string;
-        connections: ServiceConnections;
-      }[]
-    | null;
+  | {
+    site_id: string;
+    connections: ServiceConnections;
+  }[]
+  | null;
   requests_handled: ServiceRequest[] | null;
   requests_received: ServiceRequest[] | null;
   derived?: boolean;
@@ -80,14 +80,6 @@ export interface LinkResponse {
   siteConnected: string;
   connected: boolean;
   configured: boolean;
-  created: string;
-}
-
-export interface TokenResponse {
-  Name: string;
-  claimsMade: number;
-  claimsRemaining: number;
-  claimsExpiration: string;
   created: string;
 }
 

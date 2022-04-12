@@ -3,7 +3,6 @@ import { createServer, Response } from 'miragejs';
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
 import links from './data/LINKS.json';
-import tokens from './data/TOKENS.json';
 import services from './data/SERVICES.json';
 import site from './data/SITE.json';
 import targets from './data/TARGETS.json';
@@ -42,9 +41,6 @@ export function loadMockServerInDev() {
               created: Created,
             };
           });
-        });
-        this.get('/tokens', () => {
-          return tokens;
         });
         this.get('/targets', () => {
           return targets;

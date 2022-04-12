@@ -11,7 +11,6 @@ import {
   MONITORING_ROUTERS_STAT,
   MONITORING_STATS,
   MONITORING_SERVICES_STATS,
-  TOKENS,
   MONITORING_ROUTERS_TOPOLOGY,
   MONITORING_CONNECTIONS,
 } from './REST.constant';
@@ -23,7 +22,6 @@ import {
   RouterStatsResponse,
   ServiceResponse,
   TargetResponse,
-  TokenResponse,
   ServicesStatsResponse,
 } from './REST.interfaces';
 
@@ -40,11 +38,6 @@ export const RESTApi = {
   },
   fetchLinks: async (): Promise<LinkResponse[]> => {
     const { data } = await fetchWithTimeout(LINKS);
-
-    return data;
-  },
-  fetchTokens: async (): Promise<TokenResponse[]> => {
-    const { data } = await fetchWithTimeout(TOKENS);
 
     return data;
   },

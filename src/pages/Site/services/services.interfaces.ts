@@ -1,4 +1,4 @@
-import { TokenResponse, LinkResponse } from '@models/API/REST.interfaces';
+import { LinkResponse } from '@models/API/REST.interfaces';
 
 export interface SiteService {
   address: string;
@@ -19,5 +19,4 @@ export interface SiteInfo {
   gateway: boolean;
 }
 
-export type Token = TokenResponse;
 export type Link = LinkResponse;

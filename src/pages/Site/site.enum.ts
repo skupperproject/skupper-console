@@ -5,7 +5,6 @@ export enum QuerySite {
   GetServices = 'get-site-services-query',
   GetDeploymentLinks = 'get-deployment-links-query',
   GetLinks = 'get-links-query',
-  GetTokens = 'get-tokens-query',
 }
 
 export enum SiteRoutesPaths {

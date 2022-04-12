@@ -24,7 +24,6 @@ import LinksTable from './components/LinksTable';
 import ServicesTable from './components/ServicesTable';
 import SiteInfo from './components/SiteInfo';
 import SitesTable from './components/SitesTable';
-import TokenTable from './components/TokensTable';
 import TrafficChart from './components/TrafficChart';
 import { TotalByteProps } from './components/TrafficChart/TrafficChart.interfaces';
 import { OverviewLabels } from './Overview.enum';
@@ -48,15 +47,6 @@ const Overview = function () {
   const { data: links, isLoading: isLoadingLinks } = useQuery(
     QuerySite.GetLinks,
     SitesServices.fetchLinks,
-    {
-      refetchInterval,
-      onError: handleError,
-    },
-  );
-
-  const { data: tokens, isLoading: isLoadingTokens } = useQuery(
-    QuerySite.GetTokens,
-    SitesServices.fetchTokens,
     {
       refetchInterval,
       onError: handleError,
@@ -102,7 +92,6 @@ const Overview = function () {
     isLoadingLinks ||
     isLoadingServices ||
     isLoadingSites ||
-    isLoadingTokens ||
     isLoadingSiteInfo ||
     isLoadingDeploymentLinks
   ) {
@@ -127,16 +116,9 @@ const Overview = function () {
         </StackItem>
       )}
 
-      {links && tokens && (
+      {links && (
         <StackItem className="pf-u-mb-xl">
-          <Split hasGutter>
-            <SplitItem isFilled>
-              <TokenTable tokens={tokens} />
-            </SplitItem>
-            <SplitItem isFilled>
-              <LinksTable links={links} />
-            </SplitItem>
-          </Split>
+          <LinksTable links={links} />
         </StackItem>
       )}
 
