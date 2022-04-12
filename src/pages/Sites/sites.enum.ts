@@ -8,7 +8,7 @@ export enum QuerySite {
 }
 
 export enum SiteRoutesPaths {
-  Site = '/site',
+  Sites = '/site',
   Links = 'links',
   Overview = 'overview',
   Deployments = 'deployments',

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
-import { SiteService } from '@pages/Site/services/services.interfaces';
+import { SiteService } from '@pages/Sites/services/services.interfaces';
 
 import { SERVICES_HEADER_TABLE } from './ServicesTable.constants';
 import { ServicesTableProps } from './ServicesTable.interfaces';

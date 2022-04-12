@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
-import { SiteRoutesPaths } from '@pages/Site/site.enum';
+import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
 
 import { routes } from './routes';
 
@@ -21,7 +21,7 @@ const App = function () {
 
   useEffect(() => {
     if (pathname === '/') {
-      navigate(SiteRoutesPaths.Site);
+      navigate(SiteRoutesPaths.Sites);
     }
   }, [pathname, navigate]);
 

@@ -1,7 +1,6 @@
 export enum SideBarLabels {
-  SideBarNetwork = 'Network',
   SideBarServices = 'Services',
-  SideBarSite = 'Site',
+  SideBarSite = 'Sites',
   SideBarDeployments = 'Deployments',
   SideBarMonitoring = 'Monitoring',
 }

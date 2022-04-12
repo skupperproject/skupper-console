@@ -4,7 +4,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
 
-import { SiteRoutesPaths } from './site.enum';
+import { SiteRoutesPaths } from './sites.enum';
 
 const Site = function () {
   const navigate = useNavigate();

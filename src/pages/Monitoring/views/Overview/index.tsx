@@ -22,8 +22,8 @@ import {
   ROUTERS_STATS_HEADER,
   VANS_STATS_HEADER,
 } from '@pages/Monitoring/Monitoring.constant';
-import TrafficChart from '@pages/Site/views/Overview/components/TrafficChart';
-import { ChartThemeColors } from '@pages/Site/views/Overview/components/TrafficChart/TrafficChart.enum';
+import TrafficChart from '@pages/Sites/views/Overview/components/TrafficChart';
+import { ChartThemeColors } from '@pages/Sites/views/Overview/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 

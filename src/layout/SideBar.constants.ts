@@ -1,20 +1,15 @@
 import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
 import { MonitoringRoutesPaths } from '@pages/Monitoring/Monitoring.enum';
-import { NetworkRoutesPaths } from '@pages/Network/Network.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
-import { SiteRoutesPaths } from '@pages/Site/site.enum';
+import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
 
 import { SideBarLabels } from './SideBar.enum';
 import { SideBarRouteProps } from './SideBar.interfaces';
 
 export const RoutesProps: SideBarRouteProps[] = [
   {
-    path: SiteRoutesPaths.Site,
+    path: SiteRoutesPaths.Sites,
     name: SideBarLabels.SideBarSite,
-  },
-  {
-    path: NetworkRoutesPaths.Network,
-    name: SideBarLabels.SideBarNetwork,
   },
   {
     path: ServicesRoutesPaths.Services,

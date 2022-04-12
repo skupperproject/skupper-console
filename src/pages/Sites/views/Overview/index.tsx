@@ -18,7 +18,7 @@ import LoadingPage from '@pages/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import { SitesServices } from '../../services';
-import { QuerySite } from '../../site.enum';
+import { QuerySite } from '../../sites.enum';
 import GatewaysTable from './components/GatewayTable';
 import LinksTable from './components/LinksTable';
 import ServicesTable from './components/ServicesTable';
@@ -121,12 +121,6 @@ const Overview = function () {
           <LinksTable links={links} />
         </StackItem>
       )}
-
-      <StackItem className="pf-u-mb-xl">
-        <TextContent>
-          <Text component={TextVariants.h2}>{OverviewLabels.NetworkDetails}</Text>
-        </TextContent>
-      </StackItem>
 
       {services && sites && (
         <StackItem className="pf-u-mb-xl">

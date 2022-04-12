@@ -1,5 +1,4 @@
 export enum OverviewLabels {
-  SiteDetails = 'Site details',
-  NetworkDetails = 'Network details',
+  SiteDetails = 'Sites details',
   TrafficSite = 'Traffic for this site',
 }

@@ -1,4 +1,4 @@
-import { Link } from '@pages/Site/services/services.interfaces';
+import { Link } from '@pages/Sites/services/services.interfaces';
 
 export interface LinkRow {
   status: string;
