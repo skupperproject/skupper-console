@@ -12,9 +12,9 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { DeploymentLinks } from '@models/services/REST.interfaces';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
+import { DeploymentLinks } from '@pages/Sites/services/services.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import { SitesServices } from '../../services';

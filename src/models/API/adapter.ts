@@ -3,7 +3,6 @@
 /* eslint-disable guard-for-in */
 import { DataResponse } from '@models/API/REST.interfaces';
 
-import { DataServices } from './REST.interfaces';
 import { utils } from './utilities';
 
 let INSTANCE = 0;
@@ -649,7 +648,7 @@ class Adapter {
     service.targets.filter((t: { name: any }) => t.name === service.address);
 
   // get a list of sites the given service is resident in
-  getServiceSites = (service: DataServices) => {
+  getServiceSites = (service: any) => {
     const sites: any[] = [];
     // for tcp services
     if (service.protocol === 'tcp') {

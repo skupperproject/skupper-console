@@ -1,4 +1,4 @@
-import { DataServices, SiteData } from '@models/services/REST.interfaces';
+import { DataServices, SiteData } from '../services/services.interfaces';
 
 const TCP_PROTOCOL = 'tcp';
 

@@ -1,9 +1,8 @@
+import Adapter from '@models/API/adapter';
 import { RESTApi } from '@models/API/REST';
-import { RESTServices } from '@models/services/REST';
-import { DeploymentLinks } from '@models/services/REST.interfaces';
 
 import { getServicesExposed } from '../utils';
-import { SiteInfo, SiteService, Link } from './services.interfaces';
+import { SiteInfo, SiteService, Link, DeploymentLinks, DataVAN } from './services.interfaces';
 
 export const SitesServices = {
   fetchSiteId: async (): Promise<string> => {
@@ -12,12 +11,12 @@ export const SitesServices = {
     return siteId;
   },
   fetchDeploymentLinks: async (): Promise<DeploymentLinks[]> => {
-    const { deploymentLinks } = await RESTServices.fetchData();
+    const { deploymentLinks } = await fetchData();
 
     return deploymentLinks;
   },
   fetchServices: async (): Promise<SiteService[]> => {
-    const { services, sites } = await RESTServices.fetchData();
+    const { services, sites } = await fetchData();
     const servicesExposed = getServicesExposed(services, sites);
 
     return servicesExposed.map((deployment) => ({
@@ -67,4 +66,17 @@ export const SitesServices = {
 
     return data;
   },
+};
+
+const fetchData = async (): Promise<DataVAN> => {
+  const [dataVAN] = await Promise.all([
+    RESTApi.fetchData(),
+    RESTApi.fetchSite(),
+    RESTApi.fetchLinks(),
+    RESTApi.fetchTargets(),
+    RESTApi.fetchServices(),
+  ]);
+  const data: DataVAN = new Adapter(dataVAN).getData();
+
+  return data;
 };
