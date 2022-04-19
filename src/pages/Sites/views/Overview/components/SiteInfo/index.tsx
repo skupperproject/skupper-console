@@ -6,7 +6,7 @@ import { SITE_INFO_HEADER } from './SiteInfo.constants';
 import { SiteInfoProps } from './SiteInfo.interfaces';
 
 const SiteInfo = memo(function ({ data }: SiteInfoProps) {
-  return <OverviewCard columns={SITE_INFO_HEADER} data={[data]} noBorder={true} />;
+    return <OverviewCard columns={SITE_INFO_HEADER} data={[data]} noBorder={true} />;
 });
 
 export default SiteInfo;

@@ -1,4 +1,4 @@
 export enum ServicesRoutesPaths {
-  Services = '/services',
-  Overview = 'overview',
+    Services = '/services',
+    Overview = 'overview',
 }

@@ -10,15 +10,15 @@ import { ServicesTableProps } from './ServicesTable.interfaces';
 const Pluralize = require('pluralize');
 
 const ServicesTable = memo(function ({ siteId, services }: ServicesTableProps) {
-  return (
-    <OverviewCard
-      columns={SERVICES_HEADER_TABLE}
-      data={services}
-      label={Pluralize('exposed Service', services?.length, true)}
-      color={SummaryCardColors.Blue}
-      styleCell={(cell: SiteService) => (cell.siteId === siteId ? 'sk-table-bg-blue' : '')}
-    />
-  );
+    return (
+        <OverviewCard
+            columns={SERVICES_HEADER_TABLE}
+            data={services}
+            label={Pluralize('exposed Service', services?.length, true)}
+            color={SummaryCardColors.Blue}
+            styleCell={(cell: SiteService) => (cell.siteId === siteId ? 'sk-table-bg-blue' : '')}
+        />
+    );
 });
 
 export default ServicesTable;

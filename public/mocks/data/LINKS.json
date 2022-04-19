@@ -1,29 +1,29 @@
 [
-  {
-    "Name": "link1",
-    "Url": "",
-    "Cost": 0,
-    "Connected": false,
-    "Configured": true,
-    "Description": "",
-    "Created": "2022-03-29T14:50:56Z"
-  },
-  {
-    "Name": "link2",
-    "Url": "",
-    "Cost": 0,
-    "Connected": false,
-    "Configured": true,
-    "Description": "",
-    "Created": "2022-03-29T14:51:05Z"
-  },
-  {
-    "Name": "link3",
-    "Url": "skupper-inter-router-web-server.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud:443",
-    "Cost": 1,
-    "Connected": true,
-    "Configured": false,
-    "Description": "[C1] Connection Opened: dir=out host=skupper-inter-router-web-server.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud:443 vhost= encrypted=TLSv1.3 auth=EXTERNAL user=(null) container_id=web-server-skupper-router-5f7c555bd4-2gvv7",
-    "Created": "2022-03-29T14:54:17Z"
-  }
+    {
+        "Name": "link1",
+        "Url": "",
+        "Cost": 0,
+        "Connected": false,
+        "Configured": true,
+        "Description": "",
+        "Created": "2022-03-29T14:50:56Z"
+    },
+    {
+        "Name": "link2",
+        "Url": "",
+        "Cost": 0,
+        "Connected": false,
+        "Configured": true,
+        "Description": "",
+        "Created": "2022-03-29T14:51:05Z"
+    },
+    {
+        "Name": "link3",
+        "Url": "skupper-inter-router-web-server.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud:443",
+        "Cost": 1,
+        "Connected": true,
+        "Configured": false,
+        "Description": "[C1] Connection Opened: dir=out host=skupper-inter-router-web-server.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud:443 vhost= encrypted=TLSv1.3 auth=EXTERNAL user=(null) container_id=web-server-skupper-router-5f7c555bd4-2gvv7",
+        "Created": "2022-03-29T14:54:17Z"
+    }
 ]

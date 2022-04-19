@@ -15,21 +15,26 @@ import '@patternfly/patternfly/patternfly-addons.scss';
 import './App.scss';
 
 const App = function () {
-  const appRoutes = useRoutes(routes);
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+    const appRoutes = useRoutes(routes);
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
 
-  useEffect(() => {
-    if (pathname === '/') {
-      navigate(SiteRoutesPaths.Sites);
-    }
-  }, [pathname, navigate]);
+    useEffect(() => {
+        if (pathname === '/') {
+            navigate(SiteRoutesPaths.Sites);
+        }
+    }, [pathname, navigate]);
 
-  return (
-    <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
-      <Suspense fallback={<span />}>{appRoutes}</Suspense>
-    </Page>
-  );
+    return (
+        <Page
+            header={<Header />}
+            sidebar={<SideBar />}
+            isManagedSidebar
+            className="app-main-container"
+        >
+            <Suspense fallback={<span />}>{appRoutes}</Suspense>
+        </Page>
+    );
 };
 
 export default App;

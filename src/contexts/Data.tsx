@@ -4,8 +4,8 @@ import { ConnectionSiteInfoState, GlobalStateProviderProps } from './Data.interf
 
 // Initial States
 const siteInfoInitialState = {
-  siteInfo: null,
-  setSiteInfo: () => null,
+    siteInfo: null,
+    setSiteInfo: () => null,
 };
 
 // Contexts
@@ -13,14 +13,14 @@ const SiteInfoContext = createContext<ConnectionSiteInfoState>(siteInfoInitialSt
 
 // Provider
 const GlobalStateProvider = function ({ children }: GlobalStateProviderProps) {
-  const [siteInfo, setSiteInfo] = useState(siteInfoInitialState.siteInfo);
+    const [siteInfo, setSiteInfo] = useState(siteInfoInitialState.siteInfo);
 
-  // Contexts values
-  const siteInfoContextValue = useMemo(() => ({ siteInfo, setSiteInfo }), [siteInfo]);
+    // Contexts values
+    const siteInfoContextValue = useMemo(() => ({ siteInfo, setSiteInfo }), [siteInfo]);
 
-  return (
-    <SiteInfoContext.Provider value={siteInfoContextValue}>{children}</SiteInfoContext.Provider>
-  );
+    return (
+        <SiteInfoContext.Provider value={siteInfoContextValue}>{children}</SiteInfoContext.Provider>
+    );
 };
 
 // custom hooks

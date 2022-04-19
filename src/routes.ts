@@ -8,10 +8,10 @@ import { servicesRoutes } from '@pages/Services/routes';
 import { siteRoutes } from '@pages/Sites/routes';
 
 export const routes: RouteObject[] = [
-  ...siteRoutes,
-  ...deploymentsRoutes,
-  ...monitoringRoutes,
-  ...servicesRoutes,
-  ...errorsRoutes,
-  ...notFoundRoutes,
+    ...siteRoutes,
+    ...deploymentsRoutes,
+    ...monitoringRoutes,
+    ...servicesRoutes,
+    ...errorsRoutes,
+    ...notFoundRoutes,
 ];

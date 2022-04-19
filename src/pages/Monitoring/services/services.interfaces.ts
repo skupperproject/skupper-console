@@ -1,9 +1,9 @@
 import {
-  FlowsResponse,
-  MonitoringRoutersTopologyResponse,
-  MonitoringStatsResponse,
-  RouterStatsResponse,
-  ServicesStatsResponse,
+    FlowsResponse,
+    MonitoringRoutersTopologyResponse,
+    MonitoringStatsResponse,
+    RouterStatsResponse,
+    ServicesStatsResponse,
 } from '@models/API/REST.interfaces';
 
 export type Flow = FlowsResponse;
@@ -14,7 +14,7 @@ export type RoutersStats = RouterStatsResponse;
 export type MonitoringStats = MonitoringStatsResponse;
 export type VanStats = ServicesStatsResponse;
 export interface MonitoringInfo {
-  vansStats: VanStats[];
-  routersStats: RoutersStats[];
-  monitoringStats: MonitoringStats[];
+    vansStats: VanStats[];
+    routersStats: RoutersStats[];
+    monitoringStats: MonitoringStats[];
 }

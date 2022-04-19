@@ -6,10 +6,10 @@ import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
 import { SideBarLabels } from './SideBar.enum';
 
 export interface SideBarRouteProps {
-  path:
-    | SiteRoutesPaths.Sites
-    | ServicesRoutesPaths.Services
-    | DeploymentsRoutesPaths.Deployments
-    | MonitoringRoutesPaths.Monitoring;
-  name: SideBarLabels;
+    path:
+        | SiteRoutesPaths.Sites
+        | ServicesRoutesPaths.Services
+        | DeploymentsRoutesPaths.Deployments
+        | MonitoringRoutesPaths.Monitoring;
+    name: SideBarLabels;
 }

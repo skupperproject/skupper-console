@@ -14,12 +14,12 @@ loadMockServerInDev();
 const queryClient = new QueryClient();
 
 render(
-  <QueryClientProvider client={queryClient}>
-    <HashRouter>
-      <GlobalStateProvider>
-        <App />
-      </GlobalStateProvider>
-    </HashRouter>
-  </QueryClientProvider>,
-  document.getElementById('app'),
+    <QueryClientProvider client={queryClient}>
+        <HashRouter>
+            <GlobalStateProvider>
+                <App />
+            </GlobalStateProvider>
+        </HashRouter>
+    </QueryClientProvider>,
+    document.getElementById('app'),
 );

@@ -10,15 +10,15 @@ import { GatewaysTableProps } from './GatewayTable.interfaces';
 const Pluralize = require('pluralize');
 
 const GatewaysTable = memo(function ({ siteId, gateways }: GatewaysTableProps) {
-  return (
-    <OverviewCard
-      columns={GATEWAYS_HEADER_TABLE}
-      data={gateways}
-      label={Pluralize('Gateway', gateways?.length, true)}
-      color={SummaryCardColors.Green}
-      styleCell={(cell: SiteInfo) => (cell.siteId === siteId ? 'sk-table-bg-green' : '')}
-    />
-  );
+    return (
+        <OverviewCard
+            columns={GATEWAYS_HEADER_TABLE}
+            data={gateways}
+            label={Pluralize('Gateway', gateways?.length, true)}
+            color={SummaryCardColors.Green}
+            styleCell={(cell: SiteInfo) => (cell.siteId === siteId ? 'sk-table-bg-green' : '')}
+        />
+    );
 });
 
 export default GatewaysTable;

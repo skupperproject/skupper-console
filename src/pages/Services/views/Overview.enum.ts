@@ -1,4 +1,4 @@
 export enum ServicesOverviewColumns {
-  Name = 'Name',
-  Protocol = 'Protocol',
+    Name = 'Name',
+    Protocol = 'Protocol',
 }

@@ -1,3 +1,3 @@
 export enum QueriesDeployments {
-  GetDeployments = 'get-deployments-query',
+    GetDeployments = 'get-deployments-query',
 }

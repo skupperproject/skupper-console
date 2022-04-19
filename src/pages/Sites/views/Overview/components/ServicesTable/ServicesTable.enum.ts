@@ -1,5 +1,5 @@
 export enum ServiceColumns {
-  ServiceName = 'Service',
-  Protocol = 'Protocol',
-  SiteName = 'Site',
+    ServiceName = 'Service',
+    Protocol = 'Protocol',
+    SiteName = 'Site',
 }

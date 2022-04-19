@@ -7,20 +7,20 @@ import AppContent from '@layout/AppContent';
 import { SiteRoutesPaths } from './sites.enum';
 
 const Site = function () {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
 
-  useEffect(() => {
-    if (location.pathname === '/') {
-      navigate(SiteRoutesPaths.Overview);
-    }
-  }, [pathname, navigate]);
+    useEffect(() => {
+        if (location.pathname === '/') {
+            navigate(SiteRoutesPaths.Overview);
+        }
+    }, [pathname, navigate]);
 
-  return (
-    <AppContent>
-      <Outlet />
-    </AppContent>
-  );
+    return (
+        <AppContent>
+            <Outlet />
+        </AppContent>
+    );
 };
 
 export default Site;

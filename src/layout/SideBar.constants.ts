@@ -7,20 +7,20 @@ import { SideBarLabels } from './SideBar.enum';
 import { SideBarRouteProps } from './SideBar.interfaces';
 
 export const RoutesProps: SideBarRouteProps[] = [
-  {
-    path: SiteRoutesPaths.Sites,
-    name: SideBarLabels.SideBarSite,
-  },
-  {
-    path: ServicesRoutesPaths.Services,
-    name: SideBarLabels.SideBarServices,
-  },
-  {
-    path: DeploymentsRoutesPaths.Deployments,
-    name: SideBarLabels.SideBarDeployments,
-  },
-  {
-    path: MonitoringRoutesPaths.Monitoring,
-    name: SideBarLabels.SideBarMonitoring,
-  },
+    {
+        path: SiteRoutesPaths.Sites,
+        name: SideBarLabels.SideBarSite,
+    },
+    {
+        path: ServicesRoutesPaths.Services,
+        name: SideBarLabels.SideBarServices,
+    },
+    {
+        path: DeploymentsRoutesPaths.Deployments,
+        name: SideBarLabels.SideBarDeployments,
+    },
+    {
+        path: MonitoringRoutesPaths.Monitoring,
+        name: SideBarLabels.SideBarMonitoring,
+    },
 ];

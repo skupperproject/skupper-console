@@ -1,3 +1,3 @@
 export enum NotFoundRoutesPaths {
-  NotFound = '*',
+    NotFound = '*',
 }

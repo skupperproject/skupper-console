@@ -7,20 +7,20 @@ import AppContent from '@layout/AppContent';
 import { ServicesRoutesPaths } from './Services.enum';
 
 const Services = function () {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
 
-  useEffect(() => {
-    if (location.pathname === '/') {
-      navigate(ServicesRoutesPaths.Overview);
-    }
-  }, [pathname, navigate]);
+    useEffect(() => {
+        if (location.pathname === '/') {
+            navigate(ServicesRoutesPaths.Overview);
+        }
+    }, [pathname, navigate]);
 
-  return (
-    <AppContent>
-      <Outlet />
-    </AppContent>
-  );
+    return (
+        <AppContent>
+            <Outlet />
+        </AppContent>
+    );
 };
 
 export default Services;

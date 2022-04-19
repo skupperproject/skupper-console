@@ -10,15 +10,15 @@ import { SitesTableProps } from './SitesTable.interfaces';
 const Pluralize = require('pluralize');
 
 const SitesTable = memo(function ({ siteId, sites }: SitesTableProps) {
-  return (
-    <OverviewCard
-      columns={SITE_HEADER_TABLE}
-      data={sites}
-      label={Pluralize('Site', sites?.length, true)}
-      color={SummaryCardColors.Blue}
-      styleCell={(cell: SiteInfo) => (cell.siteId === siteId ? 'sk-table-bg-gray' : '')}
-    />
-  );
+    return (
+        <OverviewCard
+            columns={SITE_HEADER_TABLE}
+            data={sites}
+            label={Pluralize('Site', sites?.length, true)}
+            color={SummaryCardColors.Blue}
+            styleCell={(cell: SiteInfo) => (cell.siteId === siteId ? 'sk-table-bg-gray' : '')}
+        />
+    );
 });
 
 export default SitesTable;
