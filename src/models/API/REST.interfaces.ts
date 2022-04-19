@@ -92,7 +92,7 @@ export interface TargetResponse {
   };
 }
 
-export interface ServiceResponse {
+export interface ServiceSitesResponse {
   name: string;
   protocol: string;
   ports: number[];
@@ -107,6 +107,13 @@ export interface ServiceResponse {
   ];
 }
 
+// SERVICES
+export interface ServiceResponse {
+  name: string;
+  protocol: string;
+}
+
+// FLOWSS
 interface FlowResponse {
   sourceHost: string;
   sourcePort: string;

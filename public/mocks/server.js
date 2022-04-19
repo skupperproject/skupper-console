@@ -14,6 +14,7 @@ export function loadMockServerInDev() {
     createServer({
       routes() {
         this.timing = DELAY_RESPONSE;
+
         this.get('/error', () => {
           return new Response(500, { some: 'header' }, { errors: ['Server Error'] });
         });
@@ -23,7 +24,7 @@ export function loadMockServerInDev() {
         this.get('/site', () => {
           return site;
         });
-        this.get('/services', () => {
+        this.get('/sites/services', () => {
           return services;
         });
         this.get('/links', () => {
@@ -46,8 +47,14 @@ export function loadMockServerInDev() {
           return targets;
         });
 
-        //Flows APIs
+        //Services APIs
+        this.get('/services', () => {
+          return VANdata.services.map((service) => {
+            return { id: service.address, name: service.address, protocol: service.protocol };
+          });
+        });
 
+        //Flows APIs
         this.get('/flows/network-stats', () => {
           let data = generateDynamicBytes(flowsData);
 

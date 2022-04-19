@@ -74,7 +74,7 @@ const fetchData = async (): Promise<DataVAN> => {
     RESTApi.fetchSite(),
     RESTApi.fetchLinks(),
     RESTApi.fetchTargets(),
-    RESTApi.fetchServices(),
+    RESTApi.fetchSitesServices(),
   ]);
   const data: DataVAN = new Adapter(dataVAN).getData();
 
