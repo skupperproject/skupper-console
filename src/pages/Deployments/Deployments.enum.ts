@@ -1,3 +1,4 @@
 export enum DeploymentsRoutesPaths {
-  Deployments = '/Deployments',
+  Deployments = '/deployments',
+  Overview = 'overview',
 }

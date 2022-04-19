@@ -12,6 +12,8 @@ export const SITES_SERVICES = `${BASE_URL}/sites/services`;
 
 export const SERVICES = `${BASE_URL}/services`;
 
+export const DEPLOYMENTS = `${BASE_URL}/deployments`;
+
 export const MONITORING_FLOWS = `${BASE_URL}/flows`;
 export const MONITORING_CONNECTIONS = `${MONITORING_FLOWS}/connections`;
 export const MONITORING_STATS = `${MONITORING_FLOWS}/network-stats`;

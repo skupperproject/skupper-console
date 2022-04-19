@@ -49,9 +49,35 @@ export function loadMockServerInDev() {
 
         //Services APIs
         this.get('/services', () => {
-          return VANdata.services.map((service) => {
-            return { id: service.address, name: service.address, protocol: service.protocol };
+          return VANdata.services.map(({ address, protocol }) => {
+            return { id: address, name: address, protocol };
           });
+        });
+
+        //Deployments APIs
+        this.get('/deployments', () => {
+          const sitesMap = VANdata.sites.reduce((acc, site) => {
+            acc[site.site_id] = { name: site.site_name, url: site.url };
+            return acc;
+          }, {});
+
+          const deployments = VANdata.services.map(
+            ({ targets, address, protocol, connections_ingress, connections_egress }) => {
+              const sitesConnected = targets
+                .map((target) => sitesMap[target.site_id])
+                .filter(Boolean);
+              return {
+                id: address,
+                name: address,
+                protocol: protocol,
+                numConnectionsIn: connections_ingress.length,
+                numConnectionsOut: connections_egress.length,
+                sites: sitesConnected,
+              };
+            },
+          );
+
+          return deployments;
         });
 
         //Flows APIs

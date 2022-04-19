@@ -1,3 +1,3 @@
 export enum QueriesServices {
-  GetServices = 'services-query',
+  GetServices = 'get-services-query',
 }

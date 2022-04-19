@@ -114,6 +114,16 @@ export interface ServiceResponse {
   protocol: string;
 }
 
+// DEPLOYMENTS
+export interface DeploymentResponse {
+  id: string;
+  name: string;
+  protocol: string;
+  numConnectionsIn: number;
+  numConnectionsOut: number;
+  sites: { name: string; url: string }[];
+}
+
 // FLOWSS
 interface FlowResponse {
   sourceHost: string;
