@@ -109,6 +109,7 @@ export interface ServiceSitesResponse {
 
 // SERVICES
 export interface ServiceResponse {
+  id: string;
   name: string;
   protocol: string;
 }
