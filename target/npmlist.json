@@ -1,0 +1,21 @@
+{
+  "name": "skupper-web-console",
+  "dependencies": {
+    "@patternfly/patternfly": { "version": "4.185.1" },
+    "@patternfly/react-charts": { "version": "6.55.16" },
+    "@patternfly/react-core": { "version": "4.202.16" },
+    "@patternfly/react-icons": { "version": "4.53.16" },
+    "@patternfly/react-table": { "version": "4.71.16" },
+    "@patternfly/react-topology": { "version": "4.49.16" },
+    "axios": { "version": "0.26.1" },
+    "d3-drag": { "version": "3.0.0" },
+    "d3-force": { "version": "3.0.0" },
+    "d3-selection": { "version": "3.0.0" },
+    "d3-zoom": { "version": "3.0.0" },
+    "pluralize": { "version": "8.0.0" },
+    "react-dom": { "version": "17.0.2" },
+    "react-query": { "version": "3.34.19" },
+    "react-router-dom": { "version": "6.3.0" },
+    "react": { "version": "17.0.2" }
+  }
+}
