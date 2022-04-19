@@ -22,9 +22,10 @@ import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MAX_HEIGHT_DETAILS_TABLE, MAX_WIDTH_DETAILS_TABLE } from '../../../Monitoring.constant';
-import { ConnectionColumns, ConnectionStatus, QueriesMonitoring } from '../../../Monitoring.enum';
+import { ConnectionColumns, ConnectionStatus } from '../../../Monitoring.enum';
 import { Row } from '../../../Monitoring.interfaces';
 import { MonitorServices } from '../../../services';
+import { QueriesMonitoring } from '../../../services/services.enum';
 import { Flow } from '../../../services/services.interfaces';
 import ConnectionDetailsTable from './Details';
 

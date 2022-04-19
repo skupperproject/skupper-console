@@ -81,11 +81,3 @@ export enum ConnectionStatus {
   SomeFlowsOpen = 'Traffic is flowing',
   AllFlowsClosed = 'No connections opened',
 }
-
-export enum QueriesMonitoring {
-  GetMonitoringConnectionsByServiceName = 'monitoring-connections-by-service-name-query',
-  GetMonitoringServices = 'monitoring-services-query',
-  GetMonitoringNetworkStats = 'network-stats-query',
-  GetMonitoringTopologyFlows = 'monitoring-topology-flows-query',
-  GetMonitoringTopologyNetwork = 'monitoring-topology-network-query',
-}

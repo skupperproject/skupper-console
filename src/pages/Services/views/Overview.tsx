@@ -10,7 +10,7 @@ import LoadingPage from '@pages/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import ServicesServices from '../services';
-import { QueriesServices } from '../Services.enum';
+import { QueriesServices } from '../services/services.enum';
 import { ServicesOverviewColumns } from './Overview.enum';
 
 const ServicesOverview = function () {

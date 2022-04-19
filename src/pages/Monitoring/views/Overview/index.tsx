@@ -27,13 +27,9 @@ import { ChartThemeColors } from '@pages/Sites/views/Overview/components/Traffic
 import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
-import {
-  MonitoringRoutesPaths,
-  OverviewColumns,
-  QueriesMonitoring,
-  SectionsStatsLabels,
-} from '../../Monitoring.enum';
+import { MonitoringRoutesPaths, OverviewColumns, SectionsStatsLabels } from '../../Monitoring.enum';
 import { MonitorServices } from '../../services';
+import { QueriesMonitoring } from '../../services/services.enum';
 import { MonitoringStats } from '../../services/services.interfaces';
 import { RouterStatsRow, VanStatsRow, LinkStatsRow } from './Overview.interfaces';
 

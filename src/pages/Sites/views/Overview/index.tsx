@@ -18,7 +18,7 @@ import { DeploymentLinks } from '@pages/Sites/services/services.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import { SitesServices } from '../../services';
-import { QuerySite } from '../../sites.enum';
+import { QuerySite } from '../../services/services.enum';
 import GatewaysTable from './components/GatewayTable';
 import LinksTable from './components/LinksTable';
 import ServicesTable from './components/ServicesTable';
