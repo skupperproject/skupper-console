@@ -9,7 +9,7 @@ import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import ServicesServices from '../services';
+import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
 import { ServicesOverviewColumns } from './Overview.enum';
 
@@ -19,7 +19,7 @@ const DeploymentsOverview = function () {
 
     const { data: rows, isLoading } = useQuery(
         QueriesDeployments.GetDeployments,
-        ServicesServices.fetchDeployments,
+        DeploymentsServices.fetchDeployments,
         {
             refetchInterval,
             onError: handleError,

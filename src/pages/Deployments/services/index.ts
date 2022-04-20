@@ -2,8 +2,8 @@ import { RESTApi } from '@models/API/REST';
 
 import { Deployment } from './deployments.interfaces';
 
-export const Services = {
+const DeploymentsServices = {
     fetchDeployments: async (): Promise<Deployment[]> => RESTApi.fetchDeployments(),
 };
 
-export default Services;
+export default DeploymentsServices;
