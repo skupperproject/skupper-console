@@ -14,10 +14,10 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import TrafficChart from '@core/components/TrafficChart';
+import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
-import TrafficChart from '@pages/Sites/views/Overview/components/TrafficChart';
-import { ChartThemeColors } from '@pages/Sites/views/Overview/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 

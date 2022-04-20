@@ -15,6 +15,8 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
+import TrafficChart from '@core/components/TrafficChart';
+import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import {
@@ -22,8 +24,6 @@ import {
     ROUTERS_STATS_HEADER,
     VANS_STATS_HEADER,
 } from '@pages/Monitoring/Monitoring.constant';
-import TrafficChart from '@pages/Sites/views/Overview/components/TrafficChart';
-import { ChartThemeColors } from '@pages/Sites/views/Overview/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
