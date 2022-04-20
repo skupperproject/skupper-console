@@ -1,6 +1,6 @@
 export enum SiteRoutesPaths {
     Sites = '/site',
     Links = 'links',
-    Overview = 'overview',
+    Network = 'network',
     Deployments = 'deployments',
 }

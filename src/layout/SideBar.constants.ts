@@ -8,6 +8,10 @@ import { SideBarRouteProps } from './SideBar.interfaces';
 
 export const RoutesProps: SideBarRouteProps[] = [
     {
+        path: SiteRoutesPaths.Network,
+        name: SideBarLabels.SideBarNetwork,
+    },
+    {
         path: SiteRoutesPaths.Sites,
         name: SideBarLabels.SideBarSite,
     },

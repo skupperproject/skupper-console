@@ -4,15 +4,15 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
 
-import { SiteRoutesPaths } from './sites.enum';
+import { OverviewRoutesPaths } from './Network.enum';
 
-const Site = function () {
+const Network = function () {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
     useEffect(() => {
         if (location.pathname === '/') {
-            navigate(SiteRoutesPaths.Network);
+            navigate(OverviewRoutesPaths.Overview);
         }
     }, [pathname, navigate]);
 
@@ -23,4 +23,4 @@ const Site = function () {
     );
 };
 
-export default Site;
+export default Network;

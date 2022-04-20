@@ -11,7 +11,7 @@ export const siteRoutes = [
         element: <Site />,
         children: [
             {
-                path: SiteRoutesPaths.Overview,
+                path: SiteRoutesPaths.Network,
                 element: <SiteOverview />,
             },
         ],

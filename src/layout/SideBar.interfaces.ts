@@ -7,6 +7,7 @@ import { SideBarLabels } from './SideBar.enum';
 
 export interface SideBarRouteProps {
     path:
+        | SiteRoutesPaths.Network
         | SiteRoutesPaths.Sites
         | ServicesRoutesPaths.Services
         | DeploymentsRoutesPaths.Deployments
