@@ -2,7 +2,6 @@ import {
     DataResponse,
     DataServicesResponse,
     DataSiteResponse,
-    LinkResponse,
     ServiceConnections,
 } from '@models/API/REST.interfaces';
 
@@ -24,8 +23,6 @@ export interface SiteInfo {
     numSitesConnected: number;
     gateway: boolean;
 }
-
-export type Link = LinkResponse;
 
 export type DataServices = DataServicesResponse;
 export type SiteData = DataSiteResponse;

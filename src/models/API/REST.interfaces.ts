@@ -75,23 +75,6 @@ export interface DataResponse {
     services: DataServicesResponse[];
 }
 
-export interface LinkResponse {
-    name: string;
-    siteConnected: string;
-    connected: boolean;
-    configured: boolean;
-    created: string;
-}
-
-export interface TargetResponse {
-    name: string;
-    type: string;
-    ports: {
-        name: string;
-        port: number;
-    };
-}
-
 export interface ServiceSitesResponse {
     name: string;
     protocol: string;
