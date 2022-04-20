@@ -1,9 +1,11 @@
 import React, { lazy } from 'react';
 
 import { DeploymentsRoutesPaths } from './Deployments.enum';
-import DeploymentsOverview from './views/Overview';
 
 const Deployments = lazy(() => import(/* webpackChunkName: "deployments" */ '@pages/Deployments'));
+const DeploymentsOverview = lazy(
+    () => import(/* webpackChunkName: "deployments-overview" */ './views/Overview'),
+);
 
 export const deploymentsRoutes = [
     {

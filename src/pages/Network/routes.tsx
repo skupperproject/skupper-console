@@ -1,9 +1,9 @@
 import React, { lazy } from 'react';
 
 import { OverviewRoutesPaths as NetworkRoutesPaths } from './Network.enum';
-import OverviewPage from './views/Overview';
 
 const Network = lazy(() => import(/* webpackChunkName: "network" */ '@pages/Network'));
+const Overview = lazy(() => import(/* webpackChunkName: "network-overview" */ './views/Overview'));
 
 export const overviewRoutes = [
     {
@@ -12,7 +12,7 @@ export const overviewRoutes = [
         children: [
             {
                 path: NetworkRoutesPaths.Overview,
-                element: <OverviewPage />,
+                element: <Overview />,
             },
         ],
     },

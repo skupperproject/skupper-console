@@ -6,7 +6,7 @@ import {
     MONITORING_FLOWS,
     SITES_SERVICES,
     MONITORING_ROUTERS_STAT,
-    MONITORING_STATS,
+    MONITORING_NETWORK_STATS,
     MONITORING_SERVICES_STATS,
     MONITORING_ROUTERS_TOPOLOGY,
     MONITORING_CONNECTIONS,
@@ -19,9 +19,9 @@ import {
     MonitoringStatsResponse,
     RouterStatsResponse,
     ServiceSitesResponse,
-    ServicesStatsResponse,
     ServiceResponse,
     DeploymentResponse,
+    NetworkStatsResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -51,8 +51,8 @@ export const RESTApi = {
     },
 
     // FLOWS APIs
-    fetchFlowsStats: async (): Promise<MonitoringStatsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_STATS);
+    fetchFlowsNetworkStats: async (): Promise<MonitoringStatsResponse[]> => {
+        const { data } = await fetchWithTimeout(MONITORING_NETWORK_STATS);
 
         return data;
     },
@@ -61,7 +61,7 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsServicesStats: async (): Promise<ServicesStatsResponse[]> => {
+    fetchFlowsServicesStats: async (): Promise<NetworkStatsResponse[]> => {
         const { data } = await fetchWithTimeout(MONITORING_SERVICES_STATS);
 
         return data;

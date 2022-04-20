@@ -140,7 +140,7 @@ export interface FlowsResponse {
     endTime?: number;
 }
 
-export interface ServicesStatsResponse {
+export interface NetworkStatsResponse {
     id: string;
     name: string;
     routerName: string;

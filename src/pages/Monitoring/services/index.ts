@@ -16,7 +16,7 @@ export const MonitorServices = {
         const [vansStats, routersStats, monitoringStats] = await Promise.all([
             RESTApi.fetchFlowsServicesStats(),
             RESTApi.fetchFlowsRoutersStats(),
-            RESTApi.fetchFlowsStats(),
+            RESTApi.fetchFlowsNetworkStats(),
         ]);
 
         return {
