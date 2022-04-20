@@ -3,28 +3,28 @@ import { MonitoringRoutesPaths } from '@pages/Monitoring/Monitoring.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
 
-import { SideBarLabels } from './SideBar.enum';
-import { SideBarRouteProps } from './SideBar.interfaces';
+import { NavBarLabels } from './NavBar.enum';
+import { NavBarRouteProps } from './NavBar.interfaces';
 
-export const RoutesProps: SideBarRouteProps[] = [
+export const RoutesProps: NavBarRouteProps[] = [
     {
         path: SiteRoutesPaths.Network,
-        name: SideBarLabels.SideBarNetwork,
+        name: NavBarLabels.SideBarNetwork,
     },
     {
         path: SiteRoutesPaths.Sites,
-        name: SideBarLabels.SideBarSite,
+        name: NavBarLabels.SideBarSite,
     },
     {
         path: ServicesRoutesPaths.Services,
-        name: SideBarLabels.SideBarServices,
+        name: NavBarLabels.SideBarServices,
     },
     {
         path: DeploymentsRoutesPaths.Deployments,
-        name: SideBarLabels.SideBarDeployments,
+        name: NavBarLabels.SideBarDeployments,
     },
     {
         path: MonitoringRoutesPaths.Monitoring,
-        name: SideBarLabels.SideBarMonitoring,
+        name: NavBarLabels.SideBarMonitoring,
     },
 ];
