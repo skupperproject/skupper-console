@@ -2,10 +2,7 @@ import { createServer, Response } from 'miragejs';
 
 import VANdata from './data/DATA.json';
 import flowsData from './data/FLOWS.json';
-import links from './data/LINKS.json';
 import services from './data/SERVICES.json';
-import site from './data/SITE.json';
-import targets from './data/TARGETS.json';
 
 const DELAY_RESPONSE = 1000;
 
@@ -15,50 +12,28 @@ export function loadMockServerInDev() {
             routes() {
                 this.timing = DELAY_RESPONSE;
 
+                // General APIs
                 this.get('/error', () => {
                     return new Response(500, { some: 'header' }, { errors: ['Server Error'] });
                 });
+
+                // Sites APIs
                 this.get('/data', () => {
                     return VANdata;
                 });
-                this.get('/site', () => {
-                    return site;
-                });
+
                 this.get('/sites/services', () => {
                     return services;
                 });
-                this.get('/links', () => {
-                    return links.map(
-                        ({ Name, Url, Cost, Connected, Configured, Description, Created }) => {
-                            const sites = VANdata.sites.filter(
-                                (site) => site.url === Url.split(':')[0],
-                            );
 
-                            const site = sites[0];
-
-                            return {
-                                name: Name,
-                                cost: Cost,
-                                siteConnected: site && site.site_name,
-                                connected: Connected,
-                                configured: Configured,
-                                created: Created,
-                            };
-                        },
-                    );
-                });
-                this.get('/targets', () => {
-                    return targets;
-                });
-
-                //Services APIs
+                // Services APIs
                 this.get('/services', () => {
                     return VANdata.services.map(({ address, protocol }) => {
                         return { id: address, name: address, protocol };
                     });
                 });
 
-                //Deployments APIs
+                // Deployments APIs
                 this.get('/deployments', () => {
                     const sitesMap = VANdata.sites.reduce((acc, site) => {
                         acc[site.site_id] = { name: site.site_name, url: site.url };
@@ -90,7 +65,17 @@ export function loadMockServerInDev() {
                     return deployments;
                 });
 
-                //Flows APIs
+                // Flows APIs
+                this.get('/flows', (_, { queryParams }) => {
+                    if (queryParams.vanaddr) {
+                        return normalizeFlows(getFlowsTree(flowsData)).filter(
+                            (flow) => flow.vanAddress === queryParams.vanaddr,
+                        );
+                    }
+
+                    return normalizeFlows(getFlowsTree(generateDynamicBytes(flowsData)));
+                });
+
                 this.get('/flows/network-stats', () => {
                     let data = generateDynamicBytes(flowsData);
 
@@ -128,6 +113,7 @@ export function loadMockServerInDev() {
                         },
                     ];
                 });
+
                 this.get('/flows/routers-stats', () => {
                     let data = generateDynamicBytes(flowsData);
                     let current;
@@ -156,6 +142,7 @@ export function loadMockServerInDev() {
 
                     return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
                 });
+
                 this.get('/flows/services-stats', () => {
                     let data = generateDynamicBytes(flowsData);
 
@@ -199,15 +186,6 @@ export function loadMockServerInDev() {
                     return Object.values(routersStats);
                 });
 
-                this.get('/flows', (_, { queryParams }) => {
-                    if (queryParams.vanaddr) {
-                        return normalizeFlows(getFlowsTree(flowsData)).filter(
-                            (flow) => flow.vanAddress === queryParams.vanaddr,
-                        );
-                    }
-
-                    return normalizeFlows(getFlowsTree(generateDynamicBytes(flowsData)));
-                });
                 this.get('/flows/connections', (_, { queryParams }) => {
                     let data = generateDynamicBytes(flowsData);
 
