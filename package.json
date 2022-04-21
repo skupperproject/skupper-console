@@ -62,6 +62,7 @@
         "prettier": "^2.6.2",
         "sass": "^1.50.1",
         "sass-loader": "^12.6.0",
+        "start-server-and-test": "^1.14.0",
         "style-loader": "^3.3.1",
         "ts-jest": "^27.1.4",
         "ts-loader": "^9.2.8",

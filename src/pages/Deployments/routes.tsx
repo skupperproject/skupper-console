@@ -12,6 +12,7 @@ export const deploymentsRoutes = [
         path: DeploymentsRoutesPaths.Deployments,
         element: <Deployments />,
         children: [
+            { index: true, element: <DeploymentsOverview /> },
             {
                 path: DeploymentsRoutesPaths.Overview,
                 element: <DeploymentsOverview />,

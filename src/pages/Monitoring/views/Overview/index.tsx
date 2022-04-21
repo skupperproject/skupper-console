@@ -209,7 +209,7 @@ const Overview = function () {
                 </StackItem>
 
                 <StackItem>
-                    <Card>
+                    <Card className="sk-monitoring-services">
                         <Split hasGutter>
                             {vans && (
                                 <SplitItem isFilled>

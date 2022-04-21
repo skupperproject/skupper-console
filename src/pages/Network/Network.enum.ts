@@ -1,4 +1,4 @@
-export enum OverviewRoutesPaths {
+export enum NetworkRoutesPaths {
     Network = '/network',
     Overview = 'overview',
 }
