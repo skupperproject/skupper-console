@@ -15,7 +15,7 @@ import {
 
 const DELAY_RESPONSE = 1000;
 
-export function loadMockServerInDev() {
+export function loadMockServer() {
     if (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER) {
         const path = './data';
         const VANdata = require(`${path}/DATA.json`);

@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
-export interface ServiceConnections {
+interface ServiceConnections {
     id: string;
     client: string;
     start_time: number;

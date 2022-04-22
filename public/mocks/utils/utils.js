@@ -1,4 +1,4 @@
-export function list_to_tree(dataset) {
+function list_to_tree(dataset) {
     const hashTable = Object.create(null);
     const dataTree = [];
 
@@ -36,7 +36,7 @@ export function normalizeFlows(data) {
         .filter(Boolean);
 }
 
-export function mapFlowsWithListenersConnectors(flows) {
+function mapFlowsWithListenersConnectors(flows) {
     return flows.map((data) => {
         const listenersBound = flows.reduce(
             (acc, item) => ({
