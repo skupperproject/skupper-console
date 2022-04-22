@@ -5,5 +5,4 @@
 **/@types_app
 **/cypress
 ./public/mocks/data/*
-jest.*
 

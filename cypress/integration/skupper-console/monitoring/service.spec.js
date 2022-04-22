@@ -1,3 +1,5 @@
+/// <reference types="Cypress" />
+
 context('Monitoring', () => {
     beforeEach(() => {
         cy.visit('/#/monitoring');

@@ -10,8 +10,8 @@
         "cy:open": "cypress open",
         "cy:run": "cypress run",
         "ci-test": "start-test 3000 cy:run",
-        "lint-fix": "eslint src --ext .ts,.tsx --fix --ignore-path .gitignore",
-        "prettier-all": "prettier --write '**/*.{js,ts,tsx,json,html,scss}' --ignore-path .gitignore",
+        "lint-fix": "eslint src --ext .ts,.tsx --fix",
+        "prettier-all": "prettier --write 'src/**/*.{js,ts,tsx,json,html,scss}' --ignore-path .gitignore",
         "bundle-report": "STATS=server npm run build",
         "find-dead-code": "ts-prune",
         "prepare": "husky install"

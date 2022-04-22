@@ -15,9 +15,9 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
-import { formatBytes } from '@core/utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import { NetworkServices } from '../../services';
