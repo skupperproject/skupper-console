@@ -10,8 +10,9 @@ export const siteRoutes = [
         path: SiteRoutesPaths.Sites,
         element: <Site />,
         children: [
+            { index: true, element: <SiteOverview /> },
             {
-                path: SiteRoutesPaths.Network,
+                path: SiteRoutesPaths.Overview,
                 element: <SiteOverview />,
             },
         ],

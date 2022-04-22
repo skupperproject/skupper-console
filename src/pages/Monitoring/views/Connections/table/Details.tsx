@@ -10,8 +10,8 @@ import {
     Tr,
 } from '@patternfly/react-table';
 
-import { formatBytes } from '@utils/formatBytes';
-import { formatTime } from '@utils/formatTime';
+import { formatBytes } from '@core/utils/formatBytes';
+import { formatTime } from '@core/utils/formatTime';
 
 import { ConnectionColumns } from '../../../Monitoring.enum';
 import { Connection } from '../../../Monitoring.interfaces';

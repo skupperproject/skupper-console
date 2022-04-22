@@ -4,7 +4,7 @@ import {
     MonitoringStatsResponse,
     RouterStatsResponse,
     NetworkStatsResponse,
-} from '@models/API/REST.interfaces';
+} from 'API/REST.interfaces';
 
 export type Flow = FlowsResponse;
 export type MonitoringRoutersTopology = MonitoringRoutersTopologyResponse;

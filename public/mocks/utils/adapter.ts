@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable guard-for-in */
-import { DataResponse } from '@models/API/REST.interfaces';
+import { DataResponse } from 'API/REST.interfaces';
 
 import { utils } from './utilities';
 
@@ -493,7 +493,6 @@ class Adapter {
                                         const connection = ingress.connections[connectionID];
                                         if (connection) {
                                             const client = connection.client;
-                                            //console.log('dddd', this.data.services);
 
                                             const clientService = this.data.services.find(
                                                 (s: { targets: any[] }) =>
@@ -503,7 +502,6 @@ class Adapter {
                                                             t.site_id === fromSite,
                                                     ),
                                             );
-                                            // console.log('client', clientService);
 
                                             if (from === clientService) {
                                                 utils.aggregateAttributes(connection, req);
@@ -554,7 +552,6 @@ class Adapter {
     };
     // add source and target list for each service
     addSourcesTargets = () => {
-        // console.log('dssddddsadadsda', this.data.services);
         this.data.services.forEach(
             (service: { sourceServices: any[]; targetServices: never[] }) => {
                 if (!service.sourceServices) {

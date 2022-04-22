@@ -1,4 +1,4 @@
-export interface TotalByteProps {
+interface TotalByteProps {
     totalBytes: number;
     name: string;
 }

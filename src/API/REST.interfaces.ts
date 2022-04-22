@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
-export interface ServiceConnections {
+interface ServiceConnections {
     id: string;
     client: string;
     start_time: number;
@@ -70,12 +70,44 @@ export interface DataSiteResponse {
     gateway: boolean;
 }
 
+interface DeploymentLinksStreamPoints {
+    site: { site_id: string; site_name: string };
+}
+
+export interface DeploymentLinksResponse {
+    key: string;
+    request: ServiceConnections;
+    source: DeploymentLinksStreamPoints;
+    target: DeploymentLinksStreamPoints;
+}
+
+interface DeploymentsResponse {
+    key: string;
+    service: any;
+    site: any;
+}
+
 export interface DataResponse {
     sites: DataSiteResponse[];
     services: DataServicesResponse[];
+    deployments: DeploymentsResponse;
+    deploymentLinks: DeploymentLinksResponse[];
 }
 
-export interface ServiceSitesResponse {
+// SITES
+export interface SiteResponse {
+    siteId: string;
+    siteName: string;
+    edge: boolean;
+    version: string;
+    url: string;
+    connected: string[];
+    namespace: string;
+    numSitesConnected: number;
+    gateway: boolean;
+}
+
+export interface SiteServiceResponse {
     name: string;
     protocol: string;
     ports: number[];

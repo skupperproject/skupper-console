@@ -12,6 +12,7 @@ export const servicesRoutes = [
         path: ServicesRoutesPaths.Services,
         element: <Services />,
         children: [
+            { index: true, element: <ServicesOverview /> },
             {
                 path: ServicesRoutesPaths.Overview,
                 element: <ServicesOverview />,

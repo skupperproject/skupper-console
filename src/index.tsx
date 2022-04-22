@@ -6,20 +6,17 @@ import { HashRouter } from 'react-router-dom';
 
 import App from 'App';
 
-import { loadMockServerInDev } from '../public/mocks/server.js';
-import GlobalStateProvider from './contexts/Data';
-
-loadMockServerInDev();
+import { loadMockServer } from '../public/mocks/server.js';
 
 const queryClient = new QueryClient();
 
 render(
     <QueryClientProvider client={queryClient}>
         <HashRouter>
-            <GlobalStateProvider>
-                <App />
-            </GlobalStateProvider>
+            <App />
         </HashRouter>
     </QueryClientProvider>,
     document.getElementById('app'),
 );
+
+loadMockServer();

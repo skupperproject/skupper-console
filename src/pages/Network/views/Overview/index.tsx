@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
-import { formatBytes } from '@utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import { NetworkServices } from '../../services';

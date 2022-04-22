@@ -4,7 +4,7 @@ import { select } from 'd3-selection';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
 import router from '@assets/router.svg';
-import { formatTime } from '@utils/formatTime';
+import { formatTime } from '@core/utils/formatTime';
 
 import {
     MonitoringTopologyDeviceNode,

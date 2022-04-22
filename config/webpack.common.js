@@ -1,4 +1,5 @@
 const { ROOT, path } = require('./webpack.constant');
+const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -30,6 +31,9 @@ module.exports = {
         ],
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env.API_HOST': JSON.stringify(process.env.API_HOST || ''),
+        }),
         new HtmlWebpackPlugin({
             template: path.join(ROOT, '/public/index.html'),
         }),
