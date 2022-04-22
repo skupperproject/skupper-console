@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable guard-for-in */
-import { DataResponse } from '@models/API/REST.interfaces';
+import { DataResponse } from 'API/REST.interfaces';
 
 import { utils } from './utilities';
 

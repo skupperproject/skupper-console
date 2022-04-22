@@ -1,3 +1,3 @@
-import { ServiceResponse } from '@models/API/REST.interfaces';
+import { ServiceResponse } from 'API/REST.interfaces';
 
 export type Service = ServiceResponse;

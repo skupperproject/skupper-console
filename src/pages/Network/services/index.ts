@@ -1,4 +1,4 @@
-import { RESTApi } from '@models/API/REST';
+import { RESTApi } from 'API/REST';
 
 import { Network } from './network.interfaces';
 

@@ -3,7 +3,7 @@ import {
     DataSiteResponse,
     DeploymentLinksResponse,
     SiteResponse,
-} from '@models/API/REST.interfaces';
+} from 'API/REST.interfaces';
 
 export type DataServices = DataServicesResponse;
 export type SiteData = DataSiteResponse;

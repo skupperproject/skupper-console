@@ -1,4 +1,4 @@
-import { RESTApi } from '@models/API/REST';
+import { RESTApi } from 'API/REST';
 
 import { Flow, MonitoringRoutersTopology, MonitoringInfo } from './services.interfaces';
 

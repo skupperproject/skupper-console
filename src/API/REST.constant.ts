@@ -1,9 +1,9 @@
 export const CONNECTION_TIMEOUT = 10 * 1000;
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
-// HTTP URLs
-const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+const BASE_URL = process.env.API_HOST || `${window.location.protocol}//${window.location.host}`;
 
+// HTTP URLs
 export const DATA_URL = `${BASE_URL}/data`;
 
 export const SITES = `${BASE_URL}/sites`;
