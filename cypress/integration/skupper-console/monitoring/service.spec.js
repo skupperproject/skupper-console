@@ -1,4 +1,6 @@
-context('Monitoring', () => {
+/// <reference types="Cypress" />
+
+context('Monitoring service', () => {
     beforeEach(() => {
         cy.visit('/#/monitoring');
     });

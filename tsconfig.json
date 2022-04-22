@@ -20,12 +20,6 @@
         "baseUrl": "./src",
         "downlevelIteration": true
     },
-    "include": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.json",
-        "public/mocks/utils/utilities.ts",
-        "public/mocks/utils/adapter.ts"
-    ],
+    "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
     "exclude": ["**/node_modules", "**/build"]
 }

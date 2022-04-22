@@ -17,6 +17,7 @@ import OverviewCard from '@core/components/SummaryCard';
 import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
 import TrafficChart from '@core/components/TrafficChart';
 import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
+import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import {
@@ -24,7 +25,6 @@ import {
     ROUTERS_STATS_HEADER,
     VANS_STATS_HEADER,
 } from '@pages/Monitoring/Monitoring.constant';
-import { formatBytes } from '@core/utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MonitoringRoutesPaths, OverviewColumns, SectionsStatsLabels } from '../../Monitoring.enum';

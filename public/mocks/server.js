@@ -13,7 +13,7 @@ import {
     getData,
 } from './controllers';
 
-const DELAY_RESPONSE = 1000;
+const DELAY_RESPONSE = 250;
 
 export function loadMockServer() {
     if (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER) {

@@ -1,4 +1,6 @@
-context('Navigation', () => {
+/// <reference types="Cypress" />
+
+context('Error pages', () => {
     beforeEach(() => {});
 
     it('Redirect to the Not found page when url not exists', () => {
