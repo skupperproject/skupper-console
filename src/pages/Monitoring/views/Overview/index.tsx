@@ -24,7 +24,7 @@ import {
     ROUTERS_STATS_HEADER,
     VANS_STATS_HEADER,
 } from '@pages/Monitoring/Monitoring.constant';
-import { formatBytes } from '@utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MonitoringRoutesPaths, OverviewColumns, SectionsStatsLabels } from '../../Monitoring.enum';

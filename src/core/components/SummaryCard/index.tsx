@@ -12,7 +12,7 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, Th, Tr, Thead, Tbody, Td } from '@patternfly/react-table';
 
-import { generateUUID } from '@utils/generateUUID';
+import { generateUUID } from '@core/utils/generateUUID';
 
 import EmptyStateSpinner from '../EmptyStateSpinner';
 import { SummaryCardColors, SummaryCardEmptyStatus } from './SummaryCard.enum';

@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-import { CONNECTION_TIMEOUT, MSG_TIMEOUT_ERROR } from './REST.constant';
+import { CONNECTION_TIMEOUT } from 'config';
+
+import { MSG_TIMEOUT_ERROR } from './REST.constant';
 import { FetchWithTimeoutOptions } from './REST.interfaces';
 
 export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOptions = {}) {

@@ -12,7 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
 import { MonitorServices } from '@pages/Monitoring/services';
-import { formatBytes } from '@utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 
 import { QueriesMonitoring } from '../../../services/services.enum';
 import TopologyMonitoringService from './FlowsTopology';

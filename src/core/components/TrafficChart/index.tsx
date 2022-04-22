@@ -8,7 +8,7 @@ import {
     ChartVoronoiContainer,
 } from '@patternfly/react-charts';
 
-import { formatBytes } from '@utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 
 import { chartConfig } from './TrafficChart.constants';
 import { TrafficChartLabels } from './TrafficChart.enum';

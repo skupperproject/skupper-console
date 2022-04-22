@@ -18,7 +18,7 @@ import TrafficChart from '@core/components/TrafficChart';
 import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
 import LoadingPage from '@pages/Loading';
-import { formatBytes } from '@utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MAX_HEIGHT_DETAILS_TABLE, MAX_WIDTH_DETAILS_TABLE } from '../../../Monitoring.constant';
