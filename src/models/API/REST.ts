@@ -12,16 +12,18 @@ import {
     MONITORING_CONNECTIONS,
     SERVICES,
     DEPLOYMENTS,
+    SITES,
 } from './REST.constant';
 import {
     DataResponse,
     FlowsResponse,
     MonitoringStatsResponse,
     RouterStatsResponse,
-    ServiceSitesResponse,
+    SiteServiceResponse,
     ServiceResponse,
     DeploymentResponse,
     NetworkStatsResponse,
+    SiteResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -30,7 +32,12 @@ export const RESTApi = {
 
         return data;
     },
-    fetchSitesServices: async (): Promise<ServiceSitesResponse[]> => {
+    fetchSites: async (): Promise<SiteResponse[]> => {
+        const { data } = await fetchWithTimeout(SITES);
+
+        return data;
+    },
+    fetchSitesServices: async (): Promise<SiteServiceResponse[]> => {
         const { data } = await fetchWithTimeout(SITES_SERVICES);
 
         return data;

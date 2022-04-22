@@ -6,6 +6,7 @@ const BASE_URL = `${window.location.protocol}//${window.location.host}`;
 
 export const DATA_URL = `${BASE_URL}/data`;
 
+export const SITES = `${BASE_URL}/sites`;
 export const SITES_SERVICES = `${BASE_URL}/sites/services`;
 
 export const SERVICES = `${BASE_URL}/services`;
