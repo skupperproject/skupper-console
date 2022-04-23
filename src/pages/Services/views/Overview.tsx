@@ -5,8 +5,8 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
-import { ErrorRoutesPaths } from '@pages/Errors/errors.enum';
-import LoadingPage from '@pages/Loading';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.enum';
+import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import ServicesServices from '../services';
