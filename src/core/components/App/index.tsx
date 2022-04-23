@@ -6,8 +6,7 @@ import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
 import { FirstLoadingView } from 'config';
-
-import { routes } from './routes';
+import { routes } from 'routes';
 
 import '@patternfly/patternfly/patternfly.scss';
 import '@patternfly/patternfly/patternfly-addons.scss';

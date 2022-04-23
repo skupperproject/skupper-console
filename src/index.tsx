@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HashRouter } from 'react-router-dom';
 
-import App from 'App';
+import App from '@core/components/App';
 
 import { loadMockServer } from '../public/mocks/server.js';
 
