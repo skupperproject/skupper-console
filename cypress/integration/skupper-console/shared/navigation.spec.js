@@ -1,8 +1,17 @@
 /// <reference types="Cypress" />
 
+import { loadMockServer } from '../../../../public/mocks/server';
+
 context('Navigation', () => {
+    let server;
+
     beforeEach(() => {
+        server = loadMockServer();
         cy.visit('/');
+    });
+
+    afterEach(() => {
+        server.shutdown();
     });
 
     it('Redirect to the Overview section when the app is loaded', () => {
