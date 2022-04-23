@@ -17,7 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import TrafficChart from '@core/components/TrafficChart';
 import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.enum';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 

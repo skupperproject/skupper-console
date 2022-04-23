@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.enum';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 

@@ -4,7 +4,7 @@ import { Brand, Grid, GridItem, Text, TextContent, TextVariants } from '@pattern
 
 import BrandImg from '@assets/skupper.svg';
 
-import { Labels } from './errors.enum';
+import { Labels } from './Server.enum';
 
 const ErrorServer = function () {
     return (

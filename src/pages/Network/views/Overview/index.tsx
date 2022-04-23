@@ -16,7 +16,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { formatBytes } from '@core/utils/formatBytes';
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.enum';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 

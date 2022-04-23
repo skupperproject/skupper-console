@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 import BrandImg from '@assets/skupper.svg';
 
-import { Labels } from './errors.enum';
+import { Labels } from './Connection.enum';
 
 const ErrorConnection = function () {
     const navigate = useNavigate();

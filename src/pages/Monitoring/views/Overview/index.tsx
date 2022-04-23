@@ -23,7 +23,7 @@ import {
     ROUTERS_STATS_HEADER,
     VANS_STATS_HEADER,
 } from '@pages/Monitoring/Monitoring.constant';
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.enum';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
