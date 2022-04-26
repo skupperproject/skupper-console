@@ -9,7 +9,7 @@ const NavBar = function () {
     const { pathname } = useLocation();
 
     return (
-        <Nav className="sk-nav-bar">
+        <Nav data-cy="sk-nav-bar">
             <NavList>
                 {RoutesProps.map((navItem) => (
                     <NavItem key={navItem.path} isActive={pathname.startsWith(`${navItem.path}`)}>

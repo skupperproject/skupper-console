@@ -209,7 +209,7 @@ const Overview = function () {
                 </StackItem>
 
                 <StackItem>
-                    <Card className="sk-monitoring-services">
+                    <Card data-cy="sk-monitoring-services">
                         <Split hasGutter>
                             {vans && (
                                 <SplitItem isFilled>

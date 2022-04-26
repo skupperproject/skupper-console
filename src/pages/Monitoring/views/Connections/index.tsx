@@ -29,7 +29,7 @@ const Connections = function () {
     }
 
     return (
-        <Stack className="sk-monitoring-service">
+        <Stack data-cy="sk-monitoring-service">
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
