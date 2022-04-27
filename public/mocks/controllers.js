@@ -44,6 +44,7 @@ export function getDeployments(VANdata) {
             const sitesConnected = targets
                 .map((target) => sitesMap[target.site_id])
                 .filter(Boolean);
+            console.log(targets);
 
             return {
                 id: address,

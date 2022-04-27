@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
+import { Card } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import AppContent from '@layout/AppContent';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
@@ -38,11 +38,10 @@ const DeploymentsOverview = function () {
     }
 
     return (
-        <AppContent>
+        <Card>
             <TableComposable
                 className="flows-table"
                 aria-label="flows table"
-                variant="compact"
                 borders={false}
                 isStickyHeader
             >
@@ -75,7 +74,7 @@ const DeploymentsOverview = function () {
                     </Tbody>
                 ))}
             </TableComposable>
-        </AppContent>
+        </Card>
     );
 };
 

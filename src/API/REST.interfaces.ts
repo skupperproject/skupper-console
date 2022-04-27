@@ -98,13 +98,13 @@ export interface DataResponse {
 export interface SiteResponse {
     siteId: string;
     siteName: string;
-    edge: boolean;
+    edge?: boolean;
     version: string;
     url: string;
     connected: string[];
     namespace: string;
     numSitesConnected: number;
-    gateway: boolean;
+    gateway?: boolean;
 }
 
 export interface SiteServiceResponse {
