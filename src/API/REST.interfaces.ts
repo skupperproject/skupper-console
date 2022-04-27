@@ -71,6 +71,7 @@ export interface DataSiteResponse {
 }
 
 interface DeploymentLinksStreamPoints {
+    key: string;
     site: { site_id: string; site_name: string };
 }
 
@@ -81,7 +82,7 @@ export interface DeploymentLinksResponse {
     target: DeploymentLinksStreamPoints;
 }
 
-interface DeploymentsResponse {
+export interface DeploymentTopologyResponse {
     key: string;
     service: any;
     site: any;
@@ -90,7 +91,7 @@ interface DeploymentsResponse {
 export interface DataResponse {
     sites: DataSiteResponse[];
     services: DataServicesResponse[];
-    deployments: DeploymentsResponse;
+    deployments: DeploymentTopologyResponse[];
     deploymentLinks: DeploymentLinksResponse[];
 }
 
@@ -139,7 +140,7 @@ export interface DeploymentResponse {
     sites: { name: string; url: string }[];
 }
 
-// FLOWSS
+// FLOWS
 interface FlowResponse {
     sourceHost: string;
     sourcePort: string;

@@ -6,6 +6,7 @@ import { overviewRoutes } from '@pages/Network/routes';
 import { servicesRoutes } from '@pages/Services/routes';
 import { errorsRoutes } from '@pages/shared/Errors/routes';
 import { siteRoutes } from '@pages/Sites/routes';
+import { topologyRoutes } from '@pages/Topology/routes';
 
 export const routes: RouteObject[] = [
     ...overviewRoutes,
@@ -14,4 +15,5 @@ export const routes: RouteObject[] = [
     ...monitoringRoutes,
     ...servicesRoutes,
     ...errorsRoutes,
+    ...topologyRoutes,
 ];

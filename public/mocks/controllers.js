@@ -44,14 +44,13 @@ export function getDeployments(VANdata) {
             const sitesConnected = targets
                 .map((target) => sitesMap[target.site_id])
                 .filter(Boolean);
-            console.log(targets);
 
             return {
                 id: address,
                 name: address,
                 protocol,
-                numConnectionsIn: connections_ingress.length,
-                numConnectionsOut: connections_egress.length,
+                numConnectionsIn: connections_ingress && connections_ingress.length,
+                numConnectionsOut: connections_egress && connections_egress.length,
                 sites: sitesConnected,
             };
         },

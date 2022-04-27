@@ -1,12 +1,12 @@
-import { DataServices, SiteData } from '../services/services.interfaces';
+import { DataService, SiteData } from '../services/services.interfaces';
 
 const TCP_PROTOCOL = 'tcp';
 
 /**
  * It returns the list of the services exposed in the Skupper network.
  */
-export function getServicesExposed(services: DataServices[], allSites: SiteData[]) {
-    const deployments: { service: DataServices; site: SiteData }[] = [];
+export function getServicesExposed(services: DataService[], allSites: SiteData[]) {
+    const deployments: { service: DataService; site: SiteData }[] = [];
 
     services
         .filter((service) => !service.derived)
@@ -27,7 +27,7 @@ export function getServicesExposed(services: DataServices[], allSites: SiteData[
 /**
  * It returns every site connected with a service based on the communication protocol.
  */
-function getSitesPerService(service: DataServices, allSites: SiteData[]) {
+function getSitesPerService(service: DataService, allSites: SiteData[]) {
     const sites: SiteData[] = [];
 
     if (service.protocol === TCP_PROTOCOL) {
@@ -104,6 +104,6 @@ function findSite(site_id: string, sites: SiteData[]) {
 /**
  * It returns all the targets that match with the service address name.
  */
-function findAllTargetsPerService(service: DataServices) {
+function findAllTargetsPerService(service: DataService) {
     return service.targets?.filter(({ name }) => name.startsWith(service.address));
 }
