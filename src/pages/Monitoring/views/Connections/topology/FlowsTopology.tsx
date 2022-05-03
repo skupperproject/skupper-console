@@ -17,6 +17,7 @@ import {
 const CIRCLE_R = 10;
 const ROUTER_IMG_WIDTH = 50;
 const ROUTER_IMG_CENTER_X = ROUTER_IMG_WIDTH / 2;
+const ARROW_SIZE = 10;
 
 const tooltip = select('body')
     .append('div')
@@ -86,9 +87,9 @@ function TopologyMonitoringService(
         .append('svg:marker')
         .attr('id', 'arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', ROUTER_IMG_CENTER_X)
-        .attr('markerWidth', 9)
-        .attr('markerHeight', 9)
+        .attr('refX', CIRCLE_R + ARROW_SIZE)
+        .attr('markerWidth', ARROW_SIZE)
+        .attr('markerHeight', ARROW_SIZE)
         .attr('orient', 'auto-start-reverse')
         .append('svg:path')
         .style('fill', 'gray')
@@ -128,7 +129,7 @@ function TopologyMonitoringService(
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
                 .attr(
-                    'marker-start',
+                    'marker-end',
                     ({ type }) => (type === 'LISTENER' || type === 'CONNECTOR') && 'url(#arrow)',
                 );
 

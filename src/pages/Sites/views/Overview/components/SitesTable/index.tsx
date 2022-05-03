@@ -6,16 +6,6 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { SitesColumns } from './SitesTable.enum';
 import { SitesTableProps } from './SitesTable.interfaces';
 
-// siteId: string;
-//     siteName: string;
-//     edge: boolean;
-//     version: string;
-//     url: string;
-//     connected: string[];
-//     namespace: string;
-//     numSitesConnected: number;
-//     gateway: boolean;
-
 const SitesTable = memo(function ({ sites }: SitesTableProps) {
     return (
         <Card>

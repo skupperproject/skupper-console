@@ -25,7 +25,7 @@ export function loadMockServer() {
         createServer({
             routes() {
                 this.timing = DELAY_RESPONSE;
-
+                this.pretender.get('*', this.pretender.passthrough);
                 // General APIs
                 this.get(
                     '/error',

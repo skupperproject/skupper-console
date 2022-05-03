@@ -3,7 +3,7 @@
         {
             "site_name": "site-a",
             "site_id": "7hZ9GQzD6u",
-            "connected": [],
+            "connected": ["aArHqpCWpc", "m32q5a0vtb"],
             "namespace": "pub1",
             "url": "grs-test-1.devcluster.openshift.com",
             "edge": false
@@ -11,7 +11,7 @@
         {
             "site_name": "site-b",
             "site_id": "m32q5a0vtb",
-            "connected": ["7hZ9GQzD6u"],
+            "connected": ["7hZ9GQzD6u", "aArHqpCWpc"],
             "namespace": "pub2",
             "url": "grs-test-2.devcluster.openshift.com",
             "edge": false
@@ -19,7 +19,7 @@
         {
             "site_name": "mini1",
             "site_id": "aArHqpCWpc",
-            "connected": ["7hZ9GQzD6u"],
+            "connected": [],
             "namespace": "default",
             "url": "10.107.63.213",
             "edge": false
