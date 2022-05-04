@@ -79,7 +79,10 @@
         "no-else-return": ["error"],
         "no-global-strict": 0,
         "no-irregular-whitespace": ["error"],
-        "no-param-reassign": ["warn", { "props": true }],
+        "no-param-reassign": [
+            "warn",
+            { "props": true, "ignorePropertyModificationsFor": ["acc", "node"] }
+        ],
         "no-shadow": "off",
         "no-underscore-dangle": 0,
         "no-var": 2,
