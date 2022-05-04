@@ -1,4 +1,4 @@
-export interface SiteTopologyNode {
+export interface TopologyNode {
     id: string;
     name: string;
     x: number;
@@ -9,30 +9,15 @@ export interface SiteTopologyNode {
     fy?: number | null;
 }
 
-export type DeploymentTopologyNode = {
-    id: string;
-    name: string;
-    x: number;
-    y: number;
-    group: number;
-    type: string;
-    fx?: number | null;
-    fy?: number | null;
-};
-
-export type DeploymentsNode = SiteTopologyNode | DeploymentTopologyNode;
-
-export interface SitesTopologyLink {
+export interface TopologyLink {
     source: string;
     target: string;
-    targetId: string;
-    sourceId: string;
     type: string;
 }
 
-export interface SitesTopologyLinkNormalized {
-    source: DeploymentsNode;
-    target: DeploymentsNode;
+export interface TopologyLinkNormalized {
+    source: TopologyNode;
+    target: TopologyNode;
     type: string;
 }
 

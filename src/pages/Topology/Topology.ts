@@ -11,55 +11,32 @@ import {
 } from 'd3-force';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { select } from 'd3-selection';
+import { select, selectAll } from 'd3-selection';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
 import server from '@assets/server.svg';
 import service from '@assets/service.svg';
 
-import {
-    DeploymentsNode,
-    DeploymentTopologyNode,
-    SitesTopologyLink,
-    SitesTopologyLinkNormalized,
-    // SiteTopologyNode,
-} from './Topology.interfaces';
+import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './Topology.interfaces';
 
 const SITE_SIZE = 150;
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 40;
 
-// const tooltip = select('body')
-//     .append('div')
-//     .style('position', 'absolute')
-//     .style('z-index', '1000')
-//     .style('visibility', 'hidden')
-//     .style('background-color', 'var(--pf-global--palette--black-200)')
-//     .style('border', 'solid')
-//     .style('border-width', '1px')
-//     .style('border-radius', '4px')
-//     .style('border-color', 'var(--pf-global--palette--light-blue-500)')
-//     .style('padding', '10px')
-//     .style('opacity', '0.7')
-//     .html('');
-
-const TopologySites = function (
+const TopologySites = async function (
     $node: HTMLElement,
-    nodes: DeploymentsNode[],
-    links: SitesTopologyLink[],
+    nodes: TopologyNode[],
+    links: TopologyLink[],
     boxWidth: number,
     boxHeight: number,
 ) {
+    selectAll('svg').remove();
+
     if (!nodes.length) {
         return null;
     }
 
-    //const sites = nodes.filter(({ type }) => type === 'site');
-    const services = nodes; //nodes.filter(({ type }) => type === 'service');
-    //const linkSites = links.filter(({ type }) => type === 'linkSite');
-    const linkServices = links; //links.filter(({ type }) => type === 'linkService');
-
-    const domain = services.reduce((acc, node) => {
+    const domain = nodes.reduce((acc, node) => {
         acc[node.group] = true;
 
         return acc;
@@ -75,90 +52,38 @@ const TopologySites = function (
     const yScale = scaleOrdinal().domain(domainValues).range(rangeValuesY);
     const color = scaleOrdinal(schemeCategory10).domain(domainValues);
 
-    //  const isDragging = false;
+    // let isDragging = false;
+    let selected = '';
 
-    const simulation = forceSimulation(services)
-        .force(
-            'x',
-            forceX()
-                .strength(0.3)
-                .x(function (d: any) {
-                    return xScale(d.group?.toString()) as number;
-                }),
-        )
-        .force(
-            'y',
-            forceY()
-                .strength(0.3)
-                .y(function (d: any) {
-                    return yScale(d.group?.toString()) as number;
-                }),
-        )
+    const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>(nodes)
         .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2).strength(0))
         .force('charge', forceManyBody().strength(0))
         .force('collide', forceCollide().strength(1).radius(SERVICE_SIZE).iterations(1))
         .force(
+            'x',
+            forceX<TopologyNode>()
+                .strength(0.3)
+                .x(function ({ group }) {
+                    return xScale(group?.toString()) as number;
+                }),
+        )
+        .force(
+            'y',
+            forceY<TopologyNode>()
+                .strength(0.3)
+                .y(function ({ group }) {
+                    return yScale(group?.toString()) as number;
+                }),
+        )
+        .force(
             'link',
-            forceLink<DeploymentsNode, SitesTopologyLink>()
+            forceLink<TopologyNode, TopologyLink>(links)
                 .strength(0.15)
                 .id(function ({ id }) {
                     return id;
                 }),
-        );
-
-    simulation.nodes(services).on('tick', ticked).force<any>('link').links(linkServices);
-
-    const groupMap: any = {};
-    services.forEach(function (v, i) {
-        const g = v.group;
-        if (typeof groupMap[g] === 'undefined') {
-            groupMap[g] = [];
-        }
-        groupMap[g].push(i);
-
-        // v.width = v.height = 10;
-    });
-
-    const groups: any = [];
-    // eslint-disable-next-line guard-for-in
-    for (const g in groupMap) {
-        groups.push({ id: g, leaves: groupMap[g] });
-    }
-    console.log(groups);
-    // const simulationSite = forceSimulation(sites)
-    //     .force(
-    //         'x',
-    //         forceX()
-    //             .strength(0.5)
-    //             .x(function (d: any) {
-    //                 return xScale(d.group?.toString()) as number;
-    //             }),
-    //     )
-    //     .force(
-    //         'y',
-    //         forceY()
-    //             .strength(0.5)
-    //             .y(function (d: any) {
-    //                 return yScale(d.group?.toString()) as number;
-    //             }),
-    //     )
-    //     .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2))
-    //     .force('charge', forceManyBody().strength(1))
-    //     .force('collide', forceCollide().strength(0.1).radius(32).iterations(1))
-    //     .force('link', forceLink<DeploymentsNode, SitesTopologyLink>().strength(0.15));
-
-    // simulationSite.nodes(sites).on('tick', ticked).force<any>('link').links(linkSites);
-
-    // links.some(function ({ source, target, sourceId, targetId, ...rest }) {
-    //     services.some(function (node) {
-    //         if (sourceId === node.id) {
-    //             linksWithNodes.push({ ...rest, target, source: node });
-    //         }
-    //         if (targetId === node.id) {
-    //             linksWithNodes.push({ ...rest, source, target: node });
-    //         }
-    //     });
-    // });
+        )
+        .on('tick', ticked);
 
     // root
     const svgContainer = select($node)
@@ -200,60 +125,10 @@ const TopologySites = function (
         .style('fill', 'gray')
         .attr('d', 'M0,-5L10,0L0,5');
 
-    // // links
-    // svgElement
-    //     .selectAll('.siteLink')
-    //     .data(linkSites)
-    //     .enter()
-    //     .call(function (p) {
-    //         // hidden link line. Creates an area  to trigger mouseover and show the popup
-    //         p.append('line')
-    //             .attr('class', 'siteLink')
-    //             .style('stroke', 'transparent')
-    //             .style('stroke-width', '24px')
-    //             .style('opacity', 0);
-
-    //         p.append('line')
-    //             .attr('class', 'siteLink')
-    //             .style('stroke', 'var(--pf-global--palette--black-400)')
-    //             .style('stroke-width', '1px')
-    //             .attr('marker-end', 'url(#arrow)');
-    //     });
-
-    // //sites
-    // const svgSiteNodes = svgElement
-    //     .selectAll('.siteNode')
-    //     .data(sites)
-    //     .enter()
-    //     .call(function (p) {
-    //         p.append('rect')
-    //             .attr('class', 'siteNode')
-    //             .attr('width', SITE_SIZE)
-    //             .attr('height', SITE_SIZE)
-    //             .style('stroke', 'steelblue')
-    //             .style('stroke-width', '1px')
-    //             .style('fill', () => 'var(--pf-global--BackgroundColor--100)')
-    //             .call(
-    //                 drag<SVGRectElement, DeploymentsNode>()
-    //                     .on('start', dragStarted)
-    //                     .on('drag', dragged)
-    //                     .on('end', dragEnded),
-    //             );
-
-    //         p.append('text')
-    //             .attr('class', 'siteNodeL')
-    //             .attr('font-size', 18)
-    //             .style('text-anchor', 'middle')
-    //             .style('fill', 'var(--pf-global--palette--light-blue-500)')
-    //             .text(function ({ name }) {
-    //                 return name;
-    //             });
-    //   });
-
     // links services
     svgElement
         .selectAll('.serviceLink')
-        .data(linkServices)
+        .data(links)
         .enter()
         .call(function (p) {
             // hidden link line. Creates an area  to trigger mouseover and show the popup
@@ -268,82 +143,69 @@ const TopologySites = function (
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
                 .attr('marker-end', 'url(#arrowService)');
-        });
+        })
+        .exit()
+        .remove();
 
     //services
-    const svgServiceNodes = svgElement.selectAll('.serviceNode').data(services).enter();
-    xml(server).then((serverXMLData) => {
-        xml(service).then((serviceXMLData) => {
-            svgServiceNodes.call(function (p) {
-                p.append('text')
-                    .attr('class', 'serviceNodeL')
-                    .attr('font-size', 12)
-                    .style('text-anchor', 'middle')
-                    .style('fill', 'var(--pf-global--palette--light-blue-500)')
-                    .text(function ({ name }) {
-                        return name;
-                    });
+    const svgServiceNodes = svgElement.selectAll('.serviceNode').data(nodes).enter();
+    const serverXMLData = await xml(server);
+    const serviceXMLData = await xml(service);
 
-                p.append(function ({ type }) {
-                    const XMLData = type === 'site' ? serverXMLData : serviceXMLData;
+    svgServiceNodes.call((svgServiceNode) => {
+        svgServiceNode
+            .append('text')
+            .attr('class', 'serviceNodeL')
+            .attr('font-size', 12)
+            .style('text-anchor', 'middle')
+            .style('fill', 'var(--pf-global--palette--light-blue-500)')
+            .text(({ name }) => name);
 
-                    return XMLData.documentElement.cloneNode(true) as any;
-                })
-                    .attr('width', SERVICE_SIZE)
-                    .attr('height', SERVICE_SIZE)
-                    .attr('class', 'serviceNode')
-                    .style('fill', function (d: any) {
-                        return color(d.group) as any;
-                    })
-                    .call(
-                        drag<any, any>()
-                            .on('start', dragStarted)
-                            .on('drag', dragged)
-                            .on('end', dragEnded),
-                    )
-                    .on('mouseover', function (_, d) {
-                        svgElement.selectAll('.serviceLink').style('opacity', function (l: any) {
-                            console.log(l.sourceId, l.targetId);
-                            if (
-                                d.id === l.source.id ||
-                                d.id === l.target.id ||
-                                d.id === l.sourceId ||
-                                d.id === l.targetId
-                            ) {
-                                return '1';
-                            }
+        svgServiceNode
+            .append(({ type }) => {
+                const XMLData = type === 'site' ? serverXMLData : serviceXMLData;
 
-                            return '0';
-                        });
-                    })
-                    .on('mouseout', function () {
-                        svgElement.selectAll('.serviceLink').style('opacity', '1');
-                    });
+                return XMLData.documentElement.cloneNode(true) as HTMLElement;
+            })
+            .attr('width', SERVICE_SIZE)
+            .attr('height', SERVICE_SIZE)
+            .attr('class', 'serviceNode')
+            .style('fill', ({ group }) => color(group.toString()))
+            .call(
+                drag<HTMLElement, TopologyNode>()
+                    .on('start', dragStarted)
+                    .on('drag', dragged)
+                    .on('end', dragEnded),
+            )
+            .on('click', (_, { id }) => {
+                if (selected === id) {
+                    return svgElement.selectAll('.serviceLink').style('opacity', '1');
+                }
+
+                selected = id;
+
+                svgElement.selectAll('.serviceLink').style('opacity', (svgLink: any) => {
+                    const isLinkConnectedToTheNode =
+                        id === svgLink.source.id || id === svgLink.target.id;
+
+                    return isLinkConnectedToTheNode ? '1' : '0';
+                });
             });
-        });
     });
-    // drag util
 
-    function fixNodes(node: any) {
-        svgServiceNodes.each(function (d: any) {
-            if (node !== d) {
-                d.fx = d.x;
-                d.fy = d.y;
+    // drag util
+    function fixNodes({ x, y }: TopologyNode) {
+        svgServiceNodes.each(function (node) {
+            if (x !== node.x || y !== node.y) {
+                node.fx = node.x;
+                node.fy = node.y;
             }
         });
-
-        // svgSiteNodes.each(function (d: any) {
-        //     if (node !== d) {
-        //         d.fx = d.x;
-        //         d.fy = d.y;
-        //     }
-        // });
     }
 
-    function dragStarted(event: any, node: DeploymentsNode) {
-        if (!event.active) {
+    function dragStarted({ active }: { active: boolean }, node: TopologyNode) {
+        if (!active) {
             simulation.alphaTarget(0.3).restart();
-            //simulationSite.alphaTarget(0.3).restart();
         }
         node.fx = node.x;
         node.fy = node.y;
@@ -352,23 +214,20 @@ const TopologySites = function (
         // isDragging = true;
     }
 
-    function dragged(event: any, node: DeploymentsNode) {
-        node.fx = event.x;
-        node.fy = event.y;
+    function dragged({ x, y }: { x: number; y: number }, node: TopologyNode) {
+        node.fx = x;
+        node.fy = y;
     }
 
-    function dragEnded(event: any, node: DeploymentsNode) {
-        if (!event.active) {
+    function dragEnded({ active }: { active: boolean }, node: TopologyNode) {
+        if (!active) {
             simulation.alphaTarget(0);
             simulation.stop();
-
-            // simulationSite.alphaTarget(0);
-            // simulationSite.stop();
         }
         node.fx = null;
         node.fy = null;
 
-        //isDragging = false;
+        // isDragging = false;
     }
 
     function ticked() {
@@ -391,42 +250,43 @@ const TopologySites = function (
         }
 
         svgElement
-            .selectAll<SVGSVGElement, DeploymentTopologyNode>('.serviceNode')
+            .selectAll<SVGSVGElement, TopologyNode>('.serviceNode')
             .attr('x', ({ x }) => validatePosition(x - SERVICE_SIZE / 2, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y - SERVICE_SIZE / 2, maxSvgPosY, minSvgPosY));
 
         svgElement
-            .selectAll<SVGSVGElement, DeploymentTopologyNode>('.serviceNodeL')
+            .selectAll<SVGSVGElement, TopologyNode>('.serviceNodeL')
             .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y - SERVICE_SIZE * 1.2, maxSvgPosY, minSvgPosY));
 
         svgElement
-            .selectAll<SVGSVGElement, SitesTopologyLinkNormalized>('.serviceLink')
+            .selectAll<SVGSVGElement, TopologyLinkNormalized>('.serviceLink')
             .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
             .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
             .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
             .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
 
-        // svgElement
-        //     .selectAll<SVGSVGElement, SiteTopologyNode>('.siteNode')
-        //     .attr('x', ({ x }) => validatePosition(x - SITE_SIZE / 2, maxSvgPosX, minSvgPosX))
-        //     .attr('y', ({ y }) => validatePosition(y - SITE_SIZE / 2, maxSvgPosY, minSvgPosY));
+        svgElement
+            .selectAll<SVGSVGElement, TopologyNode>('.siteNode')
+            .attr('x', ({ x }) => validatePosition(x - SITE_SIZE / 2, maxSvgPosX, minSvgPosX))
+            .attr('y', ({ y }) => validatePosition(y - SITE_SIZE / 2, maxSvgPosY, minSvgPosY));
 
-        // svgElement
-        //     .selectAll<SVGSVGElement, SiteTopologyNode>('.siteNodeL')
-        //     .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
-        //     .attr('y', ({ y }) => validatePosition(y - SITE_SIZE / 2 - 10, maxSvgPosY, minSvgPosY));
+        svgElement
+            .selectAll<SVGSVGElement, TopologyNode>('.siteNodeL')
+            .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
+            .attr('y', ({ y }) => validatePosition(y - SITE_SIZE / 2 - 10, maxSvgPosY, minSvgPosY));
 
-        // svgElement
-        //     .selectAll<SVGSVGElement, SitesTopologyLinkNormalized>('.siteLink')
-        //     .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
-        //     .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
-        //     .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
-        //     .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
+        svgElement
+            .selectAll<SVGSVGElement, TopologyLinkNormalized>('.siteLink')
+            .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
+            .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
+            .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
+            .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
     }
 
     // zoom
-    const handleZoom = (e: any) => svgElement.attr('transform', e.transform);
+    const handleZoom = ({ transform }: { transform: string }) =>
+        svgElement.attr('transform', transform);
     const initZoom = zoom<SVGSVGElement, unknown>().scaleExtent([0.5, 6]).on('zoom', handleZoom);
 
     svgContainer.call(initZoom);
