@@ -46,20 +46,6 @@ function TopologyMonitoringService(
 
     let isDragging = false;
 
-    const simulation = forceSimulation(nodes)
-        .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 3))
-        .force('charge', forceManyBody().strength(-30))
-        .force('collide', forceCollide(0.9).radius(50).iterations(1))
-        .force(
-            'link',
-            forceLink<MonitoringTopologyNode, MonitoringTopologyLink>()
-                .strength(({ pType }) => (pType ? 0.015 : 0.001))
-                .id(function ({ id }) {
-                    return id;
-                }),
-        )
-        .on('tick', ticked);
-
     const linksWithNodes: MonitoringTopologyLinkNormalized[] = [];
     links.some(function ({ source, target, ...rest }) {
         nodes.some(function (node) {
@@ -71,6 +57,20 @@ function TopologyMonitoringService(
             }
         });
     });
+
+    const simulation = forceSimulation(nodes)
+        .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 3))
+        .force('charge', forceManyBody().strength(-30))
+        .force('collide', forceCollide(0.9).radius(50).iterations(1))
+        .force(
+            'link',
+            forceLink<MonitoringTopologyNode, MonitoringTopologyLinkNormalized>(linksWithNodes)
+                .strength(({ pType }) => (pType ? 0.015 : 0.001))
+                .id(function ({ id }) {
+                    return id;
+                }),
+        )
+        .on('tick', ticked);
 
     // root
     const svgContainer = select($node)
@@ -222,10 +222,9 @@ function TopologyMonitoringService(
                 });
         });
 
-    simulation.nodes(nodes).force<any>('link').links(linksWithNodes);
     // drag util
-    function dragStarted(event: any, node: MonitoringTopologyNode) {
-        if (!event.active) {
+    function dragStarted({ active }: { active: boolean }, node: MonitoringTopologyNode) {
+        if (!active) {
             simulation.alphaTarget(0.3).restart();
         }
         node.fx = node.x;
@@ -234,13 +233,13 @@ function TopologyMonitoringService(
         isDragging = true;
     }
 
-    function dragged(event: any, node: MonitoringTopologyNode) {
-        node.fx = event.x;
-        node.fy = event.y;
+    function dragged({ x, y }: { x: number; y: number }, node: MonitoringTopologyNode) {
+        node.fx = x;
+        node.fy = y;
     }
 
-    function dragEnded(event: any, node: MonitoringTopologyNode) {
-        if (!event.active) {
+    function dragEnded({ active }: { active: boolean }, node: MonitoringTopologyNode) {
+        if (!active) {
             simulation.alphaTarget(0);
             simulation.stop();
         }
@@ -355,7 +354,8 @@ function TopologyMonitoringService(
     }
 
     // zoom
-    const handleZoom = (e: any) => svgElement.attr('transform', e.transform);
+    const handleZoom = ({ transform }: { transform: string }) =>
+        svgElement.attr('transform', transform);
     const initZoom = zoom<SVGSVGElement, unknown>().scaleExtent([0.5, 6]).on('zoom', handleZoom);
 
     svgContainer.call(initZoom);

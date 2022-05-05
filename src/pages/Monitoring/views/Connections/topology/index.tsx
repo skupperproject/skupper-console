@@ -17,8 +17,6 @@ import LoadingPage from '@pages/shared/Loading';
 import { QueriesMonitoring } from '../../../services/services.enum';
 import TopologyMonitoringService from './FlowsTopology';
 
-// import { UPDATE_INTERVAL } from 'config';
-
 const MonitoringTopology = function () {
     const navigate = useNavigate();
     const { id: vanId } = useParams();
