@@ -131,13 +131,6 @@ const TopologySites = async function (
         .data(links)
         .enter()
         .call(function (p) {
-            // hidden link line. Creates an area  to trigger mouseover and show the popup
-            // p.append('line')
-            //     .attr('class', 'serviceLink')
-            //     .style('stroke', 'transparent')
-            //     .style('stroke-width', '24px')
-            //     .style('opacity', 0);
-
             p.append('line')
                 .attr('class', 'serviceLink')
                 .style('stroke', 'var(--pf-global--palette--black-400)')
@@ -168,9 +161,17 @@ const TopologySites = async function (
             .attr('width', SERVICE_SIZE)
             .attr('height', SERVICE_SIZE)
             .attr('class', 'serviceNode')
-            .style('fill', ({ group }) => color(group.toString()))
+            .style('fill', ({ group }) => color(group.toString()));
+
+        // it improves drag & drop area selection
+        svgServiceNode
+            .append('rect')
+            .attr('class', 'serviceNode')
+            .attr('width', SERVICE_SIZE)
+            .attr('height', SERVICE_SIZE)
+            .attr('fill', 'transparent')
             .call(
-                drag<HTMLElement, TopologyNode>()
+                drag<SVGRectElement, TopologyNode>()
                     .on('start', dragStarted)
                     .on('drag', dragged)
                     .on('end', dragEnded),

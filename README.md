@@ -2,28 +2,28 @@
 
 ## Development
 
-> `npm i`
-> `npm prepare`
+> `yarn install`
+> `yarn prepare`
 
 the last command install husky to improves commits. You need to run this command just one time
 
 To develop the console type
 
-> `npm run start`
+> `yarn start`
 
 ## Tests
 
 ### Unit
 
-> `npm run test`
+> `yarn test`
 
 ### Integration
 
 #### Development mode
 
-> `npm run start`
-> `npm run cy:open`
+> `yarn start`
+> `yarn cy:open`
 
 #### ci mode
 
-> `npm run cy-test`
+> `yarn cy-test`
