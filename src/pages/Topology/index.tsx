@@ -106,7 +106,7 @@ const Topology = function () {
     );
 
     const panelRef = useCallback(
-        async (node) => {
+        async (node: HTMLDivElement) => {
             if (node && linkSites && siteNodes && serviceNodes && linkServices) {
                 const nodes = topologyType === 'sites' ? siteNodes : serviceNodes;
                 const links = topologyType === 'sites' ? linkSites : linkServices;

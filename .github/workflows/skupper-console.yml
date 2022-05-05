@@ -15,20 +15,20 @@ jobs:
 
             - name: Install 📦
               run: |
-                  npm ci
+                  yarn install --frozen-lockfile
 
             - name: Lint 🎨
               run: |
-                  npm run lint
+                  yarn lint
 
             - name: Build 🚧
               run: |
-                  npm run build
+                  yarn build
 
             - name: Unit tests 🔧
               run: |
-                  npm run test
+                  yarn test
 
             - name: Integration tests 🚨
               run: |
-                  npm run ci-test
+                  yarn ci-test

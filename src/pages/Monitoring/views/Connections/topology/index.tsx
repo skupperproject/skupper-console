@@ -107,7 +107,7 @@ const MonitoringTopology = function () {
     );
 
     const panelRef = useCallback(
-        (node) => {
+        (node: HTMLDivElement) => {
             const routerLinks = routers?.links || [];
             if (node && deviceLinks && deviceNodes && routerNodes && routerLinks) {
                 const topologyServiceRef = TopologyMonitoringService(
