@@ -11,7 +11,7 @@ import {
 } from 'd3-force';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { select, selectAll } from 'd3-selection';
+import { select } from 'd3-selection';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
 import server from '@assets/server.svg';
@@ -30,8 +30,6 @@ const TopologySites = async function (
     boxWidth: number,
     boxHeight: number,
 ) {
-    selectAll('svg').remove();
-
     if (!nodes.length) {
         return null;
     }
@@ -131,21 +129,12 @@ const TopologySites = async function (
         .data(links)
         .enter()
         .call(function (p) {
-            // hidden link line. Creates an area  to trigger mouseover and show the popup
-            // p.append('line')
-            //     .attr('class', 'serviceLink')
-            //     .style('stroke', 'transparent')
-            //     .style('stroke-width', '24px')
-            //     .style('opacity', 0);
-
             p.append('line')
                 .attr('class', 'serviceLink')
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
                 .attr('marker-end', 'url(#arrowService)');
-        })
-        .exit()
-        .remove();
+        });
 
     //services
     const svgServiceNodes = svgElement.selectAll('.serviceNode').data(nodes).enter();
@@ -170,9 +159,17 @@ const TopologySites = async function (
             .attr('width', SERVICE_SIZE)
             .attr('height', SERVICE_SIZE)
             .attr('class', 'serviceNode')
-            .style('fill', ({ group }) => color(group.toString()))
+            .style('fill', ({ group }) => color(group.toString()));
+
+        // it improves drag & drop area selection
+        svgServiceNode
+            .append('rect')
+            .attr('class', 'serviceNode')
+            .attr('width', SERVICE_SIZE)
+            .attr('height', SERVICE_SIZE)
+            .attr('fill', 'transparent')
             .call(
-                drag<HTMLElement, TopologyNode>()
+                drag<SVGRectElement, TopologyNode>()
                     .on('start', dragStarted)
                     .on('drag', dragged)
                     .on('end', dragEnded),
