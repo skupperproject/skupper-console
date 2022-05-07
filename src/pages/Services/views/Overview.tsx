@@ -43,6 +43,7 @@ const ServicesOverview = function () {
                 className="flows-table"
                 aria-label="flows table"
                 borders={false}
+                variant="compact"
                 isStickyHeader
             >
                 <Thead>

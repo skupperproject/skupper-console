@@ -2,7 +2,7 @@ import { normalizeFlows, getFlowsTree, generateDynamicBytes } from './utils/util
 import Adapter from './utils/adapter';
 
 export function getData(VANdata) {
-    const data = { ...VANdata };
+    const data = JSON.parse(JSON.stringify(VANdata));
     return new Adapter(data).getData();
 }
 
@@ -33,30 +33,35 @@ export function getServices(VANdata) {
 }
 
 export function getDeployments(VANdata) {
-    const sitesMap = VANdata.sites.reduce((acc, site) => {
-        acc[site.site_id] = { name: site.site_name, url: site.url };
+    const data = JSON.parse(JSON.stringify(VANdata));
+    const dataAdapted = new Adapter(data).getData();
 
-        return acc;
-    }, {});
+    return dataAdapted.deployments;
 
-    const deployments = VANdata.services.map(
-        ({ targets, address, protocol, connections_ingress, connections_egress }) => {
-            const sitesConnected = targets
-                .map((target) => sitesMap[target.site_id])
-                .filter(Boolean);
+    // const sitesMap = VANdata.sites.reduce((acc, site) => {
+    //     acc[site.site_id] = { name: site.site_name, url: site.url };
 
-            return {
-                id: address,
-                name: address,
-                protocol,
-                numConnectionsIn: connections_ingress && connections_ingress.length,
-                numConnectionsOut: connections_egress && connections_egress.length,
-                sites: sitesConnected,
-            };
-        },
-    );
+    //     return acc;
+    // }, {});
 
-    return deployments;
+    // const deployments = VANdata.services.map(
+    //     ({ targets, address, protocol, connections_ingress, connections_egress }) => {
+    //         const sitesConnected = targets
+    //             .map((target) => sitesMap[target.site_id])
+    //             .filter(Boolean);
+
+    //         return {
+    //             id: address,
+    //             name: address,
+    //             protocol,
+    //             numConnectionsIn: connections_ingress && connections_ingress.length,
+    //             numConnectionsOut: connections_egress && connections_egress.length,
+    //             sites: sitesConnected,
+    //         };
+    //     },
+    // );
+
+    // return deployments;
 }
 
 export function getFlows(flowsData, serviceAddress) {

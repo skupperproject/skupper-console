@@ -84,8 +84,8 @@ export interface DeploymentLinksResponse {
 
 export interface DeploymentTopologyResponse {
     key: string;
-    service: any;
-    site: any;
+    service: DataServicesResponse;
+    site: DataSiteResponse;
 }
 
 export interface DataResponse {
@@ -104,7 +104,6 @@ export interface SiteResponse {
     url: string;
     connected: string[];
     namespace: string;
-    numSitesConnected: number;
     gateway?: boolean;
 }
 

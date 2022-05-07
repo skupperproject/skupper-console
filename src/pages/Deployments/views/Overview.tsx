@@ -43,6 +43,7 @@ const DeploymentsOverview = function () {
                 className="flows-table"
                 aria-label="flows table"
                 borders={false}
+                variant="compact"
                 isStickyHeader
             >
                 <Thead>
@@ -50,26 +51,18 @@ const DeploymentsOverview = function () {
                         <Th>{ServicesOverviewColumns.Name}</Th>
                         <Th>{ServicesOverviewColumns.Protocol}</Th>
                         <Th>{ServicesOverviewColumns.Deployed}</Th>
-                        <Th>{ServicesOverviewColumns.NumSitesConnectionsIn}</Th>
-                        <Th>{ServicesOverviewColumns.NumSitesConnectionsOut}</Th>
                     </Tr>
                 </Thead>
                 {rows?.map((row) => (
-                    <Tbody key={row.id}>
+                    <Tbody key={row.key}>
                         <Tr>
-                            <Td dataLabel={ServicesOverviewColumns.Name}>{row.name}</Td>
+                            <Td dataLabel={ServicesOverviewColumns.Name}>{row.service.address}</Td>
                             <Td
                                 dataLabel={ServicesOverviewColumns.Protocol}
-                            >{`${row.protocol}`}</Td>
+                            >{`${row.service.protocol}`}</Td>
                             <Td dataLabel={ServicesOverviewColumns.Deployed}>
-                                {`${row.sites.map((site) => `${site.name} (${site.url})`)}`}
+                                {`${row.site.site_name}`}
                             </Td>
-                            <Td
-                                dataLabel={ServicesOverviewColumns.NumSitesConnectionsIn}
-                            >{`${row.numConnectionsIn}`}</Td>
-                            <Td
-                                dataLabel={ServicesOverviewColumns.NumSitesConnectionsOut}
-                            >{`${row.numConnectionsOut}`}</Td>
                         </Tr>
                     </Tbody>
                 ))}

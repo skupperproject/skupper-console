@@ -1,3 +1,3 @@
-import { DeploymentResponse } from 'API/REST.interfaces';
+import { DeploymentTopologyResponse } from 'API/REST.interfaces';
 
-export type Deployment = DeploymentResponse;
+export type Deployment = DeploymentTopologyResponse;

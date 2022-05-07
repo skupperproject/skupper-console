@@ -21,9 +21,9 @@ import {
     RouterStatsResponse,
     SiteServiceResponse,
     ServiceResponse,
-    DeploymentResponse,
     NetworkStatsResponse,
     SiteResponse,
+    DeploymentTopologyResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -51,7 +51,7 @@ export const RESTApi = {
     },
 
     // DEPLOYMENTS APIs
-    fetchDeployments: async (): Promise<DeploymentResponse[]> => {
+    fetchDeployments: async (): Promise<DeploymentTopologyResponse[]> => {
         const { data } = await fetchWithTimeout(DEPLOYMENTS);
 
         return data;

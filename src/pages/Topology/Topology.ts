@@ -51,7 +51,6 @@ const TopologySites = async function (
     const color = scaleOrdinal(schemeCategory10).domain(domainValues);
 
     // let isDragging = false;
-    let selected = '';
 
     const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>(nodes)
         .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2).strength(0))
@@ -176,20 +175,15 @@ const TopologySites = async function (
                     .on('drag', dragged)
                     .on('end', dragEnded),
             )
-            .on('click', (_, { id }) => {
-                if (selected === id) {
-                    return svgElement.selectAll('.serviceLink').style('opacity', '1');
-                }
-
-                selected = id;
-
+            .on('mouseover', (_, { id }) => {
                 svgElement.selectAll('.serviceLink').style('opacity', (svgLink: any) => {
                     const isLinkConnectedToTheNode =
                         id === svgLink.source.id || id === svgLink.target.id;
 
                     return isLinkConnectedToTheNode ? '1' : '0';
                 });
-            });
+            })
+            .on('mouseout', () => svgElement.selectAll('.serviceLink').style('opacity', '1'));
     });
 
     // drag util
