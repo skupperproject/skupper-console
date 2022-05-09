@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
-interface ServiceConnections {
+export interface ServiceConnections {
     id: string;
     client: string;
     start_time: number;
@@ -10,19 +10,14 @@ interface ServiceConnections {
     last_in: number;
     bytes_in: number;
     bytes_out: number;
+    latency_max: number;
+    details?: Record<string, string>;
+    requests?: number;
 }
 
 interface ServiceDetails {
     [key: string]: {
-        [key: string]: {
-            request: number;
-            bytes_in: number;
-            bytes_out: number;
-            latency_max: number;
-            details: {
-                'POST:200': number;
-            };
-        };
+        [key: string]: ServiceConnections;
     };
 }
 

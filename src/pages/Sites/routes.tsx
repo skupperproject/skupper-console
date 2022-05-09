@@ -2,18 +2,25 @@ import React, { lazy } from 'react';
 
 import { SiteRoutesPaths } from './sites.enum';
 
-const Site = lazy(() => import(/* webpackChunkName: "sites" */ '.'));
-const SiteOverview = lazy(() => import(/* webpackChunkName: "site-overview" */ './views/Overview'));
+const Sites = lazy(() => import(/* webpackChunkName: "sites" */ '.'));
+const SitesOverview = lazy(
+    () => import(/* webpackChunkName: "sites-overview" */ './views/Overview'),
+);
+const SiteDetails = lazy(() => import(/* webpackChunkName: "site-detail" */ './views/Details'));
 
 export const siteRoutes = [
     {
         path: SiteRoutesPaths.Sites,
-        element: <Site />,
+        element: <Sites />,
         children: [
-            { index: true, element: <SiteOverview /> },
+            { index: true, element: <SitesOverview /> },
             {
                 path: SiteRoutesPaths.Overview,
-                element: <SiteOverview />,
+                element: <SitesOverview />,
+            },
+            {
+                path: `${SiteRoutesPaths.Details}/:id`,
+                element: <SiteDetails />,
             },
         ],
     },

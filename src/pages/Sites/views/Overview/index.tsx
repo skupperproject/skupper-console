@@ -8,14 +8,14 @@ import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import { SitesServices } from '../../services';
-import { QuerySite } from '../../services/services.enum';
+import { QueriesSites } from '../../services/services.enum';
 import SitesTable from './components/SitesTable';
 
 const Overview = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-    const { data: sites, isLoading } = useQuery(QuerySite.GetSites, SitesServices.fetchSites, {
+    const { data: sites, isLoading } = useQuery(QueriesSites.GetSites, SitesServices.fetchSites, {
         refetchInterval,
         onError: handleError,
     });

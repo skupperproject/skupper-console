@@ -51,7 +51,6 @@ const TopologySites = async function (
     const color = scaleOrdinal(schemeCategory10).domain(domainValues);
 
     // let isDragging = false;
-
     const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>(nodes)
         .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2).strength(0))
         .force('charge', forceManyBody().strength(0))
@@ -94,21 +93,6 @@ const TopologySites = async function (
 
     const svgElement = svgContainer.append('g').attr('width', '100%').attr('height', '100%');
 
-    // arrow site
-    svgElement
-        .append('svg:defs')
-        .append('svg:marker')
-        .attr('id', 'arrow')
-        .attr('viewBox', '0 -5 10 10')
-        .attr('refX', SITE_SIZE * 2)
-        .attr('refY', 0)
-        .attr('markerWidth', ARROW_SIZE)
-        .attr('markerHeight', ARROW_SIZE)
-        .attr('orient', 'auto-start-reverse')
-        .append('svg:path')
-        .style('fill', 'gray')
-        .attr('d', 'M0,-5L10,0L0,5');
-
     // arrow service
     svgElement
         .append('svg:defs')
@@ -134,7 +118,12 @@ const TopologySites = async function (
                 .attr('class', 'serviceLink')
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
-                .attr('marker-end', 'url(#arrowService)');
+                .attr('marker-start', ({ type }) =>
+                    type === 'site' ? 'none' : 'url(#arrowService)',
+                )
+                .attr('marker-end', ({ type }) =>
+                    type === 'service' ? 'none' : 'url(#arrowService)',
+                );
         });
 
     //services

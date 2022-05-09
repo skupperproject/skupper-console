@@ -1,5 +1,9 @@
 export enum SiteRoutesPaths {
     Sites = '/sites',
-    Overview = 'overview',
-    Topology = 'topology',
+    Overview = '/sites/overview',
+    Details = '/sites/details',
+}
+
+export enum SitesRoutesPathLabel {
+    Sites = 'Sites',
 }

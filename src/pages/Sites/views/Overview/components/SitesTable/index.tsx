@@ -2,6 +2,9 @@ import React, { memo } from 'react';
 
 import { Card } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Link } from 'react-router-dom';
+
+import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
 
 import { SitesColumns } from './SitesTable.enum';
 import { SitesTableProps } from './SitesTable.interfaces';
@@ -27,7 +30,12 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                 {sites?.map((row) => (
                     <Tbody key={row.siteId}>
                         <Tr>
-                            <Td dataLabel={SitesColumns.Name}>{row.siteName}</Td>
+                            <Td dataLabel={SitesColumns.Name}>
+                                {' '}
+                                <Link to={`${SiteRoutesPaths.Details}/${row.siteId}`}>
+                                    {row.siteName}
+                                </Link>
+                            </Td>
                             <Td dataLabel={SitesColumns.Namespace}>{`${row.namespace}`}</Td>
                             <Td dataLabel={SitesColumns.Url}>{`${row.url}`}</Td>
                             <Td dataLabel={SitesColumns.Gateway}>{`${!!row.gateway}`}</Td>
