@@ -13,8 +13,8 @@ import {
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
-import { ConnectionColumns } from '../../../Monitoring.enum';
-import { Connection } from '../../../Monitoring.interfaces';
+import { ConnectionColumns } from '../../Monitoring.enum';
+import { Connection } from '../../Monitoring.interfaces';
 
 const ConnectionDetailsTable = function ({
     connection,

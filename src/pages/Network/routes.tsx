@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 
 import { NetworkRoutesPaths } from './Network.enum';
 
-const Network = lazy(() => import(/* webpackChunkName: "network" */ '@pages/Network'));
+const Network = lazy(() => import(/* webpackChunkName: "network" */ '.'));
 const NetworkOverview = lazy(
     () => import(/* webpackChunkName: "network-overview" */ './views/Overview'),
 );

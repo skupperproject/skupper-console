@@ -157,7 +157,7 @@ export interface FlowsResponse {
 export interface NetworkStatsResponse {
     id: string;
     name: string;
-    routerName: string;
+    routersAssociated: string;
     totalDevices: number;
     totalFlows: number;
     totalBytes: number;

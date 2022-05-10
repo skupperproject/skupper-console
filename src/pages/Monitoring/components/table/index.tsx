@@ -21,13 +21,15 @@ import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { MAX_HEIGHT_DETAILS_TABLE, MAX_WIDTH_DETAILS_TABLE } from '../../../Monitoring.constant';
-import { ConnectionColumns, ConnectionStatus } from '../../../Monitoring.enum';
-import { Row } from '../../../Monitoring.interfaces';
-import { MonitorServices } from '../../../services';
-import { QueriesMonitoring } from '../../../services/services.enum';
-import { Flow } from '../../../services/services.interfaces';
+import { ConnectionColumns, ConnectionStatus } from '../../Monitoring.enum';
+import { Row } from '../../Monitoring.interfaces';
+import { MonitorServices } from '../../services';
+import { QueriesMonitoring } from '../../services/services.enum';
+import { Flow } from '../../services/services.interfaces';
 import ConnectionDetailsTable from './Details';
+
+export const MAX_WIDTH_DETAILS_TABLE = 600;
+export const MAX_HEIGHT_DETAILS_TABLE = 305;
 
 const ConnectionsTableVIew = function () {
     const navigate = useNavigate();

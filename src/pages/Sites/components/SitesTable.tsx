@@ -4,8 +4,7 @@ import { Card } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
-
+import { SiteRoutesPaths } from '../sites.enum';
 import { SitesColumns } from './SitesTable.enum';
 import { SitesTableProps } from './SitesTable.interfaces';
 

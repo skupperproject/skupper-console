@@ -20,8 +20,8 @@ import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { NetworkServices } from '../../services';
-import { QueriesNetwork } from '../../services/network.enum';
+import { NetworkServices } from '../services';
+import { QueriesNetwork } from '../services/network.enum';
 import {
     OverviewNetworkColumns,
     OverviewRoutersColumns,

@@ -15,11 +15,11 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesServices from '@pages/Sites/services';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
-import { SiteRoutesPaths, SitesRoutesPathLabel } from '@pages/Sites/sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
+import SitesServices from '../services';
+import { QueriesSites } from '../services/services.enum';
+import { SiteRoutesPaths, SitesRoutesPathLabel } from '../sites.enum';
 import { SiteDetailsColumns, SiteDetailsColumnsLabels } from './Details.enum';
 
 const SiteDetail = function () {

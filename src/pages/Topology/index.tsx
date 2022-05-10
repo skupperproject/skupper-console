@@ -13,11 +13,11 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
+import TopologySites from './components/Topology';
+import { TopologyViews } from './components/topology.enum';
+import { TopologySVG } from './components/Topology.interfaces';
 import { TopologyServices } from './services';
 import { QueryTopology } from './services/services.enum';
-import TopologySites from './Topology';
-import { TopologyViews } from './topology.enum';
-import { TopologySVG } from './Topology.interfaces';
 
 const Topology = function () {
     const navigate = useNavigate();

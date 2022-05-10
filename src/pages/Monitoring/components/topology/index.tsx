@@ -10,11 +10,11 @@ import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { formatBytes } from '@core/utils/formatBytes';
-import { MonitorServices } from '@pages/Monitoring/services';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import { QueriesMonitoring } from '../../../services/services.enum';
+import { MonitorServices } from '../../services';
+import { QueriesMonitoring } from '../../services/services.enum';
 import TopologyMonitoringService from './FlowsTopology';
 
 const MonitoringTopology = function () {

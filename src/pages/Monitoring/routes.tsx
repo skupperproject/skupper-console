@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 
 import { MonitoringRoutesPaths } from './Monitoring.enum';
 
-const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './'));
+const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ '.'));
 const MonitoringOverview = lazy(
     () => import(/* webpackChunkName: "monitoring-vans" */ './views/Overview'),
 );
@@ -10,14 +10,10 @@ const MonitoringConnections = lazy(
     () => import(/* webpackChunkName: "monitoring-connections" */ './views/Connections'),
 );
 const ConnectionsTable = lazy(
-    () =>
-        import(/* webpackChunkName: "monitoring-connections-table" */ './views/Connections/table'),
+    () => import(/* webpackChunkName: "monitoring-connections-table" */ './components/table'),
 );
 const ConnectionsTopology = lazy(
-    () =>
-        import(
-            /* webpackChunkName: "monitoring-connections-topology" */ './views/Connections/topology'
-        ),
+    () => import(/* webpackChunkName: "monitoring-connections-topology" */ './components/topology'),
 );
 
 export const monitoringRoutes = [

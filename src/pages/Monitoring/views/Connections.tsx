@@ -12,13 +12,13 @@ import {
 } from '@patternfly/react-core';
 import { Link, useParams } from 'react-router-dom';
 
+import ConnectionsTableVIew from '../components/table';
+import ConnectionsTopology from '../components/topology';
 import {
     MonitoringRoutesPaths,
     MonitoringRoutesPathLabel,
     ConnectionsNavMenu,
-} from '../../Monitoring.enum';
-import ConnectionsTableVIew from './table';
-import ConnectionsTopology from './topology';
+} from '../Monitoring.enum';
 
 const Connections = function () {
     const [activeItem, setActiveItem] = useState(0);

@@ -1,5 +1,3 @@
-import { MonitoringRoutersTopology } from '@pages/Monitoring/services/services.interfaces';
-
 import { fetchWithTimeout } from './Middleware';
 import {
     DATA_URL,
@@ -22,6 +20,7 @@ import {
     NetworkStatsResponse,
     SiteResponse,
     DeploymentTopologyResponse,
+    MonitoringRoutersTopologyResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -66,7 +65,7 @@ export const RESTApi = {
 
         return data;
     },
-    fetchTopologyRoutersLinks: async (): Promise<MonitoringRoutersTopology> => {
+    fetchTopologyRoutersLinks: async (): Promise<MonitoringRoutersTopologyResponse> => {
         const { data } = await fetchWithTimeout(MONITORING_ROUTERS_TOPOLOGY);
 
         return data;

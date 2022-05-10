@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 
 import { DeploymentsRoutesPaths } from './Deployments.enum';
 
-const Deployments = lazy(() => import(/* webpackChunkName: "deployments" */ '@pages/Deployments'));
+const Deployments = lazy(() => import(/* webpackChunkName: "deployments" */ '.'));
 const DeploymentsOverview = lazy(
     () => import(/* webpackChunkName: "deployments-overview" */ './views/Overview'),
 );
