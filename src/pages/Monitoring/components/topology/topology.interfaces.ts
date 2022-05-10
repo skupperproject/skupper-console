@@ -1,3 +1,5 @@
+import { Transition } from 'd3-transition';
+
 export interface MonitoringTopologyLink {
     source: string;
     target: string;
@@ -46,3 +48,9 @@ export interface MonitoringTopologyDeviceNode {
 }
 
 export type MonitoringTopologyNode = MonitoringTopologyRouterNode | MonitoringTopologyDeviceNode;
+
+export type MonitoringTopologyVanService = SVGSVGElement & {
+    zoomIn: () => Transition<SVGSVGElement, unknown, null, undefined>;
+    zoomOut: () => Transition<SVGSVGElement, unknown, null, undefined>;
+    reset: () => void;
+};

@@ -1,27 +1,34 @@
 import React, { useState } from 'react';
 
-import { Card, CardHeader } from '@patternfly/react-core';
+import {
+    Breadcrumb,
+    BreadcrumbHeading,
+    BreadcrumbItem,
+    Card,
+    CardHeader,
+} from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
+import { DeploymentsRoutesPaths, DeploymentsRoutesPathLabel } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
 import { DeploymentDetailsColumns, DeploymentDetailsColumnsLabels } from './Details.enum';
 
 const DeploymentsDetails = function () {
     const navigate = useNavigate();
-    const { id: service_site_id } = useParams();
+    const { id: deploymentId } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: deployment, isLoading } = useQuery(
-        [QueriesDeployments.GetDeployments, service_site_id],
-        () => DeploymentsServices.fetchDeployment(service_site_id),
+        [QueriesDeployments.GetDeployments, deploymentId],
+        () => DeploymentsServices.fetchDeployment(deploymentId),
         {
             refetchInterval,
             onError: handleError,
@@ -48,6 +55,15 @@ const DeploymentsDetails = function () {
 
     return (
         <>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <Link to={DeploymentsRoutesPaths.Deployments}>
+                        {DeploymentsRoutesPathLabel.Deployments}
+                    </Link>
+                </BreadcrumbItem>
+                <BreadcrumbHeading to="#">{deploymentId?.split('_')[0]}</BreadcrumbHeading>
+            </Breadcrumb>
+
             {httpConnectionsIn.length !== 0 && (
                 <Card>
                     <CardHeader>{DeploymentDetailsColumnsLabels.HTTPrequestsIn}</CardHeader>

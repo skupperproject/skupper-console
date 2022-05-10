@@ -4,6 +4,6 @@ export enum DeploymentsRoutesPaths {
     Details = '/deployments/details',
 }
 
-export enum SitesRoutesPathLabel {
+export enum DeploymentsRoutesPathLabel {
     Deployments = 'Deployments',
 }

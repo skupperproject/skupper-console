@@ -12,6 +12,7 @@ import {
     MonitoringTopologyLinkNormalized,
     MonitoringTopologyNode,
     MonitoringTopologyRouterNode,
+    MonitoringTopologyVanService,
 } from './topology.interfaces';
 
 const CIRCLE_R = 10;
@@ -39,11 +40,7 @@ function TopologyMonitoringService(
     links: MonitoringTopologyLink[],
     boxWidth: number,
     boxHeight: number,
-) {
-    if (!nodes.length) {
-        return;
-    }
-
+): MonitoringTopologyVanService {
     let isDragging = false;
 
     const linksWithNodes: MonitoringTopologyLinkNormalized[] = [];

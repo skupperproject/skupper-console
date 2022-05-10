@@ -16,12 +16,14 @@ import LoadingPage from '@pages/shared/Loading';
 import { MonitorServices } from '../../services';
 import { QueriesMonitoring } from '../../services/services.enum';
 import TopologyMonitoringService from './FlowsTopology';
+import { MonitoringTopologyVanService } from './topology.interfaces';
 
 const MonitoringTopology = function () {
     const navigate = useNavigate();
     const { id: vanId } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(0);
-    const [svgTopologyComponent, setSvgTopologyComponent] = useState<any>();
+    const [svgTopologyComponent, setSvgTopologyComponent] =
+        useState<MonitoringTopologyVanService>();
 
     const { data: devices, isLoading } = useQuery(
         [QueriesMonitoring.GetMonitoringTopologyFlows, vanId],
