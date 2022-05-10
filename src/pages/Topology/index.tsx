@@ -57,14 +57,20 @@ const Topology = function () {
 
     const siteNodes = useMemo(
         () =>
-            sites?.map((node) => ({
-                id: node.siteId,
-                name: node.siteName,
-                x: 0,
-                y: 0,
-                type: 'site',
-                group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
-            })),
+            sites?.map((node) => {
+                const positions = localStorage.getItem(node.siteId);
+
+                return {
+                    id: node.siteId,
+                    name: node.siteName,
+                    x: 0,
+                    y: 0,
+                    fx: positions ? JSON.parse(positions).fx : null,
+                    fy: positions ? JSON.parse(positions).fy : null,
+                    type: 'site',
+                    group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
+                };
+            }),
         [sites],
     );
 
@@ -84,14 +90,20 @@ const Topology = function () {
 
     const serviceNodes = useMemo(
         () =>
-            deployments?.deployments?.map((node) => ({
-                id: node.key,
-                name: node.service.address,
-                x: 0,
-                y: 0,
-                type: 'service',
-                group: siteNodes?.findIndex(({ id }) => id === node.site.site_id) || 0,
-            })),
+            deployments?.deployments?.map((node) => {
+                const positions = localStorage.getItem(node.key);
+
+                return {
+                    id: node.key,
+                    name: node.service.address,
+                    x: 0,
+                    y: 0,
+                    fx: positions ? JSON.parse(positions).fx : null,
+                    fy: positions ? JSON.parse(positions).fy : null,
+                    type: 'service',
+                    group: siteNodes?.findIndex(({ id }) => id === node.site.site_id) || 0,
+                };
+            }),
         [deployments?.deployments, siteNodes],
     );
 

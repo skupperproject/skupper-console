@@ -206,9 +206,11 @@ const TopologySites = async function (
             simulation.alphaTarget(0);
             simulation.stop();
         }
+
+        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+
         node.fx = null;
         node.fy = null;
-
         // isDragging = false;
     }
 
