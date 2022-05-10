@@ -3,7 +3,7 @@ import { ServiceConnections } from 'API/REST.interfaces';
 
 import { DeploymentLink, Site, SiteDetails } from './services.interfaces';
 
-export const SitesServices = {
+const SitesServices = {
     fetchSites: async (): Promise<Site[]> => RESTApi.fetchSites(),
     fetchSite: async (id: string | undefined): Promise<SiteDetails | null> => {
         const sites = await RESTApi.fetchSites();
@@ -26,6 +26,8 @@ export const SitesServices = {
             : null;
     },
 };
+
+export default SitesServices;
 
 function getTCPConnectionsInBySite(links: DeploymentLink[], siteId: string) {
     return links.reduce((acc, { source, target, request }) => {

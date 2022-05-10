@@ -20,7 +20,6 @@ export function loadMockServer() {
         const path = './data';
         const VANdata = require(`${path}/DATA.json`);
         const flowsData = require(`${path}/FLOWS.json`);
-        const services = require(`${path}/SERVICES.json`);
 
         createServer({
             routes() {
@@ -32,10 +31,10 @@ export function loadMockServer() {
                     () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }),
                 );
 
-                // Sites APIs
                 this.get('/data', () => getData(VANdata));
+
+                // Sites APIs
                 this.get('/sites', () => getSites(VANdata));
-                this.get('/sites/services', () => services);
 
                 // Services APIs
                 this.get('/services', () => getServices(VANdata));

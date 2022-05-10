@@ -165,6 +165,7 @@ const Overview = function () {
                                 <TableComposable
                                     className="network-table"
                                     aria-label="network table"
+                                    variant="compact"
                                     borders={false}
                                 >
                                     <Thead>
@@ -204,6 +205,7 @@ const Overview = function () {
                                 <TableComposable
                                     className="network-table"
                                     aria-label="network table"
+                                    variant="compact"
                                     borders={false}
                                 >
                                     <Thead>

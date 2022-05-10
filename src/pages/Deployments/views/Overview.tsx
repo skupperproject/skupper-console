@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { Card } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
+import { DeploymentsRoutesPaths } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
 import { ServicesOverviewColumns } from './Overview.enum';
@@ -17,7 +18,7 @@ const DeploymentsOverview = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-    const { data: rows, isLoading } = useQuery(
+    const { data: deployments, isLoading } = useQuery(
         QueriesDeployments.GetDeployments,
         DeploymentsServices.fetchDeployments,
         {
@@ -53,10 +54,16 @@ const DeploymentsOverview = function () {
                         <Th>{ServicesOverviewColumns.Deployed}</Th>
                     </Tr>
                 </Thead>
-                {rows?.map((row) => (
+                {deployments?.map((row) => (
                     <Tbody key={row.key}>
                         <Tr>
-                            <Td dataLabel={ServicesOverviewColumns.Name}>{row.service.address}</Td>
+                            <Td dataLabel={ServicesOverviewColumns.Name}>
+                                <Link
+                                    to={`${DeploymentsRoutesPaths.Details}/${row.service.address}_${row.site.site_id}`}
+                                >
+                                    {row.service.address}
+                                </Link>
+                            </Td>
                             <Td
                                 dataLabel={ServicesOverviewColumns.Protocol}
                             >{`${row.service.protocol}`}</Td>

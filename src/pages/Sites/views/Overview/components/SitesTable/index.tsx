@@ -31,7 +31,6 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                     <Tbody key={row.siteId}>
                         <Tr>
                             <Td dataLabel={SitesColumns.Name}>
-                                {' '}
                                 <Link to={`${SiteRoutesPaths.Details}/${row.siteId}`}>
                                     {row.siteName}
                                 </Link>

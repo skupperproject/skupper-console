@@ -6,7 +6,6 @@ const BASE_URL = process.env.API_HOST || `${window.location.protocol}//${window.
 export const DATA_URL = `${BASE_URL}/data`;
 
 export const SITES = `${BASE_URL}/sites`;
-export const SITES_SERVICES = `${BASE_URL}/sites/services`;
 
 export const SERVICES = `${BASE_URL}/services`;
 

@@ -6,6 +6,9 @@ const Deployments = lazy(() => import(/* webpackChunkName: "deployments" */ '@pa
 const DeploymentsOverview = lazy(
     () => import(/* webpackChunkName: "deployments-overview" */ './views/Overview'),
 );
+const DeploymentsDetails = lazy(
+    () => import(/* webpackChunkName: "deployments-details" */ './views/Details'),
+);
 
 export const deploymentsRoutes = [
     {
@@ -16,6 +19,10 @@ export const deploymentsRoutes = [
             {
                 path: DeploymentsRoutesPaths.Overview,
                 element: <DeploymentsOverview />,
+            },
+            {
+                path: `${DeploymentsRoutesPaths.Details}/:id`,
+                element: <DeploymentsDetails />,
             },
         ],
     },

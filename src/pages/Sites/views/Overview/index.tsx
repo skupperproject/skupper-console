@@ -7,7 +7,7 @@ import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { SitesServices } from '../../services';
+import SitesServices from '../../services';
 import { QueriesSites } from '../../services/services.enum';
 import SitesTable from './components/SitesTable';
 

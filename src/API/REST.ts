@@ -4,7 +4,6 @@ import { fetchWithTimeout } from './Middleware';
 import {
     DATA_URL,
     MONITORING_FLOWS,
-    SITES_SERVICES,
     MONITORING_ROUTERS_STAT,
     MONITORING_NETWORK_STATS,
     MONITORING_SERVICES_STATS,
@@ -19,7 +18,6 @@ import {
     FlowsResponse,
     MonitoringStatsResponse,
     RouterStatsResponse,
-    SiteServiceResponse,
     ServiceResponse,
     NetworkStatsResponse,
     SiteResponse,
@@ -34,11 +32,6 @@ export const RESTApi = {
     },
     fetchSites: async (): Promise<SiteResponse[]> => {
         const { data } = await fetchWithTimeout(SITES);
-
-        return data;
-    },
-    fetchSitesServices: async (): Promise<SiteServiceResponse[]> => {
-        const { data } = await fetchWithTimeout(SITES_SERVICES);
 
         return data;
     },

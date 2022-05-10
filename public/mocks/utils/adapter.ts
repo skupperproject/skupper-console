@@ -407,7 +407,7 @@ class Adapter {
                 this.data.deployments.push({
                     service,
                     site,
-                    key: `${service.address} (${site.site_id})`,
+                    key: `${service.address}_${site.site_id}`,
                 });
             });
         });

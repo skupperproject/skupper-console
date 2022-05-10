@@ -21,9 +21,15 @@ interface ServiceDetails {
     };
 }
 
-interface ServiceRequest {
+export interface ServiceRequestReceivedResponse {
     site_id: string;
-    [key: symbol]: ServiceDetails;
+    by_client: Record<string, ServiceConnections>;
+}
+
+export interface ServiceRequestHandledResponse {
+    site_id: string;
+    by_server: ServiceDetails;
+    by_originating_site: ServiceDetails;
 }
 
 export interface DataServicesResponse {
@@ -36,20 +42,16 @@ export interface DataServicesResponse {
             site_id: string;
         },
     ];
-    connections_ingress:
-        | {
-              site_id: string;
-              connections: ServiceConnections;
-          }[]
-        | null;
-    connections_egress:
-        | {
-              site_id: string;
-              connections: ServiceConnections;
-          }[]
-        | null;
-    requests_handled: ServiceRequest[] | null;
-    requests_received: ServiceRequest[] | null;
+    connections_ingress?: {
+        site_id: string;
+        connections: Record<string, ServiceConnections>;
+    }[];
+    connections_egress?: {
+        site_id: string;
+        connections: Record<string, ServiceConnections>;
+    }[];
+    requests_handled?: ServiceRequestHandledResponse[];
+    requests_received?: ServiceRequestReceivedResponse[];
     derived?: boolean;
     isExternal?: boolean;
 }
@@ -100,21 +102,6 @@ export interface SiteResponse {
     connected: string[];
     namespace: string;
     gateway?: boolean;
-}
-
-export interface SiteServiceResponse {
-    name: string;
-    protocol: string;
-    ports: number[];
-    endpoints: [
-        {
-            name: string;
-            target: string;
-            ports: {
-                [port: string]: number;
-            };
-        },
-    ];
 }
 
 // SERVICES
