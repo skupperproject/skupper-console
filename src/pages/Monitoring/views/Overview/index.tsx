@@ -1,50 +1,34 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-    Card,
-    Split,
-    SplitItem,
-    Stack,
-    StackItem,
-    Text,
-    TextContent,
-    TextVariants,
-} from '@patternfly/react-core';
+import { Card, Split, SplitItem } from '@patternfly/react-core';
 import { useQuery } from 'react-query';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import OverviewCard from '@core/components/SummaryCard';
-import { SummaryCardColors } from '@core/components/SummaryCard/SummaryCard.enum';
 import TrafficChart from '@core/components/TrafficChart';
 import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
-import {
-    LINKS_STATS_HEADER,
-    ROUTERS_STATS_HEADER,
-    VANS_STATS_HEADER,
-} from '@pages/Monitoring/Monitoring.constant';
+import { VANS_STATS_HEADER } from '@pages/Monitoring/Monitoring.constant';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { MonitoringRoutesPaths, OverviewColumns, SectionsStatsLabels } from '../../Monitoring.enum';
+import { MonitoringRoutesPaths } from '../../Monitoring.enum';
 import { MonitorServices } from '../../services';
 import { QueriesMonitoring } from '../../services/services.enum';
-import { MonitoringStats } from '../../services/services.interfaces';
-import { RouterStatsRow, VanStatsRow, LinkStatsRow } from './Overview.interfaces';
-
-const Pluralize = require('pluralize');
+import { VanStatsRow } from './Overview.interfaces';
 
 const Overview = function () {
     const navigate = useNavigate();
     const [vans, setVans] = useState<VanStatsRow[]>();
-    const [routersStats, setRoutersStats] = useState<RouterStatsRow[]>();
-    const [linksStats, setLinksStats] = useState<LinkStatsRow[]>();
-    const [monitoringStats, setMonitoringStats] = useState<MonitoringStats>();
 
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-    const { data, isLoading, dataUpdatedAt } = useQuery(
+    const {
+        data: networkStats,
+        isLoading,
+        dataUpdatedAt,
+    } = useQuery(
         QueriesMonitoring.GetMonitoringNetworkStats,
         MonitorServices.fetchMonitoringStats,
         {
@@ -61,190 +45,48 @@ const Overview = function () {
     }
 
     useEffect(() => {
-        if (data) {
-            const vanStatsRow = data.vansStats.map(({ name, totalBytes, ...rest }) => ({
+        if (networkStats) {
+            const vanStatsRow = networkStats.map(({ name, totalBytes, ...rest }) => ({
                 ...rest,
                 totalBytes: formatBytes(totalBytes),
                 name: <Link to={`${MonitoringRoutesPaths.Connections}/${name}`}>{name}</Link>,
             }));
 
-            const routersRow = data.routersStats.map(({ totalBytes, ...rest }) => ({
-                ...rest,
-                totalBytes: formatBytes(totalBytes),
-            }));
-
-            const linksRows = data.routersStats.flatMap(({ connectedTo, name }) =>
-                connectedTo.map(({ linkCost, name: routerNameLinked, mode, direction }) => ({
-                    routerNameStart: name,
-                    routerNameEnd: routerNameLinked,
-                    cost: linkCost,
-                    mode,
-                    direction,
-                })),
-            );
-
             setVans(vanStatsRow);
-            setRoutersStats(routersRow);
-            setLinksStats(linksRows);
-            setMonitoringStats(data.monitoringStats[0]);
         }
-    }, [data]);
+    }, [networkStats]);
 
     if (isLoading) {
         return <LoadingPage />;
     }
 
     return (
-        <>
-            <Stack hasGutter>
-                {monitoringStats && (
-                    <StackItem>
-                        <Split hasGutter>
-                            <SplitItem isFilled>
-                                <Card className=" pf-u-p-md" isRounded>
-                                    <TextContent>
-                                        <Text component={TextVariants.small}>
-                                            {OverviewColumns.NumRouters}
-                                        </Text>
-                                        <Text
-                                            className="pf-u-text-align-center"
-                                            component={TextVariants.h1}
-                                        >
-                                            {monitoringStats.totalRouters}
-                                        </Text>
-                                    </TextContent>
-                                </Card>
-                            </SplitItem>
-
-                            <SplitItem isFilled>
-                                <Card className="pf-u-p-md" isRounded>
-                                    <TextContent>
-                                        <Text component={TextVariants.small}>
-                                            {OverviewColumns.NumLinks}
-                                        </Text>
-                                        <Text
-                                            className="pf-u-text-align-center"
-                                            component={TextVariants.h1}
-                                        >
-                                            {monitoringStats.totalLinks}
-                                        </Text>
-                                    </TextContent>
-                                </Card>
-                            </SplitItem>
-
-                            <SplitItem isFilled>
-                                <Card className="pf-u-p-md" isRounded>
-                                    <TextContent>
-                                        <Text component={TextVariants.small}>
-                                            {OverviewColumns.NumServices}
-                                        </Text>
-                                        <Text
-                                            className="pf-u-text-align-center"
-                                            component={TextVariants.h1}
-                                        >
-                                            {monitoringStats.totalVanAddress}
-                                        </Text>
-                                    </TextContent>
-                                </Card>
-                            </SplitItem>
-
-                            <SplitItem isFilled>
-                                <Card className="pf-u-p-md" isRounded>
-                                    <TextContent>
-                                        <Text component={TextVariants.small}>
-                                            {OverviewColumns.NumConnections}
-                                        </Text>
-                                        <Text
-                                            className="pf-u-text-align-center"
-                                            component={TextVariants.h1}
-                                        >
-                                            {monitoringStats.totalFlows}
-                                        </Text>
-                                    </TextContent>
-                                </Card>
-                            </SplitItem>
-                        </Split>
-                    </StackItem>
+        <Card data-cy="sk-monitoring-services">
+            <Split hasGutter>
+                {vans && (
+                    <SplitItem isFilled>
+                        <OverviewCard
+                            noBorder={true}
+                            isPlain={true}
+                            columns={VANS_STATS_HEADER}
+                            data={vans}
+                        />
+                    </SplitItem>
                 )}
-
-                <StackItem className="pf-u-py-md">
-                    <Split hasGutter>
-                        {routersStats && (
-                            <SplitItem isFilled>
-                                <Card>
-                                    <OverviewCard
-                                        color={SummaryCardColors.Blue}
-                                        noBorder={true}
-                                        isPlain={true}
-                                        columns={ROUTERS_STATS_HEADER}
-                                        data={routersStats}
-                                        label={Pluralize(
-                                            `${SectionsStatsLabels.Router}`,
-                                            routersStats.length,
-                                            false,
-                                        )}
-                                    />
-                                </Card>
-                            </SplitItem>
-                        )}
-                        {linksStats && (
-                            <SplitItem isFilled>
-                                <Card>
-                                    <OverviewCard
-                                        color={SummaryCardColors.Green}
-                                        noBorder={true}
-                                        isPlain={true}
-                                        columns={LINKS_STATS_HEADER}
-                                        data={linksStats}
-                                        label={Pluralize(
-                                            `${SectionsStatsLabels.Link}`,
-                                            linksStats.length,
-                                            false,
-                                        )}
-                                    />
-                                </Card>
-                            </SplitItem>
-                        )}
-                    </Split>
-                </StackItem>
-
-                <StackItem>
-                    <Card data-cy="sk-monitoring-services">
-                        <Split hasGutter>
-                            {vans && (
-                                <SplitItem isFilled>
-                                    <OverviewCard
-                                        color={SummaryCardColors.Purple}
-                                        noBorder={true}
-                                        isPlain={true}
-                                        columns={VANS_STATS_HEADER}
-                                        data={vans}
-                                        label={Pluralize(
-                                            `${SectionsStatsLabels.Service}`,
-                                            vans.length,
-                                            false,
-                                        )}
-                                    />
-                                </SplitItem>
-                            )}
-                            {data && (
-                                <SplitItem>
-                                    <TrafficChart
-                                        options={{ chartColor: ChartThemeColors.Purple }}
-                                        timestamp={dataUpdatedAt}
-                                        totalBytesProps={data.vansStats.map((van) => ({
-                                            name: van.name,
-                                            totalBytes: van.totalBytes,
-                                        }))}
-                                    />
-                                </SplitItem>
-                            )}
-                        </Split>
-                    </Card>
-                </StackItem>
-            </Stack>
-            <Outlet />
-        </>
+                {networkStats && (
+                    <SplitItem>
+                        <TrafficChart
+                            options={{ chartColor: ChartThemeColors.Purple }}
+                            timestamp={dataUpdatedAt}
+                            totalBytesProps={networkStats.map((van) => ({
+                                name: van.name,
+                                totalBytes: van.totalBytes,
+                            }))}
+                        />
+                    </SplitItem>
+                )}
+            </Split>
+        </Card>
     );
 };
 
