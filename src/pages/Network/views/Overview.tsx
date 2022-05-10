@@ -167,6 +167,7 @@ const Overview = function () {
                                     aria-label="network table"
                                     variant="compact"
                                     borders={false}
+                                    isStriped
                                 >
                                     <Thead>
                                         <Tr>
@@ -207,6 +208,7 @@ const Overview = function () {
                                     aria-label="network table"
                                     variant="compact"
                                     borders={false}
+                                    isStriped
                                 >
                                     <Thead>
                                         <Tr>

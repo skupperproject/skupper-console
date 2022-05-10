@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import ServicesServices from '../services';
 import { QueriesServices } from '../services/services.enum';
@@ -15,7 +14,7 @@ import { ServicesOverviewColumns } from './Overview.enum';
 
 const ServicesOverview = function () {
     const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: rows, isLoading } = useQuery(
         QueriesServices.GetServices,
@@ -45,6 +44,7 @@ const ServicesOverview = function () {
                 borders={false}
                 variant="compact"
                 isStickyHeader
+                isStriped
             >
                 <Thead>
                     <Tr>

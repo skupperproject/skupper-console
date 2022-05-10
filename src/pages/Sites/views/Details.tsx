@@ -80,6 +80,7 @@ const SiteDetail = function () {
                             aria-label="network table"
                             borders={false}
                             variant="compact"
+                            isStriped
                         >
                             <Thead>
                                 <Tr>
@@ -130,6 +131,7 @@ const SiteDetail = function () {
                             aria-label="network table"
                             borders={false}
                             variant="compact"
+                            isStriped
                         >
                             <Thead>
                                 <Tr>
@@ -183,6 +185,7 @@ const SiteDetail = function () {
                                     aria-label="network table"
                                     borders={false}
                                     variant="compact"
+                                    isStriped
                                 >
                                     <Thead>
                                         <Tr>
@@ -229,6 +232,7 @@ const SiteDetail = function () {
                                     aria-label="network table"
                                     borders={false}
                                     variant="compact"
+                                    isStriped
                                 >
                                     <Thead>
                                         <Tr>

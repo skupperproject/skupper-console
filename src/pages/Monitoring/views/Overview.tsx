@@ -5,10 +5,8 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import { MonitoringRoutesPaths, ServicesColumns } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
@@ -17,7 +15,7 @@ import { QueriesMonitoring } from '../services/services.enum';
 const Overview = function () {
     const navigate = useNavigate();
 
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: vanServices, isLoading } = useQuery(
         QueriesMonitoring.GetMonitoringNetworkStats,
@@ -47,12 +45,12 @@ const Overview = function () {
                 borders={false}
                 variant="compact"
                 isStickyHeader
+                isStriped
             >
                 <Thead>
                     <Tr>
                         <Th>{ServicesColumns.Name}</Th>
                         <Th>{ServicesColumns.RoutersAssociated}</Th>
-                        <Th>{ServicesColumns.TotalBytes}</Th>
                         <Th>{ServicesColumns.NumDevices}</Th>
                         <Th>{ServicesColumns.NumFLows}</Th>
                     </Tr>
@@ -67,9 +65,6 @@ const Overview = function () {
                             </Td>
                             <Td dataLabel={ServicesColumns.RoutersAssociated}>
                                 {`${row.routersAssociated}`}
-                            </Td>
-                            <Td dataLabel={ServicesColumns.TotalBytes}>
-                                {`${formatBytes(row.totalBytes)}`}
                             </Td>
                             <Td dataLabel={ServicesColumns.NumDevices}>{`${row.totalDevices}`}</Td>
                             <Td dataLabel={ServicesColumns.NumFLows}>{`${row.totalFlows}`}</Td>

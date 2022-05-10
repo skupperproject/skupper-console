@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import SitesTable from '../components/SitesTable';
 import SitesServices from '../services';
@@ -13,7 +12,7 @@ import { QueriesSites } from '../services/services.enum';
 
 const Overview = function () {
     const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: sites, isLoading } = useQuery(QueriesSites.GetSites, SitesServices.fetchSites, {
         refetchInterval,

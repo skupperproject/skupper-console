@@ -100,10 +100,11 @@ const ConnectionsTable = memo(function ({
 
     return (
         <TableComposable
-            className="flows-table"
+            isStriped
             aria-label="flows table"
             variant="compact"
             isStickyHeader
+            borders={false}
         >
             <Thead>
                 <Tr>

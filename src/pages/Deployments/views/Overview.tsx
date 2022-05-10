@@ -7,7 +7,6 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import { DeploymentsRoutesPaths } from '../Deployments.enum';
 import DeploymentsServices from '../services';
@@ -16,7 +15,7 @@ import { ServicesOverviewColumns } from './Overview.enum';
 
 const DeploymentsOverview = function () {
     const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: deployments, isLoading } = useQuery(
         QueriesDeployments.GetDeployments,
@@ -46,12 +45,13 @@ const DeploymentsOverview = function () {
                 borders={false}
                 variant="compact"
                 isStickyHeader
+                isStriped
             >
                 <Thead>
                     <Tr>
                         <Th>{ServicesOverviewColumns.Name}</Th>
-                        <Th>{ServicesOverviewColumns.Protocol}</Th>
                         <Th>{ServicesOverviewColumns.Deployed}</Th>
+                        <Th>{ServicesOverviewColumns.Protocol}</Th>
                     </Tr>
                 </Thead>
                 {deployments?.map((row) => (
@@ -64,11 +64,11 @@ const DeploymentsOverview = function () {
                                     {row.service.address}
                                 </Link>
                             </Td>
-                            <Td
-                                dataLabel={ServicesOverviewColumns.Protocol}
-                            >{`${row.service.protocol}`}</Td>
                             <Td dataLabel={ServicesOverviewColumns.Deployed}>
                                 {`${row.site.site_name}`}
+                            </Td>
+                            <Td dataLabel={ServicesOverviewColumns.Protocol}>
+                                {`${row.service.protocol}`}
                             </Td>
                         </Tr>
                     </Tbody>

@@ -17,6 +17,7 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                 aria-label="network table"
                 borders={false}
                 variant="compact"
+                isStriped
             >
                 <Thead>
                     <Tr>

@@ -38,6 +38,7 @@ const ConnectionDetailsTable = function ({
                 borders
                 variant="compact"
                 gridBreakPoint=""
+                isStriped
             >
                 <Thead hasNestedHeader>
                     <Tr>

@@ -77,7 +77,12 @@ const OverviewCard = function <T>({
                     </Label>
                 )}
                 {columns && rows && (
-                    <TableComposable aria-label="Simple table" variant="compact" borders={false}>
+                    <TableComposable
+                        aria-label="Simple table"
+                        variant="compact"
+                        borders={false}
+                        isStriped
+                    >
                         <Thead>
                             <Tr>
                                 {columns.map((columnName) => (
