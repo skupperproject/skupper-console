@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 
 import { Card } from '@patternfly/react-core';
+import { CloudIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
@@ -36,8 +37,20 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                             </Td>
                             <Td dataLabel={SitesColumns.Namespace}>{`${row.namespace}`}</Td>
                             <Td dataLabel={SitesColumns.Url}>{`${row.url}`}</Td>
-                            <Td dataLabel={SitesColumns.Gateway}>{`${!!row.gateway}`}</Td>
-                            <Td dataLabel={SitesColumns.Edge}>{`${row.edge}`}</Td>
+                            <Td dataLabel={SitesColumns.Gateway}>
+                                {row.gateway ? (
+                                    <CloudIcon color="var(--pf-global--success-color--100)" />
+                                ) : (
+                                    <CloudIcon color="var(--pf-global--disabled-color--300)" />
+                                )}
+                            </Td>
+                            <Td dataLabel={SitesColumns.Edge}>
+                                {row.edge ? (
+                                    <CloudIcon color="var(--pf-global--success-color--100)" />
+                                ) : (
+                                    <CloudIcon color="var(--pf-global--disabled-color--300)" />
+                                )}
+                            </Td>
                         </Tr>
                     </Tbody>
                 ))}
