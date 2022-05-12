@@ -148,57 +148,53 @@ function TopologyMonitoringService(
         (node) => node.type !== 'flow',
     ) as MonitoringTopologyRouterNode[];
 
-    svgElement
-        .selectAll('.routerImg')
-        .data(routerNodes)
-        .enter()
-        .call(function (p) {
-            p.append('image')
-                .attr('xlink:href', router)
-                .attr('width', ROUTER_IMG_WIDTH)
-                .attr('class', 'routerImg')
-                .call(
-                    drag<SVGImageElement, MonitoringTopologyRouterNode>()
-                        .on('start', dragStarted)
-                        .on('drag', dragged)
-                        .on('end', dragEnded),
-                );
+    const svgRouterNodes = svgElement.selectAll('.routerImg').data(routerNodes).enter();
 
-            // label
-            p.append('text')
-                .attr('class', 'routerImg')
-                .text(({ name }) => name)
-                .attr('font-size', 10);
-        });
+    svgRouterNodes.call(function (p) {
+        p.append('image')
+            .attr('xlink:href', router)
+            .attr('width', ROUTER_IMG_WIDTH)
+            .attr('class', 'routerImg')
+            .call(
+                drag<SVGImageElement, MonitoringTopologyRouterNode>()
+                    .on('start', dragStarted)
+                    .on('drag', dragged)
+                    .on('end', dragEnded),
+            );
+
+        // label
+        p.append('text')
+            .attr('class', 'routerImg')
+            .text(({ name }) => name)
+            .attr('font-size', 10);
+    });
 
     // devices
     const deviceNodes = nodes.filter(
         (node) => node.type === 'flow',
     ) as MonitoringTopologyDeviceNode[];
 
-    svgElement
-        .selectAll('.devicesImg')
-        .data(deviceNodes)
-        .enter()
-        .call(function (p) {
-            p.append('circle')
-                .attr('class', 'devicesImg')
-                .attr('r', CIRCLE_R)
-                .style('stroke', 'steelblue')
-                .style('stroke-width', '1px')
-                .style('fill', ({ rtype }) =>
-                    rtype === 'CONNECTOR'
-                        ? 'var(--pf-global--palette--light-blue-500)'
-                        : 'var(--pf-global--BackgroundColor--100)',
-                )
-                .call(
-                    drag<SVGCircleElement, MonitoringTopologyDeviceNode>()
-                        .on('start', dragStarted)
-                        .on('drag', dragged)
-                        .on('end', dragEnded),
-                )
-                .on('mouseover', function (_, { name, protocol, rtype, numFlows, avgLatency }) {
-                    tooltip.html(`
+    const svgDeviceNodes = svgElement.selectAll('.devicesImg').data(deviceNodes).enter();
+
+    svgDeviceNodes.call(function (p) {
+        p.append('circle')
+            .attr('class', 'devicesImg')
+            .attr('r', CIRCLE_R)
+            .style('stroke', 'steelblue')
+            .style('stroke-width', '1px')
+            .style('fill', ({ rtype }) =>
+                rtype === 'CONNECTOR'
+                    ? 'var(--pf-global--palette--light-blue-500)'
+                    : 'var(--pf-global--BackgroundColor--100)',
+            )
+            .call(
+                drag<SVGCircleElement, MonitoringTopologyDeviceNode>()
+                    .on('start', dragStarted)
+                    .on('drag', dragged)
+                    .on('end', dragEnded),
+            )
+            .on('mouseover', function (_, { name, protocol, rtype, numFlows, avgLatency }) {
+                tooltip.html(`
           <b>${name}</b>
           <br><br>
           <p>protocol: <b>${protocol}</b></p>
@@ -207,17 +203,34 @@ function TopologyMonitoringService(
           <p>Avg Latency: <b>${formatTime(avgLatency)}</b></p>
           `);
 
-                    return tooltip.style('visibility', isDragging ? 'hidden' : 'visible');
-                })
-                .on('mousemove', function (event) {
-                    return tooltip
-                        .style('top', `${event.pageY - 10}px`)
-                        .style('left', `${event.pageX + 10}px`);
-                })
-                .on('mouseout', function () {
-                    return tooltip.style('visibility', 'hidden');
-                });
+                return tooltip.style('visibility', isDragging ? 'hidden' : 'visible');
+            })
+            .on('mousemove', function (event) {
+                return tooltip
+                    .style('top', `${event.pageY - 10}px`)
+                    .style('left', `${event.pageX + 10}px`);
+            })
+            .on('mouseout', function () {
+                return tooltip.style('visibility', 'hidden');
+            });
+    });
+
+    // drag util
+    function fixNodes({ x, y }: MonitoringTopologyNode) {
+        svgRouterNodes.each(function (node) {
+            if (x !== node.x || y !== node.y) {
+                node.fx = node.x;
+                node.fy = node.y;
+            }
         });
+
+        svgDeviceNodes.each(function (node) {
+            if (x !== node.x || y !== node.y) {
+                node.fx = node.x;
+                node.fy = node.y;
+            }
+        });
+    }
 
     // drag util
     function dragStarted({ active }: { active: boolean }, node: MonitoringTopologyNode) {
@@ -227,6 +240,7 @@ function TopologyMonitoringService(
         node.fx = node.x;
         node.fy = node.y;
 
+        fixNodes(node);
         isDragging = true;
     }
 
@@ -240,6 +254,9 @@ function TopologyMonitoringService(
             simulation.alphaTarget(0);
             simulation.stop();
         }
+
+        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+
         node.fx = null;
         node.fy = null;
 

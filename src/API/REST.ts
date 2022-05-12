@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from './axiosMiddleware';
 import {
     getData,
     getDeployments,
@@ -10,7 +11,6 @@ import {
     getServices,
     getSites,
 } from './controllers';
-import { fetchWithTimeout } from './middleware';
 import { DATA_URL, MONITORING_FLOWS } from './REST.constant';
 import {
     DataAdapterResponse,

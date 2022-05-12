@@ -56,14 +56,20 @@ const MonitoringTopology = function () {
 
     const routerNodes = useMemo(
         () =>
-            routers?.nodes?.map((node) => ({
-                id: node.id,
-                name: node.name,
-                x: 0,
-                y: 0,
-                width: 50,
-                type: 'router',
-            })),
+            routers?.nodes?.map(({ id, name }) => {
+                const positions = localStorage.getItem(id);
+
+                return {
+                    id,
+                    name,
+                    width: 50,
+                    type: 'router',
+                    x: 0,
+                    y: 0,
+                    fx: positions ? JSON.parse(positions).fx : null,
+                    fy: positions ? JSON.parse(positions).fy : null,
+                };
+            }),
         [routers?.nodes],
     );
 
@@ -72,6 +78,9 @@ const MonitoringTopology = function () {
             devices?.map(({ id, name, rtype, flows, protocol }) => {
                 const totalLatency = flows.reduce((acc, flow) => acc + flow.latency, 0);
                 const avgLatency = totalLatency / flows.length;
+
+                const positions = localStorage.getItem(id);
+
                 const node = {
                     id,
                     name,
@@ -82,6 +91,8 @@ const MonitoringTopology = function () {
                     numFlows: flows.length,
                     x: 0,
                     y: 0,
+                    fx: positions ? JSON.parse(positions).fx : null,
+                    fy: positions ? JSON.parse(positions).fy : null,
                 };
 
                 return node;
