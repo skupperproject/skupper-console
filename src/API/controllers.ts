@@ -1,12 +1,14 @@
-import { normalizeFlows, getFlowsTree, generateDynamicBytes } from './utils/utils';
+import { DataResponse, FlowsDataResponse } from './REST.interfaces';
 import Adapter from './utils/adapter';
+import { normalizeFlows, getFlowsTree, generateDynamicBytes } from './utils/utils';
 
-export function getData(VANdata) {
+export function getData(VANdata: DataResponse) {
     const data = JSON.parse(JSON.stringify(VANdata));
+
     return new Adapter(data).getData();
 }
 
-export function getSites(VANdata) {
+export function getSites(VANdata: DataResponse) {
     const { sites } = VANdata;
 
     return sites.map(
@@ -24,7 +26,7 @@ export function getSites(VANdata) {
     );
 }
 
-export function getServices(VANdata) {
+export function getServices(VANdata: DataResponse) {
     return VANdata.services.map(({ address, protocol }) => ({
         id: address,
         name: address,
@@ -32,49 +34,24 @@ export function getServices(VANdata) {
     }));
 }
 
-export function getDeployments(VANdata) {
+export function getDeployments(VANdata: DataResponse) {
     const data = JSON.parse(JSON.stringify(VANdata));
     const dataAdapted = new Adapter(data).getData();
 
     return dataAdapted.deployments;
-
-    // const sitesMap = VANdata.sites.reduce((acc, site) => {
-    //     acc[site.site_id] = { name: site.site_name, url: site.url };
-
-    //     return acc;
-    // }, {});
-
-    // const deployments = VANdata.services.map(
-    //     ({ targets, address, protocol, connections_ingress, connections_egress }) => {
-    //         const sitesConnected = targets
-    //             .map((target) => sitesMap[target.site_id])
-    //             .filter(Boolean);
-
-    //         return {
-    //             id: address,
-    //             name: address,
-    //             protocol,
-    //             numConnectionsIn: connections_ingress && connections_ingress.length,
-    //             numConnectionsOut: connections_egress && connections_egress.length,
-    //             sites: sitesConnected,
-    //         };
-    //     },
-    // );
-
-    // return deployments;
 }
 
-export function getFlows(flowsData, serviceAddress) {
+export function getFlows(flowsData: FlowsDataResponse[], serviceAddress?: string) {
     if (serviceAddress) {
         return normalizeFlows(getFlowsTree(flowsData)).filter(
-            (flow) => flow.vanAddress === serviceAddress,
+            (flow) => flow?.vanAddress === serviceAddress,
         );
     }
 
     return normalizeFlows(getFlowsTree(generateDynamicBytes(flowsData)));
 }
 
-export function getFlowsNetworkStats(flowsData) {
+export function getFlowsNetworkStats(flowsData: FlowsDataResponse[]) {
     const data = generateDynamicBytes(flowsData);
 
     const stats = data.reduce((acc, item) => {
@@ -100,7 +77,7 @@ export function getFlowsNetworkStats(flowsData) {
         }
 
         return acc;
-    }, {});
+    }, {} as Record<string, any>);
 
     return [
         {
@@ -113,9 +90,9 @@ export function getFlowsNetworkStats(flowsData) {
     ];
 }
 
-export function getFlowsRoutersStats(flowsData) {
+export function getFlowsRoutersStats(flowsData: FlowsDataResponse[]) {
     const data = generateDynamicBytes(flowsData);
-    let current;
+    let current: string;
     const routersStats = data.reduce((acc, item) => {
         if (item.rtype === 'ROUTER') {
             current = item.id;
@@ -136,17 +113,17 @@ export function getFlowsRoutersStats(flowsData) {
         }
 
         return acc;
-    }, {});
+    }, {} as Record<string, any>);
 
     return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
 }
 
-export function getFlowsServiceStats(flowsData) {
+export function getFlowsServiceStats(flowsData: FlowsDataResponse[]) {
     const data = generateDynamicBytes(flowsData);
 
-    let current;
-    let currentRouterName;
-    const connections = {};
+    let current: string;
+    let currentRouterName: string;
+    const connections: Record<string, string> = {};
     const routersStats = data.reduce((acc, item) => {
         if (item.rtype === 'ROUTER') {
             currentRouterName = item.name;
@@ -174,21 +151,24 @@ export function getFlowsServiceStats(flowsData) {
         }
 
         return acc;
-    }, {});
+    }, {} as Record<string, any>);
 
     return Object.values(routersStats);
 }
 
-export function getFlowsConnectionsByService(flowsData, serviceAddress) {
+export function getFlowsConnectionsByService(
+    flowsData: FlowsDataResponse[],
+    serviceAddress: string,
+) {
     const data = generateDynamicBytes(flowsData);
 
     const flows = normalizeFlows(getFlowsTree(data)).filter(
-        (flow) => flow.vanAddress === serviceAddress && flow.rtype === 'CONNECTOR',
+        (flow) => flow?.vanAddress === serviceAddress && flow.rtype === 'CONNECTOR',
     );
 
     return flows.flatMap((item) => {
-        const group = {};
-        item.flows?.forEach(({ deviceNameConnectedTo, ...rest }) => {
+        const group: Record<string, any> = {};
+        item?.flows?.forEach(({ deviceNameConnectedTo, ...rest }: any) => {
             (group[deviceNameConnectedTo] = group[deviceNameConnectedTo] || []).push(rest);
         });
 
@@ -200,13 +180,13 @@ export function getFlowsConnectionsByService(flowsData, serviceAddress) {
     });
 }
 
-export function getFlowsTopology(flowsData) {
+export function getFlowsTopology(flowsData: FlowsDataResponse[]) {
     const routerNodes = flowsData.filter((data) => data.rtype === 'ROUTER');
     const routersMap = routerNodes.reduce((acc, router) => {
         acc[router.name] = router;
 
         return acc;
-    }, {});
+    }, {} as Record<string, FlowsDataResponse>);
 
     const links = flowsData.filter((data) => data.rtype === 'LINK');
     const linkRouters = links.reduce((acc, link) => {
@@ -220,7 +200,7 @@ export function getFlowsTopology(flowsData) {
         });
 
         return acc;
-    }, []);
+    }, [] as any[]);
 
     return { links: linkRouters, nodes: routerNodes };
 }

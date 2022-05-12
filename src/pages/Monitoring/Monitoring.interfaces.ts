@@ -13,7 +13,7 @@ interface RowDetails {
     totalBytes: number;
     totalBytesIn: number;
     connectorName: string;
-    listenerName: string;
+    listenerName?: string;
     connection: Connection[];
 }
 

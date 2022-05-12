@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
 
 import { ErrorConnectionRoutesPaths } from './Connection/Connection.enum';
-import { NotFoundRoutesPaths } from './NotFound/sNotFound.enum';
+import { NotFoundRoutesPaths } from './NotFound/NotFound.enum';
 import { ErrorServerRoutesPaths } from './Server/Server.enum';
 
 const ErrorConnection = lazy(() => import(/* webpackChunkName: "connection-err" */ './Connection'));

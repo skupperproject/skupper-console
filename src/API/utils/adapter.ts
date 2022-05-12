@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable guard-for-in */
-import { DataResponse } from 'API/REST.interfaces';
+import { DataAdapterResponse } from 'API/REST.interfaces';
 
 import { utils } from './utilities';
 
@@ -12,7 +12,7 @@ class Adapter {
     data: any;
     instance: number;
     siteInfo: { name: any };
-    constructor(data: DataResponse) {
+    constructor(data: DataAdapterResponse) {
         this.data = data;
         this.sortSites();
         this.sortServices();

@@ -27,7 +27,7 @@ const ConnectionDetailsTable = function ({
     totalBytes: number;
     totalBytesIn: number;
     connectorName: string;
-    listenerName: string;
+    listenerName?: string;
 }) {
     return (
         <InnerScrollContainer>

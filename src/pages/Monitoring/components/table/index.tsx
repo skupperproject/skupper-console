@@ -17,7 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import TrafficChart from '@core/components/TrafficChart';
 import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
+import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
@@ -46,8 +46,10 @@ const ConnectionsTableVIew = function () {
         },
     );
 
-    function handleError({ httpStatus }: { httpStatus?: number }) {
-        const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
+    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+        const route = httpStatus
+            ? ErrorRoutesPaths.error[httpStatus]
+            : ErrorRoutesPaths.ErrConnection;
 
         setRefetchInterval(0);
         navigate(route);
@@ -214,7 +216,7 @@ const ConnectionsTable = memo(function ({
                                                         totalBytes: details.totalBytes,
                                                     },
                                                     {
-                                                        name: details.listenerName,
+                                                        name: details.listenerName || '',
                                                         totalBytes: details.totalBytesIn,
                                                     },
                                                 ]}

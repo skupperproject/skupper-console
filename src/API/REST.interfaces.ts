@@ -1,5 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
 
+export interface DataResponse {
+    sites: DataSiteResponse[];
+    services: DataServicesResponse[];
+}
+
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
 export interface ServiceConnections {
@@ -85,7 +90,7 @@ export interface DeploymentTopologyResponse {
     site: DataSiteResponse;
 }
 
-export interface DataResponse {
+export interface DataAdapterResponse {
     sites: DataSiteResponse[];
     services: DataServicesResponse[];
     deployments: DeploymentTopologyResponse[];
@@ -122,14 +127,65 @@ export interface DeploymentResponse {
 }
 
 // FLOWS
-interface FlowResponse {
+interface FlowsRouterResponse {
+    startTime: number;
+    hostname: string;
+    name: string;
+    buildVersion: string;
+    rtype: string;
+    id: string;
+}
+
+interface FlowsLinkResponse {
+    parent: string;
+    startTime: number;
+    mode: string;
+    name: string;
+    linkCost: number;
+    direction: string;
+    rtype: string;
+    id: string;
+}
+
+export interface FlowsDeviceResponse {
+    parent: string;
+    startTime: number;
+    destHost: string;
+    protocol: string;
+    destPort: number;
+    vanAddress: string;
+    name: string;
+    rtype: string;
+    id: string;
+}
+
+export interface FlowResponse {
+    parent: string;
+    startTime: number;
+    octets: number;
+    sourceHost: string;
+    sourcePort: string;
+    counterflow: string;
+    trace: string;
+    latency: number;
+    endTime: number;
+    rtype: string;
+    id: string;
+}
+
+export type FlowsDataResponse = FlowsRouterResponse &
+    FlowsLinkResponse &
+    FlowsDeviceResponse &
+    FlowResponse;
+
+interface FlowAdapterResponse {
     sourceHost: string;
     sourcePort: string;
     id: string;
     octets: number;
     latency: number;
     counterflow?: string | null;
-    connectedTo?: FlowResponse & { parent: string };
+    connectedTo?: FlowAdapterResponse & { parent: string };
     startTime: number;
     endTime?: number;
     parent: string;
@@ -147,8 +203,8 @@ export interface FlowsResponse {
     destPort: number;
     vanAddress: string;
     id: string;
-    deviceNameConnectedTo: string;
-    flows: FlowResponse[];
+    deviceNameConnectedTo?: string;
+    flows: FlowAdapterResponse[];
     parent: string;
     startTime: number;
     endTime?: number;
@@ -184,7 +240,6 @@ export interface RouterStatsResponse {
 }
 
 export interface MonitoringStatsResponse {
-    name: string;
     totalVanAddress: number;
     totalFlows: number;
     totalBytes: number;
@@ -200,6 +255,6 @@ interface MonitoringRoutersTopologyLink {
 }
 
 export interface MonitoringRoutersTopologyResponse {
-    nodes: FlowsResponse[];
+    nodes: FlowsDataResponse[];
     links: MonitoringRoutersTopologyLink[];
 }

@@ -32,14 +32,11 @@ context('Navigation', () => {
     it('Navigate to the Monitoring/service-bar section', () => {
         cy.get('[data-cy=sk-nav-bar]').contains('Monitoring').click({ force: true });
         cy.location('hash').should('include', 'monitoring');
-
-        cy.get('[data-cy=sk-monitoring-services]').contains('service-bar').click({ force: true });
-        cy.location('hash').should('include', 'monitoring/connections/service-bar');
     });
 
     it('Redirect to the Not found page when url not exists', () => {
         cy.visit('/#/wrong-page');
-        cy.get('[data-cy=sk-not-found]').contains('NotFound').should('be.visible');
+        cy.get('[data-cy=sk-not-found]').contains('Page not found').should('be.visible');
     });
 
     it("Go back or forward in the browser's history", () => {

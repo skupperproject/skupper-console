@@ -1,6 +1,25 @@
-function list_to_tree(dataset) {
+import { FlowsDataResponse } from 'API/REST.interfaces';
+
+export type FlowsWithListenersConnectorsMapped =
+    | FlowsDataResponse
+    | (FlowsDataResponse & {
+          connectedTo: FlowsDataResponse;
+          deviceNameConnectedTo?: string | undefined;
+      });
+
+type ListToTree = FlowsWithListenersConnectorsMapped & {
+    childNodes: FlowsWithListenersConnectorsMapped[];
+};
+
+type ListToTreeNormalized = FlowsWithListenersConnectorsMapped & {
+    hostname: string;
+    siteName: string;
+    flows: FlowsWithListenersConnectorsMapped[];
+};
+
+function list_to_tree(dataset: FlowsWithListenersConnectorsMapped[]) {
     const hashTable = Object.create(null);
-    const dataTree = [];
+    const dataTree: ListToTree[] = [];
 
     dataset.forEach((data) => {
         hashTable[data.id] = { ...data, childNodes: [] };
@@ -15,12 +34,12 @@ function list_to_tree(dataset) {
     return dataTree;
 }
 
-export function normalizeFlows(data) {
+export function normalizeFlows(data: ListToTree[]) {
     return data
         .flatMap(({ childNodes, hostname, name }) => {
             if (childNodes.length) {
                 return childNodes.flatMap((node) => {
-                    const { childNodes: flows, ...rest } = node;
+                    const { childNodes: flows, ...rest } = node as ListToTree;
 
                     return {
                         ...rest,
@@ -33,17 +52,17 @@ export function normalizeFlows(data) {
 
             return undefined;
         })
-        .filter(Boolean);
+        .filter(Boolean) as ListToTreeNormalized[];
 }
 
-function mapFlowsWithListenersConnectors(flows) {
+function mapFlowsWithListenersConnectors(flows: FlowsDataResponse[]) {
     return flows.map((data) => {
         const listenersBound = flows.reduce(
             (acc, item) => ({
                 ...acc,
                 [item.id]: item,
             }),
-            {},
+            {} as Record<string, FlowsDataResponse>,
         );
 
         const connectorsBound = flows.reduce((acc, item) => {
@@ -52,7 +71,7 @@ function mapFlowsWithListenersConnectors(flows) {
             }
 
             return acc;
-        }, {});
+        }, {} as Record<string, FlowsDataResponse>);
 
         if (data.counterflow) {
             const deviceConnectedTo = flows.find(
@@ -62,7 +81,7 @@ function mapFlowsWithListenersConnectors(flows) {
             return {
                 ...data,
                 connectedTo: listenersBound[data.counterflow],
-                deviceNameConnectedTo: deviceConnectedTo.name,
+                deviceNameConnectedTo: deviceConnectedTo?.name,
             };
         }
 
@@ -74,12 +93,12 @@ function mapFlowsWithListenersConnectors(flows) {
     });
 }
 
-export function getFlowsTree(data) {
+export function getFlowsTree(data: FlowsDataResponse[]) {
     return list_to_tree(mapFlowsWithListenersConnectors(data));
 }
 
 // TODO: simulate dynamic bytes flow
-export function generateDynamicBytes(flows) {
+export function generateDynamicBytes(flows: FlowsDataResponse[]) {
     return flows.map((item) =>
         item.rtype === 'FLOW'
             ? { ...item, octets: item.octets + Math.random() * (1024 * 1024 * 10) }

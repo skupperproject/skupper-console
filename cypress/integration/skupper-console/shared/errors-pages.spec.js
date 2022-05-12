@@ -5,6 +5,6 @@ context('Error pages', () => {
 
     it('Redirect to the Not found page when url not exists', () => {
         cy.visit('/#/wrong-page');
-        cy.get('[data-cy=sk-not-found]').contains('NotFound').should('be.visible');
+        cy.get('[data-cy=sk-not-found]').contains('Page not found').should('be.visible');
     });
 });

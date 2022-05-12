@@ -5,7 +5,7 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
+import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
 import ServicesServices from '../services';
@@ -25,8 +25,10 @@ const ServicesOverview = function () {
         },
     );
 
-    function handleError({ httpStatus }: { httpStatus?: number }) {
-        const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
+    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+        const route = httpStatus
+            ? ErrorRoutesPaths.error[httpStatus]
+            : ErrorRoutesPaths.ErrConnection;
 
         setRefetchInterval(0);
         navigate(route);

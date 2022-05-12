@@ -10,7 +10,7 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
+import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
 import TopologySites from './components/Topology';
@@ -43,8 +43,10 @@ const Topology = function () {
         },
     );
 
-    function handleError({ httpStatus }: { httpStatus?: number }) {
-        const route = httpStatus ? ErrorRoutesPaths.ErrServer : ErrorRoutesPaths.ErrConnection;
+    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+        const route = httpStatus
+            ? ErrorRoutesPaths.error[httpStatus]
+            : ErrorRoutesPaths.ErrConnection;
 
         setRefetchInterval(0);
         navigate(route);
@@ -121,7 +123,6 @@ const Topology = function () {
         async (node: HTMLDivElement) => {
             if (node && linkSites && siteNodes && serviceNodes && linkServices) {
                 node.replaceChildren();
-
                 const nodes = topologyType === 'sites' ? siteNodes : serviceNodes;
                 const links = topologyType === 'sites' ? linkSites : linkServices;
 
