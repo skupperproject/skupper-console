@@ -31,4 +31,4 @@ jobs:
 
             - name: Integration tests 🚨
               run: |
-                  yarn ci-test
+                  yarn ci
