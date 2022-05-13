@@ -36,6 +36,10 @@ module.exports = {
             'process.env.API_HOST_FLOW_COLLECTOR': JSON.stringify(
                 process.env.API_HOST_FLOW_COLLECTOR || '',
             ),
+            'process.env.NODE_API_HOST': JSON.stringify(process.env.NODE_API_HOST || ''),
+            'process.env.NODE_API_HOST_FLOW_COLLECTOR': JSON.stringify(
+                process.env.NODE_API_HOST_FLOW_COLLECTOR || '',
+            ),
         }),
         new HtmlWebpackPlugin({
             template: path.join(ROOT, '/public/index.html'),
