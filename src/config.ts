@@ -6,3 +6,5 @@ export const FirstLoadingView = NetworkRoutesPaths.Network; // Firs page to load
 
 export const BASE_URL =
     process.env.API_HOST || `${window.location.protocol}//${window.location.host}`;
+//TODO: The flow collector is a beta at the moment ad it is not part of skupper yet. This URL will be removed in the future.
+export const BASE_URL_FLOW_COLLECTOR = process.env.API_HOST_FLOW_COLLECTOR || BASE_URL;

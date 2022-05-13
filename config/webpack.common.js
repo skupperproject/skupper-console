@@ -33,6 +33,9 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.API_HOST': JSON.stringify(process.env.API_HOST || ''),
+            'process.env.API_HOST_FLOW_COLLECTOR': JSON.stringify(
+                process.env.API_HOST_FLOW_COLLECTOR || '',
+            ),
         }),
         new HtmlWebpackPlugin({
             template: path.join(ROOT, '/public/index.html'),

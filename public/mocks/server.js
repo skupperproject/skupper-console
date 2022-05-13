@@ -21,7 +21,7 @@ export function loadMockServer() {
                     () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }),
                 );
                 this.get('/DATA', () => VANdata);
-                this.get('/flows', () => flowsData);
+                this.get('/api/v1alpha1/all', () => flowsData);
             },
         });
     }
