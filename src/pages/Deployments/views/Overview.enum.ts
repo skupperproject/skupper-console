@@ -1,5 +1,10 @@
-export enum ServicesOverviewColumns {
-    Name = 'Service name',
+export enum DeploymentsOverviewColumns {
+    Name = 'Name',
     Protocol = 'Protocol',
-    Deployed = 'Site',
+    Site = 'Site',
+    Service = 'Service',
+}
+
+export enum DeploymentsLabels {
+    Details = 'Deployment  Details',
 }

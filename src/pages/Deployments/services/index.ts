@@ -12,8 +12,15 @@ const DeploymentsServices = {
         const tcpConnectionsIn = getTCPConnectionsInByService(deployments, id || '');
         const httpConnectionsOut = getHTTPconnectionsOutByService(deployments, id || '');
         const httpConnectionsIn = getHTTPconnectionsInByService(deployments, id || '');
+        const info = deployments.find(({ key }) => key === id) as Deployment;
 
-        return { tcpConnectionsIn, tcpConnectionsOut, httpConnectionsOut, httpConnectionsIn };
+        return {
+            ...info,
+            tcpConnectionsIn,
+            tcpConnectionsOut,
+            httpConnectionsOut,
+            httpConnectionsIn,
+        };
     },
 };
 

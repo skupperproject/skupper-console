@@ -228,6 +228,7 @@ interface LinkStatsResponse {
     parent: string;
     rtype: string;
     startTime: number;
+    endTime?: number;
 }
 
 export interface RouterStatsResponse {
@@ -236,7 +237,7 @@ export interface RouterStatsResponse {
     totalVanAddress: number;
     totalFlows: number;
     totalBytes: number;
-    connectedTo: LinkStatsResponse[];
+    connectedTo?: LinkStatsResponse[];
 }
 
 export interface MonitoringStatsResponse {

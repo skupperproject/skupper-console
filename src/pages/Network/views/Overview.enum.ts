@@ -17,7 +17,6 @@ export enum OverviewRoutersColumns {
     NumRouters = 'Routers',
     NumServices = 'Services',
     NumFLows = 'Flows',
-    TotalBytes = 'Traffic',
 }
 
 export enum OverviewLinksColumns {
@@ -25,5 +24,4 @@ export enum OverviewLinksColumns {
     RouterEnd = 'To',
     Cost = 'Cost',
     Mode = 'Mode',
-    Direction = 'Direction',
 }

@@ -11,7 +11,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { DeploymentsRoutesPaths } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
-import { ServicesOverviewColumns } from './Overview.enum';
+import { DeploymentsOverviewColumns } from './Overview.enum';
 
 const DeploymentsOverview = function () {
     const navigate = useNavigate();
@@ -51,26 +51,19 @@ const DeploymentsOverview = function () {
             >
                 <Thead>
                     <Tr>
-                        <Th>{ServicesOverviewColumns.Name}</Th>
-                        <Th>{ServicesOverviewColumns.Deployed}</Th>
-                        <Th>{ServicesOverviewColumns.Protocol}</Th>
+                        <Th>{DeploymentsOverviewColumns.Name}</Th>
                     </Tr>
                 </Thead>
                 {deployments?.map((row) => (
                     <Tbody key={row.key}>
                         <Tr>
-                            <Td dataLabel={ServicesOverviewColumns.Name}>
+                            <Td dataLabel={DeploymentsOverviewColumns.Name}>
+                                <span className="sk-resource-icon sk-resource-deployment ">D</span>
                                 <Link
                                     to={`${DeploymentsRoutesPaths.Details}/${row.service.address}_${row.site.site_id}`}
                                 >
-                                    {row.service.address}
+                                    {`${row.site.site_name} -> ${row.service.address}`}
                                 </Link>
-                            </Td>
-                            <Td dataLabel={ServicesOverviewColumns.Deployed}>
-                                {`${row.site.site_name}`}
-                            </Td>
-                            <Td dataLabel={ServicesOverviewColumns.Protocol}>
-                                {`${row.service.protocol}`}
                             </Td>
                         </Tr>
                     </Tbody>

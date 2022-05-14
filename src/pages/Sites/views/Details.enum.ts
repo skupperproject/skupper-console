@@ -13,3 +13,7 @@ export enum SiteDetailsColumnsLabels {
     TCPconnectionsIn = 'Inbound TCP Connections',
     TCPconnectionsOut = 'Outbound TCP Connections',
 }
+
+export enum SitesLabel {
+    Details = 'Site Details',
+}

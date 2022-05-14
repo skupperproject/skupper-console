@@ -10,6 +10,9 @@ import {
     SplitItem,
     Stack,
     StackItem,
+    Text,
+    TextContent,
+    TextVariants,
 } from '@patternfly/react-core';
 import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
@@ -22,10 +25,11 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
+import { SitesColumns } from '../components/SitesTable.enum';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SiteRoutesPaths, SitesRoutesPathLabel } from '../sites.enum';
-import { SiteDetailsColumns, SiteDetailsColumnsLabels } from './Details.enum';
+import { SiteDetailsColumns, SiteDetailsColumnsLabels, SitesLabel } from './Details.enum';
 
 const SiteDetail = function () {
     const navigate = useNavigate();
@@ -64,7 +68,7 @@ const SiteDetail = function () {
     const tcpConnectionsOutEntries = Object.entries(site.tcpConnectionsOut);
 
     return (
-        <Stack hasGutter>
+        <Stack hasGutter className="pf-u-pl-md">
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
@@ -73,6 +77,54 @@ const SiteDetail = function () {
                     <BreadcrumbHeading to="#">{site.siteName}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
+
+            <TextContent>
+                <Text component={TextVariants.h1} className=" pf-u-font-weight-bold">
+                    <span className="sk-resource-icon sk-resource-site">S</span>
+                    {site.siteName}
+                </Text>
+            </TextContent>
+
+            <TextContent>
+                <Text component={TextVariants.h2}>{SitesLabel.Details}</Text>
+            </TextContent>
+
+            <Split>
+                <SplitItem className="pf-u-w-50">
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">{SitesColumns.Name}</div>
+                        <span>{site.siteName}</span>
+                    </div>
+
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">{SitesColumns.Namespace}</div>
+                        <span>{site.namespace}</span>
+                    </div>
+
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">{SitesColumns.Version}</div>
+                        <span>{site.version}</span>
+                    </div>
+
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">{SitesColumns.Edge}</div>
+                        <span>{site.edge ? 'Yes' : 'No'}</span>
+                    </div>
+
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">{SitesColumns.Gateway}</div>
+                        <span>{site.gateway ? 'Yes' : 'No'}</span>
+                    </div>
+                </SplitItem>
+
+                <SplitItem className="pf-u-w-50">
+                    <div className="pf-u-mb-lg">
+                        <div className="pf-u-font-weight-bold">{SitesColumns.RouterHostname}</div>
+                        <span>{site.url}</span>
+                    </div>
+                </SplitItem>
+            </Split>
+
             {httpRequestsReceivedEntries.length !== 0 && (
                 <StackItem>
                     <Card isRounded>

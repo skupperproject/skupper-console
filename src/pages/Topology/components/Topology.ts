@@ -97,7 +97,7 @@ const TopologySites = async function (
     svgElement
         .append('svg:defs')
         .append('svg:marker')
-        .attr('id', 'arrowService')
+        .attr('id', 'arrow')
         .attr('viewBox', '0 -5 10 10')
         .attr('refX', SERVICE_SIZE / 2 + ARROW_SIZE)
         .attr('refY', 0)
@@ -118,11 +118,8 @@ const TopologySites = async function (
                 .attr('class', 'serviceLink')
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
-                .attr('marker-start', ({ type }) =>
-                    type === 'site' ? 'none' : 'url(#arrowService)',
-                )
                 .attr('marker-end', ({ type }) =>
-                    type === 'service' ? 'none' : 'url(#arrowService)',
+                    type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
                 );
         });
 

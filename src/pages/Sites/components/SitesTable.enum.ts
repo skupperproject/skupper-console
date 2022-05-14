@@ -5,8 +5,8 @@ export enum SitesTableLabels {
 export enum SitesColumns {
     Name = 'Name',
     Namespace = 'Namespace',
-    Url = 'Url',
     Gateway = 'Gateway',
     Edge = 'Edge',
     Version = 'Version',
+    RouterHostname = 'Router Canonical hostname',
 }

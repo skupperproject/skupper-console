@@ -72,7 +72,7 @@ export function getFlowsNetworkStats(flowsData: FlowsDataResponse[]) {
             acc.totalRouters = (acc.totalRouters || 0) + 1;
         }
 
-        if (item.rtype === 'LINK') {
+        if (item.rtype === 'LINK' && !item.endTime && item.direction === 'outgoing') {
             acc.totalLinks = (acc.totalLinks || 0) + 1;
         }
 
@@ -81,11 +81,11 @@ export function getFlowsNetworkStats(flowsData: FlowsDataResponse[]) {
 
     return [
         {
-            totalRouters: stats.totalRouters - 1, // ignore the first route (hub)
+            totalRouters: stats.totalRouters, // ignore the first route (hub)
             totalBytes: stats.totalBytes,
             totalFlows: stats.totalFlows,
             totalVanAddress: stats.totalVanAddress,
-            totalLinks: stats.totalLinks / 2, // the json data give us 2 endpoints for each link
+            totalLinks: stats.totalLinks, // the json data give us 2 endpoints for each link
         },
     ];
 }
@@ -103,7 +103,7 @@ export function getFlowsRoutersStats(flowsData: FlowsDataResponse[]) {
                 totalFlows: 0,
                 totalVanAddress: 0,
             };
-        } else if (item.rtype === 'LINK') {
+        } else if (item.rtype === 'LINK' && !item.endTime && item.direction === 'outgoing') {
             (acc[current].connectedTo = acc[current].connectedTo || []).push(item);
         } else if (item.octets) {
             acc[current].totalFlows++;
@@ -114,6 +114,7 @@ export function getFlowsRoutersStats(flowsData: FlowsDataResponse[]) {
 
         return acc;
     }, {} as Record<string, any>);
+    console.log(routersStats);
 
     return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
 }

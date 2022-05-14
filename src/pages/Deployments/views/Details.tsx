@@ -10,8 +10,11 @@ import {
     SplitItem,
     Stack,
     StackItem,
+    Text,
+    TextContent,
+    TextVariants,
 } from '@patternfly/react-core';
-import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
+import { LongArrowAltDownIcon, LongArrowAltUpIcon, SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -20,12 +23,14 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import { DeploymentsRoutesPaths, DeploymentsRoutesPathLabel } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
 import { DeploymentDetailsColumns, DeploymentDetailsColumnsLabels } from './Details.enum';
+import { DeploymentsLabels, DeploymentsOverviewColumns } from './Overview.enum';
 
 const DeploymentsDetails = function () {
     const navigate = useNavigate();
@@ -61,8 +66,10 @@ const DeploymentsDetails = function () {
     const { tcpConnectionsIn, tcpConnectionsOut, httpConnectionsOut, httpConnectionsIn } =
         deployment;
 
+    const { service, site } = deployment;
+
     return (
-        <Stack hasGutter>
+        <Stack hasGutter className="pf-u-pl-md">
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
@@ -73,6 +80,52 @@ const DeploymentsDetails = function () {
                     <BreadcrumbHeading to="#">{deploymentId?.split('_')[0]}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
+
+            <TextContent>
+                <Text component={TextVariants.h1} className=" pf-u-font-weight-bold">
+                    <span className="sk-resource-icon sk-resource-deployment">D</span>
+                    {`${site.site_name}/${service.address}`}
+                </Text>
+            </TextContent>
+
+            <TextContent>
+                <Text component={TextVariants.h2}>{DeploymentsLabels.Details}</Text>
+            </TextContent>
+
+            <Split>
+                <SplitItem className="pf-u-w-50">
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">
+                            {DeploymentsOverviewColumns.Site}
+                        </div>
+                        <span>
+                            <Link to={`${SiteRoutesPaths.Details}/${site.site_id}`}>
+                                <SearchIcon /> {site.site_name}
+                            </Link>
+                        </span>
+                    </div>
+                </SplitItem>
+
+                <SplitItem className="pf-u-w-50">
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">
+                            {DeploymentsOverviewColumns.Service}
+                        </div>
+                        <span>
+                            <span className="sk-resource-icon sk-resource-service">S</span>
+                            {service.address}
+                        </span>
+                    </div>
+
+                    <div className="pf-u-mb-lg">
+                        <div className="  pf-u-font-weight-bold">
+                            {DeploymentsOverviewColumns.Protocol}
+                        </div>
+                        <span>{service.protocol}</span>
+                    </div>
+                </SplitItem>
+            </Split>
+
             {httpConnectionsIn.length !== 0 && (
                 <StackItem>
                     <Card>

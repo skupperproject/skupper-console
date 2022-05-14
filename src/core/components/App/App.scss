@@ -18,3 +18,30 @@ html {
 .pf-c-table thead th {
     color: var(--pf-global--palette--black-600);
 }
+
+.sk-resource-icon {
+    background-color: #2b9af3;
+    border-radius: 20px;
+    color: var(--pf-global--palette--white);
+    display: inline-block;
+    flex-shrink: 0;
+    font-size: 14px;
+    line-height: 16px;
+    margin-right: 4px;
+    min-width: 18px;
+    padding: 1px 4px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.sk-resource-site {
+    background-color: purple;
+}
+
+.sk-resource-service {
+    background-color: #6ca100;
+}
+
+.sk-resource-deployment {
+    background-color: red;
+}

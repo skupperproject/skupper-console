@@ -1,5 +1,6 @@
 import {
     DataServicesResponse,
+    DataSiteResponse,
     DeploymentTopologyResponse,
     ServiceConnections,
     ServiceRequestReceivedResponse,
@@ -7,8 +8,11 @@ import {
 
 export type Deployment = DeploymentTopologyResponse;
 export type Service = DataServicesResponse;
+export type Site = DataSiteResponse;
 
 export interface DeploymentDetails {
+    service: Service;
+    site: Site;
     tcpConnectionsIn: ServiceConnections[];
     tcpConnectionsOut: ServiceConnections[];
     httpConnectionsOut: ServiceConnections[];

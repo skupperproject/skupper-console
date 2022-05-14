@@ -18,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import { NetworkServices } from '../services';
 import { QueriesNetwork } from '../services/network.enum';
@@ -36,7 +35,7 @@ const Overview = function () {
     const [routersStats, setRoutersStats] = useState<RouterStatsRow[]>();
     const [linksStats, setLinksStats] = useState<LinkStatsRow[]>();
 
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data, isLoading } = useQuery(
         QueriesNetwork.GetNetwork,
@@ -66,14 +65,26 @@ const Overview = function () {
             }));
 
             const linksRows = data.routersStats.flatMap(({ connectedTo, name }) =>
-                connectedTo.map(({ id, linkCost, name: routerNameLinked, mode, direction }) => ({
-                    id: `$link-${id}`,
-                    routerNameStart: name,
-                    routerNameEnd: routerNameLinked,
-                    cost: linkCost,
-                    mode,
-                    direction,
-                })),
+                (connectedTo || []).map(
+                    ({
+                        id,
+                        linkCost,
+                        name: routerNameLinked,
+                        mode,
+                        direction,
+                        endTime,
+                        startTime,
+                    }) => ({
+                        id: `$link-${id}`,
+                        routerNameStart: name,
+                        routerNameEnd: routerNameLinked,
+                        cost: linkCost,
+                        mode,
+                        direction,
+                        startTime,
+                        endTime,
+                    }),
+                ),
             );
 
             setRoutersStats(routersRow);
@@ -174,7 +185,6 @@ const Overview = function () {
                                     <Thead>
                                         <Tr>
                                             <Th>{OverviewRoutersColumns.Name}</Th>
-                                            <Th>{OverviewRoutersColumns.TotalBytes}</Th>
                                             <Th>{OverviewRoutersColumns.NumServices}</Th>
                                             <Th>{OverviewRoutersColumns.NumFLows}</Th>
                                         </Tr>
@@ -184,9 +194,6 @@ const Overview = function () {
                                             <Tr>
                                                 <Td dataLabel={OverviewRoutersColumns.Name}>
                                                     {row.name}
-                                                </Td>
-                                                <Td dataLabel={OverviewRoutersColumns.TotalBytes}>
-                                                    {`${row.totalBytes}`}
                                                 </Td>
                                                 <Td dataLabel={OverviewRoutersColumns.NumServices}>
                                                     {`${row.totalVanAddress}`}
@@ -218,7 +225,6 @@ const Overview = function () {
                                             <Th>{OverviewLinksColumns.RouterEnd}</Th>
                                             <Th>{OverviewLinksColumns.Cost}</Th>
                                             <Th>{OverviewLinksColumns.Mode}</Th>
-                                            <Th>{OverviewLinksColumns.Direction}</Th>
                                         </Tr>
                                     </Thead>
                                     {linksStats?.map((row) => (
@@ -235,9 +241,6 @@ const Overview = function () {
                                                 </Td>
                                                 <Td dataLabel={OverviewLinksColumns.Mode}>
                                                     {`${row.mode}`}
-                                                </Td>
-                                                <Td dataLabel={OverviewLinksColumns.Direction}>
-                                                    {`${row.direction}`}
                                                 </Td>
                                             </Tr>
                                         </Tbody>

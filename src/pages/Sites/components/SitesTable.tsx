@@ -23,7 +23,7 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                     <Tr>
                         <Th>{SitesColumns.Name}</Th>
                         <Th>{SitesColumns.Namespace}</Th>
-                        <Th>{SitesColumns.Url}</Th>
+                        <Th>{SitesColumns.Version}</Th>
                         <Th>{SitesColumns.Gateway}</Th>
                         <Th>{SitesColumns.Edge}</Th>
                     </Tr>
@@ -32,12 +32,13 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                     <Tbody key={row.siteId}>
                         <Tr>
                             <Td dataLabel={SitesColumns.Name}>
+                                <span className="sk-resource-icon sk-resource-site ">S</span>
                                 <Link to={`${SiteRoutesPaths.Details}/${row.siteId}`}>
                                     {row.siteName}
                                 </Link>
                             </Td>
                             <Td dataLabel={SitesColumns.Namespace}>{`${row.namespace}`}</Td>
-                            <Td dataLabel={SitesColumns.Url}>{`${row.url}`}</Td>
+                            <Td dataLabel={SitesColumns.Version}>{`${row.version}`}</Td>
                             <Td dataLabel={SitesColumns.Gateway}>
                                 {row.gateway ? (
                                     <CloudIcon color="var(--pf-global--success-color--100)" />

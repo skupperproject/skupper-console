@@ -57,7 +57,10 @@ const ServicesOverview = function () {
                 {rows?.map((row) => (
                     <Tbody key={row.id}>
                         <Tr>
-                            <Td dataLabel={ServicesOverviewColumns.Name}>{row.name}</Td>
+                            <Td dataLabel={ServicesOverviewColumns.Name}>
+                                <span className="sk-resource-icon sk-resource-service ">S</span>
+                                {row.name}
+                            </Td>
                             <Td
                                 dataLabel={ServicesOverviewColumns.Protocol}
                             >{`${row.protocol}`}</Td>
