@@ -5,11 +5,13 @@ import { CloudIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { SiteRoutesPaths } from '../sites.enum';
-import { SitesColumns } from './SitesTable.enum';
-import { SitesTableProps } from './SitesTable.interfaces';
+import ResourceIcon from '@core/components/ResourceIcon';
 
-const SitesTable = memo(function ({ sites }: SitesTableProps) {
+import { SitesRoutesPaths } from '../sites.enum';
+import { SitesOverviewColumns } from './SitesOverviewTable.enum';
+import { SitesOverviewTableProps } from './SitesOverviewTable.interfaces';
+
+const SitesOverviewTable = memo(function ({ sites }: SitesOverviewTableProps) {
     return (
         <Card>
             <TableComposable
@@ -21,38 +23,42 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
             >
                 <Thead>
                     <Tr>
-                        <Th>{SitesColumns.Name}</Th>
-                        <Th>{SitesColumns.Namespace}</Th>
-                        <Th>{SitesColumns.Version}</Th>
-                        <Th>{SitesColumns.Gateway}</Th>
-                        <Th>{SitesColumns.Edge}</Th>
+                        <Th>{SitesOverviewColumns.Name}</Th>
+                        <Th>{SitesOverviewColumns.Namespace}</Th>
+                        <Th>{SitesOverviewColumns.Version}</Th>
+                        <Th>{SitesOverviewColumns.Gateway}</Th>
+                        <Th>{SitesOverviewColumns.Edge}</Th>
+                        <Th>{SitesOverviewColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
                 {sites?.map((row) => (
                     <Tbody key={row.siteId}>
                         <Tr>
-                            <Td dataLabel={SitesColumns.Name}>
-                                <span className="sk-resource-icon sk-resource-site ">S</span>
-                                <Link to={`${SiteRoutesPaths.Details}/${row.siteId}`}>
+                            <Td dataLabel={SitesOverviewColumns.Name}>
+                                <ResourceIcon type="site" />
+                                <Link to={`${SitesRoutesPaths.Details}/${row.siteId}`}>
                                     {row.siteName}
                                 </Link>
                             </Td>
-                            <Td dataLabel={SitesColumns.Namespace}>{`${row.namespace}`}</Td>
-                            <Td dataLabel={SitesColumns.Version}>{`${row.version}`}</Td>
-                            <Td dataLabel={SitesColumns.Gateway}>
+                            <Td dataLabel={SitesOverviewColumns.Namespace}>{`${row.namespace}`}</Td>
+                            <Td dataLabel={SitesOverviewColumns.Version}>{`${row.version}`}</Td>
+                            <Td dataLabel={SitesOverviewColumns.Gateway}>
                                 {row.gateway ? (
                                     <CloudIcon color="var(--pf-global--success-color--100)" />
                                 ) : (
                                     <CloudIcon color="var(--pf-global--disabled-color--300)" />
                                 )}
                             </Td>
-                            <Td dataLabel={SitesColumns.Edge}>
+                            <Td dataLabel={SitesOverviewColumns.Edge}>
                                 {row.edge ? (
                                     <CloudIcon color="var(--pf-global--success-color--100)" />
                                 ) : (
                                     <CloudIcon color="var(--pf-global--disabled-color--300)" />
                                 )}
                             </Td>
+                            <Td
+                                dataLabel={SitesOverviewColumns.Version}
+                            >{`${row.connected.length}`}</Td>
                         </Tr>
                     </Tbody>
                 ))}
@@ -61,4 +67,4 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
     );
 });
 
-export default SitesTable;
+export default SitesOverviewTable;

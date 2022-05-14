@@ -31,7 +31,7 @@ export default SitesServices;
 
 function getTCPConnectionsInBySite(links: DeploymentLink[], siteId: string) {
     return links.reduce((acc, { source, target, request }) => {
-        if (target.site.site_id === siteId && request.id) {
+        if (target.site.site_id === siteId && request.id && source.site.site_id !== siteId) {
             const sourceSiteName = source.site.site_name;
             const requestsSetPerSites = acc[sourceSiteName];
 
@@ -46,7 +46,7 @@ function getTCPConnectionsInBySite(links: DeploymentLink[], siteId: string) {
 
 function getTCPConnectionsOutBySite(links: DeploymentLink[], siteId: string) {
     return links.reduce((acc, { source, target, request }) => {
-        if (source.site.site_id === siteId && request.id) {
+        if (source.site.site_id === siteId && request.id && target.site.site_id !== siteId) {
             const targetSiteName = target.site.site_name;
             const requestsSetPerSites = acc[targetSiteName];
 

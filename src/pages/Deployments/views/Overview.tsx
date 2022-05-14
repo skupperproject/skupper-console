@@ -5,6 +5,7 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
@@ -58,7 +59,7 @@ const DeploymentsOverview = function () {
                     <Tbody key={row.key}>
                         <Tr>
                             <Td dataLabel={DeploymentsOverviewColumns.Name}>
-                                <span className="sk-resource-icon sk-resource-deployment ">D</span>
+                                <ResourceIcon type="deployment" />
                                 <Link
                                     to={`${DeploymentsRoutesPaths.Details}/${row.service.address}_${row.site.site_id}`}
                                 >

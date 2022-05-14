@@ -31,7 +31,7 @@ export interface ServiceRequestReceivedResponse {
     by_client: Record<string, ServiceConnections>;
 }
 
-export interface ServiceRequestHandledResponse {
+interface ServiceRequestHandledResponse {
     site_id: string;
     by_server: ServiceDetails;
     by_originating_site: ServiceDetails;
@@ -101,11 +101,11 @@ export interface DataAdapterResponse {
 export interface SiteResponse {
     siteId: string;
     siteName: string;
-    edge?: boolean;
     version: string;
     url: string;
     connected: string[];
     namespace: string;
+    edge?: boolean;
     gateway?: boolean;
 }
 
@@ -147,7 +147,7 @@ interface FlowsLinkResponse {
     id: string;
 }
 
-export interface FlowsDeviceResponse {
+interface FlowsDeviceResponse {
     parent: string;
     startTime: number;
     destHost: string;
@@ -159,7 +159,7 @@ export interface FlowsDeviceResponse {
     id: string;
 }
 
-export interface FlowResponse {
+interface FlowResponse {
     parent: string;
     startTime: number;
     octets: number;

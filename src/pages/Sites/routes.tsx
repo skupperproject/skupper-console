@@ -1,6 +1,6 @@
 import React, { lazy } from 'react';
 
-import { SiteRoutesPaths } from './sites.enum';
+import { SitesRoutesPaths } from './sites.enum';
 
 const Sites = lazy(() => import(/* webpackChunkName: "sites" */ '.'));
 const SitesOverview = lazy(
@@ -10,16 +10,16 @@ const SiteDetails = lazy(() => import(/* webpackChunkName: "site-detail" */ './v
 
 export const siteRoutes = [
     {
-        path: SiteRoutesPaths.Sites,
+        path: SitesRoutesPaths.Sites,
         element: <Sites />,
         children: [
             { index: true, element: <SitesOverview /> },
             {
-                path: SiteRoutesPaths.Overview,
+                path: SitesRoutesPaths.Overview,
                 element: <SitesOverview />,
             },
             {
-                path: `${SiteRoutesPaths.Details}/:id`,
+                path: `${SitesRoutesPaths.Details}/:id`,
                 element: <SiteDetails />,
             },
         ],

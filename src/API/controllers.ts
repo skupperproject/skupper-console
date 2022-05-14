@@ -1,6 +1,6 @@
 import { DataResponse, FlowsDataResponse } from './REST.interfaces';
 import Adapter from './utils/adapter';
-import { normalizeFlows, getFlowsTree, generateDynamicBytes } from './utils/utils';
+import { normalizeFlows, getFlowsTree } from './utils/utils';
 
 export function getData(VANdata: DataResponse) {
     const data = JSON.parse(JSON.stringify(VANdata));
@@ -48,11 +48,11 @@ export function getFlows(flowsData: FlowsDataResponse[], serviceAddress?: string
         );
     }
 
-    return normalizeFlows(getFlowsTree(generateDynamicBytes(flowsData)));
+    return normalizeFlows(getFlowsTree(flowsData));
 }
 
 export function getFlowsNetworkStats(flowsData: FlowsDataResponse[]) {
-    const data = generateDynamicBytes(flowsData);
+    const data = flowsData;
 
     const stats = data.reduce((acc, item) => {
         if (item.vanAddress && !acc[item.vanAddress]) {
@@ -91,7 +91,7 @@ export function getFlowsNetworkStats(flowsData: FlowsDataResponse[]) {
 }
 
 export function getFlowsRoutersStats(flowsData: FlowsDataResponse[]) {
-    const data = generateDynamicBytes(flowsData);
+    const data = flowsData;
     let current: string;
     const routersStats = data.reduce((acc, item) => {
         if (item.rtype === 'ROUTER') {
@@ -114,13 +114,12 @@ export function getFlowsRoutersStats(flowsData: FlowsDataResponse[]) {
 
         return acc;
     }, {} as Record<string, any>);
-    console.log(routersStats);
 
     return Object.values(routersStats).filter((item) => item.totalVanAddress > 0);
 }
 
 export function getFlowsServiceStats(flowsData: FlowsDataResponse[]) {
-    const data = generateDynamicBytes(flowsData);
+    const data = flowsData;
 
     let current: string;
     let currentRouterName: string;
@@ -161,7 +160,7 @@ export function getFlowsConnectionsByService(
     flowsData: FlowsDataResponse[],
     serviceAddress: string,
 ) {
-    const data = generateDynamicBytes(flowsData);
+    const data = flowsData;
 
     const flows = normalizeFlows(getFlowsTree(data)).filter(
         (flow) => flow?.vanAddress === serviceAddress && flow.rtype === 'CONNECTOR',

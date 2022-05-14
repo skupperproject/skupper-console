@@ -12,7 +12,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import { MonitorServices } from '../../services';
 import { QueriesMonitoring } from '../../services/services.enum';
@@ -22,7 +21,7 @@ import { MonitoringTopologyVanService } from './topology.interfaces';
 const MonitoringTopology = function () {
     const navigate = useNavigate();
     const { id: vanId } = useParams();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(0);
     const [svgTopologyComponent, setSvgTopologyComponent] =
         useState<MonitoringTopologyVanService>();
 

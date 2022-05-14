@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import SitesTable from '../components/SitesTable';
+import SitesOverviewTable from '../components/SitesOverviewTable';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 
@@ -32,7 +32,11 @@ const Overview = function () {
         return <LoadingPage />;
     }
 
-    return <SitesTable sites={sites || []} />;
+    if (!sites) {
+        return null;
+    }
+
+    return <SitesOverviewTable sites={sites} />;
 };
 
 export default Overview;

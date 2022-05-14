@@ -1,14 +1,6 @@
 import { drag } from 'd3-drag';
 import { xml } from 'd3-fetch';
-import {
-    forceSimulation,
-    forceCenter,
-    forceManyBody,
-    forceCollide,
-    forceLink,
-    forceX,
-    forceY,
-} from 'd3-force';
+import { forceSimulation, forceCenter, forceManyBody, forceLink, forceX, forceY } from 'd3-force';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
@@ -23,7 +15,7 @@ const SITE_SIZE = 150;
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 40;
 
-const TopologySites = async function (
+const TopologyGraph = async function (
     $node: HTMLElement,
     nodes: TopologyNode[],
     links: TopologyLink[],
@@ -53,13 +45,16 @@ const TopologySites = async function (
     // let isDragging = false;
     const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>(nodes)
         .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2).strength(0))
-        .force('charge', forceManyBody().strength(0))
-        .force('collide', forceCollide().strength(1).radius(SERVICE_SIZE).iterations(1))
+        .force('charge', forceManyBody())
         .force(
             'x',
             forceX<TopologyNode>()
                 .strength(0.3)
-                .x(function ({ group }) {
+                .x(function ({ group, fx }) {
+                    if (fx) {
+                        return fx;
+                    }
+
                     return xScale(group?.toString()) as number;
                 }),
         )
@@ -67,17 +62,17 @@ const TopologySites = async function (
             'y',
             forceY<TopologyNode>()
                 .strength(0.3)
-                .y(function ({ group }) {
+                .y(function ({ group, fy }) {
+                    if (fy) {
+                        return fy;
+                    }
+
                     return yScale(group?.toString()) as number;
                 }),
         )
         .force(
             'link',
-            forceLink<TopologyNode, TopologyLink>(links)
-                .strength(0.15)
-                .id(function ({ id }) {
-                    return id;
-                }),
+            forceLink<TopologyNode, TopologyLink>(links).id(({ id }) => id),
         )
         .on('tick', ticked);
 
@@ -109,71 +104,82 @@ const TopologySites = async function (
         .attr('d', 'M0,-5L10,0L0,5');
 
     // links services
-    svgElement
-        .selectAll('.serviceLink')
-        .data(links)
-        .enter()
-        .call(function (p) {
-            p.append('line')
-                .attr('class', 'serviceLink')
-                .style('stroke', 'var(--pf-global--palette--black-400)')
-                .style('stroke-width', '1px')
-                .attr('marker-end', ({ type }) =>
-                    type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
-                );
-        });
+    const svgLinks = svgElement.selectAll('.serviceLink').data(links).enter();
+
+    svgLinks
+        .append('line')
+        .attr('class', 'serviceLink')
+        .style('stroke', 'var(--pf-global--palette--black-400)')
+        .style('stroke-width', '1px')
+        .attr('marker-end', ({ type }) =>
+            type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
+        );
 
     //services
-    const svgServiceNodes = svgElement.selectAll('.serviceNode').data(nodes).enter();
     const serverXMLData = await xml(server);
     const serviceXMLData = await xml(service);
+    const svgServiceNodes = svgElement.selectAll('.serviceNode').data(nodes).enter();
 
-    svgServiceNodes.call((svgServiceNode) => {
-        svgServiceNode
-            .append('text')
-            .attr('class', 'serviceNodeL')
-            .attr('font-size', 12)
-            .style('text-anchor', 'middle')
-            .style('fill', 'var(--pf-global--palette--light-blue-500)')
-            .text(({ name }) => name);
+    svgServiceNodes
+        .append('text')
+        .attr('class', 'serviceNodeL')
+        .attr('font-size', 12)
+        .style('text-anchor', 'middle')
+        .style('fill', 'var(--pf-global--palette--light-blue-500)')
+        .text(({ name }) => name);
 
-        svgServiceNode
-            .append(({ type }) => {
-                const XMLData = type === 'site' ? serverXMLData : serviceXMLData;
+    svgServiceNodes
+        .append(({ type }) => {
+            const XMLData = type === 'site' ? serverXMLData : serviceXMLData;
 
-                return XMLData.documentElement.cloneNode(true) as HTMLElement;
-            })
-            .attr('width', SERVICE_SIZE)
-            .attr('height', SERVICE_SIZE)
-            .attr('class', 'serviceNode')
-            .style('fill', ({ group }) => color(group.toString()));
+            return XMLData.documentElement.cloneNode(true) as HTMLElement;
+        })
+        .attr('width', SERVICE_SIZE)
+        .attr('height', SERVICE_SIZE)
+        .attr('class', 'serviceNode')
+        .style('fill', ({ group }) => color(group.toString()));
 
-        // it improves drag & drop area selection
-        svgServiceNode
-            .append('rect')
-            .attr('class', 'serviceNode')
-            .attr('width', SERVICE_SIZE)
-            .attr('height', SERVICE_SIZE)
-            .attr('fill', 'transparent')
-            .call(
-                drag<SVGRectElement, TopologyNode>()
-                    .on('start', dragStarted)
-                    .on('drag', dragged)
-                    .on('end', dragEnded),
-            )
-            .on('mouseover', (_, { id }) => {
-                svgElement.selectAll('.serviceLink').style('opacity', (svgLink: any) => {
+    // it improves drag & drop area selection
+    svgServiceNodes
+        .append('rect')
+        .attr('class', 'serviceNode')
+        .attr('width', SERVICE_SIZE)
+        .attr('height', SERVICE_SIZE)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .call(
+            drag<SVGRectElement, TopologyNode>()
+                .on('start', dragStarted)
+                .on('drag', dragged)
+                .on('end', dragEnded),
+        )
+        .on('mouseover', (_, { id }) => {
+            svgElement
+                .selectAll<SVGElement, TopologyLinkNormalized>('.serviceLink')
+                .style('opacity', (svgLink) => {
                     const isLinkConnectedToTheNode =
                         id === svgLink.source.id || id === svgLink.target.id;
 
-                    return isLinkConnectedToTheNode ? '1' : '0';
+                    return isLinkConnectedToTheNode ? '1' : '0.2';
+                })
+                .style('stroke', (svgLink) => {
+                    const isLinkConnectedToTheNode =
+                        id === svgLink.source.id || id === svgLink.target.id;
+
+                    return isLinkConnectedToTheNode
+                        ? 'blue'
+                        : 'var(--pf-global--palette--black-400)';
                 });
-            })
-            .on('mouseout', () => svgElement.selectAll('.serviceLink').style('opacity', '1'));
-    });
+        })
+        .on('mouseout', () =>
+            svgElement
+                .selectAll('.serviceLink')
+                .style('opacity', '1')
+                .style('stroke', 'var(--pf-global--palette--black-400)'),
+        );
 
     // drag util
-    function fixNodes({ x, y }: TopologyNode) {
+    function fixNodes(x: number, y: number) {
         svgServiceNodes.each(function (node) {
             if (x !== node.x || y !== node.y) {
                 node.fx = node.x;
@@ -189,7 +195,7 @@ const TopologySites = async function (
         node.fx = node.x;
         node.fy = node.y;
 
-        fixNodes(node);
+        fixNodes(node.x, node.y);
         // isDragging = true;
     }
 
@@ -294,4 +300,4 @@ const TopologySites = async function (
     });
 };
 
-export default TopologySites;
+export default TopologyGraph;

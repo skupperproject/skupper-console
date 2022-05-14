@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import TopologySites from './components/Topology';
+import TopologyGraph from './components/Topology';
 import { TopologyViews } from './components/topology.enum';
 import { TopologySVG } from './components/Topology.interfaces';
 import { TopologyServices } from './services';
@@ -61,14 +61,16 @@ const Topology = function () {
         () =>
             sites?.map((node) => {
                 const positions = localStorage.getItem(node.siteId);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
 
                 return {
                     id: node.siteId,
                     name: node.siteName,
-                    x: 0,
-                    y: 0,
-                    fx: positions ? JSON.parse(positions).fx : null,
-                    fy: positions ? JSON.parse(positions).fy : null,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
                     type: 'site',
                     group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
                 };
@@ -94,14 +96,16 @@ const Topology = function () {
         () =>
             deployments?.deployments?.map((node) => {
                 const positions = localStorage.getItem(node.key);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
 
                 return {
                     id: node.key,
                     name: node.service.address,
-                    x: 0,
-                    y: 0,
-                    fx: positions ? JSON.parse(positions).fx : null,
-                    fy: positions ? JSON.parse(positions).fy : null,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
                     type: 'service',
                     group: siteNodes?.findIndex(({ id }) => id === node.site.site_id) || 0,
                 };
@@ -126,7 +130,7 @@ const Topology = function () {
                 const nodes = topologyType === 'sites' ? siteNodes : serviceNodes;
                 const links = topologyType === 'sites' ? linkSites : linkServices;
 
-                const topologySitesRef = TopologySites(
+                const topologySitesRef = TopologyGraph(
                     node,
                     nodes,
                     links,

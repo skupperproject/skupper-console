@@ -6,9 +6,11 @@ import {
     ServiceRequestReceivedResponse,
 } from 'API/REST.interfaces';
 
+type Service = DataServicesResponse;
+
+type Site = DataSiteResponse;
+
 export type Deployment = DeploymentTopologyResponse;
-export type Service = DataServicesResponse;
-export type Site = DataSiteResponse;
 
 export interface DeploymentDetails {
     service: Service;

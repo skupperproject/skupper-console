@@ -19,11 +19,12 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { SiteRoutesPaths } from '@pages/Sites/sites.enum';
+import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import { DeploymentsRoutesPaths, DeploymentsRoutesPathLabel } from '../Deployments.enum';
@@ -83,7 +84,7 @@ const DeploymentsDetails = function () {
 
             <TextContent>
                 <Text component={TextVariants.h1} className=" pf-u-font-weight-bold">
-                    <span className="sk-resource-icon sk-resource-deployment">D</span>
+                    <ResourceIcon type="deployment" />
                     {`${site.site_name}/${service.address}`}
                 </Text>
             </TextContent>
@@ -92,39 +93,27 @@ const DeploymentsDetails = function () {
                 <Text component={TextVariants.h2}>{DeploymentsLabels.Details}</Text>
             </TextContent>
 
-            <Split>
-                <SplitItem className="pf-u-w-50">
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">
-                            {DeploymentsOverviewColumns.Site}
-                        </div>
-                        <span>
-                            <Link to={`${SiteRoutesPaths.Details}/${site.site_id}`}>
-                                <SearchIcon /> {site.site_name}
-                            </Link>
-                        </span>
-                    </div>
-                </SplitItem>
+            <div className="pf-u-mb-lg">
+                <div className="  pf-u-font-weight-bold">{DeploymentsOverviewColumns.Site}</div>
+                <span>
+                    <Link to={`${SitesRoutesPaths.Details}/${site.site_id}`}>
+                        <SearchIcon /> {site.site_name}
+                    </Link>
+                </span>
+            </div>
 
-                <SplitItem className="pf-u-w-50">
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">
-                            {DeploymentsOverviewColumns.Service}
-                        </div>
-                        <span>
-                            <span className="sk-resource-icon sk-resource-service">S</span>
-                            {service.address}
-                        </span>
-                    </div>
+            <div className="pf-u-mb-lg">
+                <div className="  pf-u-font-weight-bold">{DeploymentsOverviewColumns.Service}</div>
+                <span>
+                    <ResourceIcon type="service" />
+                    {service.address}
+                </span>
+            </div>
 
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">
-                            {DeploymentsOverviewColumns.Protocol}
-                        </div>
-                        <span>{service.protocol}</span>
-                    </div>
-                </SplitItem>
-            </Split>
+            <div className="pf-u-mb-lg">
+                <div className="  pf-u-font-weight-bold">{DeploymentsOverviewColumns.Protocol}</div>
+                <span>{service.protocol}</span>
+            </div>
 
             {httpConnectionsIn.length !== 0 && (
                 <StackItem>

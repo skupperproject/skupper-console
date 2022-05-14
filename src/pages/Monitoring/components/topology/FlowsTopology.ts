@@ -125,10 +125,8 @@ function TopologyMonitoringService(
                 .attr('class', 'routerLink')
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
-                .attr(
-                    'marker-end',
-                    ({ type }) => (type === 'LISTENER' || type === 'CONNECTOR') && 'url(#arrow)',
-                );
+                .attr('marker-start', ({ type }) => type === 'CONNECTOR' && 'url(#arrow)')
+                .attr('marker-end', ({ type }) => type === 'LISTENER' && 'url(#arrow)');
 
             // label
             p.append('text')
@@ -216,7 +214,7 @@ function TopologyMonitoringService(
     });
 
     // drag util
-    function fixNodes({ x, y }: MonitoringTopologyNode) {
+    function fixNodes(x?: number, y?: number) {
         svgRouterNodes.each(function (node) {
             if (x !== node.x || y !== node.y) {
                 node.fx = node.x;
@@ -240,8 +238,8 @@ function TopologyMonitoringService(
         node.fx = node.x;
         node.fy = node.y;
 
-        fixNodes(node);
         isDragging = true;
+        fixNodes(node.x, node.y);
     }
 
     function dragged({ x, y }: { x: number; y: number }, node: MonitoringTopologyNode) {
@@ -255,12 +253,11 @@ function TopologyMonitoringService(
             simulation.stop();
         }
 
-        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
-
         node.fx = null;
         node.fy = null;
 
         isDragging = false;
+        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
     }
 
     function ticked() {
@@ -283,14 +280,14 @@ function TopologyMonitoringService(
         }
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.routerImg')
-            .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
-            .attr('y', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
-
-        svgElement
             .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImg')
             .attr('cx', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
             .attr('cy', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
+
+        svgElement
+            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.routerImg')
+            .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
+            .attr('y', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
 
         svgElement
             .selectAll<SVGSVGElement, MonitoringTopologyLinkNormalized>('.routerLink')

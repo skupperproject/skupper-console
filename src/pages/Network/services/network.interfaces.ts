@@ -6,4 +6,13 @@ export type NetworkStats = MonitoringStatsResponse;
 export interface Network {
     networkStats: NetworkStats[];
     routersStats: RoutersStats[];
+    sitesStats: {
+        totalSites: number;
+    };
+    serviceStats: {
+        totalServices: number;
+    };
+    deploymentsStats: {
+        totalDeployments: number;
+    };
 }

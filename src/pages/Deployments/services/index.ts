@@ -70,26 +70,27 @@ function getTCPConnectionsOutByService(deployments: Deployment[], id: string) {
     const otherDeployments = deployments.filter(({ key }) => key !== id) as Deployment[];
     const serviceName = id?.split('_')[0];
 
-    return otherDeployments.flatMap(({ service: { address, connections_ingress } }) =>
-        (connections_ingress || [])
-            .flatMap((connectionIn) => Object.values(connectionIn.connections))
-            .filter(({ client }) => client.includes(serviceName))
-            .flatMap((connection) => ({
-                ...connection,
-                client: address,
-            })),
+    return otherDeployments.flatMap(
+        ({ service: { address, connections_ingress }, site: { site_name } }) =>
+            (connections_ingress || [])
+                .flatMap((connectionIn) => Object.values(connectionIn.connections))
+                .filter(({ client }) => client.includes(serviceName))
+                .flatMap((connection) => ({
+                    ...connection,
+                    client: `${site_name}/${address}`,
+                })),
     );
 }
 
 function getTCPConnectionsInByService(deployments: Deployment[], id: string) {
     const myDeployments = deployments.filter(({ key }) => key === id) as Deployment[];
 
-    return myDeployments.flatMap(({ service: { connections_ingress } }) =>
+    return myDeployments.flatMap(({ service: { connections_ingress }, site: { site_name } }) =>
         (connections_ingress || [])
             .flatMap((connectionIn) => Object.values(connectionIn.connections))
             .flatMap((connection) => ({
                 ...connection,
-                client: removeSuffixFromClientPropValue(connection.client),
+                client: removeSuffixFromClientPropValue(`${site_name}/${connection.client}`),
             })),
     );
 }

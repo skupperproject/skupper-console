@@ -11,40 +11,9 @@ export enum MonitoringRoutesPathLabel {
 }
 
 // Routers  section
-export enum SectionsStatsLabels {
-    Service = 'Service',
-    Router = 'Router',
-    Link = 'Link',
-}
-
 export enum ConnectionsNavMenu {
     Topology = 'Topology',
     Table = 'Details',
-}
-
-export enum OverviewColumns {
-    Name = 'Name',
-    NumRouters = 'Routers',
-    NumServices = 'Services',
-    NumConnections = 'Flows',
-    NumLinks = 'Links',
-    TotalBytes = 'Traffic',
-}
-
-export enum RoutersColumns {
-    Name = 'Name',
-    NumRouters = 'Routers',
-    NumServices = 'Services',
-    NumFLows = 'Flows',
-    TotalBytes = 'Traffic',
-}
-
-export enum LinksColumns {
-    RouterStart = 'From',
-    RouterEnd = 'To',
-    Cost = 'Cost',
-    Mode = 'Mode',
-    Direction = 'Direction',
 }
 
 // Services  section

@@ -11,13 +11,17 @@ import {
     TextContent,
     TextVariants,
 } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { formatBytes } from '@core/utils/formatBytes';
+import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
+import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
 
 import { NetworkServices } from '../services';
 import { QueriesNetwork } from '../services/network.enum';
@@ -103,32 +107,24 @@ const Overview = function () {
                 <StackItem>
                     <Split hasGutter>
                         <SplitItem isFilled>
-                            <Card className=" pf-u-p-md" isRounded>
-                                <TextContent>
-                                    <Text component={TextVariants.small}>
-                                        {OverviewNetworkColumns.NumRouters}
-                                    </Text>
-                                    <Text
-                                        className="pf-u-text-align-center"
-                                        component={TextVariants.h1}
-                                    >
-                                        {networkStats.totalRouters}
-                                    </Text>
-                                </TextContent>
-                            </Card>
-                        </SplitItem>
-
-                        <SplitItem isFilled>
                             <Card className="pf-u-p-md" isRounded>
                                 <TextContent>
                                     <Text component={TextVariants.small}>
-                                        {OverviewNetworkColumns.NumLinks}
+                                        {OverviewNetworkColumns.NumSites}
                                     </Text>
                                     <Text
                                         className="pf-u-text-align-center"
                                         component={TextVariants.h1}
                                     >
-                                        {networkStats.totalLinks}
+                                        {data?.sitesStats.totalSites}
+                                    </Text>
+                                    <Text
+                                        className="pf-u-text-align-right"
+                                        component={TextVariants.p}
+                                    >
+                                        <Link to={`${SitesRoutesPaths.Overview}`}>
+                                            <SearchIcon /> view details
+                                        </Link>
                                     </Text>
                                 </TextContent>
                             </Card>
@@ -144,7 +140,15 @@ const Overview = function () {
                                         className="pf-u-text-align-center"
                                         component={TextVariants.h1}
                                     >
-                                        {networkStats.totalVanAddress}
+                                        {data?.serviceStats.totalServices}
+                                    </Text>
+                                    <Text
+                                        className="pf-u-text-align-right"
+                                        component={TextVariants.p}
+                                    >
+                                        <Link to={`${ServicesRoutesPaths.Overview}`}>
+                                            <SearchIcon /> view details
+                                        </Link>
                                     </Text>
                                 </TextContent>
                             </Card>
@@ -154,13 +158,21 @@ const Overview = function () {
                             <Card className="pf-u-p-md" isRounded>
                                 <TextContent>
                                     <Text component={TextVariants.small}>
-                                        {OverviewNetworkColumns.NumConnections}
+                                        {OverviewNetworkColumns.NumDeployments}
                                     </Text>
                                     <Text
                                         className="pf-u-text-align-center"
                                         component={TextVariants.h1}
                                     >
-                                        {networkStats.totalFlows}
+                                        {data?.deploymentsStats.totalDeployments}
+                                    </Text>
+                                    <Text
+                                        className="pf-u-text-align-right"
+                                        component={TextVariants.p}
+                                    >
+                                        <Link to={`${DeploymentsRoutesPaths.Overview}`}>
+                                            <SearchIcon /> view details
+                                        </Link>
                                     </Text>
                                 </TextContent>
                             </Card>

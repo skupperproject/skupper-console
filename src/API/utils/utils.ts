@@ -1,6 +1,6 @@
 import { FlowsDataResponse } from 'API/REST.interfaces';
 
-export type FlowsWithListenersConnectorsMapped =
+type FlowsWithListenersConnectorsMapped =
     | FlowsDataResponse
     | (FlowsDataResponse & {
           connectedTo: FlowsDataResponse;
@@ -57,13 +57,13 @@ export function normalizeFlows(data: ListToTree[]) {
 
 function mapFlowsWithListenersConnectors(flows: FlowsDataResponse[]) {
     return flows.map((data) => {
-        const listenersBound = flows.reduce(
-            (acc, item) => ({
-                ...acc,
-                [item.id]: item,
-            }),
-            {} as Record<string, FlowsDataResponse>,
-        );
+        const listenersBound = flows.reduce((acc, item) => {
+            if (item.counterflow) {
+                acc[item.id] = item;
+            }
+
+            return acc;
+        }, {} as Record<string, FlowsDataResponse>);
 
         const connectorsBound = flows.reduce((acc, item) => {
             if (item.counterflow) {
@@ -95,13 +95,4 @@ function mapFlowsWithListenersConnectors(flows: FlowsDataResponse[]) {
 
 export function getFlowsTree(data: FlowsDataResponse[]) {
     return list_to_tree(mapFlowsWithListenersConnectors(data));
-}
-
-// TODO: simulate dynamic bytes flow
-export function generateDynamicBytes(flows: FlowsDataResponse[]) {
-    return flows.map((item) =>
-        item.rtype === 'FLOW'
-            ? { ...item, octets: item.octets + Math.random() * (1024 * 1024 * 10) }
-            : item,
-    );
 }

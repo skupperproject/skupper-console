@@ -4,6 +4,8 @@ export enum OverviewNetworkColumns {
     NumServices = 'Services',
     NumConnections = 'Flows',
     NumLinks = 'Links',
+    NumSites = 'Sites',
+    NumDeployments = 'Deployments',
     TotalBytes = 'Traffic',
 }
 

@@ -5,6 +5,7 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
@@ -58,7 +59,7 @@ const ServicesOverview = function () {
                     <Tbody key={row.id}>
                         <Tr>
                             <Td dataLabel={ServicesOverviewColumns.Name}>
-                                <span className="sk-resource-icon sk-resource-service ">S</span>
+                                <ResourceIcon type="service" />
                                 {row.name}
                             </Td>
                             <Td

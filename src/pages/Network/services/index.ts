@@ -4,11 +4,20 @@ import { Network } from './network.interfaces';
 
 export const NetworkServices = {
     fetchNetworkStats: async function (): Promise<Network> {
-        const [routersStats, networkStats] = await Promise.all([
+        const [routersStats, networkStats, sites, services, deployments] = await Promise.all([
             RESTApi.fetchFlowsRoutersStats(),
             RESTApi.fetchFlowsNetworkStats(),
+            RESTApi.fetchSites(),
+            RESTApi.fetchServices(),
+            RESTApi.fetchDeployments(),
         ]);
 
-        return { routersStats, networkStats };
+        return {
+            routersStats,
+            networkStats,
+            sitesStats: { totalSites: sites.length },
+            serviceStats: { totalServices: services.length },
+            deploymentsStats: { totalDeployments: deployments.length },
+        };
     },
 };
