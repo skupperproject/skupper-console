@@ -1,11 +1,9 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
     Breadcrumb,
     BreadcrumbHeading,
     BreadcrumbItem,
-    Card,
-    CardTitle,
     Split,
     SplitItem,
     Stack,
@@ -17,14 +15,10 @@ import {
     TextContent,
     TextVariants,
 } from '@patternfly/react-core';
-import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
-import { formatBytes } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
@@ -33,8 +27,9 @@ import { SitesOverviewColumns } from '../components/SitesOverviewTable.enum';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel } from '../sites.enum';
-import { SiteDetailsColumns, SiteDetailsColumnsLabels, SitesDetailsLabels } from './Details.enum';
-import { TableProps } from './Details.interfaces';
+import SitesConnections from './Connections';
+import { SitesDetailsLabels } from './Details.enum';
+import SitesMetrics from './Metrics';
 
 const SiteDetail = function () {
     const navigate = useNavigate();
@@ -74,59 +69,6 @@ const SiteDetail = function () {
     if (!site) {
         return null;
     }
-
-    const httpRequestsReceivedEntries = Object.entries(site.httpRequestsReceived);
-    const httpRequestsSentEntries = Object.entries(site.httpRequestsSent);
-    const tcpConnectionsInEntries = Object.entries(site.tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.entries(site.tcpConnectionsOut);
-
-    const ConnectionsTables = function () {
-        return (
-            <Stack hasGutter>
-                {httpRequestsReceivedEntries.length !== 0 && (
-                    <StackItem>
-                        <Card isRounded>
-                            <CardTitle>{SiteDetailsColumnsLabels.HTTPrequestsIn}</CardTitle>
-                            <HTTPtable rows={httpRequestsReceivedEntries} />
-                        </Card>
-                    </StackItem>
-                )}
-                {httpRequestsSentEntries.length !== 0 && (
-                    <StackItem>
-                        <Card isRounded>
-                            <CardTitle>{SiteDetailsColumnsLabels.HTTPrequestsOut}</CardTitle>
-                            <HTTPtable rows={httpRequestsSentEntries} />
-                        </Card>
-                    </StackItem>
-                )}
-
-                <StackItem>
-                    <Split hasGutter>
-                        {tcpConnectionsInEntries.length !== 0 && (
-                            <SplitItem isFilled>
-                                <Card isFullHeight isRounded>
-                                    <CardTitle>
-                                        {SiteDetailsColumnsLabels.TCPconnectionsIn}
-                                    </CardTitle>
-                                    <TCPTable rows={tcpConnectionsInEntries} />
-                                </Card>
-                            </SplitItem>
-                        )}
-                        {tcpConnectionsOutEntries.length !== 0 && (
-                            <SplitItem isFilled>
-                                <Card isFullHeight isRounded>
-                                    <CardTitle>
-                                        {SiteDetailsColumnsLabels.TCPconnectionsOut}
-                                    </CardTitle>
-                                    <TCPTable rows={tcpConnectionsOutEntries} />
-                                </Card>
-                            </SplitItem>
-                        )}
-                    </Split>
-                </StackItem>
-            </Stack>
-        );
-    };
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
@@ -199,13 +141,18 @@ const SiteDetail = function () {
                     eventKey={0}
                     title={<TabTitleText>{SitesDetailsLabels.TabConnections}</TabTitleText>}
                 >
-                    <ConnectionsTables />
+                    <SitesConnections
+                        httpRequestsReceived={site.httpRequestsReceived}
+                        httpRequestsSent={site.httpRequestsSent}
+                        tcpConnectionsIn={site.tcpConnectionsIn}
+                        tcpConnectionsOut={site.tcpConnectionsOut}
+                    />
                 </Tab>
                 <Tab
                     eventKey={1}
                     title={<TabTitleText>{SitesDetailsLabels.TabMetrics}</TabTitleText>}
                 >
-                    Containers
+                    <SitesMetrics />
                 </Tab>
             </Tabs>
         </Stack>
@@ -213,95 +160,3 @@ const SiteDetail = function () {
 };
 
 export default SiteDetail;
-
-const TCPTable: FC<TableProps> = function ({ rows }) {
-    return (
-        <TableComposable
-            className="network-table"
-            aria-label="network table"
-            borders={false}
-            variant="compact"
-            isStriped
-        >
-            <Thead>
-                <Tr>
-                    <Th>{SiteDetailsColumns.Name}</Th>
-                    <Th>{SiteDetailsColumns.Ip}</Th>
-                    <Th>
-                        <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                        {SiteDetailsColumns.BytesIn}
-                    </Th>
-                    <Th>
-                        <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                        {SiteDetailsColumns.BytesOut}
-                    </Th>
-                </Tr>
-            </Thead>
-            {rows.map(([siteName, tcpConnectionsIn]) => (
-                <Tbody key={siteName}>
-                    <Tr>
-                        <Td dataLabel={SiteDetailsColumns.Name}>{`${siteName}`}</Td>
-                        <Td dataLabel={SiteDetailsColumns.Ip}>{`${
-                            tcpConnectionsIn.id.split('@')[0]
-                        }`}</Td>
-                        <Td dataLabel={SiteDetailsColumns.BytesIn}>{`${formatBytes(
-                            tcpConnectionsIn.bytes_in,
-                        )}`}</Td>
-                        <Td dataLabel={SiteDetailsColumns.BytesOut}>{`${formatBytes(
-                            tcpConnectionsIn.bytes_out,
-                        )}`}</Td>
-                    </Tr>
-                </Tbody>
-            ))}
-        </TableComposable>
-    );
-};
-
-const HTTPtable: FC<TableProps> = function ({ rows }) {
-    return (
-        <TableComposable
-            className="network-table"
-            aria-label="network table"
-            borders={false}
-            variant="compact"
-            isStriped
-        >
-            <Thead>
-                <Tr>
-                    <Th>{SiteDetailsColumns.Name}</Th>
-                    <Th>{SiteDetailsColumns.Requests}</Th>
-                    <Th>{SiteDetailsColumns.MaxLatency}</Th>
-                    <Th>
-                        <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                        {SiteDetailsColumns.BytesIn}
-                    </Th>
-                    <Th>
-                        <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                        {SiteDetailsColumns.BytesOut}
-                    </Th>
-                </Tr>
-            </Thead>
-            {rows.map(([siteName, requestReceived]) => (
-                <Tbody key={siteName}>
-                    <Tr>
-                        <Td dataLabel={SiteDetailsColumns.Name}>{`${siteName}`}</Td>
-                        <Td dataLabel={SiteDetailsColumns.Requests}>
-                            {`${requestReceived.requests}`}
-                        </Td>
-                        <Td dataLabel={SiteDetailsColumns.MaxLatency}>
-                            {`${formatTime(requestReceived.latency_max, {
-                                startSize: 'ms',
-                            })}`}
-                        </Td>
-                        <Td dataLabel={SiteDetailsColumns.BytesIn}>
-                            {`${formatBytes(requestReceived.bytes_in)}`}
-                        </Td>
-                        <Td dataLabel={SiteDetailsColumns.BytesOut}>
-                            {`${formatBytes(requestReceived.bytes_out)}`}
-                        </Td>
-                    </Tr>
-                </Tbody>
-            ))}
-        </TableComposable>
-    );
-};
