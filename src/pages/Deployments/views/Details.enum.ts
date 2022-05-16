@@ -7,9 +7,11 @@ export enum DeploymentDetailsColumns {
     MaxLatency = 'Max Latency',
 }
 
-export enum DeploymentDetailsColumnsLabels {
+export enum DeploymentDetailsLabels {
     HTTPrequestsIn = 'HTTP Requests Received',
     HTTPrequestsOut = 'HTTP Requests Sent',
     TCPconnectionsIn = 'Inbound TCP Connections',
     TCPconnectionsOut = 'Outbound TCP Connections',
+    TabConnections = 'Connections',
+    TabMetrics = 'Metrics',
 }

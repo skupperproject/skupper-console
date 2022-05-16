@@ -10,6 +10,9 @@ import {
     SplitItem,
     Stack,
     StackItem,
+    Tab,
+    Tabs,
+    TabTitleText,
     Text,
     TextContent,
     TextVariants,
@@ -30,13 +33,14 @@ import { SitesOverviewColumns } from '../components/SitesOverviewTable.enum';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel } from '../sites.enum';
-import { SiteDetailsColumns, SiteDetailsColumnsLabels, SitesLabel } from './Details.enum';
+import { SiteDetailsColumns, SiteDetailsColumnsLabels, SitesDetailsLabels } from './Details.enum';
 import { TableProps } from './Details.interfaces';
 
 const SiteDetail = function () {
     const navigate = useNavigate();
     const { id: siteId } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [activeTabKey, setaActiveTabKey] = useState<number>();
 
     const { data: site, isLoading } = useQuery(
         [QueriesSites.GetSite, siteId],
@@ -56,6 +60,13 @@ const SiteDetail = function () {
         navigate(route);
     }
 
+    function handleTabClick(
+        _: React.MouseEvent<HTMLElement, MouseEvent>,
+        tabIndex: number | string,
+    ) {
+        setaActiveTabKey(tabIndex as number);
+    }
+
     if (isLoading) {
         return <LoadingPage />;
     }
@@ -69,6 +80,54 @@ const SiteDetail = function () {
     const tcpConnectionsInEntries = Object.entries(site.tcpConnectionsIn);
     const tcpConnectionsOutEntries = Object.entries(site.tcpConnectionsOut);
 
+    const ConnectionsTables = function () {
+        return (
+            <Stack hasGutter>
+                {httpRequestsReceivedEntries.length !== 0 && (
+                    <StackItem>
+                        <Card isRounded>
+                            <CardTitle>{SiteDetailsColumnsLabels.HTTPrequestsIn}</CardTitle>
+                            <HTTPtable rows={httpRequestsReceivedEntries} />
+                        </Card>
+                    </StackItem>
+                )}
+                {httpRequestsSentEntries.length !== 0 && (
+                    <StackItem>
+                        <Card isRounded>
+                            <CardTitle>{SiteDetailsColumnsLabels.HTTPrequestsOut}</CardTitle>
+                            <HTTPtable rows={httpRequestsSentEntries} />
+                        </Card>
+                    </StackItem>
+                )}
+
+                <StackItem>
+                    <Split hasGutter>
+                        {tcpConnectionsInEntries.length !== 0 && (
+                            <SplitItem isFilled>
+                                <Card isFullHeight isRounded>
+                                    <CardTitle>
+                                        {SiteDetailsColumnsLabels.TCPconnectionsIn}
+                                    </CardTitle>
+                                    <TCPTable rows={tcpConnectionsInEntries} />
+                                </Card>
+                            </SplitItem>
+                        )}
+                        {tcpConnectionsOutEntries.length !== 0 && (
+                            <SplitItem isFilled>
+                                <Card isFullHeight isRounded>
+                                    <CardTitle>
+                                        {SiteDetailsColumnsLabels.TCPconnectionsOut}
+                                    </CardTitle>
+                                    <TCPTable rows={tcpConnectionsOutEntries} />
+                                </Card>
+                            </SplitItem>
+                        )}
+                    </Split>
+                </StackItem>
+            </Stack>
+        );
+    };
+
     return (
         <Stack hasGutter className="pf-u-pl-md">
             <StackItem>
@@ -81,14 +140,14 @@ const SiteDetail = function () {
             </StackItem>
 
             <TextContent>
-                <Text component={TextVariants.h1} className=" pf-u-font-weight-bold">
+                <Text component={TextVariants.h1} className="pf-u-mb-xl pf-u-font-weight-bold">
                     <ResourceIcon type="site" />
                     {site.siteName}
                 </Text>
             </TextContent>
 
             <TextContent>
-                <Text component={TextVariants.h2}>{SitesLabel.Details}</Text>
+                <Text component={TextVariants.h2}>{SitesDetailsLabels.Details}</Text>
             </TextContent>
 
             <Split>
@@ -135,43 +194,20 @@ const SiteDetail = function () {
                 </SplitItem>
             </Split>
 
-            {httpRequestsReceivedEntries.length !== 0 && (
-                <StackItem>
-                    <Card isRounded>
-                        <CardTitle>{SiteDetailsColumnsLabels.HTTPrequestsIn}</CardTitle>
-                        <HTTPtable rows={httpRequestsReceivedEntries} />
-                    </Card>
-                </StackItem>
-            )}
-            {httpRequestsSentEntries.length !== 0 && (
-                <StackItem>
-                    <Card isRounded>
-                        <CardTitle>{SiteDetailsColumnsLabels.HTTPrequestsOut}</CardTitle>
-                        <HTTPtable rows={httpRequestsSentEntries} />
-                    </Card>
-                </StackItem>
-            )}
-
-            <StackItem>
-                <Split hasGutter>
-                    {tcpConnectionsInEntries.length !== 0 && (
-                        <SplitItem isFilled>
-                            <Card isFullHeight isRounded>
-                                <CardTitle>{SiteDetailsColumnsLabels.TCPconnectionsIn}</CardTitle>
-                                <TCPTable rows={tcpConnectionsInEntries} />
-                            </Card>
-                        </SplitItem>
-                    )}
-                    {tcpConnectionsOutEntries.length !== 0 && (
-                        <SplitItem isFilled>
-                            <Card isFullHeight isRounded>
-                                <CardTitle>{SiteDetailsColumnsLabels.TCPconnectionsOut}</CardTitle>
-                                <TCPTable rows={tcpConnectionsOutEntries} />
-                            </Card>
-                        </SplitItem>
-                    )}
-                </Split>
-            </StackItem>
+            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                <Tab
+                    eventKey={0}
+                    title={<TabTitleText>{SitesDetailsLabels.TabConnections}</TabTitleText>}
+                >
+                    <ConnectionsTables />
+                </Tab>
+                <Tab
+                    eventKey={1}
+                    title={<TabTitleText>{SitesDetailsLabels.TabMetrics}</TabTitleText>}
+                >
+                    Containers
+                </Tab>
+            </Tabs>
         </Stack>
     );
 };
