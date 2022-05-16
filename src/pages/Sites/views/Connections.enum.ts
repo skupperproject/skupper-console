@@ -1,11 +1,11 @@
-export enum ConnectionsDetailsLabels {
+export enum SitesConnectionsLabels {
     HTTPrequestsIn = 'HTTP Requests Received',
     HTTPrequestsOut = 'HTTP Requests Sent',
     TCPconnectionsIn = 'TCP traffic received',
     TCPconnectionsOut = 'TCP traffic sent',
 }
 
-export enum ConnectionsDetailsColumns {
+export enum SitesConnectionsColumns {
     Name = 'Site',
     Ip = 'IP',
     BytesIn = 'Bytes In',

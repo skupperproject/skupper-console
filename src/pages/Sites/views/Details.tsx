@@ -152,7 +152,13 @@ const SiteDetail = function () {
                     eventKey={1}
                     title={<TabTitleText>{SitesDetailsLabels.TabMetrics}</TabTitleText>}
                 >
-                    <SitesMetrics />
+                    <SitesMetrics
+                        site={site}
+                        httpRequestsReceived={site.httpRequestsReceived}
+                        httpRequestsSent={site.httpRequestsSent}
+                        tcpConnectionsIn={site.tcpConnectionsIn}
+                        tcpConnectionsOut={site.tcpConnectionsOut}
+                    />
                 </Tab>
             </Tabs>
         </Stack>
