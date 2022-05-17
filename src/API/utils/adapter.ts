@@ -170,7 +170,6 @@ class Adapter {
               connected: [],
               namespace: "",
               url: "",
-              edge: false,
             });
           }
           this.addTarget(service.targets, service.address, "unknownID");

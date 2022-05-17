@@ -21,6 +21,7 @@ const TopologyGraph = async function (
     links: TopologyLink[],
     boxWidth: number,
     boxHeight: number,
+    onClick: Function,
 ) {
     if (!nodes.length) {
         return null;
@@ -176,7 +177,9 @@ const TopologyGraph = async function (
                 .selectAll('.serviceLink')
                 .style('opacity', '1')
                 .style('stroke', 'var(--pf-global--palette--black-400)'),
-        );
+        )
+        .on('mousedown', (event) => event.stopPropagation())
+        .on('click', (_, { id }) => onClick(id));
 
     // drag util
     function fixNodes(x: number, y: number) {

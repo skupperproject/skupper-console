@@ -1,6 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import { Radio } from '@patternfly/react-core';
+import {
+    Drawer,
+    DrawerActions,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerContentBody,
+    DrawerHead,
+    DrawerPanelContent,
+    Radio,
+} from '@patternfly/react-core';
 import {
     createTopologyControlButtons,
     defaultControlButtonsOptions,
@@ -24,6 +33,10 @@ const Topology = function () {
     const [refetchInterval, setRefetchInterval] = useState<number>(0);
     const [svgTopologyComponent, setSvgTopologyComponent] = useState<TopologySVG>();
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const drawerRef = useRef<HTMLSpanElement>(null);
+    const selected = useRef<any>(null);
 
     const { data: sites, isLoading } = useQuery(
         QueryTopology.GetSites,
@@ -33,6 +46,15 @@ const Topology = function () {
             onError: handleError,
         },
     );
+
+    const handleExpand = (id: string) => {
+        setIsExpanded(selected.current !== id ? !isExpanded : isExpanded);
+        selected.current = selected.current !== id ? id : '';
+    };
+
+    const handleCloseClick = () => {
+        setIsExpanded(false);
+    };
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
         QueryTopology.GetDeployments,
@@ -136,6 +158,7 @@ const Topology = function () {
                     links,
                     node.getBoundingClientRect().width,
                     node.getBoundingClientRect().height,
+                    handleExpand,
                 );
 
                 setSvgTopologyComponent(await topologySitesRef);
@@ -193,13 +216,60 @@ const Topology = function () {
         );
     };
 
+    const Details = function ({ id }: any) {
+        const nodes = topologyType === 'sites' ? sites : sites;
+        //const links = topologyType === 'sites' ? linkSites : linkServices;
+        const node = nodes?.find((resource) => resource.siteId === id);
+
+        return (
+            <>
+                <div>{node?.siteName}</div>
+                <div>
+                    <b>protocol: </b>
+                    tcp
+                </div>
+                <div>
+                    <b>bytes sent:</b>
+                    <p>230 MB total</p>
+                    <p>81 MB public1</p>
+                    <p>17 MB public2</p>
+                </div>
+                <div>
+                    <b>bytes received:</b>
+                    <p>4 MB total</p>
+                    <p>2 MB public1</p>
+                    <p>2 MB public2</p>
+                </div>
+            </>
+        );
+    };
+
+    const panelContent = (
+        <DrawerPanelContent>
+            <DrawerHead>
+                <span tabIndex={isExpanded ? 0 : -1} ref={drawerRef}>
+                    <Details id={selected.current} />
+                </span>
+                <DrawerActions>
+                    <DrawerCloseButton onClick={handleCloseClick} />
+                </DrawerActions>
+            </DrawerHead>
+        </DrawerPanelContent>
+    );
+
     return (
-        <TopologyView
-            viewToolbar={<ViewToolbar />}
-            controlBar={<TopologyControlBar controlButtons={controlButtons} />}
-        >
-            <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
-        </TopologyView>
+        <Drawer isExpanded={isExpanded} position="right">
+            <DrawerContent panelContent={panelContent}>
+                <DrawerContentBody>
+                    <TopologyView
+                        viewToolbar={<ViewToolbar />}
+                        controlBar={<TopologyControlBar controlButtons={controlButtons} />}
+                    >
+                        <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
+                    </TopologyView>
+                </DrawerContentBody>
+            </DrawerContent>
+        </Drawer>
     );
 };
 

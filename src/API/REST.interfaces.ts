@@ -68,7 +68,6 @@ export interface DataSiteResponse {
     connected: string[];
     namespace: string;
     url: string;
-    edge: boolean;
     gateway: boolean;
 }
 
@@ -105,7 +104,6 @@ export interface SiteResponse {
     url: string;
     connected: string[];
     namespace: string;
-    edge?: boolean;
     gateway?: boolean;
 }
 

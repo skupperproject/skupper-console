@@ -27,7 +27,6 @@ const SitesOverviewTable = memo(function ({ sites }: SitesOverviewTableProps) {
                         <Th>{SitesOverviewColumns.Namespace}</Th>
                         <Th>{SitesOverviewColumns.Version}</Th>
                         <Th>{SitesOverviewColumns.Gateway}</Th>
-                        <Th>{SitesOverviewColumns.Edge}</Th>
                         <Th>{SitesOverviewColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
@@ -44,13 +43,6 @@ const SitesOverviewTable = memo(function ({ sites }: SitesOverviewTableProps) {
                             <Td dataLabel={SitesOverviewColumns.Version}>{`${row.version}`}</Td>
                             <Td dataLabel={SitesOverviewColumns.Gateway}>
                                 {row.gateway ? (
-                                    <CloudIcon color="var(--pf-global--success-color--100)" />
-                                ) : (
-                                    <CloudIcon color="var(--pf-global--disabled-color--300)" />
-                                )}
-                            </Td>
-                            <Td dataLabel={SitesOverviewColumns.Edge}>
-                                {row.edge ? (
                                     <CloudIcon color="var(--pf-global--success-color--100)" />
                                 ) : (
                                     <CloudIcon color="var(--pf-global--disabled-color--300)" />

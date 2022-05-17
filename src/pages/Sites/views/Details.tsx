@@ -114,11 +114,6 @@ const SiteDetail = function () {
                     </div>
 
                     <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">{SitesOverviewColumns.Edge}</div>
-                        <span>{site.edge ? 'Yes' : 'No'}</span>
-                    </div>
-
-                    <div className="pf-u-mb-lg">
                         <div className="  pf-u-font-weight-bold">
                             {SitesOverviewColumns.Gateway}
                         </div>
