@@ -8,11 +8,11 @@ const DeploymentsServices = {
     fetchDeployment: async (id: string | undefined): Promise<DeploymentDetails> => {
         const deployments = await RESTApi.fetchDeployments();
 
+        const info = deployments.find(({ key }) => key === id) as Deployment;
         const tcpConnectionsOut = getTCPConnectionsOutByService(deployments, id || '');
         const tcpConnectionsIn = getTCPConnectionsInByService(deployments, id || '');
         const httpConnectionsOut = getHTTPconnectionsOutByService(deployments, id || '');
         const httpConnectionsIn = getHTTPconnectionsInByService(deployments, id || '');
-        const info = deployments.find(({ key }) => key === id) as Deployment;
 
         return {
             ...info,
@@ -83,16 +83,26 @@ function getTCPConnectionsOutByService(deployments: Deployment[], id: string) {
 }
 
 function getTCPConnectionsInByService(deployments: Deployment[], id: string) {
-    const myDeployments = deployments.filter(({ key }) => key === id) as Deployment[];
+    const myDeployments = deployments.find(({ key }) => key === id);
+    const otherDeployments = deployments.filter(({ key }) => key !== id);
 
-    return myDeployments.flatMap(({ service: { connections_ingress }, site: { site_name } }) =>
-        (connections_ingress || [])
-            .flatMap((connectionIn) => Object.values(connectionIn.connections))
-            .flatMap((connection) => ({
+    return (myDeployments?.service.connections_ingress || [])
+        .flatMap((connectionIn) => Object.values(connectionIn.connections))
+        .filter(({ client }) => !client.includes(myDeployments?.service.address || '')) //remove himself
+        .flatMap((connection) => {
+            const siteIdTarget = connection.id.split('@')[1];
+
+            const deploymentTarget = otherDeployments.find(
+                ({ site: { site_id } }) => site_id === siteIdTarget,
+            );
+
+            return {
                 ...connection,
-                client: removeSuffixFromClientPropValue(`${site_name}/${connection.client}`),
-            })),
-    );
+                client: removeSuffixFromClientPropValue(
+                    `${deploymentTarget?.site.site_name}/${connection.client}`,
+                ),
+            };
+        });
 }
 
 function removeSuffixFromClientPropValue(name: string) {
