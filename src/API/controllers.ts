@@ -194,7 +194,7 @@ export function getFlowsTopology(flowsData: FlowsDataResponse[]) {
 
         acc.push({
             source: link.parent,
-            target: target.id,
+            target: target?.id,
             mode: link.mode,
             cost: link.linkCost,
         });

@@ -139,7 +139,7 @@ const SiteDetail = function () {
             <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
                 <Tab
                     eventKey={0}
-                    title={<TabTitleText>{SitesDetailsLabels.TabConnections}</TabTitleText>}
+                    title={<TabTitleText>{SitesDetailsLabels.TabTraffic}</TabTitleText>}
                 >
                     <SitesConnections
                         httpRequestsReceived={site.httpRequestsReceived}
@@ -153,7 +153,7 @@ const SiteDetail = function () {
                     title={<TabTitleText>{SitesDetailsLabels.TabMetrics}</TabTitleText>}
                 >
                     <SitesMetrics
-                        site={site}
+                        siteName={site.siteName}
                         httpRequestsReceived={site.httpRequestsReceived}
                         httpRequestsSent={site.httpRequestsSent}
                         tcpConnectionsIn={site.tcpConnectionsIn}

@@ -7,11 +7,11 @@ import EmptyData from '@core/components/EmptyData';
 import { formatBytes } from '@core/utils/formatBytes';
 
 import { SitesMetricsLabels } from './Metrics.enum';
-import { SitesConnectionsDonutChartProps, SitesMetricsProps } from './Metrics.interfaces';
+import { SitesConnectionsDonutChartProps, DeploymentsMetricsProps } from './Metrics.interfaces';
 
 const CARD_HEIGHT = '250px';
 
-const SitesConnectionsDonutChart: FC<SitesConnectionsDonutChartProps> = function ({
+const DeploymentsConnectionsDonutChart: FC<SitesConnectionsDonutChartProps> = function ({
     data,
     legend,
     legendOrientation = 'horizontal',
@@ -41,37 +41,37 @@ const SitesConnectionsDonutChart: FC<SitesConnectionsDonutChartProps> = function
     );
 };
 
-const SitesMetrics: FC<SitesMetricsProps> = function ({
-    siteName: name,
+const DeploymentsMetrics: FC<DeploymentsMetricsProps> = function ({
+    deploymentName: name,
     httpRequestsReceived,
     httpRequestsSent,
     tcpConnectionsIn,
     tcpConnectionsOut,
 }) {
-    const httpRequestsReceivedChartData = Object.entries(httpRequestsReceived)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const httpRequestsReceivedChartData = Object.values(httpRequestsReceived)
+        .map(({ client, bytes_out }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpRequestsSentChartData = Object.entries(httpRequestsSent)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const httpRequestsSentChartData = Object.values(httpRequestsSent)
+        .map(({ client, bytes_out }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const tcpConnectionsInChartData = Object.entries(tcpConnectionsIn)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const tcpConnectionsInChartData = Object.values(tcpConnectionsIn)
+        .map(({ client, bytes_out }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const tcpConnectionsOutChartData = Object.entries(tcpConnectionsOut)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const tcpConnectionsOutChartData = Object.values(tcpConnectionsOut)
+        .map(({ client, bytes_out }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
@@ -84,7 +84,9 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                         <Card style={{ height: CARD_HEIGHT }}>
                             <CardTitle>{SitesMetricsLabels.TCPconnectionsIn}</CardTitle>
                             {tcpConnectionsInChartData.length ? (
-                                <SitesConnectionsDonutChart data={tcpConnectionsInChartData} />
+                                <DeploymentsConnectionsDonutChart
+                                    data={tcpConnectionsInChartData}
+                                />
                             ) : (
                                 <EmptyData />
                             )}
@@ -95,7 +97,7 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                         <Card style={{ height: CARD_HEIGHT }}>
                             <CardTitle>{SitesMetricsLabels.TCPconnectionsOut}</CardTitle>
                             {tcpConnectionsOutChartData.length ? (
-                                <SitesConnectionsDonutChart
+                                <DeploymentsConnectionsDonutChart
                                     data={tcpConnectionsOutChartData}
                                     color="orange"
                                 />
@@ -113,7 +115,7 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                         <Card style={{ height: CARD_HEIGHT }}>
                             <CardTitle>{SitesMetricsLabels.HTTPrequestsIn}</CardTitle>
                             {httpRequestsReceivedChartData.length ? (
-                                <SitesConnectionsDonutChart
+                                <DeploymentsConnectionsDonutChart
                                     data={httpRequestsReceivedChartData}
                                     color="green"
                                 />
@@ -127,7 +129,7 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                         <Card style={{ height: CARD_HEIGHT }}>
                             <CardTitle>{SitesMetricsLabels.HTTPrequestsOut}</CardTitle>
                             {httpRequestsSentChartData.length ? (
-                                <SitesConnectionsDonutChart
+                                <DeploymentsConnectionsDonutChart
                                     data={httpRequestsSentChartData}
                                     color="blue"
                                 />
@@ -142,4 +144,4 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
     );
 };
 
-export default SitesMetrics;
+export default DeploymentsMetrics;

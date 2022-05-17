@@ -11,7 +11,7 @@ export enum DeploymentDetailsLabels {
     HTTPrequestsIn = 'HTTP Requests Received',
     HTTPrequestsOut = 'HTTP Requests Sent',
     TCPconnectionsIn = 'TCP traffic received',
-    TCPconnectionsOut = '=TCP traffic sent',
-    TabConnections = 'Connections',
+    TCPconnectionsOut = 'TCP traffic sent',
+    TabTraffic = 'Traffic',
     TabMetrics = 'Metrics',
 }

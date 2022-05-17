@@ -1,5 +1,5 @@
 export enum SitesDetailsLabels {
     Details = 'Site Details',
-    TabConnections = 'Connections',
+    TabTraffic = 'Traffic',
     TabMetrics = 'Metrics',
 }

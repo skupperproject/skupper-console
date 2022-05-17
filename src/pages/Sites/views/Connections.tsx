@@ -4,6 +4,7 @@ import { Card, CardTitle, Split, SplitItem, Stack, StackItem } from '@patternfly
 import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import EmptyData from '@core/components/EmptyData';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
@@ -23,41 +24,55 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
 
     return (
         <Stack hasGutter>
-            {httpRequestsReceivedEntries.length !== 0 && (
-                <StackItem>
-                    <Card isRounded>
-                        <CardTitle>{SitesConnectionsLabels.HTTPrequestsIn}</CardTitle>
-                        <HTTPtable rows={httpRequestsReceivedEntries} />
-                    </Card>
-                </StackItem>
-            )}
-            {httpRequestsSentEntries.length !== 0 && (
-                <StackItem>
-                    <Card isRounded>
-                        <CardTitle>{SitesConnectionsLabels.HTTPrequestsOut}</CardTitle>
-                        <HTTPtable rows={httpRequestsSentEntries} />
-                    </Card>
-                </StackItem>
-            )}
+            <StackItem>
+                <Split hasGutter>
+                    <SplitItem className="pf-u-w-50vw">
+                        <Card isRounded>
+                            <CardTitle>{SitesConnectionsLabels.HTTPrequestsIn}</CardTitle>
+                            {httpRequestsReceivedEntries.length !== 0 ? (
+                                <HTTPtable rows={httpRequestsReceivedEntries} />
+                            ) : (
+                                <EmptyData />
+                            )}
+                        </Card>
+                    </SplitItem>
+
+                    <SplitItem className="pf-u-w-50vw">
+                        <Card isRounded>
+                            <CardTitle>{SitesConnectionsLabels.HTTPrequestsOut}</CardTitle>
+                            {httpRequestsSentEntries.length !== 0 ? (
+                                <HTTPtable rows={httpRequestsSentEntries} />
+                            ) : (
+                                <EmptyData />
+                            )}
+                        </Card>
+                    </SplitItem>
+                </Split>
+            </StackItem>
 
             <StackItem>
                 <Split hasGutter>
-                    {tcpConnectionsInEntries.length !== 0 && (
-                        <SplitItem isFilled>
-                            <Card isFullHeight isRounded>
-                                <CardTitle>{SitesConnectionsLabels.TCPconnectionsIn}</CardTitle>
+                    <SplitItem className="pf-u-w-50vw">
+                        <Card isFullHeight isRounded>
+                            <CardTitle>{SitesConnectionsLabels.TCPconnectionsIn}</CardTitle>
+                            {tcpConnectionsInEntries.length !== 0 ? (
                                 <TCPTable rows={tcpConnectionsInEntries} />
-                            </Card>
-                        </SplitItem>
-                    )}
-                    {tcpConnectionsOutEntries.length !== 0 && (
-                        <SplitItem isFilled>
-                            <Card isFullHeight isRounded>
-                                <CardTitle>{SitesConnectionsLabels.TCPconnectionsOut}</CardTitle>
+                            ) : (
+                                <EmptyData />
+                            )}
+                        </Card>
+                    </SplitItem>
+
+                    <SplitItem className="pf-u-w-50vw">
+                        <Card isFullHeight isRounded>
+                            <CardTitle>{SitesConnectionsLabels.TCPconnectionsOut}</CardTitle>
+                            {tcpConnectionsOutEntries.length !== 0 ? (
                                 <TCPTable rows={tcpConnectionsOutEntries} />
-                            </Card>
-                        </SplitItem>
-                    )}
+                            ) : (
+                                <EmptyData />
+                            )}
+                        </Card>
+                    </SplitItem>
                 </Split>
             </StackItem>
         </Stack>
