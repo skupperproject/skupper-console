@@ -6,8 +6,9 @@ import { DeploymentLink, Site, SiteDetails } from './services.interfaces';
 const SitesServices = {
     fetchSites: async (): Promise<Site[]> => RESTApi.fetchSites(),
     fetchSite: async (id: string | undefined): Promise<SiteDetails | null> => {
-        const sites = await RESTApi.fetchSites();
         const data = await RESTApi.fetchData();
+        const sites = await RESTApi.fetchSites();
+
         const site = sites.find(({ siteId }) => siteId === id) as Site;
 
         const httpRequestsReceived = getHTTPrequestsInBySite(data.deploymentLinks, site.siteId);
