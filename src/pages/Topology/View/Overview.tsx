@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import SitesServices from '@pages/Sites/services';
 
 import TopologySiteDetails from '../components/Details';
 import TopologyGraph from '../components/Topology';
@@ -35,22 +36,20 @@ const Topology = function () {
     const [svgTopologyComponent, setSvgTopologyComponent] = useState<TopologySVG>();
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
     const [isExpanded, setIsExpanded] = useState(false);
+    const [selectedNode, setSelectedNode] = useState('');
 
     const drawerRef = useRef<HTMLSpanElement>(null);
-    const selected = useRef<any>(null);
+    const selectedRef = useRef<string>('');
 
-    const { data: sites, isLoading } = useQuery(
-        QueryTopology.GetSites,
-        TopologyServices.fetchSites,
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
+    const { data: sites, isLoading } = useQuery(QueryTopology.GetSites, SitesServices.fetchSites, {
+        refetchInterval,
+        onError: handleError,
+    });
 
     const handleExpand = (id: string) => {
-        setIsExpanded(selected.current !== id ? !isExpanded : isExpanded);
-        selected.current = selected.current !== id ? id : '';
+        setIsExpanded(selectedRef.current !== id ? !isExpanded : isExpanded);
+        setSelectedNode(id);
+        selectedRef.current = selectedRef.current !== id ? id : '';
     };
 
     const handleCloseClick = () => {
@@ -217,18 +216,14 @@ const Topology = function () {
         );
     };
 
-    const panelContent = (
+    const PanelContent = (
         <DrawerPanelContent>
             <DrawerHead>
                 <span tabIndex={isExpanded ? 0 : -1} ref={drawerRef}>
                     {topologyType === 'sites' ? (
-                        <TopologySiteDetails
-                            site={sites?.find(({ siteId }) => siteId === selected.current)}
-                        />
+                        <TopologySiteDetails id={selectedNode} />
                     ) : (
-                        <TopologySiteDetails
-                            site={sites?.find(({ siteId }) => siteId === selected.current)}
-                        />
+                        <TopologySiteDetails id={selectedNode} />
                     )}
                 </span>
                 <DrawerActions>
@@ -240,7 +235,7 @@ const Topology = function () {
 
     return (
         <Drawer isExpanded={isExpanded} position="right">
-            <DrawerContent panelContent={panelContent}>
+            <DrawerContent panelContent={PanelContent}>
                 <DrawerContentBody>
                     <TopologyView
                         viewToolbar={<ViewToolbar />}
