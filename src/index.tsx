@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -15,9 +15,7 @@ const root = createRoot(rootElement);
 root.render(
     <QueryClientProvider client={queryClient}>
         <HashRouter>
-            <StrictMode>
-                <App />
-            </StrictMode>
+            <App />
         </HashRouter>
     </QueryClientProvider>,
 );

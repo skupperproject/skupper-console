@@ -178,7 +178,7 @@ const TopologyGraph = async function (
                 .style('opacity', '1')
                 .style('stroke', 'var(--pf-global--palette--black-400)'),
         )
-        .on('mousedown', (event) => event.stopPropagation())
+        .on('dblclick', (e) => e.stopPropagation()) // deactivates the zoom triggered by d3-zoom
         .on('click', (_, { id }) => onClick(id));
 
     // drag util
@@ -277,6 +277,7 @@ const TopologyGraph = async function (
     // zoom
     const handleZoom = ({ transform }: { transform: string }) =>
         svgElement.attr('transform', transform);
+
     const initZoom = zoom<SVGSVGElement, unknown>().scaleExtent([0.5, 6]).on('zoom', handleZoom);
 
     svgContainer.call(initZoom);
