@@ -193,8 +193,6 @@ const ConnectionsTable = memo(function ({
                                         <SplitItem isFilled>
                                             <ConnectionDetailsTable
                                                 connection={details.connection}
-                                                totalBytes={details.totalBytes}
-                                                totalBytesIn={details.totalBytesIn}
                                                 connectorName={details.connectorName}
                                                 listenerName={details.listenerName}
                                             />

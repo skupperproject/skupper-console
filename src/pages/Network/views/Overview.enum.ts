@@ -1,22 +1,16 @@
 export enum OverviewNetworkColumns {
-    Name = 'Name',
-    NumRouters = 'Routers',
     NumServices = 'Services',
-    NumConnections = 'Flows',
-    NumLinks = 'Links',
     NumSites = 'Sites',
     NumDeployments = 'Deployments',
-    TotalBytes = 'Traffic',
 }
 
 export enum OverviewLabels {
-    Routers = 'Routers',
+    Sites = 'Sites',
     Links = 'Links',
 }
 
 export enum OverviewRoutersColumns {
     Name = 'Name',
-    NumRouters = 'Routers',
     NumServices = 'Services',
     NumFLows = 'Flows',
 }

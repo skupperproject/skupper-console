@@ -9,6 +9,7 @@ import {
 } from '@patternfly/react-charts';
 
 import { formatBytes } from '@core/utils/formatBytes';
+import { formatTime } from '@core/utils/formatTime';
 
 import { chartConfig } from './TrafficChart.constants';
 import { TrafficChartLabels } from './TrafficChart.enum';
@@ -20,7 +21,6 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
 
     useEffect(() => {
         const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
-
         const newSamplesBySite = totalBytesProps.map(({ totalBytes, name }, index) => {
             const sample = {
                 y: totalBytes,
@@ -30,7 +30,7 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
             };
 
             const newSamples = [
-                ...((samples && samples[index]) || [{ name: ' ', x: '0', y: 0, timestamp: 0 }]),
+                ...((samples && samples[index]) || [{ name: 'ss ', x: '0', y: 0, timestamp: 0 }]),
                 sample,
             ];
 
@@ -44,12 +44,16 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
         setLastTimestamp(Date.now());
     }, []);
 
+    if (!samples) {
+        return null;
+    }
+
     return (
-        <div style={{ height: `${chartConfig.height}px`, width: `${chartConfig.width}px` }}>
+        <div style={{ height: `${chartConfig.height}px` }}>
             <Chart
                 containerComponent={
                     <ChartVoronoiContainer
-                        labels={({ datum }) => `${datum.name}: ${formatBytes(datum.y)}`}
+                        labels={({ datum }) => `${datum.name}: ${formatBytes(datum.y, 3)}`}
                         constrainToVisibleArea
                     />
                 }
@@ -72,12 +76,13 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
                         if (index === ticks.length - 1) {
                             return TrafficChartLabels.TickFormatUpperBoundLabel;
                         }
+
                         if (index === 0) {
                             return Number(ticks[ticks.length - 1]) <=
                                 chartConfig.timestampWindowUpperBound
-                                ? `${Math.floor(ticks[ticks.length - 1] / 1000)} ${
-                                      TrafficChartLabels.TickFormatLowerBoundLabel
-                                  }`
+                                ? `${formatTime(Math.floor(ticks[ticks.length - 1] / 1000), {
+                                      startSize: 'sec',
+                                  })} ${TrafficChartLabels.TickFormatLowerBoundLabel}`
                                 : TrafficChartLabels.TickFormatLowerBoundLabelOverflow;
                         }
 
@@ -91,7 +96,7 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
                     style={{
                         tickLabels: { fontSize: 12 },
                     }}
-                    tickFormat={(tick) => formatBytes(tick)}
+                    tickFormat={(tick) => formatBytes(tick, 3)}
                 />
                 <ChartGroup>
                     {samples?.map((sampleGroup: SampleProps[], index) => (

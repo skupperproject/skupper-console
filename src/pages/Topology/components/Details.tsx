@@ -1,13 +1,19 @@
 import React, { FC, useState } from 'react';
 
-import { Card, CardBody, CardTitle, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Divider, Panel, Text, TextContent, Title, TitleSizes } from '@patternfly/react-core';
+import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import SitesServices from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
+import {
+    SitesConnectionsColumns,
+    SitesConnectionsLabels,
+} from '@pages/Sites/views/Connections.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 interface TopologySiteDetailsProps {
@@ -50,61 +56,148 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const tcpConnectionsOutEntries = Object.entries(site.tcpConnectionsOut);
 
     return (
-        <Card isPlain isFullHeight>
-            <CardTitle>{site.siteName}</CardTitle>
-            <CardBody>
-                <TextContent>
-                    {(!!httpRequestsSentEntries.length || !!httpRequestsReceivedEntries.length) && (
-                        <>
-                            <Text component={TextVariants.h2}>HTTP</Text>
-                            <Text component={TextVariants.h4}>bytes sent to</Text>
-                            <div className="pf-u-ml-md">
-                                {httpRequestsSentEntries.map(([siteName, requestsSent]) => (
-                                    <Text
-                                        component={TextVariants.p}
-                                        key={requestsSent.id}
-                                    >{`${siteName}: ${formatBytes(requestsSent.bytes_out)}`}</Text>
-                                ))}
-                            </div>
-                            <Text component={TextVariants.h4}>Bytes Received from</Text>
-                            <div className="pf-u-ml-md">
-                                {httpRequestsReceivedEntries.map(([siteName, requestsSent]) => (
-                                    <Text
-                                        component={TextVariants.p}
-                                        key={requestsSent.id}
-                                    >{`${siteName}: ${formatBytes(requestsSent.bytes_out)}`}</Text>
-                                ))}
-                            </div>
-                        </>
-                    )}
+        <Panel>
+            <Title headingLevel="h1" size={TitleSizes['4xl']} className="pf-u-mb-md">
+                {capitalizeFirstLetter(site.siteName)}
+            </Title>
+            <Text component="h3" style={{ color: 'var(--pf-global--Color--200)' }}>
+                {site.namespace} ● {site.namespace} ● {site.version}
+            </Text>
+            <Divider className="pf-u-mt-xs" />
+            <TextContent className="pf-u-mt-md">
+                {(!!httpRequestsSentEntries.length || !!httpRequestsReceivedEntries.length) && (
+                    <>
+                        {!!httpRequestsSentEntries.length && (
+                            <TableComposable
+                                aria-label="flows table"
+                                variant="compact"
+                                isStickyHeader
+                                borders={false}
+                            >
+                                <Caption>{SitesConnectionsLabels.HTTPrequestsOut}</Caption>
 
-                    {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
-                        <>
-                            <Text component={TextVariants.h2}>TCP</Text>
+                                <Thead>
+                                    <Tr>
+                                        <Th>{SitesConnectionsColumns.Name}</Th>
+                                        <Th>{SitesConnectionsColumns.BytesOut}</Th>
+                                        <Th>{SitesConnectionsColumns.Requests}</Th>
+                                    </Tr>
+                                </Thead>
+                                {httpRequestsSentEntries.map(([siteName, info]) => (
+                                    <Tbody key={info.id}>
+                                        <Tr>
+                                            <Td dataLabel={SitesConnectionsColumns.Name}>
+                                                {`${siteName}`}
+                                            </Td>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.BytesIn}
+                                            >{`${formatBytes(info.bytes_in)}`}</Td>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Requests}
+                                            >{`${info.requests}`}</Td>
+                                        </Tr>
+                                    </Tbody>
+                                ))}
+                            </TableComposable>
+                        )}
+                        {!!httpRequestsReceivedEntries.length && (
+                            <TableComposable
+                                aria-label="flows table"
+                                variant="compact"
+                                isStickyHeader
+                                borders={false}
+                            >
+                                <Caption>{SitesConnectionsLabels.HTTPrequestsIn}</Caption>
 
-                            <Text component={TextVariants.h4}>bytes sent to</Text>
-                            <div className="pf-u-ml-md">
-                                {tcpConnectionsOutEntries.map(([siteName, requestsSent]) => (
-                                    <Text
-                                        component={TextVariants.p}
-                                        key={requestsSent.id}
-                                    >{`${siteName}: ${formatBytes(requestsSent.bytes_out)}`}</Text>
+                                <Thead>
+                                    <Tr>
+                                        <Th>{SitesConnectionsColumns.Name}</Th>
+                                        <Th>{SitesConnectionsColumns.BytesOut}</Th>
+                                        <Th>{SitesConnectionsColumns.Requests}</Th>
+                                    </Tr>
+                                </Thead>
+                                {httpRequestsReceivedEntries.map(([siteName, info]) => (
+                                    <Tbody key={info.id}>
+                                        <Tr>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Name}
+                                            >{`${siteName}`}</Td>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.BytesIn}
+                                            >{`${formatBytes(info.bytes_in)}`}</Td>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Requests}
+                                            >{`${info.requests}`}</Td>
+                                        </Tr>
+                                    </Tbody>
                                 ))}
-                            </div>
-                            <Text component={TextVariants.h4}>Bytes Received from</Text>
-                            <div className="pf-u-ml-md">
-                                {tcpConnectionsInEntries.map(([siteName, requestsSent]) => (
-                                    <Text
-                                        component={TextVariants.p}
-                                        key={requestsSent.id}
-                                    >{`${siteName}: ${formatBytes(requestsSent.bytes_out)}`}</Text>
+                            </TableComposable>
+                        )}
+                    </>
+                )}
+
+                {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
+                    <>
+                        {!!tcpConnectionsOutEntries.length && (
+                            <TableComposable
+                                aria-label="flows table"
+                                variant="compact"
+                                isStickyHeader
+                                borders={false}
+                            >
+                                <Caption>{SitesConnectionsLabels.TCPconnectionsOut}</Caption>
+                                <Thead>
+                                    <Tr>
+                                        <Th>{SitesConnectionsColumns.Name}</Th>
+                                        <Th>{SitesConnectionsColumns.BytesOut}</Th>
+                                    </Tr>
+                                </Thead>
+                                {tcpConnectionsOutEntries.map(([siteName, info]) => (
+                                    <Tbody key={info.id}>
+                                        <Tr>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Name}
+                                            >{`${siteName}`}</Td>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Bytes}
+                                            >{`${formatBytes(info.bytes_out)}`}</Td>
+                                        </Tr>
+                                    </Tbody>
                                 ))}
-                            </div>
-                        </>
-                    )}
-                </TextContent>
-            </CardBody>
-        </Card>
+                            </TableComposable>
+                        )}
+                        {!!tcpConnectionsInEntries.length && (
+                            <TableComposable
+                                aria-label="flows table"
+                                variant="compact"
+                                isStickyHeader
+                                borders={false}
+                            >
+                                <Caption>{SitesConnectionsLabels.TCPconnectionsIn}</Caption>
+                                <Thead>
+                                    <Tr>
+                                        <Th>{SitesConnectionsColumns.Name}</Th>
+                                        <Th>{SitesConnectionsColumns.BytesIn}</Th>
+                                    </Tr>
+                                </Thead>
+                                {tcpConnectionsInEntries.map(([siteName, info]) => (
+                                    <Tbody key={info.id}>
+                                        <Tr>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Name}
+                                            >{`${siteName}`}</Td>
+                                            <Td
+                                                dataLabel={SitesConnectionsColumns.Bytes}
+                                            >{`${formatBytes(info.bytes_in)}`}</Td>
+                                        </Tr>
+                                    </Tbody>
+                                ))}
+                            </TableComposable>
+                        )}
+                    </>
+                )}
+            </TextContent>
+        </Panel>
     );
 };
 

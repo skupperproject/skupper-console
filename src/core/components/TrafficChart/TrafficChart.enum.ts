@@ -1,6 +1,6 @@
 export enum TrafficChartLabels {
     TickFormatUpperBoundLabel = 'now',
-    TickFormatLowerBoundLabel = 'secs ago',
+    TickFormatLowerBoundLabel = 'ago',
     TickFormatLowerBoundLabelOverflow = '1 min ago',
 }
 

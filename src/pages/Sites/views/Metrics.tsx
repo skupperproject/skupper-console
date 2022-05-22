@@ -4,6 +4,7 @@ import { ChartDonut, ChartThemeColor } from '@patternfly/react-charts';
 import { Card, CardTitle, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 
 import EmptyData from '@core/components/EmptyData';
+import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
 
 import { SitesMetricsLabels } from './Metrics.enum';
@@ -97,7 +98,7 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                             {tcpConnectionsOutChartData.length ? (
                                 <SitesConnectionsDonutChart
                                     data={tcpConnectionsOutChartData}
-                                    color="orange"
+                                    color={ChartThemeColors.Orange}
                                 />
                             ) : (
                                 <EmptyData />
@@ -115,7 +116,7 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                             {httpRequestsReceivedChartData.length ? (
                                 <SitesConnectionsDonutChart
                                     data={httpRequestsReceivedChartData}
-                                    color="green"
+                                    color={ChartThemeColors.Green}
                                 />
                             ) : (
                                 <EmptyData />
@@ -129,7 +130,7 @@ const SitesMetrics: FC<SitesMetricsProps> = function ({
                             {httpRequestsSentChartData.length ? (
                                 <SitesConnectionsDonutChart
                                     data={httpRequestsSentChartData}
-                                    color="blue"
+                                    color={ChartThemeColors.Blue}
                                 />
                             ) : (
                                 <EmptyData />

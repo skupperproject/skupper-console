@@ -18,5 +18,6 @@ export interface TrafficChartProps {
 export interface SampleProps {
     x: string;
     y: number;
+    name: string;
     timestamp: number;
 }

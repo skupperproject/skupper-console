@@ -25,5 +25,8 @@ export function formatTime(time: number, options?: FormatTimeOptions) {
     const i = Math.floor(Math.log(time) / Math.log(k));
     const timeSized = parseFloat((time / Math.pow(k, i)).toFixed(dm));
 
-    return isNaN(timeSized) ? '' : `${timeSized} ${sizeFrom[i]}`;
+    const timeFormatted =
+        timeSized < 60 ? `${timeSized} ${sizeFrom[i]}` : `${Math.floor(timeSized / 60)} min`;
+
+    return isNaN(timeSized) ? '' : timeFormatted;
 }

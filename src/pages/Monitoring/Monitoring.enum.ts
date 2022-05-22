@@ -43,7 +43,6 @@ export enum ConnectionColumns {
     TrafficIn = 'Traffic',
     Latency = 'Latency',
     LatencyIn = 'Latency',
-    TrafficPercentage = '%',
 }
 
 export enum ConnectionStatus {

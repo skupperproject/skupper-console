@@ -5,8 +5,8 @@ import {
     DrawerActions,
     DrawerCloseButton,
     DrawerContent,
-    DrawerContentBody,
     DrawerHead,
+    DrawerPanelBody,
     DrawerPanelContent,
     Radio,
 } from '@patternfly/react-core';
@@ -79,69 +79,22 @@ const Topology = function () {
         setTopologyType(value);
     }
 
-    const siteNodes = useMemo(
-        () =>
-            sites?.map((node) => {
-                const positions = localStorage.getItem(node.siteId);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
-
-                return {
-                    id: node.siteId,
-                    name: node.siteName,
-                    x: fx || 0,
-                    y: fy || 0,
-                    fx,
-                    fy,
-                    type: 'site',
-                    group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
-                };
-            }),
-        [sites],
-    );
-
-    const linkSites = useMemo(
-        () =>
-            sites?.flatMap(({ siteId: sourceId, connected }) =>
-                connected.flatMap((targetId) => [
-                    {
-                        source: sourceId,
-                        target: targetId,
-                        type: 'linkSite',
-                    },
-                ]),
-            ),
-        [sites],
-    );
+    const siteNodes = useMemo(() => (sites ? TopologyServices.getSiteNodes(sites) : []), [sites]);
+    const linkSites = useMemo(() => (sites ? TopologyServices.getLinkSites(sites) : []), [sites]);
 
     const serviceNodes = useMemo(
         () =>
-            deployments?.deployments?.map((node) => {
-                const positions = localStorage.getItem(node.key);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
-
-                return {
-                    id: node.key,
-                    name: node.service.address,
-                    x: fx || 0,
-                    y: fy || 0,
-                    fx,
-                    fy,
-                    type: 'service',
-                    group: siteNodes?.findIndex(({ id }) => id === node.site.site_id) || 0,
-                };
-            }),
+            deployments?.deployments
+                ? TopologyServices.getServiceNodes(deployments?.deployments, siteNodes)
+                : [],
         [deployments?.deployments, siteNodes],
     );
 
     const linkServices = useMemo(
         () =>
-            deployments?.deploymentLinks?.flatMap(({ source, target }) => ({
-                source: source.key,
-                target: target.key,
-                type: 'linkService',
-            })),
+            deployments?.deploymentLinks
+                ? TopologyServices.getLinkServices(deployments?.deploymentLinks)
+                : [],
         [deployments?.deploymentLinks],
     );
 
@@ -236,14 +189,14 @@ const Topology = function () {
     return (
         <Drawer isExpanded={isExpanded} position="right">
             <DrawerContent panelContent={PanelContent}>
-                <DrawerContentBody>
+                <DrawerPanelBody hasNoPadding>
                     <TopologyView
                         viewToolbar={<ViewToolbar />}
                         controlBar={<TopologyControlBar controlButtons={controlButtons} />}
                     >
                         <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
                     </TopologyView>
-                </DrawerContentBody>
+                </DrawerPanelBody>
             </DrawerContent>
         </Drawer>
     );
