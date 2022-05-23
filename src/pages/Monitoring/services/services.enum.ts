@@ -4,4 +4,5 @@ export enum QueriesMonitoring {
     GetMonitoringNetworkStats = 'network-stats-query',
     GetMonitoringTopologyFlows = 'monitoring-topology-flows-query',
     GetMonitoringTopologyNetwork = 'monitoring-topology-network-query',
+    GetVanAdresses = 'monitoring-van-adresses',
 }

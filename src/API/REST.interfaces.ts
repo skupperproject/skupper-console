@@ -114,16 +114,6 @@ export interface ServiceResponse {
     protocol: string;
 }
 
-// DEPLOYMENTS
-export interface DeploymentResponse {
-    id: string;
-    name: string;
-    protocol: string;
-    numConnectionsIn: number;
-    numConnectionsOut: number;
-    sites: { name: string; url: string }[];
-}
-
 // FLOWS
 interface FlowsRouterResponse {
     startTime: number;
@@ -208,16 +198,15 @@ export interface FlowsResponse {
     endTime?: number;
 }
 
-export interface NetworkStatsResponse {
+export interface FlowsVanAddressesResponse {
     id: string;
-    name: string;
-    routersAssociated: string;
-    totalDevices: number;
+    listenerCount: number;
+    connectorCount: number;
     totalFlows: number;
-    totalBytes: number;
+    currentFlows: number;
 }
 
-interface LinkStatsResponse {
+export interface LinkStatsResponse {
     direction: string;
     id: string;
     linkCost: number;
@@ -228,32 +217,14 @@ interface LinkStatsResponse {
     startTime: number;
     endTime?: number;
 }
-
-export interface RouterStatsResponse {
-    id: string;
-    name: string;
-    totalVanAddress: number;
-    totalFlows: number;
-    totalBytes: number;
-    connectedTo?: LinkStatsResponse[];
-}
-
-export interface MonitoringStatsResponse {
-    totalVanAddress: number;
-    totalFlows: number;
-    totalBytes: number;
-    totalRouters: number;
-    totalLinks: number;
-}
-
-interface MonitoringRoutersTopologyLink {
+export interface FlowsTopologyLink {
     source: string;
     target: string;
     mode: string;
     cost: string;
 }
 
-export interface MonitoringRoutersTopologyResponse {
+export interface FlowsTopologyResponse {
     nodes: FlowsDataResponse[];
-    links: MonitoringRoutersTopologyLink[];
+    links: FlowsTopologyLink[];
 }

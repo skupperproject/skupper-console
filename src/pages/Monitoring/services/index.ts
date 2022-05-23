@@ -1,18 +1,17 @@
 import { RESTApi } from 'API/REST';
 
-import { Flow, MonitoringRoutersTopology, VanStats } from './services.interfaces';
+import { Flow, MonitoringTopology, VanAddresses } from './services.interfaces';
 
 export const MonitorServices = {
     fetchFlowsByVanId: async (id: string | undefined): Promise<Flow[] | null> =>
         id ? RESTApi.fetchMonitoringFlowsByVanId(id) : null,
 
     fetchConnectionsByVanId: async (id: string | undefined): Promise<Flow[] | null> =>
-        id ? RESTApi.fetchMonitoringConnectionsByVanId(id) : null,
+        id ? RESTApi.fetchFlowsByVanId(id) : null,
 
-    fetchMonitoringRoutersTopology: async (): Promise<MonitoringRoutersTopology> =>
-        RESTApi.fetchTopologyRoutersLinks(),
+    fetchMonitoringTopology: async (): Promise<MonitoringTopology> => RESTApi.fetchFlowsTopology(),
 
-    fetchMonitoringStats: async function (): Promise<VanStats[]> {
-        return RESTApi.fetchFlowsServicesStats();
+    fetchVanAddresses: async function (): Promise<VanAddresses[]> {
+        return RESTApi.fetchFlowsVanAddresses();
     },
 };

@@ -14,8 +14,6 @@ import {
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import TrafficChart from '@core/components/TrafficChart';
-import { ChartThemeColors } from '@core/components/TrafficChart/TrafficChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -76,13 +74,7 @@ const ConnectionsTableVIew = function () {
 
 export default ConnectionsTableVIew;
 
-const ConnectionsTable = memo(function ({
-    rows,
-    dataUpdatedAt,
-}: {
-    rows: Row<Flow>[];
-    dataUpdatedAt: number;
-}) {
+const ConnectionsTable = memo(function ({ rows }: { rows: Row<Flow>[]; dataUpdatedAt: number }) {
     const [expandedRowsIds, setExpandedRowsIds] = useState<string[]>([]);
 
     const isRowExpanded = (row: Flow) => expandedRowsIds.includes(row.id);
@@ -195,29 +187,6 @@ const ConnectionsTable = memo(function ({
                                                 connection={details.connection}
                                                 connectorName={details.connectorName}
                                                 listenerName={details.listenerName}
-                                            />
-                                        </SplitItem>
-                                        <SplitItem style={{ width: MAX_WIDTH_DETAILS_TABLE }}>
-                                            <TrafficChart
-                                                options={{
-                                                    chartColor: ChartThemeColors.Purple,
-                                                    showLegend: true,
-                                                    dataLegend: [
-                                                        { name: 'Connector' },
-                                                        { name: 'Listener' },
-                                                    ],
-                                                }}
-                                                timestamp={dataUpdatedAt}
-                                                totalBytesProps={[
-                                                    {
-                                                        name: details.connectorName,
-                                                        totalBytes: details.totalBytes,
-                                                    },
-                                                    {
-                                                        name: details.listenerName || '',
-                                                        totalBytes: details.totalBytesIn,
-                                                    },
-                                                ]}
                                             />
                                         </SplitItem>
                                     </Split>

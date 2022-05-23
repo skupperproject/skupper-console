@@ -37,7 +37,7 @@ const MonitoringTopology = function () {
 
     const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
         [QueriesMonitoring.GetMonitoringTopologyNetwork],
-        () => MonitorServices.fetchMonitoringRoutersTopology(),
+        () => MonitorServices.fetchMonitoringTopology(),
         {
             refetchOnWindowFocus: false,
             refetchInterval,

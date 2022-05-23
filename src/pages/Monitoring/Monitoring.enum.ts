@@ -19,10 +19,10 @@ export enum ConnectionsNavMenu {
 // Services  section
 export enum ServicesColumns {
     Name = 'Name',
-    RoutersAssociated = 'Routers Flows',
-    NumDevices = 'Devices',
-    NumFLows = 'Connections',
-    TotalBytes = 'Traffic',
+    TotalListeners = 'Listerners',
+    TotalConnectors = 'Connectors',
+    NumFlowsActive = 'Active flows',
+    NumFLows = 'Flows',
 }
 
 // Connection details section

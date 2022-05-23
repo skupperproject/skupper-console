@@ -5,6 +5,7 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
@@ -18,8 +19,8 @@ const Overview = function () {
     const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: vanServices, isLoading } = useQuery(
-        QueriesMonitoring.GetMonitoringNetworkStats,
-        MonitorServices.fetchMonitoringStats,
+        QueriesMonitoring.GetVanAdresses,
+        MonitorServices.fetchVanAddresses,
         {
             refetchInterval,
             onError: handleError,
@@ -52,24 +53,30 @@ const Overview = function () {
                 <Thead>
                     <Tr>
                         <Th>{ServicesColumns.Name}</Th>
-                        <Th>{ServicesColumns.RoutersAssociated}</Th>
-                        <Th>{ServicesColumns.NumDevices}</Th>
+                        <Th>{ServicesColumns.TotalListeners}</Th>
+                        <Th>{ServicesColumns.TotalConnectors}</Th>
                         <Th>{ServicesColumns.NumFLows}</Th>
+                        <Th>{ServicesColumns.NumFlowsActive}</Th>
                     </Tr>
                 </Thead>
                 {vanServices?.map((row) => (
                     <Tbody key={row.id}>
                         <Tr>
                             <Td dataLabel={ServicesColumns.Name}>
-                                <Link to={`${MonitoringRoutesPaths.Connections}/${row.name}`}>
-                                    {row.name}
+                                <ResourceIcon type="vanAddress" />
+
+                                <Link to={`${MonitoringRoutesPaths.Connections}/${row.id}`}>
+                                    {row.id}
                                 </Link>
                             </Td>
-                            <Td dataLabel={ServicesColumns.RoutersAssociated}>
-                                {`${row.routersAssociated}`}
+                            <Td dataLabel={ServicesColumns.TotalListeners}>
+                                {`${row.listenerCount}`}
                             </Td>
-                            <Td dataLabel={ServicesColumns.NumDevices}>{`${row.totalDevices}`}</Td>
+                            <Td
+                                dataLabel={ServicesColumns.TotalConnectors}
+                            >{`${row.connectorCount}`}</Td>
                             <Td dataLabel={ServicesColumns.NumFLows}>{`${row.totalFlows}`}</Td>
+                            <Td dataLabel={ServicesColumns.NumFLows}>{`${row.currentFlows}`}</Td>
                         </Tr>
                     </Tbody>
                 ))}

@@ -1,9 +1,5 @@
 import { ServiceConnections } from 'API/REST.interfaces';
 
-export interface SitesConnectionProps {
-    rows: [string, ServiceConnections][];
-}
-
 export interface SitesMetricsRealTimeProps {
     siteName: string;
     timestamp: number;

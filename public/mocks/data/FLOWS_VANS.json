@@ -1,1 +1,26 @@
-["service-bar", "service-baz", "hello-world-backend:8080", "service-foo"]
+[
+    {
+        "rtype": "VAN_ADDRESS",
+        "id": "mongo-a:27017",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 26,
+        "currentFlows": 22
+    },
+    {
+        "rtype": "VAN_ADDRESS",
+        "id": "mongo-b:27017",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 22,
+        "currentFlows": 22
+    },
+    {
+        "rtype": "VAN_ADDRESS",
+        "id": "mongo-c:27017",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 28,
+        "currentFlows": 28
+    }
+]

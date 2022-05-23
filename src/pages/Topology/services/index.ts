@@ -39,6 +39,7 @@ export const TopologyServices = {
                 },
             ]),
         ),
+
     getServiceNodes: (deployments: DeploymentNode[], siteNodes: TopologyNode[]) =>
         deployments?.map((node) => {
             const positions = localStorage.getItem(node.key);

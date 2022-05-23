@@ -3,6 +3,6 @@ export enum NavBarLabels {
     SideBarSite = 'Sites',
     SideBarServices = 'Services',
     SideBarDeployments = 'Deployments',
-    SideBarMonitoring = 'Monitoring',
+    SideBarMonitoring = 'Live',
     SideBarTopology = 'Topology',
 }

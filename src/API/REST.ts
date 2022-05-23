@@ -4,24 +4,26 @@ import {
     getDeployments,
     getFlows,
     getFlowsConnectionsByService,
-    getFlowsNetworkStats,
-    getFlowsRoutersStats,
-    getFlowsServiceStats,
     getFlowsTopology,
     getServices,
     getSites,
 } from './controllers';
-import { DATA_URL, MONITORING_FLOWS } from './REST.constant';
+import {
+    DATA_URL,
+    FLOWS_BY_VAN_ADDRESS,
+    FLOWS_LINKS,
+    FLOWS_TOPOLOGY,
+    FLOWS_VAN_ADDRESSES,
+} from './REST.constant';
 import {
     DataAdapterResponse,
     FlowsResponse,
-    MonitoringStatsResponse,
-    RouterStatsResponse,
     ServiceResponse,
-    NetworkStatsResponse,
     SiteResponse,
     DeploymentTopologyResponse,
-    MonitoringRoutersTopologyResponse,
+    FlowsVanAddressesResponse,
+    LinkStatsResponse,
+    FlowsTopologyResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -51,39 +53,39 @@ export const RESTApi = {
     },
 
     // FLOWS APIs
-    fetchFlows: async (): Promise<FlowsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
-
-        return getFlows(data);
-    },
     fetchMonitoringFlowsByVanId: async (vanaddr: string): Promise<FlowsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
+        const { data: topology } = await fetchWithTimeout(`${FLOWS_TOPOLOGY}`);
+        const { data: flows } = await fetchWithTimeout(
+            `${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`,
+        );
+
+        const data = [...topology, ...flows];
 
         return getFlows(data, vanaddr);
     },
-    fetchFlowsNetworkStats: async (): Promise<MonitoringStatsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
+    fetchFlowsLinks: async (): Promise<LinkStatsResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
-        return getFlowsNetworkStats(data);
+        return data;
     },
-    fetchFlowsRoutersStats: async (): Promise<RouterStatsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
-
-        return getFlowsRoutersStats(data);
-    },
-    fetchFlowsServicesStats: async (): Promise<NetworkStatsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
-
-        return getFlowsServiceStats(data);
-    },
-    fetchTopologyRoutersLinks: async (): Promise<MonitoringRoutersTopologyResponse> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
+    fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_TOPOLOGY}`);
 
         return getFlowsTopology(data);
     },
-    fetchMonitoringConnectionsByVanId: async (vanaddr: string): Promise<FlowsResponse[]> => {
-        const { data } = await fetchWithTimeout(MONITORING_FLOWS);
+    fetchFlowsByVanId: async (vanaddr: string): Promise<FlowsResponse[]> => {
+        const { data: topology } = await fetchWithTimeout(`${FLOWS_TOPOLOGY}`);
+        const { data: flows } = await fetchWithTimeout(
+            `${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`,
+        );
+
+        const data = [...topology, ...flows];
 
         return getFlowsConnectionsByService(data, vanaddr);
+    },
+    fetchFlowsVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
+        const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
+
+        return data;
     },
 };
