@@ -115,11 +115,14 @@ export interface ServiceResponse {
 }
 
 // FLOWS
-interface FlowsRouterResponse {
+export interface FlowsRouterResponse {
     startTime: number;
     hostname: string;
     name: string;
+    namespace: string;
+    imageName: string;
     buildVersion: string;
+    imageVersion: string;
     rtype: string;
     id: string;
 }
@@ -135,9 +138,10 @@ interface FlowsLinkResponse {
     id: string;
 }
 
-interface FlowsDeviceResponse {
+export interface FlowsDeviceResponse {
     parent: string;
     startTime: number;
+    endTime?: number;
     destHost: string;
     protocol: string;
     destPort: number;
@@ -147,20 +151,21 @@ interface FlowsDeviceResponse {
     id: string;
 }
 
-interface FlowResponse {
+export interface FlowResponse {
     parent: string;
     startTime: number;
+    endTime?: number;
     octets: number;
     sourceHost: string;
     sourcePort: string;
     counterflow: string;
-    trace: string;
+    trace?: string;
     latency: number;
-    endTime: number;
     rtype: string;
     id: string;
 }
 
+export type FlowsConnectionResponse = FlowsDeviceResponse | FlowResponse;
 export type FlowsDataResponse = FlowsRouterResponse &
     FlowsLinkResponse &
     FlowsDeviceResponse &
@@ -191,7 +196,6 @@ export interface FlowsResponse {
     destPort: number;
     vanAddress: string;
     id: string;
-    deviceNameConnectedTo?: string;
     flows: FlowAdapterResponse[];
     parent: string;
     startTime: number;

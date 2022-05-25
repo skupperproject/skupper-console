@@ -24,57 +24,61 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
 
     return (
         <Stack hasGutter>
-            <StackItem>
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card isFullHeight isRounded>
-                            <CardTitle>{SitesConnectionsLabels.TCPconnectionsIn}</CardTitle>
-                            {tcpConnectionsInEntries.length !== 0 ? (
-                                <TCPTable rows={tcpConnectionsInEntries} />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
+            {!!(tcpConnectionsInEntries.length || tcpConnectionsOutEntries.length) && (
+                <StackItem>
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card isFullHeight isRounded>
+                                <CardTitle>{SitesConnectionsLabels.TCPconnectionsIn}</CardTitle>
+                                {tcpConnectionsInEntries.length !== 0 ? (
+                                    <TCPTable rows={tcpConnectionsInEntries} />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card isFullHeight isRounded>
-                            <CardTitle>{SitesConnectionsLabels.TCPconnectionsOut}</CardTitle>
-                            {tcpConnectionsOutEntries.length !== 0 ? (
-                                <TCPTable rows={tcpConnectionsOutEntries} />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
-                </Split>
-            </StackItem>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card isFullHeight isRounded>
+                                <CardTitle>{SitesConnectionsLabels.TCPconnectionsOut}</CardTitle>
+                                {tcpConnectionsOutEntries.length !== 0 ? (
+                                    <TCPTable rows={tcpConnectionsOutEntries} />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
+                    </Split>
+                </StackItem>
+            )}
 
-            <StackItem>
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card isRounded>
-                            <CardTitle>{SitesConnectionsLabels.HTTPrequestsIn}</CardTitle>
-                            {httpRequestsReceivedEntries.length !== 0 ? (
-                                <HTTPtable rows={httpRequestsReceivedEntries} />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
+            {!!(httpRequestsReceivedEntries.length || httpRequestsSentEntries.length) && (
+                <StackItem>
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card isRounded>
+                                <CardTitle>{SitesConnectionsLabels.HTTPrequestsIn}</CardTitle>
+                                {httpRequestsReceivedEntries.length !== 0 ? (
+                                    <HTTPtable rows={httpRequestsReceivedEntries} />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card isRounded>
-                            <CardTitle>{SitesConnectionsLabels.HTTPrequestsOut}</CardTitle>
-                            {httpRequestsSentEntries.length !== 0 ? (
-                                <HTTPtable rows={httpRequestsSentEntries} />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
-                </Split>
-            </StackItem>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card isRounded>
+                                <CardTitle>{SitesConnectionsLabels.HTTPrequestsOut}</CardTitle>
+                                {httpRequestsSentEntries.length !== 0 ? (
+                                    <HTTPtable rows={httpRequestsSentEntries} />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
+                    </Split>
+                </StackItem>
+            )}
         </Stack>
     );
 };

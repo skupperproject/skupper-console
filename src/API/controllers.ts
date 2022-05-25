@@ -48,25 +48,19 @@ export function getFlows(flowsData: FlowsDataResponse[], serviceAddress?: string
     return normalizeFlows(getFlowsTree(flowsData));
 }
 
-export function getFlowsConnectionsByService(
-    flowsData: FlowsDataResponse[],
-    serviceAddress: string,
-) {
+export function getFlowsConnectionsByService(flowsData: FlowsDataResponse[]) {
     const data = flowsData;
 
-    const flows = normalizeFlows(getFlowsTree(data)).filter(
-        (flow) => flow?.vanAddress === serviceAddress && flow.rtype === 'CONNECTOR',
-    );
+    const flows = normalizeFlows(getFlowsTree(data));
 
     return flows.flatMap((item) => {
         const group: Record<string, any> = {};
-        item?.flows?.forEach(({ deviceNameConnectedTo, ...rest }: any) => {
-            (group[deviceNameConnectedTo] = group[deviceNameConnectedTo] || []).push(rest);
+        item?.flows?.forEach(({ name, ...rest }: any) => {
+            (group[name] = group[name] || []).push(rest);
         });
 
-        return Object.entries(group).map(([k, v]) => ({
+        return Object.values(group).map((v) => ({
             ...item,
-            deviceNameConnectedTo: k,
             flows: v,
         }));
     });
@@ -80,7 +74,7 @@ export function getFlowsTopology(flowsData: FlowsDataResponse[]) {
         return acc;
     }, {} as Record<string, FlowsDataResponse>);
 
-    const links = flowsData.filter((data) => data.rtype === 'LINK');
+    const links = flowsData.filter(({ rtype, linkCost }) => rtype === 'LINK' && linkCost);
     const linkRouters = links.reduce((acc, link) => {
         const target = routersMap[link.name];
 

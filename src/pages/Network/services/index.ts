@@ -1,4 +1,5 @@
 import { RESTApi } from 'API/REST';
+import { FlowsRouterResponse } from 'API/REST.interfaces';
 
 import { Network } from './network.interfaces';
 
@@ -11,15 +12,15 @@ export const NetworkServices = {
             RESTApi.fetchDeployments(),
         ]);
 
-        const routersMap = topologyNetwork.nodes.reduce((acc, router) => {
-            acc[router.id] = router;
+        const routersMap = topologyNetwork.nodes.reduce((acc, node) => {
+            acc[node.id] = node;
 
             return acc;
-        }, {} as any);
+        }, {} as Record<string, FlowsRouterResponse>);
 
         const linksRouters = topologyNetwork.links.map((link) => {
-            const sourceNamespace = routersMap[link.target].namespace;
-            const targetNamespace = routersMap[link.source].namespace;
+            const sourceNamespace = routersMap[link.target]?.namespace;
+            const targetNamespace = routersMap[link.source]?.namespace;
 
             return { ...link, sourceNamespace, targetNamespace };
         });

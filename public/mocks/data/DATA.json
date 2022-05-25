@@ -2,836 +2,322 @@
     "sites": [
         {
             "site_name": "private",
-            "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-            "version": "0.8.7",
+            "site_id": "0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+            "version": "1.0.0",
             "connected": [
-                "610a0fec-c343-401c-aa4c-156e49b52a89",
-                "8b4fd894-d509-4670-82a2-f38ffdfe561e"
+                "33e72aa7-d924-4448-8780-e64fb275f3d6",
+                "14bac872-24b3-4111-b803-9037f7ee7afb"
             ],
-            "namespace": "grpc-private",
-            "url": "skupper-inter-router-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud",
+            "namespace": "mongo-private",
+            "url": "skupper-inter-router-mongo-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud",
             "edge": false,
-            "gateway": true
+            "gateway": false
         },
         {
             "site_name": "public1",
-            "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-            "version": "0.8.7",
+            "site_id": "33e72aa7-d924-4448-8780-e64fb275f3d6",
+            "version": "1.0.0",
             "connected": [],
-            "namespace": "grpc-public1",
-            "url": "skupper-inter-router-grpc-public1.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud",
+            "namespace": "mongo-public1",
+            "url": "skupper-inter-router-mongo-public1.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud",
             "edge": false,
             "gateway": false
         },
         {
             "site_name": "public2",
-            "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89",
-            "version": "0.8.7",
-            "connected": ["8b4fd894-d509-4670-82a2-f38ffdfe561e"],
-            "namespace": "grpc-public2",
-            "url": "skupper-inter-router-grpc-public2.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud",
+            "site_id": "14bac872-24b3-4111-b803-9037f7ee7afb",
+            "version": "1.0.0",
+            "connected": ["33e72aa7-d924-4448-8780-e64fb275f3d6"],
+            "namespace": "mongo-public2",
+            "url": "skupper-inter-router-mongo-public2.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud",
             "edge": false,
             "gateway": false
         }
     ],
     "services": [
         {
-            "address": "paymentservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "paymentservice-767dc8865f-8flt7",
-                    "target": "paymentservice",
-                    "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_client": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 1,
-                            "bytes_in": 50,
-                            "bytes_out": 43,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 20,
-                            "by_handling_site": {
-                                "610a0fec-c343-401c-aa4c-156e49b52a89": {
-                                    "requests": 1,
-                                    "bytes_in": 50,
-                                    "bytes_out": 43,
-                                    "details": {
-                                        "POST:200": 1
-                                    },
-                                    "latency_max": 20
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89",
-                    "by_server": {
-                        "paymentservice-767dc8865f-8flt7": {
-                            "requests": 1,
-                            "bytes_in": 43,
-                            "bytes_out": 50,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 25
-                        }
-                    },
-                    "by_originating_site": {
-                        "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "requests": 1,
-                            "bytes_in": 43,
-                            "bytes_out": 50,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 25
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "recommendationservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "recommendationservice-5c846cd755-mpq64",
-                    "target": "recommendationservice",
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 7,
-                            "bytes_in": 385,
-                            "bytes_out": 455,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 39,
-                            "by_handling_site": {
-                                "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                                    "requests": 7,
-                                    "bytes_in": 385,
-                                    "bytes_out": 455,
-                                    "details": {
-                                        "POST:200": 7
-                                    },
-                                    "latency_max": 39
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_server": {
-                        "recommendationservice-5c846cd755-mpq64": {
-                            "requests": 7,
-                            "bytes_in": 455,
-                            "bytes_out": 385,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 38
-                        }
-                    },
-                    "by_originating_site": {
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 7,
-                            "bytes_in": 455,
-                            "bytes_out": 385,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 38
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "shippingservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "shippingservice-7ccc74bdfd-65lzb",
-                    "target": "shippingservice",
-                    "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 4,
-                            "bytes_in": 100,
-                            "bytes_out": 72,
-                            "details": {
-                                "POST:200": 4
-                            },
-                            "latency_max": 17,
-                            "by_handling_site": {
-                                "610a0fec-c343-401c-aa4c-156e49b52a89": {
-                                    "requests": 4,
-                                    "bytes_in": 100,
-                                    "bytes_out": 72,
-                                    "details": {
-                                        "POST:200": 4
-                                    },
-                                    "latency_max": 17
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_client": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 2,
-                            "bytes_in": 208,
-                            "bytes_out": 45,
-                            "details": {
-                                "POST:200": 2
-                            },
-                            "latency_max": 31,
-                            "by_handling_site": {
-                                "610a0fec-c343-401c-aa4c-156e49b52a89": {
-                                    "requests": 2,
-                                    "bytes_in": 208,
-                                    "bytes_out": 45,
-                                    "details": {
-                                        "POST:200": 2
-                                    },
-                                    "latency_max": 31
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89",
-                    "by_server": {
-                        "shippingservice-7ccc74bdfd-65lzb": {
-                            "requests": 6,
-                            "bytes_in": 117,
-                            "bytes_out": 308,
-                            "details": {
-                                "POST:200": 6
-                            },
-                            "latency_max": 17
-                        }
-                    },
-                    "by_originating_site": {
-                        "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "requests": 2,
-                            "bytes_in": 45,
-                            "bytes_out": 208,
-                            "details": {
-                                "POST:200": 2
-                            },
-                            "latency_max": 17
-                        },
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 4,
-                            "bytes_in": 72,
-                            "bytes_out": 100,
-                            "details": {
-                                "POST:200": 4
-                            },
-                            "latency_max": 17
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "cartservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "cartservice-68ddb4bf47-62fxv",
-                    "target": "cartservice",
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 13,
-                            "bytes_in": 591,
-                            "bytes_out": 367,
-                            "details": {
-                                "POST:200": 13
-                            },
-                            "latency_max": 38,
-                            "by_handling_site": {
-                                "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                                    "requests": 13,
-                                    "bytes_in": 591,
-                                    "bytes_out": 367,
-                                    "details": {
-                                        "POST:200": 13
-                                    },
-                                    "latency_max": 38
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_client": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 2,
-                            "bytes_in": 86,
-                            "bytes_out": 80,
-                            "details": {
-                                "POST:200": 2
-                            },
-                            "latency_max": 27,
-                            "by_handling_site": {
-                                "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                                    "requests": 2,
-                                    "bytes_in": 86,
-                                    "bytes_out": 80,
-                                    "details": {
-                                        "POST:200": 2
-                                    },
-                                    "latency_max": 27
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_server": {
-                        "cartservice-68ddb4bf47-62fxv": {
-                            "requests": 15,
-                            "bytes_in": 447,
-                            "bytes_out": 677,
-                            "details": {
-                                "POST:200": 15
-                            },
-                            "latency_max": 37
-                        }
-                    },
-                    "by_originating_site": {
-                        "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "requests": 2,
-                            "bytes_in": 80,
-                            "bytes_out": 86,
-                            "details": {
-                                "POST:200": 2
-                            },
-                            "latency_max": 27
-                        },
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 13,
-                            "bytes_in": 367,
-                            "bytes_out": 591,
-                            "details": {
-                                "POST:200": 13
-                            },
-                            "latency_max": 37
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "emailservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "emailservice-65f8f796cf-9mpkt",
-                    "target": "emailservice",
-                    "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_client": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 1,
-                            "bytes_in": 235,
-                            "bytes_out": 5,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 14,
-                            "by_handling_site": {
-                                "610a0fec-c343-401c-aa4c-156e49b52a89": {
-                                    "requests": 1,
-                                    "bytes_in": 235,
-                                    "bytes_out": 5,
-                                    "details": {
-                                        "POST:200": 1
-                                    },
-                                    "latency_max": 14
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "610a0fec-c343-401c-aa4c-156e49b52a89",
-                    "by_server": {
-                        "emailservice-65f8f796cf-9mpkt": {
-                            "requests": 1,
-                            "bytes_in": 5,
-                            "bytes_out": 235,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 6
-                        }
-                    },
-                    "by_originating_site": {
-                        "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "requests": 1,
-                            "bytes_in": 5,
-                            "bytes_out": 235,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 6
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "adservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "adservice-58b9d598d9-dxxxf",
-                    "target": "adservice",
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 7,
-                            "bytes_in": 62,
-                            "bytes_out": 784,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 56,
-                            "by_handling_site": {
-                                "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                                    "requests": 7,
-                                    "bytes_in": 62,
-                                    "bytes_out": 784,
-                                    "details": {
-                                        "POST:200": 7
-                                    },
-                                    "latency_max": 56
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_server": {
-                        "adservice-58b9d598d9-dxxxf": {
-                            "requests": 7,
-                            "bytes_in": 784,
-                            "bytes_out": 62,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 56
-                        }
-                    },
-                    "by_originating_site": {
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 7,
-                            "bytes_in": 784,
-                            "bytes_out": 62,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 56
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "currencyservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "currencyservice-9676f6457-65t99",
-                    "target": "currencyservice",
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 68,
-                            "bytes_in": 1452,
-                            "bytes_out": 3036,
-                            "details": {
-                                "POST:200": 68
-                            },
-                            "latency_max": 34,
-                            "by_handling_site": {
-                                "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                                    "requests": 68,
-                                    "bytes_in": 1452,
-                                    "bytes_out": 3036,
-                                    "details": {
-                                        "POST:200": 68
-                                    },
-                                    "latency_max": 34
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_client": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 3,
-                            "bytes_in": 75,
-                            "bytes_out": 54,
-                            "details": {
-                                "POST:200": 3
-                            },
-                            "latency_max": 8,
-                            "by_handling_site": {
-                                "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                                    "requests": 3,
-                                    "bytes_in": 75,
-                                    "bytes_out": 54,
-                                    "details": {
-                                        "POST:200": 3
-                                    },
-                                    "latency_max": 8
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_server": {
-                        "currencyservice-9676f6457-65t99": {
-                            "requests": 71,
-                            "bytes_in": 3090,
-                            "bytes_out": 1527,
-                            "details": {
-                                "POST:200": 71
-                            },
-                            "latency_max": 37
-                        }
-                    },
-                    "by_originating_site": {
-                        "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "requests": 3,
-                            "bytes_in": 54,
-                            "bytes_out": 75,
-                            "details": {
-                                "POST:200": 3
-                            },
-                            "latency_max": 7
-                        },
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 68,
-                            "bytes_in": 3036,
-                            "bytes_out": 1452,
-                            "details": {
-                                "POST:200": 68
-                            },
-                            "latency_max": 37
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "checkoutservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "checkoutservice-bfc7687d7-b2tv2",
-                    "target": "checkoutservice",
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 1,
-                            "bytes_in": 167,
-                            "bytes_out": 214,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 148,
-                            "by_handling_site": {
-                                "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                                    "requests": 1,
-                                    "bytes_in": 167,
-                                    "bytes_out": 214,
-                                    "details": {
-                                        "POST:200": 1
-                                    },
-                                    "latency_max": 148
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_server": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 1,
-                            "bytes_in": 214,
-                            "bytes_out": 167,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 148
-                        }
-                    },
-                    "by_originating_site": {
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 1,
-                            "bytes_in": 214,
-                            "bytes_out": 167,
-                            "details": {
-                                "POST:200": 1
-                            },
-                            "latency_max": 148
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "productcatalogservice",
-            "protocol": "http2",
-            "targets": [
-                {
-                    "name": "productcatalogservice-65f9567c5-txkwp",
-                    "target": "productcatalogservice",
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9"
-                }
-            ],
-            "requests_received": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_client": {
-                        "frontend-549fd9954f-szj9n": {
-                            "requests": 49,
-                            "bytes_in": 773,
-                            "bytes_out": 13664,
-                            "details": {
-                                "POST:200": 49
-                            },
-                            "latency_max": 13,
-                            "by_handling_site": {
-                                "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                                    "requests": 49,
-                                    "bytes_in": 773,
-                                    "bytes_out": 13664,
-                                    "details": {
-                                        "POST:200": 49
-                                    },
-                                    "latency_max": 13
-                                }
-                            }
-                        },
-                        "recommendationservice-5c846cd755-mpq64": {
-                            "requests": 7,
-                            "bytes_in": 35,
-                            "bytes_out": 9590,
-                            "details": {
-                                "POST:200": 7
-                            },
-                            "latency_max": 2,
-                            "by_handling_site": {
-                                "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                                    "requests": 7,
-                                    "bytes_in": 35,
-                                    "bytes_out": 9590,
-                                    "details": {
-                                        "POST:200": 7
-                                    },
-                                    "latency_max": 2
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                    "by_client": {
-                        "checkoutservice-bfc7687d7-b2tv2": {
-                            "requests": 2,
-                            "bytes_in": 34,
-                            "bytes_out": 344,
-                            "details": {
-                                "POST:200": 2
-                            },
-                            "latency_max": 4,
-                            "by_handling_site": {
-                                "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                                    "requests": 2,
-                                    "bytes_in": 34,
-                                    "bytes_out": 344,
-                                    "details": {
-                                        "POST:200": 2
-                                    },
-                                    "latency_max": 4
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            "requests_handled": [
-                {
-                    "site_id": "db69de18-a0c9-4aec-90a8-3328d23007b9",
-                    "by_server": {
-                        "productcatalogservice-65f9567c5-txkwp": {
-                            "requests": 58,
-                            "bytes_in": 23598,
-                            "bytes_out": 842,
-                            "details": {
-                                "POST:200": 58
-                            },
-                            "latency_max": 17
-                        }
-                    },
-                    "by_originating_site": {
-                        "8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "requests": 2,
-                            "bytes_in": 344,
-                            "bytes_out": 34,
-                            "details": {
-                                "POST:200": 2
-                            },
-                            "latency_max": 4
-                        },
-                        "db69de18-a0c9-4aec-90a8-3328d23007b9": {
-                            "requests": 56,
-                            "bytes_in": 23254,
-                            "bytes_out": 808,
-                            "details": {
-                                "POST:200": 56
-                            },
-                            "latency_max": 17
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "address": "redis-cart",
+            "address": "mongo-b",
             "protocol": "tcp",
             "targets": [
                 {
-                    "name": "redis-cart-5998f5886b-t9sz6",
-                    "target": "redis-cart",
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e"
+                    "name": "mongo-b-647c7b7d4d-bfgq5",
+                    "target": "mongo-b",
+                    "site_id": "33e72aa7-d924-4448-8780-e64fb275f3d6"
                 }
             ],
             "connections_ingress": [
                 {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
+                    "site_id": "0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
                     "connections": {
-                        "172.17.14.14:33694@8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "id": "172.17.14.14:33694@8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                            "start_time": 434,
-                            "last_out": 73,
-                            "last_in": 73,
-                            "bytes_in": 181,
-                            "bytes_out": 124,
-                            "client": "cartservice-68ddb4bf47-62fxv"
-                        },
-                        "172.17.14.14:33696@8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "id": "172.17.14.14:33696@8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                            "start_time": 434,
-                            "last_out": 9,
-                            "last_in": 9,
-                            "bytes_in": 3143,
-                            "bytes_out": 8977,
-                            "client": "cartservice-68ddb4bf47-62fxv"
+                        "172.17.29.127:49314@0ad15362-aa74-415e-8ea9-240a9ba9d6d9": {
+                            "id": "172.17.29.127:49314@0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+                            "start_time": 201,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 29815,
+                            "bytes_out": 45592,
+                            "client": "mongo-a-64fc4d7b6-rjlkq"
+                        }
+                    }
+                },
+                {
+                    "site_id": "14bac872-24b3-4111-b803-9037f7ee7afb",
+                    "connections": {
+                        "172.17.29.120:57170@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:57170@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 212,
+                            "last_out": 2,
+                            "last_in": 2,
+                            "bytes_in": 34528,
+                            "bytes_out": 54847,
+                            "client": "mongo-c-9469d7fc4-vpww6"
                         }
                     }
                 }
             ],
             "connections_egress": [
                 {
-                    "site_id": "8b4fd894-d509-4670-82a2-f38ffdfe561e",
+                    "site_id": "33e72aa7-d924-4448-8780-e64fb275f3d6",
                     "connections": {
-                        "172.17.14.14:33694@8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "id": "172.17.14.14:33694@8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                            "start_time": 434,
-                            "last_out": 73,
-                            "last_in": 73,
-                            "bytes_in": 124,
-                            "bytes_out": 181,
-                            "server": "redis-cart-5998f5886b-t9sz6"
+                        "172.17.29.120:57170@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:57170@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 211,
+                            "last_out": 2,
+                            "last_in": 2,
+                            "bytes_in": 54847,
+                            "bytes_out": 34528,
+                            "server": "mongo-b-647c7b7d4d-bfgq5"
                         },
-                        "172.17.14.14:33696@8b4fd894-d509-4670-82a2-f38ffdfe561e": {
-                            "id": "172.17.14.14:33696@8b4fd894-d509-4670-82a2-f38ffdfe561e",
-                            "start_time": 434,
-                            "last_out": 9,
-                            "last_in": 9,
-                            "bytes_in": 8977,
-                            "bytes_out": 3143,
-                            "server": "redis-cart-5998f5886b-t9sz6"
+                        "172.17.29.127:49314@0ad15362-aa74-415e-8ea9-240a9ba9d6d9": {
+                            "id": "172.17.29.127:49314@0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+                            "start_time": 201,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 45592,
+                            "bytes_out": 29815,
+                            "server": "mongo-b-647c7b7d4d-bfgq5"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "address": "mongo-c",
+            "protocol": "tcp",
+            "targets": [
+                {
+                    "name": "mongo-c-9469d7fc4-vpww6",
+                    "target": "mongo-c",
+                    "site_id": "14bac872-24b3-4111-b803-9037f7ee7afb"
+                }
+            ],
+            "connections_ingress": [
+                {
+                    "site_id": "0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+                    "connections": {
+                        "172.17.29.127:51442@0ad15362-aa74-415e-8ea9-240a9ba9d6d9": {
+                            "id": "172.17.29.127:51442@0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+                            "start_time": 213,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 35130,
+                            "bytes_out": 55492,
+                            "client": "mongo-a-64fc4d7b6-rjlkq"
+                        }
+                    }
+                },
+                {
+                    "site_id": "33e72aa7-d924-4448-8780-e64fb275f3d6",
+                    "connections": {
+                        "172.17.29.83:56584@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:56584@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 212,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 34419,
+                            "bytes_out": 55402,
+                            "client": "mongo-b-647c7b7d4d-bfgq5"
+                        },
+                        "172.17.29.83:59720@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:59720@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 199,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 1075650,
+                            "bytes_out": 636447,
+                            "client": "mongo-b-647c7b7d4d-bfgq5"
+                        },
+                        "172.17.29.83:60796@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:60796@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 199,
+                            "last_out": 1,
+                            "last_in": 199,
+                            "bytes_in": 957,
+                            "bytes_out": 1079386,
+                            "client": "mongo-b-647c7b7d4d-bfgq5"
+                        }
+                    }
+                }
+            ],
+            "connections_egress": [
+                {
+                    "site_id": "14bac872-24b3-4111-b803-9037f7ee7afb",
+                    "connections": {
+                        "172.17.29.127:51442@0ad15362-aa74-415e-8ea9-240a9ba9d6d9": {
+                            "id": "172.17.29.127:51442@0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+                            "start_time": 212,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 55492,
+                            "bytes_out": 35130,
+                            "server": "mongo-c-9469d7fc4-vpww6"
+                        },
+                        "172.17.29.83:56584@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:56584@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 212,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 55402,
+                            "bytes_out": 34419,
+                            "server": "mongo-c-9469d7fc4-vpww6"
+                        },
+                        "172.17.29.83:59720@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:59720@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 199,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 636447,
+                            "bytes_out": 1075650,
+                            "server": "mongo-c-9469d7fc4-vpww6"
+                        },
+                        "172.17.29.83:60796@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:60796@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 199,
+                            "last_out": 199,
+                            "last_in": 1,
+                            "bytes_in": 1079386,
+                            "bytes_out": 957,
+                            "server": "mongo-c-9469d7fc4-vpww6"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "address": "mongo-a",
+            "protocol": "tcp",
+            "targets": [
+                {
+                    "name": "mongo-a-64fc4d7b6-rjlkq",
+                    "target": "mongo-a",
+                    "site_id": "0ad15362-aa74-415e-8ea9-240a9ba9d6d9"
+                }
+            ],
+            "connections_ingress": [
+                {
+                    "site_id": "33e72aa7-d924-4448-8780-e64fb275f3d6",
+                    "connections": {
+                        "172.17.29.83:34684@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:34684@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 212,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 34932,
+                            "bytes_out": 54999,
+                            "client": "mongo-b-647c7b7d4d-bfgq5"
+                        },
+                        "172.17.29.83:34782@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:34782@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 210,
+                            "last_out": 30,
+                            "last_in": 30,
+                            "bytes_in": 1734,
+                            "bytes_out": 4229,
+                            "client": "mongo-b-647c7b7d4d-bfgq5"
+                        }
+                    }
+                },
+                {
+                    "site_id": "14bac872-24b3-4111-b803-9037f7ee7afb",
+                    "connections": {
+                        "172.17.29.120:49852@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:49852@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 212,
+                            "last_out": 2,
+                            "last_in": 2,
+                            "bytes_in": 35043,
+                            "bytes_out": 54583,
+                            "client": "mongo-c-9469d7fc4-vpww6"
+                        },
+                        "172.17.29.120:49948@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:49948@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 211,
+                            "last_out": 1,
+                            "last_in": 1,
+                            "bytes_in": 1567485,
+                            "bytes_out": 955205,
+                            "client": "mongo-c-9469d7fc4-vpww6"
+                        },
+                        "172.17.29.120:52994@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:52994@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 200,
+                            "last_out": 1,
+                            "last_in": 200,
+                            "bytes_in": 957,
+                            "bytes_out": 1077188,
+                            "client": "mongo-c-9469d7fc4-vpww6"
+                        }
+                    }
+                }
+            ],
+            "connections_egress": [
+                {
+                    "site_id": "0ad15362-aa74-415e-8ea9-240a9ba9d6d9",
+                    "connections": {
+                        "172.17.29.120:49852@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:49852@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 213,
+                            "last_out": 2,
+                            "last_in": 2,
+                            "bytes_in": 54583,
+                            "bytes_out": 35043,
+                            "server": "mongo-a-64fc4d7b6-rjlkq"
+                        },
+                        "172.17.29.120:49948@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:49948@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 211,
+                            "last_out": 2,
+                            "last_in": 2,
+                            "bytes_in": 955205,
+                            "bytes_out": 1567485,
+                            "server": "mongo-a-64fc4d7b6-rjlkq"
+                        },
+                        "172.17.29.120:52994@14bac872-24b3-4111-b803-9037f7ee7afb": {
+                            "id": "172.17.29.120:52994@14bac872-24b3-4111-b803-9037f7ee7afb",
+                            "start_time": 201,
+                            "last_out": 201,
+                            "last_in": 2,
+                            "bytes_in": 1077188,
+                            "bytes_out": 957,
+                            "server": "mongo-a-64fc4d7b6-rjlkq"
+                        },
+                        "172.17.29.83:34684@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:34684@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 213,
+                            "last_out": 2,
+                            "last_in": 2,
+                            "bytes_in": 54999,
+                            "bytes_out": 34932,
+                            "server": "mongo-a-64fc4d7b6-rjlkq"
+                        },
+                        "172.17.29.83:34782@33e72aa7-d924-4448-8780-e64fb275f3d6": {
+                            "id": "172.17.29.83:34782@33e72aa7-d924-4448-8780-e64fb275f3d6",
+                            "start_time": 211,
+                            "last_out": 31,
+                            "last_in": 31,
+                            "bytes_in": 4229,
+                            "bytes_out": 1734,
+                            "server": "mongo-a-64fc4d7b6-rjlkq"
                         }
                     }
                 }

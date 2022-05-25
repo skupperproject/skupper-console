@@ -3,7 +3,6 @@ import {
     getData,
     getDeployments,
     getFlows,
-    getFlowsConnectionsByService,
     getFlowsTopology,
     getServices,
     getSites,
@@ -12,6 +11,7 @@ import {
     DATA_URL,
     FLOWS_BY_VAN_ADDRESS,
     FLOWS_LINKS,
+    FLOWS_RECORD_BY_ID,
     FLOWS_TOPOLOGY,
     FLOWS_VAN_ADDRESSES,
 } from './REST.constant';
@@ -24,6 +24,8 @@ import {
     FlowsVanAddressesResponse,
     LinkStatsResponse,
     FlowsTopologyResponse,
+    FlowsConnectionResponse,
+    FlowsDataResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -73,19 +75,23 @@ export const RESTApi = {
 
         return getFlowsTopology(data);
     },
-    fetchFlowsByVanId: async (vanaddr: string): Promise<FlowsResponse[]> => {
-        const { data: topology } = await fetchWithTimeout(`${FLOWS_TOPOLOGY}`);
-        const { data: flows } = await fetchWithTimeout(
-            `${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`,
-        );
+    fetchFlowsConnectionsByVanAddr: async (vanaddr: string): Promise<FlowsConnectionResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`);
 
-        const data = [...topology, ...flows];
-
-        return getFlowsConnectionsByService(data, vanaddr);
+        return data;
     },
     fetchFlowsVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
         const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
 
         return data;
+    },
+    fetchFlowRecord: async (ids: string[]): Promise<FlowsDataResponse[]> => {
+        const queryString = ids.map((id) => `id=${id}`).join('&');
+
+        const { data } = await fetchWithTimeout(`${FLOWS_RECORD_BY_ID}?${queryString}`);
+
+        const record = data.map(({ _record }: any) => _record);
+
+        return record;
     },
 };

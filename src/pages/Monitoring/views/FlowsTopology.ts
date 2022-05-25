@@ -13,7 +13,7 @@ import {
     MonitoringTopologyNode,
     MonitoringTopologyRouterNode,
     MonitoringTopologyVanService,
-} from './topology.interfaces';
+} from './Topology.interfaces';
 
 const CIRCLE_R = 10;
 const ROUTER_IMG_WIDTH = 50;

@@ -1,0 +1,9 @@
+.pf-c-table tbody tr {
+    &:hover {
+        background-color: var(--pf-global--palette--blue-100);
+    }
+
+    &.selected {
+        background-color: var(--pf-global--palette--blue-100);
+    }
+}

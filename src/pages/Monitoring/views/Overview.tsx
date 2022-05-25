@@ -9,9 +9,10 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import { MonitoringRoutesPaths, ServicesColumns } from '../Monitoring.enum';
+import { MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
+import { OverviewColumns } from './Overview.enum';
 
 const Overview = function () {
     const navigate = useNavigate();
@@ -52,31 +53,31 @@ const Overview = function () {
             >
                 <Thead>
                     <Tr>
-                        <Th>{ServicesColumns.Name}</Th>
-                        <Th>{ServicesColumns.TotalListeners}</Th>
-                        <Th>{ServicesColumns.TotalConnectors}</Th>
-                        <Th>{ServicesColumns.NumFLows}</Th>
-                        <Th>{ServicesColumns.NumFlowsActive}</Th>
+                        <Th>{OverviewColumns.Name}</Th>
+                        <Th>{OverviewColumns.TotalListeners}</Th>
+                        <Th>{OverviewColumns.TotalConnectors}</Th>
+                        <Th>{OverviewColumns.NumFLows}</Th>
+                        <Th>{OverviewColumns.NumFlowsActive}</Th>
                     </Tr>
                 </Thead>
                 {vanServices?.map((row) => (
                     <Tbody key={row.id}>
                         <Tr>
-                            <Td dataLabel={ServicesColumns.Name}>
+                            <Td dataLabel={OverviewColumns.Name}>
                                 <ResourceIcon type="vanAddress" />
 
                                 <Link to={`${MonitoringRoutesPaths.Connections}/${row.id}`}>
                                     {row.id}
                                 </Link>
                             </Td>
-                            <Td dataLabel={ServicesColumns.TotalListeners}>
+                            <Td dataLabel={OverviewColumns.TotalListeners}>
                                 {`${row.listenerCount}`}
                             </Td>
                             <Td
-                                dataLabel={ServicesColumns.TotalConnectors}
+                                dataLabel={OverviewColumns.TotalConnectors}
                             >{`${row.connectorCount}`}</Td>
-                            <Td dataLabel={ServicesColumns.NumFLows}>{`${row.totalFlows}`}</Td>
-                            <Td dataLabel={ServicesColumns.NumFLows}>{`${row.currentFlows}`}</Td>
+                            <Td dataLabel={OverviewColumns.NumFLows}>{`${row.totalFlows}`}</Td>
+                            <Td dataLabel={OverviewColumns.NumFLows}>{`${row.currentFlows}`}</Td>
                         </Tr>
                     </Tbody>
                 ))}
