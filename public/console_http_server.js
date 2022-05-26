@@ -10,19 +10,20 @@ const PORT = process.env.PORT || SERVER_PORT_DEFAULT;
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-app.use(function (req, res, next) {
-    console.log(process.env.NODE_API_HOST);
+app.use(async (req, res, next) => {
+    const API_HOST = process.env.NODE_API_HOST;
+    const API_HOST_FLOW_COLLECTOR = process.env.NODE_API_HOST_FLOW_COLLECTOR;
 
     if (req.originalUrl.includes('/DATA')) {
-        axios.get(req.originalUrl).then((response) => {
-            res.send(response.data);
-        });
+        const { data } = await axios.get(`${API_HOST}${req.originalUrl}`);
+
+        res.json(data);
     }
 
-    if (req.originalUrl.includes('api')) {
-        axios.get(req.originalUrl).then((response) => {
-            res.send(response.data);
-        });
+    if (req.originalUrl.includes('/api')) {
+        const { data } = await axios.get(`${API_HOST_FLOW_COLLECTOR}${req.originalUrl}`);
+
+        res.json(data);
     }
 
     next();
