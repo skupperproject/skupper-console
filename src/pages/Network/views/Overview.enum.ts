@@ -9,15 +9,9 @@ export enum OverviewLabels {
     Links = 'Links',
 }
 
-export enum OverviewRoutersColumns {
-    Name = 'Name',
-    NumServices = 'Services',
-    NumFLows = 'Flows',
-}
-
 export enum OverviewLinksColumns {
-    RouterStart = 'From',
-    RouterEnd = 'To',
+    Source = 'From',
+    Target = 'To',
     Cost = 'Cost',
     Mode = 'Mode',
 }

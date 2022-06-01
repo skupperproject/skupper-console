@@ -1,12 +1,4 @@
-import {
-    DataServicesResponse,
-    DeploymentLinksResponse,
-    DeploymentTopologyResponse,
-    SiteResponse,
-} from 'API/REST.interfaces';
-
-export type DataService = DataServicesResponse;
-export type Site = SiteResponse;
+import { DeploymentLinksResponse, DeploymentTopologyResponse } from 'API/REST.interfaces';
 
 export type DeploymentNode = DeploymentTopologyResponse;
 
@@ -14,10 +6,3 @@ export type Deployments = {
     deployments: DeploymentNode[];
     deploymentLinks: DeploymentLinksResponse[];
 };
-
-export interface SiteService {
-    address: string;
-    protocol: string;
-    siteName: string;
-    siteId: string;
-}

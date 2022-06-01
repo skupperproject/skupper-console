@@ -1,11 +1,12 @@
-import { RouterStatsResponse, MonitoringStatsResponse } from 'API/REST.interfaces';
+import { FlowsTopologyLink } from 'API/REST.interfaces';
 
-export type RoutersStats = RouterStatsResponse;
-export type NetworkStats = MonitoringStatsResponse;
+interface LinksRouters extends FlowsTopologyLink {
+    sourceNamespace: string;
+    targetNamespace: string;
+}
 
 export interface Network {
-    networkStats: NetworkStats[];
-    routersStats: RoutersStats[];
+    linksRouters: LinksRouters[];
     sitesStats: {
         totalSites: number;
     };

@@ -11,7 +11,10 @@ export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOpt
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
 
-    const response = await axios(url, { ...options, signal: controller.signal });
+    const response = await axios(url, {
+        ...options,
+        signal: controller.signal,
+    });
     clearTimeout(id);
 
     return response;

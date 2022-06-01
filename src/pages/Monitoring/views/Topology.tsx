@@ -13,10 +13,10 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import { MonitorServices } from '../../services';
-import { QueriesMonitoring } from '../../services/services.enum';
+import { MonitorServices } from '../services';
+import { QueriesMonitoring } from '../services/services.enum';
 import TopologyMonitoringService from './FlowsTopology';
-import { MonitoringTopologyVanService } from './topology.interfaces';
+import { MonitoringTopologyVanService } from './Topology.interfaces';
 
 const MonitoringTopology = function () {
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ const MonitoringTopology = function () {
 
     const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
         [QueriesMonitoring.GetMonitoringTopologyNetwork],
-        () => MonitorServices.fetchMonitoringRoutersTopology(),
+        () => MonitorServices.fetchMonitoringTopology(),
         {
             refetchOnWindowFocus: false,
             refetchInterval,

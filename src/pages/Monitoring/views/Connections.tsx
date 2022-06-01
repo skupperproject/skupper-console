@@ -12,13 +12,10 @@ import {
 } from '@patternfly/react-core';
 import { Link, useParams } from 'react-router-dom';
 
-import ConnectionsTableVIew from '../components/table';
-import ConnectionsTopology from '../components/topology';
-import {
-    MonitoringRoutesPaths,
-    MonitoringRoutesPathLabel,
-    ConnectionsNavMenu,
-} from '../Monitoring.enum';
+import { MonitoringRoutesPaths, MonitoringRoutesPathLabel } from '../Monitoring.enum';
+import ConnectionsTopology from '../views/Topology';
+import { ConnectionsNavMenu } from './Connections.enum';
+import DetailsView from './Details';
 
 const Connections = function () {
     const [activeItem, setActiveItem] = useState(0);
@@ -58,9 +55,7 @@ const Connections = function () {
                     />
                 </Tabs>
             </StackItem>
-            <StackItem isFilled>
-                {activeItem ? <ConnectionsTopology /> : <ConnectionsTableVIew />}
-            </StackItem>
+            <StackItem isFilled>{activeItem ? <ConnectionsTopology /> : <DetailsView />}</StackItem>
         </Stack>
     );
 };

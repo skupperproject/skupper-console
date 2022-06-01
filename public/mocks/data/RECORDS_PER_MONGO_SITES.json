@@ -1,0 +1,240 @@
+[
+    {
+        "_rtype": "ROUTER",
+        "_id": "0:2w46g:0",
+        "_record": {
+            "startTime": 1654029784258797,
+            "namespace": "mongo-private",
+            "imageName": "skupper-router",
+            "imageVersion": "latest",
+            "hostname": "skupper-router-54b7fbfb-2w46g",
+            "name": "0/private-skupper-router-54b7fbfb-2w46g",
+            "buildVersion": "2.0.1",
+            "rtype": "ROUTER",
+            "id": "0:2w46g:0"
+        },
+        "_children": ["0:2w46g:1", "0:2w46g:2", "0:2w46g:3", "0:2w46g:4", "0:2w46g:5", "0:2w46g:6"]
+    },
+    {
+        "_rtype": "ROUTER",
+        "_id": "0:5vkvb:0",
+        "_record": {
+            "startTime": 1654029799761909,
+            "namespace": "mongo-public2",
+            "imageName": "skupper-router",
+            "imageVersion": "latest",
+            "hostname": "skupper-router-7b5678694f-5vkvb",
+            "name": "0/public2-skupper-router-7b5678694f-5vkvb",
+            "buildVersion": "2.0.1",
+            "rtype": "ROUTER",
+            "id": "0:5vkvb:0"
+        },
+        "_children": ["0:5vkvb:1", "0:5vkvb:2", "0:5vkvb:3", "0:5vkvb:4", "0:5vkvb:5", "0:5vkvb:6"]
+    },
+    {
+        "_rtype": "ROUTER",
+        "_id": "0:c4cgx:0",
+        "_record": {
+            "startTime": 1654029794612015,
+            "namespace": "mongo-public1",
+            "imageName": "skupper-router",
+            "imageVersion": "latest",
+            "hostname": "skupper-router-6bf87df5d9-c4cgx",
+            "name": "0/public1-skupper-router-6bf87df5d9-c4cgx",
+            "buildVersion": "2.0.1",
+            "rtype": "ROUTER",
+            "id": "0:c4cgx:0"
+        },
+        "_children": ["0:c4cgx:1", "0:c4cgx:2", "0:c4cgx:3", "0:c4cgx:4", "0:c4cgx:5", "0:c4cgx:6"]
+    },
+    {
+        "_rtype": "ROUTER",
+        "_id": "0:2w46g:0",
+        "_record": {
+            "startTime": 1654029784258797,
+            "namespace": "mongo-private",
+            "imageName": "skupper-router",
+            "imageVersion": "latest",
+            "hostname": "skupper-router-54b7fbfb-2w46g",
+            "name": "0/private-skupper-router-54b7fbfb-2w46g",
+            "buildVersion": "2.0.1",
+            "rtype": "ROUTER",
+            "id": "0:2w46g:0"
+        },
+        "_children": ["0:2w46g:1", "0:2w46g:2", "0:2w46g:3", "0:2w46g:4", "0:2w46g:5", "0:2w46g:6"]
+    },
+    {
+        "_rtype": "ROUTER",
+        "_id": "0:5vkvb:0",
+        "_record": {
+            "startTime": 1654029799761909,
+            "namespace": "mongo-public2",
+            "imageName": "skupper-router",
+            "imageVersion": "latest",
+            "hostname": "skupper-router-7b5678694f-5vkvb",
+            "name": "0/public2-skupper-router-7b5678694f-5vkvb",
+            "buildVersion": "2.0.1",
+            "rtype": "ROUTER",
+            "id": "0:5vkvb:0"
+        },
+        "_children": ["0:5vkvb:1", "0:5vkvb:2", "0:5vkvb:3", "0:5vkvb:4", "0:5vkvb:5", "0:5vkvb:6"]
+    },
+    {
+        "_rtype": "ROUTER",
+        "_id": "0:c4cgx:0",
+        "_record": {
+            "startTime": 1654029794612015,
+            "namespace": "mongo-public1",
+            "imageName": "skupper-router",
+            "imageVersion": "latest",
+            "hostname": "skupper-router-6bf87df5d9-c4cgx",
+            "name": "0/public1-skupper-router-6bf87df5d9-c4cgx",
+            "buildVersion": "2.0.1",
+            "rtype": "ROUTER",
+            "id": "0:c4cgx:0"
+        },
+        "_children": ["0:c4cgx:1", "0:c4cgx:2", "0:c4cgx:3", "0:c4cgx:4", "0:c4cgx:5", "0:c4cgx:6"]
+    },
+    [
+        {
+            "_rtype": "ROUTER",
+            "_id": "0:2w46g:0",
+            "_record": {
+                "startTime": 1654029784258797,
+                "namespace": "mongo-private",
+                "imageName": "skupper-router",
+                "imageVersion": "latest",
+                "hostname": "skupper-router-54b7fbfb-2w46g",
+                "name": "0/private-skupper-router-54b7fbfb-2w46g",
+                "buildVersion": "2.0.1",
+                "rtype": "ROUTER",
+                "id": "0:2w46g:0"
+            },
+            "_children": [
+                "0:2w46g:1",
+                "0:2w46g:2",
+                "0:2w46g:3",
+                "0:2w46g:4",
+                "0:2w46g:5",
+                "0:2w46g:6"
+            ]
+        },
+        {
+            "_rtype": "ROUTER",
+            "_id": "0:5vkvb:0",
+            "_record": {
+                "startTime": 1654029799761909,
+                "namespace": "mongo-public2",
+                "imageName": "skupper-router",
+                "imageVersion": "latest",
+                "hostname": "skupper-router-7b5678694f-5vkvb",
+                "name": "0/public2-skupper-router-7b5678694f-5vkvb",
+                "buildVersion": "2.0.1",
+                "rtype": "ROUTER",
+                "id": "0:5vkvb:0"
+            },
+            "_children": [
+                "0:5vkvb:1",
+                "0:5vkvb:2",
+                "0:5vkvb:3",
+                "0:5vkvb:4",
+                "0:5vkvb:5",
+                "0:5vkvb:6"
+            ]
+        },
+        {
+            "_rtype": "ROUTER",
+            "_id": "0:c4cgx:0",
+            "_record": {
+                "startTime": 1654029794612015,
+                "namespace": "mongo-public1",
+                "imageName": "skupper-router",
+                "imageVersion": "latest",
+                "hostname": "skupper-router-6bf87df5d9-c4cgx",
+                "name": "0/public1-skupper-router-6bf87df5d9-c4cgx",
+                "buildVersion": "2.0.1",
+                "rtype": "ROUTER",
+                "id": "0:c4cgx:0"
+            },
+            "_children": [
+                "0:c4cgx:1",
+                "0:c4cgx:2",
+                "0:c4cgx:3",
+                "0:c4cgx:4",
+                "0:c4cgx:5",
+                "0:c4cgx:6"
+            ]
+        }
+    ],
+    [
+        {
+            "_rtype": "ROUTER",
+            "_id": "0:2w46g:0",
+            "_record": {
+                "startTime": 1654029784258797,
+                "namespace": "mongo-private",
+                "imageName": "skupper-router",
+                "imageVersion": "latest",
+                "hostname": "skupper-router-54b7fbfb-2w46g",
+                "name": "0/private-skupper-router-54b7fbfb-2w46g",
+                "buildVersion": "2.0.1",
+                "rtype": "ROUTER",
+                "id": "0:2w46g:0"
+            },
+            "_children": [
+                "0:2w46g:1",
+                "0:2w46g:2",
+                "0:2w46g:3",
+                "0:2w46g:4",
+                "0:2w46g:5",
+                "0:2w46g:6"
+            ]
+        },
+        {
+            "_rtype": "ROUTER",
+            "_id": "0:5vkvb:0",
+            "_record": {
+                "startTime": 1654029799761909,
+                "namespace": "mongo-public2",
+                "imageName": "skupper-router",
+                "imageVersion": "latest",
+                "hostname": "skupper-router-7b5678694f-5vkvb",
+                "name": "0/public2-skupper-router-7b5678694f-5vkvb",
+                "buildVersion": "2.0.1",
+                "rtype": "ROUTER",
+                "id": "0:5vkvb:0"
+            },
+            "_children": [
+                "0:5vkvb:1",
+                "0:5vkvb:2",
+                "0:5vkvb:3",
+                "0:5vkvb:4",
+                "0:5vkvb:5",
+                "0:5vkvb:6"
+            ]
+        },
+        {
+            "_rtype": "ROUTER",
+            "_id": "0:c4cgx:0",
+            "_record": {
+                "startTime": 1654029794612015,
+                "namespace": "mongo-public1",
+                "imageName": "skupper-router",
+                "imageVersion": "latest",
+                "hostname": "skupper-router-6bf87df5d9-c4cgx",
+                "name": "0/public1-skupper-router-6bf87df5d9-c4cgx",
+                "buildVersion": "2.0.1",
+                "rtype": "ROUTER",
+                "id": "0:c4cgx:0"
+            },
+            "_children": [
+                "0:c4cgx:1",
+                "0:c4cgx:2",
+                "0:c4cgx:3",
+                "0:c4cgx:4",
+                "0:c4cgx:5",
+                "0:c4cgx:6"
+            ]
+        }
+    ]
+]

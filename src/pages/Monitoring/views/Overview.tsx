@@ -5,12 +5,14 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import { MonitoringRoutesPaths, ServicesColumns } from '../Monitoring.enum';
+import { MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
+import { OverviewColumns } from './Overview.enum';
 
 const Overview = function () {
     const navigate = useNavigate();
@@ -18,8 +20,8 @@ const Overview = function () {
     const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: vanServices, isLoading } = useQuery(
-        QueriesMonitoring.GetMonitoringNetworkStats,
-        MonitorServices.fetchMonitoringStats,
+        QueriesMonitoring.GetVanAdresses,
+        MonitorServices.fetchVanAddresses,
         {
             refetchInterval,
             onError: handleError,
@@ -51,25 +53,31 @@ const Overview = function () {
             >
                 <Thead>
                     <Tr>
-                        <Th>{ServicesColumns.Name}</Th>
-                        <Th>{ServicesColumns.RoutersAssociated}</Th>
-                        <Th>{ServicesColumns.NumDevices}</Th>
-                        <Th>{ServicesColumns.NumFLows}</Th>
+                        <Th>{OverviewColumns.Name}</Th>
+                        <Th>{OverviewColumns.TotalListeners}</Th>
+                        <Th>{OverviewColumns.TotalConnectors}</Th>
+                        <Th>{OverviewColumns.NumFLows}</Th>
+                        <Th>{OverviewColumns.NumFlowsActive}</Th>
                     </Tr>
                 </Thead>
                 {vanServices?.map((row) => (
                     <Tbody key={row.id}>
                         <Tr>
-                            <Td dataLabel={ServicesColumns.Name}>
-                                <Link to={`${MonitoringRoutesPaths.Connections}/${row.name}`}>
-                                    {row.name}
+                            <Td dataLabel={OverviewColumns.Name}>
+                                <ResourceIcon type="vanAddress" />
+
+                                <Link to={`${MonitoringRoutesPaths.Connections}/${row.id}`}>
+                                    {row.id}
                                 </Link>
                             </Td>
-                            <Td dataLabel={ServicesColumns.RoutersAssociated}>
-                                {`${row.routersAssociated}`}
+                            <Td dataLabel={OverviewColumns.TotalListeners}>
+                                {`${row.listenerCount}`}
                             </Td>
-                            <Td dataLabel={ServicesColumns.NumDevices}>{`${row.totalDevices}`}</Td>
-                            <Td dataLabel={ServicesColumns.NumFLows}>{`${row.totalFlows}`}</Td>
+                            <Td
+                                dataLabel={OverviewColumns.TotalConnectors}
+                            >{`${row.connectorCount}`}</Td>
+                            <Td dataLabel={OverviewColumns.NumFLows}>{`${row.totalFlows}`}</Td>
+                            <Td dataLabel={OverviewColumns.NumFLows}>{`${row.currentFlows}`}</Td>
                         </Tr>
                     </Tbody>
                 ))}

@@ -23,12 +23,12 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import SitesServices from '@pages/Sites/services';
 
-import TopologySiteDetails from '../components/Details';
 import TopologyGraph from '../components/Topology';
 import { TopologyViews } from '../components/topology.enum';
 import { TopologySVG } from '../components/Topology.interfaces';
 import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
+import TopologySiteDetails from './Details';
 
 const Topology = function () {
     const navigate = useNavigate();

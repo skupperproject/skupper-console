@@ -1,7 +1,3 @@
-export enum SitesOverviewTableLabels {
-    Sites = 'Sites',
-}
-
 export enum SitesOverviewColumns {
     Name = 'Name',
     Namespace = 'Namespace',
