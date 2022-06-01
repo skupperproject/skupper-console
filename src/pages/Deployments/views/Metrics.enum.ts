@@ -1,6 +1,6 @@
 export enum SitesMetricsLabels {
-    HTTPrequestsIn = 'HTTP Requests Received',
-    HTTPrequestsOut = 'HTTP Requests Sent',
+    HTTbytesIn = 'HTTP bytes Received',
+    HTTbytesOut = 'HTTP bytes Sent',
     TCPconnectionsIn = 'TCP traffic received',
     TCPconnectionsOut = 'TCP traffic sent',
 }

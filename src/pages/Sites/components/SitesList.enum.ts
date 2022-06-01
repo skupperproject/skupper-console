@@ -1,4 +1,4 @@
-export enum SitesOverviewColumns {
+export enum SitesListColumns {
     Name = 'Name',
     Namespace = 'Namespace',
     Gateway = 'Gateway',

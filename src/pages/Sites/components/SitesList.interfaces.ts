@@ -1,5 +1,5 @@
 import { Site } from '../services/services.interfaces';
 
-export interface SitesOverviewTableProps {
+export interface SitesListProps {
     sites: Site[];
 }

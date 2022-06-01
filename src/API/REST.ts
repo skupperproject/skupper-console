@@ -90,7 +90,7 @@ export const RESTApi = {
 
         const { data } = await fetchWithTimeout(`${FLOWS_RECORD_BY_ID}?${queryString}`);
 
-        const record = data.map(({ _record }: any) => _record);
+        const record = data.map(({ _record, _id }: any) => ({ ..._record, id: _id }));
 
         return record;
     },

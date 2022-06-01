@@ -17,8 +17,8 @@ export const MonitorServices = {
             ({ rtype, endTime }) => rtype === 'CONNECTOR' && !endTime,
         ) as FlowsDeviceResponse[];
         const idsConn = connectors.map(({ parent }) => parent);
-        const routersConn = await RESTApi.fetchFlowRecord(idsConn);
-        const recordsConnectors = mergeById(connectors, routersConn);
+        const routersConnections = await RESTApi.fetchFlowRecord(idsConn);
+        const recordsConnectors = mergeById(connectors, routersConnections);
 
         const listeners = connections.filter(
             ({ rtype, endTime }) => rtype === 'LISTENER' && !endTime,
@@ -26,8 +26,9 @@ export const MonitorServices = {
             routerName: string;
         };
         const ids = listeners.map(({ parent }) => parent);
-        const routers = await RESTApi.fetchFlowRecord(ids);
-        const recordsListeners = mergeById(listeners, routers);
+        const routersListeners = await RESTApi.fetchFlowRecord(ids);
+
+        const recordsListeners = mergeById(listeners, routersListeners);
 
         const flows = connections.filter(
             ({ rtype, endTime }) => rtype === 'FLOW' && !endTime,

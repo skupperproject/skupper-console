@@ -85,303 +85,315 @@ const DeploymentsDetails = function () {
     const ConnectionsTables = function () {
         return (
             <Stack hasGutter>
-                <StackItem>
-                    <Split hasGutter>
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card>
-                                <CardTitle>{DeploymentDetailsLabels.HTTPrequestsIn}</CardTitle>
-                                {httpConnectionsIn.length === 0 ? (
-                                    <EmptyData />
-                                ) : (
-                                    <TableComposable
-                                        className="network-table"
-                                        aria-label="network table"
-                                        borders={false}
-                                        variant="compact"
-                                        isStriped
-                                    >
-                                        <Thead>
-                                            <Tr>
-                                                <Th>{DeploymentDetailsColumns.ServiceName}</Th>
-                                                <Th>{DeploymentDetailsColumns.Requests}</Th>
-                                                <Th>{DeploymentDetailsColumns.MaxLatency}</Th>
-                                                <Th>
-                                                    <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesIn}
-                                                </Th>
-                                                <Th>
-                                                    <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesOut}
-                                                </Th>
-                                            </Tr>
-                                        </Thead>
-                                        {httpConnectionsIn.map(
-                                            ({
-                                                id,
-                                                client,
-                                                bytes_in,
-                                                bytes_out,
-                                                requests,
-                                                latency_max,
-                                            }) => (
-                                                <Tbody key={`${id}${client}`}>
-                                                    <Tr>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.ServiceName
-                                                            }
-                                                        >
-                                                            {client}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.Requests
-                                                            }
-                                                        >
-                                                            {requests}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.MaxLatency
-                                                            }
-                                                        >
-                                                            {`${formatTime(latency_max, {
-                                                                startSize: 'ms',
-                                                            })}`}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesIn
-                                                            }
-                                                        >
-                                                            {`${formatBytes(bytes_in)}`}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesOut
-                                                            }
-                                                        >
-                                                            {`${formatBytes(bytes_out)}`}
-                                                        </Td>
-                                                    </Tr>
-                                                </Tbody>
-                                            ),
-                                        )}
-                                    </TableComposable>
-                                )}
-                            </Card>
-                        </SplitItem>
+                {!!(httpConnectionsIn.length || httpConnectionsOut.length) && (
+                    <StackItem>
+                        <Split hasGutter>
+                            <SplitItem className="pf-u-w-50vw">
+                                <Card>
+                                    <CardTitle>{DeploymentDetailsLabels.HTTPrequestsIn}</CardTitle>
+                                    {httpConnectionsIn.length === 0 ? (
+                                        <EmptyData />
+                                    ) : (
+                                        <TableComposable
+                                            className="network-table"
+                                            aria-label="network table"
+                                            borders={false}
+                                            variant="compact"
+                                            isStriped
+                                        >
+                                            <Thead>
+                                                <Tr>
+                                                    <Th>{DeploymentDetailsColumns.ServiceName}</Th>
+                                                    <Th>{DeploymentDetailsColumns.Requests}</Th>
+                                                    <Th>{DeploymentDetailsColumns.MaxLatency}</Th>
+                                                    <Th>
+                                                        <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesIn}
+                                                    </Th>
+                                                    <Th>
+                                                        <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesOut}
+                                                    </Th>
+                                                </Tr>
+                                            </Thead>
+                                            {httpConnectionsIn.map(
+                                                ({
+                                                    id,
+                                                    client,
+                                                    bytes_in,
+                                                    bytes_out,
+                                                    requests,
+                                                    latency_max,
+                                                }) => (
+                                                    <Tbody key={`${id}${client}`}>
+                                                        <Tr>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.ServiceName
+                                                                }
+                                                            >
+                                                                {client}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.Requests
+                                                                }
+                                                            >
+                                                                {requests}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.MaxLatency
+                                                                }
+                                                            >
+                                                                {`${formatTime(latency_max, {
+                                                                    startSize: 'ms',
+                                                                })}`}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesIn
+                                                                }
+                                                            >
+                                                                {`${formatBytes(bytes_in)}`}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesOut
+                                                                }
+                                                            >
+                                                                {`${formatBytes(bytes_out)}`}
+                                                            </Td>
+                                                        </Tr>
+                                                    </Tbody>
+                                                ),
+                                            )}
+                                        </TableComposable>
+                                    )}
+                                </Card>
+                            </SplitItem>
 
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card>
-                                <CardTitle>{DeploymentDetailsLabels.HTTPrequestsOut}</CardTitle>
-                                {httpConnectionsOut.length === 0 ? (
-                                    <EmptyData />
-                                ) : (
-                                    <TableComposable
-                                        className="network-table"
-                                        aria-label="network table"
-                                        borders={false}
-                                        variant="compact"
-                                        isStriped
-                                    >
-                                        <Thead>
-                                            <Tr>
-                                                <Th>{DeploymentDetailsColumns.ServiceName}</Th>
-                                                <Th>{DeploymentDetailsColumns.Requests}</Th>
-                                                <Th>{DeploymentDetailsColumns.MaxLatency}</Th>
-                                                <Th>
-                                                    <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesIn}
-                                                </Th>
-                                                <Th>
-                                                    <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesOut}
-                                                </Th>
-                                            </Tr>
-                                        </Thead>
-                                        {httpConnectionsOut.map(
-                                            ({
-                                                id,
-                                                client,
-                                                bytes_in,
-                                                bytes_out,
-                                                requests,
-                                                latency_max,
-                                            }) => (
-                                                <Tbody key={`${id}${client}`}>
-                                                    <Tr>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.ServiceName
-                                                            }
-                                                        >
-                                                            {client}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.Requests
-                                                            }
-                                                        >
-                                                            {requests}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.MaxLatency
-                                                            }
-                                                        >
-                                                            {`${formatTime(latency_max, {
-                                                                startSize: 'ms',
-                                                            })}`}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesIn
-                                                            }
-                                                        >
-                                                            {`${formatBytes(bytes_in)}`}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesOut
-                                                            }
-                                                        >
-                                                            {`${formatBytes(bytes_out)}`}
-                                                        </Td>
-                                                    </Tr>
-                                                </Tbody>
-                                            ),
-                                        )}
-                                    </TableComposable>
-                                )}
-                            </Card>
-                        </SplitItem>
-                    </Split>
-                </StackItem>
+                            <SplitItem className="pf-u-w-50vw">
+                                <Card>
+                                    <CardTitle>{DeploymentDetailsLabels.HTTPrequestsOut}</CardTitle>
+                                    {httpConnectionsOut.length === 0 ? (
+                                        <EmptyData />
+                                    ) : (
+                                        <TableComposable
+                                            className="network-table"
+                                            aria-label="network table"
+                                            borders={false}
+                                            variant="compact"
+                                            isStriped
+                                        >
+                                            <Thead>
+                                                <Tr>
+                                                    <Th>{DeploymentDetailsColumns.ServiceName}</Th>
+                                                    <Th>{DeploymentDetailsColumns.Requests}</Th>
+                                                    <Th>{DeploymentDetailsColumns.MaxLatency}</Th>
+                                                    <Th>
+                                                        <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesIn}
+                                                    </Th>
+                                                    <Th>
+                                                        <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesOut}
+                                                    </Th>
+                                                </Tr>
+                                            </Thead>
+                                            {httpConnectionsOut.map(
+                                                ({
+                                                    id,
+                                                    client,
+                                                    bytes_in,
+                                                    bytes_out,
+                                                    requests,
+                                                    latency_max,
+                                                }) => (
+                                                    <Tbody key={`${id}${client}`}>
+                                                        <Tr>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.ServiceName
+                                                                }
+                                                            >
+                                                                {client}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.Requests
+                                                                }
+                                                            >
+                                                                {requests}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.MaxLatency
+                                                                }
+                                                            >
+                                                                {`${formatTime(latency_max, {
+                                                                    startSize: 'ms',
+                                                                })}`}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesIn
+                                                                }
+                                                            >
+                                                                {`${formatBytes(bytes_in)}`}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesOut
+                                                                }
+                                                            >
+                                                                {`${formatBytes(bytes_out)}`}
+                                                            </Td>
+                                                        </Tr>
+                                                    </Tbody>
+                                                ),
+                                            )}
+                                        </TableComposable>
+                                    )}
+                                </Card>
+                            </SplitItem>
+                        </Split>
+                    </StackItem>
+                )}
 
-                <StackItem>
-                    <Split hasGutter>
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card>
-                                <CardTitle>{DeploymentDetailsLabels.TCPconnectionsIn}</CardTitle>
-                                {tcpConnectionsIn.length === 0 ? (
-                                    <EmptyData />
-                                ) : (
-                                    <TableComposable
-                                        className="network-table"
-                                        aria-label="network table"
-                                        borders={false}
-                                        variant="compact"
-                                        isStriped
-                                    >
-                                        <Thead>
-                                            <Tr>
-                                                <Th>{DeploymentDetailsColumns.ServiceName}</Th>
-                                                <Th>{DeploymentDetailsColumns.Ip}</Th>
-                                                <Th>
-                                                    <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesIn}
-                                                </Th>
-                                                <Th>
-                                                    <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesOut}
-                                                </Th>
-                                            </Tr>
-                                        </Thead>
-                                        {tcpConnectionsIn.map(
-                                            ({ id, client, bytes_in, bytes_out }) => (
-                                                <Tbody key={`${id}${client}`}>
-                                                    <Tr>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.ServiceName
-                                                            }
-                                                        >
-                                                            {client}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={DeploymentDetailsColumns.Ip}
-                                                        >{`${id.split('@')[0]}`}</Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesIn
-                                                            }
-                                                        >{`${formatBytes(bytes_in)}`}</Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesOut
-                                                            }
-                                                        >{`${formatBytes(bytes_out)}`}</Td>
-                                                    </Tr>
-                                                </Tbody>
-                                            ),
-                                        )}
-                                    </TableComposable>
-                                )}
-                            </Card>
-                        </SplitItem>
+                {!!(tcpConnectionsIn.length || tcpConnectionsOut.length) && (
+                    <StackItem>
+                        <Split hasGutter>
+                            <SplitItem className="pf-u-w-50vw">
+                                <Card>
+                                    <CardTitle>
+                                        {DeploymentDetailsLabels.TCPconnectionsIn}
+                                    </CardTitle>
+                                    {tcpConnectionsIn.length === 0 ? (
+                                        <EmptyData />
+                                    ) : (
+                                        <TableComposable
+                                            className="network-table"
+                                            aria-label="network table"
+                                            borders={false}
+                                            variant="compact"
+                                            isStriped
+                                        >
+                                            <Thead>
+                                                <Tr>
+                                                    <Th>{DeploymentDetailsColumns.ServiceName}</Th>
+                                                    <Th>{DeploymentDetailsColumns.Ip}</Th>
+                                                    <Th>
+                                                        <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesIn}
+                                                    </Th>
+                                                    <Th>
+                                                        <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesOut}
+                                                    </Th>
+                                                </Tr>
+                                            </Thead>
+                                            {tcpConnectionsIn.map(
+                                                ({ id, client, bytes_in, bytes_out }) => (
+                                                    <Tbody key={`${id}${client}`}>
+                                                        <Tr>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.ServiceName
+                                                                }
+                                                            >
+                                                                {client}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.Ip
+                                                                }
+                                                            >{`${id.split('@')[0]}`}</Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesIn
+                                                                }
+                                                            >{`${formatBytes(bytes_in)}`}</Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesOut
+                                                                }
+                                                            >{`${formatBytes(bytes_out)}`}</Td>
+                                                        </Tr>
+                                                    </Tbody>
+                                                ),
+                                            )}
+                                        </TableComposable>
+                                    )}
+                                </Card>
+                            </SplitItem>
 
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card>
-                                <CardTitle>{DeploymentDetailsLabels.TCPconnectionsOut}</CardTitle>
-                                {tcpConnectionsOut.length === 0 ? (
-                                    <EmptyData />
-                                ) : (
-                                    <TableComposable
-                                        className="network-table"
-                                        aria-label="network table"
-                                        borders={false}
-                                        variant="compact"
-                                        isStriped
-                                    >
-                                        <Thead>
-                                            <Tr>
-                                                <Th>{DeploymentDetailsColumns.ServiceName}</Th>
-                                                <Th>{DeploymentDetailsColumns.Ip}</Th>
-                                                <Th>
-                                                    <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesIn}
-                                                </Th>
-                                                <Th>
-                                                    <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                                                    {DeploymentDetailsColumns.BytesOut}
-                                                </Th>
-                                            </Tr>
-                                        </Thead>
-                                        {tcpConnectionsOut.map(
-                                            ({ id, client, bytes_in, bytes_out }) => (
-                                                <Tbody key={`${id}${client}`}>
-                                                    <Tr>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.ServiceName
-                                                            }
-                                                        >
-                                                            {client}
-                                                        </Td>
-                                                        <Td
-                                                            dataLabel={DeploymentDetailsColumns.Ip}
-                                                        >{`${id.split('@')[0]}`}</Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesIn
-                                                            }
-                                                        >{`${formatBytes(bytes_in)}`}</Td>
-                                                        <Td
-                                                            dataLabel={
-                                                                DeploymentDetailsColumns.BytesOut
-                                                            }
-                                                        >{`${formatBytes(bytes_out)}`}</Td>
-                                                    </Tr>
-                                                </Tbody>
-                                            ),
-                                        )}
-                                    </TableComposable>
-                                )}
-                            </Card>
-                        </SplitItem>
-                    </Split>
-                </StackItem>
+                            <SplitItem className="pf-u-w-50vw">
+                                <Card>
+                                    <CardTitle>
+                                        {DeploymentDetailsLabels.TCPconnectionsOut}
+                                    </CardTitle>
+                                    {tcpConnectionsOut.length === 0 ? (
+                                        <EmptyData />
+                                    ) : (
+                                        <TableComposable
+                                            className="network-table"
+                                            aria-label="network table"
+                                            borders={false}
+                                            variant="compact"
+                                            isStriped
+                                        >
+                                            <Thead>
+                                                <Tr>
+                                                    <Th>{DeploymentDetailsColumns.ServiceName}</Th>
+                                                    <Th>{DeploymentDetailsColumns.Ip}</Th>
+                                                    <Th>
+                                                        <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesIn}
+                                                    </Th>
+                                                    <Th>
+                                                        <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
+                                                        {DeploymentDetailsColumns.BytesOut}
+                                                    </Th>
+                                                </Tr>
+                                            </Thead>
+                                            {tcpConnectionsOut.map(
+                                                ({ id, client, bytes_in, bytes_out }) => (
+                                                    <Tbody key={`${id}${client}`}>
+                                                        <Tr>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.ServiceName
+                                                                }
+                                                            >
+                                                                {client}
+                                                            </Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.Ip
+                                                                }
+                                                            >{`${id.split('@')[0]}`}</Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesIn
+                                                                }
+                                                            >{`${formatBytes(bytes_in)}`}</Td>
+                                                            <Td
+                                                                dataLabel={
+                                                                    DeploymentDetailsColumns.BytesOut
+                                                                }
+                                                            >{`${formatBytes(bytes_out)}`}</Td>
+                                                        </Tr>
+                                                    </Tbody>
+                                                ),
+                                            )}
+                                        </TableComposable>
+                                    )}
+                                </Card>
+                            </SplitItem>
+                        </Split>
+                    </StackItem>
+                )}
             </Stack>
         );
     };

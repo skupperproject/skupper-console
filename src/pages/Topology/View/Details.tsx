@@ -8,12 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
+import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Connections.enum';
 import SitesServices from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
-import {
-    SitesConnectionsColumns,
-    SitesConnectionsLabels,
-} from '@pages/Sites/views/Connections.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 interface TopologySiteDetailsProps {
@@ -61,7 +58,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                 {capitalizeFirstLetter(site.siteName)}
             </Title>
             <Text component="h3" style={{ color: 'var(--pf-global--Color--200)' }}>
-                {site.namespace} ● {site.namespace} ● {site.version}
+                {site.namespace} ● {site.version}
             </Text>
             <Divider className="pf-u-mt-xs" />
             <TextContent className="pf-u-mt-md">
@@ -74,26 +71,26 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                                 isStickyHeader
                                 borders={false}
                             >
-                                <Caption>{SitesConnectionsLabels.HTTPrequestsOut}</Caption>
+                                <Caption>{ConnectionsLabels.HTTPrequestsOut}</Caption>
 
                                 <Thead>
                                     <Tr>
-                                        <Th>{SitesConnectionsColumns.Name}</Th>
-                                        <Th>{SitesConnectionsColumns.BytesOut}</Th>
-                                        <Th>{SitesConnectionsColumns.Requests}</Th>
+                                        <Th>{ConnectionsColumns.Name}</Th>
+                                        <Th>{ConnectionsColumns.BytesOut}</Th>
+                                        <Th>{ConnectionsColumns.Requests}</Th>
                                     </Tr>
                                 </Thead>
                                 {httpRequestsSentEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
-                                            <Td dataLabel={SitesConnectionsColumns.Name}>
+                                            <Td dataLabel={ConnectionsColumns.Name}>
                                                 {`${siteName}`}
                                             </Td>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.BytesIn}
-                                            >{`${formatBytes(info.bytes_in)}`}</Td>
+                                                dataLabel={ConnectionsColumns.BytesIn}
+                                            >{`${formatBytes(info.bytes_out)}`}</Td>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Requests}
+                                                dataLabel={ConnectionsColumns.Requests}
                                             >{`${info.requests}`}</Td>
                                         </Tr>
                                     </Tbody>
@@ -107,26 +104,26 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                                 isStickyHeader
                                 borders={false}
                             >
-                                <Caption>{SitesConnectionsLabels.HTTPrequestsIn}</Caption>
+                                <Caption>{ConnectionsLabels.HTTPrequestsIn}</Caption>
 
                                 <Thead>
                                     <Tr>
-                                        <Th>{SitesConnectionsColumns.Name}</Th>
-                                        <Th>{SitesConnectionsColumns.BytesOut}</Th>
-                                        <Th>{SitesConnectionsColumns.Requests}</Th>
+                                        <Th>{ConnectionsColumns.Name}</Th>
+                                        <Th>{ConnectionsColumns.BytesOut}</Th>
+                                        <Th>{ConnectionsColumns.Requests}</Th>
                                     </Tr>
                                 </Thead>
                                 {httpRequestsReceivedEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Name}
+                                                dataLabel={ConnectionsColumns.Name}
                                             >{`${siteName}`}</Td>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.BytesIn}
-                                            >{`${formatBytes(info.bytes_in)}`}</Td>
+                                                dataLabel={ConnectionsColumns.BytesIn}
+                                            >{`${formatBytes(info.bytes_out)}`}</Td>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Requests}
+                                                dataLabel={ConnectionsColumns.Requests}
                                             >{`${info.requests}`}</Td>
                                         </Tr>
                                     </Tbody>
@@ -145,21 +142,21 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                                 isStickyHeader
                                 borders={false}
                             >
-                                <Caption>{SitesConnectionsLabels.TCPconnectionsOut}</Caption>
+                                <Caption>{ConnectionsLabels.TCPconnectionsOut}</Caption>
                                 <Thead>
                                     <Tr>
-                                        <Th>{SitesConnectionsColumns.Name}</Th>
-                                        <Th>{SitesConnectionsColumns.BytesOut}</Th>
+                                        <Th>{ConnectionsColumns.Name}</Th>
+                                        <Th>{ConnectionsColumns.BytesOut}</Th>
                                     </Tr>
                                 </Thead>
                                 {tcpConnectionsOutEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Name}
+                                                dataLabel={ConnectionsColumns.Name}
                                             >{`${siteName}`}</Td>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Bytes}
+                                                dataLabel={ConnectionsColumns.Bytes}
                                             >{`${formatBytes(info.bytes_out)}`}</Td>
                                         </Tr>
                                     </Tbody>
@@ -173,22 +170,22 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                                 isStickyHeader
                                 borders={false}
                             >
-                                <Caption>{SitesConnectionsLabels.TCPconnectionsIn}</Caption>
+                                <Caption>{ConnectionsLabels.TCPconnectionsIn}</Caption>
                                 <Thead>
                                     <Tr>
-                                        <Th>{SitesConnectionsColumns.Name}</Th>
-                                        <Th>{SitesConnectionsColumns.BytesIn}</Th>
+                                        <Th>{ConnectionsColumns.Name}</Th>
+                                        <Th>{ConnectionsColumns.BytesOut}</Th>
                                     </Tr>
                                 </Thead>
                                 {tcpConnectionsInEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Name}
+                                                dataLabel={ConnectionsColumns.Name}
                                             >{`${siteName}`}</Td>
                                             <Td
-                                                dataLabel={SitesConnectionsColumns.Bytes}
-                                            >{`${formatBytes(info.bytes_in)}`}</Td>
+                                                dataLabel={ConnectionsColumns.Bytes}
+                                            >{`${formatBytes(info.bytes_out)}`}</Td>
                                         </Tr>
                                     </Tbody>
                                 ))}

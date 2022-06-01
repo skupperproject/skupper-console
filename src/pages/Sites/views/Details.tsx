@@ -23,14 +23,15 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import MetricsRealTime from '../components/MetricsRealTime';
-import { SitesOverviewColumns } from '../components/SitesOverviewTable.enum';
+import Connections from '../components/Connections';
+import DescriptionItem from '../components/DescriptionItem';
+import Metrics from '../components/Metrics';
+import RealTimeMetrics from '../components/RealTimeMetrics';
+import { SitesListColumns } from '../components/SitesList.enum';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel } from '../sites.enum';
-import SitesConnections from './Connections';
 import { SitesDetailsLabels } from './Details.enum';
-import SitesMetrics from './Metrics';
 
 const SiteDetail = function () {
     const navigate = useNavigate();
@@ -95,40 +96,17 @@ const SiteDetail = function () {
 
             <Split>
                 <SplitItem className="pf-u-w-50">
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">{SitesOverviewColumns.Name}</div>
-                        <span>{site.siteName}</span>
-                    </div>
-
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">
-                            {SitesOverviewColumns.Namespace}
-                        </div>
-                        <span>{site.namespace}</span>
-                    </div>
-
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">
-                            {SitesOverviewColumns.Version}
-                        </div>
-                        <span>{site.version}</span>
-                    </div>
-
-                    <div className="pf-u-mb-lg">
-                        <div className="  pf-u-font-weight-bold">
-                            {SitesOverviewColumns.Gateway}
-                        </div>
-                        <span>{site.gateway ? 'Yes' : 'No'}</span>
-                    </div>
+                    <DescriptionItem title={SitesListColumns.Name} value={site.siteName} />
+                    <DescriptionItem title={SitesListColumns.Namespace} value={site.namespace} />
+                    <DescriptionItem title={SitesListColumns.Version} value={site.version} />
+                    <DescriptionItem
+                        title={SitesListColumns.Gateway}
+                        value={site.gateway ? 'Yes' : 'No'}
+                    />
                 </SplitItem>
 
                 <SplitItem className="pf-u-w-50">
-                    <div className="pf-u-mb-lg">
-                        <div className="pf-u-font-weight-bold">
-                            {SitesOverviewColumns.RouterHostname}
-                        </div>
-                        <span>{site.url}</span>
-                    </div>
+                    <DescriptionItem title={SitesListColumns.RouterHostname} value={site.url} />
                 </SplitItem>
             </Split>
 
@@ -137,7 +115,7 @@ const SiteDetail = function () {
                     eventKey={0}
                     title={<TabTitleText>{SitesDetailsLabels.TabTraffic}</TabTitleText>}
                 >
-                    <SitesConnections
+                    <Connections
                         httpRequestsReceived={site.httpRequestsReceived}
                         httpRequestsSent={site.httpRequestsSent}
                         tcpConnectionsIn={site.tcpConnectionsIn}
@@ -148,19 +126,15 @@ const SiteDetail = function () {
                     eventKey={1}
                     title={<TabTitleText>{SitesDetailsLabels.TabMetrics}</TabTitleText>}
                 >
-                    <SitesMetrics
+                    <Metrics
                         siteName={site.siteName}
                         httpRequestsReceived={site.httpRequestsReceived}
                         httpRequestsSent={site.httpRequestsSent}
                         tcpConnectionsIn={site.tcpConnectionsIn}
                         tcpConnectionsOut={site.tcpConnectionsOut}
                     />
-                </Tab>
-                <Tab
-                    eventKey={2}
-                    title={<TabTitleText>{SitesDetailsLabels.RealTime}</TabTitleText>}
-                >
-                    <MetricsRealTime
+
+                    <RealTimeMetrics
                         siteName={site.siteName}
                         httpRequestsReceived={site.httpRequestsReceived}
                         httpRequestsSent={site.httpRequestsSent}

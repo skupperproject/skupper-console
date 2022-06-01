@@ -8,10 +8,10 @@ import EmptyData from '@core/components/EmptyData';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
-import { SitesConnectionsColumns, SitesConnectionsLabels } from './Connections.enum';
-import { SitesConnectionsProps, SitesConnectionProps } from './Connections.interfaces';
+import { ConnectionsColumns, ConnectionsLabels } from './Connections.enum';
+import { ConnectionsProps, ConnectionProps } from './Connections.interfaces';
 
-const SitesConnections: FC<SitesConnectionsProps> = function ({
+const Connections: FC<ConnectionsProps> = function ({
     httpRequestsReceived,
     httpRequestsSent,
     tcpConnectionsIn,
@@ -29,7 +29,7 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
                     <Split hasGutter>
                         <SplitItem className="pf-u-w-50vw">
                             <Card isFullHeight isRounded>
-                                <CardTitle>{SitesConnectionsLabels.TCPconnectionsIn}</CardTitle>
+                                <CardTitle>{ConnectionsLabels.TCPconnectionsIn}</CardTitle>
                                 {tcpConnectionsInEntries.length !== 0 ? (
                                     <TCPTable rows={tcpConnectionsInEntries} />
                                 ) : (
@@ -40,7 +40,7 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
 
                         <SplitItem className="pf-u-w-50vw">
                             <Card isFullHeight isRounded>
-                                <CardTitle>{SitesConnectionsLabels.TCPconnectionsOut}</CardTitle>
+                                <CardTitle>{ConnectionsLabels.TCPconnectionsOut}</CardTitle>
                                 {tcpConnectionsOutEntries.length !== 0 ? (
                                     <TCPTable rows={tcpConnectionsOutEntries} />
                                 ) : (
@@ -57,7 +57,7 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
                     <Split hasGutter>
                         <SplitItem className="pf-u-w-50vw">
                             <Card isRounded>
-                                <CardTitle>{SitesConnectionsLabels.HTTPrequestsIn}</CardTitle>
+                                <CardTitle>{ConnectionsLabels.HTTPrequestsIn}</CardTitle>
                                 {httpRequestsReceivedEntries.length !== 0 ? (
                                     <HTTPtable rows={httpRequestsReceivedEntries} />
                                 ) : (
@@ -68,7 +68,7 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
 
                         <SplitItem className="pf-u-w-50vw">
                             <Card isRounded>
-                                <CardTitle>{SitesConnectionsLabels.HTTPrequestsOut}</CardTitle>
+                                <CardTitle>{ConnectionsLabels.HTTPrequestsOut}</CardTitle>
                                 {httpRequestsSentEntries.length !== 0 ? (
                                     <HTTPtable rows={httpRequestsSentEntries} />
                                 ) : (
@@ -83,9 +83,9 @@ const SitesConnections: FC<SitesConnectionsProps> = function ({
     );
 };
 
-export default SitesConnections;
+export default Connections;
 
-const TCPTable: FC<SitesConnectionProps> = function ({ rows }) {
+const TCPTable: FC<ConnectionProps> = function ({ rows }) {
     return (
         <TableComposable
             className="network-table"
@@ -96,29 +96,29 @@ const TCPTable: FC<SitesConnectionProps> = function ({ rows }) {
         >
             <Thead>
                 <Tr>
-                    <Th>{SitesConnectionsColumns.Name}</Th>
-                    <Th>{SitesConnectionsColumns.Ip}</Th>
+                    <Th>{ConnectionsColumns.Name}</Th>
+                    <Th>{ConnectionsColumns.Ip}</Th>
                     <Th>
                         <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                        {SitesConnectionsColumns.BytesIn}
+                        {ConnectionsColumns.BytesIn}
                     </Th>
                     <Th>
                         <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                        {SitesConnectionsColumns.BytesOut}
+                        {ConnectionsColumns.BytesOut}
                     </Th>
                 </Tr>
             </Thead>
             {rows.map(([siteName, tcpConnectionsIn]) => (
                 <Tbody key={siteName}>
                     <Tr>
-                        <Td dataLabel={SitesConnectionsColumns.Name}>{`${siteName}`}</Td>
-                        <Td dataLabel={SitesConnectionsColumns.Ip}>{`${
+                        <Td dataLabel={ConnectionsColumns.Name}>{`${siteName}`}</Td>
+                        <Td dataLabel={ConnectionsColumns.Ip}>{`${
                             tcpConnectionsIn.id.split('@')[0]
                         }`}</Td>
-                        <Td dataLabel={SitesConnectionsColumns.BytesIn}>{`${formatBytes(
+                        <Td dataLabel={ConnectionsColumns.BytesIn}>{`${formatBytes(
                             tcpConnectionsIn.bytes_in,
                         )}`}</Td>
-                        <Td dataLabel={SitesConnectionsColumns.BytesOut}>{`${formatBytes(
+                        <Td dataLabel={ConnectionsColumns.BytesOut}>{`${formatBytes(
                             tcpConnectionsIn.bytes_out,
                         )}`}</Td>
                     </Tr>
@@ -128,7 +128,7 @@ const TCPTable: FC<SitesConnectionProps> = function ({ rows }) {
     );
 };
 
-const HTTPtable: FC<SitesConnectionProps> = function ({ rows }) {
+const HTTPtable: FC<ConnectionProps> = function ({ rows }) {
     return (
         <TableComposable
             className="network-table"
@@ -139,35 +139,35 @@ const HTTPtable: FC<SitesConnectionProps> = function ({ rows }) {
         >
             <Thead>
                 <Tr>
-                    <Th>{SitesConnectionsColumns.Name}</Th>
-                    <Th>{SitesConnectionsColumns.Requests}</Th>
-                    <Th>{SitesConnectionsColumns.MaxLatency}</Th>
+                    <Th>{ConnectionsColumns.Name}</Th>
+                    <Th>{ConnectionsColumns.Requests}</Th>
+                    <Th>{ConnectionsColumns.MaxLatency}</Th>
                     <Th>
                         <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                        {SitesConnectionsColumns.BytesIn}
+                        {ConnectionsColumns.BytesIn}
                     </Th>
                     <Th>
                         <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                        {SitesConnectionsColumns.BytesOut}
+                        {ConnectionsColumns.BytesOut}
                     </Th>
                 </Tr>
             </Thead>
             {rows.map(([siteName, requestReceived]) => (
                 <Tbody key={siteName}>
                     <Tr>
-                        <Td dataLabel={SitesConnectionsColumns.Name}>{`${siteName}`}</Td>
-                        <Td dataLabel={SitesConnectionsColumns.Requests}>
+                        <Td dataLabel={ConnectionsColumns.Name}>{`${siteName}`}</Td>
+                        <Td dataLabel={ConnectionsColumns.Requests}>
                             {`${requestReceived.requests}`}
                         </Td>
-                        <Td dataLabel={SitesConnectionsColumns.MaxLatency}>
+                        <Td dataLabel={ConnectionsColumns.MaxLatency}>
                             {`${formatTime(requestReceived.latency_max, {
                                 startSize: 'ms',
                             })}`}
                         </Td>
-                        <Td dataLabel={SitesConnectionsColumns.BytesIn}>
+                        <Td dataLabel={ConnectionsColumns.BytesIn}>
                             {`${formatBytes(requestReceived.bytes_in)}`}
                         </Td>
-                        <Td dataLabel={SitesConnectionsColumns.BytesOut}>
+                        <Td dataLabel={ConnectionsColumns.BytesOut}>
                             {`${formatBytes(requestReceived.bytes_out)}`}
                         </Td>
                     </Tr>

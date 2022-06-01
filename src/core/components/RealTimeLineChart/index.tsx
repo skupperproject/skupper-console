@@ -8,29 +8,28 @@ import {
     ChartVoronoiContainer,
 } from '@patternfly/react-charts';
 
-import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
-import { chartConfig } from './TrafficChart.constants';
-import { TrafficChartLabels } from './TrafficChart.enum';
-import { SampleProps, TrafficChartProps } from './TrafficChart.interfaces';
+import { chartConfig } from './RealTimeLineChart.constants';
+import { ChartThemeColors, TrafficChartLabels } from './RealTimeLineChart.enum';
+import { SampleProps, RealTimeLineChartProps } from './RealTimeLineChart.interfaces';
 
-const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: TrafficChartProps) {
+const RealTimeLineChart = memo(function ({ data, timestamp, options }: RealTimeLineChartProps) {
     const [lastTimestamp, setLastTimestamp] = useState(timestamp);
     const [samples, setSamples] = useState<SampleProps[][] | null>(null);
 
     useEffect(() => {
         const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
-        const newSamplesBySite = totalBytesProps.map(({ totalBytes, name }, index) => {
+        const newSamplesBySite = data.map(({ value, name }, index) => {
             const sample = {
-                y: totalBytes,
+                y: value,
                 name,
                 x: `${timestamp - lastTimestamp}`,
                 timestamp,
             };
 
             const newSamples = [
-                ...((samples && samples[index]) || [{ name: 'ss ', x: '0', y: 0, timestamp: 0 }]),
+                ...((samples && samples[index]) || [{ name: '.', x: '0', y: 0, timestamp: 0 }]),
                 sample,
             ];
 
@@ -53,7 +52,11 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
             <Chart
                 containerComponent={
                     <ChartVoronoiContainer
-                        labels={({ datum }) => `${datum.name}: ${formatBytes(datum.y, 3)}`}
+                        labels={({ datum }) =>
+                            `${datum.name}: ${
+                                options?.formatter ? options.formatter(datum.y, 3) : datum.y
+                            }`
+                        }
                         constrainToVisibleArea
                     />
                 }
@@ -69,7 +72,7 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
                     top: 20,
                 }}
                 width={chartConfig.width}
-                themeColor={options?.chartColor ? options.chartColor : 'blue'}
+                themeColor={options?.chartColor ? options.chartColor : ChartThemeColors.Blue}
             >
                 <ChartAxis // X axis
                     tickFormat={(_, index, ticks) => {
@@ -96,7 +99,9 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
                     style={{
                         tickLabels: { fontSize: 12 },
                     }}
-                    tickFormat={(tick) => formatBytes(tick, 3)}
+                    tickFormat={(tick) =>
+                        options?.formatter ? options?.formatter(tick, 3) : Math.ceil(tick)
+                    }
                 />
                 <ChartGroup>
                     {samples?.map((sampleGroup: SampleProps[], index) => (
@@ -104,8 +109,8 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
                             key={index}
                             data={sampleGroup}
                             animate={{
-                                duration: 2000,
-                                onLoad: { duration: 1000 },
+                                duration: 0,
+                                onLoad: { duration: 0 },
                             }}
                         />
                     ))}
@@ -115,4 +120,4 @@ const TrafficChart = memo(function ({ totalBytesProps, timestamp, options }: Tra
     );
 });
 
-export default TrafficChart;
+export default RealTimeLineChart;

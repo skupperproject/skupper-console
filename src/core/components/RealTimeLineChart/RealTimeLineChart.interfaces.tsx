@@ -1,12 +1,13 @@
-interface TotalByteProps {
-    totalBytes: number;
+interface DataProps {
     name: string;
+    value: number;
 }
 
-export interface TrafficChartProps {
-    totalBytesProps: TotalByteProps[];
+export interface RealTimeLineChartProps {
+    data: DataProps[];
     timestamp: number;
     options?: {
+        formatter?: Function;
         chartColor?: string;
         showLegend?: boolean;
         dataLegend?: {

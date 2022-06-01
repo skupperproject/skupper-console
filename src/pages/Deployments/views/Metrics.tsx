@@ -78,68 +78,72 @@ const DeploymentsMetrics: FC<DeploymentsMetricsProps> = function ({
 
     return (
         <Stack hasGutter>
-            <StackItem>
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card style={{ height: CARD_HEIGHT }}>
-                            <CardTitle>{SitesMetricsLabels.TCPconnectionsIn}</CardTitle>
-                            {tcpConnectionsInChartData.length ? (
-                                <DeploymentsConnectionsDonutChart
-                                    data={tcpConnectionsInChartData}
-                                />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
+            {!!(tcpConnectionsInChartData.length || tcpConnectionsOutChartData.length) && (
+                <StackItem>
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card style={{ height: CARD_HEIGHT }}>
+                                <CardTitle>{SitesMetricsLabels.TCPconnectionsIn}</CardTitle>
+                                {tcpConnectionsInChartData.length ? (
+                                    <DeploymentsConnectionsDonutChart
+                                        data={tcpConnectionsInChartData}
+                                    />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card style={{ height: CARD_HEIGHT }}>
-                            <CardTitle>{SitesMetricsLabels.TCPconnectionsOut}</CardTitle>
-                            {tcpConnectionsOutChartData.length ? (
-                                <DeploymentsConnectionsDonutChart
-                                    data={tcpConnectionsOutChartData}
-                                    color="orange"
-                                />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
-                </Split>
-            </StackItem>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card style={{ height: CARD_HEIGHT }}>
+                                <CardTitle>{SitesMetricsLabels.TCPconnectionsOut}</CardTitle>
+                                {tcpConnectionsOutChartData.length ? (
+                                    <DeploymentsConnectionsDonutChart
+                                        data={tcpConnectionsOutChartData}
+                                        color="orange"
+                                    />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
+                    </Split>
+                </StackItem>
+            )}
 
-            <StackItem>
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card style={{ height: CARD_HEIGHT }}>
-                            <CardTitle>{SitesMetricsLabels.HTTPrequestsIn}</CardTitle>
-                            {httpRequestsReceivedChartData.length ? (
-                                <DeploymentsConnectionsDonutChart
-                                    data={httpRequestsReceivedChartData}
-                                    color="green"
-                                />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
+            {!!(httpRequestsReceivedChartData.length || httpRequestsSentChartData.length) && (
+                <StackItem>
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card style={{ height: CARD_HEIGHT }}>
+                                <CardTitle>{SitesMetricsLabels.HTTbytesIn}</CardTitle>
+                                {httpRequestsReceivedChartData.length ? (
+                                    <DeploymentsConnectionsDonutChart
+                                        data={httpRequestsReceivedChartData}
+                                        color="green"
+                                    />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <Card style={{ height: CARD_HEIGHT }}>
-                            <CardTitle>{SitesMetricsLabels.HTTPrequestsOut}</CardTitle>
-                            {httpRequestsSentChartData.length ? (
-                                <DeploymentsConnectionsDonutChart
-                                    data={httpRequestsSentChartData}
-                                    color="blue"
-                                />
-                            ) : (
-                                <EmptyData />
-                            )}
-                        </Card>
-                    </SplitItem>
-                </Split>
-            </StackItem>
+                        <SplitItem className="pf-u-w-50vw">
+                            <Card style={{ height: CARD_HEIGHT }}>
+                                <CardTitle>{SitesMetricsLabels.HTTbytesOut}</CardTitle>
+                                {httpRequestsSentChartData.length ? (
+                                    <DeploymentsConnectionsDonutChart
+                                        data={httpRequestsSentChartData}
+                                        color="blue"
+                                    />
+                                ) : (
+                                    <EmptyData />
+                                )}
+                            </Card>
+                        </SplitItem>
+                    </Split>
+                </StackItem>
+            )}
         </Stack>
     );
 };

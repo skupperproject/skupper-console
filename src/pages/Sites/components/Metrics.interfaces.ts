@@ -1,6 +1,7 @@
+import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import { ServiceConnections } from 'API/REST.interfaces';
 
-export interface SitesMetricsProps {
+export interface MetricsProps {
     siteName: string;
     httpRequestsReceived: Record<string, ServiceConnections>;
     httpRequestsSent: Record<string, ServiceConnections>;
@@ -8,10 +9,16 @@ export interface SitesMetricsProps {
     tcpConnectionsOut: Record<string, ServiceConnections>;
 }
 
-export interface SitesConnectionsDonutChartProps {
+export interface MetricsChartProps {
     legend?: { name: string }[];
     legendOrientation?: 'horizontal' | 'vertical';
     legendPosition?: 'bottom' | 'right';
     data: { x: string; y: number }[];
-    color?: 'orange' | 'purple' | 'blue' | 'green';
+    color?: ChartThemeColors;
+}
+
+export interface MetricChartProps {
+    data: { x: string; y: number }[];
+    title: string;
+    color?: ChartThemeColors;
 }

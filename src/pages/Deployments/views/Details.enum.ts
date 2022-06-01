@@ -8,8 +8,8 @@ export enum DeploymentDetailsColumns {
 }
 
 export enum DeploymentDetailsLabels {
-    HTTPrequestsIn = 'HTTP Requests Received',
-    HTTPrequestsOut = 'HTTP Requests Sent',
+    HTTPrequestsIn = 'HTTP Requests received',
+    HTTPrequestsOut = 'HTTP  Requests sent',
     TCPconnectionsIn = 'TCP traffic received',
     TCPconnectionsOut = 'TCP traffic sent',
     TabTraffic = 'Traffic',

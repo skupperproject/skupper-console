@@ -7,10 +7,10 @@ import { Link } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 
 import { SitesRoutesPaths } from '../sites.enum';
-import { SitesOverviewColumns } from './SitesOverviewTable.enum';
-import { SitesOverviewTableProps } from './SitesOverviewTable.interfaces';
+import { SitesListColumns } from './SitesList.enum';
+import { SitesListProps } from './SitesList.interfaces';
 
-const SitesOverviewTable = memo(function ({ sites }: SitesOverviewTableProps) {
+const SitesOverviewTable = memo(function ({ sites }: SitesListProps) {
     return (
         <Card>
             <TableComposable
@@ -22,25 +22,25 @@ const SitesOverviewTable = memo(function ({ sites }: SitesOverviewTableProps) {
             >
                 <Thead>
                     <Tr>
-                        <Th>{SitesOverviewColumns.Name}</Th>
-                        <Th>{SitesOverviewColumns.Namespace}</Th>
-                        <Th>{SitesOverviewColumns.Version}</Th>
-                        <Th>{SitesOverviewColumns.NumSitesLinked}</Th>
+                        <Th>{SitesListColumns.Name}</Th>
+                        <Th>{SitesListColumns.Namespace}</Th>
+                        <Th>{SitesListColumns.Version}</Th>
+                        <Th>{SitesListColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
                 {sites?.map((row) => (
                     <Tbody key={row.siteId}>
                         <Tr>
-                            <Td dataLabel={SitesOverviewColumns.Name}>
+                            <Td dataLabel={SitesListColumns.Name}>
                                 <ResourceIcon type="site" />
                                 <Link to={`${SitesRoutesPaths.Details}/${row.siteId}`}>
                                     {row.siteName}
                                 </Link>
                             </Td>
-                            <Td dataLabel={SitesOverviewColumns.Namespace}>{`${row.namespace}`}</Td>
-                            <Td dataLabel={SitesOverviewColumns.Version}>{`${row.version}`}</Td>
+                            <Td dataLabel={SitesListColumns.Namespace}>{`${row.namespace}`}</Td>
+                            <Td dataLabel={SitesListColumns.Version}>{`${row.version}`}</Td>
                             <Td
-                                dataLabel={SitesOverviewColumns.Version}
+                                dataLabel={SitesListColumns.Version}
                             >{`${row.connected.length}`}</Td>
                         </Tr>
                     </Tbody>

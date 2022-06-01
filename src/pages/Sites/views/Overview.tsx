@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import SitesOverviewTable from '../components/SitesOverviewTable';
+import SitesOverviewTable from '../components/SitesList';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 
