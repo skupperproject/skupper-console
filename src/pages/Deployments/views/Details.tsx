@@ -77,8 +77,12 @@ const DeploymentsDetails = function () {
         return null;
     }
 
-    const { tcpConnectionsIn, tcpConnectionsOut, httpConnectionsOut, httpConnectionsIn } =
-        deployment;
+    const {
+        tcpConnectionsIn,
+        tcpConnectionsOut,
+        httpRequestsSent: httpConnectionsOut,
+        httpRequestsReceived: httpConnectionsIn,
+    } = deployment;
 
     const { service, site } = deployment;
 

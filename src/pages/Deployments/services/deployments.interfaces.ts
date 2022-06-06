@@ -17,8 +17,8 @@ export interface DeploymentDetails {
     site: Site;
     tcpConnectionsIn: ServiceConnections[];
     tcpConnectionsOut: ServiceConnections[];
-    httpConnectionsOut: ServiceConnections[];
-    httpConnectionsIn: ServiceConnections[];
+    httpRequestsSent: ServiceConnections[];
+    httpRequestsReceived: ServiceConnections[];
 }
 
 export interface ServiceRequestReceived extends ServiceRequestReceivedResponse {

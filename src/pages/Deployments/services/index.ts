@@ -18,8 +18,8 @@ const DeploymentsServices = {
             ...info,
             tcpConnectionsIn,
             tcpConnectionsOut,
-            httpConnectionsOut,
-            httpConnectionsIn,
+            httpRequestsSent: httpConnectionsOut,
+            httpRequestsReceived: httpConnectionsIn,
         };
     },
 };

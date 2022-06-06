@@ -38,7 +38,9 @@ export function loadMockServer() {
                         .flatMap((elem) => elem.split('id=').filter(Boolean));
 
                     if (queryParams.id) {
-                        return recordsMongo.filter(({ _id }) => ids.includes(_id)).map(record => record._record);
+                        return recordsMongo
+                            .filter(({ _id }) => ids.includes(_id))
+                            .map((record) => record._record);
                     }
                 });
             },

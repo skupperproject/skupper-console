@@ -28,6 +28,7 @@ import { TopologyViews } from '../components/topology.enum';
 import { TopologySVG } from '../components/Topology.interfaces';
 import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
+import TopologyDeploymentDetails from './DeploymentDetails';
 import TopologySiteDetails from './Details';
 
 const Topology = function () {
@@ -54,6 +55,8 @@ const Topology = function () {
 
     const handleCloseClick = () => {
         setIsExpanded(false);
+        setSelectedNode('');
+        selectedRef.current = '';
     };
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
@@ -77,6 +80,7 @@ const Topology = function () {
     function handleChangeTopologyType(_: boolean, event: React.FormEvent<HTMLInputElement>) {
         const { value } = event.currentTarget;
         setTopologyType(value);
+        handleCloseClick();
     }
 
     const siteNodes = useMemo(() => (sites ? TopologyServices.getSiteNodes(sites) : []), [sites]);
@@ -172,13 +176,15 @@ const Topology = function () {
     const PanelContent = (
         <DrawerPanelContent>
             <DrawerHead>
-                <span tabIndex={isExpanded ? 0 : -1} ref={drawerRef}>
-                    {topologyType === 'sites' ? (
-                        <TopologySiteDetails id={selectedNode} />
-                    ) : (
-                        <TopologySiteDetails id={selectedNode} />
-                    )}
-                </span>
+                {selectedNode && (
+                    <span tabIndex={isExpanded ? 0 : -1} ref={drawerRef}>
+                        {topologyType === 'sites' ? (
+                            <TopologySiteDetails id={selectedNode} />
+                        ) : (
+                            <TopologyDeploymentDetails id={selectedNode} />
+                        )}
+                    </span>
+                )}
                 <DrawerActions>
                     <DrawerCloseButton onClick={handleCloseClick} />
                 </DrawerActions>
