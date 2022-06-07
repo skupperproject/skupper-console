@@ -35,11 +35,14 @@ function getHTTPconnectionsInByService(deployments: Deployment[], id: string) {
         .flatMap(
             ({ service: { requests_received } }) => requests_received as ServiceRequestReceived[],
         )
-        .map(({ by_client }) => {
+        .flatMap(({ by_client }) => {
             const clients = Object.keys(by_client);
             const shorts = clients.map((client) => removeSuffixFromClientPropValue(client));
 
-            return { ...Object.values(by_client)[0], client: shorts[0] };
+            return clients.flatMap((client, index) => ({
+                ...by_client[client],
+                client: shorts[index],
+            }));
         })
         .filter(Boolean) as ServiceConnections[];
 }

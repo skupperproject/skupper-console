@@ -28,23 +28,25 @@ const SitesOverviewTable = memo(function ({ sites }: SitesListProps) {
                         <Th>{SitesListColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
-                {sites?.map((row) => (
-                    <Tbody key={row.siteId}>
-                        <Tr>
-                            <Td dataLabel={SitesListColumns.Name}>
-                                <ResourceIcon type="site" />
-                                <Link to={`${SitesRoutesPaths.Details}/${row.siteId}`}>
-                                    {row.siteName}
-                                </Link>
-                            </Td>
-                            <Td dataLabel={SitesListColumns.Namespace}>{`${row.namespace}`}</Td>
-                            <Td dataLabel={SitesListColumns.Version}>{`${row.version}`}</Td>
-                            <Td
-                                dataLabel={SitesListColumns.Version}
-                            >{`${row.connected.length}`}</Td>
-                        </Tr>
-                    </Tbody>
-                ))}
+                {sites
+                    ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
+                    .map((row) => (
+                        <Tbody key={row.siteId}>
+                            <Tr>
+                                <Td dataLabel={SitesListColumns.Name}>
+                                    <ResourceIcon type="site" />
+                                    <Link to={`${SitesRoutesPaths.Details}/${row.siteId}`}>
+                                        {row.siteName}
+                                    </Link>
+                                </Td>
+                                <Td dataLabel={SitesListColumns.Namespace}>{`${row.namespace}`}</Td>
+                                <Td dataLabel={SitesListColumns.Version}>{`${row.version}`}</Td>
+                                <Td
+                                    dataLabel={SitesListColumns.Version}
+                                >{`${row.connected.length}`}</Td>
+                            </Tr>
+                        </Tbody>
+                    ))}
             </TableComposable>
         </Card>
     );

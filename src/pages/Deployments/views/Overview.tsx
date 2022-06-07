@@ -55,20 +55,22 @@ const DeploymentsOverview = function () {
                         <Th>{DeploymentsOverviewColumns.Name}</Th>
                     </Tr>
                 </Thead>
-                {deployments?.map((row) => (
-                    <Tbody key={row.key}>
-                        <Tr>
-                            <Td dataLabel={DeploymentsOverviewColumns.Name}>
-                                <ResourceIcon type="deployment" />
-                                <Link
-                                    to={`${DeploymentsRoutesPaths.Details}/${row.service.address}_${row.site.site_id}`}
-                                >
-                                    {`${row.site.site_name} -> ${row.service.address}`}
-                                </Link>
-                            </Td>
-                        </Tr>
-                    </Tbody>
-                ))}
+                {deployments
+                    ?.sort((a, b) => a.site.site_id.localeCompare(b.site.site_id))
+                    .map((row) => (
+                        <Tbody key={row.key}>
+                            <Tr>
+                                <Td dataLabel={DeploymentsOverviewColumns.Name}>
+                                    <ResourceIcon type="deployment" />
+                                    <Link
+                                        to={`${DeploymentsRoutesPaths.Details}/${row.service.address}_${row.site.site_id}`}
+                                    >
+                                        {`${row.site.site_name} -> ${row.service.address}`}
+                                    </Link>
+                                </Td>
+                            </Tr>
+                        </Tbody>
+                    ))}
             </TableComposable>
         </Card>
     );

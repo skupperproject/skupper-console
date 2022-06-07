@@ -83,13 +83,18 @@ const Topology = function () {
         handleCloseClick();
     }
 
-    const siteNodes = useMemo(() => (sites ? TopologyServices.getSiteNodes(sites) : []), [sites]);
+    const siteNodes = useMemo(
+        () => (sites ? TopologyServices.getSiteNodes(sites).sort((a, b) => a.group - b.group) : []),
+        [sites],
+    );
     const linkSites = useMemo(() => (sites ? TopologyServices.getLinkSites(sites) : []), [sites]);
 
     const serviceNodes = useMemo(
         () =>
             deployments?.deployments
-                ? TopologyServices.getServiceNodes(deployments?.deployments, siteNodes)
+                ? TopologyServices.getServiceNodes(deployments?.deployments, siteNodes).sort(
+                      (a, b) => a.group - b.group,
+                  )
                 : [],
         [deployments?.deployments, siteNodes],
     );

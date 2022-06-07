@@ -55,19 +55,21 @@ const ServicesOverview = function () {
                         <Th>{ServicesOverviewColumns.Protocol}</Th>
                     </Tr>
                 </Thead>
-                {rows?.map((row) => (
-                    <Tbody key={row.id}>
-                        <Tr>
-                            <Td dataLabel={ServicesOverviewColumns.Name}>
-                                <ResourceIcon type="service" />
-                                {row.name}
-                            </Td>
-                            <Td
-                                dataLabel={ServicesOverviewColumns.Protocol}
-                            >{`${row.protocol}`}</Td>
-                        </Tr>
-                    </Tbody>
-                ))}
+                {rows
+                    ?.sort((a, b) => a.id.localeCompare(b.id))
+                    .map((row) => (
+                        <Tbody key={row.id}>
+                            <Tr>
+                                <Td dataLabel={ServicesOverviewColumns.Name}>
+                                    <ResourceIcon type="service" />
+                                    {row.name}
+                                </Td>
+                                <Td
+                                    dataLabel={ServicesOverviewColumns.Protocol}
+                                >{`${row.protocol}`}</Td>
+                            </Tr>
+                        </Tbody>
+                    ))}
             </TableComposable>
         </Card>
     );

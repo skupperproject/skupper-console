@@ -6,7 +6,7 @@ context('Navigation', () => {
     });
 
     it('Redirect to the Overview section when the app is loaded', () => {
-        cy.location('hash').should('include', 'network');
+        cy.location('hash').should('include', 'overview');
     });
 
     it('Navigate to the Sites section', () => {
