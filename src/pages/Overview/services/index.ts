@@ -1,10 +1,10 @@
 import { RESTApi } from 'API/REST';
 import { FlowsRouterResponse } from 'API/REST.interfaces';
 
-import { Network } from './network.interfaces';
+import { Overview } from './overview.interfaces';
 
 export const NetworkServices = {
-    fetchNetworkStats: async function (): Promise<Network> {
+    fetchOverviewStats: async function (): Promise<Overview> {
         const [topologyNetwork, sites, services, deployments] = await Promise.all([
             RESTApi.fetchFlowsTopology(),
             RESTApi.fetchSites(),

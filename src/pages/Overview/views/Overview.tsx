@@ -23,7 +23,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
 
 import { NetworkServices } from '../services';
-import { QueriesNetwork } from '../services/network.enum';
+import { QueriesOverview } from '../services/overview.enum';
 import { OverviewNetworkColumns, OverviewLabels, OverviewLinksColumns } from './Overview.enum';
 
 const Overview = function () {
@@ -32,8 +32,8 @@ const Overview = function () {
     const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data, isLoading } = useQuery(
-        QueriesNetwork.GetNetwork,
-        NetworkServices.fetchNetworkStats,
+        QueriesOverview.GetOverview,
+        NetworkServices.fetchOverviewStats,
         {
             refetchInterval,
             onError: handleError,
@@ -142,7 +142,7 @@ const Overview = function () {
                                 </Tr>
                             </Thead>
                             {data.linksRouters.map((row) => (
-                                <Tbody key={`${row.sourceNamespace}${row.targetNamespace}`}>
+                                <Tbody key={`${row.source}${row.target}`}>
                                     <Tr>
                                         <Td dataLabel={OverviewLinksColumns.Source}>
                                             {row.sourceNamespace}

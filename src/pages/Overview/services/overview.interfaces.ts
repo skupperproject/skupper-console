@@ -5,7 +5,7 @@ interface LinksRouters extends FlowsTopologyLink {
     targetNamespace: string;
 }
 
-export interface Network {
+export interface Overview {
     linksRouters: LinksRouters[];
     sitesStats: {
         totalSites: number;

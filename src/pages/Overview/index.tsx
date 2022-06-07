@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
 
-const Network = function () {
+const Overview = function () {
     return (
         <AppContent>
             <Outlet />
@@ -12,4 +12,4 @@ const Network = function () {
     );
 };
 
-export default Network;
+export default Overview;
