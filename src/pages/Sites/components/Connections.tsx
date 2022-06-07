@@ -17,10 +17,10 @@ const Connections: FC<ConnectionsProps> = function ({
     tcpConnectionsIn,
     tcpConnectionsOut,
 }) {
-    const httpRequestsReceivedEntries = Object.entries(httpRequestsReceived);
-    const httpRequestsSentEntries = Object.entries(httpRequestsSent);
-    const tcpConnectionsInEntries = Object.entries(tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.entries(tcpConnectionsOut);
+    const httpRequestsReceivedEntries = Object.values(httpRequestsReceived);
+    const httpRequestsSentEntries = Object.values(httpRequestsSent);
+    const tcpConnectionsInEntries = Object.values(tcpConnectionsIn);
+    const tcpConnectionsOutEntries = Object.values(tcpConnectionsOut);
 
     return (
         <Stack hasGutter>
@@ -108,10 +108,10 @@ const TCPTable: FC<ConnectionProps> = function ({ rows }) {
                     </Th>
                 </Tr>
             </Thead>
-            {rows.map(([siteName, tcpConnectionsIn]) => (
-                <Tbody key={siteName}>
+            {rows.map((tcpConnectionsIn) => (
+                <Tbody key={tcpConnectionsIn.id}>
                     <Tr>
-                        <Td dataLabel={ConnectionsColumns.Name}>{`${siteName}`}</Td>
+                        <Td dataLabel={ConnectionsColumns.Name}>{`${tcpConnectionsIn.client}`}</Td>
                         <Td dataLabel={ConnectionsColumns.Ip}>{`${
                             tcpConnectionsIn.id.split('@')[0]
                         }`}</Td>
@@ -152,10 +152,10 @@ const HTTPtable: FC<ConnectionProps> = function ({ rows }) {
                     </Th>
                 </Tr>
             </Thead>
-            {rows.map(([siteName, requestReceived]) => (
-                <Tbody key={siteName}>
+            {rows.map((requestReceived) => (
+                <Tbody key={requestReceived.id}>
                     <Tr>
-                        <Td dataLabel={ConnectionsColumns.Name}>{`${siteName}`}</Td>
+                        <Td dataLabel={ConnectionsColumns.Name}>{`${requestReceived.client}`}</Td>
                         <Td dataLabel={ConnectionsColumns.Requests}>
                             {`${requestReceived.requests}`}
                         </Td>

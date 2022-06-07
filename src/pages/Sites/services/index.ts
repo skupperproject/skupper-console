@@ -9,16 +9,16 @@ const SitesServices = {
         const data = await RESTApi.fetchData();
         const sites = await RESTApi.fetchSites();
 
-        const site = sites.find(({ siteId }) => siteId === id) as Site;
+        const info = sites.find(({ siteId }) => siteId === id) as Site;
 
-        const httpRequestsReceived = getHTTPrequestsInBySite(data.deploymentLinks, site.siteId);
-        const httpRequestsSent = getHTTPrequestsOutBySite(data.deploymentLinks, site.siteId);
-        const tcpConnectionsIn = getTCPConnectionsInBySite(data.deploymentLinks, site.siteId);
-        const tcpConnectionsOut = getTCPConnectionsOutBySite(data.deploymentLinks, site.siteId);
+        const httpRequestsReceived = getHTTPrequestsInBySite(data.deploymentLinks, info.siteId);
+        const httpRequestsSent = getHTTPrequestsOutBySite(data.deploymentLinks, info.siteId);
+        const tcpConnectionsIn = getTCPConnectionsInBySite(data.deploymentLinks, info.siteId);
+        const tcpConnectionsOut = getTCPConnectionsOutBySite(data.deploymentLinks, info.siteId);
 
         return id
             ? {
-                  ...site,
+                  ...info,
                   httpRequestsReceived,
                   httpRequestsSent,
                   tcpConnectionsIn,
@@ -38,7 +38,7 @@ function getTCPConnectionsInBySite(links: DeploymentLink[], siteId: string) {
 
             acc[sourceSiteName] = requestsSetPerSites
                 ? aggregateAttributes(request, requestsSetPerSites)
-                : request;
+                : { ...request, client: sourceSiteName };
         }
 
         return acc;
@@ -53,7 +53,7 @@ function getTCPConnectionsOutBySite(links: DeploymentLink[], siteId: string) {
 
             acc[targetSiteName] = requestsSetPerSites
                 ? aggregateAttributes(request, requestsSetPerSites)
-                : request;
+                : { ...request, client: targetSiteName };
         }
 
         return acc;
@@ -68,7 +68,7 @@ function getHTTPrequestsOutBySite(links: DeploymentLink[], siteId: string) {
 
             acc[targetSiteName] = requestsSetPerSites
                 ? aggregateAttributes(request, requestsSetPerSites)
-                : request;
+                : { ...request, client: targetSiteName, id: target.site.site_id };
         }
 
         return acc;
@@ -83,7 +83,7 @@ function getHTTPrequestsInBySite(links: DeploymentLink[], siteId: string) {
 
             acc[sourceSiteName] = requestsReceivedPerSites
                 ? aggregateAttributes(request, requestsReceivedPerSites)
-                : request;
+                : { ...request, client: sourceSiteName, id: source.site.site_id };
         }
 
         return acc;

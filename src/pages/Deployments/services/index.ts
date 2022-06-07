@@ -9,17 +9,18 @@ const DeploymentsServices = {
         const deployments = await RESTApi.fetchDeployments();
 
         const info = deployments.find(({ key }) => key === id) as Deployment;
+
         const tcpConnectionsOut = getTCPConnectionsOutByService(deployments, id || '');
         const tcpConnectionsIn = getTCPConnectionsInByService(deployments, id || '');
-        const httpConnectionsOut = getHTTPconnectionsOutByService(deployments, id || '');
-        const httpConnectionsIn = getHTTPconnectionsInByService(deployments, id || '');
+        const httpRequestsSent = getHTTPconnectionsOutByService(deployments, id || '');
+        const httpRequestsReceived = getHTTPconnectionsInByService(deployments, id || '');
 
         return {
             ...info,
             tcpConnectionsIn,
             tcpConnectionsOut,
-            httpRequestsSent: httpConnectionsOut,
-            httpRequestsReceived: httpConnectionsIn,
+            httpRequestsSent,
+            httpRequestsReceived,
         };
     },
 };

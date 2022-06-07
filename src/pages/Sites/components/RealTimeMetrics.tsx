@@ -55,7 +55,6 @@ const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
         }))
         .filter(({ name: sName }) => sName !== name);
 
-    console.log(httpRequestsReceivedChartData);
     const httpRequestsSentChartData = Object.entries(httpRequestsSent)
         .map(([siteName, { requests }]) => ({
             name: siteName,

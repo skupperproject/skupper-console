@@ -1,7 +1,7 @@
 import { ServiceConnections } from 'API/REST.interfaces';
 
 export interface ConnectionProps {
-    rows: [string, ServiceConnections][];
+    rows: ServiceConnections[];
 }
 
 export interface ConnectionsProps {
