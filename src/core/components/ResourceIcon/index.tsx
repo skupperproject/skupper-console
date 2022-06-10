@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import { Tooltip } from '@patternfly/react-core';
+
 import './ResourceIcon.scss';
 
 interface ResourceIconProps {
@@ -9,15 +11,17 @@ interface ResourceIconProps {
 const RESOURCE_MAP = {
     site: { class: 'sk-resource-site', symbol: 'S' },
     deployment: { class: 'sk-resource-deployment', symbol: 'D' },
-    service: { class: 'sk-resource-service', symbol: 'S' },
+    service: { class: 'sk-resource-service', symbol: 'SE' },
     vanAddress: { class: 'sk-resource-vanaddress', symbol: 'VA' },
 };
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {
     return (
-        <span className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
-            {RESOURCE_MAP[type].symbol}
-        </span>
+        <Tooltip content={type}>
+            <span className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
+                {RESOURCE_MAP[type].symbol}
+            </span>
+        </Tooltip>
     );
 };
 

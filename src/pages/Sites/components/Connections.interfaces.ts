@@ -1,12 +1,14 @@
-import { ServiceConnections } from 'API/REST.interfaces';
+import { HttpRequest, TCPRequest } from '../services/services.interfaces';
+
+export interface ConnectionPropsHTTP {
+    rows: HttpRequest[];
+}
 
 export interface ConnectionProps {
-    rows: ServiceConnections[];
+    rows: TCPRequest[];
 }
 
 export interface ConnectionsProps {
-    httpRequestsReceived: Record<string, ServiceConnections>;
-    httpRequestsSent: Record<string, ServiceConnections>;
-    tcpConnectionsIn: Record<string, ServiceConnections>;
-    tcpConnectionsOut: Record<string, ServiceConnections>;
+    httpRequests: HttpRequest[];
+    tcpRequests: TCPRequest[];
 }

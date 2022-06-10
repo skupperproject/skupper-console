@@ -1,4 +1,6 @@
 export enum ConnectionsLabels {
+    HTTPprotocol = 'HTTP protocol',
+    TCPprotocol = 'TCP protocol',
     HTTPrequestsIn = 'HTTP Requests Received',
     HTTPrequestsOut = 'HTTP Requests Sent',
     TCPconnectionsIn = 'TCP traffic received',
@@ -9,8 +11,20 @@ export enum ConnectionsColumns {
     Name = 'Site',
     Ip = 'IP',
     Bytes = 'Bytes',
-    BytesIn = 'Bytes In',
-    BytesOut = 'Bytes Out',
+    BytesIn = 'Bytes Received',
+    BytesOut = 'Bytes Sent',
     Requests = 'Requests',
     MaxLatency = 'Max Latency',
+}
+
+export enum HTTPConnectionsColumns {
+    Name = 'Site',
+    Ip = 'IP',
+    Bytes = 'Bytes',
+    BytesIn = 'Bytes Received',
+    BytesOut = 'Bytes Sent',
+    RequestsCountSent = 'Requests sent',
+    RequestsCountReceived = 'Requests received',
+    MaxLatencySent = 'Max Latency sent',
+    MaxLatencyReceived = 'Max Latency received',
 }

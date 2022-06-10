@@ -41,7 +41,7 @@ const DeploymentsConnectionsDonutChart: FC<SitesConnectionsDonutChartProps> = fu
     );
 };
 
-const DeploymentsMetrics: FC<DeploymentsMetricsProps> = function ({
+const Metrics: FC<DeploymentsMetricsProps> = function ({
     deploymentName: name,
     httpRequestsReceived,
     httpRequestsSent,
@@ -148,4 +148,4 @@ const DeploymentsMetrics: FC<DeploymentsMetricsProps> = function ({
     );
 };
 
-export default DeploymentsMetrics;
+export default Metrics;

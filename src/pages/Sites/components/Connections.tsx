@@ -1,82 +1,36 @@
 import React, { FC } from 'react';
 
-import { Card, CardTitle, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import { Card, CardTitle, Stack, StackItem } from '@patternfly/react-core';
 import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Link } from 'react-router-dom';
 
-import EmptyData from '@core/components/EmptyData';
+import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
-import { ConnectionsColumns, ConnectionsLabels } from './Connections.enum';
-import { ConnectionsProps, ConnectionProps } from './Connections.interfaces';
+import { SitesRoutesPaths } from '../sites.enum';
+import { ConnectionsColumns, ConnectionsLabels, HTTPConnectionsColumns } from './Connections.enum';
+import { ConnectionProps, ConnectionPropsHTTP, ConnectionsProps } from './Connections.interfaces';
 
-const Connections: FC<ConnectionsProps> = function ({
-    httpRequestsReceived,
-    httpRequestsSent,
-    tcpConnectionsIn,
-    tcpConnectionsOut,
-}) {
-    const httpRequestsReceivedEntries = Object.values(httpRequestsReceived);
-    const httpRequestsSentEntries = Object.values(httpRequestsSent);
-    const tcpConnectionsInEntries = Object.values(tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.values(tcpConnectionsOut);
-
+const Connections: FC<ConnectionsProps> = function ({ httpRequests, tcpRequests }) {
     return (
         <Stack hasGutter>
-            {!!(tcpConnectionsInEntries.length || tcpConnectionsOutEntries.length) && (
+            {!!tcpRequests.length && (
                 <StackItem>
-                    <Split hasGutter>
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card isFullHeight isRounded>
-                                <CardTitle>{ConnectionsLabels.TCPconnectionsIn}</CardTitle>
-                                {tcpConnectionsInEntries.length !== 0 ? (
-                                    <TCPTable rows={tcpConnectionsInEntries} />
-                                ) : (
-                                    <EmptyData />
-                                )}
-                            </Card>
-                        </SplitItem>
-
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card isFullHeight isRounded>
-                                <CardTitle>{ConnectionsLabels.TCPconnectionsOut}</CardTitle>
-                                {tcpConnectionsOutEntries.length !== 0 ? (
-                                    <TCPTable rows={tcpConnectionsOutEntries} />
-                                ) : (
-                                    <EmptyData />
-                                )}
-                            </Card>
-                        </SplitItem>
-                    </Split>
+                    <Card isFullHeight isRounded>
+                        <CardTitle>{ConnectionsLabels.TCPprotocol}</CardTitle>
+                        <TCPTable rows={tcpRequests} />
+                    </Card>
                 </StackItem>
             )}
 
-            {!!(httpRequestsReceivedEntries.length || httpRequestsSentEntries.length) && (
+            {!!httpRequests.length && (
                 <StackItem>
-                    <Split hasGutter>
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card isRounded>
-                                <CardTitle>{ConnectionsLabels.HTTPrequestsIn}</CardTitle>
-                                {httpRequestsReceivedEntries.length !== 0 ? (
-                                    <HTTPtable rows={httpRequestsReceivedEntries} />
-                                ) : (
-                                    <EmptyData />
-                                )}
-                            </Card>
-                        </SplitItem>
-
-                        <SplitItem className="pf-u-w-50vw">
-                            <Card isRounded>
-                                <CardTitle>{ConnectionsLabels.HTTPrequestsOut}</CardTitle>
-                                {httpRequestsSentEntries.length !== 0 ? (
-                                    <HTTPtable rows={httpRequestsSentEntries} />
-                                ) : (
-                                    <EmptyData />
-                                )}
-                            </Card>
-                        </SplitItem>
-                    </Split>
+                    <Card isRounded>
+                        <CardTitle>{ConnectionsLabels.HTTPprotocol}</CardTitle>
+                        <HTTPtable rows={httpRequests} />
+                    </Card>
                 </StackItem>
             )}
         </Stack>
@@ -108,19 +62,22 @@ const TCPTable: FC<ConnectionProps> = function ({ rows }) {
                     </Th>
                 </Tr>
             </Thead>
-            {rows.map((tcpConnectionsIn) => (
-                <Tbody key={tcpConnectionsIn.id}>
+            {rows.map(({ id, ip, name, byteIn, byteOut }) => (
+                <Tbody key={id}>
                     <Tr>
-                        <Td dataLabel={ConnectionsColumns.Name}>{`${tcpConnectionsIn.client}`}</Td>
-                        <Td dataLabel={ConnectionsColumns.Ip}>{`${
-                            tcpConnectionsIn.id.split('@')[0]
-                        }`}</Td>
-                        <Td dataLabel={ConnectionsColumns.BytesIn}>{`${formatBytes(
-                            tcpConnectionsIn.bytes_in,
-                        )}`}</Td>
-                        <Td dataLabel={ConnectionsColumns.BytesOut}>{`${formatBytes(
-                            tcpConnectionsIn.bytes_out,
-                        )}`}</Td>
+                        <Td dataLabel={ConnectionsColumns.Name}>
+                            <Link to={`${SitesRoutesPaths.Details}/${id}`}>
+                                <ResourceIcon type="site" />
+                                {name}
+                            </Link>
+                        </Td>
+                        <Td dataLabel={ConnectionsColumns.Ip}>{`${ip}`}</Td>
+                        <Td dataLabel={ConnectionsColumns.BytesIn}>
+                            {byteIn ? `${formatBytes(byteIn)}` : '-'}
+                        </Td>
+                        <Td dataLabel={ConnectionsColumns.BytesOut}>
+                            {byteOut ? `${formatBytes(byteOut)}` : '-'}
+                        </Td>
                     </Tr>
                 </Tbody>
             ))}
@@ -128,7 +85,7 @@ const TCPTable: FC<ConnectionProps> = function ({ rows }) {
     );
 };
 
-const HTTPtable: FC<ConnectionProps> = function ({ rows }) {
+const HTTPtable: FC<ConnectionPropsHTTP> = function ({ rows }) {
     return (
         <TableComposable
             className="network-table"
@@ -139,36 +96,50 @@ const HTTPtable: FC<ConnectionProps> = function ({ rows }) {
         >
             <Thead>
                 <Tr>
-                    <Th>{ConnectionsColumns.Name}</Th>
-                    <Th>{ConnectionsColumns.Requests}</Th>
-                    <Th>{ConnectionsColumns.MaxLatency}</Th>
+                    <Th>{HTTPConnectionsColumns.Name}</Th>
+                    <Th>{HTTPConnectionsColumns.RequestsCountSent}</Th>
+                    <Th>{HTTPConnectionsColumns.RequestsCountReceived}</Th>
+                    <Th>{HTTPConnectionsColumns.MaxLatencySent}</Th>
+                    <Th>{HTTPConnectionsColumns.MaxLatencyReceived}</Th>
                     <Th>
                         <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                        {ConnectionsColumns.BytesIn}
+                        {HTTPConnectionsColumns.BytesIn}
                     </Th>
                     <Th>
                         <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                        {ConnectionsColumns.BytesOut}
+                        {HTTPConnectionsColumns.BytesOut}
                     </Th>
                 </Tr>
             </Thead>
-            {rows.map((requestReceived) => (
-                <Tbody key={requestReceived.id}>
+            {rows.map((row) => (
+                <Tbody key={row.id}>
                     <Tr>
-                        <Td dataLabel={ConnectionsColumns.Name}>{`${requestReceived.client}`}</Td>
-                        <Td dataLabel={ConnectionsColumns.Requests}>
-                            {`${requestReceived.requests}`}
+                        <Td dataLabel={HTTPConnectionsColumns.Name}>{`${row.name}`}</Td>
+                        <Td dataLabel={HTTPConnectionsColumns.RequestsCountSent}>
+                            {`${row.requestsCountSent || '-'}`}
                         </Td>
-                        <Td dataLabel={ConnectionsColumns.MaxLatency}>
-                            {`${formatTime(requestReceived.latency_max, {
-                                startSize: 'ms',
-                            })}`}
+                        <Td dataLabel={HTTPConnectionsColumns.RequestsCountReceived}>
+                            {`${row.requestsCountReceived || '-'}`}
                         </Td>
-                        <Td dataLabel={ConnectionsColumns.BytesIn}>
-                            {`${formatBytes(requestReceived.bytes_in)}`}
+                        <Td dataLabel={HTTPConnectionsColumns.MaxLatencySent}>
+                            {row.maxLatencySent
+                                ? `${formatTime(row.maxLatencySent, {
+                                      startSize: 'ms',
+                                  })}`
+                                : '-'}
                         </Td>
-                        <Td dataLabel={ConnectionsColumns.BytesOut}>
-                            {`${formatBytes(requestReceived.bytes_out)}`}
+                        <Td dataLabel={HTTPConnectionsColumns.MaxLatencyReceived}>
+                            {row.maxLatencyReceived
+                                ? `${formatTime(row.maxLatencyReceived, {
+                                      startSize: 'ms',
+                                  })}`
+                                : '-'}
+                        </Td>
+                        <Td dataLabel={HTTPConnectionsColumns.BytesIn}>
+                            {row.byteIn ? `${formatBytes(row.byteIn)}` : '-'}
+                        </Td>
+                        <Td dataLabel={HTTPConnectionsColumns.BytesOut}>
+                            {row.byteOut ? `${formatBytes(row.byteOut)}` : '-'}
                         </Td>
                     </Tr>
                 </Tbody>

@@ -2,7 +2,7 @@ import {
     DataServicesResponse,
     DataSiteResponse,
     DeploymentLinksResponse,
-    ServiceConnections,
+    ServiceConnection,
     SiteResponse,
 } from 'API/REST.interfaces';
 
@@ -11,9 +11,30 @@ export type SiteData = DataSiteResponse;
 export type Site = SiteResponse;
 export type DeploymentLink = DeploymentLinksResponse;
 
+export interface HttpRequest {
+    id: string;
+    name: string;
+    requestsCountSent: number | null;
+    requestsCountReceived: number | null;
+    maxLatencySent: number | null;
+    maxLatencyReceived: number | null;
+    byteOut: number | null;
+    byteIn: number | null;
+}
+
+export interface TCPRequest {
+    id: string;
+    name: string;
+    ip: string;
+    byteOut: number | null;
+    byteIn: number | null;
+}
+
 export type SiteDetails = SiteResponse & {
-    httpRequestsReceived: Record<string, ServiceConnections>;
-    httpRequestsSent: Record<string, ServiceConnections>;
-    tcpConnectionsIn: Record<string, ServiceConnections>;
-    tcpConnectionsOut: Record<string, ServiceConnections>;
+    httpRequestsReceived: Record<string, ServiceConnection>;
+    httpRequestsSent: Record<string, ServiceConnection>;
+    tcpConnectionsIn: Record<string, ServiceConnection>;
+    tcpConnectionsOut: Record<string, ServiceConnection>;
+    httpRequests: HttpRequest[];
+    tcpRequests: TCPRequest[];
 };

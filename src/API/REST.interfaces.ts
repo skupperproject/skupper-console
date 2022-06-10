@@ -7,7 +7,7 @@ export interface DataResponse {
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
-export interface ServiceConnections {
+export interface ServiceConnection {
     id: string;
     client: string;
     start_time: number;
@@ -22,13 +22,13 @@ export interface ServiceConnections {
 
 interface ServiceDetails {
     [key: string]: {
-        [key: string]: ServiceConnections;
+        [key: string]: ServiceConnection;
     };
 }
 
 export interface ServiceRequestReceivedResponse {
     site_id: string;
-    by_client: Record<string, ServiceConnections>;
+    by_client: Record<string, ServiceConnection>;
 }
 
 interface ServiceRequestHandledResponse {
@@ -49,11 +49,11 @@ export interface DataServicesResponse {
     ];
     connections_ingress?: {
         site_id: string;
-        connections: Record<string, ServiceConnections>;
+        connections: Record<string, ServiceConnection>;
     }[];
     connections_egress?: {
         site_id: string;
-        connections: Record<string, ServiceConnections>;
+        connections: Record<string, ServiceConnection>;
     }[];
     requests_handled?: ServiceRequestHandledResponse[];
     requests_received?: ServiceRequestReceivedResponse[];
@@ -78,7 +78,7 @@ interface DeploymentLinksStreamPoints {
 
 export interface DeploymentLinksResponse {
     key: string;
-    request: ServiceConnections;
+    request: ServiceConnection;
     source: DeploymentLinksStreamPoints;
     target: DeploymentLinksStreamPoints;
 }

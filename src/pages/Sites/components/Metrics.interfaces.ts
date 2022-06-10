@@ -1,12 +1,12 @@
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
-import { ServiceConnections } from 'API/REST.interfaces';
+import { ServiceConnection } from 'API/REST.interfaces';
 
 export interface MetricsProps {
     siteName: string;
-    httpRequestsReceived: Record<string, ServiceConnections>;
-    httpRequestsSent: Record<string, ServiceConnections>;
-    tcpConnectionsIn: Record<string, ServiceConnections>;
-    tcpConnectionsOut: Record<string, ServiceConnections>;
+    httpRequestsReceived: Record<string, ServiceConnection>;
+    httpRequestsSent: Record<string, ServiceConnection>;
+    tcpConnectionsIn: Record<string, ServiceConnection>;
+    tcpConnectionsOut: Record<string, ServiceConnection>;
 }
 
 export interface MetricsChartProps {

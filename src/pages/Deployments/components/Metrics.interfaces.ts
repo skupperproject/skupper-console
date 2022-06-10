@@ -1,11 +1,11 @@
-import { ServiceConnections } from 'API/REST.interfaces';
+import { ServiceConnection } from 'API/REST.interfaces';
 
 export interface DeploymentsMetricsProps {
     deploymentName: string;
-    httpRequestsReceived: ServiceConnections[];
-    httpRequestsSent: ServiceConnections[];
-    tcpConnectionsIn: ServiceConnections[];
-    tcpConnectionsOut: ServiceConnections[];
+    httpRequestsReceived: ServiceConnection[];
+    httpRequestsSent: ServiceConnection[];
+    tcpConnectionsIn: ServiceConnection[];
+    tcpConnectionsOut: ServiceConnection[];
 }
 
 export interface SitesConnectionsDonutChartProps {

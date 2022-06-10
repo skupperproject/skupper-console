@@ -1,5 +1,5 @@
 import { RESTApi } from 'API/REST';
-import { ServiceConnections } from 'API/REST.interfaces';
+import { ServiceConnection } from 'API/REST.interfaces';
 
 import { DeploymentLink, Site, SiteDetails } from './services.interfaces';
 
@@ -13,22 +13,85 @@ const SitesServices = {
 
         const httpRequestsReceived = getHTTPrequestsInBySite(data.deploymentLinks, info.siteId);
         const httpRequestsSent = getHTTPrequestsOutBySite(data.deploymentLinks, info.siteId);
-        const tcpConnectionsIn = getTCPConnectionsInBySite(data.deploymentLinks, info.siteId);
-        const tcpConnectionsOut = getTCPConnectionsOutBySite(data.deploymentLinks, info.siteId);
+        const tcpTrafficReceived = getTCPConnectionsInBySite(data.deploymentLinks, info.siteId);
+        const tcpTrafficSent = getTCPConnectionsOutBySite(data.deploymentLinks, info.siteId);
+
+        const httpRequests = getHTTPtraffic(httpRequestsSent, httpRequestsReceived);
+        const tcpRequests = getTCPtraffic(tcpTrafficSent, tcpTrafficReceived);
 
         return id
             ? {
                   ...info,
                   httpRequestsReceived,
                   httpRequestsSent,
-                  tcpConnectionsIn,
-                  tcpConnectionsOut,
+                  tcpConnectionsIn: tcpTrafficSent,
+                  tcpConnectionsOut: tcpTrafficReceived,
+                  httpRequests,
+                  tcpRequests,
               }
             : null;
     },
 };
 
 export default SitesServices;
+
+function getTCPtraffic(
+    tcpRequestsSent: Record<string, ServiceConnection>,
+    tcpRequestsReceived: Record<string, ServiceConnection>,
+) {
+    const httpRequestsIncludedKeys = Object.keys(tcpRequestsSent).filter(
+        (key) => !!tcpRequestsReceived[key],
+    );
+    const httpRequestsExcludedKeys = Object.keys(tcpRequestsSent).filter(
+        (key) => !tcpRequestsReceived[key],
+    );
+
+    return [...httpRequestsIncludedKeys, ...httpRequestsExcludedKeys].map((key) => {
+        const tcpRequestSent = tcpRequestsSent[key];
+        const tcpRequestReceived = tcpRequestsReceived[key];
+        const [address, id] = (tcpRequestReceived.id || tcpRequestSent.id).split('@');
+
+        const tcpRequest = {
+            id,
+            name: tcpRequestReceived.client || tcpRequestSent.client,
+            ip: address.split(':')[0],
+            byteOut: tcpRequestSent?.bytes_out || null,
+            byteIn: tcpRequestReceived?.bytes_out || null,
+        };
+
+        return tcpRequest;
+    });
+}
+
+function getHTTPtraffic(
+    httpRequestsSent: Record<string, ServiceConnection>,
+    httpRequestsReceived: Record<string, ServiceConnection>,
+) {
+    const httpRequestsIncludedKeys = Object.keys(httpRequestsSent).filter(
+        (key) => !!httpRequestsReceived[key],
+    );
+    const httpRequestsExcludedKeys = Object.keys(httpRequestsSent).filter(
+        (key) => !httpRequestsReceived[key],
+    );
+
+    return [...httpRequestsIncludedKeys, ...httpRequestsExcludedKeys].map((key) => {
+        const httpRequestSent = httpRequestsSent[key];
+        const httpRequestReceived = httpRequestsReceived[key];
+
+        const httpRequest = {
+            id: httpRequestSent.id || httpRequestReceived.id,
+            name: httpRequestSent.client || httpRequestReceived.client,
+            requestsCountSent: httpRequestSent?.requests || null,
+            requestsCountReceived: httpRequestReceived?.requests || null,
+            maxLatencySent: httpRequestSent?.latency_max || null,
+            maxLatencyReceived: httpRequestReceived?.latency_max || null,
+            byteIn: httpRequestSent?.bytes_out || null,
+            byteOut: httpRequestReceived?.bytes_out || null,
+        };
+
+        return httpRequest;
+    });
+}
 
 function getTCPConnectionsInBySite(links: DeploymentLink[], siteId: string) {
     return links.reduce((acc, { source, target, request }) => {
@@ -42,7 +105,7 @@ function getTCPConnectionsInBySite(links: DeploymentLink[], siteId: string) {
         }
 
         return acc;
-    }, {} as Record<string, ServiceConnections>);
+    }, {} as Record<string, ServiceConnection>);
 }
 
 function getTCPConnectionsOutBySite(links: DeploymentLink[], siteId: string) {
@@ -57,12 +120,12 @@ function getTCPConnectionsOutBySite(links: DeploymentLink[], siteId: string) {
         }
 
         return acc;
-    }, {} as Record<string, ServiceConnections>);
+    }, {} as Record<string, ServiceConnection>);
 }
 
 function getHTTPrequestsOutBySite(links: DeploymentLink[], siteId: string) {
     return links.reduce((acc, { source, target, request }) => {
-        if (source.site.site_id === siteId && request.details) {
+        if (source.site.site_id === siteId && request.details && target.site.site_id !== siteId) {
             const targetSiteName = target.site.site_name;
             const requestsSetPerSites = acc[targetSiteName];
 
@@ -72,12 +135,12 @@ function getHTTPrequestsOutBySite(links: DeploymentLink[], siteId: string) {
         }
 
         return acc;
-    }, {} as Record<string, ServiceConnections>);
+    }, {} as Record<string, ServiceConnection>);
 }
 
 function getHTTPrequestsInBySite(links: DeploymentLink[], siteId: string) {
     return links.reduce((acc, { source, target, request }) => {
-        if (target.site.site_id === siteId && request.details) {
+        if (target.site.site_id === siteId && request.details && source.site.site_id !== siteId) {
             const sourceSiteName = source.site.site_name;
             const requestsReceivedPerSites = acc[sourceSiteName];
 
@@ -87,7 +150,7 @@ function getHTTPrequestsInBySite(links: DeploymentLink[], siteId: string) {
         }
 
         return acc;
-    }, {} as Record<string, ServiceConnections>);
+    }, {} as Record<string, ServiceConnection>);
 }
 
 // add the source values to the target values for each attribute in the source.

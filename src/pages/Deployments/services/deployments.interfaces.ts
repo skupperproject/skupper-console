@@ -2,25 +2,49 @@ import {
     DataServicesResponse,
     DataSiteResponse,
     DeploymentTopologyResponse,
-    ServiceConnections,
+    ServiceConnection,
     ServiceRequestReceivedResponse,
 } from 'API/REST.interfaces';
 
 type Service = DataServicesResponse;
 
-type Site = DataSiteResponse;
+export interface Traffic extends ServiceConnection {
+    site: DeploymentSite;
+}
+
+export type DeploymentSite = DataSiteResponse;
 
 export type Deployment = DeploymentTopologyResponse;
 
+export interface HttpRequest {
+    id: string;
+    name: string;
+    requestsCountSent: number | null;
+    requestsCountReceived: number | null;
+    maxLatencySent: number | null;
+    maxLatencyReceived: number | null;
+    bytesOut: number | null;
+    bytesIn: number | null;
+}
+
+export interface TCPRequest {
+    id: string;
+    name: string;
+    ip: string;
+    bytesOut: number | null;
+    bytesIn: number | null;
+}
+
 export interface DeploymentDetails {
     service: Service;
-    site: Site;
-    tcpConnectionsIn: ServiceConnections[];
-    tcpConnectionsOut: ServiceConnections[];
-    httpRequestsSent: ServiceConnections[];
-    httpRequestsReceived: ServiceConnections[];
+    site: DeploymentSite;
+    tcpConnectionsIn: Traffic[];
+    tcpConnectionsOut: Traffic[];
+    httpRequestsSent: Traffic[];
+    httpRequestsReceived: Traffic[];
 }
 
 export interface ServiceRequestReceived extends ServiceRequestReceivedResponse {
     address: string;
+    site: DeploymentSite;
 }

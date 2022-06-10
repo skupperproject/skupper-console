@@ -11,9 +11,7 @@ import {
     Tab,
     Tabs,
     TabTitleText,
-    Text,
-    TextContent,
-    TextVariants,
+    Title,
 } from '@patternfly/react-core';
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -83,16 +81,10 @@ const SiteDetail = function () {
                 </Breadcrumb>
             </StackItem>
 
-            <TextContent>
-                <Text component={TextVariants.h1} className="pf-u-mb-xl pf-u-font-weight-bold">
-                    <ResourceIcon type="site" />
-                    {site.siteName}
-                </Text>
-            </TextContent>
-
-            <TextContent>
-                <Text component={TextVariants.h2}>{SitesDetailsLabels.Details}</Text>
-            </TextContent>
+            <Title headingLevel="h1">
+                <ResourceIcon type="site" />
+                {site.siteName}
+            </Title>
 
             <Split>
                 <SplitItem className="pf-u-w-50">
@@ -115,12 +107,7 @@ const SiteDetail = function () {
                     eventKey={0}
                     title={<TabTitleText>{SitesDetailsLabels.TabTraffic}</TabTitleText>}
                 >
-                    <Connections
-                        httpRequestsReceived={site.httpRequestsReceived}
-                        httpRequestsSent={site.httpRequestsSent}
-                        tcpConnectionsIn={site.tcpConnectionsIn}
-                        tcpConnectionsOut={site.tcpConnectionsOut}
-                    />
+                    <Connections httpRequests={site.httpRequests} tcpRequests={site.tcpRequests} />
                 </Tab>
                 <Tab
                     eventKey={1}
