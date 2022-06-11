@@ -1,5 +1,10 @@
 import { RESTApi } from 'API/REST';
-import { FlowResponse, FlowsDeviceResponse, FlowsResponse } from 'API/REST.interfaces';
+import {
+    FlowResponse,
+    FlowsDeviceResponse,
+    FlowsResponse,
+    FlowsRouterResponse,
+} from 'API/REST.interfaces';
 
 import { Connection, MonitoringTopology, VanAddresses } from './services.interfaces';
 
@@ -13,28 +18,20 @@ export const MonitorServices = {
         }
 
         const connections = await RESTApi.fetchFlowsConnectionsByVanAddr(id as string);
-        const connectors = connections.filter(
-            ({ rtype, endTime }) => rtype === 'CONNECTOR' && !endTime,
+
+        const activeDevices = connections.filter(
+            ({ rtype, endTime }) => (rtype === 'LISTENER' || rtype === 'CONNECTOR') && !endTime,
         ) as FlowsDeviceResponse[];
-        const idsConn = connectors.map(({ parent }) => parent);
-        const routersConnections = await RESTApi.fetchFlowRecord(idsConn);
-        const recordsConnectors = mergeById(connectors, routersConnections);
 
-        const listeners = connections.filter(
-            ({ rtype, endTime }) => rtype === 'LISTENER' && !endTime,
-        ) as FlowsDeviceResponse[] & {
-            routerName: string;
-        };
-        const ids = listeners.map(({ parent }) => parent);
-        const routersListeners = await RESTApi.fetchFlowRecord(ids);
-
-        const recordsListeners = mergeById(listeners, routersListeners);
+        const ids = activeDevices.map(({ parent }) => parent);
+        const records = await RESTApi.fetchFlowRecord(ids);
+        const devices = mergeDevicesById(activeDevices, records);
 
         const flows = connections.filter(
             ({ rtype, endTime }) => rtype === 'FLOW' && !endTime,
         ) as FlowResponse[];
 
-        return { listeners: recordsListeners, connectors: recordsConnectors, flows };
+        return { devices, flows };
     },
 
     fetchMonitoringTopology: async (): Promise<MonitoringTopology> => RESTApi.fetchFlowsTopology(),
@@ -42,12 +39,12 @@ export const MonitorServices = {
     fetchVanAddresses: async (): Promise<VanAddresses[]> => RESTApi.fetchFlowsVanAddresses(),
 };
 
-const mergeById = (a1: FlowsDeviceResponse[], a2: FlowsDeviceResponse[]) => {
+const mergeDevicesById = (a1: FlowsDeviceResponse[], a2: FlowsRouterResponse[]) => {
     const a2Map = a2.reduce((acc, item) => {
         acc[item.id] = item;
 
         return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, FlowsRouterResponse>);
 
     return a1.flatMap((item) => {
         const { name, namespace } = a2Map[item.parent];

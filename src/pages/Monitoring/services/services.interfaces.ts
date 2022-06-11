@@ -13,8 +13,7 @@ interface Device extends FlowsDeviceResponse {
 }
 
 export type Connection = {
-    connectors: Device[];
-    listeners: Device[];
+    devices: Device[];
     flows: FlowResponse[];
 };
 

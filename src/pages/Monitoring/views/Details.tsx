@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Card, CardTitle, Stack, StackItem } from '@patternfly/react-core';
+import { Card, CardTitle, Stack, StackItem, Tooltip } from '@patternfly/react-core';
 import { CircleIcon, ArrowRightIcon, ConnectedIcon, PluggedIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
@@ -85,8 +85,7 @@ const DetailsView = function () {
         return null;
     }
 
-    const listeners = connections.listeners;
-    const connectors = connections.connectors;
+    const devices = connections.devices;
     const flows = connections.flows;
 
     return (
@@ -99,6 +98,7 @@ const DetailsView = function () {
                     <TableComposable variant="compact" borders={false}>
                         <Thead>
                             <Tr>
+                                <Th>{DetailsColumns.Type}</Th>
                                 <Th>{DetailsColumns.Name}</Th>
                                 <Th>{DetailsColumns.Protocol}</Th>
                                 <Th>{DetailsColumns.Router}</Th>
@@ -107,13 +107,31 @@ const DetailsView = function () {
                                 <Th>{DetailsColumns.DestinationPort}</Th>
                             </Tr>
                         </Thead>
-                        {listeners?.map(
-                            ({ id, protocol, name, routerName, namespace, destHost, destPort }) => (
+                        {devices?.map(
+                            ({
+                                id,
+                                protocol,
+                                name,
+                                routerName,
+                                namespace,
+                                destHost,
+                                destPort,
+                                rtype,
+                            }) => (
                                 <Tbody key={id}>
                                     <Tr
                                         onClick={() => handleRowClick(id)}
                                         className={handleSelectRow(id)}
                                     >
+                                        <Td dataLabel={DetailsColumns.Type}>
+                                            <Tooltip content={rtype}>
+                                                {rtype === 'LISTENER' ? (
+                                                    <ConnectedIcon />
+                                                ) : (
+                                                    <PluggedIcon />
+                                                )}
+                                            </Tooltip>
+                                        </Td>
                                         <Td dataLabel={DetailsColumns.Name}>{name}</Td>
                                         <Td dataLabel={DetailsColumns.Protocol}>{protocol}</Td>
                                         <Td dataLabel={DetailsColumns.Router}>{routerName}</Td>
@@ -132,42 +150,6 @@ const DetailsView = function () {
                 </Card>
             </StackItem>
 
-            <StackItem>
-                <Card>
-                    <CardTitle>
-                        <PluggedIcon /> {Labels.Connectors}
-                    </CardTitle>
-                    <TableComposable variant="compact" borders={false}>
-                        <Thead>
-                            <Tr>
-                                <Th>{DetailsColumns.Name}</Th>
-                                <Th>{DetailsColumns.Protocol}</Th>
-                                <Th>{DetailsColumns.Router}</Th>
-                                <Th>{DetailsColumns.Namespace}</Th>
-                                <Th>{DetailsColumns.DestinationHost}</Th>
-                                <Th>{DetailsColumns.DestinationPort}</Th>
-                            </Tr>
-                        </Thead>
-                        {connectors?.map(
-                            ({ id, protocol, name, routerName, namespace, destHost, destPort }) => (
-                                <Tbody key={id}>
-                                    <Tr
-                                        onClick={() => handleRowClick(id)}
-                                        className={handleSelectRow(id)}
-                                    >
-                                        <Td dataLabel={DetailsColumns.Name}>{name}</Td>
-                                        <Td dataLabel={DetailsColumns.Protocol}>{protocol}</Td>
-                                        <Td dataLabel={DetailsColumns.Router}>{routerName}</Td>
-                                        <Td dataLabel={DetailsColumns.Namespace}>{namespace}</Td>
-                                        <Td dataLabel={DetailsColumns.Protocol}>{destHost}</Td>
-                                        <Td dataLabel={DetailsColumns.Protocol}>{destPort}</Td>
-                                    </Tr>
-                                </Tbody>
-                            ),
-                        )}
-                    </TableComposable>
-                </Card>
-            </StackItem>
             <StackItem className="pf-u-mt-xl">
                 <Card>
                     <CardTitle>
