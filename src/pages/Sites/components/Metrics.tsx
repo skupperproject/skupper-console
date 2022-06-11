@@ -10,7 +10,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { MetricsLabels } from './Metrics.enum';
 import { MetricChartProps, MetricsChartProps, MetricsProps } from './Metrics.interfaces';
 
-const CARD_HEIGHT = '250px';
+const CARD_HEIGHT = '350px';
 
 const Metrics: FC<MetricsProps> = function ({
     siteName: name,
@@ -98,10 +98,16 @@ const MetricChart: FC<MetricChartProps> = function ({
     title,
     color = ChartThemeColors.Purple,
 }) {
+    const legend = data.map(({ x }) => ({ name: x }));
+
     return (
         <Card style={{ height: CARD_HEIGHT }}>
             <CardTitle>{title}</CardTitle>
-            {data.length ? <MetricsChart data={data} color={color} /> : <EmptyData />}
+            {data.length ? (
+                <MetricsChart data={data} color={color} legend={legend} />
+            ) : (
+                <EmptyData />
+            )}
         </Card>
     );
 };
@@ -117,7 +123,8 @@ const MetricsChart: FC<MetricsChartProps> = function ({
 
     return (
         <ChartDonut
-            constrainToVisibleArea={true}
+            height={350}
+            width={700}
             data={data}
             labels={({ datum }) => `${datum.x}: ${formatBytes(datum.y)}`}
             legendOrientation={legendOrientation}
@@ -125,7 +132,7 @@ const MetricsChart: FC<MetricsChartProps> = function ({
             legendPosition={legendPosition}
             legendAllowWrap={true}
             padding={{
-                bottom: 80,
+                bottom: 120,
                 left: 0,
                 right: 0, // Adjusted to accommodate legend
                 top: 0,

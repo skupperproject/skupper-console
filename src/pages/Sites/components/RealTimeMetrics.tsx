@@ -10,7 +10,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { RealTimeMetricsLabels } from './RealTimeMetrics.enum';
 import { RealTimeMetricChartProps, RealTimeMetricsProps } from './RealTimeMetrics.interfaces';
 
-const CARD_HEIGHT = '300px';
+const CARD_HEIGHT = '450px';
 
 const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
     siteName: name,
@@ -145,6 +145,8 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
     formatter,
     timestamp = 0,
 }) {
+    const dataLegend = data.map(({ name }) => ({ name }));
+
     return (
         <Card style={{ height: CARD_HEIGHT }}>
             <CardTitle>{title}</CardTitle>
@@ -154,6 +156,7 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
                     options={{
                         chartColor: color,
                         formatter,
+                        dataLegend,
                     }}
                     data={data}
                 />

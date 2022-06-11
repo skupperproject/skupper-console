@@ -10,10 +10,10 @@ const MonitoringConnections = lazy(
     () => import(/* webpackChunkName: "monitoring-connections" */ './views/Connections'),
 );
 const ConnectionsTable = lazy(
-    () => import(/* webpackChunkName: "monitoring-connections-table" */ './views/Details'),
+    () => import(/* webpackChunkName: "monitoring-details" */ './views/Details'),
 );
 const ConnectionsTopology = lazy(
-    () => import(/* webpackChunkName: "monitoring-connections-topology" */ './views/Topology'),
+    () => import(/* webpackChunkName: "monitoring-topology" */ './components/Topology'),
 );
 
 export const monitoringRoutes = [

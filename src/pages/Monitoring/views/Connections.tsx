@@ -12,8 +12,8 @@ import {
 } from '@patternfly/react-core';
 import { Link, useParams } from 'react-router-dom';
 
+import ConnectionsTopology from '../components/Topology';
 import { MonitoringRoutesPaths, MonitoringRoutesPathLabel } from '../Monitoring.enum';
-import ConnectionsTopology from '../views/Topology';
 import { ConnectionsNavMenu } from './Connections.enum';
 import DetailsView from './Details';
 

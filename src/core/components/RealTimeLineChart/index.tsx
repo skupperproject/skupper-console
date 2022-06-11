@@ -63,13 +63,14 @@ const RealTimeLineChart = memo(function ({ data, timestamp, options }: RealTimeL
                 legendData={options?.dataLegend}
                 legendOrientation="horizontal"
                 legendPosition="bottom"
+                legendAllowWrap={true}
                 height={chartConfig.height}
                 domainPadding={{ y: [10, 10] }}
                 padding={{
-                    bottom: 40,
+                    bottom: 140,
                     left: 90,
-                    right: 50,
-                    top: 20,
+                    right: 90,
+                    top: 0,
                 }}
                 width={chartConfig.width}
                 themeColor={options?.chartColor ? options.chartColor : ChartThemeColors.Blue}
