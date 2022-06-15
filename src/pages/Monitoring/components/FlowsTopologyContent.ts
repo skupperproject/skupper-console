@@ -4,7 +4,6 @@ import { select } from 'd3-selection';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
 import router from '@assets/router.svg';
-import { formatTime } from '@core/utils/formatTime';
 
 import {
     MonitoringTopologyDeviceNode,
@@ -13,36 +12,20 @@ import {
     MonitoringTopologyNode,
     MonitoringTopologyRouterNode,
     MonitoringTopologyVanService,
-} from './Topology.interfaces';
+} from './FlowTopology.interfaces';
 
 const CIRCLE_R = 10;
 const ROUTER_IMG_WIDTH = 50;
 const ROUTER_IMG_CENTER_X = ROUTER_IMG_WIDTH / 2;
 const ARROW_SIZE = 10;
 
-const tooltip = select('body')
-    .append('div')
-    .style('position', 'absolute')
-    .style('z-index', '1000')
-    .style('visibility', 'hidden')
-    .style('background-color', 'var(--pf-global--palette--black-200)')
-    .style('border', 'solid')
-    .style('border-width', '1px')
-    .style('border-radius', '4px')
-    .style('border-color', 'var(--pf-global--palette--light-blue-500)')
-    .style('padding', '10px')
-    .style('opacity', '0.7')
-    .html('');
-
-function TopologyMonitoringService(
+function FlowTopologyContent(
     $node: HTMLElement,
     nodes: MonitoringTopologyNode[],
     links: MonitoringTopologyLink[],
     boxWidth: number,
     boxHeight: number,
 ): MonitoringTopologyVanService {
-    let isDragging = false;
-
     const linksWithNodes: MonitoringTopologyLinkNormalized[] = [];
     links.some(function ({ source, target, ...rest }) {
         nodes.some(function (node) {
@@ -103,23 +86,7 @@ function TopologyMonitoringService(
                 .attr('class', 'routerLink')
                 .style('stroke', 'transparent')
                 .style('stroke-width', '24px')
-                .style('opacity', 0)
-                .on('mouseover', (_, { cost, bytes, type, protocol }) => {
-                    const trafficType = type === 'CONNECTOR' ? 'outbound' : 'inbound';
-
-                    const template = cost
-                        ? `<p>cost: <b>${cost}</b></p>`
-                        : `<p>${trafficType} ${protocol}: <b>${bytes}</b></p>`;
-                    tooltip.html(template);
-
-                    return tooltip.style('visibility', 'visible');
-                })
-                .on('mousemove', function ({ pageY, pageX }) {
-                    return tooltip.style('top', `${pageY - 10}px`).style('left', `${pageX + 10}px`);
-                })
-                .on('mouseout', function () {
-                    return tooltip.style('visibility', 'hidden');
-                });
+                .style('opacity', 0);
 
             p.append('line')
                 .attr('class', 'routerLink')
@@ -136,8 +103,8 @@ function TopologyMonitoringService(
                     return type !== 'CONNECTOR' && type !== 'LISTENER' ? 24 : 10;
                 })
                 .style('fill', 'var(--pf-global--palette--light-blue-500)')
-                .text(function ({ type, cost = 0, bytes = 0 }) {
-                    return type !== 'CONNECTOR' && type !== 'LISTENER' ? cost : bytes;
+                .text(function ({ type, cost = 0 }) {
+                    return type !== 'CONNECTOR' && type !== 'LISTENER' ? cost : '';
                 });
         });
 
@@ -190,27 +157,13 @@ function TopologyMonitoringService(
                     .on('start', dragStarted)
                     .on('drag', dragged)
                     .on('end', dragEnded),
-            )
-            .on('mouseover', function (_, { name, protocol, rtype, numFlows, avgLatency }) {
-                tooltip.html(`
-          <b>${name}</b>
-          <br><br>
-          <p>protocol: <b>${protocol}</b></p>
-          <p>type: <b>${rtype}</b></p>
-          <p>flows: <b>${numFlows}</b></p>
-          <p>Avg Latency: <b>${formatTime(avgLatency)}</b></p>
-          `);
+            );
 
-                return tooltip.style('visibility', isDragging ? 'hidden' : 'visible');
-            })
-            .on('mousemove', function (event) {
-                return tooltip
-                    .style('top', `${event.pageY - 10}px`)
-                    .style('left', `${event.pageX + 10}px`);
-            })
-            .on('mouseout', function () {
-                return tooltip.style('visibility', 'hidden');
-            });
+        // label
+        p.append('text')
+            .attr('class', 'devicesImg')
+            .text(({ rtype }) => (rtype === 'CONNECTOR' ? 'connector' : 'listener'))
+            .attr('font-size', 10);
     });
 
     // drag util
@@ -238,7 +191,6 @@ function TopologyMonitoringService(
         node.fx = node.x;
         node.fy = node.y;
 
-        isDragging = true;
         fixNodes(node.x, node.y);
     }
 
@@ -256,7 +208,6 @@ function TopologyMonitoringService(
         node.fx = null;
         node.fy = null;
 
-        isDragging = false;
         localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
     }
 
@@ -282,7 +233,9 @@ function TopologyMonitoringService(
         svgElement
             .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImg')
             .attr('cx', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
-            .attr('cy', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
+            .attr('cy', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY))
+            .attr('x', ({ x }) => validatePosition(x + CIRCLE_R, maxSvgPosX, minSvgPosX))
+            .attr('y', ({ y }) => validatePosition(y + CIRCLE_R, maxSvgPosY, minSvgPosY));
 
         svgElement
             .selectAll<SVGSVGElement, MonitoringTopologyNode>('.routerImg')
@@ -386,11 +339,11 @@ function TopologyMonitoringService(
         }
     }
 
-    return Object.assign(svgContainer.node(), {
+    return Object.assign(svgContainer.node() as SVGElement, {
         zoomIn: () => svgContainer.transition().duration(750).call(initZoom.scaleBy, 1.5),
         zoomOut: () => svgContainer.transition().duration(750).call(initZoom.scaleBy, 0.5),
         reset,
-    });
+    }) as any;
 }
 
-export default TopologyMonitoringService;
+export default FlowTopologyContent;

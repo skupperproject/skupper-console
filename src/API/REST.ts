@@ -75,7 +75,7 @@ export const RESTApi = {
 
         return getFlowsTopology(data);
     },
-    fetchFlowsConnectionsByVanAddr: async (vanaddr: string): Promise<FlowsConnectionResponse[]> => {
+    fetchConnectionsByVanAddr: async (vanaddr: string): Promise<FlowsConnectionResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`);
 
         return data;

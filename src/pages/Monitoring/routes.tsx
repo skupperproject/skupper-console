@@ -12,8 +12,8 @@ const MonitoringConnections = lazy(
 const ConnectionsTable = lazy(
     () => import(/* webpackChunkName: "monitoring-details" */ './views/Details'),
 );
-const ConnectionsTopology = lazy(
-    () => import(/* webpackChunkName: "monitoring-topology" */ './components/Topology'),
+const FlowDetails = lazy(
+    () => import(/* webpackChunkName: "monitoring-flow-details" */ './views/FlowDetails'),
 );
 
 export const monitoringRoutes = [
@@ -32,12 +32,8 @@ export const monitoringRoutes = [
                 children: [
                     { index: true, element: <ConnectionsTable /> },
                     {
-                        path: `${MonitoringRoutesPaths.Connections}/:id/${MonitoringRoutesPaths.ConnectionsTopology}`,
-                        element: <ConnectionsTopology />,
-                    },
-                    {
-                        path: `${MonitoringRoutesPaths.Connections}/:id/${MonitoringRoutesPaths.ConnectionsTable}`,
-                        element: <ConnectionsTable />,
+                        path: `${MonitoringRoutesPaths.Connections}/:id${MonitoringRoutesPaths.ConnectionsTopology}/:idDevice/:idFlow`,
+                        element: <FlowDetails />,
                     },
                 ],
             },

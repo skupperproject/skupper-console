@@ -1,17 +1,35 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Card, CardTitle, Stack, StackItem, Tooltip } from '@patternfly/react-core';
-import { CircleIcon, ArrowRightIcon, ConnectedIcon, PluggedIcon } from '@patternfly/react-icons';
+import {
+    Bullseye,
+    Card,
+    CardTitle,
+    EmptyState,
+    EmptyStateBody,
+    EmptyStateIcon,
+    EmptyStateVariant,
+    Stack,
+    StackItem,
+    Title,
+    Tooltip,
+} from '@patternfly/react-core';
+import {
+    CircleIcon,
+    ArrowRightIcon,
+    ConnectedIcon,
+    PluggedIcon,
+    InfoCircleIcon,
+    SearchIcon,
+} from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { formatBytes } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
+import { MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
 import { DetailsColumns, Labels } from './Details.enum';
@@ -29,7 +47,7 @@ const DetailsView = function () {
 
     const { data: connections, isLoading } = useQuery(
         [QueriesMonitoring.GetConnectionsByVanAddr, vanId],
-        () => MonitorServices.fetchConnectionsByVanAddr(vanId),
+        () => (vanId ? MonitorServices.fetchConnectionsByVanAddr(vanId) : null),
         {
             refetchInterval,
             onError: handleError,
@@ -85,17 +103,20 @@ const DetailsView = function () {
         return null;
     }
 
-    const devices = connections.devices;
-    const flows = connections.flows;
+    const { devices, flows } = connections;
+
+    const flowsSelected = flows
+        .map((flow) => ({ ...flow, device: devices.find(({ id }) => id === flow.parent) }))
+        .filter(({ parent }) => devicesSelected.includes(parent));
 
     return (
         <Stack hasGutter>
             <StackItem>
                 <Card>
                     <CardTitle>
-                        <ConnectedIcon /> {Labels.Listeners}
+                        <ConnectedIcon /> {Labels.Devices}
                     </CardTitle>
-                    <TableComposable variant="compact" borders={false}>
+                    <TableComposable variant="compact" borders={false} className="flow-devices">
                         <Thead>
                             <Tr>
                                 <Th>{DetailsColumns.Type}</Th>
@@ -161,35 +182,70 @@ const DetailsView = function () {
                                 <Th>{DetailsColumns.Status}</Th>
                                 <Th>{DetailsColumns.IP}</Th>
                                 <Th>{DetailsColumns.Port}</Th>
-                                <Th>{DetailsColumns.Traffic}</Th>
-                                <Th>{DetailsColumns.Latency}</Th>
+                                <Th>{DetailsColumns.Name}</Th>
                             </Tr>
                         </Thead>
-                        {flows
-                            .filter(({ parent }) => devicesSelected.includes(parent))
-                            .map(({ id, latency, octets, sourceHost, sourcePort, endTime }) => (
-                                <Tbody key={id}>
-                                    <Tr>
-                                        <Td>
-                                            <CircleIcon
-                                                color={
-                                                    endTime
-                                                        ? 'var(--pf-global--BackgroundColor--200)'
-                                                        : 'var(--pf-global--success-color--100)'
-                                                }
-                                            />
-                                        </Td>
-                                        <Td dataLabel={DetailsColumns.IP}>{sourceHost}</Td>
-                                        <Td dataLabel={DetailsColumns.Port}>{sourcePort}</Td>
-                                        <Td dataLabel={DetailsColumns.Traffic}>
-                                            {formatBytes(octets)}
-                                        </Td>
-                                        <Td dataLabel={DetailsColumns.Latency}>
-                                            {formatTime(latency)}
-                                        </Td>
-                                    </Tr>
-                                </Tbody>
-                            ))}
+                        <Tbody>
+                            {!flowsSelected.length && (
+                                <Tr>
+                                    <Td colSpan={8}>
+                                        <Bullseye>
+                                            <EmptyState variant={EmptyStateVariant.small}>
+                                                <EmptyStateIcon
+                                                    icon={
+                                                        !devicesSelected.length
+                                                            ? InfoCircleIcon
+                                                            : SearchIcon
+                                                    }
+                                                    color="var(--pf-global--palette--blue-300)"
+                                                />
+                                                <EmptyStateBody>
+                                                    <Title headingLevel="h4" size="md">
+                                                        {!devicesSelected.length
+                                                            ? Labels.NoFlows
+                                                            : Labels.NoResult}
+                                                    </Title>
+                                                </EmptyStateBody>
+                                            </EmptyState>
+                                        </Bullseye>
+                                    </Td>
+                                </Tr>
+                            )}
+                            {!!flowsSelected.length &&
+                                flowsSelected.map(
+                                    ({ id, sourceHost, sourcePort, endTime, device, parent }) => (
+                                        <Tr key={id}>
+                                            <Td>
+                                                <CircleIcon
+                                                    color={
+                                                        endTime
+                                                            ? 'var(--pf-global--BackgroundColor--200)'
+                                                            : 'var(--pf-global--success-color--100)'
+                                                    }
+                                                />
+                                            </Td>
+                                            <Td dataLabel={DetailsColumns.IP}>
+                                                <Link
+                                                    to={`${MonitoringRoutesPaths.Connections}/${vanId}${MonitoringRoutesPaths.ConnectionsTopology}/${parent}/${id}`}
+                                                >
+                                                    {sourceHost}
+                                                </Link>
+                                            </Td>
+                                            <Td dataLabel={DetailsColumns.Port}>{sourcePort}</Td>
+                                            <Td dataLabel={DetailsColumns.Namespace}>
+                                                <Tooltip content={device?.rtype}>
+                                                    {device?.rtype === 'LISTENER' ? (
+                                                        <ConnectedIcon />
+                                                    ) : (
+                                                        <PluggedIcon />
+                                                    )}
+                                                </Tooltip>{' '}
+                                                {device?.name}
+                                            </Td>
+                                        </Tr>
+                                    ),
+                                )}
+                        </Tbody>
                     </TableComposable>
                 </Card>
             </StackItem>

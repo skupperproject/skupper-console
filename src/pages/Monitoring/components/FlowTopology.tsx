@@ -15,19 +15,20 @@ import LoadingPage from '@pages/shared/Loading';
 
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
-import TopologyMonitoringService from './FlowsTopology';
-import { MonitoringTopologyVanService } from './Topology.interfaces';
+import FlowTopologyContent from './FlowsTopologyContent';
+import { MonitoringTopologyVanService } from './FlowTopology.interfaces';
 
-const MonitoringTopology = function () {
+const FlowTopology = function () {
     const navigate = useNavigate();
-    const { id: vanId } = useParams();
+    const { id: vanId, idFlow } = useParams();
+
     const [refetchInterval, setRefetchInterval] = useState(0);
     const [svgTopologyComponent, setSvgTopologyComponent] =
         useState<MonitoringTopologyVanService>();
 
     const { data: devices, isLoading } = useQuery(
         [QueriesMonitoring.GetMonitoringTopologyFlows, vanId],
-        () => MonitorServices.fetchFlowsByVanId(vanId),
+        () => (vanId ? MonitorServices.fetchFlowsByVanId(vanId) : null),
         {
             refetchOnWindowFocus: false,
             refetchInterval,
@@ -37,8 +38,19 @@ const MonitoringTopology = function () {
 
     const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
         [QueriesMonitoring.GetMonitoringTopologyNetwork],
-        () => MonitorServices.fetchMonitoringTopology(),
+        () => MonitorServices.fetchFlowsTopology(),
         {
+            refetchOnWindowFocus: false,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: connection, isLoading: isLoadingRecords } = useQuery(
+        [QueriesMonitoring.GetMonitoringConnection],
+        () => (idFlow ? MonitorServices.fetchConnectionByFlowId(idFlow) : null),
+        {
+            cacheTime: 0,
             refetchOnWindowFocus: false,
             refetchInterval,
             onError: handleError,
@@ -73,9 +85,26 @@ const MonitoringTopology = function () {
         [routers?.nodes],
     );
 
+    const getConnectionTopology = () =>
+        devices?.filter(({ id }: { id: string }) => {
+            if (connection) {
+                if (id === connection.startFlow?.parent) {
+                    return true;
+                }
+
+                if (id === connection.endFlow?.parent) {
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+    const connectionTopology = getConnectionTopology();
+
     const deviceNodes = useMemo(
         () =>
-            devices?.map(({ id, name, rtype, flows, protocol }) => {
+            connectionTopology?.map(({ id, name, rtype, flows, protocol }) => {
                 const totalLatency = flows.reduce((acc, flow) => acc + flow.latency, 0);
                 const avgLatency = totalLatency / flows.length;
 
@@ -102,7 +131,7 @@ const MonitoringTopology = function () {
 
     const deviceLinks = useMemo(
         () =>
-            devices?.flatMap(({ id, rtype, parent, flows, protocol }) => {
+            connectionTopology?.flatMap(({ id, rtype, parent, flows, protocol }) => {
                 const bytes = flows.reduce((acc, flow) => acc + (flow.octets || 0), 0);
 
                 return [
@@ -122,8 +151,14 @@ const MonitoringTopology = function () {
     const panelRef = useCallback(
         (node: HTMLDivElement) => {
             const routerLinks = routers?.links || [];
-            if (node && deviceLinks && deviceNodes && routerNodes && routerLinks) {
-                const topologyServiceRef = TopologyMonitoringService(
+            if (
+                node &&
+                deviceLinks?.length &&
+                deviceNodes?.length &&
+                routerNodes?.length &&
+                routerLinks?.length
+            ) {
+                const topologyServiceRef = FlowTopologyContent(
                     node,
                     [...routerNodes, ...deviceNodes],
                     [...routerLinks, ...deviceLinks],
@@ -137,7 +172,7 @@ const MonitoringTopology = function () {
         [deviceLinks, deviceNodes, routerNodes, routers?.links],
     );
 
-    if (isLoading || isLoadingTopologyRoutersLinks) {
+    if (isLoading || isLoadingTopologyRoutersLinks || isLoadingRecords) {
         return <LoadingPage />;
     }
 
@@ -169,4 +204,4 @@ const MonitoringTopology = function () {
     );
 };
 
-export default MonitoringTopology;
+export default FlowTopology;

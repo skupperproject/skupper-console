@@ -19,3 +19,12 @@ export type Connection = {
 
 export type MonitoringTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
+
+interface extendedFlow extends Flow {
+    parentType?: string;
+}
+
+export interface MonitoringConnection {
+    startFlow?: extendedFlow;
+    endFlow?: Flow;
+}

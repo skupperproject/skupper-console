@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { UPDATE_INTERVAL } from 'config';
 
 import { MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
@@ -17,7 +18,7 @@ import { OverviewColumns } from './Overview.enum';
 const Overview = function () {
     const navigate = useNavigate();
 
-    const [refetchInterval, setRefetchInterval] = useState(0);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: vanServices, isLoading } = useQuery(
         QueriesMonitoring.GetVanAdresses,

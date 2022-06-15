@@ -1,7 +1,8 @@
 export enum Labels {
-    Listeners = 'Listeners',
-    Connectors = 'Connectors',
+    Devices = 'Devices',
     Flows = 'Log of service flows',
+    NoFlows = 'Please select a device to show the associated flows',
+    NoResult = 'No flows found',
 }
 
 export enum DetailsColumns {
