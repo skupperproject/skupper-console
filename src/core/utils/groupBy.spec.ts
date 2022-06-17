@@ -1,3 +1,5 @@
+import { expect } from '@jest/globals';
+
 import { groupBy } from './groupBy';
 
 describe('groupBy groupBy', () => {
