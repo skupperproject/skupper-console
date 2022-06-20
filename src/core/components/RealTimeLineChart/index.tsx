@@ -67,9 +67,9 @@ const RealTimeLineChart = memo(function ({ data, timestamp, options }: RealTimeL
                 height={chartConfig.height}
                 domainPadding={{ y: [10, 10] }}
                 padding={{
-                    bottom: 140,
+                    bottom: 200,
                     left: 90,
-                    right: 90,
+                    right: 20,
                     top: 0,
                 }}
                 width={chartConfig.width}

@@ -9,16 +9,24 @@ export interface MetricsProps {
     tcpConnectionsOut: Record<string, ServiceConnection>;
 }
 
-export interface MetricsChartProps {
+export interface CustomDonutChartProps {
     legend?: { name: string }[];
     legendOrientation?: 'horizontal' | 'vertical';
     legendPosition?: 'bottom' | 'right';
     data: { x: string; y: number }[];
     color?: ChartThemeColors;
+    options?: {
+        formatter?: Function;
+        showTitle?: boolean;
+    };
 }
 
-export interface MetricChartProps {
+export interface CustomDonutProps {
     data: { x: string; y: number }[];
     title: string;
     color?: ChartThemeColors;
+    options?: {
+        formatter?: Function;
+        showTitle?: boolean;
+    };
 }

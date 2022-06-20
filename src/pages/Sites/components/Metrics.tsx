@@ -6,9 +6,10 @@ import { Card, CardTitle, Split, SplitItem } from '@patternfly/react-core';
 import EmptyData from '@core/components/EmptyData';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
+import { formatTime } from '@core/utils/formatTime';
 
 import { MetricsLabels } from './Metrics.enum';
-import { MetricChartProps, MetricsChartProps, MetricsProps } from './Metrics.interfaces';
+import { CustomDonutProps, CustomDonutChartProps, MetricsProps } from './Metrics.interfaces';
 
 const CARD_HEIGHT = '350px';
 
@@ -19,17 +20,45 @@ const Metrics: FC<MetricsProps> = function ({
     tcpConnectionsIn,
     tcpConnectionsOut,
 }) {
-    const httpRequestsReceivedChartData = Object.entries(httpRequestsReceived)
+    const httpBytesReceivedChartData = Object.entries(httpRequestsReceived)
         .map(([siteName, { bytes_out }]) => ({
             x: siteName,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpRequestsSentChartData = Object.entries(httpRequestsSent)
+    const httpBytesSentChartData = Object.entries(httpRequestsSent)
         .map(([siteName, { bytes_out }]) => ({
             x: siteName,
             y: bytes_out,
+        }))
+        .filter(({ x }) => x !== name);
+
+    const httpLatencyReceivedChartData = Object.entries(httpRequestsReceived)
+        .map(([siteName, { latency_max }]) => ({
+            x: siteName,
+            y: latency_max,
+        }))
+        .filter(({ x }) => x !== name);
+
+    const httpLatencySentChartData = Object.entries(httpRequestsSent)
+        .map(([siteName, { latency_max }]) => ({
+            x: siteName,
+            y: latency_max,
+        }))
+        .filter(({ x }) => x !== name);
+
+    const httpRequestsReceivedChartData = Object.entries(httpRequestsReceived)
+        .map(([siteName, { requests }]) => ({
+            x: siteName,
+            y: requests || 0,
+        }))
+        .filter(({ x }) => x !== name);
+
+    const httpRequestsSentChartData = Object.entries(httpRequestsSent)
+        .map(([siteName, { requests }]) => ({
+            x: siteName,
+            y: requests || 0,
         }))
         .filter(({ x }) => x !== name);
 
@@ -48,55 +77,109 @@ const Metrics: FC<MetricsProps> = function ({
         .filter(({ x }) => x !== name);
 
     return (
-        <div className="pf-u-py-md">
-            {!!(tcpConnectionsInChartData.length || tcpConnectionsOutChartData.length) && (
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <MetricChart
-                            data={tcpConnectionsInChartData}
-                            title={MetricsLabels.TCPconnectionsIn}
-                        />
-                    </SplitItem>
+        <>
+            <div className="pf-u-mb-md">
+                {!!(tcpConnectionsInChartData.length || tcpConnectionsOutChartData.length) && (
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={tcpConnectionsInChartData}
+                                title={MetricsLabels.TCPconnectionsIn}
+                                options={{ showTitle: true }}
+                            />
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <MetricChart
-                            data={tcpConnectionsOutChartData}
-                            title={MetricsLabels.TCPconnectionsOut}
-                            color={ChartThemeColors.Orange}
-                        />
-                    </SplitItem>
-                </Split>
-            )}
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={tcpConnectionsOutChartData}
+                                title={MetricsLabels.TCPconnectionsOut}
+                                color={ChartThemeColors.Orange}
+                                options={{ showTitle: true }}
+                            />
+                        </SplitItem>
+                    </Split>
+                )}
 
-            {!!(httpRequestsReceivedChartData.length || httpRequestsSentChartData.length) && (
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <MetricChart
-                            data={httpRequestsReceivedChartData}
-                            title={MetricsLabels.HTTPbytesIn}
-                            color={ChartThemeColors.Green}
-                        />
-                    </SplitItem>
+                {!!(httpBytesReceivedChartData.length || httpBytesSentChartData.length) && (
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={httpBytesReceivedChartData}
+                                title={MetricsLabels.HTTPbytesIn}
+                                color={ChartThemeColors.Green}
+                                options={{ showTitle: true }}
+                            />
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <MetricChart
-                            data={httpRequestsSentChartData}
-                            title={MetricsLabels.HTTbytesOut}
-                            color={ChartThemeColors.Blue}
-                        />
-                    </SplitItem>
-                </Split>
-            )}
-        </div>
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={httpBytesSentChartData}
+                                title={MetricsLabels.HTTbytesOut}
+                                color={ChartThemeColors.Blue}
+                                options={{ showTitle: true }}
+                            />
+                        </SplitItem>
+                    </Split>
+                )}
+            </div>
+
+            <div className="pf-u-mb-md">
+                {!!(
+                    httpRequestsReceivedChartData.length ||
+                    httpRequestsSentChartData.length ||
+                    httpLatencyReceivedChartData.length ||
+                    httpLatencySentChartData.length
+                ) && (
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={httpRequestsReceivedChartData}
+                                title={MetricsLabels.HTTPMaxLatencyOut}
+                                color={ChartThemeColors.Purple}
+                                options={{ formatter: formatTime }}
+                            />
+                        </SplitItem>
+
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={httpRequestsSentChartData}
+                                title={MetricsLabels.HTTPrequestsSent}
+                                color={ChartThemeColors.Orange}
+                                options={{ formatter: formatTime }}
+                            />
+                        </SplitItem>
+
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={httpLatencyReceivedChartData}
+                                title={MetricsLabels.HTTPrequestsReceived}
+                                color={ChartThemeColors.Cyan}
+                                options={{ formatter: formatTime }}
+                            />
+                        </SplitItem>
+
+                        <SplitItem className="pf-u-w-50vw">
+                            <BytesChart
+                                data={httpLatencySentChartData}
+                                title={MetricsLabels.HTTPMaxLatencyIn}
+                                color={ChartThemeColors.Gray}
+                                options={{ formatter: formatTime }}
+                            />
+                        </SplitItem>
+                    </Split>
+                )}
+            </div>
+        </>
     );
 };
 
 export default Metrics;
 
-const MetricChart: FC<MetricChartProps> = function ({
+const BytesChart: FC<CustomDonutProps> = function ({
     data,
     title,
     color = ChartThemeColors.Purple,
+    options,
 }) {
     const legend = data.map(({ x }) => ({ name: x }));
 
@@ -104,7 +187,7 @@ const MetricChart: FC<MetricChartProps> = function ({
         <Card style={{ height: CARD_HEIGHT }}>
             <CardTitle>{title}</CardTitle>
             {data.length ? (
-                <MetricsChart data={data} color={color} legend={legend} />
+                <CustomDonutChart data={data} color={color} legend={legend} options={options} />
             ) : (
                 <EmptyData />
             )}
@@ -112,33 +195,44 @@ const MetricChart: FC<MetricChartProps> = function ({
     );
 };
 
-const MetricsChart: FC<MetricsChartProps> = function ({
+const CustomDonutChart: FC<CustomDonutChartProps> = function ({
     data,
     legend,
     legendOrientation = 'horizontal',
     legendPosition = 'bottom',
     color = ChartThemeColors.Purple,
+    options,
 }) {
-    const totalBytes = data.reduce((acc, { y }) => (acc = acc + y), 0);
+    const total = data.reduce((acc, { y }) => (acc = acc + y), 0);
 
     return (
         <ChartDonut
             height={350}
             width={700}
             data={data}
-            labels={({ datum }) => `${datum.x}: ${formatBytes(datum.y)}`}
+            labels={({ datum }) =>
+                `${datum.x}: ${
+                    options?.formatter ? options?.formatter(datum.y) : formatBytes(datum.y)
+                }`
+            }
             legendOrientation={legendOrientation}
             legendData={legend || []}
             legendPosition={legendPosition}
             legendAllowWrap={true}
             padding={{
-                bottom: 120,
+                bottom: 160,
                 left: 0,
                 right: 0, // Adjusted to accommodate legend
                 top: 0,
             }}
             themeColor={color}
-            title={formatBytes(totalBytes)}
+            title={
+                options?.showTitle
+                    ? options?.formatter
+                        ? options?.formatter(total)
+                        : formatBytes(total)
+                    : ''
+            }
         />
     );
 };
