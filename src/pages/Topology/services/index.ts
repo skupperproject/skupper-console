@@ -12,22 +12,24 @@ export const TopologyServices = {
     },
 
     getSiteNodes: (sites: Site[]) =>
-        sites?.map((node) => {
-            const positions = localStorage.getItem(node.siteId);
-            const fx = positions ? JSON.parse(positions).fx : null;
-            const fy = positions ? JSON.parse(positions).fy : null;
+        sites
+            ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
+            .map((node) => {
+                const positions = localStorage.getItem(node.siteId);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
 
-            return {
-                id: node.siteId,
-                name: node.siteName,
-                x: fx || 0,
-                y: fy || 0,
-                fx,
-                fy,
-                type: 'site',
-                group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
-            };
-        }),
+                return {
+                    id: node.siteId,
+                    name: node.siteName,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
+                    type: 'site',
+                    group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
+                };
+            }),
 
     getLinkSites: (sites: Site[]) =>
         sites?.flatMap(({ siteId: sourceId, connected }) =>

@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import SitesServices from '@pages/Sites/services';
+import { UPDATE_INTERVAL } from 'config';
 
 import TopologyGraph from '../components/Topology';
 import { TopologyViews } from '../components/topology.enum';
@@ -33,8 +34,8 @@ import TopologySiteDetails from './Details';
 
 const Topology = function () {
     const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState<number>(0);
-    const [svgTopologyComponent, setSvgTopologyComponent] = useState<TopologySVG>();
+    const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
+    const [svgTopologyComponentRef, setSvgTopologyComponentRef] = useState<TopologySVG>(null);
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
     const [isExpanded, setIsExpanded] = useState(false);
     const [selectedNode, setSelectedNode] = useState('');
@@ -47,11 +48,24 @@ const Topology = function () {
         onError: handleError,
     });
 
-    const handleExpand = (id: string) => {
-        setIsExpanded(selectedRef.current !== id ? !isExpanded : isExpanded);
-        setSelectedNode(id);
-        selectedRef.current = selectedRef.current !== id ? id : '';
-    };
+    const handleExpand = useCallback(
+        (id: string) => {
+            let shouldOpen = false;
+
+            if (selectedRef.current !== id) {
+                shouldOpen = true;
+            }
+
+            if (selectedRef.current === id) {
+                shouldOpen = isExpanded === false ? true : false;
+            }
+
+            setIsExpanded(shouldOpen);
+            setSelectedNode(id);
+            selectedRef.current = selectedRef.current !== id ? id : '';
+        },
+        [isExpanded],
+    );
 
     const handleCloseClick = () => {
         setIsExpanded(false);
@@ -83,18 +97,13 @@ const Topology = function () {
         handleCloseClick();
     }
 
-    const siteNodes = useMemo(
-        () => (sites ? TopologyServices.getSiteNodes(sites).sort((a, b) => a.group - b.group) : []),
-        [sites],
-    );
+    const siteNodes = useMemo(() => (sites ? TopologyServices.getSiteNodes(sites) : []), [sites]);
     const linkSites = useMemo(() => (sites ? TopologyServices.getLinkSites(sites) : []), [sites]);
 
     const serviceNodes = useMemo(
         () =>
             deployments?.deployments
-                ? TopologyServices.getServiceNodes(deployments?.deployments, siteNodes).sort(
-                      (a, b) => a.group - b.group,
-                  )
+                ? TopologyServices.getServiceNodes(deployments?.deployments, siteNodes)
                 : [],
         [deployments?.deployments, siteNodes],
     );
@@ -107,26 +116,34 @@ const Topology = function () {
         [deployments?.deploymentLinks],
     );
 
+    const nodes = topologyType === 'sites' ? siteNodes : serviceNodes;
+    const links = topologyType === 'sites' ? linkSites : linkServices;
+
     const panelRef = useCallback(
-        async (node: HTMLDivElement) => {
-            if (node && linkSites && siteNodes && serviceNodes && linkServices) {
-                node.replaceChildren();
-                const nodes = topologyType === 'sites' ? siteNodes : serviceNodes;
-                const links = topologyType === 'sites' ? linkSites : linkServices;
+        async (node: HTMLDivElement | null) => {
+            if (node) {
+                if (
+                    linkSites &&
+                    siteNodes &&
+                    serviceNodes &&
+                    linkServices &&
+                    !svgTopologyComponentRef?.isDragging()
+                ) {
+                    node.replaceChildren();
+                    const topologySitesRef = await TopologyGraph(
+                        node,
+                        nodes,
+                        links,
+                        node.getBoundingClientRect().width,
+                        node.getBoundingClientRect().height,
+                        handleExpand,
+                    );
 
-                const topologySitesRef = TopologyGraph(
-                    node,
-                    nodes,
-                    links,
-                    node.getBoundingClientRect().width,
-                    node.getBoundingClientRect().height,
-                    handleExpand,
-                );
-
-                setSvgTopologyComponent(await topologySitesRef);
+                    setSvgTopologyComponentRef(topologySitesRef);
+                }
             }
         },
-        [linkServices, linkSites, serviceNodes, siteNodes, topologyType],
+        [nodes, links, topologyType],
     );
 
     if (isLoading && isLoadingServices) {
@@ -134,15 +151,15 @@ const Topology = function () {
     }
 
     function handleZoomIn() {
-        svgTopologyComponent?.zoomIn();
+        svgTopologyComponentRef?.zoomIn();
     }
 
     function handleZoomOut() {
-        svgTopologyComponent?.zoomOut();
+        svgTopologyComponentRef?.zoomOut();
     }
 
     function handleResetView() {
-        svgTopologyComponent?.reset();
+        svgTopologyComponentRef?.reset();
     }
 
     const controlButtons = createTopologyControlButtons({

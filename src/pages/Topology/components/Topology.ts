@@ -9,11 +9,16 @@ import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 import server from '@assets/server.svg';
 import service from '@assets/service.svg';
 
-import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './Topology.interfaces';
+import {
+    TopologyNode,
+    TopologyLink,
+    TopologyLinkNormalized,
+    TopologySVG,
+} from './Topology.interfaces';
 
-const SITE_SIZE = 150;
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 40;
+let isDraggingNode = false;
 
 const TopologyGraph = async function (
     $node: HTMLElement,
@@ -22,7 +27,7 @@ const TopologyGraph = async function (
     boxWidth: number,
     boxHeight: number,
     onClick: Function,
-) {
+): Promise<TopologySVG> {
     if (!nodes.length) {
         return null;
     }
@@ -75,7 +80,12 @@ const TopologyGraph = async function (
             'link',
             forceLink<TopologyNode, TopologyLink>(links).id(({ id }) => id),
         )
-        .on('tick', ticked);
+        .on('tick', ticked)
+        .on('end', () => {
+            nodes.forEach(({ id, x, y }) =>
+                localStorage.setItem(id, JSON.stringify({ fx: x, fy: y })),
+            );
+        });
 
     // root
     const svgContainer = select($node)
@@ -199,7 +209,7 @@ const TopologyGraph = async function (
         node.fy = node.y;
 
         fixNodes(node.x, node.y);
-        // isDragging = true;
+        isDraggingNode = true;
     }
 
     function dragged({ x, y }: { x: number; y: number }, node: TopologyNode) {
@@ -214,10 +224,7 @@ const TopologyGraph = async function (
         }
 
         localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
-
-        node.fx = null;
-        node.fy = null;
-        // isDragging = false;
+        isDraggingNode = false;
     }
 
     function ticked() {
@@ -247,27 +254,10 @@ const TopologyGraph = async function (
         svgElement
             .selectAll<SVGSVGElement, TopologyNode>('.serviceNodeL')
             .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
-            .attr('y', ({ y }) => validatePosition(y - SERVICE_SIZE * 1.2, maxSvgPosY, minSvgPosY));
+            .attr('y', ({ y }) => validatePosition(y + SERVICE_SIZE, maxSvgPosY, minSvgPosY));
 
         svgElement
             .selectAll<SVGSVGElement, TopologyLinkNormalized>('.serviceLink')
-            .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
-            .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
-            .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
-            .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
-
-        svgElement
-            .selectAll<SVGSVGElement, TopologyNode>('.siteNode')
-            .attr('x', ({ x }) => validatePosition(x - SITE_SIZE / 2, maxSvgPosX, minSvgPosX))
-            .attr('y', ({ y }) => validatePosition(y - SITE_SIZE / 2, maxSvgPosY, minSvgPosY));
-
-        svgElement
-            .selectAll<SVGSVGElement, TopologyNode>('.siteNodeL')
-            .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
-            .attr('y', ({ y }) => validatePosition(y - SITE_SIZE / 2 - 10, maxSvgPosY, minSvgPosY));
-
-        svgElement
-            .selectAll<SVGSVGElement, TopologyLinkNormalized>('.siteLink')
             .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
             .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
             .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
@@ -297,10 +287,11 @@ const TopologyGraph = async function (
         }
     }
 
-    return Object.assign(svgContainer.node(), {
+    return Object.assign(svgContainer.node() as SVGSVGElement, {
         zoomIn: () => svgContainer.transition().duration(750).call(initZoom.scaleBy, 1.5),
         zoomOut: () => svgContainer.transition().duration(750).call(initZoom.scaleBy, 0.5),
         reset,
+        isDragging: () => isDraggingNode,
     });
 };
 
