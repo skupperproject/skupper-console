@@ -1,6 +1,6 @@
 import { drag } from 'd3-drag';
 import { xml } from 'd3-fetch';
-import { forceSimulation, forceCenter, forceManyBody, forceLink, forceX, forceY } from 'd3-force';
+import { forceSimulation, forceCenter, forceLink, forceX, forceY } from 'd3-force';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
@@ -48,14 +48,14 @@ const TopologyGraph = async function (
     const yScale = scaleOrdinal().domain(domainValues).range(rangeValuesY);
     const color = scaleOrdinal(schemeCategory10).domain(domainValues);
 
-    // let isDragging = false;
-    const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>(nodes)
-        .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2).strength(0))
-        .force('charge', forceManyBody())
+    const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>()
+        .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2))
+        .force('charge', null)
+        .alpha(0.1)
         .force(
             'x',
             forceX<TopologyNode>()
-                .strength(0.3)
+                .strength(0.7)
                 .x(function ({ group, fx }) {
                     if (fx) {
                         return fx;
@@ -67,7 +67,7 @@ const TopologyGraph = async function (
         .force(
             'y',
             forceY<TopologyNode>()
-                .strength(0.3)
+                .strength(0.7)
                 .y(function ({ group, fy }) {
                     if (fy) {
                         return fy;
@@ -78,14 +78,19 @@ const TopologyGraph = async function (
         )
         .force(
             'link',
-            forceLink<TopologyNode, TopologyLink>(links).id(({ id }) => id),
+            forceLink<TopologyNode, TopologyLink>().id(({ id }) => id),
         )
-        .on('tick', ticked)
+
         .on('end', () => {
-            nodes.forEach(({ id, x, y }) =>
-                localStorage.setItem(id, JSON.stringify({ fx: x, fy: y })),
-            );
+            nodes.forEach((node) => {
+                node.fx = node.x;
+                node.fy = node.y;
+                localStorage.setItem(node.id, JSON.stringify({ fx: node.fx, fy: node.fy }));
+            });
         });
+
+    simulation.nodes(nodes).on('tick', ticked);
+    simulation.force<any>('link')?.links(links);
 
     // root
     const svgContainer = select($node)
