@@ -1,29 +1,29 @@
 import React, { FC, useState } from 'react';
 
-import { Divider, Panel, Text, TextContent, Title, TitleSizes } from '@patternfly/react-core';
+import { Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
 import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { formatBytes } from '@core/utils/formatBytes';
-import DeploymentsServices from '@pages/Deployments/services';
-import { QueriesDeployments } from '@pages/Deployments/services/deployments.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Connections.enum';
+import SitesServices from '@pages/Sites/services';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { UPDATE_INTERVAL } from 'config';
 
-interface TopologyDeploymentDetailsProps {
-    id?: string;
+interface TopologySiteDetailsProps {
+    id: string;
 }
 
-const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function ({ id }) {
+const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
-    const { data: deployment, isLoading } = useQuery(
-        [QueriesDeployments.GetDeployments, id],
-        () => DeploymentsServices.fetchDeployment(id),
+    const { data: site, isLoading } = useQuery(
+        [QueriesSites.GetSite, id],
+        () => SitesServices.fetchSite(id),
         {
             refetchInterval,
             onError: handleError,
@@ -43,25 +43,27 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
         return null;
     }
 
-    if (!deployment) {
+    if (!site) {
         return null;
     }
 
-    const httpRequestsReceivedEntries = Object.values(deployment.httpRequestsReceived);
-    const httpRequestsSentEntries = Object.values(deployment.httpRequestsSent);
-    const tcpConnectionsInEntries = Object.values(deployment.tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.values(deployment.tcpConnectionsOut);
+    const httpRequestsReceivedEntries = Object.entries(site.httpRequestsReceived);
+    const httpRequestsSentEntries = Object.entries(site.httpRequestsSent);
+    const tcpConnectionsInEntries = Object.entries(site.tcpConnectionsIn);
+    const tcpConnectionsOutEntries = Object.entries(site.tcpConnectionsOut);
 
     return (
         <Panel>
-            <Title headingLevel="h2" size={TitleSizes['4xl']} className="pf-u-mb-md">
-                {capitalizeFirstLetter(deployment.site.site_name)}/
-                {capitalizeFirstLetter(deployment.service.address)}
-            </Title>
-            <Text component="h3" style={{ color: 'var(--pf-global--Color--200)' }}>
-                {deployment.site.site_name} ● {deployment.service.address}
-            </Text>
-            <Divider className="pf-u-mt-xs" />
+            <Tooltip content={site.siteName}>
+                <Title
+                    headingLevel="h1"
+                    size={TitleSizes['2xl']}
+                    className="pf-u-mb-md text-ellipsis"
+                    style={{ width: '300px' }}
+                >
+                    {capitalizeFirstLetter(site.siteName)}
+                </Title>
+            </Tooltip>
             <TextContent className="pf-u-mt-md">
                 {(!!httpRequestsSentEntries.length || !!httpRequestsReceivedEntries.length) && (
                     <>
@@ -81,11 +83,11 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
                                         <Th>{ConnectionsColumns.Requests}</Th>
                                     </Tr>
                                 </Thead>
-                                {httpRequestsSentEntries.map((info) => (
+                                {httpRequestsSentEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td dataLabel={ConnectionsColumns.Name}>
-                                                {`${info.client}`}
+                                                {`${siteName}`}
                                             </Td>
                                             <Td
                                                 dataLabel={ConnectionsColumns.BytesIn}
@@ -114,12 +116,12 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
                                         <Th>{ConnectionsColumns.Requests}</Th>
                                     </Tr>
                                 </Thead>
-                                {httpRequestsReceivedEntries.map((info) => (
+                                {httpRequestsReceivedEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td
                                                 dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
+                                            >{`${siteName}`}</Td>
                                             <Td
                                                 dataLabel={ConnectionsColumns.BytesIn}
                                             >{`${formatBytes(info.bytes_out)}`}</Td>
@@ -150,12 +152,12 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
                                         <Th>{ConnectionsColumns.BytesOut}</Th>
                                     </Tr>
                                 </Thead>
-                                {tcpConnectionsOutEntries.map((info) => (
+                                {tcpConnectionsOutEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td
                                                 dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
+                                            >{`${siteName}`}</Td>
                                             <Td
                                                 dataLabel={ConnectionsColumns.Bytes}
                                             >{`${formatBytes(info.bytes_out)}`}</Td>
@@ -178,12 +180,12 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
                                         <Th>{ConnectionsColumns.BytesOut}</Th>
                                     </Tr>
                                 </Thead>
-                                {tcpConnectionsInEntries.map((info) => (
+                                {tcpConnectionsInEntries.map(([siteName, info]) => (
                                     <Tbody key={info.id}>
                                         <Tr>
                                             <Td
                                                 dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
+                                            >{`${siteName}`}</Td>
                                             <Td
                                                 dataLabel={ConnectionsColumns.Bytes}
                                             >{`${formatBytes(info.bytes_out)}`}</Td>
@@ -199,4 +201,4 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
     );
 };
 
-export default TopologyDeploymentDetails;
+export default TopologySiteDetails;

@@ -1,10 +1,10 @@
 export enum MetricsLabels {
-    HTTPbytesIn = 'HTTP Bytes Received',
-    HTTbytesOut = 'HTTP Bytes Sent',
-    TCPconnectionsIn = 'TCP traffic received',
-    TCPconnectionsOut = 'TCP traffic sent',
-    HTTPMaxLatencyOut = 'Max Latency sent',
-    HTTPMaxLatencyIn = 'Max Latency received',
-    HTTPrequestsReceived = 'HTTP requests received',
-    HTTPrequestsSent = 'HTTP requests sent',
+    HTTPbytesIn = 'HTTP Bytes Received from',
+    HTTbytesOut = 'HTTP Bytes sent to',
+    TCPconnectionsIn = 'TCP traffic received from',
+    TCPconnectionsOut = 'TCP traffic sent to',
+    HTTPMaxLatencyOut = 'Max Latency sent to',
+    HTTPMaxLatencyIn = 'Max Latency received from',
+    HTTPrequestsReceived = 'HTTP requests received from',
+    HTTPrequestsSent = 'HTTP requests sent to',
 }

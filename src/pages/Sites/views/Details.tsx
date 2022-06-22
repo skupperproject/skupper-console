@@ -107,7 +107,11 @@ const SiteDetail = function () {
                     eventKey={0}
                     title={<TabTitleText>{SitesDetailsLabels.TabTraffic}</TabTitleText>}
                 >
-                    <Connections httpRequests={site.httpRequests} tcpRequests={site.tcpRequests} />
+                    <Connections
+                        siteName={site.siteName}
+                        httpRequests={site.httpRequests}
+                        tcpRequests={site.tcpRequests}
+                    />
                 </Tab>
                 <Tab
                     eventKey={1}

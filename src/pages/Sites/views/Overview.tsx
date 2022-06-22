@@ -40,29 +40,3 @@ const Overview = function () {
 };
 
 export default Overview;
-
-// function getTotalBytesBySite({
-//     direction,
-//     deploymentLinks,
-//     siteId,
-// }: {
-//     direction: string;
-//     deploymentLinks: DeploymentLinks[];
-//     siteId: string;
-// }) {
-//     const stat = 'bytes_out';
-//     const from = direction === 'out' ? 'source' : 'target';
-//     const to = direction === 'out' ? 'target' : 'source';
-
-//     const bytesBySite = deploymentLinks.reduce((acc, deploymentLink) => {
-//         const idFrom = deploymentLink[from].site.site_id;
-//         const idTo = deploymentLink[to].site.site_id;
-//         if (idFrom !== idTo && idFrom === siteId) {
-//             acc.push({ name: '', totalBytes: deploymentLink.request[stat] });
-//         }
-
-//         return acc;
-//     }, [] as TotalByteProps[]);
-
-//     return bytesBySite;
-// }

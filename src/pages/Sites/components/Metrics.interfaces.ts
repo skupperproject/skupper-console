@@ -21,7 +21,7 @@ export interface CustomDonutChartProps {
     };
 }
 
-export interface CustomDonutProps {
+export interface BytesChartProps {
     data: { x: string; y: number }[];
     title: string;
     color?: ChartThemeColors;

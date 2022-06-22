@@ -1,6 +1,14 @@
 import React, { FC } from 'react';
 
-import { ChartDonut } from '@patternfly/react-charts';
+import {
+    Chart,
+    ChartAxis,
+    ChartBar,
+    ChartDonut,
+    ChartGroup,
+    ChartThemeColor,
+    ChartVoronoiContainer,
+} from '@patternfly/react-charts';
 import { Card, CardTitle, Split, SplitItem } from '@patternfly/react-core';
 
 import EmptyData from '@core/components/EmptyData';
@@ -9,7 +17,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
 import { MetricsLabels } from './Metrics.enum';
-import { CustomDonutProps, CustomDonutChartProps, MetricsProps } from './Metrics.interfaces';
+import { BytesChartProps, MetricsProps } from './Metrics.interfaces';
 
 const CARD_HEIGHT = '350px';
 
@@ -124,44 +132,43 @@ const Metrics: FC<MetricsProps> = function ({
             </div>
 
             <div className="pf-u-mb-md">
-                {!!(
-                    httpRequestsReceivedChartData.length ||
-                    httpRequestsSentChartData.length ||
-                    httpLatencyReceivedChartData.length ||
-                    httpLatencySentChartData.length
-                ) && (
+                {!!(httpRequestsReceivedChartData.length || httpRequestsSentChartData.length) && (
                     <Split hasGutter>
                         <SplitItem className="pf-u-w-50vw">
-                            <BytesChart
+                            <RequestsLatenciesChart
                                 data={httpRequestsReceivedChartData}
-                                title={MetricsLabels.HTTPMaxLatencyOut}
+                                title={MetricsLabels.HTTPrequestsReceived}
                                 color={ChartThemeColors.Purple}
-                                options={{ formatter: formatTime }}
                             />
                         </SplitItem>
 
                         <SplitItem className="pf-u-w-50vw">
-                            <BytesChart
+                            <RequestsLatenciesChart
                                 data={httpRequestsSentChartData}
                                 title={MetricsLabels.HTTPrequestsSent}
                                 color={ChartThemeColors.Orange}
-                                options={{ formatter: formatTime }}
                             />
                         </SplitItem>
+                    </Split>
+                )}
+            </div>
 
+            <div className="pf-u-mb-md">
+                {!!(httpLatencyReceivedChartData.length || httpLatencySentChartData.length) && (
+                    <Split hasGutter>
                         <SplitItem className="pf-u-w-50vw">
-                            <BytesChart
+                            <RequestsLatenciesChart
                                 data={httpLatencyReceivedChartData}
-                                title={MetricsLabels.HTTPrequestsReceived}
+                                title={MetricsLabels.HTTPMaxLatencyIn}
                                 color={ChartThemeColors.Cyan}
                                 options={{ formatter: formatTime }}
                             />
                         </SplitItem>
 
                         <SplitItem className="pf-u-w-50vw">
-                            <BytesChart
+                            <RequestsLatenciesChart
                                 data={httpLatencySentChartData}
-                                title={MetricsLabels.HTTPMaxLatencyIn}
+                                title={MetricsLabels.HTTPMaxLatencyOut}
                                 color={ChartThemeColors.Gray}
                                 options={{ formatter: formatTime }}
                             />
@@ -175,19 +182,47 @@ const Metrics: FC<MetricsProps> = function ({
 
 export default Metrics;
 
-const BytesChart: FC<CustomDonutProps> = function ({
+const BytesChart: FC<BytesChartProps> = function ({
     data,
     title,
     color = ChartThemeColors.Purple,
     options,
 }) {
     const legend = data.map(({ x }) => ({ name: x }));
+    const total = data.reduce((acc, { y }) => (acc = acc + y), 0);
 
     return (
         <Card style={{ height: CARD_HEIGHT }}>
             <CardTitle>{title}</CardTitle>
             {data.length ? (
-                <CustomDonutChart data={data} color={color} legend={legend} options={options} />
+                <ChartDonut
+                    height={350}
+                    width={700}
+                    data={data}
+                    labels={({ datum }) =>
+                        `${datum.x}: ${
+                            options?.formatter ? options?.formatter(datum.y) : formatBytes(datum.y)
+                        }`
+                    }
+                    legendOrientation="horizontal"
+                    legendData={legend || []}
+                    legendPosition="bottom"
+                    legendAllowWrap={true}
+                    padding={{
+                        bottom: 160,
+                        left: 0,
+                        right: 0, // Adjusted to accommodate legend
+                        top: 0,
+                    }}
+                    themeColor={color}
+                    title={
+                        options?.showTitle
+                            ? options?.formatter
+                                ? options?.formatter(total)
+                                : formatBytes(total)
+                            : ''
+                    }
+                />
             ) : (
                 <EmptyData />
             )}
@@ -195,44 +230,60 @@ const BytesChart: FC<CustomDonutProps> = function ({
     );
 };
 
-const CustomDonutChart: FC<CustomDonutChartProps> = function ({
+const RequestsLatenciesChart: FC<BytesChartProps> = function ({
     data,
-    legend,
-    legendOrientation = 'horizontal',
-    legendPosition = 'bottom',
-    color = ChartThemeColors.Purple,
+    title,
+    color = ChartThemeColor.multiOrdered,
     options,
 }) {
-    const total = data.reduce((acc, { y }) => (acc = acc + y), 0);
+    const legend = data.map(({ x }) => ({ name: x }));
 
     return (
-        <ChartDonut
-            height={350}
-            width={700}
-            data={data}
-            labels={({ datum }) =>
-                `${datum.x}: ${
-                    options?.formatter ? options?.formatter(datum.y) : formatBytes(datum.y)
-                }`
-            }
-            legendOrientation={legendOrientation}
-            legendData={legend || []}
-            legendPosition={legendPosition}
-            legendAllowWrap={true}
-            padding={{
-                bottom: 160,
-                left: 0,
-                right: 0, // Adjusted to accommodate legend
-                top: 0,
-            }}
-            themeColor={color}
-            title={
-                options?.showTitle
-                    ? options?.formatter
-                        ? options?.formatter(total)
-                        : formatBytes(total)
-                    : ''
-            }
-        />
+        <Card style={{ height: CARD_HEIGHT }}>
+            <CardTitle>{title}</CardTitle>
+            <Chart
+                containerComponent={
+                    <ChartVoronoiContainer
+                        labels={({ datum }) =>
+                            `${datum.x}: ${
+                                options?.formatter ? options?.formatter(datum.y) : datum.y
+                            }`
+                        }
+                        constrainToVisibleArea
+                    />
+                }
+                domainPadding={{ x: [10, 15] }}
+                legendData={legend}
+                legendPosition="bottom-left"
+                padding={{
+                    bottom: 160,
+                    left: 10,
+                    right: 10,
+                    top: 0,
+                }}
+                themeColor={color}
+                height={350}
+            >
+                <ChartAxis
+                    style={{
+                        tickLabels: { fontSize: 12 },
+                    }}
+                />
+                <ChartAxis
+                    dependentAxis
+                    showGrid
+                    fixLabelOverlap={true}
+                    style={{
+                        tickLabels: { fontSize: 12 },
+                    }}
+                    tickFormat={(tick) =>
+                        options?.formatter ? options?.formatter(tick) : Math.ceil(tick)
+                    }
+                />
+                <ChartGroup horizontal>
+                    <ChartBar data={data} />
+                </ChartGroup>
+            </Chart>
+        </Card>
     );
 };

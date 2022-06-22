@@ -127,6 +127,7 @@ const TopologyGraph = async function (
         .attr('class', 'serviceLink')
         .style('stroke', 'var(--pf-global--palette--black-400)')
         .style('stroke-width', '1px')
+        .style('stroke-dasharray', ({ source }: any) => source.type === 'site' && '8, 8')
         .attr('marker-end', ({ type }) =>
             type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
         );

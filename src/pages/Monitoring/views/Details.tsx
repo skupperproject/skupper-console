@@ -36,8 +36,8 @@ import { DetailsColumns, Labels } from './Details.enum';
 
 import './Details.scss';
 
-export const MAX_WIDTH_DETAILS_TABLE = 600;
 export const MAX_HEIGHT_DETAILS_TABLE = 305;
+export const MAX_WIDTH_DETAILS_TABLE = 600;
 
 const DetailsView = function () {
     const navigate = useNavigate();
@@ -113,9 +113,7 @@ const DetailsView = function () {
         <Stack hasGutter>
             <StackItem>
                 <Card>
-                    <CardTitle>
-                        <ConnectedIcon /> {Labels.Devices}
-                    </CardTitle>
+                    <CardTitle>{Labels.Devices}</CardTitle>
                     <TableComposable variant="compact" borders={false} className="flow-devices">
                         <Thead>
                             <Tr>
@@ -145,7 +143,9 @@ const DetailsView = function () {
                                         className={handleSelectRow(id)}
                                     >
                                         <Td dataLabel={DetailsColumns.Type}>
-                                            <Tooltip content={rtype}>
+                                            <Tooltip
+                                                content={rtype === 'LISTENER' ? 'SERVER' : 'CLIENT'}
+                                            >
                                                 {rtype === 'LISTENER' ? (
                                                     <ConnectedIcon />
                                                 ) : (

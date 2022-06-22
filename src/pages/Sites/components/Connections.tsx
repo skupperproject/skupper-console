@@ -11,16 +11,20 @@ import { formatTime } from '@core/utils/formatTime';
 
 import { SitesRoutesPaths } from '../sites.enum';
 import { ConnectionsColumns, ConnectionsLabels, HTTPConnectionsColumns } from './Connections.enum';
-import { ConnectionProps, ConnectionPropsHTTP, ConnectionsProps } from './Connections.interfaces';
+import {
+    ConnectionPropsTCP,
+    ConnectionPropsHTTP,
+    ConnectionsProps,
+} from './Connections.interfaces';
 
-const Connections: FC<ConnectionsProps> = function ({ httpRequests, tcpRequests }) {
+const Connections: FC<ConnectionsProps> = function ({ siteName, httpRequests, tcpRequests }) {
     return (
         <Stack hasGutter>
             {!!tcpRequests.length && (
                 <StackItem>
                     <Card isFullHeight isRounded>
                         <CardTitle>{ConnectionsLabels.TCPprotocol}</CardTitle>
-                        <TCPTable rows={tcpRequests} />
+                        <TCPTable rows={tcpRequests} siteName={siteName} />
                     </Card>
                 </StackItem>
             )}
@@ -29,7 +33,7 @@ const Connections: FC<ConnectionsProps> = function ({ httpRequests, tcpRequests 
                 <StackItem>
                     <Card isRounded>
                         <CardTitle>{ConnectionsLabels.HTTPprotocol}</CardTitle>
-                        <HTTPtable rows={httpRequests} />
+                        <HTTPtable rows={httpRequests} siteName={siteName} />
                     </Card>
                 </StackItem>
             )}
@@ -39,7 +43,7 @@ const Connections: FC<ConnectionsProps> = function ({ httpRequests, tcpRequests 
 
 export default Connections;
 
-const TCPTable: FC<ConnectionProps> = function ({ rows }) {
+const TCPTable: FC<ConnectionPropsTCP> = function ({ rows, siteName }) {
     return (
         <TableComposable
             className="network-table"
@@ -66,10 +70,9 @@ const TCPTable: FC<ConnectionProps> = function ({ rows }) {
                 <Tbody key={id}>
                     <Tr>
                         <Td dataLabel={ConnectionsColumns.Name}>
-                            <Link to={`${SitesRoutesPaths.Details}/${id}`}>
-                                <ResourceIcon type="site" />
-                                {name}
-                            </Link>
+                            <ResourceIcon type="site" />
+                            {siteName} {' -> '}
+                            <Link to={`${SitesRoutesPaths.Details}/${id}`}>{name}</Link>
                         </Td>
                         <Td dataLabel={ConnectionsColumns.Ip}>{`${ip}`}</Td>
                         <Td dataLabel={ConnectionsColumns.BytesIn}>
@@ -85,7 +88,7 @@ const TCPTable: FC<ConnectionProps> = function ({ rows }) {
     );
 };
 
-const HTTPtable: FC<ConnectionPropsHTTP> = function ({ rows }) {
+const HTTPtable: FC<ConnectionPropsHTTP> = function ({ rows, siteName }) {
     return (
         <TableComposable
             className="network-table"
@@ -114,7 +117,11 @@ const HTTPtable: FC<ConnectionPropsHTTP> = function ({ rows }) {
             {rows.map((row) => (
                 <Tbody key={row.id}>
                     <Tr>
-                        <Td dataLabel={HTTPConnectionsColumns.Name}>{`${row.name}`}</Td>
+                        <Td dataLabel={HTTPConnectionsColumns.Name}>
+                            <ResourceIcon type="site" />
+                            {siteName} {' -> '}
+                            <Link to={`${SitesRoutesPaths.Details}/${row.id}`}>{row.name}</Link>
+                        </Td>
                         <Td dataLabel={HTTPConnectionsColumns.RequestsCountSent}>
                             {`${row.requestsCountSent || '-'}`}
                         </Td>

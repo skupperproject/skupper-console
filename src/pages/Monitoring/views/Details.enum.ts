@@ -1,5 +1,5 @@
 export enum Labels {
-    Devices = 'Devices',
+    Devices = 'Clients & Servers',
     Flows = 'Log of service flows',
     NoFlows = 'Please select a device to show the associated flows',
     NoResult = 'No flows found',

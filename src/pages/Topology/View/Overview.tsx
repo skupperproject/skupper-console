@@ -24,13 +24,13 @@ import LoadingPage from '@pages/shared/Loading';
 import SitesServices from '@pages/Sites/services';
 import { UPDATE_INTERVAL } from 'config';
 
+import TopologyDeploymentDetails from '../components/DetailsDeployment';
+import TopologySiteDetails from '../components/DetailsSite';
 import TopologyGraph from '../components/Topology';
-import { TopologyViews } from '../components/topology.enum';
+import { TopologyViews } from '../components/Topology.enum';
 import { TopologySVG } from '../components/Topology.interfaces';
 import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
-import TopologyDeploymentDetails from './DeploymentDetails';
-import TopologySiteDetails from './Details';
 
 const Topology = function () {
     const navigate = useNavigate();
