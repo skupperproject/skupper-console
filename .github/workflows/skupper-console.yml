@@ -7,10 +7,6 @@ on:
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
-        env:
-            ENABLE_MOCK_SERVER: true
-            API_HOST: ${{secrets.API_HOST}}
-            API_HOST_FLOW_COLLECTOR: ${{secrets.API_HOST_FLOW_COLLECTOR}}
         steps:
             - name: Checkout 🛎️
               uses: actions/checkout@v3
