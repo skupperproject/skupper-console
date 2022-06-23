@@ -55,7 +55,6 @@ const TCPTable: FC<ConnectionPropsTCP> = function ({ rows, siteName }) {
             <Thead>
                 <Tr>
                     <Th>{ConnectionsColumns.Name}</Th>
-                    <Th>{ConnectionsColumns.Ip}</Th>
                     <Th>
                         <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
                         {ConnectionsColumns.BytesIn}
@@ -66,7 +65,7 @@ const TCPTable: FC<ConnectionPropsTCP> = function ({ rows, siteName }) {
                     </Th>
                 </Tr>
             </Thead>
-            {rows.map(({ id, ip, name, byteIn, byteOut }) => (
+            {rows.map(({ id, name, byteIn, byteOut }) => (
                 <Tbody key={id}>
                     <Tr>
                         <Td dataLabel={ConnectionsColumns.Name}>
@@ -74,7 +73,6 @@ const TCPTable: FC<ConnectionPropsTCP> = function ({ rows, siteName }) {
                             {siteName} {' -> '}
                             <Link to={`${SitesRoutesPaths.Details}/${id}`}>{name}</Link>
                         </Td>
-                        <Td dataLabel={ConnectionsColumns.Ip}>{`${ip}`}</Td>
                         <Td dataLabel={ConnectionsColumns.BytesIn}>
                             {byteIn ? `${formatBytes(byteIn)}` : '-'}
                         </Td>

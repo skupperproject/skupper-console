@@ -17,6 +17,8 @@ To develop the console using external APIs from a skupper network
 
 > `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
+Both skupper and the collector need enable the CORS. We can do that doing kubectl set env USE_CORS=yes for each of them
+
 **remember to enable CORS from the APIs side**
 
 ## Tests
@@ -40,5 +42,6 @@ To develop the console using external APIs from a skupper network
 
 Everytime you create a build we can pass ENV_VARIABLES:
 
-> `ENABLE_MOCK_SERVER=true` - the app run use mock data
-> `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn build`  - the app run use data from remote endpoints
+> `ENABLE_MOCK_SERVER=true` - the app use mock data
+
+> `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url>`  - the app use data from remote endpoints
