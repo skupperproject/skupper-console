@@ -15,7 +15,7 @@ and open <http://localhosst:3000> from the browser
 
 To develop the console using external APIs from a skupper network
 
-> `API_HOST=<url root apis> yarn start`
+> `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
 **remember to enable CORS from the APIs side**
 
@@ -38,10 +38,7 @@ To develop the console using external APIs from a skupper network
 
 #### build
 
-To build the console using mock data type  in the terminal
+Everytime you create a build we can pass ENV_VARIABLES:
 
-> `ENABLE_MOCK_SERVER=true yarn build`
-
-To build the console using external APIs
-
-> `API_HOST=<url root apis> ENABLE_MOCK_SERVER=true yarn build`
+> `ENABLE_MOCK_SERVER=true` - the app run use mock data
+> `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn build`  - the app run use data from remote endpoints
