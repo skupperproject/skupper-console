@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import {
+    Divider,
     Drawer,
     DrawerActions,
     DrawerCloseButton,
@@ -8,7 +9,12 @@ import {
     DrawerHead,
     DrawerPanelBody,
     DrawerPanelContent,
+    Flex,
+    Panel,
     Radio,
+    Text,
+    TextContent,
+    TextVariants,
 } from '@patternfly/react-core';
 import {
     createTopologyControlButtons,
@@ -31,6 +37,7 @@ import { TopologyViews } from '../components/Topology.enum';
 import { TopologySVG } from '../components/Topology.interfaces';
 import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
+import { TopologyOverviewLabels } from './Overview.enum';
 
 const Topology = function () {
     const navigate = useNavigate();
@@ -47,6 +54,24 @@ const Topology = function () {
         refetchInterval,
         onError: handleError,
     });
+
+    const { data: deployments, isLoading: isLoadingServices } = useQuery(
+        QueryTopology.GetDeployments,
+        TopologyServices.fetchDeployments,
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+        const route = httpStatus
+            ? ErrorRoutesPaths.error[httpStatus]
+            : ErrorRoutesPaths.ErrConnection;
+
+        setRefetchInterval(0);
+        navigate(route);
+    }
 
     const handleExpand = useCallback(
         (id: string) => {
@@ -73,83 +98,6 @@ const Topology = function () {
         selectedRef.current = '';
     };
 
-    const { data: deployments, isLoading: isLoadingServices } = useQuery(
-        QueryTopology.GetDeployments,
-        TopologyServices.fetchDeployments,
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
-    }
-
-    function handleChangeTopologyType(_: boolean, event: React.FormEvent<HTMLInputElement>) {
-        const { value } = event.currentTarget;
-        setTopologyType(value);
-        handleCloseClick();
-    }
-
-    const siteNodes = useMemo(() => (sites ? TopologyServices.getSiteNodes(sites) : []), [sites]);
-    const linkSites = useMemo(() => (sites ? TopologyServices.getLinkSites(sites) : []), [sites]);
-
-    const serviceNodes = useMemo(
-        () =>
-            deployments?.deployments
-                ? TopologyServices.getServiceNodes(deployments?.deployments, siteNodes)
-                : [],
-        [deployments?.deployments, siteNodes],
-    );
-
-    const linkServices = useMemo(
-        () =>
-            deployments?.deploymentLinks
-                ? TopologyServices.getLinkServices(deployments?.deploymentLinks)
-                : [],
-        [deployments?.deploymentLinks],
-    );
-
-    const nodes = topologyType === 'sites' ? siteNodes : serviceNodes;
-    const links = topologyType === 'sites' ? linkSites : linkServices;
-
-    const panelRef = useCallback(
-        async (node: HTMLDivElement | null) => {
-            if (node) {
-                if (
-                    linkSites &&
-                    siteNodes &&
-                    serviceNodes &&
-                    linkServices &&
-                    !svgTopologyComponentRef?.isDragging()
-                ) {
-                    node.replaceChildren();
-                    const topologySitesRef = await TopologyGraph(
-                        node,
-                        nodes,
-                        links,
-                        node.getBoundingClientRect().width,
-                        node.getBoundingClientRect().height,
-                        handleExpand,
-                    );
-
-                    setSvgTopologyComponentRef(topologySitesRef);
-                }
-            }
-        },
-        [nodes, links, topologyType],
-    );
-
-    if (isLoading && isLoadingServices) {
-        return <LoadingPage />;
-    }
-
     function handleZoomIn() {
         svgTopologyComponentRef?.zoomIn();
     }
@@ -160,6 +108,64 @@ const Topology = function () {
 
     function handleResetView() {
         svgTopologyComponentRef?.reset();
+    }
+
+    function handleChangeTopologyType(_: boolean, event: React.FormEvent<HTMLInputElement>) {
+        const { value } = event.currentTarget;
+        setTopologyType(value);
+        handleCloseClick();
+    }
+
+    const nodesSites = useMemo(() => (sites ? TopologyServices.getNodesSites(sites) : []), [sites]);
+    const linkSites = useMemo(() => (sites ? TopologyServices.getLinkSites(sites) : []), [sites]);
+
+    const serviceNodes = useMemo(
+        () =>
+            deployments?.deployments
+                ? TopologyServices.getServiceNodes(deployments?.deployments, nodesSites)
+                : [],
+        [deployments?.deployments, nodesSites],
+    );
+
+    const linkServices = useMemo(
+        () =>
+            deployments?.deploymentLinks
+                ? TopologyServices.getLinkServices(deployments?.deploymentLinks)
+                : [],
+        [deployments?.deploymentLinks],
+    );
+
+    const nodes = topologyType === 'sites' ? nodesSites : serviceNodes;
+    const links = topologyType === 'sites' ? linkSites : linkServices;
+
+    const panelRef = useCallback(
+        async ($node: HTMLDivElement | null) => {
+            if (
+                $node &&
+                linkSites &&
+                nodesSites &&
+                serviceNodes &&
+                linkServices &&
+                !svgTopologyComponentRef?.isDragging()
+            ) {
+                $node.replaceChildren();
+                const topologySitesRef = await TopologyGraph(
+                    $node,
+                    nodes,
+                    links,
+                    $node.getBoundingClientRect().width,
+                    $node.getBoundingClientRect().height,
+                    handleExpand,
+                );
+
+                setSvgTopologyComponentRef(topologySitesRef);
+            }
+        },
+        [nodes, links, topologyType],
+    );
+
+    if (isLoading && isLoadingServices) {
+        return <LoadingPage />;
     }
 
     const controlButtons = createTopologyControlButtons({
@@ -215,18 +221,43 @@ const Topology = function () {
     );
 
     return (
-        <Drawer isExpanded={isExpanded} position="right">
-            <DrawerContent panelContent={PanelContent}>
-                <DrawerPanelBody hasNoPadding>
-                    <TopologyView
-                        viewToolbar={<ViewToolbar />}
-                        controlBar={<TopologyControlBar controlButtons={controlButtons} />}
-                    >
-                        <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
-                    </TopologyView>
-                </DrawerPanelBody>
-            </DrawerContent>
-        </Drawer>
+        <>
+            <Drawer isExpanded={isExpanded} position="right">
+                <DrawerContent panelContent={PanelContent}>
+                    <DrawerPanelBody hasNoPadding>
+                        <TopologyView
+                            viewToolbar={<ViewToolbar />}
+                            controlBar={<TopologyControlBar controlButtons={controlButtons} />}
+                        >
+                            <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
+                        </TopologyView>
+                    </DrawerPanelBody>
+                </DrawerContent>
+            </Drawer>
+            <Divider />
+            {topologyType !== 'sites' && (
+                <Panel className="pf-u-px-md pf-u-py-sm">
+                    <Flex>
+                        <TextContent>
+                            <Text component={TextVariants.small}>{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
+                        </TextContent>{' '}
+                        {nodes?.map((node) => (
+                            <span key={node.id}>
+                                <div
+                                    style={{
+                                        display: 'inline-block',
+                                        width: 20,
+                                        height: 10,
+                                        backgroundColor: node.color,
+                                    }}
+                                />{' '}
+                                {node.groupName}
+                            </span>
+                        ))}
+                    </Flex>
+                </Panel>
+            )}
+        </>
     );
 };
 

@@ -1,3 +1,6 @@
+import { scaleOrdinal } from 'd3-scale';
+import { schemeCategory10 } from 'd3-scale-chromatic';
+
 import { DeploymentLink, Site } from '@pages/Sites/services/services.interfaces';
 import { RESTApi } from 'API/REST';
 
@@ -11,10 +14,10 @@ export const TopologyServices = {
         return { deployments, deploymentLinks };
     },
 
-    getSiteNodes: (sites: Site[]) =>
+    getNodesSites: (sites: Site[]) =>
         sites
             ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
-            .map((node) => {
+            .map((node, index) => {
                 const positions = localStorage.getItem(node.siteId);
                 const fx = positions ? JSON.parse(positions).fx : null;
                 const fy = positions ? JSON.parse(positions).fy : null;
@@ -27,7 +30,9 @@ export const TopologyServices = {
                     fx,
                     fy,
                     type: 'site',
-                    group: sites?.findIndex(({ siteId }) => siteId === node.siteId) || 0,
+                    groupName: node.siteName,
+                    group: index,
+                    color: color(index.toString())
                 };
             }),
 
@@ -43,22 +48,28 @@ export const TopologyServices = {
         ),
 
     getServiceNodes: (deployments: DeploymentNode[], siteNodes: TopologyNode[]) =>
-        deployments?.map((node) => {
-            const positions = localStorage.getItem(node.key);
-            const fx = positions ? JSON.parse(positions).fx : null;
-            const fy = positions ? JSON.parse(positions).fy : null;
+        deployments
+            ?.map((node) => {
+                const positions = localStorage.getItem(node.key);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
+                const site = siteNodes?.find(({ id }) => id === node.site.site_id);
+                const groupIndex = site?.group || 0;
 
-            return {
-                id: node.key,
-                name: node.service.address,
-                x: fx || 0,
-                y: fy || 0,
-                fx,
-                fy,
-                type: 'service',
-                group: siteNodes?.findIndex(({ id }) => id === node.site.site_id) || 0,
-            };
-        }),
+                return {
+                    id: node.key,
+                    name: node.service.address,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
+                    type: 'service',
+                    groupName: site?.name || '',
+                    group: groupIndex,
+                    color: color(groupIndex.toString())
+                };
+            })
+            .sort((a, b) => a.group - b.group),
 
     getLinkServices: (deploymentsLinks: DeploymentLink[]) =>
         deploymentsLinks?.flatMap(({ source, target }) => ({
@@ -67,3 +78,5 @@ export const TopologyServices = {
             type: 'linkService',
         })),
 };
+
+const color = scaleOrdinal(schemeCategory10);

@@ -3,6 +3,8 @@ export interface TopologyNode {
     name: string;
     x: number;
     y: number;
+    color: string;
+    groupName: string;
     group: number;
     type: string;
     fx?: number | null;

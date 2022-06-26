@@ -2,7 +2,6 @@ import { drag } from 'd3-drag';
 import { xml } from 'd3-fetch';
 import { forceSimulation, forceCenter, forceLink, forceX, forceY } from 'd3-force';
 import { scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
@@ -46,7 +45,6 @@ const TopologyGraph = async function (
 
     const xScale = scaleOrdinal().domain(domainValues).range(rangeValuesX);
     const yScale = scaleOrdinal().domain(domainValues).range(rangeValuesY);
-    const color = scaleOrdinal(schemeCategory10).domain(domainValues);
 
     const simulation = forceSimulation<TopologyNode, TopologyLinkNormalized>()
         .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 2))
@@ -147,14 +145,14 @@ const TopologyGraph = async function (
 
     svgServiceNodes
         .append(({ type }) => {
-            const XMLData = type === 'site' ? serverXMLData : serviceXMLData;
+            const { documentElement } = type === 'site' ? serverXMLData : serviceXMLData;
 
-            return XMLData.documentElement.cloneNode(true) as HTMLElement;
+            return documentElement.cloneNode(true) as HTMLElement;
         })
         .attr('width', SERVICE_SIZE)
         .attr('height', SERVICE_SIZE)
         .attr('class', 'serviceNode')
-        .style('fill', ({ group }) => color(group.toString()));
+        .style('fill', ({ color }) => color);
 
     // it improves drag & drop area selection
     svgServiceNodes
@@ -234,8 +232,8 @@ const TopologyGraph = async function (
     }
 
     function ticked() {
-        const minSvgPosY = 50;
-        const minSvgPosX = 50;
+        const minSvgPosY = 10;
+        const minSvgPosX = 10;
 
         const maxSvgPosX = Number(svgElement.attr('width'));
         const maxSvgPosY = Number(svgElement.attr('height'));
