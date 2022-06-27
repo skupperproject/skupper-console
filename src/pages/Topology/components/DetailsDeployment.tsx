@@ -10,7 +10,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import DeploymentsServices from '@pages/Deployments/services';
 import { QueriesDeployments } from '@pages/Deployments/services/deployments.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Connections.enum';
+import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 interface TopologyDeploymentDetailsProps {

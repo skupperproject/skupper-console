@@ -10,12 +10,8 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
 import { SitesRoutesPaths } from '../sites.enum';
-import { ConnectionsColumns, ConnectionsLabels, HTTPConnectionsColumns } from './Connections.enum';
-import {
-    ConnectionPropsTCP,
-    ConnectionPropsHTTP,
-    ConnectionsProps,
-} from './Connections.interfaces';
+import { ConnectionsColumns, ConnectionsLabels, HTTPConnectionsColumns } from './Traffic.enum';
+import { ConnectionPropsTCP, ConnectionPropsHTTP, ConnectionsProps } from './Traffic.interfaces';
 
 const Connections: FC<ConnectionsProps> = function ({ siteName, httpRequests, tcpRequests }) {
     return (

@@ -1,3 +1,4 @@
+import { getDeployments, getServices, getSites } from 'API/controllers';
 import { RESTApi } from 'API/REST';
 import { FlowsRouterResponse } from 'API/REST.interfaces';
 
@@ -5,12 +6,14 @@ import { Overview } from './overview.interfaces';
 
 export const NetworkServices = {
     fetchOverviewStats: async function (): Promise<Overview> {
-        const [topologyNetwork, sites, services, deployments] = await Promise.all([
+        const [data, topologyNetwork] = await Promise.all([
+            RESTApi.fetchData(),
             RESTApi.fetchFlowsTopology(),
-            RESTApi.fetchSites(),
-            RESTApi.fetchServices(),
-            RESTApi.fetchDeployments(),
         ]);
+
+        const sites = getSites(data);
+        const services = getServices(data);
+        const deployments = getDeployments(data);
 
         const routersMap = topologyNetwork.nodes.reduce((acc, node) => {
             acc[node.id] = node;

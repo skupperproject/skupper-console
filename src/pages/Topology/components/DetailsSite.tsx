@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Connections.enum';
+import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
 import SitesServices from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { UPDATE_INTERVAL } from 'config';

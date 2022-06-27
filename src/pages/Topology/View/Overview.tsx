@@ -239,7 +239,9 @@ const Topology = function () {
                 <Panel className="pf-u-px-md pf-u-py-sm">
                     <Flex>
                         <TextContent>
-                            <Text component={TextVariants.small}>{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
+                            <Text
+                                component={TextVariants.small}
+                            >{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
                         </TextContent>{' '}
                         {nodes?.map((node) => (
                             <span key={node.id}>

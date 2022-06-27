@@ -16,8 +16,8 @@ const DeploymentsServices = {
 
         const info = deployments.find(({ key }) => key === id) as Deployment;
 
-        const tcpConnectionsOut = getTCPTrafficSentByService(deployments, id || '');
-        const tcpConnectionsIn = getTCPTrafficReceivedByService(deployments, id || '');
+        const tcpConnectionsOut = getTCPConnectionsOutBySite(deployments, id || '');
+        const tcpConnectionsIn = getTCPConnectionsInBySite(deployments, id || '');
         const httpRequestsSent = getHTTPconnectionsOutByService(deployments, id || '');
         const httpRequestsReceived = getHTTPconnectionsInByService(deployments, id || '');
 
@@ -168,7 +168,7 @@ function getHTTPconnectionsOutByService(deployments: Deployment[], id: string) {
         .filter(Boolean) as Traffic[];
 }
 
-function getTCPTrafficSentByService(deployments: Deployment[], id: string) {
+function getTCPConnectionsInBySite(deployments: Deployment[], id: string) {
     const otherDeployments = deployments.filter(({ key }) => key !== id) as Deployment[];
     const serviceName = id?.split('_')[0];
 
@@ -184,7 +184,7 @@ function getTCPTrafficSentByService(deployments: Deployment[], id: string) {
     );
 }
 
-function getTCPTrafficReceivedByService(deployments: Deployment[], id: string) {
+function getTCPConnectionsOutBySite(deployments: Deployment[], id: string) {
     const myDeployments = deployments.find(({ key }) => key === id);
     const otherDeployments = deployments.filter(({ key }) => key !== id);
 

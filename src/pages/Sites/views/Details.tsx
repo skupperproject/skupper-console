@@ -21,11 +21,11 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import Connections from '../components/Connections';
 import DescriptionItem from '../components/DescriptionItem';
 import Metrics from '../components/Metrics';
 import RealTimeMetrics from '../components/RealTimeMetrics';
 import { SitesListColumns } from '../components/SitesList.enum';
+import Connections from '../components/Traffic';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel } from '../sites.enum';

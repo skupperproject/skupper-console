@@ -190,8 +190,7 @@ const TrafficTables: FC<TrafficTablesProps> = function ({
                                                             to={`${SitesRoutesPaths.Details}/${site.site_id}`}
                                                         >
                                                             {client.split('/')[0]}
-                                                        </Link>{' '}
-                                                        {`(${id.split('@')[0].split(':')[0]})`}
+                                                        </Link>
                                                     </Td>
                                                     <Td dataLabel={TrafficColumns.ServiceName}>
                                                         <ResourceIcon type="service" />

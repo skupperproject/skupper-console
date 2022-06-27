@@ -1,3 +1,3 @@
 export enum TopologyOverviewLabels {
-    LegendGroupsItems = 'Sites'
+    LegendGroupsItems = 'Sites',
 }

@@ -32,7 +32,7 @@ export const TopologyServices = {
                     type: 'site',
                     groupName: node.siteName,
                     group: index,
-                    color: color(index.toString())
+                    color: color(index.toString()),
                 };
             }),
 
@@ -66,7 +66,7 @@ export const TopologyServices = {
                     type: 'service',
                     groupName: site?.name || '',
                     group: groupIndex,
-                    color: color(groupIndex.toString())
+                    color: color(groupIndex.toString()),
                 };
             })
             .sort((a, b) => a.group - b.group),

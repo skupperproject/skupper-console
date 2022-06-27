@@ -22,6 +22,7 @@ import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import Metrics from '../components/Metrics';
+import RealTimeMetrics from '../components/RealTimeMetrics';
 import TrafficTables from '../components/Traffic';
 import { DeploymentsRoutesPaths, DeploymentsRoutesPathLabel } from '../Deployments.enum';
 import DeploymentsServices from '../services';
@@ -35,7 +36,11 @@ const DeploymentsDetails = function () {
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [activeTabKey, setaActiveTabKey] = useState<number>();
 
-    const { data: deployment, isLoading } = useQuery(
+    const {
+        data: deployment,
+        isLoading,
+        dataUpdatedAt,
+    } = useQuery(
         [QueriesDeployments.GetDeployments, deploymentId],
         () => DeploymentsServices.fetchDeployment(deploymentId),
         {
@@ -137,6 +142,15 @@ const DeploymentsDetails = function () {
                         httpRequestsSent={httpRequestsSent}
                         tcpConnectionsIn={tcpConnectionsIn}
                         tcpConnectionsOut={tcpConnectionsOut}
+                    />
+
+                    <RealTimeMetrics
+                        deploymentName={deploymentName}
+                        httpRequestsReceived={httpRequestsReceived}
+                        httpRequestsSent={httpRequestsSent}
+                        tcpConnectionsIn={tcpConnectionsIn}
+                        tcpConnectionsOut={tcpConnectionsOut}
+                        timestamp={dataUpdatedAt}
                     />
                 </Tab>
             </Tabs>
