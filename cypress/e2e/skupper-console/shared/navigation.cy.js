@@ -25,12 +25,12 @@ context('Navigation', () => {
     });
 
     it('Navigate to the Monitoring section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Monitoring').click({ force: true });
+        cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
         cy.location('hash').should('include', 'monitoring');
     });
 
     it('Navigate to the Monitoring/service-bar section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Monitoring').click({ force: true });
+        cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
         cy.location('hash').should('include', 'monitoring');
     });
 
@@ -41,7 +41,7 @@ context('Navigation', () => {
 
     it("Go back or forward in the browser's history", () => {
         cy.get('[data-cy=sk-nav-bar]').contains('Sites').click({ force: true });
-        cy.get('[data-cy=sk-nav-bar]').contains('Monitoring').click({ force: true });
+        cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
 
         cy.go('back');
         cy.location('hash').should('not.include', 'monitoring');

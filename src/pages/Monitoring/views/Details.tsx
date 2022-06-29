@@ -8,9 +8,12 @@ import {
     EmptyStateBody,
     EmptyStateIcon,
     EmptyStateVariant,
+    Pagination,
     Stack,
     StackItem,
     Title,
+    Toolbar,
+    ToolbarItem,
     Tooltip,
 } from '@patternfly/react-core';
 import {
@@ -20,6 +23,8 @@ import {
     PluggedIcon,
     InfoCircleIcon,
     SearchIcon,
+    LongArrowAltDownIcon,
+    LongArrowAltUpIcon,
 } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
@@ -39,11 +44,15 @@ import './Details.scss';
 export const MAX_HEIGHT_DETAILS_TABLE = 305;
 export const MAX_WIDTH_DETAILS_TABLE = 600;
 
+const PER_PAGE = 50;
+
 const DetailsView = function () {
     const navigate = useNavigate();
     const { id: vanId } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [devicesSelected, setIdDevicesSelected] = useState<string[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [visibleItems, setVisibleItems] = useState<number>(PER_PAGE);
 
     const { data: connections, isLoading } = useQuery(
         [QueriesMonitoring.GetConnectionsByVanAddr, vanId],
@@ -62,6 +71,14 @@ const DetailsView = function () {
         setRefetchInterval(0);
         navigate(route);
     }
+
+    const onSetPage = (_: any, perPage: number) => {
+        setCurrentPage(perPage);
+    };
+
+    const onPerPageSelect = (_: any, perPageSelect: number) => {
+        setVisibleItems(perPageSelect);
+    };
 
     const handleSelectRow = useCallback(
         (id: string) => {
@@ -109,6 +126,11 @@ const DetailsView = function () {
         .map((flow) => ({ ...flow, device: devices.find(({ id }) => id === flow.parent) }))
         .filter(({ parent }) => devicesSelected.includes(parent));
 
+    const flowsSelectedPaginated = flowsSelected.slice(
+        visibleItems * (currentPage - 1),
+        visibleItems * (currentPage - 1) + visibleItems,
+    );
+
     return (
         <Stack hasGutter>
             <StackItem>
@@ -117,56 +139,62 @@ const DetailsView = function () {
                     <TableComposable variant="compact" borders={false} className="flow-devices">
                         <Thead>
                             <Tr>
+                                <Th>{DetailsColumns.Router}</Th>
+                                <Th>{DetailsColumns.Namespace}</Th>
                                 <Th>{DetailsColumns.Type}</Th>
                                 <Th>{DetailsColumns.Name}</Th>
                                 <Th>{DetailsColumns.Protocol}</Th>
-                                <Th>{DetailsColumns.Router}</Th>
-                                <Th>{DetailsColumns.Namespace}</Th>
                                 <Th>{DetailsColumns.DestinationHost}</Th>
                                 <Th>{DetailsColumns.DestinationPort}</Th>
                             </Tr>
                         </Thead>
-                        {devices?.map(
-                            ({
-                                id,
-                                protocol,
-                                name,
-                                routerName,
-                                namespace,
-                                destHost,
-                                destPort,
-                                rtype,
-                            }) => (
-                                <Tbody key={id}>
-                                    <Tr
-                                        onClick={() => handleRowClick(id)}
-                                        className={handleSelectRow(id)}
-                                    >
-                                        <Td dataLabel={DetailsColumns.Type}>
-                                            <Tooltip
-                                                content={rtype === 'LISTENER' ? 'SERVER' : 'CLIENT'}
-                                            >
-                                                {rtype === 'LISTENER' ? (
-                                                    <ConnectedIcon />
-                                                ) : (
-                                                    <PluggedIcon />
-                                                )}
-                                            </Tooltip>
-                                        </Td>
-                                        <Td dataLabel={DetailsColumns.Name}>{name}</Td>
-                                        <Td dataLabel={DetailsColumns.Protocol}>{protocol}</Td>
-                                        <Td dataLabel={DetailsColumns.Router}>{routerName}</Td>
-                                        <Td dataLabel={DetailsColumns.Namespace}>{namespace}</Td>
-                                        <Td dataLabel={DetailsColumns.DestinationHost}>
-                                            {destHost}
-                                        </Td>
-                                        <Td dataLabel={DetailsColumns.DestinationPort}>
-                                            {destPort}
-                                        </Td>
-                                    </Tr>
-                                </Tbody>
-                            ),
-                        )}
+                        {devices
+                            ?.sort((a, b) => a.routerName.localeCompare(b.routerName))
+                            .map(
+                                ({
+                                    id,
+                                    protocol,
+                                    name,
+                                    routerName,
+                                    namespace,
+                                    destHost,
+                                    destPort,
+                                    rtype,
+                                }) => (
+                                    <Tbody key={id}>
+                                        <Tr
+                                            onClick={() => handleRowClick(id)}
+                                            className={handleSelectRow(id)}
+                                        >
+                                            <Td dataLabel={DetailsColumns.Router}>{routerName}</Td>
+                                            <Td dataLabel={DetailsColumns.Namespace}>
+                                                {namespace}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumns.Type}>
+                                                <Tooltip
+                                                    content={
+                                                        rtype === 'LISTENER' ? 'SERVER' : 'CLIENT'
+                                                    }
+                                                >
+                                                    {rtype === 'LISTENER' ? (
+                                                        <ConnectedIcon />
+                                                    ) : (
+                                                        <PluggedIcon />
+                                                    )}
+                                                </Tooltip>
+                                            </Td>
+                                            <Td dataLabel={DetailsColumns.Name}>{name}</Td>
+                                            <Td dataLabel={DetailsColumns.Protocol}>{protocol}</Td>
+                                            <Td dataLabel={DetailsColumns.DestinationHost}>
+                                                {destHost}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumns.DestinationPort}>
+                                                {destPort}
+                                            </Td>
+                                        </Tr>
+                                    </Tbody>
+                                ),
+                            )}
                     </TableComposable>
                 </Card>
             </StackItem>
@@ -176,13 +204,27 @@ const DetailsView = function () {
                     <CardTitle>
                         <ArrowRightIcon /> {Labels.Flows}
                     </CardTitle>
+                    <Toolbar>
+                        <ToolbarItem>
+                            {!!flowsSelectedPaginated.length && (
+                                <Pagination
+                                    perPageComponent="button"
+                                    itemCount={flowsSelected.length}
+                                    perPage={visibleItems}
+                                    page={currentPage}
+                                    onSetPage={onSetPage}
+                                    onPerPageSelect={onPerPageSelect}
+                                />
+                            )}
+                        </ToolbarItem>
+                    </Toolbar>
                     <TableComposable variant="compact" borders={false}>
                         <Thead>
                             <Tr>
                                 <Th>{DetailsColumns.Status}</Th>
                                 <Th>{DetailsColumns.IP}</Th>
                                 <Th>{DetailsColumns.Port}</Th>
-                                <Th>{DetailsColumns.Name}</Th>
+                                <Th>{DetailsColumns.Direction}</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -212,7 +254,7 @@ const DetailsView = function () {
                                 </Tr>
                             )}
                             {!!flowsSelected.length &&
-                                flowsSelected.map(
+                                flowsSelectedPaginated.map(
                                     ({ id, sourceHost, sourcePort, endTime, device, parent }) => (
                                         <Tr key={id}>
                                             <Td>
@@ -233,14 +275,17 @@ const DetailsView = function () {
                                             </Td>
                                             <Td dataLabel={DetailsColumns.Port}>{sourcePort}</Td>
                                             <Td dataLabel={DetailsColumns.Namespace}>
-                                                <Tooltip content={device?.rtype}>
-                                                    {device?.rtype === 'LISTENER' ? (
-                                                        <ConnectedIcon />
-                                                    ) : (
-                                                        <PluggedIcon />
-                                                    )}
-                                                </Tooltip>{' '}
-                                                {device?.name}
+                                                {device?.rtype === 'LISTENER' ? (
+                                                    <>
+                                                        <LongArrowAltUpIcon color="var(--pf-global--palette--blue-200)" />
+                                                        {'Outgoing'} ({device.name})
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <LongArrowAltDownIcon color="var(--pf-global--palette--red-200)" />
+                                                        {'Incoming'} ({device?.name})
+                                                    </>
+                                                )}
                                             </Td>
                                         </Tr>
                                     ),

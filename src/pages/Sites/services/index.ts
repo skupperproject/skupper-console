@@ -24,8 +24,8 @@ const SitesServices = {
                   ...info,
                   httpRequestsReceived,
                   httpRequestsSent,
-                  tcpConnectionsIn: tcpTrafficSent,
-                  tcpConnectionsOut: tcpTrafficReceived,
+                  tcpConnectionsIn: tcpTrafficReceived,
+                  tcpConnectionsOut: tcpTrafficSent,
                   httpRequests,
                   tcpRequests,
               }

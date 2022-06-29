@@ -9,6 +9,7 @@ export enum DetailsColumns {
     To = 'To',
     Hostname = 'Hostname',
     Name = 'Name',
+    Direction = 'Direction',
     Namespace = 'Namespace',
     Protocol = 'Protocol',
     Router = 'Router',

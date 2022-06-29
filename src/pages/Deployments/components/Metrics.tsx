@@ -57,7 +57,6 @@ const Metrics: FC<DeploymentsMetricsProps> = function ({
                                 data={tcpConnectionsInChartData}
                                 title={MetricsLabels.TCPconnectionsIn}
                                 options={{ showTitle: true }}
-                                color={ChartThemeColors.Orange}
                             />
                         </SplitItem>
 
@@ -66,6 +65,7 @@ const Metrics: FC<DeploymentsMetricsProps> = function ({
                                 data={tcpConnectionsOutChartData}
                                 title={MetricsLabels.TCPconnectionsOut}
                                 options={{ showTitle: true }}
+                                color={ChartThemeColors.Orange}
                             />
                         </SplitItem>
                     </Split>
