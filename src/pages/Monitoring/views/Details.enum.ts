@@ -1,14 +1,14 @@
 export enum Labels {
     Devices = 'Clients & Servers',
     Flows = 'Log of service flows',
-    NoFlows = 'Please select a device to show the associated flows',
+    NoFlows = 'Please select a Client or Server to show the associated flows',
     NoResult = 'No flows found',
 }
 
 export enum DetailsColumns {
     To = 'To',
     Hostname = 'Hostname',
-    Name = 'Name',
+    Name = 'Source',
     Direction = 'Direction',
     Namespace = 'Namespace',
     Protocol = 'Protocol',

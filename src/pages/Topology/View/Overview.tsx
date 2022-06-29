@@ -243,7 +243,7 @@ const Topology = function () {
                                 component={TextVariants.small}
                             >{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
                         </TextContent>{' '}
-                        {nodes?.map((node) => (
+                        {nodesSites?.map((node) => (
                             <span key={node.id}>
                                 <div
                                     style={{

@@ -246,7 +246,9 @@ const RequestsLatenciesChart: FC<BytesChartProps> = function ({
                     <ChartVoronoiContainer
                         labels={({ datum }) =>
                             `${datum.x}: ${
-                                options?.formatter ? options?.formatter(datum.y) : datum.y
+                                options?.formatter
+                                    ? options?.formatter(datum.y, { startSize: 'ms' })
+                                    : datum.y
                             }`
                         }
                         constrainToVisibleArea
@@ -277,7 +279,9 @@ const RequestsLatenciesChart: FC<BytesChartProps> = function ({
                         tickLabels: { fontSize: 12 },
                     }}
                     tickFormat={(tick) =>
-                        options?.formatter ? options?.formatter(tick) : Math.ceil(tick)
+                        options?.formatter
+                            ? options?.formatter(tick, { startSize: 'ms' })
+                            : Math.ceil(tick)
                     }
                 />
                 <ChartGroup horizontal>

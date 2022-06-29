@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import {
+    Breadcrumb,
+    BreadcrumbHeading,
+    BreadcrumbItem,
     Bullseye,
     Card,
     CardTitle,
@@ -34,7 +37,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { MonitoringRoutesPaths } from '../Monitoring.enum';
+import { MonitoringRoutesPathLabel, MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
 import { DetailsColumns, Labels } from './Details.enum';
@@ -96,6 +99,7 @@ const DetailsView = function () {
     const handleRowClick = useCallback(
         (id: string) => {
             const isIdSelected = devicesSelected.includes(id);
+            setCurrentPage(1);
 
             if (isIdSelected) {
                 setIdDevicesSelected(
@@ -134,15 +138,25 @@ const DetailsView = function () {
     return (
         <Stack hasGutter>
             <StackItem>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <Link to={MonitoringRoutesPaths.Monitoring}>
+                            {MonitoringRoutesPathLabel.Monitoring}
+                        </Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbHeading to="#">{vanId}</BreadcrumbHeading>
+                </Breadcrumb>
+            </StackItem>
+            <StackItem>
                 <Card>
                     <CardTitle>{Labels.Devices}</CardTitle>
                     <TableComposable variant="compact" borders={false} className="flow-devices">
                         <Thead>
                             <Tr>
-                                <Th>{DetailsColumns.Router}</Th>
-                                <Th>{DetailsColumns.Namespace}</Th>
                                 <Th>{DetailsColumns.Type}</Th>
                                 <Th>{DetailsColumns.Name}</Th>
+                                <Th>{DetailsColumns.Router}</Th>
+                                <Th>{DetailsColumns.Namespace}</Th>
                                 <Th>{DetailsColumns.Protocol}</Th>
                                 <Th>{DetailsColumns.DestinationHost}</Th>
                                 <Th>{DetailsColumns.DestinationPort}</Th>
@@ -166,10 +180,6 @@ const DetailsView = function () {
                                             onClick={() => handleRowClick(id)}
                                             className={handleSelectRow(id)}
                                         >
-                                            <Td dataLabel={DetailsColumns.Router}>{routerName}</Td>
-                                            <Td dataLabel={DetailsColumns.Namespace}>
-                                                {namespace}
-                                            </Td>
                                             <Td dataLabel={DetailsColumns.Type}>
                                                 <Tooltip
                                                     content={
@@ -184,6 +194,10 @@ const DetailsView = function () {
                                                 </Tooltip>
                                             </Td>
                                             <Td dataLabel={DetailsColumns.Name}>{name}</Td>
+                                            <Td dataLabel={DetailsColumns.Router}>{routerName}</Td>
+                                            <Td dataLabel={DetailsColumns.Namespace}>
+                                                {namespace}
+                                            </Td>
                                             <Td dataLabel={DetailsColumns.Protocol}>{protocol}</Td>
                                             <Td dataLabel={DetailsColumns.DestinationHost}>
                                                 {destHost}
@@ -222,8 +236,7 @@ const DetailsView = function () {
                         <Thead>
                             <Tr>
                                 <Th>{DetailsColumns.Status}</Th>
-                                <Th>{DetailsColumns.IP}</Th>
-                                <Th>{DetailsColumns.Port}</Th>
+                                <Th>{DetailsColumns.Name}</Th>
                                 <Th>{DetailsColumns.Direction}</Th>
                             </Tr>
                         </Thead>
@@ -266,24 +279,24 @@ const DetailsView = function () {
                                                     }
                                                 />
                                             </Td>
-                                            <Td dataLabel={DetailsColumns.IP}>
+                                            <Td dataLabel={DetailsColumns.Port}>
                                                 <Link
                                                     to={`${MonitoringRoutesPaths.Connections}/${vanId}${MonitoringRoutesPaths.ConnectionsTopology}/${parent}/${id}`}
                                                 >
-                                                    {sourceHost}
-                                                </Link>
+                                                    {sourceHost}: {sourcePort}
+                                                </Link>{' '}
+                                                ({device?.name})
                                             </Td>
-                                            <Td dataLabel={DetailsColumns.Port}>{sourcePort}</Td>
                                             <Td dataLabel={DetailsColumns.Namespace}>
                                                 {device?.rtype === 'LISTENER' ? (
                                                     <>
                                                         <LongArrowAltUpIcon color="var(--pf-global--palette--blue-200)" />
-                                                        {'Outgoing'} ({device.name})
+                                                        {'Outgoing'}
                                                     </>
                                                 ) : (
                                                     <>
                                                         <LongArrowAltDownIcon color="var(--pf-global--palette--red-200)" />
-                                                        {'Incoming'} ({device?.name})
+                                                        {'Incoming'}
                                                     </>
                                                 )}
                                             </Td>
