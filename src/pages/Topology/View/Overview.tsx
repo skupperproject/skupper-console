@@ -11,7 +11,9 @@ import {
     DrawerPanelContent,
     Flex,
     Panel,
-    Radio,
+    Tab,
+    Tabs,
+    TabTitleText,
     Text,
     TextContent,
     TextVariants,
@@ -34,17 +36,16 @@ import TopologyDeploymentDetails from '../components/DetailsDeployment';
 import TopologySiteDetails from '../components/DetailsSite';
 import TopologyGraph from '../components/Topology';
 import { TopologyViews } from '../components/Topology.enum';
-import { TopologySVG } from '../components/Topology.interfaces';
 import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
 import { TopologyOverviewLabels } from './Overview.enum';
 
-const Topology = function () {
+const TopologyContent = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [svgTopologyComponentRef, setSvgTopologyComponentRef] = useState<TopologySVG>(null);
+    const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologyGraph>();
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
     const [selectedNode, setSelectedNode] = useState('');
 
     const drawerRef = useRef<HTMLSpanElement>(null);
@@ -82,37 +83,41 @@ const Topology = function () {
             }
 
             if (selectedRef.current === id) {
-                shouldOpen = isExpanded === false ? true : false;
+                shouldOpen = areDetailsExpanded === false ? true : false;
             }
 
-            setIsExpanded(shouldOpen);
+            setIsExpandedDetails(shouldOpen);
             setSelectedNode(id);
             selectedRef.current = selectedRef.current !== id ? id : '';
         },
-        [isExpanded],
+        [areDetailsExpanded],
     );
 
     const handleCloseClick = () => {
-        setIsExpanded(false);
+        setIsExpandedDetails(false);
         setSelectedNode('');
         selectedRef.current = '';
     };
 
     function handleZoomIn() {
-        svgTopologyComponentRef?.zoomIn();
+        topologyGraphInstance?.zoomIn();
     }
 
     function handleZoomOut() {
-        svgTopologyComponentRef?.zoomOut();
+        topologyGraphInstance?.zoomOut();
     }
 
     function handleResetView() {
-        svgTopologyComponentRef?.reset();
+        topologyGraphInstance?.reset();
     }
 
-    function handleChangeTopologyType(_: boolean, event: React.FormEvent<HTMLInputElement>) {
-        const { value } = event.currentTarget;
-        setTopologyType(value);
+    function handleChangeTopologyType(
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
+        tabIndex: string | number,
+    ) {
+        setTopologyType(tabIndex as string);
+        setTopologyGraphInstance(undefined);
+
         handleCloseClick();
     }
 
@@ -139,29 +144,28 @@ const Topology = function () {
     const links = topologyType === 'sites' ? linkSites : linkServices;
 
     const panelRef = useCallback(
-        async ($node: HTMLDivElement | null) => {
-            if (
-                $node &&
-                linkSites &&
-                nodesSites &&
-                serviceNodes &&
-                linkServices &&
-                !svgTopologyComponentRef?.isDragging()
-            ) {
-                $node.replaceChildren();
-                const topologySitesRef = await TopologyGraph(
-                    $node,
-                    nodes,
-                    links,
-                    $node.getBoundingClientRect().width,
-                    $node.getBoundingClientRect().height,
-                    handleExpand,
-                );
+        ($node: HTMLDivElement | null) => {
+            if ($node && nodes && links && !topologyGraphInstance?.isDragging()) {
+                if (topologyGraphInstance) {
+                    topologyGraphInstance.updateTopology(nodes, links);
+                } else {
+                    $node.replaceChildren();
 
-                setSvgTopologyComponentRef(topologySitesRef);
+                    const topologyGraph = new TopologyGraph(
+                        $node,
+                        nodes,
+                        links,
+                        $node.getBoundingClientRect().width,
+                        $node.getBoundingClientRect().height,
+                        handleExpand,
+                    );
+                    topologyGraph.updateTopology(nodes, links);
+
+                    setTopologyGraphInstance(topologyGraph);
+                }
             }
         },
-        [nodes, links, topologyType],
+        [handleExpand, links, nodes, topologyGraphInstance],
     );
 
     if (isLoading && isLoadingServices) {
@@ -178,34 +182,14 @@ const Topology = function () {
     });
 
     const ViewToolbar = function () {
-        return (
-            <>
-                <Radio
-                    className="pf-u-mr-md"
-                    isChecked={topologyType === TopologyViews.Sites}
-                    name={TopologyViews.Sites}
-                    onChange={handleChangeTopologyType}
-                    label={TopologyViews.Sites}
-                    id={TopologyViews.Sites}
-                    value={TopologyViews.Sites}
-                />
-                <Radio
-                    isChecked={topologyType === TopologyViews.Deployments}
-                    name={TopologyViews.Deployments}
-                    onChange={handleChangeTopologyType}
-                    label={TopologyViews.Deployments}
-                    id={TopologyViews.Deployments}
-                    value={TopologyViews.Deployments}
-                />
-            </>
-        );
+        return <div />;
     };
 
     const PanelContent = (
         <DrawerPanelContent>
             <DrawerHead>
                 {selectedNode && (
-                    <span tabIndex={isExpanded ? 0 : -1} ref={drawerRef}>
+                    <span ref={drawerRef}>
                         {topologyType === 'sites' ? (
                             <TopologySiteDetails id={selectedNode} />
                         ) : (
@@ -222,8 +206,15 @@ const Topology = function () {
 
     return (
         <>
-            <Drawer isExpanded={isExpanded} position="right">
-                <DrawerContent panelContent={PanelContent}>
+            <Drawer isExpanded={areDetailsExpanded} position="right">
+                <Tabs activeKey={topologyType} isFilled onSelect={handleChangeTopologyType} isBox>
+                    <Tab eventKey={'sites'} title={<TabTitleText>Sites</TabTitleText>} />
+                    <Tab
+                        eventKey={'deployements'}
+                        title={<TabTitleText>Deployments</TabTitleText>}
+                    />
+                </Tabs>
+                <DrawerContent panelContent={PanelContent} style={{ overflow: 'hidden' }}>
                     <DrawerPanelBody hasNoPadding>
                         <TopologyView
                             viewToolbar={<ViewToolbar />}
@@ -263,4 +254,4 @@ const Topology = function () {
     );
 };
 
-export default Topology;
+export default TopologyContent;

@@ -7,8 +7,8 @@ export interface TopologyNode {
     groupName: string;
     group: number;
     type: string;
-    fx?: number | null;
-    fy?: number | null;
+    fx: number | null;
+    fy: number | null;
 }
 
 export interface TopologyLink {
