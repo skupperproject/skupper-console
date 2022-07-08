@@ -25,4 +25,5 @@ export enum DetailsColumns {
     TrafficIn = 'Traffic',
     Latency = 'Latency',
     LatencyIn = 'Latency',
+    CreatedAt = 'Created at',
 }
