@@ -6,6 +6,7 @@ import {
     BreadcrumbItem,
     Card,
     CardTitle,
+    Label,
     Pagination,
     Select,
     SelectOption,
@@ -19,17 +20,8 @@ import {
     ToolbarItem,
 } from '@patternfly/react-core';
 import { CircleIcon, LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
-import {
-    InnerScrollContainer,
-    OuterScrollContainer,
-    TableComposable,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-} from '@patternfly/react-table';
-import dayjs from 'dayjs';
+import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import { formatDistanceToNow } from 'date-fns';
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -42,7 +34,9 @@ import { UPDATE_INTERVAL } from 'config';
 import { MonitoringRoutesPathLabel, MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
-import { DetailsColumns, Labels } from './Details.enum';
+import { FlowExtended } from '../services/services.interfaces';
+import { DetailsColumns } from './Details.constants';
+import { DetailsColumnsNames, Labels } from './Details.enum';
 
 import './Details.scss';
 
@@ -58,10 +52,20 @@ const DetailsView = function () {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [filters, setFilters] = useState({
         directionSelected: '',
+        sitesSelected: [] as string[],
+        sitesSelectedTarget: [] as string[],
         routersSelected: [] as string[],
+        routersSelectedTarget: [] as string[],
     });
     const [isDirectionFilterExpanded, setIsDirectionFilterExanded] = useState(false);
     const [isRoutersFilterExpanded, setIsRoutersFilterExanded] = useState(false);
+    const [isRoutersFilterTargetExpanded, setIsRoutersFilterTargetExanded] = useState(false);
+    const [isSitesFilterExpanded, setIsSitesFilterExanded] = useState(false);
+    const [isSitesFilterTargetExpanded, setIsSitesFilterTargetExanded] = useState(false);
+
+    const [activeSortIndex, setActiveSortIndex] = useState<number>();
+    const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
+
     const [shouldShowActiveFlows, setShouldShowActiveFlows] = useState(true);
 
     const [visibleItems, setVisibleItems] = useState<number>(PER_PAGE);
@@ -108,17 +112,68 @@ const DetailsView = function () {
         setCurrentPage(1);
     }
 
+    function handleSitesToggle(isExpanded: boolean) {
+        setIsSitesFilterExanded(isExpanded);
+    }
+
+    function handleSitesToggleTarget(isExpanded: boolean) {
+        setIsSitesFilterTargetExanded(isExpanded);
+    }
+
     function handleRoutersToggle(isExpanded: boolean) {
         setIsRoutersFilterExanded(isExpanded);
     }
 
+    function handleRoutersToggleTarget(isExpanded: boolean) {
+        setIsRoutersFilterTargetExanded(isExpanded);
+    }
+
+    function handleSitesSelect(_: any, selection: any) {
+        const selected = filters.sitesSelected.includes(selection)
+            ? filters.sitesSelected.filter((filter) => filter !== selection)
+            : [...filters.sitesSelected, selection];
+
+        setFilters({ ...filters, sitesSelected: selected });
+        setCurrentPage(1);
+    }
+
+    function handleSitesSelectTarget(_: any, selection: any) {
+        const selected = filters.sitesSelectedTarget.includes(selection)
+            ? filters.sitesSelectedTarget.filter((filter) => filter !== selection)
+            : [...filters.sitesSelectedTarget, selection];
+
+        setFilters({ ...filters, sitesSelectedTarget: selected });
+        setCurrentPage(1);
+    }
+
     function handleRoutersSelect(_: any, selection: any) {
-        const isRouterExist = filters.routersSelected.includes(selection);
-        const routersSelected = isRouterExist
+        const routersSelected = filters.routersSelected.includes(selection)
             ? filters.routersSelected.filter((filter) => filter !== selection)
             : [...filters.routersSelected, selection];
 
         setFilters({ ...filters, routersSelected });
+        setCurrentPage(1);
+    }
+
+    function handleRoutersSelectTarget(_: any, selection: any) {
+        const isRouterExist = filters.routersSelectedTarget.includes(selection);
+        const routersSelectedTarget = isRouterExist
+            ? filters.routersSelectedTarget.filter((filter) => filter !== selection)
+            : [...filters.routersSelectedTarget, selection];
+
+        setFilters({ ...filters, routersSelectedTarget });
+        setCurrentPage(1);
+    }
+
+    function handleSitesClear() {
+        setFilters({ ...filters, sitesSelected: [] });
+        setIsRoutersFilterExanded(false);
+        setCurrentPage(1);
+    }
+
+    function handleSitesTargetClear() {
+        setFilters({ ...filters, sitesSelectedTarget: [] });
+        setIsRoutersFilterExanded(false);
         setCurrentPage(1);
     }
 
@@ -128,9 +183,29 @@ const DetailsView = function () {
         setCurrentPage(1);
     }
 
+    function handleRoutersTargetsClear() {
+        setFilters({ ...filters, routersSelectedTarget: [] });
+        setIsRoutersFilterTargetExanded(false);
+        setCurrentPage(1);
+    }
+
     function handleShowActiveFlowsToggle(isChecked: boolean) {
         setShouldShowActiveFlows(isChecked);
         setCurrentPage(1);
+    }
+
+    function getSortParams(columnIndex: number): ThProps['sort'] {
+        return {
+            sortBy: {
+                index: activeSortIndex,
+                direction: activeSortDirection,
+            },
+            onSort: (_event: any, index: number, direction: 'asc' | 'desc') => {
+                setActiveSortIndex(index);
+                setActiveSortDirection(direction);
+            },
+            columnIndex,
+        };
     }
 
     if (isLoading) {
@@ -140,23 +215,65 @@ const DetailsView = function () {
     if (!flows) {
         return null;
     }
+
     const flowsFiltered = flows
         .sort((a, b) => b.startTime - a.startTime)
         .filter(
             (flow) =>
                 (flow.device === filters.directionSelected || !filters.directionSelected) &&
+                (filters.sitesSelected.includes(flow.namespace) || !filters.sitesSelected.length) &&
+                (filters.sitesSelectedTarget.includes(flow.target?.namespace) ||
+                    !filters.sitesSelectedTarget.length) &&
                 (filters.routersSelected.includes(flow.routerName) ||
                     !filters.routersSelected.length) &&
+                (filters.routersSelectedTarget.includes(flow.target?.routerName) ||
+                    !filters.routersSelectedTarget.length) &&
                 !(shouldShowActiveFlows && flow.endTime),
         );
 
-    const flowsPaginated = flowsFiltered.slice(
+    const flowsSorted = !activeSortDirection
+        ? flowsFiltered
+        : flowsFiltered.sort((a: FlowExtended, b: FlowExtended) => {
+              const columnName = DetailsColumns[activeSortIndex || 0].prop as keyof FlowExtended;
+
+              const paramA = a[columnName] as string | number;
+              const paramB = b[columnName] as string | number;
+
+              if (paramA === b[columnName]) {
+                  return 0;
+              }
+
+              if (activeSortIndex && activeSortDirection === 'asc') {
+                  return paramA > paramB ? 1 : -1;
+              }
+
+              return paramA > paramB ? -1 : 1;
+          });
+
+    const flowsPaginated = flowsSorted.slice(
         visibleItems * (currentPage - 1),
         visibleItems * (currentPage - 1) + visibleItems,
     );
 
-    const routersNames = flows.map(({ routerName }) => routerName);
+    const sitesNames = flows.map(({ namespace }) => namespace);
+    const sitesNamesNamesOptions = [...new Set(sitesNames)];
+
+    const routersNames = flows
+        .filter(
+            (flow) =>
+                !filters.sitesSelected.length || filters.sitesSelected.includes(flow.namespace),
+        )
+        .map(({ routerName }) => routerName);
     const routersNamesOptions = [...new Set(routersNames)];
+
+    const routersNamesTarget = flows
+        .filter(
+            (flow) =>
+                !filters.sitesSelectedTarget.length ||
+                filters.sitesSelectedTarget.includes(flow.namespace),
+        )
+        .map(({ routerName }) => routerName);
+    const routersNamesOptionsTarget = [...new Set(routersNamesTarget)];
 
     return (
         <Stack hasGutter>
@@ -176,55 +293,104 @@ const DetailsView = function () {
                     <CardTitle>{Labels.Flows}</CardTitle>
                     <Toolbar>
                         <ToolbarContent>
-                            <ToolbarItem>
-                                <ToolbarGroup>
-                                    <ToolbarItem>
-                                        <Select
-                                            width={220}
-                                            variant={SelectVariant.checkbox}
-                                            hasPlaceholderStyle
-                                            placeholderText="Filter by routers"
-                                            onToggle={handleRoutersToggle}
-                                            onSelect={handleRoutersSelect}
-                                            onClear={handleRoutersClear}
-                                            selections={filters.routersSelected}
-                                            isOpen={isRoutersFilterExpanded}
-                                        >
-                                            {routersNamesOptions.map((option, i) => (
-                                                <SelectOption key={i} value={option} />
-                                            ))}
-                                        </Select>
-                                    </ToolbarItem>
-                                    <ToolbarItem>
-                                        <Select
-                                            width={200}
-                                            variant={SelectVariant.single}
-                                            hasPlaceholderStyle
-                                            placeholderText="Filter by direction"
-                                            onToggle={handleDirectionToggle}
-                                            onSelect={handleDirectionSelect}
-                                            onClear={handleDirectionClear}
-                                            selections={filters.directionSelected}
-                                            isOpen={isDirectionFilterExpanded}
-                                        >
-                                            <SelectOption key={0} value="CONNECTOR">
-                                                Incoming
-                                            </SelectOption>
-                                            <SelectOption key={1} value="LISTENER">
-                                                Outgoing
-                                            </SelectOption>
-                                        </Select>
-                                    </ToolbarItem>
-                                </ToolbarGroup>
-                            </ToolbarItem>
-                            <ToolbarItem>
-                                <Switch
-                                    label="show active flows"
-                                    labelOff="show all flows"
-                                    isChecked={shouldShowActiveFlows}
-                                    onChange={handleShowActiveFlowsToggle}
-                                />
-                            </ToolbarItem>
+                            <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+                                <ToolbarItem>
+                                    <Select
+                                        width={250}
+                                        variant={SelectVariant.checkbox}
+                                        hasPlaceholderStyle
+                                        placeholderText="From site"
+                                        onToggle={handleSitesToggle}
+                                        onSelect={handleSitesSelect}
+                                        onClear={handleSitesClear}
+                                        selections={filters.sitesSelected}
+                                        isOpen={isSitesFilterExpanded}
+                                    >
+                                        {sitesNamesNamesOptions.map((option, i) => (
+                                            <SelectOption key={i} value={option} />
+                                        ))}
+                                    </Select>
+                                    <Select
+                                        width={250}
+                                        variant={SelectVariant.checkbox}
+                                        hasPlaceholderStyle
+                                        placeholderText="From routers"
+                                        onToggle={handleRoutersToggle}
+                                        onSelect={handleRoutersSelect}
+                                        onClear={handleRoutersClear}
+                                        selections={filters.routersSelected}
+                                        isOpen={isRoutersFilterExpanded}
+                                    >
+                                        {routersNamesOptions.map((option, i) => (
+                                            <SelectOption key={i} value={option} />
+                                        ))}
+                                    </Select>
+                                </ToolbarItem>
+                                <ToolbarItem>
+                                    <Select
+                                        width={250}
+                                        variant={SelectVariant.checkbox}
+                                        hasPlaceholderStyle
+                                        placeholderText="To site"
+                                        onToggle={handleSitesToggleTarget}
+                                        onSelect={handleSitesSelectTarget}
+                                        onClear={handleSitesTargetClear}
+                                        selections={filters.sitesSelectedTarget}
+                                        isOpen={isSitesFilterTargetExpanded}
+                                    >
+                                        {sitesNamesNamesOptions.map((option, i) => (
+                                            <SelectOption key={i} value={option} />
+                                        ))}
+                                    </Select>
+                                    <Select
+                                        width={250}
+                                        variant={SelectVariant.checkbox}
+                                        hasPlaceholderStyle
+                                        placeholderText="To routers"
+                                        onToggle={handleRoutersToggleTarget}
+                                        onSelect={handleRoutersSelectTarget}
+                                        onClear={handleRoutersTargetsClear}
+                                        selections={filters.routersSelectedTarget}
+                                        isOpen={isRoutersFilterTargetExpanded}
+                                    >
+                                        {routersNamesOptionsTarget.map((option, i) => (
+                                            <SelectOption key={i} value={option} />
+                                        ))}
+                                    </Select>
+                                </ToolbarItem>
+
+                                <ToolbarItem>
+                                    <Select
+                                        width={200}
+                                        variant={SelectVariant.single}
+                                        hasPlaceholderStyle
+                                        placeholderText="Flow direction"
+                                        onToggle={handleDirectionToggle}
+                                        onSelect={handleDirectionSelect}
+                                        onClear={handleDirectionClear}
+                                        selections={filters.directionSelected || undefined}
+                                        isOpen={isDirectionFilterExpanded}
+                                    >
+                                        <SelectOption key={0} value="CONNECTOR">
+                                            Incoming
+                                        </SelectOption>
+                                        <SelectOption key={1} value="LISTENER">
+                                            Outgoing
+                                        </SelectOption>
+                                    </Select>
+                                </ToolbarItem>
+                            </ToolbarGroup>
+
+                            <ToolbarGroup alignment={{ default: 'alignRight' }}>
+                                <ToolbarItem>
+                                    <Switch
+                                        label="show active flows"
+                                        labelOff="show all flows"
+                                        isChecked={shouldShowActiveFlows}
+                                        onChange={handleShowActiveFlowsToggle}
+                                    />
+                                </ToolbarItem>
+                            </ToolbarGroup>
                         </ToolbarContent>
                     </Toolbar>
                 </Card>
@@ -241,94 +407,115 @@ const DetailsView = function () {
                             onPerPageSelect={handlePerPageSelect}
                         />
                     )}
-                    <OuterScrollContainer>
-                        <InnerScrollContainer>
-                            <TableComposable variant="compact" borders={true} isStriped>
-                                <Thead>
-                                    <Tr>
-                                        <Th>{DetailsColumns.Status}</Th>
-                                        <Th>{DetailsColumns.Name}</Th>
-                                        <Th>{DetailsColumns.Protocol}</Th>
-                                        <Th>{DetailsColumns.Direction}</Th>
-                                        <Th>{DetailsColumns.Traffic}</Th>
-                                        <Th>{DetailsColumns.Latency}</Th>
-                                        <Th>{DetailsColumns.Router}</Th>
-                                        <Th>{DetailsColumns.Namespace}</Th>
-                                        <Th>{DetailsColumns.CreatedAt}</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {!!flows.length &&
-                                        flowsPaginated.map(
-                                            ({
-                                                id,
-                                                sourceHost,
-                                                sourcePort,
-                                                endTime,
-                                                device,
-                                                parent,
-                                                octets,
-                                                latency,
-                                                routerName,
-                                                protocol,
-                                                namespace,
-                                                startTime,
-                                            }) => (
-                                                <Tr key={id}>
-                                                    <Td>
-                                                        <CircleIcon
-                                                            color={
-                                                                endTime
-                                                                    ? 'var(--pf-global--BackgroundColor--200)'
-                                                                    : 'var(--pf-global--success-color--100)'
-                                                            }
-                                                        />
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Port}>
-                                                        <Link
-                                                            to={`${MonitoringRoutesPaths.Connections}/${vanId}${MonitoringRoutesPaths.ConnectionsTopology}/${parent}/${id}`}
-                                                        >
-                                                            {sourceHost}: {sourcePort}
-                                                        </Link>
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Protocol}>
-                                                        {protocol}
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Direction}>
-                                                        {device === 'LISTENER' ? (
-                                                            <>
-                                                                <LongArrowAltUpIcon color="var(--pf-global--palette--blue-200)" />
-                                                                {'Outgoing'}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <LongArrowAltDownIcon color="var(--pf-global--palette--red-200)" />
-                                                                {'Incoming'}
-                                                            </>
-                                                        )}
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Traffic}>
-                                                        {formatBytes(octets, 3)}
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Latency}>
-                                                        {formatTime(latency)}
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Router}>
-                                                        {routerName}
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.Namespace}>
-                                                        {namespace}
-                                                    </Td>
-                                                    <Td dataLabel={DetailsColumns.CreatedAt}>
-                                                        {dayjs(startTime).format('YYYY-MM-DD')}
-                                                    </Td>
-                                                </Tr>
-                                            ),
-                                        )}
-                                </Tbody>
-                            </TableComposable>
-                        </InnerScrollContainer>
-                    </OuterScrollContainer>
+                    <TableComposable variant="compact" borders={true} className="flows-table">
+                        <Thead>
+                            <Tr>
+                                {DetailsColumns.map(({ name }, index) => (
+                                    <Th
+                                        key={name}
+                                        sort={
+                                            ![0, 3, 4, 6].includes(index)
+                                                ? getSortParams(index)
+                                                : undefined
+                                        }
+                                    >
+                                        {' '}
+                                        {name}
+                                    </Th>
+                                ))}
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {!!flows.length &&
+                                flowsPaginated.map(
+                                    ({
+                                        id,
+                                        endTime,
+                                        device,
+                                        parent,
+                                        octets,
+                                        latency,
+                                        routerName,
+                                        protocol,
+                                        namespace,
+                                        target,
+                                        startTime,
+                                    }) => (
+                                        <Tr
+                                            key={id}
+                                            onRowClick={() => {
+                                                navigate(
+                                                    `${MonitoringRoutesPaths.Connections}/${vanId}${MonitoringRoutesPaths.ConnectionsTopology}/${parent}/${id}`,
+                                                );
+                                            }}
+                                        >
+                                            <Td>
+                                                <CircleIcon
+                                                    color={
+                                                        endTime
+                                                            ? 'var(--pf-global--BackgroundColor--200)'
+                                                            : 'var(--pf-global--success-color--100)'
+                                                    }
+                                                />
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Site}>
+                                                <Label
+                                                    color={device === 'LISTENER' ? 'blue' : 'red'}
+                                                >
+                                                    {namespace}
+                                                </Label>
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Router}>
+                                                {routerName}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.TargetSite}>
+                                                {target?.namespace && (
+                                                    <Label
+                                                        color={
+                                                            target?.device === 'LISTENER'
+                                                                ? 'blue'
+                                                                : 'red'
+                                                        }
+                                                    >
+                                                        {target.namespace}
+                                                    </Label>
+                                                )}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.TargetRouter}>
+                                                {target?.routerName}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Direction}>
+                                                {device === 'LISTENER' ? (
+                                                    <>
+                                                        <LongArrowAltUpIcon color="var(--pf-global--palette--blue-200)" />
+                                                        {'Outgoing'}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <LongArrowAltDownIcon color="var(--pf-global--palette--red-200)" />
+                                                        {'Incoming'}
+                                                    </>
+                                                )}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Protocol}>
+                                                {protocol}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Traffic}>
+                                                {formatBytes(octets, 3)}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Latency}>
+                                                {formatTime(latency)}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.StartTime}>
+                                                {formatDistanceToNow(new Date(startTime / 1000), {
+                                                    addSuffix: true,
+                                                })}
+                                            </Td>
+                                        </Tr>
+                                    ),
+                                )}
+                        </Tbody>
+                    </TableComposable>
                 </Card>
             </StackItem>
         </Stack>

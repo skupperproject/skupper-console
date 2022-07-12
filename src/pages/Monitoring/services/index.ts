@@ -1,5 +1,10 @@
 import { RESTApi } from 'API/REST';
-import { FlowResponse, FlowsDeviceResponse, FlowsResponse } from 'API/REST.interfaces';
+import {
+    FlowResponse,
+    FlowsDataResponse,
+    FlowsDeviceResponse,
+    FlowsResponse,
+} from 'API/REST.interfaces';
 
 import {
     Connection,
@@ -26,7 +31,7 @@ export const MonitorServices = {
             (acc[parent] = acc[parent] || []).push(idFlow);
 
             return acc;
-        }, {} as any);
+        }, {} as Record<string, string[]>);
 
         const adaptersIds = Object.keys(flowsAdaptersMap);
         const adapters = await RESTApi.fetchFlowRecord(adaptersIds);
@@ -35,16 +40,57 @@ export const MonitorServices = {
             (acc[parent] = acc[parent] || []).push(idFlow);
 
             return acc;
-        }, {} as any);
+        }, {} as Record<string, string[]>);
 
         const routersIds = Object.keys(flowsRoutersMap);
         const routers = await RESTApi.fetchFlowRecord(routersIds);
 
         const adaptersWithRoutersInfo = mergeDevicesById(adapters, routers);
         const flowsWithAdaptersInfo = mergeDevicesById(flows, adaptersWithRoutersInfo);
-        console.log(flowsWithAdaptersInfo);
 
-        return flowsWithAdaptersInfo;
+        const counterFlows = flowsWithAdaptersInfo
+            .map(({ counterflow }) => counterflow)
+            .filter(Boolean);
+        const endFlows = await RESTApi.fetchFlowRecord(counterFlows);
+
+        const flowsAdaptersTargetsMap = endFlows.reduce((acc, { parent, id: idFlow }) => {
+            (acc[parent] = acc[parent] || []).push(idFlow);
+
+            return acc;
+        }, {} as Record<string, string[]>);
+
+        const adaptersIdsTargets = Object.keys(flowsAdaptersTargetsMap);
+        const adaptersTargets = await RESTApi.fetchFlowRecord(adaptersIdsTargets);
+
+        const flowsRoutersTargetsMap = adaptersTargets.reduce((acc, { parent, id: idFlow }) => {
+            (acc[parent] = acc[parent] || []).push(idFlow);
+
+            return acc;
+        }, {} as Record<string, string[]>);
+
+        const routersIdsTargets = Object.keys(flowsRoutersTargetsMap);
+        const routersTargets = await RESTApi.fetchFlowRecord(routersIdsTargets);
+
+        const adaptersWithRoutersInfoTargets = mergeDevicesById(adaptersTargets, routersTargets);
+        const flowsWithAdaptersInfoTargets = mergeDevicesById(
+            endFlows,
+            adaptersWithRoutersInfoTargets,
+        );
+
+        const endFlowsMap = flowsWithAdaptersInfoTargets.reduce((acc, flow) => {
+            if (flow.counterflow) {
+                acc[flow.counterflow] = flow;
+            }
+
+            return acc;
+        }, {} as Record<string, FlowsDataResponse>);
+
+        const flowsWithCounterFlows = flowsWithAdaptersInfo.map((flow) => ({
+            ...flow,
+            target: endFlowsMap[flow.id],
+        }));
+
+        return flowsWithCounterFlows;
     },
 
     fetchConnectionsByVanAddr: async (id: string): Promise<Connection> => {

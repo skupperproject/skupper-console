@@ -22,6 +22,7 @@ export interface FlowExtended extends FlowResponse {
     routerName: string;
     protocol: string;
     namespace: string;
+    target: FlowExtended;
 }
 
 export type MonitoringTopology = FlowsTopologyResponse;

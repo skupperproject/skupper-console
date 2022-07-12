@@ -13,7 +13,7 @@ import { UPDATE_INTERVAL } from 'config';
 import { MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
-import { OverviewColumns } from './Overview.enum';
+import { OverviewColumns } from './Monitoring.enum';
 
 const Overview = function () {
     const navigate = useNavigate();

@@ -75,7 +75,7 @@ function mapFlowsWithListenersConnectors(flows: FlowsDataResponse[]) {
 
         if (data.counterflow) {
             const deviceConnectedTo = flows.find(
-                (flow) => flow.id === listenersBound[data.counterflow]?.parent,
+                (flow) => flow.id === data.counterflow && listenersBound[data.counterflow]?.parent,
             );
 
             return {
