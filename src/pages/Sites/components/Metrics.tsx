@@ -189,7 +189,7 @@ const BytesChart: FC<BytesChartProps> = function ({
     options,
 }) {
     const legend = data.map(({ x }) => ({ name: x }));
-    const total = data.reduce((acc, { y }) => (acc = acc + y), 0);
+    const total = data.reduce((acc, { y }) => acc + y, 0);
 
     return (
         <Card style={{ height: CARD_HEIGHT }}>

@@ -61,6 +61,7 @@ const TCPTable: FC<ConnectionPropsTCP> = function ({ rows, siteName }) {
                     </Th>
                 </Tr>
             </Thead>
+
             {rows.map(({ id, name, byteIn, byteOut }) => (
                 <Tbody key={id}>
                     <Tr>

@@ -14,7 +14,6 @@ const CARD_HEIGHT = '450px';
 
 const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
     siteName: name,
-    timestamp,
     httpRequestsReceived,
     httpRequestsSent,
     tcpConnectionsIn,
@@ -63,76 +62,74 @@ const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
         .filter(({ name: sName }) => sName !== name);
 
     return (
-        <div className="pf-u-py-md">
-            {!!(tcpBytesInChartData.length || tcpBytesOutChartData.length) && (
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <RealTimeMetricChart
-                            data={tcpBytesInChartData}
-                            title={RealTimeMetricsLabels.TCPbytesIn}
-                            timestamp={timestamp}
-                            formatter={formatBytes}
-                        />
-                    </SplitItem>
+        <>
+            <div className="pf-u-mb-md">
+                {!!(tcpBytesInChartData.length || tcpBytesOutChartData.length) && (
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <RealTimeMetricChart
+                                data={tcpBytesInChartData}
+                                title={RealTimeMetricsLabels.TCPbytesIn}
+                                formatter={formatBytes}
+                            />
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <RealTimeMetricChart
-                            data={tcpBytesOutChartData}
-                            title={RealTimeMetricsLabels.TCPbytesOut}
-                            color={ChartThemeColors.Orange}
-                            timestamp={timestamp}
-                            formatter={formatBytes}
-                        />
-                    </SplitItem>
-                </Split>
-            )}
+                        <SplitItem className="pf-u-w-50vw">
+                            <RealTimeMetricChart
+                                data={tcpBytesOutChartData}
+                                title={RealTimeMetricsLabels.TCPbytesOut}
+                                color={ChartThemeColors.Orange}
+                                formatter={formatBytes}
+                            />
+                        </SplitItem>
+                    </Split>
+                )}
+            </div>
+            <div className="pf-u-mb-md">
+                {!!(httpBytesReceivedChartData.length || httpBytesSentChartData.length) && (
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <RealTimeMetricChart
+                                data={httpBytesReceivedChartData}
+                                title={RealTimeMetricsLabels.HTTPbytesIn}
+                                color={ChartThemeColors.Blue}
+                                formatter={formatBytes}
+                            />
+                        </SplitItem>
 
-            {!!(httpBytesReceivedChartData.length || httpBytesSentChartData.length) && (
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <RealTimeMetricChart
-                            data={httpBytesReceivedChartData}
-                            title={RealTimeMetricsLabels.HTTPbytesIn}
-                            color={ChartThemeColors.Blue}
-                            timestamp={timestamp}
-                            formatter={formatBytes}
-                        />
-                    </SplitItem>
+                        <SplitItem className="pf-u-w-50vw">
+                            <RealTimeMetricChart
+                                data={httpBytesSentChartData}
+                                title={RealTimeMetricsLabels.HTTbytesOut}
+                                color={ChartThemeColors.Green}
+                                formatter={formatBytes}
+                            />
+                        </SplitItem>
+                    </Split>
+                )}
+            </div>
+            <div className="pf-u-mb-md">
+                {!!(httpRequestsReceivedChartData.length || httpRequestsSentChartData.length) && (
+                    <Split hasGutter>
+                        <SplitItem className="pf-u-w-50vw">
+                            <RealTimeMetricChart
+                                data={httpRequestsReceivedChartData}
+                                title={RealTimeMetricsLabels.HTTPrequestsIn}
+                                color={ChartThemeColors.Cyan}
+                            />
+                        </SplitItem>
 
-                    <SplitItem className="pf-u-w-50vw">
-                        <RealTimeMetricChart
-                            data={httpBytesSentChartData}
-                            title={RealTimeMetricsLabels.HTTbytesOut}
-                            color={ChartThemeColors.Green}
-                            timestamp={timestamp}
-                            formatter={formatBytes}
-                        />
-                    </SplitItem>
-                </Split>
-            )}
-
-            {!!(httpRequestsReceivedChartData.length || httpRequestsSentChartData.length) && (
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50vw">
-                        <RealTimeMetricChart
-                            data={httpRequestsReceivedChartData}
-                            title={RealTimeMetricsLabels.HTTPrequestsIn}
-                            color={ChartThemeColors.Cyan}
-                            timestamp={timestamp}
-                        />
-                    </SplitItem>
-
-                    <SplitItem className="pf-u-w-50vw">
-                        <RealTimeMetricChart
-                            data={httpRequestsSentChartData}
-                            title={RealTimeMetricsLabels.HTTPrequestsOut}
-                            color={ChartThemeColors.Gray}
-                            timestamp={timestamp}
-                        />
-                    </SplitItem>
-                </Split>
-            )}
-        </div>
+                        <SplitItem className="pf-u-w-50vw">
+                            <RealTimeMetricChart
+                                data={httpRequestsSentChartData}
+                                title={RealTimeMetricsLabels.HTTPrequestsOut}
+                                color={ChartThemeColors.Gray}
+                            />
+                        </SplitItem>
+                    </Split>
+                )}
+            </div>
+        </>
     );
 };
 
@@ -143,7 +140,6 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
     title,
     color = ChartThemeColors.Purple,
     formatter,
-    timestamp = 0,
 }) {
     const dataLegend = data.map(({ name }) => ({ name }));
 
@@ -152,7 +148,6 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
             <CardTitle>{title}</CardTitle>
             {data.length ? (
                 <RealTimeLineChart
-                    timestamp={timestamp}
                     options={{
                         chartColor: color,
                         formatter,

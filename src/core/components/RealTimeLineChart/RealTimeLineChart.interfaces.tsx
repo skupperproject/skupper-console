@@ -5,7 +5,6 @@ interface DataProps {
 
 export interface RealTimeLineChartProps {
     data: DataProps[];
-    timestamp: number;
     options?: {
         formatter?: Function;
         chartColor?: string;

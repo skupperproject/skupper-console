@@ -1,11 +1,11 @@
 /**
  * Transform an array to an abject grouped by some conditions.
  */
-export function groupBy<K extends keyof any, V>(array: V[], grouper: (item: V) => K) {
-    return array.reduce((store, item) => {
+export function groupBy<K extends keyof V, V>(array: V[], grouper: (item: V) => K) {
+    return array.reduce((acc, item) => {
         const key = grouper(item);
-        (store[key] = store[key] || []).push(item);
+        (acc[key] = acc[key] || []).push(item);
 
-        return store;
+        return acc;
     }, {} as Record<K, V[]>);
 }

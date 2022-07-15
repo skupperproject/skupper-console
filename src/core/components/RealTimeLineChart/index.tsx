@@ -14,8 +14,9 @@ import { chartConfig } from './RealTimeLineChart.constants';
 import { ChartThemeColors, TrafficChartLabels } from './RealTimeLineChart.enum';
 import { SampleProps, RealTimeLineChartProps } from './RealTimeLineChart.interfaces';
 
-const RealTimeLineChart = memo(function ({ data, timestamp, options }: RealTimeLineChartProps) {
-    const [lastTimestamp, setLastTimestamp] = useState(timestamp);
+const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartProps) {
+    const [timestamp, setTimestamp] = useState(new Date().getTime());
+    const [lastTimestamp] = useState(new Date().getTime());
     const [samples, setSamples] = useState<SampleProps[][] | null>(null);
 
     useEffect(() => {
@@ -40,7 +41,9 @@ const RealTimeLineChart = memo(function ({ data, timestamp, options }: RealTimeL
     }, [timestamp]);
 
     useEffect(() => {
-        setLastTimestamp(Date.now());
+        setInterval(() => {
+            setTimestamp(new Date().getTime());
+        }, 3000);
     }, []);
 
     if (!samples) {
@@ -67,7 +70,7 @@ const RealTimeLineChart = memo(function ({ data, timestamp, options }: RealTimeL
                 height={chartConfig.height}
                 domainPadding={{ y: [10, 10] }}
                 padding={{
-                    bottom: 200,
+                    bottom: 250,
                     left: 90,
                     right: 20,
                     top: 0,

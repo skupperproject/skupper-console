@@ -107,7 +107,6 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
     title,
     color = ChartThemeColors.Purple,
     formatter,
-    timestamp = 0,
 }) {
     const dataLegend = data.map(({ name }) => ({ name }));
 
@@ -116,7 +115,6 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
             <CardTitle>{title}</CardTitle>
             {data.length ? (
                 <RealTimeLineChart
-                    timestamp={timestamp}
                     options={{
                         chartColor: color,
                         formatter,

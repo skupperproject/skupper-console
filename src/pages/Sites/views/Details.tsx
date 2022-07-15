@@ -37,14 +37,14 @@ const SiteDetail = function () {
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [activeTabKey, setaActiveTabKey] = useState<number>();
 
-    const {
-        data: site,
-        isLoading,
-        dataUpdatedAt,
-    } = useQuery([QueriesSites.GetSite, siteId], () => SitesServices.fetchSite(siteId), {
-        refetchInterval,
-        onError: handleError,
-    });
+    const { data: site, isLoading } = useQuery(
+        [QueriesSites.GetSite, siteId],
+        () => SitesServices.fetchSite(siteId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
 
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
@@ -131,7 +131,6 @@ const SiteDetail = function () {
                         httpRequestsSent={site.httpRequestsSent}
                         tcpConnectionsIn={site.tcpConnectionsIn}
                         tcpConnectionsOut={site.tcpConnectionsOut}
-                        timestamp={dataUpdatedAt}
                     />
                 </Tab>
             </Tabs>
