@@ -369,17 +369,7 @@ export default class TopologyGraph {
             .style('cursor', 'pointer')
             .attr('stroke', (d) => setColor(d))
             .attr('fill', (d) => setColor(d))
-            .attr('opacity', 0)
-            .on('mouseover', ({ target }) => {
-                if (!this.isDraggingNode) {
-                    select(target).attr('opacity', 0.15);
-                }
-            })
-            .on('mouseout', ({ target }) => {
-                if (!this.isDraggingNode) {
-                    select(target).attr('opacity', 0);
-                }
-            })
+            .attr('opacity', 0.15)
             .call(
                 drag<SVGPathElement, string>()
                     .on('start', this.groupDragstarted)
