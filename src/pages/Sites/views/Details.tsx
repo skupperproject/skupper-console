@@ -37,9 +37,18 @@ const SiteDetail = function () {
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [activeTabKey, setaActiveTabKey] = useState<number>();
 
-    const { data: site, isLoading } = useQuery(
+    const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
-        () => SitesServices.fetchSite(siteId),
+        () => (siteId ? SitesServices.fetchSite(siteId) : null),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
+        [QueriesSites.GetSiteTraffic, siteId],
+        () => (siteId ? SitesServices.fetchTraffic(siteId) : null),
         {
             refetchInterval,
             onError: handleError,
@@ -62,13 +71,22 @@ const SiteDetail = function () {
         setaActiveTabKey(tabIndex as number);
     }
 
-    if (isLoading) {
+    if (isLoadingSite && isLoadingTraffic) {
         return <LoadingPage />;
     }
 
-    if (!site) {
+    if (!site || !traffic) {
         return null;
     }
+
+    const {
+        httpRequests,
+        tcpRequests,
+        httpRequestsReceived,
+        httpRequestsSent,
+        tcpConnectionsIn,
+        tcpConnectionsOut,
+    } = traffic;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
@@ -109,8 +127,8 @@ const SiteDetail = function () {
                 >
                     <Connections
                         siteName={site.siteName}
-                        httpRequests={site.httpRequests}
-                        tcpRequests={site.tcpRequests}
+                        httpRequests={httpRequests}
+                        tcpRequests={tcpRequests}
                     />
                 </Tab>
                 <Tab
@@ -119,18 +137,18 @@ const SiteDetail = function () {
                 >
                     <Metrics
                         siteName={site.siteName}
-                        httpRequestsReceived={site.httpRequestsReceived}
-                        httpRequestsSent={site.httpRequestsSent}
-                        tcpConnectionsIn={site.tcpConnectionsIn}
-                        tcpConnectionsOut={site.tcpConnectionsOut}
+                        httpRequestsReceived={httpRequestsReceived}
+                        httpRequestsSent={httpRequestsSent}
+                        tcpConnectionsIn={tcpConnectionsIn}
+                        tcpConnectionsOut={tcpConnectionsOut}
                     />
 
                     <RealTimeMetrics
                         siteName={site.siteName}
-                        httpRequestsReceived={site.httpRequestsReceived}
-                        httpRequestsSent={site.httpRequestsSent}
-                        tcpConnectionsIn={site.tcpConnectionsIn}
-                        tcpConnectionsOut={site.tcpConnectionsOut}
+                        httpRequestsReceived={httpRequestsReceived}
+                        httpRequestsSent={httpRequestsSent}
+                        tcpConnectionsIn={tcpConnectionsIn}
+                        tcpConnectionsOut={tcpConnectionsOut}
                     />
                 </Tab>
             </Tabs>

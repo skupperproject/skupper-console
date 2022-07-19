@@ -1,35 +1,35 @@
 import { RESTApi } from 'API/REST';
 import { ServiceConnection } from 'API/REST.interfaces';
 
-import { DeploymentLink, Site, SiteDetails } from './services.interfaces';
+import { DeploymentLink, Site, SiteTraffic } from './services.interfaces';
 
 const SitesServices = {
     fetchSites: async (): Promise<Site[]> => RESTApi.fetchSites(),
-    fetchSite: async (id: string | undefined): Promise<SiteDetails | null> => {
-        const data = await RESTApi.fetchData();
+    fetchSite: async (id: string): Promise<Site> => {
         const sites = await RESTApi.fetchSites();
+        const site = sites.find(({ siteId }) => siteId === id) as Site;
 
-        const info = sites.find(({ siteId }) => siteId === id) as Site;
+        return site;
+    },
+    fetchTraffic: async (id: string): Promise<SiteTraffic> => {
+        const data = await RESTApi.fetchData();
 
-        const httpRequestsReceived = getHTTPrequestsInBySite(data.deploymentLinks, info.siteId);
-        const httpRequestsSent = getHTTPrequestsOutBySite(data.deploymentLinks, info.siteId);
-        const tcpTrafficReceived = getTCPConnectionsInBySite(data.deploymentLinks, info.siteId);
-        const tcpTrafficSent = getTCPConnectionsOutBySite(data.deploymentLinks, info.siteId);
+        const httpRequestsReceived = getHTTPrequestsInBySite(data.deploymentLinks, id);
+        const httpRequestsSent = getHTTPrequestsOutBySite(data.deploymentLinks, id);
+        const tcpConnectionsIn = getTCPConnectionsInBySite(data.deploymentLinks, id);
+        const tcpConnectionsOut = getTCPConnectionsOutBySite(data.deploymentLinks, id);
 
         const httpRequests = getHTTPtraffic(httpRequestsSent, httpRequestsReceived);
-        const tcpRequests = getTCPtraffic(tcpTrafficSent, tcpTrafficReceived);
+        const tcpRequests = getTCPtraffic(tcpConnectionsOut, tcpConnectionsIn);
 
-        return id
-            ? {
-                  ...info,
-                  httpRequestsReceived,
-                  httpRequestsSent,
-                  tcpConnectionsIn: tcpTrafficReceived,
-                  tcpConnectionsOut: tcpTrafficSent,
-                  httpRequests,
-                  tcpRequests,
-              }
-            : null;
+        return {
+            httpRequestsReceived,
+            httpRequestsSent,
+            tcpConnectionsIn,
+            tcpConnectionsOut,
+            httpRequests,
+            tcpRequests,
+        };
     },
 };
 

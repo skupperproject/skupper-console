@@ -21,9 +21,18 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
-    const { data: site, isLoading } = useQuery(
+    const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, id],
         () => SitesServices.fetchSite(id),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
+        [QueriesSites.GetSiteTraffic, id],
+        () => SitesServices.fetchTraffic(id),
         {
             refetchInterval,
             onError: handleError,
@@ -39,18 +48,18 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         navigate(route);
     }
 
-    if (isLoading) {
+    if (isLoadingSite || isLoadingTraffic) {
         return null;
     }
 
-    if (!site) {
+    if (!site || !traffic) {
         return null;
     }
 
-    const httpRequestsReceivedEntries = Object.entries(site.httpRequestsReceived);
-    const httpRequestsSentEntries = Object.entries(site.httpRequestsSent);
-    const tcpConnectionsInEntries = Object.entries(site.tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.entries(site.tcpConnectionsOut);
+    const httpRequestsReceivedEntries = Object.entries(traffic.httpRequestsReceived);
+    const httpRequestsSentEntries = Object.entries(traffic.httpRequestsSent);
+    const tcpConnectionsInEntries = Object.entries(traffic.tcpConnectionsIn);
+    const tcpConnectionsOutEntries = Object.entries(traffic.tcpConnectionsOut);
 
     return (
         <Panel>

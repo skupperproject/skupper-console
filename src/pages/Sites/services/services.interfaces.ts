@@ -30,7 +30,7 @@ export interface TCPRequest {
     byteIn: number | null;
 }
 
-export type SiteDetails = SiteResponse & {
+export type SiteTraffic = {
     httpRequestsReceived: Record<string, ServiceConnection>;
     httpRequestsSent: Record<string, ServiceConnection>;
     tcpConnectionsIn: Record<string, ServiceConnection>;
