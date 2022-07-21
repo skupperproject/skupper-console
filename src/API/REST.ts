@@ -12,6 +12,7 @@ import {
     FLOWS_BY_VAN_ADDRESS,
     FLOWS_LINKS,
     FLOWS_RECORD_BY_ID,
+    FLOWS_ROUTERS,
     FLOWS_TOPOLOGY,
     FLOWS_VAN_ADDRESSES,
 } from './REST.constant';
@@ -71,9 +72,10 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_TOPOLOGY}`);
+        const { data: routers } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
+        const { data: links } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
-        return getFlowsTopology(data);
+        return getFlowsTopology(routers, links);
     },
     fetchConnectionsByVanAddr: async (vanaddr: string): Promise<FlowsConnectionResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`);

@@ -116,26 +116,27 @@ export interface ServiceResponse {
 
 // FLOWS
 export interface FlowsRouterResponse {
-    startTime: number;
-    hostname: string;
+    identity: string;
+    parent: string;
+    recType: string;
     name: string;
+    hostname: string;
     namespace: string;
     imageName: string;
-    buildVersion: string;
     imageVersion: string;
-    rtype: string;
-    id: string;
+    buildVersion: string;
+    startTime: number;
 }
 
-interface FlowsLinkResponse {
+export interface FlowsLinkResponse {
+    identity: string;
     parent: string;
-    startTime: number;
-    mode: string;
+    recType: string;
     name: string;
+    mode: string;
     linkCost: number;
     direction: string;
-    rtype: string;
-    id: string;
+    startTime: number;
 }
 
 export interface FlowsDeviceResponse {
@@ -203,11 +204,14 @@ export interface FlowsResponse {
 }
 
 export interface FlowsVanAddressesResponse {
-    id: string;
+    identity: string;
+    recType: string;
+    name: string;
     listenerCount: number;
     connectorCount: number;
     totalFlows: number;
     currentFlows: number;
+    startTime: number;
 }
 
 export interface LinkStatsResponse {
@@ -225,7 +229,7 @@ export interface FlowsTopologyLink {
     source: string;
     target: string;
     mode: string;
-    cost: string;
+    cost: number;
 }
 
 export interface FlowsTopologyResponse {

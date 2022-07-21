@@ -16,7 +16,7 @@ export const NetworkServices = {
         const deployments = getDeployments(data);
 
         const routersMap = topologyNetwork.nodes.reduce((acc, node) => {
-            acc[node.id] = node;
+            acc[node.identity] = node;
 
             return acc;
         }, {} as Record<string, FlowsRouterResponse>);

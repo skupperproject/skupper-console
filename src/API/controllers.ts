@@ -1,4 +1,10 @@
-import { DataResponse, FlowsDataResponse } from './REST.interfaces';
+import {
+    DataResponse,
+    FlowsDataResponse,
+    FlowsLinkResponse,
+    FlowsRouterResponse,
+    FlowsTopologyLink,
+} from './REST.interfaces';
 import Adapter from './utils/adapter';
 import { normalizeFlows, getFlowsTree } from './utils/utils';
 
@@ -66,27 +72,27 @@ export function getFlowsConnectionsByService(flowsData: FlowsDataResponse[]) {
     });
 }
 
-export function getFlowsTopology(flowsData: FlowsDataResponse[]) {
-    const routerNodes = flowsData.filter((data) => data.rtype === 'ROUTER');
-    const routersMap = routerNodes.reduce((acc, router) => {
-        acc[router.name] = router;
+export function getFlowsTopology(routers: FlowsRouterResponse[], links: FlowsLinkResponse[]) {
+    const routersMap = routers.reduce((acc, router) => {
+        acc[router.identity] = router;
 
         return acc;
-    }, {} as Record<string, FlowsDataResponse>);
+    }, {} as Record<string, FlowsRouterResponse>);
 
-    const links = flowsData.filter(({ rtype, linkCost }) => rtype === 'LINK' && linkCost);
-    const linkRouters = links.reduce((acc, link) => {
-        const target = routersMap[link.name];
+    const linksWithRouters = links
+        .filter(({ linkCost, direction }) => linkCost && direction === 'incoming')
+        .reduce((acc, link) => {
+            const target = routersMap[link.parent];
 
-        acc.push({
-            source: link.parent,
-            target: target?.id,
-            mode: link.mode,
-            cost: link.linkCost,
-        });
+            acc.push({
+                source: link.parent,
+                target: target?.identity,
+                mode: link.mode,
+                cost: link.linkCost,
+            });
 
-        return acc;
-    }, [] as any[]);
+            return acc;
+        }, [] as FlowsTopologyLink[]);
 
-    return { links: linkRouters, nodes: routerNodes };
+    return { links: linksWithRouters, nodes: routers as FlowsDataResponse[] };
 }

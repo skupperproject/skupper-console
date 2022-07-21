@@ -61,27 +61,36 @@ const Overview = function () {
                         <Th>{OverviewColumns.NumFlowsActive}</Th>
                     </Tr>
                 </Thead>
-                {vanServices?.map((row) => (
-                    <Tbody key={row.id}>
-                        <Tr>
-                            <Td dataLabel={OverviewColumns.Name}>
-                                <ResourceIcon type="vanAddress" />
+                {vanServices?.map(
+                    ({
+                        identity,
+                        name,
+                        listenerCount,
+                        connectorCount,
+                        totalFlows,
+                        currentFlows,
+                    }) => (
+                        <Tbody key={identity}>
+                            <Tr>
+                                <Td dataLabel={OverviewColumns.Name}>
+                                    <ResourceIcon type="vanAddress" />
 
-                                <Link to={`${MonitoringRoutesPaths.Connections}/${row.id}`}>
-                                    {row.id}
-                                </Link>
-                            </Td>
-                            <Td dataLabel={OverviewColumns.TotalListeners}>
-                                {`${row.listenerCount}`}
-                            </Td>
-                            <Td
-                                dataLabel={OverviewColumns.TotalConnectors}
-                            >{`${row.connectorCount}`}</Td>
-                            <Td dataLabel={OverviewColumns.NumFLows}>{`${row.totalFlows}`}</Td>
-                            <Td dataLabel={OverviewColumns.NumFLows}>{`${row.currentFlows}`}</Td>
-                        </Tr>
-                    </Tbody>
-                ))}
+                                    <Link to={`${MonitoringRoutesPaths.Connections}/${identity}`}>
+                                        {name}
+                                    </Link>
+                                </Td>
+                                <Td dataLabel={OverviewColumns.TotalListeners}>
+                                    {`${listenerCount}`}
+                                </Td>
+                                <Td
+                                    dataLabel={OverviewColumns.TotalConnectors}
+                                >{`${connectorCount}`}</Td>
+                                <Td dataLabel={OverviewColumns.NumFLows}>{`${totalFlows}`}</Td>
+                                <Td dataLabel={OverviewColumns.NumFLows}>{`${currentFlows}`}</Td>
+                            </Tr>
+                        </Tbody>
+                    ),
+                )}
             </TableComposable>
         </Card>
     );

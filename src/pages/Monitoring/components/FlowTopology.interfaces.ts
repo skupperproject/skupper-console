@@ -8,7 +8,7 @@ export interface MonitoringTopologyLink {
     bytes?: string;
     protocol?: string;
     mode?: string;
-    cost?: string;
+    cost?: number;
 }
 
 export interface MonitoringTopologyLinkNormalized {
@@ -17,7 +17,7 @@ export interface MonitoringTopologyLinkNormalized {
     bytes?: string;
     protocol?: string;
     mode?: string;
-    cost?: string;
+    cost?: number;
     source: MonitoringTopologyNode | string;
     target: MonitoringTopologyNode | string;
 }
