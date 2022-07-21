@@ -80,7 +80,7 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
+    fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
         const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
 
         return data;

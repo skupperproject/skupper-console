@@ -158,7 +158,7 @@ export interface FlowResponse {
     octets: number;
     sourceHost: string;
     sourcePort: string;
-    counterflow: string;
+    counterflow?: string;
     trace?: string;
     latency: number;
     rtype: string;

@@ -17,6 +17,14 @@ export type Connection = {
     flows: FlowResponse[];
 };
 
+export interface FlowExtended extends FlowResponse {
+    device: string;
+    routerName: string;
+    protocol: string;
+    namespace: string;
+    target: FlowExtended;
+}
+
 export type MonitoringTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 

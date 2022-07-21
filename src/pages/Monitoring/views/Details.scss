@@ -1,9 +1,11 @@
-.flow-devices tbody tr {
+.flows-table tbody tr {
+    cursor: pointer;
+
     &:hover {
-        background-color: var(--pf-global--palette--blue-100);
+        background-color: var(--pf-global--palette--black-200);
     }
 
     &.selected {
-        background-color: var(--pf-global--palette--blue-300);
+        background-color: var(--pf-global--palette--black-200);
     }
 }

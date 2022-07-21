@@ -5,14 +5,18 @@ export enum Labels {
     NoResult = 'No flows found',
 }
 
-export enum DetailsColumns {
+export enum DetailsColumnsNames {
     To = 'To',
     Hostname = 'Hostname',
     Name = 'Source',
     Direction = 'Direction',
     Namespace = 'Namespace',
+    Site = 'Site',
+    TargetSite = 'Target Site',
     Protocol = 'Protocol',
     Router = 'Router',
+    TargetRouter = 'Target Router',
+    TargetDirection = 'Target Direction',
     DestinationHost = 'Host',
     DestinationPort = 'Port',
     Status = 'Status',
@@ -25,4 +29,5 @@ export enum DetailsColumns {
     TrafficIn = 'Traffic',
     Latency = 'Latency',
     LatencyIn = 'Latency',
+    StartTime = 'Created at',
 }

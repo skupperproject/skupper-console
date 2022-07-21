@@ -9,6 +9,7 @@ import {
     forceY,
     Simulation,
     ForceLink,
+    forceCollide,
 } from 'd3-force';
 import { polygonCentroid, polygonHull } from 'd3-polygon';
 import { scaleOrdinal } from 'd3-scale';
@@ -35,7 +36,7 @@ export default class TopologyGraph {
     onClickNode: Function;
     force: Simulation<TopologyNode, TopologyLinkNormalized>;
     svgContainer: Selection<SVGSVGElement, unknown, null, undefined>;
-    svgContainerGroup: Selection<SVGGElement, unknown, null, undefined>;
+    svgContainerGroupNodes: Selection<SVGGElement, unknown, null, undefined>;
     xmlData: { site: XMLDocument | null; service: XMLDocument | null };
     isDraggingNode: boolean;
     handleZoom: ZoomBehavior<SVGSVGElement, unknown>;
@@ -61,7 +62,7 @@ export default class TopologyGraph {
         this.force = this.initForce(nodes);
 
         this.svgContainer = this.createSvgContainer();
-        this.svgContainerGroup = this.svgContainer
+        this.svgContainerGroupNodes = this.svgContainer
             .append('g')
             .attr('width', '100%')
             .attr('height', '100%');
@@ -81,7 +82,7 @@ export default class TopologyGraph {
         this.handleZoom = zoom<SVGSVGElement, unknown>()
             .scaleExtent([0.5, 4])
             .on('zoom', ({ transform }) => {
-                this.svgContainerGroup.attr('transform', transform);
+                this.svgContainerGroupNodes.attr('transform', transform);
             });
 
         this.svgContainer.call(this.handleZoom);
@@ -111,6 +112,7 @@ export default class TopologyGraph {
         if (!active) {
             this.force.alphaTarget(0.3).restart();
         }
+
         node.fx = node.x;
         node.fy = node.y;
 
@@ -182,8 +184,8 @@ export default class TopologyGraph {
         const minSvgPosY = 10;
         const minSvgPosX = 10;
 
-        const maxSvgPosX = Number(this.svgContainerGroup.attr('width'));
-        const maxSvgPosY = Number(this.svgContainerGroup.attr('height'));
+        const maxSvgPosX = Number(this.svgContainerGroupNodes.attr('width'));
+        const maxSvgPosY = Number(this.svgContainerGroupNodes.attr('height'));
 
         function validatePosition(pos: number, max: number, min: number) {
             if (pos - min < 0) {
@@ -197,7 +199,7 @@ export default class TopologyGraph {
             return pos;
         }
 
-        this.svgContainerGroup.selectAll<SVGSVGElement, TopologyNode>('.node').attr(
+        this.svgContainerGroupNodes.selectAll<SVGSVGElement, TopologyNode>('.node').attr(
             'transform',
             ({ x, y }) => `translate(
                     ${validatePosition(x - SERVICE_SIZE / 2, maxSvgPosX, minSvgPosX)},
@@ -205,7 +207,7 @@ export default class TopologyGraph {
                 )`,
         );
 
-        this.svgContainerGroup
+        this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, TopologyLinkNormalized>('.serviceLink')
             .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
             .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
@@ -216,7 +218,7 @@ export default class TopologyGraph {
     };
 
     private polygonGenerator = (groupId: string) => {
-        const node_coords: [number, number][] = this.svgContainerGroup
+        const node_coords: [number, number][] = this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, TopologyNode>('.node')
             .filter(function (d) {
                 return d.group === Number(groupId);
@@ -233,7 +235,7 @@ export default class TopologyGraph {
         this.groupIds.forEach((groupId) => {
             let centroid: [number, number] = [0, 0];
 
-            const path = this.svgContainerGroup
+            const path = this.svgContainerGroupNodes
                 .selectAll<SVGPathElement, string>('.nodes_groups')
                 .filter((d) => d === groupId)
                 .attr('transform', 'scale(1) translate(0,0)')
@@ -276,7 +278,9 @@ export default class TopologyGraph {
         return forceSimulation<TopologyNode, TopologyLinkNormalized>()
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', null)
+            .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
             .alpha(0.1)
+            .alphaMin(0.08)
             .force(
                 'x',
                 forceX<TopologyNode>()
@@ -317,7 +321,7 @@ export default class TopologyGraph {
 
     private updateDOMLinks = (links: TopologyLinkNormalized[]) => {
         // Pointer
-        this.svgContainerGroup
+        this.svgContainerGroupNodes
             .append('svg:defs')
             .append('svg:marker')
             .attr('id', 'arrow')
@@ -332,7 +336,7 @@ export default class TopologyGraph {
             .attr('d', 'M0,-5L10,0L0,5');
 
         // links services
-        const svgLinksData = this.svgContainerGroup.selectAll('.serviceLink').data(links);
+        const svgLinksData = this.svgContainerGroupNodes.selectAll('.serviceLink').data(links);
         const svgLinks = svgLinksData.enter();
 
         svgLinks
@@ -347,6 +351,14 @@ export default class TopologyGraph {
     };
 
     private updateDOMNodes = async (nodes: TopologyNode[]) => {
+        if (!this.xmlData.site) {
+            this.xmlData.site = await xml(server);
+        }
+
+        if (!this.xmlData.service) {
+            this.xmlData.service = await xml(service);
+        }
+
         this.groupIds = set(nodes.map((n) => +n.group))
             .values()
             .map((groupId) => ({
@@ -357,7 +369,7 @@ export default class TopologyGraph {
             .map((group) => group.groupId);
         const setColor = scaleOrdinal(schemeCategory10);
 
-        this.svgContainerGroup
+        this.svgContainerGroupNodes
             .attr('class', 'groups')
             .selectAll('.path_placeholder')
             .data(this.groupIds)
@@ -366,7 +378,6 @@ export default class TopologyGraph {
             .attr('class', 'path_placeholder')
             .append('path')
             .attr('class', 'nodes_groups')
-            .style('cursor', 'pointer')
             .attr('stroke', (d) => setColor(d))
             .attr('fill', (d) => setColor(d))
             .attr('opacity', 0.15)
@@ -377,27 +388,9 @@ export default class TopologyGraph {
                     .on('end', this.groupDragended),
             );
 
-        if (!this.xmlData.site) {
-            this.xmlData.site = await xml(server);
-        }
-
-        if (!this.xmlData.service) {
-            this.xmlData.service = await xml(service);
-        }
-
-        const svgNodesData = this.svgContainerGroup.selectAll('.node').data(nodes);
-
+        const svgNodesData = this.svgContainerGroupNodes.selectAll('.node').data(nodes);
         const svgNodes = svgNodesData.enter();
-
-        const enterSelection = svgNodes
-            .append('g')
-            .attr('class', 'node')
-            .call(
-                drag<SVGGElement, TopologyNode>()
-                    .on('start', this.dragStarted)
-                    .on('drag', this.dragged)
-                    .on('end', this.dragEnded),
-            );
+        const enterSelection = svgNodes.append('g').attr('class', 'node');
 
         enterSelection
             .append(({ type }) => {
@@ -418,7 +411,7 @@ export default class TopologyGraph {
             .style('cursor', 'pointer')
             .on('mouseover', (_, { id }) => {
                 if (!this.isDraggingNode) {
-                    this.svgContainerGroup
+                    this.svgContainerGroupNodes
                         .selectAll<SVGElement, TopologyLinkNormalized>('.serviceLink')
                         .style('opacity', (svgLink) => {
                             const isLinkConnectedToTheNode =
@@ -438,7 +431,7 @@ export default class TopologyGraph {
             })
             .on('mouseout', () => {
                 if (!this.isDraggingNode) {
-                    this.svgContainerGroup
+                    this.svgContainerGroupNodes
                         .selectAll('.serviceLink')
                         .style('opacity', '1')
                         .style('stroke', 'var(--pf-global--palette--black-400)');
@@ -453,10 +446,17 @@ export default class TopologyGraph {
             .attr('y', SERVICE_SIZE + FONT_SIZE_DEFAULT * 2)
             .style('fill', 'var(--pf-global--palette--black-500)')
             .text(({ name }) => name);
+
+        enterSelection.call(
+            drag<SVGGElement, TopologyNode>()
+                .on('start', this.dragStarted)
+                .on('drag', this.dragged)
+                .on('end', this.dragEnded),
+        );
     };
 
     updateTopology = (nodes: TopologyNode[], links: TopologyLink[] | TopologyLinkNormalized[]) => {
-        this.svgContainerGroup.selectAll('*').remove();
+        this.svgContainerGroupNodes.selectAll('*').remove();
 
         this.force
             .nodes(nodes)
