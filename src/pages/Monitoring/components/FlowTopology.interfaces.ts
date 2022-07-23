@@ -23,7 +23,7 @@ export interface MonitoringTopologyLinkNormalized {
 }
 
 export interface MonitoringTopologyRouterNode {
-    id: string;
+    identity: string;
     name: string;
     x: number;
     y: number;
@@ -34,14 +34,14 @@ export interface MonitoringTopologyRouterNode {
 }
 
 export interface MonitoringTopologyDeviceNode {
-    id: string;
+    identity: string;
     name: string;
     x: number;
     y: number;
     fx?: number | null;
     fy?: number | null;
     type: string;
-    rtype: string;
+    recType: string;
     protocol: string;
     avgLatency: number;
     numFlows: number;

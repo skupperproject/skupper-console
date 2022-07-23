@@ -121,6 +121,7 @@ export interface FlowsRouterResponse {
     recType: string;
     name: string;
     hostname: string;
+    hostame: string;
     namespace: string;
     imageName: string;
     imageVersion: string;
@@ -140,63 +141,64 @@ export interface FlowsLinkResponse {
 }
 
 export interface FlowsDeviceResponse {
+    identity: string;
     parent: string;
+    recType: string;
+    address: string;
+    protocol: string;
+    flowRateL4: number;
+    flowCountL4: number;
     startTime: number;
     endTime?: number;
-    destHost: string;
-    protocol: string;
-    destPort: number;
-    vanAddress: string;
-    name: string;
-    rtype: string;
-    id: string;
 }
 
 export interface FlowResponse {
+    identity: string;
     parent: string;
-    startTime: number;
-    endTime?: number;
+    recType: string;
     octets: number;
+    octetRate: number;
+    octetsUnacked: number;
+    windowSize: number;
     sourceHost: string;
     sourcePort: string;
-    counterflow?: string;
-    trace?: string;
     latency: number;
-    rtype: string;
-    id: string;
+    trace?: string;
+    counterFlow?: string;
+    startTime: number;
+    endTime?: number;
 }
 
-export type FlowsConnectionResponse = FlowsDeviceResponse | FlowResponse;
 export type FlowsDataResponse = FlowsRouterResponse &
     FlowsLinkResponse &
     FlowsDeviceResponse &
     FlowResponse;
 
 interface FlowAdapterResponse {
+    identity: string;
+    recType: string;
     sourceHost: string;
     sourcePort: string;
-    id: string;
     octets: number;
     latency: number;
-    counterflow?: string | null;
+    counterFlow?: string | null;
     connectedTo?: FlowAdapterResponse & { parent: string };
     startTime: number;
     endTime?: number;
     parent: string;
-    rtype: string;
     trace?: string;
 }
 
 export interface FlowsResponse {
+    identity: string;
+    recType: string;
     hostname: string;
     siteName: string;
     name: string;
-    rtype: string;
     protocol: string;
     destHost: string;
     destPort: number;
     vanAddress: string;
-    id: string;
     flows: FlowAdapterResponse[];
     parent: string;
     startTime: number;
@@ -216,12 +218,12 @@ export interface FlowsVanAddressesResponse {
 
 export interface LinkStatsResponse {
     direction: string;
-    id: string;
+    identity: string;
     linkCost: number;
     mode: string;
     name: string;
     parent: string;
-    rtype: string;
+    recType: string;
     startTime: number;
     endTime?: number;
 }

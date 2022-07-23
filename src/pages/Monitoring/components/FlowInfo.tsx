@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { Alert, Card, Label } from '@patternfly/react-core';
+import { Page } from '@patternfly/react-core';
+import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,11 +10,12 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import DescriptionItem from '@pages/Sites/components/DescriptionItem';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
-import { FlowInfoColumns, FlowInfoLables } from './FlowInfo.enum';
+import { FlowInfoColumns } from './FlowInfo.enum';
 
 const FlowInfo = function () {
     const navigate = useNavigate();
@@ -52,74 +54,80 @@ const FlowInfo = function () {
     const { startFlow, endFlow } = connection;
 
     return (
-        <>
-            {(!startFlow || !endFlow) && (
-                <Alert
-                    variant="warning"
-                    isInline
-                    title={FlowInfoLables.WarningMessage}
-                    className="pf-u-mb-md"
-                />
-            )}
+        <Page>
+            <DescriptionItem
+                title={FlowInfoColumns.Address}
+                value={startFlow?.device.address || ''}
+            />
+            <DescriptionItem
+                title={FlowInfoColumns.Protocol}
+                value={startFlow?.device.protocol || ''}
+            />
 
-            <Card data-cy="sk-monitoring-services" className="pf-u-mb-md">
-                <TableComposable>
-                    <Thead hasNestedHeader>
+            <TableComposable borders={true} isStriped>
+                <Thead>
+                    <Tr>
+                        <Th>{FlowInfoColumns.Source}</Th>
+                        <Th>{FlowInfoColumns.RouterName}</Th>
+                        <Th>{FlowInfoColumns.Namespace}</Th>
+                        <Th>{FlowInfoColumns.HostName}</Th>
+                        <Th>{FlowInfoColumns.Bytes}</Th>
+                        <Th>{FlowInfoColumns.ByteRate}</Th>
+                        <Th>{FlowInfoColumns.Latency}</Th>
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    <Tr>
+                        <Td dataLabel={FlowInfoColumns.Source}>
+                            {startFlow?.device.recType === 'LISTENER' ? (
+                                <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />
+                            ) : (
+                                <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />
+                            )}
+                            {`${startFlow?.sourceHost}: ${startFlow?.sourcePort}`}
+                        </Td>
+                        <Td dataLabel={FlowInfoColumns.RouterName}>{startFlow?.router.name}</Td>
+                        <Td dataLabel={FlowInfoColumns.Namespace}>{startFlow?.router.namespace}</Td>
+                        <Td dataLabel={FlowInfoColumns.HostName}>{startFlow?.router.hostame}</Td>
+                        <Td dataLabel={FlowInfoColumns.Bytes}>
+                            {formatBytes(startFlow?.octets || 0)}
+                        </Td>
+                        <Td dataLabel={FlowInfoColumns.ByteRate}>
+                            {`${formatBytes(startFlow?.octetRate || 0)}/sec`}
+                        </Td>
+                        <Td dataLabel={FlowInfoColumns.Latency}>
+                            {formatTime(startFlow?.latency || 0)}
+                        </Td>
+                    </Tr>
+                    {endFlow && (
                         <Tr>
-                            <Th colSpan={4} hasRightBorder>
-                                <Label color="blue">
-                                    {' '}
-                                    {startFlow?.parentType === FlowInfoLables.Listener
-                                        ? FlowInfoLables.Listener
-                                        : FlowInfoLables.Connector}
-                                </Label>
-                            </Th>
-                            <Th colSpan={4} hasRightBorder>
-                                <Label color="blue">
-                                    {startFlow?.parentType === FlowInfoLables.Listener
-                                        ? FlowInfoLables.Connector
-                                        : FlowInfoLables.Listener}
-                                </Label>
-                            </Th>
-                        </Tr>
-                        <Tr>
-                            <Th isSubheader>{FlowInfoColumns.IP}</Th>
-                            <Th isSubheader>{FlowInfoColumns.Port}</Th>
-                            <Th isSubheader>{FlowInfoColumns.Bytes}</Th>
-                            <Th isSubheader hasRightBorder>
-                                {FlowInfoColumns.Latency}
-                            </Th>
-                            <Th isSubheader>{FlowInfoColumns.IP}</Th>
-                            <Th isSubheader>{FlowInfoColumns.Port}</Th>
-                            <Th isSubheader> {FlowInfoColumns.Bytes}</Th>
-                            <Th isSubheader hasRightBorder>
-                                {FlowInfoColumns.Latency}
-                            </Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        <Tr>
-                            <Td dataLabel={'IP'}>{startFlow?.sourceHost || '-'}</Td>
-                            <Td dataLabel={'port'}>{startFlow?.sourcePort || '-'}</Td>
-                            <Td dataLabel={'bytes'}>
-                                {startFlow?.octets ? formatBytes(startFlow?.octets) : '-'}
+                            <Td dataLabel={FlowInfoColumns.Source}>
+                                {endFlow?.device.recType === 'LISTENER' ? (
+                                    <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />
+                                ) : (
+                                    <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />
+                                )}
+                                {`${endFlow?.sourceHost}: ${endFlow?.sourcePort}`}
                             </Td>
-                            <Td dataLabel={'latency'}>
-                                {startFlow?.latency ? formatTime(startFlow?.latency) : '-'}
+                            <Td dataLabel={FlowInfoColumns.RouterName}>{endFlow?.router.name}</Td>
+                            <Td dataLabel={FlowInfoColumns.Namespace}>
+                                {endFlow?.router.namespace}
                             </Td>
-                            <Td dataLabel={'destination'}>{endFlow?.sourceHost || '-'}</Td>
-                            <Td dataLabel={'port'}>{endFlow?.sourcePort || '-'}</Td>
-                            <Td dataLabel={'bytes'}>
-                                {endFlow?.octets ? formatBytes(endFlow?.octets) : '-'}
+                            <Td dataLabel={FlowInfoColumns.HostName}>{endFlow?.router.hostame}</Td>
+                            <Td dataLabel={FlowInfoColumns.Bytes}>
+                                {formatBytes(endFlow?.octets || 0)}
                             </Td>
-                            <Td dataLabel={'latency'}>
-                                {endFlow?.latency ? formatTime(endFlow?.latency) : '-'}
+                            <Td dataLabel={FlowInfoColumns.ByteRate}>
+                                {`${formatBytes(endFlow?.octetRate || 0)}/sec`}
+                            </Td>
+                            <Td dataLabel={FlowInfoColumns.Latency}>
+                                {formatTime(endFlow?.latency || 0)}
                             </Td>
                         </Tr>
-                    </Tbody>
-                </TableComposable>
-            </Card>
-        </>
+                    )}
+                </Tbody>
+            </TableComposable>
+        </Page>
     );
 };
 

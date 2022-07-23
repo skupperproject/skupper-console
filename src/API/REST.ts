@@ -10,8 +10,15 @@ import {
 import {
     DATA_URL,
     FLOWS_BY_VAN_ADDRESS,
+    FLOWS_CONNECTOR,
+    FLOWS_CONNECTORS,
+    FLOWS_FLOW,
+    FLOWS_LINK,
     FLOWS_LINKS,
+    FLOWS_LISTENER,
+    FLOWS_LISTENERS,
     FLOWS_RECORD_BY_ID,
+    FLOWS_ROUTER,
     FLOWS_ROUTERS,
     FLOWS_TOPOLOGY,
     FLOWS_VAN_ADDRESSES,
@@ -23,10 +30,11 @@ import {
     SiteResponse,
     DeploymentTopologyResponse,
     FlowsVanAddressesResponse,
-    LinkStatsResponse,
     FlowsTopologyResponse,
-    FlowsConnectionResponse,
     FlowsDataResponse,
+    FlowResponse,
+    FlowsDeviceResponse,
+    FlowsRouterResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -66,26 +74,66 @@ export const RESTApi = {
 
         return getFlows(data, vanaddr);
     },
-    fetchFlowsLinks: async (): Promise<LinkStatsResponse[]> => {
+    fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
+        const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
+
+        return data;
+    },
+    fetchFlowsRouters: async (): Promise<FlowsRouterResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
+
+        return data;
+    },
+    fetchFlowsRouter: async (id: string): Promise<FlowsRouterResponse | null> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_ROUTER}/${id}`);
+
+        return data ? data[0] : null;
+    },
+    fetchFlowsLinks: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
         return data;
+    },
+    fetchFlowsLink: async (id: string): Promise<FlowsDeviceResponse | null> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_LINK}/${id}`);
+
+        return data ? data[0] : null;
+    },
+    fetchFlowsConnectors: async (): Promise<FlowsDeviceResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}`);
+
+        return data;
+    },
+    fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse | null> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_CONNECTOR}/${id}`);
+
+        return data ? data[0] : null;
+    },
+    fetchFlowsListeners: async (): Promise<FlowsDeviceResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}`);
+
+        return data;
+    },
+    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse | null> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_LISTENER}/${id}`);
+
+        return data ? data[0] : null;
+    },
+    fetchFlowsByVanAddr: async (vanaddr: string): Promise<FlowResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`);
+
+        return data;
+    },
+    fetchFlow: async (id: string): Promise<FlowResponse | null> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_FLOW}/${id}`);
+
+        return data ? data[0] : null;
     },
     fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
         const { data: routers } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
         const { data: links } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
         return getFlowsTopology(routers, links);
-    },
-    fetchConnectionsByVanAddr: async (vanaddr: string): Promise<FlowsConnectionResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`);
-
-        return data;
-    },
-    fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
-
-        return data;
     },
     fetchFlowRecord: async (ids: string[]): Promise<FlowsDataResponse[]> => {
         const queryString = ids.map((id) => `id=${id}`).join('&');

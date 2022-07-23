@@ -44,10 +44,10 @@ export function getDeployments(VANdata: DataResponse) {
     return dataAdapted.deployments;
 }
 
-export function getFlows(flowsData: FlowsDataResponse[], serviceAddress?: string) {
+export function getFlows(flowsData: FlowsDataResponse[], serviceAddress?: string): any {
     if (serviceAddress) {
         return normalizeFlows(getFlowsTree(flowsData)).filter(
-            (flow) => flow?.vanAddress === serviceAddress,
+            (flow) => flow?.address === serviceAddress,
         );
     }
 

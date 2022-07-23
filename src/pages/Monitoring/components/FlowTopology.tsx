@@ -68,11 +68,11 @@ const FlowTopology = function () {
 
     const routerNodes = useMemo(
         () =>
-            routers?.nodes?.map(({ id, name }) => {
-                const positions = localStorage.getItem(id);
+            routers?.nodes?.map(({ identity, name }) => {
+                const positions = localStorage.getItem(identity);
 
                 return {
-                    id,
+                    identity,
                     name,
                     width: 50,
                     type: 'router',
@@ -86,13 +86,13 @@ const FlowTopology = function () {
     );
 
     const getConnectionTopology = () =>
-        devices?.filter(({ id }: { id: string }) => {
+        devices?.filter(({ identity }) => {
             if (connection) {
-                if (id === connection.startFlow?.parent) {
+                if (identity === connection.startFlow?.parent) {
                     return true;
                 }
 
-                if (id === connection.endFlow?.parent) {
+                if (identity === connection.endFlow?.parent) {
                     return true;
                 }
 
@@ -104,17 +104,17 @@ const FlowTopology = function () {
 
     const deviceNodes = useMemo(
         () =>
-            connectionTopology?.map(({ id, name, rtype, flows, protocol }) => {
+            connectionTopology?.map(({ identity, name, recType, flows, protocol }) => {
                 const totalLatency = flows.reduce((acc, flow) => acc + flow.latency, 0);
                 const avgLatency = totalLatency / flows.length;
 
-                const positions = localStorage.getItem(id);
+                const positions = localStorage.getItem(identity);
 
                 const node = {
-                    id,
+                    identity,
                     name,
                     type: 'flow',
-                    rtype,
+                    recType,
                     avgLatency,
                     protocol,
                     numFlows: flows.length,
@@ -131,14 +131,14 @@ const FlowTopology = function () {
 
     const deviceLinks = useMemo(
         () =>
-            connectionTopology?.flatMap(({ id, rtype, parent, flows, protocol }) => {
+            connectionTopology?.flatMap(({ identity, recType, parent, flows, protocol }) => {
                 const bytes = flows.reduce((acc, flow) => acc + (flow.octets || 0), 0);
 
                 return [
                     {
                         source: parent,
-                        target: id,
-                        type: rtype,
+                        target: identity,
+                        type: recType,
                         pType: 'device',
                         protocol,
                         bytes: formatBytes(bytes),

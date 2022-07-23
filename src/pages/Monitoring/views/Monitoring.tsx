@@ -44,14 +44,7 @@ const Overview = function () {
 
     return (
         <Card data-cy="sk-monitoring-services">
-            <TableComposable
-                className="flows-table"
-                aria-label="flows table"
-                borders={false}
-                variant="compact"
-                isStickyHeader
-                isStriped
-            >
+            <TableComposable className="flows-table" borders={false} variant="compact" isStriped>
                 <Thead>
                     <Tr>
                         <Th>{OverviewColumns.Name}</Th>
@@ -75,7 +68,7 @@ const Overview = function () {
                                 <Td dataLabel={OverviewColumns.Name}>
                                     <ResourceIcon type="vanAddress" />
 
-                                    <Link to={`${MonitoringRoutesPaths.Connections}/${identity}`}>
+                                    <Link to={`${MonitoringRoutesPaths.Connections}/${name}`}>
                                         {name}
                                     </Link>
                                 </Td>

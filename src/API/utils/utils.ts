@@ -22,13 +22,13 @@ function list_to_tree(dataset: FlowsWithListenersConnectorsMapped[]) {
     const dataTree: ListToTree[] = [];
 
     dataset.forEach((data) => {
-        hashTable[data.id] = { ...data, childNodes: [] };
+        hashTable[data.identity] = { ...data, childNodes: [] };
     });
 
     dataset.forEach((data) => {
         data.parent
-            ? hashTable[data.parent].childNodes.push(hashTable[data.id])
-            : dataTree.push(hashTable[data.id]);
+            ? hashTable[data.parent].childNodes.push(hashTable[data.identity])
+            : dataTree.push(hashTable[data.identity]);
     });
 
     return dataTree;
@@ -58,35 +58,36 @@ export function normalizeFlows(data: ListToTree[]) {
 function mapFlowsWithListenersConnectors(flows: FlowsDataResponse[]) {
     return flows.map((data) => {
         const listenersBound = flows.reduce((acc, item) => {
-            if (item.counterflow) {
-                acc[item.id] = item;
+            if (item.counterFlow) {
+                acc[item.identity] = item;
             }
 
             return acc;
         }, {} as Record<string, FlowsDataResponse>);
 
         const connectorsBound = flows.reduce((acc, item) => {
-            if (item.counterflow) {
-                acc[item.counterflow] = item;
+            if (item.counterFlow) {
+                acc[item.counterFlow] = item;
             }
 
             return acc;
         }, {} as Record<string, FlowsDataResponse>);
 
-        if (data.counterflow) {
+        if (data.counterFlow) {
             const deviceConnectedTo = flows.find(
-                (flow) => flow.id === data.counterflow && listenersBound[data.counterflow]?.parent,
+                (flow) =>
+                    flow.identity === data.counterFlow && listenersBound[data.counterFlow]?.parent,
             );
 
             return {
                 ...data,
-                connectedTo: listenersBound[data.counterflow],
+                connectedTo: listenersBound[data.counterFlow],
                 deviceNameConnectedTo: deviceConnectedTo?.name,
             };
         }
 
-        if (data.rtype === 'FLOW' && !data.counterflow) {
-            return { ...data, connectedTo: connectorsBound[data.id] };
+        if (data.recType === 'FLOW' && !data.counterFlow) {
+            return { ...data, connectedTo: connectorsBound[data.identity] };
         }
 
         return data;

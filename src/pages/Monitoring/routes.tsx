@@ -33,7 +33,7 @@ export const monitoringRoutes = [
                 children: [
                     { index: true, element: <ConnectionsTable /> },
                     {
-                        path: `${MonitoringRoutesPaths.Connections}/:id${MonitoringRoutesPaths.ConnectionsTopology}/:idDevice/:idFlow`,
+                        path: `${MonitoringRoutesPaths.Connections}/:id/:idFlow`,
                         element: <FlowDetails />,
                     },
                 ],

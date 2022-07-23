@@ -1,8 +1,15 @@
 export enum FlowInfoColumns {
-    IP = 'IP',
-    Port = 'Port',
+    Source = 'Source',
+    RouterName = 'Router',
+    Namespace = 'Namespace',
+    HostName = 'Hostname',
+    Address = 'Address',
+    Protocol = 'Protocol',
     Bytes = 'Bytes',
-    Latency = 'Latency',
+    ByteRate = 'Byte Rate',
+    Latency = 'FFTB',
+    Client = 'Client',
+    Server = 'Server',
 }
 
 export enum FlowInfoLables {

@@ -1,11 +1,17 @@
-.flows-table tbody tr {
-    cursor: pointer;
+.flows-table tbody {
+    & .flow-row {
+        cursor: pointer;
 
-    &:hover {
-        background-color: var(--pf-global--palette--black-200);
+        &:hover {
+            background-color: var(--pf-global--palette--black-200);
+        }
+
+        &.selected {
+            background-color: var(--pf-global--palette--black-200);
+        }
     }
 
-    &.selected {
-        background-color: var(--pf-global--palette--black-200);
+    & .flow-no-connection-target-warning {
+        background-color: var(--pf-global--palette--gold-100);
     }
 }

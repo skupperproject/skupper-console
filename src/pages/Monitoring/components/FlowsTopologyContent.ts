@@ -29,10 +29,10 @@ function FlowTopologyContent(
     const linksWithNodes: MonitoringTopologyLinkNormalized[] = [];
     links.some(function ({ source, target, ...rest }) {
         nodes.some(function (node) {
-            if (source === node.id) {
+            if (source === node.identity) {
                 linksWithNodes.push({ ...rest, target, source: node });
             }
-            if (target === node.id) {
+            if (target === node.identity) {
                 linksWithNodes.push({ ...rest, source, target: node });
             }
         });
@@ -46,8 +46,8 @@ function FlowTopologyContent(
             'link',
             forceLink<MonitoringTopologyNode, MonitoringTopologyLinkNormalized>(linksWithNodes)
                 .strength(({ pType }) => (pType ? 0.015 : 0.001))
-                .id(function ({ id }) {
-                    return id;
+                .id(function ({ identity }) {
+                    return identity;
                 }),
         )
         .on('tick', ticked);
@@ -147,8 +147,8 @@ function FlowTopologyContent(
             .attr('r', CIRCLE_R)
             .style('stroke', 'steelblue')
             .style('stroke-width', '1px')
-            .style('fill', ({ rtype }) =>
-                rtype === 'CONNECTOR'
+            .style('fill', ({ recType }) =>
+                recType === 'CONNECTOR'
                     ? 'var(--pf-global--palette--light-blue-500)'
                     : 'var(--pf-global--BackgroundColor--100)',
             )
@@ -162,7 +162,7 @@ function FlowTopologyContent(
         // label
         p.append('text')
             .attr('class', 'devicesImg')
-            .text(({ rtype }) => (rtype === 'CONNECTOR' ? 'connector' : 'listener'))
+            .text(({ recType }) => (recType === 'CONNECTOR' ? 'connector' : 'listener'))
             .attr('font-size', 10);
     });
 
@@ -208,7 +208,7 @@ function FlowTopologyContent(
         node.fx = null;
         node.fy = null;
 
-        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+        localStorage.setItem(node.identity, JSON.stringify({ fx: node.x, fy: node.y }));
     }
 
     function ticked() {

@@ -3,6 +3,7 @@ import {
     FlowsTopologyResponse,
     FlowsDeviceResponse,
     FlowResponse,
+    FlowsRouterResponse,
 } from 'API/REST.interfaces';
 
 export type Flow = FlowResponse;
@@ -17,22 +18,20 @@ export type Connection = {
     flows: FlowResponse[];
 };
 
-export interface FlowExtended extends FlowResponse {
-    device: string;
-    routerName: string;
-    protocol: string;
-    namespace: string;
-    target: FlowExtended;
-}
-
 export type MonitoringTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
+export interface ConnectionFlows extends FlowResponse {
+    target: FlowResponse | null;
+}
+
 interface extendedFlow extends Flow {
+    router: FlowsRouterResponse;
+    device: FlowsDeviceResponse;
     parentType?: string;
 }
 
-export interface MonitoringConnection {
-    startFlow?: extendedFlow;
-    endFlow?: Flow;
+export interface ExtendedConnectionFlows {
+    startFlow: extendedFlow;
+    endFlow: extendedFlow | null;
 }
