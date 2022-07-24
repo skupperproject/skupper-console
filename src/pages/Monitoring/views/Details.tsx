@@ -13,8 +13,9 @@ import {
     ToolbarContent,
     ToolbarGroup,
     ToolbarItem,
+    Tooltip,
 } from '@patternfly/react-core';
-import { CircleIcon } from '@patternfly/react-icons';
+import { CircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { formatDistanceToNow } from 'date-fns';
 import { useQuery } from 'react-query';
@@ -190,7 +191,7 @@ const DetailsView = function () {
                     <TableComposable variant="compact" borders={true} className="flows-table">
                         <Thead>
                             <Tr>
-                                {DetailsColumns.map(({ name }, index) => (
+                                {DetailsColumns.map(({ name, description }, index) => (
                                     <Th
                                         key={name}
                                         sort={
@@ -200,6 +201,14 @@ const DetailsView = function () {
                                         }
                                     >
                                         {name}
+                                        {description && (
+                                            <Tooltip content={description}>
+                                                <InfoCircleIcon
+                                                    color="var(--pf-global--palette--black-500)"
+                                                    className="pf-u-ml-sm"
+                                                />
+                                            </Tooltip>
+                                        )}
                                     </Th>
                                 ))}
                             </Tr>

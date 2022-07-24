@@ -12,6 +12,7 @@
     }
 
     & .flow-no-connection-target-warning {
+        cursor: pointer;
         background-color: var(--pf-global--palette--gold-100);
     }
 }

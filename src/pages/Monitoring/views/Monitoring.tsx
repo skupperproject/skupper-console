@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 
-import { Card } from '@patternfly/react-core';
+import {
+    Card,
+    Text,
+    TextContent,
+    TextVariants,
+    CardTitle,
+    Flex,
+    Tooltip,
+} from '@patternfly/react-core';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,7 +22,7 @@ import { UPDATE_INTERVAL } from 'config';
 import { MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
-import { OverviewColumns } from './Monitoring.enum';
+import { Labels, OverviewColumns } from './Monitoring.enum';
 
 const Overview = function () {
     const navigate = useNavigate();
@@ -44,6 +53,16 @@ const Overview = function () {
 
     return (
         <Card data-cy="sk-monitoring-services">
+            <CardTitle>
+                <Flex>
+                    <TextContent>
+                        <Text component={TextVariants.h1}>{Labels.VanServices}</Text>
+                    </TextContent>
+                    <Tooltip position="right" content={Labels.VanServicesDescription}>
+                        <InfoCircleIcon color="var(--pf-global--palette--black-500)" />
+                    </Tooltip>
+                </Flex>
+            </CardTitle>
             <TableComposable className="flows-table" borders={false} variant="compact" isStriped>
                 <Thead>
                     <Tr>
