@@ -53,6 +53,7 @@ export const TopologyServices = {
                 const positions = localStorage.getItem(node.key);
                 const fx = positions ? JSON.parse(positions).fx : null;
                 const fy = positions ? JSON.parse(positions).fy : null;
+
                 const site = siteNodes?.find(({ id }) => id === node.site.site_id);
                 const groupIndex = site?.group || 0;
 

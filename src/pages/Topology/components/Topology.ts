@@ -1,6 +1,5 @@
 import { set } from 'd3-collection';
 import { drag } from 'd3-drag';
-import { xml } from 'd3-fetch';
 import {
     forceSimulation,
     forceCenter,
@@ -18,9 +17,6 @@ import { select, Selection } from 'd3-selection';
 import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
-import server from '@assets/server.svg';
-import service from '@assets/service.svg';
-
 import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './Topology.interfaces';
 
 const ARROW_SIZE = 10;
@@ -37,7 +33,6 @@ export default class TopologyGraph {
     force: Simulation<TopologyNode, TopologyLinkNormalized>;
     svgContainer: Selection<SVGSVGElement, unknown, null, undefined>;
     svgContainerGroupNodes: Selection<SVGGElement, unknown, null, undefined>;
-    xmlData: { site: XMLDocument | null; service: XMLDocument | null };
     isDraggingNode: boolean;
     handleZoom: ZoomBehavior<SVGSVGElement, unknown>;
     valueline: Line<[number, number]>;
@@ -66,8 +61,6 @@ export default class TopologyGraph {
             .append('g')
             .attr('width', '100%')
             .attr('height', '100%');
-
-        this.xmlData = { site: null, service: null };
 
         (this.valueline = line()
             .x(function (d) {
@@ -279,6 +272,8 @@ export default class TopologyGraph {
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', null)
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
+            .alpha(0.1)
+            .alphaMin(0.08)
             .force(
                 'x',
                 forceX<TopologyNode>()
@@ -349,14 +344,6 @@ export default class TopologyGraph {
     };
 
     private updateDOMNodes = async (nodes: TopologyNode[]) => {
-        if (!this.xmlData.site) {
-            this.xmlData.site = await xml(server);
-        }
-
-        if (!this.xmlData.service) {
-            this.xmlData.service = await xml(service);
-        }
-
         this.groupIds = set(nodes.map((n) => +n.group))
             .values()
             .map((groupId) => ({
@@ -391,11 +378,7 @@ export default class TopologyGraph {
         const enterSelection = svgNodes.append('g').attr('class', 'node');
 
         enterSelection
-            .append(({ type }) => {
-                const xmlData = type === 'site' ? this.xmlData.site : this.xmlData.service;
-
-                return xmlData?.documentElement.cloneNode(true) as HTMLElement;
-            })
+            .append(({ img }) => img?.documentElement.cloneNode(true) as HTMLElement)
             .attr('width', SERVICE_SIZE)
             .attr('height', SERVICE_SIZE)
             .style('fill', ({ color }) => color);

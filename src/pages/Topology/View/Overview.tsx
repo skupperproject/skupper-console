@@ -24,21 +24,26 @@ import {
     TopologyControlBar,
     TopologyView,
 } from '@patternfly/react-topology';
+import { xml } from 'd3-fetch';
 import { QueryObserverSuccessResult, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import siteSVG from '@assets/server.svg';
+import serviceSVG from '@assets/service.svg';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import SitesServices from '@pages/Sites/services';
-import { SiteResponse } from 'API/REST.interfaces';
+import { Site } from '@pages/Sites/services/services.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import TopologyDeploymentDetails from '../components/DetailsDeployment';
 import TopologySiteDetails from '../components/DetailsSite';
 import TopologyGraph from '../components/Topology';
 import { TopologyViews } from '../components/Topology.enum';
+import { TopologyLink, TopologyNode } from '../components/Topology.interfaces';
 import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
+import { Deployments } from '../services/services.interfaces';
 import { TopologyOverviewLabels } from './Overview.enum';
 
 const TYPE_SITES = 'sites';
@@ -49,6 +54,10 @@ const TopologyContent = function () {
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
     const [selectedNode, setSelectedNode] = useState('');
+    const [topology, setTopology] = useState<{ nodes: TopologyNode[]; links: TopologyLink[] }>({
+        nodes: [],
+        links: [],
+    });
 
     const drawerRef = useRef<HTMLSpanElement>(null);
     const selectedRef = useRef<string>('');
@@ -61,16 +70,17 @@ const TopologyContent = function () {
             refetchInterval,
             onError: handleError,
         },
-    ) as QueryObserverSuccessResult<SiteResponse[]>;
+    ) as QueryObserverSuccessResult<Site[]>;
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
         QueryTopology.GetDeployments,
         TopologyServices.fetchDeployments,
         {
+            initialData: { deployments: [], deploymentLinks: [] },
             refetchInterval,
             onError: handleError,
         },
-    );
+    ) as QueryObserverSuccessResult<Deployments>;
 
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
@@ -128,54 +138,61 @@ const TopologyContent = function () {
         handleCloseClick();
     }
 
-    const nodesSites = useCallback(() => TopologyServices.getNodesSites(sites), [sites]);
-    const linkSites = useCallback(() => TopologyServices.getLinkSites(sites), [sites]);
-
-    const servicesNodes = useCallback(
-        () =>
-            deployments?.deployments
-                ? TopologyServices.getServiceNodes(deployments?.deployments, nodesSites())
-                : [],
-        [deployments?.deployments, nodesSites],
-    );
-
-    const servicesLinks = useCallback(
-        () =>
-            deployments?.deploymentLinks
-                ? TopologyServices.getLinkServices(deployments?.deploymentLinks)
-                : [],
-        [deployments?.deploymentLinks],
-    );
-
-    const nodes = topologyType === TYPE_SITES ? nodesSites() : servicesNodes();
-    const links = topologyType === TYPE_SITES ? linkSites() : servicesLinks();
-
-    useEffect(() => {
-        if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
-            topologyGraphInstance.updateTopology(nodes, links);
-        }
-    }, [links, nodes, topologyGraphInstance]);
-
     const panelRef = useCallback(
         ($node: HTMLDivElement | null) => {
-            if ($node && nodes.length && links.length && !topologyGraphInstance) {
+            if ($node && topology.nodes.length && topology.links.length && !topologyGraphInstance) {
                 $node.replaceChildren();
 
                 const topologyGraph = new TopologyGraph(
                     $node,
-                    nodes,
-                    links,
+                    topology.nodes,
+                    topology.links,
                     $node.getBoundingClientRect().width,
                     $node.getBoundingClientRect().height,
                     handleExpand,
                 );
-                topologyGraph.updateTopology(nodes, links);
+                topologyGraph.updateTopology(topology.nodes, topology.links);
 
                 setTopologyGraphInstance(topologyGraph);
             }
         },
-        [handleExpand, links, nodes, topologyGraphInstance],
+        [handleExpand, topology, topologyGraphInstance],
     );
+
+    const refreshTopology = useCallback(async () => {
+        if (topologyType === TYPE_SITES) {
+            const siteXML = await xml(siteSVG);
+            const nodes = TopologyServices.getNodesSites(sites).map((site) => ({
+                ...site,
+                img: siteXML,
+            }));
+            const links = TopologyServices.getLinkSites(sites);
+
+            setTopology({ nodes, links });
+
+            return;
+        }
+
+        const serviceXML = await xml(serviceSVG);
+        const nodesSites = TopologyServices.getNodesSites(sites);
+
+        const nodes = TopologyServices.getServiceNodes(deployments.deployments, nodesSites).map(
+            (site) => ({ ...site, img: serviceXML }),
+        );
+        const links = TopologyServices.getLinkServices(deployments.deploymentLinks);
+
+        setTopology({ nodes, links });
+    }, [deployments?.deploymentLinks, deployments?.deployments, sites, topologyType]);
+
+    useEffect(() => {
+        refreshTopology();
+    }, [refreshTopology]);
+
+    useEffect(() => {
+        if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
+            topologyGraphInstance.updateTopology(topology.nodes, topology.links);
+        }
+    }, [topology, topologyGraphInstance]);
 
     if (isLoadingSites || isLoadingServices) {
         return <LoadingPage />;
@@ -238,7 +255,7 @@ const TopologyContent = function () {
                                 component={TextVariants.small}
                             >{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
                         </TextContent>{' '}
-                        {nodesSites()?.map((node) => (
+                        {topology.nodes?.map((node) => (
                             <Flex key={node.id}>
                                 <div
                                     className="pf-u-mr-xs"
