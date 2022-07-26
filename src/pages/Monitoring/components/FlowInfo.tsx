@@ -1,56 +1,18 @@
-import React, { useState } from 'react';
+import React, { FC } from 'react';
 
-import { Page } from '@patternfly/react-core';
-import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
+import { Card, CardBody, CardTitle, Page } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useQuery } from 'react-query';
-import { useNavigate, useParams } from 'react-router-dom';
 
+import RealTimeLineChart from '@core/components/RealTimeLineChart';
+import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import LoadingPage from '@pages/shared/Loading';
 import DescriptionItem from '@pages/Sites/components/DescriptionItem';
-import { UPDATE_INTERVAL } from 'config';
 
-import { MonitorServices } from '../services';
-import { QueriesMonitoring } from '../services/services.enum';
-import { FlowInfoColumns } from './FlowInfo.enum';
+import { FlowInfoColumns, FlowInfoLables } from './FlowInfo.enum';
+import { FlowsInfoProps } from './FlowInfo.interfaces';
 
-const FlowInfo = function () {
-    const navigate = useNavigate();
-    const { idFlow } = useParams();
-
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-
-    const { data: connection, isLoading } = useQuery(
-        [QueriesMonitoring.GetMonitoringConnection],
-        () => (idFlow ? MonitorServices.fetchConnectionByFlowId(idFlow) : null),
-        {
-            cacheTime: 0,
-            refetchOnWindowFocus: false,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
-    }
-
-    if (isLoading) {
-        return <LoadingPage />;
-    }
-
-    if (!connection) {
-        return null;
-    }
-
+const FlowInfo: FC<FlowsInfoProps> = function ({ connection }) {
     const { startFlow, endFlow } = connection;
 
     return (
@@ -64,12 +26,38 @@ const FlowInfo = function () {
                 value={startFlow?.device.protocol || ''}
             />
 
-            <TableComposable borders={true} isStriped>
+            <Card className="pf-u-mb-md">
+                <CardBody>
+                    <CardTitle>{FlowInfoLables.TrafficChartTitle}</CardTitle>
+                    <RealTimeLineChart
+                        options={{
+                            chartColor: ChartThemeColors.Multi,
+                            padding: {
+                                bottom: 70,
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                            },
+                            height: 300,
+                            dataLegend: [
+                                { name: `${startFlow.sourceHost}: ${startFlow.sourcePort}` },
+                                { name: `${endFlow?.sourceHost}: ${endFlow?.sourcePort}` },
+                            ],
+                            formatter: formatBytes,
+                        }}
+                        data={[
+                            { name: `flow`, value: startFlow.octets },
+                            { name: `couterflow`, value: endFlow?.octets || 0 },
+                        ]}
+                    />
+                </CardBody>
+            </Card>
+            <TableComposable borders={true} isStriped variant="compact">
                 <Thead>
                     <Tr>
                         <Th>{FlowInfoColumns.Source}</Th>
+                        <Th>{FlowInfoColumns.SiteName}</Th>
                         <Th>{FlowInfoColumns.RouterName}</Th>
-                        <Th>{FlowInfoColumns.Namespace}</Th>
                         <Th>{FlowInfoColumns.HostName}</Th>
                         <Th>{FlowInfoColumns.Bytes}</Th>
                         <Th>{FlowInfoColumns.ByteRate}</Th>
@@ -79,15 +67,10 @@ const FlowInfo = function () {
                 <Tbody>
                     <Tr>
                         <Td dataLabel={FlowInfoColumns.Source}>
-                            {startFlow?.device.recType === 'LISTENER' ? (
-                                <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />
-                            ) : (
-                                <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />
-                            )}
                             {`${startFlow?.sourceHost}: ${startFlow?.sourcePort}`}
                         </Td>
+                        <Td dataLabel={FlowInfoColumns.SiteName}>{startFlow?.site.name}</Td>
                         <Td dataLabel={FlowInfoColumns.RouterName}>{startFlow?.router.name}</Td>
-                        <Td dataLabel={FlowInfoColumns.Namespace}>{startFlow?.router.namespace}</Td>
                         <Td dataLabel={FlowInfoColumns.HostName}>{startFlow?.router.hostame}</Td>
                         <Td dataLabel={FlowInfoColumns.Bytes}>
                             {formatBytes(startFlow?.octets || 0)}
@@ -102,17 +85,10 @@ const FlowInfo = function () {
                     {endFlow && (
                         <Tr>
                             <Td dataLabel={FlowInfoColumns.Source}>
-                                {endFlow?.device.recType === 'LISTENER' ? (
-                                    <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />
-                                ) : (
-                                    <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />
-                                )}
                                 {`${endFlow?.sourceHost}: ${endFlow?.sourcePort}`}
                             </Td>
+                            <Td dataLabel={FlowInfoColumns.SiteName}>{endFlow?.site.name}</Td>
                             <Td dataLabel={FlowInfoColumns.RouterName}>{endFlow?.router.name}</Td>
-                            <Td dataLabel={FlowInfoColumns.Namespace}>
-                                {endFlow?.router.namespace}
-                            </Td>
                             <Td dataLabel={FlowInfoColumns.HostName}>{endFlow?.router.hostame}</Td>
                             <Td dataLabel={FlowInfoColumns.Bytes}>
                                 {formatBytes(endFlow?.octets || 0)}

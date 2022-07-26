@@ -1,123 +1,63 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 
-import {
-    createTopologyControlButtons,
-    defaultControlButtonsOptions,
-    TopologyControlBar,
-    TopologyView,
-} from '@patternfly/react-topology';
-import { useQuery } from 'react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { TopologyView } from '@patternfly/react-topology';
 
 import { formatBytes } from '@core/utils/formatBytes';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import LoadingPage from '@pages/shared/Loading';
 
-import { MonitorServices } from '../services';
-import { QueriesMonitoring } from '../services/services.enum';
 import FlowTopologyContent from './FlowsTopologyContent';
-import { MonitoringTopologyVanService } from './FlowTopology.interfaces';
+import { FlowsConnectionProps, MonitoringTopologyVanService } from './FlowTopology.interfaces';
 
-const FlowTopology = function () {
-    const navigate = useNavigate();
-    const { id: vanId, idFlow } = useParams();
-
-    const [refetchInterval, setRefetchInterval] = useState(0);
+const FlowTopology: FC<FlowsConnectionProps> = function ({ connection, routers }) {
     const [svgTopologyComponent, setSvgTopologyComponent] =
         useState<MonitoringTopologyVanService>();
 
-    const { data: devices, isLoading } = useQuery(
-        [QueriesMonitoring.GetMonitoringTopologyFlows, vanId],
-        () => (vanId ? MonitorServices.fetchFlowsByVanId(vanId) : null),
-        {
-            refetchOnWindowFocus: false,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
-        [QueriesMonitoring.GetMonitoringTopologyNetwork],
-        () => MonitorServices.fetchFlowsTopology(),
-        {
-            refetchOnWindowFocus: false,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: connection, isLoading: isLoadingRecords } = useQuery(
-        [QueriesMonitoring.GetMonitoringConnection],
-        () => (idFlow ? MonitorServices.fetchConnectionByFlowId(idFlow) : null),
-        {
-            cacheTime: 0,
-            refetchOnWindowFocus: false,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
-    }
-
     const routerNodes = useMemo(
         () =>
-            routers?.nodes?.map(({ identity, name }) => {
-                const positions = localStorage.getItem(identity);
+            routers.nodes
+                ?.filter(
+                    (node) =>
+                        node.identity === connection.startFlow.router.identity ||
+                        node.identity === connection.endFlow?.router.identity,
+                )
+                .map(({ identity, name }) => {
+                    const positions = localStorage.getItem(identity);
 
-                return {
-                    identity,
-                    name,
-                    width: 50,
-                    type: 'router',
-                    x: 0,
-                    y: 0,
-                    fx: positions ? JSON.parse(positions).fx : null,
-                    fy: positions ? JSON.parse(positions).fy : null,
-                };
-            }),
-        [routers?.nodes],
+                    return {
+                        identity,
+                        name,
+                        width: 50,
+                        type: 'router',
+                        x: 0,
+                        y: 0,
+                        fx: positions ? JSON.parse(positions).fx : null,
+                        fy: positions ? JSON.parse(positions).fy : null,
+                    };
+                }),
+        [routers?.nodes, connection],
     );
 
-    const getConnectionTopology = () =>
-        devices?.filter(({ identity }) => {
-            if (connection) {
-                if (identity === connection.startFlow?.parent) {
-                    return true;
-                }
+    const connectionTopology = useMemo(
+        () => [{ ...connection.startFlow.device, flow: connection?.startFlow }],
+        [connection],
+    );
 
-                if (identity === connection.endFlow?.parent) {
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-    const connectionTopology = getConnectionTopology();
+    if (connection.endFlow) {
+        connectionTopology.push({ ...connection.endFlow.device, flow: connection.endFlow });
+    }
 
     const deviceNodes = useMemo(
         () =>
-            connectionTopology?.map(({ identity, name, recType, flows, protocol }) => {
-                const totalLatency = flows.reduce((acc, flow) => acc + flow.latency, 0);
-                const avgLatency = totalLatency / flows.length;
-
-                const positions = localStorage.getItem(identity);
-
+            connectionTopology.map(({ identity, address, recType, protocol, flow }) => {
+                const positions = localStorage.getItem(identity || '');
                 const node = {
                     identity,
-                    name,
+                    name: address,
                     type: 'flow',
                     recType,
-                    avgLatency,
                     protocol,
-                    numFlows: flows.length,
+                    sourceHost: flow.sourceHost,
+                    sourcePort: flow.sourcePort,
+                    bytes: formatBytes(flow.octets),
                     x: 0,
                     y: 0,
                     fx: positions ? JSON.parse(positions).fx : null,
@@ -126,13 +66,13 @@ const FlowTopology = function () {
 
                 return node;
             }),
-        [devices],
+        [connectionTopology],
     );
 
     const deviceLinks = useMemo(
         () =>
-            connectionTopology?.flatMap(({ identity, recType, parent, flows, protocol }) => {
-                const bytes = flows.reduce((acc, flow) => acc + (flow.octets || 0), 0);
+            connectionTopology.flatMap(({ identity, recType, parent, protocol }) => {
+                const bytes = 0;
 
                 return [
                     {
@@ -145,60 +85,44 @@ const FlowTopology = function () {
                     },
                 ];
             }),
-        [devices],
+        [connectionTopology],
     );
 
     const panelRef = useCallback(
-        (node: HTMLDivElement) => {
-            const routerLinks = routers?.links || [];
+        ($node: HTMLDivElement) => {
+            const routerNodesIds = routerNodes?.map(({ identity }) => identity);
+            const routerLinks =
+                routers?.links.filter(
+                    (link) =>
+                        routerNodesIds?.includes(link.source) &&
+                        routerNodesIds?.includes(link.target),
+                ) || [];
+
             if (
-                node &&
+                $node &&
                 deviceLinks?.length &&
                 deviceNodes?.length &&
                 routerNodes?.length &&
-                routerLinks?.length
+                routerLinks?.length &&
+                !svgTopologyComponent
             ) {
+                $node.replaceChildren();
                 const topologyServiceRef = FlowTopologyContent(
-                    node,
+                    $node,
                     [...routerNodes, ...deviceNodes],
                     [...routerLinks, ...deviceLinks],
-                    node.getBoundingClientRect().width,
-                    node.getBoundingClientRect().height,
+                    $node.getBoundingClientRect().width,
+                    $node.getBoundingClientRect().height,
                 );
 
                 setSvgTopologyComponent(topologyServiceRef);
             }
         },
-        [deviceLinks, deviceNodes, routerNodes, routers?.links],
+        [deviceLinks, deviceNodes, routerNodes, routers?.links, svgTopologyComponent],
     );
 
-    if (isLoading || isLoadingTopologyRoutersLinks || isLoadingRecords) {
-        return <LoadingPage />;
-    }
-
-    function handleZoomIn() {
-        svgTopologyComponent?.zoomIn();
-    }
-
-    function handleZoomOut() {
-        svgTopologyComponent?.zoomOut();
-    }
-
-    function handleResetView() {
-        svgTopologyComponent?.reset();
-    }
-
-    const controlButtons = createTopologyControlButtons({
-        ...defaultControlButtonsOptions,
-        zoomInCallback: handleZoomIn,
-        zoomOutCallback: handleZoomOut,
-        resetViewCallback: handleResetView,
-        fitToScreenHidden: true,
-        legendHidden: true,
-    });
-
     return (
-        <TopologyView controlBar={<TopologyControlBar controlButtons={controlButtons} />}>
+        <TopologyView>
             <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
         </TopologyView>
     );

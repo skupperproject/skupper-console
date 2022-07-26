@@ -50,8 +50,10 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
         return null;
     }
 
+    const height = options?.height || chartConfig.height;
+
     return (
-        <div style={{ height: `${chartConfig.height}px` }}>
+        <div style={{ height: `${height}px` }}>
             <Chart
                 containerComponent={
                     <ChartVoronoiContainer
@@ -67,14 +69,16 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
                 legendOrientation="horizontal"
                 legendPosition="bottom"
                 legendAllowWrap={true}
-                height={chartConfig.height}
+                height={height}
                 domainPadding={{ y: [10, 10] }}
-                padding={{
-                    bottom: 250,
-                    left: 90,
-                    right: 20,
-                    top: 0,
-                }}
+                padding={
+                    options?.padding || {
+                        bottom: 250,
+                        left: 90,
+                        right: 20,
+                        top: 0,
+                    }
+                }
                 width={chartConfig.width}
                 themeColor={options?.chartColor ? options.chartColor : ChartThemeColors.Blue}
             >

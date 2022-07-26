@@ -4,6 +4,7 @@ import {
     FlowsDeviceResponse,
     FlowResponse,
     FlowsRouterResponse,
+    FlowsSiteResponse,
 } from 'API/REST.interfaces';
 
 export type Flow = FlowResponse;
@@ -28,6 +29,7 @@ export interface ConnectionFlows extends FlowResponse {
 interface extendedFlow extends Flow {
     router: FlowsRouterResponse;
     device: FlowsDeviceResponse;
+    site: FlowsSiteResponse;
     parentType?: string;
 }
 

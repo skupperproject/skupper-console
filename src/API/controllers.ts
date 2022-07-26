@@ -74,7 +74,9 @@ export function getFlowsConnectionsByService(flowsData: FlowsDataResponse[]) {
 
 export function getFlowsTopology(routers: FlowsRouterResponse[], links: FlowsLinkResponse[]) {
     const routersMap = routers.reduce((acc, router) => {
-        acc[router.identity] = router;
+        //TODO: improve the logic to associate link source and link target
+        const name = router.name.split('/')[1];
+        acc[name] = router;
 
         return acc;
     }, {} as Record<string, FlowsRouterResponse>);
@@ -82,7 +84,7 @@ export function getFlowsTopology(routers: FlowsRouterResponse[], links: FlowsLin
     const linksWithRouters = links
         .filter(({ linkCost, direction }) => linkCost && direction === 'incoming')
         .reduce((acc, link) => {
-            const target = routersMap[link.parent];
+            const target = routersMap[link.name];
 
             acc.push({
                 source: link.parent,

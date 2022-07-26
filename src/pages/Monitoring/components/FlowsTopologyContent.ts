@@ -40,17 +40,32 @@ function FlowTopologyContent(
 
     const simulation = forceSimulation(nodes)
         .force('center', forceCenter((boxWidth || 2) / 2, (boxHeight || 2) / 3))
-        .force('charge', forceManyBody().strength(-30))
+        .force('charge', forceManyBody().strength(-60))
         .force('collide', forceCollide(0.9).radius(50).iterations(1))
+        .alpha(0.1)
+        .alphaMin(0.03)
         .force(
             'link',
             forceLink<MonitoringTopologyNode, MonitoringTopologyLinkNormalized>(linksWithNodes)
-                .strength(({ pType }) => (pType ? 0.015 : 0.001))
+                .strength(({ pType }) => (pType ? 1 : 0.1))
                 .id(function ({ identity }) {
                     return identity;
                 }),
         )
-        .on('tick', ticked);
+        .on('tick', ticked)
+        .on('end', () => {
+            nodes.forEach((node) => {
+                if (!localStorage.getItem(node.identity)) {
+                    node.fx = node.x;
+                    node.fy = node.y;
+
+                    localStorage.setItem(
+                        node.identity,
+                        JSON.stringify({ fx: node.fx, fy: node.fy }),
+                    );
+                }
+            });
+        });
 
     // root
     const svgContainer = select($node)
@@ -92,8 +107,8 @@ function FlowTopologyContent(
                 .attr('class', 'routerLink')
                 .style('stroke', 'var(--pf-global--palette--black-400)')
                 .style('stroke-width', '1px')
-                .attr('marker-start', ({ type }) => type === 'LISTENER' && 'url(#arrow)')
-                .attr('marker-end', ({ type }) => type === 'CONNECTOR' && 'url(#arrow)');
+                .attr('marker-start', () => 'url(#arrow)')
+                .attr('marker-end', () => 'url(#arrow)');
 
             // label
             p.append('text')
@@ -145,12 +160,12 @@ function FlowTopologyContent(
         p.append('circle')
             .attr('class', 'devicesImg')
             .attr('r', CIRCLE_R)
-            .style('stroke', 'steelblue')
+            .style('stroke', 'black')
             .style('stroke-width', '1px')
             .style('fill', ({ recType }) =>
                 recType === 'CONNECTOR'
-                    ? 'var(--pf-global--palette--light-blue-500)'
-                    : 'var(--pf-global--BackgroundColor--100)',
+                    ? 'var(--pf-global--palette--blue-300)'
+                    : 'var(--pf-global--palette--red-100)',
             )
             .call(
                 drag<SVGCircleElement, MonitoringTopologyDeviceNode>()
@@ -161,9 +176,14 @@ function FlowTopologyContent(
 
         // label
         p.append('text')
-            .attr('class', 'devicesImg')
-            .text(({ recType }) => (recType === 'CONNECTOR' ? 'connector' : 'listener'))
-            .attr('font-size', 10);
+            .attr('class', 'devicesImgL')
+            .text(({ sourcePort, sourceHost }) => `${sourceHost}:${sourcePort}`)
+            .attr('font-size', 12);
+
+        p.append('text')
+            .attr('class', 'devicesImgBytesL')
+            .text(({ bytes }) => bytes)
+            .attr('font-size', 12);
     });
 
     // drag util
@@ -236,6 +256,16 @@ function FlowTopologyContent(
             .attr('cy', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY))
             .attr('x', ({ x }) => validatePosition(x + CIRCLE_R, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y + CIRCLE_R, maxSvgPosY, minSvgPosY));
+
+        svgElement
+            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImgL')
+            .attr('x', ({ x }) => validatePosition(x + CIRCLE_R - 60, maxSvgPosX, minSvgPosX))
+            .attr('y', ({ y }) => validatePosition(y + CIRCLE_R + 20, maxSvgPosY, minSvgPosY));
+
+        svgElement
+            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImgBytesL')
+            .attr('x', ({ x }) => validatePosition(x + CIRCLE_R - 40, maxSvgPosX, minSvgPosX))
+            .attr('y', ({ y }) => validatePosition(y + CIRCLE_R - 30, maxSvgPosY, minSvgPosY));
 
         svgElement
             .selectAll<SVGSVGElement, MonitoringTopologyNode>('.routerImg')
