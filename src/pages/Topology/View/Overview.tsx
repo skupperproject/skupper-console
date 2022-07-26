@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
     Divider,
@@ -24,12 +24,13 @@ import {
     TopologyControlBar,
     TopologyView,
 } from '@patternfly/react-topology';
-import { useQuery } from 'react-query';
+import { QueryObserverSuccessResult, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import SitesServices from '@pages/Sites/services';
+import { SiteResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import TopologyDeploymentDetails from '../components/DetailsDeployment';
@@ -40,6 +41,7 @@ import { TopologyServices } from '../services';
 import { QueryTopology } from '../services/services.enum';
 import { TopologyOverviewLabels } from './Overview.enum';
 
+const TYPE_SITES = 'sites';
 const TopologyContent = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
@@ -51,10 +53,15 @@ const TopologyContent = function () {
     const drawerRef = useRef<HTMLSpanElement>(null);
     const selectedRef = useRef<string>('');
 
-    const { data: sites, isLoading } = useQuery(QueryTopology.GetSites, SitesServices.fetchSites, {
-        refetchInterval,
-        onError: handleError,
-    });
+    const { data: sites, isLoading: isLoadingSites } = useQuery(
+        QueryTopology.GetSites,
+        SitesServices.fetchSites,
+        {
+            initialData: [],
+            refetchInterval,
+            onError: handleError,
+        },
+    ) as QueryObserverSuccessResult<SiteResponse[]>;
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
         QueryTopology.GetDeployments,
@@ -93,11 +100,11 @@ const TopologyContent = function () {
         [areDetailsExpanded],
     );
 
-    const handleCloseClick = () => {
+    function handleCloseClick() {
         setIsExpandedDetails(false);
         setSelectedNode('');
         selectedRef.current = '';
-    };
+    }
 
     function handleZoomIn() {
         topologyGraphInstance?.zoomIn();
@@ -121,18 +128,18 @@ const TopologyContent = function () {
         handleCloseClick();
     }
 
-    const nodesSites = useMemo(() => (sites ? TopologyServices.getNodesSites(sites) : []), [sites]);
-    const linkSites = useMemo(() => (sites ? TopologyServices.getLinkSites(sites) : []), [sites]);
+    const nodesSites = useCallback(() => TopologyServices.getNodesSites(sites), [sites]);
+    const linkSites = useCallback(() => TopologyServices.getLinkSites(sites), [sites]);
 
-    const serviceNodes = useMemo(
+    const servicesNodes = useCallback(
         () =>
             deployments?.deployments
-                ? TopologyServices.getServiceNodes(deployments?.deployments, nodesSites)
+                ? TopologyServices.getServiceNodes(deployments?.deployments, nodesSites())
                 : [],
         [deployments?.deployments, nodesSites],
     );
 
-    const linkServices = useMemo(
+    const servicesLinks = useCallback(
         () =>
             deployments?.deploymentLinks
                 ? TopologyServices.getLinkServices(deployments?.deploymentLinks)
@@ -140,35 +147,37 @@ const TopologyContent = function () {
         [deployments?.deploymentLinks],
     );
 
-    const nodes = topologyType === 'sites' ? nodesSites : serviceNodes;
-    const links = topologyType === 'sites' ? linkSites : linkServices;
+    const nodes = topologyType === TYPE_SITES ? nodesSites() : servicesNodes();
+    const links = topologyType === TYPE_SITES ? linkSites() : servicesLinks();
+
+    useEffect(() => {
+        if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
+            topologyGraphInstance.updateTopology(nodes, links);
+        }
+    }, [links, nodes, topologyGraphInstance]);
 
     const panelRef = useCallback(
         ($node: HTMLDivElement | null) => {
-            if ($node && nodes && links && !topologyGraphInstance?.isDragging()) {
-                if (topologyGraphInstance) {
-                    topologyGraphInstance.updateTopology(nodes, links);
-                } else {
-                    $node.replaceChildren();
+            if ($node && nodes.length && links.length && !topologyGraphInstance) {
+                $node.replaceChildren();
 
-                    const topologyGraph = new TopologyGraph(
-                        $node,
-                        nodes,
-                        links,
-                        $node.getBoundingClientRect().width,
-                        $node.getBoundingClientRect().height,
-                        handleExpand,
-                    );
-                    topologyGraph.updateTopology(nodes, links);
+                const topologyGraph = new TopologyGraph(
+                    $node,
+                    nodes,
+                    links,
+                    $node.getBoundingClientRect().width,
+                    $node.getBoundingClientRect().height,
+                    handleExpand,
+                );
+                topologyGraph.updateTopology(nodes, links);
 
-                    setTopologyGraphInstance(topologyGraph);
-                }
+                setTopologyGraphInstance(topologyGraph);
             }
         },
         [handleExpand, links, nodes, topologyGraphInstance],
     );
 
-    if (isLoading && isLoadingServices) {
+    if (isLoadingSites || isLoadingServices) {
         return <LoadingPage />;
     }
 
@@ -181,16 +190,12 @@ const TopologyContent = function () {
         legendHidden: true,
     });
 
-    const ViewToolbar = function () {
-        return <div />;
-    };
-
     const PanelContent = (
         <DrawerPanelContent>
             <DrawerHead>
                 {selectedNode && (
                     <span ref={drawerRef}>
-                        {topologyType === 'sites' ? (
+                        {topologyType === TYPE_SITES ? (
                             <TopologySiteDetails id={selectedNode} />
                         ) : (
                             <TopologyDeploymentDetails id={selectedNode} />
@@ -208,7 +213,7 @@ const TopologyContent = function () {
         <>
             <Drawer isExpanded={areDetailsExpanded} position="right">
                 <Tabs activeKey={topologyType} isFilled onSelect={handleChangeTopologyType} isBox>
-                    <Tab eventKey={'sites'} title={<TabTitleText>Sites</TabTitleText>} />
+                    <Tab eventKey={TYPE_SITES} title={<TabTitleText>Sites</TabTitleText>} />
                     <Tab
                         eventKey={'deployements'}
                         title={<TabTitleText>Deployments</TabTitleText>}
@@ -217,7 +222,6 @@ const TopologyContent = function () {
                 <DrawerContent panelContent={PanelContent} style={{ overflow: 'hidden' }}>
                     <DrawerPanelBody hasNoPadding>
                         <TopologyView
-                            viewToolbar={<ViewToolbar />}
                             controlBar={<TopologyControlBar controlButtons={controlButtons} />}
                         >
                             <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
@@ -226,7 +230,7 @@ const TopologyContent = function () {
                 </DrawerContent>
             </Drawer>
             <Divider />
-            {topologyType !== 'sites' && (
+            {topologyType !== TYPE_SITES && (
                 <Panel className="pf-u-px-md pf-u-py-sm">
                     <Flex>
                         <TextContent>
@@ -234,18 +238,18 @@ const TopologyContent = function () {
                                 component={TextVariants.small}
                             >{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
                         </TextContent>{' '}
-                        {nodesSites?.map((node) => (
-                            <span key={node.id}>
+                        {nodesSites()?.map((node) => (
+                            <Flex key={node.id}>
                                 <div
+                                    className="pf-u-mr-xs"
                                     style={{
-                                        display: 'inline-block',
-                                        width: 20,
+                                        width: 10,
                                         height: 10,
                                         backgroundColor: node.color,
                                     }}
-                                />{' '}
+                                />
                                 {node.groupName}
-                            </span>
+                            </Flex>
                         ))}
                     </Flex>
                 </Panel>
