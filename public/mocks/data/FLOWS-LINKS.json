@@ -1,0 +1,62 @@
+[
+    {
+        "recType": "LINK",
+        "identity": "59tnd:2",
+        "parent": "59tnd:0",
+        "startTime": 1658260767313359,
+        "mode": "interior",
+        "name": "public2-skupper-router-c99749f74-wr4pc",
+        "linkCost": 1,
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
+        "identity": "t5zgd:1",
+        "parent": "t5zgd:0",
+        "startTime": 1658260756311115,
+        "mode": "interior",
+        "name": "public2-skupper-router-c99749f74-wr4pc",
+        "linkCost": 1,
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "t5zgd:2",
+        "parent": "t5zgd:0",
+        "startTime": 1658260762518559,
+        "mode": "interior",
+        "name": "private-skupper-router-56455d7598-59tnd",
+        "linkCost": 1,
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "wr4pc:1",
+        "parent": "wr4pc:0",
+        "startTime": 1658260755514068,
+        "mode": "interior",
+        "name": "public1-skupper-router-677797d595-t5zgd",
+        "linkCost": 1,
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
+        "identity": "wr4pc:2",
+        "parent": "wr4pc:0",
+        "startTime": 1658260766520997,
+        "mode": "interior",
+        "name": "private-skupper-router-56455d7598-59tnd",
+        "linkCost": 1,
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "59tnd:1",
+        "parent": "59tnd:0",
+        "startTime": 1658260762519376,
+        "mode": "interior",
+        "name": "public1-skupper-router-677797d595-t5zgd",
+        "linkCost": 1,
+        "direction": "outgoing"
+    }
+]

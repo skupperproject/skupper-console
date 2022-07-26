@@ -8,42 +8,58 @@ export function loadMockServer() {
         (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)
     ) {
         const path = './data';
-        const VANdata = require(`${path}/DATA.json`);
-        const topology = require(`${path}/FLOWS_TOPOLOGY.json`);
-        const vanaddrs = require(`${path}/FLOWS_VANS.json`);
-        const flowsMongo = require(`${path}/FLOWS_PER_MONGO_SITES.json`);
-        const recordsMongo = require(`${path}/RECORDS_PER_MONGO_SITES.json`);
+
+        const data = require(`${path}/DATA.json`);
+
+        const addresses = require(`${path}/FLOWS-ADDRESSES.json`);
+        const sites = require(`${path}/FLOWS-SITES.json`);
+        const routers = require(`${path}/FLOWS-ROUTERS.json`);
+        const links = require(`${path}/FLOWS-LINKS.json`);
+        const listeners = require(`${path}/FLOWS-LISTENERS.json`);
+        const connectors = require(`${path}/FLOWS-CONNECTORS.json`);
+        const flows = require(`${path}/FLOWS.json`);
+
+        const prefix = '/api/v1alpha1';
 
         createServer({
             routes() {
                 this.timing = DELAY_RESPONSE;
                 this.pretender.get('*', this.pretender.passthrough);
-                // General APIs
+
                 this.get(
                     '/error',
                     () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }),
                 );
-                this.get('/DATA', () => VANdata);
-                this.get('/api/v1alpha1/topology', () => topology);
-                this.get('/api/v1alpha1/vanaddrs', () => vanaddrs);
-                this.get('/api/v1alpha1//flows', (_, { queryParams }) => {
-                    if (queryParams.vanaddr) {
-                        return flowsMongo[queryParams.vanaddr];
-                    }
-                });
-                this.get('/api/v1alpha1/record', (_, { queryParams, ...rest }) => {
-                    const ids = rest.url
-                        .split('?')[1]
-                        .split('&')
-                        .flatMap((elem) => elem.split('id=').filter(Boolean));
+                this.get('/DATA', () => data);
 
-                    if (queryParams.id) {
-                        return recordsMongo
-                            .filter(({ _id }) => ids.includes(_id))
-                            .map((record) => record._record);
-                    }
-                });
+                this.get(`${prefix}/addresses`, () => addresses);
+                this.get(`${prefix}/sites`, () => sites);
+                this.get(`${prefix}/routers`, () => routers);
+                this.get(`${prefix}/links`, () => links);
+                this.get(`${prefix}/listeners`, () => listeners);
+                this.get(`${prefix}/connectors`, () => connectors);
+                this.get(`${prefix}/flows`, () => flows);
+
+                this.get(`${prefix}/address/:id`, (_, { params: { id } }) =>
+                    getEntity(addresses, id),
+                );
+                this.get(`${prefix}/site/:id`, (_, { params: { id } }) => getEntity(sites, id));
+                this.get(`${prefix}/router/:id`, (_, { params: { id } }) => getEntity(routers, id));
+                this.get(`${prefix}/link/:id`, (_, { params: { id } }) => getEntity(links, id));
+                this.get(`${prefix}/listener/:id`, (_, { params: { id } }) =>
+                    getEntity(listeners, id),
+                );
+                this.get(`${prefix}/connector/:id`, (_, { params: { id } }) =>
+                    getEntity(connectors, id),
+                );
+                this.get(`${prefix}/flow/:id`, (_, { params }) =>
+                    flows.filter(({ identity }) => identity === params.id),
+                );
             },
         });
     }
+}
+
+function getEntity(list, id) {
+    return list.filter(({ identity }) => identity === id);
 }

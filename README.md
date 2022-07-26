@@ -1,6 +1,7 @@
 # Skupper console
 
 WOrk in progress.
+
 ## Development
 
 > `yarn install`
@@ -8,19 +9,18 @@ WOrk in progress.
 
 the last command install husky to improves commits. You need to run this command just one time
 
-To develop the console type in the terminal
+To run the console in develop mode using a mock data example, type in the terminal
 
 > `yarn start`
 
 and open <http://localhosst:3000> from the browser
 
-To develop the console using external APIs from a skupper network
+Alternatevely you can run the console using external endpoints for the skupper controller and skupper flow collector:
 
 > `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
-Both skupper and the collector need enable the CORS. We can do that doing kubectl set env USE_CORS=yes for each of them
-
-**remember to enable CORS from the APIs side**
+**remember to enable CORS**
+Both the Skupper-controller and the flow-collector need to enable the CORS. We can do that doing kubectl set env USE_CORS=yes for each of them
 
 ## Tests
 
@@ -39,10 +39,11 @@ Both skupper and the collector need enable the CORS. We can do that doing kubect
 
 > `yarn cy-test`
 
-#### build
+## build
 
-Everytime you create a build we can pass ENV_VARIABLES:
+> `yarn build`
+
+ you should pass (or set your host) the following ENV_VARIABLES:
 
 > `ENABLE_MOCK_SERVER=true` - the app use mock data
-
 > `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url>`  - the app use data from remote endpoints

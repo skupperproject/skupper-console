@@ -1,0 +1,23 @@
+[
+    {
+        "recType": "SITE",
+        "identity": "6d449c84-6f6c-4eac-aa5e-bedfbbf467a7",
+        "startTime": 1658260729707111588,
+        "name": "public1",
+        "nameSpace": "mongo-public1"
+    },
+    {
+        "recType": "SITE",
+        "identity": "5f54ee36-54ac-4002-8f2d-691a06b25d47",
+        "startTime": 1658260736750320069,
+        "name": "public2",
+        "nameSpace": "mongo-public2"
+    },
+    {
+        "recType": "SITE",
+        "identity": "bfc21843-16fb-4c19-a4cc-c5938bc96768",
+        "startTime": 1658260713688271360,
+        "name": "private",
+        "nameSpace": "mongo-private"
+    }
+]

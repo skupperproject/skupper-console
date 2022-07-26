@@ -1,0 +1,101 @@
+[
+    {
+        "recType": "LISTENER",
+        "identity": "t5zgd:3",
+        "parent": "t5zgd:0",
+        "startTime": 1658260800259346,
+        "name": "mongo-a:27017",
+        "protocol": "tcp",
+        "address": "mongo-a:27017",
+        "flowCountL4": 10,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "t5zgd:4",
+        "parent": "t5zgd:0",
+        "startTime": 1658260806001351,
+        "name": "mongo-b:27017",
+        "protocol": "tcp",
+        "address": "mongo-b:27017",
+        "flowCountL4": 3,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "t5zgd:5",
+        "parent": "t5zgd:0",
+        "startTime": 1658260820483758,
+        "name": "mongo-c:27017",
+        "protocol": "tcp",
+        "address": "mongo-c:27017",
+        "flowCountL4": 4,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "wr4pc:3",
+        "parent": "wr4pc:0",
+        "startTime": 1658260800213736,
+        "name": "mongo-a:27017",
+        "protocol": "tcp",
+        "address": "mongo-a:27017",
+        "flowCountL4": 10,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "wr4pc:5",
+        "parent": "wr4pc:0",
+        "startTime": 1658260820550311,
+        "name": "mongo-c:27017",
+        "protocol": "tcp",
+        "address": "mongo-c:27017",
+        "flowCountL4": 3,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "59tnd:5",
+        "parent": "59tnd:0",
+        "startTime": 1658260820475263,
+        "name": "mongo-c:27017",
+        "protocol": "tcp",
+        "address": "mongo-c:27017",
+        "flowCountL4": 21,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "wr4pc:4",
+        "parent": "wr4pc:0",
+        "startTime": 1658260806149653,
+        "name": "mongo-b:27017",
+        "protocol": "tcp",
+        "address": "mongo-b:27017",
+        "flowCountL4": 4,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "59tnd:3",
+        "parent": "59tnd:0",
+        "startTime": 1658260800107449,
+        "name": "mongo-a:27017",
+        "protocol": "tcp",
+        "address": "mongo-a:27017",
+        "flowCountL4": 2,
+        "flowRateL4": 0
+    },
+    {
+        "recType": "LISTENER",
+        "identity": "59tnd:4",
+        "parent": "59tnd:0",
+        "startTime": 1658260806199232,
+        "name": "mongo-b:27017",
+        "protocol": "tcp",
+        "address": "mongo-b:27017",
+        "flowCountL4": 16,
+        "flowRateL4": 0
+    }
+]
