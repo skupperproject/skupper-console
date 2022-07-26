@@ -21,6 +21,7 @@ import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
+import { UPDATE_INTERVAL } from 'config';
 
 import { NetworkServices } from '../services';
 import { QueriesOverview } from '../services/overview.enum';
@@ -29,7 +30,7 @@ import { OverviewNetworkColumns, OverviewLabels, OverviewLinksColumns } from './
 const Overview = function () {
     const navigate = useNavigate();
 
-    const [refetchInterval, setRefetchInterval] = useState(0);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data, isLoading } = useQuery(
         QueriesOverview.GetOverview,

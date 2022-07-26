@@ -14,7 +14,6 @@ const CARD_HEIGHT = '450px';
 
 const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
     deploymentName: name,
-    timestamp,
     httpRequestsReceived,
     httpRequestsSent,
     tcpConnectionsIn,
@@ -56,7 +55,6 @@ const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
                         <RealTimeMetricChart
                             data={tcpBytesInChartData}
                             title={RealTimeMetricsLabels.TCPbytesIn}
-                            timestamp={timestamp}
                             formatter={formatBytes}
                         />
                     </SplitItem>
@@ -66,7 +64,6 @@ const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
                             data={tcpBytesOutChartData}
                             title={RealTimeMetricsLabels.TCPbytesOut}
                             color={ChartThemeColors.Orange}
-                            timestamp={timestamp}
                             formatter={formatBytes}
                         />
                     </SplitItem>
@@ -80,7 +77,6 @@ const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
                             data={httpBytesReceivedChartData}
                             title={RealTimeMetricsLabels.HTTPbytesIn}
                             color={ChartThemeColors.Blue}
-                            timestamp={timestamp}
                             formatter={formatBytes}
                         />
                     </SplitItem>
@@ -90,7 +86,6 @@ const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
                             data={httpBytesSentChartData}
                             title={RealTimeMetricsLabels.HTTbytesOut}
                             color={ChartThemeColors.Green}
-                            timestamp={timestamp}
                             formatter={formatBytes}
                         />
                     </SplitItem>

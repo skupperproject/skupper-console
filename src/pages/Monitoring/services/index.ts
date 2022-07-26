@@ -4,6 +4,7 @@ import {
     FlowsDeviceResponse,
     FlowsResponse,
     FlowsRouterResponse,
+    FlowsSiteResponse,
 } from 'API/REST.interfaces';
 
 import { MonitoringTopology, VanAddresses, ExtendedConnectionFlows } from './services.interfaces';
@@ -11,8 +12,21 @@ import { MonitoringTopology, VanAddresses, ExtendedConnectionFlows } from './ser
 export const MonitorServices = {
     fetchVanAddresses: async (): Promise<VanAddresses[]> => RESTApi.fetchVanAddresses(),
 
-    fetchFlowsByVanAddressId: async (id: string): Promise<FlowResponse[]> =>
-        RESTApi.fetchFlowsByVanAddr(id),
+    fetchFlowsByVanAddressId: async (id: string): Promise<FlowResponse[]> => {
+        const flows = await RESTApi.fetchFlowsByVanAddr(id);
+
+        return flows.map((flow) => {
+            const counterFlow = flow.counterFlow;
+
+            if (counterFlow) {
+                const targetFlow = flows.find(({ identity }) => identity === counterFlow);
+
+                return { ...flow, targetFlow };
+            }
+
+            return { ...flow };
+        });
+    },
 
     fetchConnectionByFlowId: async (id: string): Promise<ExtendedConnectionFlows> => {
         const startFlow = (await RESTApi.fetchFlow(id)) as FlowResponse;
@@ -27,10 +41,13 @@ export const MonitorServices = {
             startFlowsDevice.parent,
         )) as FlowsRouterResponse;
 
+        const startSite = (await RESTApi.fetchFlowsSite(startRouter.parent)) as FlowsSiteResponse;
+
         const start = {
             ...startFlow,
             device: startFlowsDevice,
             router: startRouter,
+            site: startSite,
             parentType: startFlowsDevice.recType,
         };
 
@@ -47,10 +64,13 @@ export const MonitorServices = {
                 endFlowsDevice.parent,
             )) as FlowsRouterResponse;
 
+            const endSite = (await RESTApi.fetchFlowsSite(endRouter.parent)) as FlowsSiteResponse;
+
             const end = {
                 ...endFlow,
                 device: endFlowsDevice,
                 router: endRouter,
+                site: endSite,
                 parentType: endFlowsDevice.recType,
             };
 

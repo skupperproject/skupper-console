@@ -9,6 +9,14 @@ export interface RealTimeLineChartProps {
         formatter?: Function;
         chartColor?: string;
         showLegend?: boolean;
+        height?: number;
+        width?: number;
+        padding?: {
+            bottom: number;
+            left: number;
+            right: number;
+            top: number;
+        };
         dataLegend?: {
             name: string;
         }[];

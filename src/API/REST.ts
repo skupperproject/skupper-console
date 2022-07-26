@@ -20,6 +20,8 @@ import {
     FLOWS_RECORD_BY_ID,
     FLOWS_ROUTER,
     FLOWS_ROUTERS,
+    FLOWS_SITE,
+    FLOWS_SITES,
     FLOWS_TOPOLOGY,
     FLOWS_VAN_ADDRESSES,
 } from './REST.constant';
@@ -35,6 +37,7 @@ import {
     FlowResponse,
     FlowsDeviceResponse,
     FlowsRouterResponse,
+    FlowsSiteResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -78,6 +81,16 @@ export const RESTApi = {
         const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
 
         return data;
+    },
+    fetchFlowsSites: async (): Promise<FlowsSiteResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_SITES}`);
+
+        return data;
+    },
+    fetchFlowsSite: async (id: string): Promise<FlowsSiteResponse | null> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_SITE}/${id}`);
+
+        return data ? data[0] : null;
     },
     fetchFlowsRouters: async (): Promise<FlowsRouterResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);

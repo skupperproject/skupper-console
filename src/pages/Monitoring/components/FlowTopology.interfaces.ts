@@ -1,5 +1,12 @@
 import { Transition } from 'd3-transition';
 
+import { ExtendedConnectionFlows, MonitoringTopology } from '../services/services.interfaces';
+
+export interface FlowsConnectionProps {
+    connection: ExtendedConnectionFlows;
+    routers: MonitoringTopology;
+}
+
 export interface MonitoringTopologyLink {
     source: string;
     target: string;
@@ -43,8 +50,9 @@ export interface MonitoringTopologyDeviceNode {
     type: string;
     recType: string;
     protocol: string;
-    avgLatency: number;
-    numFlows: number;
+    sourceHost: string;
+    sourcePort: string;
+    bytes: string;
 }
 
 export type MonitoringTopologyNode = MonitoringTopologyRouterNode | MonitoringTopologyDeviceNode;

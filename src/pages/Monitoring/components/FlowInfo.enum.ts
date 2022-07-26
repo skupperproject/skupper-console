@@ -1,7 +1,7 @@
 export enum FlowInfoColumns {
     Source = 'Source',
     RouterName = 'Router',
-    Namespace = 'Namespace',
+    SiteName = 'Site',
     HostName = 'Hostname',
     Address = 'Address',
     Protocol = 'Protocol',
@@ -16,4 +16,5 @@ export enum FlowInfoLables {
     WarningMessage = 'This flow does not have a counter flow. There may be an error in the network',
     Connector = 'CONNECTOR',
     Listener = 'LISTENER',
+    TrafficChartTitle = 'Real-time traffic data',
 }

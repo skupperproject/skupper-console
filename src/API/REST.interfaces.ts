@@ -115,6 +115,15 @@ export interface ServiceResponse {
 }
 
 // FLOWS
+
+export interface FlowsSiteResponse {
+    identity: string;
+    recType: string;
+    name: string;
+    namespace: string;
+    startTime: number;
+}
+
 export interface FlowsRouterResponse {
     identity: string;
     parent: string;
@@ -167,6 +176,7 @@ export interface FlowResponse {
     counterFlow?: string;
     startTime: number;
     endTime?: number;
+    targetFlow?: any;
 }
 
 export type FlowsDataResponse = FlowsRouterResponse &
