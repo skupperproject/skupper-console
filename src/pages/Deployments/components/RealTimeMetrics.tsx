@@ -10,7 +10,8 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { RealTimeMetricsLabels } from './RealTimeMetrics.enum';
 import { RealTimeMetricChartProps, RealTimeMetricsProps } from './RealTimeMetrics.interfaces';
 
-const CARD_HEIGHT = '450px';
+const CARD_HEIGHT = 350;
+const CARD_WIDTH = 700;
 
 const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
     deploymentName: name,
@@ -106,14 +107,22 @@ const RealTimeMetricChart: FC<RealTimeMetricChartProps> = function ({
     const dataLegend = data.map(({ name }) => ({ name }));
 
     return (
-        <Card style={{ height: CARD_HEIGHT }}>
+        <Card style={{ height: `${CARD_HEIGHT}px` }}>
             <CardTitle>{title}</CardTitle>
             {data.length ? (
                 <RealTimeLineChart
                     options={{
+                        width: CARD_WIDTH,
+                        height: CARD_HEIGHT,
                         chartColor: color,
                         formatter,
                         dataLegend,
+                        padding: {
+                            top: 10,
+                            bottom: 180,
+                            left: 100,
+                            right: 20,
+                        },
                     }}
                     data={data}
                 />
