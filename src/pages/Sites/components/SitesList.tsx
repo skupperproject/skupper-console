@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 
-import { SitesRoutesPaths } from '../sites.enum';
+import { SitesRoutesPaths } from '../Sites.enum';
 import { SitesListColumns } from './SitesList.enum';
 import { SitesListProps } from './SitesList.interfaces';
 

@@ -9,6 +9,7 @@ import {
     Simulation,
     ForceLink,
     forceCollide,
+    forceManyBody,
 } from 'd3-force';
 import { polygonCentroid, polygonHull } from 'd3-polygon';
 import { scaleOrdinal } from 'd3-scale';
@@ -17,13 +18,13 @@ import { select, Selection } from 'd3-selection';
 import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
-import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './Topology.interfaces';
+import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './TopologySVG.interfaces';
 
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 35;
 const FONT_SIZE_DEFAULT = 12;
 
-export default class TopologyGraph {
+export default class TopologySVG {
     $root: HTMLElement;
     nodes: TopologyNode[];
     links: TopologyLink[] | TopologyLinkNormalized[];
@@ -270,10 +271,10 @@ export default class TopologyGraph {
 
         return forceSimulation<TopologyNode, TopologyLinkNormalized>()
             .force('center', forceCenter(this.width / 2, this.height / 2))
-            .force('charge', null)
+            .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
             .alpha(0.1)
-            .alphaMin(0.08)
+            .alphaMin(0.07)
             .force(
                 'x',
                 forceX<TopologyNode>()

@@ -4,7 +4,7 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { DeploymentLink, Site } from '@pages/Sites/services/services.interfaces';
 import { RESTApi } from 'API/REST';
 
-import { TopologyNode } from '../components/Topology.interfaces';
+import { TopologyNode } from '../components/TopologySVG.interfaces';
 import { DeploymentNode, Deployments } from './services.interfaces';
 
 export const TopologyServices = {

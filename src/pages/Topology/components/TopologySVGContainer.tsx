@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
     Divider,
@@ -25,32 +25,26 @@ import {
     TopologyView,
 } from '@patternfly/react-topology';
 import { xml } from 'd3-fetch';
-import { QueryObserverSuccessResult, useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
 
 import siteSVG from '@assets/server.svg';
 import serviceSVG from '@assets/service.svg';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import LoadingPage from '@pages/shared/Loading';
-import SitesServices from '@pages/Sites/services';
 import { Site } from '@pages/Sites/services/services.interfaces';
-import { UPDATE_INTERVAL } from 'config';
 
 import TopologyDeploymentDetails from '../components/DetailsDeployment';
 import TopologySiteDetails from '../components/DetailsSite';
-import TopologyGraph from '../components/Topology';
-import { TopologyViews } from '../components/Topology.enum';
-import { TopologyLink, TopologyNode } from '../components/Topology.interfaces';
+import TopologySVG from '../components/TopologySVG';
 import { TopologyServices } from '../services';
-import { QueryTopology } from '../services/services.enum';
 import { Deployments } from '../services/services.interfaces';
-import { TopologyOverviewLabels } from './Overview.enum';
+import { TopologyViews } from '../Topology.enum';
+import { TopologyOverviewLabels } from '../View/Topology.enum';
+import { TopologyLink, TopologyNode } from './TopologySVG.interfaces';
 
 const TYPE_SITES = 'sites';
-const TopologyContent = function () {
-    const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologyGraph>();
+const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = function ({
+    sites,
+    deployments,
+}) {
+    const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologySVG>();
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
     const [selectedNode, setSelectedNode] = useState('');
@@ -61,35 +55,6 @@ const TopologyContent = function () {
 
     const drawerRef = useRef<HTMLSpanElement>(null);
     const selectedRef = useRef<string>('');
-
-    const { data: sites, isLoading: isLoadingSites } = useQuery(
-        QueryTopology.GetSites,
-        SitesServices.fetchSites,
-        {
-            initialData: [],
-            refetchInterval,
-            onError: handleError,
-        },
-    ) as QueryObserverSuccessResult<Site[]>;
-
-    const { data: deployments, isLoading: isLoadingServices } = useQuery(
-        QueryTopology.GetDeployments,
-        TopologyServices.fetchDeployments,
-        {
-            initialData: { deployments: [], deploymentLinks: [] },
-            refetchInterval,
-            onError: handleError,
-        },
-    ) as QueryObserverSuccessResult<Deployments>;
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
-    }
 
     const handleExpand = useCallback(
         (id: string) => {
@@ -143,7 +108,7 @@ const TopologyContent = function () {
             if ($node && topology.nodes.length && topology.links.length && !topologyGraphInstance) {
                 $node.replaceChildren();
 
-                const topologyGraph = new TopologyGraph(
+                const topologyGraph = new TopologySVG(
                     $node,
                     topology.nodes,
                     topology.links,
@@ -159,7 +124,7 @@ const TopologyContent = function () {
         [handleExpand, topology, topologyGraphInstance],
     );
 
-    const refreshTopology = useCallback(async () => {
+    const updateNodesAndLinks = useCallback(async () => {
         if (topologyType === TYPE_SITES) {
             const siteXML = await xml(siteSVG);
             const nodes = TopologyServices.getNodesSites(sites).map((site) => ({
@@ -185,8 +150,8 @@ const TopologyContent = function () {
     }, [deployments?.deploymentLinks, deployments?.deployments, sites, topologyType]);
 
     useEffect(() => {
-        refreshTopology();
-    }, [refreshTopology]);
+        updateNodesAndLinks();
+    }, [updateNodesAndLinks]);
 
     useEffect(() => {
         if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
@@ -194,11 +159,7 @@ const TopologyContent = function () {
         }
     }, [topology, topologyGraphInstance]);
 
-    if (isLoadingSites || isLoadingServices) {
-        return <LoadingPage />;
-    }
-
-    const controlButtons = createTopologyControlButtons({
+    const controlButtonsComponent = createTopologyControlButtons({
         ...defaultControlButtonsOptions,
         zoomInCallback: handleZoomIn,
         zoomOutCallback: handleZoomOut,
@@ -207,7 +168,7 @@ const TopologyContent = function () {
         legendHidden: true,
     });
 
-    const PanelContent = (
+    const PanelContentComponent = (
         <DrawerPanelContent>
             <DrawerHead>
                 {selectedNode && (
@@ -236,10 +197,12 @@ const TopologyContent = function () {
                         title={<TabTitleText>Deployments</TabTitleText>}
                     />
                 </Tabs>
-                <DrawerContent panelContent={PanelContent} style={{ overflow: 'hidden' }}>
+                <DrawerContent panelContent={PanelContentComponent} style={{ overflow: 'hidden' }}>
                     <DrawerPanelBody hasNoPadding>
                         <TopologyView
-                            controlBar={<TopologyControlBar controlButtons={controlButtons} />}
+                            controlBar={
+                                <TopologyControlBar controlButtons={controlButtonsComponent} />
+                            }
                         >
                             <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
                         </TopologyView>
@@ -275,4 +238,4 @@ const TopologyContent = function () {
     );
 };
 
-export default TopologyContent;
+export default TopologySVGContainer;

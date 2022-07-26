@@ -18,7 +18,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import Metrics from '../components/Metrics';

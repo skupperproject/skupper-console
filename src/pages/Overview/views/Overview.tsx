@@ -20,7 +20,7 @@ import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import { NetworkServices } from '../services';

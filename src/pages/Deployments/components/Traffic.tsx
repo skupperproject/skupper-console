@@ -8,7 +8,7 @@ import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
-import { SitesRoutesPaths } from '@pages/Sites/sites.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TrafficColumns, TrafficLabels } from './Traffic.enum';
 import { TrafficTablesProps } from './Traffic.interfaces';
