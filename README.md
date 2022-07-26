@@ -20,7 +20,7 @@ Alternatevely you can run the console using external endpoints for the skupper c
 > `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
 **remember to enable CORS**
-Both skupper and the collector need enable the CORS. We can do that doing kubectl set env USE_CORS=yes for each of them
+Both the Skupper-controller and the flow-collector need to enable the CORS. We can do that doing kubectl set env USE_CORS=yes for each of them
 
 ## Tests
 
@@ -46,5 +46,4 @@ Both skupper and the collector need enable the CORS. We can do that doing kubect
  you should pass (or set your host) the following ENV_VARIABLES:
 
 > `ENABLE_MOCK_SERVER=true` - the app use mock data
-
 > `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url>`  - the app use data from remote endpoints
