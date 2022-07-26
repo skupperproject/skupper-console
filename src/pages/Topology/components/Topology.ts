@@ -279,8 +279,6 @@ export default class TopologyGraph {
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', null)
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
-            .alpha(0.1)
-            .alphaMin(0.08)
             .force(
                 'x',
                 forceX<TopologyNode>()
@@ -475,10 +473,11 @@ export default class TopologyGraph {
         this.force
             .force<ForceLink<TopologyNode, TopologyLink | TopologyLinkNormalized>>('link')
             ?.links(links);
+
         this.force.restart();
 
-        this.updateDOMLinks(links as TopologyLinkNormalized[]);
         this.updateDOMNodes(nodes);
+        this.updateDOMLinks(links as TopologyLinkNormalized[]);
     };
 
     reset() {
