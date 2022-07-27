@@ -25,7 +25,6 @@ const CONNECTION_PATH_NAME = 'connection';
 const FlowDetails = function () {
     const navigate = useNavigate();
     const { id, idFlow } = useParams();
-    const link = `${MonitoringRoutesPaths.Connections}/${idFlow}`;
 
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
@@ -73,7 +72,7 @@ const FlowDetails = function () {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
-                        <Link to={link}>{id}</Link>
+                        <Link to={`${MonitoringRoutesPaths.Connections}/${id}`}>{id}</Link>
                     </BreadcrumbItem>
                     <BreadcrumbHeading to="#">{CONNECTION_PATH_NAME}</BreadcrumbHeading>
                 </Breadcrumb>

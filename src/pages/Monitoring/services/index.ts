@@ -2,7 +2,6 @@ import { RESTApi } from 'API/REST';
 import {
     FlowResponse,
     FlowsDeviceResponse,
-    FlowsResponse,
     FlowsRouterResponse,
     FlowsSiteResponse,
 } from 'API/REST.interfaces';
@@ -33,22 +32,22 @@ export const MonitorServices = {
 
         const { counterFlow, parent } = startFlow;
 
-        const startLink = await RESTApi.fetchFlowsListener(parent);
+        const startListener = await RESTApi.fetchFlowsListener(parent);
         const startConnector = await RESTApi.fetchFlowsConnector(parent);
+        const startDevice = { ...startListener, ...startConnector } as FlowsDeviceResponse;
 
-        const startFlowsDevice = { ...startLink, ...startConnector } as FlowsDeviceResponse;
         const startRouter = (await RESTApi.fetchFlowsRouter(
-            startFlowsDevice.parent,
+            startDevice.parent,
         )) as FlowsRouterResponse;
 
         const startSite = (await RESTApi.fetchFlowsSite(startRouter.parent)) as FlowsSiteResponse;
 
         const start = {
             ...startFlow,
-            device: startFlowsDevice,
+            device: startDevice,
             router: startRouter,
             site: startSite,
-            parentType: startFlowsDevice.recType,
+            parentType: startDevice.recType,
         };
 
         if (counterFlow) {
@@ -85,9 +84,6 @@ export const MonitorServices = {
             endFlow: null,
         };
     },
-
-    fetchFlowsByVanId: async (id: string): Promise<FlowsResponse[] | null> =>
-        id ? RESTApi.fetchMonitoringFlowsByVanId(id) : null,
 
     fetchFlowsTopology: async (): Promise<MonitoringTopology> => RESTApi.fetchFlowsTopology(),
 };

@@ -18,6 +18,7 @@ export function loadMockServer() {
         const listeners = require(`${path}/FLOWS-LISTENERS.json`);
         const connectors = require(`${path}/FLOWS-CONNECTORS.json`);
         const flows = require(`${path}/FLOWS.json`);
+        const processes = require(`${path}/FLOWS-PROCESSES.json`);
 
         const prefix = '/api/v1alpha1';
 
@@ -39,21 +40,27 @@ export function loadMockServer() {
                 this.get(`${prefix}/listeners`, () => listeners);
                 this.get(`${prefix}/connectors`, () => connectors);
                 this.get(`${prefix}/flows`, () => flows);
+                this.get(`${prefix}/processes`, () => processes);
 
-                this.get(`${prefix}/address/:id`, (_, { params: { id } }) =>
+                this.get(`${prefix}/addresses/:id`, (_, { params: { id } }) =>
                     getEntity(addresses, id),
                 );
-                this.get(`${prefix}/site/:id`, (_, { params: { id } }) => getEntity(sites, id));
-                this.get(`${prefix}/router/:id`, (_, { params: { id } }) => getEntity(routers, id));
-                this.get(`${prefix}/link/:id`, (_, { params: { id } }) => getEntity(links, id));
-                this.get(`${prefix}/listener/:id`, (_, { params: { id } }) =>
+                this.get(`${prefix}/sites/:id`, (_, { params: { id } }) => getEntity(sites, id));
+                this.get(`${prefix}/routers/:id`, (_, { params: { id } }) =>
+                    getEntity(routers, id),
+                );
+                this.get(`${prefix}/links/:id`, (_, { params: { id } }) => getEntity(links, id));
+                this.get(`${prefix}/listeners/:id`, (_, { params: { id } }) =>
                     getEntity(listeners, id),
                 );
-                this.get(`${prefix}/connector/:id`, (_, { params: { id } }) =>
+                this.get(`${prefix}/connectors/:id`, (_, { params: { id } }) =>
                     getEntity(connectors, id),
                 );
-                this.get(`${prefix}/flow/:id`, (_, { params }) =>
+                this.get(`${prefix}/flows/:id`, (_, { params }) =>
                     flows.filter(({ identity }) => identity === params.id),
+                );
+                this.get(`${prefix}/processes/:id`, (_, { params }) =>
+                    processes.filter(({ identity }) => identity === params.id),
                 );
             },
         });

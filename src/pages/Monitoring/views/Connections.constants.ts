@@ -1,4 +1,4 @@
-import { DetailsColumnsNames } from './Details.enum';
+import { DetailsColumnsNames } from './Connections.enum';
 
 export const DetailsColumns = [
     { name: DetailsColumnsNames.ConnectionStatus, prop: '' },

@@ -1,39 +1,22 @@
 import { fetchWithTimeout } from './axiosMiddleware';
-import {
-    getData,
-    getDeployments,
-    getFlows,
-    getFlowsTopology,
-    getServices,
-    getSites,
-} from './controllers';
+import { getData, getDeployments, getFlowsTopology, getServices, getSites } from './controllers';
 import {
     DATA_URL,
-    FLOWS_BY_VAN_ADDRESS,
-    FLOWS_CONNECTOR,
     FLOWS_CONNECTORS,
-    FLOWS_FLOW,
-    FLOWS_LINK,
+    FLOWS,
     FLOWS_LINKS,
-    FLOWS_LISTENER,
     FLOWS_LISTENERS,
-    FLOWS_RECORD_BY_ID,
-    FLOWS_ROUTER,
     FLOWS_ROUTERS,
-    FLOWS_SITE,
     FLOWS_SITES,
-    FLOWS_TOPOLOGY,
     FLOWS_VAN_ADDRESSES,
 } from './REST.constant';
 import {
     DataAdapterResponse,
-    FlowsResponse,
     ServiceResponse,
     SiteResponse,
     DeploymentTopologyResponse,
     FlowsVanAddressesResponse,
     FlowsTopologyResponse,
-    FlowsDataResponse,
     FlowResponse,
     FlowsDeviceResponse,
     FlowsRouterResponse,
@@ -67,16 +50,6 @@ export const RESTApi = {
     },
 
     // FLOWS APIs
-    fetchMonitoringFlowsByVanId: async (vanaddr: string): Promise<FlowsResponse[]> => {
-        const { data: topology } = await fetchWithTimeout(`${FLOWS_TOPOLOGY}`);
-        const { data: flows } = await fetchWithTimeout(
-            `${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`,
-        );
-
-        const data = [...topology, ...flows];
-
-        return getFlows(data, vanaddr);
-    },
     fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
         const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
 
@@ -88,7 +61,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsSite: async (id: string): Promise<FlowsSiteResponse | null> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_SITE}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWS_SITES}/${id}`);
 
         return data ? data[0] : null;
     },
@@ -98,7 +71,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsRouter: async (id: string): Promise<FlowsRouterResponse | null> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_ROUTER}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}/${id}`);
 
         return data ? data[0] : null;
     },
@@ -108,7 +81,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsLink: async (id: string): Promise<FlowsDeviceResponse | null> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LINK}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWS_LINKS}/${id}`);
 
         return data ? data[0] : null;
     },
@@ -118,7 +91,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse | null> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_CONNECTOR}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}/${id}`);
 
         return data ? data[0] : null;
     },
@@ -128,17 +101,17 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse | null> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LISTENER}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
 
         return data ? data[0] : null;
     },
     fetchFlowsByVanAddr: async (vanaddr: string): Promise<FlowResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_BY_VAN_ADDRESS}?vanaddr=${vanaddr}`);
+        const { data } = await fetchWithTimeout(`${FLOWS}?vanaddr=${vanaddr}`);
 
         return data;
     },
     fetchFlow: async (id: string): Promise<FlowResponse | null> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_FLOW}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWS}/${id}`);
 
         return data ? data[0] : null;
     },
@@ -148,11 +121,11 @@ export const RESTApi = {
 
         return getFlowsTopology(routers, links);
     },
-    fetchFlowRecord: async (ids: string[]): Promise<FlowsDataResponse[]> => {
-        const queryString = ids.map((id) => `id=${id}`).join('&');
+    // fetchFlowRecord: async (ids: string[]): Promise<FlowsDataResponse[]> => {
+    //     const queryString = ids.map((id) => `id=${id}`).join('&');
 
-        const { data } = await fetchWithTimeout(`${FLOWS_RECORD_BY_ID}?${queryString}`);
+    //     const { data } = await fetchWithTimeout(`${FLOWS_RECORD_BY_ID}?${queryString}`);
 
-        return data;
-    },
+    //     return data;
+    // },
 };

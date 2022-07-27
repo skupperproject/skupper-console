@@ -47,11 +47,12 @@ const TopologyContent = function () {
         return <LoadingPage />;
     }
 
-    if (!sites || !deployments) {
-        return null;
-    }
-
-    return <TopologySVGContainer sites={sites} deployments={deployments} />;
+    return (
+        <TopologySVGContainer
+            sites={sites || []}
+            deployments={deployments || { deployments: [], deploymentLinks: [] }}
+        />
+    );
 };
 
 export default TopologyContent;
