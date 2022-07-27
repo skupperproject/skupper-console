@@ -2,6 +2,7 @@ import { RESTApi } from 'API/REST';
 import {
     FlowResponse,
     FlowsDeviceResponse,
+    FlowsProcessResponse,
     FlowsRouterResponse,
     FlowsSiteResponse,
 } from 'API/REST.interfaces';
@@ -41,12 +42,16 @@ export const MonitorServices = {
         )) as FlowsRouterResponse;
 
         const startSite = (await RESTApi.fetchFlowsSite(startRouter.parent)) as FlowsSiteResponse;
+        const startProcess = (await RESTApi.fetchFlowProcess(
+            startFlow.process,
+        )) as FlowsProcessResponse;
 
         const start = {
             ...startFlow,
             device: startDevice,
             router: startRouter,
             site: startSite,
+            processFlow: startProcess,
             parentType: startDevice.recType,
         };
 
@@ -64,12 +69,16 @@ export const MonitorServices = {
             )) as FlowsRouterResponse;
 
             const endSite = (await RESTApi.fetchFlowsSite(endRouter.parent)) as FlowsSiteResponse;
+            const endProcess = (await RESTApi.fetchFlowProcess(
+                endFlow.process,
+            )) as FlowsProcessResponse;
 
             const end = {
                 ...endFlow,
                 device: endFlowsDevice,
                 router: endRouter,
                 site: endSite,
+                processFlow: endProcess,
                 parentType: endFlowsDevice.recType,
             };
 

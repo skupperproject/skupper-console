@@ -57,8 +57,11 @@ const FlowInfo: FC<FlowsInfoProps> = function ({ connection }) {
                     <Tr>
                         <Th>{FlowInfoColumns.Source}</Th>
                         <Th>{FlowInfoColumns.SiteName}</Th>
+                        <Th>{FlowInfoColumns.ProcessName}</Th>
+                        <Th>{FlowInfoColumns.ProcessHost}</Th>
+                        <Th>{FlowInfoColumns.ProcessImg}</Th>
                         <Th>{FlowInfoColumns.RouterName}</Th>
-                        <Th>{FlowInfoColumns.HostName}</Th>
+                        <Th>{FlowInfoColumns.RouterHostName}</Th>
                         <Th>{FlowInfoColumns.Bytes}</Th>
                         <Th>{FlowInfoColumns.ByteRate}</Th>
                         <Th>{FlowInfoColumns.Latency}</Th>
@@ -70,8 +73,19 @@ const FlowInfo: FC<FlowsInfoProps> = function ({ connection }) {
                             {`${startFlow?.sourceHost}: ${startFlow?.sourcePort}`}
                         </Td>
                         <Td dataLabel={FlowInfoColumns.SiteName}>{startFlow?.site.name}</Td>
+                        <Td dataLabel={FlowInfoColumns.ProcessName}>
+                            {startFlow?.processFlow.name}
+                        </Td>
+                        <Td dataLabel={FlowInfoColumns.ProcessHost}>
+                            {startFlow?.processFlow.sourceHost}
+                        </Td>
+                        <Td dataLabel={FlowInfoColumns.ProcessImg}>
+                            {startFlow?.processFlow.imageName}
+                        </Td>
                         <Td dataLabel={FlowInfoColumns.RouterName}>{startFlow?.router.name}</Td>
-                        <Td dataLabel={FlowInfoColumns.HostName}>{startFlow?.router.hostame}</Td>
+                        <Td dataLabel={FlowInfoColumns.RouterHostName}>
+                            {startFlow?.router.hostame}
+                        </Td>
                         <Td dataLabel={FlowInfoColumns.Bytes}>
                             {formatBytes(startFlow?.octets || 0)}
                         </Td>
@@ -88,8 +102,19 @@ const FlowInfo: FC<FlowsInfoProps> = function ({ connection }) {
                                 {`${endFlow?.sourceHost}: ${endFlow?.sourcePort}`}
                             </Td>
                             <Td dataLabel={FlowInfoColumns.SiteName}>{endFlow?.site.name}</Td>
+                            <Td dataLabel={FlowInfoColumns.ProcessName}>
+                                {endFlow?.processFlow.name}
+                            </Td>
+                            <Td dataLabel={FlowInfoColumns.ProcessHost}>
+                                {endFlow?.processFlow.sourceHost}
+                            </Td>
+                            <Td dataLabel={FlowInfoColumns.ProcessImg}>
+                                {endFlow?.processFlow.imageName}
+                            </Td>
                             <Td dataLabel={FlowInfoColumns.RouterName}>{endFlow?.router.name}</Td>
-                            <Td dataLabel={FlowInfoColumns.HostName}>{endFlow?.router.hostame}</Td>
+                            <Td dataLabel={FlowInfoColumns.RouterHostName}>
+                                {endFlow?.router.hostame}
+                            </Td>
                             <Td dataLabel={FlowInfoColumns.Bytes}>
                                 {formatBytes(endFlow?.octets || 0)}
                             </Td>

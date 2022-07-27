@@ -5,6 +5,7 @@ import {
     FlowResponse,
     FlowsRouterResponse,
     FlowsSiteResponse,
+    FlowsProcessResponse,
 } from 'API/REST.interfaces';
 
 export type Flow = FlowResponse;
@@ -30,6 +31,7 @@ interface extendedFlow extends Flow {
     router: FlowsRouterResponse;
     device: FlowsDeviceResponse;
     site: FlowsSiteResponse;
+    processFlow: FlowsProcessResponse;
     parentType?: string;
 }
 

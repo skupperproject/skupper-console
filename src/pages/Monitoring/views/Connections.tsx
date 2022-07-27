@@ -39,7 +39,7 @@ import './Connections.scss';
 export const MAX_HEIGHT_DETAILS_TABLE = 305;
 export const MAX_WIDTH_DETAILS_TABLE = 600;
 
-const PER_PAGE = 50;
+const PER_PAGE_DEFAULT = 50;
 
 const DetailsView = function () {
     const navigate = useNavigate();
@@ -52,9 +52,9 @@ const DetailsView = function () {
 
     const [shouldShowActiveFlows, setShouldShowActiveFlows] = useState(true);
 
-    const [visibleItems, setVisibleItems] = useState<number>(PER_PAGE);
+    const [visibleItems, setVisibleItems] = useState<number>(PER_PAGE_DEFAULT);
 
-    const { data: flows, isLoading } = useQuery(
+    const { data: connections, isLoading } = useQuery(
         [QueriesMonitoring.GetConnectionsByVanAddr, vanAddressId],
         () => (vanAddressId ? MonitorServices.fetchFlowsByVanAddressId(vanAddressId) : null),
         {
@@ -109,11 +109,11 @@ const DetailsView = function () {
         return <LoadingPage />;
     }
 
-    if (!flows) {
+    if (!connections) {
         return null;
     }
 
-    const flowsFiltered = flows
+    const flowsFiltered = connections
         .sort((a, b) => b.startTime - a.startTime)
         .filter((flow) => !(shouldShowActiveFlows && flow.endTime));
 
@@ -214,7 +214,7 @@ const DetailsView = function () {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {!!flows.length &&
+                            {!!connections.length &&
                                 flowsPaginated.map(
                                     ({
                                         identity,

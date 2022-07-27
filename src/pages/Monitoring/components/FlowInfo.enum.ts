@@ -2,7 +2,7 @@ export enum FlowInfoColumns {
     Source = 'Source',
     RouterName = 'Router',
     SiteName = 'Site',
-    HostName = 'Hostname',
+    RouterHostName = 'Router Hostname',
     Address = 'Address',
     Protocol = 'Protocol',
     Bytes = 'Bytes',
@@ -10,6 +10,9 @@ export enum FlowInfoColumns {
     Latency = 'FFTB',
     Client = 'Client',
     Server = 'Server',
+    ProcessName = 'Process',
+    ProcessHost = 'Process Host',
+    ProcessImg = 'Process Image',
 }
 
 export enum FlowInfoLables {

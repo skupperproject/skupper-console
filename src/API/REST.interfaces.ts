@@ -124,6 +124,16 @@ export interface FlowsSiteResponse {
     startTime: number;
 }
 
+export interface FlowsProcessResponse {
+    identity: string;
+    parent: string;
+    recType: string;
+    name: string;
+    imageName: string;
+    sourceHost: string;
+    startTime: number;
+}
+
 export interface FlowsRouterResponse {
     identity: string;
     parent: string;
@@ -172,9 +182,11 @@ export interface FlowResponse {
     sourceHost: string;
     sourcePort: string;
     latency: number;
+    process: string;
     trace?: string;
     counterFlow?: string;
     startTime: number;
+
     endTime?: number;
     targetFlow?: any;
 }
