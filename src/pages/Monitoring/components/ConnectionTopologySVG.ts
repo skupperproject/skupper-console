@@ -12,14 +12,14 @@ import {
     MonitoringTopologyNode,
     MonitoringTopologyRouterNode,
     MonitoringTopologyVanService,
-} from './FlowTopology.interfaces';
+} from './ConnectionTopology.interfaces';
 
 const CIRCLE_R = 10;
 const ROUTER_IMG_WIDTH = 50;
 const ROUTER_IMG_CENTER_X = ROUTER_IMG_WIDTH / 2;
 const ARROW_SIZE = 10;
 
-function FlowTopologyContent(
+function ConnectionTopologySVG(
     $node: HTMLElement,
     nodes: MonitoringTopologyNode[],
     links: MonitoringTopologyLink[],
@@ -157,6 +157,17 @@ function FlowTopologyContent(
     const svgDeviceNodes = svgElement.selectAll('.devicesImg').data(deviceNodes).enter();
 
     svgDeviceNodes.call(function (p) {
+        // label
+        p.append('text')
+            .attr('class', 'devicesImgL')
+            .text(({ sourcePort, sourceHost }) => `${sourceHost}:${sourcePort}`)
+            .attr('font-size', 12);
+
+        p.append('text')
+            .attr('class', 'devicesImgBytesL')
+            .text(({ bytes }) => bytes)
+            .attr('font-size', 12);
+
         p.append('circle')
             .attr('class', 'devicesImg')
             .attr('r', CIRCLE_R)
@@ -173,17 +184,6 @@ function FlowTopologyContent(
                     .on('drag', dragged)
                     .on('end', dragEnded),
             );
-
-        // label
-        p.append('text')
-            .attr('class', 'devicesImgL')
-            .text(({ sourcePort, sourceHost }) => `${sourceHost}:${sourcePort}`)
-            .attr('font-size', 12);
-
-        p.append('text')
-            .attr('class', 'devicesImgBytesL')
-            .text(({ bytes }) => bytes)
-            .attr('font-size', 12);
     });
 
     // drag util
@@ -376,4 +376,4 @@ function FlowTopologyContent(
     }) as any;
 }
 
-export default FlowTopologyContent;
+export default ConnectionTopologySVG;

@@ -9,10 +9,10 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import DescriptionItem from '@pages/Sites/components/DescriptionItem';
 
-import { FlowInfoColumns, FlowInfoLables } from './FlowInfo.enum';
-import { FlowsInfoProps } from './FlowInfo.interfaces';
+import { FlowInfoColumns, FlowInfoLables } from './ConnectionDetails.enum';
+import { FlowsInfoProps } from './ConnectionDetails.interfaces';
 
-const FlowInfo: FC<FlowsInfoProps> = function ({ connection }) {
+const ConnectionDetails: FC<FlowsInfoProps> = function ({ connection }) {
     const { startFlow, endFlow } = connection;
 
     return (
@@ -132,4 +132,4 @@ const FlowInfo: FC<FlowsInfoProps> = function ({ connection }) {
     );
 };
 
-export default FlowInfo;
+export default ConnectionDetails;

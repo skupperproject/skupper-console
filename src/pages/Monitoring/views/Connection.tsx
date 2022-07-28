@@ -14,13 +14,14 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import FlowInfo from '../components/FlowInfo';
-import FlowTopology from '../components/FlowTopology';
+import ConnectionDetails from '../components/ConnectionDetails';
+import ConnectionTopologyContainer from '../components/ConnectionTopologyContainer';
 import { MonitoringRoutesPathLabel, MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
 
 const CONNECTION_PATH_NAME = 'connection';
+const TOPOLOGY_CONTAINER_HEIGHT = 500;
 
 const FlowDetails = function () {
     const navigate = useNavigate();
@@ -77,11 +78,11 @@ const FlowDetails = function () {
                     <BreadcrumbHeading to="#">{CONNECTION_PATH_NAME}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
-            <StackItem>{connection && <FlowInfo connection={connection} />}</StackItem>
+            <StackItem>{connection && <ConnectionDetails connection={connection} />}</StackItem>
             <StackItem>
-                <div style={{ width: '100%', height: '300px' }}>
+                <div style={{ width: '100%', height: `${TOPOLOGY_CONTAINER_HEIGHT}px` }}>
                     {connection && routers && (
-                        <FlowTopology connection={connection} routers={routers} />
+                        <ConnectionTopologyContainer connection={connection} routers={routers} />
                     )}
                 </div>
             </StackItem>

@@ -4,36 +4,33 @@ import { TopologyView } from '@patternfly/react-topology';
 
 import { formatBytes } from '@core/utils/formatBytes';
 
-import FlowTopologyContent from './FlowsTopologyContent';
-import { FlowsConnectionProps, MonitoringTopologyVanService } from './FlowTopology.interfaces';
+import {
+    FlowsConnectionProps,
+    MonitoringTopologyVanService,
+} from './ConnectionTopology.interfaces';
+import ConnectionTopologySVG from './ConnectionTopologySVG';
 
-const FlowTopology: FC<FlowsConnectionProps> = function ({ connection, routers }) {
+const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connection, routers }) {
     const [svgTopologyComponent, setSvgTopologyComponent] =
         useState<MonitoringTopologyVanService>();
 
     const routerNodes = useMemo(
         () =>
-            routers.nodes
-                ?.filter(
-                    (node) =>
-                        node.identity === connection.startFlow.router.identity ||
-                        node.identity === connection.endFlow?.router.identity,
-                )
-                .map(({ identity, name }) => {
-                    const positions = localStorage.getItem(identity);
+            routers.nodes.map(({ identity, name }) => {
+                const positions = localStorage.getItem(identity);
 
-                    return {
-                        identity,
-                        name,
-                        width: 50,
-                        type: 'router',
-                        x: 0,
-                        y: 0,
-                        fx: positions ? JSON.parse(positions).fx : null,
-                        fy: positions ? JSON.parse(positions).fy : null,
-                    };
-                }),
-        [routers?.nodes, connection],
+                return {
+                    identity,
+                    name,
+                    width: 50,
+                    type: 'router',
+                    x: 0,
+                    y: 0,
+                    fx: positions ? JSON.parse(positions).fx : null,
+                    fy: positions ? JSON.parse(positions).fy : null,
+                };
+            }),
+        [routers.nodes],
     );
 
     const connectionTopology = useMemo(
@@ -90,24 +87,18 @@ const FlowTopology: FC<FlowsConnectionProps> = function ({ connection, routers }
 
     const panelRef = useCallback(
         ($node: HTMLDivElement) => {
-            const routerNodesIds = routerNodes?.map(({ identity }) => identity);
-            const routerLinks =
-                routers?.links.filter(
-                    (link) =>
-                        routerNodesIds?.includes(link.source) &&
-                        routerNodesIds?.includes(link.target),
-                ) || [];
+            const routerLinks = routers?.links;
 
             if (
                 $node &&
-                deviceLinks?.length &&
-                deviceNodes?.length &&
-                routerNodes?.length &&
-                routerLinks?.length &&
+                deviceLinks.length &&
+                deviceNodes.length &&
+                routerNodes.length &&
+                routers?.links.length &&
                 !svgTopologyComponent
             ) {
                 $node.replaceChildren();
-                const topologyServiceRef = FlowTopologyContent(
+                const topologyServiceRef = ConnectionTopologySVG(
                     $node,
                     [...routerNodes, ...deviceNodes],
                     [...routerLinks, ...deviceLinks],
@@ -128,4 +119,4 @@ const FlowTopology: FC<FlowsConnectionProps> = function ({ connection, routers }
     );
 };
 
-export default FlowTopology;
+export default ConnectionTopologyContainer;
