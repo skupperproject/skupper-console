@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -15,7 +15,7 @@ const Overview = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-    const { data: sites, isLoading } = useQuery(QueriesSites.GetSites, SitesServices.fetchSites, {
+    const { data: sites, isLoading } = useQuery([QueriesSites.GetSites], SitesServices.fetchSites, {
         refetchInterval,
         onError: handleError,
     });

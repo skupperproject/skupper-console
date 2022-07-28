@@ -17,8 +17,8 @@ import {
 } from '@patternfly/react-core';
 import { CircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { formatBytes } from '@core/utils/formatBytes';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -17,7 +17,7 @@ const TopologyContent = function () {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
-        QueryTopology.GetSites,
+        [QueryTopology.GetSites],
         SitesServices.fetchSites,
         {
             refetchInterval,
@@ -26,7 +26,7 @@ const TopologyContent = function () {
     );
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
-        QueryTopology.GetDeployments,
+        [QueryTopology.GetDeployments],
         TopologyServices.fetchDeployments,
         {
             refetchInterval,

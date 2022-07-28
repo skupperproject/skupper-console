@@ -13,7 +13,7 @@ import {
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
@@ -33,7 +33,7 @@ const Overview = function () {
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data, isLoading } = useQuery(
-        QueriesOverview.GetOverview,
+        [QueriesOverview.GetOverview],
         NetworkServices.fetchOverviewStats,
         {
             refetchInterval,

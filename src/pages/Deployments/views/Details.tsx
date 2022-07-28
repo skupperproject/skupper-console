@@ -12,7 +12,7 @@ import {
     Title,
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';

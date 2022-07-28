@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Card } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -19,7 +19,7 @@ const DeploymentsOverview = function () {
     const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: deployments, isLoading } = useQuery(
-        QueriesDeployments.GetDeployments,
+        [QueriesDeployments.GetDeployments],
         DeploymentsServices.fetchDeployments,
         {
             refetchInterval,

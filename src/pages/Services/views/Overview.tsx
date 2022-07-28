@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Card } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -18,7 +18,7 @@ const ServicesOverview = function () {
     const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: rows, isLoading } = useQuery(
-        QueriesServices.GetServices,
+        [QueriesServices.GetServices],
         ServicesServices.fetchServices,
         {
             refetchInterval,

@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 
 import { Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
 import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';

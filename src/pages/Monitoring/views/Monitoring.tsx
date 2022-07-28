@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -30,7 +30,7 @@ const Overview = function () {
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: vanServices, isLoading } = useQuery(
-        QueriesMonitoring.GetVanAdresses,
+        [QueriesMonitoring.GetVanAdresses],
         MonitorServices.fetchVanAddresses,
         {
             refetchInterval,
