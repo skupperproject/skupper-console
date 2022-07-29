@@ -1,30 +1,12 @@
 [
     {
         "recType": "PROCESS",
-        "identity": "321e9bce-eb0c-4721-85bd-a638a205754f",
-        "parent": "bfc21843-16fb-4c19-a4cc-c5938bc96768",
-        "startTime": 1658853737294083164,
-        "name": "mongo-a-64fc4d7b6-fvfpx",
-        "imageName": "mongo:5.0",
-        "sourceHost": "172.17.29.112"
-    },
-    {
-        "recType": "PROCESS",
-        "identity": "9c17ac54-77a6-4d05-97cb-3a5f2671b816",
+        "identity": "d699de67-5092-4fed-8677-dc5883c57952",
         "parent": "6d449c84-6f6c-4eac-aa5e-bedfbbf467a7",
-        "startTime": 1658261014639708434,
-        "name": "mongo-b-647c7b7d4d-jmm4p",
-        "imageName": "mongo:5.0",
-        "sourceHost": "172.17.36.207"
-    },
-    {
-        "recType": "PROCESS",
-        "identity": "71cef18a-f320-434a-9f4e-d31f482ff14f",
-        "parent": "5f54ee36-54ac-4002-8f2d-691a06b25d47",
-        "startTime": 1658260737050884188,
-        "name": "skupper-router-c99749f74-wr4pc",
-        "imageName": "docker.io/tedross/skupper-router:vflowtest",
-        "sourceHost": "172.17.36.198"
+        "startTime": 1658260730011347502,
+        "name": "skupper-service-controller-7b9dd94ddc-5d5tw",
+        "imageName": "quay.io/ajssmith/service-controller:vflowtest",
+        "sourceHost": "172.17.29.70"
     },
     {
         "recType": "PROCESS",
@@ -82,11 +64,29 @@
     },
     {
         "recType": "PROCESS",
-        "identity": "d699de67-5092-4fed-8677-dc5883c57952",
+        "identity": "321e9bce-eb0c-4721-85bd-a638a205754f",
+        "parent": "bfc21843-16fb-4c19-a4cc-c5938bc96768",
+        "startTime": 1658853737294083164,
+        "name": "mongo-a-64fc4d7b6-fvfpx",
+        "imageName": "mongo:5.0",
+        "sourceHost": "172.17.29.112"
+    },
+    {
+        "recType": "PROCESS",
+        "identity": "9c17ac54-77a6-4d05-97cb-3a5f2671b816",
         "parent": "6d449c84-6f6c-4eac-aa5e-bedfbbf467a7",
-        "startTime": 1658260730011347502,
-        "name": "skupper-service-controller-7b9dd94ddc-5d5tw",
-        "imageName": "quay.io/ajssmith/service-controller:vflowtest",
-        "sourceHost": "172.17.29.70"
+        "startTime": 1658261014639708434,
+        "name": "mongo-b-647c7b7d4d-jmm4p",
+        "imageName": "mongo:5.0",
+        "sourceHost": "172.17.36.207"
+    },
+    {
+        "recType": "PROCESS",
+        "identity": "71cef18a-f320-434a-9f4e-d31f482ff14f",
+        "parent": "5f54ee36-54ac-4002-8f2d-691a06b25d47",
+        "startTime": 1658260737050884188,
+        "name": "skupper-router-c99749f74-wr4pc",
+        "imageName": "docker.io/tedross/skupper-router:vflowtest",
+        "sourceHost": "172.17.36.198"
     }
 ]

@@ -1,11 +1,13 @@
 import React, { FC } from 'react';
 
+import { Title } from '@patternfly/react-core';
+
 import { DescriptionItemProps } from './DescriptionItem.interfaces';
 
 const DescriptionItem: FC<DescriptionItemProps> = function ({ title, value }) {
     return (
         <div className="pf-u-mb-lg">
-            <div className="  pf-u-font-weight-bold">{title}</div>
+            <Title headingLevel="h4">{title}</Title>
             <span>{value}</span>
         </div>
     );

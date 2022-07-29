@@ -1,4 +1,4 @@
-export enum SitesDetailsLabels {
+export enum SiteLabels {
     Details = 'Site Details',
     TabTraffic = 'Traffic',
     TabMetrics = 'Metrics',

@@ -7,11 +7,11 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import SitesOverviewTable from '../components/SitesList';
+import SitesTable from '../components/SitesList';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 
-const Overview = function () {
+const Sites = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
@@ -37,7 +37,7 @@ const Overview = function () {
         return null;
     }
 
-    return <SitesOverviewTable sites={sites} />;
+    return <SitesTable sites={sites} />;
 };
 
-export default Overview;
+export default Sites;

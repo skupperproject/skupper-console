@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Card, CardTitle, Stack, StackItem } from '@patternfly/react-core';
+import { Card, CardTitle, Stack, StackItem, Title } from '@patternfly/react-core';
 import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,9 @@ const Connections: FC<ConnectionsProps> = function ({ siteName, httpRequests, tc
             {!!tcpRequests.length && (
                 <StackItem>
                     <Card isFullHeight isRounded>
-                        <CardTitle>{ConnectionsLabels.TCPprotocol}</CardTitle>
+                        <CardTitle>
+                            <Title headingLevel="h2">{ConnectionsLabels.TCPprotocol}</Title>
+                        </CardTitle>
                         <TCPTable rows={tcpRequests} siteName={siteName} />
                     </Card>
                 </StackItem>
@@ -28,7 +30,9 @@ const Connections: FC<ConnectionsProps> = function ({ siteName, httpRequests, tc
             {!!httpRequests.length && (
                 <StackItem>
                     <Card isRounded>
-                        <CardTitle>{ConnectionsLabels.HTTPprotocol}</CardTitle>
+                        <CardTitle>
+                            <Title headingLevel="h2">{ConnectionsLabels.HTTPprotocol}</Title>
+                        </CardTitle>
                         <HTTPtable rows={httpRequests} siteName={siteName} />
                     </Card>
                 </StackItem>

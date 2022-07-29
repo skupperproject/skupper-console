@@ -10,7 +10,7 @@ import { SitesRoutesPaths } from '../Sites.enum';
 import { SitesListColumns } from './SitesList.enum';
 import { SitesListProps } from './SitesList.interfaces';
 
-const SitesOverviewTable = memo(function ({ sites }: SitesListProps) {
+const SitesTable = memo(function ({ sites }: SitesListProps) {
     return (
         <Card>
             <TableComposable
@@ -52,4 +52,4 @@ const SitesOverviewTable = memo(function ({ sites }: SitesListProps) {
     );
 });
 
-export default SitesOverviewTable;
+export default SitesTable;

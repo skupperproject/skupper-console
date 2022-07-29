@@ -2,6 +2,7 @@ import {
     DataServicesResponse,
     DataSiteResponse,
     DeploymentLinksResponse,
+    FlowsProcessResponse,
     ServiceConnection,
     SiteResponse,
 } from 'API/REST.interfaces';
@@ -10,7 +11,7 @@ export type DataService = DataServicesResponse;
 export type SiteData = DataSiteResponse;
 export type Site = SiteResponse;
 export type DeploymentLink = DeploymentLinksResponse;
-
+export type Processes = FlowsProcessResponse;
 export interface HttpRequest {
     id: string;
     name: string;

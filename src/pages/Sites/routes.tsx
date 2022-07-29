@@ -3,10 +3,8 @@ import React, { lazy } from 'react';
 import { SitesRoutesPaths } from './Sites.enum';
 
 const Sites = lazy(() => import(/* webpackChunkName: "sites" */ '.'));
-const SitesOverview = lazy(
-    () => import(/* webpackChunkName: "sites-overview" */ './views/Overview'),
-);
-const SiteDetails = lazy(() => import(/* webpackChunkName: "site-details" */ './views/Details'));
+const SitesOverview = lazy(() => import(/* webpackChunkName: "sites-overview" */ './views/SItes'));
+const Site = lazy(() => import(/* webpackChunkName: "site" */ './views/Site'));
 
 export const siteRoutes = [
     {
@@ -20,7 +18,7 @@ export const siteRoutes = [
             },
             {
                 path: `${SitesRoutesPaths.Details}/:id`,
-                element: <SiteDetails />,
+                element: <Site />,
             },
         ],
     },
