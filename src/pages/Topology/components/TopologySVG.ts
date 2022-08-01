@@ -23,7 +23,7 @@ import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './TopologySV
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 35;
 const FONT_SIZE_DEFAULT = 12;
-
+const OPACITY_NO_SELECTED_ITEM = 0.2;
 export default class TopologySVG {
     $root: HTMLElement;
     nodes: TopologyNode[];
@@ -344,7 +344,7 @@ export default class TopologySVG {
             );
     };
 
-    private updateDOMNodes = async (nodes: TopologyNode[]) => {
+    private updateDOMNodes = async (nodes: TopologyNode[], selectedNode?: string) => {
         this.groupIds = set(nodes.map((n) => +n.group))
             .values()
             .map((groupId) => ({
@@ -379,7 +379,14 @@ export default class TopologySVG {
         const enterSelection = svgNodes.append('g').attr('class', 'node');
 
         enterSelection
+            .append('rect')
+            .attr('width', SERVICE_SIZE)
+            .attr('height', SERVICE_SIZE)
+            .style('fill', () => 'white');
+
+        enterSelection
             .append(({ img }) => img?.documentElement.cloneNode(true) as HTMLElement)
+            .attr('class', 'node-img')
             .attr('width', SERVICE_SIZE)
             .attr('height', SERVICE_SIZE)
             .style('fill', ({ color }) => color);
@@ -399,7 +406,7 @@ export default class TopologySVG {
                             const isLinkConnectedToTheNode =
                                 id === svgLink.source.id || id === svgLink.target.id;
 
-                            return isLinkConnectedToTheNode ? '1' : '0.2';
+                            return isLinkConnectedToTheNode ? '1' : OPACITY_NO_SELECTED_ITEM;
                         })
                         .style('stroke', (svgLink) => {
                             const isLinkConnectedToTheNode =
@@ -420,7 +427,9 @@ export default class TopologySVG {
                 }
             })
             .on('dblclick', (e) => e.stopPropagation()) // deactivates the zoom triggered by d3-zoom
-            .on('click', (_, { id }) => this.onClickNode && this.onClickNode(id));
+            .on('click', (_, { id }) => {
+                this.onClickNode && this.onClickNode(id);
+            });
 
         enterSelection
             .append('text')
@@ -435,9 +444,19 @@ export default class TopologySVG {
                 .on('drag', this.dragged)
                 .on('end', this.dragEnded),
         );
+
+        this.svgContainerGroupNodes
+            .selectAll('.node-img')
+            .style('opacity', ({ id }: any) =>
+                !!selectedNode && id !== selectedNode ? OPACITY_NO_SELECTED_ITEM : '1',
+            );
     };
 
-    updateTopology = (nodes: TopologyNode[], links: TopologyLink[] | TopologyLinkNormalized[]) => {
+    updateTopology = (
+        nodes: TopologyNode[],
+        links: TopologyLink[] | TopologyLinkNormalized[],
+        selectedNode?: string,
+    ) => {
         this.svgContainerGroupNodes.selectAll('*').remove();
 
         this.force
@@ -460,8 +479,8 @@ export default class TopologySVG {
 
         this.force.restart();
 
-        this.updateDOMNodes(nodes);
         this.updateDOMLinks(links as TopologyLinkNormalized[]);
+        this.updateDOMNodes(nodes, selectedNode);
     };
 
     reset() {

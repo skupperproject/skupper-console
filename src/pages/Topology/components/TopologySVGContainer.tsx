@@ -121,7 +121,7 @@ const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = fu
                 setTopologyGraphInstance(topologyGraph);
             }
         },
-        [handleExpand, topology, topologyGraphInstance],
+        [handleExpand, topology, topologyGraphInstance, selectedNode],
     );
 
     const updateNodesAndLinks = useCallback(async () => {
@@ -155,9 +155,9 @@ const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = fu
 
     useEffect(() => {
         if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
-            topologyGraphInstance.updateTopology(topology.nodes, topology.links);
+            topologyGraphInstance.updateTopology(topology.nodes, topology.links, selectedNode);
         }
-    }, [topology, topologyGraphInstance]);
+    }, [topology, topologyGraphInstance, selectedNode]);
 
     const controlButtonsComponent = createTopologyControlButtons({
         ...defaultControlButtonsOptions,
