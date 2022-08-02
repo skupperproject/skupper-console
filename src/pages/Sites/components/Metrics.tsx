@@ -23,64 +23,64 @@ const CARD_HEIGHT = 350;
 const CARD_WIDTH = 700;
 
 const Metrics: FC<MetricsProps> = function ({
-    siteName: name,
+    name,
     httpRequestsReceived,
     httpRequestsSent,
     tcpConnectionsIn,
     tcpConnectionsOut,
 }) {
-    const httpBytesReceivedChartData = Object.entries(httpRequestsReceived)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const httpBytesReceivedChartData = Object.values(httpRequestsReceived)
+        .map(({ bytes_out, client }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpBytesSentChartData = Object.entries(httpRequestsSent)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const httpBytesSentChartData = Object.values(httpRequestsSent)
+        .map(({ bytes_out, client }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpLatencyReceivedChartData = Object.entries(httpRequestsReceived)
-        .map(([siteName, { latency_max }]) => ({
-            x: siteName,
+    const httpLatencyReceivedChartData = Object.values(httpRequestsReceived)
+        .map(({ latency_max, client }) => ({
+            x: client,
             y: latency_max,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpLatencySentChartData = Object.entries(httpRequestsSent)
-        .map(([siteName, { latency_max }]) => ({
-            x: siteName,
+    const httpLatencySentChartData = Object.values(httpRequestsSent)
+        .map(({ latency_max, client }) => ({
+            x: client,
             y: latency_max,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpRequestsReceivedChartData = Object.entries(httpRequestsReceived)
-        .map(([siteName, { requests }]) => ({
-            x: siteName,
+    const httpRequestsReceivedChartData = Object.values(httpRequestsReceived)
+        .map(({ requests, client }) => ({
+            x: client,
             y: requests || 0,
         }))
         .filter(({ x }) => x !== name);
 
-    const httpRequestsSentChartData = Object.entries(httpRequestsSent)
-        .map(([siteName, { requests }]) => ({
-            x: siteName,
+    const httpRequestsSentChartData = Object.values(httpRequestsSent)
+        .map(({ requests, client }) => ({
+            x: client,
             y: requests || 0,
         }))
         .filter(({ x }) => x !== name);
 
-    const tcpConnectionsInChartData = Object.entries(tcpConnectionsIn)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const tcpConnectionsInChartData = Object.values(tcpConnectionsIn)
+        .map(({ bytes_out, client }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
 
-    const tcpConnectionsOutChartData = Object.entries(tcpConnectionsOut)
-        .map(([siteName, { bytes_out }]) => ({
-            x: siteName,
+    const tcpConnectionsOutChartData = Object.values(tcpConnectionsOut)
+        .map(({ bytes_out, client }) => ({
+            x: client,
             y: bytes_out,
         }))
         .filter(({ x }) => x !== name);
@@ -244,55 +244,64 @@ const RequestsLatenciesChart: FC<BytesChartProps> = function ({
     const legend = data.map(({ x }) => ({ name: x }));
 
     return (
-        <Card style={{ height: CARD_HEIGHT }}>
+        <Card>
             <CardTitle>{title}</CardTitle>
-            <Chart
-                containerComponent={
-                    <ChartVoronoiContainer
-                        labels={({ datum }) =>
-                            `${datum.x}: ${
-                                options?.formatter
-                                    ? options?.formatter(datum.y, { startSize: 'ms' })
-                                    : datum.y
-                            }`
+            <CardBody style={{ height: CARD_HEIGHT, width: CARD_WIDTH }}>
+                {data.length ? (
+                    <Chart
+                        width={CARD_WIDTH}
+                        height={CARD_HEIGHT}
+                        containerComponent={
+                            <ChartVoronoiContainer
+                                labels={({ datum }) =>
+                                    `${datum.x}: ${
+                                        options?.formatter
+                                            ? options?.formatter(datum.y, { startSize: 'ms' })
+                                            : datum.y
+                                    }`
+                                }
+                                constrainToVisibleArea
+                            />
                         }
-                        constrainToVisibleArea
-                    />
-                }
-                domainPadding={{ x: [10, 15] }}
-                legendData={legend}
-                legendPosition="bottom-left"
-                padding={{
-                    bottom: 160,
-                    left: 10,
-                    right: 10,
-                    top: 0,
-                }}
-                themeColor={color}
-                height={350}
-            >
-                <ChartAxis
-                    style={{
-                        tickLabels: { fontSize: 12 },
-                    }}
-                />
-                <ChartAxis
-                    dependentAxis
-                    showGrid
-                    fixLabelOverlap={true}
-                    style={{
-                        tickLabels: { fontSize: 12 },
-                    }}
-                    tickFormat={(tick) =>
-                        options?.formatter
-                            ? options?.formatter(tick, { startSize: 'ms' })
-                            : Math.ceil(tick)
-                    }
-                />
-                <ChartGroup horizontal>
-                    <ChartBar data={data} />
-                </ChartGroup>
-            </Chart>
+                        domainPadding={{ x: [10, 15] }}
+                        legendData={legend}
+                        legendOrientation="horizontal"
+                        legendPosition="bottom"
+                        legendAllowWrap={true}
+                        padding={{
+                            bottom: 160,
+                            left: 180,
+                            right: 10,
+                            top: 0,
+                        }}
+                        themeColor={color}
+                    >
+                        <ChartAxis
+                            style={{
+                                tickLabels: { fontSize: 12 },
+                            }}
+                        />
+                        <ChartAxis
+                            dependentAxis
+                            showGrid
+                            fixLabelOverlap={true}
+                            style={{
+                                tickLabels: { fontSize: 12 },
+                            }}
+                            tickFormat={(tick) =>
+                                options?.formatter
+                                    ? options?.formatter(tick, { startSize: 'ms' })
+                                    : Math.ceil(tick)
+                            }
+                        />
+                        <ChartGroup horizontal>
+                            <ChartBar data={data} />
+                        </ChartGroup>
+                    </Chart>
+                ) : (
+                    <EmptyData />
+                )}
+            </CardBody>
         </Card>
     );
 };

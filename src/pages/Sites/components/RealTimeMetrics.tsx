@@ -14,50 +14,50 @@ const CARD_HEIGHT = 350;
 const CARD_WIDTH = 700;
 
 const RealTimeMetrics: FC<RealTimeMetricsProps> = function ({
-    siteName: name,
+    name,
     httpRequestsReceived,
     httpRequestsSent,
     tcpConnectionsIn,
     tcpConnectionsOut,
 }) {
-    const httpBytesReceivedChartData = Object.entries(httpRequestsReceived)
-        .map(([siteName, { bytes_out }]) => ({
-            name: siteName,
+    const httpBytesReceivedChartData = Object.values(httpRequestsReceived)
+        .map(({ bytes_out, client }) => ({
+            name: client,
             value: bytes_out,
         }))
         .filter(({ name: sName }) => sName !== name);
 
-    const httpBytesSentChartData = Object.entries(httpRequestsSent)
-        .map(([siteName, { bytes_out }]) => ({
-            name: siteName,
+    const httpBytesSentChartData = Object.values(httpRequestsSent)
+        .map(({ bytes_out, client }) => ({
+            name: client,
             value: bytes_out,
         }))
         .filter(({ name: sName }) => sName !== name);
 
-    const tcpBytesInChartData = Object.entries(tcpConnectionsIn)
-        .map(([siteName, { bytes_out }]) => ({
-            name: siteName,
+    const tcpBytesInChartData = Object.values(tcpConnectionsIn)
+        .map(({ bytes_out, client }) => ({
+            name: client,
             value: bytes_out,
         }))
         .filter(({ name: sName }) => sName !== name);
 
-    const tcpBytesOutChartData = Object.entries(tcpConnectionsOut)
-        .map(([siteName, { bytes_out }]) => ({
-            name: siteName,
+    const tcpBytesOutChartData = Object.values(tcpConnectionsOut)
+        .map(({ bytes_out, client }) => ({
+            name: client,
             value: bytes_out,
         }))
         .filter(({ name: sName }) => sName !== name);
 
-    const httpRequestsReceivedChartData = Object.entries(httpRequestsReceived)
-        .map(([siteName, { requests }]) => ({
-            name: siteName,
+    const httpRequestsReceivedChartData = Object.values(httpRequestsReceived)
+        .map(({ requests, client }) => ({
+            name: client,
             value: requests || 0,
         }))
         .filter(({ name: sName }) => sName !== name);
 
-    const httpRequestsSentChartData = Object.entries(httpRequestsSent)
-        .map(([siteName, { requests }]) => ({
-            name: siteName,
+    const httpRequestsSentChartData = Object.values(httpRequestsSent)
+        .map(({ requests, client }) => ({
+            name: client,
             value: requests || 0,
         }))
         .filter(({ name: sName }) => sName !== name);

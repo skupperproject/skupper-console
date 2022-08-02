@@ -12,7 +12,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { DeploymentsRoutesPaths } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
-import { DeploymentsOverviewColumns } from './Overview.enum';
+import { DeploymentsOverviewColumns } from './Deployments.enum';
 
 const DeploymentsOverview = function () {
     const navigate = useNavigate();

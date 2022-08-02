@@ -1,12 +1,13 @@
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
+import { Traffic } from '@pages/Deployments/services/deployments.interfaces';
 import { ServiceConnection } from 'API/REST.interfaces';
 
 export interface MetricsProps {
-    siteName: string;
-    httpRequestsReceived: Record<string, ServiceConnection>;
-    httpRequestsSent: Record<string, ServiceConnection>;
-    tcpConnectionsIn: Record<string, ServiceConnection>;
-    tcpConnectionsOut: Record<string, ServiceConnection>;
+    name: string;
+    httpRequestsReceived: Record<string, ServiceConnection> | Traffic[];
+    httpRequestsSent: Record<string, ServiceConnection> | Traffic[];
+    tcpConnectionsIn: Record<string, ServiceConnection> | Traffic[];
+    tcpConnectionsOut: Record<string, ServiceConnection> | Traffic[];
 }
 
 export interface CustomDonutChartProps {

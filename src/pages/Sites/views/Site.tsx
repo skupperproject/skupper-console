@@ -190,7 +190,7 @@ const Site = function () {
                     </Tab>
                     <Tab eventKey={1} title={<TabTitleText>{SiteLabels.TabMetrics}</TabTitleText>}>
                         <Metrics
-                            siteName={site.siteName}
+                            name={site.siteName}
                             httpRequestsReceived={httpRequestsReceived}
                             httpRequestsSent={httpRequestsSent}
                             tcpConnectionsIn={tcpConnectionsIn}
@@ -198,7 +198,7 @@ const Site = function () {
                         />
 
                         <RealTimeMetrics
-                            siteName={site.siteName}
+                            name={site.siteName}
                             httpRequestsReceived={httpRequestsReceived}
                             httpRequestsSent={httpRequestsSent}
                             tcpConnectionsIn={tcpConnectionsIn}

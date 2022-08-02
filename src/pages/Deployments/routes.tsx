@@ -4,10 +4,10 @@ import { DeploymentsRoutesPaths } from './Deployments.enum';
 
 const Deployments = lazy(() => import(/* webpackChunkName: "deployments" */ '.'));
 const DeploymentsOverview = lazy(
-    () => import(/* webpackChunkName: "deployments-overview" */ './views/Overview'),
+    () => import(/* webpackChunkName: "deployments-overview" */ './views/Deployments'),
 );
 const DeploymentsDetails = lazy(
-    () => import(/* webpackChunkName: "deployments-details" */ './views/Details'),
+    () => import(/* webpackChunkName: "deployments-details" */ './views/Deployment'),
 );
 
 export const deploymentsRoutes = [

@@ -18,17 +18,17 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import Metrics from '@pages/Sites/components/Metrics';
+import RealTimeMetrics from '@pages/Sites/components/RealTimeMetrics';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
-import Metrics from '../components/Metrics';
-import RealTimeMetrics from '../components/RealTimeMetrics';
 import TrafficTables from '../components/Traffic';
 import { DeploymentsRoutesPaths, DeploymentsRoutesPathLabel } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
-import { DeploymentDetailsLabels } from './Details.enum';
-import { DeploymentsOverviewColumns } from './Overview.enum';
+import { DeploymentDetailsLabels } from './Deployment.enum';
+import { DeploymentsOverviewColumns } from './Deployments.enum';
 
 const DeploymentsDetails = function () {
     const navigate = useNavigate();
@@ -36,11 +36,7 @@ const DeploymentsDetails = function () {
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [activeTabKey, setaActiveTabKey] = useState<number>();
 
-    const {
-        data: deployment,
-        isLoading,
-        dataUpdatedAt,
-    } = useQuery(
+    const { data: deployment, isLoading } = useQuery(
         [QueriesDeployments.GetDeployments, deploymentId],
         () => DeploymentsServices.fetchDeployment(deploymentId),
         {
@@ -137,7 +133,7 @@ const DeploymentsDetails = function () {
                     title={<TabTitleText>{DeploymentDetailsLabels.TabMetrics}</TabTitleText>}
                 >
                     <Metrics
-                        deploymentName={deploymentName}
+                        name={deploymentName}
                         httpRequestsReceived={httpRequestsReceived}
                         httpRequestsSent={httpRequestsSent}
                         tcpConnectionsIn={tcpConnectionsIn}
@@ -145,12 +141,11 @@ const DeploymentsDetails = function () {
                     />
 
                     <RealTimeMetrics
-                        deploymentName={deploymentName}
+                        name={deploymentName}
                         httpRequestsReceived={httpRequestsReceived}
                         httpRequestsSent={httpRequestsSent}
                         tcpConnectionsIn={tcpConnectionsIn}
                         tcpConnectionsOut={tcpConnectionsOut}
-                        timestamp={dataUpdatedAt}
                     />
                 </Tab>
             </Tabs>

@@ -11,7 +11,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import ServicesServices from '../services';
 import { QueriesServices } from '../services/services.enum';
-import { ServicesOverviewColumns } from './Overview.enum';
+import { ServicesOverviewColumns } from './Services.enum';
 
 const ServicesOverview = function () {
     const navigate = useNavigate();

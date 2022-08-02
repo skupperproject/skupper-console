@@ -4,7 +4,7 @@ import { ServicesRoutesPaths } from './Services.enum';
 
 const Services = lazy(() => import(/* webpackChunkName: "services" */ '.'));
 const ServicesOverview = lazy(
-    () => import(/* webpackChunkName: "services-overview" */ './views/Overview'),
+    () => import(/* webpackChunkName: "services-overview" */ './views/Services'),
 );
 
 export const servicesRoutes = [

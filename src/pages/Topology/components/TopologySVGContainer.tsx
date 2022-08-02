@@ -121,7 +121,7 @@ const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = fu
                 setTopologyGraphInstance(topologyGraph);
             }
         },
-        [handleExpand, topology, topologyGraphInstance, selectedNode],
+        [handleExpand, topology, topologyGraphInstance],
     );
 
     const updateNodesAndLinks = useCallback(async () => {

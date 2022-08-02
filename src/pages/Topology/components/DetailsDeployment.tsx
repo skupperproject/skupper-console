@@ -1,17 +1,18 @@
 import React, { FC, useState } from 'react';
 
-import { Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
-import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Spinner } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
-import { formatBytes } from '@core/utils/formatBytes';
 import DeploymentsServices from '@pages/Deployments/services';
 import { QueriesDeployments } from '@pages/Deployments/services/deployments.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
 import { UPDATE_INTERVAL } from 'config';
+
+import TopologyDetails from './Details';
+
+const SPINNER_DIAMETER = 80;
 
 interface TopologyDeploymentDetailsProps {
     id?: string;
@@ -40,7 +41,18 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
     }
 
     if (isLoading) {
-        return null;
+        return (
+            <Spinner
+                diameter={`${SPINNER_DIAMETER}px`}
+                style={{
+                    position: 'absolute',
+                    left: '50%',
+                    marginLeft: `-${SPINNER_DIAMETER / 4}px`,
+                    top: '50%',
+                    marginTop: `-${SPINNER_DIAMETER / 4}px`,
+                }}
+            />
+        );
     }
 
     if (!deployment) {
@@ -57,151 +69,13 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
     )}`;
 
     return (
-        <Panel>
-            <Tooltip content={title}>
-                <Title
-                    headingLevel="h1"
-                    size={TitleSizes['2xl']}
-                    className="pf-u-mb-md text-ellipsis"
-                    style={{ width: '300px' }}
-                >
-                    {title}
-                </Title>
-            </Tooltip>
-            <TextContent className="pf-u-mt-md">
-                {(!!httpRequestsSentEntries.length || !!httpRequestsReceivedEntries.length) && (
-                    <>
-                        {!!httpRequestsSentEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.HTTPrequestsOut}</Caption>
-
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                        <Th>{ConnectionsColumns.Requests}</Th>
-                                    </Tr>
-                                </Thead>
-                                {httpRequestsSentEntries.map((info) => (
-                                    <Tbody key={info.id}>
-                                        <Tr>
-                                            <Td dataLabel={ConnectionsColumns.Name}>
-                                                {`${info.client}`}
-                                            </Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.BytesIn}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Requests}
-                                            >{`${info.requests}`}</Td>
-                                        </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
-                        )}
-                        {!!httpRequestsReceivedEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.HTTPrequestsIn}</Caption>
-
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                        <Th>{ConnectionsColumns.Requests}</Th>
-                                    </Tr>
-                                </Thead>
-                                {httpRequestsReceivedEntries.map((info) => (
-                                    <Tbody key={info.id}>
-                                        <Tr>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.BytesIn}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Requests}
-                                            >{`${info.requests}`}</Td>
-                                        </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
-                        )}
-                    </>
-                )}
-
-                {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
-                    <>
-                        {!!tcpConnectionsOutEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.TCPconnectionsOut}</Caption>
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                    </Tr>
-                                </Thead>
-                                {tcpConnectionsOutEntries.map((info) => (
-                                    <Tbody key={info.id}>
-                                        <Tr>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Bytes}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
-                                        </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
-                        )}
-                        {!!tcpConnectionsInEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.TCPconnectionsIn}</Caption>
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                    </Tr>
-                                </Thead>
-                                {tcpConnectionsInEntries.map((info) => (
-                                    <Tbody key={info.id}>
-                                        <Tr>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Bytes}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
-                                        </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
-                        )}
-                    </>
-                )}
-            </TextContent>
-        </Panel>
+        <TopologyDetails
+            name={title}
+            httpRequestsReceivedEntries={httpRequestsReceivedEntries}
+            httpRequestsSentEntries={httpRequestsSentEntries}
+            tcpConnectionsInEntries={tcpConnectionsInEntries}
+            tcpConnectionsOutEntries={tcpConnectionsOutEntries}
+        />
     );
 };
 
