@@ -10,8 +10,8 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 
 import ServicesServices from '../services';
+import { ServicesOverviewColumns } from '../Services.enum';
 import { QueriesServices } from '../services/services.enum';
-import { ServicesOverviewColumns } from './Services.enum';
 
 const ServicesOverview = function () {
     const navigate = useNavigate();

@@ -379,12 +379,6 @@ export default class TopologySVG {
         const enterSelection = svgNodes.append('g').attr('class', 'node');
 
         enterSelection
-            .append('rect')
-            .attr('width', SERVICE_SIZE)
-            .attr('height', SERVICE_SIZE)
-            .style('fill', () => 'white');
-
-        enterSelection
             .append(({ img }) => img?.documentElement.cloneNode(true) as HTMLElement)
             .attr('class', 'node-img')
             .attr('width', SERVICE_SIZE)

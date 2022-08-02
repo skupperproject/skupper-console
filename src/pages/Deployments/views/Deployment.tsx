@@ -24,11 +24,14 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import TrafficTables from '../components/Traffic';
-import { DeploymentsRoutesPaths, DeploymentsRoutesPathLabel } from '../Deployments.enum';
+import {
+    DeploymentsRoutesPaths,
+    DeploymentsRoutesPathLabel,
+    DeploymentsOverviewColumns,
+    DeploymentDetailsLabels,
+} from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
-import { DeploymentDetailsLabels } from './Deployment.enum';
-import { DeploymentsOverviewColumns } from './Deployments.enum';
 
 const DeploymentsDetails = function () {
     const navigate = useNavigate();

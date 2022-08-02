@@ -27,12 +27,16 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { MonitoringRoutesPathLabel, MonitoringRoutesPaths } from '../Monitoring.enum';
+import { DetailsColumns } from '../Monitoring.constants';
+import {
+    MonitoringRoutesPathLabel,
+    MonitoringRoutesPaths,
+    DetailsColumnsNames,
+    ConnectionsLabels,
+} from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
 import { ConnectionFlows } from '../services/services.interfaces';
-import { DetailsColumns } from './Connections.constants';
-import { DetailsColumnsNames, Labels } from './Connections.enum';
 
 import './Connections.scss';
 
@@ -162,7 +166,7 @@ const DetailsView = function () {
             <StackItem>
                 <Toolbar>
                     <ToolbarContent>
-                        <ToolbarItem>{Labels.Flows}</ToolbarItem>
+                        <ToolbarItem>{ConnectionsLabels.Flows}</ToolbarItem>
                         <ToolbarGroup alignment={{ default: 'alignRight' }}>
                             <ToolbarItem>
                                 <Switch
@@ -254,7 +258,7 @@ const DetailsView = function () {
                                             >
                                                 {`${sourceHost}: ${sourcePort}`}{' '}
                                                 {!counterFlow &&
-                                                    `(${Labels.NoCounterFlowAwailable})`}
+                                                    `(${ConnectionsLabels.NoCounterFlowAwailable})`}
                                             </Td>
                                             <Td dataLabel={DetailsColumnsNames.Traffic}>
                                                 {formatBytes(octets, 3)}

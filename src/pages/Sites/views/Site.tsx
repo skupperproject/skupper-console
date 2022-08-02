@@ -32,8 +32,7 @@ import { SitesListColumns } from '../components/SitesList.enum';
 import Connections from '../components/Traffic';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel } from '../Sites.enum';
-import { SiteLabels } from './Site.enum';
+import { SitesRoutesPaths, SitesRoutesPathLabel, SiteLabels } from '../Sites.enum';
 
 const Site = function () {
     const navigate = useNavigate();

@@ -1,5 +1,6 @@
-import { DetailsColumnsNames } from './Connections.enum';
+import { DetailsColumnsNames } from './Monitoring.enum';
 
+// CONNECTIONS VIEW
 export const DetailsColumns = [
     { name: DetailsColumnsNames.ConnectionStatus, prop: '' },
     { name: DetailsColumnsNames.Connections, prop: '' },

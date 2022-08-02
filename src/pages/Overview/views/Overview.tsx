@@ -23,9 +23,9 @@ import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
+import { OverviewNetworkColumns, OverviewLabels, OverviewLinksColumns } from '../Overview.enum';
 import { NetworkServices } from '../services';
 import { QueriesOverview } from '../services/overview.enum';
-import { OverviewNetworkColumns, OverviewLabels, OverviewLinksColumns } from './Overview.enum';
 
 const Overview = function () {
     const navigate = useNavigate();

@@ -35,8 +35,7 @@ import TopologySiteDetails from '../components/DetailsSite';
 import TopologySVG from '../components/TopologySVG';
 import { TopologyServices } from '../services';
 import { Deployments } from '../services/services.interfaces';
-import { TopologyViews } from '../Topology.enum';
-import { TopologyOverviewLabels } from '../View/Topology.enum';
+import { TopologyViews, TopologyOverviewLabels } from '../Topology.enum';
 import { TopologyLink, TopologyNode } from './TopologySVG.interfaces';
 
 const TYPE_SITES = 'sites';
@@ -217,8 +216,8 @@ const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = fu
                             <Text
                                 component={TextVariants.small}
                             >{`${TopologyOverviewLabels.LegendGroupsItems}:`}</Text>
-                        </TextContent>{' '}
-                        {topology.nodes?.map((node) => (
+                        </TextContent>
+                        {TopologyServices.getNodesSites(sites).map((node) => (
                             <Flex key={node.id}>
                                 <div
                                     className="pf-u-mr-xs"

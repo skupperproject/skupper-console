@@ -9,10 +9,9 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import { DeploymentsRoutesPaths } from '../Deployments.enum';
+import { DeploymentsRoutesPaths, DeploymentsOverviewColumns } from '../Deployments.enum';
 import DeploymentsServices from '../services';
 import { QueriesDeployments } from '../services/deployments.enum';
-import { DeploymentsOverviewColumns } from './Deployments.enum';
 
 const DeploymentsOverview = function () {
     const navigate = useNavigate();

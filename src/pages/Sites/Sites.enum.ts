@@ -7,3 +7,11 @@ export enum SitesRoutesPaths {
 export enum SitesRoutesPathLabel {
     Sites = 'Sites',
 }
+
+// SITE VIEW
+export enum SiteLabels {
+    Details = 'Site Details',
+    TabTraffic = 'Traffic',
+    TabMetrics = 'Metrics',
+    RealTime = 'Real Time',
+}
