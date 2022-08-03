@@ -16,9 +16,9 @@ import { UPDATE_INTERVAL } from 'config';
 
 import ConnectionDetails from '../components/ConnectionDetails';
 import ConnectionTopologyContainer from '../components/ConnectionTopologyContainer';
-import { MonitoringRoutesPathLabel, MonitoringRoutesPaths } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
+import { MonitoringRoutesPathLabel, MonitoringRoutesPaths } from '../VANServices.enum';
 
 const CONNECTION_PATH_NAME = 'connection';
 const TOPOLOGY_CONTAINER_HEIGHT = 500;
@@ -42,7 +42,7 @@ const FlowDetails = function () {
 
     const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
         [QueriesMonitoring.GetMonitoringTopologyNetwork],
-        () => MonitorServices.fetchFlowsTopology(),
+        () => MonitorServices.fetchConnectionTopology(),
         {
             refetchOnWindowFocus: false,
             refetchInterval,

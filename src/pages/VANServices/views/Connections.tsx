@@ -27,16 +27,16 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { DetailsColumns } from '../Monitoring.constants';
+import { MonitorServices } from '../services';
+import { QueriesMonitoring } from '../services/services.enum';
+import { ConnectionFlows } from '../services/services.interfaces';
+import { DetailsColumns } from '../VANServices.constants';
 import {
     MonitoringRoutesPathLabel,
     MonitoringRoutesPaths,
     DetailsColumnsNames,
     ConnectionsLabels,
-} from '../Monitoring.enum';
-import { MonitorServices } from '../services';
-import { QueriesMonitoring } from '../services/services.enum';
-import { ConnectionFlows } from '../services/services.interfaces';
+} from '../VANServices.enum';
 
 import './Connections.scss';
 
@@ -58,9 +58,25 @@ const DetailsView = function () {
 
     const [visibleItems, setVisibleItems] = useState<number>(PER_PAGE_DEFAULT);
 
-    const { data: connections, isLoading } = useQuery(
-        [QueriesMonitoring.GetConnectionsByVanAddr, vanAddressId],
-        () => (vanAddressId ? MonitorServices.fetchFlowsByVanAddressId(vanAddressId) : null),
+    const filters = { shouldShowActiveFlows };
+
+    const { data: connectionsPaginated, isLoading } = useQuery(
+        [
+            QueriesMonitoring.GetConnectionsByVanAddr,
+            vanAddressId,
+            currentPage,
+            visibleItems,
+            filters,
+        ],
+        () =>
+            vanAddressId
+                ? MonitorServices.fetchFlowsByVanAddressId(
+                      vanAddressId,
+                      currentPage,
+                      visibleItems,
+                      filters,
+                  )
+                : null,
         {
             refetchInterval,
             onError: handleError,
@@ -113,15 +129,13 @@ const DetailsView = function () {
         return <LoadingPage />;
     }
 
-    if (!connections) {
+    if (!connectionsPaginated) {
         return null;
     }
 
-    const flowsFiltered = connections
-        .sort((a, b) => b.startTime - a.startTime)
-        .filter((flow) => !(shouldShowActiveFlows && flow.endTime));
+    const { connections, total } = connectionsPaginated;
 
-    const flowsSorted = flowsFiltered.sort((a: any, b: any) => {
+    const connectionsSorted = connections.sort((a: any, b: any) => {
         const columnName = DetailsColumns[activeSortIndex || 0].prop as keyof ConnectionFlows;
 
         let paramA = a[columnName] as string | number;
@@ -144,11 +158,6 @@ const DetailsView = function () {
 
         return paramA > paramB ? -1 : 1;
     });
-
-    const flowsPaginated = flowsSorted.slice(
-        visibleItems * (currentPage - 1),
-        visibleItems * (currentPage - 1) + visibleItems,
-    );
 
     return (
         <Stack hasGutter>
@@ -182,10 +191,10 @@ const DetailsView = function () {
             </StackItem>
             <StackItem isFilled>
                 <Card isFullHeight>
-                    {!!flowsPaginated.length && (
+                    {!!connectionsSorted.length && (
                         <Pagination
                             perPageComponent="button"
-                            itemCount={flowsFiltered.length}
+                            itemCount={total}
                             perPage={visibleItems}
                             page={currentPage}
                             onSetPage={handleSetPage}
@@ -219,7 +228,7 @@ const DetailsView = function () {
                         </Thead>
                         <Tbody>
                             {!!connections.length &&
-                                flowsPaginated.map(
+                                connectionsSorted.map(
                                     ({
                                         identity,
                                         endTime,

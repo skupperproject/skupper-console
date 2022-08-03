@@ -1,10 +1,11 @@
 import React, { lazy } from 'react';
 
-import { MonitoringRoutesPaths } from './Monitoring.enum';
+import { MonitoringRoutesPaths } from './VANServices.enum';
 
-const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ '.'));
-
-const VanAddresses = lazy(() => import(/* webpackChunkName: "monitoring" */ './views/Monitoring'));
+const VANServices = lazy(() => import(/* webpackChunkName: "van-services" */ '.'));
+const VANServicesList = lazy(
+    () => import(/* webpackChunkName: "van-services-list" */ './views/VANServices'),
+);
 const Connections = lazy(
     () => import(/* webpackChunkName: "monitoring-connections" */ './views/Connections'),
 );
@@ -15,12 +16,12 @@ const Connection = lazy(
 export const monitoringRoutes = [
     {
         path: MonitoringRoutesPaths.Monitoring,
-        element: <Monitoring />,
+        element: <VANServices />,
         children: [
-            { index: true, element: <VanAddresses /> },
+            { index: true, element: <VANServicesList /> },
             {
                 path: MonitoringRoutesPaths.OverviewTable,
-                element: <VanAddresses />,
+                element: <VANServicesList />,
             },
             {
                 path: `${MonitoringRoutesPaths.Connections}/:id`,

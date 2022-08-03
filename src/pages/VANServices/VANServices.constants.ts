@@ -1,4 +1,4 @@
-import { DetailsColumnsNames } from './Monitoring.enum';
+import { DetailsColumnsNames } from './VANServices.enum';
 
 // CONNECTIONS VIEW
 export const DetailsColumns = [

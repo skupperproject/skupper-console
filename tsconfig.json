@@ -20,6 +20,6 @@
         "baseUrl": "./src",
         "downlevelIteration": true
     },
-    "include": ["**/*.ts", "**/*.tsx", "**/*.json", "src/pages/Monitoring/views/Monitori.gtsx"],
+    "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
     "exclude": ["**/node_modules", "**/build"]
 }

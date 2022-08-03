@@ -1,9 +1,9 @@
 import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
-import { MonitoringRoutesPaths } from '@pages/Monitoring/Monitoring.enum';
 import { OverviewRoutesPaths } from '@pages/Overview/Overview.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
+import { MonitoringRoutesPaths } from '@pages/VANServices/VANServices.enum';
 
 import { NavBarLabels } from './NavBar.enum';
 

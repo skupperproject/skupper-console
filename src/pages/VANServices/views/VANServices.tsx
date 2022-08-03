@@ -19,9 +19,9 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { MonitoringRoutesPaths, Labels, OverviewColumns } from '../Monitoring.enum';
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
+import { MonitoringRoutesPaths, Labels, OverviewColumns } from '../VANServices.enum';
 
 const Overview = function () {
     const navigate = useNavigate();

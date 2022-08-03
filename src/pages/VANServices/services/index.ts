@@ -9,13 +9,32 @@ import {
 
 import { MonitoringTopology, VanAddresses, ExtendedConnectionFlows } from './services.interfaces';
 
+export interface ConnectionsPaginated {
+    connections: FlowResponse[];
+    total: number;
+}
+
 export const MonitorServices = {
     fetchVanAddresses: async (): Promise<VanAddresses[]> => RESTApi.fetchVanAddresses(),
 
-    fetchFlowsByVanAddressId: async (id: string): Promise<FlowResponse[]> => {
+    fetchFlowsByVanAddressId: async (
+        id: string,
+        currentPage: number,
+        visibleItems: number,
+        filters: { shouldShowActiveFlows?: boolean },
+    ): Promise<ConnectionsPaginated> => {
         const flows = await RESTApi.fetchFlowsByVanAddr(id);
 
-        return flows.map((flow) => {
+        const flowsFiltered = flows
+            .sort((a, b) => b.startTime - a.startTime)
+            .filter((flow) => !(filters.shouldShowActiveFlows && flow.endTime));
+
+        const startOffset = (currentPage - 1) * visibleItems;
+        const flowsPaginated = flowsFiltered.filter(
+            (_, index) => index >= startOffset && index < startOffset + visibleItems,
+        );
+
+        const connections = flowsPaginated.map((flow) => {
             const counterFlow = flow.counterFlow;
 
             if (counterFlow) {
@@ -26,6 +45,8 @@ export const MonitorServices = {
 
             return { ...flow };
         });
+
+        return { connections, total: flowsFiltered.length };
     },
 
     fetchConnectionByFlowId: async (id: string): Promise<ExtendedConnectionFlows> => {
@@ -94,5 +115,5 @@ export const MonitorServices = {
         };
     },
 
-    fetchFlowsTopology: async (): Promise<MonitoringTopology> => RESTApi.fetchFlowsTopology(),
+    fetchConnectionTopology: async (): Promise<MonitoringTopology> => RESTApi.fetchFlowsTopology(),
 };
