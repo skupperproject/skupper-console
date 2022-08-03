@@ -23,15 +23,24 @@ export type Connection = {
 export type MonitoringTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
-export interface ConnectionFlows extends FlowResponse {
-    target: FlowResponse | null;
+// CONNECTIONS BASIC INFO
+export interface ConnectionBasic extends Flow {
+    siteName: string;
+    processName: string;
+    targetSiteName?: string;
+    targetProcessName?: string;
+}
+export interface ConnectionsBasic {
+    connections: ConnectionBasic[];
+    total: number;
 }
 
+// CONNECTION
 interface extendedFlow extends Flow {
-    router: FlowsRouterResponse;
-    device: FlowsDeviceResponse;
     site: FlowsSiteResponse;
     processFlow: FlowsProcessResponse;
+    router: FlowsRouterResponse;
+    device: FlowsDeviceResponse;
     parentType?: string;
 }
 

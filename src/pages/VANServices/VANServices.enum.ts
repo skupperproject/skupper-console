@@ -24,13 +24,17 @@ export enum OverviewColumns {
 
 // CONNECTIONS VIEW
 export enum ConnectionsLabels {
-    Flows = 'Flows',
+    Connections = 'Connections',
     NoCounterFlowAwailable = 'no counterflow found',
+    ShowActiveConnections = 'show active connections',
 }
 
 export enum DetailsColumnsNames {
     ConnectionStatus = 'Status',
-    Connections = 'Flows',
+    StartSite = 'From site',
+    StartProcess = 'From process',
+    EndSite = 'To site',
+    EndProcess = 'To process',
     Traffic = 'Traffic',
     Latency = 'TTFB',
     StartTime = 'Created at',

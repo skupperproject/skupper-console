@@ -29,8 +29,8 @@ import { UPDATE_INTERVAL } from 'config';
 
 import { MonitorServices } from '../services';
 import { QueriesMonitoring } from '../services/services.enum';
-import { ConnectionFlows } from '../services/services.interfaces';
-import { DetailsColumns } from '../VANServices.constants';
+import { ConnectionBasic } from '../services/services.interfaces';
+import { DetailsColumns, CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../VANServices.constants';
 import {
     MonitoringRoutesPathLabel,
     MonitoringRoutesPaths,
@@ -40,15 +40,10 @@ import {
 
 import './Connections.scss';
 
-export const MAX_HEIGHT_DETAILS_TABLE = 305;
-export const MAX_WIDTH_DETAILS_TABLE = 600;
-
-const PER_PAGE_DEFAULT = 50;
-
 const DetailsView = function () {
     const navigate = useNavigate();
     const { id: vanAddressId } = useParams();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL * 3);
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
@@ -56,7 +51,7 @@ const DetailsView = function () {
 
     const [shouldShowActiveFlows, setShouldShowActiveFlows] = useState(true);
 
-    const [visibleItems, setVisibleItems] = useState<number>(PER_PAGE_DEFAULT);
+    const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
 
     const filters = { shouldShowActiveFlows };
 
@@ -104,6 +99,7 @@ const DetailsView = function () {
         perPageSelect: number,
     ) {
         setVisibleItems(perPageSelect);
+        setCurrentPage(1);
     }
 
     function handleShowActiveFlowsToggle(isChecked: boolean) {
@@ -136,17 +132,10 @@ const DetailsView = function () {
     const { connections, total } = connectionsPaginated;
 
     const connectionsSorted = connections.sort((a: any, b: any) => {
-        const columnName = DetailsColumns[activeSortIndex || 0].prop as keyof ConnectionFlows;
+        const columnName = DetailsColumns[activeSortIndex || 0].prop as keyof ConnectionBasic;
 
-        let paramA = a[columnName] as string | number;
-        let paramB = b[columnName] as string | number;
-
-        if (columnName.includes('target')) {
-            const columnNames = columnName.split('.');
-
-            paramA = a[columnNames[0]] && (a[columnNames[0]][columnNames[1]] as string | number);
-            paramB = b[columnNames[0]] && (b[columnNames[0]][columnNames[1]] as string | number);
-        }
+        const paramA = a[columnName] as string | number;
+        const paramB = b[columnName] as string | number;
 
         if (paramA === b[columnName]) {
             return 0;
@@ -175,12 +164,11 @@ const DetailsView = function () {
             <StackItem>
                 <Toolbar>
                     <ToolbarContent>
-                        <ToolbarItem>{ConnectionsLabels.Flows}</ToolbarItem>
+                        <ToolbarItem>{ConnectionsLabels.Connections}</ToolbarItem>
                         <ToolbarGroup alignment={{ default: 'alignRight' }}>
                             <ToolbarItem>
                                 <Switch
-                                    label="show active flows"
-                                    labelOff="show all flows"
+                                    label={ConnectionsLabels.ShowActiveConnections}
                                     isChecked={shouldShowActiveFlows}
                                     onChange={handleShowActiveFlowsToggle}
                                 />
@@ -208,9 +196,7 @@ const DetailsView = function () {
                                     <Th
                                         key={name}
                                         sort={
-                                            ![0, 1].includes(index)
-                                                ? getSortParams(index)
-                                                : undefined
+                                            ![0].includes(index) ? getSortParams(index) : undefined
                                         }
                                     >
                                         {name}
@@ -232,12 +218,14 @@ const DetailsView = function () {
                                     ({
                                         identity,
                                         endTime,
-                                        sourceHost,
-                                        sourcePort,
                                         octets,
                                         latency,
                                         startTime,
                                         counterFlow,
+                                        siteName,
+                                        processName,
+                                        targetSiteName,
+                                        targetProcessName,
                                     }) => (
                                         <Tr
                                             className={
@@ -261,13 +249,17 @@ const DetailsView = function () {
                                                     }
                                                 />
                                             </Td>
-                                            <Td
-                                                dataLabel={DetailsColumnsNames.ConnectionStatus}
-                                                width={30}
-                                            >
-                                                {`${sourceHost}: ${sourcePort}`}{' '}
-                                                {!counterFlow &&
-                                                    `(${ConnectionsLabels.NoCounterFlowAwailable})`}
+                                            <Td dataLabel={DetailsColumnsNames.StartSite}>
+                                                {`${siteName}`}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.StartProcess}>
+                                                {`${processName}`}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.EndSite}>
+                                                {`${targetSiteName || '-'}`}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.EndProcess}>
+                                                {`${targetProcessName || '-'}`}
                                             </Td>
                                             <Td dataLabel={DetailsColumnsNames.Traffic}>
                                                 {formatBytes(octets, 3)}
