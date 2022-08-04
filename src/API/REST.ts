@@ -62,70 +62,70 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsSite: async (id: string): Promise<FlowsSiteResponse | null> => {
+    fetchFlowsSite: async (id: string): Promise<FlowsSiteResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_SITES}/${id}`);
 
-        return data ? data[0] : null;
+        return data;
     },
     fetchFlowsProcesses: async (): Promise<FlowsProcessResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}`);
 
         return data;
     },
-    fetchFlowProcess: async (id: string): Promise<FlowsProcessResponse | null> => {
+    fetchFlowProcess: async (id: string): Promise<FlowsProcessResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}/${id}`);
 
-        return data ? data[0] : null;
+        return data;
     },
     fetchFlowsRouters: async (): Promise<FlowsRouterResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
 
         return data;
     },
-    fetchFlowsRouter: async (id: string): Promise<FlowsRouterResponse | null> => {
+    fetchFlowsRouter: async (id: string): Promise<FlowsRouterResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}/${id}`);
 
-        return data ? data[0] : null;
+        return data ? data : null;
     },
     fetchFlowsLinks: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
         return data;
     },
-    fetchFlowsLink: async (id: string): Promise<FlowsDeviceResponse | null> => {
+    fetchFlowsLink: async (id: string): Promise<FlowsDeviceResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}/${id}`);
 
-        return data ? data[0] : null;
+        return data ? data : null;
     },
     fetchFlowsConnectors: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}`);
 
         return data;
     },
-    fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse | null> => {
+    fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}/${id}`);
 
-        return data ? data[0] : null;
+        return data ? data : null;
     },
     fetchFlowsListeners: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}`);
 
         return data;
     },
-    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse | null> => {
+    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
 
-        return data ? data[0] : null;
+        return data;
     },
     fetchFlowsByVanAddr: async (vanaddr: string): Promise<FlowResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS}?vanaddr=${vanaddr}`);
 
         return data;
     },
-    fetchFlow: async (id: string): Promise<FlowResponse | null> => {
+    fetchFlow: async (id: string): Promise<FlowResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS}/${id}`);
 
-        return data ? data[0] : null;
+        return data;
     },
     fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
         const { data: routers } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
@@ -133,11 +133,4 @@ export const RESTApi = {
 
         return getFlowsTopology(routers, links);
     },
-    // fetchFlowRecord: async (ids: string[]): Promise<FlowsDataResponse[]> => {
-    //     const queryString = ids.map((id) => `id=${id}`).join('&');
-
-    //     const { data } = await fetchWithTimeout(`${FLOWS_RECORD_BY_ID}?${queryString}`);
-
-    //     return data;
-    // },
 };

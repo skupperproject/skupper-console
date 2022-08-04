@@ -1,11 +1,5 @@
 import { RESTApi } from 'API/REST';
-import {
-    FlowResponse,
-    FlowsDeviceResponse,
-    FlowsProcessResponse,
-    FlowsRouterResponse,
-    FlowsSiteResponse,
-} from 'API/REST.interfaces';
+import { FlowResponse, FlowsDeviceResponse, FlowsSiteResponse } from 'API/REST.interfaces';
 
 import {
     MonitoringTopology,
@@ -39,10 +33,9 @@ export const MonitorServices = {
 
         const connections = await Promise.all(
             flowsPaginated.map(async (flow) => {
-                const process = (await RESTApi.fetchFlowProcess(
-                    flow.process,
-                )) as FlowsProcessResponse;
-                const site = (await RESTApi.fetchFlowsSite(process.parent)) as FlowsSiteResponse;
+                const process = await RESTApi.fetchFlowProcess(flow.process);
+
+                const site = await RESTApi.fetchFlowsSite(process.parent);
 
                 const counterFlow = flow.counterFlow;
 
@@ -50,12 +43,10 @@ export const MonitorServices = {
                     const targetFlow = flows.find(
                         ({ identity }) => identity === counterFlow,
                     ) as FlowResponse;
-                    const targetProcess = (await RESTApi.fetchFlowProcess(
-                        targetFlow.process,
-                    )) as FlowsProcessResponse;
-                    const targetSite = (await RESTApi.fetchFlowsSite(
-                        targetProcess.parent,
-                    )) as FlowsSiteResponse;
+
+                    const targetProcess = await RESTApi.fetchFlowProcess(targetFlow.process);
+
+                    const targetSite = await RESTApi.fetchFlowsSite(targetProcess.parent);
 
                     return {
                         ...flow,
@@ -86,14 +77,10 @@ export const MonitorServices = {
         const startConnector = await RESTApi.fetchFlowsConnector(parent);
         const startDevice = { ...startListener, ...startConnector } as FlowsDeviceResponse;
 
-        const startRouter = (await RESTApi.fetchFlowsRouter(
-            startDevice.parent,
-        )) as FlowsRouterResponse;
+        const startRouter = await RESTApi.fetchFlowsRouter(startDevice.parent);
 
         const startSite = (await RESTApi.fetchFlowsSite(startRouter.parent)) as FlowsSiteResponse;
-        const startProcess = (await RESTApi.fetchFlowProcess(
-            startFlow.process,
-        )) as FlowsProcessResponse;
+        const startProcess = await RESTApi.fetchFlowProcess(startFlow.process);
 
         const start = {
             ...startFlow,
@@ -113,14 +100,10 @@ export const MonitorServices = {
             const endConnector = await RESTApi.fetchFlowsConnector(endParent);
 
             const endFlowsDevice = { ...endListener, ...endConnector } as FlowsDeviceResponse;
-            const endRouter = (await RESTApi.fetchFlowsRouter(
-                endFlowsDevice.parent,
-            )) as FlowsRouterResponse;
+            const endRouter = await RESTApi.fetchFlowsRouter(endFlowsDevice.parent);
 
             const endSite = (await RESTApi.fetchFlowsSite(endRouter.parent)) as FlowsSiteResponse;
-            const endProcess = (await RESTApi.fetchFlowProcess(
-                endFlow.process,
-            )) as FlowsProcessResponse;
+            const endProcess = await RESTApi.fetchFlowProcess(endFlow.process);
 
             const end = {
                 ...endFlow,

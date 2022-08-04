@@ -140,7 +140,6 @@ export interface FlowsRouterResponse {
     recType: string;
     name: string;
     hostname: string;
-    hostame: string;
     namespace: string;
     imageName: string;
     imageVersion: string;
