@@ -190,10 +190,13 @@ const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = fu
         <>
             <Drawer isExpanded={areDetailsExpanded} position="right">
                 <Tabs activeKey={topologyType} isFilled onSelect={handleChangeTopologyType} isBox>
-                    <Tab eventKey={TYPE_SITES} title={<TabTitleText>Sites</TabTitleText>} />
+                    <Tab
+                        eventKey={TYPE_SITES}
+                        title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>}
+                    />
                     <Tab
                         eventKey={'deployements'}
-                        title={<TabTitleText>Deployments</TabTitleText>}
+                        title={<TabTitleText>{TopologyViews.Services}</TabTitleText>}
                     />
                 </Tabs>
                 <DrawerContent panelContent={PanelContentComponent} style={{ overflow: 'hidden' }}>

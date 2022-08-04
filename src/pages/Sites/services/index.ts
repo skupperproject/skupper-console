@@ -6,18 +6,15 @@ import { DeploymentLink, Processes, Site, SiteTraffic } from './services.interfa
 const SitesServices = {
     fetchSites: async (): Promise<Site[]> => RESTApi.fetchSites(),
 
-    fetchProcessesBySiteId: async (id: string): Promise<Processes[]> => {
-        const processes = await RESTApi.fetchFlowsProcesses();
-
-        return processes.filter(({ parent }) => parent === id);
-    },
-
     fetchSite: async (id: string): Promise<Site> => {
         const sites = await RESTApi.fetchSites();
         const site = sites.find(({ siteId }) => siteId === id) as Site;
 
         return site;
     },
+
+    fetchProcessesBySiteId: async (id: string): Promise<Processes[]> =>
+        RESTApi.fetchFlowsProcessesBySite(id),
 
     fetchTraffic: async (id: string): Promise<SiteTraffic> => {
         const data = await RESTApi.fetchData();

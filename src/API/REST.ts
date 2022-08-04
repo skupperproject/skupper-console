@@ -67,6 +67,11 @@ export const RESTApi = {
 
         return data;
     },
+    fetchFlowsProcessesBySite: async (id: string): Promise<FlowsProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_SITES}/${id}/processes`);
+
+        return data;
+    },
     fetchFlowsProcesses: async (): Promise<FlowsProcessResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}`);
 

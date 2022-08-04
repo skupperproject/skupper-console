@@ -5,7 +5,7 @@ export enum TopologyRoutesPaths {
 
 export enum TopologyViews {
     Sites = 'sites',
-    Deployments = 'deployments',
+    Services = 'Services',
 }
 
 // TOPOLOGY VIEW
