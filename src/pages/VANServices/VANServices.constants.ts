@@ -3,7 +3,10 @@ import { DetailsColumnsNames } from './VANServices.enum';
 // CONNECTIONS VIEW
 export const DetailsColumns = [
     { name: DetailsColumnsNames.ConnectionStatus, prop: '' },
-    { name: DetailsColumnsNames.Connections, prop: '' },
+    { name: DetailsColumnsNames.StartSite, prop: 'siteName' },
+    { name: DetailsColumnsNames.StartProcess, prop: 'processName' },
+    { name: DetailsColumnsNames.EndSite, prop: 'targetSiteName' },
+    { name: DetailsColumnsNames.EndProcess, prop: 'targetProcessName' },
     { name: DetailsColumnsNames.Traffic, prop: 'octets' },
     {
         name: DetailsColumnsNames.Latency,
@@ -13,3 +16,5 @@ export const DetailsColumns = [
     },
     { name: DetailsColumnsNames.StartTime, prop: 'startTime' },
 ];
+
+export const CONNECTIONS_PAGINATION_SIZE_DEFAULT = 20;

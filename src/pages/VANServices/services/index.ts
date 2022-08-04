@@ -1,50 +1,69 @@
 import { RESTApi } from 'API/REST';
+import { FlowResponse, FlowsDeviceResponse, FlowsSiteResponse } from 'API/REST.interfaces';
+
 import {
-    FlowResponse,
-    FlowsDeviceResponse,
-    FlowsProcessResponse,
-    FlowsRouterResponse,
-    FlowsSiteResponse,
-} from 'API/REST.interfaces';
-
-import { MonitoringTopology, VanAddresses, ExtendedConnectionFlows } from './services.interfaces';
-
-export interface ConnectionsPaginated {
-    connections: FlowResponse[];
-    total: number;
-}
+    MonitoringTopology,
+    VanAddresses,
+    ExtendedConnectionFlows,
+    ConnectionsBasic,
+} from './services.interfaces';
 
 export const MonitorServices = {
     fetchVanAddresses: async (): Promise<VanAddresses[]> => RESTApi.fetchVanAddresses(),
 
+    // TODO: waiting for the API to remove multiple calls and filters
     fetchFlowsByVanAddressId: async (
         id: string,
         currentPage: number,
         visibleItems: number,
         filters: { shouldShowActiveFlows?: boolean },
-    ): Promise<ConnectionsPaginated> => {
+    ): Promise<ConnectionsBasic> => {
         const flows = await RESTApi.fetchFlowsByVanAddr(id);
 
+        // filter collection
         const flowsFiltered = flows
             .sort((a, b) => b.startTime - a.startTime)
             .filter((flow) => !(filters.shouldShowActiveFlows && flow.endTime));
 
         const startOffset = (currentPage - 1) * visibleItems;
+        //paginate collection
         const flowsPaginated = flowsFiltered.filter(
             (_, index) => index >= startOffset && index < startOffset + visibleItems,
         );
 
-        const connections = flowsPaginated.map((flow) => {
-            const counterFlow = flow.counterFlow;
+        const connections = await Promise.all(
+            flowsPaginated.map(async (flow) => {
+                const process = await RESTApi.fetchFlowProcess(flow.process);
 
-            if (counterFlow) {
-                const targetFlow = flows.find(({ identity }) => identity === counterFlow);
+                const site = await RESTApi.fetchFlowsSite(process.parent);
 
-                return { ...flow, targetFlow };
-            }
+                const counterFlow = flow.counterFlow;
 
-            return { ...flow };
-        });
+                if (counterFlow) {
+                    const targetFlow = flows.find(
+                        ({ identity }) => identity === counterFlow,
+                    ) as FlowResponse;
+
+                    const targetProcess = await RESTApi.fetchFlowProcess(targetFlow.process);
+
+                    const targetSite = await RESTApi.fetchFlowsSite(targetProcess.parent);
+
+                    return {
+                        ...flow,
+                        siteName: site.name,
+                        processName: process.name,
+                        targetSiteName: targetSite.name,
+                        targetProcessName: targetProcess.name,
+                    };
+                }
+
+                return {
+                    ...flow,
+                    siteName: site.name,
+                    processName: process.name,
+                };
+            }),
+        );
 
         return { connections, total: flowsFiltered.length };
     },
@@ -58,14 +77,10 @@ export const MonitorServices = {
         const startConnector = await RESTApi.fetchFlowsConnector(parent);
         const startDevice = { ...startListener, ...startConnector } as FlowsDeviceResponse;
 
-        const startRouter = (await RESTApi.fetchFlowsRouter(
-            startDevice.parent,
-        )) as FlowsRouterResponse;
+        const startRouter = await RESTApi.fetchFlowsRouter(startDevice.parent);
 
         const startSite = (await RESTApi.fetchFlowsSite(startRouter.parent)) as FlowsSiteResponse;
-        const startProcess = (await RESTApi.fetchFlowProcess(
-            startFlow.process,
-        )) as FlowsProcessResponse;
+        const startProcess = await RESTApi.fetchFlowProcess(startFlow.process);
 
         const start = {
             ...startFlow,
@@ -81,18 +96,14 @@ export const MonitorServices = {
 
             const { parent: endParent } = endFlow;
 
-            const endLink = await RESTApi.fetchFlowsListener(endParent);
+            const endListener = await RESTApi.fetchFlowsListener(endParent);
             const endConnector = await RESTApi.fetchFlowsConnector(endParent);
 
-            const endFlowsDevice = { ...endLink, ...endConnector } as FlowsDeviceResponse;
-            const endRouter = (await RESTApi.fetchFlowsRouter(
-                endFlowsDevice.parent,
-            )) as FlowsRouterResponse;
+            const endFlowsDevice = { ...endListener, ...endConnector } as FlowsDeviceResponse;
+            const endRouter = await RESTApi.fetchFlowsRouter(endFlowsDevice.parent);
 
             const endSite = (await RESTApi.fetchFlowsSite(endRouter.parent)) as FlowsSiteResponse;
-            const endProcess = (await RESTApi.fetchFlowProcess(
-                endFlow.process,
-            )) as FlowsProcessResponse;
+            const endProcess = await RESTApi.fetchFlowProcess(endFlow.process);
 
             const end = {
                 ...endFlow,

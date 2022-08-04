@@ -84,7 +84,7 @@ const ConnectionDetails: FC<FlowsInfoProps> = function ({ connection }) {
                         </Td>
                         <Td dataLabel={FlowInfoColumns.RouterName}>{startFlow?.router.name}</Td>
                         <Td dataLabel={FlowInfoColumns.RouterHostName}>
-                            {startFlow?.router.hostame}
+                            {startFlow?.router.hostname}
                         </Td>
                         <Td dataLabel={FlowInfoColumns.Bytes}>
                             {formatBytes(startFlow?.octets || 0)}
@@ -113,7 +113,7 @@ const ConnectionDetails: FC<FlowsInfoProps> = function ({ connection }) {
                             </Td>
                             <Td dataLabel={FlowInfoColumns.RouterName}>{endFlow?.router.name}</Td>
                             <Td dataLabel={FlowInfoColumns.RouterHostName}>
-                                {endFlow?.router.hostame}
+                                {endFlow?.router.hostname}
                             </Td>
                             <Td dataLabel={FlowInfoColumns.Bytes}>
                                 {formatBytes(endFlow?.octets || 0)}

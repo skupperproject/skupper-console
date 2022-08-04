@@ -8,7 +8,7 @@
         "namespace": "mongo-public1",
         "imageName": "skupper-router",
         "imageVersion": "latest",
-        "hostame": "skupper-router-677797d595-t5zgd",
+        "hostname": "skupper-router-677797d595-t5zgd",
         "buildVersion": "UNKNOWN"
     },
     {
@@ -20,7 +20,7 @@
         "namespace": "mongo-public2",
         "imageName": "skupper-router",
         "imageVersion": "latest",
-        "hostame": "skupper-router-c99749f74-wr4pc",
+        "hostname": "skupper-router-c99749f74-wr4pc",
         "buildVersion": "UNKNOWN"
     },
     {
@@ -32,7 +32,7 @@
         "namespace": "mongo-private",
         "imageName": "skupper-router",
         "imageVersion": "latest",
-        "hostame": "skupper-router-56455d7598-59tnd",
+        "hostname": "skupper-router-56455d7598-59tnd",
         "buildVersion": "UNKNOWN"
     }
 ]
