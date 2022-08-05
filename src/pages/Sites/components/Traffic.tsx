@@ -10,8 +10,8 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 
 import { SitesRoutesPaths } from '../Sites.enum';
-import { ConnectionsColumns, ConnectionsLabels, HTTPConnectionsColumns } from './Traffic.enum';
-import { ConnectionPropsTCP, ConnectionPropsHTTP, ConnectionsProps } from './Traffic.interfaces';
+import { ConnectionsColumns, ConnectionsLabels, HTTPRequestsColumns } from './Traffic.enum';
+import { ConnectionPropsTCP, RequestPropsHTTP, ConnectionsProps } from './Traffic.interfaces';
 
 const Connections: FC<ConnectionsProps> = function ({ siteName, httpRequests, tcpRequests }) {
     return (
@@ -87,7 +87,7 @@ const TCPTable: FC<ConnectionPropsTCP> = function ({ rows, siteName }) {
     );
 };
 
-const HTTPtable: FC<ConnectionPropsHTTP> = function ({ rows, siteName }) {
+const HTTPtable: FC<RequestPropsHTTP> = function ({ rows, siteName }) {
     return (
         <TableComposable
             className="network-table"
@@ -98,53 +98,53 @@ const HTTPtable: FC<ConnectionPropsHTTP> = function ({ rows, siteName }) {
         >
             <Thead>
                 <Tr>
-                    <Th>{HTTPConnectionsColumns.Name}</Th>
-                    <Th>{HTTPConnectionsColumns.RequestsCountSent}</Th>
-                    <Th>{HTTPConnectionsColumns.RequestsCountReceived}</Th>
-                    <Th>{HTTPConnectionsColumns.MaxLatencySent}</Th>
-                    <Th>{HTTPConnectionsColumns.MaxLatencyReceived}</Th>
+                    <Th>{HTTPRequestsColumns.Name}</Th>
+                    <Th>{HTTPRequestsColumns.RequestsCountSent}</Th>
+                    <Th>{HTTPRequestsColumns.RequestsCountReceived}</Th>
+                    <Th>{HTTPRequestsColumns.MaxLatencySent}</Th>
+                    <Th>{HTTPRequestsColumns.MaxLatencyReceived}</Th>
                     <Th>
                         <LongArrowAltDownIcon color="var(--pf-global--palette--blue-200)" />{' '}
-                        {HTTPConnectionsColumns.BytesIn}
+                        {HTTPRequestsColumns.BytesIn}
                     </Th>
                     <Th>
                         <LongArrowAltUpIcon color="var(--pf-global--palette--red-100)" />{' '}
-                        {HTTPConnectionsColumns.BytesOut}
+                        {HTTPRequestsColumns.BytesOut}
                     </Th>
                 </Tr>
             </Thead>
             {rows.map((row) => (
                 <Tbody key={row.id}>
                     <Tr>
-                        <Td dataLabel={HTTPConnectionsColumns.Name}>
+                        <Td dataLabel={HTTPRequestsColumns.Name}>
                             <ResourceIcon type="site" />
                             {siteName} {' -> '}
                             <Link to={`${SitesRoutesPaths.Details}/${row.id}`}>{row.name}</Link>
                         </Td>
-                        <Td dataLabel={HTTPConnectionsColumns.RequestsCountSent}>
+                        <Td dataLabel={HTTPRequestsColumns.RequestsCountSent}>
                             {`${row.requestsCountSent || '-'}`}
                         </Td>
-                        <Td dataLabel={HTTPConnectionsColumns.RequestsCountReceived}>
+                        <Td dataLabel={HTTPRequestsColumns.RequestsCountReceived}>
                             {`${row.requestsCountReceived || '-'}`}
                         </Td>
-                        <Td dataLabel={HTTPConnectionsColumns.MaxLatencySent}>
+                        <Td dataLabel={HTTPRequestsColumns.MaxLatencySent}>
                             {row.maxLatencySent
                                 ? `${formatTime(row.maxLatencySent, {
                                       startSize: 'ms',
                                   })}`
                                 : '-'}
                         </Td>
-                        <Td dataLabel={HTTPConnectionsColumns.MaxLatencyReceived}>
+                        <Td dataLabel={HTTPRequestsColumns.MaxLatencyReceived}>
                             {row.maxLatencyReceived
                                 ? `${formatTime(row.maxLatencyReceived, {
                                       startSize: 'ms',
                                   })}`
                                 : '-'}
                         </Td>
-                        <Td dataLabel={HTTPConnectionsColumns.BytesIn}>
+                        <Td dataLabel={HTTPRequestsColumns.BytesIn}>
                             {row.byteIn ? `${formatBytes(row.byteIn)}` : '-'}
                         </Td>
-                        <Td dataLabel={HTTPConnectionsColumns.BytesOut}>
+                        <Td dataLabel={HTTPRequestsColumns.BytesOut}>
                             {row.byteOut ? `${formatBytes(row.byteOut)}` : '-'}
                         </Td>
                     </Tr>

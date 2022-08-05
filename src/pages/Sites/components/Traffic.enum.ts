@@ -17,7 +17,7 @@ export enum ConnectionsColumns {
     MaxLatency = 'Max Latency',
 }
 
-export enum HTTPConnectionsColumns {
+export enum HTTPRequestsColumns {
     Name = 'Sites',
     Ip = 'IP',
     Bytes = 'Bytes',

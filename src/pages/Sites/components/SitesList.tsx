@@ -1,18 +1,37 @@
 import React, { memo } from 'react';
 
-import { Card } from '@patternfly/react-core';
+import {
+    Card,
+    CardTitle,
+    Flex,
+    Text,
+    TextContent,
+    TextVariants,
+    Tooltip,
+} from '@patternfly/react-core';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 
-import { SitesRoutesPaths } from '../Sites.enum';
+import { Labels, SitesRoutesPaths } from '../Sites.enum';
 import { SitesListColumns } from './SitesList.enum';
 import { SitesListProps } from './SitesList.interfaces';
 
 const SitesTable = memo(function ({ sites }: SitesListProps) {
     return (
         <Card>
+            <CardTitle>
+                <Flex>
+                    <TextContent>
+                        <Text component={TextVariants.h1}>{Labels.Sites}</Text>
+                    </TextContent>
+                    <Tooltip position="right" content={Labels.SitesDescription}>
+                        <InfoCircleIcon color="var(--pf-global--palette--blue-300)" />
+                    </Tooltip>
+                </Flex>
+            </CardTitle>
             <TableComposable
                 className="network-table"
                 aria-label="network table"

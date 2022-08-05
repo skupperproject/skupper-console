@@ -8,6 +8,12 @@ export enum SitesRoutesPathLabel {
     Sites = 'Sites',
 }
 
+// SITES VIEW
+export enum Labels {
+    Sites = 'Sites',
+    SitesDescription = 'Set of applications running under the same geographical area',
+}
+
 // SITE VIEW
 export enum SiteLabels {
     Details = 'Site Details',

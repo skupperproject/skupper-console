@@ -1,6 +1,6 @@
 import { HttpRequest, TCPRequest } from '../services/services.interfaces';
 
-export interface ConnectionPropsHTTP {
+export interface RequestPropsHTTP {
     rows: HttpRequest[];
     siteName: string;
 }

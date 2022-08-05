@@ -18,13 +18,13 @@ const DeploymentsServices = {
 
         const tcpConnectionsOut = getTCPConnectionsOutBysSite(deployments, id || '');
         const tcpConnectionsIn = getTCPConnectionsInBySite(deployments, id || '');
-        const httpRequestsSent = getHTTPconnectionsOutByService(deployments, id || '');
-        const httpRequestsReceived = getHTTPconnectionsInByService(deployments, id || '');
+        const httpRequestsSent = getHTTPRequestsOutByService(deployments, id || '');
+        const httpRequestsReceived = getHTTPRequestsInByService(deployments, id || '');
 
         const tcpConnectionsOutGrouped = Object.values(groupTrafficServices(tcpConnectionsOut));
         const tcpConnectionsInGrouped = Object.values(groupTrafficServices(tcpConnectionsIn));
-        const httpConnectionsSentGrouped = Object.values(groupTrafficServices(httpRequestsSent));
-        const httpConnectionsReceivedGrouped = Object.values(
+        const httpRequestsSentGrouped = Object.values(groupTrafficServices(httpRequestsSent));
+        const httpRequestsReceivedGrouped = Object.values(
             groupTrafficServices(httpRequestsReceived),
         );
 
@@ -32,8 +32,8 @@ const DeploymentsServices = {
             ...info,
             tcpConnectionsOut: tcpConnectionsOutGrouped,
             tcpConnectionsIn: tcpConnectionsInGrouped,
-            httpRequestsSent: httpConnectionsSentGrouped,
-            httpRequestsReceived: httpConnectionsReceivedGrouped,
+            httpRequestsSent: httpRequestsSentGrouped,
+            httpRequestsReceived: httpRequestsReceivedGrouped,
         };
     },
 };
@@ -52,7 +52,7 @@ function groupTrafficServices(trafficServices: DeploymentTraffic[]) {
     }, {} as Record<string, DeploymentTraffic>);
 }
 
-function getHTTPconnectionsInByService(deployments: Deployment[], id: string) {
+function getHTTPRequestsInByService(deployments: Deployment[], id: string) {
     const serviceName = id?.split('_')[0];
 
     const sitesMap = deployments.reduce((acc, { site }) => {
@@ -81,7 +81,7 @@ function getHTTPconnectionsInByService(deployments: Deployment[], id: string) {
         .filter(Boolean) as DeploymentTraffic[];
 }
 
-function getHTTPconnectionsOutByService(deployments: Deployment[], id: string) {
+function getHTTPRequestsOutByService(deployments: Deployment[], id: string) {
     const serviceName = id?.split('_')[0];
 
     return deployments

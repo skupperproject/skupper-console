@@ -15,7 +15,7 @@ interface Device extends FlowsDeviceResponse {
     namespace: string;
 }
 
-export type Connection = {
+export type FlowPair = {
     devices: Device[];
     flows: FlowResponse[];
 };
@@ -23,7 +23,7 @@ export type Connection = {
 export type MonitoringTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
-// CONNECTIONS BASIC INFO
+// FLOWPAIR BASIC INFO
 export interface ConnectionBasic extends Flow {
     siteName: string;
     processName: string;
@@ -35,7 +35,7 @@ export interface ConnectionsBasic {
     total: number;
 }
 
-// CONNECTION
+// FLOWPAIR
 interface extendedFlow extends Flow {
     site: FlowsSiteResponse;
     processFlow: FlowsProcessResponse;

@@ -58,7 +58,7 @@ const Overview = function () {
                         <Text component={TextVariants.h1}>{Labels.VanServices}</Text>
                     </TextContent>
                     <Tooltip position="right" content={Labels.VanServicesDescription}>
-                        <InfoCircleIcon color="var(--pf-global--palette--black-500)" />
+                        <InfoCircleIcon color="var(--pf-global--palette--blue-300)" />
                     </Tooltip>
                 </Flex>
             </CardTitle>

@@ -203,7 +203,7 @@ const DetailsView = function () {
                                         {description && (
                                             <Tooltip content={description}>
                                                 <InfoCircleIcon
-                                                    color="var(--pf-global--palette--black-500)"
+                                                    color="var(--pf-global--palette--blue-300)"
                                                     className="pf-u-ml-sm"
                                                 />
                                             </Tooltip>
