@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
 
-const Monitoring = function () {
+const VanServices = function () {
     return (
         <AppContent>
             <Outlet />
@@ -12,4 +12,4 @@ const Monitoring = function () {
     );
 };
 
-export default Monitoring;
+export default VanServices;

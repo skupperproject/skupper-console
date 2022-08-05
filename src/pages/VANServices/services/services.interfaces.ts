@@ -20,18 +20,18 @@ export type FlowPair = {
     flows: FlowResponse[];
 };
 
-export type MonitoringTopology = FlowsTopologyResponse;
+export type VanServicesTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
 // FLOWPAIR BASIC INFO
-export interface ConnectionBasic extends Flow {
+export interface FlowPairBasic extends Flow {
     siteName: string;
     processName: string;
     targetSiteName?: string;
     targetProcessName?: string;
 }
-export interface ConnectionsBasic {
-    connections: ConnectionBasic[];
+export interface FlowsPairsBasic {
+    connections: FlowPairBasic[];
     total: number;
 }
 
@@ -44,7 +44,7 @@ interface extendedFlow extends Flow {
     parentType?: string;
 }
 
-export interface ExtendedConnectionFlows {
+export interface ExtendedFlowPair {
     startFlow: extendedFlow;
     endFlow: extendedFlow | null;
 }

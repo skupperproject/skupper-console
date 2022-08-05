@@ -1,10 +1,7 @@
-export enum QueriesMonitoring {
-    GetConnectionsByVanAddr = 'monitoring-connections-by-van-addr-query',
-    GetFlowsByVanAddr = 'monitoring-flows-by-van-addr-query',
-    GetMonitoringServices = 'monitoring-services-query',
-    GetMonitoringNetworkStats = 'network-stats-query',
-    GetMonitoringTopologyFlows = 'monitoring-topology-flows-query',
-    GetMonitoringTopologyNetwork = 'monitoring-topology-network-query',
-    GetMonitoringConnection = 'monitoring-connection-query',
-    GetVanAdresses = 'monitoring-van-adresses',
+export enum QueriesVANServices {
+    GetFlowsPairsByVanAddr = 'vanservices-flowspairs-by-van-addr-query',
+    GetFlowsByVanAddr = 'vanservices-flows-by-van-addr-query',
+    GetFlowPairTopologyNetwork = 'flowpair-topology-network-query',
+    GetFlowPair = 'vanservices-flowpair-query',
+    GetVanAdresses = 'vanservices-van-adresses',
 }

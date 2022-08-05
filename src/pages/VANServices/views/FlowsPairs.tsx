@@ -22,25 +22,24 @@ import { formatDistanceToNow } from 'date-fns';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { formatBytes } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MonitorServices } from '../services';
-import { QueriesMonitoring } from '../services/services.enum';
-import { ConnectionBasic } from '../services/services.interfaces';
+import { QueriesVANServices } from '../services/services.enum';
+import { FlowPairBasic } from '../services/services.interfaces';
 import { DetailsColumns, CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../VANServices.constants';
 import {
-    MonitoringRoutesPathLabel,
-    MonitoringRoutesPaths,
+    VanServicesRoutesPathLabel,
+    VANServicesRoutesPaths,
     DetailsColumnsNames,
-    ConnectionsLabels,
+    FlowsPairsLabels,
 } from '../VANServices.enum';
 
-import './Connections.scss';
+import './FlowsPairs.scss';
 
-const DetailsView = function () {
+const FlowsPairs = function () {
     const navigate = useNavigate();
     const { id: vanAddressId } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL * 3);
@@ -57,7 +56,7 @@ const DetailsView = function () {
 
     const { data: connectionsPaginated, isLoading } = useQuery(
         [
-            QueriesMonitoring.GetConnectionsByVanAddr,
+            QueriesVANServices.GetFlowsPairsByVanAddr,
             vanAddressId,
             currentPage,
             visibleItems,
@@ -65,7 +64,7 @@ const DetailsView = function () {
         ],
         () =>
             vanAddressId
-                ? MonitorServices.fetchFlowsByVanAddressId(
+                ? MonitorServices.fetchFlowsPairsByVanAddressId(
                       vanAddressId,
                       currentPage,
                       visibleItems,
@@ -132,7 +131,7 @@ const DetailsView = function () {
     const { connections, total } = connectionsPaginated;
 
     const connectionsSorted = connections.sort((a: any, b: any) => {
-        const columnName = DetailsColumns[activeSortIndex || 0].prop as keyof ConnectionBasic;
+        const columnName = DetailsColumns[activeSortIndex || 0].prop as keyof FlowPairBasic;
 
         const paramA = a[columnName] as string | number;
         const paramB = b[columnName] as string | number;
@@ -153,8 +152,8 @@ const DetailsView = function () {
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        <Link to={MonitoringRoutesPaths.Monitoring}>
-                            {MonitoringRoutesPathLabel.Monitoring}
+                        <Link to={VANServicesRoutesPaths.VANServices}>
+                            {VanServicesRoutesPathLabel.VanServices}
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbHeading to="#">{vanAddressId}</BreadcrumbHeading>
@@ -164,11 +163,11 @@ const DetailsView = function () {
             <StackItem>
                 <Toolbar>
                     <ToolbarContent>
-                        <ToolbarItem>{ConnectionsLabels.Connections}</ToolbarItem>
+                        <ToolbarItem>{FlowsPairsLabels.FlowsPairs}</ToolbarItem>
                         <ToolbarGroup alignment={{ default: 'alignRight' }}>
                             <ToolbarItem>
                                 <Switch
-                                    label={ConnectionsLabels.ShowActiveConnections}
+                                    label={FlowsPairsLabels.ShowActiveFlowsPairs}
                                     isChecked={shouldShowActiveFlows}
                                     onChange={handleShowActiveFlowsToggle}
                                 />
@@ -219,7 +218,6 @@ const DetailsView = function () {
                                         identity,
                                         endTime,
                                         octets,
-                                        latency,
                                         startTime,
                                         counterFlow,
                                         siteName,
@@ -236,7 +234,7 @@ const DetailsView = function () {
                                             key={identity}
                                             onRowClick={() => {
                                                 navigate(
-                                                    `${MonitoringRoutesPaths.Connections}/${vanAddressId}/${identity}`,
+                                                    `${VANServicesRoutesPaths.FlowsPairs}/${vanAddressId}/${identity}`,
                                                 );
                                             }}
                                         >
@@ -264,9 +262,6 @@ const DetailsView = function () {
                                             <Td dataLabel={DetailsColumnsNames.Traffic}>
                                                 {formatBytes(octets, 3)}
                                             </Td>
-                                            <Td dataLabel={DetailsColumnsNames.Latency}>
-                                                {formatTime(latency)}
-                                            </Td>
                                             <Td
                                                 dataLabel={DetailsColumnsNames.StartTime}
                                                 width={20}
@@ -286,4 +281,4 @@ const DetailsView = function () {
     );
 };
 
-export default DetailsView;
+export default FlowsPairs;

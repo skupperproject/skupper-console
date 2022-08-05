@@ -20,16 +20,16 @@ import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import { MonitorServices } from '../services';
-import { QueriesMonitoring } from '../services/services.enum';
-import { MonitoringRoutesPaths, Labels, OverviewColumns } from '../VANServices.enum';
+import { QueriesVANServices } from '../services/services.enum';
+import { VANServicesRoutesPaths, Labels, OverviewColumns } from '../VANServices.enum';
 
-const Overview = function () {
+const VANServices = function () {
     const navigate = useNavigate();
 
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: vanServices, isLoading } = useQuery(
-        [QueriesMonitoring.GetVanAdresses],
+        [QueriesVANServices.GetVanAdresses],
         MonitorServices.fetchVanAddresses,
         {
             refetchInterval,
@@ -51,7 +51,7 @@ const Overview = function () {
     }
 
     return (
-        <Card data-cy="sk-monitoring-services">
+        <Card data-cy="sk-vanservices-services">
             <CardTitle>
                 <Flex>
                     <TextContent>
@@ -86,7 +86,7 @@ const Overview = function () {
                                 <Td dataLabel={OverviewColumns.Name}>
                                     <ResourceIcon type="vanAddress" />
 
-                                    <Link to={`${MonitoringRoutesPaths.Connections}/${name}`}>
+                                    <Link to={`${VANServicesRoutesPaths.FlowsPairs}/${name}`}>
                                         {name}
                                     </Link>
                                 </Td>
@@ -107,4 +107,4 @@ const Overview = function () {
     );
 };
 
-export default Overview;
+export default VANServices;

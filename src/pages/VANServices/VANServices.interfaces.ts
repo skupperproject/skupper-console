@@ -1,13 +1,19 @@
 import { Transition } from 'd3-transition';
 
-import { ExtendedConnectionFlows, MonitoringTopology } from '../services/services.interfaces';
+import { ExtendedFlowPair, VanServicesTopology } from './services/services.interfaces';
 
-export interface FlowsConnectionProps {
-    connection: ExtendedConnectionFlows;
-    routers: MonitoringTopology;
+// FLOWPAIR DETAILS
+
+export interface FlowPairDetailsProps {
+    connection: ExtendedFlowPair;
 }
 
-export interface MonitoringTopologyLink {
+export interface FlowPairProps {
+    connection: ExtendedFlowPair;
+    routers: VanServicesTopology;
+}
+
+export interface VanServicesTopologyLink {
     source: string;
     target: string;
     type?: string;
@@ -18,18 +24,18 @@ export interface MonitoringTopologyLink {
     cost?: number;
 }
 
-export interface MonitoringTopologyLinkNormalized {
+export interface VanServicesTopologyLinkNormalized {
     type?: string;
     pType?: string;
     bytes?: string;
     protocol?: string;
     mode?: string;
     cost?: number;
-    source: MonitoringTopologyNode | string;
-    target: MonitoringTopologyNode | string;
+    source: VanServicesTopologyNode | string;
+    target: VanServicesTopologyNode | string;
 }
 
-export interface MonitoringTopologyRouterNode {
+export interface VanServicesTopologyRouterNode {
     identity: string;
     name: string;
     x: number;
@@ -40,7 +46,7 @@ export interface MonitoringTopologyRouterNode {
     type: string;
 }
 
-export interface MonitoringTopologyDeviceNode {
+export interface VanServicesTopologyDeviceNode {
     identity: string;
     name: string;
     x: number;
@@ -55,9 +61,9 @@ export interface MonitoringTopologyDeviceNode {
     bytes: string;
 }
 
-export type MonitoringTopologyNode = MonitoringTopologyRouterNode | MonitoringTopologyDeviceNode;
+export type VanServicesTopologyNode = VanServicesTopologyRouterNode | VanServicesTopologyDeviceNode;
 
-export type MonitoringTopologyVanService = SVGSVGElement & {
+export type VanServicesTopologyVanService = SVGSVGElement & {
     zoomIn: () => Transition<SVGSVGElement, unknown, null, undefined>;
     zoomOut: () => Transition<SVGSVGElement, unknown, null, undefined>;
     reset: () => void;

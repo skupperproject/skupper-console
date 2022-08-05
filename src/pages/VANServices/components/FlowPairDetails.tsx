@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
-import { Card, CardBody, CardTitle, Page } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Page, Tooltip } from '@patternfly/react-core';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
@@ -9,26 +10,26 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import DescriptionItem from '@pages/Sites/components/DescriptionItem';
 
-import { FlowInfoColumns, FlowInfoLables } from './ConnectionDetails.enum';
-import { FlowsInfoProps } from './ConnectionDetails.interfaces';
+import { FlowPairDetailsColumns, FlowPairDetailsLabels } from '../VANServices.enum';
+import { FlowPairDetailsProps } from '../VANServices.interfaces';
 
-const ConnectionDetails: FC<FlowsInfoProps> = function ({ connection }) {
+const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
     const { startFlow, endFlow } = connection;
 
     return (
         <Page>
             <DescriptionItem
-                title={FlowInfoColumns.Address}
+                title={FlowPairDetailsColumns.Address}
                 value={startFlow?.device.address || ''}
             />
             <DescriptionItem
-                title={FlowInfoColumns.Protocol}
+                title={FlowPairDetailsColumns.Protocol}
                 value={startFlow?.device.protocol || ''}
             />
 
             <Card className="pf-u-mb-md">
                 <CardBody>
-                    <CardTitle>{FlowInfoLables.TrafficChartTitle}</CardTitle>
+                    <CardTitle>{FlowPairDetailsLabels.TrafficChartTitle}</CardTitle>
                     <RealTimeLineChart
                         options={{
                             chartColor: ChartThemeColors.Multi,
@@ -55,73 +56,87 @@ const ConnectionDetails: FC<FlowsInfoProps> = function ({ connection }) {
             <TableComposable borders={true} isStriped variant="compact">
                 <Thead>
                     <Tr>
-                        <Th>{FlowInfoColumns.Source}</Th>
-                        <Th>{FlowInfoColumns.SiteName}</Th>
-                        <Th>{FlowInfoColumns.ProcessName}</Th>
-                        <Th>{FlowInfoColumns.ProcessHost}</Th>
-                        <Th>{FlowInfoColumns.ProcessImg}</Th>
-                        <Th>{FlowInfoColumns.RouterName}</Th>
-                        <Th>{FlowInfoColumns.RouterHostName}</Th>
-                        <Th>{FlowInfoColumns.Bytes}</Th>
-                        <Th>{FlowInfoColumns.ByteRate}</Th>
-                        <Th>{FlowInfoColumns.Latency}</Th>
+                        <Th>{FlowPairDetailsColumns.Source}</Th>
+                        <Th>{FlowPairDetailsColumns.SiteName}</Th>
+                        <Th>{FlowPairDetailsColumns.ProcessName}</Th>
+                        <Th>{FlowPairDetailsColumns.ProcessHost}</Th>
+                        <Th>{FlowPairDetailsColumns.ProcessImg}</Th>
+                        <Th>{FlowPairDetailsColumns.RouterName}</Th>
+                        <Th>{FlowPairDetailsColumns.RouterHostName}</Th>
+                        <Th>{FlowPairDetailsColumns.Bytes}</Th>
+                        <Th>{FlowPairDetailsColumns.ByteRate}</Th>
+                        <Th width={10}>
+                            {FlowPairDetailsColumns.Latency}
+                            <Tooltip content={FlowPairDetailsLabels.TTFBDesc}>
+                                <InfoCircleIcon
+                                    color="var(--pf-global--palette--blue-300)"
+                                    className="pf-u-ml-xs"
+                                />
+                            </Tooltip>
+                        </Th>
                     </Tr>
                 </Thead>
                 <Tbody>
                     <Tr>
-                        <Td dataLabel={FlowInfoColumns.Source}>
+                        <Td dataLabel={FlowPairDetailsColumns.Source}>
                             {`${startFlow?.sourceHost}: ${startFlow?.sourcePort}`}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.SiteName}>{startFlow?.site.name}</Td>
-                        <Td dataLabel={FlowInfoColumns.ProcessName}>
+                        <Td dataLabel={FlowPairDetailsColumns.SiteName}>{startFlow?.site.name}</Td>
+                        <Td dataLabel={FlowPairDetailsColumns.ProcessName}>
                             {startFlow?.processFlow.name}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.ProcessHost}>
+                        <Td dataLabel={FlowPairDetailsColumns.ProcessHost}>
                             {startFlow?.processFlow.sourceHost}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.ProcessImg}>
+                        <Td dataLabel={FlowPairDetailsColumns.ProcessImg}>
                             {startFlow?.processFlow.imageName}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.RouterName}>{startFlow?.router.name}</Td>
-                        <Td dataLabel={FlowInfoColumns.RouterHostName}>
+                        <Td dataLabel={FlowPairDetailsColumns.RouterName}>
+                            {startFlow?.router.name}
+                        </Td>
+                        <Td dataLabel={FlowPairDetailsColumns.RouterHostName}>
                             {startFlow?.router.hostname}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.Bytes}>
+                        <Td dataLabel={FlowPairDetailsColumns.Bytes}>
                             {formatBytes(startFlow?.octets || 0)}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.ByteRate}>
+                        <Td dataLabel={FlowPairDetailsColumns.ByteRate}>
                             {`${formatBytes(startFlow?.octetRate || 0)}/sec`}
                         </Td>
-                        <Td dataLabel={FlowInfoColumns.Latency}>
+                        <Td dataLabel={FlowPairDetailsColumns.Latency}>
                             {formatTime(startFlow?.latency || 0)}
                         </Td>
                     </Tr>
                     {endFlow && (
                         <Tr>
-                            <Td dataLabel={FlowInfoColumns.Source}>
+                            <Td dataLabel={FlowPairDetailsColumns.Source}>
                                 {`${endFlow?.sourceHost}: ${endFlow?.sourcePort}`}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.SiteName}>{endFlow?.site.name}</Td>
-                            <Td dataLabel={FlowInfoColumns.ProcessName}>
+                            <Td dataLabel={FlowPairDetailsColumns.SiteName}>
+                                {endFlow?.site.name}
+                            </Td>
+                            <Td dataLabel={FlowPairDetailsColumns.ProcessName}>
                                 {endFlow?.processFlow.name}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.ProcessHost}>
+                            <Td dataLabel={FlowPairDetailsColumns.ProcessHost}>
                                 {endFlow?.processFlow.sourceHost}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.ProcessImg}>
+                            <Td dataLabel={FlowPairDetailsColumns.ProcessImg}>
                                 {endFlow?.processFlow.imageName}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.RouterName}>{endFlow?.router.name}</Td>
-                            <Td dataLabel={FlowInfoColumns.RouterHostName}>
+                            <Td dataLabel={FlowPairDetailsColumns.RouterName}>
+                                {endFlow?.router.name}
+                            </Td>
+                            <Td dataLabel={FlowPairDetailsColumns.RouterHostName}>
                                 {endFlow?.router.hostname}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.Bytes}>
+                            <Td dataLabel={FlowPairDetailsColumns.Bytes}>
                                 {formatBytes(endFlow?.octets || 0)}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.ByteRate}>
+                            <Td dataLabel={FlowPairDetailsColumns.ByteRate}>
                                 {`${formatBytes(endFlow?.octetRate || 0)}/sec`}
                             </Td>
-                            <Td dataLabel={FlowInfoColumns.Latency}>
+                            <Td dataLabel={FlowPairDetailsColumns.Latency}>
                                 {formatTime(endFlow?.latency || 0)}
                             </Td>
                         </Tr>
@@ -132,4 +147,4 @@ const ConnectionDetails: FC<FlowsInfoProps> = function ({ connection }) {
     );
 };
 
-export default ConnectionDetails;
+export default FlowPairDetails;

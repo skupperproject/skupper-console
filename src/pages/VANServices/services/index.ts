@@ -2,22 +2,22 @@ import { RESTApi } from 'API/REST';
 import { FlowResponse, FlowsDeviceResponse, FlowsSiteResponse } from 'API/REST.interfaces';
 
 import {
-    MonitoringTopology,
+    VanServicesTopology,
     VanAddresses,
-    ExtendedConnectionFlows,
-    ConnectionsBasic,
+    ExtendedFlowPair,
+    FlowsPairsBasic,
 } from './services.interfaces';
 
 export const MonitorServices = {
     fetchVanAddresses: async (): Promise<VanAddresses[]> => RESTApi.fetchVanAddresses(),
 
     // TODO: waiting for the API to remove multiple calls and filters
-    fetchFlowsByVanAddressId: async (
+    fetchFlowsPairsByVanAddressId: async (
         id: string,
         currentPage: number,
         visibleItems: number,
         filters: { shouldShowActiveFlows?: boolean },
-    ): Promise<ConnectionsBasic> => {
+    ): Promise<FlowsPairsBasic> => {
         const flows = await RESTApi.fetchFlowsByVanAddr(id);
 
         // filter collection
@@ -68,7 +68,7 @@ export const MonitorServices = {
         return { connections, total: flowsFiltered.length };
     },
 
-    fetchConnectionByFlowId: async (id: string): Promise<ExtendedConnectionFlows> => {
+    fetchFlowPairByFlowId: async (id: string): Promise<ExtendedFlowPair> => {
         const startFlow = (await RESTApi.fetchFlow(id)) as FlowResponse;
 
         const { counterFlow, parent } = startFlow;
@@ -126,5 +126,5 @@ export const MonitorServices = {
         };
     },
 
-    fetchConnectionTopology: async (): Promise<MonitoringTopology> => RESTApi.fetchFlowsTopology(),
+    fetchFlowPairTopology: async (): Promise<VanServicesTopology> => RESTApi.fetchFlowsTopology(),
 };

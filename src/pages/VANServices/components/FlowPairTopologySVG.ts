@@ -6,27 +6,27 @@ import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 import router from '@assets/router.svg';
 
 import {
-    MonitoringTopologyDeviceNode,
-    MonitoringTopologyLink,
-    MonitoringTopologyLinkNormalized,
-    MonitoringTopologyNode,
-    MonitoringTopologyRouterNode,
-    MonitoringTopologyVanService,
-} from './ConnectionTopology.interfaces';
+    VanServicesTopologyDeviceNode,
+    VanServicesTopologyLink,
+    VanServicesTopologyLinkNormalized,
+    VanServicesTopologyNode,
+    VanServicesTopologyRouterNode,
+    VanServicesTopologyVanService,
+} from '../VANServices.interfaces';
 
 const CIRCLE_R = 10;
 const ROUTER_IMG_WIDTH = 50;
 const ROUTER_IMG_CENTER_X = ROUTER_IMG_WIDTH / 2;
 const ARROW_SIZE = 10;
 
-function ConnectionTopologySVG(
+function FlowPairTopologySVG(
     $node: HTMLElement,
-    nodes: MonitoringTopologyNode[],
-    links: MonitoringTopologyLink[],
+    nodes: VanServicesTopologyNode[],
+    links: VanServicesTopologyLink[],
     boxWidth: number,
     boxHeight: number,
-): MonitoringTopologyVanService {
-    const linksWithNodes: MonitoringTopologyLinkNormalized[] = [];
+): VanServicesTopologyVanService {
+    const linksWithNodes: VanServicesTopologyLinkNormalized[] = [];
     links.some(function ({ source, target, ...rest }) {
         nodes.some(function (node) {
             if (source === node.identity) {
@@ -46,7 +46,7 @@ function ConnectionTopologySVG(
         .alphaMin(0.03)
         .force(
             'link',
-            forceLink<MonitoringTopologyNode, MonitoringTopologyLinkNormalized>(linksWithNodes)
+            forceLink<VanServicesTopologyNode, VanServicesTopologyLinkNormalized>(linksWithNodes)
                 .strength(({ pType }) => (pType ? 1 : 0.1))
                 .id(function ({ identity }) {
                     return identity;
@@ -126,7 +126,7 @@ function ConnectionTopologySVG(
     // routers
     const routerNodes = nodes.filter(
         (node) => node.type !== 'flow',
-    ) as MonitoringTopologyRouterNode[];
+    ) as VanServicesTopologyRouterNode[];
 
     const svgRouterNodes = svgElement.selectAll('.routerImg').data(routerNodes).enter();
 
@@ -136,7 +136,7 @@ function ConnectionTopologySVG(
             .attr('width', ROUTER_IMG_WIDTH)
             .attr('class', 'routerImg')
             .call(
-                drag<SVGImageElement, MonitoringTopologyRouterNode>()
+                drag<SVGImageElement, VanServicesTopologyRouterNode>()
                     .on('start', dragStarted)
                     .on('drag', dragged)
                     .on('end', dragEnded),
@@ -152,7 +152,7 @@ function ConnectionTopologySVG(
     // devices
     const deviceNodes = nodes.filter(
         (node) => node.type === 'flow',
-    ) as MonitoringTopologyDeviceNode[];
+    ) as VanServicesTopologyDeviceNode[];
 
     const svgDeviceNodes = svgElement.selectAll('.devicesImg').data(deviceNodes).enter();
 
@@ -179,7 +179,7 @@ function ConnectionTopologySVG(
                     : 'var(--pf-global--palette--red-100)',
             )
             .call(
-                drag<SVGCircleElement, MonitoringTopologyDeviceNode>()
+                drag<SVGCircleElement, VanServicesTopologyDeviceNode>()
                     .on('start', dragStarted)
                     .on('drag', dragged)
                     .on('end', dragEnded),
@@ -204,7 +204,7 @@ function ConnectionTopologySVG(
     }
 
     // drag util
-    function dragStarted({ active }: { active: boolean }, node: MonitoringTopologyNode) {
+    function dragStarted({ active }: { active: boolean }, node: VanServicesTopologyNode) {
         if (!active) {
             simulation.alphaTarget(0.3).restart();
         }
@@ -214,12 +214,12 @@ function ConnectionTopologySVG(
         fixNodes(node.x, node.y);
     }
 
-    function dragged({ x, y }: { x: number; y: number }, node: MonitoringTopologyNode) {
+    function dragged({ x, y }: { x: number; y: number }, node: VanServicesTopologyNode) {
         node.fx = x;
         node.fy = y;
     }
 
-    function dragEnded({ active }: { active: boolean }, node: MonitoringTopologyNode) {
+    function dragEnded({ active }: { active: boolean }, node: VanServicesTopologyNode) {
         if (!active) {
             simulation.alphaTarget(0);
             simulation.stop();
@@ -251,39 +251,39 @@ function ConnectionTopologySVG(
         }
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImg')
+            .selectAll<SVGSVGElement, VanServicesTopologyNode>('.devicesImg')
             .attr('cx', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
             .attr('cy', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY))
             .attr('x', ({ x }) => validatePosition(x + CIRCLE_R, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y + CIRCLE_R, maxSvgPosY, minSvgPosY));
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImgL')
+            .selectAll<SVGSVGElement, VanServicesTopologyNode>('.devicesImgL')
             .attr('x', ({ x }) => validatePosition(x + CIRCLE_R - 60, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y + CIRCLE_R + 20, maxSvgPosY, minSvgPosY));
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.devicesImgBytesL')
+            .selectAll<SVGSVGElement, VanServicesTopologyNode>('.devicesImgBytesL')
             .attr('x', ({ x }) => validatePosition(x + CIRCLE_R - 40, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y + CIRCLE_R - 30, maxSvgPosY, minSvgPosY));
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyNode>('.routerImg')
+            .selectAll<SVGSVGElement, VanServicesTopologyNode>('.routerImg')
             .attr('x', ({ x }) => validatePosition(x, maxSvgPosX, minSvgPosX))
             .attr('y', ({ y }) => validatePosition(y, maxSvgPosY, minSvgPosY));
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyLinkNormalized>('.routerLink')
+            .selectAll<SVGSVGElement, VanServicesTopologyLinkNormalized>('.routerLink')
             .attr('x1', ({ source }) =>
                 validatePosition(
-                    (source as MonitoringTopologyRouterNode).x + ROUTER_IMG_CENTER_X,
+                    (source as VanServicesTopologyRouterNode).x + ROUTER_IMG_CENTER_X,
                     maxSvgPosX,
                     minSvgPosX,
                 ),
             )
             .attr('y1', ({ source }) =>
                 validatePosition(
-                    (source as MonitoringTopologyRouterNode).y + ROUTER_IMG_CENTER_X,
+                    (source as VanServicesTopologyRouterNode).y + ROUTER_IMG_CENTER_X,
                     maxSvgPosY,
                     minSvgPosY,
                 ),
@@ -291,8 +291,8 @@ function ConnectionTopologySVG(
             .attr('x2', ({ target, pType }) =>
                 validatePosition(
                     !pType
-                        ? (target as MonitoringTopologyRouterNode).x + ROUTER_IMG_CENTER_X
-                        : (target as MonitoringTopologyRouterNode).x,
+                        ? (target as VanServicesTopologyRouterNode).x + ROUTER_IMG_CENTER_X
+                        : (target as VanServicesTopologyRouterNode).x,
                     maxSvgPosX,
                     minSvgPosX,
                 ),
@@ -300,18 +300,18 @@ function ConnectionTopologySVG(
             .attr('y2', ({ target, pType }) =>
                 validatePosition(
                     !pType
-                        ? (target as MonitoringTopologyRouterNode).y + ROUTER_IMG_CENTER_X
-                        : (target as MonitoringTopologyRouterNode).y,
+                        ? (target as VanServicesTopologyRouterNode).y + ROUTER_IMG_CENTER_X
+                        : (target as VanServicesTopologyRouterNode).y,
                     maxSvgPosY,
                     minSvgPosY,
                 ),
             );
 
         svgElement
-            .selectAll<SVGSVGElement, MonitoringTopologyLinkNormalized>('.routerLinkL')
+            .selectAll<SVGSVGElement, VanServicesTopologyLinkNormalized>('.routerLinkL')
             .attr('x', ({ target: t, source: s }) => {
-                const target = t as MonitoringTopologyRouterNode;
-                const source = s as MonitoringTopologyRouterNode;
+                const target = t as VanServicesTopologyRouterNode;
+                const source = s as VanServicesTopologyRouterNode;
 
                 if (target.x > source.x) {
                     return validatePosition(
@@ -328,8 +328,8 @@ function ConnectionTopologySVG(
                 );
             })
             .attr('y', ({ target: t, source: s }) => {
-                const target = t as MonitoringTopologyRouterNode;
-                const source = s as MonitoringTopologyRouterNode;
+                const target = t as VanServicesTopologyRouterNode;
+                const source = s as VanServicesTopologyRouterNode;
 
                 if (target.y > source.y) {
                     return validatePosition(
@@ -376,4 +376,4 @@ function ConnectionTopologySVG(
     }) as any;
 }
 
-export default ConnectionTopologySVG;
+export default FlowPairTopologySVG;

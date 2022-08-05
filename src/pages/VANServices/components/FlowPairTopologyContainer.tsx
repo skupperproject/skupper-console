@@ -4,15 +4,12 @@ import { TopologyView } from '@patternfly/react-topology';
 
 import { formatBytes } from '@core/utils/formatBytes';
 
-import {
-    FlowsConnectionProps,
-    MonitoringTopologyVanService,
-} from './ConnectionTopology.interfaces';
-import ConnectionTopologySVG from './ConnectionTopologySVG';
+import { FlowPairProps, VanServicesTopologyVanService } from '../VANServices.interfaces';
+import FlowPairTopologySVG from './FlowPairTopologySVG';
 
-const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connection, routers }) {
+const FlowPairTopologyContainer: FC<FlowPairProps> = function ({ connection, routers }) {
     const [svgTopologyComponent, setSvgTopologyComponent] =
-        useState<MonitoringTopologyVanService>();
+        useState<VanServicesTopologyVanService>();
 
     const routerNodes = useMemo(
         () =>
@@ -33,18 +30,18 @@ const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connec
         [routers.nodes],
     );
 
-    const connectionTopology = useMemo(
+    const flowPairTopology = useMemo(
         () => [{ ...connection.startFlow.device, flow: connection?.startFlow }],
         [connection],
     );
 
     if (connection.endFlow) {
-        connectionTopology.push({ ...connection.endFlow.device, flow: connection.endFlow });
+        flowPairTopology.push({ ...connection.endFlow.device, flow: connection.endFlow });
     }
 
     const deviceNodes = useMemo(
         () =>
-            connectionTopology.map(({ identity, address, recType, protocol, flow }) => {
+            flowPairTopology.map(({ identity, address, recType, protocol, flow }) => {
                 const positions = localStorage.getItem(identity || '');
                 const node = {
                     identity,
@@ -63,12 +60,12 @@ const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connec
 
                 return node;
             }),
-        [connectionTopology],
+        [flowPairTopology],
     );
 
     const deviceLinks = useMemo(
         () =>
-            connectionTopology.flatMap(({ identity, recType, parent, protocol }) => {
+            flowPairTopology.flatMap(({ identity, recType, parent, protocol }) => {
                 const bytes = 0;
 
                 return [
@@ -82,7 +79,7 @@ const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connec
                     },
                 ];
             }),
-        [connectionTopology],
+        [flowPairTopology],
     );
 
     const panelRef = useCallback(
@@ -98,7 +95,7 @@ const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connec
                 !svgTopologyComponent
             ) {
                 $node.replaceChildren();
-                const topologyServiceRef = ConnectionTopologySVG(
+                const topologyServiceRef = FlowPairTopologySVG(
                     $node,
                     [...routerNodes, ...deviceNodes],
                     [...routerLinks, ...deviceLinks],
@@ -119,4 +116,4 @@ const ConnectionTopologyContainer: FC<FlowsConnectionProps> = function ({ connec
     );
 };
 
-export default ConnectionTopologyContainer;
+export default FlowPairTopologyContainer;
