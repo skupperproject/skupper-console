@@ -1,4 +1,3 @@
-import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
 import { OverviewRoutesPaths } from '@pages/Overview/Overview.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -20,10 +19,6 @@ export const RoutesProps: NavBarRouteProps[] = [
     {
         path: ServicesRoutesPaths.Services,
         name: NavBarLabels.SideBarServices,
-    },
-    {
-        path: DeploymentsRoutesPaths.Deployments,
-        name: NavBarLabels.SideBarDeployments,
     },
     {
         path: MonitoringRoutesPaths.Monitoring,

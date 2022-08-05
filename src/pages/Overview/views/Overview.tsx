@@ -16,7 +16,6 @@ import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-tab
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -93,27 +92,6 @@ const Overview = function () {
                                 </Text>
                                 <Text className="pf-u-text-align-right" component={TextVariants.p}>
                                     <Link to={`${ServicesRoutesPaths.Overview}`}>
-                                        <SearchIcon /> view details
-                                    </Link>
-                                </Text>
-                            </TextContent>
-                        </Card>
-                    </SplitItem>
-
-                    <SplitItem isFilled>
-                        <Card className="pf-u-p-md" isRounded>
-                            <TextContent>
-                                <Text component={TextVariants.small}>
-                                    {OverviewNetworkColumns.NumDeployments}
-                                </Text>
-                                <Text
-                                    className="pf-u-text-align-center"
-                                    component={TextVariants.h1}
-                                >
-                                    {data?.deploymentsStats.totalDeployments || 0}
-                                </Text>
-                                <Text className="pf-u-text-align-right" component={TextVariants.p}>
-                                    <Link to={`${DeploymentsRoutesPaths.Overview}`}>
                                         <SearchIcon /> view details
                                     </Link>
                                 </Text>

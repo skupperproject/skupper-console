@@ -8,7 +8,7 @@ import {
 
 type Service = DataServicesResponse;
 
-export interface Traffic extends ServiceConnection {
+export interface DeploymentTraffic extends ServiceConnection {
     site: DeploymentSite;
 }
 
@@ -38,10 +38,10 @@ export interface TCPRequest {
 export interface DeploymentDetails {
     service: Service;
     site: DeploymentSite;
-    tcpConnectionsIn: Traffic[];
-    tcpConnectionsOut: Traffic[];
-    httpRequestsSent: Traffic[];
-    httpRequestsReceived: Traffic[];
+    tcpConnectionsIn: DeploymentTraffic[];
+    tcpConnectionsOut: DeploymentTraffic[];
+    httpRequestsSent: DeploymentTraffic[];
+    httpRequestsReceived: DeploymentTraffic[];
 }
 
 export interface ServiceRequestReceived extends ServiceRequestReceivedResponse {

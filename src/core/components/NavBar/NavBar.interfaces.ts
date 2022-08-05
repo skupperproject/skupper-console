@@ -1,4 +1,3 @@
-import { DeploymentsRoutesPaths } from '@pages/Deployments/Deployments.enum';
 import { OverviewRoutesPaths } from '@pages/Overview/Overview.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -12,7 +11,6 @@ export interface NavBarRouteProps {
         | OverviewRoutesPaths.Overview
         | SitesRoutesPaths.Sites
         | ServicesRoutesPaths.Services
-        | DeploymentsRoutesPaths.Deployments
         | MonitoringRoutesPaths.Monitoring
         | TopologyRoutesPaths.Topology;
     name: NavBarLabels;

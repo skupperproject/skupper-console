@@ -19,11 +19,6 @@ context('Navigation', () => {
         cy.location('hash').should('include', 'services');
     });
 
-    it('Navigate to the Deployments section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Deployments').click({ force: true });
-        cy.location('hash').should('include', 'deployments');
-    });
-
     it('Navigate to the Monitoring section', () => {
         cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
         cy.location('hash').should('include', 'monitoring');

@@ -6,7 +6,7 @@ import {
     DeploymentDetails,
     ServiceRequestReceived,
     DeploymentSite,
-    Traffic,
+    DeploymentTraffic,
 } from './deployments.interfaces';
 
 const DeploymentsServices = {
@@ -40,65 +40,7 @@ const DeploymentsServices = {
 
 export default DeploymentsServices;
 
-// function getTCPtraffic(
-//     tcpRequestsSent: Record<string, ServiceConnection>,
-//     tcpRequestsReceived: Record<string, ServiceConnection>,
-// ) {
-//     const httpRequestsIncludedKeys = Object.keys(tcpRequestsSent).filter(
-//         (key) => !!tcpRequestsReceived[key],
-//     );
-//     const httpRequestsExcludedKeys = Object.keys(tcpRequestsSent).filter(
-//         (key) => !tcpRequestsReceived[key],
-//     );
-
-//     return [...httpRequestsIncludedKeys, ...httpRequestsExcludedKeys].map((key) => {
-//         const tcpRequestSent = tcpRequestsSent[key];
-//         const tcpRequestReceived = tcpRequestsReceived[key];
-//         const [address, id] = (tcpRequestReceived.id || tcpRequestSent.id).split('@');
-
-//         const tcpRequest = {
-//             id,
-//             name: tcpRequestReceived.client || tcpRequestSent.client,
-//             ip: address.split(':')[0],
-//             bytesOut: tcpRequestSent?.bytes_out || null,
-//             bytesIn: tcpRequestReceived?.bytes_out || null,
-//         };
-
-//         return tcpRequest;
-//     });
-// }
-
-// function getHTTPtraffic(
-//     httpRequestsSent: Record<string, ServiceConnection>,
-//     httpRequestsReceived: Record<string, ServiceConnection>,
-// ) {
-//     const httpRequestsIncludedKeys = Object.keys(httpRequestsSent).filter(
-//         (key) => !!httpRequestsReceived[key],
-//     );
-//     const httpRequestsExcludedKeys = Object.keys(httpRequestsSent).filter(
-//         (key) => !httpRequestsReceived[key],
-//     );
-
-//     return [...httpRequestsIncludedKeys, ...httpRequestsExcludedKeys].map((key) => {
-//         const httpRequestSent = httpRequestsSent[key];
-//         const httpRequestReceived = httpRequestsReceived[key];
-
-//         const httpRequest = {
-//             id: httpRequestSent.id || httpRequestReceived.id,
-//             name: httpRequestSent.client || httpRequestReceived.client,
-//             requestsCountSent: httpRequestSent?.requests || null,
-//             requestsCountReceived: httpRequestReceived?.requests || null,
-//             maxLatencySent: httpRequestSent?.latency_max || null,
-//             maxLatencyReceived: httpRequestReceived?.latency_max || null,
-//             bytesIn: httpRequestSent?.bytes_out || null,
-//             bytesOut: httpRequestReceived?.bytes_out || null,
-//         };
-
-//         return httpRequest;
-//     });
-// }
-
-function groupTrafficServices(trafficServices: Traffic[]) {
+function groupTrafficServices(trafficServices: DeploymentTraffic[]) {
     return trafficServices.reduce((acc, { bytes_in, bytes_out, ...rest }) => {
         acc[rest.client] = {
             ...rest,
@@ -107,7 +49,7 @@ function groupTrafficServices(trafficServices: Traffic[]) {
         };
 
         return acc;
-    }, {} as Record<string, Traffic>);
+    }, {} as Record<string, DeploymentTraffic>);
 }
 
 function getHTTPconnectionsInByService(deployments: Deployment[], id: string) {
@@ -136,7 +78,7 @@ function getHTTPconnectionsInByService(deployments: Deployment[], id: string) {
                 site,
             }));
         })
-        .filter(Boolean) as Traffic[];
+        .filter(Boolean) as DeploymentTraffic[];
 }
 
 function getHTTPconnectionsOutByService(deployments: Deployment[], id: string) {
@@ -165,7 +107,7 @@ function getHTTPconnectionsOutByService(deployments: Deployment[], id: string) {
                 };
             }
         })
-        .filter(Boolean) as Traffic[];
+        .filter(Boolean) as DeploymentTraffic[];
 }
 
 function getTCPConnectionsOutBysSite(deployments: Deployment[], id: string) {

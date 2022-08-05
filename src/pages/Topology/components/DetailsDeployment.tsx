@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 
+import DeploymentsServices from '@pages/Deployments/services';
 import { Spinner } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
-import DeploymentsServices from '@pages/Deployments/services';
 import { QueriesDeployments } from '@pages/Deployments/services/deployments.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { UPDATE_INTERVAL } from 'config';

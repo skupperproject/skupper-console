@@ -5,16 +5,16 @@ import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { formatBytes } from '@core/utils/formatBytes';
-import { Traffic } from '@pages/Deployments/services/deployments.interfaces';
+import { DeploymentTraffic } from '@pages/Deployments/services/deployments.interfaces';
 import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
 import { ServiceConnection } from 'API/REST.interfaces';
 
 interface TopologyDetailsProps {
     name: string;
-    tcpConnectionsOutEntries: ServiceConnection[] | Traffic[];
-    tcpConnectionsInEntries: ServiceConnection[] | Traffic[];
-    httpRequestsSentEntries: ServiceConnection[] | Traffic[];
-    httpRequestsReceivedEntries: ServiceConnection[] | Traffic[];
+    tcpConnectionsOutEntries: ServiceConnection[] | DeploymentTraffic[];
+    tcpConnectionsInEntries: ServiceConnection[] | DeploymentTraffic[];
+    httpRequestsSentEntries: ServiceConnection[] | DeploymentTraffic[];
+    httpRequestsReceivedEntries: ServiceConnection[] | DeploymentTraffic[];
 }
 
 const TopologyDetails: FC<TopologyDetailsProps> = function ({

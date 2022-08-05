@@ -13,7 +13,4 @@ export interface Overview {
     serviceStats: {
         totalServices: number;
     };
-    deploymentsStats: {
-        totalDeployments: number;
-    };
 }

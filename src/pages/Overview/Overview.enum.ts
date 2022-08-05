@@ -7,7 +7,6 @@ export enum OverviewRoutesPaths {
 export enum OverviewNetworkColumns {
     NumServices = 'Services',
     NumSites = 'Sites',
-    NumDeployments = 'Deployments',
 }
 
 export enum OverviewLabels {

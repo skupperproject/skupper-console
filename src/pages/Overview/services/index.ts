@@ -1,4 +1,4 @@
-import { getDeployments, getServices, getSites } from 'API/controllers';
+import { getServices, getSites } from 'API/controllers';
 import { RESTApi } from 'API/REST';
 import { FlowsRouterResponse } from 'API/REST.interfaces';
 
@@ -13,7 +13,6 @@ export const NetworkServices = {
 
         const sites = getSites(data);
         const services = getServices(data);
-        const deployments = getDeployments(data);
 
         const routersMap = topologyNetwork.nodes.reduce((acc, node) => {
             acc[node.identity] = node;
@@ -32,7 +31,6 @@ export const NetworkServices = {
             linksRouters,
             sitesStats: { totalSites: sites.length },
             serviceStats: { totalServices: services.length },
-            deploymentsStats: { totalDeployments: deployments.length },
         };
     },
 };
