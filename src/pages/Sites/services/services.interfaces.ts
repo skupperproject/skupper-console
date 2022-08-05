@@ -36,6 +36,4 @@ export type SiteTraffic = {
     httpRequestsSent: Record<string, ServiceConnection>;
     tcpConnectionsIn: Record<string, ServiceConnection>;
     tcpConnectionsOut: Record<string, ServiceConnection>;
-    httpRequests: HttpRequest[];
-    tcpRequests: TCPRequest[];
 };

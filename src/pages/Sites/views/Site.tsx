@@ -11,9 +11,6 @@ import {
     SplitItem,
     Stack,
     StackItem,
-    Tab,
-    Tabs,
-    TabTitleText,
     Title,
 } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
@@ -29,16 +26,14 @@ import DescriptionItem from '../components/DescriptionItem';
 import Metrics from '../components/Metrics';
 import RealTimeMetrics from '../components/RealTimeMetrics';
 import { SitesListColumns } from '../components/SitesList.enum';
-import Connections from '../components/Traffic';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel, SiteLabels } from '../Sites.enum';
+import { SitesRoutesPaths, SitesRoutesPathLabel } from '../Sites.enum';
 
 const Site = function () {
     const navigate = useNavigate();
     const { id: siteId } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-    const [activeTabKey, setaActiveTabKey] = useState<number>();
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
@@ -76,13 +71,6 @@ const Site = function () {
         navigate(route);
     }
 
-    function handleTabClick(
-        _: React.MouseEvent<HTMLElement, MouseEvent>,
-        tabIndex: number | string,
-    ) {
-        setaActiveTabKey(tabIndex as number);
-    }
-
     if (isLoadingSite || isLoadingTraffic || isLoadingProcesses) {
         return <LoadingPage />;
     }
@@ -91,14 +79,7 @@ const Site = function () {
         return null;
     }
 
-    const {
-        httpRequests,
-        tcpRequests,
-        httpRequestsReceived,
-        httpRequestsSent,
-        tcpConnectionsIn,
-        tcpConnectionsOut,
-    } = traffic;
+    const { httpRequestsReceived, httpRequestsSent, tcpConnectionsIn, tcpConnectionsOut } = traffic;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
@@ -179,32 +160,21 @@ const Site = function () {
             </StackItem>
 
             <StackItem>
-                <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                    <Tab eventKey={0} title={<TabTitleText>{SiteLabels.TabTraffic}</TabTitleText>}>
-                        <Connections
-                            siteName={site.siteName}
-                            httpRequests={httpRequests}
-                            tcpRequests={tcpRequests}
-                        />
-                    </Tab>
-                    <Tab eventKey={1} title={<TabTitleText>{SiteLabels.TabMetrics}</TabTitleText>}>
-                        <Metrics
-                            name={site.siteName}
-                            httpRequestsReceived={httpRequestsReceived}
-                            httpRequestsSent={httpRequestsSent}
-                            tcpConnectionsIn={tcpConnectionsIn}
-                            tcpConnectionsOut={tcpConnectionsOut}
-                        />
+                <Metrics
+                    name={site.siteName}
+                    httpRequestsReceived={httpRequestsReceived}
+                    httpRequestsSent={httpRequestsSent}
+                    tcpConnectionsIn={tcpConnectionsIn}
+                    tcpConnectionsOut={tcpConnectionsOut}
+                />
 
-                        <RealTimeMetrics
-                            name={site.siteName}
-                            httpRequestsReceived={httpRequestsReceived}
-                            httpRequestsSent={httpRequestsSent}
-                            tcpConnectionsIn={tcpConnectionsIn}
-                            tcpConnectionsOut={tcpConnectionsOut}
-                        />
-                    </Tab>
-                </Tabs>
+                <RealTimeMetrics
+                    name={site.siteName}
+                    httpRequestsReceived={httpRequestsReceived}
+                    httpRequestsSent={httpRequestsSent}
+                    tcpConnectionsIn={tcpConnectionsIn}
+                    tcpConnectionsOut={tcpConnectionsOut}
+                />
             </StackItem>
         </Stack>
     );
