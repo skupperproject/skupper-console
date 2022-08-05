@@ -23,12 +23,3 @@ export interface TopologyLinkNormalized {
     target: TopologyNode;
     type: string;
 }
-
-export type TopologySVG =
-    | (SVGSVGElement & {
-          zoomIn: () => void;
-          zoomOut: () => void;
-          reset: () => void;
-          isDragging: () => boolean;
-      })
-    | null;

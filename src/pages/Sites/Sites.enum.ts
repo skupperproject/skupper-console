@@ -13,11 +13,3 @@ export enum Labels {
     Sites = 'Sites',
     SitesDescription = 'Set of applications running under the same geographical area',
 }
-
-// SITE VIEW
-export enum SiteLabels {
-    Details = 'Site Details',
-    TabTraffic = 'Traffic',
-    TabMetrics = 'Metrics',
-    RealTime = 'Real Time',
-}

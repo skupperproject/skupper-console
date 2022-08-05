@@ -18,7 +18,7 @@ import { select, Selection } from 'd3-selection';
 import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
-import { TopologyNode, TopologyLink, TopologyLinkNormalized } from './TopologySVG.interfaces';
+import { TopologyNode, TopologyLink, TopologyLinkNormalized } from '../Topoloyg.interfaces';
 
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 35;

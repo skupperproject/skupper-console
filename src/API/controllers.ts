@@ -6,7 +6,6 @@ import {
     FlowsTopologyLink,
 } from './REST.interfaces';
 import Adapter from './utils/adapter';
-import { normalizeFlows, getFlowsTree } from './utils/utils';
 
 export function getData(VANdata: DataResponse) {
     const data = JSON.parse(JSON.stringify(VANdata));
@@ -42,34 +41,6 @@ export function getDeployments(VANdata: DataResponse) {
     const dataAdapted = new Adapter(data).getData();
 
     return dataAdapted.deployments;
-}
-
-export function getFlows(flowsData: FlowsDataResponse[], serviceAddress?: string): any {
-    if (serviceAddress) {
-        return normalizeFlows(getFlowsTree(flowsData)).filter(
-            (flow) => flow?.address === serviceAddress,
-        );
-    }
-
-    return normalizeFlows(getFlowsTree(flowsData));
-}
-
-export function getFlowsConnectionsByService(flowsData: FlowsDataResponse[]) {
-    const data = flowsData;
-
-    const flows = normalizeFlows(getFlowsTree(data));
-
-    return flows.flatMap((item) => {
-        const group: Record<string, any> = {};
-        item?.flows?.forEach(({ name, ...rest }: any) => {
-            (group[name] = group[name] || []).push(rest);
-        });
-
-        return Object.values(group).map((v) => ({
-            ...item,
-            flows: v,
-        }));
-    });
 }
 
 export function getFlowsTopology(routers: FlowsRouterResponse[], links: FlowsLinkResponse[]) {

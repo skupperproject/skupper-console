@@ -195,37 +195,6 @@ export type FlowsDataResponse = FlowsRouterResponse &
     FlowsDeviceResponse &
     FlowResponse;
 
-interface FlowAdapterResponse {
-    identity: string;
-    recType: string;
-    sourceHost: string;
-    sourcePort: string;
-    octets: number;
-    latency: number;
-    counterFlow?: string | null;
-    connectedTo?: FlowAdapterResponse & { parent: string };
-    startTime: number;
-    endTime?: number;
-    parent: string;
-    trace?: string;
-}
-
-export interface FlowsResponse {
-    identity: string;
-    recType: string;
-    hostname: string;
-    siteName: string;
-    name: string;
-    protocol: string;
-    destHost: string;
-    destPort: number;
-    vanAddress: string;
-    flows: FlowAdapterResponse[];
-    parent: string;
-    startTime: number;
-    endTime?: number;
-}
-
 export interface FlowsVanAddressesResponse {
     identity: string;
     recType: string;
@@ -237,17 +206,6 @@ export interface FlowsVanAddressesResponse {
     startTime: number;
 }
 
-export interface LinkStatsResponse {
-    direction: string;
-    identity: string;
-    linkCost: number;
-    mode: string;
-    name: string;
-    parent: string;
-    recType: string;
-    startTime: number;
-    endTime?: number;
-}
 export interface FlowsTopologyLink {
     source: string;
     target: string;

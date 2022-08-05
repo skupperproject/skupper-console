@@ -35,8 +35,8 @@ import TopologySiteDetails from '../components/DetailsSite';
 import TopologySVG from '../components/TopologySVG';
 import { TopologyServices } from '../services';
 import { Deployments } from '../services/services.interfaces';
+import { TopologyLink, TopologyNode } from '../Topoloyg.interfaces';
 import { TopologyViews, TopologyOverviewLabels } from '../Topology.enum';
-import { TopologyLink, TopologyNode } from './TopologySVG.interfaces';
 
 const TYPE_SITES = 'sites';
 const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = function ({

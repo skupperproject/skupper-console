@@ -8,23 +8,11 @@ import {
     FlowsProcessResponse,
 } from 'API/REST.interfaces';
 
-export type Flow = FlowResponse;
-
-interface Device extends FlowsDeviceResponse {
-    routerName: string;
-    namespace: string;
-}
-
-export type FlowPair = {
-    devices: Device[];
-    flows: FlowResponse[];
-};
-
 export type VanServicesTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
 // FLOWPAIR BASIC INFO
-export interface FlowPairBasic extends Flow {
+export interface FlowPairBasic extends FlowResponse {
     siteName: string;
     processName: string;
     targetSiteName?: string;
@@ -36,7 +24,7 @@ export interface FlowsPairsBasic {
 }
 
 // FLOWPAIR
-interface extendedFlow extends Flow {
+interface extendedFlow extends FlowResponse {
     site: FlowsSiteResponse;
     processFlow: FlowsProcessResponse;
     router: FlowsRouterResponse;
