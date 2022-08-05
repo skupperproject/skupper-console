@@ -18,7 +18,3 @@ html {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
-.pf-c-table thead th {
-    color: var(--pf-global--palette--black-600);
-}

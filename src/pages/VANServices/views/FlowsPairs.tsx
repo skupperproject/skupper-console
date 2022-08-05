@@ -37,7 +37,7 @@ import {
     FlowsPairsLabels,
 } from '../VANServices.enum';
 
-import './FlowsPairs.scss';
+import './FlowsPairs.css';
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
@@ -228,8 +228,8 @@ const FlowsPairs = function () {
                                         <Tr
                                             className={
                                                 counterFlow
-                                                    ? 'flow-row'
-                                                    : 'flow-no-connection-target-warning'
+                                                    ? 'flow-row cursor-pointer'
+                                                    : 'flow-no-connection-target-warning cursor-pointer'
                                             }
                                             key={identity}
                                             onRowClick={() => {

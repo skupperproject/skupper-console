@@ -8,10 +8,10 @@ import SideBar from '@layout/SideBar';
 import { FirstLoadingView } from 'config';
 import { routes } from 'routes';
 
-import '@patternfly/patternfly/patternfly.scss';
-import '@patternfly/patternfly/patternfly-addons.scss';
+import '@patternfly/patternfly/patternfly.css';
+import '@patternfly/patternfly/patternfly-addons.css';
 
-import './App.scss';
+import './App.css';
 
 const App = function () {
     const appRoutes = useRoutes(routes);

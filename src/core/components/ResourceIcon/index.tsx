@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Tooltip } from '@patternfly/react-core';
 
-import './ResourceIcon.scss';
+import './ResourceIcon.css';
 
 interface ResourceIconProps {
     type: 'site' | 'deployment' | 'service' | 'vanAddress';
@@ -12,7 +12,7 @@ const RESOURCE_MAP = {
     site: { class: 'sk-resource-site', symbol: 'S' },
     deployment: { class: 'sk-resource-deployment', symbol: 'D' },
     service: { class: 'sk-resource-service', symbol: 'SE' },
-    vanAddress: { class: 'sk-resource-vanaddress', symbol: 'VA' },
+    vanAddress: { class: 'sk-resource-services', symbol: 'VS' },
 };
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {

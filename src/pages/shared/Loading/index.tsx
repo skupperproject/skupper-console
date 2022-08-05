@@ -6,7 +6,7 @@ import { CogIcon } from '@patternfly/react-icons';
 
 import BrandImg from '@assets/skupper.svg';
 
-import './Loading.scss';
+import './Loading.css';
 import { Labels } from './Loading.enum';
 
 const PleaseWait = function () {
