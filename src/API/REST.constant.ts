@@ -12,4 +12,10 @@ export const FLOWS_CONNECTORS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/connect
 export const FLOWS_LISTENERS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/listeners`;
 export const FLOWS_LINKS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/links`;
 export const FLOWS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/flows`;
-// export const FLOWS_RECORD_BY_ID = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/record`;
+export const FLOWPAIRS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/flowpairs`;
+
+export const getFlowsProcessesBySiteURLPATH = (id: string) => `${FLOWS_SITES}/${id}/processes`;
+export const getFlowsPairsByVanAddressIdPATH = (id: string) =>
+    `${FLOWS_VAN_ADDRESSES}/${id}/flowpairs`;
+export const getProcessesByVanAddressIdPATH = (id: string) =>
+    `${FLOWS_VAN_ADDRESSES}/${id}/processes`;

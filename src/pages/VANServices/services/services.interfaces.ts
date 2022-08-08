@@ -3,7 +3,6 @@ import {
     FlowsTopologyResponse,
     FlowsDeviceResponse,
     FlowResponse,
-    FlowsRouterResponse,
     FlowsSiteResponse,
     FlowsProcessResponse,
 } from 'API/REST.interfaces';
@@ -27,7 +26,6 @@ export interface FlowsPairsBasic {
 interface extendedFlow extends FlowResponse {
     site: FlowsSiteResponse;
     processFlow: FlowsProcessResponse;
-    router: FlowsRouterResponse;
     device: FlowsDeviceResponse;
     parentType?: string;
 }

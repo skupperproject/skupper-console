@@ -19,7 +19,7 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
     return (
         <Page>
             <DescriptionItem
-                title={FlowPairDetailsColumns.Address}
+                title={FlowPairDetailsColumns.VANService}
                 value={startFlow?.device.address || ''}
             />
             <DescriptionItem
@@ -41,14 +41,17 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
                             },
                             height: 300,
                             dataLegend: [
-                                { name: `${startFlow.sourceHost}: ${startFlow.sourcePort}` },
-                                { name: `${endFlow?.sourceHost}: ${endFlow?.sourcePort}` },
+                                { name: `${startFlow.processFlow.name}` },
+                                { name: `${endFlow?.processFlow.name || ''}` },
                             ],
                             formatter: formatBytes,
                         }}
                         data={[
-                            { name: `flow`, value: startFlow.octets },
-                            { name: `couterflow`, value: endFlow?.octets || 0 },
+                            { name: `${startFlow.processFlow.name}`, value: startFlow.octetRate },
+                            {
+                                name: `${endFlow?.processFlow.name || ''}`,
+                                value: endFlow?.octetRate || 0,
+                            },
                         ]}
                     />
                 </CardBody>
@@ -56,13 +59,10 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
             <TableComposable borders={true} isStriped variant="compact">
                 <Thead>
                     <Tr>
-                        <Th>{FlowPairDetailsColumns.Source}</Th>
                         <Th>{FlowPairDetailsColumns.SiteName}</Th>
                         <Th>{FlowPairDetailsColumns.ProcessName}</Th>
                         <Th>{FlowPairDetailsColumns.ProcessHost}</Th>
                         <Th>{FlowPairDetailsColumns.ProcessImg}</Th>
-                        <Th>{FlowPairDetailsColumns.RouterName}</Th>
-                        <Th>{FlowPairDetailsColumns.RouterHostName}</Th>
                         <Th>{FlowPairDetailsColumns.Bytes}</Th>
                         <Th>{FlowPairDetailsColumns.ByteRate}</Th>
                         <Th width={10}>
@@ -78,9 +78,6 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
                 </Thead>
                 <Tbody>
                     <Tr>
-                        <Td dataLabel={FlowPairDetailsColumns.Source}>
-                            {`${startFlow?.sourceHost}: ${startFlow?.sourcePort}`}
-                        </Td>
                         <Td dataLabel={FlowPairDetailsColumns.SiteName}>{startFlow?.site.name}</Td>
                         <Td dataLabel={FlowPairDetailsColumns.ProcessName}>
                             {startFlow?.processFlow.name}
@@ -90,12 +87,6 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
                         </Td>
                         <Td dataLabel={FlowPairDetailsColumns.ProcessImg}>
                             {startFlow?.processFlow.imageName}
-                        </Td>
-                        <Td dataLabel={FlowPairDetailsColumns.RouterName}>
-                            {startFlow?.router.name}
-                        </Td>
-                        <Td dataLabel={FlowPairDetailsColumns.RouterHostName}>
-                            {startFlow?.router.hostname}
                         </Td>
                         <Td dataLabel={FlowPairDetailsColumns.Bytes}>
                             {formatBytes(startFlow?.octets || 0)}
@@ -109,9 +100,6 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
                     </Tr>
                     {endFlow && (
                         <Tr>
-                            <Td dataLabel={FlowPairDetailsColumns.Source}>
-                                {`${endFlow?.sourceHost}: ${endFlow?.sourcePort}`}
-                            </Td>
                             <Td dataLabel={FlowPairDetailsColumns.SiteName}>
                                 {endFlow?.site.name}
                             </Td>
@@ -123,12 +111,6 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
                             </Td>
                             <Td dataLabel={FlowPairDetailsColumns.ProcessImg}>
                                 {endFlow?.processFlow.imageName}
-                            </Td>
-                            <Td dataLabel={FlowPairDetailsColumns.RouterName}>
-                                {endFlow?.router.name}
-                            </Td>
-                            <Td dataLabel={FlowPairDetailsColumns.RouterHostName}>
-                                {endFlow?.router.hostname}
                             </Td>
                             <Td dataLabel={FlowPairDetailsColumns.Bytes}>
                                 {formatBytes(endFlow?.octets || 0)}

@@ -3,7 +3,7 @@ import { forceSimulation, forceCenter, forceManyBody, forceCollide, forceLink } 
 import { select } from 'd3-selection';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 
-import router from '@assets/router.svg';
+import siteSVG from '@assets/site.svg';
 
 import {
     VanServicesTopologyDeviceNode,
@@ -15,7 +15,7 @@ import {
 } from '../VANServices.interfaces';
 
 const CIRCLE_R = 10;
-const ROUTER_IMG_WIDTH = 50;
+const ROUTER_IMG_WIDTH = 40;
 const ROUTER_IMG_CENTER_X = ROUTER_IMG_WIDTH / 2;
 const ARROW_SIZE = 10;
 
@@ -132,7 +132,7 @@ function FlowPairTopologySVG(
 
     svgRouterNodes.call(function (p) {
         p.append('image')
-            .attr('xlink:href', router)
+            .attr('xlink:href', siteSVG)
             .attr('width', ROUTER_IMG_WIDTH)
             .attr('class', 'routerImg')
             .call(

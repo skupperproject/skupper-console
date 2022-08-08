@@ -1,15 +1,20 @@
-import { fetchWithTimeout } from './axiosMiddleware';
+import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
+
+import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
 import { getData, getDeployments, getFlowsTopology, getServices, getSites } from './controllers';
 import {
     DATA_URL,
     FLOWS_CONNECTORS,
-    FLOWS,
     FLOWS_LINKS,
     FLOWS_LISTENERS,
     FLOWS_ROUTERS,
     FLOWS_SITES,
     FLOWS_VAN_ADDRESSES,
     FLOWS_PROCESSES,
+    FLOWPAIRS,
+    getFlowsPairsByVanAddressIdPATH,
+    getFlowsProcessesBySiteURLPATH,
+    getProcessesByVanAddressIdPATH,
 } from './REST.constant';
 import {
     DataAdapterResponse,
@@ -18,11 +23,12 @@ import {
     DeploymentTopologyResponse,
     FlowsVanAddressesResponse,
     FlowsTopologyResponse,
-    FlowResponse,
     FlowsDeviceResponse,
     FlowsRouterResponse,
     FlowsSiteResponse,
     FlowsProcessResponse,
+    FlowPairResponse,
+    HTTPError,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -68,7 +74,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsProcessesBySite: async (id: string): Promise<FlowsProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_SITES}/${id}/processes`);
+        const { data } = await fetchWithTimeout(getFlowsProcessesBySiteURLPATH(id));
 
         return data;
     },
@@ -90,7 +96,7 @@ export const RESTApi = {
     fetchFlowsRouter: async (id: string): Promise<FlowsRouterResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}/${id}`);
 
-        return data ? data : null;
+        return data;
     },
     fetchFlowsLinks: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}`);
@@ -100,42 +106,79 @@ export const RESTApi = {
     fetchFlowsLink: async (id: string): Promise<FlowsDeviceResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}/${id}`);
 
-        return data ? data : null;
+        return data;
     },
     fetchFlowsConnectors: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}`);
 
         return data;
     },
-    fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}/${id}`);
+    fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse | null> => {
+        try {
+            const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}/${id}`);
 
-        return data ? data : null;
+            return data;
+        } catch (e) {
+            const error = e as HTTPError;
+
+            if (error.httpStatus === HttpStatusErrors.NotFound) {
+                return null;
+            }
+
+            return handleStatusError(error);
+        }
     },
     fetchFlowsListeners: async (): Promise<FlowsDeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}`);
 
         return data;
     },
-    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
+    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse | null> => {
+        try {
+            const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
+
+            return data;
+        } catch (e) {
+            const error = e as HTTPError;
+
+            if (error.httpStatus === HttpStatusErrors.NotFound) {
+                return null;
+            }
+
+            return handleStatusError(error);
+        }
+    },
+    fetchFlowsPairsByVanAddr: async (id: string): Promise<FlowPairResponse[]> => {
+        const { data } = await fetchWithTimeout(getFlowsPairsByVanAddressIdPATH(id));
 
         return data;
     },
-    fetchFlowsByVanAddr: async (vanaddr: string): Promise<FlowResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS}?vanaddr=${vanaddr}`);
+    fetchProcessesByVanAddr: async (id: string): Promise<FlowsProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesByVanAddressIdPATH(id));
 
         return data;
     },
-    fetchFlow: async (id: string): Promise<FlowResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS}/${id}`);
+    fetchFlowPair: async (id: string): Promise<FlowPairResponse> => {
+        const { data } = await fetchWithTimeout(`${FLOWPAIRS}/${id}`);
 
         return data;
     },
     fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
+        const { data: sites } = await fetchWithTimeout(`${FLOWS_SITES}`);
         const { data: routers } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
         const { data: links } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
-        return getFlowsTopology(routers, links);
+        const sitesMap = (sites as FlowsSiteResponse[]).reduce((acc, site) => {
+            acc[site.identity] = site;
+
+            return acc;
+        }, {} as Record<string, FlowsSiteResponse>);
+
+        const routersExtended = (routers as FlowsRouterResponse[]).map((router) => ({
+            ...router,
+            siteName: sitesMap[router.parent].name,
+        }));
+
+        return getFlowsTopology(routersExtended, links);
     },
 };

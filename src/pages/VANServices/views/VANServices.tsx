@@ -66,10 +66,10 @@ const VANServices = function () {
                 <Thead>
                     <Tr>
                         <Th>{OverviewColumns.Name}</Th>
+                        <Th>{OverviewColumns.TotalFlowPairs}</Th>
+                        <Th>{OverviewColumns.CurrentFlowPairs}</Th>
                         <Th>{OverviewColumns.TotalListeners}</Th>
                         <Th>{OverviewColumns.TotalConnectors}</Th>
-                        <Th>{OverviewColumns.NumFLows}</Th>
-                        <Th>{OverviewColumns.NumFlowsActive}</Th>
                     </Tr>
                 </Thead>
                 {vanServices?.map(
@@ -86,18 +86,24 @@ const VANServices = function () {
                                 <Td dataLabel={OverviewColumns.Name}>
                                     <ResourceIcon type="vanAddress" />
 
-                                    <Link to={`${VANServicesRoutesPaths.FlowsPairs}/${name}`}>
+                                    <Link
+                                        to={`${VANServicesRoutesPaths.FlowsPairs}/${name}@${identity}`}
+                                    >
                                         {name}
                                     </Link>
                                 </Td>
+                                <Td
+                                    dataLabel={OverviewColumns.TotalFlowPairs}
+                                >{`${totalFlows}`}</Td>
+                                <Td
+                                    dataLabel={OverviewColumns.TotalFlowPairs}
+                                >{`${currentFlows}`}</Td>
                                 <Td dataLabel={OverviewColumns.TotalListeners}>
                                     {`${listenerCount}`}
                                 </Td>
                                 <Td
                                     dataLabel={OverviewColumns.TotalConnectors}
                                 >{`${connectorCount}`}</Td>
-                                <Td dataLabel={OverviewColumns.NumFLows}>{`${totalFlows}`}</Td>
-                                <Td dataLabel={OverviewColumns.NumFLows}>{`${currentFlows}`}</Td>
                             </Tr>
                         </Tbody>
                     ),

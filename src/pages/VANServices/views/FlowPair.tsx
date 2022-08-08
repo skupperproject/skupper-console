@@ -18,10 +18,8 @@ import FlowPairDetails from '../components/FlowPairDetails';
 import FlowPairTopologyContainer from '../components/FlowPairTopologyContainer';
 import { MonitorServices } from '../services';
 import { QueriesVANServices } from '../services/services.enum';
+import { CONNECTION_PATH_NAME, TOPOLOGY_CONTAINER_HEIGHT } from '../VANServices.constants';
 import { VanServicesRoutesPathLabel, VANServicesRoutesPaths } from '../VANServices.enum';
-
-const CONNECTION_PATH_NAME = 'connection';
-const TOPOLOGY_CONTAINER_HEIGHT = 500;
 
 const FlowPair = function () {
     const navigate = useNavigate();

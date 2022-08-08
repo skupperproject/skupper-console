@@ -1,9 +1,28 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { CONNECTION_TIMEOUT } from 'config';
 
 import { MSG_TIMEOUT_ERROR } from './REST.constant';
-import { FetchWithTimeoutOptions } from './REST.interfaces';
+import { FetchWithTimeoutOptions, HTTPError } from './REST.interfaces';
+
+export function handleStatusError(e: AxiosError) {
+    const error: HTTPError = { ...e };
+
+    if (!e.response) {
+        error.message = MSG_TIMEOUT_ERROR;
+    }
+
+    if (error.response?.status) {
+        const {
+            response: { status, statusText },
+        } = error;
+
+        error.message = `${status}: ${statusText}`;
+        error.httpStatus = status.toString();
+    }
+
+    return Promise.reject(error);
+}
 
 export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOptions = {}) {
     const { timeout = CONNECTION_TIMEOUT } = options;
@@ -22,22 +41,5 @@ export async function fetchWithTimeout(url: string, options: FetchWithTimeoutOpt
 
 axios.interceptors.response.use(
     (config) => config,
-    (e) => {
-        const error = e;
-
-        if (!error.response) {
-            error.message = MSG_TIMEOUT_ERROR;
-        }
-
-        if (error.response?.status) {
-            const {
-                response: { status, statusText },
-            } = error;
-
-            error.message = `${status}: ${statusText}`;
-            error.httpStatus = status;
-        }
-
-        return Promise.reject(error);
-    },
+    (e) => handleStatusError(e),
 );

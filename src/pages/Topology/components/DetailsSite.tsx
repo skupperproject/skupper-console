@@ -72,7 +72,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const tcpConnectionsInEntries = Object.values(traffic.tcpConnectionsIn);
     const tcpConnectionsOutEntries = Object.values(traffic.tcpConnectionsOut);
 
-    const title = `${capitalizeFirstLetter(site.siteName)})}`;
+    const title = `${capitalizeFirstLetter(site.siteName)}`;
 
     return (
         <TopologyDetails

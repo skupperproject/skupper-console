@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
 import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { formatBytes } from '@core/utils/formatBytes';
 import { DeploymentTraffic } from '@pages/Deployments/services/deployments.interfaces';
 import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
@@ -33,7 +32,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                     className="pf-u-mb-md text-ellipsis"
                     style={{ width: '300px' }}
                 >
-                    {capitalizeFirstLetter(name)}
+                    {name}
                 </Title>
             </Tooltip>
             <TextContent className="pf-u-mt-md">

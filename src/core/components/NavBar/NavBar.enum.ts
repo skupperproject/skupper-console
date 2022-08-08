@@ -3,5 +3,5 @@ export enum NavBarLabels {
     SideBarSite = 'Sites',
     SideBarServices = 'Services',
     SideBarVanServices = 'VAN Services',
-    SideBarTopology = 'Topology',
+    SideBarTopology = 'Network',
 }

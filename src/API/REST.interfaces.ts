@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosRequestConfig } from 'axios';
 
 export interface DataResponse {
     sites: DataSiteResponse[];
@@ -145,6 +145,7 @@ export interface FlowsRouterResponse {
     imageVersion: string;
     buildVersion: string;
     startTime: number;
+    siteName: string;
 }
 
 export interface FlowsLinkResponse {
@@ -190,6 +191,15 @@ export interface FlowResponse {
     targetFlow?: any;
 }
 
+export interface FlowPairResponse {
+    identity: string;
+    recType: string;
+    ForwardSiteId: number;
+    ReverseSiteId: number;
+    ForwardFlow: FlowResponse;
+    ReverseFlow: FlowResponse;
+}
+
 export type FlowsDataResponse = FlowsRouterResponse &
     FlowsLinkResponse &
     FlowsDeviceResponse &
@@ -216,4 +226,8 @@ export interface FlowsTopologyLink {
 export interface FlowsTopologyResponse {
     nodes: FlowsDataResponse[];
     links: FlowsTopologyLink[];
+}
+
+export interface HTTPError extends AxiosError {
+    httpStatus?: string;
 }

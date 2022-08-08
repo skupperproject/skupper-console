@@ -12,3 +12,7 @@ export const DetailsColumns = [
 ];
 
 export const CONNECTIONS_PAGINATION_SIZE_DEFAULT = 20;
+
+// FLOW PAIR VIEW
+export const CONNECTION_PATH_NAME = 'flowpair';
+export const TOPOLOGY_CONTAINER_HEIGHT = 500;

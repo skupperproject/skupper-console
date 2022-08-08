@@ -41,7 +41,7 @@ import './FlowsPairs.css';
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
-    const { id: vanAddressId } = useParams();
+    const { id: vanAddress } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL * 3);
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -53,6 +53,8 @@ const FlowsPairs = function () {
     const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
 
     const filters = { shouldShowActiveFlows };
+
+    const vanAddressId = vanAddress?.split('@')[1];
 
     const { data: connectionsPaginated, isLoading } = useQuery(
         [
@@ -234,7 +236,7 @@ const FlowsPairs = function () {
                                             key={identity}
                                             onRowClick={() => {
                                                 navigate(
-                                                    `${VANServicesRoutesPaths.FlowsPairs}/${vanAddressId}/${identity}`,
+                                                    `${VANServicesRoutesPaths.FlowsPairs}/${vanAddress}/${identity}`,
                                                 );
                                             }}
                                         >

@@ -26,8 +26,8 @@ import {
 } from '@patternfly/react-topology';
 import { xml } from 'd3-fetch';
 
-import siteSVG from '@assets/server.svg';
 import serviceSVG from '@assets/service.svg';
+import siteSVG from '@assets/site.svg';
 import { Site } from '@pages/Sites/services/services.interfaces';
 
 import TopologyDeploymentDetails from '../components/DetailsDeployment';
@@ -35,8 +35,8 @@ import TopologySiteDetails from '../components/DetailsSite';
 import TopologySVG from '../components/TopologySVG';
 import { TopologyServices } from '../services';
 import { Deployments } from '../services/services.interfaces';
-import { TopologyLink, TopologyNode } from '../Topoloyg.interfaces';
 import { TopologyViews, TopologyOverviewLabels } from '../Topology.enum';
+import { TopologyLink, TopologyNode } from '../Topoloyg.interfaces';
 
 const TYPE_SITES = 'sites';
 const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = function ({

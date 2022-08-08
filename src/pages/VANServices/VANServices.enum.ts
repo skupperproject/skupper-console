@@ -19,8 +19,8 @@ export enum OverviewColumns {
     Name = 'Name',
     TotalListeners = 'Servers',
     TotalConnectors = 'Clients',
-    NumFlowsActive = 'Active flows',
-    NumFLows = 'Flows',
+    CurrentFlowPairs = 'Current flow pairs',
+    TotalFlowPairs = 'Total flow pairs',
 }
 
 // FLOWS PAIRS VIEW
@@ -43,11 +43,8 @@ export enum DetailsColumnsNames {
 
 // FLOW PAIR DETAIL
 export enum FlowPairDetailsColumns {
-    Source = 'Source',
-    RouterName = 'Router',
     SiteName = 'Site',
-    RouterHostName = 'Router Hostname',
-    Address = 'Address',
+    VANService = 'VAN Service',
     Protocol = 'Protocol',
     Bytes = 'Bytes',
     ByteRate = 'Byte Rate',
@@ -63,6 +60,6 @@ export enum FlowPairDetailsLabels {
     WarningMessage = 'This flow does not have a counter flow. There may be an error in the network',
     Connector = 'CONNECTOR',
     Listener = 'LISTENER',
-    TrafficChartTitle = 'Real-time traffic data',
+    TrafficChartTitle = 'Bytes Rate in the last minute',
     TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
 }

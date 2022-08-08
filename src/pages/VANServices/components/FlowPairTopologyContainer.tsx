@@ -13,12 +13,12 @@ const FlowPairTopologyContainer: FC<FlowPairProps> = function ({ connection, rou
 
     const routerNodes = useMemo(
         () =>
-            routers.nodes.map(({ identity, name }) => {
+            routers.nodes.map(({ identity, siteName }) => {
                 const positions = localStorage.getItem(identity);
 
                 return {
                     identity,
-                    name,
+                    name: siteName,
                     width: 50,
                     type: 'router',
                     x: 0,
