@@ -165,10 +165,11 @@ export interface FlowsDeviceResponse {
     recType: string;
     address: string;
     protocol: string;
+    destHost: string;
+    destPort: string;
     flowRateL4: number;
     flowCountL4: number;
     startTime: number;
-    endTime?: number;
 }
 
 export interface FlowResponse {

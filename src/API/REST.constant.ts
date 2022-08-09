@@ -19,3 +19,4 @@ export const getFlowsPairsByVanAddressIdPATH = (id: string) =>
     `${FLOWS_VAN_ADDRESSES}/${id}/flowpairs`;
 export const getProcessesByVanAddressIdPATH = (id: string) =>
     `${FLOWS_VAN_ADDRESSES}/${id}/processes`;
+export const getConnectorByProcessIdPATH = (id: string) => `${FLOWS_PROCESSES}/${id}/connector`;

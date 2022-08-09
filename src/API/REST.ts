@@ -15,6 +15,7 @@ import {
     getFlowsPairsByVanAddressIdPATH,
     getFlowsProcessesBySiteURLPATH,
     getProcessesByVanAddressIdPATH,
+    getConnectorByProcessIdPATH,
 } from './REST.constant';
 import {
     DataAdapterResponse,
@@ -85,6 +86,11 @@ export const RESTApi = {
     },
     fetchFlowProcess: async (id: string): Promise<FlowsProcessResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}/${id}`);
+
+        return data;
+    },
+    fetchFlowConnectorByProcessId: async (id: string): Promise<FlowsDeviceResponse> => {
+        const { data } = await fetchWithTimeout(getConnectorByProcessIdPATH(id));
 
         return data;
     },

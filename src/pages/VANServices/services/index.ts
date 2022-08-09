@@ -1,5 +1,5 @@
 import { RESTApi } from 'API/REST';
-import { FlowsDeviceResponse, FlowsSiteResponse } from 'API/REST.interfaces';
+import { FlowsDeviceResponse, FlowsProcessResponse, FlowsSiteResponse } from 'API/REST.interfaces';
 
 import {
     VanServicesTopology,
@@ -24,17 +24,16 @@ export const MonitorServices = {
         id: string,
         currentPage: number,
         visibleItems: number,
-        filters: { shouldShowActiveFlows?: boolean },
     ): Promise<FlowsPairsBasic> => {
         const flowsPairs = await RESTApi.fetchFlowsPairsByVanAddr(id);
         const processes = await RESTApi.fetchFlowsProcesses();
         const sites = await RESTApi.fetchFlowsSites();
 
         const processesMap = processes.reduce((acc, process) => {
-            acc[process.identity] = process.name;
+            acc[process.identity] = process;
 
             return acc;
-        }, {} as Record<string, string>);
+        }, {} as Record<string, FlowsProcessResponse>);
 
         const sitesMap = sites.reduce((acc, site) => {
             acc[site.identity] = site.name;
@@ -42,27 +41,52 @@ export const MonitorServices = {
             return acc;
         }, {} as Record<string, string>);
 
-        const flowsPairsExtended = flowsPairs.map((flowPair) => {
-            const processName = processesMap[flowPair.ForwardFlow.process];
-            const targetProcessName = processesMap[flowPair.ReverseFlow.process];
+        const flowsPairsExtended = await Promise.all(
+            flowsPairs.map(async (flowPair) => {
+                const { octetRate, octets, startTime, endTime, process } = flowPair.ForwardFlow;
+                const siteName = sitesMap[flowPair.ForwardSiteId];
+                const processName = processesMap[process].name;
+                const processId = processesMap[process].identity;
+                const processHost = processesMap[process].sourceHost;
 
-            const siteName = sitesMap[flowPair.ForwardSiteId];
-            const targetSiteName = sitesMap[flowPair.ReverseSiteId];
+                const {
+                    octetRate: targetByteRate,
+                    octets: targetBytes,
+                    process: targetProcess,
+                } = flowPair.ReverseFlow;
+                const targetSiteName = sitesMap[flowPair.ReverseSiteId];
+                const targetProcessName = processesMap[targetProcess].name;
+                const taregetProcessId = processesMap[targetProcess].identity;
+                const targetHost = processesMap[targetProcess].sourceHost;
 
-            return {
-                ...flowPair.ForwardFlow,
-                identity: flowPair.identity,
-                processName,
-                targetProcessName,
-                siteName,
-                targetSiteName,
-            };
-        });
+                const connector = await RESTApi.fetchFlowConnectorByProcessId(processId);
+                const targetConnector = await RESTApi.fetchFlowConnectorByProcessId(
+                    taregetProcessId,
+                );
+
+                return {
+                    id: flowPair.identity,
+                    siteName,
+                    byteRate: octetRate,
+                    bytes: octets,
+                    host: processHost,
+                    port: connector.destPort,
+                    startTime,
+                    endTime,
+                    processName,
+                    targetSiteName,
+                    targetByteRate,
+                    targetBytes,
+                    targetHost,
+                    targetProcessName,
+                    targetPort: targetConnector.destPort,
+                    protocol: connector.protocol,
+                };
+            }),
+        );
 
         // filter collection
-        const flowsFiltered = flowsPairsExtended
-            .sort((a, b) => b.startTime - a.startTime)
-            .filter((flow) => !(filters.shouldShowActiveFlows && flow.endTime));
+        const flowsFiltered = flowsPairsExtended.sort((a, b) => b.startTime - a.startTime);
 
         const startOffset = (currentPage - 1) * visibleItems;
         //paginate collection

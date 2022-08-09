@@ -5,22 +5,19 @@ import {
     BreadcrumbHeading,
     BreadcrumbItem,
     Card,
+    Flex,
     Pagination,
     Stack,
     StackItem,
-    Switch,
-    Toolbar,
-    ToolbarContent,
-    ToolbarGroup,
-    ToolbarItem,
-    Tooltip,
+    Text,
+    TextContent,
+    TextVariants,
 } from '@patternfly/react-core';
-import { CircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
-import { formatDistanceToNow } from 'date-fns';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -34,7 +31,6 @@ import {
     VanServicesRoutesPathLabel,
     VANServicesRoutesPaths,
     DetailsColumnsNames,
-    FlowsPairsLabels,
 } from '../VANServices.enum';
 
 import './FlowsPairs.css';
@@ -48,29 +44,19 @@ const FlowsPairs = function () {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
 
-    const [shouldShowActiveFlows, setShouldShowActiveFlows] = useState(true);
-
     const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
 
-    const filters = { shouldShowActiveFlows };
-
     const vanAddressId = vanAddress?.split('@')[1];
+    const vanAddressName = vanAddress?.split('@')[0];
 
     const { data: connectionsPaginated, isLoading } = useQuery(
-        [
-            QueriesVANServices.GetFlowsPairsByVanAddr,
-            vanAddressId,
-            currentPage,
-            visibleItems,
-            filters,
-        ],
+        [QueriesVANServices.GetFlowsPairsByVanAddr, vanAddressId, currentPage, visibleItems],
         () =>
             vanAddressId
                 ? MonitorServices.fetchFlowsPairsByVanAddressId(
                       vanAddressId,
                       currentPage,
                       visibleItems,
-                      filters,
                   )
                 : null,
         {
@@ -100,11 +86,6 @@ const FlowsPairs = function () {
         perPageSelect: number,
     ) {
         setVisibleItems(perPageSelect);
-        setCurrentPage(1);
-    }
-
-    function handleShowActiveFlowsToggle(isChecked: boolean) {
-        setShouldShowActiveFlows(isChecked);
         setCurrentPage(1);
     }
 
@@ -142,7 +123,7 @@ const FlowsPairs = function () {
             return 0;
         }
 
-        if (activeSortIndex && activeSortDirection === 'asc') {
+        if (activeSortDirection === 'asc') {
             return paramA > paramB ? 1 : -1;
         }
 
@@ -158,30 +139,173 @@ const FlowsPairs = function () {
                             {VanServicesRoutesPathLabel.VanServices}
                         </Link>
                     </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{vanAddressId}</BreadcrumbHeading>
+                    <BreadcrumbHeading to="#">{vanAddressName}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
 
             <StackItem>
-                <Toolbar>
-                    <ToolbarContent>
-                        <ToolbarItem>{FlowsPairsLabels.FlowsPairs}</ToolbarItem>
-                        <ToolbarGroup alignment={{ default: 'alignRight' }}>
-                            <ToolbarItem>
-                                <Switch
-                                    label={FlowsPairsLabels.ShowActiveFlowsPairs}
-                                    isChecked={shouldShowActiveFlows}
-                                    onChange={handleShowActiveFlowsToggle}
-                                />
-                            </ToolbarItem>
-                        </ToolbarGroup>
-                    </ToolbarContent>
-                </Toolbar>
+                <Flex>
+                    <ResourceIcon type="vanAddress" />
+                    <TextContent>
+                        <Text component={TextVariants.h1}>{vanAddressName}</Text>
+                    </TextContent>
+                </Flex>
             </StackItem>
             <StackItem isFilled>
-                <Card isFullHeight>
+                <Card isRounded className="pf-u-pt-md">
+                    <TableComposable variant="compact" borders={true} className="flows-table">
+                        <Thead hasNestedHeader>
+                            <Tr>
+                                <Th hasRightBorder colSpan={6}>
+                                    {DetailsColumnsNames.FlowForward}
+                                </Th>
+                                <Th colSpan={6} hasRightBorder>
+                                    {DetailsColumnsNames.FlowReverse}
+                                </Th>
+                                <Th modifier="fitContent" rowSpan={2}>
+                                    {DetailsColumnsNames.Protocol}
+                                </Th>
+                            </Tr>
+                            <Tr>
+                                <Th isSubheader sort={getSortParams(0)}>
+                                    {DetailsColumnsNames.Site}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(1)}>
+                                    {DetailsColumnsNames.Host}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(2)}>
+                                    {DetailsColumnsNames.Port}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(3)}>
+                                    {DetailsColumnsNames.Process}
+                                </Th>
+                                <Th isSubheader className="align-th-right" sort={getSortParams(4)}>
+                                    {DetailsColumnsNames.ByteRate}
+                                </Th>
+                                <Th
+                                    isSubheader
+                                    className="align-th-right"
+                                    sort={getSortParams(5)}
+                                    hasRightBorder
+                                >
+                                    {DetailsColumnsNames.Bytes}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(6)}>
+                                    {DetailsColumnsNames.Site}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(7)}>
+                                    {DetailsColumnsNames.Host}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(8)}>
+                                    {DetailsColumnsNames.Port}
+                                </Th>
+                                <Th isSubheader sort={getSortParams(9)}>
+                                    {DetailsColumnsNames.Process}
+                                </Th>
+                                <Th isSubheader className="align-th-right" sort={getSortParams(10)}>
+                                    {DetailsColumnsNames.ByteRate}
+                                </Th>
+                                <Th
+                                    isSubheader
+                                    className="align-th-right"
+                                    sort={getSortParams(11)}
+                                    hasRightBorder
+                                >
+                                    {DetailsColumnsNames.Bytes}
+                                </Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {!!connections.length &&
+                                connectionsSorted.map(
+                                    ({
+                                        id,
+                                        bytes,
+                                        byteRate,
+                                        host,
+                                        port,
+                                        siteName,
+                                        processName,
+                                        targetSiteName,
+                                        targetByteRate,
+                                        targetBytes,
+                                        targetHost,
+                                        targetProcessName,
+                                        targetPort,
+                                        protocol,
+                                    }) => (
+                                        <Tr key={id}>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Site}
+                                                className="secondary-color"
+                                            >
+                                                {`${siteName}`}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Host}
+                                                className="secondary-color"
+                                            >
+                                                {host}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Port}
+                                                className="secondary-color"
+                                            >
+                                                {port}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Process}
+                                                className="secondary-color"
+                                            >
+                                                {`${processName}`}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Bytes}
+                                                className="align-td-right secondary-color"
+                                            >
+                                                {formatBytes(byteRate, 3)}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Bytes}
+                                                className="align-td-right secondary-color"
+                                            >
+                                                {formatBytes(bytes, 3)}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Site}>
+                                                {`${targetSiteName}`}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Host}>
+                                                {targetHost}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Port}>
+                                                {targetPort}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Process}>
+                                                {`${targetProcessName}`}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Bytes}
+                                                className="align-td-right"
+                                            >
+                                                {formatBytes(targetByteRate, 3)}
+                                            </Td>
+                                            <Td
+                                                dataLabel={DetailsColumnsNames.Bytes}
+                                                className="align-td-right"
+                                            >
+                                                {formatBytes(targetBytes, 3)}
+                                            </Td>
+                                            <Td dataLabel={DetailsColumnsNames.Protocol}>
+                                                {protocol}
+                                            </Td>
+                                        </Tr>
+                                    ),
+                                )}
+                        </Tbody>
+                    </TableComposable>
                     {!!connectionsSorted.length && (
                         <Pagination
+                            className="pf-u-my-xs"
                             perPageComponent="button"
                             itemCount={total}
                             perPage={visibleItems}
@@ -190,93 +314,6 @@ const FlowsPairs = function () {
                             onPerPageSelect={handlePerPageSelect}
                         />
                     )}
-                    <TableComposable variant="compact" borders={true} className="flows-table">
-                        <Thead>
-                            <Tr>
-                                {DetailsColumns.map(({ name, description }, index) => (
-                                    <Th
-                                        key={name}
-                                        sort={
-                                            ![0].includes(index) ? getSortParams(index) : undefined
-                                        }
-                                    >
-                                        {name}
-                                        {description && (
-                                            <Tooltip content={description}>
-                                                <InfoCircleIcon
-                                                    color="var(--pf-global--palette--blue-300)"
-                                                    className="pf-u-ml-sm"
-                                                />
-                                            </Tooltip>
-                                        )}
-                                    </Th>
-                                ))}
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {!!connections.length &&
-                                connectionsSorted.map(
-                                    ({
-                                        identity,
-                                        endTime,
-                                        octets,
-                                        startTime,
-                                        counterFlow,
-                                        siteName,
-                                        processName,
-                                        targetSiteName,
-                                        targetProcessName,
-                                    }) => (
-                                        <Tr
-                                            className={
-                                                counterFlow
-                                                    ? 'flow-row cursor-pointer'
-                                                    : 'flow-no-connection-target-warning cursor-pointer'
-                                            }
-                                            key={identity}
-                                            onRowClick={() => {
-                                                navigate(
-                                                    `${VANServicesRoutesPaths.FlowsPairs}/${vanAddress}/${identity}`,
-                                                );
-                                            }}
-                                        >
-                                            <Td>
-                                                <CircleIcon
-                                                    color={
-                                                        endTime
-                                                            ? 'var(--pf-global--BackgroundColor--200)'
-                                                            : 'var(--pf-global--success-color--100)'
-                                                    }
-                                                />
-                                            </Td>
-                                            <Td dataLabel={DetailsColumnsNames.StartSite}>
-                                                {`${siteName}`}
-                                            </Td>
-                                            <Td dataLabel={DetailsColumnsNames.StartProcess}>
-                                                {`${processName}`}
-                                            </Td>
-                                            <Td dataLabel={DetailsColumnsNames.EndSite}>
-                                                {`${targetSiteName || '-'}`}
-                                            </Td>
-                                            <Td dataLabel={DetailsColumnsNames.EndProcess}>
-                                                {`${targetProcessName || '-'}`}
-                                            </Td>
-                                            <Td dataLabel={DetailsColumnsNames.Traffic}>
-                                                {formatBytes(octets, 3)}
-                                            </Td>
-                                            <Td
-                                                dataLabel={DetailsColumnsNames.StartTime}
-                                                width={20}
-                                            >
-                                                {formatDistanceToNow(new Date(startTime / 1000), {
-                                                    addSuffix: true,
-                                                })}
-                                            </Td>
-                                        </Tr>
-                                    ),
-                                )}
-                        </Tbody>
-                    </TableComposable>
                 </Card>
             </StackItem>
         </Stack>

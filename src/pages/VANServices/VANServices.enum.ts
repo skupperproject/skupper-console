@@ -31,14 +31,18 @@ export enum FlowsPairsLabels {
 }
 
 export enum DetailsColumnsNames {
-    FlowPairStatus = 'Status',
-    StartSite = 'From site',
-    StartProcess = 'From process',
-    EndSite = 'To site',
-    EndProcess = 'To process',
-    Traffic = 'Traffic',
+    Status = 'Status',
+    FlowForward = 'Forward',
+    FlowReverse = 'Reverse',
+    Site = 'Site',
+    Process = 'process',
+    Bytes = 'Bytes',
+    ByteRate = 'Byte Rate',
+    Host = 'Host',
+    Port = 'Port',
     Latency = 'TTFB',
     StartTime = 'Created at',
+    Protocol = 'Protocol',
 }
 
 // FLOW PAIR DETAIL

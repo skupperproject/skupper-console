@@ -11,11 +11,24 @@ export type VanServicesTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
 // FLOWPAIR BASIC INFO
-export interface FlowPairBasic extends FlowResponse {
+
+export interface FlowPairBasic {
+    id: string;
     siteName: string;
+    byteRate: number;
+    bytes: number;
+    host: string;
+    port: string;
     processName: string;
-    targetSiteName?: string;
-    targetProcessName?: string;
+    startTime: number;
+    endTime?: number;
+    targetSiteName: string;
+    targetByteRate: number;
+    targetBytes: number;
+    targetHost: string;
+    targetPort: string;
+    targetProcessName: string;
+    protocol: string;
 }
 export interface FlowsPairsBasic {
     connections: FlowPairBasic[];
@@ -32,5 +45,5 @@ interface extendedFlow extends FlowResponse {
 
 export interface ExtendedFlowPair {
     startFlow: extendedFlow;
-    endFlow: extendedFlow | null;
+    endFlow: extendedFlow;
 }

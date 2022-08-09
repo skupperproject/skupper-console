@@ -2,13 +2,18 @@ import { DetailsColumnsNames } from './VANServices.enum';
 
 // CONNECTIONS VIEW
 export const DetailsColumns = [
-    { name: DetailsColumnsNames.FlowPairStatus, prop: '', description: '' },
-    { name: DetailsColumnsNames.StartSite, prop: 'siteName' },
-    { name: DetailsColumnsNames.StartProcess, prop: 'processName' },
-    { name: DetailsColumnsNames.EndSite, prop: 'targetSiteName' },
-    { name: DetailsColumnsNames.EndProcess, prop: 'targetProcessName' },
-    { name: DetailsColumnsNames.Traffic, prop: 'octets' },
-    { name: DetailsColumnsNames.StartTime, prop: 'startTime' },
+    { name: DetailsColumnsNames.Site, prop: 'siteName' },
+    { name: DetailsColumnsNames.Host, prop: 'host' },
+    { name: DetailsColumnsNames.Port, prop: 'port' },
+    { name: DetailsColumnsNames.Process, prop: 'processName' },
+    { name: DetailsColumnsNames.ByteRate, prop: 'byteRate' },
+    { name: DetailsColumnsNames.Bytes, prop: 'bytes' },
+    { name: DetailsColumnsNames.Site, prop: 'targetSiteName' },
+    { name: DetailsColumnsNames.Host, prop: 'targetHost' },
+    { name: DetailsColumnsNames.Host, prop: 'targetPort' },
+    { name: DetailsColumnsNames.Process, prop: 'targetProcessName' },
+    { name: DetailsColumnsNames.ByteRate, prop: 'targetByteRate' },
+    { name: DetailsColumnsNames.Bytes, prop: 'targetBytes' },
 ];
 
 export const CONNECTIONS_PAGINATION_SIZE_DEFAULT = 20;
