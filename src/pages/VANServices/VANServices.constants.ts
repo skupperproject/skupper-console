@@ -1,19 +1,19 @@
-import { DetailsColumnsNames } from './VANServices.enum';
+import { FlowPairsColumnsNames } from './VANServices.enum';
 
 // CONNECTIONS VIEW
-export const DetailsColumns = [
-    { name: DetailsColumnsNames.Site, prop: 'siteName' },
-    { name: DetailsColumnsNames.Host, prop: 'host' },
-    { name: DetailsColumnsNames.Port, prop: 'port' },
-    { name: DetailsColumnsNames.Process, prop: 'processName' },
-    { name: DetailsColumnsNames.ByteRate, prop: 'byteRate' },
-    { name: DetailsColumnsNames.Bytes, prop: 'bytes' },
-    { name: DetailsColumnsNames.Site, prop: 'targetSiteName' },
-    { name: DetailsColumnsNames.Host, prop: 'targetHost' },
-    { name: DetailsColumnsNames.Host, prop: 'targetPort' },
-    { name: DetailsColumnsNames.Process, prop: 'targetProcessName' },
-    { name: DetailsColumnsNames.ByteRate, prop: 'targetByteRate' },
-    { name: DetailsColumnsNames.Bytes, prop: 'targetBytes' },
+export const FlowPairsColumns = [
+    { name: FlowPairsColumnsNames.Site, prop: 'siteName' },
+    { name: FlowPairsColumnsNames.Host, prop: 'host' },
+    { name: FlowPairsColumnsNames.Port, prop: 'port' },
+    { name: FlowPairsColumnsNames.Process, prop: 'processName' },
+    { name: FlowPairsColumnsNames.ByteRate, prop: 'byteRate' },
+    { name: FlowPairsColumnsNames.Bytes, prop: 'bytes' },
+    { name: FlowPairsColumnsNames.Site, prop: 'targetSiteName' },
+    { name: FlowPairsColumnsNames.Host, prop: 'targetHost' },
+    { name: FlowPairsColumnsNames.Host, prop: 'targetPort' },
+    { name: FlowPairsColumnsNames.Process, prop: 'targetProcessName' },
+    { name: FlowPairsColumnsNames.ByteRate, prop: 'targetByteRate' },
+    { name: FlowPairsColumnsNames.Bytes, prop: 'targetBytes' },
 ];
 
 export const CONNECTIONS_PAGINATION_SIZE_DEFAULT = 20;
@@ -21,3 +21,16 @@ export const CONNECTIONS_PAGINATION_SIZE_DEFAULT = 20;
 // FLOW PAIR VIEW
 export const CONNECTION_PATH_NAME = 'flowpair';
 export const TOPOLOGY_CONTAINER_HEIGHT = 500;
+
+// PROCESSES TABLE
+export const ProcessesColumns = [
+    { name: FlowPairsColumnsNames.Site, prop: 'siteName' },
+    { name: FlowPairsColumnsNames.Process, prop: 'processName' },
+    { name: FlowPairsColumnsNames.Bytes, prop: 'bytes' },
+    { name: FlowPairsColumnsNames.ByteRate, prop: 'byteRate' },
+    { name: FlowPairsColumnsNames.Latency, prop: 'latency' },
+    { name: FlowPairsColumnsNames.Host, prop: 'host' },
+    { name: FlowPairsColumnsNames.Port, prop: 'port' },
+    { name: FlowPairsColumnsNames.ImageName, prop: 'imageName' },
+    { name: FlowPairsColumnsNames.Protocol, prop: 'protocol' },
+];

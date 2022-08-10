@@ -9,7 +9,7 @@ import {
     Flex,
     Tooltip,
 } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -58,7 +58,7 @@ const VANServices = function () {
                         <Text component={TextVariants.h1}>{Labels.VanServices}</Text>
                     </TextContent>
                     <Tooltip position="right" content={Labels.VanServicesDescription}>
-                        <InfoCircleIcon color="var(--pf-global--palette--blue-300)" />
+                        <OutlinedQuestionCircleIcon />
                     </Tooltip>
                 </Flex>
             </CardTitle>
@@ -85,7 +85,6 @@ const VANServices = function () {
                             <Tr>
                                 <Td dataLabel={OverviewColumns.Name}>
                                     <ResourceIcon type="vanAddress" />
-
                                     <Link
                                         to={`${VANServicesRoutesPaths.FlowsPairs}/${name}@${identity}`}
                                     >

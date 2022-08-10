@@ -9,6 +9,11 @@ export enum VanServicesRoutesPathLabel {
     VanServices = 'vanservices',
 }
 
+export enum VanServicesDescriptions {
+    FlowPairsDesc = 'Sequence of packets from a source to a destination',
+    TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
+}
+
 // VAN SERVICES VIEW
 export enum Labels {
     VanServices = 'VAN Services',
@@ -30,7 +35,7 @@ export enum FlowsPairsLabels {
     ShowActiveFlowsPairs = 'show active items',
 }
 
-export enum DetailsColumnsNames {
+export enum FlowPairsColumnsNames {
     Status = 'Status',
     FlowForward = 'Forward',
     FlowReverse = 'Reverse',
@@ -43,6 +48,7 @@ export enum DetailsColumnsNames {
     Latency = 'TTFB',
     StartTime = 'Created at',
     Protocol = 'Protocol',
+    ImageName = 'Image',
 }
 
 // FLOW PAIR DETAIL
@@ -65,5 +71,17 @@ export enum FlowPairDetailsLabels {
     Connector = 'CONNECTOR',
     Listener = 'LISTENER',
     TrafficChartTitle = 'Bytes Rate in the last minute',
-    TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
+}
+
+// PROCESSES TABLE
+export enum ProcessesColumnsNames {
+    Site = 'Site',
+    Process = 'process',
+    Bytes = 'Bytes',
+    ByteRate = 'Byte Rate',
+    Host = 'Host',
+    Port = 'Port',
+    Latency = 'TTFB',
+    Image = 'Image',
+    Protocol = 'Protocol',
 }

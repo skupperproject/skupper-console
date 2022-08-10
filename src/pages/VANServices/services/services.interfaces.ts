@@ -10,8 +10,29 @@ import {
 export type VanServicesTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
-// FLOWPAIR BASIC INFO
+// FLOW PAIRS TABLE
+export interface FlowPairsTableProps {
+    flowPairs: FlowPairBasic[];
+}
 
+// Process TABLE
+export interface ProcessRow {
+    id: string;
+    siteName: string;
+    processName: string;
+    bytes: number;
+    byteRate: number;
+    host: string;
+    port: string;
+    imageName: string;
+    latency: number;
+    protocol: string;
+}
+
+export interface ProcessesTableProps {
+    processes: ProcessRow[];
+}
+// FLOWPAIR BASIC INFO
 export interface FlowPairBasic {
     id: string;
     siteName: string;
@@ -19,7 +40,10 @@ export interface FlowPairBasic {
     bytes: number;
     host: string;
     port: string;
+    processId: string;
     processName: string;
+    processImageName: string;
+    latency: number;
     startTime: number;
     endTime?: number;
     targetSiteName: string;
@@ -27,7 +51,10 @@ export interface FlowPairBasic {
     targetBytes: number;
     targetHost: string;
     targetPort: string;
+    targetProcessId: string;
     targetProcessName: string;
+    targetProcessImageName: string;
+    targetLatency: number;
     protocol: string;
 }
 export interface FlowsPairsBasic {

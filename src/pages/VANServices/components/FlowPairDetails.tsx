@@ -10,7 +10,11 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import DescriptionItem from '@pages/Sites/components/DescriptionItem';
 
-import { FlowPairDetailsColumns, FlowPairDetailsLabels } from '../VANServices.enum';
+import {
+    FlowPairDetailsColumns,
+    FlowPairDetailsLabels,
+    VanServicesDescriptions,
+} from '../VANServices.enum';
 import { FlowPairDetailsProps } from '../VANServices.interfaces';
 
 const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
@@ -67,7 +71,7 @@ const FlowPairDetails: FC<FlowPairDetailsProps> = function ({ connection }) {
                         <Th>{FlowPairDetailsColumns.ByteRate}</Th>
                         <Th width={10}>
                             {FlowPairDetailsColumns.Latency}
-                            <Tooltip content={FlowPairDetailsLabels.TTFBDesc}>
+                            <Tooltip content={VanServicesDescriptions.TTFBDesc}>
                                 <InfoCircleIcon
                                     color="var(--pf-global--palette--blue-300)"
                                     className="pf-u-ml-xs"
