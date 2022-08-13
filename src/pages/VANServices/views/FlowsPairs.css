@@ -19,3 +19,12 @@
 .flows-table .secondary-color {
     background-color: var(--pf-global--palette--black-200);
 }
+
+
+.van-services-table thead .align-th-right {
+    text-align: end;
+}
+
+.van-services-table tbody .align-td-right {
+    text-align: end;
+}

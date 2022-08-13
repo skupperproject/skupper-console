@@ -24,8 +24,8 @@ export enum OverviewColumns {
     Name = 'Name',
     TotalListeners = 'Servers',
     TotalConnectors = 'Clients',
-    CurrentFlowPairs = 'Current flow pairs',
-    TotalFlowPairs = 'Total flow pairs',
+    CurrentFlowPairs = 'Current connections',
+    TotalFlowPairs = 'Total connections',
 }
 
 // FLOWS PAIRS VIEW
@@ -37,15 +37,15 @@ export enum FlowsPairsLabels {
 
 export enum FlowPairsColumnsNames {
     Status = 'Status',
-    FlowForward = 'Forward',
-    FlowReverse = 'Reverse',
+    FlowForward = 'From',
+    FlowReverse = 'To',
     Site = 'Site',
     Process = 'process',
     Bytes = 'Bytes',
     ByteRate = 'Byte Rate',
     Host = 'Host',
     Port = 'Port',
-    Latency = 'TTFB',
+    MaxTTFB = ' max TTFB',
     StartTime = 'Created at',
     Protocol = 'Protocol',
     ImageName = 'Image',

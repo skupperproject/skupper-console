@@ -195,8 +195,8 @@ export interface FlowResponse {
 export interface FlowPairResponse {
     identity: string;
     recType: string;
-    ForwardSiteId: number;
-    ReverseSiteId: number;
+    ForwardSiteId: string;
+    ReverseSiteId: string;
     ForwardFlow: FlowResponse;
     ReverseFlow: FlowResponse;
 }

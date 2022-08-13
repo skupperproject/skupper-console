@@ -3,15 +3,15 @@ import { FlowPairsColumnsNames } from './VANServices.enum';
 // CONNECTIONS VIEW
 export const FlowPairsColumns = [
     { name: FlowPairsColumnsNames.Site, prop: 'siteName' },
+    { name: FlowPairsColumnsNames.Process, prop: 'processName' },
     { name: FlowPairsColumnsNames.Host, prop: 'host' },
     { name: FlowPairsColumnsNames.Port, prop: 'port' },
-    { name: FlowPairsColumnsNames.Process, prop: 'processName' },
     { name: FlowPairsColumnsNames.ByteRate, prop: 'byteRate' },
     { name: FlowPairsColumnsNames.Bytes, prop: 'bytes' },
     { name: FlowPairsColumnsNames.Site, prop: 'targetSiteName' },
+    { name: FlowPairsColumnsNames.Process, prop: 'targetProcessName' },
     { name: FlowPairsColumnsNames.Host, prop: 'targetHost' },
     { name: FlowPairsColumnsNames.Host, prop: 'targetPort' },
-    { name: FlowPairsColumnsNames.Process, prop: 'targetProcessName' },
     { name: FlowPairsColumnsNames.ByteRate, prop: 'targetByteRate' },
     { name: FlowPairsColumnsNames.Bytes, prop: 'targetBytes' },
 ];
@@ -26,11 +26,10 @@ export const TOPOLOGY_CONTAINER_HEIGHT = 500;
 export const ProcessesColumns = [
     { name: FlowPairsColumnsNames.Site, prop: 'siteName' },
     { name: FlowPairsColumnsNames.Process, prop: 'processName' },
-    { name: FlowPairsColumnsNames.Bytes, prop: 'bytes' },
-    { name: FlowPairsColumnsNames.ByteRate, prop: 'byteRate' },
-    { name: FlowPairsColumnsNames.Latency, prop: 'latency' },
     { name: FlowPairsColumnsNames.Host, prop: 'host' },
     { name: FlowPairsColumnsNames.Port, prop: 'port' },
     { name: FlowPairsColumnsNames.ImageName, prop: 'imageName' },
-    { name: FlowPairsColumnsNames.Protocol, prop: 'protocol' },
+    { name: FlowPairsColumnsNames.Bytes, prop: 'bytes' },
+    { name: FlowPairsColumnsNames.ByteRate, prop: 'byteRate' },
+    { name: FlowPairsColumnsNames.MaxTTFB, prop: 'maxTTFB' },
 ];

@@ -25,8 +25,7 @@ export interface ProcessRow {
     host: string;
     port: string;
     imageName: string;
-    latency: number;
-    protocol: string;
+    maxTTFB: number;
 }
 
 export interface ProcessesTableProps {

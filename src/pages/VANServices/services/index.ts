@@ -7,6 +7,7 @@ import {
     ExtendedFlowPair,
     FlowsPairsBasic,
     FlowPairBasic,
+    ProcessRow,
 } from './services.interfaces';
 
 export const MonitorServices = {
@@ -15,18 +16,26 @@ export const MonitorServices = {
 
         return vanAddresses.map((vanAddress) => ({
             ...vanAddress,
-            totalFlows: Math.round(vanAddress.totalFlows / 2),
-            currentFlows: Math.round(vanAddress.currentFlows / 2),
+            totalFlows: Math.floor(vanAddress.totalFlows / 2),
+            currentFlows: Math.floor(vanAddress.currentFlows / 2),
         }));
     },
 
     // TODO: waiting for the API to remove multiple calls and filters
-    fetchFlowsPairsByVanAddressId: async (
+    fetchFlowPairsByVanAddressId: async (
         id: string,
         currentPage: number,
         visibleItems: number,
     ): Promise<FlowsPairsBasic> => {
         const flowsPairs = await RESTApi.fetchFlowsPairsByVanAddr(id);
+
+        if (!flowsPairs) {
+            return {
+                connections: [],
+                total: 0,
+            };
+        }
+
         const processes = await RESTApi.fetchFlowsProcesses();
         const sites = await RESTApi.fetchFlowsSites();
 
@@ -65,7 +74,7 @@ export const MonitorServices = {
                 const targetHost = processesMap[targetProcess].sourceHost;
                 const targetProcessImageName = processesMap[targetProcess].imageName;
 
-                const connector = await RESTApi.fetchFlowConnectorByProcessId(processId);
+                const connector = await RESTApi.fetchFlowsListener(flowPair.ForwardFlow.parent);
                 const targetConnector = await RESTApi.fetchFlowConnectorByProcessId(
                     targetProcessId,
                 );
@@ -107,6 +116,39 @@ export const MonitorServices = {
         );
 
         return { connections: flowsPairsPaginated, total: flowsFiltered.length };
+    },
+
+    fetchProcessesByVanAddr: async (id: string): Promise<ProcessRow[]> => {
+        const processes = await RESTApi.fetchProcessesByVanAddr(id);
+
+        return Promise.all(
+            processes.map(async (process) => {
+                const site = await RESTApi.fetchFlowsSite(process.parent);
+                const { destPort } = await RESTApi.fetchFlowConnectorByProcessId(process.identity);
+                const flows = await RESTApi.fetchFlowsByProcessesId(process.identity);
+
+                const flowsMetrics = flows
+                    .filter(({ endTime }) => !endTime)
+                    .reduce(
+                        (acc, { octetRate, octets, latency }) => ({
+                            bytes: (acc?.bytes || 0) + octets,
+                            byteRate: (acc?.byteRate || 0) + octetRate,
+                            maxTTFB: Math.max(acc.maxTTFB || 0, latency),
+                        }),
+                        {} as { bytes: number; byteRate: number; maxTTFB: number },
+                    );
+
+                return {
+                    id: process.identity,
+                    siteName: site.name,
+                    processName: process.name,
+                    host: process.sourceHost,
+                    port: destPort,
+                    imageName: process.imageName,
+                    ...flowsMetrics,
+                };
+            }),
+        );
     },
 
     fetchFlowPairByFlowId: async (id: string): Promise<ExtendedFlowPair> => {
@@ -167,7 +209,8 @@ export const MonitorServices = {
                 byteRate: (acc[flowPair.processName]?.byteRate || 0) + flowPair.byteRate,
                 host: flowPair.host,
                 port: flowPair.port,
-                latency: Math.max(acc[flowPair.processName]?.latency || 0, flowPair.latency),
+                minTTFB: Math.min(acc[flowPair.processName]?.latency || 0, flowPair.latency),
+                maxTTFB: Math.max(acc[flowPair.processName]?.latency || 0, flowPair.latency),
                 imageName: flowPair.processImageName,
                 protocol: flowPair.protocol,
             };
@@ -181,7 +224,11 @@ export const MonitorServices = {
                     (acc[flowPair.targetProcessName]?.byteRate || 0) + flowPair.targetByteRate,
                 host: flowPair.targetHost,
                 port: flowPair.targetPort,
-                latency: Math.max(
+                minTTFB: Math.min(
+                    acc[flowPair.processName]?.targetLatency || 0,
+                    flowPair.targetLatency,
+                ),
+                maxTTFB: Math.max(
                     acc[flowPair.processName]?.targetLatency || 0,
                     flowPair.targetLatency,
                 ),

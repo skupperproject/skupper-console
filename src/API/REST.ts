@@ -13,9 +13,10 @@ import {
     FLOWS_PROCESSES,
     FLOWPAIRS,
     getFlowsPairsByVanAddressIdPATH,
-    getFlowsProcessesBySiteURLPATH,
+    getProcessesBySitePATH,
     getProcessesByVanAddressIdPATH,
     getConnectorByProcessIdPATH,
+    getFlowsByProcessIdPATH,
 } from './REST.constant';
 import {
     DataAdapterResponse,
@@ -30,6 +31,7 @@ import {
     FlowsProcessResponse,
     FlowPairResponse,
     HTTPError,
+    FlowResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -75,12 +77,17 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsProcessesBySite: async (id: string): Promise<FlowsProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getFlowsProcessesBySiteURLPATH(id));
+        const { data } = await fetchWithTimeout(getProcessesBySitePATH(id));
 
         return data;
     },
     fetchFlowsProcesses: async (): Promise<FlowsProcessResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}`);
+
+        return data;
+    },
+    fetchFlowsByProcessesId: async (id: string): Promise<FlowResponse[]> => {
+        const { data } = await fetchWithTimeout(getFlowsByProcessIdPATH(id));
 
         return data;
     },
@@ -139,20 +146,10 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse | null> => {
-        try {
-            const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
+    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse> => {
+        const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
 
-            return data;
-        } catch (e) {
-            const error = e as HTTPError;
-
-            if (error.httpStatus === HttpStatusErrors.NotFound) {
-                return null;
-            }
-
-            return handleStatusError(error);
-        }
+        return data;
     },
     fetchFlowsPairsByVanAddr: async (id: string): Promise<FlowPairResponse[]> => {
         const { data } = await fetchWithTimeout(getFlowsPairsByVanAddressIdPATH(id));

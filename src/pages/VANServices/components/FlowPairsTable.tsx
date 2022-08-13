@@ -46,7 +46,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
     });
 
     return (
-        <TableComposable variant="compact" borders={true} className="flows-table">
+        <TableComposable borders={true} className="flows-table">
             <Thead hasNestedHeader>
                 <Tr>
                     <Th hasRightBorder colSpan={6}>
@@ -55,22 +55,19 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                     <Th colSpan={6} hasRightBorder>
                         {FlowPairsColumnsNames.FlowReverse}
                     </Th>
-                    <Th modifier="fitContent" rowSpan={2}>
-                        {FlowPairsColumnsNames.Protocol}
-                    </Th>
                 </Tr>
                 <Tr>
                     <Th isSubheader sort={getSortParams(0)}>
                         {FlowPairsColumnsNames.Site}
                     </Th>
                     <Th isSubheader sort={getSortParams(1)}>
-                        {FlowPairsColumnsNames.Host}
+                        {FlowPairsColumnsNames.Process}
                     </Th>
                     <Th isSubheader sort={getSortParams(2)}>
-                        {FlowPairsColumnsNames.Port}
+                        {FlowPairsColumnsNames.Host}
                     </Th>
                     <Th isSubheader sort={getSortParams(3)}>
-                        {FlowPairsColumnsNames.Process}
+                        {FlowPairsColumnsNames.Port}
                     </Th>
                     <Th isSubheader className="align-th-right" sort={getSortParams(4)}>
                         {FlowPairsColumnsNames.ByteRate}
@@ -87,13 +84,13 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                         {FlowPairsColumnsNames.Site}
                     </Th>
                     <Th isSubheader sort={getSortParams(7)}>
-                        {FlowPairsColumnsNames.Host}
+                        {FlowPairsColumnsNames.Process}
                     </Th>
                     <Th isSubheader sort={getSortParams(8)}>
-                        {FlowPairsColumnsNames.Port}
+                        {FlowPairsColumnsNames.Host}
                     </Th>
                     <Th isSubheader sort={getSortParams(9)}>
-                        {FlowPairsColumnsNames.Process}
+                        {FlowPairsColumnsNames.Port}
                     </Th>
                     <Th isSubheader className="align-th-right" sort={getSortParams(10)}>
                         {FlowPairsColumnsNames.ByteRate}
@@ -125,7 +122,6 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                             targetHost,
                             targetProcessName,
                             targetPort,
-                            protocol,
                         }) => (
                             <Tr key={id}>
                                 <Td
@@ -133,6 +129,12 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     className="secondary-color"
                                 >
                                     {`${siteName}`}
+                                </Td>
+                                <Td
+                                    dataLabel={FlowPairsColumnsNames.Process}
+                                    className="secondary-color"
+                                >
+                                    {processName}
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Host}
@@ -144,13 +146,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     dataLabel={FlowPairsColumnsNames.Port}
                                     className="secondary-color"
                                 >
-                                    {port}
-                                </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Process}
-                                    className="secondary-color"
-                                >
-                                    {`${processName}`}
+                                    {`${port}`}
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Bytes}
@@ -167,11 +163,11 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Site}
                                 >{`${targetSiteName}`}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Host}>{targetHost}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Port}>{targetPort}</Td>
                                 <Td dataLabel={FlowPairsColumnsNames.Process}>
-                                    {`${targetProcessName}`}
+                                    {targetProcessName}
                                 </Td>
+                                <Td dataLabel={FlowPairsColumnsNames.Host}>{targetHost}</Td>
+                                <Td dataLabel={FlowPairsColumnsNames.Port}>{`${targetPort}`}</Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Bytes}
                                     className="align-td-right"
@@ -184,7 +180,6 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                 >
                                     {formatBytes(targetBytes, 3)}
                                 </Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Protocol}>{protocol}</Td>
                             </Tr>
                         ),
                     )}

@@ -43,7 +43,7 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
     useEffect(() => {
         setInterval(() => {
             setTimestamp(new Date().getTime());
-        }, 3000);
+        }, 1000);
     }, []);
 
     if (!samples) {

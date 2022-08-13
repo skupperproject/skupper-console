@@ -15,9 +15,7 @@ import {
     Text,
     TextContent,
     TextVariants,
-    Tooltip,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -31,18 +29,14 @@ import ProcessesTable from '../components/ProcessesTable';
 import { MonitorServices } from '../services';
 import { QueriesVANServices } from '../services/services.enum';
 import { CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../VANServices.constants';
-import {
-    VanServicesDescriptions,
-    VanServicesRoutesPathLabel,
-    VANServicesRoutesPaths,
-} from '../VANServices.enum';
+import { VanServicesRoutesPathLabel, VANServicesRoutesPaths } from '../VANServices.enum';
 
 import './FlowsPairs.css';
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
     const { id: vanAddress } = useParams();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL * 3);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL / 3);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
     const [vanAddressView, setVanAddressView] = useState<number>(0);
@@ -50,17 +44,28 @@ const FlowsPairs = function () {
     const vanAddressId = vanAddress?.split('@')[1];
     const vanAddressName = vanAddress?.split('@')[0];
 
-    const { data: connectionsPaginated, isLoading } = useQuery(
+    const { data: connectionsPaginated, isLoading: isLoadingConnectionsPaginated } = useQuery(
         [QueriesVANServices.GetFlowsPairsByVanAddr, vanAddressId, currentPage, visibleItems],
         () =>
             vanAddressId
-                ? MonitorServices.fetchFlowsPairsByVanAddressId(
+                ? MonitorServices.fetchFlowPairsByVanAddressId(
                       vanAddressId,
                       currentPage,
                       visibleItems,
                   )
                 : null,
         {
+            cacheTime: 0,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+        [QueriesVANServices.GetProcessesByVanAddr, vanAddressId, currentPage, visibleItems],
+        () => (vanAddressId ? MonitorServices.fetchProcessesByVanAddr(vanAddressId) : null),
+        {
+            cacheTime: 0,
             refetchInterval,
             onError: handleError,
         },
@@ -97,11 +102,11 @@ const FlowsPairs = function () {
         setVanAddressView(tabIndex as number);
     }
 
-    if (isLoading) {
+    if (isLoadingConnectionsPaginated || isLoadingProcesses) {
         return <LoadingPage />;
     }
 
-    if (!connectionsPaginated) {
+    if (!connectionsPaginated || !processes) {
         return null;
     }
 
@@ -132,24 +137,9 @@ const FlowsPairs = function () {
                 <Card isRounded className="pf-u-pt-md">
                     <Tabs activeKey={vanAddressView} onSelect={handleTabClick}>
                         <Tab eventKey={0} title={<TabTitleText>Processes</TabTitleText>}>
-                            <ProcessesTable
-                                processes={MonitorServices.getProcessesViewData(connections)}
-                            />
+                            <ProcessesTable processes={processes} />
                         </Tab>
-                        <Tab
-                            eventKey={1}
-                            title={
-                                <TabTitleText>
-                                    Flow Pairs
-                                    <Tooltip
-                                        position="right"
-                                        content={VanServicesDescriptions.FlowPairsDesc}
-                                    >
-                                        <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-                                    </Tooltip>
-                                </TabTitleText>
-                            }
-                        >
+                        <Tab eventKey={1} title={<TabTitleText>Connections</TabTitleText>}>
                             <FlowsPairsTable flowPairs={connections} />
                             {!!connections.length && (
                                 <Pagination

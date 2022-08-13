@@ -53,27 +53,30 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
     });
 
     return (
-        <TableComposable variant="compact" borders={true} className="processes-table">
+        <TableComposable borders={true} className="processes-table">
             <Thead>
                 <Tr>
                     <Th sort={getSortParams(0)}>{ProcessesColumnsNames.Site}</Th>
                     <Th sort={getSortParams(1)}>{FlowPairsColumnsNames.Process}</Th>
-                    <Th sort={getSortParams(2)} className="align-th-right">
+                    <Th sort={getSortParams(2)} modifier="fitContent">
+                        {FlowPairsColumnsNames.Host}
+                    </Th>
+                    <Th sort={getSortParams(3)} modifier="fitContent">
+                        {FlowPairsColumnsNames.Port}
+                    </Th>
+                    <Th sort={getSortParams(4)}>{FlowPairsColumnsNames.ImageName}</Th>
+                    <Th sort={getSortParams(5)} className="align-th-right">
                         {FlowPairsColumnsNames.ByteRate}
                     </Th>
-                    <Th sort={getSortParams(3)} className="align-th-right">
+                    <Th sort={getSortParams(6)} className="align-th-right">
                         {FlowPairsColumnsNames.Bytes}
                     </Th>
-                    <Th sort={getSortParams(4)} className="align-th-right">
-                        {FlowPairsColumnsNames.Latency}
+                    <Th sort={getSortParams(7)} className="align-th-right">
+                        {FlowPairsColumnsNames.MaxTTFB}
                         <Tooltip position="right" content={VanServicesDescriptions.TTFBDesc}>
                             <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
                         </Tooltip>
                     </Th>
-                    <Th sort={getSortParams(5)}>{FlowPairsColumnsNames.Host}</Th>
-                    <Th sort={getSortParams(6)}>{FlowPairsColumnsNames.Port}</Th>
-                    <Th sort={getSortParams(7)}>{FlowPairsColumnsNames.ImageName}</Th>
-                    <Th sort={getSortParams(8)}>{FlowPairsColumnsNames.Protocol}</Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -87,13 +90,15 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                             port,
                             siteName,
                             processName,
-                            latency,
+                            maxTTFB,
                             imageName,
-                            protocol,
                         }) => (
                             <Tr key={id}>
                                 <Td dataLabel={FlowPairsColumnsNames.Site}>{siteName}</Td>
                                 <Td dataLabel={FlowPairsColumnsNames.Host}>{processName}</Td>
+                                <Td dataLabel={FlowPairsColumnsNames.Port}>{host}</Td>
+                                <Td dataLabel={FlowPairsColumnsNames.Process}>{port}</Td>
+                                <Td dataLabel={FlowPairsColumnsNames.ImageName}>{imageName}</Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.ByteRate}
                                     className="align-td-right"
@@ -107,15 +112,11 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                                     {formatBytes(bytes, 3)}
                                 </Td>
                                 <Td
-                                    dataLabel={FlowPairsColumnsNames.Process}
+                                    dataLabel={FlowPairsColumnsNames.MaxTTFB}
                                     className="align-td-right"
                                 >
-                                    {formatTime(latency)}
+                                    {formatTime(maxTTFB)}
                                 </Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Port}>{host}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Process}>{port}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.ImageName}>{imageName}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Protocol}>{protocol}</Td>
                             </Tr>
                         ),
                     )}
