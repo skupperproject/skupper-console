@@ -1,7 +1,7 @@
 import { OverviewRoutesPaths } from '@pages/Overview/Overview.enum';
 
 export const UPDATE_INTERVAL = 4 * 1000; // time to request updated data to BE
-export const CONNECTION_TIMEOUT = 10 * 1000; // Max time to receive a HTTP response
+export const CONNECTION_TIMEOUT = 15 * 1000; // Max time to receive a HTTP response
 export const FirstLoadingView = OverviewRoutesPaths.Overview; // Firs page to load when the app is open
 
 export const BASE_URL =

@@ -14,10 +14,11 @@ export enum VanServicesDescriptions {
     TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
 }
 
-// VAN SERVICES VIEW
+// ADDRESSES VIEW
 export enum Labels {
-    VanServices = 'VAN Services',
+    VanServices = 'Addresses',
     VanServicesDescription = 'Set of services that are exposed across the Virtual application network',
+    Connections = 'Connections',
 }
 
 export enum OverviewColumns {
@@ -37,8 +38,8 @@ export enum FlowsPairsLabels {
 
 export enum FlowPairsColumnsNames {
     Status = 'Status',
-    FlowForward = 'From',
-    FlowReverse = 'To',
+    FlowForward = 'From Client',
+    FlowReverse = 'To Server',
     Site = 'Site',
     Process = 'process',
     Bytes = 'Bytes',
@@ -54,7 +55,7 @@ export enum FlowPairsColumnsNames {
 // FLOW PAIR DETAIL
 export enum FlowPairDetailsColumns {
     SiteName = 'Site',
-    VANService = 'VAN Service',
+    VANService = 'Addresses',
     Protocol = 'Protocol',
     Bytes = 'Bytes',
     ByteRate = 'Byte Rate',

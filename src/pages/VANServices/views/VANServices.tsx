@@ -27,7 +27,9 @@ import { MonitorServices } from '../services';
 import { QueriesVANServices } from '../services/services.enum';
 import { VANServicesRoutesPaths, Labels, OverviewColumns } from '../VANServices.enum';
 
-import './FlowsPairs.css';
+import './FlowPairs.css';
+
+const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
 
 const VANServices = function () {
     const navigate = useNavigate();
@@ -136,12 +138,12 @@ const VANServices = function () {
                 </Card>
             </StackItem>
             <StackItem>
-                <Card style={{ height: `${350}px` }}>
-                    <CardTitle>{'Current connections'}</CardTitle>
+                <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
+                    <CardTitle>{Labels.Connections}</CardTitle>
                     {chartData?.length ? (
                         <RealTimeLineChart
                             options={{
-                                height: 350,
+                                height: REAL_TIME_CONNECTION_HEIGHT_CHART,
                                 padding: {
                                     top: 0,
                                     bottom: 100,

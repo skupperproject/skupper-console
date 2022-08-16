@@ -6,8 +6,8 @@ const VANServices = lazy(() => import(/* webpackChunkName: "van-services" */ '.'
 const VANServicesList = lazy(
     () => import(/* webpackChunkName: "van-services-list" */ './views/VANServices'),
 );
-const FlowsPairs = lazy(
-    () => import(/* webpackChunkName: "monitoring-flows-pairs" */ './views/FlowsPairs'),
+const FlowPairs = lazy(
+    () => import(/* webpackChunkName: "monitoring-flow-pairs" */ './views/FlowPairs'),
 );
 const FlowPair = lazy(
     () => import(/* webpackChunkName: "monitoring-flow-pair" */ './views/FlowPair'),
@@ -25,7 +25,7 @@ export const monitoringRoutes = [
             },
             {
                 path: `${VANServicesRoutesPaths.FlowsPairs}/:id`,
-                element: <FlowsPairs />,
+                element: <FlowPairs />,
             },
             {
                 path: `${VANServicesRoutesPaths.FlowsPairs}/:id/:idFlow`,
