@@ -36,7 +36,7 @@ import './FlowPairs.css';
 const FlowsPairs = function () {
     const navigate = useNavigate();
     const { id: vanAddress } = useParams();
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL / 1.5);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
     const [vanAddressView, setVanAddressView] = useState<number>(0);
