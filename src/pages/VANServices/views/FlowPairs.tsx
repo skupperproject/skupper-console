@@ -29,9 +29,11 @@ import ProcessesTable from '../components/ProcessesTable';
 import { MonitorServices } from '../services';
 import { QueriesVANServices } from '../services/services.enum';
 import { CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../VANServices.constants';
-import { VanServicesRoutesPathLabel, VANServicesRoutesPaths } from '../VANServices.enum';
-
-import './FlowPairs.css';
+import {
+    FlowPairDetailsLabels,
+    VanServicesRoutesPathLabel,
+    VANServicesRoutesPaths,
+} from '../VANServices.enum';
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
@@ -136,10 +138,16 @@ const FlowsPairs = function () {
             <StackItem isFilled>
                 <Card isRounded className="pf-u-pt-md">
                     <Tabs activeKey={vanAddressView} onSelect={handleTabClick}>
-                        <Tab eventKey={0} title={<TabTitleText>Processes</TabTitleText>}>
+                        <Tab
+                            eventKey={0}
+                            title={<TabTitleText>{FlowPairDetailsLabels.Servers}</TabTitleText>}
+                        >
                             <ProcessesTable processes={processes} />
                         </Tab>
-                        <Tab eventKey={1} title={<TabTitleText>Connections</TabTitleText>}>
+                        <Tab
+                            eventKey={1}
+                            title={<TabTitleText>{FlowPairDetailsLabels.Connections}</TabTitleText>}
+                        >
                             <FlowsPairsTable flowPairs={connections} />
                             {!!connections.length && (
                                 <Pagination

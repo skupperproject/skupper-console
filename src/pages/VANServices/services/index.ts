@@ -81,6 +81,7 @@ export const MonitorServices = {
 
                 return {
                     id: flowPair.identity,
+                    siteId: flowPair.ForwardSiteId,
                     siteName,
                     byteRate: octetRate,
                     bytes: octets,
@@ -92,6 +93,8 @@ export const MonitorServices = {
                     processName,
                     processImageName,
                     latency,
+
+                    targetSiteId: flowPair.ReverseSiteId,
                     targetSiteName,
                     targetByteRate,
                     targetBytes,
@@ -140,6 +143,7 @@ export const MonitorServices = {
 
                 return {
                     id: process.identity,
+                    siteId: site.identity,
                     siteName: site.name,
                     processName: process.name,
                     host: process.sourceHost,

@@ -18,6 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
+import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -27,9 +28,7 @@ import { MonitorServices } from '../services';
 import { QueriesVANServices } from '../services/services.enum';
 import { VANServicesRoutesPaths, Labels, OverviewColumns } from '../VANServices.enum';
 
-import './FlowPairs.css';
-
-const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
+const REAL_TIME_CONNECTION_HEIGHT_CHART = 400;
 
 const VANServices = function () {
     const navigate = useNavigate();
@@ -74,19 +73,14 @@ const VANServices = function () {
                             </Tooltip>
                         </Flex>
                     </CardTitle>
-                    <TableComposable
-                        className="van-services-table"
-                        borders={false}
-                        variant="compact"
-                        isStriped
-                    >
+                    <TableComposable borders={false} variant="compact" isStriped>
                         <Thead>
                             <Tr>
                                 <Th>{OverviewColumns.Name}</Th>
-                                <Th className="align-th-right">{OverviewColumns.TotalFlowPairs}</Th>
                                 <Th className="align-th-right">
                                     {OverviewColumns.CurrentFlowPairs}
                                 </Th>
+                                <Th className="align-th-right">{OverviewColumns.TotalFlowPairs}</Th>
                                 <Th className="align-th-right">{OverviewColumns.TotalListeners}</Th>
                                 <Th className="align-th-right">
                                     {OverviewColumns.TotalConnectors}
@@ -115,11 +109,11 @@ const VANServices = function () {
                                         <Td
                                             className="align-td-right"
                                             dataLabel={OverviewColumns.TotalFlowPairs}
-                                        >{`${totalFlows}`}</Td>
+                                        >{`${currentFlows}`}</Td>
                                         <Td
                                             className="align-td-right"
                                             dataLabel={OverviewColumns.TotalFlowPairs}
-                                        >{`${currentFlows}`}</Td>
+                                        >{`${totalFlows}`}</Td>
                                         <Td
                                             className="align-td-right"
                                             dataLabel={OverviewColumns.TotalListeners}
@@ -144,9 +138,11 @@ const VANServices = function () {
                         <RealTimeLineChart
                             options={{
                                 height: REAL_TIME_CONNECTION_HEIGHT_CHART,
+                                chartColor: ChartThemeColors.Multi,
+                                dataLegend: chartData.map(({ name }) => ({ name })),
                                 padding: {
                                     top: 0,
-                                    bottom: 100,
+                                    bottom: 210,
                                     left: 0,
                                     right: 0,
                                 },

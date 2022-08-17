@@ -3,9 +3,11 @@ import React, { FC, useState } from 'react';
 import { Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import { Link } from 'react-router-dom';
 
-import { formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { FlowPairBasic, ProcessesTableProps } from '../services/services.interfaces';
 import { ProcessesColumns } from '../VANServices.constants';
@@ -88,13 +90,18 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                             byteRate,
                             host,
                             port,
+                            siteId,
                             siteName,
                             processName,
                             maxTTFB,
                             imageName,
                         }) => (
                             <Tr key={id}>
-                                <Td dataLabel={FlowPairsColumnsNames.Site}>{siteName}</Td>
+                                <Td dataLabel={FlowPairsColumnsNames.Site}>
+                                    <Link to={`${SitesRoutesPaths.Details}/${siteId}`}>
+                                        {siteName}
+                                    </Link>
+                                </Td>
                                 <Td dataLabel={FlowPairsColumnsNames.Host}>{processName}</Td>
                                 <Td dataLabel={FlowPairsColumnsNames.Port}>{host}</Td>
                                 <Td dataLabel={FlowPairsColumnsNames.Process}>{port}</Td>
@@ -103,19 +110,19 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                                     dataLabel={FlowPairsColumnsNames.ByteRate}
                                     className="align-td-right"
                                 >
-                                    {formatBytes(byteRate, 3)}
+                                    <b>{formatByteRate(byteRate, 3)}</b>
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Bytes}
                                     className="align-td-right"
                                 >
-                                    {formatBytes(bytes, 3)}
+                                    <b>{formatBytes(bytes, 3)}</b>
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.MaxTTFB}
                                     className="align-td-right"
                                 >
-                                    {formatTime(maxTTFB)}
+                                    <b> {formatTime(maxTTFB)}</b>
                                 </Td>
                             </Tr>
                         ),

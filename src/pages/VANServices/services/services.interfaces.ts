@@ -18,6 +18,7 @@ export interface FlowPairsTableProps {
 // Process TABLE
 export interface ProcessRow {
     id: string;
+    siteId: string;
     siteName: string;
     processName: string;
     bytes: number;
@@ -34,6 +35,7 @@ export interface ProcessesTableProps {
 // FLOWPAIR BASIC INFO
 export interface FlowPairBasic {
     id: string;
+    siteId: string;
     siteName: string;
     byteRate: number;
     bytes: number;
@@ -45,6 +47,7 @@ export interface FlowPairBasic {
     latency: number;
     startTime: number;
     endTime?: number;
+    targetSiteId: string;
     targetSiteName: string;
     targetByteRate: number;
     targetBytes: number;

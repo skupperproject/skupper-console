@@ -6,7 +6,7 @@ export enum VANServicesRoutesPaths {
 }
 
 export enum VanServicesRoutesPathLabel {
-    VanServices = 'vanservices',
+    VanServices = 'addresses',
 }
 
 export enum VanServicesDescriptions {
@@ -72,6 +72,8 @@ export enum FlowPairDetailsLabels {
     Connector = 'CONNECTOR',
     Listener = 'LISTENER',
     TrafficChartTitle = 'Bytes Rate in the last minute',
+    Servers = 'Servers',
+    Connections = 'Connections',
 }
 
 // PROCESSES TABLE

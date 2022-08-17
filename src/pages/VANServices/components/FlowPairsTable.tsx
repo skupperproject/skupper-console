@@ -1,8 +1,10 @@
 import React, { FC, useState } from 'react';
 
 import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import { Link } from 'react-router-dom';
 
-import { formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { FlowPairBasic, FlowPairsTableProps } from '../services/services.interfaces';
 import { FlowPairsColumns } from '../VANServices.constants';
@@ -114,8 +116,10 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                             byteRate,
                             host,
                             port,
+                            siteId,
                             siteName,
                             processName,
+                            targetSiteId,
                             targetSiteName,
                             targetByteRate,
                             targetBytes,
@@ -128,7 +132,9 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     dataLabel={FlowPairsColumnsNames.Site}
                                     className="secondary-color"
                                 >
-                                    {`${siteName}`}
+                                    <Link to={`${SitesRoutesPaths.Details}/${siteId}`}>
+                                        {siteName}
+                                    </Link>
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Process}
@@ -152,17 +158,19 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     dataLabel={FlowPairsColumnsNames.Bytes}
                                     className="align-td-right secondary-color"
                                 >
-                                    {formatBytes(byteRate, 3)}
+                                    <b>{formatByteRate(byteRate, 3)}</b>
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Bytes}
-                                    className="align-td-right secondary-color"
+                                    className="align-td-right secondary-color td-border-right "
                                 >
-                                    {formatBytes(bytes, 3)}
+                                    <b>{formatBytes(bytes, 3)}</b>
                                 </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Site}
-                                >{`${targetSiteName}`}</Td>
+                                <Td dataLabel={FlowPairsColumnsNames.Site}>
+                                    <Link to={`${SitesRoutesPaths.Details}/${targetSiteId}`}>
+                                        {targetSiteName}
+                                    </Link>
+                                </Td>
                                 <Td dataLabel={FlowPairsColumnsNames.Process}>
                                     {targetProcessName}
                                 </Td>
@@ -172,13 +180,13 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     dataLabel={FlowPairsColumnsNames.Bytes}
                                     className="align-td-right"
                                 >
-                                    {formatBytes(targetByteRate, 3)}
+                                    <b>{formatByteRate(targetByteRate, 3)}</b>
                                 </Td>
                                 <Td
                                     dataLabel={FlowPairsColumnsNames.Bytes}
                                     className="align-td-right"
                                 >
-                                    {formatBytes(targetBytes, 3)}
+                                    <b>{formatBytes(targetBytes, 3)}</b>
                                 </Td>
                             </Tr>
                         ),

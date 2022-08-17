@@ -8,7 +8,6 @@ export interface RealTimeLineChartProps {
     options?: {
         formatter?: Function;
         chartColor?: string;
-        showLegend?: boolean;
         height?: number;
         width?: number;
         padding?: {
