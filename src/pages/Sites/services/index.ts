@@ -14,7 +14,7 @@ const SitesServices = {
     },
 
     fetchProcessesBySiteId: async (id: string): Promise<Processes[]> =>
-        RESTApi.fetchFlowsProcessesBySite(id),
+        (await RESTApi.fetchFlowsProcessesBySite(id)).filter(({ endTime }) => !endTime),
 
     fetchTraffic: async (id: string): Promise<SiteTraffic> => {
         const data = await RESTApi.fetchData();

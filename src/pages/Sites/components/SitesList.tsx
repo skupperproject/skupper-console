@@ -43,7 +43,6 @@ const SitesTable = memo(function ({ sites }: SitesListProps) {
                     <Tr>
                         <Th>{SitesListColumns.Name}</Th>
                         <Th>{SitesListColumns.Namespace}</Th>
-                        <Th>{SitesListColumns.Version}</Th>
                         <Th>{SitesListColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
@@ -59,9 +58,8 @@ const SitesTable = memo(function ({ sites }: SitesListProps) {
                                     </Link>
                                 </Td>
                                 <Td dataLabel={SitesListColumns.Namespace}>{`${row.namespace}`}</Td>
-                                <Td dataLabel={SitesListColumns.Version}>{`${row.version}`}</Td>
                                 <Td
-                                    dataLabel={SitesListColumns.Version}
+                                    dataLabel={SitesListColumns.NumSitesLinked}
                                 >{`${row.connected.length}`}</Td>
                             </Tr>
                         </Tbody>

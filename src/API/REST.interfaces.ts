@@ -132,6 +132,7 @@ export interface FlowsProcessResponse {
     imageName: string;
     sourceHost: string;
     startTime: number;
+    endTime: number;
 }
 
 export interface FlowsRouterResponse {

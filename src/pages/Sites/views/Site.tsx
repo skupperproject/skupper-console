@@ -116,10 +116,6 @@ const Site = function () {
                                     value={site.namespace}
                                 />
                                 <DescriptionItem
-                                    title={SitesListColumns.Version}
-                                    value={site.version}
-                                />
-                                <DescriptionItem
                                     title={SitesListColumns.Gateway}
                                     value={site.gateway ? 'Yes' : 'No'}
                                 />
