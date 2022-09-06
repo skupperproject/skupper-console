@@ -36,7 +36,7 @@ import TopologySVG from '../components/TopologySVG';
 import { TopologyServices } from '../services';
 import { Deployments } from '../services/services.interfaces';
 import { TopologyViews, TopologyOverviewLabels } from '../Topology.enum';
-import { TopologyLink, TopologyNode } from '../Topoloyg.interfaces';
+import { TopologyLink, TopologyNode } from '../Topology.interfaces';
 
 const TYPE_SITES = 'sites';
 const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = function ({
@@ -194,10 +194,10 @@ const TopologySVGContainer: FC<{ sites: Site[]; deployments: Deployments }> = fu
                         eventKey={TYPE_SITES}
                         title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>}
                     />
-                    <Tab
+                    {/* <Tab
                         eventKey={'deployements'}
                         title={<TabTitleText>{TopologyViews.Services}</TabTitleText>}
-                    />
+                    /> */}
                 </Tabs>
                 <DrawerContent panelContent={PanelContentComponent} style={{ overflow: 'hidden' }}>
                     <DrawerPanelBody hasNoPadding>

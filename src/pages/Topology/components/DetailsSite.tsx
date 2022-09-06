@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 
-import { Spinner } from '@patternfly/react-core';
+import { Label, Spinner, Stack, StackItem } from '@patternfly/react-core';
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +9,7 @@ import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import SitesServices from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { ProcessesTableColumns } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import TopologyDetails from './Details';
@@ -39,6 +41,14 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         },
     );
 
+    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+        [QueriesSites.GetProcessesBySiteId, id],
+        () => SitesServices.fetchProcessesBySiteId(id),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -48,7 +58,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         navigate(route);
     }
 
-    if (isLoadingSite || isLoadingTraffic) {
+    if (isLoadingSite || isLoadingTraffic || isLoadingProcesses) {
         return (
             <Spinner
                 diameter={`${SPINNER_DIAMETER}px`}
@@ -63,7 +73,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         );
     }
 
-    if (!site || !traffic) {
+    if (!site || !traffic || !processes) {
         return null;
     }
 
@@ -75,13 +85,37 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const title = `${capitalizeFirstLetter(site.siteName)}`;
 
     return (
-        <TopologyDetails
-            name={title}
-            httpRequestsReceivedEntries={httpRequestsReceivedEntries}
-            httpRequestsSentEntries={httpRequestsSentEntries}
-            tcpConnectionsInEntries={tcpConnectionsInEntries}
-            tcpConnectionsOutEntries={tcpConnectionsOutEntries}
-        />
+        <Stack hasGutter>
+            <StackItem className="pf-u-mb-xl">
+                <TopologyDetails
+                    name={title}
+                    httpRequestsReceivedEntries={httpRequestsReceivedEntries}
+                    httpRequestsSentEntries={httpRequestsSentEntries}
+                    tcpConnectionsInEntries={tcpConnectionsInEntries}
+                    tcpConnectionsOutEntries={tcpConnectionsOutEntries}
+                />
+            </StackItem>
+            <StackItem>
+                <Label color="blue">{'Processes'}</Label>
+
+                <TableComposable variant="compact" borders={false}>
+                    <Thead>
+                        <Tr>
+                            <Th>{ProcessesTableColumns.Name}</Th>
+                            <Th>{ProcessesTableColumns.SourceHost}</Th>
+                        </Tr>
+                    </Thead>
+                    {processes?.map(({ identity, name, sourceHost }) => (
+                        <Tbody key={`${identity}${name}`}>
+                            <Tr>
+                                <Td>{name}</Td>
+                                <Td>{sourceHost}</Td>
+                            </Tr>
+                        </Tbody>
+                    ))}
+                </TableComposable>
+            </StackItem>
+        </Stack>
     );
 };
 

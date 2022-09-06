@@ -1,11 +1,13 @@
 import { RESTApi } from 'API/REST';
-import { FlowsDeviceResponse, FlowsSiteResponse } from 'API/REST.interfaces';
+import { FlowsDeviceResponse, FlowsProcessResponse, FlowsSiteResponse } from 'API/REST.interfaces';
 
 import {
     VanServicesTopology,
     VanAddresses,
     ExtendedFlowPair,
     FlowsPairsBasic,
+    FlowPairBasic,
+    ProcessRow,
 } from './services.interfaces';
 
 export const MonitorServices = {
@@ -14,27 +16,34 @@ export const MonitorServices = {
 
         return vanAddresses.map((vanAddress) => ({
             ...vanAddress,
-            totalFlows: Math.round(vanAddress.totalFlows / 2),
-            currentFlows: Math.round(vanAddress.currentFlows / 2),
+            totalFlows: Math.floor(vanAddress.totalFlows / 2),
+            currentFlows: Math.floor(vanAddress.currentFlows / 2),
         }));
     },
 
     // TODO: waiting for the API to remove multiple calls and filters
-    fetchFlowsPairsByVanAddressId: async (
+    fetchFlowPairsByVanAddressId: async (
         id: string,
         currentPage: number,
         visibleItems: number,
-        filters: { shouldShowActiveFlows?: boolean },
     ): Promise<FlowsPairsBasic> => {
         const flowsPairs = await RESTApi.fetchFlowsPairsByVanAddr(id);
+
+        if (!flowsPairs) {
+            return {
+                connections: [],
+                total: 0,
+            };
+        }
+
         const processes = await RESTApi.fetchFlowsProcesses();
         const sites = await RESTApi.fetchFlowsSites();
 
         const processesMap = processes.reduce((acc, process) => {
-            acc[process.identity] = process.name;
+            acc[process.identity] = process;
 
             return acc;
-        }, {} as Record<string, string>);
+        }, {} as Record<string, FlowsProcessResponse>);
 
         const sitesMap = sites.reduce((acc, site) => {
             acc[site.identity] = site.name;
@@ -42,27 +51,66 @@ export const MonitorServices = {
             return acc;
         }, {} as Record<string, string>);
 
-        const flowsPairsExtended = flowsPairs.map((flowPair) => {
-            const processName = processesMap[flowPair.ForwardFlow.process];
-            const targetProcessName = processesMap[flowPair.ReverseFlow.process];
+        const flowsPairsExtended = await Promise.all(
+            flowsPairs.map(async (flowPair) => {
+                const { octetRate, octets, startTime, endTime, process, latency } =
+                    flowPair.ForwardFlow;
+                const siteName = sitesMap[flowPair.ForwardSiteId];
+                const processName = processesMap[process].name;
+                const processId = processesMap[process].identity;
+                const processHost = processesMap[process].sourceHost;
+                const processImageName = processesMap[process].imageName;
 
-            const siteName = sitesMap[flowPair.ForwardSiteId];
-            const targetSiteName = sitesMap[flowPair.ReverseSiteId];
+                const {
+                    octetRate: targetByteRate,
+                    octets: targetBytes,
+                    process: targetProcess,
+                    latency: targetLatency,
+                } = flowPair.ReverseFlow;
 
-            return {
-                ...flowPair.ForwardFlow,
-                identity: flowPair.identity,
-                processName,
-                targetProcessName,
-                siteName,
-                targetSiteName,
-            };
-        });
+                const targetSiteName = sitesMap[flowPair.ReverseSiteId];
+                const targetProcessName = processesMap[targetProcess].name;
+                const targetProcessId = processesMap[targetProcess].identity;
+                const targetHost = processesMap[targetProcess].sourceHost;
+                const targetProcessImageName = processesMap[targetProcess].imageName;
+
+                const connector = await RESTApi.fetchFlowsListener(flowPair.ForwardFlow.parent);
+                const targetConnector = await RESTApi.fetchFlowConnectorByProcessId(
+                    targetProcessId,
+                );
+
+                return {
+                    id: flowPair.identity,
+                    siteId: flowPair.ForwardSiteId,
+                    siteName,
+                    byteRate: octetRate,
+                    bytes: octets,
+                    host: processHost,
+                    port: connector.destPort,
+                    startTime,
+                    endTime,
+                    processId,
+                    processName,
+                    processImageName,
+                    latency,
+
+                    targetSiteId: flowPair.ReverseSiteId,
+                    targetSiteName,
+                    targetByteRate,
+                    targetBytes,
+                    targetHost,
+                    targetProcessId,
+                    targetProcessName,
+                    targetProcessImageName,
+                    targetPort: targetConnector.destPort,
+                    targetLatency,
+                    protocol: connector.protocol,
+                };
+            }),
+        );
 
         // filter collection
-        const flowsFiltered = flowsPairsExtended
-            .sort((a, b) => b.startTime - a.startTime)
-            .filter((flow) => !(filters.shouldShowActiveFlows && flow.endTime));
+        const flowsFiltered = flowsPairsExtended.sort((a, b) => b.startTime - a.startTime);
 
         const startOffset = (currentPage - 1) * visibleItems;
         //paginate collection
@@ -71,6 +119,40 @@ export const MonitorServices = {
         );
 
         return { connections: flowsPairsPaginated, total: flowsFiltered.length };
+    },
+
+    fetchProcessesByVanAddr: async (id: string): Promise<ProcessRow[]> => {
+        const processes = await RESTApi.fetchProcessesByVanAddr(id);
+
+        return Promise.all(
+            processes.map(async (process) => {
+                const site = await RESTApi.fetchFlowsSite(process.parent);
+                const { destPort } = await RESTApi.fetchFlowConnectorByProcessId(process.identity);
+                const flows = await RESTApi.fetchFlowsByProcessesId(process.identity);
+
+                const flowsMetrics = flows
+                    .filter(({ endTime }) => !endTime)
+                    .reduce(
+                        (acc, { octetRate, octets, latency }) => ({
+                            bytes: (acc?.bytes || 0) + octets,
+                            byteRate: (acc?.byteRate || 0) + octetRate,
+                            maxTTFB: Math.max(acc.maxTTFB || 0, latency),
+                        }),
+                        {} as { bytes: number; byteRate: number; maxTTFB: number },
+                    );
+
+                return {
+                    id: process.identity,
+                    siteId: site.identity,
+                    siteName: site.name,
+                    processName: process.name,
+                    host: process.sourceHost,
+                    port: destPort,
+                    imageName: process.imageName,
+                    ...flowsMetrics,
+                };
+            }),
+        );
     },
 
     fetchFlowPairByFlowId: async (id: string): Promise<ExtendedFlowPair> => {
@@ -120,4 +202,47 @@ export const MonitorServices = {
     },
 
     fetchFlowPairTopology: async (): Promise<VanServicesTopology> => RESTApi.fetchFlowsTopology(),
+
+    getProcessesViewData(flowPairs: FlowPairBasic[]) {
+        const processesMap = flowPairs.reduce((acc, flowPair) => {
+            acc[flowPair.processName] = {
+                id: flowPair.processId,
+                siteName: flowPair.siteName,
+                processName: flowPair.processName,
+                bytes: (acc[flowPair.processName]?.bytes || 0) + flowPair.bytes,
+                byteRate: (acc[flowPair.processName]?.byteRate || 0) + flowPair.byteRate,
+                host: flowPair.host,
+                port: flowPair.port,
+                minTTFB: Math.min(acc[flowPair.processName]?.latency || 0, flowPair.latency),
+                maxTTFB: Math.max(acc[flowPair.processName]?.latency || 0, flowPair.latency),
+                imageName: flowPair.processImageName,
+                protocol: flowPair.protocol,
+            };
+
+            acc[flowPair.targetProcessName] = {
+                id: flowPair.targetProcessId,
+                siteName: flowPair.targetSiteName,
+                processName: flowPair.targetProcessName,
+                bytes: (acc[flowPair.targetProcessName]?.bytes || 0) + flowPair.targetBytes,
+                byteRate:
+                    (acc[flowPair.targetProcessName]?.byteRate || 0) + flowPair.targetByteRate,
+                host: flowPair.targetHost,
+                port: flowPair.targetPort,
+                minTTFB: Math.min(
+                    acc[flowPair.processName]?.targetLatency || 0,
+                    flowPair.targetLatency,
+                ),
+                maxTTFB: Math.max(
+                    acc[flowPair.processName]?.targetLatency || 0,
+                    flowPair.targetLatency,
+                ),
+                imageName: flowPair.targetProcessImageName,
+                protocol: flowPair.protocol,
+            };
+
+            return acc;
+        }, {} as Record<string, any>);
+
+        return Object.values(processesMap);
+    },
 };

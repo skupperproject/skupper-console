@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-import { Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
-import { Caption, TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Label, Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { formatBytes } from '@core/utils/formatBytes';
 import { DeploymentTraffic } from '@pages/Deployments/services/deployments.interfaces';
@@ -39,70 +39,72 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                 {(!!httpRequestsSentEntries.length || !!httpRequestsReceivedEntries.length) && (
                     <>
                         {!!httpRequestsSentEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.HTTPrequestsOut}</Caption>
-
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                        <Th>{ConnectionsColumns.Requests}</Th>
-                                    </Tr>
-                                </Thead>
-                                {httpRequestsSentEntries.map((info) => (
-                                    <Tbody key={info.id}>
+                            <>
+                                <Label>{ConnectionsLabels.HTTPrequestsOut}</Label>
+                                <TableComposable
+                                    aria-label="flows table"
+                                    variant="compact"
+                                    isStickyHeader
+                                    borders={false}
+                                >
+                                    <Thead>
                                         <Tr>
-                                            <Td dataLabel={ConnectionsColumns.Name}>
-                                                {`${info.client}`}
-                                            </Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.BytesIn}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Requests}
-                                            >{`${info.requests}`}</Td>
+                                            <Th>{ConnectionsColumns.Name}</Th>
+                                            <Th>{ConnectionsColumns.BytesOut}</Th>
+                                            <Th>{ConnectionsColumns.Requests}</Th>
                                         </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
+                                    </Thead>
+                                    {httpRequestsSentEntries.map((info) => (
+                                        <Tbody key={info.id}>
+                                            <Tr>
+                                                <Td dataLabel={ConnectionsColumns.Name}>
+                                                    {`${info.client}`}
+                                                </Td>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.BytesIn}
+                                                >{`${formatBytes(info.bytes_out)}`}</Td>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Requests}
+                                                >{`${info.requests}`}</Td>
+                                            </Tr>
+                                        </Tbody>
+                                    ))}
+                                </TableComposable>
+                            </>
                         )}
                         {!!httpRequestsReceivedEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.HTTPrequestsIn}</Caption>
-
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                        <Th>{ConnectionsColumns.Requests}</Th>
-                                    </Tr>
-                                </Thead>
-                                {httpRequestsReceivedEntries.map((info) => (
-                                    <Tbody key={info.id}>
+                            <>
+                                <Label color="red">{ConnectionsLabels.HTTPrequestsIn}</Label>
+                                <TableComposable
+                                    aria-label="flows table"
+                                    variant="compact"
+                                    isStickyHeader
+                                    borders={false}
+                                >
+                                    <Thead>
                                         <Tr>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.BytesIn}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Requests}
-                                            >{`${info.requests}`}</Td>
+                                            <Th>{ConnectionsColumns.Name}</Th>
+                                            <Th>{ConnectionsColumns.BytesOut}</Th>
+                                            <Th>{ConnectionsColumns.Requests}</Th>
                                         </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
+                                    </Thead>
+                                    {httpRequestsReceivedEntries.map((info) => (
+                                        <Tbody key={info.id}>
+                                            <Tr>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Name}
+                                                >{`${info.client}`}</Td>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.BytesIn}
+                                                >{`${formatBytes(info.bytes_out)}`}</Td>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Requests}
+                                                >{`${info.requests}`}</Td>
+                                            </Tr>
+                                        </Tbody>
+                                    ))}
+                                </TableComposable>
+                            </>
                         )}
                     </>
                 )}
@@ -110,60 +112,65 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                 {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
                     <>
                         {!!tcpConnectionsOutEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.TCPconnectionsOut}</Caption>
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                    </Tr>
-                                </Thead>
-                                {tcpConnectionsOutEntries.map((info) => (
-                                    <Tbody key={info.id}>
+                            <>
+                                <Label color="green">{ConnectionsLabels.TCPconnectionsOut}</Label>
+
+                                <TableComposable
+                                    aria-label="flows table"
+                                    variant="compact"
+                                    isStickyHeader
+                                    borders={false}
+                                >
+                                    <Thead>
                                         <Tr>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Bytes}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
+                                            <Th>{ConnectionsColumns.Name}</Th>
+                                            <Th>{ConnectionsColumns.BytesOut}</Th>
                                         </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
+                                    </Thead>
+                                    {tcpConnectionsOutEntries.map((info) => (
+                                        <Tbody key={info.id}>
+                                            <Tr>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Name}
+                                                >{`${info.client}`}</Td>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Bytes}
+                                                >{`${formatBytes(info.bytes_out)}`}</Td>
+                                            </Tr>
+                                        </Tbody>
+                                    ))}
+                                </TableComposable>
+                            </>
                         )}
                         {!!tcpConnectionsInEntries.length && (
-                            <TableComposable
-                                aria-label="flows table"
-                                variant="compact"
-                                isStickyHeader
-                                borders={false}
-                            >
-                                <Caption>{ConnectionsLabels.TCPconnectionsIn}</Caption>
-                                <Thead>
-                                    <Tr>
-                                        <Th>{ConnectionsColumns.Name}</Th>
-                                        <Th>{ConnectionsColumns.BytesOut}</Th>
-                                    </Tr>
-                                </Thead>
-                                {tcpConnectionsInEntries.map((info) => (
-                                    <Tbody key={info.id}>
+                            <>
+                                <Label color="purple">{ConnectionsLabels.TCPconnectionsIn}</Label>
+                                <TableComposable
+                                    aria-label="flows table"
+                                    variant="compact"
+                                    isStickyHeader
+                                    borders={false}
+                                >
+                                    <Thead>
                                         <Tr>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Name}
-                                            >{`${info.client}`}</Td>
-                                            <Td
-                                                dataLabel={ConnectionsColumns.Bytes}
-                                            >{`${formatBytes(info.bytes_out)}`}</Td>
+                                            <Th>{ConnectionsColumns.Name}</Th>
+                                            <Th>{ConnectionsColumns.BytesOut}</Th>
                                         </Tr>
-                                    </Tbody>
-                                ))}
-                            </TableComposable>
+                                    </Thead>
+                                    {tcpConnectionsInEntries.map((info) => (
+                                        <Tbody key={info.id}>
+                                            <Tr>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Name}
+                                                >{`${info.client}`}</Td>
+                                                <Td
+                                                    dataLabel={ConnectionsColumns.Bytes}
+                                                >{`${formatBytes(info.bytes_out)}`}</Td>
+                                            </Tr>
+                                        </Tbody>
+                                    ))}
+                                </TableComposable>
+                            </>
                         )}
                     </>
                 )}

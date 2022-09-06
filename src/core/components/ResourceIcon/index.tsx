@@ -12,7 +12,7 @@ const RESOURCE_MAP = {
     site: { class: 'sk-resource-site', symbol: 'S' },
     deployment: { class: 'sk-resource-deployment', symbol: 'D' },
     service: { class: 'sk-resource-service', symbol: 'SE' },
-    vanAddress: { class: 'sk-resource-services', symbol: 'VS' },
+    vanAddress: { class: 'sk-resource-services', symbol: 'A' },
 };
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {

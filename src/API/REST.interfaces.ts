@@ -132,6 +132,7 @@ export interface FlowsProcessResponse {
     imageName: string;
     sourceHost: string;
     startTime: number;
+    endTime: number;
 }
 
 export interface FlowsRouterResponse {
@@ -165,10 +166,11 @@ export interface FlowsDeviceResponse {
     recType: string;
     address: string;
     protocol: string;
+    destHost: string;
+    destPort: string;
     flowRateL4: number;
     flowCountL4: number;
     startTime: number;
-    endTime?: number;
 }
 
 export interface FlowResponse {
@@ -194,8 +196,8 @@ export interface FlowResponse {
 export interface FlowPairResponse {
     identity: string;
     recType: string;
-    ForwardSiteId: number;
-    ReverseSiteId: number;
+    ForwardSiteId: string;
+    ReverseSiteId: string;
     ForwardFlow: FlowResponse;
     ReverseFlow: FlowResponse;
 }

@@ -1,7 +1,0 @@
-.flows-table tbody .flow-row:hover {
-    background-color: var(--pf-global--palette--black-200);
-}
-
-.flows-table tbody .flow-no-connection-target-warning {
-    background-color: var(--pf-global--palette--gold-100);
-}

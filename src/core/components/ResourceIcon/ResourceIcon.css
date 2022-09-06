@@ -18,7 +18,7 @@
 }
 
 .sk-resource-service {
-    background-color: var(--pf-global--palette--green-500);
+    background-color: var(--pf-global--palette--blue-200);
 }
 
 .sk-resource-deployment {
@@ -26,5 +26,5 @@
 }
 
 .sk-resource-services {
-    background-color: var(--pf-global--palette--blue-200);
+    background-color: var(--pf-global--palette--green-500);
 }

@@ -18,3 +18,17 @@ html {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+.pf-c-table thead .align-th-right>button {
+    position: absolute;
+    right: 0;
+    top: 3px;
+}
+
+.pf-c-table thead .align-th-right {
+    text-align: end;
+}
+
+.pf-c-table tbody .align-td-right {
+    text-align: end;
+}

@@ -6,21 +6,27 @@ export enum VANServicesRoutesPaths {
 }
 
 export enum VanServicesRoutesPathLabel {
-    VanServices = 'vanservices',
+    VanServices = 'addresses',
 }
 
-// VAN SERVICES VIEW
+export enum VanServicesDescriptions {
+    FlowPairsDesc = 'Sequence of packets from a source to a destination',
+    TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
+}
+
+// ADDRESSES VIEW
 export enum Labels {
-    VanServices = 'VAN Services',
+    VanServices = 'Addresses',
     VanServicesDescription = 'Set of services that are exposed across the Virtual application network',
+    Connections = 'Connections',
 }
 
 export enum OverviewColumns {
     Name = 'Name',
     TotalListeners = 'Servers',
     TotalConnectors = 'Clients',
-    CurrentFlowPairs = 'Current flow pairs',
-    TotalFlowPairs = 'Total flow pairs',
+    CurrentFlowPairs = 'Current connections',
+    TotalFlowPairs = 'Total connections',
 }
 
 // FLOWS PAIRS VIEW
@@ -30,21 +36,26 @@ export enum FlowsPairsLabels {
     ShowActiveFlowsPairs = 'show active items',
 }
 
-export enum DetailsColumnsNames {
-    FlowPairStatus = 'Status',
-    StartSite = 'From site',
-    StartProcess = 'From process',
-    EndSite = 'To site',
-    EndProcess = 'To process',
-    Traffic = 'Traffic',
-    Latency = 'TTFB',
+export enum FlowPairsColumnsNames {
+    Status = 'Status',
+    FlowForward = 'From Client',
+    FlowReverse = 'To Server',
+    Site = 'Site',
+    Process = 'process',
+    Bytes = 'Bytes',
+    ByteRate = 'Byte Rate',
+    Host = 'Host',
+    Port = 'Port',
+    MaxTTFB = ' max TTFB',
     StartTime = 'Created at',
+    Protocol = 'Protocol',
+    ImageName = 'Image',
 }
 
 // FLOW PAIR DETAIL
 export enum FlowPairDetailsColumns {
     SiteName = 'Site',
-    VANService = 'VAN Service',
+    VANService = 'Addresses',
     Protocol = 'Protocol',
     Bytes = 'Bytes',
     ByteRate = 'Byte Rate',
@@ -61,5 +72,19 @@ export enum FlowPairDetailsLabels {
     Connector = 'CONNECTOR',
     Listener = 'LISTENER',
     TrafficChartTitle = 'Bytes Rate in the last minute',
-    TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
+    Servers = 'Servers',
+    Connections = 'Connections',
+}
+
+// PROCESSES TABLE
+export enum ProcessesColumnsNames {
+    Site = 'Site',
+    Process = 'process',
+    Bytes = 'Bytes',
+    ByteRate = 'Byte Rate',
+    Host = 'Host',
+    Port = 'Port',
+    Latency = 'TTFB',
+    Image = 'Image',
+    Protocol = 'Protocol',
 }

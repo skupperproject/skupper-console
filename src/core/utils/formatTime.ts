@@ -26,7 +26,7 @@ export function formatTime(time: number, options?: FormatTimeOptions) {
     const timeSized = parseFloat((time / Math.pow(k, i)).toFixed(dm));
 
     const timeFormatted =
-        timeSized >= 60 && sizeFrom[i] === 'ms'
+        timeSized >= 60 && sizeFrom[i] === 'sec'
             ? `${Math.floor(timeSized / 60)} min`
             : `${timeSized} ${sizeFrom[i]}`;
 

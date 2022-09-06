@@ -28,7 +28,7 @@ import RealTimeMetrics from '../components/RealTimeMetrics';
 import { SitesListColumns } from '../components/SitesList.enum';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel } from '../Sites.enum';
+import { SitesRoutesPaths, SitesRoutesPathLabel, ProcessesTableColumns } from '../Sites.enum';
 
 const Site = function () {
     const navigate = useNavigate();
@@ -116,10 +116,6 @@ const Site = function () {
                                     value={site.namespace}
                                 />
                                 <DescriptionItem
-                                    title={SitesListColumns.Version}
-                                    value={site.version}
-                                />
-                                <DescriptionItem
                                     title={SitesListColumns.Gateway}
                                     value={site.gateway ? 'Yes' : 'No'}
                                 />
@@ -137,18 +133,18 @@ const Site = function () {
                                 <Title headingLevel="h2">Processes</Title>
                             </CardTitle>
                             <CardBody>
-                                <TableComposable variant="compact">
+                                <TableComposable variant="compact" borders={false}>
                                     <Thead>
                                         <Tr>
-                                            <Th>{'Source Host'}</Th>
-                                            <Th>{'Name'}</Th>
+                                            <Th>{ProcessesTableColumns.Name}</Th>
+                                            <Th>{ProcessesTableColumns.SourceHost}</Th>
                                         </Tr>
                                     </Thead>
                                     {processes?.map(({ identity, name, sourceHost }) => (
                                         <Tbody key={`${identity}${name}`}>
                                             <Tr>
-                                                <Td>{sourceHost}</Td>
                                                 <Td>{name}</Td>
+                                                <Td>{sourceHost}</Td>
                                             </Tr>
                                         </Tbody>
                                     ))}

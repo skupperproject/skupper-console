@@ -9,7 +9,7 @@ import {
     TextVariants,
     Tooltip,
 } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ const SitesTable = memo(function ({ sites }: SitesListProps) {
                         <Text component={TextVariants.h1}>{Labels.Sites}</Text>
                     </TextContent>
                     <Tooltip position="right" content={Labels.SitesDescription}>
-                        <InfoCircleIcon color="var(--pf-global--palette--blue-300)" />
+                        <OutlinedQuestionCircleIcon />
                     </Tooltip>
                 </Flex>
             </CardTitle>
@@ -43,7 +43,6 @@ const SitesTable = memo(function ({ sites }: SitesListProps) {
                     <Tr>
                         <Th>{SitesListColumns.Name}</Th>
                         <Th>{SitesListColumns.Namespace}</Th>
-                        <Th>{SitesListColumns.Version}</Th>
                         <Th>{SitesListColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
@@ -59,9 +58,8 @@ const SitesTable = memo(function ({ sites }: SitesListProps) {
                                     </Link>
                                 </Td>
                                 <Td dataLabel={SitesListColumns.Namespace}>{`${row.namespace}`}</Td>
-                                <Td dataLabel={SitesListColumns.Version}>{`${row.version}`}</Td>
                                 <Td
-                                    dataLabel={SitesListColumns.Version}
+                                    dataLabel={SitesListColumns.NumSitesLinked}
                                 >{`${row.connected.length}`}</Td>
                             </Tr>
                         </Tbody>
