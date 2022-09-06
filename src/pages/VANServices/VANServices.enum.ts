@@ -23,8 +23,8 @@ export enum Labels {
 
 export enum OverviewColumns {
     Name = 'Name',
-    TotalListeners = 'Servers',
-    TotalConnectors = 'Clients',
+    TotalListeners = 'Clients',
+    TotalConnectors = 'Servers',
     CurrentFlowPairs = 'Current connections',
     TotalFlowPairs = 'Total connections',
 }

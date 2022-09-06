@@ -102,7 +102,7 @@ function aggregateAttributes<ServiceConnections>(
 ) {
     const data = { ...target };
 
-    Object.keys(source).forEach((attribute) => {
+    Object.keys(source as any).forEach((attribute) => {
         const sourceValue = source[attribute as keyof typeof source];
         let dataValue = data[attribute as keyof typeof data];
 
