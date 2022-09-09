@@ -54,8 +54,8 @@ export const MonitorServices = {
         const flowsPairsExtended = await Promise.all(
             flowsPairs.map(async (flowPair) => {
                 const { octetRate, octets, startTime, endTime, process, latency } =
-                    flowPair.ForwardFlow;
-                const siteName = sitesMap[flowPair.ForwardSiteId];
+                    flowPair.forwardFlow;
+                const siteName = sitesMap[flowPair.sourceSiteId];
                 const processName = processesMap[process].name;
                 const processId = processesMap[process].identity;
                 const processHost = processesMap[process].sourceHost;
@@ -66,22 +66,22 @@ export const MonitorServices = {
                     octets: targetBytes,
                     process: targetProcess,
                     latency: targetLatency,
-                } = flowPair.ReverseFlow;
+                } = flowPair.CounterFlow;
 
-                const targetSiteName = sitesMap[flowPair.ReverseSiteId];
+                const targetSiteName = sitesMap[flowPair.destinationSiteId];
                 const targetProcessName = processesMap[targetProcess].name;
                 const targetProcessId = processesMap[targetProcess].identity;
                 const targetHost = processesMap[targetProcess].sourceHost;
                 const targetProcessImageName = processesMap[targetProcess].imageName;
 
-                const connector = await RESTApi.fetchFlowsListener(flowPair.ForwardFlow.parent);
+                const connector = await RESTApi.fetchFlowsListener(flowPair.forwardFlow.parent);
                 const targetConnector = await RESTApi.fetchFlowConnectorByProcessId(
                     targetProcessId,
                 );
 
                 return {
                     id: flowPair.identity,
-                    siteId: flowPair.ForwardSiteId,
+                    siteId: flowPair.sourceSiteId,
                     siteName,
                     byteRate: octetRate,
                     bytes: octets,
@@ -94,7 +94,7 @@ export const MonitorServices = {
                     processImageName,
                     latency,
 
-                    targetSiteId: flowPair.ReverseSiteId,
+                    targetSiteId: flowPair.destinationSiteId,
                     targetSiteName,
                     targetByteRate,
                     targetBytes,
@@ -158,7 +158,7 @@ export const MonitorServices = {
     fetchFlowPairByFlowId: async (id: string): Promise<ExtendedFlowPair> => {
         const flowPair = await RESTApi.fetchFlowPair(id);
 
-        const { parent, process } = flowPair.ForwardFlow;
+        const { parent, process } = flowPair.forwardFlow;
 
         const startProcess = await RESTApi.fetchFlowProcess(process);
         const startSite = await RESTApi.fetchFlowsSite(startProcess.parent);
@@ -168,16 +168,16 @@ export const MonitorServices = {
         const startDevice = { ...startListener, ...startConnector } as FlowsDeviceResponse;
 
         const start = {
-            ...flowPair.ForwardFlow,
+            ...flowPair.forwardFlow,
             device: startDevice,
             site: startSite,
             processFlow: startProcess,
             parentType: startDevice.recType,
         };
 
-        const endFlow = flowPair.ReverseFlow;
+        const endFlow = flowPair.CounterFlow;
 
-        const { parent: reverseParent, process: reverseProcess } = flowPair.ReverseFlow;
+        const { parent: reverseParent, process: reverseProcess } = flowPair.CounterFlow;
 
         const endProcess = await RESTApi.fetchFlowProcess(reverseProcess);
         const endSite = (await RESTApi.fetchFlowsSite(endProcess.parent)) as FlowsSiteResponse;
