@@ -1,8 +1,9 @@
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 
-import { DeploymentLink, Site } from '@pages/Sites/services/services.interfaces';
+import { DeploymentLink } from '@pages/Sites/services/services.interfaces';
 import { RESTApi } from 'API/REST';
+import { SiteDataResponse } from 'API/REST.interfaces';
 
 import { TopologyNode } from '../Topology.interfaces';
 import { DeploymentNode, Deployments } from './services.interfaces';
@@ -14,7 +15,7 @@ export const TopologyServices = {
         return { deployments, deploymentLinks };
     },
 
-    getNodesSites: (sites: Site[]) =>
+    getNodesSites: (sites: SiteDataResponse[]) =>
         sites
             ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
             .map((node, index) => {
@@ -36,7 +37,7 @@ export const TopologyServices = {
                 };
             }),
 
-    getLinkSites: (sites: Site[]) =>
+    getLinkSites: (sites: SiteDataResponse[]) =>
         sites?.flatMap(({ siteId: sourceId, connected }) =>
             connected.flatMap((targetId) => [
                 {

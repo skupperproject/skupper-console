@@ -25,10 +25,14 @@ import { UPDATE_INTERVAL } from 'config';
 import DescriptionItem from '../components/DescriptionItem';
 import Metrics from '../components/Metrics';
 import RealTimeMetrics from '../components/RealTimeMetrics';
-import { SitesListColumns } from '../components/SitesList.enum';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel, ProcessesTableColumns } from '../Sites.enum';
+import {
+    SitesRoutesPaths,
+    SitesRoutesPathLabel,
+    ProcessesTableColumns,
+    SiteDetails,
+} from '../Sites.enum';
 
 const Site = function () {
     const navigate = useNavigate();
@@ -37,7 +41,7 @@ const Site = function () {
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
-        () => (siteId ? SitesServices.fetchSite(siteId) : null),
+        () => (siteId ? SitesServices.getSite(siteId) : null),
         {
             refetchInterval,
             onError: handleError,
@@ -107,20 +111,17 @@ const Site = function () {
                                 <Title headingLevel="h2">Details</Title>
                             </CardTitle>
                             <CardBody>
+                                <DescriptionItem title={SiteDetails.Name} value={site.siteName} />
                                 <DescriptionItem
-                                    title={SitesListColumns.Name}
-                                    value={site.siteName}
-                                />
-                                <DescriptionItem
-                                    title={SitesListColumns.Namespace}
+                                    title={SiteDetails.Namespace}
                                     value={site.namespace}
                                 />
                                 <DescriptionItem
-                                    title={SitesListColumns.Gateway}
+                                    title={SiteDetails.Gateway}
                                     value={site.gateway ? 'Yes' : 'No'}
                                 />
                                 <DescriptionItem
-                                    title={SitesListColumns.RouterHostname}
+                                    title={SiteDetails.RouterHostname}
                                     value={site.url}
                                 />
                             </CardBody>

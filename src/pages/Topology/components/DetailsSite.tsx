@@ -25,7 +25,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, id],
-        () => SitesServices.fetchSite(id),
+        () => SitesServices.getSite(id),
         {
             refetchInterval,
             onError: handleError,

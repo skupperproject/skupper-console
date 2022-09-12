@@ -1,20 +1,44 @@
 import { RESTApi } from 'API/REST';
-import { ServiceConnection } from 'API/REST.interfaces';
+import { LINK_DIRECTION } from 'API/REST.constant';
+import { ServiceConnection, SiteDataResponse } from 'API/REST.interfaces';
 
 import { DeploymentLink, Processes, Site, SiteTraffic } from './services.interfaces';
 
 const SitesServices = {
-    fetchSites: async (): Promise<Site[]> => RESTApi.fetchSites(),
-
-    fetchSite: async (id: string): Promise<Site> => {
+    fetchDataSites: async (): Promise<SiteDataResponse[]> => RESTApi.fetchDATASites(),
+    getSites: async (): Promise<Site[]> => {
         const sites = await RESTApi.fetchSites();
-        const site = sites.find(({ siteId }) => siteId === id) as Site;
+
+        const siteViews = await Promise.all(
+            sites.map(async (site) => {
+                const id = site.identity;
+
+                const hosts = await RESTApi.fetchHostsBySite(id);
+                const processes = await RESTApi.fetchProcessesBySite(id);
+                const links = await RESTApi.fetchLinksBySite(id);
+
+                const sitesConnected = links.filter(
+                    (link, index, linksArray) =>
+                        link.direction === LINK_DIRECTION.OUTGOING &&
+                        linksArray.findIndex(({ name }) => name === link.name) === index,
+                );
+
+                return { hosts, processes, sitesConnected, ...site };
+            }),
+        );
+
+        return siteViews;
+    },
+
+    getSite: async (id: string): Promise<SiteDataResponse> => {
+        const sites = await RESTApi.fetchDATASites();
+        const site = sites.find(({ siteId }) => siteId === id) as SiteDataResponse;
 
         return site;
     },
 
     fetchProcessesBySiteId: async (id: string): Promise<Processes[]> =>
-        (await RESTApi.fetchFlowsProcessesBySite(id)).filter(({ endTime }) => !endTime),
+        (await RESTApi.fetchProcessesBySite(id)).filter(({ endTime }) => !endTime),
 
     fetchTraffic: async (id: string): Promise<SiteTraffic> => {
         const data = await RESTApi.fetchData();

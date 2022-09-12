@@ -1,6 +1,6 @@
 import { getServices, getSites } from 'API/controllers';
 import { RESTApi } from 'API/REST';
-import { FlowsRouterResponse } from 'API/REST.interfaces';
+import { RouterResponse } from 'API/REST.interfaces';
 
 import { Overview } from './overview.interfaces';
 
@@ -18,7 +18,7 @@ export const NetworkServices = {
             acc[node.identity] = node;
 
             return acc;
-        }, {} as Record<string, FlowsRouterResponse>);
+        }, {} as Record<string, RouterResponse>);
 
         const linksRouters = topologyNetwork.links.map((link) => {
             const sourceNamespace = routersMap[link.target]?.namespace;

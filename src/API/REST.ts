@@ -8,7 +8,7 @@ import {
     FLOWS_LINKS,
     FLOWS_LISTENERS,
     FLOWS_ROUTERS,
-    FLOWS_SITES,
+    SITES_PATH,
     FLOWS_VAN_ADDRESSES,
     FLOWS_PROCESSES,
     FLOWPAIRS,
@@ -17,21 +17,27 @@ import {
     getProcessesByVanAddressIdPATH,
     getConnectorByProcessIdPATH,
     getFlowsByProcessIdPATH,
+    getSitePATH,
+    getRoutersBySitePATH,
+    getLinksBySitePATH,
+    getHostsBySitePATH,
 } from './REST.constant';
 import {
     DataAdapterResponse,
     ServiceResponse,
-    SiteResponse,
+    SiteDataResponse,
     DeploymentTopologyResponse,
     FlowsVanAddressesResponse,
     FlowsTopologyResponse,
     FlowsDeviceResponse,
-    FlowsRouterResponse,
-    FlowsSiteResponse,
-    FlowsProcessResponse,
+    ProcessResponse,
     FlowPairResponse,
     HTTPError,
     FlowResponse,
+    SiteResponse,
+    LinkResponse,
+    RouterResponse,
+    HostResponse,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -40,10 +46,42 @@ export const RESTApi = {
 
         return getData(data);
     },
-    fetchSites: async (): Promise<SiteResponse[]> => {
+    fetchDATASites: async (): Promise<SiteDataResponse[]> => {
         const { data } = await fetchWithTimeout(DATA_URL);
 
         return getSites(data);
+    },
+
+    // SITES APIs
+    fetchSites: async (): Promise<SiteResponse[]> => {
+        const { data } = await fetchWithTimeout(SITES_PATH);
+
+        return data;
+    },
+    fetchSite: async (id: string): Promise<SiteDataResponse> => {
+        const { data } = await fetchWithTimeout(getSitePATH(id));
+
+        return data;
+    },
+    fetchProcessesBySite: async (id: string): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesBySitePATH(id));
+
+        return data;
+    },
+    fetchRoutersBySite: async (id: string): Promise<RouterResponse[]> => {
+        const { data } = await fetchWithTimeout(getRoutersBySitePATH(id));
+
+        return data;
+    },
+    fetchLinksBySite: async (id: string): Promise<LinkResponse[]> => {
+        const { data } = await fetchWithTimeout(getLinksBySitePATH(id));
+
+        return data;
+    },
+    fetchHostsBySite: async (id: string): Promise<HostResponse[]> => {
+        const { data } = await fetchWithTimeout(getHostsBySitePATH(id));
+
+        return data;
     },
 
     // SERVICES APIs
@@ -66,22 +104,17 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsSites: async (): Promise<FlowsSiteResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_SITES}`);
+    fetchFlowsSites: async (): Promise<SiteResponse[]> => {
+        const { data } = await fetchWithTimeout(`${SITES_PATH}`);
 
         return data;
     },
-    fetchFlowsSite: async (id: string): Promise<FlowsSiteResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_SITES}/${id}`);
+    fetchFlowsSite: async (id: string): Promise<SiteResponse> => {
+        const { data } = await fetchWithTimeout(`${SITES_PATH}/${id}`);
 
         return data;
     },
-    fetchFlowsProcessesBySite: async (id: string): Promise<FlowsProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesBySitePATH(id));
-
-        return data;
-    },
-    fetchFlowsProcesses: async (): Promise<FlowsProcessResponse[]> => {
+    fetchFlowsProcesses: async (): Promise<ProcessResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}`);
 
         return data;
@@ -91,7 +124,7 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowProcess: async (id: string): Promise<FlowsProcessResponse> => {
+    fetchFlowProcess: async (id: string): Promise<ProcessResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_PROCESSES}/${id}`);
 
         return data;
@@ -101,12 +134,12 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsRouters: async (): Promise<FlowsRouterResponse[]> => {
+    fetchFlowsRouters: async (): Promise<RouterResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
 
         return data;
     },
-    fetchFlowsRouter: async (id: string): Promise<FlowsRouterResponse> => {
+    fetchFlowsRouter: async (id: string): Promise<RouterResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_ROUTERS}/${id}`);
 
         return data;
@@ -156,7 +189,7 @@ export const RESTApi = {
 
         return data;
     },
-    fetchProcessesByVanAddr: async (id: string): Promise<FlowsProcessResponse[]> => {
+    fetchProcessesByVanAddr: async (id: string): Promise<ProcessResponse[]> => {
         const { data } = await fetchWithTimeout(getProcessesByVanAddressIdPATH(id));
 
         return data;
@@ -167,17 +200,17 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
-        const { data: sites } = await fetchWithTimeout(`${FLOWS_SITES}`);
+        const { data: sites } = await fetchWithTimeout(`${SITES_PATH}`);
         const { data: routers } = await fetchWithTimeout(`${FLOWS_ROUTERS}`);
         const { data: links } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
-        const sitesMap = (sites as FlowsSiteResponse[]).reduce((acc, site) => {
+        const sitesMap = (sites as SiteResponse[]).reduce((acc, site) => {
             acc[site.identity] = site;
 
             return acc;
-        }, {} as Record<string, FlowsSiteResponse>);
+        }, {} as Record<string, SiteResponse>);
 
-        const routersExtended = (routers as FlowsRouterResponse[]).map((router) => ({
+        const routersExtended = (routers as RouterResponse[]).map((router) => ({
             ...router,
             siteName: sitesMap[router.parent].name,
         }));

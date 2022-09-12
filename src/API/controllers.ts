@@ -2,7 +2,7 @@ import {
     DataResponse,
     FlowsDataResponse,
     FlowsLinkResponse,
-    FlowsRouterResponse,
+    RouterResponse,
     FlowsTopologyLink,
 } from './REST.interfaces';
 import Adapter from './utils/adapter';
@@ -43,14 +43,14 @@ export function getDeployments(VANdata: DataResponse) {
     return dataAdapted.deployments;
 }
 
-export function getFlowsTopology(routers: FlowsRouterResponse[], links: FlowsLinkResponse[]) {
+export function getFlowsTopology(routers: RouterResponse[], links: FlowsLinkResponse[]) {
     const routersMap = routers.reduce((acc, router) => {
         //TODO: improve the logic to associate link source and link target
         const name = router.name.split('/')[1];
         acc[name] = router;
 
         return acc;
-    }, {} as Record<string, FlowsRouterResponse>);
+    }, {} as Record<string, RouterResponse>);
 
     const linksWithRouters = links
         .filter(({ linkCost, direction }) => linkCost && direction === 'incoming')

@@ -15,11 +15,10 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 
-import { Labels, SitesRoutesPaths } from '../Sites.enum';
-import { SitesListColumns } from './SitesList.enum';
-import { SitesListProps } from './SitesList.interfaces';
+import { Labels, SitesRoutesPaths, SitesTableColumns } from '../Sites.enum';
+import { SitesTableProps } from '../Sites.interfaces';
 
-const SitesTable = memo(function ({ sites }: SitesListProps) {
+const SitesTable = memo(function ({ sites }: SitesTableProps) {
     return (
         <Card>
             <CardTitle>
@@ -41,26 +40,30 @@ const SitesTable = memo(function ({ sites }: SitesListProps) {
             >
                 <Thead>
                     <Tr>
-                        <Th>{SitesListColumns.Name}</Th>
-                        <Th>{SitesListColumns.Namespace}</Th>
-                        <Th>{SitesListColumns.NumSitesLinked}</Th>
+                        <Th>{SitesTableColumns.Name}</Th>
+                        <Th>{SitesTableColumns.NumHosts}</Th>
+                        <Th>{SitesTableColumns.NumProcesses}</Th>
+                        <Th>{SitesTableColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
                 {sites
-                    ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
-                    .map((row) => (
-                        <Tbody key={row.siteId}>
+                    ?.sort((a, b) => a.identity.localeCompare(b.identity))
+                    .map(({ identity, name, hosts, processes, sitesConnected }) => (
+                        <Tbody key={identity}>
                             <Tr>
-                                <Td dataLabel={SitesListColumns.Name}>
+                                <Td dataLabel={SitesTableColumns.Name}>
                                     <ResourceIcon type="site" />
-                                    <Link to={`${SitesRoutesPaths.Details}/${row.siteId}`}>
-                                        {row.siteName}
+                                    <Link to={`${SitesRoutesPaths.Details}/${identity}`}>
+                                        {name}
                                     </Link>
                                 </Td>
-                                <Td dataLabel={SitesListColumns.Namespace}>{`${row.namespace}`}</Td>
-                                <Td
-                                    dataLabel={SitesListColumns.NumSitesLinked}
-                                >{`${row.connected.length}`}</Td>
+                                <Td dataLabel={SitesTableColumns.NumHosts}>{`${hosts.length}`}</Td>
+                                <Td dataLabel={SitesTableColumns.NumProcesses}>
+                                    {`${processes.length}`}
+                                </Td>
+                                <Td dataLabel={SitesTableColumns.NumSitesLinked}>
+                                    {`${sitesConnected.length}`}
+                                </Td>
                             </Tr>
                         </Tbody>
                     ))}

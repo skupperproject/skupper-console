@@ -7,7 +7,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import SitesTable from '../components/SitesList';
+import SitesTable from '../components/SitesTable';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 
@@ -15,7 +15,7 @@ const Sites = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-    const { data: sites, isLoading } = useQuery([QueriesSites.GetSites], SitesServices.fetchSites, {
+    const { data: sites, isLoading } = useQuery([QueriesSites.GetSites], SitesServices.getSites, {
         refetchInterval,
         onError: handleError,
     });
@@ -33,11 +33,7 @@ const Sites = function () {
         return <LoadingPage />;
     }
 
-    if (!sites) {
-        return null;
-    }
-
-    return <SitesTable sites={sites} />;
+    return <SitesTable sites={sites || []} />;
 };
 
 export default Sites;

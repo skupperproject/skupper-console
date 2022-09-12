@@ -15,10 +15,9 @@ import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import FlowPairDetails from '../components/FlowPairDetails';
-import FlowPairTopologyContainer from '../components/FlowPairTopologyContainer';
 import { MonitorServices } from '../services';
 import { QueriesVANServices } from '../services/services.enum';
-import { CONNECTION_PATH_NAME, TOPOLOGY_CONTAINER_HEIGHT } from '../VANServices.constants';
+import { CONNECTION_PATH_NAME } from '../VANServices.constants';
 import { VanServicesRoutesPathLabel, VANServicesRoutesPaths } from '../VANServices.enum';
 
 const FlowPair = function () {
@@ -38,16 +37,6 @@ const FlowPair = function () {
         },
     );
 
-    const { data: routers, isLoading: isLoadingTopologyRoutersLinks } = useQuery(
-        [QueriesVANServices.GetFlowPairTopologyNetwork],
-        () => MonitorServices.fetchFlowPairTopology(),
-        {
-            refetchOnWindowFocus: false,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -57,7 +46,7 @@ const FlowPair = function () {
         navigate(route);
     }
 
-    if (isLoadingConnection || isLoadingTopologyRoutersLinks) {
+    if (isLoadingConnection) {
         return <LoadingPage />;
     }
 
@@ -77,13 +66,6 @@ const FlowPair = function () {
                 </Breadcrumb>
             </StackItem>
             <StackItem>{connection && <FlowPairDetails connection={connection} />}</StackItem>
-            <StackItem>
-                <div style={{ width: '100%', height: `${TOPOLOGY_CONTAINER_HEIGHT}px` }}>
-                    {connection && routers && (
-                        <FlowPairTopologyContainer connection={connection} routers={routers} />
-                    )}
-                </div>
-            </StackItem>
         </Stack>
     );
 };

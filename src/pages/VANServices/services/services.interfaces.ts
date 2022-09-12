@@ -3,8 +3,8 @@ import {
     FlowsTopologyResponse,
     FlowsDeviceResponse,
     FlowResponse,
-    FlowsSiteResponse,
-    FlowsProcessResponse,
+    SiteResponse,
+    ProcessResponse,
 } from 'API/REST.interfaces';
 
 export type VanServicesTopology = FlowsTopologyResponse;
@@ -66,8 +66,8 @@ export interface FlowsPairsBasic {
 
 // FLOWPAIR
 interface extendedFlow extends FlowResponse {
-    site: FlowsSiteResponse;
-    processFlow: FlowsProcessResponse;
+    site: SiteResponse;
+    processFlow: ProcessResponse;
     device: FlowsDeviceResponse;
     parentType?: string;
 }

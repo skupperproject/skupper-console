@@ -18,7 +18,7 @@ const TopologyContent = function () {
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
         [QueryTopology.GetSites],
-        SitesServices.fetchSites,
+        SitesServices.fetchDataSites,
         {
             refetchInterval,
             onError: handleError,

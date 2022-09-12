@@ -96,27 +96,16 @@ export interface DataAdapterResponse {
     deploymentLinks: DeploymentLinksResponse[];
 }
 
-// SITES
-export interface SiteResponse {
+export interface SiteDataResponse {
     siteId: string;
     siteName: string;
-    version: string;
     url: string;
     connected: string[];
     namespace: string;
     gateway?: boolean;
 }
 
-// SERVICES
-export interface ServiceResponse {
-    id: string;
-    name: string;
-    protocol: string;
-}
-
-// FLOWS
-
-export interface FlowsSiteResponse {
+export interface SiteResponse {
     identity: string;
     recType: string;
     name: string;
@@ -124,7 +113,36 @@ export interface FlowsSiteResponse {
     startTime: number;
 }
 
-export interface FlowsProcessResponse {
+export interface ServiceResponse {
+    id: string;
+    name: string;
+    protocol: string;
+}
+
+export interface LinkResponse {
+    identity: string;
+    parent: string;
+    recType: string;
+    name: string;
+    direction: 'outgoing' | 'incoming';
+    linkCost: number;
+    startTime: number;
+}
+
+export interface RouterResponse {
+    identity: string;
+    parent: string;
+    recType: string;
+    name: string;
+    namespace: string;
+    hostname: string;
+    imageName: string;
+    imageVersion: string;
+    buildVersion: string;
+    startTime: number;
+}
+
+export interface ProcessResponse {
     identity: string;
     parent: string;
     recType: string;
@@ -135,20 +153,15 @@ export interface FlowsProcessResponse {
     endTime: number;
 }
 
-export interface FlowsRouterResponse {
+export interface HostResponse {
     identity: string;
     parent: string;
     recType: string;
     name: string;
-    hostname: string;
-    namespace: string;
-    imageName: string;
-    imageVersion: string;
-    buildVersion: string;
     startTime: number;
-    siteName: string;
 }
 
+// FLOWS
 export interface FlowsLinkResponse {
     identity: string;
     parent: string;
@@ -202,7 +215,7 @@ export interface FlowPairResponse {
     CounterFlow: FlowResponse;
 }
 
-export type FlowsDataResponse = FlowsRouterResponse &
+export type FlowsDataResponse = RouterResponse &
     FlowsLinkResponse &
     FlowsDeviceResponse &
     FlowResponse;

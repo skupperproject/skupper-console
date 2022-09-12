@@ -37,7 +37,7 @@ export interface VanServicesTopologyLinkNormalized {
 
 export interface VanServicesTopologyRouterNode {
     identity: string;
-    name: string;
+    name: '';
     x: number;
     y: number;
     fx?: number | null;

@@ -1,5 +1,5 @@
 import { RESTApi } from 'API/REST';
-import { FlowsDeviceResponse, FlowsProcessResponse, FlowsSiteResponse } from 'API/REST.interfaces';
+import { FlowsDeviceResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 
 import {
     VanServicesTopology,
@@ -43,7 +43,7 @@ export const MonitorServices = {
             acc[process.identity] = process;
 
             return acc;
-        }, {} as Record<string, FlowsProcessResponse>);
+        }, {} as Record<string, ProcessResponse>);
 
         const sitesMap = sites.reduce((acc, site) => {
             acc[site.identity] = site.name;
@@ -180,7 +180,7 @@ export const MonitorServices = {
         const { parent: reverseParent, process: reverseProcess } = flowPair.CounterFlow;
 
         const endProcess = await RESTApi.fetchFlowProcess(reverseProcess);
-        const endSite = (await RESTApi.fetchFlowsSite(endProcess.parent)) as FlowsSiteResponse;
+        const endSite = (await RESTApi.fetchFlowsSite(endProcess.parent)) as SiteResponse;
 
         const endListener = await RESTApi.fetchFlowsListener(reverseParent);
         const endConnector = await RESTApi.fetchFlowsConnector(reverseParent);
