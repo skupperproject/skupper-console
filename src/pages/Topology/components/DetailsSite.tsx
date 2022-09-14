@@ -13,7 +13,7 @@ import { ProcessesTableColumns } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyServices } from '../services';
-import { QueryTopology } from '../services/services.enum';
+import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
 const SPINNER_DIAMETER = 80;
@@ -26,7 +26,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
-        [QueryTopology.GetSite, id],
+        [QueriesTopology.GetSite, id],
         () => SitesServices.getDataSite(id),
         {
             refetchInterval,

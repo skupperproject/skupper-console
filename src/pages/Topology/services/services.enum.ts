@@ -1,5 +1,5 @@
-export enum QueryTopology {
-    GetSites = 'get-data-sites-query',
-    GetSite = 'get-data-site-query',
-    GetDeployments = 'get-topology-deployments-query',
+export enum QueriesTopology {
+    GetSites = 'get-topology-sites-query',
+    GetSite = 'get-topology-site-query',
+    GetProcesses = 'get-topology-processes-query',
 }

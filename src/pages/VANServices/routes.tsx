@@ -9,9 +9,6 @@ const VANServicesList = lazy(
 const FlowPairs = lazy(
     () => import(/* webpackChunkName: "monitoring-flow-pairs" */ './views/FlowPairs'),
 );
-const FlowPair = lazy(
-    () => import(/* webpackChunkName: "monitoring-flow-pair" */ './views/FlowPair'),
-);
 
 export const monitoringRoutes = [
     {
@@ -26,10 +23,6 @@ export const monitoringRoutes = [
             {
                 path: `${VANServicesRoutesPaths.FlowsPairs}/:id`,
                 element: <FlowPairs />,
-            },
-            {
-                path: `${VANServicesRoutesPaths.FlowsPairs}/:id/:idFlow`,
-                element: <FlowPair />,
             },
         ],
     },

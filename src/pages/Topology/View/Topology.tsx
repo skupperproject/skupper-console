@@ -10,14 +10,14 @@ import { UPDATE_INTERVAL } from 'config';
 
 import TopologySVGContainer from '../components/TopologySVGContainer';
 import { TopologyServices } from '../services';
-import { QueryTopology } from '../services/services.enum';
+import { QueriesTopology } from '../services/services.enum';
 
 const TopologyContent = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
-        [QueryTopology.GetSites],
+        [QueriesTopology.GetSites],
         SitesServices.fetchDataSites,
         {
             refetchInterval,
@@ -26,7 +26,7 @@ const TopologyContent = function () {
     );
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
-        [QueryTopology.GetDeployments],
+        [QueriesTopology.GetProcesses],
         TopologyServices.getDeployments,
         {
             refetchInterval,

@@ -5,11 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
-import { QueriesDeployments } from '@pages/Deployments/services/deployments.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyServices } from '../services';
+import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
 const SPINNER_DIAMETER = 80;
@@ -23,7 +23,7 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: deployment, isLoading } = useQuery(
-        [QueriesDeployments.GetDeployments, id],
+        [QueriesTopology.GetProcesses, id],
         () => TopologyServices.getProcessMetrics(id),
         {
             refetchInterval,

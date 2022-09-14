@@ -1,7 +1,7 @@
 import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 
 import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
-import { getData, getDeployments, getFlowsTopology, getServices, getSites } from './controllers';
+import { getFlowsTopology, getServices, getSites } from './controllers';
 import {
     DATA_URL,
     FLOWS_CONNECTORS,
@@ -25,10 +25,8 @@ import {
     FLOW_AGGREGATES_SITES,
 } from './REST.constant';
 import {
-    DataAdapterResponse,
     ServiceResponse,
     SiteDataResponse,
-    DeploymentTopologyResponse,
     FlowsVanAddressesResponse,
     FlowsTopologyResponse,
     FlowsDeviceResponse,
@@ -45,11 +43,6 @@ import {
 } from './REST.interfaces';
 
 export const RESTApi = {
-    fetchData: async (): Promise<DataAdapterResponse> => {
-        const { data } = await fetchWithTimeout(DATA_URL);
-
-        return getData(data);
-    },
     fetchDATASites: async (): Promise<SiteDataResponse[]> => {
         const { data } = await fetchWithTimeout(DATA_URL);
 
@@ -118,13 +111,6 @@ export const RESTApi = {
         const { data } = await fetchWithTimeout(DATA_URL);
 
         return getServices(data);
-    },
-
-    // DEPLOYMENTS APIs
-    fetchDeployments: async (): Promise<DeploymentTopologyResponse[]> => {
-        const { data } = await fetchWithTimeout(DATA_URL);
-
-        return getDeployments(data);
     },
 
     // FLOWS APIs

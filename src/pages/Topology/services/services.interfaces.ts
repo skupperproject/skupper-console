@@ -1,12 +1,9 @@
 import {
     DeploymentLinkTopology,
-    DeploymentTopologyResponse,
     FlowAggregatesResponse,
     ProcessResponse,
     SiteResponse,
 } from 'API/REST.interfaces';
-
-export type DeploymentNode = DeploymentTopologyResponse;
 
 export type Deployments = {
     deployments: ProcessResponse[];

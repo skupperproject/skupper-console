@@ -5,13 +5,6 @@ import {
     RouterResponse,
     FlowsTopologyLink,
 } from './REST.interfaces';
-import Adapter from './utils/adapter';
-
-export function getData(VANdata: DataResponse) {
-    const data = JSON.parse(JSON.stringify(VANdata));
-
-    return new Adapter(data).getData();
-}
 
 export function getSites(VANdata: DataResponse) {
     const { sites } = VANdata;
@@ -34,13 +27,6 @@ export function getServices(VANdata: DataResponse) {
         name: address,
         protocol,
     }));
-}
-
-export function getDeployments(VANdata: DataResponse) {
-    const data = JSON.parse(JSON.stringify(VANdata));
-    const dataAdapted = new Adapter(data).getData();
-
-    return dataAdapted.deployments;
 }
 
 export function getFlowsTopology(routers: RouterResponse[], links: FlowsLinkResponse[]) {

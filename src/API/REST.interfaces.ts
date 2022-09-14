@@ -26,7 +26,7 @@ interface ServiceDetails {
     };
 }
 
-export interface ServiceRequestReceivedResponse {
+interface ServiceRequestReceivedResponse {
     site_id: string;
     by_client: Record<string, ServiceConnection>;
 }
@@ -37,7 +37,7 @@ interface ServiceRequestHandledResponse {
     by_originating_site: ServiceDetails;
 }
 
-export interface DataServicesResponse {
+interface DataServicesResponse {
     address: string;
     protocol: string;
     targets: [
@@ -61,7 +61,7 @@ export interface DataServicesResponse {
     isExternal?: boolean;
 }
 
-export interface DataSiteResponse {
+interface DataSiteResponse {
     site_name: string;
     site_id: string;
     version: string;
@@ -93,13 +93,6 @@ export interface DeploymentTopologyResponse {
     key: string;
     service: DataServicesResponse;
     site: DataSiteResponse;
-}
-
-export interface DataAdapterResponse {
-    sites: DataSiteResponse[];
-    services: DataServicesResponse[];
-    deployments: DeploymentTopologyResponse[];
-    deploymentLinks: DeploymentLinksResponse[];
 }
 
 export interface SiteDataResponse {

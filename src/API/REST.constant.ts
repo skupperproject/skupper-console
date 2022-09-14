@@ -14,7 +14,6 @@ export const ROUTERS_PATH = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/routers`;
 export const FLOWS_CONNECTORS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/connectors`;
 export const FLOWS_LISTENERS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/listeners`;
 export const FLOWS_LINKS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/links`;
-export const FLOWS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/flows`;
 export const FLOWPAIRS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/flowpairs`;
 
 const FLOW_AGGREGATES_PATH = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/flowaggregates`;
