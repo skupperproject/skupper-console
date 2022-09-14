@@ -35,7 +35,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     );
 
     const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
-        [QueriesSites.GetSiteTraffic, id],
+        [QueriesSites.GetSiteMetrics, id],
         () => TopologyServices.getSiteMetrics(id),
         {
             refetchInterval,
@@ -45,7 +45,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, id],
-        () => SitesServices.fetchProcessesBySiteId(id),
+        () => SitesServices.getProcessesBySiteId(id),
         {
             refetchInterval,
             onError: handleError,

@@ -123,6 +123,7 @@ export interface LinkResponse {
     parent: string;
     recType: string;
     name: string;
+    mode: string;
     direction: 'outgoing' | 'incoming';
     linkCost: number;
     startTime: number;
@@ -141,6 +142,19 @@ export interface RouterResponse {
     startTime: number;
 }
 
+// Connector and Listener
+export interface DeviceResponse {
+    identity: string;
+    parent: string;
+    recType: string;
+    address: string;
+    protocol: string;
+    destHost: string;
+    destPort: string;
+    flowRateL4: number;
+    flowCountL4: number;
+    startTime: number;
+}
 export interface ProcessResponse {
     identity: string;
     parent: string;
@@ -157,33 +171,11 @@ export interface HostResponse {
     parent: string;
     recType: string;
     name: string;
+    provider: string;
     startTime: number;
 }
 
 // FLOWS
-export interface FlowsLinkResponse {
-    identity: string;
-    parent: string;
-    recType: string;
-    name: string;
-    mode: string;
-    linkCost: number;
-    direction: string;
-    startTime: number;
-}
-
-export interface FlowsDeviceResponse {
-    identity: string;
-    parent: string;
-    recType: string;
-    address: string;
-    protocol: string;
-    destHost: string;
-    destPort: string;
-    flowRateL4: number;
-    flowCountL4: number;
-    startTime: number;
-}
 
 export interface FlowResponse {
     identity: string;
@@ -200,9 +192,7 @@ export interface FlowResponse {
     trace?: string;
     counterFlow?: string;
     startTime: number;
-
     endTime?: number;
-    targetFlow?: any;
 }
 
 export interface FlowPairResponse {
@@ -214,10 +204,7 @@ export interface FlowPairResponse {
     CounterFlow: FlowResponse;
 }
 
-export type FlowsDataResponse = RouterResponse &
-    FlowsLinkResponse &
-    FlowsDeviceResponse &
-    FlowResponse;
+export type FlowsDataResponse = RouterResponse & LinkResponse & DeviceResponse & FlowResponse;
 
 export interface FlowsVanAddressesResponse {
     identity: string;

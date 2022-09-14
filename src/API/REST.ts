@@ -23,13 +23,14 @@ import {
     ROUTERS_PATH,
     PROCESSES_PATH,
     FLOW_AGGREGATES_SITES,
+    HOSTS_PATH,
 } from './REST.constant';
 import {
     ServiceResponse,
     SiteDataResponse,
     FlowsVanAddressesResponse,
     FlowsTopologyResponse,
-    FlowsDeviceResponse,
+    DeviceResponse,
     ProcessResponse,
     FlowPairResponse,
     HTTPError,
@@ -106,6 +107,13 @@ export const RESTApi = {
         return data;
     },
 
+    // HOST APIs
+    fetchHost: async (): Promise<HostResponse[]> => {
+        const { data } = await fetchWithTimeout(`${HOSTS_PATH}`);
+
+        return data;
+    },
+
     // SERVICES APIs
     fetchServices: async (): Promise<ServiceResponse[]> => {
         const { data } = await fetchWithTimeout(DATA_URL);
@@ -135,27 +143,27 @@ export const RESTApi = {
         return data;
     },
 
-    fetchFlowConnectorByProcessId: async (id: string): Promise<FlowsDeviceResponse> => {
+    fetchFlowConnectorByProcessId: async (id: string): Promise<DeviceResponse> => {
         const { data } = await fetchWithTimeout(getConnectorByProcessIdPATH(id));
 
         return data;
     },
-    fetchFlowsLinks: async (): Promise<FlowsDeviceResponse[]> => {
+    fetchFlowsLinks: async (): Promise<DeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}`);
 
         return data;
     },
-    fetchFlowsLink: async (id: string): Promise<FlowsDeviceResponse> => {
+    fetchFlowsLink: async (id: string): Promise<DeviceResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LINKS}/${id}`);
 
         return data;
     },
-    fetchFlowsConnectors: async (): Promise<FlowsDeviceResponse[]> => {
+    fetchFlowsConnectors: async (): Promise<DeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}`);
 
         return data;
     },
-    fetchFlowsConnector: async (id: string): Promise<FlowsDeviceResponse | null> => {
+    fetchFlowsConnector: async (id: string): Promise<DeviceResponse | null> => {
         try {
             const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}/${id}`);
 
@@ -170,12 +178,12 @@ export const RESTApi = {
             return handleStatusError(error);
         }
     },
-    fetchFlowsListeners: async (): Promise<FlowsDeviceResponse[]> => {
+    fetchFlowsListeners: async (): Promise<DeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}`);
 
         return data;
     },
-    fetchFlowsListener: async (id: string): Promise<FlowsDeviceResponse> => {
+    fetchFlowsListener: async (id: string): Promise<DeviceResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
 
         return data;

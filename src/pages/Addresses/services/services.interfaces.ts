@@ -1,7 +1,7 @@
 import {
     FlowsVanAddressesResponse,
     FlowsTopologyResponse,
-    FlowsDeviceResponse,
+    DeviceResponse,
     FlowResponse,
     SiteResponse,
     ProcessResponse,
@@ -68,7 +68,7 @@ export interface FlowsPairsBasic {
 interface extendedFlow extends FlowResponse {
     site: SiteResponse;
     processFlow: ProcessResponse;
-    device: FlowsDeviceResponse;
+    device: DeviceResponse;
     parentType?: string;
 }
 

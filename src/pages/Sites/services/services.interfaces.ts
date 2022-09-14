@@ -1,5 +1,4 @@
 import {
-    DeploymentLinksResponse,
     HostResponse,
     LinkResponse,
     ProcessResponse,
@@ -13,12 +12,7 @@ export interface Site extends SiteResponse {
     linkedSites: LinkResponse[];
 }
 
-export type DeploymentLink = DeploymentLinksResponse;
-export type Processes = ProcessResponse;
-
-export type SiteTraffic = {
-    httpRequestsReceived: Record<string, ServiceConnection>;
-    httpRequestsSent: Record<string, ServiceConnection>;
+export type SiteMetrics = {
     tcpConnectionsIn: Record<string, ServiceConnection>;
     tcpConnectionsOut: Record<string, ServiceConnection>;
 };

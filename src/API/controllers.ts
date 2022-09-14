@@ -1,9 +1,9 @@
 import {
     DataResponse,
     FlowsDataResponse,
-    FlowsLinkResponse,
     RouterResponse,
     FlowsTopologyLink,
+    LinkResponse,
 } from './REST.interfaces';
 
 export function getSites(VANdata: DataResponse) {
@@ -29,7 +29,7 @@ export function getServices(VANdata: DataResponse) {
     }));
 }
 
-export function getFlowsTopology(routers: RouterResponse[], links: FlowsLinkResponse[]) {
+export function getFlowsTopology(routers: RouterResponse[], links: LinkResponse[]) {
     const routersMap = routers.reduce((acc, router) => {
         //TODO: improve the logic to associate link source and link target
         const name = router.name.split('/')[1];

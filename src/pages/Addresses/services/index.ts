@@ -1,5 +1,5 @@
 import { RESTApi } from 'API/REST';
-import { FlowsDeviceResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import { DeviceResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 
 import {
     VanServicesTopology,
@@ -165,7 +165,7 @@ export const MonitorServices = {
 
         const startListener = await RESTApi.fetchFlowsListener(parent);
         const startConnector = await RESTApi.fetchFlowsConnector(parent);
-        const startDevice = { ...startListener, ...startConnector } as FlowsDeviceResponse;
+        const startDevice = { ...startListener, ...startConnector } as DeviceResponse;
 
         const start = {
             ...flowPair.forwardFlow,
@@ -185,7 +185,7 @@ export const MonitorServices = {
         const endListener = await RESTApi.fetchFlowsListener(reverseParent);
         const endConnector = await RESTApi.fetchFlowsConnector(reverseParent);
 
-        const endFlowsDevice = { ...endListener, ...endConnector } as FlowsDeviceResponse;
+        const endFlowsDevice = { ...endListener, ...endConnector } as DeviceResponse;
 
         const end = {
             ...endFlow,

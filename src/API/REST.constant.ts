@@ -10,6 +10,7 @@ export const LINK_DIRECTION = {
 export const DATA_URL = `${BASE_URL}/DATA`;
 export const FLOWS_VAN_ADDRESSES = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/addresses`;
 export const PROCESSES_PATH = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/processes`;
+export const HOSTS_PATH = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/hosts`;
 export const ROUTERS_PATH = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/routers`;
 export const FLOWS_CONNECTORS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/connectors`;
 export const FLOWS_LISTENERS = `${BASE_URL_FLOW_COLLECTOR}/api/v1alpha1/listeners`;

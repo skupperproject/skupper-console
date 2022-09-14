@@ -39,7 +39,7 @@
         "sourceType": "module",
         "tsconfigRootDir": "./"
     },
-    "plugins": ["react", "react-hooks", "@typescript-eslint", "eslint-plugin-tsdoc"],
+    "plugins": ["react", "react-hooks", "@typescript-eslint"],
     "rules": {
         "arrow-body-style": ["error", "as-needed"],
         "padding-line-between-statements": "off",
@@ -149,7 +149,6 @@
         ],
         "react/display-name": 0,
         "require-atomic-updates": 0,
-        "tsdoc/syntax": "warn",
         "@typescript-eslint/no-shadow": ["error", { "ignoreTypeValueShadow": true }],
         "@typescript-eslint/padding-line-between-statements": [
             "error",

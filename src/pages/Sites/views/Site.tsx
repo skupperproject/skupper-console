@@ -65,7 +65,7 @@ const Site = function () {
         return null;
     }
 
-    const { processes, linkedSites } = site;
+    const { processes, linkedSites, name, nameSpace } = site;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
@@ -74,14 +74,14 @@ const Site = function () {
                     <BreadcrumbItem>
                         <Link to={SitesRoutesPaths.Sites}>{SitesRoutesPathLabel.Sites}</Link>
                     </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{site.name}</BreadcrumbHeading>
+                    <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
 
             <StackItem>
                 <Title headingLevel="h1">
                     <ResourceIcon type="site" />
-                    {site.name}
+                    {name}
                 </Title>
             </StackItem>
 
@@ -93,11 +93,8 @@ const Site = function () {
                                 <Title headingLevel="h2">Details</Title>
                             </CardTitle>
                             <CardBody>
-                                <DescriptionItem title={SiteDetails.Name} value={site.name} />
-                                <DescriptionItem
-                                    title={SiteDetails.Namespace}
-                                    value={site.nameSpace}
-                                />
+                                <DescriptionItem title={SiteDetails.Name} value={name} />
+                                <DescriptionItem title={SiteDetails.Namespace} value={nameSpace} />
                             </CardBody>
                         </Card>
                     </SplitItem>
@@ -115,14 +112,16 @@ const Site = function () {
                                             <Th>{ProcessesTableColumns.SourceHost}</Th>
                                         </Tr>
                                     </Thead>
-                                    {processes?.map(({ identity, name, sourceHost }) => (
-                                        <Tbody key={`${identity}${name}`}>
-                                            <Tr>
-                                                <Td>{name}</Td>
-                                                <Td>{sourceHost}</Td>
-                                            </Tr>
-                                        </Tbody>
-                                    ))}
+                                    {processes?.map(
+                                        ({ identity, name: processName, sourceHost }) => (
+                                            <Tbody key={`${identity}${name}`}>
+                                                <Tr>
+                                                    <Td>{processName}</Td>
+                                                    <Td>{sourceHost}</Td>
+                                                </Tr>
+                                            </Tbody>
+                                        ),
+                                    )}
                                 </TableComposable>
                             </CardBody>
                         </Card>
@@ -137,8 +136,8 @@ const Site = function () {
                         </CardTitle>
                         <CardBody>
                             <List>
-                                {linkedSites.map(({ identity, name }) => (
-                                    <ListItem key={identity}>{name}</ListItem>
+                                {linkedSites.map(({ identity, name: linkedSiteName }) => (
+                                    <ListItem key={identity}>{linkedSiteName}</ListItem>
                                 ))}
                             </List>
                         </CardBody>

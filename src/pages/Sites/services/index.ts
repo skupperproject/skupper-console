@@ -1,8 +1,8 @@
 import { RESTApi } from 'API/REST';
 import { LINK_DIRECTION } from 'API/REST.constant';
-import { SiteDataResponse } from 'API/REST.interfaces';
+import { ProcessResponse, SiteDataResponse } from 'API/REST.interfaces';
 
-import { Processes, Site } from './services.interfaces';
+import { Site } from './services.interfaces';
 
 const SitesServices = {
     fetchDataSites: async (): Promise<SiteDataResponse[]> => RESTApi.fetchDATASites(),
@@ -38,7 +38,7 @@ const SitesServices = {
         return site;
     },
 
-    fetchProcessesBySiteId: async (id: string): Promise<Processes[]> =>
+    getProcessesBySiteId: async (id: string): Promise<ProcessResponse[]> =>
         (await RESTApi.fetchProcessesBySite(id)).filter(({ endTime }) => !endTime),
 };
 
