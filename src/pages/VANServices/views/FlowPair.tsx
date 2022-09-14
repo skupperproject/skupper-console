@@ -31,7 +31,6 @@ const FlowPair = function () {
         () => (idFlow ? MonitorServices.fetchFlowPairByFlowId(idFlow) : null),
         {
             cacheTime: 0,
-            refetchOnWindowFocus: false,
             refetchInterval,
             onError: handleError,
         },

@@ -4,11 +4,11 @@ import { Card, CardBody, CardTitle, Page, Tooltip } from '@patternfly/react-core
 import { InfoCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import DescriptionItem from '@core/components/DescriptionItem';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
-import DescriptionItem from '@pages/Sites/components/DescriptionItem';
 
 import {
     FlowPairDetailsColumns,

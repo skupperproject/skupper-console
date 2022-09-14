@@ -29,6 +29,4 @@ export enum ProcessesTableColumns {
 export enum SiteDetails {
     Name = 'Name',
     Namespace = 'Namespace',
-    Gateway = 'Gateway',
-    RouterHostname = 'Router hostname',
 }

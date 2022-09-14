@@ -36,7 +36,7 @@ export const MonitorServices = {
             };
         }
 
-        const processes = await RESTApi.fetchFlowsProcesses();
+        const processes = await RESTApi.fetchProcesses();
         const sites = await RESTApi.fetchFlowsSites();
 
         const processesMap = processes.reduce((acc, process) => {
@@ -160,7 +160,7 @@ export const MonitorServices = {
 
         const { parent, process } = flowPair.forwardFlow;
 
-        const startProcess = await RESTApi.fetchFlowProcess(process);
+        const startProcess = await RESTApi.fetchProcess(process);
         const startSite = await RESTApi.fetchFlowsSite(startProcess.parent);
 
         const startListener = await RESTApi.fetchFlowsListener(parent);
@@ -179,7 +179,7 @@ export const MonitorServices = {
 
         const { parent: reverseParent, process: reverseProcess } = flowPair.CounterFlow;
 
-        const endProcess = await RESTApi.fetchFlowProcess(reverseProcess);
+        const endProcess = await RESTApi.fetchProcess(reverseProcess);
         const endSite = (await RESTApi.fetchFlowsSite(endProcess.parent)) as SiteResponse;
 
         const endListener = await RESTApi.fetchFlowsListener(reverseParent);

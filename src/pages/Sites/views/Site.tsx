@@ -7,6 +7,8 @@ import {
     Card,
     CardBody,
     CardTitle,
+    List,
+    ListItem,
     Split,
     SplitItem,
     Stack,
@@ -22,9 +24,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import DescriptionItem from '../components/DescriptionItem';
-import Metrics from '../components/Metrics';
-import RealTimeMetrics from '../components/RealTimeMetrics';
+import DescriptionItem from '../../../core/components/DescriptionItem';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import {
@@ -36,30 +36,12 @@ import {
 
 const Site = function () {
     const navigate = useNavigate();
-    const { id: siteId } = useParams();
+    const { id: siteId } = useParams() as { id: string };
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
-        () => (siteId ? SitesServices.getSite(siteId) : null),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
-        [QueriesSites.GetSiteTraffic, siteId],
-        () => (siteId ? SitesServices.fetchTraffic(siteId) : null),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesSites.GetProcessesBySiteId, siteId],
-        () => (siteId ? SitesServices.fetchProcessesBySiteId(siteId) : null),
+        () => SitesServices.getSite(siteId),
         {
             refetchInterval,
             onError: handleError,
@@ -75,15 +57,15 @@ const Site = function () {
         navigate(route);
     }
 
-    if (isLoadingSite || isLoadingTraffic || isLoadingProcesses) {
+    if (isLoadingSite) {
         return <LoadingPage />;
     }
 
-    if (!site || !traffic) {
+    if (!site) {
         return null;
     }
 
-    const { httpRequestsReceived, httpRequestsSent, tcpConnectionsIn, tcpConnectionsOut } = traffic;
+    const { processes, linkedSites } = site;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
@@ -92,14 +74,14 @@ const Site = function () {
                     <BreadcrumbItem>
                         <Link to={SitesRoutesPaths.Sites}>{SitesRoutesPathLabel.Sites}</Link>
                     </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{site.siteName}</BreadcrumbHeading>
+                    <BreadcrumbHeading to="#">{site.name}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
 
             <StackItem>
                 <Title headingLevel="h1">
                     <ResourceIcon type="site" />
-                    {site.siteName}
+                    {site.name}
                 </Title>
             </StackItem>
 
@@ -111,18 +93,10 @@ const Site = function () {
                                 <Title headingLevel="h2">Details</Title>
                             </CardTitle>
                             <CardBody>
-                                <DescriptionItem title={SiteDetails.Name} value={site.siteName} />
+                                <DescriptionItem title={SiteDetails.Name} value={site.name} />
                                 <DescriptionItem
                                     title={SiteDetails.Namespace}
-                                    value={site.namespace}
-                                />
-                                <DescriptionItem
-                                    title={SiteDetails.Gateway}
-                                    value={site.gateway ? 'Yes' : 'No'}
-                                />
-                                <DescriptionItem
-                                    title={SiteDetails.RouterHostname}
-                                    value={site.url}
+                                    value={site.nameSpace}
                                 />
                             </CardBody>
                         </Card>
@@ -155,24 +129,22 @@ const Site = function () {
                     </SplitItem>
                 </Split>
             </StackItem>
-
-            <StackItem>
-                <Metrics
-                    name={site.siteName}
-                    httpRequestsReceived={httpRequestsReceived}
-                    httpRequestsSent={httpRequestsSent}
-                    tcpConnectionsIn={tcpConnectionsIn}
-                    tcpConnectionsOut={tcpConnectionsOut}
-                />
-
-                <RealTimeMetrics
-                    name={site.siteName}
-                    httpRequestsReceived={httpRequestsReceived}
-                    httpRequestsSent={httpRequestsSent}
-                    tcpConnectionsIn={tcpConnectionsIn}
-                    tcpConnectionsOut={tcpConnectionsOut}
-                />
-            </StackItem>
+            {!!linkedSites.length && (
+                <StackItem>
+                    <Card isFullHeight>
+                        <CardTitle>
+                            <Title headingLevel="h2">Linked to sites</Title>
+                        </CardTitle>
+                        <CardBody>
+                            <List>
+                                {linkedSites.map(({ identity, name }) => (
+                                    <ListItem key={identity}>{name}</ListItem>
+                                ))}
+                            </List>
+                        </CardBody>
+                    </Card>
+                </StackItem>
+            )}
         </Stack>
     );
 };

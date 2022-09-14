@@ -1,18 +1,84 @@
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 
-import { DeploymentLink } from '@pages/Sites/services/services.interfaces';
 import { RESTApi } from 'API/REST';
-import { SiteDataResponse } from 'API/REST.interfaces';
+import { DeploymentLinkTopology, ProcessResponse, SiteDataResponse } from 'API/REST.interfaces';
 
 import { TopologyNode } from '../Topology.interfaces';
-import { DeploymentNode, Deployments } from './services.interfaces';
+import { Deployments, ProcessesMetrics, SitesMetrics } from './services.interfaces';
 
 export const TopologyServices = {
-    fetchDeployments: async (): Promise<Deployments> => {
-        const { deployments, deploymentLinks } = await RESTApi.fetchData();
+    getDeployments: async (): Promise<Deployments> => {
+        const processes = await RESTApi.fetchProcesses();
+        const links = await RESTApi.fetchFlowAggregatesProcesses();
 
-        return { deployments, deploymentLinks };
+        const deploymentLinks = links.map(({ identity, sourceId, destinationId }) => ({
+            key: identity,
+            source: sourceId,
+            target: destinationId,
+        }));
+
+        return { deployments: processes, deploymentLinks };
+    },
+
+    getSiteMetrics: async (id: string): Promise<SitesMetrics> => {
+        const site = await RESTApi.fetchSite(id);
+        const flowAggregatesPairs = await RESTApi.fetchFlowAggregatesSites();
+
+        const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
+            .filter(({ sourceId }) => id === sourceId)
+            .map(({ identity }) => identity);
+
+        const flowAggregatesIncomingPairsIds = flowAggregatesPairs
+            .filter(({ destinationId }) => id === destinationId)
+            .map(({ identity }) => identity);
+
+        const flowAggregatesOutgoingPairs = await Promise.all(
+            flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
+                RESTApi.fetchFlowAggregatesSite(flowAggregatesPairsId),
+            ),
+        );
+        const flowAggregatesIncomingPairs = await Promise.all(
+            flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
+                RESTApi.fetchFlowAggregatesSite(flowAggregatesPairsId),
+            ),
+        );
+
+        return {
+            ...site,
+            tcpConnectionsOut: flowAggregatesOutgoingPairs,
+            tcpConnectionsIn: flowAggregatesIncomingPairs,
+        };
+    },
+
+    getProcessMetrics: async (id: string): Promise<ProcessesMetrics> => {
+        const process = await RESTApi.fetchProcess(id);
+        const flowAggregatesPairs = await RESTApi.fetchFlowAggregatesProcesses();
+
+        const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
+            .filter(({ sourceId }) => id === sourceId)
+            .map(({ identity }) => identity);
+
+        const flowAggregatesIncomingPairsIds = flowAggregatesPairs
+            .filter(({ destinationId }) => id === destinationId)
+            .map(({ identity }) => identity);
+
+        const flowAggregatesOutgoingPairs = await Promise.all(
+            flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
+                RESTApi.fetchFlowAggregatesProcess(flowAggregatesPairsId),
+            ),
+        );
+        const flowAggregatesIncomingPairs = await Promise.all(
+            flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
+                RESTApi.fetchFlowAggregatesProcess(flowAggregatesPairsId),
+            ),
+        );
+
+        return {
+            ...process,
+            tcpConnectionsOut: flowAggregatesOutgoingPairs,
+            tcpConnectionsIn: flowAggregatesIncomingPairs,
+        };
     },
 
     getNodesSites: (sites: SiteDataResponse[]) =>
@@ -48,19 +114,19 @@ export const TopologyServices = {
             ]),
         ),
 
-    getServiceNodes: (deployments: DeploymentNode[], siteNodes: TopologyNode[]) =>
+    getServiceNodes: (deployments: ProcessResponse[], siteNodes: TopologyNode[]) =>
         deployments
             ?.map((node) => {
-                const positions = localStorage.getItem(node.key);
+                const positions = localStorage.getItem(node.identity);
                 const fx = positions ? JSON.parse(positions).fx : null;
                 const fy = positions ? JSON.parse(positions).fy : null;
 
-                const site = siteNodes?.find(({ id }) => id === node.site.site_id);
+                const site = siteNodes?.find(({ id }) => id === node.parent);
                 const groupIndex = site?.group || 0;
 
                 return {
-                    id: node.key,
-                    name: node.service.address,
+                    id: node.identity,
+                    name: node.name,
                     x: fx || 0,
                     y: fy || 0,
                     fx,
@@ -73,10 +139,10 @@ export const TopologyServices = {
             })
             .sort((a, b) => a.group - b.group),
 
-    getLinkServices: (deploymentsLinks: DeploymentLink[]) =>
+    getLinkServices: (deploymentsLinks: DeploymentLinkTopology[]) =>
         deploymentsLinks?.flatMap(({ source, target }) => ({
-            source: source.key,
-            target: target.key,
+            source,
+            target,
             type: 'linkService',
         })),
 };

@@ -202,10 +202,10 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
                             eventKey={TYPE_SITES}
                             title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>}
                         />
-                        {/* <Tab
-                        eventKey={'deployements'}
-                        title={<TabTitleText>{TopologyViews.Services}</TabTitleText>}
-                    /> */}
+                        <Tab
+                            eventKey={'deployements'}
+                            title={<TabTitleText>{TopologyViews.Processes}</TabTitleText>}
+                        />
                     </Tabs>
                     <DrawerContent
                         panelContent={PanelContentComponent}

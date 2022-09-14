@@ -83,6 +83,12 @@ export interface DeploymentLinksResponse {
     target: DeploymentLinksStreamPoints;
 }
 
+export interface DeploymentLinkTopology {
+    key: string;
+    source: string;
+    target: string;
+}
+
 export interface DeploymentTopologyResponse {
     key: string;
     service: DataServicesResponse;
@@ -109,7 +115,7 @@ export interface SiteResponse {
     identity: string;
     recType: string;
     name: string;
-    namespace: string;
+    nameSpace: string;
     startTime: number;
 }
 
@@ -245,4 +251,30 @@ export interface FlowsTopologyResponse {
 
 export interface HTTPError extends AxiosError {
     httpStatus?: string;
+}
+
+export interface FlowAggregatesMapResponse {
+    identity: string;
+    rectType: 'FLOWAGGREGATE';
+    pairType: 'PROCESS' | 'SITE';
+    sourceId: string;
+    destinationId: string;
+    startTime: number;
+}
+
+export interface FlowAggregatesResponse {
+    identity: string;
+    rectType: 'FLOWAGGREGATE';
+    pairType: 'PROCESS' | 'SITE';
+    recordCount: number;
+    sourceId: string;
+    sourceOctets: number;
+    sourceMinLatency: number;
+    sourceMaxLatency: number;
+    sourceAverageLatency: number;
+    destinationId: string;
+    destinationOctets: number;
+    destinationMinLatency: number;
+    destinationAverageLatency: number;
+    startTime: number;
 }

@@ -10,7 +10,7 @@ import {
 export interface Site extends SiteResponse {
     hosts: HostResponse[];
     processes: ProcessResponse[];
-    sitesConnected: LinkResponse[];
+    linkedSites: LinkResponse[];
 }
 
 export type DeploymentLink = DeploymentLinksResponse;

@@ -105,13 +105,7 @@ const Overview = function () {
                 {data?.linksRouters && (
                     <Card>
                         <CardTitle>{OverviewLabels.Links}</CardTitle>
-                        <TableComposable
-                            className="network-table"
-                            aria-label="network table"
-                            variant="compact"
-                            borders={false}
-                            isStriped
-                        >
+                        <TableComposable variant="compact" borders={false} isStriped>
                             <Thead>
                                 <Tr>
                                     <Th>{OverviewLinksColumns.Source}</Th>

@@ -10,27 +10,28 @@ const SitesServices = {
         const sites = await RESTApi.fetchSites();
 
         const siteViews = await Promise.all(
-            sites.map(async (site) => {
-                const id = site.identity;
-
-                const hosts = await RESTApi.fetchHostsBySite(id);
-                const processes = await RESTApi.fetchProcessesBySite(id);
-                const links = await RESTApi.fetchLinksBySite(id);
-
-                const sitesConnected = links.filter(
-                    (link, index, linksArray) =>
-                        link.direction === LINK_DIRECTION.OUTGOING &&
-                        linksArray.findIndex(({ name }) => name === link.name) === index,
-                );
-
-                return { hosts, processes, sitesConnected, ...site };
-            }),
+            sites.map(async ({ identity }) => SitesServices.getSite(identity)),
         );
 
         return siteViews;
     },
 
-    getSite: async (id: string): Promise<SiteDataResponse> => {
+    getSite: async (id: string): Promise<Site> => {
+        const site = await RESTApi.fetchSite(id);
+        const hosts = await RESTApi.fetchHostsBySite(id);
+        const processes = await RESTApi.fetchProcessesBySite(id);
+        const links = await RESTApi.fetchLinksBySite(id);
+
+        const linkedSites = links.filter(
+            (link, index, linksArray) =>
+                link.direction === LINK_DIRECTION.OUTGOING &&
+                linksArray.findIndex(({ name }) => name === link.name) === index,
+        );
+
+        return { hosts, processes, linkedSites, ...site };
+    },
+
+    getDataSite: async (id: string): Promise<SiteDataResponse> => {
         const sites = await RESTApi.fetchDATASites();
         const site = sites.find(({ siteId }) => siteId === id) as SiteDataResponse;
 

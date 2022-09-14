@@ -31,13 +31,7 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                     </Tooltip>
                 </Flex>
             </CardTitle>
-            <TableComposable
-                className="network-table"
-                aria-label="network table"
-                borders={false}
-                variant="compact"
-                isStriped
-            >
+            <TableComposable borders={false} variant="compact" isStriped>
                 <Thead>
                     <Tr>
                         <Th>{SitesTableColumns.Name}</Th>
@@ -46,27 +40,23 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                         <Th>{SitesTableColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
-                {sites
-                    ?.sort((a, b) => a.identity.localeCompare(b.identity))
-                    .map(({ identity, name, hosts, processes, sitesConnected }) => (
-                        <Tbody key={identity}>
-                            <Tr>
-                                <Td dataLabel={SitesTableColumns.Name}>
-                                    <ResourceIcon type="site" />
-                                    <Link to={`${SitesRoutesPaths.Details}/${identity}`}>
-                                        {name}
-                                    </Link>
-                                </Td>
-                                <Td dataLabel={SitesTableColumns.NumHosts}>{`${hosts.length}`}</Td>
-                                <Td dataLabel={SitesTableColumns.NumProcesses}>
-                                    {`${processes.length}`}
-                                </Td>
-                                <Td dataLabel={SitesTableColumns.NumSitesLinked}>
-                                    {`${sitesConnected.length}`}
-                                </Td>
-                            </Tr>
-                        </Tbody>
-                    ))}
+                {sites.map(({ identity, name, hosts, processes, linkedSites }) => (
+                    <Tbody key={identity}>
+                        <Tr>
+                            <Td dataLabel={SitesTableColumns.Name}>
+                                <ResourceIcon type="site" />
+                                <Link to={`${SitesRoutesPaths.Details}/${identity}`}>{name}</Link>
+                            </Td>
+                            <Td dataLabel={SitesTableColumns.NumHosts}>{`${hosts.length}`}</Td>
+                            <Td dataLabel={SitesTableColumns.NumProcesses}>
+                                {`${processes.length}`}
+                            </Td>
+                            <Td dataLabel={SitesTableColumns.NumSitesLinked}>
+                                {`${linkedSites.length}`}
+                            </Td>
+                        </Tr>
+                    </Tbody>
+                ))}
             </TableComposable>
         </Card>
     );

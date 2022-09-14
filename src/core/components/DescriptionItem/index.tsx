@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Title } from '@patternfly/react-core';
 
-import { DescriptionItemProps } from '../Sites.interfaces';
+import { DescriptionItemProps } from './DescriptionItem.interface';
 
 const DescriptionItem: FC<DescriptionItemProps> = function ({ title, value }) {
     return (

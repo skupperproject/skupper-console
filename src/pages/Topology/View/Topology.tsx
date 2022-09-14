@@ -27,7 +27,7 @@ const TopologyContent = function () {
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
         [QueryTopology.GetDeployments],
-        TopologyServices.fetchDeployments,
+        TopologyServices.getDeployments,
         {
             refetchInterval,
             onError: handleError,

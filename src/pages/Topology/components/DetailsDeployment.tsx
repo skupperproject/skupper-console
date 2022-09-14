@@ -5,17 +5,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
-import DeploymentsServices from '@pages/Deployments/services';
 import { QueriesDeployments } from '@pages/Deployments/services/deployments.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { UPDATE_INTERVAL } from 'config';
 
+import { TopologyServices } from '../services';
 import TopologyDetails from './Details';
 
 const SPINNER_DIAMETER = 80;
 
 interface TopologyDeploymentDetailsProps {
-    id?: string;
+    id: string;
 }
 
 const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function ({ id }) {
@@ -24,7 +24,7 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
 
     const { data: deployment, isLoading } = useQuery(
         [QueriesDeployments.GetDeployments, id],
-        () => DeploymentsServices.fetchDeployment(id),
+        () => TopologyServices.getProcessMetrics(id),
         {
             refetchInterval,
             onError: handleError,
@@ -59,20 +59,16 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
         return null;
     }
 
-    const httpRequestsReceivedEntries = Object.values(deployment.httpRequestsReceived);
-    const httpRequestsSentEntries = Object.values(deployment.httpRequestsSent);
     const tcpConnectionsInEntries = Object.values(deployment.tcpConnectionsIn);
     const tcpConnectionsOutEntries = Object.values(deployment.tcpConnectionsOut);
 
-    const title = `${capitalizeFirstLetter(deployment.site.site_name)} / ${capitalizeFirstLetter(
-        deployment.service.address,
+    const title = `${capitalizeFirstLetter(deployment.name)} / ${capitalizeFirstLetter(
+        deployment.name,
     )}`;
 
     return (
         <TopologyDetails
             name={title}
-            httpRequestsReceivedEntries={httpRequestsReceivedEntries}
-            httpRequestsSentEntries={httpRequestsSentEntries}
             tcpConnectionsInEntries={tcpConnectionsInEntries}
             tcpConnectionsOutEntries={tcpConnectionsOutEntries}
         />

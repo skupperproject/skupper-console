@@ -5,10 +5,11 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
 import App from '@core/components/App';
+import { queryClientConfig } from 'config';
 
 import { loadMockServer } from '../public/mocks/server.js';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient(queryClientConfig);
 const rootElement = document.getElementById('app') as HTMLDivElement;
 const root = createRoot(rootElement);
 

@@ -12,6 +12,8 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessesTableColumns } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
+import { TopologyServices } from '../services';
+import { QueryTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
 const SPINNER_DIAMETER = 80;
@@ -24,8 +26,8 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
-        [QueriesSites.GetSite, id],
-        () => SitesServices.getSite(id),
+        [QueryTopology.GetSite, id],
+        () => SitesServices.getDataSite(id),
         {
             refetchInterval,
             onError: handleError,
@@ -34,7 +36,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
         [QueriesSites.GetSiteTraffic, id],
-        () => SitesServices.fetchTraffic(id),
+        () => TopologyServices.getSiteMetrics(id),
         {
             refetchInterval,
             onError: handleError,
@@ -77,10 +79,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         return null;
     }
 
-    const httpRequestsReceivedEntries = Object.values(traffic.httpRequestsReceived);
-    const httpRequestsSentEntries = Object.values(traffic.httpRequestsSent);
-    const tcpConnectionsInEntries = Object.values(traffic.tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.values(traffic.tcpConnectionsOut);
+    const { tcpConnectionsIn, tcpConnectionsOut } = traffic;
 
     const title = `${capitalizeFirstLetter(site.siteName)}`;
 
@@ -89,10 +88,8 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
             <StackItem className="pf-u-mb-xl">
                 <TopologyDetails
                     name={title}
-                    httpRequestsReceivedEntries={httpRequestsReceivedEntries}
-                    httpRequestsSentEntries={httpRequestsSentEntries}
-                    tcpConnectionsInEntries={tcpConnectionsInEntries}
-                    tcpConnectionsOutEntries={tcpConnectionsOutEntries}
+                    tcpConnectionsInEntries={tcpConnectionsIn}
+                    tcpConnectionsOutEntries={tcpConnectionsOut}
                 />
             </StackItem>
             <StackItem>
