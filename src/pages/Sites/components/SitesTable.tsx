@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { FC } from 'react';
 
 import {
     Card,
@@ -18,7 +18,7 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { Labels, SitesRoutesPaths, SitesTableColumns } from '../Sites.enum';
 import { SitesTableProps } from '../Sites.interfaces';
 
-const SitesTable = memo(function ({ sites }: SitesTableProps) {
+const SitesTable: FC<SitesTableProps> = function ({ sites }) {
     return (
         <Card>
             <CardTitle>
@@ -35,9 +35,9 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                 <Thead>
                     <Tr>
                         <Th>{SitesTableColumns.Name}</Th>
+                        <Th>{SitesTableColumns.NumSitesLinked}</Th>
                         <Th>{SitesTableColumns.NumHosts}</Th>
                         <Th>{SitesTableColumns.NumProcesses}</Th>
-                        <Th>{SitesTableColumns.NumSitesLinked}</Th>
                     </Tr>
                 </Thead>
                 {sites.map(({ identity, name, hosts, processes, linkedSites }) => (
@@ -47,12 +47,12 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
                                 <ResourceIcon type="site" />
                                 <Link to={`${SitesRoutesPaths.Details}/${identity}`}>{name}</Link>
                             </Td>
+                            <Td dataLabel={SitesTableColumns.NumSitesLinked}>
+                                {`${linkedSites.length}`}
+                            </Td>
                             <Td dataLabel={SitesTableColumns.NumHosts}>{`${hosts.length}`}</Td>
                             <Td dataLabel={SitesTableColumns.NumProcesses}>
                                 {`${processes.length}`}
-                            </Td>
-                            <Td dataLabel={SitesTableColumns.NumSitesLinked}>
-                                {`${linkedSites.length}`}
                             </Td>
                         </Tr>
                     </Tbody>
@@ -60,6 +60,6 @@ const SitesTable = memo(function ({ sites }: SitesTableProps) {
             </TableComposable>
         </Card>
     );
-});
+};
 
 export default SitesTable;

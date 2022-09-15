@@ -15,10 +15,10 @@ import {
     StackItem,
     Title,
 } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -27,12 +27,7 @@ import { UPDATE_INTERVAL } from 'config';
 import DescriptionItem from '../../../core/components/DescriptionItem';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
-import {
-    SitesRoutesPaths,
-    SitesRoutesPathLabel,
-    ProcessesTableColumns,
-    SiteDetails,
-} from '../Sites.enum';
+import { SitesRoutesPaths, SitesRoutesPathLabel, SiteDetails, Labels } from '../Sites.enum';
 
 const Site = function () {
     const navigate = useNavigate();
@@ -65,7 +60,7 @@ const Site = function () {
         return null;
     }
 
-    const { processes, linkedSites, name, nameSpace } = site;
+    const { processes, linkedSites, hosts, name, nameSpace } = site;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
@@ -86,64 +81,68 @@ const Site = function () {
             </StackItem>
 
             <StackItem>
+                <Card isFullHeight isRounded>
+                    <CardTitle>
+                        <Title headingLevel="h2">{Labels.SiteInfo}</Title>
+                    </CardTitle>
+                    <CardBody>
+                        <DescriptionItem title={SiteDetails.Name} value={name} />
+                        <DescriptionItem title={SiteDetails.Namespace} value={nameSpace} />
+                    </CardBody>
+                </Card>
+            </StackItem>
+            <StackItem>
                 <Split hasGutter>
                     <SplitItem className="pf-u-w-50">
-                        <Card isFullHeight>
+                        <Card isFullHeight isRounded>
                             <CardTitle>
-                                <Title headingLevel="h2">Details</Title>
+                                <Title headingLevel="h2">{Labels.Links}</Title>
                             </CardTitle>
                             <CardBody>
-                                <DescriptionItem title={SiteDetails.Name} value={name} />
-                                <DescriptionItem title={SiteDetails.Namespace} value={nameSpace} />
+                                {(!!linkedSites.length && (
+                                    <List isPlain>
+                                        {linkedSites.map(({ identity, name: linkedSiteName }) => (
+                                            <ListItem key={identity}>{linkedSiteName}</ListItem>
+                                        ))}
+                                    </List>
+                                )) || <EmptyData />}
                             </CardBody>
                         </Card>
                     </SplitItem>
-
                     <SplitItem className="pf-u-w-50">
-                        <Card isFullHeight style={{ height: '500px', overflow: 'auto' }}>
+                        <Card isFullHeight isRounded>
                             <CardTitle>
-                                <Title headingLevel="h2">Processes</Title>
+                                <Title headingLevel="h2">{Labels.Hosts}</Title>
                             </CardTitle>
                             <CardBody>
-                                <TableComposable variant="compact" borders={false}>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>{ProcessesTableColumns.Name}</Th>
-                                            <Th>{ProcessesTableColumns.SourceHost}</Th>
-                                        </Tr>
-                                    </Thead>
-                                    {processes?.map(
-                                        ({ identity, name: processName, sourceHost }) => (
-                                            <Tbody key={`${identity}${name}`}>
-                                                <Tr>
-                                                    <Td>{processName}</Td>
-                                                    <Td>{sourceHost}</Td>
-                                                </Tr>
-                                            </Tbody>
-                                        ),
-                                    )}
-                                </TableComposable>
+                                {(!!hosts.length && (
+                                    <List isPlain>
+                                        {hosts.map(({ identity, provider }) => (
+                                            <ListItem key={identity}>{provider}</ListItem>
+                                        ))}
+                                    </List>
+                                )) || <EmptyData />}
+                            </CardBody>
+                        </Card>
+                    </SplitItem>
+                    <SplitItem className="pf-u-w-50">
+                        <Card isFullHeight isRounded>
+                            <CardTitle>
+                                <Title headingLevel="h2">{Labels.Processes}</Title>
+                            </CardTitle>
+                            <CardBody>
+                                {(!!processes.length && (
+                                    <List isPlain>
+                                        {processes.map(({ identity, name: processName }) => (
+                                            <ListItem key={identity}>{processName}</ListItem>
+                                        ))}
+                                    </List>
+                                )) || <EmptyData />}
                             </CardBody>
                         </Card>
                     </SplitItem>
                 </Split>
             </StackItem>
-            {!!linkedSites.length && (
-                <StackItem>
-                    <Card isFullHeight>
-                        <CardTitle>
-                            <Title headingLevel="h2">Linked to sites</Title>
-                        </CardTitle>
-                        <CardBody>
-                            <List>
-                                {linkedSites.map(({ identity, name: linkedSiteName }) => (
-                                    <ListItem key={identity}>{linkedSiteName}</ListItem>
-                                ))}
-                            </List>
-                        </CardBody>
-                    </Card>
-                </StackItem>
-            )}
         </Stack>
     );
 };

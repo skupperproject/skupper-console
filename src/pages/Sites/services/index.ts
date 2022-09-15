@@ -28,7 +28,7 @@ const SitesServices = {
                 linksArray.findIndex(({ name }) => name === link.name) === index,
         );
 
-        return { hosts, processes, linkedSites, ...site };
+        return { hosts: hosts || [], processes, linkedSites, ...site };
     },
 
     getDataSite: async (id: string): Promise<SiteDataResponse> => {
