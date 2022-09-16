@@ -1,9 +1,8 @@
 import { RESTApi } from 'API/REST';
-
-import { Service } from './services.interfaces';
+import { ServiceResponse } from 'API/REST.interfaces';
 
 const Services = {
-    fetchServices: async (): Promise<Service[]> => RESTApi.fetchServices(),
+    getServices: async (): Promise<ServiceResponse[]> => RESTApi.fetchServices(),
 };
 
 export default Services;

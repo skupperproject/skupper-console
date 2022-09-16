@@ -117,8 +117,10 @@ const Site = function () {
                             <CardBody>
                                 {(!!hosts.length && (
                                     <List isPlain>
-                                        {hosts.map(({ identity, provider }) => (
-                                            <ListItem key={identity}>{provider}</ListItem>
+                                        {hosts.map(({ identity, provider, name: hostName }) => (
+                                            <ListItem
+                                                key={identity}
+                                            >{`${provider} (${hostName})`}</ListItem>
                                         ))}
                                     </List>
                                 )) || <EmptyData />}

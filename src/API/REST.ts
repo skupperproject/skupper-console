@@ -1,7 +1,7 @@
 import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 
 import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
-import { getFlowsTopology, getServices, getSites } from './controllers';
+import { getFlowsTopology, getSites } from './controllers';
 import {
     DATA_URL,
     FLOWS_CONNECTORS,
@@ -24,6 +24,7 @@ import {
     PROCESSES_PATH,
     FLOW_AGGREGATES_SITES,
     HOSTS_PATH,
+    PROCESS_GROUPS,
 } from './REST.constant';
 import {
     ServiceResponse,
@@ -116,9 +117,9 @@ export const RESTApi = {
 
     // SERVICES APIs
     fetchServices: async (): Promise<ServiceResponse[]> => {
-        const { data } = await fetchWithTimeout(DATA_URL);
+        const { data } = await fetchWithTimeout(PROCESS_GROUPS);
 
-        return getServices(data);
+        return data;
     },
 
     // FLOWS APIs

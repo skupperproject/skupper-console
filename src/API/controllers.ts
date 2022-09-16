@@ -21,14 +21,6 @@ export function getSites(VANdata: DataResponse) {
     }));
 }
 
-export function getServices(VANdata: DataResponse) {
-    return VANdata.services.map(({ address, protocol }) => ({
-        id: address,
-        name: address,
-        protocol,
-    }));
-}
-
 export function getFlowsTopology(routers: RouterResponse[], links: LinkResponse[]) {
     const routersMap = routers.reduce((acc, router) => {
         //TODO: improve the logic to associate link source and link target

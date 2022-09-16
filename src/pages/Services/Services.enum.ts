@@ -3,8 +3,10 @@ export enum ServicesRoutesPaths {
     Overview = '/services/overview',
 }
 
-// SERVICES VIEW
 export enum ServicesOverviewColumns {
     Name = 'Name',
-    Protocol = 'Protocol',
+}
+
+export enum Labels {
+    Services = 'Services',
 }

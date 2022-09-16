@@ -113,9 +113,8 @@ export interface SiteResponse {
 }
 
 export interface ServiceResponse {
-    id: string;
+    identity: string;
     name: string;
-    protocol: string;
 }
 
 export interface LinkResponse {
