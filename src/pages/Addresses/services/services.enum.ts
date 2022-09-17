@@ -1,8 +1,5 @@
-export enum QueriesVANServices {
-    GetFlowsPairsByVanAddr = 'vanservices-flowspairs-by-van-addr-query',
-    GetProcessesByVanAddr = 'vanservices-processes-by-van-addr-query',
-    GetFlowsByVanAddr = 'vanservices-flows-by-van-addr-query',
-    GetFlowPairTopologyNetwork = 'flowpair-topology-network-query',
-    GetFlowPair = 'vanservices-flowpair-query',
-    GetVanAdresses = 'vanservices-van-adresses',
+export enum QueriesAddresses {
+    GetFlowPairsByAddress = 'addresses-flowpairs-by-van-addr-query',
+    GetProcessesByVanAddr = 'processes-by-address-query',
+    GetAddresses = 'addresses-query',
 }

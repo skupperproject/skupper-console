@@ -24,16 +24,16 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
+import { CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../Addresses.constants';
+import {
+    FlowPairDetailsLabels,
+    AddressesRoutesPathLabel,
+    AddressesRoutesPaths,
+} from '../Addresses.enum';
 import FlowsPairsTable from '../components/FlowPairsTable';
 import ProcessesTable from '../components/ProcessesTable';
 import { MonitorServices } from '../services';
-import { QueriesVANServices } from '../services/services.enum';
-import { CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../VANServices.constants';
-import {
-    FlowPairDetailsLabels,
-    VanServicesRoutesPathLabel,
-    VANServicesRoutesPaths,
-} from '../VANServices.enum';
+import { QueriesAddresses } from '../services/services.enum';
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
@@ -47,7 +47,7 @@ const FlowsPairs = function () {
     const vanAddressName = vanAddress?.split('@')[0];
 
     const { data: connectionsPaginated, isLoading: isLoadingConnectionsPaginated } = useQuery(
-        [QueriesVANServices.GetFlowsPairsByVanAddr, vanAddressId, currentPage, visibleItems],
+        [QueriesAddresses.GetFlowPairsByAddress, vanAddressId, currentPage, visibleItems],
         () =>
             vanAddressId
                 ? MonitorServices.fetchFlowPairsByVanAddressId(
@@ -64,7 +64,7 @@ const FlowsPairs = function () {
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesVANServices.GetProcessesByVanAddr, vanAddressId, currentPage, visibleItems],
+        [QueriesAddresses.GetProcessesByVanAddr, vanAddressId, currentPage, visibleItems],
         () => (vanAddressId ? MonitorServices.fetchProcessesByVanAddr(vanAddressId) : null),
         {
             cacheTime: 0,
@@ -119,8 +119,8 @@ const FlowsPairs = function () {
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        <Link to={VANServicesRoutesPaths.VANServices}>
-                            {VanServicesRoutesPathLabel.VanServices}
+                        <Link to={AddressesRoutesPaths.VANServices}>
+                            {AddressesRoutesPathLabel.Addresses}
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbHeading to="#">{vanAddressName}</BreadcrumbHeading>

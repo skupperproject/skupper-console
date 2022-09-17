@@ -9,13 +9,13 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import { FlowPairBasic, ProcessesTableProps } from '../services/services.interfaces';
-import { ProcessesColumns } from '../VANServices.constants';
+import { ProcessesColumns } from '../Addresses.constants';
 import {
     FlowPairsColumnsNames,
     ProcessesColumnsNames,
-    VanServicesDescriptions,
-} from '../VANServices.enum';
+    AddressesDescriptions,
+} from '../Addresses.enum';
+import { FlowPairBasic, ProcessesTableProps } from '../services/services.interfaces';
 
 import './FlowPairs.css';
 
@@ -75,7 +75,7 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                     </Th>
                     <Th sort={getSortParams(7)} className="align-th-right">
                         {FlowPairsColumnsNames.MaxTTFB}
-                        <Tooltip position="right" content={VanServicesDescriptions.TTFBDesc}>
+                        <Tooltip position="right" content={AddressesDescriptions.TTFBDesc}>
                             <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
                         </Tooltip>
                     </Th>

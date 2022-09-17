@@ -24,19 +24,19 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
+import { AddressesRoutesPaths, Labels, AddressesColumns } from '../Addresses.enum';
 import { MonitorServices } from '../services';
-import { QueriesVANServices } from '../services/services.enum';
-import { VANServicesRoutesPaths, Labels, OverviewColumns } from '../VANServices.enum';
+import { QueriesAddresses } from '../services/services.enum';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 400;
 
-const VANServices = function () {
+const Addresses = function () {
     const navigate = useNavigate();
 
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL / 4);
 
     const { data: vanServices, isLoading } = useQuery(
-        [QueriesVANServices.GetVanAdresses],
+        [QueriesAddresses.GetAddresses],
         MonitorServices.fetchVanAddresses,
         {
             refetchInterval,
@@ -76,14 +76,18 @@ const VANServices = function () {
                     <TableComposable borders={false} variant="compact" isStriped>
                         <Thead>
                             <Tr>
-                                <Th>{OverviewColumns.Name}</Th>
+                                <Th>{AddressesColumns.Name}</Th>
                                 <Th className="align-th-right">
-                                    {OverviewColumns.CurrentFlowPairs}
+                                    {AddressesColumns.CurrentFlowPairs}
                                 </Th>
-                                <Th className="align-th-right">{OverviewColumns.TotalFlowPairs}</Th>
-                                <Th className="align-th-right">{OverviewColumns.TotalListeners}</Th>
                                 <Th className="align-th-right">
-                                    {OverviewColumns.TotalConnectors}
+                                    {AddressesColumns.TotalFlowPairs}
+                                </Th>
+                                <Th className="align-th-right">
+                                    {AddressesColumns.TotalListeners}
+                                </Th>
+                                <Th className="align-th-right">
+                                    {AddressesColumns.TotalConnectors}
                                 </Th>
                             </Tr>
                         </Thead>
@@ -98,31 +102,31 @@ const VANServices = function () {
                             }) => (
                                 <Tbody key={identity}>
                                     <Tr>
-                                        <Td dataLabel={OverviewColumns.Name}>
+                                        <Td dataLabel={AddressesColumns.Name}>
                                             <ResourceIcon type="vanAddress" />
                                             <Link
-                                                to={`${VANServicesRoutesPaths.FlowsPairs}/${name}@${identity}`}
+                                                to={`${AddressesRoutesPaths.FlowsPairs}/${name}@${identity}`}
                                             >
                                                 {name}
                                             </Link>
                                         </Td>
                                         <Td
                                             className="align-td-right"
-                                            dataLabel={OverviewColumns.TotalFlowPairs}
+                                            dataLabel={AddressesColumns.TotalFlowPairs}
                                         >{`${currentFlows}`}</Td>
                                         <Td
                                             className="align-td-right"
-                                            dataLabel={OverviewColumns.TotalFlowPairs}
+                                            dataLabel={AddressesColumns.TotalFlowPairs}
                                         >{`${totalFlows}`}</Td>
                                         <Td
                                             className="align-td-right"
-                                            dataLabel={OverviewColumns.TotalListeners}
+                                            dataLabel={AddressesColumns.TotalListeners}
                                         >
                                             {`${listenerCount}`}
                                         </Td>
                                         <Td
                                             className="align-td-right"
-                                            dataLabel={OverviewColumns.TotalConnectors}
+                                            dataLabel={AddressesColumns.TotalConnectors}
                                         >{`${connectorCount}`}</Td>
                                     </Tr>
                                 </Tbody>
@@ -158,4 +162,4 @@ const VANServices = function () {
     );
 };
 
-export default VANServices;
+export default Addresses;

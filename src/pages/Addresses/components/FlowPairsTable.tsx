@@ -7,8 +7,8 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { FlowPairBasic, FlowPairsTableProps } from '../services/services.interfaces';
-import { FlowPairsColumns } from '../VANServices.constants';
-import { FlowPairsColumnsNames } from '../VANServices.enum';
+import { FlowPairsColumns } from '../Addresses.constants';
+import { FlowPairsColumnsNames } from '../Addresses.enum';
 
 import './FlowPairs.css';
 

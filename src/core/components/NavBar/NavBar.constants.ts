@@ -1,4 +1,4 @@
-import { VANServicesRoutesPaths } from '@pages/Addresses/VANServices.enum';
+import { AddressesRoutesPaths } from '@pages/Addresses/Addresses.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesPaths } from '@pages/Sites/Sites.constant';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
@@ -12,7 +12,7 @@ export const RoutesProps = [
         name: NavBarLabels.SideBarServices,
     },
     {
-        path: VANServicesRoutesPaths.VANServices,
+        path: AddressesRoutesPaths.VANServices,
         name: NavBarLabels.SideBarVanServices,
     },
     {

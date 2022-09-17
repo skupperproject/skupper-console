@@ -1,15 +1,15 @@
-export enum VANServicesRoutesPaths {
-    VANServices = '/vanservices',
-    OverviewTable = '/vanservices/vans',
-    FlowsPairs = '/vanservices/flowspairs',
+export enum AddressesRoutesPaths {
+    VANServices = '/addresses',
+    OverviewTable = '/addresses/vans',
+    FlowsPairs = '/addresses/flowpairs',
     FlowPairsTable = '/table',
 }
 
-export enum VanServicesRoutesPathLabel {
-    VanServices = 'addresses',
+export enum AddressesRoutesPathLabel {
+    Addresses = 'addresses',
 }
 
-export enum VanServicesDescriptions {
+export enum AddressesDescriptions {
     FlowPairsDesc = 'Sequence of packets from a source to a destination',
     TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
 }
@@ -21,7 +21,7 @@ export enum Labels {
     Connections = 'Connections',
 }
 
-export enum OverviewColumns {
+export enum AddressesColumns {
     Name = 'Name',
     TotalListeners = 'Clients',
     TotalConnectors = 'Servers',
@@ -30,12 +30,6 @@ export enum OverviewColumns {
 }
 
 // FLOWS PAIRS VIEW
-export enum FlowsPairsLabels {
-    FlowsPairs = 'Flows Pairs',
-    NoCounterFlowAwailable = 'no counterflow found',
-    ShowActiveFlowsPairs = 'show active items',
-}
-
 export enum FlowPairsColumnsNames {
     Status = 'Status',
     FlowForward = 'From Client',
@@ -50,21 +44,6 @@ export enum FlowPairsColumnsNames {
     StartTime = 'Created at',
     Protocol = 'Protocol',
     ImageName = 'Image',
-}
-
-// FLOW PAIR DETAIL
-export enum FlowPairDetailsColumns {
-    SiteName = 'Site',
-    VANService = 'Addresses',
-    Protocol = 'Protocol',
-    Bytes = 'Bytes',
-    ByteRate = 'Byte Rate',
-    Latency = 'FFTB',
-    Client = 'Client',
-    Server = 'Server',
-    ProcessName = 'Process',
-    ProcessHost = 'Process Host',
-    ProcessImg = 'Process Image',
 }
 
 export enum FlowPairDetailsLabels {
