@@ -66,7 +66,6 @@ const ServicesOverview = function () {
             </CardTitle>
             <TableComposable
                 className="flows-table"
-                aria-label="flows table"
                 borders={false}
                 variant="compact"
                 isStickyHeader
@@ -80,7 +79,7 @@ const ServicesOverview = function () {
                 {services.map(({ identity, name: serviceName }) => (
                     <Tbody key={identity}>
                         <Tr>
-                            <Td dataLabel={ServicesOverviewColumns.Name}>
+                            <Td>
                                 <ResourceIcon type="service" />
                                 {serviceName}
                             </Td>

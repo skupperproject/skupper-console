@@ -97,31 +97,22 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                             imageName,
                         }) => (
                             <Tr key={id}>
-                                <Td dataLabel={FlowPairsColumnsNames.Site}>
+                                <Td>
                                     <Link to={`${SitesRoutesPaths.Details}/${siteId}`}>
                                         {siteName}
                                     </Link>
                                 </Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Host}>{processName}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Port}>{host}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Process}>{port}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.ImageName}>{imageName}</Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.ByteRate}
-                                    className="align-td-right"
-                                >
+                                <Td>{processName}</Td>
+                                <Td>{host}</Td>
+                                <Td>{port}</Td>
+                                <Td>{imageName}</Td>
+                                <Td className="align-td-right">
                                     <b>{formatByteRate(byteRate, 3)}</b>
                                 </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Bytes}
-                                    className="align-td-right"
-                                >
+                                <Td className="align-td-right">
                                     <b>{formatBytes(bytes, 3)}</b>
                                 </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.MaxTTFB}
-                                    className="align-td-right"
-                                >
+                                <Td className="align-td-right">
                                     <b> {formatTime(maxTTFB)}</b>
                                 </Td>
                             </Tr>

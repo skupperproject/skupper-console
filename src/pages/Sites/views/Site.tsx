@@ -7,6 +7,10 @@ import {
     Card,
     CardBody,
     CardTitle,
+    DescriptionList,
+    DescriptionListDescription,
+    DescriptionListGroup,
+    DescriptionListTerm,
     List,
     ListItem,
     Split,
@@ -24,7 +28,6 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import DescriptionItem from '../../../core/components/DescriptionItem';
 import SitesServices from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel, SiteDetails, Labels } from '../Sites.enum';
@@ -86,8 +89,17 @@ const Site = function () {
                         <Title headingLevel="h2">{Labels.SiteInfo}</Title>
                     </CardTitle>
                     <CardBody>
-                        <DescriptionItem title={SiteDetails.Name} value={name} />
-                        <DescriptionItem title={SiteDetails.Namespace} value={nameSpace} />
+                        <DescriptionList>
+                            <DescriptionListGroup>
+                                <DescriptionListTerm>{SiteDetails.Name}</DescriptionListTerm>
+                                <DescriptionListDescription>{name}</DescriptionListDescription>
+                            </DescriptionListGroup>
+
+                            <DescriptionListGroup>
+                                <DescriptionListTerm>{SiteDetails.Namespace}</DescriptionListTerm>
+                                <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
+                            </DescriptionListGroup>
+                        </DescriptionList>
                     </CardBody>
                 </Card>
             </StackItem>

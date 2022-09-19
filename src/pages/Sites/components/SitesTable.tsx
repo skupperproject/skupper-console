@@ -43,17 +43,13 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
                 {sites.map(({ identity, name, hosts, processes, linkedSites }) => (
                     <Tbody key={identity}>
                         <Tr>
-                            <Td dataLabel={SitesTableColumns.Name}>
+                            <Td>
                                 <ResourceIcon type="site" />
                                 <Link to={`${SitesRoutesPaths.Details}/${identity}`}>{name}</Link>
                             </Td>
-                            <Td dataLabel={SitesTableColumns.NumSitesLinked}>
-                                {`${linkedSites.length}`}
-                            </Td>
-                            <Td dataLabel={SitesTableColumns.NumHosts}>{`${hosts.length}`}</Td>
-                            <Td dataLabel={SitesTableColumns.NumProcesses}>
-                                {`${processes.length}`}
-                            </Td>
+                            <Td>{`${linkedSites.length}`}</Td>
+                            <Td>{`${hosts.length}`}</Td>
+                            <Td>{`${processes.length}`}</Td>
                         </Tr>
                     </Tbody>
                 ))}

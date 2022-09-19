@@ -37,12 +37,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                             <>
                                 <Label color="green">{ConnectionsLabels.TCPconnectionsOut}</Label>
 
-                                <TableComposable
-                                    aria-label="flows table"
-                                    variant="compact"
-                                    isStickyHeader
-                                    borders={false}
-                                >
+                                <TableComposable variant="compact" isStickyHeader borders={false}>
                                     <Thead>
                                         <Tr>
                                             <Th>{ConnectionsColumns.Name}</Th>
@@ -52,12 +47,8 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                     {tcpConnectionsOutEntries.map((info) => (
                                         <Tbody key={info.identity}>
                                             <Tr>
-                                                <Td
-                                                    dataLabel={ConnectionsColumns.Name}
-                                                >{`${info.identity}`}</Td>
-                                                <Td
-                                                    dataLabel={ConnectionsColumns.Bytes}
-                                                >{`${formatBytes(info.sourceOctets)}`}</Td>
+                                                <Td>{`${info.identity}`}</Td>
+                                                <Td>{`${formatBytes(info.sourceOctets)}`}</Td>
                                             </Tr>
                                         </Tbody>
                                     ))}
@@ -67,12 +58,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                         {!!tcpConnectionsInEntries.length && (
                             <>
                                 <Label color="purple">{ConnectionsLabels.TCPconnectionsIn}</Label>
-                                <TableComposable
-                                    aria-label="flows table"
-                                    variant="compact"
-                                    isStickyHeader
-                                    borders={false}
-                                >
+                                <TableComposable variant="compact" isStickyHeader borders={false}>
                                     <Thead>
                                         <Tr>
                                             <Th>{ConnectionsColumns.Name}</Th>
@@ -82,12 +68,8 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                     {tcpConnectionsInEntries.map((info) => (
                                         <Tbody key={info.identity}>
                                             <Tr>
-                                                <Td
-                                                    dataLabel={ConnectionsColumns.Name}
-                                                >{`${info.identity}`}</Td>
-                                                <Td
-                                                    dataLabel={ConnectionsColumns.Bytes}
-                                                >{`${formatBytes(info.destinationOctets)}`}</Td>
+                                                <Td>{`${info.identity}`}</Td>
+                                                <Td>{`${formatBytes(info.destinationOctets)}`}</Td>
                                             </Tr>
                                         </Tbody>
                                     ))}

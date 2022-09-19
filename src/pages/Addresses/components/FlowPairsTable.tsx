@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import { FlowPairBasic, FlowPairsTableProps } from '../services/services.interfaces';
 import { FlowPairsColumns } from '../Addresses.constants';
 import { FlowPairsColumnsNames } from '../Addresses.enum';
+import { FlowPairBasic, FlowPairsTableProps } from '../services/services.interfaces';
 
 import './FlowPairs.css';
 
@@ -128,64 +128,32 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                             targetPort,
                         }) => (
                             <Tr key={id}>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Site}
-                                    className="secondary-color"
-                                >
+                                <Td className="secondary-color">
                                     <Link to={`${SitesRoutesPaths.Details}/${siteId}`}>
                                         {siteName}
                                     </Link>
                                 </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Process}
-                                    className="secondary-color"
-                                >
-                                    {processName}
-                                </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Host}
-                                    className="secondary-color"
-                                >
-                                    {host}
-                                </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Port}
-                                    className="secondary-color"
-                                >
-                                    {`${port}`}
-                                </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Bytes}
-                                    className="align-td-right secondary-color"
-                                >
+                                <Td className="secondary-color">{processName}</Td>
+                                <Td className="secondary-color">{host}</Td>
+                                <Td className="secondary-color">{`${port}`}</Td>
+                                <Td className="align-td-right secondary-color">
                                     <b>{formatByteRate(byteRate, 3)}</b>
                                 </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Bytes}
-                                    className="align-td-right secondary-color td-border-right "
-                                >
+                                <Td className="align-td-right secondary-color td-border-right ">
                                     <b>{formatBytes(bytes, 3)}</b>
                                 </Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Site}>
+                                <Td>
                                     <Link to={`${SitesRoutesPaths.Details}/${targetSiteId}`}>
                                         {targetSiteName}
                                     </Link>
                                 </Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Process}>
-                                    {targetProcessName}
-                                </Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Host}>{targetHost}</Td>
-                                <Td dataLabel={FlowPairsColumnsNames.Port}>{`${targetPort}`}</Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Bytes}
-                                    className="align-td-right"
-                                >
+                                <Td>{targetProcessName}</Td>
+                                <Td>{targetHost}</Td>
+                                <Td>{`${targetPort}`}</Td>
+                                <Td className="align-td-right">
                                     <b>{formatByteRate(targetByteRate, 3)}</b>
                                 </Td>
-                                <Td
-                                    dataLabel={FlowPairsColumnsNames.Bytes}
-                                    className="align-td-right"
-                                >
+                                <Td className="align-td-right">
                                     <b>{formatBytes(targetBytes, 3)}</b>
                                 </Td>
                             </Tr>

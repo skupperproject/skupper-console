@@ -102,7 +102,7 @@ const Addresses = function () {
                             }) => (
                                 <Tbody key={identity}>
                                     <Tr>
-                                        <Td dataLabel={AddressesColumns.Name}>
+                                        <Td>
                                             <ResourceIcon type="vanAddress" />
                                             <Link
                                                 to={`${AddressesRoutesPaths.FlowsPairs}/${name}@${identity}`}
@@ -110,24 +110,10 @@ const Addresses = function () {
                                                 {name}
                                             </Link>
                                         </Td>
-                                        <Td
-                                            className="align-td-right"
-                                            dataLabel={AddressesColumns.TotalFlowPairs}
-                                        >{`${currentFlows}`}</Td>
-                                        <Td
-                                            className="align-td-right"
-                                            dataLabel={AddressesColumns.TotalFlowPairs}
-                                        >{`${totalFlows}`}</Td>
-                                        <Td
-                                            className="align-td-right"
-                                            dataLabel={AddressesColumns.TotalListeners}
-                                        >
-                                            {`${listenerCount}`}
-                                        </Td>
-                                        <Td
-                                            className="align-td-right"
-                                            dataLabel={AddressesColumns.TotalConnectors}
-                                        >{`${connectorCount}`}</Td>
+                                        <Td className="align-td-right">{`${currentFlows}`}</Td>
+                                        <Td className="align-td-right">{`${totalFlows}`}</Td>
+                                        <Td className="align-td-right">{`${listenerCount}`}</Td>
+                                        <Td className="align-td-right">{`${connectorCount}`}</Td>
                                     </Tr>
                                 </Tbody>
                             ),
