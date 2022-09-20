@@ -1,8 +1,8 @@
-.flows-table .secondary-color {
+.sk-table .secondary-color {
     background-color: var(--pf-global--palette--black-100);
     border-right: 1px solid var(--pf-global--palette--black-100);
 }
 
-.flows-table .td-border-right {
+.sk-table .td-border-right {
     border-right: 1px solid var(--pf-global--palette--black-300);
 }

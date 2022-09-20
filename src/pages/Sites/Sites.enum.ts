@@ -1,6 +1,5 @@
 export enum SitesRoutesPaths {
     Sites = '/sites',
-    Details = '/sites/details',
 }
 
 export enum SitesRoutesPathLabel {
@@ -10,10 +9,12 @@ export enum SitesRoutesPathLabel {
 export enum Labels {
     Sites = 'Sites',
     SitesDescription = 'Set of applications running under the same geographical area',
-    SiteInfo = 'Details',
+    Details = 'Details',
     Links = 'Linked to sites',
     Hosts = 'Hosts',
     Processes = 'Processes',
+    Name = 'Name',
+    Namespace = 'Namespace',
 }
 
 export enum SitesTableColumns {
@@ -31,9 +32,4 @@ export enum HostsTableColumns {
 export enum ProcessesTableColumns {
     Name = 'Name',
     SourceHost = 'Source Host',
-}
-
-export enum SiteDetails {
-    Name = 'Name',
-    Namespace = 'Namespace',
 }

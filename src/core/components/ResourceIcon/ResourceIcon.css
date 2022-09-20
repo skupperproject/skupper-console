@@ -25,6 +25,10 @@
     background-color: var(--pf-global--palette--red-100);
 }
 
-.sk-resource-services {
+.sk-resource-address {
     background-color: var(--pf-global--palette--green-500);
+}
+
+.sk-resource-process {
+    background-color: var(--pf-global--palette--orange-300);
 }

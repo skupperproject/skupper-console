@@ -17,7 +17,7 @@ export const siteRoutes = [
                 element: <Sites />,
             },
             {
-                path: `${SitesRoutesPaths.Details}/:id`,
+                path: `${SitesRoutesPaths.Sites}/:id`,
                 element: <Site />,
             },
         ],

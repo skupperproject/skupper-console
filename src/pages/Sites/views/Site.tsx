@@ -11,6 +11,7 @@ import {
     DescriptionListDescription,
     DescriptionListGroup,
     DescriptionListTerm,
+    Flex,
     List,
     ListItem,
     Split,
@@ -30,7 +31,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel, SiteDetails, Labels } from '../Sites.enum';
+import { SitesRoutesPaths, SitesRoutesPathLabel, Labels } from '../Sites.enum';
 
 const Site = function () {
     const navigate = useNavigate();
@@ -77,26 +78,27 @@ const Site = function () {
             </StackItem>
 
             <StackItem>
-                <Title headingLevel="h1">
+                <Flex alignItems={{ default: 'alignItemsCenter' }}>
                     <ResourceIcon type="site" />
-                    {name}
-                </Title>
+
+                    <Title headingLevel="h1">{name}</Title>
+                </Flex>
             </StackItem>
 
             <StackItem>
                 <Card isFullHeight isRounded>
                     <CardTitle>
-                        <Title headingLevel="h2">{Labels.SiteInfo}</Title>
+                        <Title headingLevel="h2">{Labels.Details}</Title>
                     </CardTitle>
                     <CardBody>
                         <DescriptionList>
                             <DescriptionListGroup>
-                                <DescriptionListTerm>{SiteDetails.Name}</DescriptionListTerm>
+                                <DescriptionListTerm>{Labels.Name}</DescriptionListTerm>
                                 <DescriptionListDescription>{name}</DescriptionListDescription>
                             </DescriptionListGroup>
 
                             <DescriptionListGroup>
-                                <DescriptionListTerm>{SiteDetails.Namespace}</DescriptionListTerm>
+                                <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
                                 <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
                             </DescriptionListGroup>
                         </DescriptionList>
@@ -148,7 +150,10 @@ const Site = function () {
                                 {(!!processes.length && (
                                     <List isPlain>
                                         {processes.map(({ identity, name: processName }) => (
-                                            <ListItem key={identity}>{processName}</ListItem>
+                                            <Flex key={identity}>
+                                                <ResourceIcon type="process" />
+                                                <ListItem>{processName}</ListItem>
+                                            </Flex>
                                         ))}
                                     </List>
                                 )) || <EmptyData />}

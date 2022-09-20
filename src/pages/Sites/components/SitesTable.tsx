@@ -31,13 +31,13 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
                     </Tooltip>
                 </Flex>
             </CardTitle>
-            <TableComposable borders={false} variant="compact" isStriped>
+            <TableComposable borders={false} variant="compact" isStriped className="sk-table">
                 <Thead>
                     <Tr>
                         <Th>{SitesTableColumns.Name}</Th>
-                        <Th>{SitesTableColumns.NumSitesLinked}</Th>
-                        <Th>{SitesTableColumns.NumHosts}</Th>
-                        <Th>{SitesTableColumns.NumProcesses}</Th>
+                        <Th className="align-th-right">{SitesTableColumns.NumSitesLinked}</Th>
+                        <Th className="align-th-right">{SitesTableColumns.NumHosts}</Th>
+                        <Th className="align-th-right">{SitesTableColumns.NumProcesses}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -45,11 +45,11 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
                         <Tr key={identity}>
                             <Td>
                                 <ResourceIcon type="site" />
-                                <Link to={`${SitesRoutesPaths.Details}/${identity}`}>{name}</Link>
+                                <Link to={`${SitesRoutesPaths.Sites}/${identity}`}>{name}</Link>
                             </Td>
-                            <Td>{`${linkedSites.length}`}</Td>
-                            <Td>{`${hosts.length}`}</Td>
-                            <Td>{`${processes.length}`}</Td>
+                            <Td className="align-td-right">{`${linkedSites.length}`}</Td>
+                            <Td className="align-td-right">{`${hosts.length}`}</Td>
+                            <Td className="align-td-right">{`${processes.length}`}</Td>
                         </Tr>
                     ))}
                 </Tbody>

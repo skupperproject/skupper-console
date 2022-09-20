@@ -103,7 +103,7 @@ const Addresses = function () {
                                 }) => (
                                     <Tr key={identity}>
                                         <Td>
-                                            <ResourceIcon type="vanAddress" />
+                                            <ResourceIcon type="address" />
                                             <Link
                                                 to={`${AddressesRoutesPaths.FlowsPairs}/${name}@${identity}`}
                                             >

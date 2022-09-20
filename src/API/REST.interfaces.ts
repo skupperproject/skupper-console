@@ -161,6 +161,7 @@ export interface ProcessResponse {
     name: string;
     imageName: string;
     sourceHost: string;
+    hostName: string;
     startTime: number;
     endTime: number;
 }

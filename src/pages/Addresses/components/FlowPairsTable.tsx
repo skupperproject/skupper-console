@@ -48,7 +48,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
     });
 
     return (
-        <TableComposable borders={true} className="flows-table">
+        <TableComposable className="sk-table">
             <Thead hasNestedHeader>
                 <Tr>
                     <Th hasRightBorder colSpan={6}>
@@ -129,7 +129,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                         }) => (
                             <Tr key={id}>
                                 <Td className="secondary-color">
-                                    <Link to={`${SitesRoutesPaths.Details}/${siteId}`}>
+                                    <Link to={`${SitesRoutesPaths.Sites}/${siteId}`}>
                                         {siteName}
                                     </Link>
                                 </Td>
@@ -143,7 +143,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     <b>{formatBytes(bytes, 3)}</b>
                                 </Td>
                                 <Td>
-                                    <Link to={`${SitesRoutesPaths.Details}/${targetSiteId}`}>
+                                    <Link to={`${SitesRoutesPaths.Sites}/${targetSiteId}`}>
                                         {targetSiteName}
                                     </Link>
                                 </Td>

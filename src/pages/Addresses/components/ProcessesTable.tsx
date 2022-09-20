@@ -98,7 +98,7 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                         }) => (
                             <Tr key={id}>
                                 <Td>
-                                    <Link to={`${SitesRoutesPaths.Details}/${siteId}`}>
+                                    <Link to={`${SitesRoutesPaths.Sites}/${siteId}`}>
                                         {siteName}
                                     </Link>
                                 </Td>

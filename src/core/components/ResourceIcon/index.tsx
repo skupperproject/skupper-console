@@ -5,14 +5,15 @@ import { Tooltip } from '@patternfly/react-core';
 import './ResourceIcon.css';
 
 interface ResourceIconProps {
-    type: 'site' | 'deployment' | 'service' | 'vanAddress';
+    type: 'site' | 'deployment' | 'service' | 'address' | 'process';
 }
 
 const RESOURCE_MAP = {
     site: { class: 'sk-resource-site', symbol: 'S' },
     deployment: { class: 'sk-resource-deployment', symbol: 'D' },
     service: { class: 'sk-resource-service', symbol: 'SE' },
-    vanAddress: { class: 'sk-resource-services', symbol: 'A' },
+    address: { class: 'sk-resource-address', symbol: 'A' },
+    process: { class: 'sk-resource-process', symbol: 'P' },
 };
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {

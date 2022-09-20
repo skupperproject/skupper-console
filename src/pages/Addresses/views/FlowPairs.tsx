@@ -128,8 +128,8 @@ const FlowsPairs = function () {
             </StackItem>
 
             <StackItem>
-                <Flex>
-                    <ResourceIcon type="vanAddress" />
+                <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                    <ResourceIcon type="address" />
                     <TextContent>
                         <Text component={TextVariants.h1}>{vanAddressName}</Text>
                     </TextContent>
