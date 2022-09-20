@@ -13,9 +13,9 @@ To run the console in develop mode using a mock data example, type in the termin
 
 > `yarn start`
 
-and open <http://localhosst:3000> from the browser
+and open <http://localhosst:3000>
 
-Alternatevely you can run the console using external endpoints for the skupper controller and skupper flow collector:
+You can also run the console using external endpoints for the skupper controller and skupper flow collector:
 
 > `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
@@ -43,8 +43,3 @@ For development scope alternatevely you can install and activate this plugin in 
 ## build
 
 > `yarn build`
-
- you should pass (or set your host) the following ENV_VARIABLES:
-
-> `ENABLE_MOCK_SERVER=true` - the app use mock data
-> `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url>`  - the app use data from remote endpoints
