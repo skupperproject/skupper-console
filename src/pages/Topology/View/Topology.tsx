@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesServices from '@pages/Sites/services';
+import SitesController from '@pages/Sites/services';
 import { UPDATE_INTERVAL } from 'config';
 
 import TopologySVGContainer from '../components/TopologySVGContainer';
@@ -18,7 +18,7 @@ const TopologyContent = function () {
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
         [QueriesTopology.GetSites],
-        SitesServices.fetchDataSites,
+        SitesController.fetchDataSites,
         {
             refetchInterval,
             onError: handleError,

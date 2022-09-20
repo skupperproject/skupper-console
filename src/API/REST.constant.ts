@@ -31,6 +31,9 @@ export const getRoutersBySitePATH = (id: string) => `${SITES_PATH}/${id}/routers
 export const getLinksBySitePATH = (id: string) => `${SITES_PATH}/${id}/links`;
 export const getHostsBySitePATH = (id: string) => `${SITES_PATH}/${id}/hosts`;
 
+export const getServicePATH = (id: string) => `${PROCESS_GROUPS}/${id}`;
+export const getProcessesByServicePath = (id: string) => `${PROCESS_GROUPS}/${id}/processes`;
+
 export const getFlowsPairsByVanAddressIdPATH = (id: string) =>
     `${FLOWS_VAN_ADDRESSES}/${id}/flowpairs`;
 export const getFlowsByProcessIdPATH = (id: string) => `${PROCESSES_PATH}/${id}/flows`;

@@ -40,9 +40,9 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
                         <Th>{SitesTableColumns.NumProcesses}</Th>
                     </Tr>
                 </Thead>
-                {sites.map(({ identity, name, hosts, processes, linkedSites }) => (
-                    <Tbody key={identity}>
-                        <Tr>
+                <Tbody>
+                    {sites.map(({ identity, name, hosts, processes, linkedSites }) => (
+                        <Tr key={identity}>
                             <Td>
                                 <ResourceIcon type="site" />
                                 <Link to={`${SitesRoutesPaths.Details}/${identity}`}>{name}</Link>
@@ -51,8 +51,8 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
                             <Td>{`${hosts.length}`}</Td>
                             <Td>{`${processes.length}`}</Td>
                         </Tr>
-                    </Tbody>
-                ))}
+                    ))}
+                </Tbody>
             </TableComposable>
         </Card>
     );

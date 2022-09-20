@@ -1,10 +1,10 @@
 export enum ConnectionsLabels {
-    HTTPprotocol = 'HTTP protocol',
-    TCPprotocol = 'TCP protocol',
-    HTTPrequestsIn = 'HTTP Requests Received',
-    HTTPrequestsOut = 'HTTP Requests Sent',
-    TCPconnectionsIn = 'TCP traffic received',
-    TCPconnectionsOut = 'TCP traffic sent',
+    HTTPProtocol = 'HTTP protocol',
+    TCPProtocol = 'TCP protocol',
+    HTTPRequestsIn = 'HTTP Requests Received',
+    HTTPRequestsOut = 'HTTP Requests Sent',
+    TCPConnectionsIn = 'TCP traffic received',
+    TCPConnectionsOut = 'TCP traffic sent',
 }
 
 export enum ConnectionsColumns {

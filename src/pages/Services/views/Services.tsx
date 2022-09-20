@@ -76,16 +76,16 @@ const ServicesOverview = function () {
                         <Th>{ServicesOverviewColumns.Name}</Th>
                     </Tr>
                 </Thead>
-                {services.map(({ identity, name: serviceName }) => (
-                    <Tbody key={identity}>
-                        <Tr>
+                <Tbody>
+                    {services.map(({ identity, name: serviceName }) => (
+                        <Tr key={identity}>
                             <Td>
                                 <ResourceIcon type="service" />
                                 {serviceName}
                             </Td>
                         </Tr>
-                    </Tbody>
-                ))}
+                    ))}
+                </Tbody>
             </TableComposable>
         </Card>
     );

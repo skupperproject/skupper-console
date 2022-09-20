@@ -1,16 +1,11 @@
 import { Transition } from 'd3-transition';
 
-import { ExtendedFlowPair, VanServicesTopology } from './services/services.interfaces';
+import { ExtendedFlowPair } from './services/services.interfaces';
 
-// FLOWPAIR DETAILS
+// FLOWPAIRS DETAILS
 
 export interface FlowPairDetailsProps {
     connection: ExtendedFlowPair;
-}
-
-export interface FlowPairProps {
-    connection: ExtendedFlowPair;
-    routers: VanServicesTopology;
 }
 
 export interface VanServicesTopologyLink {

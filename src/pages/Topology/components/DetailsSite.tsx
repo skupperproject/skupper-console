@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import SitesServices from '@pages/Sites/services';
+import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessesTableColumns } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
@@ -27,7 +27,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesTopology.GetSite, id],
-        () => SitesServices.getDataSite(id),
+        () => SitesController.getDataSite(id),
         {
             refetchInterval,
             onError: handleError,
@@ -35,7 +35,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     );
 
     const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
-        [QueriesSites.GetSiteMetrics, id],
+        [QueriesTopology.GetSiteMetrics, id],
         () => TopologyServices.getSiteMetrics(id),
         {
             refetchInterval,
@@ -45,7 +45,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, id],
-        () => SitesServices.getProcessesBySiteId(id),
+        () => SitesController.getProcessesBySiteId(id),
         {
             refetchInterval,
             onError: handleError,
@@ -102,14 +102,14 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                             <Th>{ProcessesTableColumns.SourceHost}</Th>
                         </Tr>
                     </Thead>
-                    {processes?.map(({ identity, name, sourceHost }) => (
-                        <Tbody key={`${identity}${name}`}>
-                            <Tr>
+                    <Tbody>
+                        {processes?.map(({ identity, name, sourceHost }) => (
+                            <Tr key={`${identity}${name}`}>
                                 <Td>{name}</Td>
                                 <Td>{sourceHost}</Td>
                             </Tr>
-                        </Tbody>
-                    ))}
+                        ))}
+                    </Tbody>
                 </TableComposable>
             </StackItem>
         </Stack>

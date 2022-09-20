@@ -1,7 +1,7 @@
 import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 
 import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
-import { getFlowsTopology, getSites } from './controllers';
+import { getSites } from './controllers';
 import {
     DATA_URL,
     FLOWS_CONNECTORS,
@@ -25,12 +25,13 @@ import {
     FLOW_AGGREGATES_SITES,
     HOSTS_PATH,
     PROCESS_GROUPS,
+    getProcessesByServicePath,
+    getServicePATH,
 } from './REST.constant';
 import {
     ServiceResponse,
     SiteDataResponse,
     FlowsVanAddressesResponse,
-    FlowsTopologyResponse,
     DeviceResponse,
     ProcessResponse,
     FlowPairResponse,
@@ -121,6 +122,16 @@ export const RESTApi = {
 
         return data;
     },
+    fetchService: async (id: string): Promise<ServiceResponse> => {
+        const { data } = await fetchWithTimeout(getServicePATH(id));
+
+        return data;
+    },
+    fetchProcessesByServices: async (id: string): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesByServicePath(id));
+
+        return data;
+    },
 
     // FLOWS APIs
     fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
@@ -203,24 +214,6 @@ export const RESTApi = {
         const { data } = await fetchWithTimeout(`${FLOWPAIRS}/${id}`);
 
         return data;
-    },
-    fetchFlowsTopology: async (): Promise<FlowsTopologyResponse> => {
-        const { data: sites } = await fetchWithTimeout(`${SITES_PATH}`);
-        const { data: routers } = await fetchWithTimeout(`${ROUTERS_PATH}`);
-        const { data: links } = await fetchWithTimeout(`${FLOWS_LINKS}`);
-
-        const sitesMap = (sites as SiteResponse[]).reduce((acc, site) => {
-            acc[site.identity] = site;
-
-            return acc;
-        }, {} as Record<string, SiteResponse>);
-
-        const routersExtended = (routers as RouterResponse[]).map((router) => ({
-            ...router,
-            siteName: sitesMap[router.parent].name,
-        }));
-
-        return getFlowsTopology(routersExtended, links);
     },
 
     // FLOWAGGREGATES APIs

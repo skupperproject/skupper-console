@@ -119,7 +119,7 @@ const FlowsPairs = function () {
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        <Link to={AddressesRoutesPaths.VANServices}>
+                        <Link to={AddressesRoutesPaths.Addresses}>
                             {AddressesRoutesPathLabel.Addresses}
                         </Link>
                     </BreadcrumbItem>

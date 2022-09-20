@@ -1,6 +1,5 @@
 export enum ServicesRoutesPaths {
     Services = '/services',
-    Overview = '/services/overview',
 }
 
 export enum ServicesOverviewColumns {

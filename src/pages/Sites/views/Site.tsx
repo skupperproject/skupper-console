@@ -28,7 +28,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import SitesServices from '../services';
+import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel, SiteDetails, Labels } from '../Sites.enum';
 
@@ -39,7 +39,7 @@ const Site = function () {
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
-        () => SitesServices.getSite(siteId),
+        () => SitesController.getSite(siteId),
         {
             refetchInterval,
             onError: handleError,

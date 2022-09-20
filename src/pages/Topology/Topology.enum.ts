@@ -5,10 +5,11 @@ export enum TopologyRoutesPaths {
 
 export enum TopologyViews {
     Sites = 'sites',
+    Services = 'Services',
     Processes = 'Processes',
 }
 
-// TOPOLOGY VIEW
-export enum TopologyOverviewLabels {
+export enum Labels {
+    Topology = 'Network',
     LegendGroupsItems = 'Sites',
 }

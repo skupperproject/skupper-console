@@ -2,23 +2,21 @@ import React, { lazy } from 'react';
 
 import { AddressesRoutesPaths } from './Addresses.enum';
 
-const VANServices = lazy(() => import(/* webpackChunkName: "van-services" */ '.'));
-const VANServicesList = lazy(
-    () => import(/* webpackChunkName: "van-services-list" */ './views/Addresses'),
-);
+const AddressesContainer = lazy(() => import(/* webpackChunkName: "addresses-container" */ '.'));
+const Addresses = lazy(() => import(/* webpackChunkName: "addresses" */ './views/Addresses'));
 const FlowPairs = lazy(
     () => import(/* webpackChunkName: "monitoring-flow-pairs" */ './views/FlowPairs'),
 );
 
 export const monitoringRoutes = [
     {
-        path: AddressesRoutesPaths.VANServices,
-        element: <VANServices />,
+        path: AddressesRoutesPaths.Addresses,
+        element: <AddressesContainer />,
         children: [
-            { index: true, element: <VANServicesList /> },
+            { index: true, element: <Addresses /> },
             {
-                path: AddressesRoutesPaths.OverviewTable,
-                element: <VANServicesList />,
+                path: AddressesRoutesPaths.Addresses,
+                element: <Addresses />,
             },
             {
                 path: `${AddressesRoutesPaths.FlowsPairs}/:id`,

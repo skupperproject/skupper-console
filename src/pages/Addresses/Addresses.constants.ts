@@ -1,4 +1,9 @@
-import { FlowPairsColumnsNames } from './Addresses.enum';
+import { AddressesRoutesPaths, FlowPairsColumnsNames, Labels } from './Addresses.enum';
+
+export const AddressesPaths = {
+    path: AddressesRoutesPaths.Addresses,
+    name: Labels.Addresses,
+};
 
 // CONNECTIONS VIEW
 export const FlowPairsColumns = [

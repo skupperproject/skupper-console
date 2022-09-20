@@ -2,20 +2,18 @@ import React, { lazy } from 'react';
 
 import { ServicesRoutesPaths } from './Services.enum';
 
-const Services = lazy(() => import(/* webpackChunkName: "services" */ '.'));
-const ServicesOverview = lazy(
-    () => import(/* webpackChunkName: "services-overview" */ './views/Services'),
-);
+const ServicesContainer = lazy(() => import(/* webpackChunkName: "services-container" */ '.'));
+const Services = lazy(() => import(/* webpackChunkName: "services" */ './views/Services'));
 
 export const servicesRoutes = [
     {
         path: ServicesRoutesPaths.Services,
-        element: <Services />,
+        element: <ServicesContainer />,
         children: [
-            { index: true, element: <ServicesOverview /> },
+            { index: true, element: <Services /> },
             {
-                path: ServicesRoutesPaths.Overview,
-                element: <ServicesOverview />,
+                path: ServicesRoutesPaths.Services,
+                element: <Services />,
             },
         ],
     },

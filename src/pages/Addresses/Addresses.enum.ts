@@ -1,8 +1,6 @@
 export enum AddressesRoutesPaths {
-    VANServices = '/addresses',
-    OverviewTable = '/addresses/vans',
+    Addresses = '/addresses',
     FlowsPairs = '/addresses/flowpairs',
-    FlowPairsTable = '/table',
 }
 
 export enum AddressesRoutesPathLabel {
@@ -16,8 +14,8 @@ export enum AddressesDescriptions {
 
 // ADDRESSES VIEW
 export enum Labels {
-    VanServices = 'Addresses',
-    VanServicesDescription = 'Set of services that are exposed across the Virtual application network',
+    Addresses = 'Addresses',
+    AddressesDescription = 'Set of services that are exposed across the Virtual application network',
     Connections = 'Connections',
 }
 

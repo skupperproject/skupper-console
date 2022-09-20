@@ -2,20 +2,18 @@ import React, { lazy } from 'react';
 
 import { TopologyRoutesPaths } from './Topology.enum';
 
-const Topology = lazy(() => import(/* webpackChunkName: "topology" */ '.'));
-const TopologyOverview = lazy(
-    () => import(/* webpackChunkName: "topology-overview" */ './View/Topology'),
-);
+const TopologyContainer = lazy(() => import(/* webpackChunkName: "topology-container" */ '.'));
+const Topology = lazy(() => import(/* webpackChunkName: "topology" */ './View/Topology'));
 
 export const topologyRoutes = [
     {
         path: TopologyRoutesPaths.Topology,
-        element: <Topology />,
+        element: <TopologyContainer />,
         children: [
-            { index: true, element: <TopologyOverview /> },
+            { index: true, element: <Topology /> },
             {
-                path: TopologyRoutesPaths.Overview,
-                element: <TopologyOverview />,
+                path: TopologyRoutesPaths.Topology,
+                element: <Topology />,
             },
         ],
     },

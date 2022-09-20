@@ -35,7 +35,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                     <>
                         {!!tcpConnectionsOutEntries.length && (
                             <>
-                                <Label color="green">{ConnectionsLabels.TCPconnectionsOut}</Label>
+                                <Label color="green">{ConnectionsLabels.TCPConnectionsOut}</Label>
 
                                 <TableComposable variant="compact" isStickyHeader borders={false}>
                                     <Thead>
@@ -44,20 +44,20 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                             <Th>{ConnectionsColumns.BytesOut}</Th>
                                         </Tr>
                                     </Thead>
-                                    {tcpConnectionsOutEntries.map((info) => (
-                                        <Tbody key={info.identity}>
-                                            <Tr>
+                                    <Tbody>
+                                        {tcpConnectionsOutEntries.map((info) => (
+                                            <Tr key={info.identity}>
                                                 <Td>{`${info.identity}`}</Td>
                                                 <Td>{`${formatBytes(info.sourceOctets)}`}</Td>
                                             </Tr>
-                                        </Tbody>
-                                    ))}
+                                        ))}
+                                    </Tbody>
                                 </TableComposable>
                             </>
                         )}
                         {!!tcpConnectionsInEntries.length && (
                             <>
-                                <Label color="purple">{ConnectionsLabels.TCPconnectionsIn}</Label>
+                                <Label color="purple">{ConnectionsLabels.TCPConnectionsIn}</Label>
                                 <TableComposable variant="compact" isStickyHeader borders={false}>
                                     <Thead>
                                         <Tr>
@@ -65,14 +65,14 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                             <Th>{ConnectionsColumns.BytesOut}</Th>
                                         </Tr>
                                     </Thead>
-                                    {tcpConnectionsInEntries.map((info) => (
-                                        <Tbody key={info.identity}>
-                                            <Tr>
+                                    <Tbody>
+                                        {tcpConnectionsInEntries.map((info) => (
+                                            <Tr key={info.identity}>
                                                 <Td>{`${info.identity}`}</Td>
                                                 <Td>{`${formatBytes(info.destinationOctets)}`}</Td>
                                             </Tr>
-                                        </Tbody>
-                                    ))}
+                                        ))}
+                                    </Tbody>
                                 </TableComposable>
                             </>
                         )}

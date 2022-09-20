@@ -4,16 +4,12 @@ import { ProcessResponse, SiteDataResponse } from 'API/REST.interfaces';
 
 import { Site } from './services.interfaces';
 
-const SitesServices = {
+const SitesController = {
     fetchDataSites: async (): Promise<SiteDataResponse[]> => RESTApi.fetchDATASites(),
     getSites: async (): Promise<Site[]> => {
         const sites = await RESTApi.fetchSites();
 
-        const siteViews = await Promise.all(
-            sites.map(async ({ identity }) => SitesServices.getSite(identity)),
-        );
-
-        return siteViews;
+        return Promise.all(sites.map(async ({ identity }) => SitesController.getSite(identity)));
     },
 
     getSite: async (id: string): Promise<Site> => {
@@ -42,4 +38,4 @@ const SitesServices = {
         (await RESTApi.fetchProcessesBySite(id)).filter(({ endTime }) => !endTime),
 };
 
-export default SitesServices;
+export default SitesController;

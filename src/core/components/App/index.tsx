@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
-import { FirstLoadingView } from 'config';
+import { DEFAULT_VIEW } from 'config';
 import { routes } from 'routes';
 
 import '@patternfly/patternfly/patternfly.css';
@@ -20,7 +20,7 @@ const App = function () {
 
     useEffect(() => {
         if (pathname === '/') {
-            navigate(FirstLoadingView);
+            navigate(DEFAULT_VIEW);
         }
     }, [pathname, navigate]);
 

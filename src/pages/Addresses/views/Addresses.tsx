@@ -66,9 +66,9 @@ const Addresses = function () {
                     <CardTitle>
                         <Flex>
                             <TextContent>
-                                <Text component={TextVariants.h1}>{Labels.VanServices}</Text>
+                                <Text component={TextVariants.h1}>{Labels.Addresses}</Text>
                             </TextContent>
-                            <Tooltip position="right" content={Labels.VanServicesDescription}>
+                            <Tooltip position="right" content={Labels.AddressesDescription}>
                                 <OutlinedQuestionCircleIcon />
                             </Tooltip>
                         </Flex>
@@ -91,17 +91,17 @@ const Addresses = function () {
                                 </Th>
                             </Tr>
                         </Thead>
-                        {vanServices?.map(
-                            ({
-                                identity,
-                                name,
-                                listenerCount,
-                                connectorCount,
-                                totalFlows,
-                                currentFlows,
-                            }) => (
-                                <Tbody key={identity}>
-                                    <Tr>
+                        <Tbody>
+                            {vanServices?.map(
+                                ({
+                                    identity,
+                                    name,
+                                    listenerCount,
+                                    connectorCount,
+                                    totalFlows,
+                                    currentFlows,
+                                }) => (
+                                    <Tr key={identity}>
                                         <Td>
                                             <ResourceIcon type="vanAddress" />
                                             <Link
@@ -115,9 +115,9 @@ const Addresses = function () {
                                         <Td className="align-td-right">{`${listenerCount}`}</Td>
                                         <Td className="align-td-right">{`${connectorCount}`}</Td>
                                     </Tr>
-                                </Tbody>
-                            ),
-                        )}
+                                ),
+                            )}
+                        </Tbody>
                     </TableComposable>
                 </Card>
             </StackItem>

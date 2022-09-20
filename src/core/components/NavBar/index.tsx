@@ -11,9 +11,9 @@ const NavBar = function () {
     return (
         <Nav data-cy="sk-nav-bar">
             <NavList>
-                {RoutesProps.map((navItem) => (
-                    <NavItem key={navItem.path} isActive={pathname.startsWith(`${navItem.path}`)}>
-                        <Link to={`${navItem.path}`}>{navItem.name}</Link>
+                {RoutesProps.map(({ name, path }) => (
+                    <NavItem key={path} isActive={pathname.startsWith(`${path}`)}>
+                        <Link to={`${path}`}>{name}</Link>
                     </NavItem>
                 ))}
             </NavList>

@@ -223,11 +223,6 @@ export interface FlowsTopologyLink {
     cost: number;
 }
 
-export interface FlowsTopologyResponse {
-    nodes: FlowsDataResponse[];
-    links: FlowsTopologyLink[];
-}
-
 export interface HTTPError extends AxiosError {
     httpStatus?: string;
 }

@@ -1,14 +1,7 @@
 import { RESTApi } from 'API/REST';
-import { DeviceResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import { ProcessResponse } from 'API/REST.interfaces';
 
-import {
-    VanServicesTopology,
-    VanAddresses,
-    ExtendedFlowPair,
-    FlowsPairsBasic,
-    FlowPairBasic,
-    ProcessRow,
-} from './services.interfaces';
+import { VanAddresses, FlowsPairsBasic, ProcessRow } from './services.interfaces';
 
 export const MonitorServices = {
     fetchVanAddresses: async (): Promise<VanAddresses[]> => {
@@ -153,96 +146,5 @@ export const MonitorServices = {
                 };
             }),
         );
-    },
-
-    fetchFlowPairByFlowId: async (id: string): Promise<ExtendedFlowPair> => {
-        const flowPair = await RESTApi.fetchFlowPair(id);
-
-        const { parent, process } = flowPair.forwardFlow;
-
-        const startProcess = await RESTApi.fetchProcess(process);
-        const startSite = await RESTApi.fetchFlowsSite(startProcess.parent);
-
-        const startListener = await RESTApi.fetchFlowsListener(parent);
-        const startConnector = await RESTApi.fetchFlowsConnector(parent);
-        const startDevice = { ...startListener, ...startConnector } as DeviceResponse;
-
-        const start = {
-            ...flowPair.forwardFlow,
-            device: startDevice,
-            site: startSite,
-            processFlow: startProcess,
-            parentType: startDevice.recType,
-        };
-
-        const endFlow = flowPair.CounterFlow;
-
-        const { parent: reverseParent, process: reverseProcess } = flowPair.CounterFlow;
-
-        const endProcess = await RESTApi.fetchProcess(reverseProcess);
-        const endSite = (await RESTApi.fetchFlowsSite(endProcess.parent)) as SiteResponse;
-
-        const endListener = await RESTApi.fetchFlowsListener(reverseParent);
-        const endConnector = await RESTApi.fetchFlowsConnector(reverseParent);
-
-        const endFlowsDevice = { ...endListener, ...endConnector } as DeviceResponse;
-
-        const end = {
-            ...endFlow,
-            device: endFlowsDevice,
-            site: endSite,
-            processFlow: endProcess,
-            parentType: endFlowsDevice.recType,
-        };
-
-        return {
-            startFlow: start,
-            endFlow: end,
-        };
-    },
-
-    fetchFlowPairTopology: async (): Promise<VanServicesTopology> => RESTApi.fetchFlowsTopology(),
-
-    getProcessesViewData(flowPairs: FlowPairBasic[]) {
-        const processesMap = flowPairs.reduce((acc, flowPair) => {
-            acc[flowPair.processName] = {
-                id: flowPair.processId,
-                siteName: flowPair.siteName,
-                processName: flowPair.processName,
-                bytes: (acc[flowPair.processName]?.bytes || 0) + flowPair.bytes,
-                byteRate: (acc[flowPair.processName]?.byteRate || 0) + flowPair.byteRate,
-                host: flowPair.host,
-                port: flowPair.port,
-                minTTFB: Math.min(acc[flowPair.processName]?.latency || 0, flowPair.latency),
-                maxTTFB: Math.max(acc[flowPair.processName]?.latency || 0, flowPair.latency),
-                imageName: flowPair.processImageName,
-                protocol: flowPair.protocol,
-            };
-
-            acc[flowPair.targetProcessName] = {
-                id: flowPair.targetProcessId,
-                siteName: flowPair.targetSiteName,
-                processName: flowPair.targetProcessName,
-                bytes: (acc[flowPair.targetProcessName]?.bytes || 0) + flowPair.targetBytes,
-                byteRate:
-                    (acc[flowPair.targetProcessName]?.byteRate || 0) + flowPair.targetByteRate,
-                host: flowPair.targetHost,
-                port: flowPair.targetPort,
-                minTTFB: Math.min(
-                    acc[flowPair.processName]?.targetLatency || 0,
-                    flowPair.targetLatency,
-                ),
-                maxTTFB: Math.max(
-                    acc[flowPair.processName]?.targetLatency || 0,
-                    flowPair.targetLatency,
-                ),
-                imageName: flowPair.targetProcessImageName,
-                protocol: flowPair.protocol,
-            };
-
-            return acc;
-        }, {} as Record<string, any>);
-
-        return Object.values(processesMap);
     },
 };

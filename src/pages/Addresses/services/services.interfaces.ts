@@ -1,13 +1,11 @@
 import {
     FlowsVanAddressesResponse,
-    FlowsTopologyResponse,
     DeviceResponse,
     FlowResponse,
     SiteResponse,
     ProcessResponse,
 } from 'API/REST.interfaces';
 
-export type VanServicesTopology = FlowsTopologyResponse;
 export type VanAddresses = FlowsVanAddressesResponse;
 
 // FLOW PAIRS TABLE
