@@ -4,29 +4,30 @@ import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
 import { getSites } from './controllers';
 import {
     DATA_URL,
-    FLOWS_CONNECTORS,
-    FLOWS_LINKS,
-    FLOWS_LISTENERS,
+    CONNECTORS_PATH,
+    LINKS_PATH,
+    LISTENERS_PATH,
     SITES_PATH,
-    FLOWS_VAN_ADDRESSES,
-    FLOWPAIRS,
-    getFlowsPairsByVanAddressIdPATH,
+    ADDRESSES_PATH,
+    FLOWPAIRS_PATH,
+    getFlowsPairsByAddressPATH,
     getProcessesBySitePATH,
     getProcessesByVanAddressIdPATH,
-    getConnectorByProcessIdPATH,
-    getFlowsByProcessIdPATH,
+    getConnectorByProcessPATH,
+    getFlowsByProcessPATH,
     getSitePATH,
     getRoutersBySitePATH,
     getLinksBySitePATH,
     getHostsBySitePATH,
-    FLOW_AGGREGATES_PROCESSES,
+    FLOW_AGGREGATES_PROCESSES_PATH,
     ROUTERS_PATH,
     PROCESSES_PATH,
-    FLOW_AGGREGATES_SITES,
+    FLOW_AGGREGATES_SITES_PATH,
     HOSTS_PATH,
-    PROCESS_GROUPS,
-    getProcessesByServicePath,
+    PROCESS_GROUPS_PATH,
+    getProcessesByServicePATH,
     getServicePATH,
+    FLOW_AGGREGATES_PROCESS_GROUPS_PATH,
 } from './REST.constant';
 import {
     ServiceResponse,
@@ -118,7 +119,7 @@ export const RESTApi = {
 
     // SERVICES APIs
     fetchServices: async (): Promise<ServiceResponse[]> => {
-        const { data } = await fetchWithTimeout(PROCESS_GROUPS);
+        const { data } = await fetchWithTimeout(PROCESS_GROUPS_PATH);
 
         return data;
     },
@@ -128,14 +129,14 @@ export const RESTApi = {
         return data;
     },
     fetchProcessesByServices: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesByServicePath(id));
+        const { data } = await fetchWithTimeout(getProcessesByServicePATH(id));
 
         return data;
     },
 
     // FLOWS APIs
     fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOWS_VAN_ADDRESSES);
+        const { data } = await fetchWithTimeout(ADDRESSES_PATH);
 
         return data;
     },
@@ -150,34 +151,34 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsByProcessesId: async (id: string): Promise<FlowResponse[]> => {
-        const { data } = await fetchWithTimeout(getFlowsByProcessIdPATH(id));
+        const { data } = await fetchWithTimeout(getFlowsByProcessPATH(id));
 
         return data;
     },
 
     fetchFlowConnectorByProcessId: async (id: string): Promise<DeviceResponse> => {
-        const { data } = await fetchWithTimeout(getConnectorByProcessIdPATH(id));
+        const { data } = await fetchWithTimeout(getConnectorByProcessPATH(id));
 
         return data;
     },
     fetchFlowsLinks: async (): Promise<DeviceResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LINKS}`);
+        const { data } = await fetchWithTimeout(`${LINKS_PATH}`);
 
         return data;
     },
     fetchFlowsLink: async (id: string): Promise<DeviceResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LINKS}/${id}`);
+        const { data } = await fetchWithTimeout(`${LINKS_PATH}/${id}`);
 
         return data;
     },
     fetchFlowsConnectors: async (): Promise<DeviceResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}`);
+        const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}`);
 
         return data;
     },
     fetchFlowsConnector: async (id: string): Promise<DeviceResponse | null> => {
         try {
-            const { data } = await fetchWithTimeout(`${FLOWS_CONNECTORS}/${id}`);
+            const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}/${id}`);
 
             return data;
         } catch (e) {
@@ -191,17 +192,17 @@ export const RESTApi = {
         }
     },
     fetchFlowsListeners: async (): Promise<DeviceResponse[]> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}`);
+        const { data } = await fetchWithTimeout(`${LISTENERS_PATH}`);
 
         return data;
     },
     fetchFlowsListener: async (id: string): Promise<DeviceResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWS_LISTENERS}/${id}`);
+        const { data } = await fetchWithTimeout(`${LISTENERS_PATH}/${id}`);
 
         return data;
     },
     fetchFlowsPairsByVanAddr: async (id: string): Promise<FlowPairResponse[]> => {
-        const { data } = await fetchWithTimeout(getFlowsPairsByVanAddressIdPATH(id));
+        const { data } = await fetchWithTimeout(getFlowsPairsByAddressPATH(id));
 
         return data;
     },
@@ -211,32 +212,38 @@ export const RESTApi = {
         return data;
     },
     fetchFlowPair: async (id: string): Promise<FlowPairResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWPAIRS}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOWPAIRS_PATH}/${id}`);
 
         return data;
     },
 
     // FLOWAGGREGATES APIs
     fetchFlowAggregatesSites: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_SITES);
+        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_SITES_PATH);
 
         return data;
     },
 
     fetchFlowAggregatesSite: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_SITES}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_SITES_PATH}/${id}`);
+
+        return data;
+    },
+
+    fetchFlowAggregatesProcessgroups: async (): Promise<FlowAggregatesMapResponse[]> => {
+        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_GROUPS_PATH);
 
         return data;
     },
 
     fetchFlowAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESSES);
+        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESSES_PATH);
 
         return data;
     },
 
     fetchFlowAggregatesProcess: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESSES}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESSES_PATH}/${id}`);
 
         return data;
     },

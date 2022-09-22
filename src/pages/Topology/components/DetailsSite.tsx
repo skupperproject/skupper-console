@@ -27,7 +27,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesTopology.GetSite, id],
-        () => SitesController.getDataSite(id),
+        () => SitesController.getSite(id),
         {
             refetchInterval,
             onError: handleError,
@@ -81,7 +81,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { tcpConnectionsIn, tcpConnectionsOut } = traffic;
 
-    const title = `${capitalizeFirstLetter(site.siteName)}`;
+    const title = `${capitalizeFirstLetter(site.name)}`;
 
     return (
         <Stack hasGutter>

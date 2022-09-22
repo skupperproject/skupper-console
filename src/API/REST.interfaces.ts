@@ -231,7 +231,7 @@ export interface HTTPError extends AxiosError {
 export interface FlowAggregatesMapResponse {
     identity: string;
     rectType: 'FLOWAGGREGATE';
-    pairType: 'PROCESS' | 'SITE';
+    pairType: 'PROCESS' | 'SITE' | 'PROCESS_GROUP';
     sourceId: string;
     destinationId: string;
     startTime: number;

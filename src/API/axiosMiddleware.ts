@@ -1,8 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { CONNECTION_TIMEOUT } from 'config';
+import { CONNECTION_TIMEOUT, MSG_TIMEOUT_ERROR } from 'config';
 
-import { MSG_TIMEOUT_ERROR } from './REST.constant';
 import { FetchWithTimeoutOptions, HTTPError } from './REST.interfaces';
 
 export function handleStatusError(e: AxiosError) {

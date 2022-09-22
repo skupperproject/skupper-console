@@ -1,6 +1,6 @@
 import { RESTApi } from 'API/REST';
-import { LINK_DIRECTION } from 'API/REST.constant';
 import { ProcessResponse, SiteDataResponse } from 'API/REST.interfaces';
+import { LINK_DIRECTIONS } from 'config';
 
 import { Site } from './services.interfaces';
 
@@ -20,18 +20,11 @@ const SitesController = {
 
         const linkedSites = links.filter(
             (link, index, linksArray) =>
-                link.direction === LINK_DIRECTION.OUTGOING &&
+                link.direction === LINK_DIRECTIONS.OUTGOING &&
                 linksArray.findIndex(({ name }) => name === link.name) === index,
         );
 
         return { hosts: hosts || [], processes, linkedSites, ...site };
-    },
-
-    getDataSite: async (id: string): Promise<SiteDataResponse> => {
-        const sites = await RESTApi.fetchDATASites();
-        const site = sites.find(({ siteId }) => siteId === id) as SiteDataResponse;
-
-        return site;
     },
 
     getProcessesBySiteId: async (id: string): Promise<ProcessResponse[]> =>
