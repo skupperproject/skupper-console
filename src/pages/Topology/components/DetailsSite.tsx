@@ -12,7 +12,7 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessesTableColumns } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
-import { TopologyServices } from '../services';
+import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
@@ -36,7 +36,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
         [QueriesTopology.GetSiteMetrics, id],
-        () => TopologyServices.getSiteMetrics(id),
+        () => TopologyController.getSiteMetrics(id),
         {
             refetchInterval,
             onError: handleError,

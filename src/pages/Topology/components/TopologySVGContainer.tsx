@@ -33,7 +33,7 @@ import { SiteDataResponse } from 'API/REST.interfaces';
 import TopologyDeploymentDetails from '../components/DetailsDeployment';
 import TopologySiteDetails from '../components/DetailsSite';
 import TopologySVG from '../components/TopologySVG';
-import { TopologyServices } from '../services';
+import { TopologyController } from '../services';
 import { Deployments } from '../services/services.interfaces';
 import { Labels, TopologyViews } from '../Topology.enum';
 import { TopologyLink, TopologyNode } from '../Topology.interfaces';
@@ -129,11 +129,11 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
         const updateNodesAndLinks = useCallback(async () => {
             if (topologyType === TYPE_SITES) {
                 const siteXML = await xml(siteSVG);
-                const nodes = TopologyServices.getNodesSites(sites).map((site) => ({
+                const nodes = TopologyController.getNodesSites(sites).map((site) => ({
                     ...site,
                     img: siteXML,
                 }));
-                const links = TopologyServices.getLinkSites(sites);
+                const links = TopologyController.getLinkSites(sites);
 
                 setTopology({ nodes, links });
 
@@ -141,12 +141,13 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
             }
 
             const serviceXML = await xml(serviceSVG);
-            const nodesSites = TopologyServices.getNodesSites(sites);
+            const nodesSites = TopologyController.getNodesSites(sites);
 
-            const nodes = TopologyServices.getServiceNodes(deployments.deployments, nodesSites).map(
-                (site) => ({ ...site, img: serviceXML }),
-            );
-            const links = TopologyServices.getLinkServices(deployments.deploymentLinks);
+            const nodes = TopologyController.getServiceNodes(
+                deployments.deployments,
+                nodesSites,
+            ).map((site) => ({ ...site, img: serviceXML }));
+            const links = TopologyController.getLinkServices(deployments.deploymentLinks);
 
             setTopology({ nodes, links });
         }, [deployments?.deploymentLinks, deployments?.deployments, sites, topologyType]);
@@ -231,7 +232,7 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
                                     component={TextVariants.small}
                                 >{`${Labels.LegendGroupsItems}:`}</Text>
                             </TextContent>
-                            {TopologyServices.getNodesSites(sites).map((node) => (
+                            {TopologyController.getNodesSites(sites).map((node) => (
                                 <Flex key={node.id}>
                                     <div
                                         className="pf-u-mr-xs"

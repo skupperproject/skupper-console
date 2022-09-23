@@ -32,7 +32,7 @@ import {
 } from '../Addresses.enum';
 import FlowsPairsTable from '../components/FlowPairsTable';
 import ProcessesTable from '../components/ProcessesTable';
-import { MonitorServices } from '../services';
+import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const FlowsPairs = function () {
@@ -50,11 +50,7 @@ const FlowsPairs = function () {
         [QueriesAddresses.GetFlowPairsByAddress, vanAddressId, currentPage, visibleItems],
         () =>
             vanAddressId
-                ? MonitorServices.fetchFlowPairsByVanAddressId(
-                      vanAddressId,
-                      currentPage,
-                      visibleItems,
-                  )
+                ? AddressesController.getFlowPairsByAddress(vanAddressId, currentPage, visibleItems)
                 : null,
         {
             cacheTime: 0,
@@ -64,8 +60,11 @@ const FlowsPairs = function () {
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesAddresses.GetProcessesByVanAddr, vanAddressId, currentPage, visibleItems],
-        () => (vanAddressId ? MonitorServices.fetchProcessesByVanAddr(vanAddressId) : null),
+        [QueriesAddresses.GetProcessesByAddress, vanAddressId, currentPage, visibleItems],
+        () =>
+            vanAddressId
+                ? AddressesController.getProcessesWithMetricsByAddress(vanAddressId)
+                : null,
         {
             cacheTime: 0,
             refetchInterval,

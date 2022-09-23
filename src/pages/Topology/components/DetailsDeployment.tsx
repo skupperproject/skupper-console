@@ -8,7 +8,7 @@ import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { UPDATE_INTERVAL } from 'config';
 
-import { TopologyServices } from '../services';
+import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
@@ -24,7 +24,7 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
 
     const { data: deployment, isLoading } = useQuery(
         [QueriesTopology.GetProcesses, id],
-        () => TopologyServices.getProcessMetrics(id),
+        () => TopologyController.getProcessMetrics(id),
         {
             refetchInterval,
             onError: handleError,

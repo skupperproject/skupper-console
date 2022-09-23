@@ -98,10 +98,8 @@ export interface DeploymentTopologyResponse {
 export interface SiteDataResponse {
     siteId: string;
     siteName: string;
-    url: string;
     connected: string[];
     namespace: string;
-    gateway?: boolean;
 }
 
 export interface SiteResponse {
@@ -206,7 +204,7 @@ export interface FlowPairResponse {
 
 export type FlowsDataResponse = RouterResponse & LinkResponse & DeviceResponse & FlowResponse;
 
-export interface FlowsVanAddressesResponse {
+export interface AddressesResponse {
     identity: string;
     recType: string;
     name: string;

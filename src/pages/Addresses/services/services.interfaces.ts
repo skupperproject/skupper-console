@@ -1,12 +1,4 @@
-import {
-    FlowsVanAddressesResponse,
-    DeviceResponse,
-    FlowResponse,
-    SiteResponse,
-    ProcessResponse,
-} from 'API/REST.interfaces';
-
-export type VanAddresses = FlowsVanAddressesResponse;
+import { DeviceResponse, FlowResponse, SiteResponse, ProcessResponse } from 'API/REST.interfaces';
 
 // FLOW PAIRS TABLE
 export interface FlowPairsTableProps {

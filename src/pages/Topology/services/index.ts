@@ -7,7 +7,7 @@ import { DeploymentLinkTopology, ProcessResponse, SiteDataResponse } from 'API/R
 import { TopologyNode } from '../Topology.interfaces';
 import { Deployments, ProcessesMetrics, SitesMetrics } from './services.interfaces';
 
-export const TopologyServices = {
+export const TopologyController = {
     getDeployments: async (): Promise<Deployments> => {
         const processes = await RESTApi.fetchProcesses();
         const links = await RESTApi.fetchFlowAggregatesProcesses();
@@ -37,12 +37,13 @@ export const TopologyServices = {
             flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
                 RESTApi.fetchFlowAggregatesSite(flowAggregatesPairsId),
             ),
-        );
+        ).catch((error) => Promise.reject(error));
+
         const flowAggregatesIncomingPairs = await Promise.all(
             flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
                 RESTApi.fetchFlowAggregatesSite(flowAggregatesPairsId),
             ),
-        );
+        ).catch((error) => Promise.reject(error));
 
         return {
             ...site,
@@ -67,12 +68,13 @@ export const TopologyServices = {
             flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
                 RESTApi.fetchFlowAggregatesProcess(flowAggregatesPairsId),
             ),
-        );
+        ).catch((error) => Promise.reject(error));
+
         const flowAggregatesIncomingPairs = await Promise.all(
             flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
                 RESTApi.fetchFlowAggregatesProcess(flowAggregatesPairsId),
             ),
-        );
+        ).catch((error) => Promise.reject(error));
 
         return {
             ...process,

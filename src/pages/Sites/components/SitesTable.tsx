@@ -35,21 +35,15 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
                 <Thead>
                     <Tr>
                         <Th>{SitesTableColumns.Name}</Th>
-                        <Th className="align-th-right">{SitesTableColumns.NumSitesLinked}</Th>
-                        <Th className="align-th-right">{SitesTableColumns.NumHosts}</Th>
-                        <Th className="align-th-right">{SitesTableColumns.NumProcesses}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {sites.map(({ identity, name, hosts, processes, linkedSites }) => (
+                    {sites.map(({ identity, name }) => (
                         <Tr key={identity}>
                             <Td>
                                 <ResourceIcon type="site" />
                                 <Link to={`${SitesRoutesPaths.Sites}/${identity}`}>{name}</Link>
                             </Td>
-                            <Td className="align-td-right">{`${linkedSites.length}`}</Td>
-                            <Td className="align-td-right">{`${hosts.length}`}</Td>
-                            <Td className="align-td-right">{`${processes.length}`}</Td>
                         </Tr>
                     ))}
                 </Tbody>

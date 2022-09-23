@@ -1,26 +1,26 @@
 import { RESTApi } from 'API/REST';
-import { ProcessResponse } from 'API/REST.interfaces';
+import { AddressesResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { VanAddresses, FlowsPairsBasic, ProcessRow } from './services.interfaces';
+import { FlowsPairsBasic, ProcessRow } from './services.interfaces';
 
-export const MonitorServices = {
-    fetchVanAddresses: async (): Promise<VanAddresses[]> => {
-        const vanAddresses = await RESTApi.fetchVanAddresses();
+export const AddressesController = {
+    getAddresses: async (): Promise<AddressesResponse[]> => {
+        const addresses = await RESTApi.fetchAddresses();
 
-        return vanAddresses.map((vanAddress) => ({
-            ...vanAddress,
-            totalFlows: Math.floor(vanAddress.totalFlows / 2),
-            currentFlows: Math.floor(vanAddress.currentFlows / 2),
+        return addresses.map((address) => ({
+            ...address,
+            totalFlows: Math.floor(address.totalFlows / 2),
+            currentFlows: Math.floor(address.currentFlows / 2),
         }));
     },
 
     // TODO: waiting for the API to remove multiple calls and filters
-    fetchFlowPairsByVanAddressId: async (
+    getFlowPairsByAddress: async (
         id: string,
         currentPage: number,
         visibleItems: number,
     ): Promise<FlowsPairsBasic> => {
-        const flowsPairs = await RESTApi.fetchFlowsPairsByVanAddr(id);
+        const flowsPairs = await RESTApi.fetchFlowPairsByAddress(id);
 
         if (!flowsPairs) {
             return {
@@ -100,7 +100,7 @@ export const MonitorServices = {
                     protocol: connector.protocol,
                 };
             }),
-        );
+        ).catch((error) => Promise.reject(error));
 
         // filter collection
         const flowsFiltered = flowsPairsExtended.sort((a, b) => b.startTime - a.startTime);
@@ -114,8 +114,8 @@ export const MonitorServices = {
         return { connections: flowsPairsPaginated, total: flowsFiltered.length };
     },
 
-    fetchProcessesByVanAddr: async (id: string): Promise<ProcessRow[]> => {
-        const processes = await RESTApi.fetchProcessesByVanAddr(id);
+    getProcessesWithMetricsByAddress: async (id: string): Promise<ProcessRow[]> => {
+        const processes = await RESTApi.fetchProcessesByAddresses(id);
 
         return Promise.all(
             processes.map(async (process) => {
@@ -145,6 +145,6 @@ export const MonitorServices = {
                     ...flowsMetrics,
                 };
             }),
-        );
+        ).catch((error) => Promise.reject({ message: error }));
     },
 };

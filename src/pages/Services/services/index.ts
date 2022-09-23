@@ -1,16 +1,13 @@
 import { RESTApi } from 'API/REST';
-import { ServiceResponse } from 'API/REST.interfaces';
-
-import { Service } from './services.interfaces';
+import { ProcessResponse, ServiceResponse } from 'API/REST.interfaces';
 
 const ServicesController = {
     getServices: async (): Promise<ServiceResponse[]> => RESTApi.fetchServices(),
-    getService: async (id: string): Promise<Service> => {
-        const service = await RESTApi.fetchService(id);
-        const processes = await RESTApi.fetchProcessesByServices(id);
 
-        return { processes, ...service };
-    },
+    getService: async (id: string): Promise<ServiceResponse> => RESTApi.fetchService(id),
+
+    getProcessesByService: async (id: string): Promise<ProcessResponse[]> =>
+        RESTApi.fetchProcessesByServices(id),
 };
 
 export default ServicesController;

@@ -1,16 +1,13 @@
 import { RESTApi } from 'API/REST';
-import { ProcessResponse, SiteDataResponse } from 'API/REST.interfaces';
+import { LinkResponse, ProcessResponse, SiteDataResponse, SiteResponse } from 'API/REST.interfaces';
 import { LINK_DIRECTIONS } from 'config';
 
 import { Site } from './services.interfaces';
 
 const SitesController = {
-    fetchDataSites: async (): Promise<SiteDataResponse[]> => RESTApi.fetchDATASites(),
-    getSites: async (): Promise<Site[]> => {
-        const sites = await RESTApi.fetchSites();
+    getDataSites: async (): Promise<SiteDataResponse[]> => RESTApi.fetchDATASites(),
 
-        return Promise.all(sites.map(async ({ identity }) => SitesController.getSite(identity)));
-    },
+    getSites: async (): Promise<SiteResponse[]> => RESTApi.fetchSites(),
 
     getSite: async (id: string): Promise<Site> => {
         const site = await RESTApi.fetchSite(id);
@@ -18,13 +15,7 @@ const SitesController = {
         const processes = await RESTApi.fetchProcessesBySite(id);
         const links = await RESTApi.fetchLinksBySite(id);
 
-        const linkedSites = links.filter(
-            (link, index, linksArray) =>
-                link.direction === LINK_DIRECTIONS.OUTGOING &&
-                linksArray.findIndex(({ name }) => name === link.name) === index,
-        );
-
-        return { hosts: hosts || [], processes, linkedSites, ...site };
+        return { hosts, processes, linkedSites: getLinkedSites(links), ...site };
     },
 
     getProcessesBySiteId: async (id: string): Promise<ProcessResponse[]> =>
@@ -32,3 +23,11 @@ const SitesController = {
 };
 
 export default SitesController;
+
+function getLinkedSites(links: LinkResponse[]) {
+    return links.filter(
+        (link, index, linksArray) =>
+            link.direction === LINK_DIRECTIONS.OUTGOING &&
+            linksArray.findIndex(({ name }) => name === link.name) === index,
+    );
+}

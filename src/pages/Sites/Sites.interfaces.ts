@@ -1,5 +1,5 @@
-import { Site } from './services/services.interfaces';
+import { SiteResponse } from 'API/REST.interfaces';
 
 export interface SitesTableProps {
-    sites: Site[];
+    sites: SiteResponse[];
 }

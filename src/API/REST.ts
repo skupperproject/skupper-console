@@ -12,7 +12,7 @@ import {
     FLOWPAIRS_PATH,
     getFlowsPairsByAddressPATH,
     getProcessesBySitePATH,
-    getProcessesByVanAddressIdPATH,
+    getProcessesByAddressPATH,
     getConnectorByProcessPATH,
     getFlowsByProcessPATH,
     getSitePATH,
@@ -32,7 +32,7 @@ import {
 import {
     ServiceResponse,
     SiteDataResponse,
-    FlowsVanAddressesResponse,
+    AddressesResponse,
     DeviceResponse,
     ProcessResponse,
     FlowPairResponse,
@@ -135,7 +135,7 @@ export const RESTApi = {
     },
 
     // FLOWS APIs
-    fetchVanAddresses: async (): Promise<FlowsVanAddressesResponse[]> => {
+    fetchAddresses: async (): Promise<AddressesResponse[]> => {
         const { data } = await fetchWithTimeout(ADDRESSES_PATH);
 
         return data;
@@ -201,13 +201,13 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsPairsByVanAddr: async (id: string): Promise<FlowPairResponse[]> => {
+    fetchFlowPairsByAddress: async (id: string): Promise<FlowPairResponse[]> => {
         const { data } = await fetchWithTimeout(getFlowsPairsByAddressPATH(id));
 
         return data;
     },
-    fetchProcessesByVanAddr: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesByVanAddressIdPATH(id));
+    fetchProcessesByAddresses: async (id: string): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesByAddressPATH(id));
 
         return data;
     },

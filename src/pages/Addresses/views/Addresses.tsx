@@ -25,7 +25,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
 import { AddressesRoutesPaths, Labels, AddressesColumns } from '../Addresses.enum';
-import { MonitorServices } from '../services';
+import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 400;
@@ -37,7 +37,7 @@ const Addresses = function () {
 
     const { data: vanServices, isLoading } = useQuery(
         [QueriesAddresses.GetAddresses],
-        MonitorServices.fetchVanAddresses,
+        AddressesController.getAddresses,
         {
             refetchInterval,
             onError: handleError,

@@ -9,7 +9,7 @@ import SitesController from '@pages/Sites/services';
 import { UPDATE_INTERVAL } from 'config';
 
 import TopologySVGContainer from '../components/TopologySVGContainer';
-import { TopologyServices } from '../services';
+import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 
 const TopologyContent = function () {
@@ -18,7 +18,7 @@ const TopologyContent = function () {
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
         [QueriesTopology.GetSites],
-        SitesController.fetchDataSites,
+        SitesController.getDataSites,
         {
             refetchInterval,
             onError: handleError,
@@ -27,7 +27,7 @@ const TopologyContent = function () {
 
     const { data: deployments, isLoading: isLoadingServices } = useQuery(
         [QueriesTopology.GetProcesses],
-        TopologyServices.getDeployments,
+        TopologyController.getDeployments,
         {
             refetchInterval,
             onError: handleError,

@@ -42,6 +42,15 @@ const Service = function () {
         },
     );
 
+    const { data: processes, isLoading: isLoadingProcess } = useQuery(
+        [QueriesServices.GetProcessesByService, serviceId],
+        () => SitesController.getProcessesByService(serviceId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -51,15 +60,15 @@ const Service = function () {
         navigate(route);
     }
 
-    if (isLoadingSite) {
+    if (isLoadingSite || isLoadingProcess) {
         return <LoadingPage />;
     }
 
-    if (!service) {
+    if (!service || !processes) {
         return null;
     }
 
-    const { name, processes } = service;
+    const { name } = service;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
