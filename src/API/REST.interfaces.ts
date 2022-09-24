@@ -112,7 +112,13 @@ export interface SiteResponse {
 
 export interface ServiceResponse {
     identity: string;
+    recType: string;
     name: string;
+    octetsSent: number;
+    octetSentRate: number;
+    octetsReceived: number;
+    octetReceivedRate: number;
+    startTime: number;
 }
 
 export interface LinkResponse {

@@ -19,4 +19,6 @@ export enum Labels {
     Details = 'Details',
     Processes = 'Processes',
     Name = 'Name',
+    MetricBytesSent = 'Top 10 process groups with the most bytes sent',
+    MetricBytesReceived = 'Top 10 process groups with the most bytes received',
 }

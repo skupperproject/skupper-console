@@ -17,11 +17,11 @@ export const BASE_URL_COLLECTOR = process.env.API_HOST_FLOW_COLLECTOR || BASE_UR
 export const queryClientConfig = {
     defaultOptions: {
         queries: {
-            retry: 2,
+            retry: 1,
             refetchOnWindowFocus: false,
             refetchIntervalInBackground: false,
             suspense: false,
-            staleTime: Infinity,
+            staleTime: 0,
         },
     },
 };
