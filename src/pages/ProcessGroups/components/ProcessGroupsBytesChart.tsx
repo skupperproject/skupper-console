@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { ChartPie } from '@patternfly/react-charts';
 
-import { ServicesBytesChartProps } from '../Services.interfaces';
+import { ProcessGroupsBytesChartProps } from '../ProcessGroups.interfaces';
 
 const CHART_HEIGHT = 350;
 const CHART_PADDING = {
@@ -12,7 +12,11 @@ const CHART_PADDING = {
     top: 20,
 };
 
-const ServicesBytesChart: FC<ServicesBytesChartProps> = function ({ bytes, labels, ...props }) {
+const ProcessGroupsBytesChart: FC<ProcessGroupsBytesChartProps> = function ({
+    bytes,
+    labels,
+    ...props
+}) {
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
 
     const [chartContainerDimension, setChartContainerDimension] = useState({ width: 0 });
@@ -42,4 +46,4 @@ const ServicesBytesChart: FC<ServicesBytesChartProps> = function ({ bytes, label
     );
 };
 
-export default ServicesBytesChart;
+export default ProcessGroupsBytesChart;

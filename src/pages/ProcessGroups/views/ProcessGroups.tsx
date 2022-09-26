@@ -9,19 +9,19 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import ServicesBytesChart from '../components/ServicesBytesChart';
-import ServicesTable from '../components/ServicesTable';
+import ProcessGroupsBytesChart from '../components/ProcessGroupsBytesChart';
+import ProcessGroupsTable from '../components/ProcessGroupsTable';
+import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import ServicesServices from '../services';
-import { Labels } from '../Services.enum';
-import { QueriesServices } from '../services/services.enum';
+import { QueriesProcessGroups } from '../services/services.enum';
 
-const ServicesOverview = function () {
+const ProcessGroups = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(0);
 
-    const { data: services, isLoading } = useQuery(
-        [QueriesServices.GetServices],
-        ServicesServices.getServices,
+    const { data: processGroups, isLoading } = useQuery(
+        [QueriesProcessGroups.GetProcessGroups],
+        ServicesServices.getProcessGroups,
         {
             refetchInterval,
             onError: handleError,
@@ -41,11 +41,11 @@ const ServicesOverview = function () {
         return <LoadingPage />;
     }
 
-    const servicesSorted = (services || [])
+    const processGroupsSorted = (processGroups || [])
         .sort((a, b) => b.octetsSent - a.octetsSent)
         .slice(0, 10);
 
-    const bytesSent = servicesSorted
+    const bytesSent = processGroupsSorted
         .map(({ name, octetsSent }) => ({
             x: name,
             y: octetsSent,
@@ -56,7 +56,7 @@ const ServicesOverview = function () {
         name: `${x}: ${formatBytes(y)}`,
     }));
 
-    const bytesReceived = servicesSorted
+    const bytesReceived = processGroupsSorted
         .map(({ name, octetsReceived }) => ({
             x: name,
             y: octetsReceived,
@@ -71,14 +71,14 @@ const ServicesOverview = function () {
         <Grid hasGutter>
             <GridItem span={6}>
                 <Card>
-                    <CardTitle>{Labels.MetricBytesSent}</CardTitle>
-                    <ServicesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
+                    <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
+                    <ProcessGroupsBytesChart bytes={bytesSent} labels={bytesSentLabels} />
                 </Card>
             </GridItem>
             <GridItem span={6}>
                 <Card>
-                    <CardTitle>{Labels.MetricBytesSent}</CardTitle>
-                    <ServicesBytesChart
+                    <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
+                    <ProcessGroupsBytesChart
                         bytes={bytesReceived}
                         labels={bytesReceivedLabels}
                         themeColor={ChartThemeColor.green}
@@ -86,10 +86,10 @@ const ServicesOverview = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ServicesTable services={services || []} />;
+                <ProcessGroupsTable processGroups={processGroups || []} />
             </GridItem>
         </Grid>
     );
 };
 
-export default ServicesOverview;
+export default ProcessGroups;

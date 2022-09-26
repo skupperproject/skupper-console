@@ -30,7 +30,7 @@ import {
     FLOW_AGGREGATES_PROCESS_GROUPS_PATH,
 } from './REST.constant';
 import {
-    ServiceResponse,
+    ProcessGroupResponse,
     SiteDataResponse,
     AddressesResponse,
     DeviceResponse,
@@ -118,17 +118,17 @@ export const RESTApi = {
     },
 
     // SERVICES APIs
-    fetchServices: async (): Promise<ServiceResponse[]> => {
+    fetchProcessGroups: async (): Promise<ProcessGroupResponse[]> => {
         const { data } = await fetchWithTimeout(PROCESS_GROUPS_PATH);
 
         return data;
     },
-    fetchService: async (id: string): Promise<ServiceResponse> => {
+    fetchProcessGroup: async (id: string): Promise<ProcessGroupResponse> => {
         const { data } = await fetchWithTimeout(getServicePATH(id));
 
         return data;
     },
-    fetchProcessesByServices: async (id: string): Promise<ProcessResponse[]> => {
+    fetchProcessesByProcessGroup: async (id: string): Promise<ProcessResponse[]> => {
         const { data } = await fetchWithTimeout(getProcessesByServicePATH(id));
 
         return data;

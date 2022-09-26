@@ -24,18 +24,18 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 
 import ProcessTable from '../components/ProcessesTable';
+import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
 import SitesController from '../services';
-import { Labels, ServicesRoutesPaths } from '../Services.enum';
-import { QueriesServices } from '../services/services.enum';
+import { QueriesProcessGroups } from '../services/services.enum';
 
-const Service = function () {
+const ProcessGroup = function () {
     const navigate = useNavigate();
-    const { id: serviceId } = useParams() as { id: string };
+    const { id: processGroupId } = useParams() as { id: string };
     const [refetchInterval, setRefetchInterval] = useState(0);
 
-    const { data: service, isLoading: isLoadingSite } = useQuery(
-        [QueriesServices.GetService, serviceId],
-        () => SitesController.getService(serviceId),
+    const { data: processGroup, isLoading: isLoadingSite } = useQuery(
+        [QueriesProcessGroups.GetProcessGroup, processGroupId],
+        () => SitesController.GetProcessGroup(processGroupId),
         {
             refetchInterval,
             onError: handleError,
@@ -43,8 +43,8 @@ const Service = function () {
     );
 
     const { data: processes, isLoading: isLoadingProcess } = useQuery(
-        [QueriesServices.GetProcessesByService, serviceId],
-        () => SitesController.getProcessesByService(serviceId),
+        [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
+        () => SitesController.getProcessesByProcessGroup(processGroupId),
         {
             refetchInterval,
             onError: handleError,
@@ -64,18 +64,20 @@ const Service = function () {
         return <LoadingPage />;
     }
 
-    if (!service || !processes) {
+    if (!processGroup || !processes) {
         return null;
     }
 
-    const { name } = service;
+    const { name } = processGroup;
 
     return (
         <Stack hasGutter className="pf-u-pl-md">
             <StackItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        <Link to={ServicesRoutesPaths.Services}>{Labels.Services}</Link>
+                        <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
+                            {ProcessGroupsLabels.Section}
+                        </Link>
                     </BreadcrumbItem>
                     <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
                 </Breadcrumb>
@@ -91,12 +93,14 @@ const Service = function () {
             <StackItem>
                 <Card isFullHeight isRounded>
                     <CardTitle>
-                        <Title headingLevel="h2">{Labels.Details}</Title>
+                        <Title headingLevel="h2">{ProcessGroupsLabels.Details}</Title>
                     </CardTitle>
                     <CardBody>
                         <DescriptionList>
                             <DescriptionListGroup>
-                                <DescriptionListTerm>{Labels.Name}</DescriptionListTerm>
+                                <DescriptionListTerm>
+                                    {ProcessGroupsLabels.Name}
+                                </DescriptionListTerm>
                                 <DescriptionListDescription>{name}</DescriptionListDescription>
                             </DescriptionListGroup>
                         </DescriptionList>
@@ -110,4 +114,4 @@ const Service = function () {
     );
 };
 
-export default Service;
+export default ProcessGroup;

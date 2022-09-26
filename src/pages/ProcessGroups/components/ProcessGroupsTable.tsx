@@ -15,18 +15,22 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 
-import { Labels, ServicesRoutesPaths, ServicesTableColumns } from '../Services.enum';
-import { ServicesTableProps } from '../Services.interfaces';
+import {
+    ProcessGroupsLabels,
+    ProcessGroupsRoutesPaths,
+    ProcessGroupsTableColumns,
+} from '../ProcessGroups.enum';
+import { ProcessGroupsTableProps } from '../ProcessGroups.interfaces';
 
-const ServicesTable: FC<ServicesTableProps> = function ({ services }) {
+const ProcessGroupsTable: FC<ProcessGroupsTableProps> = function ({ processGroups: services }) {
     return (
         <Card>
             <CardTitle>
                 <Flex>
                     <TextContent>
-                        <Text component={TextVariants.h1}>{Labels.Services}</Text>
+                        <Text component={TextVariants.h1}>{ProcessGroupsLabels.Section}</Text>
                     </TextContent>
-                    <Tooltip position="right" content={Labels.ServicesDescription}>
+                    <Tooltip position="right" content={ProcessGroupsLabels.Description}>
                         <OutlinedQuestionCircleIcon />
                     </Tooltip>
                 </Flex>
@@ -34,7 +38,7 @@ const ServicesTable: FC<ServicesTableProps> = function ({ services }) {
             <TableComposable borders={false} variant="compact" isStickyHeader isStriped>
                 <Thead>
                     <Tr>
-                        <Th>{ServicesTableColumns.Name}</Th>
+                        <Th>{ProcessGroupsTableColumns.Name}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -42,7 +46,7 @@ const ServicesTable: FC<ServicesTableProps> = function ({ services }) {
                         <Tr key={identity}>
                             <Td>
                                 <ResourceIcon type="service" />
-                                <Link to={`${ServicesRoutesPaths.Services}/${identity}`}>
+                                <Link to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${identity}`}>
                                     {name}
                                 </Link>
                             </Td>
@@ -54,4 +58,4 @@ const ServicesTable: FC<ServicesTableProps> = function ({ services }) {
     );
 };
 
-export default ServicesTable;
+export default ProcessGroupsTable;

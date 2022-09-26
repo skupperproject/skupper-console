@@ -1,8 +1,8 @@
-export enum ServicesRoutesPaths {
-    Services = '/services',
+export enum ProcessGroupsRoutesPaths {
+    ProcessGroups = '/processGroups',
 }
 
-export enum ServicesTableColumns {
+export enum ProcessGroupsTableColumns {
     Name = 'Name',
 }
 
@@ -13,9 +13,9 @@ export enum ProcessesTableColumns {
     Host = 'Host',
 }
 
-export enum Labels {
-    Services = 'Services',
-    ServicesDescription = '',
+export enum ProcessGroupsLabels {
+    Section = 'Process Groups',
+    Description = '',
     Details = 'Details',
     Processes = 'Processes',
     Name = 'Name',

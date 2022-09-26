@@ -110,7 +110,7 @@ export interface SiteResponse {
     startTime: number;
 }
 
-export interface ServiceResponse {
+export interface ProcessGroupResponse {
     identity: string;
     recType: string;
     name: string;
