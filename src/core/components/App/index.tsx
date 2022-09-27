@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 
-import { Page } from '@patternfly/react-core';
+import { Page, PageSection } from '@patternfly/react-core';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
 import Header from '@layout/Header';
@@ -31,7 +31,9 @@ const App = function () {
             isManagedSidebar
             className="app-main-container"
         >
-            <Suspense fallback={<span />}>{appRoutes}</Suspense>
+            <Suspense fallback={<span />}>
+                <PageSection>{appRoutes}</PageSection>
+            </Suspense>
         </Page>
     );
 };

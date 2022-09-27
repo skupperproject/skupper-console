@@ -16,7 +16,7 @@ export interface SKTable {
     columns: {
         name: string;
         prop: string;
-        component: string;
+        component?: string;
     }[];
     rows: Record<string, any>[];
     title?: string;
@@ -63,13 +63,15 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
         return 0;
     });
 
-    const data = rowsSorted.flatMap((row: Record<string, any>) =>
-        columns.map((column) => ({
+    const skRows = rowsSorted.map((row: Record<string, any>) => ({
+        identity: row.identity,
+        columns: columns.map((column, index) => ({
             ...column,
-            row,
+            data: row,
             value: row[column.prop],
+            identity: `${row.identity}${index}`,
         })),
-    );
+    }));
 
     return (
         <Card>
@@ -91,28 +93,30 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
             )}
             <TableComposable borders={false} variant="compact" isStickyHeader isStriped>
                 <Thead>
-                    {columns.map((column, index) => (
-                        <Tr key={column.name}>
-                            <Th sort={getSortParams(index)}>{column.name}</Th>
-                        </Tr>
-                    ))}
+                    <Tr>
+                        {columns.map((column, index) => (
+                            <Th key={column.name} sort={getSortParams(index)}>
+                                {column.name}
+                            </Th>
+                        ))}
+                    </Tr>
                 </Thead>
                 <Tbody>
-                    {data.map(({ row, value, component }) => {
-                        const Component = components && components[component];
+                    {skRows.map((row) => (
+                        <Tr key={row.identity}>
+                            {row.columns.map(({ data, value, component, identity }) => {
+                                const Component = components && component && components[component];
 
-                        return (
-                            <Tr key={row.identity}>
-                                {Component ? (
-                                    <Td>
-                                        <Component data={row} value={value} />
+                                return Component ? (
+                                    <Td key={identity}>
+                                        <Component data={data} value={value} />
                                     </Td>
                                 ) : (
-                                    <Td>{value}</Td>
-                                )}
-                            </Tr>
-                        );
-                    })}
+                                    <Td key={identity}>{value}</Td>
+                                );
+                            })}
+                        </Tr>
+                    ))}
                 </Tbody>
             </TableComposable>
         </Card>

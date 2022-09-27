@@ -15,6 +15,9 @@ export enum ProcessesLabels {
     Details = 'Details',
     Processes = 'Processes',
     Name = 'Name',
+    Image = 'Image',
+    SourceIP = 'Source IP',
+    Host = 'Host',
     MetricBytesSent = 'Top 10 process groups with the most bytes sent',
     MetricBytesReceived = 'Top 10 process groups with the most bytes received',
 }

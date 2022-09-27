@@ -15,4 +15,5 @@ const ProcessesNameLinkCell: FC<ProcessesNameLinkCellProps> = function ({ data, 
         </>
     );
 };
+
 export default ProcessesNameLinkCell;

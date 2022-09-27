@@ -8,9 +8,6 @@ export enum ProcessGroupsTableColumns {
 
 export enum ProcessesTableColumns {
     Name = 'Name',
-    Image = 'Image',
-    SourceIP = 'Source IP',
-    Host = 'Host',
 }
 
 export enum ProcessGroupsLabels {

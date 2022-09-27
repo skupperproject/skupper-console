@@ -22,3 +22,8 @@ export interface ProcessGroupNameLinkCellProps {
     data: ProcessResponse;
     value: ProcessResponse[keyof ProcessResponse];
 }
+
+export interface ProcessesNameLinkCellProps {
+    data: ProcessResponse;
+    value: ProcessResponse[keyof ProcessResponse];
+}

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 
-import { Label, Spinner, Stack, StackItem } from '@patternfly/react-core';
+import { Grid, GridItem, Label, Spinner } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -84,15 +84,15 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const title = `${capitalizeFirstLetter(site.name)}`;
 
     return (
-        <Stack hasGutter>
-            <StackItem className="pf-u-mb-xl">
+        <Grid hasGutter>
+            <GridItem span={12}>
                 <TopologyDetails
                     name={title}
                     tcpConnectionsInEntries={tcpConnectionsIn}
                     tcpConnectionsOutEntries={tcpConnectionsOut}
                 />
-            </StackItem>
-            <StackItem>
+            </GridItem>
+            <GridItem span={12}>
                 <Label color="blue">{'Processes'}</Label>
 
                 <TableComposable variant="compact" borders={false}>
@@ -111,8 +111,8 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                         ))}
                     </Tbody>
                 </TableComposable>
-            </StackItem>
-        </Stack>
+            </GridItem>
+        </Grid>
     );
 };
 

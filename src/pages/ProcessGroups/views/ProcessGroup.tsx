@@ -12,8 +12,8 @@ import {
     DescriptionListGroup,
     DescriptionListTerm,
     Flex,
-    Stack,
-    StackItem,
+    Grid,
+    GridItem,
     Title,
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -71,26 +71,22 @@ const ProcessGroup = function () {
     const { name } = processGroup;
 
     return (
-        <Stack hasGutter className="pf-u-pl-md">
-            <StackItem>
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
-                            {ProcessGroupsLabels.Section}
-                        </Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-                </Breadcrumb>
-            </StackItem>
+        <Grid hasGutter>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
+                        {ProcessGroupsLabels.Section}
+                    </Link>
+                </BreadcrumbItem>
+                <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
+            </Breadcrumb>
 
-            <StackItem>
-                <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                    <ResourceIcon type="service" />
-                    <Title headingLevel="h1">{name}</Title>
-                </Flex>
-            </StackItem>
+            <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                <ResourceIcon type="service" />
+                <Title headingLevel="h1">{name}</Title>
+            </Flex>
 
-            <StackItem>
+            <GridItem span={12}>
                 <Card isFullHeight isRounded>
                     <CardTitle>
                         <Title headingLevel="h2">{ProcessGroupsLabels.Details}</Title>
@@ -106,11 +102,11 @@ const ProcessGroup = function () {
                         </DescriptionList>
                     </CardBody>
                 </Card>
-            </StackItem>
-            <StackItem>
+            </GridItem>
+            <GridItem span={12}>
                 <ProcessTable processes={processes} />
-            </StackItem>
-        </Stack>
+            </GridItem>
+        </Grid>
     );
 };
 

@@ -1,47 +1,28 @@
 import React, { FC } from 'react';
 
-import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-
-import ResourceIcon from '@core/components/ResourceIcon';
+import SkTable from '@core/components/SkTable';
+import ProcessesNameLinkCell from '@pages/Processes/components/ProcessesNameLinkCell';
 
 import { ProcessGroupsLabels, ProcessesTableColumns } from '../ProcessGroups.enum';
 import { ProcessesTableProps } from '../ProcessGroups.interfaces';
 
-const ProcessTable: FC<ProcessesTableProps> = function ({ processes }) {
+const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
+    const columns = [
+        {
+            name: ProcessesTableColumns.Name,
+            prop: 'name',
+            component: 'linkCell',
+        },
+    ];
+
     return (
-        <Card isFullHeight isRounded>
-            <CardTitle>
-                <Title headingLevel="h2">{ProcessGroupsLabels.Processes}</Title>
-            </CardTitle>
-            <CardBody>
-                <TableComposable borders={false} variant="compact" isStriped className="sk-table">
-                    <Thead>
-                        <Tr>
-                            <Th> {ProcessesTableColumns.Name}</Th>
-                            <Th> {ProcessesTableColumns.SourceIP}</Th>
-                            <Th> {ProcessesTableColumns.Host}</Th>
-                            <Th> {ProcessesTableColumns.Image}</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {processes.map(
-                            ({ identity, name: processName, imageName, sourceHost, hostName }) => (
-                                <Tr key={identity}>
-                                    <Td>
-                                        <ResourceIcon type="process" /> {processName}
-                                    </Td>
-                                    <Td>{sourceHost}</Td>
-                                    <Td>{hostName}</Td>
-                                    <Td>{imageName}</Td>
-                                </Tr>
-                            ),
-                        )}
-                    </Tbody>
-                </TableComposable>
-            </CardBody>
-        </Card>
+        <SkTable
+            title={ProcessGroupsLabels.Processes}
+            columns={columns}
+            rows={processes}
+            components={{ linkCell: ProcessesNameLinkCell }}
+        />
     );
 };
 
-export default ProcessTable;
+export default ProcessesTable;
