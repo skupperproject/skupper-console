@@ -9,19 +9,19 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
-import ProcessesBytesChart from '../components/ProcessGroupsBytesChart';
-import ProcessGroupsTable from '../components/ProcessGroupsTable';
-import { ProcessGroupsLabels } from '../ProcessGroups.enum';
+import ProcessesBytesChart from '../components/ProcessesBytesChart';
+import ProcessesTable from '../components/ProcessesTable';
+import { ProcessesLabels } from '../Processes.enum';
 import ServicesServices from '../services';
-import { QueriesProcessGroups } from '../services/services.enum';
+import { QueriesProcesses } from '../services/services.enum';
 
-const ProcessGroups = function () {
+const Processes = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState(0);
 
-    const { data: processGroups, isLoading } = useQuery(
-        [QueriesProcessGroups.GetProcessGroups],
-        ServicesServices.getProcessGroups,
+    const { data: processes, isLoading } = useQuery(
+        [QueriesProcesses.GetProcesses],
+        ServicesServices.getProcesses,
         {
             refetchInterval,
             onError: handleError,
@@ -41,15 +41,15 @@ const ProcessGroups = function () {
         return <LoadingPage />;
     }
 
-    const processGroupsSentSorted = (processGroups || [])
+    const processesSentSorted = (processes || [])
         .sort((a, b) => b.octetsSent - a.octetsSent)
         .slice(0, 10);
 
-    const processGroupsReceivedSorted = (processGroups || [])
+    const processesReceivedSorted = (processes || [])
         .sort((a, b) => b.octetsReceived - a.octetsReceived)
         .slice(0, 10);
 
-    const bytesSent = processGroupsSentSorted
+    const bytesSent = processesSentSorted
         .map(({ name, octetsSent }) => ({
             x: name,
             y: octetsSent,
@@ -60,7 +60,7 @@ const ProcessGroups = function () {
         name: `${x}: ${formatBytes(y)}`,
     }));
 
-    const bytesReceived = processGroupsReceivedSorted
+    const bytesReceived = processesReceivedSorted
         .map(({ name, octetsReceived }) => ({
             x: name,
             y: octetsReceived,
@@ -75,13 +75,13 @@ const ProcessGroups = function () {
         <Grid hasGutter>
             <GridItem span={6}>
                 <Card>
-                    <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
+                    <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
                     <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
                 </Card>
             </GridItem>
             <GridItem span={6}>
                 <Card>
-                    <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
+                    <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
                     <ProcessesBytesChart
                         bytes={bytesReceived}
                         labels={bytesReceivedLabels}
@@ -90,10 +90,10 @@ const ProcessGroups = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessGroupsTable processGroups={processGroups || []} />
+                <ProcessesTable processes={processes || []} />
             </GridItem>
         </Grid>
     );
 };
 
-export default ProcessGroups;
+export default Processes;

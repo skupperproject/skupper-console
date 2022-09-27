@@ -76,12 +76,16 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
             {title && (
                 <CardTitle>
                     <Flex>
-                        <TextContent>
-                            <Text component={TextVariants.h1}>{title}</Text>
-                        </TextContent>
-                        <Tooltip position="right" content={titleDescription}>
-                            <OutlinedQuestionCircleIcon />
-                        </Tooltip>
+                        {title && (
+                            <TextContent>
+                                <Text component={TextVariants.h1}>{title}</Text>
+                            </TextContent>
+                        )}
+                        {titleDescription && (
+                            <Tooltip position="right" content={titleDescription}>
+                                <OutlinedQuestionCircleIcon />
+                            </Tooltip>
+                        )}
                     </Flex>
                 </CardTitle>
             )}

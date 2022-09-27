@@ -25,7 +25,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import ProcessTable from '../components/ProcessesTable';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
-import SitesController from '../services';
+import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const ProcessGroup = function () {
@@ -33,9 +33,9 @@ const ProcessGroup = function () {
     const { id: processGroupId } = useParams() as { id: string };
     const [refetchInterval, setRefetchInterval] = useState(0);
 
-    const { data: processGroup, isLoading: isLoadingSite } = useQuery(
+    const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
         [QueriesProcessGroups.GetProcessGroup, processGroupId],
-        () => SitesController.GetProcessGroup(processGroupId),
+        () => ProcessGroupsController.GetProcessGroup(processGroupId),
         {
             refetchInterval,
             onError: handleError,
@@ -44,7 +44,7 @@ const ProcessGroup = function () {
 
     const { data: processes, isLoading: isLoadingProcess } = useQuery(
         [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
-        () => SitesController.getProcessesByProcessGroup(processGroupId),
+        () => ProcessGroupsController.getProcessesByProcessGroup(processGroupId),
         {
             refetchInterval,
             onError: handleError,
@@ -60,7 +60,7 @@ const ProcessGroup = function () {
         navigate(route);
     }
 
-    if (isLoadingSite || isLoadingProcess) {
+    if (isLoadingProcessGroup || isLoadingProcess) {
         return <LoadingPage />;
     }
 

@@ -2,11 +2,15 @@ import React, { lazy } from 'react';
 
 import { ProcessGroupsRoutesPaths } from './ProcessGroups.enum';
 
-const ProcessGroupsContainer = lazy(() => import(/* webpackChunkName: "services-container" */ '.'));
-const ProcessGroups = lazy(
-    () => import(/* webpackChunkName: "services" */ './views/ProcessGroups'),
+const ProcessGroupsContainer = lazy(
+    () => import(/* webpackChunkName: "processGroups-container" */ '.'),
 );
-const ProcessGroup = lazy(() => import(/* webpackChunkName: "service" */ './views/ProcessGroup'));
+const ProcessGroups = lazy(
+    () => import(/* webpackChunkName: "processGroups" */ './views/ProcessGroups'),
+);
+const ProcessGroup = lazy(
+    () => import(/* webpackChunkName: "processGroup" */ './views/ProcessGroup'),
+);
 
 export const processGroupsRoutes = [
     {
