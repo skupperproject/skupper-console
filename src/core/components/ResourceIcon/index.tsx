@@ -11,7 +11,7 @@ interface ResourceIconProps {
 const RESOURCE_MAP = {
     site: { class: 'sk-resource-site', symbol: 'S' },
     deployment: { class: 'sk-resource-deployment', symbol: 'D' },
-    service: { class: 'sk-resource-service', symbol: 'SE' },
+    service: { class: 'sk-resource-service', symbol: 'PG' },
     address: { class: 'sk-resource-address', symbol: 'A' },
     process: { class: 'sk-resource-process', symbol: 'P' },
 };

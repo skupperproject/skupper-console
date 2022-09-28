@@ -20,8 +20,14 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import ProcessGroupsController from '@pages/ProcessGroups/services';
+import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import SitesController from '@pages/Sites/services';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import ProcessesController from '../services';
@@ -41,6 +47,26 @@ const Process = function () {
         },
     );
 
+    const { data: site, isLoading: isLoadingSite } = useQuery(
+        [QueriesSites.GetSite, process?.parent],
+        () => SitesController.getSite(process?.parent || ''),
+        {
+            enabled: !!process?.parent,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
+        [QueriesProcessGroups.GetProcessGroup, process?.groupIdentity],
+        () => ProcessGroupsController.GetProcessGroup(process?.groupIdentity || ''),
+        {
+            enabled: !!process?.groupIdentity,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -50,11 +76,11 @@ const Process = function () {
         navigate(route);
     }
 
-    if (isLoadingProcess) {
+    if (isLoadingProcess && isLoadingSite && isLoadingProcessGroup) {
         return <LoadingPage />;
     }
 
-    if (!process) {
+    if (!process || !site || !processGroup) {
         return null;
     }
 
@@ -81,29 +107,76 @@ const Process = function () {
                     </CardTitle>
                     <CardBody>
                         <DescriptionList>
-                            <DescriptionListGroup>
-                                <DescriptionListTerm>{ProcessesLabels.Name}</DescriptionListTerm>
-                                <DescriptionListDescription>{name}</DescriptionListDescription>
-                            </DescriptionListGroup>
-
-                            <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                    {ProcessesLabels.SourceIP}
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                    {sourceHost}
-                                </DescriptionListDescription>
-                            </DescriptionListGroup>
-
-                            <DescriptionListGroup>
-                                <DescriptionListTerm>{ProcessesLabels.Host}</DescriptionListTerm>
-                                <DescriptionListDescription>{hostName}</DescriptionListDescription>
-                            </DescriptionListGroup>
-
-                            <DescriptionListGroup>
-                                <DescriptionListTerm>{ProcessesLabels.Image}</DescriptionListTerm>
-                                <DescriptionListDescription>{imageName}</DescriptionListDescription>
-                            </DescriptionListGroup>
+                            <Grid hasGutter>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {ProcessesLabels.Site}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            <ResourceIcon type="site" />
+                                            <Link to={`${SitesRoutesPaths.Sites}/${site.identity}`}>
+                                                {site.name}
+                                            </Link>
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {ProcessesLabels.ProcessGroup}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            <ResourceIcon type="service" />
+                                            <Link
+                                                to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${processGroup.identity}`}
+                                            >
+                                                {processGroup.name}
+                                            </Link>
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {ProcessesLabels.Name}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {name}
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {ProcessesLabels.Image}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {imageName}
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {ProcessesLabels.SourceIP}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {sourceHost}
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {ProcessesLabels.Host}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {hostName}
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                            </Grid>
                         </DescriptionList>
                     </CardBody>
                 </Card>

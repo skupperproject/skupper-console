@@ -161,6 +161,7 @@ export interface DeviceResponse {
 export interface ProcessResponse {
     identity: string;
     parent: string;
+    groupIdentity: string;
     recType: string;
     name: string;
     imageName: string;

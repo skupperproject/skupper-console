@@ -68,7 +68,7 @@ const ProcessGroups = function () {
         .filter(({ y }) => y);
 
     const bytesReceivedLabels = bytesReceived.map(({ x, y }) => ({
-        name: `${x} ${formatBytes(y)}`,
+        name: `${x}: ${formatBytes(y)}`,
     }));
 
     return (
