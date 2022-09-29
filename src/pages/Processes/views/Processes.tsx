@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { ProcessResponse } from 'API/REST.interfaces';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import ProcessesTable from '../components/ProcessesTable';
@@ -41,15 +42,15 @@ const Processes = function () {
         return <LoadingPage />;
     }
 
-    const processesSentSorted = (processes || [])
+    const top10processesSentSorted = (processes as ProcessResponse[])
         .sort((a, b) => b.octetsSent - a.octetsSent)
         .slice(0, 10);
 
-    const processesReceivedSorted = (processes || [])
+    const top10processesReceivedSorted = (processes as ProcessResponse[])
         .sort((a, b) => b.octetsReceived - a.octetsReceived)
         .slice(0, 10);
 
-    const bytesSent = processesSentSorted
+    const bytesSent = top10processesSentSorted
         .map(({ name, octetsSent }) => ({
             x: name,
             y: octetsSent,
@@ -60,7 +61,7 @@ const Processes = function () {
         name: `${x}: ${formatBytes(y)}`,
     }));
 
-    const bytesReceived = processesReceivedSorted
+    const bytesReceived = top10processesReceivedSorted
         .map(({ name, octetsReceived }) => ({
             x: name,
             y: octetsReceived,
@@ -90,7 +91,7 @@ const Processes = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessesTable processes={processes || []} />
+                <ProcessesTable processes={processes as ProcessResponse[]} />
             </GridItem>
         </Grid>
     );

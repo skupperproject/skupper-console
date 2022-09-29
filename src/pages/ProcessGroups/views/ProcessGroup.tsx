@@ -22,6 +22,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { ProcessGroupResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import ProcessTable from '../components/ProcessesTable';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
@@ -64,11 +65,7 @@ const ProcessGroup = function () {
         return <LoadingPage />;
     }
 
-    if (!processGroup || !processes) {
-        return null;
-    }
-
-    const { name } = processGroup;
+    const { name } = processGroup as ProcessGroupResponse;
 
     return (
         <Grid hasGutter>
@@ -104,7 +101,7 @@ const ProcessGroup = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessTable processes={processes} />
+                <ProcessTable processes={processes as ProcessResponse[]} />
             </GridItem>
         </Grid>
     );

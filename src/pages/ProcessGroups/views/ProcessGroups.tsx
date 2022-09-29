@@ -41,15 +41,15 @@ const ProcessGroups = function () {
         return <LoadingPage />;
     }
 
-    const processGroupsSentSorted = (processGroups || [])
+    const top10processGroupsSentSorted = (processGroups || [])
         .sort((a, b) => b.octetsSent - a.octetsSent)
         .slice(0, 10);
 
-    const processGroupsReceivedSorted = (processGroups || [])
+    const top10processGroupsReceivedSorted = (processGroups || [])
         .sort((a, b) => b.octetsReceived - a.octetsReceived)
         .slice(0, 10);
 
-    const bytesSent = processGroupsSentSorted
+    const bytesSent = top10processGroupsSentSorted
         .map(({ name, octetsSent }) => ({
             x: name,
             y: octetsSent,
@@ -60,7 +60,7 @@ const ProcessGroups = function () {
         name: `${x}: ${formatBytes(y)}`,
     }));
 
-    const bytesReceived = processGroupsReceivedSorted
+    const bytesReceived = top10processGroupsReceivedSorted
         .map(({ name, octetsReceived }) => ({
             x: name,
             y: octetsReceived,

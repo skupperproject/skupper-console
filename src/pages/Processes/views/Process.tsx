@@ -28,6 +28,7 @@ import LoadingPage from '@pages/shared/Loading';
 import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import ProcessesController from '../services';
@@ -76,15 +77,14 @@ const Process = function () {
         navigate(route);
     }
 
-    if (isLoadingProcess && isLoadingSite && isLoadingProcessGroup) {
+    if (isLoadingProcess || isLoadingSite || isLoadingProcessGroup) {
         return <LoadingPage />;
     }
 
-    if (!process || !site || !processGroup) {
-        return null;
-    }
-
-    const { name, imageName, sourceHost, hostName } = process;
+    const { name, imageName, sourceHost, hostName } = process as ProcessResponse;
+    const { identity: siteIdentity, name: siteName } = site as SiteResponse;
+    const { identity: processGroupIdentity, name: processGroupName } =
+        processGroup as ProcessGroupResponse;
 
     return (
         <Grid hasGutter>
@@ -115,8 +115,8 @@ const Process = function () {
                                         </DescriptionListTerm>
                                         <DescriptionListDescription>
                                             <ResourceIcon type="site" />
-                                            <Link to={`${SitesRoutesPaths.Sites}/${site.identity}`}>
-                                                {site.name}
+                                            <Link to={`${SitesRoutesPaths.Sites}/${siteIdentity}`}>
+                                                {siteName}
                                             </Link>
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>
@@ -129,9 +129,9 @@ const Process = function () {
                                         <DescriptionListDescription>
                                             <ResourceIcon type="service" />
                                             <Link
-                                                to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${processGroup.identity}`}
+                                                to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${processGroupIdentity}`}
                                             >
-                                                {processGroup.name}
+                                                {processGroupName}
                                             </Link>
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>

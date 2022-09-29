@@ -45,7 +45,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, id],
-        () => SitesController.getProcessesBySiteId(id),
+        () => SitesController.getActiveProcessesBySiteId(id),
         {
             refetchInterval,
             onError: handleError,

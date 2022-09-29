@@ -12,12 +12,10 @@ import {
     DescriptionListGroup,
     DescriptionListTerm,
     Flex,
+    Grid,
+    GridItem,
     List,
     ListItem,
-    Split,
-    SplitItem,
-    Stack,
-    StackItem,
     Title,
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -27,6 +25,7 @@ import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { LinkResponse, SiteResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import SitesController from '../services';
@@ -47,6 +46,33 @@ const Site = function () {
         },
     );
 
+    const { data: hosts, isLoading: isLoadingHosts } = useQuery(
+        [QueriesSites.GetHostsBySiteId, siteId],
+        () => SitesController.getHostsBySiteId(siteId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: links, isLoading: isLoadingLinks } = useQuery(
+        [QueriesSites.GetLinksBySiteId, siteId],
+        () => SitesController.getLinksBySiteId(siteId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+        [QueriesSites.GetProcessesBySiteId, siteId],
+        () => SitesController.getActiveProcessesBySiteId(siteId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -56,36 +82,40 @@ const Site = function () {
         navigate(route);
     }
 
-    if (isLoadingSite) {
+    if (
+        isLoadingSite ||
+        isLoadingHosts ||
+        isLoadingLinks ||
+        isLoadingProcesses ||
+        !hosts ||
+        !processes
+    ) {
         return <LoadingPage />;
     }
 
-    if (!site) {
-        return null;
-    }
-
-    const { processes, linkedSites, hosts, name, nameSpace } = site;
+    const { name, nameSpace } = site as SiteResponse;
+    const linkedSites = SitesController.getLinkedSites(links as LinkResponse[]);
 
     return (
-        <Stack hasGutter className="pf-u-pl-md">
-            <StackItem>
+        <Grid hasGutter>
+            <GridItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
                         <Link to={SitesRoutesPaths.Sites}>{SitesRoutesPathLabel.Sites}</Link>
                     </BreadcrumbItem>
                     <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
                 </Breadcrumb>
-            </StackItem>
+            </GridItem>
 
-            <StackItem>
+            <GridItem>
                 <Flex alignItems={{ default: 'alignItemsCenter' }}>
                     <ResourceIcon type="site" />
 
                     <Title headingLevel="h1">{name}</Title>
                 </Flex>
-            </StackItem>
+            </GridItem>
 
-            <StackItem>
+            <GridItem>
                 <Card isFullHeight isRounded>
                     <CardTitle>
                         <Title headingLevel="h2">{Labels.Details}</Title>
@@ -104,65 +134,61 @@ const Site = function () {
                         </DescriptionList>
                     </CardBody>
                 </Card>
-            </StackItem>
-            <StackItem>
-                <Split hasGutter>
-                    <SplitItem className="pf-u-w-50">
-                        <Card isFullHeight isRounded>
-                            <CardTitle>
-                                <Title headingLevel="h2">{Labels.Links}</Title>
-                            </CardTitle>
-                            <CardBody>
-                                {(!!linkedSites.length && (
-                                    <List isPlain>
-                                        {linkedSites.map(({ identity, name: linkedSiteName }) => (
-                                            <ListItem key={identity}>{linkedSiteName}</ListItem>
-                                        ))}
-                                    </List>
-                                )) || <EmptyData />}
-                            </CardBody>
-                        </Card>
-                    </SplitItem>
-                    <SplitItem className="pf-u-w-50">
-                        <Card isFullHeight isRounded>
-                            <CardTitle>
-                                <Title headingLevel="h2">{Labels.Hosts}</Title>
-                            </CardTitle>
-                            <CardBody>
-                                {(!!hosts.length && (
-                                    <List isPlain>
-                                        {hosts.map(({ identity, provider, name: hostName }) => (
-                                            <ListItem
-                                                key={identity}
-                                            >{`${provider} (${hostName})`}</ListItem>
-                                        ))}
-                                    </List>
-                                )) || <EmptyData />}
-                            </CardBody>
-                        </Card>
-                    </SplitItem>
-                    <SplitItem className="pf-u-w-50">
-                        <Card isFullHeight isRounded>
-                            <CardTitle>
-                                <Title headingLevel="h2">{Labels.Processes}</Title>
-                            </CardTitle>
-                            <CardBody>
-                                {(!!processes.length && (
-                                    <List isPlain>
-                                        {processes.map(({ identity, name: processName }) => (
-                                            <Flex key={identity}>
-                                                <ResourceIcon type="process" />
-                                                <ListItem>{processName}</ListItem>
-                                            </Flex>
-                                        ))}
-                                    </List>
-                                )) || <EmptyData />}
-                            </CardBody>
-                        </Card>
-                    </SplitItem>
-                </Split>
-            </StackItem>
-        </Stack>
+            </GridItem>
+            <GridItem span={4}>
+                <Card isFullHeight isRounded>
+                    <CardTitle>
+                        <Title headingLevel="h2">{Labels.Links}</Title>
+                    </CardTitle>
+                    <CardBody>
+                        {(!!linkedSites.length && (
+                            <List isPlain>
+                                {linkedSites.map(({ identity, name: linkedSiteName }) => (
+                                    <ListItem key={identity}>{linkedSiteName}</ListItem>
+                                ))}
+                            </List>
+                        )) || <EmptyData />}
+                    </CardBody>
+                </Card>
+            </GridItem>
+            <GridItem span={4}>
+                <Card isFullHeight isRounded>
+                    <CardTitle>
+                        <Title headingLevel="h2">{Labels.Hosts}</Title>
+                    </CardTitle>
+                    <CardBody>
+                        {(!!hosts.length && (
+                            <List isPlain>
+                                {hosts.map(({ identity, provider, name: hostName }) => (
+                                    <ListItem
+                                        key={identity}
+                                    >{`${provider} (${hostName})`}</ListItem>
+                                ))}
+                            </List>
+                        )) || <EmptyData />}
+                    </CardBody>
+                </Card>
+            </GridItem>
+            <GridItem span={4}>
+                <Card isFullHeight isRounded>
+                    <CardTitle>
+                        <Title headingLevel="h2">{Labels.Processes}</Title>
+                    </CardTitle>
+                    <CardBody>
+                        {(!!processes.length && (
+                            <List isPlain>
+                                {processes.map(({ identity, name: processName }) => (
+                                    <Flex key={identity}>
+                                        <ResourceIcon type="process" />
+                                        <ListItem>{processName}</ListItem>
+                                    </Flex>
+                                ))}
+                            </List>
+                        )) || <EmptyData />}
+                    </CardBody>
+                </Card>
+            </GridItem>
+        </Grid>
     );
 };
 
