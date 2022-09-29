@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import {
     Breadcrumb,
@@ -14,12 +14,17 @@ import {
     Flex,
     Grid,
     GridItem,
+    Text,
+    TextContent,
+    TextVariants,
     Title,
 } from '@patternfly/react-core';
+import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import ProcessGroupsController from '@pages/ProcessGroups/services';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
@@ -31,6 +36,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
+import { CurrentBytesInfoProps } from '../Processes.interfaces';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -53,7 +59,6 @@ const Process = function () {
         () => SitesController.getSite(process?.parent || ''),
         {
             enabled: !!process?.parent,
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -63,7 +68,6 @@ const Process = function () {
         () => ProcessGroupsController.GetProcessGroup(process?.groupIdentity || ''),
         {
             enabled: !!process?.groupIdentity,
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -81,7 +85,16 @@ const Process = function () {
         return <LoadingPage />;
     }
 
-    const { name, imageName, sourceHost, hostName } = process as ProcessResponse;
+    const {
+        name,
+        imageName,
+        sourceHost,
+        hostName,
+        octetReceivedRate,
+        octetsReceived,
+        octetSentRate,
+        octetsSent,
+    } = process as ProcessResponse;
     const { identity: siteIdentity, name: siteName } = site as SiteResponse;
     const { identity: processGroupIdentity, name: processGroupName } =
         processGroup as ProcessGroupResponse;
@@ -181,8 +194,69 @@ const Process = function () {
                     </CardBody>
                 </Card>
             </GridItem>
+
+            <GridItem>
+                <Card>
+                    <CardBody>
+                        <Grid>
+                            <GridItem span={6}>
+                                <CurrentBytesInfo
+                                    description={`${ProcessesLabels.CurrentBytesInfoByteRateOut}:`}
+                                    direction="up"
+                                    style={{
+                                        color: 'var(--pf-global--palette--blue-400)',
+                                    }}
+                                    byteRate={octetSentRate}
+                                    bytes={octetsSent}
+                                />
+                            </GridItem>
+                            <GridItem span={6}>
+                                <CurrentBytesInfo
+                                    description={`${ProcessesLabels.CurrentBytesInfoByteRateIn}:`}
+                                    style={{
+                                        color: 'var(--pf-global--palette--red-100)',
+                                    }}
+                                    byteRate={octetReceivedRate}
+                                    bytes={octetsReceived}
+                                />
+                            </GridItem>
+                        </Grid>
+                    </CardBody>
+                </Card>
+            </GridItem>
         </Grid>
     );
 };
 
 export default Process;
+
+const CurrentBytesInfo: FC<CurrentBytesInfoProps> = function ({
+    description,
+    direction = 'down',
+    byteRate,
+    bytes,
+    ...props
+}) {
+    const { style } = props;
+
+    return (
+        <DescriptionListGroup>
+            <TextContent className="pf-u-color-300">
+                <Flex>
+                    {description}
+                    <Text component={TextVariants.h1} style={style}>
+                        {direction === 'up' ? (
+                            <LongArrowAltUpIcon className="pf-u-ml-md" />
+                        ) : (
+                            <LongArrowAltDownIcon className="pf-u-ml-md" />
+                        )}
+                        {formatByteRate(byteRate)}
+                    </Text>
+                </Flex>
+                <DescriptionListDescription>
+                    <Text component={TextVariants.h1}>{formatBytes(bytes)}</Text>
+                </DescriptionListDescription>
+            </TextContent>
+        </DescriptionListGroup>
+    );
+};

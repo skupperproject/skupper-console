@@ -18,3 +18,11 @@ export interface ProcessesNameLinkCellProps {
     data: ProcessResponse;
     value: ProcessResponse[keyof ProcessResponse];
 }
+
+export interface CurrentBytesInfoProps {
+    description?: string;
+    direction?: 'down' | 'up';
+    byteRate: number;
+    bytes: number;
+    style?: Record<string, string>;
+}
