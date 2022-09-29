@@ -23,6 +23,8 @@ import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icon
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import RealTimeLineChart from '@core/components/RealTimeLineChart';
+import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
@@ -34,6 +36,7 @@ import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import { UPDATE_INTERVAL } from 'config';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { CurrentBytesInfoProps } from '../Processes.interfaces';
@@ -43,7 +46,7 @@ import { QueriesProcesses } from '../services/services.enum';
 const Process = function () {
     const navigate = useNavigate();
     const { id: processId } = useParams() as { id: string };
-    const [refetchInterval, setRefetchInterval] = useState(0);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL / 2);
 
     const { data: process, isLoading: isLoadingProcess } = useQuery(
         [QueriesProcesses.GetProcess, processId],
@@ -222,6 +225,33 @@ const Process = function () {
                             </GridItem>
                         </Grid>
                     </CardBody>
+                </Card>
+            </GridItem>
+
+            <GridItem span={12}>
+                <Card>
+                    <RealTimeLineChart
+                        data={[
+                            {
+                                name: ProcessesLabels.CurrentBytesInfoByteRateIn,
+                                value: octetReceivedRate,
+                            },
+                            {
+                                name: ProcessesLabels.CurrentBytesInfoByteRateOut,
+                                value: octetSentRate,
+                            },
+                        ]}
+                        options={{
+                            formatter: formatByteRate,
+                            chartColor: ChartThemeColors.Multi,
+                            padding: {
+                                left: 20,
+                                right: 20,
+                                top: 20,
+                                bottom: 50,
+                            },
+                        }}
+                    />
                 </Card>
             </GridItem>
         </Grid>
