@@ -23,6 +23,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { LinkResponse, SiteResponse } from 'API/REST.interfaces';
@@ -178,10 +179,16 @@ const Site = function () {
                         {(!!processes.length && (
                             <List isPlain>
                                 {processes.map(({ identity, name: processName }) => (
-                                    <Flex key={identity}>
-                                        <ResourceIcon type="process" />
-                                        <ListItem>{processName}</ListItem>
-                                    </Flex>
+                                    <ListItem key={identity}>
+                                        <Flex>
+                                            <ResourceIcon type="process" />
+                                            <Link
+                                                to={`${ProcessesRoutesPaths.Processes}/${identity}`}
+                                            >
+                                                {processName}
+                                            </Link>
+                                        </Flex>
+                                    </ListItem>
                                 ))}
                             </List>
                         )) || <EmptyData />}
