@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
     Chart,
@@ -14,53 +14,67 @@ import { chartConfig } from './RealTimeLineChart.constants';
 import { ChartThemeColors, TrafficChartLabels } from './RealTimeLineChart.enum';
 import { SampleProps, RealTimeLineChartProps } from './RealTimeLineChart.interfaces';
 
-const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartProps) {
-    const [timestamp, setTimestamp] = useState(new Date().getTime());
-    const [lastTimestamp] = useState(new Date().getTime());
+const TOTAL_Y_AXIS_TICKS = 5;
+const defaultSample = [{ name: '.', x: '0', y: 0, timestamp: 0 }];
+
+const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
+    const [timestamp, setSampleTimestamp] = useState(new Date().getTime());
     const [samples, setSamples] = useState<SampleProps[][] | null>(null);
+    const [containerDimension, setContainerDimension] = useState({ width: 0, height: 0 });
+
+    const lastTimestamp = useMemo(() => new Date().getTime(), []);
+
+    const containerRef = useCallback((node: HTMLDivElement | null) => {
+        if (node) {
+            const { width, height } = node.getBoundingClientRect();
+            setContainerDimension({ width, height });
+        }
+    }, []);
 
     useEffect(() => {
         const lowerBoundTimestamp = timestamp - chartConfig.timestampWindowUpperBound;
-        const newSamplesBySite = data.map(({ value, name }, index) => {
-            const sample = {
-                y: value,
-                name,
-                x: `${timestamp - lastTimestamp}`,
-                timestamp,
-            };
 
-            const newSamples = [
-                ...((samples && samples[index]) || [{ name: '.', x: '0', y: 0, timestamp: 0 }]),
-                sample,
-            ];
+        const newSamplesWindow = (prevSamples: SampleProps[][] | null) =>
+            data.map(({ value, name }, index) => {
+                const sample = {
+                    y: value,
+                    name,
+                    x: `${timestamp - lastTimestamp}`,
+                    timestamp,
+                };
 
-            return newSamples.filter((newSample) => newSample.timestamp - lowerBoundTimestamp > 0);
-        });
+                const newSamples = [...(prevSamples ? prevSamples[index] : defaultSample), sample];
 
-        setSamples(newSamplesBySite);
+                return newSamples.filter(
+                    ({ timestamp: newTimestamp }) => newTimestamp - lowerBoundTimestamp > 0,
+                );
+            });
+
+        setSamples(newSamplesWindow);
     }, [timestamp]);
 
     useEffect(() => {
-        setInterval(() => {
-            setTimestamp(new Date().getTime());
+        const interval = setInterval(() => {
+            setSampleTimestamp(new Date().getTime());
         }, 1000);
+
+        return () => clearInterval(interval);
     }, []);
 
     if (!samples) {
         return null;
     }
 
-    const height = options?.height || chartConfig.height;
-
     return (
-        <div style={{ height: `${height}px` }}>
+        <div
+            ref={containerRef}
+            style={{ height: `${options?.height || chartConfig.height}px`, width: '100%' }}
+        >
             <Chart
                 containerComponent={
                     <ChartVoronoiContainer
-                        labels={({ datum }) =>
-                            `${datum.name}: ${
-                                options?.formatter ? options.formatter(datum.y, 3) : datum.y
-                            }`
+                        labels={({ datum: { name, y } }) =>
+                            `${name}: ${options?.formatter ? options.formatter(y, 3) : y}`
                         }
                         constrainToVisibleArea
                     />
@@ -69,7 +83,8 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
                 legendOrientation="horizontal"
                 legendPosition="bottom"
                 legendAllowWrap={true}
-                height={height}
+                height={containerDimension.height}
+                width={containerDimension.width}
                 domainPadding={{ y: [10, 10] }}
                 padding={
                     options?.padding || {
@@ -79,10 +94,10 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
                         top: 0,
                     }
                 }
-                width={chartConfig.width}
                 themeColor={options?.chartColor ? options.chartColor : ChartThemeColors.Blue}
             >
                 <ChartAxis // X axis
+                    showGrid
                     tickFormat={(_, index, ticks) => {
                         if (index === ticks.length - 1) {
                             return TrafficChartLabels.TickFormatUpperBoundLabel;
@@ -107,6 +122,7 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
                     style={{
                         tickLabels: { fontSize: 12 },
                     }}
+                    tickValues={getYAxisTickValues(samples)}
                     tickFormat={(tick) =>
                         options?.formatter ? options?.formatter(tick, 3) : Math.ceil(tick)
                     }
@@ -126,6 +142,30 @@ const RealTimeLineChart = memo(function ({ data, options }: RealTimeLineChartPro
             </Chart>
         </div>
     );
-});
+};
 
 export default RealTimeLineChart;
+
+function getYAxisTickValues(newSamples: SampleProps[][]) {
+    const tickValuesBounds = newSamples.reduce((acc, sample) => {
+        const sampleYValues = sample.map(({ y }) => y);
+
+        acc.max = Math.max(acc.max || 0, ...sampleYValues);
+        acc.min = Math.min(acc.min || 0, ...sampleYValues);
+
+        return acc;
+    }, {} as Record<string, number>);
+
+    const tickValuesRange = tickValuesBounds.max - tickValuesBounds.min;
+
+    if (tickValuesRange === 0) {
+        return [0];
+    }
+    const deltaTick = tickValuesRange / TOTAL_Y_AXIS_TICKS;
+
+    const ticks = [...Array(TOTAL_Y_AXIS_TICKS).keys()].map((index) =>
+        Math.round(deltaTick * index + tickValuesBounds.min),
+    );
+
+    return [...ticks, tickValuesBounds.max];
+}

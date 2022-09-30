@@ -245,10 +245,10 @@ const Process = function () {
                             formatter: formatByteRate,
                             chartColor: ChartThemeColors.Multi,
                             padding: {
-                                left: 20,
+                                left: 75,
                                 right: 20,
                                 top: 20,
-                                bottom: 50,
+                                bottom: 40,
                             },
                         }}
                     />

@@ -28,7 +28,7 @@ import { AddressesRoutesPaths, Labels, AddressesColumns } from '../Addresses.enu
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
-const REAL_TIME_CONNECTION_HEIGHT_CHART = 400;
+const REAL_TIME_CONNECTION_HEIGHT_CHART = 500;
 
 const Addresses = function () {
     const navigate = useNavigate();
@@ -132,9 +132,9 @@ const Addresses = function () {
                                 dataLegend: chartData.map(({ name }) => ({ name })),
                                 padding: {
                                     top: 0,
-                                    bottom: 210,
-                                    left: 0,
-                                    right: 0,
+                                    bottom: 130,
+                                    left: 50,
+                                    right: 20,
                                 },
                             }}
                             data={chartData}

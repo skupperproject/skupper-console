@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 
 import { ChartPie } from '@patternfly/react-charts';
 
@@ -17,13 +17,11 @@ const ProcessesBytesChart: FC<ProcessGroupsBytesChartProps> = function ({
     labels,
     ...props
 }) {
-    const chartContainerRef = useRef<HTMLDivElement | null>(null);
-
     const [chartContainerDimension, setChartContainerDimension] = useState({ width: 0 });
 
-    useEffect(() => {
-        if (chartContainerRef.current) {
-            const dimensions = chartContainerRef.current.getBoundingClientRect();
+    const chartContainerRef = useCallback((node: HTMLDivElement | null) => {
+        if (node) {
+            const dimensions = node.getBoundingClientRect();
             setChartContainerDimension({ width: dimensions.width });
         }
     }, []);

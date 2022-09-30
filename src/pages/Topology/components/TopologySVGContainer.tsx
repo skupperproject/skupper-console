@@ -39,6 +39,8 @@ import { Labels, TopologyViews } from '../Topology.enum';
 import { TopologyLink, TopologyNode } from '../Topology.interfaces';
 
 const TYPE_SITES = 'sites';
+const TYPE_PROCESSES = 'processes';
+
 const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deployments }> =
     function ({ sites, deployments }) {
         const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologySVG>();
@@ -50,7 +52,6 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
             links: [],
         });
 
-        const drawerRef = useRef<HTMLSpanElement>(null);
         const selectedRef = useRef<string>('');
 
         const handleExpand = useCallback(
@@ -174,14 +175,10 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
         const PanelContentComponent = (
             <DrawerPanelContent>
                 <DrawerHead>
-                    {selectedNode && (
-                        <span ref={drawerRef}>
-                            {topologyType === TYPE_SITES ? (
-                                <TopologySiteDetails id={selectedNode} />
-                            ) : (
-                                <TopologyDeploymentDetails id={selectedNode} />
-                            )}
-                        </span>
+                    {topologyType === TYPE_SITES ? (
+                        <TopologySiteDetails id={selectedNode} />
+                    ) : (
+                        <TopologyDeploymentDetails id={selectedNode} />
                     )}
                     <DrawerActions>
                         <DrawerCloseButton onClick={handleCloseClick} />
@@ -204,7 +201,7 @@ const TopologySVGContainer: FC<{ sites: SiteDataResponse[]; deployments: Deploym
                             title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>}
                         />
                         <Tab
-                            eventKey={'deployements'}
+                            eventKey={TYPE_PROCESSES}
                             title={<TabTitleText>{TopologyViews.Processes}</TabTitleText>}
                         />
                     </Tabs>
