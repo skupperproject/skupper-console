@@ -32,10 +32,10 @@ export default class TopologySVG {
     height: number;
     onClickNode: Function;
     force: Simulation<TopologyNode, TopologyLinkNormalized>;
-    svgContainer: Selection<SVGSVGElement, unknown, null, undefined>;
-    svgContainerGroupNodes: Selection<SVGGElement, unknown, null, undefined>;
+    svgContainer: Selection<SVGSVGElement, TopologyNode, null, undefined>;
+    svgContainerGroupNodes: Selection<SVGGElement, TopologyNode, null, undefined>;
     isDraggingNode: boolean;
-    handleZoom: ZoomBehavior<SVGSVGElement, unknown>;
+    handleZoom: ZoomBehavior<SVGSVGElement, TopologyNode>;
     valueline: Line<[number, number]>;
     groupIds: string[];
 
@@ -73,7 +73,7 @@ export default class TopologySVG {
             .curve(curveCatmullRomClosed)),
             (this.groupIds = []);
 
-        this.handleZoom = zoom<SVGSVGElement, unknown>()
+        this.handleZoom = zoom<SVGSVGElement, TopologyNode>()
             .scaleExtent([0.5, 4])
             .on('zoom', ({ transform }) => {
                 this.svgContainerGroupNodes.attr('transform', transform);
@@ -83,7 +83,7 @@ export default class TopologySVG {
     }
 
     private createSvgContainer() {
-        return select(this.$root)
+        return select<HTMLElement, TopologyNode>(this.$root)
             .append('svg')
             .attr('id', 'topology-draw-panel')
             .attr('preserveAspectRatio', 'xMinYMin meet')
@@ -140,7 +140,7 @@ export default class TopologySVG {
         this.force
             .nodes()
             .filter(({ group }) => group === Number(groupId))
-            .forEach((node: TopologyNode) => {
+            .forEach((node) => {
                 node.fx = (node.fx || 0) + x;
                 node.fy = (node.fy || 0) + y;
             });
@@ -152,7 +152,7 @@ export default class TopologySVG {
         this.force
             .nodes()
             .filter(({ group }) => group === Number(groupId))
-            .forEach((node: TopologyNode) => {
+            .forEach((node) => {
                 node.fx = (node.fx || 0) + x;
                 node.fy = (node.fy || 0) + y;
             });
@@ -214,12 +214,12 @@ export default class TopologySVG {
     private polygonGenerator = (groupId: string) => {
         const node_coords: [number, number][] = this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, TopologyNode>('.node')
-            .filter(function (d) {
-                return d.group === Number(groupId);
+            .filter(function ({ group }) {
+                return group === Number(groupId);
             })
             .data()
-            .map(function (d) {
-                return [d.x, d.y];
+            .map(function ({ x, y }) {
+                return [x, y];
             });
 
         return polygonHull(node_coords);
@@ -231,10 +231,10 @@ export default class TopologySVG {
 
             const path = this.svgContainerGroupNodes
                 .selectAll<SVGPathElement, string>('.nodes_groups')
-                .filter((d) => d === groupId)
+                .filter((id) => id === groupId)
                 .attr('transform', 'scale(1) translate(0,0)')
-                .attr('d', (d) => {
-                    const polygon = this.polygonGenerator(d);
+                .attr('d', (id) => {
+                    const polygon = this.polygonGenerator(id);
                     centroid = polygon ? polygonCentroid(polygon) : [0, 0];
 
                     return this.valueline(
@@ -440,8 +440,8 @@ export default class TopologySVG {
         );
 
         this.svgContainerGroupNodes
-            .selectAll('.node-img')
-            .style('opacity', ({ id }: any) =>
+            .selectAll<SVGSVGElement, TopologyNode>('.node-img')
+            .style('opacity', ({ id }) =>
                 !!selectedNode && id !== selectedNode ? OPACITY_NO_SELECTED_ITEM : '1',
             );
     };
