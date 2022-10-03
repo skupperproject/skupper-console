@@ -236,6 +236,12 @@ export const RESTApi = {
         return data;
     },
 
+    fetchFlowAggregatesProcessGroup: async (id: string): Promise<FlowAggregatesResponse> => {
+        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESS_GROUPS_PATH}/${id}`);
+
+        return data;
+    },
+
     fetchFlowAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESSES_PATH);
 

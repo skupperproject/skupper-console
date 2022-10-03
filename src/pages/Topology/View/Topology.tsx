@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import ProcessesController from '@pages/Processes/services';
+import ProcessGroupsController from '@pages/ProcessGroups/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import SitesController from '@pages/Sites/services';
@@ -25,9 +27,36 @@ const TopologyContent = function () {
         },
     );
 
-    const { data: deployments, isLoading: isLoadingServices } = useQuery(
+    const { data: processes, isLoading: isLoadingServices } = useQuery(
         [QueriesTopology.GetProcesses],
-        TopologyController.getDeployments,
+        ProcessesController.getProcesses,
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
+        [QueriesTopology.GetProcessGroups],
+        ProcessGroupsController.getProcessGroups,
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processesLinks, isLoading: isLoadingProcessesLinks } = useQuery(
+        [QueriesTopology.GetProcessesLinks],
+        TopologyController.getProcessesLinks,
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processGroupsLinks, isLoading: isLoadingProcessGroupsLinks } = useQuery(
+        [QueriesTopology.GetProcessGroupsLinks],
+        TopologyController.getProcessGroupsLinks,
         {
             refetchInterval,
             onError: handleError,
@@ -43,16 +72,23 @@ const TopologyContent = function () {
         navigate(route);
     }
 
-    if (isLoadingSites || isLoadingServices) {
+    if (
+        isLoadingSites ||
+        isLoadingServices ||
+        isLoadingProcessesLinks ||
+        isLoadingProcessGroups ||
+        isLoadingProcessGroupsLinks
+    ) {
         return <LoadingPage />;
     }
 
-    return (
-        <TopologySVGContainer
-            sites={sites || []}
-            deployments={deployments || { deployments: [], deploymentLinks: [] }}
-        />
-    );
+    if (!processes || !processesLinks || !sites || !processGroups || !processGroupsLinks) {
+        return null;
+    }
+
+    const deployments = { processes, processesLinks, processGroups, processGroupsLinks };
+
+    return <TopologySVGContainer sites={sites} deployments={deployments} />;
 };
 
 export default TopologyContent;

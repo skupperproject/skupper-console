@@ -71,18 +71,6 @@ interface DataSiteResponse {
     gateway: boolean;
 }
 
-interface DeploymentLinksStreamPoints {
-    key: string;
-    site: { site_id: string; site_name: string };
-}
-
-export interface DeploymentLinksResponse {
-    key: string;
-    request: ServiceConnection;
-    source: DeploymentLinksStreamPoints;
-    target: DeploymentLinksStreamPoints;
-}
-
 export interface DeploymentLinkTopology {
     key: string;
     source: string;

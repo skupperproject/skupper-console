@@ -1,24 +1,37 @@
-import { scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
-
 import { RESTApi } from 'API/REST';
-import { DeploymentLinkTopology, ProcessResponse, SiteDataResponse } from 'API/REST.interfaces';
+import {
+    DeploymentLinkTopology,
+    ProcessGroupResponse,
+    ProcessResponse,
+    SiteDataResponse,
+} from 'API/REST.interfaces';
 
 import { TopologyNode } from '../Topology.interfaces';
-import { Deployments, ProcessesMetrics, SitesMetrics } from './services.interfaces';
+import { ProcessesMetrics, ProcessGroupMetrics, SitesMetrics } from './services.interfaces';
 
 export const TopologyController = {
-    getDeployments: async (): Promise<Deployments> => {
-        const processes = await RESTApi.fetchProcesses();
+    getProcessesLinks: async (): Promise<DeploymentLinkTopology[]> => {
         const links = await RESTApi.fetchFlowAggregatesProcesses();
 
-        const deploymentLinks = links.map(({ identity, sourceId, destinationId }) => ({
+        const processesLinks = links.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,
             target: destinationId,
         }));
 
-        return { deployments: processes, deploymentLinks };
+        return processesLinks;
+    },
+
+    getProcessGroupsLinks: async (): Promise<DeploymentLinkTopology[]> => {
+        const links = await RESTApi.fetchFlowAggregatesProcessgroups();
+
+        const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
+            key: identity,
+            source: sourceId,
+            target: destinationId,
+        }));
+
+        return processGroupsLinks;
     },
 
     getSiteMetrics: async (id: string): Promise<SitesMetrics> => {
@@ -83,7 +96,38 @@ export const TopologyController = {
         };
     },
 
-    getNodesSites: (sites: SiteDataResponse[]) =>
+    getProcessGroupMetrics: async (id: string): Promise<ProcessGroupMetrics> => {
+        const process = await RESTApi.fetchProcessGroup(id);
+        const flowAggregatesPairs = await RESTApi.fetchFlowAggregatesProcessgroups();
+
+        const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
+            .filter(({ sourceId }) => id === sourceId)
+            .map(({ identity }) => identity);
+
+        const flowAggregatesIncomingPairsIds = flowAggregatesPairs
+            .filter(({ destinationId }) => id === destinationId)
+            .map(({ identity }) => identity);
+
+        const flowAggregatesOutgoingPairs = await Promise.all(
+            flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
+                RESTApi.fetchFlowAggregatesProcessGroup(flowAggregatesPairsId),
+            ),
+        ).catch((error) => Promise.reject(error));
+
+        const flowAggregatesIncomingPairs = await Promise.all(
+            flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
+                RESTApi.fetchFlowAggregatesProcessGroup(flowAggregatesPairsId),
+            ),
+        ).catch((error) => Promise.reject(error));
+
+        return {
+            ...process,
+            tcpConnectionsOut: flowAggregatesOutgoingPairs,
+            tcpConnectionsIn: flowAggregatesIncomingPairs,
+        };
+    },
+
+    getSiteNodes: (sites: SiteDataResponse[]) =>
         sites
             ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
             .map((node, index) => {
@@ -101,11 +145,11 @@ export const TopologyController = {
                     type: 'site',
                     groupName: node.siteName,
                     group: index,
-                    color: color(index.toString()),
+                    color: getColor(index),
                 };
             }),
 
-    getLinkSites: (sites: SiteDataResponse[]) =>
+    getSiteLinks: (sites: SiteDataResponse[]) =>
         sites?.flatMap(({ siteId: sourceId, connected }) =>
             connected.flatMap((targetId) => [
                 {
@@ -116,7 +160,36 @@ export const TopologyController = {
             ]),
         ),
 
-    getServiceNodes: (deployments: ProcessResponse[], siteNodes: TopologyNode[]) =>
+    getProcessGroupNodes: (processGroups: ProcessGroupResponse[]) =>
+        processGroups
+            ?.sort((a, b) => a.identity.localeCompare(b.identity))
+            .map((node, index) => {
+                const positions = localStorage.getItem(node.identity);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
+
+                return {
+                    id: node.identity,
+                    name: node.name,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
+                    type: 'processgroups',
+                    groupName: node.name,
+                    group: index,
+                    color: getColor(index),
+                };
+            }),
+
+    getProcessGroupNodesLinks: (deploymentsLinks: DeploymentLinkTopology[]) =>
+        deploymentsLinks?.flatMap(({ source, target }) => ({
+            source,
+            target,
+            type: 'linkService',
+        })),
+
+    getProcessNodes: (deployments: ProcessResponse[], siteNodes: TopologyNode[]) =>
         deployments
             ?.map((node) => {
                 const positions = localStorage.getItem(node.identity);
@@ -136,12 +209,12 @@ export const TopologyController = {
                     type: 'service',
                     groupName: site?.name || '',
                     group: groupIndex,
-                    color: color(groupIndex.toString()),
+                    color: getColor(groupIndex),
                 };
             })
             .sort((a, b) => a.group - b.group),
 
-    getLinkServices: (deploymentsLinks: DeploymentLinkTopology[]) =>
+    getProcessLinks: (deploymentsLinks: DeploymentLinkTopology[]) =>
         deploymentsLinks?.flatMap(({ source, target }) => ({
             source,
             target,
@@ -149,4 +222,29 @@ export const TopologyController = {
         })),
 };
 
-const color = scaleOrdinal(schemeCategory10);
+const getColor = (index: number) => {
+    const colors = [
+        '#1f77b4',
+        '#ff7f0e',
+        '#2ca02c',
+        '#d62728',
+        '#9467bd',
+        '#8c564b',
+        '#e377c2',
+        '#7f7f7f',
+        '#bcbd22',
+        '#17becf',
+        '#ffbb78',
+        '#98df8a',
+        '#ff9896',
+        '#c5b0d5',
+        '#c49c94',
+        '#f7b6d2',
+        '#c7c7c7',
+        '#dbdb8d',
+        '#9edae5',
+        '#aec7e8',
+    ];
+
+    return colors[index % colors.length];
+};

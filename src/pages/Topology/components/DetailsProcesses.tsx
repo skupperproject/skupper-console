@@ -18,12 +18,12 @@ interface TopologyDeploymentDetailsProps {
     id: string;
 }
 
-const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function ({ id }) {
+const TopologyProcessesDetails: FC<TopologyDeploymentDetailsProps> = function ({ id }) {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: deployment, isLoading } = useQuery(
-        [QueriesTopology.GetProcesses, id],
+        [QueriesTopology.GetProcessMetrics, id],
         () => TopologyController.getProcessMetrics(id),
         {
             refetchInterval,
@@ -75,4 +75,4 @@ const TopologyDeploymentDetails: FC<TopologyDeploymentDetailsProps> = function (
     );
 };
 
-export default TopologyDeploymentDetails;
+export default TopologyProcessesDetails;
