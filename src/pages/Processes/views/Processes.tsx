@@ -82,7 +82,7 @@ const Processes = function () {
             </GridItem>
             <GridItem span={6}>
                 <Card>
-                    <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
+                    <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
                     <ProcessesBytesChart
                         bytes={bytesReceived}
                         labels={bytesReceivedLabels}

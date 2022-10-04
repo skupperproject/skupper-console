@@ -1,0 +1,116 @@
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+
+import {
+    Drawer,
+    DrawerActions,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerHead,
+    DrawerPanelBody,
+    DrawerPanelContent,
+} from '@patternfly/react-core';
+import {
+    createTopologyControlButtons,
+    defaultControlButtonsOptions,
+    TopologyControlBar,
+    TopologyView,
+} from '@patternfly/react-topology';
+
+import { TopologyLink, TopologyNode } from '../Topology.interfaces';
+import TopologySVG from './TopologySVG';
+
+const TopologyContainer: FC<{
+    nodes: TopologyNode[];
+    links: TopologyLink[];
+    onGetSelectedNode?: Function;
+    children: React.ReactNode;
+}> = function ({ nodes, links, onGetSelectedNode, children }) {
+    const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologySVG>();
+    const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
+
+    const selectedRef = useRef<string>('');
+
+    const handleExpandDetails = useCallback(
+        (id: string) => {
+            selectedRef.current = selectedRef.current !== id ? id : '';
+            setIsExpandedDetails(!!selectedRef.current);
+
+            if (onGetSelectedNode) {
+                onGetSelectedNode(selectedRef.current);
+            }
+        },
+        [onGetSelectedNode],
+    );
+
+    function handleCloseDetails() {
+        setIsExpandedDetails(false);
+        selectedRef.current = '';
+    }
+
+    // Create Graph
+    const panelRef = useCallback(
+        ($node: HTMLDivElement | null) => {
+            if ($node && nodes.length && links.length && !topologyGraphInstance) {
+                $node.replaceChildren();
+
+                const topologyGraph = new TopologySVG(
+                    $node,
+                    nodes,
+                    links,
+                    $node.getBoundingClientRect().width,
+                    $node.getBoundingClientRect().height,
+                    handleExpandDetails,
+                );
+                topologyGraph.updateTopology(nodes, links);
+
+                setTopologyGraphInstance(topologyGraph);
+            }
+        },
+        [handleExpandDetails, links, nodes, topologyGraphInstance],
+    );
+
+    // Update topology
+    useEffect(() => {
+        if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
+            topologyGraphInstance.updateTopology(nodes, links, selectedRef.current);
+        }
+    }, [links, nodes, topologyGraphInstance]);
+
+    const ControlButtons = createTopologyControlButtons({
+        ...defaultControlButtonsOptions,
+        zoomInCallback: () => topologyGraphInstance?.zoomIn(),
+        zoomOutCallback: () => topologyGraphInstance?.zoomOut(),
+        resetViewCallback: () => topologyGraphInstance?.reset(),
+        fitToScreenHidden: true,
+        legendHidden: true,
+    });
+
+    const PanelContent = (
+        <DrawerPanelContent>
+            {selectedRef.current && (
+                <DrawerHead>
+                    {children}
+                    <DrawerActions>
+                        <DrawerCloseButton onClick={handleCloseDetails} />
+                    </DrawerActions>
+                </DrawerHead>
+            )}
+        </DrawerPanelContent>
+    );
+
+    return (
+        <Drawer isExpanded={areDetailsExpanded} position="right">
+            <DrawerContent panelContent={PanelContent} style={{ overflow: 'hidden' }}>
+                <DrawerPanelBody hasNoPadding>
+                    <TopologyView
+                        controlBar={<TopologyControlBar controlButtons={ControlButtons} />}
+                    >
+                        <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
+                    </TopologyView>
+                </DrawerPanelBody>
+            </DrawerContent>
+        </Drawer>
+    );
+};
+
+export default TopologyContainer;

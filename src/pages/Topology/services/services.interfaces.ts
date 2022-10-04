@@ -6,11 +6,11 @@ import {
     SiteResponse,
 } from 'API/REST.interfaces';
 
-export type TopologyProcesses = {
-    processes: ProcessResponse[];
-    processesLinks: DeploymentLinkTopology[];
-    processGroups: ProcessGroupResponse[];
-    processGroupsLinks: DeploymentLinkTopology[];
+export type TopologyDeployments = {
+    processes?: ProcessResponse[];
+    processesLinks?: DeploymentLinkTopology[];
+    processGroups?: ProcessGroupResponse[];
+    processGroupsLinks?: DeploymentLinkTopology[];
 };
 
 export interface SitesMetrics extends SiteResponse {
