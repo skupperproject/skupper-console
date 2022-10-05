@@ -4,6 +4,7 @@ import {
     ProcessGroupResponse,
     ProcessResponse,
     SiteDataResponse,
+    SiteResponse,
 } from 'API/REST.interfaces';
 
 import { TopologyNode } from '../Topology.interfaces';
@@ -127,7 +128,7 @@ export const TopologyController = {
         };
     },
 
-    getSiteNodes: (sites: SiteDataResponse[]) =>
+    getSiteDataNodes: (sites: SiteDataResponse[]) =>
         sites
             ?.sort((a, b) => a.siteId.localeCompare(b.siteId))
             .map((node, index) => {
@@ -144,6 +145,28 @@ export const TopologyController = {
                     fy,
                     type: 'site',
                     groupName: node.siteName,
+                    group: index,
+                    color: getColor(index),
+                };
+            }),
+
+    getSiteNodes: (sites: SiteResponse[]) =>
+        sites
+            ?.sort((a, b) => a.identity.localeCompare(b.identity))
+            .map((node, index) => {
+                const positions = localStorage.getItem(node.identity);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
+
+                return {
+                    id: node.identity,
+                    name: node.name,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
+                    type: 'site',
+                    groupName: node.name,
                     group: index,
                     color: getColor(index),
                 };

@@ -36,7 +36,7 @@ const TopologyProcesses = function () {
     });
     const [nodeSelected, setNodeSelected] = useState<string>('');
 
-    const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getDataSites, {
+    const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
         refetchInterval,
         onError: handleError,
     });

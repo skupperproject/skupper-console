@@ -1,5 +1,6 @@
 import { DataResponse } from './REST.interfaces';
 
+// TODO: soon will be deprecated
 export function getSites(VANdata: DataResponse) {
     const { sites } = VANdata;
 
