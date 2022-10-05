@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Card, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
 import TopologySite from '../components/TopologySite';
 import { TopologyViews } from '../Topology.enum';
 
-const TopologyContent = function () {
+const Topology = function () {
     const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
 
     function handleChangeTopologyType(
@@ -18,7 +18,7 @@ const TopologyContent = function () {
     }
 
     return (
-        <>
+        <Card isFullHeight>
             <Tabs activeKey={topologyType} isFilled onSelect={handleChangeTopologyType} isBox>
                 <Tab
                     eventKey={TopologyViews.Sites}
@@ -36,8 +36,8 @@ const TopologyContent = function () {
             {topologyType === TopologyViews.Sites && <TopologySite />}
             {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups />}
             {topologyType === TopologyViews.Processes && <TopologyProcesses />}
-        </>
+        </Card>
     );
 };
 
-export default TopologyContent;
+export default Topology;

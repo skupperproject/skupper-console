@@ -14,7 +14,7 @@ import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { TopologyLink, TopologyNode } from '../Topology.interfaces';
 import TopologyProcessGroupsDetails from './DetailsProcessGroups';
-import TopologyContainer from './TopologyContainer';
+import TopologyPanel from './TopologyPanel';
 
 const TopologyProcessGroups = function () {
     const navigate = useNavigate();
@@ -83,13 +83,13 @@ const TopologyProcessGroups = function () {
     }
 
     return (
-        <TopologyContainer
+        <TopologyPanel
             nodes={topology.nodes}
             links={topology.links}
             onGetSelectedNode={handleGetSelectedNode}
         >
             <TopologyProcessGroupsDetails id={nodeSelected} />
-        </TopologyContainer>
+        </TopologyPanel>
     );
 };
 

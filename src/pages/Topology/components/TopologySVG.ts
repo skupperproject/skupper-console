@@ -85,12 +85,7 @@ export default class TopologySVG {
     private createSvgContainer() {
         return select<HTMLElement, TopologyNode>(this.$root)
             .append('svg')
-            .attr('id', 'topology-draw-panel')
-            .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', `0 0 ${this.width} ${this.height}`)
-            .attr('width', '100%')
-            .attr('height', '100%')
-            .style('background-color', 'var(--pf-global--BackgroundColor--100)');
+            .attr('viewBox', `0 0 ${this.width} ${this.height}`);
     }
 
     private fixNodes = (x: number, y: number) => {

@@ -8,6 +8,7 @@ import {
     DrawerHead,
     DrawerPanelBody,
     DrawerPanelContent,
+    Panel,
 } from '@patternfly/react-core';
 import {
     createTopologyControlButtons,
@@ -19,7 +20,7 @@ import {
 import { TopologyLink, TopologyNode } from '../Topology.interfaces';
 import TopologySVG from './TopologySVG';
 
-const TopologyContainer: FC<{
+const TopologyPanel: FC<{
     nodes: TopologyNode[];
     links: TopologyLink[];
     onGetSelectedNode?: Function;
@@ -101,11 +102,11 @@ const TopologyContainer: FC<{
     return (
         <Drawer isExpanded={areDetailsExpanded} position="right">
             <DrawerContent panelContent={PanelContent} style={{ overflow: 'hidden' }}>
-                <DrawerPanelBody hasNoPadding>
+                <DrawerPanelBody>
                     <TopologyView
                         controlBar={<TopologyControlBar controlButtons={ControlButtons} />}
                     >
-                        <div ref={panelRef} style={{ width: '100%', height: '100%' }} />
+                        <Panel ref={panelRef} style={{ width: '100%', height: '100%' }} />
                     </TopologyView>
                 </DrawerPanelBody>
             </DrawerContent>
@@ -113,4 +114,4 @@ const TopologyContainer: FC<{
     );
 };
 
-export default TopologyContainer;
+export default TopologyPanel;
