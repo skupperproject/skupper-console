@@ -2,14 +2,8 @@ import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import AppContent from '@layout/AppContent';
-
-const Services = function () {
-    return (
-        <AppContent>
-            <Outlet />
-        </AppContent>
-    );
+const ProcessGroupsContainer = function () {
+    return <Outlet />;
 };
 
-export default Services;
+export default ProcessGroupsContainer;

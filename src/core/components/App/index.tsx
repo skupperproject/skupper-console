@@ -1,8 +1,9 @@
 import React, { Suspense, useEffect } from 'react';
 
-import { Page, PageSection } from '@patternfly/react-core';
+import { Page } from '@patternfly/react-core';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
+import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
 import { DEFAULT_VIEW } from 'config';
@@ -32,7 +33,7 @@ const App = function () {
             className="app-main-container"
         >
             <Suspense fallback={<span />}>
-                <PageSection>{appRoutes}</PageSection>
+                <AppContent>{appRoutes}</AppContent>
             </Suspense>
         </Page>
     );

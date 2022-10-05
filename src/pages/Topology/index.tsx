@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-const Topology = function () {
+const TopologyContainer = function () {
     return <Outlet />;
 };
 
-export default Topology;
+export default TopologyContainer;

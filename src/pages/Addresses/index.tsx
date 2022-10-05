@@ -2,14 +2,8 @@ import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import AppContent from '@layout/AppContent';
-
-const VanServices = function () {
-    return (
-        <AppContent>
-            <Outlet />
-        </AppContent>
-    );
+const AddressesContainer = function () {
+    return <Outlet />;
 };
 
-export default VanServices;
+export default AddressesContainer;

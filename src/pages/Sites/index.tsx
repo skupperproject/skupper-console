@@ -2,14 +2,8 @@ import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import AppContent from '@layout/AppContent';
-
-const Site = function () {
-    return (
-        <AppContent>
-            <Outlet />
-        </AppContent>
-    );
+const SiteContainer = function () {
+    return <Outlet />;
 };
 
-export default Site;
+export default SiteContainer;
