@@ -59,7 +59,7 @@ export const AddressesController = {
                     octets: targetBytes,
                     process: targetProcess,
                     latency: targetLatency,
-                } = flowPair.CounterFlow;
+                } = flowPair.counterFlow;
 
                 const targetSiteName = sitesMap[flowPair.destinationSiteId];
                 const targetProcessName = processesMap[targetProcess].name;

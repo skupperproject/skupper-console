@@ -19,15 +19,17 @@ import {
     getRoutersBySitePATH,
     getLinksBySitePATH,
     getHostsBySitePATH,
-    FLOW_AGGREGATES_PROCESSES_PATH,
+    FLOW_AGGREGATES_PROCESS_PAIRS_PATH,
     ROUTERS_PATH,
     PROCESSES_PATH,
-    FLOW_AGGREGATES_SITES_PATH,
+    FLOW_AGGREGATES_SITE_PAIRS_PATH,
     HOSTS_PATH,
     PROCESS_GROUPS_PATH,
-    getProcessesByServicePATH,
-    getServicePATH,
-    FLOW_AGGREGATES_PROCESS_GROUPS_PATH,
+    getProcessesByProcessGroupPATH,
+    getProcessGroupPATH,
+    FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH,
+    getListenerPATH,
+    geProcessPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
@@ -105,7 +107,7 @@ export const RESTApi = {
     },
 
     fetchProcess: async (id: string): Promise<ProcessResponse> => {
-        const { data } = await fetchWithTimeout(`${PROCESSES_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(geProcessPATH(id));
 
         return data;
     },
@@ -124,12 +126,12 @@ export const RESTApi = {
         return data;
     },
     fetchProcessGroup: async (id: string): Promise<ProcessGroupResponse> => {
-        const { data } = await fetchWithTimeout(getServicePATH(id));
+        const { data } = await fetchWithTimeout(getProcessGroupPATH(id));
 
         return data;
     },
     fetchProcessesByProcessGroup: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesByServicePATH(id));
+        const { data } = await fetchWithTimeout(getProcessesByProcessGroupPATH(id));
 
         return data;
     },
@@ -146,7 +148,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsSite: async (id: string): Promise<SiteResponse> => {
-        const { data } = await fetchWithTimeout(`${SITES_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(getSitePATH(id));
 
         return data;
     },
@@ -197,7 +199,7 @@ export const RESTApi = {
         return data;
     },
     fetchFlowsListener: async (id: string): Promise<DeviceResponse> => {
-        const { data } = await fetchWithTimeout(`${LISTENERS_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(getListenerPATH(id));
 
         return data;
     },
@@ -219,37 +221,39 @@ export const RESTApi = {
 
     // FLOWAGGREGATES APIs
     fetchFlowAggregatesSites: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_SITES_PATH);
+        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_SITE_PAIRS_PATH);
 
         return data;
     },
 
     fetchFlowAggregatesSite: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_SITES_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_SITE_PAIRS_PATH}/${id}`);
 
         return data;
     },
 
     fetchFlowAggregatesProcessgroups: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_GROUPS_PATH);
+        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH);
 
         return data;
     },
 
     fetchFlowAggregatesProcessGroup: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESS_GROUPS_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(
+            `${FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH}/${id}`,
+        );
 
         return data;
     },
 
     fetchFlowAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESSES_PATH);
+        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_PAIRS_PATH);
 
         return data;
     },
 
     fetchFlowAggregatesProcess: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESSES_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESS_PAIRS_PATH}/${id}`);
 
         return data;
     },

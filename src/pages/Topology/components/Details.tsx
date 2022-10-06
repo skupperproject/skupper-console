@@ -40,7 +40,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                 <TableComposable variant="compact" isStickyHeader borders={false}>
                                     <Thead>
                                         <Tr>
-                                            <Th>{ConnectionsColumns.Name}</Th>
+                                            <Th>{'Name'}</Th>
                                             <Th>{ConnectionsColumns.BytesOut}</Th>
                                         </Tr>
                                     </Thead>
@@ -61,7 +61,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                 <TableComposable variant="compact" isStickyHeader borders={false}>
                                     <Thead>
                                         <Tr>
-                                            <Th>{ConnectionsColumns.Name}</Th>
+                                            <Th>{'Name'}</Th>
                                             <Th>{ConnectionsColumns.BytesOut}</Th>
                                         </Tr>
                                     </Thead>

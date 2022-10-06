@@ -198,7 +198,7 @@ export interface FlowPairResponse {
     sourceSiteId: string;
     destinationSiteId: string;
     forwardFlow: FlowResponse;
-    CounterFlow: FlowResponse;
+    counterFlow: FlowResponse;
 }
 
 export type FlowsDataResponse = RouterResponse & LinkResponse & DeviceResponse & FlowResponse;
