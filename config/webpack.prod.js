@@ -1,7 +1,6 @@
 const { ROOT, path } = require('./webpack.constant');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
-const CopyPlugin = require('copy-webpack-plugin');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -31,13 +30,6 @@ const prodConfig = {
             generateStatsFile: true,
             statsOptions: { source: false },
             reportFilename: path.join(ROOT, '/reports/bundle-size.html'),
-        }),
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path.join(ROOT, 'public/console_http_server.js'),
-                },
-            ],
         }),
     ],
 };
