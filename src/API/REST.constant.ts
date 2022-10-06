@@ -1,7 +1,4 @@
-import { BASE_URL, BASE_URL_COLLECTOR } from 'config';
-
-// APIs PATHS
-export const DATA_URL = `${BASE_URL}/DATA`;
+import { BASE_URL_COLLECTOR } from 'config';
 
 // SITES
 const API_VERSION = '/api/v1alpha1';

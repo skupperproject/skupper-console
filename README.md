@@ -17,7 +17,7 @@ and open <http://localhosst:3000>
 
 You can also run the console using external endpoints for the skupper controller and skupper flow collector:
 
-> `API_HOST=<APIs url> API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
+> `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
 **remember to enable CORS**
 Both the Skupper-controller and the flow-collector need to enable the CORS. We can do that doing ```kubectl set env deployment/<deployment name> USE_CORS=yes``` for each of them.

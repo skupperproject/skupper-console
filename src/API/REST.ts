@@ -1,9 +1,7 @@
 import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 
 import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
-import { getSites } from './controllers';
 import {
-    DATA_URL,
     CONNECTORS_PATH,
     LINKS_PATH,
     LISTENERS_PATH,
@@ -33,7 +31,6 @@ import {
 } from './REST.constant';
 import {
     ProcessGroupResponse,
-    SiteDataResponse,
     AddressesResponse,
     DeviceResponse,
     ProcessResponse,
@@ -49,12 +46,6 @@ import {
 } from './REST.interfaces';
 
 export const RESTApi = {
-    fetchDATASites: async (): Promise<SiteDataResponse[]> => {
-        const { data } = await fetchWithTimeout(DATA_URL);
-
-        return getSites(data);
-    },
-
     // SITES APIs
     fetchSites: async (): Promise<SiteResponse[]> => {
         const { data } = await fetchWithTimeout(SITES_PATH);
@@ -163,22 +154,22 @@ export const RESTApi = {
 
         return data;
     },
-    fetchFlowsLinks: async (): Promise<DeviceResponse[]> => {
+    fetchLinks: async (): Promise<LinkResponse[]> => {
         const { data } = await fetchWithTimeout(`${LINKS_PATH}`);
 
         return data;
     },
-    fetchFlowsLink: async (id: string): Promise<DeviceResponse> => {
+    fetchLink: async (id: string): Promise<LinkResponse> => {
         const { data } = await fetchWithTimeout(`${LINKS_PATH}/${id}`);
 
         return data;
     },
-    fetchFlowsConnectors: async (): Promise<DeviceResponse[]> => {
+    fetchConnectors: async (): Promise<DeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}`);
 
         return data;
     },
-    fetchFlowsConnector: async (id: string): Promise<DeviceResponse | null> => {
+    fetchConnector: async (id: string): Promise<DeviceResponse | null> => {
         try {
             const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}/${id}`);
 

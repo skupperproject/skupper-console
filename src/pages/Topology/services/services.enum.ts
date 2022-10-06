@@ -1,5 +1,6 @@
 export enum QueriesTopology {
     GetSites = 'get-topology-sites-query',
+    GetSitesWithLinksCreated = 'get-topology-sites-with-links-creted-query',
     GetSite = 'get-topology-site-query',
     GetProcessGroups = 'get-topology-process-groups-query',
     GetProcesses = 'get-topology-processes-query',

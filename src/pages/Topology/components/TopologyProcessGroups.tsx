@@ -68,7 +68,7 @@ const TopologyProcessGroups = function () {
                     img: siteXML,
                 }),
             );
-            const links = TopologyController.getProcessGroupNodesLinks(processGroupsLinks);
+            const links = TopologyController.getProcessGroupNodesEdges(processGroupsLinks);
 
             setTopology({ nodes, links });
         }

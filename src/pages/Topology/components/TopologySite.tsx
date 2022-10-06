@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import siteSVG from '@assets/site.svg';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesController from '@pages/Sites/services';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
@@ -25,9 +24,9 @@ const TopologySite = function () {
     });
     const [nodeSelected, setNodeSelected] = useState<string>('');
 
-    const { data: sites, isLoading } = useQuery(
-        [QueriesTopology.GetSites],
-        SitesController.getDataSites,
+    const { data: sites, isLoading: isLoading } = useQuery(
+        [QueriesTopology.GetSitesWithLinksCreated],
+        TopologyController.getSitesWithLinksCreated,
         {
             refetchInterval,
             onError: handleError,
@@ -57,7 +56,7 @@ const TopologySite = function () {
                 ...site,
                 img: siteXML,
             }));
-            const links = TopologyController.getSiteLinks(sites);
+            const links = TopologyController.getSiteEdges(sites);
 
             setTopology({ nodes, links });
         }

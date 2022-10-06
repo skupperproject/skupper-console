@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 app.use(async (req, res, next) => {
-    const API_HOST = process.env.NODE_API_HOST;
     const API_HOST_FLOW_COLLECTOR = process.env.NODE_API_HOST_FLOW_COLLECTOR;
 
     if (req.originalUrl.includes('/DATA')) {

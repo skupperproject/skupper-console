@@ -1,16 +1,8 @@
 import { RESTApi } from 'API/REST';
-import {
-    HostResponse,
-    LinkResponse,
-    ProcessResponse,
-    SiteDataResponse,
-    SiteResponse,
-} from 'API/REST.interfaces';
+import { HostResponse, LinkResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 import { LINK_DIRECTIONS } from 'config';
 
 const SitesController = {
-    getDataSites: async (): Promise<SiteDataResponse[]> => RESTApi.fetchDATASites(),
-
     getSites: async (): Promise<SiteResponse[]> => RESTApi.fetchSites(),
 
     getSite: async (id: string): Promise<SiteResponse> => RESTApi.fetchSite(id),

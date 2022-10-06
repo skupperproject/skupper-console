@@ -5,9 +5,8 @@ import { SitesPaths } from '@pages/Sites/Sites.constant';
 import { TopologyPaths } from '@pages/Topology/Topology.constant';
 
 // URL config
-export const BASE_URL =
-    process.env.API_HOST || `${window.location.protocol}//${window.location.host}`;
-export const BASE_URL_COLLECTOR = process.env.API_HOST_FLOW_COLLECTOR || BASE_URL;
+export const BASE_URL_COLLECTOR =
+    process.env.API_HOST_FLOW_COLLECTOR || `${window.location.protocol}//${window.location.host}`;
 
 // Navigation config
 export const RoutesPropsConfig = [

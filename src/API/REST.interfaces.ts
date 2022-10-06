@@ -83,13 +83,6 @@ export interface DeploymentTopologyResponse {
     site: DataSiteResponse;
 }
 
-export interface SiteDataResponse {
-    siteId: string;
-    siteName: string;
-    connected: string[];
-    namespace: string;
-}
-
 export interface SiteResponse {
     identity: string;
     recType: string;

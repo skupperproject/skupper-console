@@ -32,11 +32,9 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env.API_HOST': JSON.stringify(process.env.API_HOST || ''),
             'process.env.API_HOST_FLOW_COLLECTOR': JSON.stringify(
                 process.env.API_HOST_FLOW_COLLECTOR || '',
             ),
-            'process.env.NODE_API_HOST': JSON.stringify(process.env.NODE_API_HOST || ''),
             'process.env.NODE_API_HOST_FLOW_COLLECTOR': JSON.stringify(
                 process.env.NODE_API_HOST_FLOW_COLLECTOR || '',
             ),
