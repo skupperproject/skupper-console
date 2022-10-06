@@ -5,7 +5,7 @@ export interface ProcessesMetricsProps {
 }
 
 export interface ProcessesTableProps {
-    processes: ProcessResponse[];
+    processes: ProcessesExtended[];
 }
 
 export interface ProcessesBytesChartProps {
@@ -14,7 +14,7 @@ export interface ProcessesBytesChartProps {
     themeColor?: string;
 }
 
-export interface ProcessesNameLinkCellProps {
+export interface ProcessNameLinkCellProps {
     data: ProcessResponse;
     value: ProcessResponse[keyof ProcessResponse];
 }
@@ -25,4 +25,14 @@ export interface CurrentBytesInfoProps {
     byteRate: number;
     bytes: number;
     style?: Record<string, string>;
+}
+
+export interface ProcessesExtended extends ProcessResponse {
+    siteIdentity: string;
+    siteName: String;
+}
+
+export interface SiteNameLinkCellProps {
+    data: ProcessesExtended;
+    value: ProcessesExtended[keyof ProcessesExtended];
 }

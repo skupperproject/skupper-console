@@ -1,3 +1,4 @@
+import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import {
     DeploymentLinkTopology,
@@ -10,11 +11,9 @@ import { LINK_DIRECTIONS } from 'config';
 import { TopologyNode } from '../Topology.interfaces';
 import { ProcessesMetrics, ProcessGroupMetrics, SitesMetrics } from './services.interfaces';
 
-interface SiteExtended extends SiteResponse {
-    connected: string[];
-}
-
 export const TopologyController = {
+    // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
+    // This prop is used to show the edges in the topology sites
     getSitesWithLinksCreated: async (): Promise<SiteExtended[]> => {
         // fetch routers, links and sites and bind them
         const sites = await RESTApi.fetchSites();

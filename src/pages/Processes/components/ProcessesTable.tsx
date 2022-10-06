@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 
 import SkTable from '@core/components/SkTable';
+import SiteNameLinkCell from '@pages/Processes/components/SiteNameLinkCell';
 
 import { ProcessesLabels, ProcessesTableColumns } from '../Processes.enum';
 import { ProcessesTableProps } from '../Processes.interfaces';
-import ProcessesNameLinkCell from './ProcessesNameLinkCell';
+import ProcessNameLinkCell from './ProcessesNameLinkCell';
 
 const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
     const columns = [
@@ -12,6 +13,11 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
             name: ProcessesTableColumns.Name,
             prop: 'name',
             component: 'linkCell',
+        },
+        {
+            name: ProcessesTableColumns.Site,
+            prop: 'siteName',
+            component: 'linkCellSite',
         },
     ];
 
@@ -21,7 +27,7 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
             titleDescription={ProcessesLabels.Description}
             columns={columns}
             rows={processes}
-            components={{ linkCell: ProcessesNameLinkCell }}
+            components={{ linkCell: ProcessNameLinkCell, linkCellSite: SiteNameLinkCell }}
         />
     );
 };

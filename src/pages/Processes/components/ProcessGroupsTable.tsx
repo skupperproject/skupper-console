@@ -4,7 +4,7 @@ import SkTable from '@core/components/SkTable';
 
 import { ProcessesLabels, ProcessesTableColumns } from '../Processes.enum';
 import { ProcessesTableProps } from '../Processes.interfaces';
-import ProcessesNameLinkCell from './ProcessesNameLinkCell';
+import ProcessNameLinkCell from './ProcessesNameLinkCell';
 
 const ProcessGroupsTable: FC<ProcessesTableProps> = function ({ processes }) {
     const columns = [
@@ -21,7 +21,7 @@ const ProcessGroupsTable: FC<ProcessesTableProps> = function ({ processes }) {
             titleDescription={ProcessesLabels.Description}
             columns={columns}
             rows={processes}
-            components={{ linkCell: ProcessesNameLinkCell }}
+            components={{ linkCell: ProcessNameLinkCell }}
         />
     );
 };

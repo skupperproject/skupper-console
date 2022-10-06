@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
     Breadcrumb,
@@ -20,11 +20,14 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import ProcessesTable from '@pages/Processes/components/ProcessesTable';
+import ProcessesController from '@pages/Processes/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { ProcessGroupResponse, ProcessResponse } from 'API/REST.interfaces';
+import SitesController from '@pages/Sites/services';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { ProcessGroupResponse } from 'API/REST.interfaces';
 
-import ProcessTable from '../components/ProcessesTable';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
 import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
@@ -32,13 +35,11 @@ import { QueriesProcessGroups } from '../services/services.enum';
 const ProcessGroup = function () {
     const navigate = useNavigate();
     const { id: processGroupId } = useParams() as { id: string };
-    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
         [QueriesProcessGroups.GetProcessGroup, processGroupId],
         () => ProcessGroupsController.GetProcessGroup(processGroupId),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -47,7 +48,14 @@ const ProcessGroup = function () {
         [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
         () => ProcessGroupsController.getProcessesByProcessGroup(processGroupId),
         {
-            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: sites, isLoading: isLoadingSites } = useQuery(
+        [QueriesSites.GetSites],
+        SitesController.getSites,
+        {
             onError: handleError,
         },
     );
@@ -57,12 +65,15 @@ const ProcessGroup = function () {
             ? ErrorRoutesPaths.error[httpStatus]
             : ErrorRoutesPaths.ErrConnection;
 
-        setRefetchInterval(0);
         navigate(route);
     }
 
-    if (isLoadingProcessGroup || isLoadingProcess) {
+    if (isLoadingProcessGroup || isLoadingProcess || isLoadingSites) {
         return <LoadingPage />;
+    }
+
+    if (!processGroup || !sites || !processes) {
+        return null;
     }
 
     const { name } = processGroup as ProcessGroupResponse;
@@ -101,7 +112,9 @@ const ProcessGroup = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessTable processes={processes as ProcessResponse[]} />
+                <ProcessesTable
+                    processes={ProcessesController.getProcessesExtended(sites, processes)}
+                />
             </GridItem>
         </Grid>
     );

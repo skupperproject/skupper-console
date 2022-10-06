@@ -1,5 +1,5 @@
 import { ProcessResponse, ProcessGroupResponse } from 'API/REST.interfaces';
 
-export interface Service extends ProcessGroupResponse {
+export interface ProcessGroupExtended extends ProcessGroupResponse {
     processes: ProcessResponse[];
 }

@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 
 import { ProcessesRoutesPaths } from '../Processes.enum';
-import { ProcessesNameLinkCellProps } from '../Processes.interfaces';
+import { ProcessNameLinkCellProps } from '../Processes.interfaces';
 
-const ProcessesNameLinkCell: FC<ProcessesNameLinkCellProps> = function ({ data, value }) {
+const ProcessNameLinkCell: FC<ProcessNameLinkCellProps> = function ({ data, value }) {
     return (
         <>
             <ResourceIcon type="process" />
@@ -16,4 +16,4 @@ const ProcessesNameLinkCell: FC<ProcessesNameLinkCellProps> = function ({ data, 
     );
 };
 
-export default ProcessesNameLinkCell;
+export default ProcessNameLinkCell;

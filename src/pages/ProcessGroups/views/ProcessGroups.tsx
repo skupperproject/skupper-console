@@ -12,7 +12,7 @@ import LoadingPage from '@pages/shared/Loading';
 import ProcessesBytesChart from '../components/ProcessGroupsBytesChart';
 import ProcessGroupsTable from '../components/ProcessGroupsTable';
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
-import ServicesServices from '../services';
+import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const ProcessGroups = function () {
@@ -21,7 +21,7 @@ const ProcessGroups = function () {
 
     const { data: processGroups, isLoading } = useQuery(
         [QueriesProcessGroups.GetProcessGroups],
-        ServicesServices.getProcessGroups,
+        ProcessGroupsController.getProcessGroups,
         {
             refetchInterval,
             onError: handleError,

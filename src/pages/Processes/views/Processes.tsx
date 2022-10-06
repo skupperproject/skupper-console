@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
@@ -8,23 +8,31 @@ import { useNavigate } from 'react-router-dom';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import SitesController from '@pages/Sites/services';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import ProcessesTable from '../components/ProcessesTable';
 import { ProcessesLabels } from '../Processes.enum';
-import ServicesServices from '../services';
+import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
 const Processes = function () {
     const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState(0);
 
-    const { data: processes, isLoading } = useQuery(
+    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesProcesses.GetProcesses],
-        ServicesServices.getProcesses,
+        ProcessesController.getProcesses,
         {
-            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: sites, isLoading: isLoadingSites } = useQuery(
+        [QueriesSites.GetSites],
+        SitesController.getSites,
+        {
             onError: handleError,
         },
     );
@@ -34,11 +42,10 @@ const Processes = function () {
             ? ErrorRoutesPaths.error[httpStatus]
             : ErrorRoutesPaths.ErrConnection;
 
-        setRefetchInterval(0);
         navigate(route);
     }
 
-    if (isLoading) {
+    if (isLoadingProcesses || isLoadingSites) {
         return <LoadingPage />;
     }
 
@@ -72,6 +79,10 @@ const Processes = function () {
         name: `${x}: ${formatBytes(y)}`,
     }));
 
+    if (!sites || !processes) {
+        return null;
+    }
+
     return (
         <Grid hasGutter>
             <GridItem span={6}>
@@ -91,7 +102,9 @@ const Processes = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessesTable processes={processes as ProcessResponse[]} />
+                <ProcessesTable
+                    processes={ProcessesController.getProcessesExtended(sites, processes)}
+                />
             </GridItem>
         </Grid>
     );

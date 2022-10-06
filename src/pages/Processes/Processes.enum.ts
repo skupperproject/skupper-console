@@ -4,9 +4,8 @@ export enum ProcessesRoutesPaths {
 
 export enum ProcessesTableColumns {
     Name = 'Name',
-    Image = 'Image',
+    Site = 'Site',
     SourceIP = 'Source IP',
-    Host = 'Host',
 }
 
 export enum ProcessesLabels {
