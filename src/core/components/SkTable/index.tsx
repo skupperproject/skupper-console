@@ -112,7 +112,9 @@ const SkTable = function <T>({ title, titleDescription, columns, rows, component
                                         <Component data={data} value={value} />
                                     </Td>
                                 ) : (
-                                    <Td key={identity}>{value as string}</Td>
+                                    <Td key={identity}>
+                                        <div className="text-ellipsis">{value as string}</div>
+                                    </Td>
                                 );
                             })}
                         </Tr>
