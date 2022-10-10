@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import SkTable from '@core/components/SkTable';
+import { ProcessGroupResponse } from 'API/REST.interfaces';
 
 import { ProcessGroupsLabels, ProcessGroupsTableColumns } from '../ProcessGroups.enum';
 import { ProcessGroupsTableProps } from '../ProcessGroups.interfaces';
@@ -10,7 +11,7 @@ const ProcessGroupsTable: FC<ProcessGroupsTableProps> = function ({ processGroup
     const columns = [
         {
             name: ProcessGroupsTableColumns.Name,
-            prop: 'name',
+            prop: 'name' as keyof ProcessGroupResponse,
             component: 'linkCell',
         },
     ];

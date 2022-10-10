@@ -30,11 +30,9 @@ import TopologyPanel from './TopologyPanel';
 const TopologyProcesses = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [topology, setTopology] = useState<{ nodes: TopologyNode[]; links: TopologyLink[] }>({
-        nodes: [],
-        links: [],
-    });
-    const [nodeSelected, setNodeSelected] = useState<string>('');
+    const [nodes, setNodes] = useState<TopologyNode[]>([]);
+    const [links, setLinks] = useState<TopologyLink[]>([]);
+    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
         refetchInterval,
@@ -75,24 +73,26 @@ const TopologyProcesses = function () {
     }
 
     // Refresh topology data
-    const updateNodesAndLinks = useCallback(async () => {
+    const updateTopologyData = useCallback(async () => {
         if (sites && processes && processesLinks) {
             const serviceXML = await xml(serviceSVG);
             const nodesSites = TopologyController.getSiteNodes(sites);
 
-            const nodes = TopologyController.getProcessNodes(processes, nodesSites).map((site) => ({
-                ...site,
-                img: serviceXML,
-            }));
-            const links = TopologyController.getProcessLinks(processesLinks);
+            const processesNodes = TopologyController.getProcessNodes(processes, nodesSites).map(
+                (site) => ({
+                    ...site,
+                    img: serviceXML,
+                }),
+            );
 
-            setTopology({ nodes, links });
+            setNodes(processesNodes);
+            setLinks(TopologyController.getProcessLinks(processesLinks));
         }
     }, [sites, processes, processesLinks]);
 
     useEffect(() => {
-        updateNodesAndLinks();
-    }, [updateNodesAndLinks]);
+        updateTopologyData();
+    }, [updateTopologyData]);
 
     if (isLoadingProcesses || isLoadingProcessesLInks) {
         return <LoadingPage />;
@@ -100,12 +100,8 @@ const TopologyProcesses = function () {
 
     return (
         <>
-            <TopologyPanel
-                nodes={topology.nodes}
-                links={topology.links}
-                onGetSelectedNode={handleGetSelectedNode}
-            >
-                <TopologyProcessesDetails id={nodeSelected} />
+            <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
+                {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
             </TopologyPanel>
             <Divider />
             <Panel>

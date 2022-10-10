@@ -3,9 +3,12 @@ import React, { FC } from 'react';
 import { Label, Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
 import { FlowAggregatesResponse } from 'API/REST.interfaces';
+
+import { colors } from '../Topology.constant';
 
 interface TopologyDetailsProps {
     name: string;
@@ -18,6 +21,22 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
     tcpConnectionsOutEntries,
     tcpConnectionsInEntries,
 }) {
+    const tcpConnectionsOutEntriesChartData = tcpConnectionsOutEntries.map(
+        ({ identity, sourceId, sourceOctets }) => ({
+            identity,
+            name: sourceId,
+            value: sourceOctets,
+        }),
+    );
+
+    const tcpConnectionsInEntriesChartData = tcpConnectionsInEntries.map(
+        ({ identity, sourceId, sourceOctets }) => ({
+            identity,
+            name: sourceId,
+            value: sourceOctets,
+        }),
+    );
+
     return (
         <Panel>
             <Tooltip content={name}>
@@ -36,44 +55,15 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                         {!!tcpConnectionsOutEntries.length && (
                             <>
                                 <Label color="green">{ConnectionsLabels.TCPConnectionsOut}</Label>
-
-                                <TableComposable variant="compact" isStickyHeader borders={false}>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>{'Name'}</Th>
-                                            <Th>{ConnectionsColumns.BytesOut}</Th>
-                                        </Tr>
-                                    </Thead>
-                                    <Tbody>
-                                        {tcpConnectionsOutEntries.map((info) => (
-                                            <Tr key={info.identity}>
-                                                <Td>{`${info.identity}`}</Td>
-                                                <Td>{`${formatBytes(info.sourceOctets)}`}</Td>
-                                            </Tr>
-                                        ))}
-                                    </Tbody>
-                                </TableComposable>
+                                <TrafficChart data={tcpConnectionsOutEntriesChartData} />
+                                <TrafficTable data={tcpConnectionsOutEntriesChartData} />
                             </>
                         )}
                         {!!tcpConnectionsInEntries.length && (
                             <>
                                 <Label color="purple">{ConnectionsLabels.TCPConnectionsIn}</Label>
-                                <TableComposable variant="compact" isStickyHeader borders={false}>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>{'Name'}</Th>
-                                            <Th>{ConnectionsColumns.BytesOut}</Th>
-                                        </Tr>
-                                    </Thead>
-                                    <Tbody>
-                                        {tcpConnectionsInEntries.map((info) => (
-                                            <Tr key={info.identity}>
-                                                <Td>{`${info.identity}`}</Td>
-                                                <Td>{`${formatBytes(info.destinationOctets)}`}</Td>
-                                            </Tr>
-                                        ))}
-                                    </Tbody>
-                                </TableComposable>
+                                <TrafficChart data={tcpConnectionsInEntriesChartData} />
+                                <TrafficTable data={tcpConnectionsInEntriesChartData} />
                             </>
                         )}
                     </>
@@ -84,3 +74,47 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
 };
 
 export default TopologyDetails;
+
+interface TrafficProps {
+    data: { identity: string; name: string; value: number }[];
+}
+
+const TrafficChart: FC<TrafficProps> = function ({ data }) {
+    return (
+        <RealTimeLineChart
+            data={data}
+            options={{
+                formatter: formatBytes,
+                colorScale: colors,
+                height: 200,
+                padding: {
+                    left: 70,
+                    right: 20,
+                    top: 20,
+                    bottom: 40,
+                },
+            }}
+        />
+    );
+};
+
+const TrafficTable: FC<TrafficProps> = function ({ data }) {
+    return (
+        <TableComposable variant="compact" isStickyHeader borders={false}>
+            <Thead>
+                <Tr>
+                    <Th>{ConnectionsColumns.Name}</Th>
+                    <Th>{ConnectionsColumns.BytesOut}</Th>
+                </Tr>
+            </Thead>
+            <Tbody>
+                {data.map(({ identity, name, value }) => (
+                    <Tr key={identity}>
+                        <Td>{`${name}`}</Td>
+                        <Td>{`${formatBytes(value)}`}</Td>
+                    </Tr>
+                ))}
+            </Tbody>
+        </TableComposable>
+    );
+};

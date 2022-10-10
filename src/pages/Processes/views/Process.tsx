@@ -24,7 +24,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
-import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
@@ -243,7 +242,10 @@ const Process = function () {
                         ]}
                         options={{
                             formatter: formatByteRate,
-                            chartColor: ChartThemeColors.Multi,
+                            colorScale: [
+                                'var(--pf-global--palette--red-100)',
+                                'var(--pf-global--palette--blue-400)',
+                            ],
                             padding: {
                                 left: 75,
                                 right: 20,

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
     Card,
@@ -12,19 +12,19 @@ import {
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 
-export interface SKTable {
+export interface SKTable<T> {
     columns: {
         name: string;
-        prop: string;
+        prop: keyof T;
         component?: string;
     }[];
-    rows: Record<string, any>[];
+    rows: T[];
     title?: string;
     titleDescription?: string;
-    components?: Record<string, any>;
+    components?: Record<string, Function>;
 }
 
-const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows, components }) {
+const SkTable = function <T>({ title, titleDescription, columns, rows, components }: SKTable<T>) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
 
@@ -42,13 +42,13 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
         };
     }
 
-    const rowsSorted = rows.sort((a: any, b: any) => {
-        const columnName = columns[activeSortIndex || 0].prop as keyof Record<string, any>;
+    const rowsSorted = rows.sort((a, b) => {
+        const columnName = columns[activeSortIndex || 0].prop;
 
-        const paramA = a[columnName] as string | number;
-        const paramB = b[columnName] as string | number;
+        const paramA = a[columnName];
+        const paramB = b[columnName];
 
-        if (paramA === b[columnName]) {
+        if (paramA === paramB) {
             return 0;
         }
 
@@ -63,13 +63,13 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
         return 0;
     });
 
-    const skRows = rowsSorted.map((row: Record<string, any>) => ({
-        identity: row.identity,
+    const skRows = rowsSorted.map((row) => ({
+        identity: row['identity' as keyof T],
         columns: columns.map((column, index) => ({
             ...column,
             data: row,
-            value: row[column.prop],
-            identity: `${row.identity}${index}`,
+            value: row[column.prop as keyof T],
+            identity: `${row['identity' as keyof T]}${index}`,
         })),
     }));
 
@@ -103,7 +103,7 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
                 </Thead>
                 <Tbody>
                     {skRows.map((row) => (
-                        <Tr key={row.identity}>
+                        <Tr key={row.identity as string}>
                             {row.columns.map(({ data, value, component, identity }) => {
                                 const Component = components && component && components[component];
 
@@ -112,7 +112,7 @@ const SkTable: FC<SKTable> = function ({ title, titleDescription, columns, rows,
                                         <Component data={data} value={value} />
                                     </Td>
                                 ) : (
-                                    <Td key={identity}>{value}</Td>
+                                    <Td key={identity}>{value as string}</Td>
                                 );
                             })}
                         </Tr>

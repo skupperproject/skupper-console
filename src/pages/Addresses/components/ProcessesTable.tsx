@@ -15,7 +15,7 @@ import {
     ProcessesColumnsNames,
     AddressesDescriptions,
 } from '../Addresses.enum';
-import { FlowPairBasic, ProcessesTableProps } from '../services/services.interfaces';
+import { ProcessesTableProps, ProcessRow } from '../services/services.interfaces';
 
 import './FlowPairs.css';
 
@@ -37,13 +37,13 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
         };
     }
 
-    const processesSorted = processes.sort((a: any, b: any) => {
-        const columnName = ProcessesColumns[activeSortIndex || 0].prop as keyof FlowPairBasic;
+    const processesSorted = processes.sort((a, b) => {
+        const columnName = ProcessesColumns[activeSortIndex || 0].prop as keyof ProcessRow;
 
-        const paramA = a[columnName] as string | number;
-        const paramB = b[columnName] as string | number;
+        const paramA = a[columnName];
+        const paramB = b[columnName];
 
-        if (paramA === b[columnName]) {
+        if (paramA === paramB) {
             return 0;
         }
 

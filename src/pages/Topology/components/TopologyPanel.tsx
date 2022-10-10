@@ -29,11 +29,12 @@ const TopologyPanel: FC<{
     const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologySVG>();
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
 
-    const selectedRef = useRef<string>('');
+    const selectedRef = useRef<string | null>(null);
 
     const handleExpandDetails = useCallback(
         (id: string) => {
-            selectedRef.current = selectedRef.current !== id ? id : '';
+            selectedRef.current = id;
+
             setIsExpandedDetails(!!selectedRef.current);
 
             if (onGetSelectedNode) {
@@ -45,7 +46,7 @@ const TopologyPanel: FC<{
 
     function handleCloseDetails() {
         setIsExpandedDetails(false);
-        selectedRef.current = '';
+        selectedRef.current = null;
     }
 
     // Create Graph
@@ -73,7 +74,7 @@ const TopologyPanel: FC<{
     // Update topology
     useEffect(() => {
         if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
-            topologyGraphInstance.updateTopology(nodes, links, selectedRef.current);
+            topologyGraphInstance.updateTopology(nodes, links);
         }
     }, [links, nodes, topologyGraphInstance]);
 

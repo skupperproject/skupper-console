@@ -10,6 +10,8 @@ export interface TopologyNode {
     img?: XMLDocument;
     fx: number | null;
     fy: number | null;
+    groupFx?: number;
+    groupFy?: number;
 }
 
 export interface TopologyLink {

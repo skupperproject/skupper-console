@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import SkTable from '@core/components/SkTable';
 import SiteNameLinkCell from '@pages/Processes/components/SiteNameLinkCell';
+import { ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels, ProcessesTableColumns } from '../Processes.enum';
 import { ProcessesTableProps } from '../Processes.interfaces';
@@ -11,12 +12,12 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
     const columns = [
         {
             name: ProcessesTableColumns.Name,
-            prop: 'name',
+            prop: 'name' as keyof ProcessResponse,
             component: 'linkCell',
         },
         {
             name: ProcessesTableColumns.Site,
-            prop: 'siteName',
+            prop: 'siteName' as keyof ProcessResponse,
             component: 'linkCellSite',
         },
     ];

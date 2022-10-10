@@ -19,11 +19,9 @@ import TopologyPanel from './TopologyPanel';
 const TopologyProcessGroups = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [topology, setTopology] = useState<{ nodes: TopologyNode[]; links: TopologyLink[] }>({
-        nodes: [],
-        links: [],
-    });
-    const [nodeSelected, setNodeSelected] = useState<string>('');
+    const [nodes, setNodes] = useState<TopologyNode[]>([]);
+    const [links, setLinks] = useState<TopologyLink[]>([]);
+    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
         [QueriesTopology.GetProcessGroups],
@@ -59,36 +57,32 @@ const TopologyProcessGroups = function () {
     }
 
     // Refresh topology data
-    const updateNodesAndLinks = useCallback(async () => {
+    const updateTopologyData = useCallback(async () => {
         if (processGroups && processGroupsLinks) {
             const siteXML = await xml(serviceSVG);
-            const nodes = TopologyController.getProcessGroupNodes(processGroups).map(
+            const processGroupsNodes = TopologyController.getProcessGroupNodes(processGroups).map(
                 (processGroup) => ({
                     ...processGroup,
                     img: siteXML,
                 }),
             );
-            const links = TopologyController.getProcessGroupNodesEdges(processGroupsLinks);
 
-            setTopology({ nodes, links });
+            setNodes(processGroupsNodes);
+            setLinks(TopologyController.getProcessGroupNodesEdges(processGroupsLinks));
         }
     }, [processGroups, processGroupsLinks]);
 
     useEffect(() => {
-        updateNodesAndLinks();
-    }, [updateNodesAndLinks]);
+        updateTopologyData();
+    }, [updateTopologyData]);
 
     if (isLoadingProcessGroups || isLoadingProcessGroupsLinks) {
         return <LoadingPage />;
     }
 
     return (
-        <TopologyPanel
-            nodes={topology.nodes}
-            links={topology.links}
-            onGetSelectedNode={handleGetSelectedNode}
-        >
-            <TopologyProcessGroupsDetails id={nodeSelected} />
+        <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
+            {nodeSelected && <TopologyProcessGroupsDetails id={nodeSelected} />}
         </TopologyPanel>
     );
 };

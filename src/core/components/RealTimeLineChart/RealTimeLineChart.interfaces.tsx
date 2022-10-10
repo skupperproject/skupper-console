@@ -16,6 +16,7 @@ export interface RealTimeLineChartProps {
             right: number;
             top: number;
         };
+        colorScale?: string[];
         dataLegend?: {
             name: string;
         }[];

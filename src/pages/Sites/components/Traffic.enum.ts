@@ -8,7 +8,7 @@ export enum ConnectionsLabels {
 }
 
 export enum ConnectionsColumns {
-    Name = 'Sites',
+    Name = 'Name',
     Ip = 'IP',
     Bytes = 'Bytes',
     BytesIn = 'Bytes Received',

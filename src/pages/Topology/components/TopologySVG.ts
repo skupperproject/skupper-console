@@ -38,6 +38,7 @@ export default class TopologySVG {
     handleZoom: ZoomBehavior<SVGSVGElement, TopologyNode>;
     valueline: Line<[number, number]>;
     groupIds: string[];
+    selectedNode: null | string;
 
     constructor(
         $node: HTMLElement,
@@ -50,6 +51,7 @@ export default class TopologySVG {
         this.$root = $node;
         this.nodes = nodes;
         this.links = links;
+        this.selectedNode = null;
         this.width = boxWidth;
         this.height = boxHeight;
         this.onClickNode = onclick;
@@ -124,7 +126,7 @@ export default class TopologySVG {
         this.isDraggingNode = false;
     };
 
-    private groupDragstarted = (
+    private groupDragStarted = (
         { x, y, active }: { x: number; y: number; active: boolean },
         groupId: string,
     ) => {
@@ -136,8 +138,10 @@ export default class TopologySVG {
             .nodes()
             .filter(({ group }) => group === Number(groupId))
             .forEach((node) => {
-                node.fx = (node.fx || 0) + x;
-                node.fy = (node.fy || 0) + y;
+                node.fx = node.fx || 0;
+                node.fy = node.fy || 0;
+                node.groupFx = x || 0;
+                node.groupFy = y || 0;
             });
 
         this.isDraggingNode = true;
@@ -148,12 +152,12 @@ export default class TopologySVG {
             .nodes()
             .filter(({ group }) => group === Number(groupId))
             .forEach((node) => {
-                node.fx = (node.fx || 0) + x;
-                node.fy = (node.fy || 0) + y;
+                node.fx = (node.fx || 0) + x - (node.groupFx || 0);
+                node.fy = (node.fy || 0) + y - (node.groupFy || 0);
             });
     };
 
-    private groupDragended = ({ active }: { active: boolean }, groupId: string) => {
+    private groupDragEnded = ({ active }: { active: boolean }, groupId: string) => {
         if (!active) {
             this.force.alphaTarget(0);
             this.force.stop();
@@ -336,10 +340,28 @@ export default class TopologySVG {
             .style('stroke-dasharray', ({ source }) => source.type === 'site' && '8, 8')
             .attr('marker-end', ({ type }) =>
                 type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
-            );
+            )
+            .style('opacity', (svgLink) => {
+                const isLinkConnectedToTheNode =
+                    !this.selectedNode ||
+                    this.selectedNode === svgLink.source.id ||
+                    this.selectedNode === svgLink.target.id;
+
+                return isLinkConnectedToTheNode ? '1' : OPACITY_NO_SELECTED_ITEM;
+            })
+            .style('stroke', (svgLink) => {
+                const isLinkConnectedToTheNode =
+                    this.selectedNode &&
+                    (this.selectedNode === svgLink.source.id ||
+                        this.selectedNode === svgLink.target.id);
+
+                return isLinkConnectedToTheNode
+                    ? 'var(--pf-global--palette--blue-400)'
+                    : 'var(--pf-global--palette--black-400)';
+            });
     };
 
-    private updateDOMNodes = async (nodes: TopologyNode[], selectedNode?: string) => {
+    private updateDOMNodes = async (nodes: TopologyNode[]) => {
         this.groupIds = set(nodes.map((n) => +n.group))
             .values()
             .map((groupId) => ({
@@ -362,11 +384,12 @@ export default class TopologySVG {
             .attr('stroke', (d) => setColor(d))
             .attr('fill', (d) => setColor(d))
             .attr('opacity', 0.15)
+            .style('cursor', 'pointer')
             .call(
                 drag<SVGPathElement, string>()
-                    .on('start', this.groupDragstarted)
+                    .on('start', this.groupDragStarted)
                     .on('drag', this.groupDragged)
-                    .on('end', this.groupDragended),
+                    .on('end', this.groupDragEnded),
             );
 
         const svgNodesData = this.svgContainerGroupNodes.selectAll('.node').data(nodes);
@@ -408,7 +431,7 @@ export default class TopologySVG {
                 }
             })
             .on('mouseout', () => {
-                if (!this.isDraggingNode) {
+                if (!this.selectedNode) {
                     this.svgContainerGroupNodes
                         .selectAll('.serviceLink')
                         .style('opacity', '1')
@@ -417,7 +440,14 @@ export default class TopologySVG {
             })
             .on('dblclick', (e) => e.stopPropagation()) // deactivates the zoom triggered by d3-zoom
             .on('click', (_, { id }) => {
-                this.onClickNode && this.onClickNode(id);
+                if (this.selectedNode === id) {
+                    this.selectedNode = null;
+                } else {
+                    this.selectedNode = id;
+                }
+
+                this.onClickNode && this.onClickNode(this.selectedNode);
+                this.refresh();
             });
 
         enterSelection
@@ -434,18 +464,18 @@ export default class TopologySVG {
                 .on('end', this.dragEnded),
         );
 
+        this.refresh();
+    };
+
+    private refresh() {
         this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, TopologyNode>('.node-img')
             .style('opacity', ({ id }) =>
-                !!selectedNode && id !== selectedNode ? OPACITY_NO_SELECTED_ITEM : '1',
+                !!this.selectedNode && id !== this.selectedNode ? OPACITY_NO_SELECTED_ITEM : '1',
             );
-    };
+    }
 
-    updateTopology = (
-        nodes: TopologyNode[],
-        links: TopologyLink[] | TopologyLinkNormalized[],
-        selectedNode?: string,
-    ) => {
+    updateTopology = (nodes: TopologyNode[], links: TopologyLink[] | TopologyLinkNormalized[]) => {
         this.svgContainerGroupNodes.selectAll('*').remove();
 
         this.force
@@ -469,7 +499,7 @@ export default class TopologySVG {
         this.force.restart();
 
         this.updateDOMLinks(links as TopologyLinkNormalized[]);
-        this.updateDOMNodes(nodes, selectedNode);
+        this.updateDOMNodes(nodes);
     };
 
     reset() {

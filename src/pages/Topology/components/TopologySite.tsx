@@ -18,11 +18,10 @@ import TopologyPanel from './TopologyPanel';
 const TopologySite = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [topology, setTopology] = useState<{ nodes: TopologyNode[]; links: TopologyLink[] }>({
-        nodes: [],
-        links: [],
-    });
-    const [nodeSelected, setNodeSelected] = useState<string>('');
+
+    const [nodes, setNodes] = useState<TopologyNode[]>([]);
+    const [links, setLinks] = useState<TopologyLink[]>([]);
+    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: sites, isLoading: isLoading } = useQuery(
         [QueriesTopology.GetSitesWithLinksCreated],
@@ -49,34 +48,30 @@ const TopologySite = function () {
     }
 
     // Refresh topology data
-    const updateNodesAndLinks = useCallback(async () => {
+    const updateTopologyData = useCallback(async () => {
         if (sites) {
             const siteXML = await xml(siteSVG);
-            const nodes = TopologyController.getSiteDataNodes(sites).map((site) => ({
+            const siteNodes = TopologyController.getSiteDataNodes(sites).map((site) => ({
                 ...site,
                 img: siteXML,
             }));
-            const links = TopologyController.getSiteEdges(sites);
 
-            setTopology({ nodes, links });
+            setNodes(siteNodes);
+            setLinks(TopologyController.getSiteEdges(sites));
         }
     }, [sites]);
 
     useEffect(() => {
-        updateNodesAndLinks();
-    }, [updateNodesAndLinks]);
+        updateTopologyData();
+    }, [updateTopologyData]);
 
     if (isLoading) {
         return <LoadingPage />;
     }
 
     return (
-        <TopologyPanel
-            nodes={topology.nodes}
-            links={topology.links}
-            onGetSelectedNode={handleGetSelectedNode}
-        >
-            <TopologySiteDetails id={nodeSelected} />
+        <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
+            {nodeSelected && <TopologySiteDetails id={nodeSelected} />}
         </TopologyPanel>
     );
 };

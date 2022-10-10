@@ -20,6 +20,9 @@
         "node": true,
         "jest": true
     },
+    "globals": {
+        "JSX": true
+    },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",

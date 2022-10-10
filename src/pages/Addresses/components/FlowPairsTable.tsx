@@ -30,13 +30,13 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
         };
     }
 
-    const connectionsSorted = flowPairs.sort((a: any, b: any) => {
+    const connectionsSorted = flowPairs.sort((a, b) => {
         const columnName = FlowPairsColumns[activeSortIndex || 0].prop as keyof FlowPairBasic;
 
-        const paramA = a[columnName] as string | number;
-        const paramB = b[columnName] as string | number;
+        const paramA = a[columnName] || 0;
+        const paramB = b[columnName] || 0;
 
-        if (paramA === b[columnName]) {
+        if (paramA === paramB) {
             return 0;
         }
 

@@ -74,7 +74,7 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
                 containerComponent={
                     <ChartVoronoiContainer
                         labels={({ datum: { name, y } }) =>
-                            `${name}: ${options?.formatter ? options.formatter(y, 3) : y}`
+                            `${name}: ${options?.formatter ? options.formatter(y, 2) : y}`
                         }
                         constrainToVisibleArea
                     />
@@ -95,6 +95,7 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
                     }
                 }
                 themeColor={options?.chartColor ? options.chartColor : ChartThemeColors.Blue}
+                colorScale={options?.colorScale}
             >
                 <ChartAxis // X axis
                     showGrid
@@ -124,7 +125,7 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
                     }}
                     tickValues={getYAxisTickValues(samples)}
                     tickFormat={(tick) =>
-                        options?.formatter ? options?.formatter(tick, 3) : Math.ceil(tick)
+                        options?.formatter ? options?.formatter(tick, 2) : Math.ceil(tick)
                     }
                 />
                 <ChartGroup>
