@@ -10,7 +10,16 @@ import {
     Tooltip,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import {
+    TableComposable,
+    TableText,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    ThProps,
+    Tr,
+} from '@patternfly/react-table';
 
 export interface SKTable<T> {
     columns: {
@@ -113,7 +122,9 @@ const SkTable = function <T>({ title, titleDescription, columns, rows, component
                                     </Td>
                                 ) : (
                                     <Td key={identity}>
-                                        <div className="text-ellipsis">{value as string}</div>
+                                        <TableText wrapModifier="truncate">
+                                            {value as string}
+                                        </TableText>
                                     </Td>
                                 );
                             })}

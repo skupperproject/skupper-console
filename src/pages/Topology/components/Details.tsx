@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { Label, Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { formatBytes } from '@core/utils/formatBytes';
@@ -110,8 +110,10 @@ const TrafficTable: FC<TrafficProps> = function ({ data }) {
             <Tbody>
                 {data.map(({ identity, name, value }) => (
                     <Tr key={identity}>
-                        <Td>{`${name}`}</Td>
-                        <Td>{`${formatBytes(value)}`}</Td>
+                        <Td>
+                            <TableText wrapModifier="truncate">{`${name}`} </TableText>
+                        </Td>
+                        <Td width={30}>{`${formatBytes(value)}`}</Td>
                     </Tr>
                 ))}
             </Tbody>
