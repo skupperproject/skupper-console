@@ -51,7 +51,6 @@ export const AddressesController = {
                 const siteName = sitesMap[flowPair.sourceSiteId];
                 const processName = processesMap[process].name;
                 const processId = processesMap[process].identity;
-                const processHost = processesMap[process].sourceHost;
                 const processImageName = processesMap[process].imageName;
 
                 const {
@@ -78,8 +77,8 @@ export const AddressesController = {
                     siteName,
                     byteRate: octetRate,
                     bytes: octets,
-                    host: processHost,
-                    port: connector.destPort,
+                    host: flowPair.forwardFlow.sourceHost,
+                    port: flowPair.forwardFlow.sourcePort,
                     startTime,
                     endTime,
                     processId,

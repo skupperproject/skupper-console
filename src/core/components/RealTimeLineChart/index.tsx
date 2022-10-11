@@ -43,7 +43,10 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
                     timestamp,
                 };
 
-                const newSamples = [...(prevSamples ? prevSamples[index] : defaultSample), sample];
+                const newSamples = [
+                    ...((prevSamples && prevSamples[index]) || defaultSample),
+                    sample,
+                ];
 
                 return newSamples.filter(
                     ({ timestamp: newTimestamp }) => newTimestamp - lowerBoundTimestamp > 0,

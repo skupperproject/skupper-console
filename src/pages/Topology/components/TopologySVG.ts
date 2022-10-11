@@ -414,7 +414,7 @@ export default class TopologySVG {
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .on('mouseover', (_, { id }) => {
-                if (!this.isDraggingNode) {
+                if (!this.isDraggingNode && !this.selectedNode) {
                     this.svgContainerGroupNodes
                         .selectAll<SVGElement, TopologyLinkNormalized>('.serviceLink')
                         .each((svgLink) => {
@@ -442,7 +442,7 @@ export default class TopologySVG {
                 }
             })
             .on('mouseout', () => {
-                if (!this.selectedNode) {
+                if (!this.isDraggingNode && !this.selectedNode) {
                     this.svgContainerGroupNodes
                         .selectAll('.serviceLink')
                         .each(stopAnimateLinks)
