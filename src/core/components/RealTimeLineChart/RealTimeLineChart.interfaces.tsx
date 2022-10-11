@@ -1,4 +1,4 @@
-export interface DataProps {
+interface DataProps {
     name: string;
     value: number;
 }

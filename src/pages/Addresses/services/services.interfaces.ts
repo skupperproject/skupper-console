@@ -1,5 +1,3 @@
-import { DeviceResponse, FlowResponse, SiteResponse, ProcessResponse } from 'API/REST.interfaces';
-
 // FLOW PAIRS TABLE
 export interface FlowPairsTableProps {
     flowPairs: FlowPairBasic[];
@@ -52,17 +50,4 @@ export interface FlowPairBasic {
 export interface FlowsPairsBasic {
     connections: FlowPairBasic[];
     total: number;
-}
-
-// FLOWPAIR
-interface extendedFlow extends FlowResponse {
-    site: SiteResponse;
-    processFlow: ProcessResponse;
-    device: DeviceResponse;
-    parentType?: string;
-}
-
-export interface ExtendedFlowPair {
-    startFlow: extendedFlow;
-    endFlow: extendedFlow;
 }

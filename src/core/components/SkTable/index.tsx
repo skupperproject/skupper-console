@@ -21,17 +21,7 @@ import {
     Tr,
 } from '@patternfly/react-table';
 
-export interface SKTable<T> {
-    columns: {
-        name: string;
-        prop: keyof T;
-        component?: string;
-    }[];
-    rows: T[];
-    title?: string;
-    titleDescription?: string;
-    components?: Record<string, Function>;
-}
+import { SKTable } from './Sktable.interfaces';
 
 const SkTable = function <T>({ title, titleDescription, columns, rows, components }: SKTable<T>) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();

@@ -24,11 +24,6 @@ export enum SitesTableColumns {
     NumSitesLinked = 'Links',
 }
 
-export enum HostsTableColumns {
-    Name = 'Name',
-    Provider = 'Provider',
-}
-
 export enum ProcessesTableColumns {
     Name = 'Name',
     SourceHost = 'Source Host',

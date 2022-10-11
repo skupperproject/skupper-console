@@ -1,8 +1,4 @@
-import { ProcessResponse, ProcessGroupResponse } from 'API/REST.interfaces';
-
-export interface ProcessesMetricsProps {
-    services: ProcessGroupResponse[];
-}
+import { ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
     processes: ProcessesExtended[];

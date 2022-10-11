@@ -15,17 +15,11 @@ export const getHostsBySitePATH = (id: string) => `${SITES_PATH}${id}/hosts`;
 // HOSTS
 export const HOSTS_PATH = `${API_URL}/hosts/`;
 
-export const getHostPATH = (id: string) => `${HOSTS_PATH}${id}`;
-
 // ROUTERS
 export const ROUTERS_PATH = `${API_URL}/routers/`;
 
-export const getRouterPATH = (id: string) => `${ROUTERS_PATH}${id}`;
-
 // LINKS
 export const LINKS_PATH = `${API_URL}/links/`;
-
-export const getLinkPATH = (id: string) => `${LINKS_PATH}${id}`;
 
 // CONNECTORS
 export const CONNECTORS_PATH = `${API_URL}/connectors/`;

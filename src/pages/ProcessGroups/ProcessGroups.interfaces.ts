@@ -4,14 +4,6 @@ export interface ProcessGroupsTableProps {
     processGroups: ProcessGroupResponse[];
 }
 
-export interface ProcessGroupsMetricsProps {
-    services: ProcessGroupResponse[];
-}
-
-export interface ProcessesTableProps {
-    processes: ProcessResponse[];
-}
-
 export interface ProcessGroupsBytesChartProps {
     bytes: { x: string; y: number }[];
     labels?: { name: string }[];
@@ -19,11 +11,6 @@ export interface ProcessGroupsBytesChartProps {
 }
 
 export interface ProcessGroupNameLinkCellProps {
-    data: ProcessResponse;
-    value: ProcessResponse[keyof ProcessResponse];
-}
-
-export interface ProcessesNameLinkCellProps {
     data: ProcessResponse;
     value: ProcessResponse[keyof ProcessResponse];
 }

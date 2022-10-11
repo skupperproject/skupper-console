@@ -6,10 +6,6 @@ export enum ProcessGroupsTableColumns {
     Name = 'Name',
 }
 
-export enum ProcessesTableColumns {
-    Name = 'Name',
-}
-
 export enum ProcessGroupsLabels {
     Section = 'Process Groups',
     Description = '',

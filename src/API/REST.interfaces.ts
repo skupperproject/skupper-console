@@ -1,10 +1,5 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-export interface DataResponse {
-    sites: DataSiteResponse[];
-    services: DataServicesResponse[];
-}
-
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
 export interface ServiceConnection {
@@ -19,68 +14,10 @@ export interface ServiceConnection {
     details?: Record<string, string>;
     requests?: number;
 }
-
-interface ServiceDetails {
-    [key: string]: {
-        [key: string]: ServiceConnection;
-    };
-}
-
-interface ServiceRequestReceivedResponse {
-    site_id: string;
-    by_client: Record<string, ServiceConnection>;
-}
-
-interface ServiceRequestHandledResponse {
-    site_id: string;
-    by_server: ServiceDetails;
-    by_originating_site: ServiceDetails;
-}
-
-interface DataServicesResponse {
-    address: string;
-    protocol: string;
-    targets: [
-        {
-            name: string;
-            target: string;
-            site_id: string;
-        },
-    ];
-    connections_ingress?: {
-        site_id: string;
-        connections: Record<string, ServiceConnection>;
-    }[];
-    connections_egress?: {
-        site_id: string;
-        connections: Record<string, ServiceConnection>;
-    }[];
-    requests_handled?: ServiceRequestHandledResponse[];
-    requests_received?: ServiceRequestReceivedResponse[];
-    derived?: boolean;
-    isExternal?: boolean;
-}
-
-interface DataSiteResponse {
-    site_name: string;
-    site_id: string;
-    version: string;
-    connected: string[];
-    namespace: string;
-    url: string;
-    gateway: boolean;
-}
-
 export interface DeploymentLinkTopology {
     key: string;
     source: string;
     target: string;
-}
-
-export interface DeploymentTopologyResponse {
-    key: string;
-    service: DataServicesResponse;
-    site: DataSiteResponse;
 }
 
 export interface SiteResponse {
@@ -194,8 +131,6 @@ export interface FlowPairResponse {
     counterFlow: FlowResponse;
 }
 
-export type FlowsDataResponse = RouterResponse & LinkResponse & DeviceResponse & FlowResponse;
-
 export interface AddressesResponse {
     identity: string;
     recType: string;
@@ -205,13 +140,6 @@ export interface AddressesResponse {
     totalFlows: number;
     currentFlows: number;
     startTime: number;
-}
-
-export interface FlowsTopologyLink {
-    source: string;
-    target: string;
-    mode: string;
-    cost: number;
 }
 
 export interface HTTPError extends AxiosError {
