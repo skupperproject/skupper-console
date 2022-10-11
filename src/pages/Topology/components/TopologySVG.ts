@@ -13,11 +13,11 @@ import {
 } from 'd3-force';
 import { polygonCentroid, polygonHull } from 'd3-polygon';
 import { scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select, Selection } from 'd3-selection';
 import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
+import { colors } from '../Topology.constant';
 import { TopologyNode, TopologyLink, TopologyLinkNormalized } from '../Topology.interfaces';
 
 const ARROW_SIZE = 10;
@@ -370,7 +370,6 @@ export default class TopologySVG {
             }))
             .filter((group) => group.count > 2)
             .map((group) => group.groupId);
-        const setColor = scaleOrdinal(schemeCategory10);
 
         this.svgContainerGroupNodes
             .attr('class', 'groups')
@@ -381,8 +380,7 @@ export default class TopologySVG {
             .attr('class', 'path_placeholder')
             .append('path')
             .attr('class', 'nodes_groups')
-            .attr('stroke', (d) => setColor(d))
-            .attr('fill', (d) => setColor(d))
+            .attr('fill', (groupId) => colors[Number(groupId)])
             .attr('opacity', 0.15)
             .style('cursor', 'pointer')
             .call(
