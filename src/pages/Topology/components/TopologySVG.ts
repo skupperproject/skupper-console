@@ -1,3 +1,4 @@
+import { easeLinear } from 'd3';
 import { set } from 'd3-collection';
 import { drag } from 'd3-drag';
 import {
@@ -11,6 +12,7 @@ import {
     forceCollide,
     forceManyBody,
 } from 'd3-force';
+import { interpolate } from 'd3-interpolate';
 import { polygonCentroid, polygonHull } from 'd3-polygon';
 import { scaleOrdinal } from 'd3-scale';
 import { select, Selection } from 'd3-selection';
@@ -43,7 +45,7 @@ export default class TopologySVG {
     constructor(
         $node: HTMLElement,
         nodes: TopologyNode[],
-        links: TopologyLink[],
+        links: TopologyLink[] | TopologyLinkNormalized[],
         boxWidth: number,
         boxHeight: number,
         onclick: Function,
@@ -312,7 +314,8 @@ export default class TopologySVG {
             );
     }
 
-    private updateDOMLinks = (links: TopologyLinkNormalized[]) => {
+    private redrawEdges = () => {
+        const edges = this.links as TopologyLinkNormalized[];
         // Pointer
         this.svgContainerGroupNodes
             .append('svg:defs')
@@ -329,39 +332,41 @@ export default class TopologySVG {
             .attr('d', 'M0,-5L10,0L0,5');
 
         // links services
-        const svgLinksData = this.svgContainerGroupNodes.selectAll('.serviceLink').data(links);
-        const svgLinks = svgLinksData.enter();
+        const svgEdgesData = this.svgContainerGroupNodes.selectAll('.serviceLink').data(edges);
+        const svgEdges = svgEdgesData.enter();
 
-        svgLinks
+        svgEdges
             .append('line')
+            .attr('id', ({ source, target }) => `link${source.id}-${target.id}`)
             .attr('class', 'serviceLink')
-            .style('stroke', 'var(--pf-global--palette--black-400)')
             .style('stroke-width', '1px')
-            .style('stroke-dasharray', ({ source }) => source.type === 'site' && '8, 8')
+            .style('stroke-dasharray', ({ source }) => (source.type === 'site' ? '8,8' : '0,0'))
             .attr('marker-end', ({ type }) =>
                 type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
             )
-            .style('opacity', (svgLink) => {
-                const isLinkConnectedToTheNode =
-                    !this.selectedNode ||
-                    this.selectedNode === svgLink.source.id ||
-                    this.selectedNode === svgLink.target.id;
-
-                return isLinkConnectedToTheNode ? '1' : OPACITY_NO_SELECTED_ITEM;
-            })
             .style('stroke', (svgLink) => {
-                const isLinkConnectedToTheNode =
+                const isEdgeConnectedToTheNode =
                     this.selectedNode &&
                     (this.selectedNode === svgLink.source.id ||
                         this.selectedNode === svgLink.target.id);
 
-                return isLinkConnectedToTheNode
+                return isEdgeConnectedToTheNode
                     ? 'var(--pf-global--palette--blue-400)'
                     : 'var(--pf-global--palette--black-400)';
+            })
+            .style('opacity', (svgLink) => {
+                const isEdgeConnectedToTheNode =
+                    !this.selectedNode ||
+                    this.selectedNode === svgLink.source.id ||
+                    this.selectedNode === svgLink.target.id;
+
+                return isEdgeConnectedToTheNode ? '1' : OPACITY_NO_SELECTED_ITEM;
             });
     };
 
-    private updateDOMNodes = async (nodes: TopologyNode[]) => {
+    private redrawNodes = () => {
+        const nodes = this.nodes;
+
         this.groupIds = set(nodes.map((n) => +n.group))
             .values()
             .map((groupId) => ({
@@ -412,6 +417,14 @@ export default class TopologySVG {
                 if (!this.isDraggingNode) {
                     this.svgContainerGroupNodes
                         .selectAll<SVGElement, TopologyLinkNormalized>('.serviceLink')
+                        .each((svgLink) => {
+                            const isLinkConnectedToTheNode =
+                                id === svgLink.source.id || id === svgLink.target.id;
+
+                            if (!this.selectedNode && isLinkConnectedToTheNode) {
+                                animateLinks(svgLink);
+                            }
+                        })
                         .style('opacity', (svgLink) => {
                             const isLinkConnectedToTheNode =
                                 id === svgLink.source.id || id === svgLink.target.id;
@@ -432,6 +445,7 @@ export default class TopologySVG {
                 if (!this.selectedNode) {
                     this.svgContainerGroupNodes
                         .selectAll('.serviceLink')
+                        .each(stopAnimateLinks)
                         .style('opacity', '1')
                         .style('stroke', 'var(--pf-global--palette--black-400)');
                 }
@@ -445,7 +459,7 @@ export default class TopologySVG {
                 }
 
                 this.onClickNode && this.onClickNode(this.selectedNode);
-                this.refresh();
+                this.refreshNodesOpacity();
             });
 
         enterSelection
@@ -462,10 +476,10 @@ export default class TopologySVG {
                 .on('end', this.dragEnded),
         );
 
-        this.refresh();
+        this.refreshNodesOpacity();
     };
 
-    private refresh() {
+    private refreshNodesOpacity() {
         this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, TopologyNode>('.node-img')
             .style('opacity', ({ id }) =>
@@ -495,9 +509,10 @@ export default class TopologySVG {
             ?.links(links);
 
         this.force.restart();
-
-        this.updateDOMLinks(links as TopologyLinkNormalized[]);
-        this.updateDOMNodes(nodes);
+        this.links = links as TopologyLinkNormalized[];
+        this.nodes = nodes;
+        this.redrawEdges();
+        this.redrawNodes();
     };
 
     reset() {
@@ -524,4 +539,21 @@ export default class TopologySVG {
     isDragging() {
         return this.isDraggingNode;
     }
+}
+
+function animateLinks({ source, target }: any) {
+    select(`#link${source.id}-${target.id}`)
+        .style('stroke-dasharray', '8, 8')
+        .transition()
+        .duration(500)
+        .ease(easeLinear)
+        .styleTween('stroke-dashoffset', () => interpolate('30', '0'))
+        .on('end', animateLinks);
+}
+
+function stopAnimateLinks({ source, target }: any) {
+    select(`#link${source.id}-${target.id}`)
+        .style('stroke-dasharray', ({ source: s }: any) => (s.type === 'site' ? '8, 8' : '0.0'))
+        .transition()
+        .on('end', null);
 }
