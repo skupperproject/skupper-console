@@ -11,7 +11,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import { TopologyLink, TopologyNode } from '../Topology.interfaces';
+import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import TopologySiteDetails from './DetailsSite';
 import TopologyPanel from './TopologyPanel';
 
@@ -20,7 +20,7 @@ const TopologySite = function () {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const [nodes, setNodes] = useState<TopologyNode[]>([]);
-    const [links, setLinks] = useState<TopologyLink[]>([]);
+    const [links, setLinks] = useState<TopologyEdges[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: sites, isLoading: isLoading } = useQuery(
@@ -51,7 +51,7 @@ const TopologySite = function () {
     const updateTopologyData = useCallback(async () => {
         if (sites) {
             const siteXML = await xml(siteSVG);
-            const siteNodes = TopologyController.getSiteDataNodes(sites).map((site) => ({
+            const siteNodes = TopologyController.getSiteNodes(sites).map((site) => ({
                 ...site,
                 img: siteXML,
             }));

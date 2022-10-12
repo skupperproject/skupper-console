@@ -17,12 +17,12 @@ import {
     TopologyView,
 } from '@patternfly/react-topology';
 
-import { TopologyLink, TopologyNode } from '../Topology.interfaces';
+import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import TopologySVG from './TopologySVG';
 
 const TopologyPanel: FC<{
     nodes: TopologyNode[];
-    links: TopologyLink[];
+    links: TopologyEdges[];
     onGetSelectedNode?: Function;
     children: React.ReactNode;
 }> = function ({ nodes, links, onGetSelectedNode, children }) {

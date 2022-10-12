@@ -20,7 +20,7 @@ import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
 import { colors } from '../Topology.constant';
-import { TopologyNode, TopologyLink, TopologyLinkNormalized } from '../Topology.interfaces';
+import { TopologyNode, TopologyEdges, TopologyEdgesModifiedByForce } from '../Topology.interfaces';
 
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 35;
@@ -29,11 +29,11 @@ const OPACITY_NO_SELECTED_ITEM = 0.2;
 export default class TopologySVG {
     $root: HTMLElement;
     nodes: TopologyNode[];
-    links: TopologyLink[] | TopologyLinkNormalized[];
+    links: TopologyEdges[] | TopologyEdgesModifiedByForce[];
     width: number;
     height: number;
     onClickNode: Function;
-    force: Simulation<TopologyNode, TopologyLinkNormalized>;
+    force: Simulation<TopologyNode, TopologyEdgesModifiedByForce>;
     svgContainer: Selection<SVGSVGElement, TopologyNode, null, undefined>;
     svgContainerGroupNodes: Selection<SVGGElement, TopologyNode, null, undefined>;
     isDraggingNode: boolean;
@@ -45,14 +45,14 @@ export default class TopologySVG {
     constructor(
         $node: HTMLElement,
         nodes: TopologyNode[],
-        links: TopologyLink[] | TopologyLinkNormalized[],
+        edges: TopologyEdges[] | TopologyEdgesModifiedByForce[],
         boxWidth: number,
         boxHeight: number,
         onclick: Function,
     ) {
         this.$root = $node;
         this.nodes = nodes;
-        this.links = links;
+        this.links = edges;
         this.selectedNode = null;
         this.width = boxWidth;
         this.height = boxHeight;
@@ -197,19 +197,19 @@ export default class TopologySVG {
         this.svgContainerGroupNodes.selectAll<SVGSVGElement, TopologyNode>('.node').attr(
             'transform',
             ({ x, y }) => `translate(
-                    ${validatePosition(x - SERVICE_SIZE / 2, maxSvgPosX, minSvgPosX)},
-                    ${validatePosition(y - SERVICE_SIZE / 2, maxSvgPosY, minSvgPosY)}
+                    ${validatePosition(x, maxSvgPosX, minSvgPosX)},
+                    ${validatePosition(y, maxSvgPosY, minSvgPosY)}
                 )`,
         );
 
         this.svgContainerGroupNodes
-            .selectAll<SVGSVGElement, TopologyLinkNormalized>('.serviceLink')
+            .selectAll<SVGSVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
             .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
             .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
             .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
             .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
 
-        this.updateGroups();
+        this.redrawGroups();
     };
 
     private polygonGenerator = (groupId: string) => {
@@ -226,7 +226,7 @@ export default class TopologySVG {
         return polygonHull(node_coords);
     };
 
-    private updateGroups() {
+    private redrawGroups() {
         this.groupIds.forEach((groupId) => {
             let centroid: [number, number] = [0, 0];
 
@@ -270,7 +270,7 @@ export default class TopologySVG {
         const xScale = scaleOrdinal().domain(domainValues).range(rangeValuesX);
         const yScale = scaleOrdinal().domain(domainValues).range(rangeValuesY);
 
-        return forceSimulation<TopologyNode, TopologyLinkNormalized>()
+        return forceSimulation<TopologyNode, TopologyEdgesModifiedByForce>()
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
@@ -302,7 +302,7 @@ export default class TopologySVG {
             )
             .force(
                 'link',
-                forceLink<TopologyNode, TopologyLinkNormalized>()
+                forceLink<TopologyNode, TopologyEdgesModifiedByForce>()
                     .id(({ id }) => id)
                     .strength(({ source, target }) => {
                         if (source.group === target.group) {
@@ -314,8 +314,8 @@ export default class TopologySVG {
             );
     }
 
-    private redrawEdges = () => {
-        const edges = this.links as TopologyLinkNormalized[];
+    private updateEdges = () => {
+        const edges = this.links as TopologyEdgesModifiedByForce[];
         // Pointer
         this.svgContainerGroupNodes
             .append('svg:defs')
@@ -337,32 +337,36 @@ export default class TopologySVG {
 
         svgEdges
             .append('line')
-            .attr('id', ({ source, target }) => `link${source.id}-${target.id}`)
+            .attr('id', ({ source, target }) => `edge${source.id}-${target.id}`)
             .attr('class', 'serviceLink')
+            .attr('marker-end', 'url(#arrow)');
+
+        this.redrawEdges();
+    };
+
+    private redrawEdges() {
+        this.svgContainerGroupNodes
+            .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
             .style('stroke-width', '1px')
-            .style('stroke-dasharray', ({ source }) => (source.type === 'site' ? '8,8' : '0,0'))
-            .attr('marker-end', ({ type }) =>
-                type === 'service' || type === 'site' ? 'none' : 'url(#arrow)',
-            )
-            .style('stroke', (svgLink) => {
+            .style('stroke-dasharray', ({ type }) => (type === 'dashed' ? '8,8' : '0,0'))
+            .style('stroke', ({ source, target }) => {
                 const isEdgeConnectedToTheNode =
                     this.selectedNode &&
-                    (this.selectedNode === svgLink.source.id ||
-                        this.selectedNode === svgLink.target.id);
+                    (this.selectedNode === source.id || this.selectedNode === target.id);
 
                 return isEdgeConnectedToTheNode
                     ? 'var(--pf-global--palette--blue-400)'
                     : 'var(--pf-global--palette--black-400)';
             })
-            .style('opacity', (svgLink) => {
+            .style('opacity', ({ source, target }) => {
                 const isEdgeConnectedToTheNode =
                     !this.selectedNode ||
-                    this.selectedNode === svgLink.source.id ||
-                    this.selectedNode === svgLink.target.id;
+                    this.selectedNode === source.id ||
+                    this.selectedNode === target.id;
 
                 return isEdgeConnectedToTheNode ? '1' : OPACITY_NO_SELECTED_ITEM;
             });
-    };
+    }
 
     private redrawNodes = () => {
         const nodes = this.nodes;
@@ -398,31 +402,37 @@ export default class TopologySVG {
         const svgNodesData = this.svgContainerGroupNodes.selectAll('.node').data(nodes);
         const svgNodes = svgNodesData.enter();
         const enterSelection = svgNodes.append('g').attr('class', 'node');
+        enterSelection
+            .append('circle')
+            .attr('class', 'node-img')
+            .attr('r', SERVICE_SIZE / 2)
+            .style('fill', ({ color }) => color);
 
         enterSelection
             .append(({ img }) => img?.documentElement.cloneNode(true) as HTMLElement)
             .attr('class', 'node-img')
-            .attr('width', SERVICE_SIZE)
+            .attr('width', SERVICE_SIZE / 2)
+            .attr('x', -SERVICE_SIZE / 4)
+            .attr('y', -SERVICE_SIZE / 2)
             .attr('height', SERVICE_SIZE)
-            .style('fill', ({ color }) => color);
+            .style('fill', 'white');
 
         // it improves drag & drop area selection
         enterSelection
-            .append('rect')
-            .attr('width', SERVICE_SIZE)
-            .attr('height', SERVICE_SIZE)
+            .append('circle')
+            .attr('r', SERVICE_SIZE / 2)
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .on('mouseover', (_, { id }) => {
                 if (!this.isDraggingNode && !this.selectedNode) {
                     this.svgContainerGroupNodes
-                        .selectAll<SVGElement, TopologyLinkNormalized>('.serviceLink')
+                        .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
                         .each((svgLink) => {
                             const isLinkConnectedToTheNode =
                                 id === svgLink.source.id || id === svgLink.target.id;
 
                             if (!this.selectedNode && isLinkConnectedToTheNode) {
-                                animateLinks(svgLink);
+                                addAnimateEdges(svgLink);
                             }
                         })
                         .style('opacity', (svgLink) => {
@@ -443,12 +453,9 @@ export default class TopologySVG {
             })
             .on('mouseout', () => {
                 if (!this.isDraggingNode && !this.selectedNode) {
-                    this.svgContainerGroupNodes
-                        .selectAll('.serviceLink')
-                        .each(stopAnimateLinks)
-                        .style('opacity', '1')
-                        .style('stroke', 'var(--pf-global--palette--black-400)');
+                    this.svgContainerGroupNodes.selectAll('.serviceLink').each(stopAnimateEdges);
                 }
+                this.redrawEdges();
             })
             .on('dblclick', (e) => e.stopPropagation()) // deactivates the zoom triggered by d3-zoom
             .on('click', (_, { id }) => {
@@ -459,13 +466,13 @@ export default class TopologySVG {
                 }
 
                 this.onClickNode && this.onClickNode(this.selectedNode);
-                this.refreshNodesOpacity();
+                this.redrawNodesOpacity();
             });
 
         enterSelection
             .append('text')
             .attr('font-size', FONT_SIZE_DEFAULT)
-            .attr('y', SERVICE_SIZE + FONT_SIZE_DEFAULT * 2)
+            .attr('y', SERVICE_SIZE / 2 + FONT_SIZE_DEFAULT)
             .style('fill', 'var(--pf-global--palette--black-500)')
             .text(({ name }) => name);
 
@@ -476,10 +483,10 @@ export default class TopologySVG {
                 .on('end', this.dragEnded),
         );
 
-        this.refreshNodesOpacity();
+        this.redrawNodesOpacity();
     };
 
-    private refreshNodesOpacity() {
+    private redrawNodesOpacity() {
         this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, TopologyNode>('.node-img')
             .style('opacity', ({ id }) =>
@@ -487,7 +494,10 @@ export default class TopologySVG {
             );
     }
 
-    updateTopology = (nodes: TopologyNode[], links: TopologyLink[] | TopologyLinkNormalized[]) => {
+    updateTopology = (
+        nodes: TopologyNode[],
+        links: TopologyEdges[] | TopologyEdgesModifiedByForce[],
+    ) => {
         this.svgContainerGroupNodes.selectAll('*').remove();
 
         this.force
@@ -505,16 +515,18 @@ export default class TopologySVG {
             });
 
         this.force
-            .force<ForceLink<TopologyNode, TopologyLink | TopologyLinkNormalized>>('link')
+            .force<ForceLink<TopologyNode, TopologyEdges | TopologyEdgesModifiedByForce>>('link')
             ?.links(links);
 
         this.force.restart();
-        this.links = links as TopologyLinkNormalized[];
+        this.links = links as TopologyEdgesModifiedByForce[];
         this.nodes = nodes;
-        this.redrawEdges();
+
+        this.updateEdges();
         this.redrawNodes();
     };
 
+    // exposed events
     reset() {
         const $parent = this.svgContainer.node() as SVGElement;
 
@@ -541,19 +553,16 @@ export default class TopologySVG {
     }
 }
 
-function animateLinks({ source, target }: any) {
-    select(`#link${source.id}-${target.id}`)
+function addAnimateEdges({ source, target }: any) {
+    select(`#edge${source.id}-${target.id}`)
         .style('stroke-dasharray', '8, 8')
         .transition()
         .duration(500)
         .ease(easeLinear)
         .styleTween('stroke-dashoffset', () => interpolate('30', '0'))
-        .on('end', animateLinks);
+        .on('end', addAnimateEdges);
 }
 
-function stopAnimateLinks({ source, target }: any) {
-    select(`#link${source.id}-${target.id}`)
-        .style('stroke-dasharray', ({ source: s }: any) => (s.type === 'site' ? '8, 8' : '0.0'))
-        .transition()
-        .on('end', null);
+function stopAnimateEdges({ source, target }: any) {
+    select(`#edge${source.id}-${target.id}`).transition().on('end', null);
 }

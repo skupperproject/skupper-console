@@ -14,14 +14,14 @@ export interface TopologyNode {
     groupFy?: number;
 }
 
-export interface TopologyLink {
+export interface TopologyEdges {
     source: string;
     target: string;
-    type: string;
+    type?: 'dashed';
 }
 
-export interface TopologyLinkNormalized {
+export interface TopologyEdgesModifiedByForce {
     source: TopologyNode;
     target: TopologyNode;
-    type: string;
+    type?: 'dashed';
 }

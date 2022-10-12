@@ -9,7 +9,7 @@ import {
 import { LINK_DIRECTIONS } from 'config';
 
 import { colors } from '../Topology.constant';
-import { TopologyNode } from '../Topology.interfaces';
+import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import { ProcessesMetrics, ProcessGroupMetrics, SitesMetrics } from './services.interfaces';
 
 export const TopologyController = {
@@ -182,29 +182,7 @@ export const TopologyController = {
         };
     },
 
-    getSiteDataNodes: (sites: SiteExtended[]) =>
-        sites
-            ?.sort((a, b) => a.identity.localeCompare(b.identity))
-            .map((node, index) => {
-                const positions = localStorage.getItem(node.identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
-
-                return {
-                    id: node.identity,
-                    name: node.name,
-                    x: fx || 0,
-                    y: fy || 0,
-                    fx,
-                    fy,
-                    type: 'site',
-                    groupName: node.identity,
-                    group: index,
-                    color: getColor(index),
-                };
-            }),
-
-    getSiteNodes: (sites: SiteResponse[]) =>
+    getSiteNodes: (sites: SiteResponse[]): TopologyNode[] =>
         sites
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
             .map((node, index) => {
@@ -226,18 +204,18 @@ export const TopologyController = {
                 };
             }),
 
-    getSiteEdges: (sites: SiteExtended[]) =>
+    getSiteEdges: (sites: SiteExtended[]): TopologyEdges[] =>
         sites?.flatMap(({ identity: sourceId, connected }) =>
             connected.flatMap((targetId) => [
                 {
                     source: sourceId,
                     target: targetId,
-                    type: 'linkSite',
+                    type: 'dashed',
                 },
             ]),
         ),
 
-    getProcessGroupNodes: (processGroups: ProcessGroupResponse[]) =>
+    getProcessGroupNodes: (processGroups: ProcessGroupResponse[]): TopologyNode[] =>
         processGroups
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
             .map((node, index) => {
@@ -259,14 +237,13 @@ export const TopologyController = {
                 };
             }),
 
-    getProcessGroupNodesEdges: (deploymentsLinks: DeploymentLinkTopology[]) =>
+    getProcessGroupNodesEdges: (deploymentsLinks: DeploymentLinkTopology[]): TopologyEdges[] =>
         deploymentsLinks?.flatMap(({ source, target }) => ({
             source,
             target,
-            type: 'linkService',
         })),
 
-    getProcessNodes: (deployments: ProcessResponse[], siteNodes: TopologyNode[]) =>
+    getProcessNodes: (deployments: ProcessResponse[], siteNodes: TopologyNode[]): TopologyNode[] =>
         deployments
             ?.map((node) => {
                 const positions = localStorage.getItem(node.identity);
@@ -283,7 +260,7 @@ export const TopologyController = {
                     y: fy || 0,
                     fx,
                     fy,
-                    type: 'service',
+                    type: 'process',
                     groupName: site?.name || '',
                     group: groupIndex,
                     color: getColor(groupIndex),
@@ -291,11 +268,10 @@ export const TopologyController = {
             })
             .sort((a, b) => a.group - b.group),
 
-    getProcessLinks: (deploymentsLinks: DeploymentLinkTopology[]) =>
+    getProcessEdge: (deploymentsLinks: DeploymentLinkTopology[]): TopologyEdges[] =>
         deploymentsLinks?.flatMap(({ source, target }) => ({
             source,
             target,
-            type: 'linkService',
         })),
 };
 

@@ -23,7 +23,7 @@ import { UPDATE_INTERVAL } from 'config';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { Labels } from '../Topology.enum';
-import { TopologyLink, TopologyNode } from '../Topology.interfaces';
+import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
 
@@ -31,7 +31,7 @@ const TopologyProcesses = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<TopologyNode[]>([]);
-    const [links, setLinks] = useState<TopologyLink[]>([]);
+    const [links, setLinks] = useState<TopologyEdges[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
@@ -86,7 +86,7 @@ const TopologyProcesses = function () {
             );
 
             setNodes(processesNodes);
-            setLinks(TopologyController.getProcessLinks(processesLinks));
+            setLinks(TopologyController.getProcessEdge(processesLinks));
         }
     }, [sites, processes, processesLinks]);
 
