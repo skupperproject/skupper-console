@@ -26,6 +26,7 @@ const TopologyProcessesDetails: FC<TopologyDeploymentDetailsProps> = function ({
         [QueriesTopology.GetProcessMetrics, id],
         () => TopologyController.getProcessMetrics(id),
         {
+            cacheTime: 0,
             refetchInterval,
             onError: handleError,
         },
@@ -62,9 +63,7 @@ const TopologyProcessesDetails: FC<TopologyDeploymentDetailsProps> = function ({
     const tcpConnectionsInEntries = Object.values(deployment.tcpConnectionsIn);
     const tcpConnectionsOutEntries = Object.values(deployment.tcpConnectionsOut);
 
-    const title = `${capitalizeFirstLetter(deployment.name)} / ${capitalizeFirstLetter(
-        deployment.name,
-    )}`;
+    const title = `${capitalizeFirstLetter(deployment.name)}`;
 
     return (
         <TopologyDetails

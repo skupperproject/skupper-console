@@ -26,6 +26,7 @@ const TopologyProcessGroupsDetails: FC<TopologyDeploymentDetailsProps> = functio
         [QueriesTopology.GetProcessGroupMetrics, id],
         () => TopologyController.getProcessGroupMetrics(id),
         {
+            cacheTime: 0,
             refetchInterval,
             onError: handleError,
         },

@@ -348,7 +348,13 @@ export default class TopologySVG {
         this.svgContainerGroupNodes
             .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
             .style('stroke-width', '1px')
-            .style('stroke-dasharray', ({ type }) => (type === 'dashed' ? '8,8' : '0,0'))
+            .style('stroke-dasharray', ({ type, source, target }) =>
+                type === 'dashed' ||
+                this.selectedNode === source.id ||
+                this.selectedNode === target.id
+                    ? '8,8'
+                    : '0,0',
+            )
             .style('stroke', ({ source, target }) => {
                 const isEdgeConnectedToTheNode =
                     this.selectedNode &&
@@ -465,8 +471,22 @@ export default class TopologySVG {
                     this.selectedNode = id;
                 }
 
-                this.onClickNode && this.onClickNode(this.selectedNode);
                 this.redrawNodesOpacity();
+                this.onClickNode && this.onClickNode(this.selectedNode);
+
+                this.svgContainerGroupNodes
+                    .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
+                    .each((svgLink) => {
+                        const isLinkConnectedToTheNode =
+                            id === svgLink.source.id || id === svgLink.target.id;
+
+                        if (this.selectedNode && isLinkConnectedToTheNode) {
+                            addAnimateEdges(svgLink);
+                        } else {
+                            stopAnimateEdges(svgLink);
+                        }
+                    });
+                this.redrawEdges();
             });
 
         enterSelection
@@ -557,7 +577,7 @@ function addAnimateEdges({ source, target }: any) {
     select(`#edge${source.id}-${target.id}`)
         .style('stroke-dasharray', '8, 8')
         .transition()
-        .duration(500)
+        .duration(750)
         .ease(easeLinear)
         .styleTween('stroke-dashoffset', () => interpolate('30', '0'))
         .on('end', addAnimateEdges);

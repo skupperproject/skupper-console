@@ -6,15 +6,9 @@ import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfl
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
-import { FlowAggregatesResponse } from 'API/REST.interfaces';
 
 import { colors } from '../Topology.constant';
-
-interface TopologyDetailsProps {
-    name: string;
-    tcpConnectionsOutEntries: FlowAggregatesResponse[];
-    tcpConnectionsInEntries: FlowAggregatesResponse[];
-}
+import { TopologyDetailsProps } from '../Topology.interfaces';
 
 const TopologyDetails: FC<TopologyDetailsProps> = function ({
     name,

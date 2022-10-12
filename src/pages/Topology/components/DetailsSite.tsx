@@ -29,6 +29,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         [QueriesTopology.GetSite, id],
         () => SitesController.getSite(id),
         {
+            cacheTime: 0,
             refetchInterval,
             onError: handleError,
         },

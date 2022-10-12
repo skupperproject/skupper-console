@@ -1,3 +1,5 @@
+import { FlowAggregatesResponse } from 'API/REST.interfaces';
+
 export interface TopologyNode {
     id: string;
     name: string;
@@ -24,4 +26,10 @@ export interface TopologyEdgesModifiedByForce {
     source: TopologyNode;
     target: TopologyNode;
     type?: 'dashed';
+}
+
+export interface TopologyDetailsProps {
+    name: string;
+    tcpConnectionsOutEntries: FlowAggregatesResponse[];
+    tcpConnectionsInEntries: FlowAggregatesResponse[];
 }
