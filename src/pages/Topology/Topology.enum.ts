@@ -14,3 +14,7 @@ export enum Labels {
     Topology = 'Network',
     LegendGroupsItems = 'Sites',
 }
+
+export enum EVENTS {
+    IsTopologyLoaded = 'is topology loaded',
+}

@@ -19,7 +19,10 @@ import { select, Selection } from 'd3-selection';
 import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
+import EventEmitter from '@core/EventEmitter';
+
 import { colors } from '../Topology.constant';
+import { EVENTS } from '../Topology.enum';
 import { TopologyNode, TopologyEdges, TopologyEdgesModifiedByForce } from '../Topology.interfaces';
 
 const ARROW_SIZE = 10;
@@ -41,6 +44,7 @@ export default class TopologySVG {
     valueline: Line<[number, number]>;
     groupIds: string[];
     selectedNode: null | string;
+    EventEmitter: EventEmitter;
 
     constructor(
         $node: HTMLElement,
@@ -58,6 +62,7 @@ export default class TopologySVG {
         this.height = boxHeight;
         this.onClickNode = onclick;
 
+        this.EventEmitter = new EventEmitter();
         this.isDraggingNode = false;
         this.force = this.initForce(nodes);
 
@@ -275,7 +280,7 @@ export default class TopologySVG {
             .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
             .alpha(0.1)
-            .alphaMin(0.07)
+            .alphaMin(0.065)
             .force(
                 'x',
                 forceX<TopologyNode>()
@@ -311,7 +316,19 @@ export default class TopologySVG {
 
                         return 0.1;
                     }),
-            );
+            )
+            .on('end', () => {
+                nodes.forEach((node) => {
+                    if (!localStorage.getItem(node.id)) {
+                        node.fx = node.x;
+                        node.fy = node.y;
+
+                        localStorage.setItem(node.id, JSON.stringify({ fx: node.fx, fy: node.fy }));
+                    }
+                });
+
+                this.EventEmitter.emit(EVENTS.IsTopologyLoaded);
+            });
     }
 
     private updateEdges = () => {
@@ -520,19 +537,7 @@ export default class TopologySVG {
     ) => {
         this.svgContainerGroupNodes.selectAll('*').remove();
 
-        this.force
-            .nodes(nodes)
-            .on('tick', this.ticked)
-            .on('end', () => {
-                nodes.forEach((node) => {
-                    if (!localStorage.getItem(node.id)) {
-                        node.fx = node.x;
-                        node.fy = node.y;
-
-                        localStorage.setItem(node.id, JSON.stringify({ fx: node.fx, fy: node.fy }));
-                    }
-                });
-            });
+        this.force.nodes(nodes).on('tick', this.ticked);
 
         this.force
             .force<ForceLink<TopologyNode, TopologyEdges | TopologyEdgesModifiedByForce>>('link')
@@ -570,6 +575,11 @@ export default class TopologySVG {
 
     isDragging() {
         return this.isDraggingNode;
+    }
+
+    onIsTopologyLoaded(callback: Function) {
+        console.log('registe');
+        this.EventEmitter.once(EVENTS.IsTopologyLoaded, () => callback(true));
     }
 }
 
