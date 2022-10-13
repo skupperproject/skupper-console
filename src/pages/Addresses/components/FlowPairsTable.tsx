@@ -1,9 +1,19 @@
 import React, { FC, useState } from 'react';
 
-import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import {
+    TableComposable,
+    TableText,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    ThProps,
+    Tr,
+} from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { FlowPairsColumns } from '../Addresses.constants';
@@ -60,11 +70,12 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                 </Tr>
                 <Tr>
                     <Th isSubheader sort={getSortParams(0)}>
-                        {FlowPairsColumnsNames.Site}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(1)}>
                         {FlowPairsColumnsNames.Process}
                     </Th>
+                    <Th isSubheader sort={getSortParams(1)}>
+                        {FlowPairsColumnsNames.Site}
+                    </Th>
+
                     <Th isSubheader sort={getSortParams(2)}>
                         {FlowPairsColumnsNames.Host}
                     </Th>
@@ -83,10 +94,10 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                         {FlowPairsColumnsNames.Bytes}
                     </Th>
                     <Th isSubheader sort={getSortParams(6)}>
-                        {FlowPairsColumnsNames.Site}
+                        {FlowPairsColumnsNames.Process}
                     </Th>
                     <Th isSubheader sort={getSortParams(7)}>
-                        {FlowPairsColumnsNames.Process}
+                        {FlowPairsColumnsNames.Site}
                     </Th>
                     <Th isSubheader sort={getSortParams(8)}>
                         {FlowPairsColumnsNames.Host}
@@ -118,22 +129,28 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                             port,
                             siteId,
                             siteName,
+                            processId,
                             processName,
                             targetSiteId,
                             targetSiteName,
                             targetByteRate,
                             targetBytes,
                             targetHost,
+                            targetProcessId,
                             targetProcessName,
                             targetPort,
                         }) => (
                             <Tr key={id}>
                                 <Td className="secondary-color">
+                                    <Link to={`${ProcessesRoutesPaths.Processes}/${processId}`}>
+                                        <TableText wrapModifier="truncate">{processName}</TableText>
+                                    </Link>
+                                </Td>
+                                <Td className="secondary-color">
                                     <Link to={`${SitesRoutesPaths.Sites}/${siteId}`}>
                                         {siteName}
                                     </Link>
                                 </Td>
-                                <Td className="secondary-color">{processName}</Td>
                                 <Td className="secondary-color">{host}</Td>
                                 <Td className="secondary-color">{`${port}`}</Td>
                                 <Td className="align-td-right secondary-color">
@@ -143,11 +160,19 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                     <b>{formatBytes(bytes, 3)}</b>
                                 </Td>
                                 <Td>
+                                    <Link
+                                        to={`${ProcessesRoutesPaths.Processes}/${targetProcessId}`}
+                                    >
+                                        <TableText wrapModifier="truncate">
+                                            {targetProcessName}
+                                        </TableText>
+                                    </Link>
+                                </Td>
+                                <Td>
                                     <Link to={`${SitesRoutesPaths.Sites}/${targetSiteId}`}>
                                         {targetSiteName}
                                     </Link>
                                 </Td>
-                                <Td>{targetProcessName}</Td>
                                 <Td>{targetHost}</Td>
                                 <Td>{`${targetPort}`}</Td>
                                 <Td className="align-td-right">

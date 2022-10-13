@@ -1,18 +1,18 @@
 import React, { FC, useState } from 'react';
 
 import { Grid, GridItem, Label, Spinner } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
-import { ProcessesTableColumns } from '@pages/Sites/Sites.enum';
+import { ProcessesTableColumns, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { UPDATE_INTERVAL } from 'config';
 
-import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
@@ -35,15 +35,6 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         },
     );
 
-    const { data: traffic, isLoading: isLoadingTraffic } = useQuery(
-        [QueriesTopology.GetSiteMetrics, id],
-        () => TopologyController.getSiteMetrics(id),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, id],
         () => SitesController.getActiveProcessesBySiteId(id),
@@ -61,7 +52,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         navigate(route);
     }
 
-    if (isLoadingSite || isLoadingTraffic || isLoadingProcesses) {
+    if (isLoadingSite || isLoadingProcesses) {
         return (
             <Spinner
                 diameter={`${SPINNER_DIAMETER}px`}
@@ -76,11 +67,9 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         );
     }
 
-    if (!site || !traffic || !processes) {
+    if (!site || !processes) {
         return null;
     }
-
-    const { tcpConnectionsIn, tcpConnectionsOut } = traffic;
 
     const title = `${capitalizeFirstLetter(site.name)}`;
 
@@ -89,8 +78,9 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
             <GridItem span={12}>
                 <TopologyDetails
                     name={title}
-                    tcpConnectionsInEntries={tcpConnectionsIn}
-                    tcpConnectionsOutEntries={tcpConnectionsOut}
+                    link={SitesRoutesPaths.Sites}
+                    tcpConnectionsInEntries={[]}
+                    tcpConnectionsOutEntries={[]}
                 />
             </GridItem>
             <GridItem span={12}>
@@ -106,8 +96,12 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                     <Tbody>
                         {processes?.map(({ identity, name, sourceHost }) => (
                             <Tr key={`${identity}${name}`}>
-                                <Td>{name}</Td>
-                                <Td>{sourceHost}</Td>
+                                <Td>
+                                    <Link to={`${ProcessesRoutesPaths.Processes}/${identity}`}>
+                                        <TableText wrapModifier="truncate">{name} </TableText>
+                                    </Link>
+                                </Td>
+                                <Td width={30}>{sourceHost}</Td>
                             </Tr>
                         ))}
                     </Tbody>

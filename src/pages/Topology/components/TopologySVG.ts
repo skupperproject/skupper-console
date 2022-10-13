@@ -578,7 +578,6 @@ export default class TopologySVG {
     }
 
     onIsTopologyLoaded(callback: Function) {
-        console.log('registe');
         this.EventEmitter.once(EVENTS.IsTopologyLoaded, () => callback(true));
     }
 }

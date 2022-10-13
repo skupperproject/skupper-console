@@ -1,24 +1,43 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
-import { Label, Panel, TextContent, Title, TitleSizes, Tooltip } from '@patternfly/react-core';
+import {
+    Checkbox,
+    Label,
+    Panel,
+    TextContent,
+    Title,
+    TitleSizes,
+    Tooltip,
+} from '@patternfly/react-core';
 import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Link } from 'react-router-dom';
 
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
 
 import { colors } from '../Topology.constant';
-import { TopologyDetailsProps } from '../Topology.interfaces';
+import { TopologyDetailsProps, TrafficProps } from '../Topology.interfaces';
 
 const TopologyDetails: FC<TopologyDetailsProps> = function ({
     name,
+    link,
     tcpConnectionsOutEntries,
     tcpConnectionsInEntries,
 }) {
+    const [checkBoxSelectedSent, setCheckBoxSelectedStatusSent] = useState<Record<
+        string,
+        boolean
+    > | null>(null);
+    const [checkBoxSelectedReceived, setCheckBoxSelectedStatusReceived] = useState<Record<
+        string,
+        boolean
+    > | null>(null);
+
     const tcpConnectionsOutEntriesChartData = tcpConnectionsOutEntries.map(
-        ({ identity, sourceId, sourceOctets }) => ({
+        ({ identity, destinationId, sourceOctets }) => ({
             identity,
-            name: sourceId,
+            name: destinationId,
             value: sourceOctets,
         }),
     );
@@ -30,6 +49,14 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
             value: sourceOctets,
         }),
     );
+
+    function handleSelectedSent(status: Record<string, boolean>) {
+        setCheckBoxSelectedStatusSent(status);
+    }
+
+    function handleSelectedReceived(status: Record<string, boolean>) {
+        setCheckBoxSelectedStatusReceived(status);
+    }
 
     return (
         <Panel>
@@ -49,15 +76,45 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                         {!!tcpConnectionsOutEntries.length && (
                             <>
                                 <Label color="green">{ConnectionsLabels.TCPConnectionsOut}</Label>
-                                <TrafficChart data={tcpConnectionsOutEntriesChartData} />
-                                <TrafficTable data={tcpConnectionsOutEntriesChartData} />
+                                <TrafficChart
+                                    data={tcpConnectionsOutEntriesChartData.map((data) => {
+                                        if (!checkBoxSelectedSent) {
+                                            return data;
+                                        }
+                                        if (checkBoxSelectedSent[data.identity]) {
+                                            return data;
+                                        }
+
+                                        return { ...data, value: 0 };
+                                    })}
+                                />
+                                <TrafficTable
+                                    link={link}
+                                    data={tcpConnectionsOutEntriesChartData}
+                                    onSelected={handleSelectedSent}
+                                />
                             </>
                         )}
                         {!!tcpConnectionsInEntries.length && (
                             <>
                                 <Label color="purple">{ConnectionsLabels.TCPConnectionsIn}</Label>
-                                <TrafficChart data={tcpConnectionsInEntriesChartData} />
-                                <TrafficTable data={tcpConnectionsInEntriesChartData} />
+                                <TrafficChart
+                                    data={tcpConnectionsInEntriesChartData.map((data) => {
+                                        if (!checkBoxSelectedReceived) {
+                                            return data;
+                                        }
+                                        if (checkBoxSelectedReceived[data.identity]) {
+                                            return data;
+                                        }
+
+                                        return { ...data, value: 0 };
+                                    })}
+                                />
+                                <TrafficTable
+                                    link={link}
+                                    data={tcpConnectionsInEntriesChartData}
+                                    onSelected={handleSelectedReceived}
+                                />
                             </>
                         )}
                     </>
@@ -69,10 +126,6 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
 
 export default TopologyDetails;
 
-interface TrafficProps {
-    data: { identity: string; name: string; value: number }[];
-}
-
 const TrafficChart: FC<TrafficProps> = function ({ data }) {
     return (
         <RealTimeLineChart
@@ -82,7 +135,7 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
                 colorScale: colors,
                 height: 200,
                 padding: {
-                    left: 70,
+                    left: 75,
                     right: 20,
                     top: 20,
                     bottom: 40,
@@ -92,11 +145,39 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
     );
 };
 
-const TrafficTable: FC<TrafficProps> = function ({ data }) {
+const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
+    const [status, setIsChecked] = useState<Record<string, boolean>>({});
+
+    const handleChange = (checked: boolean, event: React.FormEvent<HTMLInputElement>) => {
+        const target = event.currentTarget;
+        const newStatus = { ...status, [target.id]: checked };
+
+        setIsChecked(newStatus);
+
+        if (onSelected) {
+            onSelected(newStatus);
+        }
+    };
+
+    useEffect(() => {
+        const newStatus = data.reduce((acc, row) => {
+            acc[row.identity] = true;
+
+            return acc;
+        }, {} as Record<string, boolean>);
+
+        setIsChecked(newStatus);
+
+        if (onSelected) {
+            onSelected(newStatus);
+        }
+    }, []);
+
     return (
         <TableComposable variant="compact" isStickyHeader borders={false}>
             <Thead>
                 <Tr>
+                    <Th />
                     <Th>{ConnectionsColumns.Name}</Th>
                     <Th>{ConnectionsColumns.BytesOut}</Th>
                 </Tr>
@@ -104,8 +185,17 @@ const TrafficTable: FC<TrafficProps> = function ({ data }) {
             <Tbody>
                 {data.map(({ identity, name, value }) => (
                     <Tr key={identity}>
+                        <Td width={10}>
+                            <Checkbox
+                                isChecked={status[identity]}
+                                onChange={handleChange}
+                                id={identity}
+                            />
+                        </Td>
                         <Td>
-                            <TableText wrapModifier="truncate">{`${name}`} </TableText>
+                            <Link to={`${link}/${name}`}>
+                                <TableText wrapModifier="truncate">{name} </TableText>
+                            </Link>
                         </Td>
                         <Td width={30}>{`${formatBytes(value)}`}</Td>
                     </Tr>

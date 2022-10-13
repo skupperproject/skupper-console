@@ -84,23 +84,13 @@ const Addresses = function () {
                                     {AddressesColumns.TotalFlowPairs}
                                 </Th>
                                 <Th className="align-th-right">
-                                    {AddressesColumns.TotalListeners}
-                                </Th>
-                                <Th className="align-th-right">
                                     {AddressesColumns.TotalConnectors}
                                 </Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {vanServices?.map(
-                                ({
-                                    identity,
-                                    name,
-                                    listenerCount,
-                                    connectorCount,
-                                    totalFlows,
-                                    currentFlows,
-                                }) => (
+                                ({ identity, name, connectorCount, totalFlows, currentFlows }) => (
                                     <Tr key={identity}>
                                         <Td>
                                             <ResourceIcon type="address" />
@@ -112,7 +102,6 @@ const Addresses = function () {
                                         </Td>
                                         <Td className="align-td-right">{`${currentFlows}`}</Td>
                                         <Td className="align-td-right">{`${totalFlows}`}</Td>
-                                        <Td className="align-td-right">{`${listenerCount}`}</Td>
                                         <Td className="align-td-right">{`${connectorCount}`}</Td>
                                     </Tr>
                                 ),

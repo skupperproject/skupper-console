@@ -2,11 +2,21 @@ import React, { FC, useState } from 'react';
 
 import { Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import { TableComposable, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import {
+    TableComposable,
+    TableText,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    ThProps,
+    Tr,
+} from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { ProcessesColumns } from '../Addresses.constants';
@@ -58,8 +68,8 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
         <TableComposable borders={true} className="processes-table">
             <Thead>
                 <Tr>
-                    <Th sort={getSortParams(0)}>{ProcessesColumnsNames.Site}</Th>
-                    <Th sort={getSortParams(1)}>{FlowPairsColumnsNames.Process}</Th>
+                    <Th sort={getSortParams(0)}>{FlowPairsColumnsNames.Process}</Th>
+                    <Th sort={getSortParams(1)}>{ProcessesColumnsNames.Site}</Th>
                     <Th sort={getSortParams(2)} modifier="fitContent">
                         {FlowPairsColumnsNames.Host}
                     </Th>
@@ -98,11 +108,15 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                         }) => (
                             <Tr key={id}>
                                 <Td>
+                                    <Link to={`${ProcessesRoutesPaths.Processes}/${id}`}>
+                                        <TableText wrapModifier="truncate">{processName}</TableText>
+                                    </Link>
+                                </Td>
+                                <Td>
                                     <Link to={`${SitesRoutesPaths.Sites}/${siteId}`}>
                                         {siteName}
                                     </Link>
                                 </Td>
-                                <Td>{processName}</Td>
                                 <Td>{host}</Td>
                                 <Td>{port}</Td>
                                 <Td>{imageName}</Td>

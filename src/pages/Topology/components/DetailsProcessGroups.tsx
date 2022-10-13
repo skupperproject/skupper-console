@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
+import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { UPDATE_INTERVAL } from 'config';
 
@@ -68,6 +69,7 @@ const TopologyProcessGroupsDetails: FC<TopologyDeploymentDetailsProps> = functio
     return (
         <TopologyDetails
             name={title}
+            link={ProcessGroupsRoutesPaths.ProcessGroups}
             tcpConnectionsInEntries={tcpConnectionsInEntries}
             tcpConnectionsOutEntries={tcpConnectionsOutEntries}
         />
