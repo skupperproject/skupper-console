@@ -33,7 +33,7 @@ export const TopologyController = {
     },
 
     getProcessesLinks: async (): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchFlowAggregatesProcesses();
+        const links = await RESTApi.fetchAggregatesProcesses();
 
         const processesLinks = links.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
@@ -45,7 +45,7 @@ export const TopologyController = {
     },
 
     getProcessGroupsLinks: async (): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchFlowAggregatesProcessgroups();
+        const links = await RESTApi.fetchAggregatesProcessgroups();
 
         const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
@@ -58,7 +58,7 @@ export const TopologyController = {
 
     getSiteMetrics: async (id: string): Promise<SitesMetrics> => {
         const site = await RESTApi.fetchSite(id);
-        const flowAggregatesPairs = await RESTApi.fetchFlowAggregatesSites();
+        const flowAggregatesPairs = await RESTApi.fetchAggregatesSites();
 
         const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
             .filter(({ sourceId }) => id === sourceId)
@@ -70,15 +70,15 @@ export const TopologyController = {
 
         const flowAggregatesOutgoingPairs = await Promise.all(
             flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchFlowAggregatesSite(flowAggregatesPairsId),
+                RESTApi.fetchAggregatesSite(flowAggregatesPairsId),
             ),
-        ).catch((error) => Promise.reject(error));
+        );
 
         const flowAggregatesIncomingPairs = await Promise.all(
             flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchFlowAggregatesSite(flowAggregatesPairsId),
+                RESTApi.fetchAggregatesSite(flowAggregatesPairsId),
             ),
-        ).catch((error) => Promise.reject(error));
+        );
 
         return {
             ...site,
@@ -89,7 +89,7 @@ export const TopologyController = {
 
     getProcessMetrics: async (id: string): Promise<ProcessesMetrics> => {
         const process = await RESTApi.fetchProcess(id);
-        const flowAggregatesPairs = await RESTApi.fetchFlowAggregatesProcesses();
+        const flowAggregatesPairs = await RESTApi.fetchAggregatesProcesses();
 
         const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
             .filter(({ sourceId }) => id === sourceId)
@@ -101,15 +101,15 @@ export const TopologyController = {
 
         const flowAggregatesOutgoingPairs = await Promise.all(
             flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchFlowAggregatesProcess(flowAggregatesPairsId),
+                RESTApi.fetchAggregatesProcess(flowAggregatesPairsId),
             ),
-        ).catch((error) => Promise.reject(error));
+        );
 
         const flowAggregatesIncomingPairs = await Promise.all(
             flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchFlowAggregatesProcess(flowAggregatesPairsId),
+                RESTApi.fetchAggregatesProcess(flowAggregatesPairsId),
             ),
-        ).catch((error) => Promise.reject(error));
+        );
 
         return {
             ...process,
@@ -120,7 +120,7 @@ export const TopologyController = {
 
     getProcessGroupMetrics: async (id: string): Promise<ProcessGroupMetrics> => {
         const process = await RESTApi.fetchProcessGroup(id);
-        const flowAggregatesPairs = await RESTApi.fetchFlowAggregatesProcessgroups();
+        const flowAggregatesPairs = await RESTApi.fetchAggregatesProcessgroups();
 
         const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
             .filter(({ sourceId }) => id === sourceId)
@@ -132,15 +132,15 @@ export const TopologyController = {
 
         const flowAggregatesOutgoingPairs = await Promise.all(
             flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchFlowAggregatesProcessGroup(flowAggregatesPairsId),
+                RESTApi.fetchAggregatesProcessGroup(flowAggregatesPairsId),
             ),
-        ).catch((error) => Promise.reject(error));
+        );
 
         const flowAggregatesIncomingPairs = await Promise.all(
             flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchFlowAggregatesProcessGroup(flowAggregatesPairsId),
+                RESTApi.fetchAggregatesProcessGroup(flowAggregatesPairsId),
             ),
-        ).catch((error) => Promise.reject(error));
+        );
 
         return {
             ...process,

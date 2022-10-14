@@ -67,7 +67,7 @@ const Process = function () {
 
     const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
         [QueriesProcessGroups.GetProcessGroup, process?.groupIdentity],
-        () => ProcessGroupsController.GetProcessGroup(process?.groupIdentity || ''),
+        () => ProcessGroupsController.getProcessGroup(process?.groupIdentity || ''),
         {
             enabled: !!process?.groupIdentity,
             onError: handleError,

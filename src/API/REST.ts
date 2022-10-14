@@ -1,6 +1,4 @@
-import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-
-import { fetchWithTimeout, handleStatusError } from './axiosMiddleware';
+import { fetchWithTimeout } from './axiosMiddleware';
 import {
     CONNECTORS_PATH,
     LINKS_PATH,
@@ -12,7 +10,6 @@ import {
     getProcessesBySitePATH,
     getProcessesByAddressPATH,
     getConnectorByProcessPATH,
-    getFlowsByProcessPATH,
     getSitePATH,
     getRoutersBySitePATH,
     getLinksBySitePATH,
@@ -28,6 +25,9 @@ import {
     FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH,
     getListenerPATH,
     geProcessPATH,
+    getConnectorsByAddressPATH,
+    getLinkPATH,
+    getConnectorPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
@@ -35,8 +35,6 @@ import {
     DeviceResponse,
     ProcessResponse,
     FlowPairResponse,
-    HTTPError,
-    FlowResponse,
     SiteResponse,
     LinkResponse,
     RouterResponse,
@@ -110,7 +108,7 @@ export const RESTApi = {
         return data;
     },
 
-    // SERVICES APIs
+    // PROCESS GROUPS APIs
     fetchProcessGroups: async (): Promise<ProcessGroupResponse[]> => {
         const { data } = await fetchWithTimeout(PROCESS_GROUPS_PATH);
 
@@ -127,109 +125,104 @@ export const RESTApi = {
         return data;
     },
 
-    // FLOWS APIs
-    fetchAddresses: async (): Promise<AddressesResponse[]> => {
-        const { data } = await fetchWithTimeout(ADDRESSES_PATH);
-
-        return data;
-    },
-    fetchFlowsSites: async (): Promise<SiteResponse[]> => {
-        const { data } = await fetchWithTimeout(`${SITES_PATH}`);
-
-        return data;
-    },
-    fetchFlowsSite: async (id: string): Promise<SiteResponse> => {
-        const { data } = await fetchWithTimeout(getSitePATH(id));
-
-        return data;
-    },
-    fetchFlowsByProcessesId: async (id: string): Promise<FlowResponse[]> => {
-        const { data } = await fetchWithTimeout(getFlowsByProcessPATH(id));
-
-        return data;
-    },
-
-    fetchFlowConnectorByProcessId: async (id: string): Promise<DeviceResponse> => {
+    // PROCESSES  APIs
+    fetchConnectorByProcess: async (id: string): Promise<DeviceResponse> => {
         const { data } = await fetchWithTimeout(getConnectorByProcessPATH(id));
 
         return data;
     },
+
+    // LINKS  APIs
     fetchLinks: async (): Promise<LinkResponse[]> => {
         const { data } = await fetchWithTimeout(`${LINKS_PATH}`);
 
         return data;
     },
+
     fetchLink: async (id: string): Promise<LinkResponse> => {
-        const { data } = await fetchWithTimeout(`${LINKS_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(getLinkPATH(id));
 
         return data;
     },
+
+    // CONNECTORS  APIs
     fetchConnectors: async (): Promise<DeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}`);
 
         return data;
     },
+
     fetchConnector: async (id: string): Promise<DeviceResponse | null> => {
-        try {
-            const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(getConnectorPATH(id));
 
-            return data;
-        } catch (e) {
-            const error = e as HTTPError;
-
-            if (error.httpStatus === HttpStatusErrors.NotFound) {
-                return null;
-            }
-
-            return handleStatusError(error);
-        }
+        return data;
     },
-    fetchFlowsListeners: async (): Promise<DeviceResponse[]> => {
+
+    // LISTENERS  APIs
+    fetchListeners: async (): Promise<DeviceResponse[]> => {
         const { data } = await fetchWithTimeout(`${LISTENERS_PATH}`);
 
         return data;
     },
-    fetchFlowsListener: async (id: string): Promise<DeviceResponse> => {
+
+    fetchListener: async (id: string): Promise<DeviceResponse> => {
         const { data } = await fetchWithTimeout(getListenerPATH(id));
 
         return data;
     },
+
+    // ADDRESSES  APIs
+    fetchAddresses: async (): Promise<AddressesResponse[]> => {
+        const { data } = await fetchWithTimeout(ADDRESSES_PATH);
+
+        return data;
+    },
+
     fetchFlowPairsByAddress: async (id: string): Promise<FlowPairResponse[]> => {
         const { data } = await fetchWithTimeout(getFlowsPairsByAddressPATH(id));
 
         return data;
     },
+
     fetchProcessesByAddresses: async (id: string): Promise<ProcessResponse[]> => {
         const { data } = await fetchWithTimeout(getProcessesByAddressPATH(id));
 
         return data;
     },
+
+    fetchConnectorsByAddresses: async (id: string): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getConnectorsByAddressPATH(id));
+
+        return data;
+    },
+
+    // FLOW PAIRS  APIs
     fetchFlowPair: async (id: string): Promise<FlowPairResponse> => {
         const { data } = await fetchWithTimeout(`${FLOWPAIRS_PATH}/${id}`);
 
         return data;
     },
 
-    // FLOWAGGREGATES APIs
-    fetchFlowAggregatesSites: async (): Promise<FlowAggregatesMapResponse[]> => {
+    // AGGREGRATE  APIs
+    fetchAggregatesSites: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(FLOW_AGGREGATES_SITE_PAIRS_PATH);
 
         return data;
     },
 
-    fetchFlowAggregatesSite: async (id: string): Promise<FlowAggregatesResponse> => {
+    fetchAggregatesSite: async (id: string): Promise<FlowAggregatesResponse> => {
         const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_SITE_PAIRS_PATH}/${id}`);
 
         return data;
     },
 
-    fetchFlowAggregatesProcessgroups: async (): Promise<FlowAggregatesMapResponse[]> => {
+    fetchAggregatesProcessgroups: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH);
 
         return data;
     },
 
-    fetchFlowAggregatesProcessGroup: async (id: string): Promise<FlowAggregatesResponse> => {
+    fetchAggregatesProcessGroup: async (id: string): Promise<FlowAggregatesResponse> => {
         const { data } = await fetchWithTimeout(
             `${FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH}/${id}`,
         );
@@ -237,13 +230,13 @@ export const RESTApi = {
         return data;
     },
 
-    fetchFlowAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
+    fetchAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_PAIRS_PATH);
 
         return data;
     },
 
-    fetchFlowAggregatesProcess: async (id: string): Promise<FlowAggregatesResponse> => {
+    fetchAggregatesProcess: async (id: string): Promise<FlowAggregatesResponse> => {
         const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESS_PAIRS_PATH}/${id}`);
 
         return data;

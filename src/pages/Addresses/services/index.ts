@@ -21,16 +21,8 @@ export const AddressesController = {
         visibleItems: number,
     ): Promise<FlowsPairsBasic> => {
         const flowsPairs = await RESTApi.fetchFlowPairsByAddress(id);
-
-        if (!flowsPairs) {
-            return {
-                connections: [],
-                total: 0,
-            };
-        }
-
         const processes = await RESTApi.fetchProcesses();
-        const sites = await RESTApi.fetchFlowsSites();
+        const sites = await RESTApi.fetchSites();
 
         const processesMap = processes.reduce((acc, process) => {
             acc[process.identity] = process;
@@ -66,10 +58,8 @@ export const AddressesController = {
                 const targetHost = processesMap[targetProcess].sourceHost;
                 const targetProcessImageName = processesMap[targetProcess].imageName;
 
-                const connector = await RESTApi.fetchFlowsListener(flowPair.forwardFlow.parent);
-                const targetConnector = await RESTApi.fetchFlowConnectorByProcessId(
-                    targetProcessId,
-                );
+                const connector = await RESTApi.fetchListener(flowPair.forwardFlow.parent);
+                const targetConnector = await RESTApi.fetchConnectorByProcess(targetProcessId);
 
                 return {
                     id: flowPair.identity,
@@ -99,7 +89,7 @@ export const AddressesController = {
                     protocol: connector.protocol,
                 };
             }),
-        ).catch((error) => Promise.reject(error));
+        );
 
         // filter collection
         const flowsFiltered = flowsPairsExtended.sort((a, b) => b.startTime - a.startTime);
@@ -118,20 +108,8 @@ export const AddressesController = {
 
         return Promise.all(
             processes.map(async (process) => {
-                const site = await RESTApi.fetchFlowsSite(process.parent);
-                const { destPort } = await RESTApi.fetchFlowConnectorByProcessId(process.identity);
-                const flows = await RESTApi.fetchFlowsByProcessesId(process.identity);
-
-                const flowsMetrics = flows
-                    .filter(({ endTime }) => !endTime)
-                    .reduce(
-                        (acc, { octetRate, octets, latency }) => ({
-                            bytes: (acc?.bytes || 0) + octets,
-                            byteRate: (acc?.byteRate || 0) + octetRate,
-                            maxTTFB: Math.max(acc.maxTTFB || 0, latency),
-                        }),
-                        {} as { bytes: number; byteRate: number; maxTTFB: number },
-                    );
+                const site = await RESTApi.fetchSite(process.parent);
+                const { destPort } = await RESTApi.fetchConnectorByProcess(process.identity);
 
                 return {
                     id: process.identity,
@@ -141,9 +119,11 @@ export const AddressesController = {
                     host: process.sourceHost,
                     port: destPort,
                     imageName: process.imageName,
-                    ...flowsMetrics,
+                    bytes: process.octetsSent,
+                    byteRate: process.octetSentRate,
+                    maxTTFB: 0,
                 };
             }),
-        ).catch((error) => Promise.reject({ message: error }));
+        );
     },
 };

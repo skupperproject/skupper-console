@@ -4,7 +4,7 @@ import { CONNECTION_TIMEOUT, MSG_TIMEOUT_ERROR } from 'config';
 
 import { FetchWithTimeoutOptions, HTTPError } from './REST.interfaces';
 
-export function handleStatusError(e: AxiosError) {
+function handleStatusError(e: AxiosError) {
     const error: HTTPError = { ...e };
 
     if (!e.response) {

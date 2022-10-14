@@ -38,7 +38,7 @@ const ProcessGroup = function () {
 
     const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
         [QueriesProcessGroups.GetProcessGroup, processGroupId],
-        () => ProcessGroupsController.GetProcessGroup(processGroupId),
+        () => ProcessGroupsController.getProcessGroup(processGroupId),
         {
             onError: handleError,
         },

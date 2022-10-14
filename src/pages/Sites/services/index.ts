@@ -8,6 +8,8 @@ import {
     SiteResponse,
 } from 'API/REST.interfaces';
 
+import { SiteExtended } from '../Sites.interfaces';
+
 const SitesController = {
     getSites: async (): Promise<SiteResponse[]> => RESTApi.fetchSites(),
 
@@ -22,7 +24,11 @@ const SitesController = {
 
     getRouters: async (): Promise<RouterResponse[]> => RESTApi.fetchRouters(),
 
-    getLinkedSites(site: SiteResponse, links: LinkResponse[], routers: RouterResponse[]) {
+    getLinkedSites(
+        site: SiteResponse,
+        links: LinkResponse[],
+        routers: RouterResponse[],
+    ): SiteExtended {
         const linksExtendedMap = bindLinksWithSiteIds(links, routers);
 
         return {
