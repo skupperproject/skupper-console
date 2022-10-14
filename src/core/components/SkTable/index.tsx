@@ -4,6 +4,7 @@ import {
     Card,
     CardTitle,
     Flex,
+    Pagination,
     Text,
     TextContent,
     TextVariants,
@@ -23,9 +24,20 @@ import {
 
 import { SKTable } from './Sktable.interfaces';
 
-const SkTable = function <T>({ title, titleDescription, columns, rows, components }: SKTable<T>) {
+const DEFAULT_PAGE_SIZE = 20;
+
+const SkTable = function <T>({
+    title,
+    titleDescription,
+    columns,
+    rows,
+    rowsCount = rows.length,
+    components,
+}: SKTable<T>) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
 
     function getSortParams(columnIndex: number): ThProps['sort'] {
         return {
@@ -39,6 +51,21 @@ const SkTable = function <T>({ title, titleDescription, columns, rows, component
             },
             columnIndex,
         };
+    }
+
+    function handleSetPage(
+        _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+        perPage: number,
+    ) {
+        setCurrentPage(perPage);
+    }
+
+    function handlePerPageSelect(
+        _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+        perPageSelect: number,
+    ) {
+        setPageSize(perPageSelect);
+        setCurrentPage(1);
     }
 
     const rowsSorted = rows.sort((a, b) => {
@@ -62,15 +89,17 @@ const SkTable = function <T>({ title, titleDescription, columns, rows, component
         return 0;
     });
 
-    const skRows = rowsSorted.map((row) => ({
-        identity: row['identity' as keyof T],
-        columns: columns.map((column, index) => ({
-            ...column,
-            data: row,
-            value: row[column.prop as keyof T],
-            identity: `${row['identity' as keyof T]}${index}`,
-        })),
-    }));
+    const skRows = rowsSorted
+        .map((row) => ({
+            identity: row['identity' as keyof T],
+            columns: columns.map((column, index) => ({
+                ...column,
+                data: row,
+                value: row[column.prop as keyof T],
+                identity: `${row['identity' as keyof T]}${index}`,
+            })),
+        }))
+        .slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize);
 
     return (
         <Card>
@@ -122,6 +151,17 @@ const SkTable = function <T>({ title, titleDescription, columns, rows, component
                     ))}
                 </Tbody>
             </TableComposable>
+            {rows.length > pageSize && (
+                <Pagination
+                    className="pf-u-my-xs"
+                    perPageComponent="button"
+                    itemCount={rowsCount}
+                    perPage={pageSize}
+                    page={currentPage}
+                    onSetPage={handleSetPage}
+                    onPerPageSelect={handlePerPageSelect}
+                />
+            )}
         </Card>
     );
 };

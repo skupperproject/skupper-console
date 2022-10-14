@@ -5,6 +5,7 @@ export interface SKTable<T> {
         component?: string;
     }[];
     rows: T[];
+    rowsCount?: number;
     title?: string;
     titleDescription?: string;
     components?: Record<string, Function>;
