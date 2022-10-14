@@ -1,6 +1,12 @@
+import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { RESTApi } from 'API/REST';
-import { HostResponse, LinkResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
-import { LINK_DIRECTIONS } from 'config';
+import {
+    HostResponse,
+    LinkResponse,
+    ProcessResponse,
+    RouterResponse,
+    SiteResponse,
+} from 'API/REST.interfaces';
 
 const SitesController = {
     getSites: async (): Promise<SiteResponse[]> => RESTApi.fetchSites(),
@@ -14,12 +20,15 @@ const SitesController = {
 
     getLinksBySiteId: async (id: string): Promise<LinkResponse[]> => RESTApi.fetchLinksBySite(id),
 
-    getLinkedSites(links: LinkResponse[]) {
-        return links.filter(
-            (link, index, linksArray) =>
-                link.direction === LINK_DIRECTIONS.OUTGOING &&
-                linksArray.findIndex(({ name }) => name === link.name) === index,
-        );
+    getRouters: async (): Promise<RouterResponse[]> => RESTApi.fetchRouters(),
+
+    getLinkedSites(site: SiteResponse, links: LinkResponse[], routers: RouterResponse[]) {
+        const linksExtendedMap = bindLinksWithSiteIds(links, routers);
+
+        return {
+            ...site,
+            connected: [...new Set(linksExtendedMap[site.identity])], // remove duplicates
+        };
     },
 };
 

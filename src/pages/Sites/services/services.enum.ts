@@ -3,5 +3,6 @@ export enum QueriesSites {
     GetSite = 'get-site-query',
     GetHostsBySiteId = 'get-hosts-by-site-id-query',
     GetLinksBySiteId = 'get-links-by-site-id-query',
+    GetRouters = 'get-routers-query',
     GetProcessesBySiteId = 'get-processes-by-site-id-query',
 }

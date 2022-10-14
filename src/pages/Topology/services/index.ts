@@ -1,3 +1,4 @@
+import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import {
@@ -6,7 +7,6 @@ import {
     ProcessResponse,
     SiteResponse,
 } from 'API/REST.interfaces';
-import { LINK_DIRECTIONS } from 'config';
 
 import { colors } from '../Topology.constant';
 import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
@@ -21,40 +21,7 @@ export const TopologyController = {
         const routers = await RESTApi.fetchRouters();
         const links = await RESTApi.fetchLinks();
 
-        // Map <routerId: siteId> to assign the site ids to each the links of each routers
-        const routersMap = routers.reduce(function (acc, { identity, parent }) {
-            acc[identity] = parent;
-
-            return acc;
-        }, {} as Record<string, string>);
-
-        // Extends each link adding the source site id and destination site id info
-        const linksExtended = links.map((link) => {
-            const routerIdConnected = `${link.name.split('-').at(-1)}:0`;
-
-            const siteId = routersMap[link.parent];
-            const siteIdConnected = routersMap[routerIdConnected];
-
-            const sourceSiteId =
-                link.direction === LINK_DIRECTIONS.INCOMING ? siteIdConnected : siteId;
-            const destinationSiteId =
-                link.direction === LINK_DIRECTIONS.OUTGOING ? siteIdConnected : siteId;
-
-            return { sourceSiteId, destinationSiteId, ...link };
-        });
-
-        // Map <source site Id: destination site Id> to assign to each site the sited Ids connected with him (destinations)
-        // Only outgoing links are stored.
-        // Instead Incoming links id are used to select the site
-        const linksExtendedMap = linksExtended.reduce(function (
-            acc,
-            { sourceSiteId, destinationSiteId },
-        ) {
-            (acc[sourceSiteId] = acc[sourceSiteId] || []).push(destinationSiteId);
-
-            return acc;
-        },
-        {} as Record<string, string[]>);
+        const linksExtendedMap = bindLinksWithSiteIds(links, routers);
 
         // extend each site with the connected prop that contains the connected sites (from  site to the other one)
         const sitesConnected = sites.map((site) => ({

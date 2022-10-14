@@ -279,8 +279,9 @@ export default class TopologySVG {
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
-            .alpha(0.1)
-            .alphaMin(0.065)
+            .alpha(0.3)
+            .alphaDecay(0.028)
+            .alphaMin(0.1)
             .force(
                 'x',
                 forceX<TopologyNode>()

@@ -26,7 +26,6 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { LinkResponse, SiteResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import SitesController from '../services';
@@ -41,6 +40,15 @@ const Site = function () {
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
         () => SitesController.getSite(siteId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: sites, isLoading: isLoadingSites } = useQuery(
+        [QueriesSites.GetSites],
+        () => SitesController.getSites(),
         {
             refetchInterval,
             onError: handleError,
@@ -74,6 +82,15 @@ const Site = function () {
         },
     );
 
+    const { data: routers, isLoading: isLoadingRouters } = useQuery(
+        [QueriesSites.GetRouters],
+        () => SitesController.getRouters(),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -88,14 +105,21 @@ const Site = function () {
         isLoadingHosts ||
         isLoadingLinks ||
         isLoadingProcesses ||
+        isLoadingRouters ||
+        isLoadingSites ||
+        !sites ||
+        !routers ||
+        !site ||
         !hosts ||
+        !links ||
         !processes
     ) {
         return <LoadingPage />;
     }
 
-    const { name, nameSpace } = site as SiteResponse;
-    const linkedSites = SitesController.getLinkedSites(links as LinkResponse[]);
+    const { name, nameSpace } = site;
+    const { connected } = SitesController.getLinkedSites(site, links, routers);
+    const linkedSites = sites.filter(({ identity }) => connected.includes(identity));
 
     return (
         <Grid hasGutter>
@@ -145,7 +169,14 @@ const Site = function () {
                         {(!!linkedSites.length && (
                             <List isPlain>
                                 {linkedSites.map(({ identity, name: linkedSiteName }) => (
-                                    <ListItem key={identity}>{linkedSiteName}</ListItem>
+                                    <ListItem key={identity}>
+                                        <Flex>
+                                            <ResourceIcon type="site" />
+                                            <Link to={`${SitesRoutesPaths.Sites}/${identity}`}>
+                                                {linkedSiteName}
+                                            </Link>
+                                        </Flex>
+                                    </ListItem>
                                 ))}
                             </List>
                         )) || <EmptyData />}
