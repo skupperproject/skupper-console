@@ -32,5 +32,4 @@ export const ProcessesColumns = [
     { name: FlowPairsColumnsNames.ImageName, prop: 'imageName' },
     { name: FlowPairsColumnsNames.Bytes, prop: 'bytes' },
     { name: FlowPairsColumnsNames.ByteRate, prop: 'byteRate' },
-    { name: FlowPairsColumnsNames.MaxTTFB, prop: 'maxTTFB' },
 ];

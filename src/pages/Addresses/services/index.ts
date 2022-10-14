@@ -121,7 +121,6 @@ export const AddressesController = {
                     imageName: process.imageName,
                     bytes: process.octetsSent,
                     byteRate: process.octetSentRate,
-                    maxTTFB: 0,
                 };
             }),
         );

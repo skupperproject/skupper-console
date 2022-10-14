@@ -1,7 +1,5 @@
 import React, { FC, useState } from 'react';
 
-import { Tooltip } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import {
     TableComposable,
     TableText,
@@ -15,16 +13,11 @@ import {
 import { Link } from 'react-router-dom';
 
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { ProcessesColumns } from '../Addresses.constants';
-import {
-    FlowPairsColumnsNames,
-    ProcessesColumnsNames,
-    AddressesDescriptions,
-} from '../Addresses.enum';
+import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
 import { ProcessesTableProps, ProcessRow } from '../services/services.interfaces';
 
 import './FlowPairs.css';
@@ -83,12 +76,6 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                     <Th sort={getSortParams(6)} className="align-th-right">
                         {FlowPairsColumnsNames.Bytes}
                     </Th>
-                    <Th sort={getSortParams(7)} className="align-th-right">
-                        {FlowPairsColumnsNames.MaxTTFB}
-                        <Tooltip position="right" content={AddressesDescriptions.TTFBDesc}>
-                            <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-                        </Tooltip>
-                    </Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -103,7 +90,6 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                             siteId,
                             siteName,
                             processName,
-                            maxTTFB,
                             imageName,
                         }) => (
                             <Tr key={id}>
@@ -125,9 +111,6 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
                                 </Td>
                                 <Td className="align-td-right">
                                     <b>{formatBytes(bytes, 3)}</b>
-                                </Td>
-                                <Td className="align-td-right">
-                                    <b> {formatTime(maxTTFB)}</b>
                                 </Td>
                             </Tr>
                         ),

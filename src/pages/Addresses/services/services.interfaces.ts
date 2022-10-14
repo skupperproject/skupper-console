@@ -14,7 +14,6 @@ export interface ProcessRow {
     host: string;
     port: string;
     imageName: string;
-    maxTTFB: number;
 }
 
 export interface ProcessesTableProps {

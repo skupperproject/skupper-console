@@ -38,7 +38,6 @@ export enum FlowPairsColumnsNames {
     ByteRate = 'Byte Rate',
     Host = 'Host',
     Port = 'Port',
-    MaxTTFB = ' max TTFB',
     StartTime = 'Created at',
     Protocol = 'Protocol',
     ImageName = 'Image',
