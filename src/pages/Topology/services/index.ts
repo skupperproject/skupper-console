@@ -1,16 +1,16 @@
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
-import {
-    DeploymentLinkTopology,
-    ProcessGroupResponse,
-    ProcessResponse,
-    SiteResponse,
-} from 'API/REST.interfaces';
+import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 
 import { colors } from '../Topology.constant';
 import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
-import { ProcessesMetrics, ProcessGroupMetrics, SitesMetrics } from './services.interfaces';
+import {
+    LinkTopology,
+    ProcessesMetrics,
+    ProcessGroupMetrics,
+    SitesMetrics,
+} from './services.interfaces';
 
 export const TopologyController = {
     // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
@@ -32,7 +32,7 @@ export const TopologyController = {
         return sitesConnected;
     },
 
-    getProcessesLinks: async (): Promise<DeploymentLinkTopology[]> => {
+    getProcessesLinks: async (): Promise<LinkTopology[]> => {
         const links = await RESTApi.fetchFlowAggregatesProcesses();
 
         const processesLinks = links.map(({ identity, sourceId, destinationId }) => ({
@@ -44,7 +44,7 @@ export const TopologyController = {
         return processesLinks;
     },
 
-    getProcessGroupsLinks: async (): Promise<DeploymentLinkTopology[]> => {
+    getProcessGroupsLinks: async (): Promise<LinkTopology[]> => {
         const links = await RESTApi.fetchFlowAggregatesProcessgroups();
 
         const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
@@ -149,8 +149,8 @@ export const TopologyController = {
         };
     },
 
-    getSiteNodes: (sites: SiteResponse[]): TopologyNode[] =>
-        sites
+    getNodesFromEntities: (entities: SiteResponse[] | ProcessGroupResponse[]): TopologyNode[] =>
+        entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
             .map((node, index) => {
                 const positions = localStorage.getItem(node.identity);
@@ -164,14 +164,46 @@ export const TopologyController = {
                     y: fy || 0,
                     fx,
                     fy,
-                    type: 'site',
                     groupName: node.name,
                     group: index,
-                    color: getColor(index),
+                    color: getColor(node.name.startsWith('skupper-') ? 16 : index),
                 };
             }),
 
-    getSiteEdges: (sites: SiteExtended[]): TopologyEdges[] =>
+    getNodesFromProcesses: (
+        processes: ProcessResponse[],
+        siteNodes: TopologyNode[],
+    ): TopologyNode[] =>
+        processes
+            ?.map(({ name, identity, parent }) => {
+                const site = siteNodes?.find(({ id }) => id === parent);
+                const groupIndex = site?.group || 0;
+
+                const positions = localStorage.getItem(identity);
+                const fx = positions ? JSON.parse(positions).fx : null;
+                const fy = positions ? JSON.parse(positions).fy : null;
+
+                return {
+                    id: identity,
+                    name,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
+                    groupName: site?.name || '',
+                    group: groupIndex,
+                    color: getColor(name.startsWith('skupper-') ? 16 : groupIndex),
+                };
+            })
+            .sort((a, b) => a.group - b.group),
+
+    getEdgesFromLinks: (links: LinkTopology[]): TopologyEdges[] =>
+        links?.map(({ source, target }) => ({
+            source,
+            target,
+        })),
+
+    getEdgesFromSitesConnected: (sites: SiteExtended[]): TopologyEdges[] =>
         sites?.flatMap(({ identity: sourceId, connected }) =>
             connected.flatMap((targetId) => [
                 {
@@ -181,65 +213,6 @@ export const TopologyController = {
                 },
             ]),
         ),
-
-    getProcessGroupNodes: (processGroups: ProcessGroupResponse[]): TopologyNode[] =>
-        processGroups
-            ?.sort((a, b) => a.identity.localeCompare(b.identity))
-            .map((node, index) => {
-                const positions = localStorage.getItem(node.identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
-
-                return {
-                    id: node.identity,
-                    name: node.name,
-                    x: fx || 0,
-                    y: fy || 0,
-                    fx,
-                    fy,
-                    type: 'processgroups',
-                    groupName: node.name,
-                    group: index,
-                    color: getColor(index),
-                };
-            }),
-
-    getProcessGroupNodesEdges: (deploymentsLinks: DeploymentLinkTopology[]): TopologyEdges[] =>
-        deploymentsLinks?.flatMap(({ source, target }) => ({
-            source,
-            target,
-        })),
-
-    getProcessNodes: (deployments: ProcessResponse[], siteNodes: TopologyNode[]): TopologyNode[] =>
-        deployments
-            ?.map((node) => {
-                const positions = localStorage.getItem(node.identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
-
-                const site = siteNodes?.find(({ id }) => id === node.parent);
-                const groupIndex = site?.group || 0;
-
-                return {
-                    id: node.identity,
-                    name: node.name,
-                    x: fx || 0,
-                    y: fy || 0,
-                    fx,
-                    fy,
-                    type: 'process',
-                    groupName: site?.name || '',
-                    group: groupIndex,
-                    color: getColor(groupIndex),
-                };
-            })
-            .sort((a, b) => a.group - b.group),
-
-    getProcessEdge: (deploymentsLinks: DeploymentLinkTopology[]): TopologyEdges[] =>
-        deploymentsLinks?.flatMap(({ source, target }) => ({
-            source,
-            target,
-        })),
 };
 
 const getColor = (index: number) => colors[index % colors.length];

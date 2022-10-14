@@ -60,7 +60,7 @@ const TopologyProcessGroups = function () {
     const updateTopologyData = useCallback(async () => {
         if (processGroups && processGroupsLinks) {
             const siteXML = await xml(serviceSVG);
-            const processGroupsNodes = TopologyController.getProcessGroupNodes(processGroups).map(
+            const processGroupsNodes = TopologyController.getNodesFromEntities(processGroups).map(
                 (processGroup) => ({
                     ...processGroup,
                     img: siteXML,
@@ -68,7 +68,7 @@ const TopologyProcessGroups = function () {
             );
 
             setNodes(processGroupsNodes);
-            setLinks(TopologyController.getProcessGroupNodesEdges(processGroupsLinks));
+            setLinks(TopologyController.getEdgesFromLinks(processGroupsLinks));
         }
     }, [processGroups, processGroupsLinks]);
 

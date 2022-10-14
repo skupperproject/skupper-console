@@ -2,112 +2,81 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
-export interface ServiceConnection {
-    id: string;
-    client: string;
-    start_time: number;
-    last_out: number;
-    last_in: number;
-    bytes_in: number;
-    bytes_out: number;
-    latency_max: number;
-    details?: Record<string, string>;
-    requests?: number;
-}
-export interface DeploymentLinkTopology {
-    key: string;
-    source: string;
-    target: string;
+export interface HTTPError extends AxiosError {
+    httpStatus?: string;
 }
 
-export interface SiteResponse {
+interface BaseResponse {
     identity: string;
     recType: string;
-    name: string;
-    nameSpace: string;
     startTime: number;
 }
 
-export interface ProcessGroupResponse {
-    identity: string;
-    recType: string;
+interface EntityBaseResponse extends BaseResponse {
     name: string;
+}
+
+interface EntityMetricsResponse {
     octetsSent: number;
     octetSentRate: number;
     octetsReceived: number;
     octetReceivedRate: number;
-    startTime: number;
 }
 
-export interface LinkResponse {
-    identity: string;
+export interface SiteResponse extends EntityBaseResponse, EntityMetricsResponse {
+    nameSpace: string;
+}
+
+export type ProcessGroupResponse = EntityBaseResponse & EntityMetricsResponse;
+
+export interface ProcessResponse extends EntityBaseResponse, EntityMetricsResponse {
     parent: string;
-    recType: string;
-    name: string;
+    groupIdentity: string;
+    imageName: string;
+    sourceHost: string;
+    hostName: string;
+    endTime?: number;
+}
+export interface LinkResponse extends EntityBaseResponse {
+    parent: string;
     mode: string;
     direction: 'outgoing' | 'incoming';
     linkCost: number;
-    startTime: number;
 }
 
-export interface RouterResponse {
-    identity: string;
+export interface RouterResponse extends EntityBaseResponse {
     parent: string;
-    recType: string;
-    name: string;
     namespace: string;
     hostname: string;
     imageName: string;
     imageVersion: string;
     buildVersion: string;
-    startTime: number;
 }
 
-// Connector and Listener
-export interface DeviceResponse {
-    identity: string;
+export interface DeviceResponse extends EntityBaseResponse {
     parent: string;
-    recType: string;
     address: string;
     protocol: string;
     destHost: string;
     destPort: string;
     flowRateL4: number;
     flowCountL4: number;
-    startTime: number;
-}
-export interface ProcessResponse {
-    identity: string;
-    parent: string;
-    groupIdentity: string;
-    recType: string;
-    name: string;
-    imageName: string;
-    sourceHost: string;
-    hostName: string;
-    octetsSent: number;
-    octetSentRate: number;
-    octetsReceived: number;
-    octetReceivedRate: number;
-    startTime: number;
-    endTime: number;
 }
 
-export interface HostResponse {
-    identity: string;
+export interface HostResponse extends EntityBaseResponse {
     parent: string;
-    recType: string;
-    name: string;
     provider: string;
-    startTime: number;
 }
 
-// FLOWS
+export interface AddressesResponse extends EntityBaseResponse {
+    listenerCount: number;
+    connectorCount: number;
+    totalFlows: number;
+    currentFlows: number;
+}
 
-export interface FlowResponse {
-    identity: string;
+export interface FlowResponse extends BaseResponse {
     parent: string;
-    recType: string;
     octets: number;
     octetRate: number;
     octetsUnacked: number;
@@ -118,45 +87,23 @@ export interface FlowResponse {
     process: string;
     trace?: string;
     counterFlow?: string;
-    startTime: number;
     endTime?: number;
 }
 
-export interface FlowPairResponse {
-    identity: string;
-    recType: string;
+export interface FlowPairResponse extends BaseResponse {
     sourceSiteId: string;
     destinationSiteId: string;
     forwardFlow: FlowResponse;
     counterFlow: FlowResponse;
 }
-
-export interface AddressesResponse {
-    identity: string;
-    recType: string;
-    name: string;
-    listenerCount: number;
-    connectorCount: number;
-    totalFlows: number;
-    currentFlows: number;
-    startTime: number;
-}
-
-export interface HTTPError extends AxiosError {
-    httpStatus?: string;
-}
-
-export interface FlowAggregatesMapResponse {
-    identity: string;
+export interface FlowAggregatesMapResponse extends BaseResponse {
     rectType: 'FLOWAGGREGATE';
     pairType: 'PROCESS' | 'SITE' | 'PROCESS_GROUP';
     sourceId: string;
     destinationId: string;
-    startTime: number;
 }
 
-export interface FlowAggregatesResponse {
-    identity: string;
+export interface FlowAggregatesResponse extends BaseResponse {
     rectType: 'FLOWAGGREGATE';
     pairType: 'PROCESS' | 'SITE';
     recordCount: number;
@@ -169,5 +116,4 @@ export interface FlowAggregatesResponse {
     destinationOctets: number;
     destinationMinLatency: number;
     destinationAverageLatency: number;
-    startTime: number;
 }

@@ -76,17 +76,18 @@ const TopologyProcesses = function () {
     const updateTopologyData = useCallback(async () => {
         if (sites && processes && processesLinks) {
             const serviceXML = await xml(serviceSVG);
-            const nodesSites = TopologyController.getSiteNodes(sites);
+            const nodesSites = TopologyController.getNodesFromEntities(sites);
 
-            const processesNodes = TopologyController.getProcessNodes(processes, nodesSites).map(
-                (site) => ({
-                    ...site,
-                    img: serviceXML,
-                }),
-            );
+            const processesNodes = TopologyController.getNodesFromProcesses(
+                processes,
+                nodesSites,
+            ).map((site) => ({
+                ...site,
+                img: serviceXML,
+            }));
 
             setNodes(processesNodes);
-            setLinks(TopologyController.getProcessEdge(processesLinks));
+            setLinks(TopologyController.getEdgesFromLinks(processesLinks));
         }
     }, [sites, processes, processesLinks]);
 
@@ -112,7 +113,7 @@ const TopologyProcesses = function () {
                                 component={TextVariants.small}
                             >{`${Labels.LegendGroupsItems}:`}</Text>
                         </TextContent>
-                        {TopologyController.getSiteNodes(sites || []).map((node) => (
+                        {TopologyController.getNodesFromEntities(sites || []).map((node) => (
                             <Flex key={node.id}>
                                 <div
                                     className="pf-u-mr-xs"

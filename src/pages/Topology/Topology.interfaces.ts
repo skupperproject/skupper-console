@@ -8,7 +8,6 @@ export interface TopologyNode {
     color: string;
     groupName: string;
     group: number;
-    type: string;
     img?: XMLDocument;
     fx: number | null;
     fy: number | null;

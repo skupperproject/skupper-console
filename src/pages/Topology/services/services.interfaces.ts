@@ -19,3 +19,9 @@ export interface ProcessesMetrics extends ProcessResponse {
     tcpConnectionsIn: FlowAggregatesResponse[];
     tcpConnectionsOut: FlowAggregatesResponse[];
 }
+
+export interface LinkTopology {
+    key: string;
+    source: string;
+    target: string;
+}

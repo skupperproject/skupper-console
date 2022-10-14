@@ -51,13 +51,13 @@ const TopologySite = function () {
     const updateTopologyData = useCallback(async () => {
         if (sites) {
             const siteXML = await xml(siteSVG);
-            const siteNodes = TopologyController.getSiteNodes(sites).map((site) => ({
+            const siteNodes = TopologyController.getNodesFromEntities(sites).map((site) => ({
                 ...site,
                 img: siteXML,
             }));
 
             setNodes(siteNodes);
-            setLinks(TopologyController.getSiteEdges(sites));
+            setLinks(TopologyController.getEdgesFromSitesConnected(sites));
         }
     }, [sites]);
 
