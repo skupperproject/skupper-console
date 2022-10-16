@@ -1,4 +1,4 @@
-export interface SKTable<T> {
+export interface SKTable<T extends { identity: string }> {
     columns: {
         name: string;
         prop: keyof T;

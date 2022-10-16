@@ -21,7 +21,7 @@ const TopologySite = function () {
 
     const [nodes, setNodes] = useState<TopologyNode[]>([]);
     const [links, setLinks] = useState<TopologyEdges[]>([]);
-    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
+    const [nodeIdSelected, setNodeIdSelected] = useState<string | null>(null);
 
     const { data: sites, isLoading: isLoading } = useQuery(
         [QueriesTopology.GetSitesWithLinksCreated],
@@ -42,8 +42,8 @@ const TopologySite = function () {
     }
 
     function handleGetSelectedNode(id: string) {
-        if (id !== nodeSelected) {
-            setNodeSelected(id);
+        if (id !== nodeIdSelected) {
+            setNodeIdSelected(id);
         }
     }
 
@@ -71,7 +71,7 @@ const TopologySite = function () {
 
     return (
         <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
-            {nodeSelected && <TopologySiteDetails id={nodeSelected} />}
+            {nodeIdSelected && <TopologySiteDetails id={nodeIdSelected} />}
         </TopologyPanel>
     );
 };

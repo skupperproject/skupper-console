@@ -16,5 +16,6 @@ export enum Labels {
 }
 
 export enum EVENTS {
-    IsTopologyLoaded = 'is topology loaded',
+    IsTopologyLoaded = 'graph:loaded',
+    NodeClick = 'node:click',
 }

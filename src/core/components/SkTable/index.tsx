@@ -25,8 +25,9 @@ import {
 import { SKTable } from './Sktable.interfaces';
 
 const DEFAULT_PAGE_SIZE = 20;
+const FIRST_PAGE_INDEX = 0;
 
-const SkTable = function <T>({
+const SkTable = function <T extends { identity: string }>({
     title,
     titleDescription,
     columns,
@@ -36,7 +37,7 @@ const SkTable = function <T>({
 }: SKTable<T>) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentPageIndex, setCurrentPageIndex] = useState<number>(FIRST_PAGE_INDEX);
     const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
 
     function getSortParams(columnIndex: number): ThProps['sort'] {
@@ -57,7 +58,7 @@ const SkTable = function <T>({
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
         perPage: number,
     ) {
-        setCurrentPage(perPage);
+        setCurrentPageIndex(perPage);
     }
 
     function handlePerPageSelect(
@@ -65,7 +66,7 @@ const SkTable = function <T>({
         perPageSelect: number,
     ) {
         setPageSize(perPageSelect);
-        setCurrentPage(1);
+        setCurrentPageIndex(FIRST_PAGE_INDEX);
     }
 
     const rowsSorted = rows.sort((a, b) => {
@@ -91,15 +92,15 @@ const SkTable = function <T>({
 
     const skRows = rowsSorted
         .map((row) => ({
-            identity: row['identity' as keyof T],
+            identity: row.identity,
             columns: columns.map((column, index) => ({
                 ...column,
                 data: row,
                 value: row[column.prop as keyof T],
-                identity: `${row['identity' as keyof T]}${index}`,
+                identity: `${row.identity}${index}`,
             })),
         }))
-        .slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize);
+        .slice(currentPageIndex * pageSize, currentPageIndex * pageSize + pageSize);
 
     return (
         <Card>
@@ -131,7 +132,7 @@ const SkTable = function <T>({
                 </Thead>
                 <Tbody>
                     {skRows.map((row) => (
-                        <Tr key={row.identity as string}>
+                        <Tr key={row.identity}>
                             {row.columns.map(({ data, value, component, identity }) => {
                                 const Component = components && component && components[component];
 
@@ -157,7 +158,7 @@ const SkTable = function <T>({
                     perPageComponent="button"
                     itemCount={rowsCount}
                     perPage={pageSize}
-                    page={currentPage}
+                    page={currentPageIndex + 1}
                     onSetPage={handleSetPage}
                     onPerPageSelect={handlePerPageSelect}
                 />

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
     Drawer,
@@ -17,6 +17,7 @@ import {
     TopologyView,
 } from '@patternfly/react-topology';
 
+import { EVENTS } from '../Topology.enum';
 import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import TopologySVG from './TopologySVG';
 
@@ -29,16 +30,12 @@ const TopologyPanel: FC<{
     const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologySVG>();
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
 
-    const selectedRef = useRef<string | null>(null);
-
     const handleExpandDetails = useCallback(
-        (id: string) => {
-            selectedRef.current = id;
-
-            setIsExpandedDetails(!!selectedRef.current);
+        ({ data: { id } }: { data: TopologyNode }) => {
+            setIsExpandedDetails(!!id);
 
             if (onGetSelectedNode) {
-                onGetSelectedNode(selectedRef.current);
+                onGetSelectedNode(id);
             }
         },
         [onGetSelectedNode],
@@ -46,7 +43,6 @@ const TopologyPanel: FC<{
 
     function handleCloseDetails() {
         setIsExpandedDetails(false);
-        selectedRef.current = null;
     }
 
     // Create Graph
@@ -61,8 +57,9 @@ const TopologyPanel: FC<{
                     links,
                     $node.getBoundingClientRect().width,
                     $node.getBoundingClientRect().height,
-                    handleExpandDetails,
                 );
+
+                topologyGraph.EventEmitter.on(EVENTS.NodeClick, handleExpandDetails);
                 topologyGraph.updateTopology(nodes, links);
 
                 setTopologyGraphInstance(topologyGraph);
@@ -73,7 +70,7 @@ const TopologyPanel: FC<{
 
     // Update topology
     useEffect(() => {
-        if (topologyGraphInstance && !topologyGraphInstance?.isDragging()) {
+        if (topologyGraphInstance && links && nodes) {
             topologyGraphInstance.updateTopology(nodes, links);
         }
     }, [links, nodes, topologyGraphInstance]);
@@ -89,20 +86,18 @@ const TopologyPanel: FC<{
 
     const PanelContent = (
         <DrawerPanelContent>
-            {selectedRef.current && (
-                <DrawerHead>
-                    {children}
-                    <DrawerActions>
-                        <DrawerCloseButton onClick={handleCloseDetails} />
-                    </DrawerActions>
-                </DrawerHead>
-            )}
+            <DrawerHead>
+                {children}
+                <DrawerActions>
+                    <DrawerCloseButton onClick={handleCloseDetails} />
+                </DrawerActions>
+            </DrawerHead>
         </DrawerPanelContent>
     );
 
     return (
         <Drawer isExpanded={areDetailsExpanded} position="right">
-            <DrawerContent panelContent={PanelContent} style={{ overflow: 'hidden' }}>
+            <DrawerContent panelContent={PanelContent}>
                 <DrawerPanelBody>
                     <TopologyView
                         controlBar={<TopologyControlBar controlButtons={ControlButtons} />}

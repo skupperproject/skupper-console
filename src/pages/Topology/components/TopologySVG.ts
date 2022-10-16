@@ -35,7 +35,6 @@ export default class TopologySVG {
     links: TopologyEdges[] | TopologyEdgesModifiedByForce[];
     width: number;
     height: number;
-    onClickNode: Function;
     force: Simulation<TopologyNode, TopologyEdgesModifiedByForce>;
     svgContainer: Selection<SVGSVGElement, TopologyNode, null, undefined>;
     svgContainerGroupNodes: Selection<SVGGElement, TopologyNode, null, undefined>;
@@ -52,7 +51,6 @@ export default class TopologySVG {
         edges: TopologyEdges[] | TopologyEdgesModifiedByForce[],
         boxWidth: number,
         boxHeight: number,
-        onclick: Function,
     ) {
         this.$root = $node;
         this.nodes = nodes;
@@ -60,7 +58,6 @@ export default class TopologySVG {
         this.selectedNode = null;
         this.width = boxWidth;
         this.height = boxHeight;
-        this.onClickNode = onclick;
 
         this.EventEmitter = new EventEmitter();
         this.isDraggingNode = false;
@@ -482,7 +479,8 @@ export default class TopologySVG {
                 this.redrawEdges();
             })
             .on('dblclick', (e) => e.stopPropagation()) // deactivates the zoom triggered by d3-zoom
-            .on('click', (_, { id }) => {
+            .on('click', (_, node) => {
+                const id = node.id;
                 if (this.selectedNode === id) {
                     this.selectedNode = null;
                 } else {
@@ -490,7 +488,13 @@ export default class TopologySVG {
                 }
 
                 this.redrawNodesOpacity();
-                this.onClickNode && this.onClickNode(this.selectedNode);
+                this.EventEmitter.emit(EVENTS.NodeClick, [
+                    {
+                        type: 'click',
+                        name: EVENTS.NodeClick,
+                        data: { ...node, id: this.selectedNode },
+                    },
+                ]);
 
                 this.svgContainerGroupNodes
                     .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
@@ -536,20 +540,24 @@ export default class TopologySVG {
         nodes: TopologyNode[],
         links: TopologyEdges[] | TopologyEdgesModifiedByForce[],
     ) => {
-        this.svgContainerGroupNodes.selectAll('*').remove();
+        if (!this.isDragging()) {
+            this.svgContainerGroupNodes.selectAll('*').remove();
 
-        this.force.nodes(nodes).on('tick', this.ticked);
+            this.force.nodes(nodes).on('tick', this.ticked);
 
-        this.force
-            .force<ForceLink<TopologyNode, TopologyEdges | TopologyEdgesModifiedByForce>>('link')
-            ?.links(links);
+            this.force
+                .force<ForceLink<TopologyNode, TopologyEdges | TopologyEdgesModifiedByForce>>(
+                    'link',
+                )
+                ?.links(links);
 
-        this.force.restart();
-        this.links = links as TopologyEdgesModifiedByForce[];
-        this.nodes = nodes;
+            this.force.restart();
+            this.links = links as TopologyEdgesModifiedByForce[];
+            this.nodes = nodes;
 
-        this.updateEdges();
-        this.redrawNodes();
+            this.updateEdges();
+            this.redrawNodes();
+        }
     };
 
     // exposed events
@@ -576,10 +584,6 @@ export default class TopologySVG {
 
     isDragging() {
         return this.isDraggingNode;
-    }
-
-    onIsTopologyLoaded(callback: Function) {
-        this.EventEmitter.once(EVENTS.IsTopologyLoaded, () => callback(true));
     }
 }
 

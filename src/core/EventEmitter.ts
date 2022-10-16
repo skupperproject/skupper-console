@@ -24,10 +24,10 @@ class EventEmitter {
         return this.on(evt, callback, true);
     }
 
-    emit(evt: string) {
-        const _this = this;
+    emit(evt: string, ...params: unknown[]) {
+        const _this = this as EventEmitter;
 
-        const args: any[] = [];
+        const args = params || [];
         for (let _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
@@ -50,7 +50,7 @@ class EventEmitter {
                     length--;
                     i--;
                 }
-                callback.apply(_this, args);
+                callback.apply(_this, ...args);
             }
         };
         doEmit(events);
