@@ -14,8 +14,3 @@ export enum Labels {
     Topology = 'Network',
     LegendGroupsItems = 'Sites',
 }
-
-export enum EVENTS {
-    IsTopologyLoaded = 'graph:loaded',
-    NodeClick = 'node:click',
-}

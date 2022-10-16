@@ -1,10 +1,10 @@
+import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 
 import { colors } from '../Topology.constant';
-import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import {
     LinkTopology,
     ProcessesMetrics,
@@ -149,7 +149,7 @@ export const TopologyController = {
         };
     },
 
-    getNodesFromEntities: (entities: SiteResponse[] | ProcessGroupResponse[]): TopologyNode[] =>
+    getNodesFromEntities: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
         entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
             .map((node, index) => {
@@ -170,10 +170,7 @@ export const TopologyController = {
                 };
             }),
 
-    getNodesFromProcesses: (
-        processes: ProcessResponse[],
-        siteNodes: TopologyNode[],
-    ): TopologyNode[] =>
+    getNodesFromProcesses: (processes: ProcessResponse[], siteNodes: GraphNode[]): GraphNode[] =>
         processes
             ?.map(({ name, identity, parent }) => {
                 const site = siteNodes?.find(({ id }) => id === parent);
@@ -197,13 +194,13 @@ export const TopologyController = {
             })
             .sort((a, b) => a.group - b.group),
 
-    getEdgesFromLinks: (links: LinkTopology[]): TopologyEdges[] =>
+    getEdgesFromLinks: (links: LinkTopology[]): GraphEdge[] =>
         links?.map(({ source, target }) => ({
             source,
             target,
         })),
 
-    getEdgesFromSitesConnected: (sites: SiteExtended[]): TopologyEdges[] =>
+    getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge[] =>
         sites?.flatMap(({ identity: sourceId, connected }) =>
             connected.flatMap((targetId) => [
                 {

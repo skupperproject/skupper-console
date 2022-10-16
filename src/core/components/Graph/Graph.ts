@@ -21,25 +21,25 @@ import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
 import EventEmitter from '@core/EventEmitter';
 
-import { colors } from '../Topology.constant';
-import { EVENTS } from '../Topology.enum';
-import { TopologyNode, TopologyEdges, TopologyEdgesModifiedByForce } from '../Topology.interfaces';
+import { colors } from '../../../pages/Topology/Topology.constant';
+import { GraphEvents } from './Graph.enum';
+import { GraphNode, GraphEdge, GraphEdgeModifiedByForce } from './Graph.interfaces';
 
 const ARROW_SIZE = 10;
 const SERVICE_SIZE = 35;
 const FONT_SIZE_DEFAULT = 12;
 const OPACITY_NO_SELECTED_ITEM = 0.2;
-export default class TopologySVG {
+export default class Graph {
     $root: HTMLElement;
-    nodes: TopologyNode[];
-    links: TopologyEdges[] | TopologyEdgesModifiedByForce[];
+    nodes: GraphNode[];
+    links: GraphEdge[] | GraphEdgeModifiedByForce[];
     width: number;
     height: number;
-    force: Simulation<TopologyNode, TopologyEdgesModifiedByForce>;
-    svgContainer: Selection<SVGSVGElement, TopologyNode, null, undefined>;
-    svgContainerGroupNodes: Selection<SVGGElement, TopologyNode, null, undefined>;
+    force: Simulation<GraphNode, GraphEdgeModifiedByForce>;
+    svgContainer: Selection<SVGSVGElement, GraphNode, null, undefined>;
+    svgContainerGroupNodes: Selection<SVGGElement, GraphNode, null, undefined>;
     isDraggingNode: boolean;
-    handleZoom: ZoomBehavior<SVGSVGElement, TopologyNode>;
+    handleZoom: ZoomBehavior<SVGSVGElement, GraphNode>;
     valueline: Line<[number, number]>;
     groupIds: string[];
     selectedNode: null | string;
@@ -47,8 +47,8 @@ export default class TopologySVG {
 
     constructor(
         $node: HTMLElement,
-        nodes: TopologyNode[],
-        edges: TopologyEdges[] | TopologyEdgesModifiedByForce[],
+        nodes: GraphNode[],
+        edges: GraphEdge[] | GraphEdgeModifiedByForce[],
         boxWidth: number,
         boxHeight: number,
     ) {
@@ -79,7 +79,7 @@ export default class TopologySVG {
             .curve(curveCatmullRomClosed)),
             (this.groupIds = []);
 
-        this.handleZoom = zoom<SVGSVGElement, TopologyNode>()
+        this.handleZoom = zoom<SVGSVGElement, GraphNode>()
             .scaleExtent([0.5, 4])
             .on('zoom', ({ transform }) => {
                 this.svgContainerGroupNodes.attr('transform', transform);
@@ -89,7 +89,7 @@ export default class TopologySVG {
     }
 
     private createSvgContainer() {
-        return select<HTMLElement, TopologyNode>(this.$root)
+        return select<HTMLElement, GraphNode>(this.$root)
             .append('svg')
             .attr('viewBox', `0 0 ${this.width} ${this.height}`);
     }
@@ -103,7 +103,7 @@ export default class TopologySVG {
         });
     };
 
-    private dragStarted = ({ active }: { active: boolean }, node: TopologyNode) => {
+    private dragStarted = ({ active }: { active: boolean }, node: GraphNode) => {
         if (!active) {
             this.force.alphaTarget(0.3).restart();
         }
@@ -115,12 +115,12 @@ export default class TopologySVG {
         this.isDraggingNode = true;
     };
 
-    private dragged = ({ x, y }: { x: number; y: number }, node: TopologyNode) => {
+    private dragged = ({ x, y }: { x: number; y: number }, node: GraphNode) => {
         node.fx = x;
         node.fy = y;
     };
 
-    private dragEnded = ({ active }: { active: boolean }, node: TopologyNode) => {
+    private dragEnded = ({ active }: { active: boolean }, node: GraphNode) => {
         if (!active) {
             this.force.alphaTarget(0);
             this.force.stop();
@@ -196,7 +196,7 @@ export default class TopologySVG {
             return pos;
         }
 
-        this.svgContainerGroupNodes.selectAll<SVGSVGElement, TopologyNode>('.node').attr(
+        this.svgContainerGroupNodes.selectAll<SVGSVGElement, GraphNode>('.node').attr(
             'transform',
             ({ x, y }) => `translate(
                     ${validatePosition(x, maxSvgPosX, minSvgPosX)},
@@ -205,7 +205,7 @@ export default class TopologySVG {
         );
 
         this.svgContainerGroupNodes
-            .selectAll<SVGSVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
+            .selectAll<SVGSVGElement, GraphEdgeModifiedByForce>('.serviceLink')
             .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
             .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
             .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
@@ -216,7 +216,7 @@ export default class TopologySVG {
 
     private polygonGenerator = (groupId: string) => {
         const node_coords: [number, number][] = this.svgContainerGroupNodes
-            .selectAll<SVGSVGElement, TopologyNode>('.node')
+            .selectAll<SVGSVGElement, GraphNode>('.node')
             .filter(function ({ group }) {
                 return group === Number(groupId);
             })
@@ -256,7 +256,7 @@ export default class TopologySVG {
         });
     }
 
-    private initForce(nodes: TopologyNode[]) {
+    private initForce(nodes: GraphNode[]) {
         const domain = nodes.reduce((acc, node) => {
             acc[node.group] = true;
 
@@ -272,7 +272,7 @@ export default class TopologySVG {
         const xScale = scaleOrdinal().domain(domainValues).range(rangeValuesX);
         const yScale = scaleOrdinal().domain(domainValues).range(rangeValuesY);
 
-        return forceSimulation<TopologyNode, TopologyEdgesModifiedByForce>()
+        return forceSimulation<GraphNode, GraphEdgeModifiedByForce>()
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
@@ -281,7 +281,7 @@ export default class TopologySVG {
             .alphaMin(0.1)
             .force(
                 'x',
-                forceX<TopologyNode>()
+                forceX<GraphNode>()
                     .strength(1)
                     .x(function ({ group, fx }) {
                         if (fx) {
@@ -293,7 +293,7 @@ export default class TopologySVG {
             )
             .force(
                 'y',
-                forceY<TopologyNode>()
+                forceY<GraphNode>()
                     .strength(1)
                     .y(({ group, fy }) => {
                         if (fy) {
@@ -305,7 +305,7 @@ export default class TopologySVG {
             )
             .force(
                 'link',
-                forceLink<TopologyNode, TopologyEdgesModifiedByForce>()
+                forceLink<GraphNode, GraphEdgeModifiedByForce>()
                     .id(({ id }) => id)
                     .strength(({ source, target }) => {
                         if (source.group === target.group) {
@@ -325,12 +325,12 @@ export default class TopologySVG {
                     }
                 });
 
-                this.EventEmitter.emit(EVENTS.IsTopologyLoaded);
+                this.EventEmitter.emit(GraphEvents.IsTopologyLoaded);
             });
     }
 
     private updateEdges = () => {
-        const edges = this.links as TopologyEdgesModifiedByForce[];
+        const edges = this.links as GraphEdgeModifiedByForce[];
         // Pointer
         this.svgContainerGroupNodes
             .append('svg:defs')
@@ -361,7 +361,7 @@ export default class TopologySVG {
 
     private redrawEdges() {
         this.svgContainerGroupNodes
-            .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
+            .selectAll<SVGElement, GraphEdgeModifiedByForce>('.serviceLink')
             .style('stroke-width', '1px')
             .style('stroke-dasharray', ({ type, source, target }) =>
                 type === 'dashed' ||
@@ -447,7 +447,7 @@ export default class TopologySVG {
             .on('mouseover', (_, { id }) => {
                 if (!this.isDraggingNode && !this.selectedNode) {
                     this.svgContainerGroupNodes
-                        .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
+                        .selectAll<SVGElement, GraphEdgeModifiedByForce>('.serviceLink')
                         .each((svgLink) => {
                             const isLinkConnectedToTheNode =
                                 id === svgLink.source.id || id === svgLink.target.id;
@@ -488,16 +488,16 @@ export default class TopologySVG {
                 }
 
                 this.redrawNodesOpacity();
-                this.EventEmitter.emit(EVENTS.NodeClick, [
+                this.EventEmitter.emit(GraphEvents.NodeClick, [
                     {
                         type: 'click',
-                        name: EVENTS.NodeClick,
+                        name: GraphEvents.NodeClick,
                         data: { ...node, id: this.selectedNode },
                     },
                 ]);
 
                 this.svgContainerGroupNodes
-                    .selectAll<SVGElement, TopologyEdgesModifiedByForce>('.serviceLink')
+                    .selectAll<SVGElement, GraphEdgeModifiedByForce>('.serviceLink')
                     .each((svgLink) => {
                         const isLinkConnectedToTheNode =
                             id === svgLink.source.id || id === svgLink.target.id;
@@ -519,7 +519,7 @@ export default class TopologySVG {
             .text(({ name }) => name);
 
         enterSelection.call(
-            drag<SVGGElement, TopologyNode>()
+            drag<SVGGElement, GraphNode>()
                 .on('start', this.dragStarted)
                 .on('drag', this.dragged)
                 .on('end', this.dragEnded),
@@ -530,29 +530,24 @@ export default class TopologySVG {
 
     private redrawNodesOpacity() {
         this.svgContainerGroupNodes
-            .selectAll<SVGSVGElement, TopologyNode>('.node-img')
+            .selectAll<SVGSVGElement, GraphNode>('.node-img')
             .style('opacity', ({ id }) =>
                 !!this.selectedNode && id !== this.selectedNode ? OPACITY_NO_SELECTED_ITEM : '1',
             );
     }
 
-    updateTopology = (
-        nodes: TopologyNode[],
-        links: TopologyEdges[] | TopologyEdgesModifiedByForce[],
-    ) => {
+    updateTopology = (nodes: GraphNode[], links: GraphEdge[] | GraphEdgeModifiedByForce[]) => {
         if (!this.isDragging()) {
             this.svgContainerGroupNodes.selectAll('*').remove();
 
             this.force.nodes(nodes).on('tick', this.ticked);
 
             this.force
-                .force<ForceLink<TopologyNode, TopologyEdges | TopologyEdgesModifiedByForce>>(
-                    'link',
-                )
+                .force<ForceLink<GraphNode, GraphEdge | GraphEdgeModifiedByForce>>('link')
                 ?.links(links);
 
             this.force.restart();
-            this.links = links as TopologyEdgesModifiedByForce[];
+            this.links = links as GraphEdgeModifiedByForce[];
             this.nodes = nodes;
 
             this.updateEdges();

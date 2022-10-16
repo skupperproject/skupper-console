@@ -17,21 +17,22 @@ import {
     TopologyView,
 } from '@patternfly/react-topology';
 
-import { EVENTS } from '../Topology.enum';
-import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
-import TopologySVG from './TopologySVG';
+import { GraphEvents } from '@core/components/Graph/Graph.enum';
+import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+
+import Graph from '../../../core/components/Graph/Graph';
 
 const TopologyPanel: FC<{
-    nodes: TopologyNode[];
-    links: TopologyEdges[];
+    nodes: GraphNode[];
+    links: GraphEdge[];
     onGetSelectedNode?: Function;
     children: React.ReactNode;
 }> = function ({ nodes, links, onGetSelectedNode, children }) {
-    const [topologyGraphInstance, setTopologyGraphInstance] = useState<TopologySVG>();
+    const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
 
     const handleExpandDetails = useCallback(
-        ({ data: { id } }: { data: TopologyNode }) => {
+        ({ data: { id } }: { data: GraphNode }) => {
             setIsExpandedDetails(!!id);
 
             if (onGetSelectedNode) {
@@ -51,7 +52,7 @@ const TopologyPanel: FC<{
             if ($node && nodes.length && links.length && !topologyGraphInstance) {
                 $node.replaceChildren();
 
-                const topologyGraph = new TopologySVG(
+                const topologyGraph = new Graph(
                     $node,
                     nodes,
                     links,
@@ -59,7 +60,7 @@ const TopologyPanel: FC<{
                     $node.getBoundingClientRect().height,
                 );
 
-                topologyGraph.EventEmitter.on(EVENTS.NodeClick, handleExpandDetails);
+                topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleExpandDetails);
                 topologyGraph.updateTopology(nodes, links);
 
                 setTopologyGraphInstance(topologyGraph);

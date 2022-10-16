@@ -14,6 +14,7 @@ import { xml } from 'd3-fetch';
 import { useNavigate } from 'react-router-dom';
 
 import serviceSVG from '@assets/service.svg';
+import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import ProcessesController from '@pages/Processes/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -23,15 +24,14 @@ import { UPDATE_INTERVAL } from 'config';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { Labels } from '../Topology.enum';
-import { TopologyEdges, TopologyNode } from '../Topology.interfaces';
 import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
 
 const TopologyProcesses = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [nodes, setNodes] = useState<TopologyNode[]>([]);
-    const [links, setLinks] = useState<TopologyEdges[]>([]);
+    const [nodes, setNodes] = useState<GraphNode[]>([]);
+    const [links, setLinks] = useState<GraphEdge[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
