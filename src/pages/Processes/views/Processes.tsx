@@ -38,15 +38,24 @@ const Processes = function () {
     );
 
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
+        const route =
+            httpStatus && ErrorRoutesPaths.error[httpStatus]
+                ? ErrorRoutesPaths.error[httpStatus]
+                : ErrorRoutesPaths.ErrConnection;
 
-        navigate(route);
+        navigate(route, { state: { httpStatus } });
+
+        return;
     }
+
+    navigate(ErrorRoutesPaths.error[503], { state: { httpStatus: 503 } });
 
     if (isLoadingProcesses || isLoadingSites) {
         return <LoadingPage />;
+    }
+
+    if (!sites || !processes) {
+        return null;
     }
 
     const top10processesSentSorted = (processes as ProcessResponse[])
@@ -78,10 +87,6 @@ const Processes = function () {
     const bytesReceivedLabels = bytesReceived.map(({ x, y }) => ({
         name: `${x}: ${formatBytes(y)}`,
     }));
-
-    if (!sites || !processes) {
-        return null;
-    }
 
     return (
         <Grid hasGutter>

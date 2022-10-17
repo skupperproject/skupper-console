@@ -1,4 +1,4 @@
 export enum GraphEvents {
-    IsTopologyLoaded = 'graph:loaded',
+    IsGraphLoaded = 'graph:loaded',
     NodeClick = 'node:click',
 }

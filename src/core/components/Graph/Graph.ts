@@ -19,7 +19,7 @@ import { select, Selection } from 'd3-selection';
 import { curveCatmullRomClosed, Line, line } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
-import EventEmitter from '@core/EventEmitter';
+import EventEmitter from '@core/components/Graph/EventEmitter';
 
 import { colors } from '../../../pages/Topology/Topology.constant';
 import { GraphEvents } from './Graph.enum';
@@ -276,9 +276,8 @@ export default class Graph {
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
-            .alpha(0.3)
-            .alphaDecay(0.028)
-            .alphaMin(0.1)
+            .alpha(0.1)
+            .alphaMin(0.065)
             .force(
                 'x',
                 forceX<GraphNode>()
@@ -325,7 +324,7 @@ export default class Graph {
                     }
                 });
 
-                this.EventEmitter.emit(GraphEvents.IsTopologyLoaded);
+                this.EventEmitter.emit(GraphEvents.IsGraphLoaded);
             });
     }
 
