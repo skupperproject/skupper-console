@@ -40,17 +40,14 @@ export const getProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}`
 export const getProcessesByProcessGroupPATH = (id: string) =>
     `${PROCESS_GROUPS_PATH}${id}/processes`;
 
-// FLOW AGGREGATES
-const FLOW_AGGREGATES_PATH = `${API_URL}/flowaggregates/`;
-export const FLOW_AGGREGATES_SITE_PAIRS_PATH = `${FLOW_AGGREGATES_PATH}sitepairs`;
-export const FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH = `${FLOW_AGGREGATES_PATH}processgrouppairs`;
-export const FLOW_AGGREGATES_PROCESS_PAIRS_PATH = `${FLOW_AGGREGATES_PATH}processpairs`;
-
 // ADDRESSES
 export const ADDRESSES_PATH = `${API_URL}/addresses/`;
 export const getFlowsPairsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/flowpairs`;
 export const getProcessesByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/processes`;
 export const getConnectorsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/connectors`;
 
-// FLOWPAIRS
+// CONNECTIONS
 export const FLOWPAIRS_PATH = `${API_URL}/flowpairs/`;
+export const SITE_PAIRS_PATH = `${API_URL}/sitepairs/`;
+export const PROCESS_GROUP_PAIRS_PATH = `${API_URL}/processgrouppairs/`;
+export const PROCESS_PAIRS_PATH = `${API_URL}/processpairs/`;

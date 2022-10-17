@@ -14,15 +14,15 @@ import {
     getRoutersBySitePATH,
     getLinksBySitePATH,
     getHostsBySitePATH,
-    FLOW_AGGREGATES_PROCESS_PAIRS_PATH,
+    PROCESS_PAIRS_PATH,
     ROUTERS_PATH,
     PROCESSES_PATH,
-    FLOW_AGGREGATES_SITE_PAIRS_PATH,
+    SITE_PAIRS_PATH,
     HOSTS_PATH,
     PROCESS_GROUPS_PATH,
     getProcessesByProcessGroupPATH,
     getProcessGroupPATH,
-    FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH,
+    PROCESS_GROUP_PAIRS_PATH,
     getListenerPATH,
     geProcessPATH,
     getConnectorsByAddressPATH,
@@ -205,39 +205,37 @@ export const RESTApi = {
 
     // AGGREGRATE  APIs
     fetchAggregatesSites: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_SITE_PAIRS_PATH);
+        const { data } = await fetchWithTimeout(SITE_PAIRS_PATH);
 
         return data;
     },
 
     fetchAggregatesSite: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_SITE_PAIRS_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(`${SITE_PAIRS_PATH}/${id}`);
 
         return data;
     },
 
     fetchAggregatesProcessgroups: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH);
+        const { data } = await fetchWithTimeout(PROCESS_GROUP_PAIRS_PATH);
 
         return data;
     },
 
     fetchAggregatesProcessGroup: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(
-            `${FLOW_AGGREGATES_PROCESS_GROUP_PAIRS_PATH}/${id}`,
-        );
+        const { data } = await fetchWithTimeout(`${PROCESS_GROUP_PAIRS_PATH}/${id}`);
 
         return data;
     },
 
     fetchAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(FLOW_AGGREGATES_PROCESS_PAIRS_PATH);
+        const { data } = await fetchWithTimeout(PROCESS_PAIRS_PATH);
 
         return data;
     },
 
     fetchAggregatesProcess: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOW_AGGREGATES_PROCESS_PAIRS_PATH}/${id}`);
+        const { data } = await fetchWithTimeout(`${PROCESS_PAIRS_PATH}/${id}`);
 
         return data;
     },
