@@ -13,9 +13,9 @@ export enum AddressesDescriptions {
 }
 
 // ADDRESSES VIEW
-export enum Labels {
-    Addresses = 'Addresses',
-    AddressesDescription = 'Set of services that are exposed across the Virtual application network',
+export enum AddressesLabels {
+    Section = 'Addresses',
+    Description = 'Set of services that are exposed across the Virtual application network',
     Connections = 'Connections',
 }
 

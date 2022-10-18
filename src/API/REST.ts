@@ -31,7 +31,7 @@ import {
 } from './REST.constant';
 import {
     ProcessGroupResponse,
-    AddressesResponse,
+    AddressResponse,
     DeviceResponse,
     ProcessResponse,
     FlowPairResponse,
@@ -172,7 +172,7 @@ export const RESTApi = {
     },
 
     // ADDRESSES  APIs
-    fetchAddresses: async (): Promise<AddressesResponse[]> => {
+    fetchAddresses: async (): Promise<AddressResponse[]> => {
         const { data } = await fetchWithTimeout(ADDRESSES_PATH);
 
         return data;

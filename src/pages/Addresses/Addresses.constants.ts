@@ -1,8 +1,8 @@
-import { AddressesRoutesPaths, FlowPairsColumnsNames, Labels } from './Addresses.enum';
+import { AddressesRoutesPaths, FlowPairsColumnsNames, AddressesLabels } from './Addresses.enum';
 
 export const AddressesPaths = {
     path: AddressesRoutesPaths.Addresses,
-    name: Labels.Addresses,
+    name: AddressesLabels.Section,
 };
 
 // CONNECTIONS VIEW

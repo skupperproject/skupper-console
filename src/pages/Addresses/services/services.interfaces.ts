@@ -16,10 +16,7 @@ export interface ProcessRow {
     imageName: string;
 }
 
-export interface ProcessesTableProps {
-    processes: ProcessRow[];
-}
-// FLOWPAIR BASIC INFO
+// FLOW PAIR BASIC INFO
 export interface FlowPairBasic {
     id: string;
     siteId: string;

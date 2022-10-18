@@ -48,8 +48,6 @@ const Processes = function () {
         return;
     }
 
-    navigate(ErrorRoutesPaths.error[503], { state: { httpStatus: 503 } });
-
     if (isLoadingProcesses || isLoadingSites) {
         return <LoadingPage />;
     }

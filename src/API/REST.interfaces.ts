@@ -68,7 +68,7 @@ export interface HostResponse extends EntityBaseResponse {
     provider: string;
 }
 
-export interface AddressesResponse extends EntityBaseResponse {
+export interface AddressResponse extends EntityBaseResponse {
     listenerCount: number;
     connectorCount: number;
     totalFlows: number;

@@ -31,20 +31,20 @@ import {
     AddressesRoutesPaths,
 } from '../Addresses.enum';
 import FlowsPairsTable from '../components/FlowPairsTable';
-import ProcessesTable from '../components/ProcessesTable';
+import AddressProcessesTable from '../components/ProcessesTable';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
-    const { id: vanAddress } = useParams();
+    const { id: address } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
     const [vanAddressView, setVanAddressView] = useState<number>(0);
 
-    const vanAddressId = vanAddress?.split('@')[1];
-    const vanAddressName = vanAddress?.split('@')[0];
+    const vanAddressId = address?.split('@')[1];
+    const vanAddressName = address?.split('@')[0];
 
     const { data: connectionsPaginated, isLoading: isLoadingConnectionsPaginated } = useQuery(
         [QueriesAddresses.GetFlowPairsByAddress, vanAddressId, currentPage, visibleItems],
@@ -141,7 +141,7 @@ const FlowsPairs = function () {
                             eventKey={0}
                             title={<TabTitleText>{FlowPairDetailsLabels.Servers}</TabTitleText>}
                         >
-                            <ProcessesTable processes={processes} />
+                            <AddressProcessesTable processes={processes} />
                         </Tab>
                         <Tab
                             eventKey={1}

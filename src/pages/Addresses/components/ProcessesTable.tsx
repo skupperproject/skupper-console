@@ -18,11 +18,12 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { ProcessesColumns } from '../Addresses.constants';
 import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
-import { ProcessesTableProps, ProcessRow } from '../services/services.interfaces';
+import { ProcessesTableProps } from '../Addresses.interfaces';
+import { ProcessRow } from '../services/services.interfaces';
 
 import './FlowPairs.css';
 
-const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
+const AddressProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
 
@@ -120,4 +121,4 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
     );
 };
 
-export default ProcessesTable;
+export default AddressProcessesTable;

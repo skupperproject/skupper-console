@@ -1,10 +1,10 @@
 import { RESTApi } from 'API/REST';
-import { AddressesResponse, ProcessResponse } from 'API/REST.interfaces';
+import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import { FlowsPairsBasic, ProcessRow } from './services.interfaces';
 
 export const AddressesController = {
-    getAddresses: async (): Promise<AddressesResponse[]> => {
+    getAddresses: async (): Promise<AddressResponse[]> => {
         const addresses = await RESTApi.fetchAddresses();
 
         return addresses.map((address) => ({
