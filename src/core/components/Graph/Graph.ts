@@ -26,9 +26,10 @@ import { GraphEvents } from './Graph.enum';
 import { GraphNode, GraphEdge, GraphEdgeModifiedByForce } from './Graph.interfaces';
 
 const ARROW_SIZE = 10;
-const SERVICE_SIZE = 35;
+const NODE_SIZE = 40;
 const FONT_SIZE_DEFAULT = 12;
 const OPACITY_NO_SELECTED_ITEM = 0.2;
+
 export default class Graph {
     $root: HTMLElement;
     nodes: GraphNode[];
@@ -264,7 +265,7 @@ export default class Graph {
         }, {} as Record<string, boolean>);
 
         const domainValues = Object.keys(domain);
-        const rangeValuesX = domainValues.map((_, i) => (i ? (this.width - SERVICE_SIZE) / i : 0));
+        const rangeValuesX = domainValues.map((_, i) => (i ? (this.width - NODE_SIZE) / i : 0));
         const rangeValuesY = domainValues.map((_, i) =>
             i ? (this.height / domainValues.length) * i : 100,
         );
@@ -275,7 +276,7 @@ export default class Graph {
         return forceSimulation<GraphNode, GraphEdgeModifiedByForce>()
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', forceManyBody())
-            .force('collide', forceCollide().radius(SERVICE_SIZE * 2))
+            .force('collide', forceCollide().radius(NODE_SIZE * 2))
             .alpha(0.1)
             .alphaMin(0.065)
             .force(
@@ -336,7 +337,7 @@ export default class Graph {
             .append('svg:marker')
             .attr('id', 'arrow')
             .attr('viewBox', '0 -5 10 10')
-            .attr('refX', SERVICE_SIZE / 2 + ARROW_SIZE)
+            .attr('refX', NODE_SIZE / 2 + ARROW_SIZE)
             .attr('refY', 0)
             .attr('markerWidth', ARROW_SIZE)
             .attr('markerHeight', ARROW_SIZE)
@@ -425,22 +426,22 @@ export default class Graph {
         enterSelection
             .append('circle')
             .attr('class', 'node-img')
-            .attr('r', SERVICE_SIZE / 2)
+            .attr('r', NODE_SIZE / 2)
             .style('fill', ({ color }) => color);
 
         enterSelection
             .append(({ img }) => img?.documentElement.cloneNode(true) as HTMLElement)
             .attr('class', 'node-img')
-            .attr('width', SERVICE_SIZE / 2)
-            .attr('x', -SERVICE_SIZE / 4)
-            .attr('y', -SERVICE_SIZE / 2)
-            .attr('height', SERVICE_SIZE)
+            .attr('width', NODE_SIZE / 2)
+            .attr('x', -NODE_SIZE / 4)
+            .attr('y', -NODE_SIZE / 2)
+            .attr('height', NODE_SIZE)
             .style('fill', 'white');
 
         // it improves drag & drop area selection
         enterSelection
             .append('circle')
-            .attr('r', SERVICE_SIZE / 2)
+            .attr('r', NODE_SIZE / 2)
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .on('mouseover', (_, { id }) => {
@@ -515,7 +516,7 @@ export default class Graph {
         enterSelection
             .append('text')
             .attr('font-size', FONT_SIZE_DEFAULT)
-            .attr('y', SERVICE_SIZE / 2 + FONT_SIZE_DEFAULT)
+            .attr('y', NODE_SIZE / 2 + FONT_SIZE_DEFAULT)
             .style('fill', 'var(--pf-global--palette--black-500)')
             .text(({ name }) => name);
 

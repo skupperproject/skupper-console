@@ -14,6 +14,7 @@ import { xml } from 'd3-fetch';
 import { useNavigate } from 'react-router-dom';
 
 import serviceSVG from '@assets/service.svg';
+import skupperProcess from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import ProcessesController from '@pages/Processes/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -75,15 +76,17 @@ const TopologyProcesses = function () {
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (sites && processes && processesLinks) {
-            const serviceXML = await xml(serviceSVG);
+            const skupperProcessXML = await xml(skupperProcess);
+            const processXML = await xml(serviceSVG);
+
             const nodesSites = TopologyController.getNodesFromEntities(sites);
 
             const processesNodes = TopologyController.getNodesFromProcesses(
                 processes,
                 nodesSites,
-            ).map((site) => ({
-                ...site,
-                img: serviceXML,
+            ).map((node) => ({
+                ...node,
+                img: node.name.startsWith('skupper-') ? skupperProcessXML : processXML,
             }));
 
             setNodes(processesNodes);

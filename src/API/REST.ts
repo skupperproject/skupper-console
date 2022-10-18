@@ -216,8 +216,10 @@ export const RESTApi = {
         return data;
     },
 
-    fetchProcessgroupsPairs: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(PROCESS_GROUP_PAIRS_PATH);
+    fetchProcessgroupsPairs: async (options?: Request): Promise<FlowAggregatesMapResponse[]> => {
+        const { data } = await fetchWithTimeout(PROCESS_GROUP_PAIRS_PATH, {
+            params: options?.filters,
+        });
 
         return data;
     },
@@ -228,8 +230,10 @@ export const RESTApi = {
         return data;
     },
 
-    fetchProcessesPairs: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(PROCESS_PAIRS_PATH);
+    fetchProcessesPairs: async (options?: Request): Promise<FlowAggregatesMapResponse[]> => {
+        const { data } = await fetchWithTimeout(PROCESS_PAIRS_PATH, {
+            params: { ...options?.filters, offset: options?.offset, limit: options?.limit },
+        });
 
         return data;
     },
@@ -240,3 +244,9 @@ export const RESTApi = {
         return data;
     },
 };
+
+interface Request {
+    filters?: Record<string, string>;
+    offset?: number;
+    limit?: number;
+}

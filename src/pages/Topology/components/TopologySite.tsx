@@ -51,8 +51,8 @@ const TopologySite = function () {
     const updateTopologyData = useCallback(async () => {
         if (sites) {
             const siteXML = await xml(siteSVG);
-            const siteNodes = TopologyController.getNodesFromEntities(sites).map((site) => ({
-                ...site,
+            const siteNodes = TopologyController.getNodesFromEntities(sites).map((node) => ({
+                ...node,
                 img: siteXML,
             }));
 

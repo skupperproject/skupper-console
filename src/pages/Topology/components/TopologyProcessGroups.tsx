@@ -5,6 +5,7 @@ import { xml } from 'd3-fetch';
 import { useNavigate } from 'react-router-dom';
 
 import serviceSVG from '@assets/service.svg';
+import skupperProcess from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import ProcessGroupsController from '@pages/ProcessGroups/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -59,11 +60,15 @@ const TopologyProcessGroups = function () {
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (processGroups && processGroupsLinks) {
-            const siteXML = await xml(serviceSVG);
+            const skupperProcessGroupXML = await xml(skupperProcess);
+            const processGroupXML = await xml(serviceSVG);
+
             const processGroupsNodes = TopologyController.getNodesFromEntities(processGroups).map(
-                (processGroup) => ({
-                    ...processGroup,
-                    img: siteXML,
+                (node) => ({
+                    ...node,
+                    img: node.name.startsWith('skupper-')
+                        ? skupperProcessGroupXML
+                        : processGroupXML,
                 }),
             );
 

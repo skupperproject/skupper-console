@@ -89,7 +89,12 @@ export const TopologyController = {
 
     getProcessMetrics: async (id: string): Promise<ProcessesMetrics> => {
         const process = await RESTApi.fetchProcess(id);
-        const flowAggregatesPairs = await RESTApi.fetchProcessesPairs();
+        const flowAggregatesPairs = await RESTApi.fetchProcessesPairs({
+            filters: {
+                sourceId: id,
+                destinationId: id,
+            },
+        });
 
         const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
             .filter(({ sourceId }) => id === sourceId)
@@ -120,7 +125,12 @@ export const TopologyController = {
 
     getProcessGroupMetrics: async (id: string): Promise<ProcessGroupMetrics> => {
         const process = await RESTApi.fetchProcessGroup(id);
-        const flowAggregatesPairs = await RESTApi.fetchProcessgroupsPairs();
+        const flowAggregatesPairs = await RESTApi.fetchProcessgroupsPairs({
+            filters: {
+                sourceId: id,
+                destinationId: id,
+            },
+        });
 
         const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
             .filter(({ sourceId }) => id === sourceId)
