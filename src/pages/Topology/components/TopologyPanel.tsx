@@ -47,7 +47,7 @@ const TopologyPanel: FC<{
     }
 
     // Create Graph
-    const panelRef = useCallback(
+    const graphRef = useCallback(
         ($node: HTMLDivElement | null) => {
             if ($node && nodes.length && links.length && !topologyGraphInstance) {
                 $node.replaceChildren();
@@ -85,7 +85,7 @@ const TopologyPanel: FC<{
         legendHidden: true,
     });
 
-    const PanelContent = (
+    const Details = (
         <DrawerPanelContent>
             <DrawerHead>
                 {children}
@@ -98,12 +98,12 @@ const TopologyPanel: FC<{
 
     return (
         <Drawer isExpanded={areDetailsExpanded} position="right">
-            <DrawerContent panelContent={PanelContent}>
+            <DrawerContent panelContent={Details} style={{ overflow: 'hidden' }}>
                 <DrawerPanelBody>
                     <TopologyView
                         controlBar={<TopologyControlBar controlButtons={ControlButtons} />}
                     >
-                        <Panel ref={panelRef} style={{ width: '100%', height: '100%' }} />
+                        <Panel ref={graphRef} style={{ width: '100%', height: '100%' }} />
                     </TopologyView>
                 </DrawerPanelBody>
             </DrawerContent>

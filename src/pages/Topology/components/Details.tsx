@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import {
     Checkbox,
@@ -130,7 +130,13 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
 };
 
 const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
-    const [status, setIsChecked] = useState<Record<string, boolean>>({});
+    const [status, setIsChecked] = useState<Record<string, boolean>>(
+        data.reduce((acc, row) => {
+            acc[row.identity] = true;
+
+            return acc;
+        }, {} as Record<string, boolean>),
+    );
 
     const handleChange = (checked: boolean, event: React.FormEvent<HTMLInputElement>) => {
         const target = event.currentTarget;
@@ -142,20 +148,6 @@ const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
             onSelected(newStatus);
         }
     };
-
-    useEffect(() => {
-        const newStatus = data.reduce((acc, row) => {
-            acc[row.identity] = true;
-
-            return acc;
-        }, {} as Record<string, boolean>);
-
-        setIsChecked(newStatus);
-
-        if (onSelected) {
-            onSelected(newStatus);
-        }
-    }, []);
 
     return (
         <TableComposable variant="compact" isStickyHeader borders={false}>

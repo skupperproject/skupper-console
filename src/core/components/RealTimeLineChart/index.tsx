@@ -61,6 +61,8 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
             setSampleTimestamp(new Date().getTime());
         }, 1000);
 
+        setSampleTimestamp(new Date().getTime());
+
         return () => clearInterval(interval);
     }, []);
 

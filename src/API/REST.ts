@@ -204,37 +204,37 @@ export const RESTApi = {
     },
 
     // AGGREGRATE  APIs
-    fetchAggregatesSites: async (): Promise<FlowAggregatesMapResponse[]> => {
+    fetchSitesPairs: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(SITE_PAIRS_PATH);
 
         return data;
     },
 
-    fetchAggregatesSite: async (id: string): Promise<FlowAggregatesResponse> => {
+    fetchSitePairs: async (id: string): Promise<FlowAggregatesResponse> => {
         const { data } = await fetchWithTimeout(`${SITE_PAIRS_PATH}/${id}`);
 
         return data;
     },
 
-    fetchAggregatesProcessgroups: async (): Promise<FlowAggregatesMapResponse[]> => {
+    fetchProcessgroupsPairs: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(PROCESS_GROUP_PAIRS_PATH);
 
         return data;
     },
 
-    fetchAggregatesProcessGroup: async (id: string): Promise<FlowAggregatesResponse> => {
+    fetchProcessGroupPairs: async (id: string): Promise<FlowAggregatesResponse> => {
         const { data } = await fetchWithTimeout(`${PROCESS_GROUP_PAIRS_PATH}/${id}`);
 
         return data;
     },
 
-    fetchAggregatesProcesses: async (): Promise<FlowAggregatesMapResponse[]> => {
+    fetchProcessesPairs: async (): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(PROCESS_PAIRS_PATH);
 
         return data;
     },
 
-    fetchAggregatesProcess: async (id: string): Promise<FlowAggregatesResponse> => {
+    fetchProcessPairs: async (id: string): Promise<FlowAggregatesResponse> => {
         const { data } = await fetchWithTimeout(`${PROCESS_PAIRS_PATH}/${id}`);
 
         return data;

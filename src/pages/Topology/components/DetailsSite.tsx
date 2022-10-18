@@ -1,10 +1,11 @@
 import React, { FC, useState } from 'react';
 
-import { Grid, GridItem, Label, Spinner } from '@patternfly/react-core';
+import { Grid, GridItem, Label } from '@patternfly/react-core';
 import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import SkSpinner from '@core/components/SkSpinner';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -16,7 +17,6 @@ import { UPDATE_INTERVAL } from 'config';
 import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
 
-const SPINNER_DIAMETER = 80;
 interface TopologySiteDetailsProps {
     id: string;
 }
@@ -53,18 +53,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     }
 
     if (isLoadingSite || isLoadingProcesses) {
-        return (
-            <Spinner
-                diameter={`${SPINNER_DIAMETER}px`}
-                style={{
-                    position: 'absolute',
-                    left: '50%',
-                    marginLeft: `-${SPINNER_DIAMETER / 4}px`,
-                    top: '50%',
-                    marginTop: `-${SPINNER_DIAMETER / 4}px`,
-                }}
-            />
-        );
+        return <SkSpinner />;
     }
 
     if (!site || !processes) {

@@ -473,7 +473,9 @@ export default class Graph {
             })
             .on('mouseout', () => {
                 if (!this.isDraggingNode && !this.selectedNode) {
-                    this.svgContainerGroupNodes.selectAll('.serviceLink').each(stopAnimateEdges);
+                    this.svgContainerGroupNodes
+                        .selectAll<SVGSVGElement, GraphEdgeModifiedByForce>('.serviceLink')
+                        .each(stopAnimateEdges);
                 }
                 this.redrawEdges();
             })
@@ -581,8 +583,8 @@ export default class Graph {
     }
 }
 
-function addAnimateEdges({ source, target }: any) {
-    select(`#edge${source.id}-${target.id}`)
+function addAnimateEdges({ source, target }: GraphEdgeModifiedByForce) {
+    select<SVGSVGElement, GraphEdgeModifiedByForce>(`#edge${source.id}-${target.id}`)
         .style('stroke-dasharray', '8, 8')
         .transition()
         .duration(750)
@@ -591,6 +593,6 @@ function addAnimateEdges({ source, target }: any) {
         .on('end', addAnimateEdges);
 }
 
-function stopAnimateEdges({ source, target }: any) {
+function stopAnimateEdges({ source, target }: GraphEdgeModifiedByForce) {
     select(`#edge${source.id}-${target.id}`).transition().on('end', null);
 }

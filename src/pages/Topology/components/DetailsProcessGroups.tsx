@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
 
-import { Spinner } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import SkSpinner from '@core/components/SkSpinner';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -12,8 +12,6 @@ import { UPDATE_INTERVAL } from 'config';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import TopologyDetails from './Details';
-
-const SPINNER_DIAMETER = 80;
 
 interface TopologyDeploymentDetailsProps {
     id: string;
@@ -43,18 +41,7 @@ const TopologyProcessGroupsDetails: FC<TopologyDeploymentDetailsProps> = functio
     }
 
     if (isLoading) {
-        return (
-            <Spinner
-                diameter={`${SPINNER_DIAMETER}px`}
-                style={{
-                    position: 'absolute',
-                    left: '50%',
-                    marginLeft: `-${SPINNER_DIAMETER / 4}px`,
-                    top: '50%',
-                    marginTop: `-${SPINNER_DIAMETER / 4}px`,
-                }}
-            />
-        );
+        return <SkSpinner />;
     }
 
     if (!deployment) {
