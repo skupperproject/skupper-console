@@ -1,5 +1,11 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
+export interface Request {
+    filters?: Record<string, string>;
+    offset?: number;
+    limit?: number;
+}
+
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
 
 export interface HTTPError extends AxiosError {
@@ -21,6 +27,7 @@ interface EntityMetricsResponse {
     octetSentRate: number;
     octetsReceived: number;
     octetReceivedRate: number;
+    type: 'skupper' | 'app';
 }
 
 export interface SiteResponse extends EntityBaseResponse, EntityMetricsResponse {
@@ -32,6 +39,7 @@ export type ProcessGroupResponse = EntityBaseResponse & EntityMetricsResponse;
 export interface ProcessResponse extends EntityBaseResponse, EntityMetricsResponse {
     parent: string;
     groupIdentity: string;
+    group: string;
     imageName: string;
     sourceHost: string;
     hostName: string;

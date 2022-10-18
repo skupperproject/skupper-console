@@ -6,7 +6,7 @@ interface AppContentProps {
 
 const AppContent = function ({ children }: AppContentProps) {
     return (
-        <div className="pf-u-px-md pf-u-py-md" style={{ flex: 1, overflow: 'hidden' }}>
+        <div className="pf-u-px-md pf-u-py-md" style={{ flex: 1 }}>
             {children}
         </div>
     );

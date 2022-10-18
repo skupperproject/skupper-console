@@ -41,6 +41,7 @@ import {
     HostResponse,
     FlowAggregatesMapResponse,
     FlowAggregatesResponse,
+    Request,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -92,7 +93,10 @@ export const RESTApi = {
     fetchProcesses: async (): Promise<ProcessResponse[]> => {
         const { data } = await fetchWithTimeout(`${PROCESSES_PATH}`);
 
-        return data;
+        return data.map((process: ProcessGroupResponse) => ({
+            ...process,
+            type: process.name.startsWith('skupper-') ? 'skupper' : 'app',
+        }));
     },
 
     fetchProcess: async (id: string): Promise<ProcessResponse> => {
@@ -112,7 +116,10 @@ export const RESTApi = {
     fetchProcessGroups: async (): Promise<ProcessGroupResponse[]> => {
         const { data } = await fetchWithTimeout(PROCESS_GROUPS_PATH);
 
-        return data;
+        return data.map((processGroup: ProcessGroupResponse) => ({
+            ...processGroup,
+            type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
+        }));
     },
     fetchProcessGroup: async (id: string): Promise<ProcessGroupResponse> => {
         const { data } = await fetchWithTimeout(getProcessGroupPATH(id));
@@ -122,7 +129,10 @@ export const RESTApi = {
     fetchProcessesByProcessGroup: async (id: string): Promise<ProcessResponse[]> => {
         const { data } = await fetchWithTimeout(getProcessesByProcessGroupPATH(id));
 
-        return data;
+        return data.map((processGroup: ProcessGroupResponse) => ({
+            ...processGroup,
+            type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
+        }));
     },
 
     // PROCESSES  APIs
@@ -244,9 +254,3 @@ export const RESTApi = {
         return data;
     },
 };
-
-interface Request {
-    filters?: Record<string, string>;
-    offset?: number;
-    limit?: number;
-}

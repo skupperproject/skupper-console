@@ -1,3 +1,8 @@
+import { xml } from 'd3-fetch';
+
+import processSVG from '@assets/service.svg';
+import siteSVG from '@assets/site.svg';
+import skupperProcessSVG from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
@@ -159,8 +164,14 @@ export const TopologyController = {
         };
     },
 
-    getNodesFromEntities: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
-        entities
+    getNodesFromSitesOrProcessGroups: async (
+        entities: SiteResponse[] | ProcessGroupResponse[],
+    ): Promise<GraphNode[]> => {
+        const skupperProcessGroupXML = await xml(skupperProcessSVG);
+        const processGroupXML = await xml(processSVG);
+        const siteXML = await xml(siteSVG);
+
+        return entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
             .map((node, index) => {
                 const positions = localStorage.getItem(node.identity);
@@ -176,13 +187,26 @@ export const TopologyController = {
                     fy,
                     groupName: node.name,
                     group: index,
-                    color: getColor(node.name.startsWith('skupper-') ? 16 : index),
+                    color: getColor(node.type === 'skupper' ? 16 : index),
+                    img:
+                        node.type === 'skupper'
+                            ? skupperProcessGroupXML
+                            : node.recType === 'SITE'
+                            ? siteXML
+                            : processGroupXML,
                 };
-            }),
+            });
+    },
 
-    getNodesFromProcesses: (processes: ProcessResponse[], siteNodes: GraphNode[]): GraphNode[] =>
-        processes
-            ?.map(({ name, identity, parent }) => {
+    getNodesFromProcesses: async (
+        processes: ProcessResponse[],
+        siteNodes: GraphNode[],
+    ): Promise<GraphNode[]> => {
+        const skupperProcessGroupXML = await xml(skupperProcessSVG);
+        const processGroupXML = await xml(processSVG);
+
+        return processes
+            ?.map(({ name, identity, parent, type }) => {
                 const site = siteNodes?.find(({ id }) => id === parent);
                 const groupIndex = site?.group || 0;
 
@@ -199,10 +223,12 @@ export const TopologyController = {
                     fy,
                     groupName: site?.name || '',
                     group: groupIndex,
-                    color: getColor(name.startsWith('skupper-') ? 16 : groupIndex),
+                    color: getColor(type === 'skupper' ? 16 : groupIndex),
+                    img: type === 'skupper' ? skupperProcessGroupXML : processGroupXML,
                 };
             })
-            .sort((a, b) => a.group - b.group),
+            .sort((a, b) => a.group - b.group);
+    },
 
     getEdgesFromLinks: (links: LinkTopology[]): GraphEdge[] =>
         links?.map(({ source, target }) => ({

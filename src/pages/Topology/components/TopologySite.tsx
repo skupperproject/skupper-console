@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { xml } from 'd3-fetch';
 import { useNavigate } from 'react-router-dom';
 
-import siteSVG from '@assets/site.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -50,11 +48,7 @@ const TopologySite = function () {
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (sites) {
-            const siteXML = await xml(siteSVG);
-            const siteNodes = TopologyController.getNodesFromEntities(sites).map((node) => ({
-                ...node,
-                img: siteXML,
-            }));
+            const siteNodes = await TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
             setNodes(siteNodes);
             setLinks(TopologyController.getEdgesFromSitesConnected(sites));

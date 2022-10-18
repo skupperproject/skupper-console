@@ -10,11 +10,8 @@ import {
     TextVariants,
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { xml } from 'd3-fetch';
 import { useNavigate } from 'react-router-dom';
 
-import serviceSVG from '@assets/service.svg';
-import skupperProcess from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import ProcessesController from '@pages/Processes/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -24,6 +21,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
+import { colors } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
 import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
@@ -76,18 +74,12 @@ const TopologyProcesses = function () {
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (sites && processes && processesLinks) {
-            const skupperProcessXML = await xml(skupperProcess);
-            const processXML = await xml(serviceSVG);
+            const siteNodes = await TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
-            const nodesSites = TopologyController.getNodesFromEntities(sites);
-
-            const processesNodes = TopologyController.getNodesFromProcesses(
+            const processesNodes = await TopologyController.getNodesFromProcesses(
                 processes,
-                nodesSites,
-            ).map((node) => ({
-                ...node,
-                img: node.name.startsWith('skupper-') ? skupperProcessXML : processXML,
-            }));
+                siteNodes,
+            );
 
             setNodes(processesNodes);
             setLinks(TopologyController.getEdgesFromLinks(processesLinks));
@@ -116,17 +108,17 @@ const TopologyProcesses = function () {
                                 component={TextVariants.small}
                             >{`${Labels.LegendGroupsItems}:`}</Text>
                         </TextContent>
-                        {TopologyController.getNodesFromEntities(sites || []).map((node) => (
-                            <Flex key={node.id}>
+                        {sites?.map((node, index) => (
+                            <Flex key={node.identity}>
                                 <div
                                     className="pf-u-mr-xs"
                                     style={{
                                         width: 10,
                                         height: 10,
-                                        backgroundColor: node.color,
+                                        backgroundColor: colors[index],
                                     }}
                                 />
-                                {node.groupName}
+                                {node.name}
                             </Flex>
                         ))}
                     </Flex>

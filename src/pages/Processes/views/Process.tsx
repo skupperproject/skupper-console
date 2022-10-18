@@ -27,14 +27,12 @@ import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import ProcessGroupsController from '@pages/ProcessGroups/services';
-import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import { ProcessResponse, SiteResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
@@ -65,15 +63,6 @@ const Process = function () {
         },
     );
 
-    const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
-        [QueriesProcessGroups.GetProcessGroup, process?.groupIdentity],
-        () => ProcessGroupsController.getProcessGroup(process?.groupIdentity || ''),
-        {
-            enabled: !!process?.groupIdentity,
-            onError: handleError,
-        },
-    );
-
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -83,13 +72,15 @@ const Process = function () {
         navigate(route);
     }
 
-    if (isLoadingProcess || isLoadingSite || isLoadingProcessGroup) {
+    if (isLoadingProcess || isLoadingSite) {
         return <LoadingPage />;
     }
 
     const {
         name,
         imageName,
+        group,
+        groupIdentity,
         sourceHost,
         hostName,
         octetReceivedRate,
@@ -98,8 +89,6 @@ const Process = function () {
         octetsSent,
     } = process as ProcessResponse;
     const { identity: siteIdentity, name: siteName } = site as SiteResponse;
-    const { identity: processGroupIdentity, name: processGroupName } =
-        processGroup as ProcessGroupResponse;
 
     return (
         <Grid hasGutter>
@@ -144,9 +133,9 @@ const Process = function () {
                                         <DescriptionListDescription>
                                             <ResourceIcon type="service" />
                                             <Link
-                                                to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${processGroupIdentity}`}
+                                                to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupIdentity}`}
                                             >
-                                                {processGroupName}
+                                                {group}
                                             </Link>
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>

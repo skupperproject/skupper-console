@@ -2,7 +2,6 @@ body,
 html {
     font-size: 16px;
     text-rendering: optimizeLegibility;
-    overflow: hidden;
 }
 
 #app {

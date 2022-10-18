@@ -32,3 +32,9 @@
 .sk-resource-process {
     background-color: var(--pf-global--palette--orange-300);
 }
+
+.sk-resource-skupper {
+    margin-left: -5px;
+    min-width: 32px;
+    background-color: transparent;
+}

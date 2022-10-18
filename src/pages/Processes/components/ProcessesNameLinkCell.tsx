@@ -10,7 +10,7 @@ import { ProcessNameLinkCellProps } from '../Processes.interfaces';
 const ProcessNameLinkCell: FC<ProcessNameLinkCellProps> = function ({ data, value }) {
     return (
         <>
-            <ResourceIcon type="process" />
+            <ResourceIcon type={data.type === 'skupper' ? 'skupper' : 'process'} />
             <Link to={`${ProcessesRoutesPaths.Processes}/${data.identity}`}>{value}</Link>
         </>
     );
