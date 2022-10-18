@@ -108,11 +108,13 @@ export interface FlowAggregatesResponse extends BaseResponse {
     pairType: 'PROCESS' | 'SITE';
     recordCount: number;
     sourceId: string;
+    sourceName: string;
     sourceOctets: number;
     sourceMinLatency: number;
     sourceMaxLatency: number;
     sourceAverageLatency: number;
     destinationId: string;
+    destinationName: string;
     destinationOctets: number;
     destinationMinLatency: number;
     destinationAverageLatency: number;

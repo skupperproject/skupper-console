@@ -8,7 +8,13 @@ export interface TopologyDetailsProps {
 }
 
 export interface TrafficProps {
-    data: { identity: string; name: string; value: number }[];
+    data: {
+        identity: string;
+        targetIdentity: string;
+        name: string;
+        value: number;
+        show: boolean;
+    }[];
     link?: string;
     onSelected?: Function;
 }

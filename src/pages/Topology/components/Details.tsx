@@ -35,18 +35,22 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
     > | null>(null);
 
     const tcpConnectionsOutEntriesChartData = tcpConnectionsOutEntries.map(
-        ({ identity, destinationId, sourceOctets }) => ({
+        ({ identity, destinationId, destinationName, sourceOctets }) => ({
             identity,
-            name: destinationId,
+            targetIdentity: destinationId,
+            name: destinationName,
             value: sourceOctets,
+            show: !checkBoxSelectedSent || checkBoxSelectedSent[identity],
         }),
     );
 
     const tcpConnectionsInEntriesChartData = tcpConnectionsInEntries.map(
-        ({ identity, sourceId, sourceOctets }) => ({
+        ({ identity, sourceId, sourceName, sourceOctets }) => ({
             identity,
-            name: sourceId,
+            targetIdentity: sourceId,
+            name: sourceName,
             value: sourceOctets,
+            show: !checkBoxSelectedReceived || checkBoxSelectedReceived[identity],
         }),
     );
 
@@ -76,18 +80,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                         {!!tcpConnectionsOutEntries.length && (
                             <>
                                 <Label color="green">{ConnectionsLabels.TCPConnectionsOut}</Label>
-                                <TrafficChart
-                                    data={tcpConnectionsOutEntriesChartData.map((data) => {
-                                        if (!checkBoxSelectedSent) {
-                                            return data;
-                                        }
-                                        if (checkBoxSelectedSent[data.identity]) {
-                                            return data;
-                                        }
-
-                                        return { ...data, value: 0 };
-                                    })}
-                                />
+                                <TrafficChart data={tcpConnectionsOutEntriesChartData} />
                                 <TrafficTable
                                     link={link}
                                     data={tcpConnectionsOutEntriesChartData}
@@ -98,18 +91,7 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                         {!!tcpConnectionsInEntries.length && (
                             <>
                                 <Label color="purple">{ConnectionsLabels.TCPConnectionsIn}</Label>
-                                <TrafficChart
-                                    data={tcpConnectionsInEntriesChartData.map((data) => {
-                                        if (!checkBoxSelectedReceived) {
-                                            return data;
-                                        }
-                                        if (checkBoxSelectedReceived[data.identity]) {
-                                            return data;
-                                        }
-
-                                        return { ...data, value: 0 };
-                                    })}
-                                />
+                                <TrafficChart data={tcpConnectionsInEntriesChartData} />
                                 <TrafficTable
                                     link={link}
                                     data={tcpConnectionsInEntriesChartData}
@@ -132,7 +114,9 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
             data={data}
             options={{
                 formatter: formatBytes,
-                colorScale: colors,
+                colorScale: data.map(({ show }, index) =>
+                    show ? colors[index % data.length] : 'transparent',
+                ),
                 height: 200,
                 padding: {
                     left: 75,
@@ -183,7 +167,7 @@ const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
                 </Tr>
             </Thead>
             <Tbody>
-                {data.map(({ identity, name, value }) => (
+                {data.map(({ identity, targetIdentity, name, value }) => (
                     <Tr key={identity}>
                         <Td width={10}>
                             <Checkbox
@@ -193,7 +177,7 @@ const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
                             />
                         </Td>
                         <Td>
-                            <Link to={`${link}/${name}`}>
+                            <Link to={`${link}/${targetIdentity}`}>
                                 <TableText wrapModifier="truncate">{name} </TableText>
                             </Link>
                         </Td>
