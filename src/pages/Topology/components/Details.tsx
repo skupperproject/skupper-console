@@ -2,9 +2,11 @@ import React, { FC, useState } from 'react';
 
 import {
     Checkbox,
-    Label,
+    DescriptionList,
+    DescriptionListDescription,
+    DescriptionListGroup,
+    DescriptionListTerm,
     Panel,
-    TextContent,
     Title,
     TitleSizes,
     Tooltip,
@@ -13,10 +15,10 @@ import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfl
 import { Link } from 'react-router-dom';
 
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
-import { formatBytes } from '@core/utils/formatBytes';
-import { ConnectionsColumns, ConnectionsLabels } from '@pages/Sites/components/Traffic.enum';
+import { formatByteRate } from '@core/utils/formatBytes';
 
 import { colors } from '../Topology.constant';
+import { ConnectionsColumns, ConnectionsLabels } from '../Topology.enum';
 import { TopologyDetailsProps, TrafficProps } from '../Topology.interfaces';
 
 const TopologyDetails: FC<TopologyDetailsProps> = function ({
@@ -74,34 +76,40 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                     {name}
                 </Title>
             </Tooltip>
-            <TextContent className="pf-u-mt-md">
-                {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
-                    <>
-                        {!!tcpConnectionsOutEntries.length && (
-                            <>
-                                <Label color="green">{ConnectionsLabels.TCPConnectionsOut}</Label>
+            {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
+                <DescriptionList>
+                    {!!tcpConnectionsOutEntries.length && (
+                        <DescriptionListGroup>
+                            <DescriptionListTerm>
+                                {ConnectionsLabels.TCPConnectionsOut}
+                            </DescriptionListTerm>
+                            <DescriptionListDescription>
                                 <TrafficChart data={tcpConnectionsOutEntriesChartData} />
                                 <TrafficTable
                                     link={link}
                                     data={tcpConnectionsOutEntriesChartData}
                                     onSelected={handleSelectedSent}
                                 />
-                            </>
-                        )}
-                        {!!tcpConnectionsInEntries.length && (
-                            <>
-                                <Label color="purple">{ConnectionsLabels.TCPConnectionsIn}</Label>
+                            </DescriptionListDescription>
+                        </DescriptionListGroup>
+                    )}
+                    {!!tcpConnectionsInEntries.length && (
+                        <DescriptionListGroup>
+                            <DescriptionListTerm>
+                                {ConnectionsLabels.TCPConnectionsIn}
+                            </DescriptionListTerm>
+                            <DescriptionListDescription>
                                 <TrafficChart data={tcpConnectionsInEntriesChartData} />
                                 <TrafficTable
                                     link={link}
                                     data={tcpConnectionsInEntriesChartData}
                                     onSelected={handleSelectedReceived}
                                 />
-                            </>
-                        )}
-                    </>
-                )}
-            </TextContent>
+                            </DescriptionListDescription>
+                        </DescriptionListGroup>
+                    )}
+                </DescriptionList>
+            )}
         </Panel>
     );
 };
@@ -113,7 +121,7 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
         <RealTimeLineChart
             data={data}
             options={{
-                formatter: formatBytes,
+                formatter: formatByteRate,
                 colorScale: data.map(({ show }, index) =>
                     show ? colors[index % data.length] : 'transparent',
                 ),
@@ -155,7 +163,7 @@ const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
                 <Tr>
                     <Th />
                     <Th>{ConnectionsColumns.Name}</Th>
-                    <Th>{ConnectionsColumns.BytesOut}</Th>
+                    <Th>{ConnectionsColumns.ByteRate}</Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -173,7 +181,7 @@ const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
                                 <TableText wrapModifier="truncate">{name} </TableText>
                             </Link>
                         </Td>
-                        <Td width={30}>{`${formatBytes(value)}`}</Td>
+                        <Td width={30}>{`${formatByteRate(value)}`}</Td>
                     </Tr>
                 ))}
             </Tbody>

@@ -26,5 +26,5 @@ export enum SitesTableColumns {
 
 export enum ProcessesTableColumns {
     Name = 'Name',
-    SourceHost = 'Source Host',
+    SourceHost = 'Source IP',
 }

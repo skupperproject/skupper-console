@@ -1,6 +1,13 @@
 import React, { FC, useState } from 'react';
 
-import { Grid, GridItem, Label } from '@patternfly/react-core';
+import {
+    DescriptionList,
+    DescriptionListDescription,
+    DescriptionListGroup,
+    DescriptionListTerm,
+    Grid,
+    GridItem,
+} from '@patternfly/react-core';
 import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,6 +22,7 @@ import { ProcessesTableColumns, SitesRoutesPaths } from '@pages/Sites/Sites.enum
 import { UPDATE_INTERVAL } from 'config';
 
 import { QueriesTopology } from '../services/services.enum';
+import { ConnectionsLabels } from '../Topology.enum';
 import TopologyDetails from './Details';
 
 interface TopologySiteDetailsProps {
@@ -73,28 +81,33 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                 />
             </GridItem>
             <GridItem span={12}>
-                <Label color="blue">{'Processes'}</Label>
-
-                <TableComposable variant="compact" borders={false}>
-                    <Thead>
-                        <Tr>
-                            <Th>{ProcessesTableColumns.Name}</Th>
-                            <Th>{ProcessesTableColumns.SourceHost}</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {processes?.map(({ identity, name, sourceHost }) => (
-                            <Tr key={`${identity}${name}`}>
-                                <Td>
-                                    <Link to={`${ProcessesRoutesPaths.Processes}/${identity}`}>
-                                        <TableText wrapModifier="truncate">{name} </TableText>
-                                    </Link>
-                                </Td>
-                                <Td width={30}>{sourceHost}</Td>
+                <DescriptionList>
+                    <DescriptionListGroup>
+                        <DescriptionListTerm>{ConnectionsLabels.Processes}</DescriptionListTerm>
+                    </DescriptionListGroup>
+                </DescriptionList>
+                <DescriptionListDescription>
+                    <TableComposable variant="compact" borders={false}>
+                        <Thead>
+                            <Tr>
+                                <Th>{ProcessesTableColumns.Name}</Th>
+                                <Th>{ProcessesTableColumns.SourceHost}</Th>
                             </Tr>
-                        ))}
-                    </Tbody>
-                </TableComposable>
+                        </Thead>
+                        <Tbody>
+                            {processes?.map(({ identity, name, sourceHost }) => (
+                                <Tr key={`${identity}${name}`}>
+                                    <Td>
+                                        <Link to={`${ProcessesRoutesPaths.Processes}/${identity}`}>
+                                            <TableText wrapModifier="truncate">{name} </TableText>
+                                        </Link>
+                                    </Td>
+                                    <Td width={30}>{sourceHost}</Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </TableComposable>
+                </DescriptionListDescription>
             </GridItem>
         </Grid>
     );
