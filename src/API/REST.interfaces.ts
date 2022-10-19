@@ -105,25 +105,27 @@ export interface FlowPairResponse extends BaseResponse {
     counterFlow: FlowResponse;
 }
 export interface FlowAggregatesMapResponse extends BaseResponse {
-    rectType: 'FLOWAGGREGATE';
-    pairType: 'PROCESS' | 'SITE' | 'PROCESS_GROUP';
+    rectType: string;
+    pairType: string;
     sourceId: string;
     destinationId: string;
 }
 
 export interface FlowAggregatesResponse extends BaseResponse {
-    rectType: 'FLOWAGGREGATE';
-    pairType: 'PROCESS' | 'SITE';
+    rectType: string;
+    pairType: string;
     recordCount: number;
     sourceId: string;
     sourceName: string;
     sourceOctets: number;
+    sourceOctetRate: number;
     sourceMinLatency: number;
     sourceMaxLatency: number;
     sourceAverageLatency: number;
     destinationId: string;
     destinationName: string;
     destinationOctets: number;
+    destinationOctetRate: number;
     destinationMinLatency: number;
     destinationAverageLatency: number;
 }

@@ -21,7 +21,7 @@ const TopologyProcessesDetails: FC<TopologyDeploymentDetailsProps> = function ({
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
-    const { data: deployment, isLoading } = useQuery(
+    const { data: processesWithMetrics, isLoading } = useQuery(
         [QueriesTopology.GetProcessMetrics, id],
         () => TopologyController.getProcessMetrics(id),
         {
@@ -44,14 +44,14 @@ const TopologyProcessesDetails: FC<TopologyDeploymentDetailsProps> = function ({
         return <SkSpinner />;
     }
 
-    if (!deployment) {
+    if (!processesWithMetrics) {
         return null;
     }
 
-    const tcpConnectionsInEntries = Object.values(deployment.tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.values(deployment.tcpConnectionsOut);
+    const tcpConnectionsInEntries = Object.values(processesWithMetrics.tcpConnectionsIn);
+    const tcpConnectionsOutEntries = Object.values(processesWithMetrics.tcpConnectionsOut);
 
-    const title = `${capitalizeFirstLetter(deployment.name)}`;
+    const title = `${capitalizeFirstLetter(processesWithMetrics.name)}`;
 
     return (
         <TopologyDetails
