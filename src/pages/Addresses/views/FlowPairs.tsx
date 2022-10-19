@@ -43,14 +43,14 @@ const FlowsPairs = function () {
     const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
     const [vanAddressView, setVanAddressView] = useState<number>(0);
 
-    const vanAddressId = address?.split('@')[1];
-    const vanAddressName = address?.split('@')[0];
+    const addressId = address?.split('@')[1];
+    const addressName = address?.split('@')[0];
 
     const { data: connectionsPaginated, isLoading: isLoadingConnectionsPaginated } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, vanAddressId, currentPage, visibleItems],
+        [QueriesAddresses.GetFlowPairsByAddress, addressId, currentPage, visibleItems],
         () =>
-            vanAddressId
-                ? AddressesController.getFlowPairsByAddress(vanAddressId, currentPage, visibleItems)
+            addressId
+                ? AddressesController.getFlowPairsByAddress(addressId, currentPage, visibleItems)
                 : null,
         {
             cacheTime: 0,
@@ -60,11 +60,8 @@ const FlowsPairs = function () {
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesAddresses.GetProcessesByAddress, vanAddressId, currentPage, visibleItems],
-        () =>
-            vanAddressId
-                ? AddressesController.getProcessesWithMetricsByAddress(vanAddressId)
-                : null,
+        [QueriesAddresses.GetProcessesByAddress, addressId, currentPage, visibleItems],
+        () => (addressId ? AddressesController.getProcessesWithMetricsByAddress(addressId) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -122,7 +119,7 @@ const FlowsPairs = function () {
                             {AddressesRoutesPathLabel.Addresses}
                         </Link>
                     </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{vanAddressName}</BreadcrumbHeading>
+                    <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
                 </Breadcrumb>
             </StackItem>
 
@@ -130,7 +127,7 @@ const FlowsPairs = function () {
                 <Flex alignItems={{ default: 'alignItemsCenter' }}>
                     <ResourceIcon type="address" />
                     <TextContent>
-                        <Text component={TextVariants.h1}>{vanAddressName}</Text>
+                        <Text component={TextVariants.h1}>{addressName}</Text>
                     </TextContent>
                 </Flex>
             </StackItem>

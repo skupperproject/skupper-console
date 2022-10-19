@@ -13,6 +13,8 @@ export interface ProcessRow {
     byteRate: number;
     host: string;
     port: string;
+    groupId: string;
+    groupName: string;
     imageName: string;
 }
 

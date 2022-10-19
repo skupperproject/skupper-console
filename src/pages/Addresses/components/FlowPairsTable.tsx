@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -141,45 +142,55 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                             targetPort,
                         }) => (
                             <Tr key={id}>
-                                <Td className="secondary-color">
+                                <Td width={25} className="secondary-color">
                                     <Link to={`${ProcessesRoutesPaths.Processes}/${processId}`}>
-                                        <TableText wrapModifier="truncate">{processName}</TableText>
+                                        <TableText wrapModifier="truncate">
+                                            <ResourceIcon type="process" />
+                                            {processName}
+                                        </TableText>
                                     </Link>
                                 </Td>
-                                <Td className="secondary-color">
+                                <Td width={25} className="secondary-color">
                                     <Link to={`${SitesRoutesPaths.Sites}/${siteId}`}>
-                                        {siteName}
+                                        <TableText wrapModifier="truncate">
+                                            <ResourceIcon type="site" />
+                                            {siteName}
+                                        </TableText>
                                     </Link>
                                 </Td>
                                 <Td className="secondary-color">{host}</Td>
                                 <Td className="secondary-color">{`${port}`}</Td>
                                 <Td className="align-td-right secondary-color">
-                                    <b>{formatByteRate(byteRate, 3)}</b>
+                                    <b>{formatByteRate(byteRate, 1)}</b>
                                 </Td>
                                 <Td className="align-td-right secondary-color td-border-right ">
-                                    <b>{formatBytes(bytes, 3)}</b>
+                                    <b>{formatBytes(bytes, 1)}</b>
                                 </Td>
-                                <Td>
+                                <Td width={25}>
                                     <Link
                                         to={`${ProcessesRoutesPaths.Processes}/${targetProcessId}`}
                                     >
                                         <TableText wrapModifier="truncate">
+                                            <ResourceIcon type="process" />
                                             {targetProcessName}
                                         </TableText>
                                     </Link>
                                 </Td>
-                                <Td>
+                                <Td width={25}>
                                     <Link to={`${SitesRoutesPaths.Sites}/${targetSiteId}`}>
-                                        {targetSiteName}
+                                        <TableText wrapModifier="truncate">
+                                            <ResourceIcon type="site" />
+                                            {targetSiteName}
+                                        </TableText>
                                     </Link>
                                 </Td>
                                 <Td>{targetHost}</Td>
                                 <Td>{`${targetPort}`}</Td>
                                 <Td className="align-td-right">
-                                    <b>{formatByteRate(targetByteRate, 3)}</b>
+                                    <b>{formatByteRate(targetByteRate, 1)}</b>
                                 </Td>
                                 <Td className="align-td-right">
-                                    <b>{formatBytes(targetBytes, 3)}</b>
+                                    <b>{formatBytes(targetBytes, 1)}</b>
                                 </Td>
                             </Tr>
                         ),

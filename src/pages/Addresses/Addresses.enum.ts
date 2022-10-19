@@ -55,7 +55,8 @@ export enum FlowPairDetailsLabels {
 // PROCESSES TABLE
 export enum ProcessesColumnsNames {
     Site = 'Site',
-    Process = 'process',
+    Process = 'Process',
+    ProcessGroup = 'Group',
     Bytes = 'Bytes',
     ByteRate = 'Byte Rate',
     Host = 'Host',
