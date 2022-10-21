@@ -7,14 +7,15 @@ export interface TopologyDetailsProps {
     tcpConnectionsInEntries: FlowAggregatesResponse[];
 }
 
+export interface TrafficData {
+    identity: string;
+    targetIdentity: string;
+    name: string;
+    value: number;
+    show: boolean;
+}
 export interface TrafficProps {
-    data: {
-        identity: string;
-        targetIdentity: string;
-        name: string;
-        value: number;
-        show: boolean;
-    }[];
+    data: TrafficData[];
     link?: string;
     onSelected?: Function;
 }

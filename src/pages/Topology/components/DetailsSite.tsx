@@ -5,20 +5,23 @@ import {
     DescriptionListDescription,
     DescriptionListGroup,
     DescriptionListTerm,
+    Flex,
     Grid,
     GridItem,
 } from '@patternfly/react-core';
-import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import SkSpinner from '@core/components/SkSpinner';
+import SkTable from '@core/components/SkTable';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessesTableColumns, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import { QueriesTopology } from '../services/services.enum';
@@ -70,6 +73,18 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const title = `${capitalizeFirstLetter(site.name)}`;
 
+    const columns = [
+        {
+            name: ProcessesTableColumns.Name,
+            prop: 'name' as keyof ProcessResponse,
+            component: 'linkCell',
+        },
+        {
+            name: ProcessesTableColumns.SourceHost,
+            prop: 'sourceHost' as keyof ProcessResponse,
+        },
+    ];
+
     return (
         <Grid hasGutter>
             <GridItem span={12}>
@@ -87,26 +102,15 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                     </DescriptionListGroup>
                 </DescriptionList>
                 <DescriptionListDescription>
-                    <TableComposable variant="compact" borders={false}>
-                        <Thead>
-                            <Tr>
-                                <Th>{ProcessesTableColumns.Name}</Th>
-                                <Th>{ProcessesTableColumns.SourceHost}</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {processes?.map(({ identity, name, sourceHost }) => (
-                                <Tr key={`${identity}${name}`}>
-                                    <Td>
-                                        <Link to={`${ProcessesRoutesPaths.Processes}/${identity}`}>
-                                            <TableText wrapModifier="truncate">{name} </TableText>
-                                        </Link>
-                                    </Td>
-                                    <Td width={30}>{sourceHost}</Td>
-                                </Tr>
-                            ))}
-                        </Tbody>
-                    </TableComposable>
+                    <SkTable
+                        borders={false}
+                        isStriped={false}
+                        isPlain={true}
+                        shouldSort={false}
+                        columns={columns}
+                        rows={processes}
+                        components={{ linkCell: ProcessNameLinkCell }}
+                    />
                 </DescriptionListDescription>
             </GridItem>
         </Grid>
@@ -114,3 +118,17 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 };
 
 export default TopologySiteDetails;
+
+interface ProcessNameLinkCellProps {
+    data: ProcessResponse;
+    value: ProcessResponse[keyof ProcessResponse];
+}
+
+const ProcessNameLinkCell: FC<ProcessNameLinkCellProps> = function ({ data, value }) {
+    return (
+        <Flex>
+            <ResourceIcon type="process" />
+            <Link to={`${ProcessesRoutesPaths.Processes}/${data.identity}`}>{value}</Link>
+        </Flex>
+    );
+};

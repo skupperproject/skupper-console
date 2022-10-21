@@ -59,7 +59,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
     });
 
     return (
-        <TableComposable className="sk-table">
+        <TableComposable variant="compact">
             <Thead hasNestedHeader>
                 <Tr>
                     <Th hasRightBorder colSpan={6}>

@@ -5,7 +5,7 @@ export interface FlowPairsTableProps {
 
 // Process TABLE
 export interface ProcessRow {
-    id: string;
+    identity: string;
     siteId: string;
     siteName: string;
     processName: string;

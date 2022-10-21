@@ -112,7 +112,7 @@ export const AddressesController = {
                 const { destPort } = await RESTApi.fetchConnectorByProcess(process.identity);
 
                 return {
-                    id: process.identity,
+                    identity: process.identity,
                     siteId: site.identity,
                     siteName: site.name,
                     processName: process.name,

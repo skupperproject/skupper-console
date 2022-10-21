@@ -11,15 +11,15 @@ import {
     TitleSizes,
     Tooltip,
 } from '@patternfly/react-core';
-import { TableComposable, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
+import SkTable from '@core/components/SkTable';
 import { formatByteRate } from '@core/utils/formatBytes';
 
 import { colors } from '../Topology.constant';
 import { ConnectionsColumns, ConnectionsLabels } from '../Topology.enum';
-import { TopologyDetailsProps, TrafficProps } from '../Topology.interfaces';
+import { TopologyDetailsProps, TrafficData, TrafficProps } from '../Topology.interfaces';
 
 const TopologyDetails: FC<TopologyDetailsProps> = function ({
     name,
@@ -64,6 +64,48 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
         setCheckBoxSelectedStatusReceived(status);
     }
 
+    const columnsTCPConnectionsOut = [
+        {
+            name: '',
+            prop: '' as keyof TrafficData,
+            callback: handleSelectedSent,
+            component: 'checkboxCell',
+            with: 10,
+        },
+        {
+            name: ConnectionsColumns.Name,
+            prop: 'name' as keyof TrafficData,
+            component: 'nameLinkCell',
+        },
+        {
+            name: ConnectionsColumns.ByteRate,
+            prop: 'value' as keyof TrafficData,
+            format: formatByteRate,
+            width: 30,
+        },
+    ];
+
+    const columnsTCPConnectionsIn = [
+        {
+            name: '',
+            prop: '' as keyof TrafficData,
+            callback: handleSelectedReceived,
+            component: 'checkboxCell',
+            width: 10,
+        },
+        {
+            name: ConnectionsColumns.Name,
+            prop: 'name' as keyof TrafficData,
+            component: 'nameLinkCell',
+        },
+        {
+            name: ConnectionsColumns.ByteRate,
+            prop: 'value' as keyof TrafficData,
+            format: formatByteRate,
+            width: 30,
+        },
+    ];
+
     return (
         <Panel>
             <Tooltip content={name}>
@@ -85,10 +127,21 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                             </DescriptionListTerm>
                             <DescriptionListDescription>
                                 <TrafficChart data={tcpConnectionsOutEntriesChartData} />
-                                <TrafficTable
-                                    link={link}
-                                    data={tcpConnectionsOutEntriesChartData}
-                                    onSelected={handleSelectedSent}
+                                <SkTable
+                                    borders={false}
+                                    isStriped={false}
+                                    isPlain={true}
+                                    columns={columnsTCPConnectionsOut}
+                                    shouldSort={false}
+                                    rows={tcpConnectionsOutEntriesChartData}
+                                    components={{
+                                        checkboxCell: TopologyCheckBoxCell,
+                                        nameLinkCell: (props: TopologyDetailNameLinkCellProps) =>
+                                            TopologyDetailNameLinkCell({
+                                                ...props,
+                                                link,
+                                            }),
+                                    }}
                                 />
                             </DescriptionListDescription>
                         </DescriptionListGroup>
@@ -100,10 +153,21 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                             </DescriptionListTerm>
                             <DescriptionListDescription>
                                 <TrafficChart data={tcpConnectionsInEntriesChartData} />
-                                <TrafficTable
-                                    link={link}
-                                    data={tcpConnectionsInEntriesChartData}
-                                    onSelected={handleSelectedReceived}
+                                <SkTable
+                                    borders={false}
+                                    isStriped={false}
+                                    isPlain={true}
+                                    shouldSort={false}
+                                    columns={columnsTCPConnectionsIn}
+                                    rows={tcpConnectionsInEntriesChartData}
+                                    components={{
+                                        checkboxCell: TopologyCheckBoxCell,
+                                        nameLinkCell: (props: TopologyDetailNameLinkCellProps) =>
+                                            TopologyDetailNameLinkCell({
+                                                ...props,
+                                                link,
+                                            }),
+                                    }}
                                 />
                             </DescriptionListDescription>
                         </DescriptionListGroup>
@@ -137,54 +201,36 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
     );
 };
 
-const TrafficTable: FC<TrafficProps> = function ({ data, onSelected, link }) {
-    const [status, setIsChecked] = useState<Record<string, boolean>>(
-        data.reduce((acc, row) => {
-            acc[row.identity] = true;
+export interface TopologyCheckBoxCellProps {
+    data: TrafficData;
+    value: TrafficData[keyof TrafficData];
+    callback: Function;
+}
 
-            return acc;
-        }, {} as Record<string, boolean>),
-    );
+const TopologyCheckBoxCell: FC<TopologyCheckBoxCellProps> = function ({ data, callback }) {
+    const [status, setIsChecked] = useState<boolean>(true);
 
-    const handleChange = (checked: boolean, event: React.FormEvent<HTMLInputElement>) => {
-        const target = event.currentTarget;
-        const newStatus = { ...status, [target.id]: checked };
+    const handleChange = (checked: boolean) => {
+        setIsChecked(checked);
 
-        setIsChecked(newStatus);
-
-        if (onSelected) {
-            onSelected(newStatus);
+        if (callback) {
+            callback(!checked);
         }
     };
 
-    return (
-        <TableComposable variant="compact" isStickyHeader borders={false}>
-            <Thead>
-                <Tr>
-                    <Th />
-                    <Th>{ConnectionsColumns.Name}</Th>
-                    <Th>{ConnectionsColumns.ByteRate}</Th>
-                </Tr>
-            </Thead>
-            <Tbody>
-                {data.map(({ identity, targetIdentity, name, value }) => (
-                    <Tr key={identity}>
-                        <Td width={10}>
-                            <Checkbox
-                                isChecked={status[identity]}
-                                onChange={handleChange}
-                                id={identity}
-                            />
-                        </Td>
-                        <Td>
-                            <Link to={`${link}/${targetIdentity}`}>
-                                <TableText wrapModifier="truncate">{name} </TableText>
-                            </Link>
-                        </Td>
-                        <Td width={30}>{`${formatByteRate(value)}`}</Td>
-                    </Tr>
-                ))}
-            </Tbody>
-        </TableComposable>
-    );
+    return <Checkbox isChecked={status} onChange={handleChange} id={data.identity as string} />;
+};
+
+export interface TopologyDetailNameLinkCellProps {
+    data: TrafficData;
+    value: TrafficData[keyof TrafficData];
+    link: string;
+}
+
+const TopologyDetailNameLinkCell: FC<TopologyDetailNameLinkCellProps> = function ({
+    data,
+    value,
+    link,
+}) {
+    return <Link to={`${link}/${data.targetIdentity}`}>{value}</Link>;
 };
