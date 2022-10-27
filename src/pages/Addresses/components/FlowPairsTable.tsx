@@ -21,8 +21,6 @@ import { FlowPairsColumns } from '../Addresses.constants';
 import { FlowPairsColumnsNames } from '../Addresses.enum';
 import { FlowPairBasic, FlowPairsTableProps } from '../services/services.interfaces';
 
-import './FlowPairs.css';
-
 const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();

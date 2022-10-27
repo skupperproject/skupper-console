@@ -16,4 +16,5 @@ export interface SKTableProps<T> {
     isStriped?: boolean;
     isPlain?: boolean;
     shouldSort?: boolean;
+    onSort?: Function;
 }

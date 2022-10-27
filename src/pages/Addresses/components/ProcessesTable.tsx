@@ -13,8 +13,6 @@ import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum'
 import { ProcessesTableProps } from '../Addresses.interfaces';
 import { ProcessRow } from '../services/services.interfaces';
 
-import './FlowPairs.css';
-
 const AddressProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
     const columns = [
         {

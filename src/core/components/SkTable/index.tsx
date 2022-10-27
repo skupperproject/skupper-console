@@ -37,6 +37,7 @@ const SkTable = function <T>({
     rows,
     rowsCount = rows.length,
     components,
+    onSort,
     ...props
 }: SKTableProps<T>) {
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
@@ -53,6 +54,10 @@ const SkTable = function <T>({
             onSort: (_event: React.MouseEvent, index: number, direction: 'asc' | 'desc') => {
                 setActiveSortIndex(index);
                 setActiveSortDirection(direction);
+
+                if (onSort) {
+                    onSort({ prop: columns[index].prop, direction });
+                }
             },
             columnIndex,
         };
@@ -73,26 +78,31 @@ const SkTable = function <T>({
         setCurrentPageIndex(FIRST_PAGE_INDEX);
     }
 
-    const rowsSorted = rows.sort((a, b) => {
-        const columnName = columns[activeSortIndex || 0].prop;
+    let rowsSorted = rows;
 
-        const paramA = a[columnName];
-        const paramB = b[columnName];
+    if (!onSort) {
+        rowsSorted = rows.sort((a, b) => {
+            const columnName = columns[activeSortIndex || 0].prop;
 
-        if (paramA === paramB) {
+            const paramA = a[columnName];
+            const paramB = b[columnName];
+
+            if (paramA === paramB) {
+                return 0;
+            }
+
+            if (activeSortDirection === 'asc') {
+                return paramA > paramB ? 1 : -1;
+            }
+
+            if (activeSortDirection === 'desc') {
+                return paramA < paramB ? 1 : -1;
+            }
+
             return 0;
-        }
+        });
+    }
 
-        if (activeSortDirection === 'asc') {
-            return paramA > paramB ? 1 : -1;
-        }
-
-        if (activeSortDirection === 'desc') {
-            return paramA < paramB ? 1 : -1;
-        }
-
-        return 0;
-    });
     const skRows = rowsSorted
         .map((row) => ({
             columns: columns.map((column) => ({
@@ -103,7 +113,7 @@ const SkTable = function <T>({
         }))
         .slice(currentPageIndex * pageSize, currentPageIndex * pageSize + pageSize);
 
-    const { isPlain, shouldSort, ...restProps } = props;
+    const { isPlain, shouldSort = true, ...restProps } = props;
 
     return (
         <Card isPlain={isPlain || false}>
