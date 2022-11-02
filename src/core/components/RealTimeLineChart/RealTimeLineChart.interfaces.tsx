@@ -6,6 +6,7 @@ interface DataProps {
 export interface RealTimeLineChartProps {
     data: DataProps[];
     options?: {
+        type?: 'line' | 'area';
         formatter?: Function;
         chartColor?: string;
         height?: number;

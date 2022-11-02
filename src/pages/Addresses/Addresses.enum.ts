@@ -16,7 +16,11 @@ export enum AddressesDescriptions {
 export enum AddressesLabels {
     Section = 'Addresses',
     Description = 'Set of services that are exposed across the Virtual application network',
-    Connections = 'Connections',
+    CurrentConnections = 'Connections',
+    ConnectionsByAddress = 'Top  5 - Connections By address',
+    TopConnections = 'Top 5 - Total connections',
+    TopServer = 'Top  5 - Servers By Address',
+    CurrentServer = 'Servers',
 }
 
 export enum AddressesColumns {
@@ -43,13 +47,10 @@ export enum FlowPairsColumnsNames {
     ImageName = 'Image',
 }
 
-export enum FlowPairDetailsLabels {
-    WarningMessage = 'This flow does not have a counter flow. There may be an error in the network',
-    Connector = 'CONNECTOR',
-    Listener = 'LISTENER',
-    TrafficChartTitle = 'Bytes Rate in the last minute',
+export enum FlowPairsLabels {
     Servers = 'Servers',
     Connections = 'Connections',
+    FlowPairsDistributionTitle = 'Top 5 clients',
 }
 
 // PROCESSES TABLE

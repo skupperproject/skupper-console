@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
     Chart,
+    ChartArea,
     ChartAxis,
     ChartGroup,
     ChartLine,
@@ -134,16 +135,27 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
                     }
                 />
                 <ChartGroup>
-                    {samples?.map((sampleGroup: SampleProps[], index) => (
-                        <ChartLine
-                            key={index}
-                            data={sampleGroup}
-                            animate={{
-                                duration: 0,
-                                onLoad: { duration: 0 },
-                            }}
-                        />
-                    ))}
+                    {samples?.map((sampleGroup: SampleProps[], index) =>
+                        options?.type === 'area' ? (
+                            <ChartArea
+                                key={index}
+                                data={sampleGroup}
+                                animate={{
+                                    duration: 0,
+                                    onLoad: { duration: 0 },
+                                }}
+                            />
+                        ) : (
+                            <ChartLine
+                                key={index}
+                                data={sampleGroup}
+                                animate={{
+                                    duration: 0,
+                                    onLoad: { duration: 0 },
+                                }}
+                            />
+                        ),
+                    )}
                 </ChartGroup>
             </Chart>
         </div>
