@@ -47,7 +47,7 @@ export const getProcessesByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}
 export const getConnectorsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/connectors`;
 
 // CONNECTIONS
-export const FLOWPAIRS_PATH = `${API_URL}/flowpairs/`;
-export const SITE_PAIRS_PATH = `${API_URL}/sitepairs/`;
-export const PROCESS_GROUP_PAIRS_PATH = `${API_URL}/processgrouppairs/`;
-export const PROCESS_PAIRS_PATH = `${API_URL}/processpairs/`;
+export const FLOWPAIRS_PATH = `${API_URL}/flowpairs`;
+export const SITE_PAIRS_PATH = `${API_URL}/sitepairs`;
+export const PROCESS_GROUP_PAIRS_PATH = `${API_URL}/processgrouppairs`;
+export const PROCESS_PAIRS_PATH = `${API_URL}/processpairs`;

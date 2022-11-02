@@ -9,16 +9,17 @@ export function loadMockServer() {
     ) {
         const path = './data';
 
-        const data = require(`${path}/DATA.json`);
-
-        const addresses = require(`${path}/FLOWS-ADDRESSES.json`);
-        const sites = require(`${path}/FLOWS-SITES.json`);
-        const routers = require(`${path}/FLOWS-ROUTERS.json`);
-        const links = require(`${path}/FLOWS-LINKS.json`);
-        const listeners = require(`${path}/FLOWS-LISTENERS.json`);
-        const connectors = require(`${path}/FLOWS-CONNECTORS.json`);
+        const sites = require(`${path}/SITES.json`);
+        const processGroups = require(`${path}/PROCESS_GROUPS.json`);
+        const processGroupPairs = require(`${path}/PROCESS_GROUP_PAIRS.json`);
+        const processes = require(`${path}/PROCESSES.json`);
+        const processPairs = require(`${path}/PROCESS_PAIRS.json`);
+        const hosts = require(`${path}/HOSTS.json`);
+        const addresses = require(`${path}/ADDRESSES.json`);
+        const routers = require(`${path}/ROUTERS.json`);
+        const links = require(`${path}/LINKS.json`);
         const flows = require(`${path}/FLOWS.json`);
-        const processes = require(`${path}/FLOWS-PROCESSES.json`);
+        const flowpairs = require(`${path}/FLOWS.json`);
 
         const prefix = '/api/v1alpha1';
 
@@ -31,25 +32,60 @@ export function loadMockServer() {
                     '/error',
                     () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }),
                 );
-                this.get('/DATA', () => data);
+
+                this.get(`${prefix}/sites`, () => sites);
+                this.get(`${prefix}/sites/:id`, (_, { params: { id } }) => sites.find(({identity}) => identity === id));
+                this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => hosts.filter(({parent}) => parent === id));
+                this.get(`${prefix}/sites/:id/processes`, (_, { params: { id } }) => processes.filter(({parent}) => parent === id));
+                this.get(`${prefix}/sites/:id/routers`, (_, { params: { id } }) => routers.filter(({parent}) => parent === id));
+                this.get(`${prefix}/sites/:id/links`, (_, { params: { id } }) => links.filter(({parent}) => parent === id));
+
+                this.get(`${prefix}/processgroups`, () => processGroups);
+                this.get(`${prefix}/processgroups/:id`, (_, { params: { id } }) => processGroups.find(({identity}) => identity === id));
+                this.get(`${prefix}/processgroups/:id/processes`, (_, { params: { id } }) => processes.filter(({groupIdentity}) => groupIdentity === id));
+
+                this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
+
+                this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => {
+                    return processGroupPairs.find(({identity}) => identity === id);
+                })
+
+                this.get(`${prefix}/processes`, () => processes);
+                this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => processes.find(({identity}) => identity === id));
+
+                this.get(`${prefix}/processpairs`, (_,{queryParams}) => {
+                    if(!Object.keys(queryParams).length) {
+                        return processPairs
+                    }
+
+                    return processPairs.filter(pair => pair.sourceId === queryParams.sourceId || pair.destinationId === queryParams.destinationId  )
+
+                });
+
+                this.get(`${prefix}/processpairs/:id`, (_, { params: { id } }) => {
+                    return processPairs.find(({identity}) => identity === id);
+                })
+
 
                 this.get(`${prefix}/addresses`, () => addresses);
-                this.get(`${prefix}/sites`, () => sites);
+                this.get(`${prefix}/addresses/:id`, (_, { params: { id } }) => addresses.find(({identity}) => identity === id));
+                this.get(`${prefix}/addresses/:id/flowpairs`, (_, { params: { id } }) => flowpairs.filter(({identity}) => identity === id));
+                this.get(`${prefix}/addresses/:id/processes`, (_, { params: { id } }) => processes.filter(({identity}) => identity === id));
+
+
                 this.get(`${prefix}/routers`, () => routers);
                 this.get(`${prefix}/links`, () => links);
                 this.get(`${prefix}/listeners`, () => listeners);
                 this.get(`${prefix}/connectors`, () => connectors);
                 this.get(`${prefix}/flows`, () => flows);
-                this.get(`${prefix}/processes`, () => processes);
 
                 this.get(`${prefix}/addresses/:id`, (_, { params: { id } }) =>
                     getEntity(addresses, id),
                 );
-                this.get(`${prefix}/sites/:id`, (_, { params: { id } }) => getEntity(sites, id));
                 this.get(`${prefix}/routers/:id`, (_, { params: { id } }) =>
                     getEntity(routers, id),
                 );
-                this.get(`${prefix}/links/:id`, (_, { params: { id } }) => getEntity(links, id));
+                this.get(`${prefix}/links/:id`, (_, { params: { id } }) => getEntities(links, id));
                 this.get(`${prefix}/listeners/:id`, (_, { params: { id } }) =>
                     getEntity(listeners, id),
                 );
@@ -59,14 +95,16 @@ export function loadMockServer() {
                 this.get(`${prefix}/flows/:id`, (_, { params }) =>
                     flows.filter(({ identity }) => identity === params.id),
                 );
-                this.get(`${prefix}/processes/:id`, (_, { params }) =>
-                    processes.filter(({ identity }) => identity === params.id),
-                );
+
             },
         });
     }
 }
 
-function getEntity(list, id) {
+function getEntities(list, id) {
     return list.filter(({ identity }) => identity === id);
+}
+
+function getEntity(list, id) {
+    return list.find(({ identity }) => identity === id);
 }
