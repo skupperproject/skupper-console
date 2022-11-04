@@ -1,7 +1,5 @@
 # Skupper console
 
-WOrk in progress.
-
 ## Development
 
 > `yarn install`
