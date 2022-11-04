@@ -13,7 +13,7 @@ To run the console in develop mode using a mock data example, type in the termin
 
 > `yarn start`
 
-and open <http://localhosst:3000>
+and open <http://localhost:3000>
 
 You can also run the console using external endpoints for the skupper controller and skupper flow collector:
 
