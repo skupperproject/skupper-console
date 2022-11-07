@@ -5,8 +5,9 @@ context('Navigation', () => {
         cy.visit('/');
     });
 
-    it('Redirect to the Overview section when the app is loaded', () => {
-        cy.location('hash').should('include', 'overview');
+    it('Navigate to the Network section', () => {
+        cy.get('[data-cy=sk-nav-bar]').contains('Network').click({ force: true });
+        cy.location('hash').should('include', 'topology');
     });
 
     it('Navigate to the Sites section', () => {
@@ -14,19 +15,19 @@ context('Navigation', () => {
         cy.location('hash').should('include', 'sites');
     });
 
-    it('Navigate to the Services section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Services').click({ force: true });
-        cy.location('hash').should('include', 'services');
+    it('Navigate to the Process Groups section', () => {
+        cy.get('[data-cy=sk-nav-bar]').contains('Process Groups').click({ force: true });
+        cy.location('hash').should('include', 'processGroups');
     });
 
-    it('Navigate to the Monitoring section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
-        cy.location('hash').should('include', 'monitoring');
+    it('Navigate to the Processes section', () => {
+        cy.get('[data-cy=sk-nav-bar]').contains('Processes').click({ force: true });
+        cy.location('hash').should('include', 'processes');
     });
 
-    it('Navigate to the Monitoring/service-bar section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
-        cy.location('hash').should('include', 'monitoring');
+    it('Navigate to the Addresses', () => {
+        cy.get('[data-cy=sk-nav-bar]').contains('Addresses').click({ force: true });
+        cy.location('hash').should('include', 'addresses');
     });
 
     it('Redirect to the Not found page when url not exists', () => {
@@ -36,21 +37,21 @@ context('Navigation', () => {
 
     it("Go back or forward in the browser's history", () => {
         cy.get('[data-cy=sk-nav-bar]').contains('Sites').click({ force: true });
-        cy.get('[data-cy=sk-nav-bar]').contains('Live Services').click({ force: true });
+        cy.get('[data-cy=sk-nav-bar]').contains('Processes').click({ force: true });
 
         cy.go('back');
-        cy.location('hash').should('not.include', 'monitoring');
+        cy.location('hash').should('include', 'sites');
 
         cy.go('forward');
-        cy.location('hash').should('include', 'monitoring');
+        cy.location('hash').should('include', 'processes');
 
         // clicking back
         cy.go(-1);
-        cy.location('hash').should('not.include', 'monitoring');
+        cy.location('hash').should('include', 'sites');
 
         // clicking forward
         cy.go(1);
-        cy.location('hash').should('include', 'monitoring');
+        cy.location('hash').should('include', 'processes');
     });
 
     it('Reload the page and stay on the last page selected', () => {
@@ -60,7 +61,7 @@ context('Navigation', () => {
 
         // reload the page without using the cache
         cy.reload(true);
-        cy.get('[data-cy=sk-nav-bar]').contains('Services').click({ force: true });
-        cy.location('hash').should('include', 'services');
+        cy.get('[data-cy=sk-nav-bar]').contains('Sites').click({ force: true });
+        cy.location('hash').should('include', 'sites');
     });
 });

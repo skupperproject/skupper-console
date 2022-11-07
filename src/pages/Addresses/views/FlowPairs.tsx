@@ -138,7 +138,7 @@ const FlowsPairs = function () {
     );
 
     return (
-        <Grid hasGutter>
+        <Grid hasGutter data-cy="sk-address">
             <GridItem>
                 <Breadcrumb>
                     <BreadcrumbItem>
