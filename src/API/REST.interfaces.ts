@@ -1,9 +1,11 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-export interface Request {
+export interface RequestOptions {
     filters?: Record<string, string>;
     offset?: number;
     limit?: number;
+    sortDirection?: 'asc' | 'desc';
+    sortName?: string;
 }
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;

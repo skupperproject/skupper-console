@@ -16,6 +16,7 @@ export const HOSTS_PATH = `${API_URL}/hosts/`;
 
 // ROUTERS
 export const ROUTERS_PATH = `${API_URL}/routers/`;
+export const getRouterPATH = (id: string) => `${ROUTERS_PATH}${id}`;
 
 // LINKS
 export const LINKS_PATH = `${API_URL}/links/`;
@@ -47,7 +48,14 @@ export const getProcessesByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}
 export const getConnectorsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/connectors`;
 
 // CONNECTIONS
-export const FLOWPAIRS_PATH = `${API_URL}/flowpairs`;
-export const SITE_PAIRS_PATH = `${API_URL}/sitepairs`;
-export const PROCESS_GROUP_PAIRS_PATH = `${API_URL}/processgrouppairs`;
-export const PROCESS_PAIRS_PATH = `${API_URL}/processpairs`;
+export const FLOWPAIRS_PATH = `${API_URL}/flowpairs/`;
+export const getFlowPairPATH = (id: string) => `${FLOWPAIRS_PATH}${id}`;
+
+export const SITE_PAIRS_PATH = `${API_URL}/sitepairs/`;
+export const getSitePairPATH = (id: string) => `${SITE_PAIRS_PATH}${id}`;
+
+export const PROCESS_GROUP_PAIRS_PATH = `${API_URL}/processgrouppairs/`;
+export const getProcessGroupPairPATH = (id: string) => `${PROCESS_GROUP_PAIRS_PATH}${id}`;
+
+export const PROCESS_PAIRS_PATH = `${API_URL}/processpairs/`;
+export const getProcessPairPATH = (id: string) => `${PROCESS_PAIRS_PATH}${id}`;
