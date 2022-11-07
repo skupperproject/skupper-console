@@ -67,7 +67,7 @@ const Addresses = function () {
     );
 
     return (
-        <Grid hasGutter>
+        <Grid hasGutter data-cy="sk-addresses">
             <GridItem>
                 <AddressesTable addresses={sortedAddresses} />
             </GridItem>

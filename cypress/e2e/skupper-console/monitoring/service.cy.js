@@ -2,17 +2,17 @@
 
 context('Monitoring service', () => {
     beforeEach(() => {
-        cy.visit('/#/monitoring');
+        cy.visit('/#/addresses');
     });
 
-    // it('Navigate to the Monitoring/service-bar section and back to the monitor homepage', () => {
-    //     cy.get('[data-cy=sk-vanservices-services]').contains('service-bar').click({ force: true });
-    //     cy.location('hash').should('include', 'monitoring/connections/service-bar');
+    it('Navigate to the Monitoring/service-bar section and back to the monitor homepage', () => {
+        cy.get('[data-cy=sk-addresses]').contains('productcatalogservice').click({ force: true });
+        cy.location('hash').should('include', 'addresses/flowpairs/productcatalogservice');
 
-    //     cy.get('[data-cy=sk-monitoring-service]')
-    //         .get('.pf-c-breadcrumb__list')
-    //         .contains('Monitoring')
-    //         .click({ force: true });
-    //     cy.location('hash').should('include', 'monitoring');
-    // });
+        cy.get('[data-cy=sk-address]')
+            .get('.pf-c-breadcrumb__list')
+            .contains('addresses')
+            .click({ force: true });
+        cy.location('hash').should('include', 'addresses');
+    });
 });
