@@ -5,7 +5,6 @@ import {
     LISTENERS_PATH,
     SITES_PATH,
     ADDRESSES_PATH,
-    FLOWPAIRS_PATH,
     getFlowsPairsByAddressPATH,
     getProcessesBySitePATH,
     getProcessesByAddressPATH,
@@ -28,6 +27,11 @@ import {
     getConnectorsByAddressPATH,
     getLinkPATH,
     getConnectorPATH,
+    getRouterPATH,
+    getFlowPairPATH,
+    getSitePairPATH,
+    getProcessGroupPairPATH,
+    getProcessPairPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
@@ -41,93 +45,129 @@ import {
     HostResponse,
     FlowAggregatesMapResponse,
     FlowAggregatesResponse,
-    Request,
+    RequestOptions,
 } from './REST.interfaces';
 
 export const RESTApi = {
     // SITES APIs
-    fetchSites: async (): Promise<SiteResponse[]> => {
-        const { data } = await fetchWithTimeout(SITES_PATH);
+    fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
+        const { data } = await fetchWithTimeout(SITES_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchSite: async (id: string): Promise<SiteResponse> => {
-        const { data } = await fetchWithTimeout(getSitePATH(id));
+    fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
+        const { data } = await fetchWithTimeout(getSitePATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchProcessesBySite: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesBySitePATH(id));
+    fetchProcessesBySite: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesBySitePATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchRoutersBySite: async (id: string): Promise<RouterResponse[]> => {
-        const { data } = await fetchWithTimeout(getRoutersBySitePATH(id));
+    fetchRoutersBySite: async (id: string, options?: RequestOptions): Promise<RouterResponse[]> => {
+        const { data } = await fetchWithTimeout(getRoutersBySitePATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchLinksBySite: async (id: string): Promise<LinkResponse[]> => {
-        const { data } = await fetchWithTimeout(getLinksBySitePATH(id));
+    fetchLinksBySite: async (id: string, options?: RequestOptions): Promise<LinkResponse[]> => {
+        const { data } = await fetchWithTimeout(getLinksBySitePATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchHostsBySite: async (id: string): Promise<HostResponse[]> => {
-        const { data } = await fetchWithTimeout(getHostsBySitePATH(id));
+    fetchHostsBySite: async (id: string, options?: RequestOptions): Promise<HostResponse[]> => {
+        const { data } = await fetchWithTimeout(getHostsBySitePATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // ROUTER APIs
-    fetchRouters: async (): Promise<RouterResponse[]> => {
-        const { data } = await fetchWithTimeout(`${ROUTERS_PATH}`);
+    fetchRouters: async (options?: RequestOptions): Promise<RouterResponse[]> => {
+        const { data } = await fetchWithTimeout(ROUTERS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchRouter: async (id: string): Promise<RouterResponse> => {
-        const { data } = await fetchWithTimeout(`${ROUTERS_PATH}/${id}`);
+    fetchRouter: async (id: string, options?: RequestOptions): Promise<RouterResponse> => {
+        const { data } = await fetchWithTimeout(getRouterPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // PROCESS APIs
-    fetchProcesses: async (): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(`${PROCESSES_PATH}`);
+    fetchProcesses: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(PROCESSES_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data.map((process: ProcessGroupResponse) => ({
             ...process,
             type: process.name.startsWith('skupper-') ? 'skupper' : 'app',
         }));
     },
-
-    fetchProcess: async (id: string): Promise<ProcessResponse> => {
-        const { data } = await fetchWithTimeout(geProcessPATH(id));
+    fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
+        const { data } = await fetchWithTimeout(geProcessPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // HOST APIs
-    fetchHost: async (): Promise<HostResponse[]> => {
-        const { data } = await fetchWithTimeout(`${HOSTS_PATH}`);
+    fetchHost: async (options?: RequestOptions): Promise<HostResponse[]> => {
+        const { data } = await fetchWithTimeout(HOSTS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // PROCESS GROUPS APIs
-    fetchProcessGroups: async (): Promise<ProcessGroupResponse[]> => {
-        const { data } = await fetchWithTimeout(PROCESS_GROUPS_PATH);
+    fetchProcessGroups: async (options?: RequestOptions): Promise<ProcessGroupResponse[]> => {
+        const { data } = await fetchWithTimeout(PROCESS_GROUPS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data.map((processGroup: ProcessGroupResponse) => ({
             ...processGroup,
             type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
         }));
     },
-    fetchProcessGroup: async (id: string): Promise<ProcessGroupResponse> => {
-        const { data } = await fetchWithTimeout(getProcessGroupPATH(id));
+    fetchProcessGroup: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<ProcessGroupResponse> => {
+        const { data } = await fetchWithTimeout(getProcessGroupPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-    fetchProcessesByProcessGroup: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesByProcessGroupPATH(id));
+    fetchProcessesByProcessGroup: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesByProcessGroupPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data.map((processGroup: ProcessGroupResponse) => ({
             ...processGroup,
@@ -136,97 +176,142 @@ export const RESTApi = {
     },
 
     // PROCESSES  APIs
-    fetchConnectorByProcess: async (id: string): Promise<DeviceResponse> => {
-        const { data } = await fetchWithTimeout(getConnectorByProcessPATH(id));
+    fetchConnectorByProcess: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<DeviceResponse> => {
+        const { data } = await fetchWithTimeout(getConnectorByProcessPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // LINKS  APIs
-    fetchLinks: async (): Promise<LinkResponse[]> => {
-        const { data } = await fetchWithTimeout(`${LINKS_PATH}`);
+    fetchLinks: async (options?: RequestOptions): Promise<LinkResponse[]> => {
+        const { data } = await fetchWithTimeout(`${LINKS_PATH}`, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
-    fetchLink: async (id: string): Promise<LinkResponse> => {
-        const { data } = await fetchWithTimeout(getLinkPATH(id));
+    fetchLink: async (id: string, options?: RequestOptions): Promise<LinkResponse> => {
+        const { data } = await fetchWithTimeout(getLinkPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // CONNECTORS  APIs
-    fetchConnectors: async (): Promise<DeviceResponse[]> => {
-        const { data } = await fetchWithTimeout(`${CONNECTORS_PATH}`);
+    fetchConnectors: async (options?: RequestOptions): Promise<DeviceResponse[]> => {
+        const { data } = await fetchWithTimeout(CONNECTORS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-
-    fetchConnector: async (id: string): Promise<DeviceResponse | null> => {
-        const { data } = await fetchWithTimeout(getConnectorPATH(id));
+    fetchConnector: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<DeviceResponse | null> => {
+        const { data } = await fetchWithTimeout(getConnectorPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // LISTENERS  APIs
-    fetchListeners: async (): Promise<DeviceResponse[]> => {
-        const { data } = await fetchWithTimeout(`${LISTENERS_PATH}`);
+    fetchListeners: async (options?: RequestOptions): Promise<DeviceResponse[]> => {
+        const { data } = await fetchWithTimeout(LISTENERS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
-
-    fetchListener: async (id: string): Promise<DeviceResponse> => {
-        const { data } = await fetchWithTimeout(getListenerPATH(id));
+    fetchListener: async (id: string, options?: RequestOptions): Promise<DeviceResponse> => {
+        const { data } = await fetchWithTimeout(getListenerPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // ADDRESSES  APIs
-    fetchAddresses: async (): Promise<AddressResponse[]> => {
-        const { data } = await fetchWithTimeout(ADDRESSES_PATH);
+    fetchAddresses: async (options?: RequestOptions): Promise<AddressResponse[]> => {
+        const { data } = await fetchWithTimeout(ADDRESSES_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
+
+        return data;
+    },
+    fetchFlowPairsByAddress: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<FlowPairResponse[]> => {
+        const { data } = await fetchWithTimeout(getFlowsPairsByAddressPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
-    fetchFlowPairsByAddress: async (id: string): Promise<FlowPairResponse[]> => {
-        const { data } = await fetchWithTimeout(getFlowsPairsByAddressPATH(id));
+    fetchProcessesByAddresses: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getProcessesByAddressPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
-    fetchProcessesByAddresses: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getProcessesByAddressPATH(id));
-
-        return data;
-    },
-
-    fetchConnectorsByAddresses: async (id: string): Promise<ProcessResponse[]> => {
-        const { data } = await fetchWithTimeout(getConnectorsByAddressPATH(id));
+    fetchConnectorsByAddresses: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<ProcessResponse[]> => {
+        const { data } = await fetchWithTimeout(getConnectorsByAddressPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
     // FLOW PAIRS  APIs
-    fetchFlowPair: async (id: string): Promise<FlowPairResponse> => {
-        const { data } = await fetchWithTimeout(`${FLOWPAIRS_PATH}/${id}`);
+    fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairResponse> => {
+        const { data } = await fetchWithTimeout(getFlowPairPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
-    // AGGREGRATE  APIs
-    fetchSitesPairs: async (): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(SITE_PAIRS_PATH);
+    // AGGREGATE  APIs
+    fetchSitesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
+        const { data } = await fetchWithTimeout(SITE_PAIRS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
-    fetchSitePairs: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${SITE_PAIRS_PATH}/${id}`);
+    fetchSitePairs: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<FlowAggregatesResponse> => {
+        const { data } = await fetchWithTimeout(getSitePairPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 
-    fetchProcessgroupsPairs: async (options?: Request): Promise<FlowAggregatesMapResponse[]> => {
+    fetchProcessgroupsPairs: async (
+        options?: RequestOptions,
+    ): Promise<FlowAggregatesMapResponse[]> => {
         const { data } = await fetchWithTimeout(PROCESS_GROUP_PAIRS_PATH, {
             params: options?.filters,
         });
@@ -234,23 +319,42 @@ export const RESTApi = {
         return data;
     },
 
-    fetchProcessGroupPairs: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${PROCESS_GROUP_PAIRS_PATH}/${id}`);
-
-        return data;
-    },
-
-    fetchProcessesPairs: async (options?: Request): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await fetchWithTimeout(PROCESS_PAIRS_PATH, {
-            params: { ...options?.filters, offset: options?.offset, limit: options?.limit },
+    fetchProcessGroupPairs: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<FlowAggregatesResponse> => {
+        const { data } = await fetchWithTimeout(getProcessGroupPairPATH(id), {
+            params: options ? addQueryParams(options) : null,
         });
 
         return data;
     },
 
-    fetchProcessPairs: async (id: string): Promise<FlowAggregatesResponse> => {
-        const { data } = await fetchWithTimeout(`${PROCESS_PAIRS_PATH}/${id}`);
+    fetchProcessesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
+        const { data } = await fetchWithTimeout(PROCESS_PAIRS_PATH, {
+            params: options ? addQueryParams(options) : null,
+        });
+
+        return data;
+    },
+
+    fetchProcessPairs: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<FlowAggregatesResponse> => {
+        const { data } = await fetchWithTimeout(getProcessPairPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
 
         return data;
     },
 };
+
+function addQueryParams({ filters, offset, limit, sortDirection, sortName }: RequestOptions) {
+    return {
+        ...filters,
+        offset,
+        limit,
+        sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
+    };
+}
