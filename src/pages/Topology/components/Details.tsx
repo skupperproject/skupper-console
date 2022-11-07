@@ -201,7 +201,7 @@ const TrafficChart: FC<TrafficProps> = function ({ data }) {
     );
 };
 
-export interface TopologyCheckBoxCellProps {
+interface TopologyCheckBoxCellProps {
     data: TrafficData;
     value: TrafficData[keyof TrafficData];
     callback: Function;
@@ -221,7 +221,7 @@ const TopologyCheckBoxCell: FC<TopologyCheckBoxCellProps> = function ({ data, ca
     return <Checkbox isChecked={status} onChange={handleChange} id={data.identity as string} />;
 };
 
-export interface TopologyDetailNameLinkCellProps {
+interface TopologyDetailNameLinkCellProps {
     data: TrafficData;
     value: TrafficData[keyof TrafficData];
     link: string;

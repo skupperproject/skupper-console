@@ -88,7 +88,7 @@ const AddressProcessesTable: FC<ProcessesTableProps> = function ({ processes }) 
 
 export default AddressProcessesTable;
 
-export interface NameLinkCellProps {
+interface NameLinkCellProps {
     data: ProcessRow;
     value: ProcessRow[keyof ProcessRow];
     link: string;

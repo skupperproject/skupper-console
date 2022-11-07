@@ -7,11 +7,6 @@ export enum AddressesRoutesPathLabel {
     Addresses = 'addresses',
 }
 
-export enum AddressesDescriptions {
-    FlowPairsDesc = 'Sequence of packets from a source to a destination',
-    TTFBDesc = 'Time to first byte: the time elapsed between the opening of a TCP connection between a client and a server and the receipt by the client of the first packet with payload from the server',
-}
-
 // ADDRESSES VIEW
 export enum AddressesLabels {
     Section = 'Addresses',
