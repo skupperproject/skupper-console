@@ -1,5 +1,19 @@
 # Skupper console
 
+## Installation
+
+The skupper console is installed when skupper is initialized using
+
+> `skupper init --enable-console`
+
+## Securing the console
+
+When you run skupper init you can specify the --console-user and --console-password, otherwise they will be generated (admin and a random password held in secrets/skupper-console-users).
+
+You can also disable authentication by specifying
+
+> `--console-auth unsecured`
+
 ## Development
 
 > `yarn install`
@@ -18,8 +32,7 @@ You can also run the console using external endpoints for the skupper collector:
 > `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
 **remember to enable CORS**
-The flow-collector need to enable the CORS. We can do that doing ```kubectl set env deployment/<deployment name> USE_CORS=yes```.
-For development scope alternatevely you can install and activate this plugin in firefox <https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/> or in chrome <https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino>
+You can install and activate this plugin in firefox <https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/> or in chrome <https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino>
 
 ## Tests
 
@@ -33,11 +46,3 @@ For development scope alternatevely you can install and activate this plugin in 
 
 > `yarn start`
 > `yarn cy:open`
-
-#### ci mode
-
-> `yarn cy-test`
-
-## build
-
-> `yarn build`
