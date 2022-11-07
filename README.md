@@ -13,12 +13,12 @@ To run the console in develop mode using a mock data example, type in the termin
 
 and open <http://localhost:3000>
 
-You can also run the console using external endpoints for the skupper controller and skupper flow collector:
+You can also run the console using external endpoints for the skupper collector:
 
 > `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
 **remember to enable CORS**
-Both the Skupper-controller and the flow-collector need to enable the CORS. We can do that doing ```kubectl set env deployment/<deployment name> USE_CORS=yes``` for each of them.
+The flow-collector need to enable the CORS. We can do that doing ```kubectl set env deployment/<deployment name> USE_CORS=yes```.
 For development scope alternatevely you can install and activate this plugin in firefox <https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/> or in chrome <https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino>
 
 ## Tests
