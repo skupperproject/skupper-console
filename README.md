@@ -32,6 +32,10 @@ You can also run the console using external endpoints for the skupper collector:
 > `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
 
 **remember to enable CORS**
+The flow-collector need to enable the CORS. We can do that doing ```kubectl set env <container-name> USE_CORS=yes``` .  
+
+ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=yes```.
+
 You can install and activate this plugin in firefox <https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/> or in chrome <https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino>
 
 ## Tests
