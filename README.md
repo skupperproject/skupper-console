@@ -1,4 +1,4 @@
-# Skupper console
+# <p  style="display:flex; align-items:center; justify-content:center"><img src="https://skupper.io/images/skupper-logo.svg" height="60" style="margin-right:15px">Skupper console</p>
 
 ## Installation
 
