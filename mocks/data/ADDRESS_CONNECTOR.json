@@ -1,0 +1,10 @@
+{
+    "recType": "CONNECTOR",
+    "identity": "xf69q:3",
+    "parent": "xf69q:0",
+    "startTime": 1665055325553737,
+    "destHost": "172.17.29.173",
+    "destPort": "3550",
+    "protocol": "tcp",
+    "address": "productcatalogservice:3550"
+}
