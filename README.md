@@ -1,5 +1,6 @@
 <div style="display:flex; align-items:center; justify-content:center"><img src="https://skupper.io/images/skupper-logo.svg" height="60">&nbsp;&nbsp;&nbsp;&nbsp;<h1>Skupper console</h1></div>
 
+
 ## Installation
 
 The skupper console is installed when skupper is initialized using
