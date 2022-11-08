@@ -1,0 +1,11 @@
+{
+    "recType": "LISTENER",
+    "identity": "xf69q:4",
+    "parent": "xf69q:0",
+    "startTime": 1665055325566920,
+    "name": "productcatalogservice:3550",
+    "destHost": "0.0.0.0",
+    "destPort": "1024",
+    "protocol": "tcp",
+    "address": "productcatalogservice:3550"
+}

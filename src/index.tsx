@@ -7,7 +7,7 @@ import { HashRouter } from 'react-router-dom';
 import App from '@core/components/App';
 import { queryClientConfig } from 'config';
 
-import { loadMockServer } from '../public/mocks/server.js';
+import { loadMockServer } from '../mocks/server';
 
 const queryClient = new QueryClient(queryClientConfig);
 const rootElement = document.getElementById('app') as HTMLDivElement;
@@ -21,4 +21,9 @@ root.render(
     </QueryClientProvider>,
 );
 
-loadMockServer();
+if (
+    !process.env.API_HOST_FLOW_COLLECTOR &&
+    (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)
+) {
+    loadMockServer();
+}
