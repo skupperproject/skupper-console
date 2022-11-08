@@ -20,14 +20,14 @@ const ErrorServer = function () {
                 </TextContent>
                 <TextContent>
                     <Text component={TextVariants.h4}>
-                        {state?.httpStatus ? '' : Labels.ErrorServerMessage}
+                        {state?.httpStatus ? '' : Labels.GenericErrorServerMessage}
                     </Text>
                 </TextContent>
             </GridItem>
             <GridItem span={6} className=" pf-u-p-2xl">
                 <Brand src={BrandImg} alt="skupper brand" />
                 <TextContent>
-                    <Text>{Labels.ErrorBrandMessage}</Text>
+                    <Text>{Labels.Description}</Text>
                 </TextContent>
             </GridItem>
         </Grid>

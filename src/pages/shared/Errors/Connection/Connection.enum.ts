@@ -3,6 +3,6 @@ export enum ErrorConnectionRoutesPaths {
 }
 
 export enum Labels {
-    ErrorConnectionTitle = 'Connection error',
+    ErrorConnectionTitle = 'Request cancelled',
     ErrorBrandMessage = 'A Skupper network management and visualization tool.',
 }

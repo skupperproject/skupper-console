@@ -23,7 +23,10 @@ export const DEFAULT_VIEW = RoutesPropsConfig[0].path; // Firs page to load when
 export const queryClientConfig = {
     defaultOptions: {
         queries: {
-            retry: 1,
+            retry: 3,
+            queries: {
+                retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 30000),
+            },
             refetchOnWindowFocus: false,
             refetchIntervalInBackground: false,
             suspense: false,
@@ -34,7 +37,6 @@ export const queryClientConfig = {
 
 // general config
 export const UPDATE_INTERVAL = 4 * 1000; // time to request updated data to BE
-export const CONNECTION_TIMEOUT = 15 * 1000; // Max time to receive a HTTP response
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
 export const LINK_DIRECTIONS = {

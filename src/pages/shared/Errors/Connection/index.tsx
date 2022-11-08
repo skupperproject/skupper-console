@@ -31,18 +31,15 @@ const ErrorConnection = function () {
                     <Text component={TextVariants.h1}>{Labels.ErrorConnectionTitle}</Text>
                 </TextContent>
                 <TextContent>
-                    <Text component={TextVariants.p}>Here are some things to try:</Text>
+                    <Text component={TextVariants.p}>Some of the reason may be:</Text>
                 </TextContent>
                 <List>
+                    <ListItem>CORS issue</ListItem>
+                    <ListItem>Your browser have any ad-blockers installed</ListItem>
                     <ListItem>
                         <Button id="sk-try-again" variant="primary" onClick={handleRetryConnection}>
                             Try again
                         </Button>
-                    </ListItem>
-                    <ListItem>
-                        To help diagnose the problem
-                        <pre>{`curl ${window.location.protocol}//${window.location.host}/DATA`}</pre>
-                        and report the results to the skupper support site.
                     </ListItem>
                 </List>
             </GridItem>

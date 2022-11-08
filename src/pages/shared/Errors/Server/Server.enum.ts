@@ -4,6 +4,6 @@ export enum ErrorServerRoutesPaths {
 
 export enum Labels {
     ErrorServerTitle = 'Server Error',
-    ErrorServerMessage = 'Skupper network is adjusting to a new or removed link between sites. One moment please.',
-    ErrorBrandMessage = 'A Skupper network management and visualization tool.',
+    GenericErrorServerMessage = "We're sorry. The server encountered an internal error and was unable to complete the request",
+    Description = 'A Skupper network management and visualization tool.',
 }
