@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -58,63 +58,16 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
 
     return (
         <TableComposable variant="compact">
-            <Thead hasNestedHeader>
+            <Thead>
                 <Tr>
-                    <Th hasRightBorder colSpan={6}>
-                        {FlowPairsColumnsNames.FlowForward}
-                    </Th>
-                    <Th colSpan={6} hasRightBorder>
-                        {FlowPairsColumnsNames.FlowReverse}
-                    </Th>
-                </Tr>
-                <Tr>
-                    <Th isSubheader sort={getSortParams(0)}>
-                        {FlowPairsColumnsNames.Process}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(1)}>
-                        {FlowPairsColumnsNames.Site}
-                    </Th>
+                    <Th sort={getSortParams(0)}>{FlowPairsColumnsNames.Client}</Th>
+                    <Th sort={getSortParams(1)}>{FlowPairsColumnsNames.Site}</Th>
 
-                    <Th isSubheader sort={getSortParams(2)}>
-                        {FlowPairsColumnsNames.Host}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(3)}>
-                        {FlowPairsColumnsNames.Port}
-                    </Th>
-                    <Th isSubheader className="align-th-right" sort={getSortParams(4)}>
-                        {FlowPairsColumnsNames.ByteRate}
-                    </Th>
-                    <Th
-                        isSubheader
-                        className="align-th-right"
-                        sort={getSortParams(5)}
-                        hasRightBorder
-                    >
-                        {FlowPairsColumnsNames.Bytes}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(6)}>
-                        {FlowPairsColumnsNames.Process}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(7)}>
-                        {FlowPairsColumnsNames.Site}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(8)}>
-                        {FlowPairsColumnsNames.Host}
-                    </Th>
-                    <Th isSubheader sort={getSortParams(9)}>
-                        {FlowPairsColumnsNames.Port}
-                    </Th>
-                    <Th isSubheader className="align-th-right" sort={getSortParams(10)}>
-                        {FlowPairsColumnsNames.ByteRate}
-                    </Th>
-                    <Th
-                        isSubheader
-                        className="align-th-right"
-                        sort={getSortParams(11)}
-                        hasRightBorder
-                    >
-                        {FlowPairsColumnsNames.Bytes}
-                    </Th>
+                    <Th sort={getSortParams(2)}>{FlowPairsColumnsNames.Port}</Th>
+                    <Th sort={getSortParams(3)}>{FlowPairsColumnsNames.ByteRateTX}</Th>
+                    <Th sort={getSortParams(4)}>{FlowPairsColumnsNames.ByteRateRX}</Th>
+                    <Th sort={getSortParams(5)}>{FlowPairsColumnsNames.Server}</Th>
+                    <Th sort={getSortParams(6)}>{FlowPairsColumnsNames.Site}</Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -122,9 +75,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                     connectionsSorted.map(
                         ({
                             id,
-                            bytes,
                             byteRate,
-                            host,
                             port,
                             siteId,
                             siteName,
@@ -133,14 +84,11 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                             targetSiteId,
                             targetSiteName,
                             targetByteRate,
-                            targetBytes,
-                            targetHost,
                             targetProcessId,
                             targetProcessName,
-                            targetPort,
                         }) => (
                             <Tr key={id}>
-                                <Td width={25} className="secondary-color">
+                                <Td width={25}>
                                     <Link to={`${ProcessesRoutesPaths.Processes}/${processId}`}>
                                         <TableText wrapModifier="truncate">
                                             <ResourceIcon type="process" />
@@ -148,7 +96,7 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                         </TableText>
                                     </Link>
                                 </Td>
-                                <Td width={25} className="secondary-color">
+                                <Td>
                                     <Link to={`${SitesRoutesPaths.Sites}/${siteId}`}>
                                         <TableText wrapModifier="truncate">
                                             <ResourceIcon type="site" />
@@ -156,13 +104,12 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                         </TableText>
                                     </Link>
                                 </Td>
-                                <Td className="secondary-color">{host}</Td>
-                                <Td className="secondary-color">{`${port}`}</Td>
-                                <Td className="align-td-right secondary-color">
+                                <Td>{port}</Td>
+                                <Td>
                                     <b>{formatByteRate(byteRate, 1)}</b>
                                 </Td>
-                                <Td className="align-td-right secondary-color td-border-right ">
-                                    <b>{formatBytes(bytes, 1)}</b>
+                                <Td>
+                                    <b>{formatByteRate(targetByteRate, 1)}</b>
                                 </Td>
                                 <Td width={25}>
                                     <Link
@@ -174,21 +121,13 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
                                         </TableText>
                                     </Link>
                                 </Td>
-                                <Td width={25}>
+                                <Td>
                                     <Link to={`${SitesRoutesPaths.Sites}/${targetSiteId}`}>
                                         <TableText wrapModifier="truncate">
                                             <ResourceIcon type="site" />
                                             {targetSiteName}
                                         </TableText>
                                     </Link>
-                                </Td>
-                                <Td>{targetHost}</Td>
-                                <Td>{`${targetPort}`}</Td>
-                                <Td className="align-td-right">
-                                    <b>{formatByteRate(targetByteRate, 1)}</b>
-                                </Td>
-                                <Td className="align-td-right">
-                                    <b>{formatBytes(targetBytes, 1)}</b>
                                 </Td>
                             </Tr>
                         ),

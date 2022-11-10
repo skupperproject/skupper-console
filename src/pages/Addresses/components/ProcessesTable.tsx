@@ -9,7 +9,7 @@ import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
+import { ProcessesColumnsNames } from '../Addresses.enum';
 import { ProcessesTableProps } from '../Addresses.interfaces';
 import { ProcessRow } from '../services/services.interfaces';
 
@@ -36,15 +36,6 @@ const AddressProcessesTable: FC<ProcessesTableProps> = function ({ processes }) 
         {
             name: ProcessesColumnsNames.Host,
             prop: 'host' as keyof ProcessRow,
-        },
-        {
-            name: ProcessesColumnsNames.Port,
-            prop: 'port' as keyof ProcessRow,
-        },
-        {
-            name: FlowPairsColumnsNames.ImageName,
-            prop: 'imageName' as keyof ProcessRow,
-            width: 20,
         },
         {
             name: ProcessesColumnsNames.ByteRate,

@@ -1,7 +1,7 @@
 import { RESTApi } from 'API/REST';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { FlowsPairsBasic, ProcessRow } from './services.interfaces';
+import { FlowPairBasic, ProcessRow } from './services.interfaces';
 
 export const AddressesController = {
     getAddresses: async (): Promise<AddressResponse[]> => {
@@ -15,11 +15,7 @@ export const AddressesController = {
     },
 
     // TODO: waiting for the API to remove multiple calls and filters
-    getFlowPairsByAddress: async (
-        id: string,
-        currentPage: number,
-        visibleItems: number,
-    ): Promise<FlowsPairsBasic> => {
+    getFlowPairsByAddress: async (id: string): Promise<FlowPairBasic[]> => {
         const flowsPairs = await RESTApi.fetchFlowPairsByAddress(id);
         const processes = await RESTApi.fetchProcesses();
         const sites = await RESTApi.fetchSites();
@@ -91,16 +87,7 @@ export const AddressesController = {
             }),
         );
 
-        // filter collection
-        const flowsFiltered = flowsPairsExtended.sort((a, b) => b.startTime - a.startTime);
-
-        const startOffset = (currentPage - 1) * visibleItems;
-        //paginate collection
-        const flowsPairsPaginated = flowsFiltered.filter(
-            (_, index) => index >= startOffset && index < startOffset + visibleItems,
-        );
-
-        return { connections: flowsPairsPaginated, total: flowsFiltered.length };
+        return flowsPairsExtended;
     },
 
     getProcessesWithMetricsByAddress: async (id: string): Promise<ProcessRow[]> => {
@@ -109,7 +96,6 @@ export const AddressesController = {
         return Promise.all(
             processes.map(async (process) => {
                 const site = await RESTApi.fetchSite(process.parent);
-                const { destPort } = await RESTApi.fetchConnectorByProcess(process.identity);
 
                 return {
                     identity: process.identity,
@@ -117,7 +103,6 @@ export const AddressesController = {
                     siteName: site.name,
                     processName: process.name,
                     host: process.sourceHost,
-                    port: destPort,
                     imageName: process.imageName,
                     groupId: process.groupIdentity,
                     groupName: process.group,
