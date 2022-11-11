@@ -32,6 +32,7 @@ export enum FlowPairsColumnsNames {
     FlowForward = 'From Client',
     FlowReverse = 'To Server',
     Site = 'Site',
+    ServerSite = 'Server Site',
     Process = 'process',
     Client = 'Client',
     Server = 'Server',

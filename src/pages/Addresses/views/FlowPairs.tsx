@@ -53,16 +53,6 @@ const FlowsPairs = function () {
         },
     );
 
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesAddresses.GetProcessesByAddress, addressId],
-        () => (addressId ? AddressesController.getProcessesWithMetricsByAddress(addressId) : null),
-        {
-            cacheTime: 0,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -72,11 +62,11 @@ const FlowsPairs = function () {
         navigate(route);
     }
 
-    if (isLoadingConnections || isLoadingProcesses) {
+    if (isLoadingConnections) {
         return <LoadingPage />;
     }
 
-    if (!connections || !processes) {
+    if (!connections) {
         return null;
     }
 
@@ -93,12 +83,12 @@ const FlowsPairs = function () {
     const totalBytesReceived = connections.reduce((acc, { targetBytes }) => acc + targetBytes, 0);
 
     const AvgByteRateSent = Math.round(
-        connections.reduce((acc, { byteRate }) => acc + byteRate, 0) / connections.length || 1,
+        connections.reduce((acc, { byteRate }) => acc + byteRate, 0) / (connections.length || 1),
     );
 
     const AvgByteRateReceived = Math.round(
         connections.reduce((acc, { targetByteRate }) => acc + targetByteRate, 0) /
-            connections.length || 1,
+            (connections.length || 1),
     );
 
     return (
@@ -171,27 +161,31 @@ const FlowsPairs = function () {
             <GridItem span={6}>
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
                     <CardTitle>{FlowPairsLabels.FlowPairsDistributionTitle}</CardTitle>
-                    <ChartPie
-                        constrainToVisibleArea
-                        data={topClients?.map(({ name, value }) => ({
-                            x: name,
-                            y: formatBytes(value),
-                        }))}
-                        labels={topClients?.map(
-                            ({ name, value }) => `${name}: ${formatBytes(value)}`,
-                        )}
-                        legendData={topClients?.map(({ name }) => ({ name }))}
-                        legendOrientation="vertical"
-                        legendPosition="right"
-                        padding={{
-                            bottom: 100,
-                            left: -100,
-                            right: 100,
-                            top: 0,
-                        }}
-                        themeColor={ChartThemeColors.Multi}
-                        height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-                    />
+                    {topClients?.length ? (
+                        <ChartPie
+                            constrainToVisibleArea
+                            data={topClients?.map(({ name, value }) => ({
+                                x: name,
+                                y: formatBytes(value),
+                            }))}
+                            labels={topClients?.map(
+                                ({ name, value }) => `${name}: ${formatBytes(value)}`,
+                            )}
+                            legendData={topClients?.map(({ name }) => ({ name }))}
+                            legendOrientation="vertical"
+                            legendPosition="right"
+                            padding={{
+                                bottom: 100,
+                                left: -100,
+                                right: 100,
+                                top: 0,
+                            }}
+                            themeColor={ChartThemeColors.Multi}
+                            height={REAL_TIME_CONNECTION_HEIGHT_CHART}
+                        />
+                    ) : (
+                        <EmptyData />
+                    )}
                 </Card>
             </GridItem>
             <GridItem span={6}>
@@ -219,7 +213,7 @@ const FlowsPairs = function () {
             </GridItem>
             <GridItem>
                 <Card isRounded className="pf-u-pt-md">
-                    <FlowsPairsTable flowPairs={connections} processes={processes} />
+                    <FlowsPairsTable flowPairs={connections} />
                 </Card>
             </GridItem>
         </Grid>

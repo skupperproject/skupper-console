@@ -1,6 +1,5 @@
 // FLOW PAIRS TABLE
 export interface FlowPairsTableProps {
-    processes: ProcessRow[];
     flowPairs: FlowPairBasic[];
 }
 
@@ -29,7 +28,6 @@ export interface FlowPairBasic {
     port: string;
     processId: string;
     processName: string;
-    processImageName: string;
     latency: number;
     startTime: number;
     endTime?: number;
@@ -37,11 +35,7 @@ export interface FlowPairBasic {
     targetSiteName: string;
     targetByteRate: number;
     targetBytes: number;
-    targetHost: string;
-    targetPort: string;
     targetProcessId: string;
     targetProcessName: string;
-    targetProcessImageName: string;
     targetLatency: number;
-    protocol: string;
 }
