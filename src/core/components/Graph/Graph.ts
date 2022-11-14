@@ -1,3 +1,4 @@
+// grapsh.tsx
 import { easeLinear } from 'd3';
 import { set } from 'd3-collection';
 import { drag } from 'd3-drag';
@@ -45,6 +46,7 @@ export default class Graph {
     groupIds: string[];
     selectedNode: null | string;
     EventEmitter: EventEmitter;
+    options: { showGroup?: boolean | undefined } | undefined;
 
     constructor(
         $node: HTMLElement,
@@ -52,6 +54,7 @@ export default class Graph {
         edges: GraphEdge[] | GraphEdgeModifiedByForce[],
         boxWidth: number,
         boxHeight: number,
+        options?: { showGroup?: boolean },
     ) {
         this.$root = $node;
         this.nodes = nodes;
@@ -59,6 +62,7 @@ export default class Graph {
         this.selectedNode = null;
         this.width = boxWidth;
         this.height = boxHeight;
+        this.options = options;
 
         this.EventEmitter = new EventEmitter();
         this.isDraggingNode = false;
@@ -212,7 +216,9 @@ export default class Graph {
             .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
             .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
 
-        this.redrawGroups();
+        if (this.options?.showGroup) {
+            this.redrawGroups();
+        }
     };
 
     private polygonGenerator = (groupId: string) => {
@@ -225,6 +231,20 @@ export default class Graph {
             .map(function ({ x, y }) {
                 return [x, y];
             });
+
+        if (node_coords.length < 3) {
+            if (node_coords.length === 1) {
+                node_coords.push([
+                    node_coords[0][0] + NODE_SIZE * 2,
+                    node_coords[0][1] + NODE_SIZE * 2,
+                ]);
+            }
+
+            node_coords.push([
+                node_coords[0][0] + NODE_SIZE * 2,
+                Number(node_coords[0][1]) - NODE_SIZE * 2,
+            ]);
+        }
 
         return polygonHull(node_coords);
     };
@@ -398,7 +418,7 @@ export default class Graph {
                 groupId,
                 count: nodes.filter((n) => n.group === Number(groupId)).length,
             }))
-            .filter((group) => group.count > 2)
+            .filter((group) => group.count > 0)
             .map((group) => group.groupId);
 
         this.svgContainerGroupNodes

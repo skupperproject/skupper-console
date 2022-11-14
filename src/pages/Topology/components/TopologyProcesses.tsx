@@ -96,7 +96,12 @@ const TopologyProcesses = function () {
 
     return (
         <>
-            <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
+            <TopologyPanel
+                nodes={nodes}
+                links={links}
+                onGetSelectedNode={handleGetSelectedNode}
+                options={{ showGroup: true }}
+            >
                 {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
             </TopologyPanel>
             <Divider />
