@@ -96,7 +96,6 @@ interface FlowResponse extends BaseResponse {
     latency: number;
     process: string;
     trace?: string;
-    counterFlow?: string;
     endTime?: number;
 }
 
@@ -105,6 +104,9 @@ export interface FlowPairResponse extends BaseResponse {
     destinationSiteId: string;
     forwardFlow: FlowResponse;
     counterFlow: FlowResponse;
+    siteAggregateId: string;
+    processGroupAggregateId: string;
+    processAggregateId: string;
 }
 export interface FlowAggregatesMapResponse extends BaseResponse {
     rectType: string;

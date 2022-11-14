@@ -5,14 +5,21 @@ import {
     Flex,
     Panel,
     PanelMainBody,
+    Select,
+    SelectOption,
     Text,
     TextContent,
     TextVariants,
+    Toolbar,
+    ToolbarContent,
+    ToolbarItem,
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { AddressesController } from '@pages/Addresses/services';
+import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import ProcessesController from '@pages/Processes/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -33,6 +40,9 @@ const TopologyProcesses = function () {
     const [links, setLinks] = useState<GraphEdge[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [addressIdSelected, setAddressId] = useState<string>();
+
     const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
         refetchInterval,
         onError: handleError,
@@ -47,10 +57,31 @@ const TopologyProcesses = function () {
         },
     );
 
+    const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
+        [QueriesAddresses.GetAddresses],
+        AddressesController.getAddresses,
+        {
+            onError: handleError,
+        },
+    );
+
     const { data: processesLinks, isLoading: isLoadingProcessesLInks } = useQuery(
         [QueriesTopology.GetProcessesLinks],
         TopologyController.getProcessesLinks,
         {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processesLinksByAddress, isLoading: isLoadingProcessLinksByAddress } = useQuery(
+        [QueriesTopology.GetProcessesLinksByAddress, addressIdSelected],
+        () =>
+            addressIdSelected
+                ? TopologyController.getProcessesLinksByAddress(addressIdSelected)
+                : undefined,
+        {
+            enabled: !!addressIdSelected,
             refetchInterval,
             onError: handleError,
         },
@@ -71,31 +102,103 @@ const TopologyProcesses = function () {
         }
     }
 
+    function handleToggle(isSelectAddressOpen: boolean) {
+        setIsOpen(isSelectAddressOpen);
+    }
+
+    function handleSelect(_: any, selection: any, isPlaceholder: any) {
+        if (isPlaceholder) {
+            setAddressId(undefined);
+            setIsOpen(false);
+
+            return;
+        }
+
+        setAddressId(selection);
+        setIsOpen(false);
+    }
+
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
-        if (sites && processes && processesLinks) {
+        if (
+            sites &&
+            processes &&
+            processesLinks &&
+            !(isLoadingProcessLinksByAddress && addressIdSelected)
+        ) {
             const siteNodes = await TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
             const processesNodes = await TopologyController.getNodesFromProcesses(
                 processes,
                 siteNodes,
             );
+            const processesSourcesIds = processesLinksByAddress?.map((p) => p.source) || [];
+            const processesTargetIds = processesLinksByAddress?.map((p) => p.target) || [];
 
-            setNodes(processesNodes);
-            setLinks(TopologyController.getEdgesFromLinks(processesLinks));
+            const uniqueProcessesLinksByAddress = processesLinksByAddress?.filter(
+                (v, i, a) =>
+                    a.findIndex((v2) => v2.source === v.source && v2.target === v.target) === i,
+            );
+
+            setNodes(
+                uniqueProcessesLinksByAddress
+                    ? processesNodes.filter((p) =>
+                          [...processesSourcesIds, ...processesTargetIds].includes(p.id),
+                      )
+                    : processesNodes,
+            );
+            setLinks(
+                TopologyController.getEdgesFromLinks(
+                    uniqueProcessesLinksByAddress || processesLinks,
+                ),
+            );
         }
-    }, [sites, processes, processesLinks]);
+    }, [
+        isLoadingProcessLinksByAddress,
+        sites,
+        processes,
+        processesLinks,
+        addressIdSelected,
+        processesLinksByAddress,
+    ]);
 
     useEffect(() => {
         updateTopologyData();
     }, [updateTopologyData]);
 
-    if (isLoadingProcesses || isLoadingProcessesLInks) {
+    if (isLoadingProcesses || isLoadingProcessesLInks || isLoadingAddresses) {
         return <LoadingPage />;
     }
 
+    const options = addresses?.map((address, index) => (
+        <SelectOption key={index + 1} value={address.identity}>
+            {address.name}
+        </SelectOption>
+    ));
+
+    const optionsWithDefault = [
+        <SelectOption key={0} value="Select an address" isPlaceholder />,
+        ...(options || []),
+    ];
+
     return (
         <>
+            <Toolbar>
+                <ToolbarContent>
+                    <ToolbarItem>
+                        <Select
+                            isOpen={isOpen}
+                            onSelect={handleSelect}
+                            onToggle={handleToggle}
+                            selections={addressIdSelected}
+                        >
+                            {optionsWithDefault}
+                        </Select>
+                    </ToolbarItem>
+                </ToolbarContent>
+            </Toolbar>
+            <Divider />
+
             <TopologyPanel
                 nodes={nodes}
                 links={links}
@@ -104,6 +207,7 @@ const TopologyProcesses = function () {
             >
                 {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
             </TopologyPanel>
+
             <Divider />
             <Panel>
                 <PanelMainBody>
