@@ -31,5 +31,16 @@
         "octetSentRate": 0,
         "octetsReceived": 9402,
         "octetReceivedRate": 0
+    },
+    {
+        "recType": "SITE",
+        "identity": "c2d420d4-ba65-46f0-9cd2-dc0d0f268d20",
+        "startTime": 1665059184000000000,
+        "name": "public3",
+        "nameSpace": "grpc-public3",
+        "octetsSent": 5454354353,
+        "octetSentRate": 0,
+        "octetsReceived": 543543534,
+        "octetReceivedRate": 0
     }
 ]

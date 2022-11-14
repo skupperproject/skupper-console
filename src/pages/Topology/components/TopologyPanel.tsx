@@ -1,3 +1,4 @@
+//topologypanel.tsx
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
@@ -25,9 +26,10 @@ import Graph from '../../../core/components/Graph/Graph';
 const TopologyPanel: FC<{
     nodes: GraphNode[];
     links: GraphEdge[];
+    options?: { showGroup: boolean };
     onGetSelectedNode?: Function;
     children: React.ReactNode;
-}> = function ({ nodes, links, onGetSelectedNode, children }) {
+}> = function ({ nodes, links, onGetSelectedNode, children, options }) {
     const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
 
@@ -58,6 +60,7 @@ const TopologyPanel: FC<{
                     links,
                     $node.getBoundingClientRect().width,
                     $node.getBoundingClientRect().height,
+                    options,
                 );
 
                 topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleExpandDetails);
@@ -66,7 +69,7 @@ const TopologyPanel: FC<{
                 setTopologyGraphInstance(topologyGraph);
             }
         },
-        [handleExpandDetails, links, nodes, topologyGraphInstance],
+        [handleExpandDetails, links, nodes, options, topologyGraphInstance],
     );
 
     // Update topology
