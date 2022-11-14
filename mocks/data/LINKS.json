@@ -1,6 +1,86 @@
 [
     {
         "recType": "LINK",
+        "identity": "kjgvq:1",
+        "parent": "kjgvq:0",
+        "startTime": 1665055208494805,
+        "mode": "interior",
+        "name": "public2-skupper-router-559ff85457-zwc9j",
+        "linkCost": 1,
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "kjgvq:18592",
+        "parent": "kjgvq:0",
+        "startTime": 1667375855191553,
+        "mode": "interior",
+        "name": "private1-skupper-router-757f474994-xf69q",
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "kjgvq:2",
+        "parent": "kjgvq:0",
+        "startTime": 1665055236383840,
+        "mode": "interior",
+        "name": "private1-skupper-router-757f474994-xf69q",
+        "linkCost": 1,
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "xf69q:1",
+        "parent": "xf69q:0",
+        "startTime": 1665055235412422,
+        "endTime": 1667375840156163,
+        "mode": "interior",
+        "name": "public1-skupper-router-78f97749b7-kjgvq",
+        "linkCost": 1,
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
+        "identity": "xf69q:18288",
+        "parent": "xf69q:0",
+        "startTime": 1667375612529983,
+        "endTime": 1667375840156183,
+        "mode": "interior",
+        "name": "public2-skupper-router-559ff85457-zwc9j",
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
+        "identity": "xf69q:18306",
+        "parent": "xf69q:0",
+        "startTime": 1667375855067608,
+        "mode": "interior",
+        "name": "public1-skupper-router-78f97749b7-kjgvq",
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
+        "identity": "xf69q:18312",
+        "parent": "xf69q:0",
+        "startTime": 1667375870086063,
+        "mode": "interior",
+        "name": "public2-skupper-router-559ff85457-zwc9j",
+        "linkCost": 1,
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
+        "identity": "xf69q:2",
+        "parent": "xf69q:0",
+        "startTime": 1665055239516554,
+        "endTime": 1667375597706160,
+        "mode": "interior",
+        "name": "public2-skupper-router-559ff85457-zwc9j",
+        "linkCost": 1,
+        "direction": "outgoing"
+    },
+    {
+        "recType": "LINK",
         "identity": "zwc9j:1",
         "parent": "zwc9j:0",
         "startTime": 1665055208385136,
@@ -31,6 +111,17 @@
         "recType": "LINK",
         "identity": "zwc9j:2",
         "parent": "zwc9j:0",
+        "startTime": 1665055240389866,
+        "endTime": 1667375598520505,
+        "mode": "interior",
+        "name": "private1-skupper-router-757f474994-xf69q",
+        "linkCost": 1,
+        "direction": "incoming"
+    },
+    {
+        "recType": "LINK",
+        "identity": "zwc9p:123",
+        "parent": "zwc9p:0",
         "startTime": 1665055240389866,
         "endTime": 1667375598520505,
         "mode": "interior",

@@ -286,5 +286,37 @@
         "octetSentRate": 0,
         "octetsReceived": 6168970,
         "octetReceivedRate": 15
+    },
+    {
+        "recType": "PROCESS",
+        "identity": "fe6b93a4-11d4-4dd5-8c6e-7d923d91a12fp",
+        "parent": "c2d420d4-ba65-46f0-9cd2-dc0d0f268d20",
+        "startTime": 1665055293000000000,
+        "name": "authentication-123-der55",
+        "imageName": "gcr.io/google-samples/microservices-demo/authentication:v0.3.0",
+        "group": "authentication",
+        "groupIdentity": "a1c204b8-b9ad-4d22-aa98-563faff87e1cp",
+        "hostName": "10.642.0.14",
+        "sourceHost": "192.17.29.145",
+        "octetsSent": 3306816,
+        "octetSentRate": 0,
+        "octetsReceived": 6168970,
+        "octetReceivedRate": 15
+    },
+    {
+        "recType": "PROCESS",
+        "identity": "fe6b93a4-11d4-4dd5-8c6e-7d923d91a12fpr",
+        "parent": "c2d420d4-ba65-46f0-9cd2-dc0d0f268d20",
+        "startTime": 1665055293000000000,
+        "name": "authentication-555-abvdr",
+        "imageName": "gcr.io/google-samples/microservices-demo/authentication:v0.3.0",
+        "group": "authentication",
+        "groupIdentity": "a1c204b8-b9ad-4d22-aa98-563faff87e1cb",
+        "hostName": "10.542.0.1224",
+        "sourceHost": "192.17.29.142",
+        "octetsSent": 3306816,
+        "octetSentRate": 0,
+        "octetsReceived": 6168970,
+        "octetReceivedRate": 15
     }
 ]

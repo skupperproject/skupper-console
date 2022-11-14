@@ -34,5 +34,17 @@
         "imageVersion": "latest",
         "hostname": "skupper-router-559ff85457-zwc9j",
         "buildVersion": "UNKNOWN"
+    },
+    {
+        "recType": "ROUTER",
+        "identity": "zwc9p:0",
+        "parent": "c2d420d4-ba65-46f0-9cd2-dc0d0f268d20",
+        "startTime": 1665055195461960,
+        "name": "0/public3-skupper-router-559ff85457-zwc9p",
+        "namespace": "grpc-public3",
+        "imageName": "skupper-router",
+        "imageVersion": "latest",
+        "hostname": "skupper-router-559ff85457-zwc9p",
+        "buildVersion": "UNKNOWN"
     }
 ]
