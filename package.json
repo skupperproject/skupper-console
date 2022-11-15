@@ -3,6 +3,10 @@
     "description": "Skupper Web Console",
     "license": "Apache-2.0",
     "private": true,
+    "engines": {
+        "npm": "please-use-yarn",
+        "yarn": ">= 1.19.1"
+      },
     "scripts": {
         "start": "webpack serve --config config/webpack.dev.js",
         "build": "webpack --config config/webpack.prod.js",
@@ -12,7 +16,7 @@
         "ci": "start-test 3000 cy:run",
         "lint": "eslint src --ext .ts,.tsx --cache",
         "lint-fix": "npm run lint --fix",
-        "prettier-all": "prettier --write '**/*.{js,ts,tsx,json,html,scss}'",
+        "prettier-all": "prettier --write '**/*.{js,ts,tsx,html,scss}'",
         "bundle-report": "STATS=server npm run build",
         "find-dead-code": "ts-prune",
         "prepare": "husky install"
