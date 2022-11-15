@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 
 import {
     Drawer,
@@ -22,13 +22,16 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import Graph from '../../../core/components/Graph/Graph';
 
-const TopologyPanel: FC<{
-    nodes: GraphNode[];
-    links: GraphEdge[];
-    options?: { showGroup: boolean };
-    onGetSelectedNode?: Function;
-    children: React.ReactNode;
-}> = function ({ nodes, links, onGetSelectedNode, children, options }) {
+const TopologyPanel = forwardRef<
+    { deselectAll: () => void },
+    {
+        nodes: GraphNode[];
+        links: GraphEdge[];
+        options?: { showGroup: boolean };
+        onGetSelectedNode?: Function;
+        children: React.ReactNode;
+    }
+>(({ nodes, links, onGetSelectedNode, children, options }, ref) => {
     const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
     const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
 
@@ -44,6 +47,7 @@ const TopologyPanel: FC<{
     );
 
     function handleCloseDetails() {
+        topologyGraphInstance?.deselectAll();
         setIsExpandedDetails(false);
     }
 
@@ -71,6 +75,12 @@ const TopologyPanel: FC<{
         [handleExpandDetails, links, nodes, options, topologyGraphInstance],
     );
 
+    useImperativeHandle(ref, () => ({
+        deselectAll() {
+            handleCloseDetails();
+        },
+    }));
+
     // Update topology
     useEffect(() => {
         if (topologyGraphInstance && links && nodes) {
@@ -82,7 +92,7 @@ const TopologyPanel: FC<{
         ...defaultControlButtonsOptions,
         zoomInCallback: () => topologyGraphInstance?.zoomIn(),
         zoomOutCallback: () => topologyGraphInstance?.zoomOut(),
-        resetViewCallback: () => topologyGraphInstance?.reset(),
+        resetViewCallback: () => topologyGraphInstance?.zoomReset(),
         fitToScreenHidden: true,
         legendHidden: true,
     });
@@ -111,6 +121,6 @@ const TopologyPanel: FC<{
             </DrawerContent>
         </Drawer>
     );
-};
+});
 
 export default TopologyPanel;

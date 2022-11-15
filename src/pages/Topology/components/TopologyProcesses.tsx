@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
     Divider,
@@ -7,6 +7,7 @@ import {
     PanelMainBody,
     Select,
     SelectOption,
+    SelectOptionObject,
     Text,
     TextContent,
     TextVariants,
@@ -35,6 +36,9 @@ import TopologyPanel from './TopologyPanel';
 
 const TopologyProcesses = function () {
     const navigate = useNavigate();
+
+    const topologyRef = useRef<any>();
+
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
@@ -106,16 +110,16 @@ const TopologyProcesses = function () {
         setIsOpen(isSelectAddressOpen);
     }
 
-    function handleSelect(_: any, selection: any, isPlaceholder: any) {
-        if (isPlaceholder) {
-            setAddressId(undefined);
-            setIsOpen(false);
+    function handleSelect(
+        _: React.MouseEvent | React.ChangeEvent,
+        selection: string | SelectOptionObject,
+        isPlaceholder?: boolean,
+    ) {
+        const addressId = isPlaceholder ? undefined : (selection as string);
 
-            return;
-        }
-
-        setAddressId(selection);
+        setAddressId(addressId);
         setIsOpen(false);
+        topologyRef?.current?.deselectAll();
     }
 
     // Refresh topology data
@@ -134,6 +138,7 @@ const TopologyProcesses = function () {
             );
             const processesSourcesIds = processesLinksByAddress?.map((p) => p.source) || [];
             const processesTargetIds = processesLinksByAddress?.map((p) => p.target) || [];
+            const processesAddress = [...processesSourcesIds, ...processesTargetIds];
 
             const uniqueProcessesLinksByAddress = processesLinksByAddress?.filter(
                 (v, i, a) =>
@@ -142,11 +147,16 @@ const TopologyProcesses = function () {
 
             setNodes(
                 uniqueProcessesLinksByAddress
-                    ? processesNodes.filter((p) =>
-                          [...processesSourcesIds, ...processesTargetIds].includes(p.id),
-                      )
+                    ? processesNodes.map((node) => {
+                          if (!processesAddress.includes(node.id)) {
+                              return { ...node, isDisabled: true };
+                          }
+
+                          return node;
+                      })
                     : processesNodes,
             );
+
             setLinks(
                 TopologyController.getEdgesFromLinks(
                     uniqueProcessesLinksByAddress || processesLinks,
@@ -170,9 +180,9 @@ const TopologyProcesses = function () {
         return <LoadingPage />;
     }
 
-    const options = addresses?.map((address, index) => (
-        <SelectOption key={index + 1} value={address.identity}>
-            {address.name}
+    const options = addresses?.map(({ name, identity, currentFlows }, index) => (
+        <SelectOption key={index + 1} value={identity} isDisabled={!currentFlows}>
+            {name}
         </SelectOption>
     ));
 
@@ -200,6 +210,7 @@ const TopologyProcesses = function () {
             <Divider />
 
             <TopologyPanel
+                ref={topologyRef}
                 nodes={nodes}
                 links={links}
                 onGetSelectedNode={handleGetSelectedNode}

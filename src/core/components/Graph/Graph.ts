@@ -501,6 +501,10 @@ export default class Graph {
             })
             .on('dblclick', (e) => e.stopPropagation()) // deactivates the zoom triggered by d3-zoom
             .on('click', (_, node) => {
+                if (node.isDisabled) {
+                    return;
+                }
+
                 const id = node.id;
                 if (this.selectedNode === id) {
                     this.selectedNode = null;
@@ -534,6 +538,7 @@ export default class Graph {
 
         enterSelection
             .append('text')
+            .attr('class', 'node-img')
             .attr('font-size', FONT_SIZE_DEFAULT)
             .attr('y', NODE_SIZE / 2 + FONT_SIZE_DEFAULT)
             .style('fill', 'var(--pf-global--palette--black-500)')
@@ -552,13 +557,17 @@ export default class Graph {
     private redrawNodesOpacity() {
         this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, GraphNode>('.node-img')
-            .style('opacity', ({ id }) =>
-                !!this.selectedNode && id !== this.selectedNode ? OPACITY_NO_SELECTED_ITEM : '1',
-            );
+            .style('opacity', ({ id, isDisabled }) => {
+                if ((!!this.selectedNode && id !== this.selectedNode) || isDisabled) {
+                    return OPACITY_NO_SELECTED_ITEM;
+                }
+
+                return '1';
+            });
     }
 
     updateTopology = (nodes: GraphNode[], links: GraphEdge[] | GraphEdgeModifiedByForce[]) => {
-        if (!this.isDragging()) {
+        if (!this.isDraggingNode) {
             this.svgContainerGroupNodes.selectAll('*').remove();
 
             this.force.nodes(nodes).on('tick', this.ticked);
@@ -577,7 +586,7 @@ export default class Graph {
     };
 
     // exposed events
-    reset() {
+    zoomReset() {
         const $parent = this.svgContainer.node() as SVGElement;
 
         this.svgContainer
@@ -598,8 +607,13 @@ export default class Graph {
         return this.svgContainer.transition().duration(750).call(this.handleZoom.scaleBy, 0.5);
     }
 
-    isDragging() {
-        return this.isDraggingNode;
+    deselectAll() {
+        this.selectedNode = null;
+        this.updateEdges();
+        this.redrawNodes();
+        this.svgContainerGroupNodes
+            .selectAll<SVGSVGElement, GraphEdgeModifiedByForce>('.serviceLink')
+            .each(stopAnimateEdges);
     }
 }
 
