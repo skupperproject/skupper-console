@@ -118,10 +118,12 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data.map((process: ProcessGroupResponse) => ({
-            ...process,
-            type: process.name.startsWith('skupper-') ? 'skupper' : 'app',
-        }));
+        return data
+            .filter(({ name }: ProcessResponse) => !name.startsWith('skupper-'))
+            .map((process: ProcessResponse) => ({
+                ...process,
+                type: process.name.startsWith('skupper-') ? 'skupper' : 'app',
+            }));
     },
     fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
         const { data } = await axiosFetch(geProcessPATH(id), {
@@ -146,10 +148,13 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data.map((processGroup: ProcessGroupResponse) => ({
-            ...processGroup,
-            type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
-        }));
+        //TODO remove when api provide flag to recognize internal process groups
+        return data
+            .filter(({ name }: ProcessGroupResponse) => !name.startsWith('skupper-'))
+            .map((processGroup: ProcessGroupResponse) => ({
+                ...processGroup,
+                type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
+            }));
     },
     fetchProcessGroup: async (
         id: string,
@@ -169,10 +174,13 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data.map((processGroup: ProcessGroupResponse) => ({
-            ...processGroup,
-            type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
-        }));
+        //TODO remove when api provide flag to recognize internal processes
+        return data
+            .filter(({ name }: ProcessResponse) => !name.startsWith('skupper-'))
+            .map((processGroup: ProcessResponse) => ({
+                ...processGroup,
+                type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
+            }));
     },
 
     // PROCESSES  APIs
@@ -258,7 +266,7 @@ export const RESTApi = {
         return data;
     },
 
-    fetchProcessesByAddresses: async (
+    fetchServerProcessesByAddresses: async (
         id: string,
         options?: RequestOptions,
     ): Promise<ProcessResponse[]> => {

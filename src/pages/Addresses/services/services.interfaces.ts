@@ -12,7 +12,6 @@ export interface ProcessRow {
     bytes: number;
     byteRate: number;
     host: string;
-    port: string;
     groupId: string;
     groupName: string;
     imageName: string;
@@ -29,7 +28,6 @@ export interface FlowPairBasic {
     port: string;
     processId: string;
     processName: string;
-    processImageName: string;
     latency: number;
     startTime: number;
     endTime?: number;
@@ -37,15 +35,7 @@ export interface FlowPairBasic {
     targetSiteName: string;
     targetByteRate: number;
     targetBytes: number;
-    targetHost: string;
-    targetPort: string;
     targetProcessId: string;
     targetProcessName: string;
-    targetProcessImageName: string;
     targetLatency: number;
-    protocol: string;
-}
-export interface FlowsPairsBasic {
-    connections: FlowPairBasic[];
-    total: number;
 }

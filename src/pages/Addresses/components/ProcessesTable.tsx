@@ -38,10 +38,6 @@ const AddressProcessesTable: FC<ProcessesTableProps> = function ({ processes }) 
             prop: 'host' as keyof ProcessRow,
         },
         {
-            name: ProcessesColumnsNames.Port,
-            prop: 'port' as keyof ProcessRow,
-        },
-        {
             name: FlowPairsColumnsNames.ImageName,
             prop: 'imageName' as keyof ProcessRow,
             width: 20,

@@ -11,7 +11,6 @@ import {
     Flex,
     Grid,
     GridItem,
-    Pagination,
     Tab,
     Tabs,
     TabTitleText,
@@ -31,7 +30,6 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { UPDATE_INTERVAL } from 'config';
 
-import { CONNECTIONS_PAGINATION_SIZE_DEFAULT } from '../Addresses.constants';
 import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
 import FlowsPairsTable from '../components/FlowPairsTable';
 import AddressProcessesTable from '../components/ProcessesTable';
@@ -45,19 +43,14 @@ const FlowsPairs = function () {
     const navigate = useNavigate();
     const { id: address } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const [visibleItems, setVisibleItems] = useState<number>(CONNECTIONS_PAGINATION_SIZE_DEFAULT);
-    const [vanAddressView, setVanAddressView] = useState<number>(0);
+    const [addressView, setAddressView] = useState<number>(0);
 
     const addressId = address?.split('@')[1];
     const addressName = address?.split('@')[0];
 
-    const { data: connectionsPaginated, isLoading: isLoadingConnectionsPaginated } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, addressId, currentPage, visibleItems],
-        () =>
-            addressId
-                ? AddressesController.getFlowPairsByAddress(addressId, currentPage, visibleItems)
-                : null,
+    const { data: connections, isLoading: isLoadingConnections } = useQuery(
+        [QueriesAddresses.GetFlowPairsByAddress, addressId],
+        () => (addressId ? AddressesController.getFlowPairsByAddress(addressId) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -66,7 +59,7 @@ const FlowsPairs = function () {
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesAddresses.GetProcessesByAddress, addressId, currentPage, visibleItems],
+        [QueriesAddresses.GetProcessesByAddress, addressId],
         () => (addressId ? AddressesController.getProcessesWithMetricsByAddress(addressId) : null),
         {
             cacheTime: 0,
@@ -84,37 +77,20 @@ const FlowsPairs = function () {
         navigate(route);
     }
 
-    function handleSetPage(
-        _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-        perPage: number,
-    ) {
-        setCurrentPage(perPage);
-    }
-
-    function handlePerPageSelect(
-        _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-        perPageSelect: number,
-    ) {
-        setVisibleItems(perPageSelect);
-        setCurrentPage(1);
-    }
-
     function handleTabClick(
-        event: React.MouseEvent<HTMLElement, MouseEvent>,
+        _: React.MouseEvent<HTMLElement, MouseEvent>,
         tabIndex: string | number,
     ) {
-        setVanAddressView(tabIndex as number);
+        setAddressView(tabIndex as number);
     }
 
-    if (isLoadingConnectionsPaginated || isLoadingProcesses) {
+    if (isLoadingConnections || isLoadingProcesses) {
         return <LoadingPage />;
     }
 
-    if (!connectionsPaginated || !processes) {
+    if (!connections || !processes) {
         return null;
     }
-
-    const { connections, total } = connectionsPaginated;
 
     const topClientsMap = connections.reduce((acc, { processId, processName, bytes }, index) => {
         if (index < ITEM_DISPLAY_COUNT) {
@@ -129,12 +105,12 @@ const FlowsPairs = function () {
     const totalBytesReceived = connections.reduce((acc, { targetBytes }) => acc + targetBytes, 0);
 
     const AvgByteRateSent = Math.round(
-        connections.reduce((acc, { byteRate }) => acc + byteRate, 0) / connections.length || 1,
+        connections.reduce((acc, { byteRate }) => acc + byteRate, 0) / (connections.length || 1),
     );
 
     const AvgByteRateReceived = Math.round(
         connections.reduce((acc, { targetByteRate }) => acc + targetByteRate, 0) /
-            connections.length || 1,
+            (connections.length || 1),
     );
 
     return (
@@ -148,6 +124,15 @@ const FlowsPairs = function () {
                     </BreadcrumbItem>
                     <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
                 </Breadcrumb>
+            </GridItem>
+
+            <GridItem>
+                <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                    <ResourceIcon type="address" />
+                    <TextContent>
+                        <Text component={TextVariants.h1}>{addressName}</Text>
+                    </TextContent>
+                </Flex>
             </GridItem>
 
             <GridItem span={8} rowSpan={2}>
@@ -198,27 +183,31 @@ const FlowsPairs = function () {
             <GridItem span={6}>
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
                     <CardTitle>{FlowPairsLabels.FlowPairsDistributionTitle}</CardTitle>
-                    <ChartPie
-                        constrainToVisibleArea
-                        data={topClients?.map(({ name, value }) => ({
-                            x: name,
-                            y: formatBytes(value),
-                        }))}
-                        labels={topClients?.map(
-                            ({ name, value }) => `${name}: ${formatBytes(value)}`,
-                        )}
-                        legendData={topClients?.map(({ name }) => ({ name }))}
-                        legendOrientation="vertical"
-                        legendPosition="right"
-                        padding={{
-                            bottom: 100,
-                            left: -100,
-                            right: 100,
-                            top: 0,
-                        }}
-                        themeColor={ChartThemeColors.Multi}
-                        height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-                    />
+                    {topClients?.length ? (
+                        <ChartPie
+                            constrainToVisibleArea
+                            data={topClients?.map(({ name, value }) => ({
+                                x: name,
+                                y: formatBytes(value),
+                            }))}
+                            labels={topClients?.map(
+                                ({ name, value }) => `${name}: ${formatBytes(value)}`,
+                            )}
+                            legendData={topClients?.map(({ name }) => ({ name }))}
+                            legendOrientation="vertical"
+                            legendPosition="right"
+                            padding={{
+                                bottom: 100,
+                                left: -100,
+                                right: 100,
+                                top: 0,
+                            }}
+                            themeColor={ChartThemeColors.Multi}
+                            height={REAL_TIME_CONNECTION_HEIGHT_CHART}
+                        />
+                    ) : (
+                        <EmptyData />
+                    )}
                 </Card>
             </GridItem>
             <GridItem span={6}>
@@ -232,7 +221,7 @@ const FlowsPairs = function () {
                                 height: REAL_TIME_CONNECTION_HEIGHT_CHART,
                                 padding: {
                                     top: 0,
-                                    bottom: 130,
+                                    bottom: 70,
                                     left: 70,
                                     right: 20,
                                 },
@@ -245,16 +234,8 @@ const FlowsPairs = function () {
                 </Card>
             </GridItem>
             <GridItem>
-                <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                    <ResourceIcon type="address" />
-                    <TextContent>
-                        <Text component={TextVariants.h1}>{addressName}</Text>
-                    </TextContent>
-                </Flex>
-            </GridItem>
-            <GridItem>
                 <Card isRounded className="pf-u-pt-md">
-                    <Tabs activeKey={vanAddressView} onSelect={handleTabClick}>
+                    <Tabs activeKey={addressView} onSelect={handleTabClick}>
                         <Tab
                             eventKey={0}
                             title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
@@ -266,17 +247,6 @@ const FlowsPairs = function () {
                             title={<TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>}
                         >
                             <FlowsPairsTable flowPairs={connections} />
-                            {!!connections.length && (
-                                <Pagination
-                                    className="pf-u-my-xs"
-                                    perPageComponent="button"
-                                    itemCount={total}
-                                    perPage={visibleItems}
-                                    page={currentPage}
-                                    onSetPage={handleSetPage}
-                                    onPerPageSelect={handlePerPageSelect}
-                                />
-                            )}
                         </Tab>
                     </Tabs>
                 </Card>

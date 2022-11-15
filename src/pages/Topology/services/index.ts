@@ -49,6 +49,18 @@ export const TopologyController = {
         return processesLinks;
     },
 
+    getProcessesLinksByAddress: async (id: string): Promise<LinkTopology[]> => {
+        const links = await RESTApi.fetchFlowPairsByAddress(id);
+
+        const processesLinks = links.map(({ identity, processAggregateId }) => ({
+            key: identity,
+            source: processAggregateId.split('-to-')[0],
+            target: processAggregateId.split('-to-')[1],
+        }));
+
+        return processesLinks;
+    },
+
     getProcessGroupsLinks: async (): Promise<LinkTopology[]> => {
         const links = await RESTApi.fetchProcessgroupsPairs();
 

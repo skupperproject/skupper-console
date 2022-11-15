@@ -1,7 +1,7 @@
 import { RESTApi } from 'API/REST';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { FlowsPairsBasic, ProcessRow } from './services.interfaces';
+import { FlowPairBasic, ProcessRow } from './services.interfaces';
 
 export const AddressesController = {
     getAddresses: async (): Promise<AddressResponse[]> => {
@@ -15,11 +15,7 @@ export const AddressesController = {
     },
 
     // TODO: waiting for the API to remove multiple calls and filters
-    getFlowPairsByAddress: async (
-        id: string,
-        currentPage: number,
-        visibleItems: number,
-    ): Promise<FlowsPairsBasic> => {
+    getFlowPairsByAddress: async (id: string): Promise<FlowPairBasic[]> => {
         const flowsPairs = await RESTApi.fetchFlowPairsByAddress(id);
         const processes = await RESTApi.fetchProcesses();
         const sites = await RESTApi.fetchSites();
@@ -37,13 +33,12 @@ export const AddressesController = {
         }, {} as Record<string, string>);
 
         const flowsPairsExtended = await Promise.all(
-            flowsPairs.map(async (flowPair) => {
+            flowsPairs.map((flowPair) => {
                 const { octetRate, octets, startTime, endTime, process, latency } =
                     flowPair.forwardFlow;
                 const siteName = sitesMap[flowPair.sourceSiteId];
                 const processName = processesMap[process].name;
                 const processId = processesMap[process].identity;
-                const processImageName = processesMap[process].imageName;
 
                 const {
                     octetRate: targetByteRate,
@@ -55,11 +50,6 @@ export const AddressesController = {
                 const targetSiteName = sitesMap[flowPair.destinationSiteId];
                 const targetProcessName = processesMap[targetProcess].name;
                 const targetProcessId = processesMap[targetProcess].identity;
-                const targetHost = processesMap[targetProcess].sourceHost;
-                const targetProcessImageName = processesMap[targetProcess].imageName;
-
-                const connector = await RESTApi.fetchListener(flowPair.forwardFlow.parent);
-                const targetConnector = await RESTApi.fetchConnectorByProcess(targetProcessId);
 
                 return {
                     id: flowPair.identity,
@@ -73,38 +63,23 @@ export const AddressesController = {
                     endTime,
                     processId,
                     processName,
-                    processImageName,
                     latency,
 
                     targetSiteId: flowPair.destinationSiteId,
                     targetSiteName,
                     targetByteRate,
                     targetBytes,
-                    targetHost,
                     targetProcessId,
                     targetProcessName,
-                    targetProcessImageName,
-                    targetPort: targetConnector.destPort,
                     targetLatency,
-                    protocol: connector.protocol,
                 };
             }),
         );
 
-        // filter collection
-        const flowsFiltered = flowsPairsExtended.sort((a, b) => b.startTime - a.startTime);
-
-        const startOffset = (currentPage - 1) * visibleItems;
-        //paginate collection
-        const flowsPairsPaginated = flowsFiltered.filter(
-            (_, index) => index >= startOffset && index < startOffset + visibleItems,
-        );
-
-        return { connections: flowsPairsPaginated, total: flowsFiltered.length };
+        return flowsPairsExtended;
     },
-
     getProcessesWithMetricsByAddress: async (id: string): Promise<ProcessRow[]> => {
-        const processes = await RESTApi.fetchProcessesByAddresses(id);
+        const processes = await RESTApi.fetchServerProcessesByAddresses(id);
 
         return Promise.all(
             processes.map(async (process) => {
