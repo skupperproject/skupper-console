@@ -11,6 +11,9 @@ import {
     Flex,
     Grid,
     GridItem,
+    Tab,
+    Tabs,
+    TabTitleText,
     Text,
     TextContent,
     TextVariants,
@@ -29,6 +32,7 @@ import { UPDATE_INTERVAL } from 'config';
 
 import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
 import FlowsPairsTable from '../components/FlowPairsTable';
+import AddressProcessesTable from '../components/ProcessesTable';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
@@ -39,6 +43,7 @@ const FlowsPairs = function () {
     const navigate = useNavigate();
     const { id: address } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [addressView, setAddressView] = useState<number>(0);
 
     const addressId = address?.split('@')[1];
     const addressName = address?.split('@')[0];
@@ -46,6 +51,16 @@ const FlowsPairs = function () {
     const { data: connections, isLoading: isLoadingConnections } = useQuery(
         [QueriesAddresses.GetFlowPairsByAddress, addressId],
         () => (addressId ? AddressesController.getFlowPairsByAddress(addressId) : null),
+        {
+            cacheTime: 0,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+        [QueriesAddresses.GetProcessesByAddress, addressId],
+        () => (addressId ? AddressesController.getProcessesWithMetricsByAddress(addressId) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -62,11 +77,18 @@ const FlowsPairs = function () {
         navigate(route);
     }
 
-    if (isLoadingConnections) {
+    function handleTabClick(
+        _: React.MouseEvent<HTMLElement, MouseEvent>,
+        tabIndex: string | number,
+    ) {
+        setAddressView(tabIndex as number);
+    }
+
+    if (isLoadingConnections || isLoadingProcesses) {
         return <LoadingPage />;
     }
 
-    if (!connections) {
+    if (!connections || !processes) {
         return null;
     }
 
@@ -213,7 +235,20 @@ const FlowsPairs = function () {
             </GridItem>
             <GridItem>
                 <Card isRounded className="pf-u-pt-md">
-                    <FlowsPairsTable flowPairs={connections} />
+                    <Tabs activeKey={addressView} onSelect={handleTabClick}>
+                        <Tab
+                            eventKey={0}
+                            title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
+                        >
+                            <AddressProcessesTable processes={processes} />
+                        </Tab>
+                        <Tab
+                            eventKey={1}
+                            title={<TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>}
+                        >
+                            <FlowsPairsTable flowPairs={connections} />
+                        </Tab>
+                    </Tabs>
                 </Card>
             </GridItem>
         </Grid>

@@ -1,7 +1,7 @@
 import { RESTApi } from 'API/REST';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { FlowPairBasic } from './services.interfaces';
+import { FlowPairBasic, ProcessRow } from './services.interfaces';
 
 export const AddressesController = {
     getAddresses: async (): Promise<AddressResponse[]> => {
@@ -77,5 +77,29 @@ export const AddressesController = {
         );
 
         return flowsPairsExtended;
+    },
+    getProcessesWithMetricsByAddress: async (id: string): Promise<ProcessRow[]> => {
+        const processes = await RESTApi.fetchServerProcessesByAddresses(id);
+
+        return Promise.all(
+            processes.map(async (process) => {
+                const site = await RESTApi.fetchSite(process.parent);
+                const { destPort } = await RESTApi.fetchConnectorByProcess(process.identity);
+
+                return {
+                    identity: process.identity,
+                    siteId: site.identity,
+                    siteName: site.name,
+                    processName: process.name,
+                    host: process.sourceHost,
+                    port: destPort,
+                    imageName: process.imageName,
+                    groupId: process.groupIdentity,
+                    groupName: process.group,
+                    bytes: process.octetsSent,
+                    byteRate: process.octetSentRate,
+                };
+            }),
+        );
     },
 };
