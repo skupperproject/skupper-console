@@ -232,17 +232,11 @@ export default class Graph {
             });
 
         if (node_coords.length < 3) {
-            if (node_coords.length === 1) {
-                node_coords.push([
-                    node_coords[0][0] + NODE_SIZE * 2,
-                    node_coords[0][1] + NODE_SIZE * 2,
-                ]);
-            }
-
-            node_coords.push([
-                node_coords[0][0] + NODE_SIZE * 2,
-                Number(node_coords[0][1]) - NODE_SIZE * 2,
-            ]);
+            // When the number of the nodes is less than 3, we need to create fake points x,y to create a polygon. At least 3.
+            node_coords.push([node_coords[0][0] + NODE_SIZE, node_coords[0][1]]);
+            node_coords.push([node_coords[0][0] - NODE_SIZE, node_coords[0][1]]);
+            node_coords.push([node_coords[0][0], node_coords[0][1] + NODE_SIZE]);
+            node_coords.push([node_coords[0][0], node_coords[0][1] - NODE_SIZE]);
         }
 
         return polygonHull(node_coords);
