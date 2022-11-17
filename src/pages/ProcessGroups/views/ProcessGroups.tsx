@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
@@ -17,13 +17,11 @@ import { QueriesProcessGroups } from '../services/services.enum';
 
 const ProcessGroups = function () {
     const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState(0);
 
     const { data: processGroups, isLoading } = useQuery(
         [QueriesProcessGroups.GetProcessGroups],
         ProcessGroupsController.getProcessGroups,
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -33,7 +31,6 @@ const ProcessGroups = function () {
             ? ErrorRoutesPaths.error[httpStatus]
             : ErrorRoutesPaths.ErrConnection;
 
-        setRefetchInterval(0);
         navigate(route);
     }
 

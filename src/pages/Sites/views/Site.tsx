@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
     Breadcrumb,
@@ -26,7 +26,6 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
@@ -35,13 +34,11 @@ import { SitesRoutesPaths, SitesRoutesPathLabel, Labels } from '../Sites.enum';
 const Site = function () {
     const navigate = useNavigate();
     const { id: siteId } = useParams() as { id: string };
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
         () => SitesController.getSite(siteId),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -50,7 +47,6 @@ const Site = function () {
         [QueriesSites.GetSites],
         () => SitesController.getSites(),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -59,7 +55,6 @@ const Site = function () {
         [QueriesSites.GetHostsBySiteId, siteId],
         () => SitesController.getHostsBySiteId(siteId),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -68,7 +63,6 @@ const Site = function () {
         [QueriesSites.GetLinksBySiteId, siteId],
         () => SitesController.getLinksBySiteId(siteId),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -77,7 +71,6 @@ const Site = function () {
         [QueriesSites.GetProcessesBySiteId, siteId],
         () => SitesController.getActiveProcessesBySiteId(siteId),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -86,7 +79,6 @@ const Site = function () {
         [QueriesSites.GetRouters],
         () => SitesController.getRouters(),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -96,7 +88,6 @@ const Site = function () {
             ? ErrorRoutesPaths.error[httpStatus]
             : ErrorRoutesPaths.ErrConnection;
 
-        setRefetchInterval(0);
         navigate(route);
     }
 

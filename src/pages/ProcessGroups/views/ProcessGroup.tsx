@@ -21,11 +21,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
-import ProcessesController from '@pages/Processes/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesController from '@pages/Sites/services';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessGroupResponse } from 'API/REST.interfaces';
 
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
@@ -52,14 +49,6 @@ const ProcessGroup = function () {
         },
     );
 
-    const { data: sites, isLoading: isLoadingSites } = useQuery(
-        [QueriesSites.GetSites],
-        SitesController.getSites,
-        {
-            onError: handleError,
-        },
-    );
-
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -68,11 +57,11 @@ const ProcessGroup = function () {
         navigate(route);
     }
 
-    if (isLoadingProcessGroup || isLoadingProcess || isLoadingSites) {
+    if (isLoadingProcessGroup || isLoadingProcess) {
         return <LoadingPage />;
     }
 
-    if (!processGroup || !sites || !processes) {
+    if (!processGroup || !processes) {
         return null;
     }
 
@@ -112,9 +101,7 @@ const ProcessGroup = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessesTable
-                    processes={ProcessesController.getProcessesExtended(sites, processes)}
-                />
+                <ProcessesTable processes={processes} />
             </GridItem>
         </Grid>
     );

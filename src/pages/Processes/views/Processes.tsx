@@ -8,8 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesController from '@pages/Sites/services';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
@@ -29,14 +27,6 @@ const Processes = function () {
         },
     );
 
-    const { data: sites, isLoading: isLoadingSites } = useQuery(
-        [QueriesSites.GetSites],
-        SitesController.getSites,
-        {
-            onError: handleError,
-        },
-    );
-
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route =
             httpStatus && ErrorRoutesPaths.error[httpStatus]
@@ -48,11 +38,11 @@ const Processes = function () {
         return;
     }
 
-    if (isLoadingProcesses || isLoadingSites) {
+    if (isLoadingProcesses) {
         return <LoadingPage />;
     }
 
-    if (!sites || !processes) {
+    if (!processes) {
         return null;
     }
 
@@ -105,9 +95,7 @@ const Processes = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessesTable
-                    processes={ProcessesController.getProcessesExtended(sites, processes)}
-                />
+                <ProcessesTable processes={processes} />
             </GridItem>
         </Grid>
     );
