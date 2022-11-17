@@ -11,7 +11,7 @@ const SiteNameLinkCell: FC<SiteNameLinkCellProps> = function ({ data, value }) {
     return (
         <>
             <ResourceIcon type="site" />
-            <Link to={`${SitesRoutesPaths.Sites}/${data.siteIdentity}`}>{value}</Link>
+            <Link to={`${SitesRoutesPaths.Sites}/${data.parent}`}>{value}</Link>
         </>
     );
 };

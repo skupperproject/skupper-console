@@ -13,6 +13,7 @@ export enum ProcessesLabels {
     Description = '',
     Details = 'Details',
     Processes = 'Processes',
+    Addresses = 'Addresses',
     Name = 'Name',
     Site = 'Site',
     ProcessGroup = 'Process Group',

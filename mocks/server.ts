@@ -77,6 +77,14 @@ export function loadMockServer() {
                 processes.find(({ identity }: ProcessResponse) => identity === id),
             );
             this.get(`${prefix}/processes/:id/connector`, () => addressConnector);
+            this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }) => {
+                const process = processes.find(({ identity }: ProcessResponse) => identity === id);
+                const processNamePrefix = process.name.split('-')[0];
+
+                return addresses.filter((address: AddressResponse) =>
+                    address.name.includes(processNamePrefix),
+                );
+            });
 
             this.get(`${prefix}/listeners/:id`, () => addressListener);
 

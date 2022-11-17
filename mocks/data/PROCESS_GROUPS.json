@@ -1,98 +1,8 @@
 [
     {
         "recType": "PROCESS_GROUP",
-        "identity": "16e1b754-5492-4397-97d1-bf9a8c9412b6",
-        "startTime": 1666878489715583543,
-        "name": "shippingservice",
-        "octetsSent": 8409,
-        "octetSentRate": 0,
-        "octetsReceived": 9402,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "2ae4a8f5-6935-41f2-ae87-a42ba0abdf3b",
-        "startTime": 1666878469666880886,
-        "name": "skupper-service-controller",
-        "octetsSent": 0,
-        "octetSentRate": 0,
-        "octetsReceived": 0,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "42bb712e-5ade-4bc8-a89c-cc0b71828563",
-        "startTime": 1666878489683059691,
-        "name": "emailservice",
-        "octetsSent": 0,
-        "octetSentRate": 0,
-        "octetsReceived": 0,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "5336bf9c-0c8d-4acb-81db-a49b437e5c4f",
-        "startTime": 1666878469669482459,
-        "name": "productcatalogservice",
-        "octetsSent": 3336092,
-        "octetSentRate": 0,
-        "octetsReceived": 321515,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "5ac36cbe-6cc0-4bcf-b05f-fbbb3b7ff418",
-        "startTime": 1666878489729750944,
-        "name": "currencyservice",
-        "octetsSent": 2192117,
-        "octetSentRate": 0,
-        "octetsReceived": 2478785,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "856d6093-9b9b-477a-8629-484a584b043b",
-        "startTime": 1666878489760788221,
-        "name": "adservice",
-        "octetsSent": 408355,
-        "octetSentRate": 0,
-        "octetsReceived": 231491,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "8d85d236-a6c2-4c92-b7d0-799242a6c346",
-        "startTime": 1666878469665934905,
-        "name": "skupper-router",
-        "octetsSent": 0,
-        "octetSentRate": 0,
-        "octetsReceived": 0,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "9bb2e88c-078a-4d82-80cd-368006cbffb3",
-        "startTime": 1666878489719915744,
-        "name": "checkoutservice",
-        "octetsSent": 11978,
-        "octetSentRate": 0,
-        "octetsReceived": 12396,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "9c4dc718-84fa-4fc6-8782-fd54765d0eea",
-        "startTime": 1666878469667619268,
-        "name": "recommendationservice",
-        "octetsSent": 29550,
-        "octetSentRate": 0,
-        "octetsReceived": 139394,
-        "octetReceivedRate": 0
-    },
-    {
-        "recType": "PROCESS_GROUP",
-        "identity": "9f710a09-4630-4e17-bb9f-7d04970ccc4c",
-        "startTime": 1666878489711515100,
+        "identity": "1cf5dfda-b118-4106-b82d-2183ed94b0d1",
+        "startTime": 1668696802452087660,
         "name": "paymentservice",
         "octetsSent": 0,
         "octetSentRate": 0,
@@ -101,18 +11,48 @@
     },
     {
         "recType": "PROCESS_GROUP",
-        "identity": "a1c204b8-b9ad-4d22-aa98-563faff87e1c",
-        "startTime": 1666878469668690749,
-        "name": "frontend",
-        "octetsSent": 3303029,
+        "identity": "1d017963-e85a-4041-b3d5-4e8c05f9385c",
+        "startTime": 1668696802450674374,
+        "name": "skupper-service-controller",
+        "octetsSent": 0,
         "octetSentRate": 0,
-        "octetsReceived": 6162432,
-        "octetReceivedRate": 15
+        "octetsReceived": 0,
+        "octetReceivedRate": 0
     },
     {
         "recType": "PROCESS_GROUP",
-        "identity": "e05bc3ce-e47e-4b23-a0d7-702982eef5a5",
-        "startTime": 1666878469670281016,
+        "identity": "21fdb023-bd86-48c5-b22a-53b7c59b262f",
+        "startTime": 1668696802454876074,
+        "name": "cartservice",
+        "octetsSent": 12676854,
+        "octetSentRate": 2,
+        "octetsReceived": 27147233,
+        "octetReceivedRate": 1
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "32ce91ff-598e-4556-91a3-0ef929550a8d",
+        "startTime": 1668696802460292925,
+        "name": "adservice",
+        "octetsSent": 224281,
+        "octetSentRate": 0,
+        "octetsReceived": 126438,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "33d3cd34-0d5a-49da-bc93-90c76712d82f",
+        "startTime": 1668696802450163090,
+        "name": "emailservice",
+        "octetsSent": 0,
+        "octetSentRate": 0,
+        "octetsReceived": 0,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "355c8bfb-45d7-4425-8d5a-26160d8ab840",
+        "startTime": 1668696802449488677,
         "name": "vanflow",
         "octetsSent": 0,
         "octetSentRate": 0,
@@ -121,22 +61,92 @@
     },
     {
         "recType": "PROCESS_GROUP",
-        "identity": "eb72e147-a78c-453c-882f-05488247a7eb",
-        "startTime": 1666878489727675315,
-        "name": "cartservice",
-        "octetsSent": 8482236,
-        "octetSentRate": 17,
-        "octetsReceived": 17727896,
-        "octetReceivedRate": 1
+        "identity": "543092ad-1f44-4869-a266-de7169558890",
+        "startTime": 1668696802450551339,
+        "name": "skupper-router",
+        "octetsSent": 0,
+        "octetSentRate": 0,
+        "octetsReceived": 0,
+        "octetReceivedRate": 0
     },
     {
         "recType": "PROCESS_GROUP",
-        "identity": "fcccd0d6-a9b4-495b-95b3-baeecde3d797",
-        "startTime": 1666878489752785256,
+        "identity": "7cbcf616-d158-4311-83ae-0cf516501dbc",
+        "startTime": 1668696802454250050,
+        "name": "shippingservice",
+        "octetsSent": 3129,
+        "octetSentRate": 0,
+        "octetsReceived": 3153,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "85e87444-d7af-434f-93b9-51804abae3b1",
+        "startTime": 1668696802452179514,
+        "name": "recommendationservice",
+        "octetsSent": 32610,
+        "octetSentRate": 0,
+        "octetsReceived": 142454,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "aa87ef29-4a3e-4d60-8c8a-3f049359e124",
+        "startTime": 1668696802448558848,
+        "name": "productcatalogservice",
+        "octetsSent": 5023052,
+        "octetSentRate": 0,
+        "octetsReceived": 455480,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "b53843ac-4a11-4f38-8c41-1b0b5649bb9a",
+        "startTime": 1668696802456550880,
+        "name": "currencyservice",
+        "octetsSent": 1200364,
+        "octetSentRate": 0,
+        "octetsReceived": 1364530,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "b54f96ad-9468-4541-9f15-b995f101a6fb",
+        "startTime": 1668696802447730979,
+        "name": "frontend",
+        "octetsSent": 1949898,
+        "octetSentRate": 0,
+        "octetsReceived": 6341665,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "d907217e-dd06-48cc-b6a0-ae02ad12ddb2",
+        "startTime": 1668696802452964450,
+        "name": "checkoutservice",
+        "octetsSent": 3129,
+        "octetSentRate": 0,
+        "octetsReceived": 3153,
+        "octetReceivedRate": 0
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "fdf4f108-18a8-4df1-8aee-232f8eab5995",
+        "startTime": 1668696802458426520,
         "name": "redis",
-        "octetsSent": 17473759,
+        "octetsSent": 27142332,
         "octetSentRate": 1,
-        "octetsReceived": 8162214,
+        "octetsReceived": 12671543,
+        "octetReceivedRate": 2
+    },
+    {
+        "recType": "PROCESS_GROUP",
+        "identity": "fdf4f108-18a8-4df1-8aee-232f8eab5995a",
+        "startTime": 1668696802458426520,
+        "name": "authentication",
+        "octetsSent": 27142332,
+        "octetSentRate": 1,
+        "octetsReceived": 12671543,
         "octetReceivedRate": 2
     }
 ]

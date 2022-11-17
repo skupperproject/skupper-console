@@ -5,9 +5,9 @@ context('Monitoring service', () => {
         cy.visit('/#/addresses');
     });
 
-    it('Navigate to the Monitoring/service-bar section and back to the monitor homepage', () => {
-        cy.get('[data-cy=sk-addresses]').contains('productcatalogservice').click({ force: true });
-        cy.location('hash').should('include', 'addresses/flowpairs/productcatalogservice');
+    it('Navigate to the Address shippingservice details view and back to the Addresses homepage', () => {
+        cy.get('[data-cy=sk-addresses]').contains('shippingservice').click({ force: true });
+        cy.location('hash').should('include', 'addresses/flowpairs/shippingservice');
 
         cy.get('[data-cy=sk-address]')
             .get('.pf-c-breadcrumb__list')

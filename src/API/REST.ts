@@ -1,8 +1,6 @@
 import { axiosFetch } from './axiosMiddleware';
 import {
-    CONNECTORS_PATH,
     LINKS_PATH,
-    LISTENERS_PATH,
     SITES_PATH,
     ADDRESSES_PATH,
     getFlowsPairsByAddressPATH,
@@ -22,7 +20,6 @@ import {
     getProcessesByProcessGroupPATH,
     getProcessGroupPATH,
     PROCESS_GROUP_PAIRS_PATH,
-    getListenerPATH,
     geProcessPATH,
     getConnectorsByAddressPATH,
     getLinkPATH,
@@ -32,6 +29,7 @@ import {
     getSitePairPATH,
     getProcessGroupPairPATH,
     getProcessPairPATH,
+    getAddressesByProcessPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
@@ -125,8 +123,20 @@ export const RESTApi = {
                 type: process.name.startsWith('skupper-') ? 'skupper' : 'app',
             }));
     },
+
     fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
         const { data } = await axiosFetch(geProcessPATH(id), {
+            params: options ? addQueryParams(options) : null,
+        });
+
+        return data;
+    },
+
+    fetchAddressesByProcess: async (
+        id: string,
+        options?: RequestOptions,
+    ): Promise<AddressResponse[]> => {
+        const { data } = await axiosFetch(getAddressesByProcessPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -213,34 +223,11 @@ export const RESTApi = {
     },
 
     // CONNECTORS  APIs
-    fetchConnectors: async (options?: RequestOptions): Promise<DeviceResponse[]> => {
-        const { data } = await axiosFetch(CONNECTORS_PATH, {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return data;
-    },
     fetchConnector: async (
         id: string,
         options?: RequestOptions,
     ): Promise<DeviceResponse | null> => {
         const { data } = await axiosFetch(getConnectorPATH(id), {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return data;
-    },
-
-    // LISTENERS  APIs
-    fetchListeners: async (options?: RequestOptions): Promise<DeviceResponse[]> => {
-        const { data } = await axiosFetch(LISTENERS_PATH, {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return data;
-    },
-    fetchListener: async (id: string, options?: RequestOptions): Promise<DeviceResponse> => {
-        const { data } = await axiosFetch(getListenerPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 

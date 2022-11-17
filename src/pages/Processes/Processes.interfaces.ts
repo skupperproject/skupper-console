@@ -1,7 +1,7 @@
 import { ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
-    processes: ProcessesExtended[];
+    processes: ProcessResponse[];
 }
 
 export interface ProcessesBytesChartProps {
@@ -23,12 +23,7 @@ export interface CurrentBytesInfoProps {
     style?: Record<string, string>;
 }
 
-export interface ProcessesExtended extends ProcessResponse {
-    siteIdentity: string;
-    siteName: String;
-}
-
 export interface SiteNameLinkCellProps {
-    data: ProcessesExtended;
-    value: ProcessesExtended[keyof ProcessesExtended];
+    data: ProcessResponse;
+    value: ProcessResponse[keyof ProcessResponse];
 }

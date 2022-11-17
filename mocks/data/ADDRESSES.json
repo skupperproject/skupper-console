@@ -1,8 +1,18 @@
 [
     {
         "recType": "VanAddress",
-        "identity": "173f9c93-88ae-47f8-8f31-e1248a133315",
-        "startTime": 1666878459666767871,
+        "identity": "0c5c8133-2fe9-461c-9a90-073c6aa1f85f",
+        "startTime": 1668696782562299469,
+        "name": "recommendationservice:8080",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 0,
+        "currentFlows": 0
+    },
+    {
+        "recType": "VanAddress",
+        "identity": "11b1c6c5-8d08-4a4e-9f27-a0a7b933c0a1",
+        "startTime": 1668696782562315162,
         "name": "redis-cart:6379",
         "listenerCount": 3,
         "connectorCount": 1,
@@ -11,48 +21,8 @@
     },
     {
         "recType": "VanAddress",
-        "identity": "2c8dd2bb-29b2-45a6-8988-1c4f9c35d883",
-        "startTime": 1666878459666774939,
-        "name": "paymentservice:50051",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 0,
-        "currentFlows": 0
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "39788703-48bc-4575-b954-5d422f0cd5b8",
-        "startTime": 1666878459666737704,
-        "name": "recommendationservice:8080",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 2,
-        "currentFlows": 2
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "3a78ea41-9766-4071-94b7-edfcf8f9b307",
-        "startTime": 1666878459666748247,
-        "name": "checkoutservice:5050",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 4,
-        "currentFlows": 3
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "3f73abcd-e102-40be-a727-6f7f16506c38",
-        "startTime": 1666878459666752131,
-        "name": "cartservice:7070",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 8508,
-        "currentFlows": 3
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "8d8b24a0-b017-4bf7-9397-8a56df31dd27",
-        "startTime": 1666878459666770747,
+        "identity": "36a03f9d-6999-4bd1-b8dd-d31960380e67",
+        "startTime": 1668696782562318302,
         "name": "emailservice:5000",
         "listenerCount": 3,
         "connectorCount": 1,
@@ -61,42 +31,72 @@
     },
     {
         "recType": "VanAddress",
-        "identity": "aa71bccc-0311-4e96-952d-e2999ed1d1fc",
-        "startTime": 1666878459666701904,
+        "identity": "4134ca3d-a498-40fb-a9dd-99c935caf17c",
+        "startTime": 1668696782562303559,
+        "name": "checkoutservice:5050",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 1,
+        "currentFlows": 1
+    },
+    {
+        "recType": "VanAddress",
+        "identity": "56e11ded-7f23-44dc-b42b-ef7890c15095",
+        "startTime": 1668696782562286572,
         "name": "productcatalogservice:3550",
         "listenerCount": 3,
         "connectorCount": 1,
-        "totalFlows": 4,
-        "currentFlows": 4
+        "totalFlows": 0,
+        "currentFlows": 0
     },
     {
         "recType": "VanAddress",
-        "identity": "ce8d4e78-bbdd-4477-a4c6-006620cd838c",
-        "startTime": 1666878459666764170,
-        "name": "adservice:9555",
+        "identity": "7866be14-89d1-4ed7-a694-7b177964fc0c",
+        "startTime": 1668696782562306259,
+        "name": "cartservice:7070",
         "listenerCount": 3,
         "connectorCount": 1,
-        "totalFlows": 4,
-        "currentFlows": 3
+        "totalFlows": 95,
+        "currentFlows": 1
     },
     {
         "recType": "VanAddress",
-        "identity": "e3079051-8aba-4a62-bd79-8679d9aa2466",
-        "startTime": 1666878459666779369,
-        "name": "shippingservice:50051",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 6,
-        "currentFlows": 3
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "fabe6dee-1cc2-4345-aa9e-296ba0a801e3",
-        "startTime": 1666878459666755813,
+        "identity": "bab20c8d-ac14-49c8-89fe-7c317d6bd1be",
+        "startTime": 1668696782562309331,
         "name": "currencyservice:7000",
         "listenerCount": 3,
         "connectorCount": 1,
-        "totalFlows": 4,
-        "currentFlows": 3
+        "totalFlows": 1,
+        "currentFlows": 1
+    },
+    {
+        "recType": "VanAddress",
+        "identity": "c1401407-b762-462e-91f2-e0b2d3da0c87",
+        "startTime": 1668696782562374145,
+        "name": "paymentservice:50051",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 0,
+        "currentFlows": 0
+    },
+    {
+        "recType": "VanAddress",
+        "identity": "d7eda1ab-1bfb-460d-be9b-8d16d16d8b46",
+        "startTime": 1668696782562379147,
+        "name": "shippingservice:50051",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 1,
+        "currentFlows": 1
+    },
+    {
+        "recType": "VanAddress",
+        "identity": "e0baa106-6e1a-4761-96d4-7c66b05a552f",
+        "startTime": 1668696782562312410,
+        "name": "adservice:9555",
+        "listenerCount": 3,
+        "connectorCount": 1,
+        "totalFlows": 1,
+        "currentFlows": 1
     }
 ]
