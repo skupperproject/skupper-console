@@ -26,13 +26,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import AddressNameLinkCell from '@pages/Addresses/components/AddressNameLinkCell';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesController from '@pages/Sites/services';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import { ProcessResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
@@ -54,11 +53,10 @@ const Process = function () {
         },
     );
 
-    const { data: site, isLoading: isLoadingSite } = useQuery(
-        [QueriesSites.GetSite, process?.parent],
-        () => SitesController.getSite(process?.parent || ''),
+    const { data: addresses, isLoading: isLoadingAddressesByProcess } = useQuery(
+        [QueriesProcesses.GetAddressesByProcessId, processId],
+        () => ProcessesController.getAddressesByProcess(processId),
         {
-            enabled: !!process?.parent,
             onError: handleError,
         },
     );
@@ -72,11 +70,13 @@ const Process = function () {
         navigate(route);
     }
 
-    if (isLoadingProcess || isLoadingSite) {
+    if (isLoadingProcess || isLoadingAddressesByProcess) {
         return <LoadingPage />;
     }
 
     const {
+        parent,
+        siteName,
         name,
         imageName,
         group,
@@ -88,7 +88,6 @@ const Process = function () {
         octetSentRate,
         octetsSent,
     } = process as ProcessResponse;
-    const { identity: siteIdentity, name: siteName } = site as SiteResponse;
 
     return (
         <Grid hasGutter>
@@ -115,11 +114,21 @@ const Process = function () {
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>
+                                            {ProcessesLabels.Name}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {name}
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </GridItem>
+                                <GridItem span={6}>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
                                             {ProcessesLabels.Site}
                                         </DescriptionListTerm>
                                         <DescriptionListDescription>
                                             <ResourceIcon type="site" />
-                                            <Link to={`${SitesRoutesPaths.Sites}/${siteIdentity}`}>
+                                            <Link to={`${SitesRoutesPaths.Sites}/${parent}`}>
                                                 {siteName}
                                             </Link>
                                         </DescriptionListDescription>
@@ -140,16 +149,27 @@ const Process = function () {
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>
                                 </GridItem>
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.Name}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            {name}
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
+
+                                {!!addresses?.length && (
+                                    <GridItem span={6}>
+                                        <DescriptionListGroup>
+                                            <DescriptionListTerm>
+                                                {ProcessesLabels.Addresses}
+                                            </DescriptionListTerm>
+                                            <DescriptionListDescription>
+                                                <Flex>
+                                                    {addresses?.map((address) => (
+                                                        <AddressNameLinkCell
+                                                            key={address.identity}
+                                                            data={address}
+                                                            value={address.name}
+                                                        />
+                                                    ))}
+                                                </Flex>
+                                            </DescriptionListDescription>
+                                        </DescriptionListGroup>
+                                    </GridItem>
+                                )}
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>

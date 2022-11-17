@@ -23,17 +23,14 @@ export const LINKS_PATH = `${API_URL}/links/`;
 export const getLinkPATH = (id: string) => `${LINKS_PATH}${id}`;
 
 // CONNECTORS
-export const CONNECTORS_PATH = `${API_URL}/connectors/`;
+const CONNECTORS_PATH = `${API_URL}/connectors/`;
 export const getConnectorPATH = (id: string) => `${CONNECTORS_PATH}${id}`;
-
-// LISTENERS
-export const LISTENERS_PATH = `${API_URL}/listeners/`;
-export const getListenerPATH = (id: string) => `${LISTENERS_PATH}${id}`;
 
 // PROCESSES
 export const PROCESSES_PATH = `${API_URL}/processes/`;
 export const geProcessPATH = (id: string) => `${PROCESSES_PATH}${id}`;
 export const getConnectorByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/connector`;
+export const getAddressesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/addresses`;
 
 // PROCESS_GROUPS
 export const PROCESS_GROUPS_PATH = `${API_URL}/processgroups/`;
