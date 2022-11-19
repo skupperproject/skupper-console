@@ -6,7 +6,7 @@ export interface GraphNode {
     color: string;
     groupName: string;
     group: number;
-    img?: XMLDocument;
+    img?: string;
     fx: number | null;
     fy: number | null;
     groupFx?: number;

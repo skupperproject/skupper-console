@@ -1,5 +1,3 @@
-import { xml } from 'd3-fetch';
-
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
@@ -176,14 +174,10 @@ export const TopologyController = {
         };
     },
 
-    getNodesFromSitesOrProcessGroups: async (
+    getNodesFromSitesOrProcessGroups: (
         entities: SiteResponse[] | ProcessGroupResponse[],
-    ): Promise<GraphNode[]> => {
-        const skupperProcessGroupXML = await xml(skupperProcessSVG);
-        const processGroupXML = await xml(processSVG);
-        const siteXML = await xml(siteSVG);
-
-        return entities
+    ): GraphNode[] =>
+        entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
             .map((node, index) => {
                 const positions = localStorage.getItem(node.identity);
@@ -202,22 +196,15 @@ export const TopologyController = {
                     color: getColor(node.type === 'skupper' ? 16 : index),
                     img:
                         node.type === 'skupper'
-                            ? skupperProcessGroupXML
+                            ? skupperProcessSVG
                             : node.recType === 'SITE'
-                            ? siteXML
-                            : processGroupXML,
+                            ? siteSVG
+                            : processSVG,
                 };
-            });
-    },
+            }),
 
-    getNodesFromProcesses: async (
-        processes: ProcessResponse[],
-        siteNodes: GraphNode[],
-    ): Promise<GraphNode[]> => {
-        const skupperProcessGroupXML = await xml(skupperProcessSVG);
-        const processGroupXML = await xml(processSVG);
-
-        return processes
+    getNodesFromProcesses: (processes: ProcessResponse[], siteNodes: GraphNode[]): GraphNode[] =>
+        processes
             ?.map(({ name, identity, parent, type }) => {
                 const site = siteNodes?.find(({ id }) => id === parent);
                 const groupIndex = site?.group || 0;
@@ -236,11 +223,10 @@ export const TopologyController = {
                     groupName: site?.name || '',
                     group: groupIndex,
                     color: getColor(type === 'skupper' ? 16 : groupIndex),
-                    img: type === 'skupper' ? skupperProcessGroupXML : processGroupXML,
+                    img: type === 'skupper' ? skupperProcessSVG : processSVG,
                 };
             })
-            .sort((a, b) => a.group - b.group);
-    },
+            .sort((a, b) => a.group - b.group),
 
     getEdgesFromLinks: (links: LinkTopology[]): GraphEdge[] =>
         links?.map(({ source, target }) => ({
