@@ -6,6 +6,8 @@ The skupper console is installed when skupper is initialized using
 
 > `skupper init --enable-console`
 
+note: The console you should enable the console only for one installation to avoid more traffic load for redundant collections.
+
 ## Securing the console
 
 When you run skupper init you can specify the --console-user and --console-password, otherwise they will be generated (admin and a random password held in secrets/skupper-console-users).
