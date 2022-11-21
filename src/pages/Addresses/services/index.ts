@@ -95,7 +95,7 @@ export const AddressesController = {
                     port: destPort,
                     imageName: process.imageName,
                     groupId: process.groupIdentity,
-                    groupName: process.group,
+                    groupName: process.groupName,
                     bytes: process.octetsSent,
                     byteRate: process.octetSentRate,
                 };

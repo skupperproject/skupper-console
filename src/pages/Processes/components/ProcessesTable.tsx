@@ -17,7 +17,7 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
         },
         {
             name: ProcessesTableColumns.Site,
-            prop: 'siteName' as keyof ProcessResponse,
+            prop: 'parentName' as keyof ProcessResponse,
             component: 'linkCellSite',
         },
     ];

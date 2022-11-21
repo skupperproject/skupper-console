@@ -76,10 +76,10 @@ const Process = function () {
 
     const {
         parent,
-        siteName,
+        parentName,
         name,
         imageName,
-        group,
+        groupName,
         groupIdentity,
         sourceHost,
         hostName,
@@ -129,7 +129,7 @@ const Process = function () {
                                         <DescriptionListDescription>
                                             <ResourceIcon type="site" />
                                             <Link to={`${SitesRoutesPaths.Sites}/${parent}`}>
-                                                {siteName}
+                                                {parentName}
                                             </Link>
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>
@@ -144,7 +144,7 @@ const Process = function () {
                                             <Link
                                                 to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupIdentity}`}
                                             >
-                                                {group}
+                                                {groupName}
                                             </Link>
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>
