@@ -40,9 +40,9 @@ export type ProcessGroupResponse = EntityBaseResponse & EntityMetricsResponse;
 
 export interface ProcessResponse extends EntityBaseResponse, EntityMetricsResponse {
     parent: string;
-    siteName: string; // parent is siteId
+    parentName: string;
     groupIdentity: string;
-    group: string;
+    groupName: string;
     imageName: string;
     sourceHost: string;
     hostName: string;
