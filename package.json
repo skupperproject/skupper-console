@@ -6,7 +6,7 @@
     "engines": {
         "npm": "please-use-yarn",
         "yarn": ">= 1.19.1"
-      },
+    },
     "scripts": {
         "start": "webpack serve --config config/webpack.dev.js",
         "build": "webpack --config config/webpack.prod.js",

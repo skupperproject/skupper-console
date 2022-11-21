@@ -48,18 +48,20 @@ const TopologyProcessGroups = function () {
         navigate(route);
     }
 
-    function handleGetSelectedNode(id: string) {
-        if (id !== nodeSelected) {
-            setNodeSelected(id);
-        }
-    }
+    const handleGetSelectedNode = useCallback(
+        (id: string) => {
+            if (id !== nodeSelected) {
+                setNodeSelected(id);
+            }
+        },
+        [nodeSelected],
+    );
 
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (processGroups && processGroupsLinks) {
-            const processGroupsNodes = await TopologyController.getNodesFromSitesOrProcessGroups(
-                processGroups,
-            );
+            const processGroupsNodes =
+                TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
 
             setNodes(processGroupsNodes);
             setLinks(TopologyController.getEdgesFromLinks(processGroupsLinks));

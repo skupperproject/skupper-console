@@ -37,7 +37,7 @@ import TopologyPanel from './TopologyPanel';
 const TopologyProcesses = function () {
     const navigate = useNavigate();
 
-    const topologyRef = useRef<any>();
+    const topologyRef = useRef<{ deselectAll: () => void } | null>(null);
 
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
@@ -100,11 +100,14 @@ const TopologyProcesses = function () {
         navigate(route);
     }
 
-    function handleGetSelectedNode(id: string) {
-        if (id !== nodeSelected) {
-            setNodeSelected(id);
-        }
-    }
+    const handleGetSelectedNode = useCallback(
+        (id: string) => {
+            if (id !== nodeSelected) {
+                setNodeSelected(id);
+            }
+        },
+        [nodeSelected],
+    );
 
     function handleToggle(isSelectAddressOpen: boolean) {
         setIsOpen(isSelectAddressOpen);
@@ -130,12 +133,8 @@ const TopologyProcesses = function () {
             processesLinks &&
             !(isLoadingProcessLinksByAddress && addressIdSelected)
         ) {
-            const siteNodes = await TopologyController.getNodesFromSitesOrProcessGroups(sites);
-
-            const processesNodes = await TopologyController.getNodesFromProcesses(
-                processes,
-                siteNodes,
-            );
+            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+            const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
             const processesSourcesIds = processesLinksByAddress?.map((p) => p.source) || [];
             const processesTargetIds = processesLinksByAddress?.map((p) => p.target) || [];
             const processesAddress = [...processesSourcesIds, ...processesTargetIds];
@@ -187,7 +186,7 @@ const TopologyProcesses = function () {
     ));
 
     const optionsWithDefault = [
-        <SelectOption key={0} value="Select an address" isPlaceholder />,
+        <SelectOption key={0} value={Labels.ShowAll} isPlaceholder />,
         ...(options || []),
     ];
 

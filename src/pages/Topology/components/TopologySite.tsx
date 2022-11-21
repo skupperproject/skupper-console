@@ -19,7 +19,7 @@ const TopologySite = function () {
 
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
-    const [nodeIdSelected, setNodeIdSelected] = useState<string | null>(null);
+    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: sites, isLoading: isLoading } = useQuery(
         [QueriesTopology.GetSitesWithLinksCreated],
@@ -39,16 +39,19 @@ const TopologySite = function () {
         navigate(route);
     }
 
-    function handleGetSelectedNode(id: string) {
-        if (id !== nodeIdSelected) {
-            setNodeIdSelected(id);
-        }
-    }
+    const handleGetSelectedNode = useCallback(
+        (id: string) => {
+            if (id !== nodeSelected) {
+                setNodeSelected(id);
+            }
+        },
+        [nodeSelected],
+    );
 
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (sites) {
-            const siteNodes = await TopologyController.getNodesFromSitesOrProcessGroups(sites);
+            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
             setNodes(siteNodes);
             setLinks(TopologyController.getEdgesFromSitesConnected(sites));
@@ -65,7 +68,7 @@ const TopologySite = function () {
 
     return (
         <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
-            {nodeIdSelected && <TopologySiteDetails id={nodeIdSelected} />}
+            {nodeSelected && <TopologySiteDetails id={nodeSelected} />}
         </TopologyPanel>
     );
 };

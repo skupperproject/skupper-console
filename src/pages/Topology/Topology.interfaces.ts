@@ -1,3 +1,6 @@
+import { ReactNode } from 'react';
+
+import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { FlowAggregatesResponse } from 'API/REST.interfaces';
 
 export interface TopologyDetailsProps {
@@ -5,6 +8,14 @@ export interface TopologyDetailsProps {
     link: string;
     tcpConnectionsOutEntries: FlowAggregatesResponse[];
     tcpConnectionsInEntries: FlowAggregatesResponse[];
+}
+
+export interface TopologyPanelProps {
+    nodes: GraphNode[];
+    links: GraphEdge[];
+    options?: { showGroup: boolean };
+    onGetSelectedNode?: Function;
+    children: ReactNode;
 }
 
 export interface TrafficData {

@@ -16,7 +16,7 @@ import { interpolate } from 'd3-interpolate';
 import { polygonCentroid, polygonHull } from 'd3-polygon';
 import { scaleOrdinal } from 'd3-scale';
 import { select, Selection } from 'd3-selection';
-import { curveCatmullRomClosed, Line, line } from 'd3-shape';
+import { Line, line, curveCardinalClosed } from 'd3-shape';
 import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
 import EventEmitter from '@core/components/Graph/EventEmitter';
@@ -46,11 +46,12 @@ export default class Graph {
     selectedNode: null | string;
     EventEmitter: EventEmitter;
     options: { showGroup?: boolean | undefined } | undefined;
+    isGraphLoaded: boolean;
 
     constructor(
         $node: HTMLElement,
         nodes: GraphNode[],
-        edges: GraphEdge[] | GraphEdgeModifiedByForce[],
+        edges: GraphEdge[],
         boxWidth: number,
         boxHeight: number,
         options?: { showGroup?: boolean },
@@ -65,7 +66,9 @@ export default class Graph {
 
         this.EventEmitter = new EventEmitter();
         this.isDraggingNode = false;
-        this.force = this.initForce(nodes);
+        this.isGraphLoaded = false;
+
+        this.force = this.initForce(this.nodes);
 
         this.svgContainer = this.createSvgContainer();
         this.svgContainerGroupNodes = this.svgContainer
@@ -80,7 +83,7 @@ export default class Graph {
             .y(function (d) {
                 return d[1];
             })
-            .curve(curveCatmullRomClosed)),
+            .curve(curveCardinalClosed)),
             (this.groupIds = []);
 
         this.handleZoom = zoom<SVGSVGElement, GraphNode>()
@@ -90,6 +93,7 @@ export default class Graph {
             });
 
         this.svgContainer.call(this.handleZoom);
+        this.redrawTopology(this.nodes, this.links);
     }
 
     private createSvgContainer() {
@@ -130,8 +134,8 @@ export default class Graph {
             this.force.stop();
         }
 
-        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
         this.isDraggingNode = false;
+        this.EventEmitter.emit(GraphEvents.IsDraggingNodeEnd, [node]);
     };
 
     private groupDragStarted = (
@@ -171,14 +175,10 @@ export default class Graph {
             this.force.stop();
         }
 
-        this.force
-            .nodes()
-            .filter(({ group }) => group === Number(groupId))
-            .forEach((node) => {
-                localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
-            });
-
         this.isDraggingNode = false;
+        this.EventEmitter.emit(GraphEvents.IsDraggingNodesEnd, [
+            this.nodes.filter(({ group }) => group === Number(groupId)),
+        ]);
     };
 
     private ticked = () => {
@@ -329,16 +329,12 @@ export default class Graph {
                     }),
             )
             .on('end', () => {
-                nodes.forEach((node) => {
-                    if (!localStorage.getItem(node.id)) {
-                        node.fx = node.x;
-                        node.fy = node.y;
+                if (!this.isGraphLoaded) {
+                    this.EventEmitter.emit(GraphEvents.IsGraphLoaded, [this.nodes]);
+                    this.isGraphLoaded = true;
+                }
 
-                        localStorage.setItem(node.id, JSON.stringify({ fx: node.fx, fy: node.fy }));
-                    }
-                });
-
-                this.EventEmitter.emit(GraphEvents.IsGraphLoaded);
+                this.force.stop();
             });
     }
 
@@ -358,7 +354,6 @@ export default class Graph {
             .append('svg:path')
             .style('fill', 'gray')
             .attr('d', 'M0,-5L10,0L0,5');
-
         // links services
         const svgEdgesData = this.svgContainerGroupNodes.selectAll('.serviceLink').data(edges);
         const svgEdges = svgEdgesData.enter();
@@ -443,7 +438,8 @@ export default class Graph {
             .style('fill', ({ color }) => color);
 
         enterSelection
-            .append(({ img }) => img?.documentElement.cloneNode(true) as HTMLElement)
+            .append('image')
+            .attr('xlink:href', ({ img }) => img || null)
             .attr('class', 'node-img')
             .attr('width', NODE_SIZE / 2)
             .attr('x', -NODE_SIZE / 4)
@@ -560,23 +556,26 @@ export default class Graph {
             });
     }
 
-    updateTopology = (nodes: GraphNode[], links: GraphEdge[] | GraphEdgeModifiedByForce[]) => {
-        if (!this.isDraggingNode) {
-            this.svgContainerGroupNodes.selectAll('*').remove();
-
-            this.force.nodes(nodes).on('tick', this.ticked);
-
-            this.force
-                .force<ForceLink<GraphNode, GraphEdge | GraphEdgeModifiedByForce>>('link')
-                ?.links(links);
-
-            this.force.restart();
-            this.links = links as GraphEdgeModifiedByForce[];
-            this.nodes = nodes;
-
-            this.updateEdges();
-            this.redrawNodes();
+    updateTopology = (nodes: GraphNode[], links: GraphEdge[]) => {
+        if (this.isGraphLoaded && !this.isDraggingNode) {
+            this.redrawTopology(nodes, links);
         }
+    };
+
+    private redrawTopology = (nodes: GraphNode[], links: GraphEdge[]) => {
+        this.svgContainerGroupNodes.selectAll('*').remove();
+        this.links = JSON.parse(JSON.stringify(links));
+        this.nodes = JSON.parse(JSON.stringify(nodes));
+
+        this.force.nodes(this.nodes).on('tick', this.ticked);
+        this.force
+            .force<ForceLink<GraphNode, GraphEdge | GraphEdgeModifiedByForce>>('link')
+            ?.links(this.links);
+
+        this.force.restart();
+
+        this.updateEdges();
+        this.redrawNodes();
     };
 
     // exposed events
