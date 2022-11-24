@@ -96,6 +96,7 @@ interface FlowResponse extends BaseResponse {
     sourcePort: string;
     latency: number;
     process: string;
+    processName: string;
     trace?: string;
     endTime?: number;
 }
