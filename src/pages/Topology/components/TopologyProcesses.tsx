@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
     Divider,
@@ -34,7 +34,10 @@ import { Labels } from '../Topology.enum';
 import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
 
-const TopologyProcesses = function () {
+const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | null }> = function ({
+    addressId,
+    processId,
+}) {
     const navigate = useNavigate();
 
     const topologyRef = useRef<{ deselectAll: () => void } | null>(null);
@@ -42,10 +45,10 @@ const TopologyProcesses = function () {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
-    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
+    const [nodeSelected, setNodeSelected] = useState<string | null>(processId || null);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [addressIdSelected, setAddressId] = useState<string>();
+    const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
 
     const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
         refetchInterval,
@@ -118,9 +121,9 @@ const TopologyProcesses = function () {
         selection: string | SelectOptionObject,
         isPlaceholder?: boolean,
     ) {
-        const addressId = isPlaceholder ? undefined : (selection as string);
+        const id = isPlaceholder ? undefined : (selection as string);
 
-        setAddressId(addressId);
+        setAddressId(id);
         setIsOpen(false);
         topologyRef?.current?.deselectAll();
     }
@@ -213,7 +216,7 @@ const TopologyProcesses = function () {
                 nodes={nodes}
                 links={links}
                 onGetSelectedNode={handleGetSelectedNode}
-                options={{ showGroup: true }}
+                options={{ showGroup: true, shouldOpenDetails: !!nodeSelected }}
             >
                 {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
             </TopologyPanel>

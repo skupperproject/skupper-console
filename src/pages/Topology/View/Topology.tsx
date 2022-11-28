@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 
 import { Card, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { useSearchParams } from 'react-router-dom';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
 import TopologySite from '../components/TopologySite';
-import { TopologyViews } from '../Topology.enum';
+import { TopologyURLFilters, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
-    const [topologyType, setTopologyType] = useState<string>(TopologyViews.Sites);
+    const [searchParams] = useSearchParams();
+    const addressId = searchParams.get(TopologyURLFilters.AddressId);
+    const processId = searchParams.get(TopologyURLFilters.ProcessIdSelected);
+
+    const type = searchParams.get(TopologyURLFilters.Type);
+
+    const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
 
     function handleChangeTopologyType(
         _: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -35,7 +42,9 @@ const Topology = function () {
             </Tabs>
             {topologyType === TopologyViews.Sites && <TopologySite />}
             {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups />}
-            {topologyType === TopologyViews.Processes && <TopologyProcesses />}
+            {topologyType === TopologyViews.Processes && (
+                <TopologyProcesses addressId={addressId} processId={processId} />
+            )}
         </Card>
     );
 };

@@ -1,7 +1,7 @@
 export interface SKTableProps<T> {
     columns: {
         name: string;
-        prop: keyof T;
+        prop?: keyof T;
         component?: string;
         callback?: Function;
         format?: Function;

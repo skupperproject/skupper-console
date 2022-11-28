@@ -33,7 +33,9 @@ import { TopologyPanelProps } from '../Topology.interfaces';
 const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps>(
     ({ nodes, links, onGetSelectedNode, children, options }, ref) => {
         const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
-        const [areDetailsExpanded, setIsExpandedDetails] = useState(false);
+        const [areDetailsExpanded, setIsExpandedDetails] = useState(
+            !!options?.shouldOpenDetails || false,
+        );
 
         const prevNodesRef = useRef<GraphNode[]>();
 
@@ -53,19 +55,19 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
             setIsExpandedDetails(false);
         }
 
-        function handleIsGraphLoaded(topologyNodes: GraphNode[]) {
+        const handleIsGraphLoaded = useCallback((topologyNodes: GraphNode[]) => {
             topologyNodes.forEach((node) => {
                 if (!localStorage.getItem(node.id)) {
                     handleSaveNodePosition(node);
                 }
             });
-        }
+        }, []);
 
-        function handleSaveNodesPositions(topologyNodes: GraphNode[]) {
+        const handleSaveNodesPositions = useCallback((topologyNodes: GraphNode[]) => {
             topologyNodes.forEach((node) => {
                 handleSaveNodePosition(node);
             });
-        }
+        }, []);
 
         function handleSaveNodePosition(node: GraphNode) {
             if (node.x && node.y) {

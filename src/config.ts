@@ -6,7 +6,7 @@ import { TopologyPaths } from '@pages/Topology/Topology.constant';
 
 // URL config
 export const BASE_URL_COLLECTOR =
-    process.env.API_HOST_FLOW_COLLECTOR || `${window.location.protocol}//${window.location.host}`;
+    process.env.API_HOST_FLOW_COLLECTOR || `${window.location.protocol}/${window.location.host}`;
 
 // Navigation config
 export const RoutesPropsConfig = [

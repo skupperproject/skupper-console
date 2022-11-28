@@ -28,6 +28,11 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import {
+    TopologyRoutesPaths,
+    TopologyURLFilters,
+    TopologyViews,
+} from '@pages/Topology/Topology.enum';
 import { UPDATE_INTERVAL } from 'config';
 
 import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
@@ -60,7 +65,7 @@ const FlowsPairs = function () {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesAddresses.GetProcessesByAddress, addressId],
-        () => (addressId ? AddressesController.getProcessesWithMetricsByAddress(addressId) : null),
+        () => (addressId ? AddressesController.getServersByAddress(addressId) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -132,6 +137,13 @@ const FlowsPairs = function () {
                     <TextContent>
                         <Text component={TextVariants.h1}>{addressName}</Text>
                     </TextContent>
+                    {!!connections.length && (
+                        <Link
+                            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+                        >
+                            {'( Go to Network view )'}
+                        </Link>
+                    )}
                 </Flex>
             </GridItem>
 

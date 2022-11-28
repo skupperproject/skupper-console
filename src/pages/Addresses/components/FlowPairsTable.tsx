@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import SkTable from '@core/components/SkTable';
-import { formatByteRate } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 
 import { FlowPairsColumnsNames } from '../Addresses.enum';
 import { FlowPairBasic, FlowPairsTableProps } from '../services/services.interfaces';
@@ -33,6 +33,16 @@ const FlowsPairsTable: FC<FlowPairsTableProps> = function ({ flowPairs }) {
             name: FlowPairsColumnsNames.ByteRateRX,
             prop: 'targetByteRate' as keyof FlowPairBasic,
             format: formatByteRate,
+        },
+        {
+            name: FlowPairsColumnsNames.BytesTx,
+            prop: 'bytes' as keyof FlowPairBasic,
+            format: formatBytes,
+        },
+        {
+            name: FlowPairsColumnsNames.BytesRx,
+            prop: 'targetBytes' as keyof FlowPairBasic,
+            format: formatBytes,
         },
         {
             name: FlowPairsColumnsNames.Server,

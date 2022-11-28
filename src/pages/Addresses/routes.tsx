@@ -7,7 +7,7 @@ const FlowPairs = lazy(
     () => import(/* webpackChunkName: "addresses-flow-pairs" */ './views/FlowPairs'),
 );
 
-export const monitoringRoutes = [
+export const addressesRoutes = [
     {
         path: AddressesRoutesPaths.Addresses,
         element: <Addresses />,

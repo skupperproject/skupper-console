@@ -103,7 +103,7 @@ const Process = function () {
                 <Title headingLevel="h1">{name}</Title>
             </Flex>
 
-            <GridItem span={12}>
+            <GridItem>
                 <Card isFullHeight isRounded>
                     <CardTitle>
                         <Title headingLevel="h2">{ProcessesLabels.Details}</Title>
@@ -111,16 +111,6 @@ const Process = function () {
                     <CardBody>
                         <DescriptionList>
                             <Grid hasGutter>
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.Name}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            {name}
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>
@@ -236,7 +226,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={12}>
+            <GridItem>
                 <Card>
                     <RealTimeLineChart
                         data={[

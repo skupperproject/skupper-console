@@ -11,7 +11,7 @@ const ProcessNameLinkCell: FC<ProcessNameLinkCellProps> = function ({ data, valu
     return (
         <>
             <ResourceIcon type="process" />
-            <Link to={`${ProcessesRoutesPaths.Processes}/${data.processId}`}>{value}</Link>
+            <Link to={`${ProcessesRoutesPaths.Processes}/${data.id}`}>{value}</Link>
         </>
     );
 };

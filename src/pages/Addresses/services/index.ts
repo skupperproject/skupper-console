@@ -14,7 +14,6 @@ export const AddressesController = {
         }));
     },
 
-    // TODO: waiting for the API to remove multiple calls and filters
     getFlowPairsByAddress: async (id: string): Promise<FlowPairBasic[]> => {
         const flowsPairs = await RESTApi.fetchFlowPairsByAddress(id);
         const sites = await RESTApi.fetchSites();
@@ -75,28 +74,22 @@ export const AddressesController = {
 
         return flowsPairsExtended;
     },
-    getProcessesWithMetricsByAddress: async (id: string): Promise<ProcessRow[]> => {
-        const processes = await RESTApi.fetchServerProcessesByAddresses(id);
+    getServersByAddress: async (id: string): Promise<ProcessRow[]> => {
+        const servers = await RESTApi.fetchServersByAddress(id);
 
         return Promise.all(
-            processes.map(async (process) => {
-                const site = await RESTApi.fetchSite(process.parent);
-                const { destPort } = await RESTApi.fetchConnectorByProcess(process.identity);
-
-                return {
-                    identity: process.identity,
-                    siteId: site.identity,
-                    siteName: site.name,
-                    processName: process.name,
-                    host: process.sourceHost,
-                    port: destPort,
-                    imageName: process.imageName,
-                    groupId: process.groupIdentity,
-                    groupName: process.groupName,
-                    bytes: process.octetsSent,
-                    byteRate: process.octetSentRate,
-                };
-            }),
+            servers.map(async (process) => ({
+                identity: process.identity,
+                siteId: process.parent,
+                siteName: process.parentName,
+                processName: process.name,
+                host: process.sourceHost,
+                imageName: process.imageName,
+                groupId: process.groupIdentity,
+                groupName: process.groupName,
+                bytes: process.octetsSent,
+                byteRate: process.octetSentRate,
+            })),
         );
     },
 };
