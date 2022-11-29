@@ -117,10 +117,10 @@ export const RESTApi = {
         });
 
         return data
-            .filter(({ name }: ProcessResponse) => !name.startsWith('skupper-'))
+            .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
             .map((process: ProcessResponse) => ({
                 ...process,
-                type: process.name.startsWith('skupper-') ? 'skupper' : 'app',
+                type: getProcessType(process.name),
             }));
     },
 
@@ -160,10 +160,10 @@ export const RESTApi = {
 
         //TODO remove when api provide flag to recognize internal process groups
         return data
-            .filter(({ name }: ProcessGroupResponse) => !name.startsWith('skupper-'))
+            .filter(({ name }: ProcessGroupResponse) => !isSkupperEntity(name))
             .map((processGroup: ProcessGroupResponse) => ({
                 ...processGroup,
-                type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
+                type: getProcessType(processGroup.name),
             }));
     },
     fetchProcessGroup: async (
@@ -186,10 +186,10 @@ export const RESTApi = {
 
         //TODO remove when api provide flag to recognize internal processes
         return data
-            .filter(({ name }: ProcessResponse) => !name.startsWith('skupper-'))
+            .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
             .map((processGroup: ProcessResponse) => ({
                 ...processGroup,
-                type: processGroup.name.startsWith('skupper-') ? 'skupper' : 'app',
+                type: getProcessType(processGroup.name),
             }));
     },
 
@@ -352,4 +352,12 @@ function addQueryParams({ filters, offset, limit, sortDirection, sortName }: Req
         limit,
         sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
     };
+}
+
+function isSkupperEntity(name: string) {
+    return name.startsWith('skupper') || name.startsWith('vanflow');
+}
+
+function getProcessType(name: string) {
+    return name.startsWith('skupper-') || name.startsWith('vanflow') ? 'skupper' : 'app';
 }

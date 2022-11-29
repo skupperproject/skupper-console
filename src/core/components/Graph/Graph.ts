@@ -102,15 +102,6 @@ export default class Graph {
             .attr('viewBox', `0 0 ${this.width} ${this.height}`);
     }
 
-    private fixNodes = (x: number, y: number) => {
-        this.nodes.forEach(function (node) {
-            if (x !== node.x || y !== node.y) {
-                node.fx = node.x;
-                node.fy = node.y;
-            }
-        });
-    };
-
     private dragStarted = ({ active }: { active: boolean }, node: GraphNode) => {
         if (!active) {
             this.force.alphaTarget(0.3).restart();
@@ -119,7 +110,6 @@ export default class Graph {
         node.fx = node.x;
         node.fy = node.y;
 
-        this.fixNodes(node.x, node.y);
         this.isDraggingNode = true;
     };
 
@@ -146,26 +136,22 @@ export default class Graph {
             this.force.alphaTarget(0.3).restart();
         }
 
-        this.force
-            .nodes()
+        this.nodes
             .filter(({ group }) => group === Number(groupId))
             .forEach((node) => {
-                node.fx = node.fx || 0;
-                node.fy = node.fy || 0;
-                node.groupFx = x || 0;
-                node.groupFy = y || 0;
+                node.groupFx = x;
+                node.groupFy = y;
             });
 
         this.isDraggingNode = true;
     };
 
     private groupDragged = ({ x, y }: { x: number; y: number }, groupId: string) => {
-        this.force
-            .nodes()
+        this.nodes
             .filter(({ group }) => group === Number(groupId))
             .forEach((node) => {
-                node.fx = (node.fx || 0) + x - (node.groupFx || 0);
-                node.fy = (node.fy || 0) + y - (node.groupFy || 0);
+                node.fx = node.x + x - (node.groupFx || 0);
+                node.fy = node.y + y - (node.groupFy || 0);
             });
     };
 
@@ -333,6 +319,11 @@ export default class Graph {
                     this.EventEmitter.emit(GraphEvents.IsGraphLoaded, [this.nodes]);
                     this.isGraphLoaded = true;
                 }
+
+                this.nodes.forEach((node) => {
+                    node.fx = node.x;
+                    node.fy = node.y;
+                });
 
                 this.force.stop();
             });
