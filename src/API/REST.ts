@@ -253,7 +253,7 @@ export const RESTApi = {
         return data;
     },
 
-    fetchServerProcessesByAddresses: async (
+    fetchServersByAddress: async (
         id: string,
         options?: RequestOptions,
     ): Promise<ProcessResponse[]> => {

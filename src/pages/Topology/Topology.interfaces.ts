@@ -13,7 +13,7 @@ export interface TopologyDetailsProps {
 export interface TopologyPanelProps {
     nodes: GraphNode[];
     links: GraphEdge[];
-    options?: { showGroup: boolean };
+    options?: { showGroup?: boolean; shouldOpenDetails?: boolean };
     onGetSelectedNode?: Function;
     children: ReactNode;
 }

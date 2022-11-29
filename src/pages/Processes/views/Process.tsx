@@ -26,7 +26,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import AddressNameLinkCell from '@pages/Addresses/components/AddressNameLinkCell';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -34,6 +33,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
+import AddressNameLinkCell from '../components/AddressNameLinkCell';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { CurrentBytesInfoProps } from '../Processes.interfaces';
 import ProcessesController from '../services';
@@ -103,7 +103,7 @@ const Process = function () {
                 <Title headingLevel="h1">{name}</Title>
             </Flex>
 
-            <GridItem span={12}>
+            <GridItem>
                 <Card isFullHeight isRounded>
                     <CardTitle>
                         <Title headingLevel="h2">{ProcessesLabels.Details}</Title>
@@ -111,16 +111,6 @@ const Process = function () {
                     <CardBody>
                         <DescriptionList>
                             <Grid hasGutter>
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.Name}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            {name}
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>
@@ -236,7 +226,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={12}>
+            <GridItem>
                 <Card>
                     <RealTimeLineChart
                         data={[

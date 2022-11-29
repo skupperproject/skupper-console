@@ -3,16 +3,16 @@ import React, { FC } from 'react';
 import SkTable from '@core/components/SkTable';
 import { AddressResponse } from 'API/REST.interfaces';
 
-import { AddressesColumns, AddressesLabels } from '../Addresses.enum';
-import { AddressesTableProps } from '../Addresses.interfaces';
-import AddressNameLinkCell from './AddressNameLinkCell';
+import { AddressesColumns, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
+import { AddressesTableProps, LinkCellProps } from '../Addresses.interfaces';
+import LinkCell from './LinkCell';
 
 const AddressesTable: FC<AddressesTableProps> = function ({ addresses }) {
     const columns = [
         {
             name: AddressesColumns.Name,
             prop: 'name' as keyof AddressResponse,
-            component: 'linkCell',
+            component: 'AddressNameLinkCell',
         },
         {
             name: AddressesColumns.TotalFlowPairs,
@@ -34,7 +34,14 @@ const AddressesTable: FC<AddressesTableProps> = function ({ addresses }) {
             titleDescription={AddressesLabels.Description}
             columns={columns}
             rows={addresses}
-            components={{ linkCell: AddressNameLinkCell }}
+            components={{
+                AddressNameLinkCell: (props: LinkCellProps<AddressResponse>) =>
+                    LinkCell({
+                        ...props,
+                        type: 'address',
+                        link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}`,
+                    }),
+            }}
         />
     );
 };

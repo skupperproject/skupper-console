@@ -36,7 +36,8 @@ export enum FlowPairsColumnsNames {
     Process = 'process',
     Client = 'Client',
     Server = 'Server',
-    Bytes = 'Bytes',
+    BytesTx = 'Tx Bytes',
+    BytesRx = 'Rx Bytes',
     ByteRateTX = 'Tx Byte Rate',
     ByteRateRX = 'Rx Byte Rate',
     Host = 'Host',
@@ -50,6 +51,7 @@ export enum FlowPairsLabels {
     Servers = 'Servers',
     Connections = 'Connections',
     FlowPairsDistributionTitle = 'Top 5 clients',
+    ViewDetails = 'view details',
 }
 
 // PROCESSES TABLE
@@ -61,7 +63,20 @@ export enum ProcessesColumnsNames {
     ByteRate = 'Rx Byte Rate',
     Host = 'Host',
     Port = 'Port',
-    Latency = 'TTFB',
     Image = 'Image',
-    Protocol = 'Protocol',
+}
+
+export enum FlowLabels {
+    Process = 'Process',
+    Host = 'Source Host',
+    Port = 'Source Port',
+    DestHost = 'Destination Host',
+    DestPort = 'Destination Port',
+    Flow = 'Client',
+    CounterFlow = 'Server',
+    TTFB = 'Time to first byte',
+    ByteRate = 'Byte rate',
+    BytesTransferred = 'Bytes transferred',
+    ByteUnacked = 'Byte unacked',
+    WindowSize = 'Window Size',
 }

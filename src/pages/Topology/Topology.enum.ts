@@ -30,3 +30,9 @@ export enum ConnectionsColumns {
     Name = 'Name',
     ByteRate = 'Byte-rate',
 }
+
+export enum TopologyURLFilters {
+    Type = 'type',
+    AddressId = 'addressId',
+    ProcessIdSelected = 'processId',
+}

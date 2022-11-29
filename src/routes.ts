@@ -1,6 +1,6 @@
 import { RouteObject } from 'react-router-dom';
 
-import { monitoringRoutes } from '@pages/Addresses/routes';
+import { addressesRoutes } from '@pages/Addresses/routes';
 import { processesRoutes } from '@pages/Processes/routes';
 import { processGroupsRoutes } from '@pages/ProcessGroups/routes';
 import { errorsRoutes } from '@pages/shared/Errors/routes';
@@ -9,7 +9,7 @@ import { topologyRoutes } from '@pages/Topology/routes';
 
 export const routes: RouteObject[] = [
     ...siteRoutes,
-    ...monitoringRoutes,
+    ...addressesRoutes,
     ...processGroupsRoutes,
     ...processesRoutes,
     ...errorsRoutes,

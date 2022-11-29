@@ -6,14 +6,21 @@ const Addresses = lazy(() => import(/* webpackChunkName: "addresses" */ './views
 const FlowPairs = lazy(
     () => import(/* webpackChunkName: "addresses-flow-pairs" */ './views/FlowPairs'),
 );
+const FlowsPair = lazy(
+    () => import(/* webpackChunkName: "addresses-flow-pair" */ './views/FlowPair'),
+);
 
-export const monitoringRoutes = [
+export const addressesRoutes = [
     {
         path: AddressesRoutesPaths.Addresses,
         element: <Addresses />,
     },
     {
-        path: `${AddressesRoutesPaths.FlowsPairs}/:id`,
+        path: `${AddressesRoutesPaths.Addresses}/:address`,
         element: <FlowPairs />,
+    },
+    {
+        path: `${AddressesRoutesPaths.Addresses}/:address/:flowPairId`,
+        element: <FlowsPair />,
     },
 ];

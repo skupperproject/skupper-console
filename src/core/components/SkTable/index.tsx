@@ -82,7 +82,7 @@ const SkTable = function <T>({
 
     if (!onSort) {
         rowsSorted = rows.sort((a, b) => {
-            const columnName = columns[activeSortIndex || 0].prop;
+            const columnName = columns[activeSortIndex || 0].prop as keyof T;
 
             const paramA = a[columnName];
             const paramB = b[columnName];
@@ -142,12 +142,12 @@ const SkTable = function <T>({
             >
                 <Thead>
                     <Tr>
-                        {columns.map((column, index) => (
+                        {columns.map(({ name, prop }, index) => (
                             <Th
-                                key={column.name}
-                                sort={(shouldSort && getSortParams(index)) || undefined}
+                                key={name}
+                                sort={(prop && shouldSort && getSortParams(index)) || undefined}
                             >
-                                {column.name}
+                                {name}
                             </Th>
                         ))}
                     </Tr>
