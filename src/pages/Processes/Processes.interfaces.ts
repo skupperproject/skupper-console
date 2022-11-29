@@ -1,4 +1,4 @@
-import { ProcessResponse } from 'API/REST.interfaces';
+import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
     processes: ProcessResponse[];
@@ -26,4 +26,9 @@ export interface CurrentBytesInfoProps {
 export interface SiteNameLinkCellProps {
     data: ProcessResponse;
     value: ProcessResponse[keyof ProcessResponse];
+}
+
+export interface AddressNameLinkCellProps {
+    data: AddressResponse;
+    value: AddressResponse[keyof AddressResponse];
 }

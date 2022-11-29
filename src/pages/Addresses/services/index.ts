@@ -1,5 +1,5 @@
 import { RESTApi } from 'API/REST';
-import { AddressResponse } from 'API/REST.interfaces';
+import { AddressResponse, FlowPairResponse } from 'API/REST.interfaces';
 
 import { FlowPairBasic, ProcessRow } from './services.interfaces';
 
@@ -92,4 +92,6 @@ export const AddressesController = {
             })),
         );
     },
+
+    getFlowPair: async (id: string): Promise<FlowPairResponse> => RESTApi.fetchFlowPair(id),
 };

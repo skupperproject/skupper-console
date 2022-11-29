@@ -86,7 +86,7 @@ export interface AddressResponse extends EntityBaseResponse {
     currentFlows: number;
 }
 
-interface FlowResponse extends BaseResponse {
+export interface FlowResponse extends BaseResponse {
     parent: string;
     octets: number;
     octetRate: number;
