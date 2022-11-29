@@ -146,14 +146,17 @@ export default class Graph {
             this.force.alphaTarget(0.3).restart();
         }
 
+        this.force.nodes().forEach((node) => {
+            node.fx = node.x;
+            node.fy = node.y;
+        });
+
         this.force
             .nodes()
             .filter(({ group }) => group === Number(groupId))
             .forEach((node) => {
-                node.fx = node.fx || 0;
-                node.fy = node.fy || 0;
-                node.groupFx = x || 0;
-                node.groupFy = y || 0;
+                node.groupFx = x;
+                node.groupFy = y;
             });
 
         this.isDraggingNode = true;
@@ -164,8 +167,8 @@ export default class Graph {
             .nodes()
             .filter(({ group }) => group === Number(groupId))
             .forEach((node) => {
-                node.fx = (node.fx || 0) + x - (node.groupFx || 0);
-                node.fy = (node.fy || 0) + y - (node.groupFy || 0);
+                node.fx = node.x + x - (node.groupFx || 0);
+                node.fy = node.y + y - (node.groupFy || 0);
             });
     };
 
