@@ -18,7 +18,7 @@ export enum ProcessesLabels {
     Addresses = 'Addresses',
     Process = 'Process',
     Site = 'Site',
-    ProcessGroup = 'Process Group',
+    ProcessGroup = 'Component',
     Image = 'Image',
     SourceIP = 'Source IP',
     Host = 'Host',
