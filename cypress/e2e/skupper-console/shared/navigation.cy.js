@@ -16,8 +16,8 @@ context('Navigation', () => {
     });
 
     it('Navigate to the Process Groups section', () => {
-        cy.get('[data-cy=sk-nav-bar]').contains('Process Groups').click({ force: true });
-        cy.location('hash').should('include', 'processGroups');
+        cy.get('[data-cy=sk-nav-bar]').contains('Components').click({ force: true });
+        cy.location('hash').should('include', 'components');
     });
 
     it('Navigate to the Processes section', () => {

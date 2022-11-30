@@ -1,5 +1,5 @@
 export enum ProcessGroupsRoutesPaths {
-    ProcessGroups = '/processGroups',
+    ProcessGroups = '/components',
 }
 
 export enum ProcessGroupsTableColumns {
@@ -7,11 +7,11 @@ export enum ProcessGroupsTableColumns {
 }
 
 export enum ProcessGroupsLabels {
-    Section = 'Process Groups',
+    Section = 'Components',
     Description = '',
     Details = 'Details',
     Processes = 'Processes',
     Name = 'Name',
-    MetricBytesSent = 'Top 10 process groups bytes sent',
-    MetricBytesReceived = 'Top 10 process groups bytes received',
+    MetricBytesSent = 'Top 10 components bytes sent',
+    MetricBytesReceived = 'Top 10 components bytes received',
 }

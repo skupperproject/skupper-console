@@ -1,6 +1,5 @@
 export enum AddressesRoutesPaths {
     Addresses = '/addresses',
-    FlowsPairs = '/addresses/flowpairs',
 }
 
 export enum AddressesRoutesPathLabel {
@@ -10,7 +9,7 @@ export enum AddressesRoutesPathLabel {
 // ADDRESSES VIEW
 export enum AddressesLabels {
     Section = 'Addresses',
-    Description = 'Set of services that are exposed across the Virtual application network',
+    Description = 'Set of processes that are exposed across the Virtual application network',
     CurrentConnections = 'Connections',
     ConnectionsByAddress = 'Top  5 - Connections By address',
     TopConnections = 'Top 5 - Total connections',
@@ -58,7 +57,7 @@ export enum FlowPairsLabels {
 export enum ProcessesColumnsNames {
     Site = 'Site',
     Process = 'Process',
-    ProcessGroup = 'Group',
+    ProcessGroup = 'Component',
     Bytes = 'Rx Bytes',
     ByteRate = 'Rx Byte Rate',
     Host = 'Host',
