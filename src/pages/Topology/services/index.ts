@@ -203,11 +203,16 @@ export const TopologyController = {
                 };
             }),
 
-    getNodesFromProcesses: (processes: ProcessResponse[], siteNodes: GraphNode[]): GraphNode[] =>
+    getNodesFromProcesses: (
+        processes: ProcessResponse[],
+        parentNodes: GraphNode[],
+        isProcessGroup = false,
+    ): GraphNode[] =>
         processes
-            ?.map(({ name, identity, parent, type }) => {
-                const site = siteNodes?.find(({ id }) => id === parent);
-                const groupIndex = site?.group || 0;
+            ?.map(({ name, identity, parent, groupIdentity, type }) => {
+                const groupId = isProcessGroup ? groupIdentity : parent;
+                const parentNode = parentNodes?.find(({ id }) => id === groupId);
+                const groupIndex = parentNode?.group || 0;
 
                 const positions = localStorage.getItem(identity);
                 const fx = positions ? JSON.parse(positions).fx : null;
@@ -220,7 +225,7 @@ export const TopologyController = {
                     y: fy || 0,
                     fx,
                     fy,
-                    groupName: site?.name || '',
+                    groupName: parentNode?.name || '',
                     group: groupIndex,
                     color: getColor(type === 'skupper' ? 16 : groupIndex),
                     img: type === 'skupper' ? skupperProcessSVG : processSVG,

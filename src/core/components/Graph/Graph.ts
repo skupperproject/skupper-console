@@ -547,8 +547,9 @@ export default class Graph {
             });
     }
 
-    updateTopology = (nodes: GraphNode[], links: GraphEdge[]) => {
+    updateTopology = (nodes: GraphNode[], links: GraphEdge[], options?: any) => {
         if (this.isGraphLoaded && !this.isDraggingNode) {
+            this.options = { ...this.options, showGroup: !!options.showGroup };
             this.redrawTopology(nodes, links);
         }
     };
