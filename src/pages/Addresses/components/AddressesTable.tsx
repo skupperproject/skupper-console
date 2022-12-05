@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 
+import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import { AddressResponse } from 'API/REST.interfaces';
 
 import { AddressesColumns, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
-import { AddressesTableProps, LinkCellProps } from '../Addresses.interfaces';
-import LinkCell from './LinkCell';
+import { AddressesTableProps } from '../Addresses.interfaces';
 
 const AddressesTable: FC<AddressesTableProps> = function ({ addresses }) {
     const columns = [

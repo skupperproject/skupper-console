@@ -1,15 +1,16 @@
 import React, { FC } from 'react';
 
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
+import LinkCell from '../../../core/components/LinkCell';
 import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
-import { LinkCellProps, ProcessesTableProps } from '../Addresses.interfaces';
+import { ProcessesTableProps } from '../Addresses.interfaces';
 import { ProcessRow } from '../services/services.interfaces';
-import LinkCell from './LinkCell';
 
 const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
     const columns = [
@@ -27,7 +28,7 @@ const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
         {
             name: ProcessesColumnsNames.Site,
             prop: 'siteName' as keyof ProcessRow,
-            component: 'nameLinkCellSite',
+            component: 'name[LinkCell]Site',
         },
         {
             name: ProcessesColumnsNames.Host,
