@@ -5,14 +5,14 @@ import {
     DescriptionListDescription,
     DescriptionListGroup,
     DescriptionListTerm,
-    Flex,
     Grid,
     GridItem,
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import ResourceIcon from '@core/components/ResourceIcon';
+import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkSpinner from '@core/components/SkSpinner';
 import SkTable from '@core/components/SkTable';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
@@ -77,7 +77,8 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         {
             name: ProcessesTableColumns.Name,
             prop: 'name' as keyof ProcessResponse,
-            component: 'linkCell',
+            component: 'ProcessNameLinkCell',
+            width: 60,
         },
         {
             name: ProcessesTableColumns.SourceHost,
@@ -109,7 +110,14 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                         shouldSort={false}
                         columns={columns}
                         rows={processes}
-                        components={{ linkCell: ProcessNameLinkCell }}
+                        components={{
+                            ProcessNameLinkCell: (props: LinkCellProps<ProcessResponse>) =>
+                                LinkCell({
+                                    ...props,
+                                    type: 'process',
+                                    link: `${ProcessesRoutesPaths.Processes}/${props.data.identity}`,
+                                }),
+                        }}
                     />
                 </DescriptionListDescription>
             </GridItem>
@@ -118,17 +126,3 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 };
 
 export default TopologySiteDetails;
-
-interface ProcessNameLinkCellProps {
-    data: ProcessResponse;
-    value: ProcessResponse[keyof ProcessResponse];
-}
-
-const ProcessNameLinkCell: FC<ProcessNameLinkCellProps> = function ({ data, value }) {
-    return (
-        <Flex>
-            <ResourceIcon type="process" />
-            <Link to={`${ProcessesRoutesPaths.Processes}/${data.identity}`}>{value}</Link>
-        </Flex>
-    );
-};

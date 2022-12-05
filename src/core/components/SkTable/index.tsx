@@ -9,7 +9,6 @@ import {
     TextContent,
     TextVariants,
     Tooltip,
-    Truncate,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import {
@@ -184,7 +183,7 @@ const SkTable = function <T>({
                                         >
                                             <Component
                                                 data={data}
-                                                value={<Truncate content={value as string} />}
+                                                value={value}
                                                 callback={callback}
                                                 format={format && format(value)}
                                             />

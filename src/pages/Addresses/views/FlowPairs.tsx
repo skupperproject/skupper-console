@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -38,21 +39,20 @@ import {
 } from '@pages/Topology/Topology.enum';
 import { UPDATE_INTERVAL } from 'config';
 
+import LinkCell from '../../../core/components/LinkCell';
 import {
     FlowPairsLabels,
     AddressesRoutesPathLabel,
     AddressesRoutesPaths,
     FlowPairsColumnsNames,
 } from '../Addresses.enum';
-import { LinkCellProps } from '../Addresses.interfaces';
-import LinkCell from '../components/LinkCell';
 import ServersTable from '../components/ServersTable';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 import { FlowPairBasic } from '../services/services.interfaces';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
-const ITEM_DISPLAY_COUNT = 6;
+const ITEM_DISPLAY_COUNT = 11;
 
 const columns = [
     {
@@ -102,6 +102,7 @@ const columns = [
     {
         name: '',
         component: 'viewDetailsLinkCell',
+        width: 10,
     },
 ];
 
@@ -192,7 +193,23 @@ const FlowsPairs = function () {
 
         return acc;
     }, {} as Record<string, { name: string; value: number }>);
+
+    const topClientsRxMap = connections.reduce(
+        (acc, { processId, processName, targetBytes }, index) => {
+            if (index < ITEM_DISPLAY_COUNT) {
+                acc[processName] = {
+                    name: processName,
+                    value: (acc[processId]?.value || 0) + targetBytes,
+                };
+            }
+
+            return acc;
+        },
+        {} as Record<string, { name: string; value: number }>,
+    );
+
     const topClients = Object.values(topClientsMap);
+    const topClientsRx = Object.values(topClientsRxMap);
 
     const totalBytesSent = connections.reduce((acc, { bytes }) => acc + bytes, 0);
     const totalBytesReceived = connections.reduce((acc, { targetBytes }) => acc + targetBytes, 0);
@@ -284,7 +301,7 @@ const FlowsPairs = function () {
 
             <GridItem span={6}>
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{FlowPairsLabels.FlowPairsDistributionTitle}</CardTitle>
+                    <CardTitle>{FlowPairsLabels.TopClientTxTraffic}</CardTitle>
                     {topClients?.length ? (
                         <ChartPie
                             constrainToVisibleArea
@@ -295,16 +312,18 @@ const FlowsPairs = function () {
                             labels={topClients?.map(
                                 ({ name, value }) => `${name}: ${formatBytes(value)}`,
                             )}
-                            legendData={topClients?.map(({ name }) => ({ name }))}
+                            legendData={topClients?.map(({ name, value }) => ({
+                                name: `${name}: ${formatBytes(value)}`,
+                            }))}
                             legendOrientation="vertical"
                             legendPosition="right"
                             padding={{
                                 bottom: 100,
-                                left: -100,
+                                left: -300,
                                 right: 100,
                                 top: 0,
                             }}
-                            themeColor={ChartThemeColors.Multi}
+                            themeColor={ChartThemeColors.Blue}
                             height={REAL_TIME_CONNECTION_HEIGHT_CHART}
                         />
                     ) : (
@@ -315,27 +334,37 @@ const FlowsPairs = function () {
 
             <GridItem span={6}>
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{FlowPairsLabels.FlowPairsDistributionTitle}</CardTitle>
-                    {topClients?.length ? (
-                        <RealTimeLineChart
-                            options={{
-                                type: 'area',
-                                formatter: formatBytes,
-                                height: REAL_TIME_CONNECTION_HEIGHT_CHART,
-                                padding: {
-                                    top: 0,
-                                    bottom: 70,
-                                    left: 70,
-                                    right: 20,
-                                },
+                    <CardTitle>{FlowPairsLabels.TopClientRxTraffic}</CardTitle>
+                    {topClientsRx?.length ? (
+                        <ChartPie
+                            constrainToVisibleArea
+                            data={topClientsRx?.map(({ name, value }) => ({
+                                x: name,
+                                y: formatBytes(value),
+                            }))}
+                            labels={topClientsRx?.map(
+                                ({ name, value }) => `${name}: ${formatBytes(value)}`,
+                            )}
+                            legendData={topClientsRx?.map(({ name, value }) => ({
+                                name: `${name}: ${formatBytes(value)}`,
+                            }))}
+                            legendOrientation="vertical"
+                            legendPosition="right"
+                            padding={{
+                                bottom: 100,
+                                left: -300,
+                                right: 100,
+                                top: 0,
                             }}
-                            data={topClients}
+                            themeColor={ChartThemeColors.Orange}
+                            height={REAL_TIME_CONNECTION_HEIGHT_CHART}
                         />
                     ) : (
                         <EmptyData />
                     )}
                 </Card>
             </GridItem>
+
             <GridItem>
                 <Card isRounded className="pf-u-pt-md">
                     <Tabs activeKey={addressView} onSelect={handleTabClick}>

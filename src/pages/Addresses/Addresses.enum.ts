@@ -11,9 +11,7 @@ export enum AddressesLabels {
     Section = 'Addresses',
     Description = 'Set of processes that are exposed across the Virtual application network',
     CurrentConnections = 'Connections',
-    ConnectionsByAddress = 'Top  5 - Connections By address',
-    TopConnections = 'Top 5 - Total connections',
-    TopServer = 'Top  5 - Servers By Address',
+    ConnectionsByAddress = 'Top  6 - Connections By address',
     CurrentServer = 'Servers',
 }
 
@@ -49,7 +47,8 @@ export enum FlowPairsColumnsNames {
 export enum FlowPairsLabels {
     Servers = 'Servers',
     Connections = 'Connections',
-    FlowPairsDistributionTitle = 'Top 5 clients',
+    TopClientTxTraffic = 'Top 10 clients - Tx Traffic',
+    TopClientRxTraffic = 'Top 10 clients - Rx Traffic',
     ViewDetails = 'view details',
 }
 

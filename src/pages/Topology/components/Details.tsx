@@ -11,8 +11,9 @@ import {
     TitleSizes,
     Tooltip,
 } from '@patternfly/react-core';
-import { Link } from 'react-router-dom';
 
+import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import SkTable from '@core/components/SkTable';
 import { formatByteRate } from '@core/utils/formatBytes';
@@ -136,10 +137,11 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                     rows={tcpConnectionsOutEntriesChartData}
                                     components={{
                                         checkboxCell: TopologyCheckBoxCell,
-                                        nameLinkCell: (props: TopologyDetailNameLinkCellProps) =>
-                                            TopologyDetailNameLinkCell({
+                                        nameLinkCell: (props: LinkCellProps<TrafficData>) =>
+                                            LinkCell({
                                                 ...props,
-                                                link,
+                                                type: 'process',
+                                                link: `${link}/${props.data.targetIdentity}`,
                                             }),
                                     }}
                                 />
@@ -162,10 +164,10 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
                                     rows={tcpConnectionsInEntriesChartData}
                                     components={{
                                         checkboxCell: TopologyCheckBoxCell,
-                                        nameLinkCell: (props: TopologyDetailNameLinkCellProps) =>
-                                            TopologyDetailNameLinkCell({
+                                        nameLinkCell: (props: LinkCellProps<TrafficData>) =>
+                                            LinkCell({
                                                 ...props,
-                                                link,
+                                                link: `${link}/${props.data.targetIdentity}`,
                                             }),
                                     }}
                                 />
@@ -219,18 +221,4 @@ const TopologyCheckBoxCell: FC<TopologyCheckBoxCellProps> = function ({ data, ca
     };
 
     return <Checkbox isChecked={status} onChange={handleChange} id={data.identity as string} />;
-};
-
-interface TopologyDetailNameLinkCellProps {
-    data: TrafficData;
-    value: TrafficData[keyof TrafficData];
-    link: string;
-}
-
-const TopologyDetailNameLinkCell: FC<TopologyDetailNameLinkCellProps> = function ({
-    data,
-    value,
-    link,
-}) {
-    return <Link to={`${link}/${data.targetIdentity}`}>{value}</Link>;
 };
