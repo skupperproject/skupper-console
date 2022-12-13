@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Checkbox, Divider, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +21,6 @@ const TopologyProcessGroups = function () {
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
-    const [shouldShowProcesses, setShouldShowProcesses] = useState<boolean>(false);
 
     const isProcessViewEnabled = true;
 
@@ -82,30 +80,18 @@ const TopologyProcessGroups = function () {
         [nodeSelected],
     );
 
-    function handleChangeShouldShowProcesses(checked: boolean) {
-        setShouldShowProcesses(checked);
-    }
-
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
         if (processGroups && processGroupsLinks && processes && processesLinks) {
             const processGroupsNodes =
                 TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
 
-            let pNodes = processGroupsNodes;
-            const pLinks = shouldShowProcesses ? processesLinks : processGroupsLinks;
+            processGroupsLinks;
 
-            if (shouldShowProcesses) {
-                pNodes = TopologyController.getNodesFromProcesses(
-                    processes,
-                    processGroupsNodes,
-                    true,
-                );
-            }
-            setNodes(pNodes);
-            setLinks(TopologyController.getEdgesFromLinks(pLinks));
+            setNodes(processGroupsNodes);
+            setLinks(TopologyController.getEdgesFromLinks(processGroupsLinks));
         }
-    }, [processGroups, processGroupsLinks, processes, processesLinks, shouldShowProcesses]);
+    }, [processGroups, processGroupsLinks, processes, processesLinks]);
 
     useEffect(() => {
         updateTopologyData();
@@ -120,29 +106,14 @@ const TopologyProcessGroups = function () {
     }
 
     return (
-        <>
-            <Toolbar>
-                <ToolbarContent>
-                    <ToolbarItem>
-                        <Checkbox
-                            label="show processes"
-                            isChecked={shouldShowProcesses}
-                            onChange={handleChangeShouldShowProcesses}
-                            id="show_process"
-                        />
-                    </ToolbarItem>
-                </ToolbarContent>
-            </Toolbar>
-            <Divider />
-            <TopologyPanel
-                nodes={nodes}
-                links={links}
-                onGetSelectedNode={handleGetSelectedNode}
-                options={{ showGroup: shouldShowProcesses, shouldOpenDetails: !!nodeSelected }}
-            >
-                {nodeSelected && <TopologyProcessGroupsDetails id={nodeSelected} />}
-            </TopologyPanel>
-        </>
+        <TopologyPanel
+            nodes={nodes}
+            links={links}
+            onGetSelectedNode={handleGetSelectedNode}
+            options={{ shouldOpenDetails: !!nodeSelected }}
+        >
+            {nodeSelected && <TopologyProcessGroupsDetails id={nodeSelected} />}
+        </TopologyPanel>
     );
 };
 

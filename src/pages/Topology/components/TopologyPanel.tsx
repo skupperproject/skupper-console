@@ -38,7 +38,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         );
 
         const prevNodesRef = useRef<GraphNode[]>();
-
         const handleExpandDetails = useCallback(
             ({ data: { id } }: { data: GraphNode }) => {
                 setIsExpandedDetails(!!id);
@@ -100,8 +99,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                         GraphEvents.IsDraggingNodeEnd,
                         handleSaveNodePosition,
                     );
-
-                    topologyGraph.updateTopology(nodes, links);
 
                     setTopologyGraphInstance(topologyGraph);
                 }

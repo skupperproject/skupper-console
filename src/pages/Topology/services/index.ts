@@ -179,44 +179,36 @@ export const TopologyController = {
     ): GraphNode[] =>
         entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
-            .map((node, index) => {
-                const positions = localStorage.getItem(node.identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
+            .map(({ identity, name, recType, type }, index) => {
+                const { fx, fy } = getPosition(identity);
 
                 return {
-                    id: node.identity,
-                    name: node.name,
+                    id: identity,
+                    name,
                     x: fx || 0,
                     y: fy || 0,
                     fx,
                     fy,
-                    groupName: node.name,
+                    groupName: name,
                     group: index,
-                    color: getColor(node.type === 'skupper' ? 16 : index),
+                    color: getColor(type === 'skupper' ? 16 : index),
                     img:
-                        node.type === 'skupper'
+                        type === 'skupper'
                             ? skupperProcessSVG
-                            : node.recType === 'SITE'
+                            : recType === 'SITE'
                             ? siteSVG
                             : processSVG,
                 };
             }),
 
-    getNodesFromProcesses: (
-        processes: ProcessResponse[],
-        parentNodes: GraphNode[],
-        isProcessGroup = false,
-    ): GraphNode[] =>
+    getNodesFromProcesses: (processes: ProcessResponse[], parentNodes: GraphNode[]): GraphNode[] =>
         processes
-            ?.map(({ name, identity, parent, groupIdentity, type }) => {
-                const groupId = isProcessGroup ? groupIdentity : parent;
+            ?.map(({ name, identity, parent, type }) => {
+                const groupId = parent;
                 const parentNode = parentNodes?.find(({ id }) => id === groupId);
                 const groupIndex = parentNode?.group || 0;
 
-                const positions = localStorage.getItem(identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
+                const { fx, fy } = getPosition(identity);
 
                 return {
                     id: identity,
@@ -252,3 +244,19 @@ export const TopologyController = {
 };
 
 const getColor = (index: number) => colors[index % colors.length];
+
+function getPosition(identity: string): { fx: number; fy: number } {
+    let positions = localStorage.getItem(identity);
+
+    if (!positions) {
+        const newIdentity = identity.split('pGroup');
+        if (newIdentity[1]) {
+            positions = localStorage.getItem(newIdentity[1]);
+        }
+    }
+
+    const fx = positions ? JSON.parse(positions).fx : null;
+    const fy = positions ? JSON.parse(positions).fy : null;
+
+    return { fx, fy };
+}

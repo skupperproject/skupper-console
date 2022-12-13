@@ -14,6 +14,7 @@ export enum Labels {
     Topology = 'Network',
     LegendGroupsItems = 'Sites',
     ShowAll = 'Show all addresses',
+    ShowProcessGroups = 'Show by components',
 }
 
 export enum ConnectionsLabels {
