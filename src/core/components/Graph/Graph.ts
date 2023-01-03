@@ -30,6 +30,9 @@ const NODE_SIZE = 40;
 const FONT_SIZE_DEFAULT = 12;
 const OPACITY_NO_SELECTED_ITEM = 0.2;
 
+const ALPHA_FORCE = 0.1;
+const ALPHA_MIN_FORCE = 0.065;
+const ALPHA_TARGET_DRAG = 0.3;
 export default class Graph {
     $root: HTMLElement;
     nodes: GraphNode[];
@@ -99,12 +102,13 @@ export default class Graph {
     private createSvgContainer() {
         return select<HTMLElement, GraphNode>(this.$root)
             .append('svg')
-            .attr('viewBox', `0 0 ${this.width} ${this.height}`);
+            .attr('width', '100%')
+            .attr('height', '100%');
     }
 
     private dragStarted = ({ active }: { active: boolean }, node: GraphNode) => {
         if (!active) {
-            this.force.alphaTarget(0.3).restart();
+            this.force.alphaTarget(ALPHA_TARGET_DRAG).restart();
         }
 
         node.fx = node.x;
@@ -133,7 +137,7 @@ export default class Graph {
         groupId: string,
     ) => {
         if (!active) {
-            this.force.alphaTarget(0.3).restart();
+            this.force.alphaTarget(ALPHA_TARGET_DRAG).restart();
         }
 
         this.nodes
@@ -168,38 +172,20 @@ export default class Graph {
     };
 
     private ticked = () => {
-        const minSvgPosY = 10;
-        const minSvgPosX = 10;
-
-        const maxSvgPosX = Number(this.svgContainerGroupNodes.attr('width'));
-        const maxSvgPosY = Number(this.svgContainerGroupNodes.attr('height'));
-
-        function validatePosition(pos: number, max: number, min: number) {
-            if (pos - min < 0) {
-                return min;
-            }
-
-            if (pos > max) {
-                return max;
-            }
-
-            return pos;
-        }
-
         this.svgContainerGroupNodes.selectAll<SVGSVGElement, GraphNode>('.node').attr(
             'transform',
             ({ x, y }) => `translate(
-                    ${validatePosition(x, maxSvgPosX, minSvgPosX)},
-                    ${validatePosition(y, maxSvgPosY, minSvgPosY)}
+                    ${x},
+                    ${y}
                 )`,
         );
 
         this.svgContainerGroupNodes
             .selectAll<SVGSVGElement, GraphEdgeModifiedByForce>('.serviceLink')
-            .attr('x1', ({ source }) => validatePosition(source.x, maxSvgPosX, minSvgPosX))
-            .attr('y1', ({ source }) => validatePosition(source.y, maxSvgPosX, minSvgPosX))
-            .attr('x2', ({ target }) => validatePosition(target.x, maxSvgPosX, minSvgPosX))
-            .attr('y2', ({ target }) => validatePosition(target.y, maxSvgPosX, minSvgPosX));
+            .attr('x1', ({ source }) => source.x)
+            .attr('y1', ({ source }) => source.y)
+            .attr('x2', ({ target }) => target.x)
+            .attr('y2', ({ target }) => target.y);
 
         if (this.options?.showGroup) {
             this.redrawGroups();
@@ -276,8 +262,8 @@ export default class Graph {
             .force('center', forceCenter(this.width / 2, this.height / 2))
             .force('charge', forceManyBody())
             .force('collide', forceCollide().radius(NODE_SIZE * 2))
-            .alpha(0.1)
-            .alphaMin(0.065)
+            .alpha(ALPHA_FORCE)
+            .alphaMin(ALPHA_MIN_FORCE)
             .force(
                 'x',
                 forceX<GraphNode>()
@@ -304,15 +290,7 @@ export default class Graph {
             )
             .force(
                 'link',
-                forceLink<GraphNode, GraphEdgeModifiedByForce>()
-                    .id(({ id }) => id)
-                    .strength(({ source, target }) => {
-                        if (source.group === target.group) {
-                            return 1;
-                        }
-
-                        return 0.1;
-                    }),
+                forceLink<GraphNode, GraphEdgeModifiedByForce>().id(({ id }) => id),
             )
             .on('end', () => {
                 if (!this.isGraphLoaded) {
@@ -547,12 +525,6 @@ export default class Graph {
             });
     }
 
-    updateTopology = (nodes: GraphNode[], links: GraphEdge[]) => {
-        if (this.isGraphLoaded && !this.isDraggingNode) {
-            this.redrawTopology(nodes, links);
-        }
-    };
-
     private redrawTopology = (nodes: GraphNode[], links: GraphEdge[]) => {
         this.svgContainerGroupNodes.selectAll('*').remove();
         this.links = JSON.parse(JSON.stringify(links));
@@ -567,6 +539,13 @@ export default class Graph {
 
         this.updateEdges();
         this.redrawNodes();
+    };
+
+    updateTopology = (nodes: GraphNode[], links: GraphEdge[], options?: { showGroup: boolean }) => {
+        if (this.isGraphLoaded && !this.isDraggingNode) {
+            this.options = { ...this.options, showGroup: !!options?.showGroup };
+            this.redrawTopology(nodes, links);
+        }
     };
 
     // exposed events

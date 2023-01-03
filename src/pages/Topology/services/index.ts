@@ -179,39 +179,8 @@ export const TopologyController = {
     ): GraphNode[] =>
         entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
-            .map((node, index) => {
-                const positions = localStorage.getItem(node.identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
-
-                return {
-                    id: node.identity,
-                    name: node.name,
-                    x: fx || 0,
-                    y: fy || 0,
-                    fx,
-                    fy,
-                    groupName: node.name,
-                    group: index,
-                    color: getColor(node.type === 'skupper' ? 16 : index),
-                    img:
-                        node.type === 'skupper'
-                            ? skupperProcessSVG
-                            : node.recType === 'SITE'
-                            ? siteSVG
-                            : processSVG,
-                };
-            }),
-
-    getNodesFromProcesses: (processes: ProcessResponse[], siteNodes: GraphNode[]): GraphNode[] =>
-        processes
-            ?.map(({ name, identity, parent, type }) => {
-                const site = siteNodes?.find(({ id }) => id === parent);
-                const groupIndex = site?.group || 0;
-
-                const positions = localStorage.getItem(identity);
-                const fx = positions ? JSON.parse(positions).fx : null;
-                const fy = positions ? JSON.parse(positions).fy : null;
+            .map(({ identity, name, recType, type }, index) => {
+                const { fx, fy } = getPosition(identity);
 
                 return {
                     id: identity,
@@ -220,7 +189,35 @@ export const TopologyController = {
                     y: fy || 0,
                     fx,
                     fy,
-                    groupName: site?.name || '',
+                    groupName: name,
+                    group: index,
+                    color: getColor(type === 'skupper' ? 16 : index),
+                    img:
+                        type === 'skupper'
+                            ? skupperProcessSVG
+                            : recType === 'SITE'
+                            ? siteSVG
+                            : processSVG,
+                };
+            }),
+
+    getNodesFromProcesses: (processes: ProcessResponse[], parentNodes: GraphNode[]): GraphNode[] =>
+        processes
+            ?.map(({ name, identity, parent, type }) => {
+                const groupId = parent;
+                const parentNode = parentNodes?.find(({ id }) => id === groupId);
+                const groupIndex = parentNode?.group || 0;
+
+                const { fx, fy } = getPosition(identity);
+
+                return {
+                    id: identity,
+                    name,
+                    x: fx || 0,
+                    y: fy || 0,
+                    fx,
+                    fy,
+                    groupName: parentNode?.name || '',
                     group: groupIndex,
                     color: getColor(type === 'skupper' ? 16 : groupIndex),
                     img: type === 'skupper' ? skupperProcessSVG : processSVG,
@@ -247,3 +244,19 @@ export const TopologyController = {
 };
 
 const getColor = (index: number) => colors[index % colors.length];
+
+function getPosition(identity: string): { fx: number; fy: number } {
+    let positions = localStorage.getItem(identity);
+
+    if (!positions) {
+        const newIdentity = identity.split('pGroup');
+        if (newIdentity[1]) {
+            positions = localStorage.getItem(newIdentity[1]);
+        }
+    }
+
+    const fx = positions ? JSON.parse(positions).fx : null;
+    const fy = positions ? JSON.parse(positions).fy : null;
+
+    return { fx, fy };
+}

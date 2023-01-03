@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
+    Checkbox,
     Divider,
     Flex,
     Panel,
@@ -8,9 +9,6 @@ import {
     Select,
     SelectOption,
     SelectOptionObject,
-    Text,
-    TextContent,
-    TextVariants,
     Toolbar,
     ToolbarContent,
     ToolbarItem,
@@ -22,6 +20,7 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { AddressesController } from '@pages/Addresses/services';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import ProcessesController from '@pages/Processes/services';
+import ProcessGroupsController from '@pages/ProcessGroups/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import SitesController from '@pages/Sites/services';
@@ -49,11 +48,22 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
+    const [shouldShowProcessGroups, setShouldShowProcessGroups] = useState<boolean>(false);
 
     const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
         refetchInterval,
         onError: handleError,
     });
+
+    const { data: processGroups } = useQuery(
+        [QueriesTopology.GetProcessGroups],
+        ProcessGroupsController.getProcessGroups,
+        {
+            enabled: shouldShowProcessGroups,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesTopology.GetProcesses],
@@ -103,6 +113,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
         navigate(route);
     }
 
+    function handleChangeShouldShowProcesses(checked: boolean) {
+        setShouldShowProcessGroups(checked);
+    }
+
     const handleGetSelectedNode = useCallback(
         (id: string) => {
             if (id !== nodeSelected) {
@@ -132,10 +146,37 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     const updateTopologyData = useCallback(async () => {
         if (
             sites &&
-            processes &&
             processesLinks &&
+            processes &&
             !(isLoadingProcessLinksByAddress && addressIdSelected)
         ) {
+            if (shouldShowProcessGroups && processGroups) {
+                const processGroupsNodes =
+                    TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
+
+                const processesNodes = TopologyController.getNodesFromProcesses(
+                    processes.map((process) => ({
+                        ...process,
+                        identity: `pGroup${process.identity}`,
+                        parent: process.groupIdentity,
+                    })),
+                    processGroupsNodes,
+                );
+
+                setNodes(processesNodes);
+                setLinks(
+                    TopologyController.getEdgesFromLinks(
+                        processesLinks.map(({ source, target, key }) => ({
+                            source: `pGroup${source}`,
+                            target: `pGroup${target}`,
+                            key,
+                        })),
+                    ),
+                );
+
+                return;
+            }
+
             const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
             const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
             const processesSourcesIds = processesLinksByAddress?.map((p) => p.source) || [];
@@ -166,11 +207,13 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
             );
         }
     }, [
-        isLoadingProcessLinksByAddress,
         sites,
         processes,
         processesLinks,
+        processGroups,
+        isLoadingProcessLinksByAddress,
         addressIdSelected,
+        shouldShowProcessGroups,
         processesLinksByAddress,
     ]);
 
@@ -198,15 +241,26 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
             <Toolbar>
                 <ToolbarContent>
                     <ToolbarItem>
-                        <Select
-                            isOpen={isOpen}
-                            onSelect={handleSelect}
-                            onToggle={handleToggle}
-                            selections={addressIdSelected}
-                        >
-                            {optionsWithDefault}
-                        </Select>
+                        <Checkbox
+                            label={Labels.ShowProcessGroups}
+                            isChecked={shouldShowProcessGroups}
+                            onChange={handleChangeShouldShowProcesses}
+                            id="show_process"
+                        />
                     </ToolbarItem>
+                    {!shouldShowProcessGroups && (
+                        <ToolbarItem>
+                            <Select
+                                disabled={shouldShowProcessGroups}
+                                isOpen={isOpen}
+                                onSelect={handleSelect}
+                                onToggle={handleToggle}
+                                selections={addressIdSelected}
+                            >
+                                {optionsWithDefault}
+                            </Select>
+                        </ToolbarItem>
+                    )}
                 </ToolbarContent>
             </Toolbar>
             <Divider />
@@ -225,12 +279,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
             <Panel>
                 <PanelMainBody>
                     <Flex>
-                        <TextContent>
-                            <Text
-                                component={TextVariants.small}
-                            >{`${Labels.LegendGroupsItems}:`}</Text>
-                        </TextContent>
-                        {sites?.map((node, index) => (
+                        {(shouldShowProcessGroups ? processGroups : sites)?.map((node, index) => (
                             <Flex key={node.identity}>
                                 <div
                                     className="pf-u-mr-xs"

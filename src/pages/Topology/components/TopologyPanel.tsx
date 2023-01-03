@@ -38,7 +38,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         );
 
         const prevNodesRef = useRef<GraphNode[]>();
-
         const handleExpandDetails = useCallback(
             ({ data: { id } }: { data: GraphNode }) => {
                 setIsExpandedDetails(!!id);
@@ -101,8 +100,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                         handleSaveNodePosition,
                     );
 
-                    topologyGraph.updateTopology(nodes, links);
-
                     setTopologyGraphInstance(topologyGraph);
                 }
             },
@@ -131,10 +128,12 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                 nodes &&
                 JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes)
             ) {
-                topologyGraphInstance.updateTopology(nodes, links);
+                topologyGraphInstance.updateTopology(nodes, links, {
+                    showGroup: !!options?.showGroup,
+                });
                 prevNodesRef.current = nodes;
             }
-        }, [nodes, links, topologyGraphInstance]);
+        }, [nodes, links, topologyGraphInstance, options?.showGroup]);
 
         const ControlButtons = createTopologyControlButtons({
             ...defaultControlButtonsOptions,
