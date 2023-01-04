@@ -5,7 +5,13 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
-import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import {
+    LinkResponse,
+    ProcessGroupResponse,
+    ProcessResponse,
+    RouterResponse,
+    SiteResponse,
+} from 'API/REST.interfaces';
 
 import { colors } from '../Topology.constant';
 import {
@@ -18,12 +24,11 @@ import {
 export const TopologyController = {
     // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
     // This prop is used to show the edges in the topology sites
-    getSitesWithLinksCreated: async (): Promise<SiteExtended[]> => {
-        // fetch routers, links and sites and bind them
-        const sites = await RESTApi.fetchSites();
-        const routers = await RESTApi.fetchRouters();
-        const links = await RESTApi.fetchLinks();
-
+    getSitesWithLinksCreated: (
+        sites: SiteResponse[],
+        routers: RouterResponse[],
+        links: LinkResponse[],
+    ): SiteExtended[] => {
         const linksExtendedMap = bindLinksWithSiteIds(links, routers);
 
         // extend each site with the connected prop that contains the connected sites (from  site to the other one)
