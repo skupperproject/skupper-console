@@ -30,13 +30,13 @@ import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enu
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { RESTApi } from 'API/REST';
 import { ProcessResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
 import AddressNameLinkCell from '../components/AddressNameLinkCell';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { CurrentBytesInfoProps } from '../Processes.interfaces';
-import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
 const Process = function () {
@@ -46,7 +46,7 @@ const Process = function () {
 
     const { data: process, isLoading: isLoadingProcess } = useQuery(
         [QueriesProcesses.GetProcess, processId],
-        () => ProcessesController.getProcess(processId),
+        () => RESTApi.fetchProcess(processId),
         {
             refetchInterval,
             onError: handleError,
@@ -55,7 +55,7 @@ const Process = function () {
 
     const { data: addresses, isLoading: isLoadingAddressesByProcess } = useQuery(
         [QueriesProcesses.GetAddressesByProcessId, processId],
-        () => ProcessesController.getAddressesByProcess(processId),
+        () => RESTApi.fetchAddressesByProcess(processId),
         {
             onError: handleError,
         },
