@@ -23,7 +23,8 @@ import ProcessesController from '@pages/Processes/services';
 import ProcessGroupsController from '@pages/ProcessGroups/services';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesController from '@pages/Sites/services';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
@@ -50,7 +51,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
     const [shouldShowProcessGroups, setShouldShowProcessGroups] = useState<boolean>(false);
 
-    const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
+    const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
         refetchInterval,
         onError: handleError,
     });

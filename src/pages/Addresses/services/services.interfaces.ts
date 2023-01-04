@@ -1,8 +1,3 @@
-// FLOW PAIRS TABLE
-export interface FlowPairsTableProps {
-    flowPairs: FlowPairBasic[];
-}
-
 // Process TABLE
 export interface ProcessRow {
     identity: string;

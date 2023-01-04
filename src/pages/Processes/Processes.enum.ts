@@ -1,5 +1,3 @@
-import { ProcessResponse } from 'API/REST.interfaces';
-
 export enum ProcessesRoutesPaths {
     Processes = '/processes',
 }
@@ -26,10 +24,4 @@ export enum ProcessesLabels {
     MetricBytesReceived = 'Top 10 processes bytes received',
     CurrentBytesInfoByteRateIn = 'Incoming byte rate',
     CurrentBytesInfoByteRateOut = 'Outgoing byte rate',
-}
-
-export interface ProcessDescriptionProps {
-    description: ProcessResponse & {
-        addresses: { identity: string; name: string }[];
-    };
 }

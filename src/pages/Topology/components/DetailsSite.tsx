@@ -18,13 +18,12 @@ import SkTable from '@core/components/SkTable';
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import SitesController from '@pages/Sites/services';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { ProcessesTableColumns, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { RESTApi } from 'API/REST';
 import { ProcessResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
-import { QueriesTopology } from '../services/services.enum';
 import { ConnectionsLabels } from '../Topology.enum';
 import TopologyDetails from './Details';
 
@@ -37,8 +36,8 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
-        [QueriesTopology.GetSite, id],
-        () => SitesController.getSite(id),
+        [QueriesSites.GetSite, id],
+        () => RESTApi.fetchSite(id),
         {
             cacheTime: 0,
             refetchInterval,
@@ -48,7 +47,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, id],
-        () => SitesController.getActiveProcessesBySiteId(id),
+        () => RESTApi.fetchProcessesBySite(id),
         {
             refetchInterval,
             onError: handleError,
@@ -86,6 +85,8 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         },
     ];
 
+    const liveProcesses = processes.filter(({ endTime }) => !endTime);
+
     return (
         <Grid hasGutter>
             <GridItem span={12}>
@@ -109,7 +110,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
                         isPlain={true}
                         shouldSort={false}
                         columns={columns}
-                        rows={processes}
+                        rows={liveProcesses}
                         components={{
                             ProcessNameLinkCell: (props: LinkCellProps<ProcessResponse>) =>
                                 LinkCell({
