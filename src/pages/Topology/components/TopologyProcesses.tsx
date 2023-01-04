@@ -19,8 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { AddressesController } from '@pages/Addresses/services';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
-import ProcessesController from '@pages/Processes/services';
-import ProcessGroupsController from '@pages/ProcessGroups/services';
+import { QueriesProcesses } from '@pages/Processes/services/services.enum';
+import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
@@ -57,8 +57,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     });
 
     const { data: processGroups } = useQuery(
-        [QueriesTopology.GetProcessGroups],
-        ProcessGroupsController.getProcessGroups,
+        [QueriesProcessGroups.GetProcessGroups],
+        () => RESTApi.fetchProcessGroups(),
         {
             enabled: shouldShowProcessGroups,
             refetchInterval,
@@ -67,8 +67,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesTopology.GetProcesses],
-        ProcessesController.getProcesses,
+        [QueriesProcesses.GetProcess],
+        () => RESTApi.fetchProcesses(),
         {
             refetchInterval,
             onError: handleError,

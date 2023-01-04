@@ -6,6 +6,7 @@ import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import {
+    FlowAggregatesMapResponse,
     LinkResponse,
     ProcessGroupResponse,
     ProcessResponse,
@@ -64,9 +65,7 @@ export const TopologyController = {
         return processesLinks;
     },
 
-    getProcessGroupsLinks: async (): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchProcessgroupsPairs();
-
+    getProcessGroupsLinks: (links: FlowAggregatesMapResponse[]): LinkTopology[] => {
         const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,
