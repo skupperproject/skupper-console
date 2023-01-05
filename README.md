@@ -1,12 +1,12 @@
 # Skupper console
 
-## Installation
+## Installation in Skupper
 
 The skupper console is installed when skupper is initialized using
 
 > `skupper init --enable-console`
 
-note: The console you should enable the console only for one installation to avoid more traffic load for redundant collections.
+note: You should enable the console only for one installation to avoid more traffic load for redundant collections.
 
 ## Securing the console
 
@@ -36,9 +36,7 @@ You can also run the console using external endpoints for the skupper collector:
 **remember to enable CORS**
 The flow-collector need to enable the CORS. We can do that doing ```kubectl set env <container-name> USE_CORS=yes``` .  
 
-ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=yes```.
-
-You can install and activate this plugin in firefox <https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/> or in chrome <https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino>
+ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=yes```. Then restart the pod
 
 ## Tests
 
