@@ -18,7 +18,7 @@
         "lint-fix": "npm run lint --fix",
         "prettier-all": "prettier --write '**/*.{js,ts,tsx,html,scss}'",
         "bundle-report": "STATS=server npm run build",
-        "find-dead-code": "ts-prune",
+        "find-deadcode": "ts-prune",
         "prepare": "husky install"
     },
     "dependencies": {

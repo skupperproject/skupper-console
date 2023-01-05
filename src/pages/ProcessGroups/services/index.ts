@@ -1,14 +1,31 @@
-import { RESTApi } from 'API/REST';
-import { ProcessResponse, ProcessGroupResponse } from 'API/REST.interfaces';
+import { formatBytes } from '@core/utils/formatBytes';
+import { ProcessGroupResponse } from 'API/REST.interfaces';
 
 const ProcessGroupsController = {
-    getProcessGroups: async (): Promise<ProcessGroupResponse[]> => RESTApi.fetchProcessGroups(),
+    getTop10processGroupsSentSortedByBytes: (processGroups: ProcessGroupResponse[]) =>
+        processGroups
+            .sort((a, b) => b.octetsSent - a.octetsSent)
+            .slice(0, 10)
+            .map(({ name, octetsSent }) => ({
+                x: name,
+                y: octetsSent,
+            }))
+            .filter(({ y }) => y),
 
-    getProcessGroup: async (id: string): Promise<ProcessGroupResponse> =>
-        RESTApi.fetchProcessGroup(id),
+    getTop10processGroupsReceivedSortedByBytes: (processGroups: ProcessGroupResponse[]) =>
+        processGroups
+            .sort((a, b) => b.octetsReceived - a.octetsReceived)
+            .slice(0, 10)
+            .map(({ name, octetsReceived }) => ({
+                x: name,
+                y: octetsReceived,
+            }))
+            .filter(({ y }) => y),
 
-    getProcessesByProcessGroup: async (id: string): Promise<ProcessResponse[]> =>
-        RESTApi.fetchProcessesByProcessGroup(id),
+    getBytesLabels: (bytes: { x: string; y: number }[]) =>
+        bytes.map(({ x, y }) => ({
+            name: `${x}: ${formatBytes(y)}`,
+        })),
 };
 
 export default ProcessGroupsController;

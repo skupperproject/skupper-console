@@ -6,73 +6,73 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessResponse } from 'API/REST.interfaces';
 
 import LinkCell from '../../../core/components/LinkCell';
 import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
 import { ProcessesTableProps } from '../Addresses.interfaces';
-import { ProcessRow } from '../services/services.interfaces';
+
+const columns = [
+    {
+        name: ProcessesColumnsNames.Process,
+        prop: 'name' as keyof ProcessResponse,
+        component: 'nameLinkCellProcess',
+        width: 20,
+    },
+    {
+        name: ProcessesColumnsNames.ProcessGroup,
+        prop: 'groupName' as keyof ProcessResponse,
+        component: 'nameLinkCellProcessGroup',
+    },
+    {
+        name: ProcessesColumnsNames.Site,
+        prop: 'parentName' as keyof ProcessResponse,
+        component: 'name[LinkCell]Site',
+    },
+    {
+        name: ProcessesColumnsNames.Host,
+        prop: 'sourceHost' as keyof ProcessResponse,
+    },
+    {
+        name: FlowPairsColumnsNames.ImageName,
+        prop: 'imageName' as keyof ProcessResponse,
+        width: 10,
+    },
+    {
+        name: ProcessesColumnsNames.ByteRate,
+        prop: 'octetSentRate' as keyof ProcessResponse,
+        format: formatByteRate,
+    },
+    {
+        name: ProcessesColumnsNames.Bytes,
+        prop: 'octetsSent' as keyof ProcessResponse,
+        format: formatBytes,
+    },
+];
 
 const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
-    const columns = [
-        {
-            name: ProcessesColumnsNames.Process,
-            prop: 'processName' as keyof ProcessRow,
-            component: 'nameLinkCellProcess',
-            width: 20,
-        },
-        {
-            name: ProcessesColumnsNames.ProcessGroup,
-            prop: 'groupName' as keyof ProcessRow,
-            component: 'nameLinkCellProcessGroup',
-        },
-        {
-            name: ProcessesColumnsNames.Site,
-            prop: 'siteName' as keyof ProcessRow,
-            component: 'name[LinkCell]Site',
-        },
-        {
-            name: ProcessesColumnsNames.Host,
-            prop: 'host' as keyof ProcessRow,
-        },
-        {
-            name: FlowPairsColumnsNames.ImageName,
-            prop: 'imageName' as keyof ProcessRow,
-            width: 10,
-        },
-        {
-            name: ProcessesColumnsNames.ByteRate,
-            prop: 'byteRate' as keyof ProcessRow,
-            format: formatByteRate,
-        },
-        {
-            name: ProcessesColumnsNames.Bytes,
-            prop: 'bytes' as keyof ProcessRow,
-            format: formatBytes,
-        },
-    ];
-
     return (
         <SkTable
             columns={columns}
             rows={processes}
             components={{
-                nameLinkCellProcess: (props: LinkCellProps<ProcessRow>) =>
+                nameLinkCellProcess: (props: LinkCellProps<ProcessResponse>) =>
                     LinkCell({
                         ...props,
                         type: 'process',
                         link: `${ProcessesRoutesPaths.Processes}/${props.data.identity}`,
                     }),
-                nameLinkCellProcessGroup: (props: LinkCellProps<ProcessRow>) =>
+                nameLinkCellProcessGroup: (props: LinkCellProps<ProcessResponse>) =>
                     LinkCell({
                         ...props,
                         type: 'service',
-                        link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupId}`,
+                        link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupIdentity}`,
                     }),
-                nameLinkCellSite: (props: LinkCellProps<ProcessRow>) =>
+                nameLinkCellSite: (props: LinkCellProps<ProcessResponse>) =>
                     LinkCell({
                         ...props,
                         type: 'site',
-                        link: `${SitesRoutesPaths.Sites}/${props.data.siteId}`,
+                        link: `${SitesRoutesPaths.Sites}/${props.data.parent}`,
                     }),
             }}
         />

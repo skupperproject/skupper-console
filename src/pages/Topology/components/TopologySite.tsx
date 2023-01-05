@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../services/services.enum';
 import TopologySiteDetails from './DetailsSite';
 import TopologyPanel from './TopologyPanel';
 
@@ -18,12 +19,30 @@ const TopologySite = function () {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const [nodes, setNodes] = useState<GraphNode[]>([]);
-    const [links, setLinks] = useState<GraphEdge[]>([]);
+    const [edges, setEdges] = useState<GraphEdge[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
-    const { data: sites, isLoading: isLoading } = useQuery(
-        [QueriesTopology.GetSitesWithLinksCreated],
-        TopologyController.getSitesWithLinksCreated,
+    const { data: sites, isLoading: isLoadingSites } = useQuery(
+        [QueriesSites.GetSites],
+        () => RESTApi.fetchSites(),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: routers, isLoading: isLoadingRouters } = useQuery(
+        [QueriesSites.GetRouters],
+        () => RESTApi.fetchRouters(),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: links, isLoading: isLoadingLinks } = useQuery(
+        [QueriesSites.GetLinks],
+        () => RESTApi.fetchLinks(),
         {
             refetchInterval,
             onError: handleError,
@@ -50,24 +69,30 @@ const TopologySite = function () {
 
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
-        if (sites) {
+        if (sites && routers && links) {
+            const sitesWithLinks = TopologyController.getSitesWithLinksCreated(
+                sites,
+                routers,
+                links,
+            );
+
             const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
             setNodes(siteNodes);
-            setLinks(TopologyController.getEdgesFromSitesConnected(sites));
+            setEdges(TopologyController.getEdgesFromSitesConnected(sitesWithLinks));
         }
-    }, [sites]);
+    }, [links, routers, sites]);
 
     useEffect(() => {
         updateTopologyData();
     }, [updateTopologyData]);
 
-    if (isLoading) {
+    if (isLoadingSites || isLoadingLinks || isLoadingRouters) {
         return <LoadingPage />;
     }
 
     return (
-        <TopologyPanel nodes={nodes} links={links} onGetSelectedNode={handleGetSelectedNode}>
+        <TopologyPanel nodes={nodes} links={edges} onGetSelectedNode={handleGetSelectedNode}>
             {nodeSelected && <TopologySiteDetails id={nodeSelected} />}
         </TopologyPanel>
     );

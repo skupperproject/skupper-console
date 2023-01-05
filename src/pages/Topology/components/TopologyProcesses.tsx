@@ -17,13 +17,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
-import { AddressesController } from '@pages/Addresses/services';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
-import ProcessesController from '@pages/Processes/services';
-import ProcessGroupsController from '@pages/ProcessGroups/services';
+import { QueriesProcesses } from '@pages/Processes/services/services.enum';
+import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import SitesController from '@pages/Sites/services';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
@@ -50,14 +50,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
     const [shouldShowProcessGroups, setShouldShowProcessGroups] = useState<boolean>(false);
 
-    const { data: sites } = useQuery([QueriesTopology.GetSites], SitesController.getSites, {
+    const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
         refetchInterval,
         onError: handleError,
     });
 
     const { data: processGroups } = useQuery(
-        [QueriesTopology.GetProcessGroups],
-        ProcessGroupsController.getProcessGroups,
+        [QueriesProcessGroups.GetProcessGroups],
+        () => RESTApi.fetchProcessGroups(),
         {
             enabled: shouldShowProcessGroups,
             refetchInterval,
@@ -66,8 +66,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesTopology.GetProcesses],
-        ProcessesController.getProcesses,
+        [QueriesProcesses.GetProcess],
+        () => RESTApi.fetchProcesses(),
         {
             refetchInterval,
             onError: handleError,
@@ -76,27 +76,24 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
 
     const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
         [QueriesAddresses.GetAddresses],
-        AddressesController.getAddresses,
+        () => RESTApi.fetchAddresses(),
         {
             onError: handleError,
         },
     );
 
-    const { data: processesLinks, isLoading: isLoadingProcessesLInks } = useQuery(
-        [QueriesTopology.GetProcessesLinks],
-        TopologyController.getProcessesLinks,
+    const { data: processesPairs, isLoading: isLoadingProcessesPairs } = useQuery(
+        [QueriesTopology.GetProcessesPairs],
+        () => RESTApi.fetchProcessesPairs(),
         {
             refetchInterval,
             onError: handleError,
         },
     );
 
-    const { data: processesLinksByAddress, isLoading: isLoadingProcessLinksByAddress } = useQuery(
-        [QueriesTopology.GetProcessesLinksByAddress, addressIdSelected],
-        () =>
-            addressIdSelected
-                ? TopologyController.getProcessesLinksByAddress(addressIdSelected)
-                : undefined,
+    const { data: processesPairsByAddress, isLoading: isLoadingProcessPairsByAddress } = useQuery(
+        [QueriesTopology.GetProcessesPairsByAddress, addressIdSelected],
+        () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddress(addressIdSelected) : undefined),
         {
             enabled: !!addressIdSelected,
             refetchInterval,
@@ -146,10 +143,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     const updateTopologyData = useCallback(async () => {
         if (
             sites &&
-            processesLinks &&
+            processesPairs &&
             processes &&
-            !(isLoadingProcessLinksByAddress && addressIdSelected)
+            !(isLoadingProcessPairsByAddress && addressIdSelected)
         ) {
+            const processesLinks = TopologyController.getProcessesLinks(processesPairs);
+
             if (shouldShowProcessGroups && processGroups) {
                 const processGroupsNodes =
                     TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
@@ -176,6 +175,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
 
                 return;
             }
+
+            const processesLinksByAddress = processesPairsByAddress
+                ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress)
+                : undefined;
 
             const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
             const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
@@ -209,19 +212,19 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     }, [
         sites,
         processes,
-        processesLinks,
+        processesPairs,
         processGroups,
-        isLoadingProcessLinksByAddress,
+        isLoadingProcessPairsByAddress,
         addressIdSelected,
         shouldShowProcessGroups,
-        processesLinksByAddress,
+        processesPairsByAddress,
     ]);
 
     useEffect(() => {
         updateTopologyData();
     }, [updateTopologyData]);
 
-    if (isLoadingProcesses || isLoadingProcessesLInks || isLoadingAddresses) {
+    if (isLoadingProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
         return <LoadingPage />;
     }
 
