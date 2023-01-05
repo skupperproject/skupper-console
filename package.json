@@ -49,7 +49,7 @@
         "@testing-library/user-event": "^14.4.3",
         "@types/d3-drag": "^3.0.2",
         "@types/d3-force": "^3.0.4",
-        "@types/d3-selection": "^3.0.3",
+        "@types/d3-selection": "^3.0.4",
         "@types/d3-transition": "^3.0.3",
         "@types/d3-zoom": "^3.0.2",
         "@typescript-eslint/eslint-plugin": "^5.48.0",

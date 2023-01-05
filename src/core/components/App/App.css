@@ -1,7 +1,6 @@
 body,
 html {
     font-size: 16px;
-    text-rendering: optimizeLegibility;
 }
 
 #app {
@@ -18,16 +17,3 @@ html {
     text-overflow: ellipsis;
 }
 
-.pf-c-table thead .align-th-right>button {
-    position: absolute;
-    right: 0;
-    top: 3px;
-}
-
-.pf-c-table thead .align-th-right {
-    text-align: end;
-}
-
-.pf-c-table tbody .align-td-right {
-    text-align: end;
-}
