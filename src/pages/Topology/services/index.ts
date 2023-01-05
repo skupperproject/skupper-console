@@ -7,6 +7,7 @@ import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import {
     FlowAggregatesMapResponse,
+    FlowPairResponse,
     LinkResponse,
     ProcessGroupResponse,
     ProcessResponse,
@@ -41,10 +42,8 @@ export const TopologyController = {
         return sitesConnected;
     },
 
-    getProcessesLinks: async (): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchProcessesPairs();
-
-        const processesLinks = links.map(({ identity, sourceId, destinationId }) => ({
+    getProcessesLinks: (processesPairs: FlowAggregatesMapResponse[]): LinkTopology[] => {
+        const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,
             target: destinationId,
@@ -53,10 +52,8 @@ export const TopologyController = {
         return processesLinks;
     },
 
-    getProcessesLinksByAddress: async (id: string): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchFlowPairsByAddress(id);
-
-        const processesLinks = links.map(({ identity, processAggregateId }) => ({
+    getProcessesLinksByAddress: (flowPairsByAddress: FlowPairResponse[]): LinkTopology[] => {
+        const processesLinks = flowPairsByAddress.map(({ identity, processAggregateId }) => ({
             key: identity,
             source: processAggregateId.split('-to-')[0],
             target: processAggregateId.split('-to-')[1],

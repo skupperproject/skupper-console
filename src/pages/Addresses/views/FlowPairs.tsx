@@ -75,7 +75,7 @@ const FlowsPairs = function () {
         },
     );
 
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+    const { data: serversByAddress, isLoading: isLoadingServersByAddress } = useQuery(
         [QueriesAddresses.GetProcessesByAddress, addressId],
         () => (addressId ? RESTApi.fetchServersByAddress(addressId) : null),
         {
@@ -101,11 +101,11 @@ const FlowsPairs = function () {
         setAddressView(tabIndex as number);
     }
 
-    if (isLoadingFlowPairs || isLoadingProcesses || isLoadingSites) {
+    if (isLoadingFlowPairs || isLoadingServersByAddress || isLoadingSites) {
         return <LoadingPage />;
     }
 
-    if (!flowPairs || !sites || !processes) {
+    if (!flowPairs || !sites || !serversByAddress) {
         return null;
     }
 
@@ -303,7 +303,7 @@ const FlowsPairs = function () {
                             eventKey={1}
                             title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
                         >
-                            <ServersTable processes={processes} />
+                            <ServersTable processes={serversByAddress} />
                         </Tab>
                     </Tabs>
                 </Card>
