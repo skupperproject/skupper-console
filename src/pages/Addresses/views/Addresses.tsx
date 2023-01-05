@@ -10,6 +10,7 @@ import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
 import { AddressesLabels } from '../Addresses.enum';
@@ -27,7 +28,7 @@ const Addresses = function () {
 
     const { data: addresses, isLoading } = useQuery(
         [QueriesAddresses.GetAddresses],
-        AddressesController.getAddresses,
+        () => RESTApi.fetchAddresses(),
         {
             refetchInterval,
             onError: handleError,
@@ -46,7 +47,12 @@ const Addresses = function () {
     if (isLoading || !addresses) {
         return <LoadingPage />;
     }
-    const sortedAddresses = addresses.sort((a, b) => b.currentFlows - a.currentFlows);
+    const addressesWithFlowPairsCounts =
+        AddressesController.getAddressesWithFlowPairsCounts(addresses);
+
+    const sortedAddresses = addressesWithFlowPairsCounts.sort(
+        (a, b) => b.currentFlows - a.currentFlows,
+    );
 
     const topCurrentConnectionsChartData = sortedAddresses
         .map(({ name, currentFlows }) => ({

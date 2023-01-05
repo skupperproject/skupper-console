@@ -17,7 +17,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
-import { AddressesController } from '@pages/Addresses/services';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
@@ -77,7 +76,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
 
     const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
         [QueriesAddresses.GetAddresses],
-        AddressesController.getAddresses,
+        () => RESTApi.fetchAddresses(),
         {
             onError: handleError,
         },
