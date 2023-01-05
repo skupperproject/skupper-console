@@ -25,10 +25,10 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { RESTApi } from 'API/REST';
 import { FlowResponse } from 'API/REST.interfaces';
 
 import { AddressesRoutesPathLabel, AddressesRoutesPaths, FlowLabels } from '../Addresses.enum';
-import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const FlowsPair = function () {
@@ -39,8 +39,8 @@ const FlowsPair = function () {
     const addressName = address?.split('@')[0];
 
     const { data: connection, isLoading: isLoadingConnections } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, flowPairId],
-        () => (addressId ? AddressesController.getFlowPair(flowPairId as string) : null),
+        [QueriesAddresses.GetFlowPair, flowPairId],
+        () => (addressId && flowPairId ? RESTApi.fetchFlowPair(flowPairId as string) : null),
         {
             cacheTime: 0,
             onError: handleError,

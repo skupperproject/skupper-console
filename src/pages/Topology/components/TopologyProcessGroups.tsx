@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
-import ProcessesController from '@pages/Processes/services';
-import ProcessGroupsController from '@pages/ProcessGroups/services';
+import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
 import { TopologyController } from '../services';
@@ -22,41 +22,19 @@ const TopologyProcessGroups = function () {
     const [links, setLinks] = useState<GraphEdge[]>([]);
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
-    const isProcessViewEnabled = true;
-
     const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
-        [QueriesTopology.GetProcessGroups],
-        ProcessGroupsController.getProcessGroups,
+        [QueriesProcessGroups.GetProcessGroups],
+        () => RESTApi.fetchProcessGroups(),
         {
             refetchInterval,
             onError: handleError,
         },
     );
 
-    const { data: processGroupsLinks, isLoading: isLoadingProcessGroupsLinks } = useQuery(
+    const { data: processGroupsPairs, isLoading: isLoadingProcessGroupsPairs } = useQuery(
         [QueriesTopology.GetProcessGroupsLinks],
-        TopologyController.getProcessGroupsLinks,
+        () => RESTApi.fetchProcessgroupsPairs(),
         {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesTopology.GetProcesses],
-        ProcessesController.getProcesses,
-        {
-            enabled: isProcessViewEnabled,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: processesLinks, isLoading: isLoadingProcessesLInks } = useQuery(
-        [QueriesTopology.GetProcessesLinks],
-        TopologyController.getProcessesLinks,
-        {
-            enabled: isProcessViewEnabled,
             refetchInterval,
             onError: handleError,
         },
@@ -79,10 +57,11 @@ const TopologyProcessGroups = function () {
         },
         [nodeSelected],
     );
-
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
-        if (processGroups && processGroupsLinks && processes && processesLinks) {
+        if (processGroups && processGroupsPairs) {
+            const processGroupsLinks = TopologyController.getProcessGroupsLinks(processGroupsPairs);
+
             const processGroupsNodes =
                 TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
 
@@ -91,17 +70,13 @@ const TopologyProcessGroups = function () {
             setNodes(processGroupsNodes);
             setLinks(TopologyController.getEdgesFromLinks(processGroupsLinks));
         }
-    }, [processGroups, processGroupsLinks, processes, processesLinks]);
+    }, [processGroups, processGroupsPairs]);
 
     useEffect(() => {
         updateTopologyData();
     }, [updateTopologyData]);
 
-    if (
-        isLoadingProcessGroups ||
-        isLoadingProcessGroupsLinks ||
-        (isProcessViewEnabled && (isLoadingProcesses || isLoadingProcessesLInks))
-    ) {
+    if (isLoadingProcessGroups || isLoadingProcessGroupsPairs) {
         return <LoadingPage />;
     }
 

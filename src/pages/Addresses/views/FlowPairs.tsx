@@ -22,116 +22,29 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
-import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { QueriesSites } from '@pages/Sites/services/services.enum';
 import {
     TopologyRoutesPaths,
     TopologyURLFilters,
     TopologyViews,
 } from '@pages/Topology/Topology.enum';
+import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import LinkCell from '../../../core/components/LinkCell';
-import {
-    FlowPairsLabels,
-    AddressesRoutesPathLabel,
-    AddressesRoutesPaths,
-    FlowPairsColumnsNames,
-} from '../Addresses.enum';
+import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
+import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
-import { FlowPairBasic } from '../services/services.interfaces';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
 const ITEM_DISPLAY_COUNT = 11;
-
-const columns = [
-    {
-        name: FlowPairsColumnsNames.Client,
-        prop: 'processName' as keyof FlowPairBasic,
-        component: 'ProcessNameLinkCell',
-    },
-    {
-        name: FlowPairsColumnsNames.Port,
-        prop: 'port' as keyof FlowPairBasic,
-    },
-    {
-        name: FlowPairsColumnsNames.Site,
-        prop: 'siteName' as keyof FlowPairBasic,
-        component: 'SiteNameLinkCell',
-    },
-    {
-        name: FlowPairsColumnsNames.ByteRateTX,
-        prop: 'byteRate' as keyof FlowPairBasic,
-        format: formatByteRate,
-    },
-    {
-        name: FlowPairsColumnsNames.ByteRateRX,
-        prop: 'targetByteRate' as keyof FlowPairBasic,
-        format: formatByteRate,
-    },
-    {
-        name: FlowPairsColumnsNames.BytesTx,
-        prop: 'bytes' as keyof FlowPairBasic,
-        format: formatBytes,
-    },
-    {
-        name: FlowPairsColumnsNames.BytesRx,
-        prop: 'targetBytes' as keyof FlowPairBasic,
-        format: formatBytes,
-    },
-    {
-        name: FlowPairsColumnsNames.Server,
-        prop: 'targetProcessName' as keyof FlowPairBasic,
-        component: 'TargetProcessNameLinkCell',
-    },
-    {
-        name: FlowPairsColumnsNames.ServerSite,
-        prop: 'targetSiteName' as keyof FlowPairBasic,
-        component: 'TargetSiteNameLinkCell',
-    },
-    {
-        name: '',
-        component: 'viewDetailsLinkCell',
-        width: 10,
-    },
-];
-
-const components = {
-    ProcessNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
-        LinkCell({
-            ...props,
-            type: 'process',
-            link: `${ProcessesRoutesPaths.Processes}/${props.data.processId}`,
-        }),
-    SiteNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
-        LinkCell({
-            ...props,
-            type: 'site',
-            link: `${SitesRoutesPaths.Sites}/${props.data.siteId}`,
-        }),
-    TargetProcessNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
-        LinkCell({
-            ...props,
-            type: 'process',
-            link: `${ProcessesRoutesPaths.Processes}/${props.data.targetProcessId}`,
-        }),
-    TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
-        LinkCell({
-            ...props,
-            type: 'site',
-            link: `${SitesRoutesPaths.Sites}/${props.data.targetSiteId}`,
-        }),
-};
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
@@ -142,9 +55,9 @@ const FlowsPairs = function () {
     const addressId = address?.split('@')[1];
     const addressName = address?.split('@')[0];
 
-    const { data: connections, isLoading: isLoadingConnections } = useQuery(
+    const { data: flowPairs, isLoading: isLoadingFlowPairs } = useQuery(
         [QueriesAddresses.GetFlowPairsByAddress, addressId],
-        () => (addressId ? AddressesController.getFlowPairsByAddress(addressId) : null),
+        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -152,9 +65,19 @@ const FlowsPairs = function () {
         },
     );
 
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+    const { data: sites, isLoading: isLoadingSites } = useQuery(
+        [QueriesSites.GetSites, addressId],
+        () => RESTApi.fetchSites(),
+        {
+            cacheTime: 0,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: serversByAddress, isLoading: isLoadingServersByAddress } = useQuery(
         [QueriesAddresses.GetProcessesByAddress, addressId],
-        () => (addressId ? AddressesController.getServersByAddress(addressId) : null),
+        () => (addressId ? RESTApi.fetchServersByAddress(addressId) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -178,13 +101,15 @@ const FlowsPairs = function () {
         setAddressView(tabIndex as number);
     }
 
-    if (isLoadingConnections || isLoadingProcesses) {
+    if (isLoadingFlowPairs || isLoadingServersByAddress || isLoadingSites) {
         return <LoadingPage />;
     }
 
-    if (!connections || !processes) {
+    if (!flowPairs || !sites || !serversByAddress) {
         return null;
     }
+
+    const connections = AddressesController.getFlowPairsByAddress(flowPairs, sites);
 
     const topClientsMap = connections.reduce((acc, { processId, processName, bytes }, index) => {
         if (index < ITEM_DISPLAY_COUNT) {
@@ -372,25 +297,13 @@ const FlowsPairs = function () {
                             eventKey={0}
                             title={<TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>}
                         >
-                            <SkTable
-                                columns={columns}
-                                rows={connections}
-                                components={{
-                                    ...components,
-                                    viewDetailsLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
-                                        LinkCell({
-                                            ...props,
-                                            link: `${AddressesRoutesPaths.Addresses}/${address}/${props.data.id}`,
-                                            value: FlowPairsLabels.ViewDetails,
-                                        }),
-                                }}
-                            />
+                            <FlowPairsTable connections={connections} />
                         </Tab>
                         <Tab
                             eventKey={1}
                             title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
                         >
-                            <ServersTable processes={processes} />
+                            <ServersTable processes={serversByAddress} />
                         </Tab>
                     </Tabs>
                 </Card>

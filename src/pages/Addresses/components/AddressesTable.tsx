@@ -8,27 +8,27 @@ import { AddressResponse } from 'API/REST.interfaces';
 import { AddressesColumns, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
 import { AddressesTableProps } from '../Addresses.interfaces';
 
-const AddressesTable: FC<AddressesTableProps> = function ({ addresses }) {
-    const columns = [
-        {
-            name: AddressesColumns.Name,
-            prop: 'name' as keyof AddressResponse,
-            component: 'AddressNameLinkCell',
-        },
-        {
-            name: AddressesColumns.TotalFlowPairs,
-            prop: 'totalFlows' as keyof AddressResponse,
-        },
-        {
-            name: AddressesColumns.CurrentFlowPairs,
-            prop: 'currentFlows' as keyof AddressResponse,
-        },
-        {
-            name: AddressesColumns.TotalConnectors,
-            prop: 'connectorCount' as keyof AddressResponse,
-        },
-    ];
+const columns = [
+    {
+        name: AddressesColumns.Name,
+        prop: 'name' as keyof AddressResponse,
+        component: 'AddressNameLinkCell',
+    },
+    {
+        name: AddressesColumns.TotalFlowPairs,
+        prop: 'totalFlows' as keyof AddressResponse,
+    },
+    {
+        name: AddressesColumns.CurrentFlowPairs,
+        prop: 'currentFlows' as keyof AddressResponse,
+    },
+    {
+        name: AddressesColumns.TotalConnectors,
+        prop: 'connectorCount' as keyof AddressResponse,
+    },
+];
 
+const AddressesTable: FC<AddressesTableProps> = function ({ addresses }) {
     return (
         <SkTable
             title={AddressesLabels.Section}

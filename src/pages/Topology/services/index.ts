@@ -5,7 +5,15 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
-import { ProcessGroupResponse, ProcessResponse, SiteResponse } from 'API/REST.interfaces';
+import {
+    FlowAggregatesMapResponse,
+    FlowPairResponse,
+    LinkResponse,
+    ProcessGroupResponse,
+    ProcessResponse,
+    RouterResponse,
+    SiteResponse,
+} from 'API/REST.interfaces';
 
 import { colors } from '../Topology.constant';
 import {
@@ -18,12 +26,11 @@ import {
 export const TopologyController = {
     // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
     // This prop is used to show the edges in the topology sites
-    getSitesWithLinksCreated: async (): Promise<SiteExtended[]> => {
-        // fetch routers, links and sites and bind them
-        const sites = await RESTApi.fetchSites();
-        const routers = await RESTApi.fetchRouters();
-        const links = await RESTApi.fetchLinks();
-
+    getSitesWithLinksCreated: (
+        sites: SiteResponse[],
+        routers: RouterResponse[],
+        links: LinkResponse[],
+    ): SiteExtended[] => {
         const linksExtendedMap = bindLinksWithSiteIds(links, routers);
 
         // extend each site with the connected prop that contains the connected sites (from  site to the other one)
@@ -35,10 +42,8 @@ export const TopologyController = {
         return sitesConnected;
     },
 
-    getProcessesLinks: async (): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchProcessesPairs();
-
-        const processesLinks = links.map(({ identity, sourceId, destinationId }) => ({
+    getProcessesLinks: (processesPairs: FlowAggregatesMapResponse[]): LinkTopology[] => {
+        const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,
             target: destinationId,
@@ -47,10 +52,8 @@ export const TopologyController = {
         return processesLinks;
     },
 
-    getProcessesLinksByAddress: async (id: string): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchFlowPairsByAddress(id);
-
-        const processesLinks = links.map(({ identity, processAggregateId }) => ({
+    getProcessesLinksByAddress: (flowPairsByAddress: FlowPairResponse[]): LinkTopology[] => {
+        const processesLinks = flowPairsByAddress.map(({ identity, processAggregateId }) => ({
             key: identity,
             source: processAggregateId.split('-to-')[0],
             target: processAggregateId.split('-to-')[1],
@@ -59,9 +62,7 @@ export const TopologyController = {
         return processesLinks;
     },
 
-    getProcessGroupsLinks: async (): Promise<LinkTopology[]> => {
-        const links = await RESTApi.fetchProcessgroupsPairs();
-
+    getProcessGroupsLinks: (links: FlowAggregatesMapResponse[]): LinkTopology[] => {
         const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,

@@ -222,7 +222,7 @@ export const RESTApi = {
         return data;
     },
 
-    // CONNECTORS  APIs
+    // CONNECTORS APIs
     fetchConnector: async (
         id: string,
         options?: RequestOptions,
@@ -234,7 +234,7 @@ export const RESTApi = {
         return data;
     },
 
-    // ADDRESSES  APIs
+    // ADDRESSES APIs
     fetchAddresses: async (options?: RequestOptions): Promise<AddressResponse[]> => {
         const { data } = await axiosFetch(ADDRESSES_PATH, {
             params: options ? addQueryParams(options) : null,
@@ -242,6 +242,7 @@ export const RESTApi = {
 
         return data;
     },
+
     fetchFlowPairsByAddress: async (
         id: string,
         options?: RequestOptions,

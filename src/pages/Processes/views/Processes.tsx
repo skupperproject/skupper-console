@@ -5,10 +5,9 @@ import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { ProcessResponse } from 'API/REST.interfaces';
+import { RESTApi } from 'API/REST';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import ProcessesTable from '../components/ProcessesTable';
@@ -21,7 +20,7 @@ const Processes = function () {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesProcesses.GetProcesses],
-        ProcessesController.getProcesses,
+        () => RESTApi.fetchProcesses(),
         {
             onError: handleError,
         },
@@ -46,35 +45,11 @@ const Processes = function () {
         return null;
     }
 
-    const top10processesSentSorted = (processes as ProcessResponse[])
-        .sort((a, b) => b.octetsSent - a.octetsSent)
-        .slice(0, 10);
+    const bytesSent = ProcessesController.getTop10processGroupsSentSortedByBytes(processes);
+    const bytesReceived = ProcessesController.getTop10processGroupsReceivedSortedByBytes(processes);
 
-    const top10processesReceivedSorted = (processes as ProcessResponse[])
-        .sort((a, b) => b.octetsReceived - a.octetsReceived)
-        .slice(0, 10);
-
-    const bytesSent = top10processesSentSorted
-        .map(({ name, octetsSent }) => ({
-            x: name,
-            y: octetsSent,
-        }))
-        .filter(({ y }) => y);
-
-    const bytesSentLabels = bytesSent.map(({ x, y }) => ({
-        name: `${x}: ${formatBytes(y)}`,
-    }));
-
-    const bytesReceived = top10processesReceivedSorted
-        .map(({ name, octetsReceived }) => ({
-            x: name,
-            y: octetsReceived,
-        }))
-        .filter(({ y }) => y);
-
-    const bytesReceivedLabels = bytesReceived.map(({ x, y }) => ({
-        name: `${x}: ${formatBytes(y)}`,
-    }));
+    const bytesSentLabels = ProcessesController.getBytesLabels(bytesSent);
+    const bytesReceivedLabels = ProcessesController.getBytesLabels(bytesReceived);
 
     return (
         <Grid hasGutter>

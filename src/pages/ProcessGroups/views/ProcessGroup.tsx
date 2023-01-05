@@ -23,10 +23,9 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { ProcessGroupResponse } from 'API/REST.interfaces';
+import { RESTApi } from 'API/REST';
 
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
-import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const ProcessGroup = function () {
@@ -35,7 +34,7 @@ const ProcessGroup = function () {
 
     const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
         [QueriesProcessGroups.GetProcessGroup, processGroupId],
-        () => ProcessGroupsController.getProcessGroup(processGroupId),
+        () => RESTApi.fetchProcessGroup(processGroupId),
         {
             onError: handleError,
         },
@@ -43,7 +42,7 @@ const ProcessGroup = function () {
 
     const { data: processes, isLoading: isLoadingProcess } = useQuery(
         [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
-        () => ProcessGroupsController.getProcessesByProcessGroup(processGroupId),
+        () => RESTApi.fetchProcessesByProcessGroup(processGroupId),
         {
             onError: handleError,
         },
@@ -65,7 +64,7 @@ const ProcessGroup = function () {
         return null;
     }
 
-    const { name } = processGroup as ProcessGroupResponse;
+    const { name } = processGroup;
 
     return (
         <Grid hasGutter>

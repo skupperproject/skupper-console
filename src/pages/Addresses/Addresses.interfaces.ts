@@ -1,11 +1,15 @@
-import { AddressResponse } from 'API/REST.interfaces';
+import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { ProcessRow } from './services/services.interfaces';
+import { FlowPairBasic } from './services/services.interfaces';
 
 export interface AddressesTableProps {
     addresses: AddressResponse[];
 }
 
 export interface ProcessesTableProps {
-    processes: ProcessRow[];
+    processes: ProcessResponse[];
+}
+
+export interface FlowPairsTableProps {
+    connections: FlowPairBasic[];
 }

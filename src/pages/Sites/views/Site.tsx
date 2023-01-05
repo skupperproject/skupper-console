@@ -26,6 +26,7 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { RESTApi } from 'API/REST';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
@@ -37,7 +38,7 @@ const Site = function () {
 
     const { data: site, isLoading: isLoadingSite } = useQuery(
         [QueriesSites.GetSite, siteId],
-        () => SitesController.getSite(siteId),
+        () => RESTApi.fetchSite(siteId),
         {
             onError: handleError,
         },
@@ -45,7 +46,7 @@ const Site = function () {
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
         [QueriesSites.GetSites],
-        () => SitesController.getSites(),
+        () => RESTApi.fetchSites(),
         {
             onError: handleError,
         },
@@ -53,7 +54,7 @@ const Site = function () {
 
     const { data: hosts, isLoading: isLoadingHosts } = useQuery(
         [QueriesSites.GetHostsBySiteId, siteId],
-        () => SitesController.getHostsBySiteId(siteId),
+        () => RESTApi.fetchHostsBySite(siteId),
         {
             onError: handleError,
         },
@@ -61,7 +62,7 @@ const Site = function () {
 
     const { data: links, isLoading: isLoadingLinks } = useQuery(
         [QueriesSites.GetLinksBySiteId, siteId],
-        () => SitesController.getLinksBySiteId(siteId),
+        () => RESTApi.fetchLinksBySite(siteId),
         {
             onError: handleError,
         },
@@ -69,7 +70,7 @@ const Site = function () {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, siteId],
-        () => SitesController.getActiveProcessesBySiteId(siteId),
+        () => RESTApi.fetchProcessesBySite(siteId),
         {
             onError: handleError,
         },
@@ -77,7 +78,7 @@ const Site = function () {
 
     const { data: routers, isLoading: isLoadingRouters } = useQuery(
         [QueriesSites.GetRouters],
-        () => SitesController.getRouters(),
+        () => RESTApi.fetchRouters(),
         {
             onError: handleError,
         },
@@ -111,6 +112,7 @@ const Site = function () {
     const { name, nameSpace } = site;
     const { connected } = SitesController.getLinkedSites(site, links, routers);
     const linkedSites = sites.filter(({ identity }) => connected.includes(identity));
+    const liveProcesses = processes.filter(({ endTime }) => !endTime);
 
     return (
         <Grid hasGutter>
@@ -198,9 +200,9 @@ const Site = function () {
                         <Title headingLevel="h2">{Labels.Processes}</Title>
                     </CardTitle>
                     <CardBody>
-                        {(!!processes.length && (
+                        {(!!liveProcesses.length && (
                             <List isPlain>
-                                {processes.map(({ identity, name: processName }) => (
+                                {liveProcesses.map(({ identity, name: processName }) => (
                                     <ListItem key={identity}>
                                         <Flex>
                                             <ResourceIcon type="process" />
