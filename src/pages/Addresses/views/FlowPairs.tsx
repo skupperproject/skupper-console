@@ -28,7 +28,6 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
 import {
     TopologyRoutesPaths,
     TopologyURLFilters,
@@ -65,16 +64,6 @@ const FlowsPairs = function () {
         },
     );
 
-    const { data: sites, isLoading: isLoadingSites } = useQuery(
-        [QueriesSites.GetSites, addressId],
-        () => RESTApi.fetchSites(),
-        {
-            cacheTime: 0,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
     const { data: serversByAddress, isLoading: isLoadingServersByAddress } = useQuery(
         [QueriesAddresses.GetProcessesByAddress, addressId],
         () => (addressId ? RESTApi.fetchServersByAddress(addressId) : null),
@@ -101,15 +90,15 @@ const FlowsPairs = function () {
         setAddressView(tabIndex as number);
     }
 
-    if (isLoadingFlowPairs || isLoadingServersByAddress || isLoadingSites) {
+    if (isLoadingFlowPairs || isLoadingServersByAddress) {
         return <LoadingPage />;
     }
 
-    if (!flowPairs || !sites || !serversByAddress) {
+    if (!flowPairs || !serversByAddress) {
         return null;
     }
-
-    const connections = AddressesController.getFlowPairsByAddress(flowPairs, sites);
+    const activeFlowPairs = flowPairs.filter(({ endTime }) => !endTime);
+    const connections = AddressesController.getFlowPairsByAddress(activeFlowPairs);
 
     const topClientsMap = connections.reduce((acc, { processId, processName, bytes }, index) => {
         if (index < ITEM_DISPLAY_COUNT) {

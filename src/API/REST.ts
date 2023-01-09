@@ -53,14 +53,14 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
         const { data } = await axiosFetch(getSitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchProcessesBySite: async (
         id: string,
@@ -70,28 +70,28 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchRoutersBySite: async (id: string, options?: RequestOptions): Promise<RouterResponse[]> => {
         const { data } = await axiosFetch(getRoutersBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchLinksBySite: async (id: string, options?: RequestOptions): Promise<LinkResponse[]> => {
         const { data } = await axiosFetch(getLinksBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchHostsBySite: async (id: string, options?: RequestOptions): Promise<HostResponse[]> => {
         const { data } = await axiosFetch(getHostsBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // ROUTER APIs
@@ -100,14 +100,14 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchRouter: async (id: string, options?: RequestOptions): Promise<RouterResponse> => {
         const { data } = await axiosFetch(getRouterPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // PROCESS APIs
@@ -116,7 +116,9 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data
+        const results: any = getResults(data);
+
+        return results
             .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
             .map((process: ProcessResponse) => ({
                 ...process,
@@ -129,7 +131,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchAddressesByProcess: async (
@@ -140,7 +142,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // HOST APIs
@@ -149,7 +151,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // PROCESS GROUPS APIs
@@ -159,7 +161,9 @@ export const RESTApi = {
         });
 
         //TODO remove when api provide flag to recognize internal process groups
-        return data
+        const results: any = getResults(data);
+
+        return results
             .filter(({ name }: ProcessGroupResponse) => !isSkupperEntity(name))
             .map((processGroup: ProcessGroupResponse) => ({
                 ...processGroup,
@@ -174,7 +178,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchProcessesByProcessGroup: async (
         id: string,
@@ -185,7 +189,9 @@ export const RESTApi = {
         });
 
         //TODO remove when api provide flag to recognize internal processes
-        return data
+        const results: any = getResults(data);
+
+        return results
             .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
             .map((processGroup: ProcessResponse) => ({
                 ...processGroup,
@@ -202,7 +208,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // LINKS  APIs
@@ -211,7 +217,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchLink: async (id: string, options?: RequestOptions): Promise<LinkResponse> => {
@@ -219,7 +225,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // CONNECTORS APIs
@@ -231,7 +237,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // ADDRESSES APIs
@@ -240,7 +246,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchFlowPairsByAddress: async (
@@ -251,7 +257,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchServersByAddress: async (
@@ -262,7 +268,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchConnectorsByAddresses: async (
@@ -273,7 +279,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // FLOW PAIRS  APIs
@@ -282,7 +288,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // AGGREGATE  APIs
@@ -291,7 +297,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchSitePairs: async (
@@ -302,7 +308,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessgroupsPairs: async (
@@ -312,7 +318,7 @@ export const RESTApi = {
             params: options?.filters,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessGroupPairs: async (
@@ -323,7 +329,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
@@ -331,7 +337,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessPairs: async (
@@ -342,9 +348,13 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 };
+
+function getResults<T>(data: { results: T }) {
+    return data.results;
+}
 
 function addQueryParams({ filters, offset, limit, sortDirection, sortName }: RequestOptions) {
     return {

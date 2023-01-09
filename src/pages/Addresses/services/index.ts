@@ -1,4 +1,4 @@
-import { AddressResponse, FlowPairResponse, SiteResponse } from 'API/REST.interfaces';
+import { AddressResponse, FlowPairResponse } from 'API/REST.interfaces';
 
 import { FlowPairBasic } from './services.interfaces';
 
@@ -10,16 +10,7 @@ export const AddressesController = {
             currentFlows: Math.floor(address.currentFlows / 2),
         })),
 
-    getFlowPairsByAddress: (
-        flowsPairsByAddress: FlowPairResponse[],
-        sites: SiteResponse[],
-    ): FlowPairBasic[] => {
-        const sitesMap = sites.reduce((acc, site) => {
-            acc[site.identity] = site.name;
-
-            return acc;
-        }, {} as Record<string, string>);
-
+    getFlowPairsByAddress: (flowsPairsByAddress: FlowPairResponse[]): FlowPairBasic[] => {
         const flowsPairsExtended = flowsPairsByAddress.map((flowPair) => {
             const {
                 octetRate,
@@ -30,7 +21,6 @@ export const AddressesController = {
                 processName,
                 latency,
             } = flowPair.forwardFlow;
-            const siteName = sitesMap[flowPair.sourceSiteId];
 
             const {
                 octetRate: targetByteRate,
@@ -40,12 +30,10 @@ export const AddressesController = {
                 latency: targetLatency,
             } = flowPair.counterFlow;
 
-            const targetSiteName = sitesMap[flowPair.destinationSiteId];
-
             return {
                 id: flowPair.identity,
                 siteId: flowPair.sourceSiteId,
-                siteName,
+                siteName: flowPair.sourceSiteName,
                 byteRate: octetRate,
                 bytes: octets,
                 host: flowPair.forwardFlow.sourceHost,
@@ -57,7 +45,7 @@ export const AddressesController = {
                 latency,
 
                 targetSiteId: flowPair.destinationSiteId,
-                targetSiteName,
+                targetSiteName: flowPair.destinationSiteName,
                 targetByteRate,
                 targetBytes,
                 targetProcessId,

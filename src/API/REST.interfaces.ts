@@ -103,12 +103,15 @@ export interface FlowResponse extends BaseResponse {
 
 export interface FlowPairResponse extends BaseResponse {
     sourceSiteId: string;
+    sourceSiteName: string;
     destinationSiteId: string;
+    destinationSiteName: string;
     forwardFlow: FlowResponse;
     counterFlow: FlowResponse;
     siteAggregateId: string;
     processGroupAggregateId: string;
     processAggregateId: string;
+    endTime?: number;
 }
 export interface FlowAggregatesMapResponse extends BaseResponse {
     rectType: string;
