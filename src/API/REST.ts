@@ -44,16 +44,17 @@ import {
     FlowAggregatesMapResponse,
     FlowAggregatesResponse,
     RequestOptions,
+    ResponseWrapper,
 } from './REST.interfaces';
 
 export const RESTApi = {
     // SITES APIs
-    fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
+    fetchSites: async (options?: RequestOptions): Promise<ResponseWrapper<SiteResponse[]>> => {
         const { data } = await axiosFetch(SITES_PATH, {
             params: options ? addQueryParams(options) : null,
         });
 
-        return getResults(data);
+        return data;
     },
     fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
         const { data } = await axiosFetch(getSitePATH(id), {
@@ -116,7 +117,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        const results: any = getResults(data);
+        const results = getResults<ProcessResponse[]>(data);
 
         return results
             .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
@@ -161,7 +162,7 @@ export const RESTApi = {
         });
 
         //TODO remove when api provide flag to recognize internal process groups
-        const results: any = getResults(data);
+        const results = getResults<ProcessGroupResponse[]>(data);
 
         return results
             .filter(({ name }: ProcessGroupResponse) => !isSkupperEntity(name))
@@ -189,7 +190,7 @@ export const RESTApi = {
         });
 
         //TODO remove when api provide flag to recognize internal processes
-        const results: any = getResults(data);
+        const results = getResults<ProcessResponse[]>(data);
 
         return results
             .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
@@ -352,7 +353,7 @@ export const RESTApi = {
     },
 };
 
-function getResults<T>(data: { results: T }) {
+export function getResults<T>(data: { results: T }) {
     return data.results;
 }
 

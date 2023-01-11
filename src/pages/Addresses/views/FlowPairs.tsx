@@ -39,7 +39,6 @@ import { UPDATE_INTERVAL } from 'config';
 import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
 import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
-import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
@@ -56,17 +55,7 @@ const FlowsPairs = function () {
 
     const { data: flowPairs, isLoading: isLoadingFlowPairs } = useQuery(
         [QueriesAddresses.GetFlowPairsByAddress, addressId],
-        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : null),
-        {
-            cacheTime: 0,
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: serversByAddress, isLoading: isLoadingServersByAddress } = useQuery(
-        [QueriesAddresses.GetProcessesByAddress, addressId],
-        () => (addressId ? RESTApi.fetchServersByAddress(addressId) : null),
+        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : undefined),
         {
             cacheTime: 0,
             refetchInterval,
@@ -90,30 +79,35 @@ const FlowsPairs = function () {
         setAddressView(tabIndex as number);
     }
 
-    if (isLoadingFlowPairs || isLoadingServersByAddress) {
+    if (isLoadingFlowPairs) {
         return <LoadingPage />;
     }
 
-    if (!flowPairs || !serversByAddress) {
+    if (!flowPairs) {
         return null;
     }
-    const activeFlowPairs = flowPairs.filter(({ endTime }) => !endTime);
-    const connections = AddressesController.getFlowPairsByAddress(activeFlowPairs);
+    const connections = flowPairs.filter(({ endTime }) => !endTime);
 
-    const topClientsMap = connections.reduce((acc, { processId, processName, bytes }, index) => {
-        if (index < ITEM_DISPLAY_COUNT) {
-            acc[processName] = { name: processName, value: (acc[processId]?.value || 0) + bytes };
-        }
-
-        return acc;
-    }, {} as Record<string, { name: string; value: number }>);
-
-    const topClientsRxMap = connections.reduce(
-        (acc, { processId, processName, targetBytes }, index) => {
+    const topClientsMap = connections.reduce(
+        (acc, { forwardFlow: { process, processName, octets } }, index) => {
             if (index < ITEM_DISPLAY_COUNT) {
                 acc[processName] = {
                     name: processName,
-                    value: (acc[processId]?.value || 0) + targetBytes,
+                    value: (acc[process]?.value || 0) + octets,
+                };
+            }
+
+            return acc;
+        },
+        {} as Record<string, { name: string; value: number }>,
+    );
+
+    const topClientsRxMap = connections.reduce(
+        (acc, { forwardFlow: { process, processName, octets } }, index) => {
+            if (index < ITEM_DISPLAY_COUNT) {
+                acc[processName] = {
+                    name: processName,
+                    value: (acc[process]?.value || 0) + octets,
                 };
             }
 
@@ -125,15 +119,22 @@ const FlowsPairs = function () {
     const topClients = Object.values(topClientsMap);
     const topClientsRx = Object.values(topClientsRxMap);
 
-    const totalBytesSent = connections.reduce((acc, { bytes }) => acc + bytes, 0);
-    const totalBytesReceived = connections.reduce((acc, { targetBytes }) => acc + targetBytes, 0);
+    const totalBytesSent = connections.reduce(
+        (acc, { forwardFlow: { octets } }) => acc + octets,
+        0,
+    );
+    const totalBytesReceived = connections.reduce(
+        (acc, { counterFlow: { octets } }) => acc + octets,
+        0,
+    );
 
     const AvgByteRateSent = Math.round(
-        connections.reduce((acc, { byteRate }) => acc + byteRate, 0) / (connections.length || 1),
+        connections.reduce((acc, { forwardFlow: { octetRate } }) => acc + octetRate, 0) /
+            (connections.length || 1),
     );
 
     const AvgByteRateReceived = Math.round(
-        connections.reduce((acc, { targetByteRate }) => acc + targetByteRate, 0) /
+        connections.reduce((acc, { counterFlow: { octetRate } }) => acc + octetRate, 0) /
             (connections.length || 1),
     );
 
@@ -286,13 +287,13 @@ const FlowsPairs = function () {
                             eventKey={0}
                             title={<TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>}
                         >
-                            <FlowPairsTable connections={connections} />
+                            <FlowPairsTable connections={connections} addressId={addressId || ''} />
                         </Tab>
                         <Tab
                             eventKey={1}
                             title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
                         >
-                            <ServersTable processes={serversByAddress} />
+                            <ServersTable processes={[]} addressId={addressId || ''} />
                         </Tab>
                     </Tabs>
                 </Card>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
     Card,
@@ -21,101 +21,204 @@ import {
     ThProps,
     Tr,
 } from '@patternfly/react-table';
+import { useQuery } from '@tanstack/react-query';
 
 import { generateUUID } from '@core/utils/generateUUID';
+import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
+import { axiosFetch } from 'API/axiosMiddleware';
+import { getResults } from 'API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import { SKTableProps } from './Sktable.interfaces';
+import { SKTableProps } from './SkTable.interfaces';
 
-const DEFAULT_PAGE_SIZE = 20;
-const FIRST_PAGE_INDEX = 0;
+const FIRST_PAGE_NUMBER = 1;
+
+function getProperty(obj: any, prop: any) {
+    if (!prop) {
+        return {};
+    }
+
+    const parts = prop.split('.');
+
+    if (parts.length === 1) {
+        return obj[prop];
+    }
+
+    if (Array.isArray(parts)) {
+        const last = parts.pop();
+        const l = parts.length;
+        let i = 1;
+        let current = parts[0];
+
+        while ((obj = obj[current]) && i < l) {
+            current = parts[i];
+            i++;
+        }
+
+        if (obj) {
+            return obj[last];
+        }
+    } else {
+        throw 'parts is not valid array';
+    }
+}
 
 const SkTable = function <T>({
     title,
     titleDescription,
     columns,
-    rows,
+    rows = [],
     rowsCount = rows.length,
     components,
-    onSort,
+    urlPagination = '',
+    onGetFilters,
+    onError,
     ...props
 }: SKTableProps<T>) {
+    // sort
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
     const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
-    const [currentPageIndex, setCurrentPageIndex] = useState<number>(FIRST_PAGE_INDEX);
-    const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
+    // pagination
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
+    const [pageSize, setPageSize] = useState<number>(DEFAULT_TABLE_PAGE_SIZE);
 
-    function getSortParams(columnIndex: number): ThProps['sort'] {
-        return {
+    const { data: page } = useQuery({
+        queryKey: [
+            urlPagination, // name of the query
+            currentPageNumber,
+            pageSize,
+            activeSortIndex,
+            activeSortDirection,
+        ],
+        queryFn: () =>
+            fetchRows(currentPageNumber - 1, pageSize, activeSortIndex, activeSortDirection),
+        keepPreviousData: true,
+        onError: handleError,
+        enabled: !!urlPagination,
+    });
+
+    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+        if (onError) {
+            onError(httpStatus);
+        }
+    }
+
+    const fetchRows = async (
+        offset: number,
+        limit: number,
+        sortColumnIndex?: number,
+        sortColumnDirection?: 'asc' | 'desc',
+    ) => {
+        const prop =
+            sortColumnIndex !== undefined
+                ? columns[sortColumnIndex].prop?.toString().split('.')
+                : undefined;
+
+        const { data } = await axiosFetch(urlPagination || '', {
+            params: {
+                offset: offset * limit,
+                limit,
+                sortBy:
+                    prop !== undefined ? `${prop[prop?.length - 1]}.${sortColumnDirection}` : null,
+            },
+        });
+
+        return data;
+    };
+
+    const getSortParams = useCallback(
+        (columnIndex: number): ThProps['sort'] => ({
             sortBy: {
                 index: activeSortIndex,
                 direction: activeSortDirection,
             },
             onSort: (_event: React.MouseEvent, index: number, direction: 'asc' | 'desc') => {
+                if (onGetFilters) {
+                    onGetFilters({
+                        limit: pageSize,
+                        offset: currentPageNumber - 1 * pageSize,
+                        sortName: index !== undefined && columns[index].prop?.toString(),
+                        sortDirection: direction,
+                    });
+                }
+
                 setActiveSortIndex(index);
                 setActiveSortDirection(direction);
-
-                if (onSort) {
-                    onSort({ prop: columns[index].prop, direction });
-                }
             },
             columnIndex,
-        };
-    }
+        }),
+        [activeSortDirection, activeSortIndex, columns, currentPageNumber, pageSize, onGetFilters],
+    );
 
-    function handleSetPage(
+    function handleSetPageNumber(
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-        perPage: number,
+        pageNumber: number,
     ) {
-        setCurrentPageIndex(perPage);
+        if (onGetFilters) {
+            onGetFilters({
+                limit: pageSize,
+                offset: pageNumber - 1 * pageSize,
+                sortName:
+                    activeSortIndex !== undefined && columns[activeSortIndex].prop?.toString(),
+                sortDirection: activeSortDirection,
+            });
+        }
+
+        setCurrentPageNumber(pageNumber);
     }
 
-    function handlePerPageSelect(
+    function handleSetPageSize(
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-        perPageSelect: number,
+        pageSizeSelected: number,
     ) {
-        setPageSize(perPageSelect);
-        setCurrentPageIndex(FIRST_PAGE_INDEX);
+        setPageSize(pageSizeSelected);
+        setCurrentPageNumber(FIRST_PAGE_NUMBER);
     }
 
-    let rowsSorted = rows;
+    const totalRows = page ? page.totalCount : rowsCount;
+    let rowsSorted = page ? (getResults(page) as T[]) || [] : rows;
 
-    if (!onSort) {
-        rowsSorted = rows.sort((a, b) => {
-            const columnName = columns[activeSortIndex || 0].prop as keyof T;
+    rowsSorted = rowsSorted.sort((a, b) => {
+        const columnName = columns[activeSortIndex || 0].prop as keyof T;
 
-            const paramA = a[columnName];
-            const paramB = b[columnName];
+        const paramA = a[columnName];
+        const paramB = b[columnName];
 
-            if (paramA === paramB) {
-                return 0;
-            }
-
-            if (activeSortDirection === 'asc') {
-                return paramA > paramB ? 1 : -1;
-            }
-
-            if (activeSortDirection === 'desc') {
-                return paramA < paramB ? 1 : -1;
-            }
-
+        if (paramA === paramB) {
             return 0;
-        });
+        }
+
+        if (activeSortDirection === 'asc') {
+            return paramA > paramB ? 1 : -1;
+        }
+
+        if (activeSortDirection === 'desc') {
+            return paramA < paramB ? 1 : -1;
+        }
+
+        return 0;
+    });
+
+    let skRows = rowsSorted.map((row) => ({
+        id: generateUUID(),
+        columns: columns.map((column) => ({
+            ...column,
+            data: row,
+            value: getProperty(row, column.prop),
+        })),
+    }));
+
+    if (!urlPagination && !onGetFilters) {
+        skRows = skRows.slice(
+            (currentPageNumber - 1) * pageSize,
+            (currentPageNumber - 1) * pageSize + pageSize,
+        );
     }
 
-    const skRows = rowsSorted
-        .map((row) => ({
-            columns: columns.map((column) => ({
-                ...column,
-                data: row,
-                value: row[column.prop as keyof T],
-            })),
-        }))
-        .slice(currentPageIndex * pageSize, currentPageIndex * pageSize + pageSize);
-
-    const { isPlain, shouldSort = true, ...restProps } = props;
+    const { isPlain = false, shouldSort = true, ...restProps } = props;
 
     return (
-        <Card isPlain={isPlain || false}>
+        <Card isPlain={isPlain}>
             {title && (
                 <CardTitle>
                     <Flex>
@@ -153,7 +256,7 @@ const SkTable = function <T>({
                 </Thead>
                 <Tbody>
                     {skRows.map((row) => (
-                        <Tr key={generateUUID()}>
+                        <Tr key={row.id}>
                             {row.columns.map(
                                 ({ data, value, component, callback, format, width }) => {
                                     const Component =
@@ -201,15 +304,15 @@ const SkTable = function <T>({
                     ))}
                 </Tbody>
             </TableComposable>
-            {rows.length > pageSize && (
+            {totalRows > pageSize && (
                 <Pagination
                     className="pf-u-my-xs"
                     perPageComponent="button"
-                    itemCount={rowsCount}
+                    itemCount={totalRows}
                     perPage={pageSize}
-                    page={currentPageIndex + 1}
-                    onSetPage={handleSetPage}
-                    onPerPageSelect={handlePerPageSelect}
+                    page={currentPageNumber}
+                    onSetPage={handleSetPageNumber}
+                    onPerPageSelect={handleSetPageSize}
                 />
             )}
         </Card>

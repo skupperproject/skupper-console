@@ -1,5 +1,9 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
+export type ResponseWrapper<T> = {
+    results: T;
+    totalCount: number;
+};
 export interface RequestOptions {
     filters?: Record<string, string>;
     offset?: number;

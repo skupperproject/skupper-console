@@ -7,55 +7,56 @@ import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { getFlowsPairsByAddressPATH } from 'API/REST.constant';
+import { FlowPairResponse } from 'API/REST.interfaces';
 
 import LinkCell from '../../../core/components/LinkCell';
 import { AddressesRoutesPaths, FlowPairsColumnsNames, FlowPairsLabels } from '../Addresses.enum';
 import { FlowPairsTableProps } from '../Addresses.interfaces';
-import { FlowPairBasic } from '../services/services.interfaces';
 
 const columns = [
     {
         name: FlowPairsColumnsNames.Client,
-        prop: 'processName' as keyof FlowPairBasic,
+        prop: 'forwardFlow.processName' as keyof FlowPairResponse,
         component: 'ProcessNameLinkCell',
     },
     {
         name: FlowPairsColumnsNames.Port,
-        prop: 'port' as keyof FlowPairBasic,
+        prop: 'forwardFlow.sourcePort' as keyof FlowPairResponse,
     },
     {
         name: FlowPairsColumnsNames.Site,
-        prop: 'siteName' as keyof FlowPairBasic,
+        prop: 'sourceSiteName' as keyof FlowPairResponse,
         component: 'SiteNameLinkCell',
     },
     {
         name: FlowPairsColumnsNames.ByteRateTX,
-        prop: 'byteRate' as keyof FlowPairBasic,
+        prop: 'forwardFlow.octetRate' as keyof FlowPairResponse,
         format: formatByteRate,
     },
     {
         name: FlowPairsColumnsNames.ByteRateRX,
-        prop: 'targetByteRate' as keyof FlowPairBasic,
+        prop: 'counterFlow.octetRate' as keyof FlowPairResponse,
         format: formatByteRate,
     },
     {
         name: FlowPairsColumnsNames.BytesTx,
-        prop: 'bytes' as keyof FlowPairBasic,
+        prop: 'forwardFlow.octets' as keyof FlowPairResponse,
         format: formatBytes,
     },
     {
         name: FlowPairsColumnsNames.BytesRx,
-        prop: 'targetBytes' as keyof FlowPairBasic,
+        prop: 'counterFlow.octets' as keyof FlowPairResponse,
         format: formatBytes,
     },
     {
         name: FlowPairsColumnsNames.Server,
-        prop: 'targetProcessName' as keyof FlowPairBasic,
+        prop: 'counterFlow.processName' as keyof FlowPairResponse,
         component: 'TargetProcessNameLinkCell',
     },
     {
         name: FlowPairsColumnsNames.ServerSite,
-        prop: 'targetSiteName' as keyof FlowPairBasic,
+        prop: 'destinationSiteName' as keyof FlowPairResponse,
         component: 'TargetSiteNameLinkCell',
     },
     {
@@ -66,44 +67,44 @@ const columns = [
 ];
 
 const components = {
-    ProcessNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
+    ProcessNameLinkCell: (props: LinkCellProps<FlowPairResponse>) =>
         LinkCell({
             ...props,
             type: 'process',
-            link: `${ProcessesRoutesPaths.Processes}/${props.data.processId}`,
+            link: `${ProcessesRoutesPaths.Processes}/${props.data.forwardFlow.process}`,
         }),
-    SiteNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
+    SiteNameLinkCell: (props: LinkCellProps<FlowPairResponse>) =>
         LinkCell({
             ...props,
             type: 'site',
-            link: `${SitesRoutesPaths.Sites}/${props.data.siteId}`,
+            link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteId}`,
         }),
-    TargetProcessNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
+    TargetProcessNameLinkCell: (props: LinkCellProps<FlowPairResponse>) =>
         LinkCell({
             ...props,
             type: 'process',
-            link: `${ProcessesRoutesPaths.Processes}/${props.data.targetProcessId}`,
+            link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.process}`,
         }),
-    TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
+    TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairResponse>) =>
         LinkCell({
             ...props,
             type: 'site',
-            link: `${SitesRoutesPaths.Sites}/${props.data.targetSiteId}`,
+            link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`,
         }),
 };
-const FlowPairsTable: FC<FlowPairsTableProps> = function ({ connections }) {
+const FlowPairsTable: FC<FlowPairsTableProps> = function ({ addressId }) {
     const { address } = useParams();
 
     return (
         <SkTable
             columns={columns}
-            rows={connections}
+            urlPagination={getFlowsPairsByAddressPATH(addressId)}
             components={{
                 ...components,
-                viewDetailsLinkCell: (props: LinkCellProps<FlowPairBasic>) =>
+                viewDetailsLinkCell: (props: LinkCellProps<FlowPairResponse>) =>
                     LinkCell({
                         ...props,
-                        link: `${AddressesRoutesPaths.Addresses}/${address}/${props.data.id}`,
+                        link: `${AddressesRoutesPaths.Addresses}/${address}/${props.data.identity}`,
                         value: FlowPairsLabels.ViewDetails,
                     }),
             }}

@@ -7,7 +7,7 @@ export interface SKTableProps<T> {
         format?: Function;
         width?: number;
     }[];
-    rows: T[];
+    rows?: T[];
     rowsCount?: number;
     title?: string;
     titleDescription?: string;
@@ -16,5 +16,7 @@ export interface SKTableProps<T> {
     isStriped?: boolean;
     isPlain?: boolean;
     shouldSort?: boolean;
-    onSort?: Function;
+    urlPagination?: string;
+    onGetFilters?: Function;
+    onError?: Function;
 }

@@ -7,7 +7,7 @@ import { Labels, SitesTableColumns } from '../Sites.enum';
 import { SitesTableProps } from '../Sites.interfaces';
 import SiteNameLinkCell from './SiteNameLinkCell';
 
-const SitesTable: FC<SitesTableProps> = function ({ sites }) {
+const SitesTable: FC<SitesTableProps> = function ({ sites, onGetFilters, rowsCount }) {
     const columns = [
         {
             name: SitesTableColumns.Name,
@@ -22,6 +22,8 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
             titleDescription={Labels.SitesDescription}
             columns={columns}
             rows={sites}
+            rowsCount={rowsCount}
+            onGetFilters={onGetFilters}
             components={{ linkCell: SiteNameLinkCell }}
         />
     );

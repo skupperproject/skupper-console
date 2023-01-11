@@ -2,6 +2,8 @@ import { SiteResponse } from 'API/REST.interfaces';
 
 export interface SitesTableProps {
     sites: SiteResponse[];
+    onGetFilters?: Function;
+    rowsCount: number;
 }
 
 export interface SiteExtended extends SiteResponse {

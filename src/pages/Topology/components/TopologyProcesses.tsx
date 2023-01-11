@@ -180,7 +180,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
                 ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress)
                 : undefined;
 
-            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites.results);
             const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
             const processesSourcesIds = processesLinksByAddress?.map((p) => p.source) || [];
             const processesTargetIds = processesLinksByAddress?.map((p) => p.target) || [];
@@ -282,19 +282,21 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
             <Panel>
                 <PanelMainBody>
                     <Flex>
-                        {(shouldShowProcessGroups ? processGroups : sites)?.map((node, index) => (
-                            <Flex key={node.identity}>
-                                <div
-                                    className="pf-u-mr-xs"
-                                    style={{
-                                        width: 10,
-                                        height: 10,
-                                        backgroundColor: colors[index],
-                                    }}
-                                />
-                                {node.name}
-                            </Flex>
-                        ))}
+                        {(shouldShowProcessGroups ? processGroups : sites?.results)?.map(
+                            (node, index) => (
+                                <Flex key={node.identity}>
+                                    <div
+                                        className="pf-u-mr-xs"
+                                        style={{
+                                            width: 10,
+                                            height: 10,
+                                            backgroundColor: colors[index],
+                                        }}
+                                    />
+                                    {node.name}
+                                </Flex>
+                            ),
+                        )}
                     </Flex>
                 </PanelMainBody>
             </Panel>
