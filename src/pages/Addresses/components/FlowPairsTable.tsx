@@ -7,7 +7,6 @@ import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { getFlowsPairsByAddressPATH } from 'API/REST.constant';
 import { FlowPairResponse } from 'API/REST.interfaces';
 
 import LinkCell from '../../../core/components/LinkCell';
@@ -92,13 +91,13 @@ const components = {
             link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`,
         }),
 };
-const FlowPairsTable: FC<FlowPairsTableProps> = function ({ addressId }) {
+const FlowPairsTable: FC<FlowPairsTableProps> = function ({ connections }) {
     const { address } = useParams();
 
     return (
         <SkTable
             columns={columns}
-            urlPagination={getFlowsPairsByAddressPATH(addressId)}
+            rows={connections}
             components={{
                 ...components,
                 viewDetailsLinkCell: (props: LinkCellProps<FlowPairResponse>) =>

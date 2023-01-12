@@ -27,6 +27,7 @@ import { generateUUID } from '@core/utils/generateUUID';
 import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { axiosFetch } from 'API/axiosMiddleware';
 import { getResults } from 'API/REST';
+import { SortDirection } from 'API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { SKTableProps } from './SkTable.interfaces';
@@ -73,14 +74,15 @@ const SkTable = function <T>({
     urlPagination = '',
     onGetFilters,
     onError,
+    pageSizeStart,
     ...props
 }: SKTableProps<T>) {
     // sort
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
-    const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
+    const [activeSortDirection, setActiveSortDirection] = useState<SortDirection>();
     // pagination
     const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
-    const [pageSize, setPageSize] = useState<number>(DEFAULT_TABLE_PAGE_SIZE);
+    const [pageSize, setPageSize] = useState<number>(pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
 
     const { data: page } = useQuery({
         queryKey: [
@@ -107,7 +109,7 @@ const SkTable = function <T>({
         offset: number,
         limit: number,
         sortColumnIndex?: number,
-        sortColumnDirection?: 'asc' | 'desc',
+        sortColumnDirection?: SortDirection,
     ) => {
         const prop =
             sortColumnIndex !== undefined
@@ -143,7 +145,7 @@ const SkTable = function <T>({
                 }
 
                 setActiveSortIndex(index);
-                setActiveSortDirection(direction);
+                setActiveSortDirection(direction as SortDirection);
             },
             columnIndex,
         }),
@@ -208,7 +210,7 @@ const SkTable = function <T>({
         })),
     }));
 
-    if (!urlPagination && !onGetFilters) {
+    if (!urlPagination && !onGetFilters && pageSizeStart) {
         skRows = skRows.slice(
             (currentPageNumber - 1) * pageSize,
             (currentPageNumber - 1) * pageSize + pageSize,
@@ -304,7 +306,7 @@ const SkTable = function <T>({
                     ))}
                 </Tbody>
             </TableComposable>
-            {totalRows > pageSize && (
+            {(pageSizeStart || urlPagination || onGetFilters) && (
                 <Pagination
                     className="pf-u-my-xs"
                     perPageComponent="button"

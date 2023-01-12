@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
+import { SortDirection } from 'API/REST.enum';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import ProcessesTable from '../components/ProcessesTable';
@@ -18,9 +19,16 @@ import { QueriesProcesses } from '../services/services.enum';
 const Processes = function () {
     const navigate = useNavigate();
 
+    const options = {
+        sortName: 'octetsSent',
+        sortDirection: SortDirection.DESC,
+        limit: 5,
+        offset: 0,
+    };
+
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcesses],
-        () => RESTApi.fetchProcesses(),
+        [QueriesProcesses.GetProcesses, options],
+        () => RESTApi.fetchProcesses(options),
         {
             onError: handleError,
         },
@@ -45,8 +53,8 @@ const Processes = function () {
         return null;
     }
 
-    const bytesSent = ProcessesController.getTop10processGroupsSentSortedByBytes(processes);
-    const bytesReceived = ProcessesController.getTop10processGroupsReceivedSortedByBytes(processes);
+    const bytesSent = ProcessesController.getTopProcessGroupsSentSortedByBytes(processes);
+    const bytesReceived = ProcessesController.getTopProcessGroupsReceivedSortedByBytes(processes);
 
     const bytesSentLabels = ProcessesController.getBytesLabels(bytesSent);
     const bytesReceivedLabels = ProcessesController.getBytesLabels(bytesReceived);

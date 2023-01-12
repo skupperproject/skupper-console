@@ -111,7 +111,7 @@ const Site = function () {
 
     const { name, nameSpace } = site;
     const { connected } = SitesController.getLinkedSites(site, links, routers);
-    const linkedSites = sites.results.filter(({ identity }) => connected.includes(identity));
+    const linkedSites = sites.filter(({ identity }) => connected.includes(identity));
     const liveProcesses = processes.filter(({ endTime }) => !endTime);
 
     return (

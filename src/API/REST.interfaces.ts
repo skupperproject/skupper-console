@@ -1,5 +1,7 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
+import { SortDirection } from './REST.enum';
+
 export type ResponseWrapper<T> = {
     results: T;
     totalCount: number;
@@ -8,7 +10,7 @@ export interface RequestOptions {
     filters?: Record<string, string>;
     offset?: number;
     limit?: number;
-    sortDirection?: 'asc' | 'desc';
+    sortDirection?: SortDirection;
     sortName?: string;
 }
 

@@ -71,12 +71,12 @@ const TopologySite = function () {
     const updateTopologyData = useCallback(async () => {
         if (sites && routers && links) {
             const sitesWithLinks = TopologyController.getSitesWithLinksCreated(
-                sites.results,
+                sites,
                 routers,
                 links,
             );
 
-            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites.results);
+            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
             setNodes(siteNodes);
             setEdges(TopologyController.getEdgesFromSitesConnected(sitesWithLinks));

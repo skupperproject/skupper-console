@@ -9,6 +9,7 @@ export interface SKTableProps<T> {
     }[];
     rows?: T[];
     rowsCount?: number;
+    pageSizeStart?: number;
     title?: string;
     titleDescription?: string;
     components?: Record<string, Function>;

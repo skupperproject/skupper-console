@@ -6,7 +6,6 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { getProcessesByAddressPATH } from 'API/REST.constant';
 import { ProcessResponse } from 'API/REST.interfaces';
 
 import LinkCell from '../../../core/components/LinkCell';
@@ -51,11 +50,11 @@ const columns = [
     },
 ];
 
-const ServersTable: FC<ProcessesTableProps> = function ({ addressId }) {
+const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
     return (
         <SkTable
             columns={columns}
-            urlPagination={getProcessesByAddressPATH(addressId)}
+            rows={processes}
             components={{
                 nameLinkCellProcess: (props: LinkCellProps<ProcessResponse>) =>
                     LinkCell({

@@ -44,17 +44,16 @@ import {
     FlowAggregatesMapResponse,
     FlowAggregatesResponse,
     RequestOptions,
-    ResponseWrapper,
 } from './REST.interfaces';
 
 export const RESTApi = {
     // SITES APIs
-    fetchSites: async (options?: RequestOptions): Promise<ResponseWrapper<SiteResponse[]>> => {
+    fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
         const { data } = await axiosFetch(SITES_PATH, {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
     fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
         const { data } = await axiosFetch(getSitePATH(id), {
