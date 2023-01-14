@@ -91,13 +91,19 @@ const components = {
             link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`,
         }),
 };
-const FlowPairsTable: FC<FlowPairsTableProps> = function ({ connections }) {
+const FlowPairsTable: FC<FlowPairsTableProps> = function ({
+    connections,
+    onGetFilters,
+    rowsCount,
+}) {
     const { address } = useParams();
 
     return (
         <SkTable
             columns={columns}
             rows={connections}
+            rowsCount={rowsCount}
+            onGetFilters={onGetFilters}
             components={{
                 ...components,
                 viewDetailsLinkCell: (props: LinkCellProps<FlowPairResponse>) =>

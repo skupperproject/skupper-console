@@ -176,8 +176,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
                 return;
             }
 
-            const processesLinksByAddress = processesPairsByAddress
-                ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress)
+            const processesLinksByAddress = processesPairsByAddress?.results
+                ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress.results)
                 : undefined;
 
             const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);

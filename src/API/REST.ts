@@ -44,6 +44,7 @@ import {
     FlowAggregatesMapResponse,
     FlowAggregatesResponse,
     RequestOptions,
+    ResponseWrapper,
 } from './REST.interfaces';
 
 export const RESTApi = {
@@ -252,12 +253,12 @@ export const RESTApi = {
     fetchFlowPairsByAddress: async (
         id: string,
         options?: RequestOptions,
-    ): Promise<FlowPairResponse[]> => {
+    ): Promise<ResponseWrapper<FlowPairResponse[]>> => {
         const { data } = await axiosFetch(getFlowsPairsByAddressPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return getResults(data);
+        return data;
     },
 
     fetchServersByAddress: async (

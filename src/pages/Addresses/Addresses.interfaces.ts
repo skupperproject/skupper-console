@@ -12,4 +12,6 @@ export interface ProcessesTableProps {
 export interface FlowPairsTableProps {
     connections: FlowPairResponse[];
     addressId: string;
+    onGetFilters: Function;
+    rowsCount: number;
 }

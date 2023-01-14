@@ -138,8 +138,8 @@ const SkTable = function <T>({
                 if (onGetFilters) {
                     onGetFilters({
                         limit: pageSize,
-                        offset: currentPageNumber - 1 * pageSize,
-                        sortName: index !== undefined && columns[index].prop?.toString(),
+                        offset: (currentPageNumber - 1) * pageSize,
+                        sortName: index !== undefined && columns[index].prop,
                         sortDirection: direction,
                     });
                 }
@@ -160,8 +160,7 @@ const SkTable = function <T>({
             onGetFilters({
                 limit: pageSize,
                 offset: pageNumber - 1 * pageSize,
-                sortName:
-                    activeSortIndex !== undefined && columns[activeSortIndex].prop?.toString(),
+                sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
                 sortDirection: activeSortDirection,
             });
         }

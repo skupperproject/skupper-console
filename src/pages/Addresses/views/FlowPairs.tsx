@@ -34,7 +34,7 @@ import {
     TopologyViews,
 } from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
-import { UPDATE_INTERVAL } from 'config';
+import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
 import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
 import FlowPairsTable from '../components/FlowPairsTable';
@@ -49,17 +49,19 @@ const FlowsPairs = function () {
     const { address } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [addressView, setAddressView] = useState<number>(0);
+    const [filters, setFilters] = useState({ offset: 0, limit: DEFAULT_TABLE_PAGE_SIZE });
 
     const addressId = address?.split('@')[1];
     const addressName = address?.split('@')[0];
 
     const { data: flowPairs, isLoading: isLoadingFlowPairs } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, addressId],
-        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : undefined),
+        [QueriesAddresses.GetFlowPairsByAddress, addressId, filters],
+        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, filters) : undefined),
         {
             cacheTime: 0,
             refetchInterval,
             onError: handleError,
+            keepPreviousData: true,
         },
     );
 
@@ -79,14 +81,16 @@ const FlowsPairs = function () {
         setAddressView(tabIndex as number);
     }
 
+    function handleGetFilters(params: any) {
+        setFilters(params);
+    }
+
     if (isLoadingFlowPairs) {
         return <LoadingPage />;
     }
 
-    if (!flowPairs) {
-        return null;
-    }
-    const connections = flowPairs.filter(({ endTime }) => !endTime);
+    const connections = (flowPairs?.results || []).filter(({ endTime }) => !endTime);
+    const rowsCount = flowPairs?.totalCount;
 
     const topClientsMap = connections.reduce(
         (acc, { forwardFlow: { process, processName, octets } }, index) => {
@@ -287,7 +291,12 @@ const FlowsPairs = function () {
                             eventKey={0}
                             title={<TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>}
                         >
-                            <FlowPairsTable connections={connections} addressId={addressId || ''} />
+                            <FlowPairsTable
+                                connections={connections}
+                                onGetFilters={handleGetFilters}
+                                rowsCount={rowsCount || 0}
+                                addressId={addressId || ''}
+                            />
                         </Tab>
                         <Tab
                             eventKey={1}
