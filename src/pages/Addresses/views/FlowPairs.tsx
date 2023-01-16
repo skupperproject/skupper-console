@@ -65,6 +65,17 @@ const FlowsPairs = function () {
         },
     );
 
+    const { data: chartFlowPairs, isLoading: isLoadingTopFlowPairs } = useQuery(
+        [QueriesAddresses.GetFlowPairsByAddress, addressId],
+        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : undefined),
+        {
+            cacheTime: 0,
+            refetchInterval,
+            onError: handleError,
+            keepPreviousData: true,
+        },
+    );
+
     function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
         const route = httpStatus
             ? ErrorRoutesPaths.error[httpStatus]
@@ -85,14 +96,16 @@ const FlowsPairs = function () {
         setFilters(params);
     }
 
-    if (isLoadingFlowPairs) {
+    if (isLoadingFlowPairs || isLoadingTopFlowPairs) {
         return <LoadingPage />;
     }
 
     const connections = (flowPairs?.results || []).filter(({ endTime }) => !endTime);
+    const topConnections = chartFlowPairs?.results || [];
+
     const rowsCount = flowPairs?.totalCount;
 
-    const topClientsMap = connections.reduce(
+    const topClientsMap = topConnections.reduce(
         (acc, { forwardFlow: { process, processName, octets } }, index) => {
             if (index < ITEM_DISPLAY_COUNT) {
                 acc[processName] = {
@@ -106,7 +119,7 @@ const FlowsPairs = function () {
         {} as Record<string, { name: string; value: number }>,
     );
 
-    const topClientsRxMap = connections.reduce(
+    const topClientsRxMap = topConnections.reduce(
         (acc, { forwardFlow: { process, processName, octets } }, index) => {
             if (index < ITEM_DISPLAY_COUNT) {
                 acc[processName] = {
@@ -123,23 +136,23 @@ const FlowsPairs = function () {
     const topClients = Object.values(topClientsMap);
     const topClientsRx = Object.values(topClientsRxMap);
 
-    const totalBytesSent = connections.reduce(
+    const totalBytesSent = topConnections.reduce(
         (acc, { forwardFlow: { octets } }) => acc + octets,
         0,
     );
-    const totalBytesReceived = connections.reduce(
+    const totalBytesReceived = topConnections.reduce(
         (acc, { counterFlow: { octets } }) => acc + octets,
         0,
     );
 
     const AvgByteRateSent = Math.round(
-        connections.reduce((acc, { forwardFlow: { octetRate } }) => acc + octetRate, 0) /
-            (connections.length || 1),
+        topConnections.reduce((acc, { forwardFlow: { octetRate } }) => acc + octetRate, 0) /
+            (topConnections.length || 1),
     );
 
     const AvgByteRateReceived = Math.round(
-        connections.reduce((acc, { counterFlow: { octetRate } }) => acc + octetRate, 0) /
-            (connections.length || 1),
+        topConnections.reduce((acc, { counterFlow: { octetRate } }) => acc + octetRate, 0) /
+            (topConnections.length || 1),
     );
 
     return (

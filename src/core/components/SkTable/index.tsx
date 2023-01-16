@@ -30,7 +30,7 @@ import { getResults } from 'API/REST';
 import { SortDirection } from 'API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import { SKTableProps } from './SkTable.interfaces';
+import { SKTableProps } from './SkTable.interface';
 
 const FIRST_PAGE_NUMBER = 1;
 
