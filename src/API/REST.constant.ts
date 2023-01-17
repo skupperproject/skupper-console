@@ -42,7 +42,6 @@ export const getProcessesByProcessGroupPATH = (id: string) =>
 export const ADDRESSES_PATH = `${API_URL}/addresses/`;
 export const getFlowsPairsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/flowpairs`;
 export const getProcessesByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/processes`;
-export const getConnectorsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/connectors`;
 
 // CONNECTIONS
 const FLOWPAIRS_PATH = `${API_URL}/flowpairs/`;

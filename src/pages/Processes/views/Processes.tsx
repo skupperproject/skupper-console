@@ -16,19 +16,27 @@ import { ProcessesLabels } from '../Processes.enum';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
+const filterOptions = {
+    sortName: 'octetsSent',
+    sortDirection: SortDirection.DESC,
+    limit: 5,
+    offset: 0,
+};
+
 const Processes = function () {
     const navigate = useNavigate();
 
-    const options = {
-        sortName: 'octetsSent',
-        sortDirection: SortDirection.DESC,
-        limit: 5,
-        offset: 0,
-    };
+    const { data: processesChartInfo, isLoading: isLoadingProcessesChartInfo } = useQuery(
+        [QueriesProcesses.GetProcesses, filterOptions],
+        () => RESTApi.fetchProcesses(filterOptions),
+        {
+            onError: handleError,
+        },
+    );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcesses, options],
-        () => RESTApi.fetchProcesses(options),
+        [QueriesProcesses.GetProcesses],
+        () => RESTApi.fetchProcesses(),
         {
             onError: handleError,
         },
@@ -45,16 +53,16 @@ const Processes = function () {
         return;
     }
 
-    if (isLoadingProcesses) {
+    if (isLoadingProcesses || isLoadingProcessesChartInfo) {
         return <LoadingPage />;
     }
 
-    if (!processes) {
-        return null;
-    }
-
-    const bytesSent = ProcessesController.getTopProcessGroupsSentSortedByBytes(processes);
-    const bytesReceived = ProcessesController.getTopProcessGroupsReceivedSortedByBytes(processes);
+    const bytesSent = ProcessesController.getTopProcessGroupsSentSortedByBytes(
+        processesChartInfo || [],
+    );
+    const bytesReceived = ProcessesController.getTopProcessGroupsReceivedSortedByBytes(
+        processesChartInfo || [],
+    );
 
     const bytesSentLabels = ProcessesController.getBytesLabels(bytesSent);
     const bytesReceivedLabels = ProcessesController.getBytesLabels(bytesReceived);
@@ -78,7 +86,7 @@ const Processes = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessesTable processes={processes} />
+                <ProcessesTable processes={processes || []} />
             </GridItem>
         </Grid>
     );

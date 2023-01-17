@@ -21,7 +21,6 @@ import {
     getProcessGroupPATH,
     PROCESS_GROUP_PAIRS_PATH,
     geProcessPATH,
-    getConnectorsByAddressPATH,
     getLinkPATH,
     getConnectorPATH,
     getRouterPATH,
@@ -266,17 +265,6 @@ export const RESTApi = {
         options?: RequestOptions,
     ): Promise<ProcessResponse[]> => {
         const { data } = await axiosFetch(getProcessesByAddressPATH(id), {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return getResults(data);
-    },
-
-    fetchConnectorsByAddresses: async (
-        id: string,
-        options?: RequestOptions,
-    ): Promise<ProcessResponse[]> => {
-        const { data } = await axiosFetch(getConnectorsByAddressPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
