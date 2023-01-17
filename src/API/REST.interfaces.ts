@@ -54,6 +54,7 @@ export interface ProcessResponse extends EntityBaseResponse, EntityMetricsRespon
     imageName: string;
     sourceHost: string;
     hostName: string;
+    processRole: 'external' | 'internal';
     endTime?: number;
 }
 export interface LinkResponse extends EntityBaseResponse {
@@ -92,6 +93,7 @@ export interface AddressResponse extends EntityBaseResponse {
     connectorCount: number;
     totalFlows: number;
     currentFlows: number;
+    protocol: string;
 }
 
 export interface FlowResponse extends BaseResponse {

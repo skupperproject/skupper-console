@@ -155,16 +155,9 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        //TODO remove when api provide flag to recognize internal process groups
-        const results = getResults<ProcessGroupResponse[]>(data);
-
-        return results
-            .filter(({ name }: ProcessGroupResponse) => !isSkupperEntity(name))
-            .map((processGroup: ProcessGroupResponse) => ({
-                ...processGroup,
-                type: getProcessType(processGroup.name),
-            }));
+        return getResults<ProcessGroupResponse[]>(data);
     },
+
     fetchProcessGroup: async (
         id: string,
         options?: RequestOptions,
@@ -175,6 +168,7 @@ export const RESTApi = {
 
         return getResults(data);
     },
+
     fetchProcessesByProcessGroup: async (
         id: string,
         options?: RequestOptions,
@@ -183,15 +177,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        //TODO remove when api provide flag to recognize internal processes
-        const results = getResults<ProcessResponse[]>(data);
-
-        return results
-            .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
-            .map((processGroup: ProcessResponse) => ({
-                ...processGroup,
-                type: getProcessType(processGroup.name),
-            }));
+        return getResults<ProcessResponse[]>(data);
     },
 
     // PROCESSES  APIs
@@ -357,12 +343,4 @@ function addQueryParams({
         timeRangeStart,
         sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
     };
-}
-
-function isSkupperEntity(name: string) {
-    return name.startsWith('skupper') || name.startsWith('vanflow');
-}
-
-function getProcessType(name: string) {
-    return name.startsWith('skupper-') || name.startsWith('vanflow') ? 'skupper' : 'app';
 }
