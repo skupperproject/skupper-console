@@ -12,6 +12,8 @@ export interface RequestOptions {
     limit?: number;
     sortDirection?: SortDirection;
     sortName?: string;
+    timeRangeStart?: number;
+    timeRangeEnd?: number;
 }
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;

@@ -20,4 +20,5 @@ export interface SKTableProps<T> {
     urlPagination?: string;
     onGetFilters?: Function;
     onError?: Function;
+    onLoaded?: Function;
 }

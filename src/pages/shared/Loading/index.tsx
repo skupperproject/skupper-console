@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 // eslint-disable-next-line import/no-unresolved
 import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@patternfly/react-core';
@@ -38,9 +38,27 @@ const PleaseWait = function () {
     );
 };
 
-const LoadingPage = function () {
+const floatLoader: React.CSSProperties = {
+    top: 0,
+    position: 'absolute',
+    backgroundColor: 'white',
+    right: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 100,
+};
+
+interface LoadingPageProps {
+    isFLoating?: boolean;
+}
+
+const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating }) {
     return (
-        <Grid className=" pf-u-p-4xl sk-loading-page">
+        <Grid
+            span={12}
+            className=" pf-u-p-4xl sk-loading-page floating"
+            style={isFLoating ? floatLoader : undefined}
+        >
             <GridItem span={6} className=" pf-u-p-2xl">
                 <TextContent className="pf-u-text-align-center">
                     <Text component={TextVariants.h1}>{Labels.LoadingBrandTitle}</Text>

@@ -1,7 +1,9 @@
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
-    processes: ProcessResponse[];
+    processes?: ProcessResponse[];
+    onGetFilters?: Function;
+    rowsCount?: number;
 }
 
 export interface ProcessesBytesChartProps {

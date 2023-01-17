@@ -65,7 +65,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
         },
     );
 
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+    const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
         [QueriesProcesses.GetProcess],
         () => RESTApi.fetchProcesses(),
         {
@@ -73,6 +73,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
             onError: handleError,
         },
     );
+
+    const processes = processesRaw?.results;
 
     const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
         [QueriesAddresses.GetAddresses],

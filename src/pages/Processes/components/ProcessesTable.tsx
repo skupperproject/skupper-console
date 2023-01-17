@@ -8,7 +8,7 @@ import { ProcessesLabels, ProcessesTableColumns } from '../Processes.enum';
 import { ProcessesTableProps } from '../Processes.interfaces';
 import ProcessNameLinkCell from './ProcessesNameLinkCell';
 
-const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
+const ProcessesTable: FC<ProcessesTableProps> = function ({ processes, rowsCount, onGetFilters }) {
     const columns = [
         {
             name: ProcessesTableColumns.Name,
@@ -29,6 +29,8 @@ const ProcessesTable: FC<ProcessesTableProps> = function ({ processes }) {
             columns={columns}
             rows={processes}
             components={{ linkCell: ProcessNameLinkCell, linkCellSite: SiteNameLinkCell }}
+            rowsCount={rowsCount}
+            onGetFilters={onGetFilters}
         />
     );
 };

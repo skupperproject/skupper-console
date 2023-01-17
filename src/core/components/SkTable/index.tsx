@@ -74,6 +74,7 @@ const SkTable = function <T>({
     urlPagination = '',
     onGetFilters,
     onError,
+    onLoaded,
     pageSizeStart,
     ...props
 }: SKTableProps<T>) {
@@ -125,6 +126,10 @@ const SkTable = function <T>({
             },
         });
 
+        if (onLoaded) {
+            onLoaded(true);
+        }
+
         return data;
     };
 
@@ -156,24 +161,34 @@ const SkTable = function <T>({
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
         pageNumber: number,
     ) {
+        setCurrentPageNumber(pageNumber);
+
         if (onGetFilters) {
             onGetFilters({
                 limit: pageSize,
-                offset: pageNumber - 1 * pageSize,
+                offset: (pageNumber - 1) * pageSize,
                 sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
                 sortDirection: activeSortDirection,
             });
         }
-
-        setCurrentPageNumber(pageNumber);
     }
 
     function handleSetPageSize(
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
         pageSizeSelected: number,
+        newPage: number,
     ) {
         setPageSize(pageSizeSelected);
         setCurrentPageNumber(FIRST_PAGE_NUMBER);
+
+        if (onGetFilters) {
+            onGetFilters({
+                limit: pageSizeSelected,
+                offset: (newPage - 1) * pageSizeSelected,
+                sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
+                sortDirection: activeSortDirection,
+            });
+        }
     }
 
     const totalRows = page ? page.totalCount : rowsCount;

@@ -19,7 +19,7 @@ import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
-const ITEM_DISPLAY_COUNT = 6;
+const ITEM_DISPLAY_COUNT = 5;
 
 const Addresses = function () {
     const navigate = useNavigate();

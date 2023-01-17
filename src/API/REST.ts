@@ -111,19 +111,14 @@ export const RESTApi = {
     },
 
     // PROCESS APIs
-    fetchProcesses: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
+    fetchProcesses: async (
+        options?: RequestOptions,
+    ): Promise<ResponseWrapper<ProcessResponse[]>> => {
         const { data } = await axiosFetch(PROCESSES_PATH, {
             params: options ? addQueryParams(options) : null,
         });
 
-        const results = getResults<ProcessResponse[]>(data);
-
-        return results
-            .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
-            .map((process: ProcessResponse) => ({
-                ...process,
-                type: getProcessType(process.name),
-            }));
+        return data;
     },
 
     fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
@@ -345,11 +340,21 @@ export function getResults<T>(data: { results: T }) {
     return data.results;
 }
 
-function addQueryParams({ filters, offset, limit, sortDirection, sortName }: RequestOptions) {
+function addQueryParams({
+    filters,
+    offset,
+    limit,
+    sortDirection,
+    sortName,
+    timeRangeEnd,
+    timeRangeStart,
+}: RequestOptions) {
     return {
         ...filters,
         offset,
         limit,
+        timeRangeEnd,
+        timeRangeStart,
         sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
     };
 }

@@ -11,7 +11,7 @@ export enum AddressesLabels {
     Section = 'Addresses',
     Description = 'Set of processes that are exposed across the Virtual application network',
     CurrentConnections = 'Connections',
-    ConnectionsByAddress = 'Top  6 - Connections By address',
+    ConnectionsByAddress = 'Top  5 - Connections By address',
     CurrentServer = 'Servers',
 }
 

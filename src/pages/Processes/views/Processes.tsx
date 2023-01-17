@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
@@ -9,6 +9,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 import { SortDirection } from 'API/REST.enum';
+import { RequestOptions } from 'API/REST.interfaces';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import ProcessesTable from '../components/ProcessesTable';
@@ -16,7 +17,7 @@ import { ProcessesLabels } from '../Processes.enum';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
-const filterOptions = {
+const filterOptionsForCharts = {
     sortName: 'octetsSent',
     sortDirection: SortDirection.DESC,
     limit: 5,
@@ -25,18 +26,23 @@ const filterOptions = {
 
 const Processes = function () {
     const navigate = useNavigate();
+    const [filterOptions, setFilterOptions] = useState<RequestOptions>({
+        limit: 10,
+        offset: 0,
+        timeRangeStart: 0,
+    });
 
     const { data: processesChartInfo, isLoading: isLoadingProcessesChartInfo } = useQuery(
-        [QueriesProcesses.GetProcesses, filterOptions],
-        () => RESTApi.fetchProcesses(filterOptions),
+        [QueriesProcesses.GetProcessesForChart, filterOptionsForCharts],
+        () => RESTApi.fetchProcesses(filterOptionsForCharts),
         {
             onError: handleError,
         },
     );
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcesses],
-        () => RESTApi.fetchProcesses(),
+        [QueriesProcesses.GetProcessesFiltered, filterOptions],
+        () => RESTApi.fetchProcesses(filterOptions),
         {
             onError: handleError,
         },
@@ -53,42 +59,51 @@ const Processes = function () {
         return;
     }
 
-    if (isLoadingProcesses || isLoadingProcessesChartInfo) {
-        return <LoadingPage />;
-    }
+    const handleGetFilters = useCallback((params: RequestOptions) => {
+        setFilterOptions(params);
+    }, []);
 
     const bytesSent = ProcessesController.getTopProcessGroupsSentSortedByBytes(
-        processesChartInfo || [],
+        processesChartInfo?.results || [],
     );
     const bytesReceived = ProcessesController.getTopProcessGroupsReceivedSortedByBytes(
-        processesChartInfo || [],
+        processesChartInfo?.results || [],
     );
 
     const bytesSentLabels = ProcessesController.getBytesLabels(bytesSent);
     const bytesReceivedLabels = ProcessesController.getBytesLabels(bytesReceived);
 
     return (
-        <Grid hasGutter>
-            <GridItem span={6}>
-                <Card>
-                    <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
-                    <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
-                </Card>
-            </GridItem>
-            <GridItem span={6}>
-                <Card>
-                    <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
-                    <ProcessesBytesChart
-                        bytes={bytesReceived}
-                        labels={bytesReceivedLabels}
-                        themeColor={ChartThemeColor.green}
+        <>
+            <Grid hasGutter>
+                <GridItem span={6}>
+                    <Card>
+                        <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
+                        <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
+                    </Card>
+                </GridItem>
+                <GridItem span={6}>
+                    <Card>
+                        <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
+                        <ProcessesBytesChart
+                            bytes={bytesReceived}
+                            labels={bytesReceivedLabels}
+                            themeColor={ChartThemeColor.green}
+                        />
+                    </Card>
+                </GridItem>
+                <GridItem span={12}>
+                    <ProcessesTable
+                        processes={processes?.results || []}
+                        rowsCount={processes?.totalCount}
+                        onGetFilters={handleGetFilters}
                     />
-                </Card>
-            </GridItem>
-            <GridItem span={12}>
-                <ProcessesTable processes={processes || []} />
-            </GridItem>
-        </Grid>
+                </GridItem>
+            </Grid>
+            {(isLoadingProcesses || isLoadingProcessesChartInfo) && (
+                <LoadingPage isFLoating={true} />
+            )}
+        </>
     );
 };
 
