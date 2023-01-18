@@ -44,6 +44,7 @@ const Processes = function () {
         [QueriesProcesses.GetProcessesFiltered, filterOptions],
         () => RESTApi.fetchProcesses(filterOptions),
         {
+            keepPreviousData: true,
             onError: handleError,
         },
     );

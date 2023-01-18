@@ -1,5 +1,13 @@
 import { BASE_URL_COLLECTOR } from 'config';
 
+import { AvailableProtocols } from './REST.enum';
+
+export const protocols = [
+    { name: AvailableProtocols.Tcp, identity: 1 },
+    { name: AvailableProtocols.Http, identity: 2 },
+    { name: AvailableProtocols.Http2, identity: 3 },
+];
+
 const API_VERSION = '/api/v1alpha1';
 const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
 

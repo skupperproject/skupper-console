@@ -72,7 +72,7 @@ const FlowsPairs = function () {
         },
     );
 
-    const { data: chartFlowPairsData, isLoading: isLoadingTopFlowPairs } = useQuery(
+    const { data: allFlowPairsData, isLoading: isLoadingTopFlowPairs } = useQuery(
         [QueriesAddresses.GetFlowPairsByAddressForChart, addressId],
         () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : undefined),
         {
@@ -115,11 +115,14 @@ const FlowsPairs = function () {
     }, []);
 
     const flowPairs = flowPairsData?.results || [];
-    const topConnections = chartFlowPairsData?.results || [];
+    const FlowPairsForCharts = allFlowPairsData?.results || [];
+
     const flowPairsRowsCount = flowPairsData?.totalCount;
 
     const servers = serversByAddressData?.results || [];
     const serversRowsCount = serversByAddressData?.totalCount;
+
+    const topConnections = FlowPairsForCharts || [];
 
     const topClientsMap = topConnections.reduce(
         (acc, { forwardFlow: { process, processName, octets } }, index) => {
@@ -191,7 +194,7 @@ const FlowsPairs = function () {
                         <TextContent>
                             <Text component={TextVariants.h1}>{addressName}</Text>
                         </TextContent>
-                        {!!flowPairs.length && (
+                        {!!FlowPairsForCharts?.length && (
                             <Link
                                 to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
                             >
@@ -204,7 +207,7 @@ const FlowsPairs = function () {
                 <GridItem span={8} rowSpan={2}>
                     <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
                         <CardTitle>{FlowPairsLabels.Connections}</CardTitle>
-                        {flowPairs?.length ? (
+                        {FlowPairsForCharts?.length ? (
                             <RealTimeLineChart
                                 options={{
                                     height: REAL_TIME_CONNECTION_HEIGHT_CHART,
@@ -215,7 +218,7 @@ const FlowsPairs = function () {
                                         right: 20,
                                     },
                                 }}
-                                data={[{ name: 'Connections', value: flowPairs.length }]}
+                                data={[{ name: 'Connections', value: FlowPairsForCharts.length }]}
                             />
                         ) : (
                             <EmptyData />
