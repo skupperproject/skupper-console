@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { ChartPie } from '@patternfly/react-charts';
 import {
@@ -43,24 +43,27 @@ import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
-const ITEM_DISPLAY_COUNT = 11;
+const ITEM_DISPLAY_COUNT = 6;
+
+const defaultFilters = {
+    offset: 0,
+    limit: DEFAULT_TABLE_PAGE_SIZE,
+};
 
 const FlowsPairs = function () {
     const navigate = useNavigate();
     const { address } = useParams();
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [addressView, setAddressView] = useState<number>(0);
-    const [filters, setFilters] = useState<RequestOptions>({
-        offset: 0,
-        limit: DEFAULT_TABLE_PAGE_SIZE,
-    });
+    const [flowPairsFilters, setFlowPairsFilters] = useState<RequestOptions>(defaultFilters);
 
     const addressId = address?.split('@')[1];
     const addressName = address?.split('@')[0];
 
-    const { data: flowPairs, isLoading: isLoadingFlowPairs } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, addressId, filters],
-        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, filters) : undefined),
+    const { data: flowPairsData, isLoading: isLoadingFlowPairs } = useQuery(
+        [QueriesAddresses.GetFlowPairsByAddress, addressId, flowPairsFilters],
+        () =>
+            addressId ? RESTApi.fetchFlowPairsByAddress(addressId, flowPairsFilters) : undefined,
         {
             cacheTime: 0,
             refetchInterval,
@@ -69,9 +72,19 @@ const FlowsPairs = function () {
         },
     );
 
-    const { data: chartFlowPairs, isLoading: isLoadingTopFlowPairs } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, addressId],
+    const { data: chartFlowPairsData, isLoading: isLoadingTopFlowPairs } = useQuery(
+        [QueriesAddresses.GetFlowPairsByAddressForChart, addressId],
         () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : undefined),
+        {
+            cacheTime: 0,
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
+        [QueriesAddresses.GetProcessesByAddress, addressId, flowPairsFilters],
+        () => (addressId ? RESTApi.fetchServersByAddress(addressId, flowPairsFilters) : null),
         {
             cacheTime: 0,
             refetchInterval,
@@ -93,17 +106,20 @@ const FlowsPairs = function () {
         _: React.MouseEvent<HTMLElement, MouseEvent>,
         tabIndex: string | number,
     ) {
+        setFlowPairsFilters(defaultFilters);
         setAddressView(tabIndex as number);
     }
 
-    function handleGetFilters(params: RequestOptions) {
-        setFilters(params);
-    }
+    const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
+        setFlowPairsFilters(params);
+    }, []);
 
-    const connections = flowPairs?.results || [];
-    const topConnections = chartFlowPairs?.results || [];
+    const flowPairs = flowPairsData?.results || [];
+    const topConnections = chartFlowPairsData?.results || [];
+    const flowPairsRowsCount = flowPairsData?.totalCount;
 
-    const rowsCount = flowPairs?.totalCount;
+    const servers = serversByAddressData?.results || [];
+    const serversRowsCount = serversByAddressData?.totalCount;
 
     const topClientsMap = topConnections.reduce(
         (acc, { forwardFlow: { process, processName, octets } }, index) => {
@@ -175,7 +191,7 @@ const FlowsPairs = function () {
                         <TextContent>
                             <Text component={TextVariants.h1}>{addressName}</Text>
                         </TextContent>
-                        {!!connections.length && (
+                        {!!flowPairs.length && (
                             <Link
                                 to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
                             >
@@ -188,7 +204,7 @@ const FlowsPairs = function () {
                 <GridItem span={8} rowSpan={2}>
                     <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
                         <CardTitle>{FlowPairsLabels.Connections}</CardTitle>
-                        {connections?.length ? (
+                        {flowPairs?.length ? (
                             <RealTimeLineChart
                                 options={{
                                     height: REAL_TIME_CONNECTION_HEIGHT_CHART,
@@ -199,7 +215,7 @@ const FlowsPairs = function () {
                                         right: 20,
                                     },
                                 }}
-                                data={[{ name: 'Connections', value: connections.length }]}
+                                data={[{ name: 'Connections', value: flowPairs.length }]}
                             />
                         ) : (
                             <EmptyData />
@@ -301,28 +317,39 @@ const FlowsPairs = function () {
                 <GridItem>
                     <Card isRounded className="pf-u-pt-md">
                         <Tabs activeKey={addressView} onSelect={handleTabClick}>
-                            <Tab
-                                eventKey={0}
-                                title={<TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>}
-                            >
-                                <FlowPairsTable
-                                    connections={connections}
-                                    onGetFilters={handleGetFilters}
-                                    rowsCount={rowsCount || 0}
-                                    addressId={addressId || ''}
-                                />
-                            </Tab>
-                            <Tab
-                                eventKey={1}
-                                title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
-                            >
-                                <ServersTable processes={[]} addressId={addressId || ''} />
-                            </Tab>
+                            {flowPairsRowsCount && (
+                                <Tab
+                                    eventKey={0}
+                                    title={
+                                        <TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>
+                                    }
+                                >
+                                    <FlowPairsTable
+                                        connections={flowPairs}
+                                        rowsCount={flowPairsRowsCount}
+                                        onGetFilters={handleGetFiltersConnections}
+                                    />
+                                </Tab>
+                            )}
+                            {serversRowsCount && (
+                                <Tab
+                                    eventKey={1}
+                                    title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
+                                >
+                                    <ServersTable
+                                        processes={servers}
+                                        rowsCount={serversRowsCount}
+                                        onGetFilters={handleGetFiltersConnections}
+                                    />
+                                </Tab>
+                            )}
                         </Tabs>
                     </Card>
                 </GridItem>
             </Grid>
-            {(isLoadingFlowPairs || isLoadingTopFlowPairs) && <LoadingPage isFLoating={true} />}
+            {(isLoadingFlowPairs || isLoadingTopFlowPairs || isLoadingServersByAddress) && (
+                <LoadingPage isFLoating={true} />
+            )}
         </>
     );
 };

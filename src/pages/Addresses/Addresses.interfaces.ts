@@ -6,12 +6,12 @@ export interface AddressesTableProps {
 
 export interface ProcessesTableProps {
     processes: ProcessResponse[];
-    addressId: string;
+    onGetFilters: Function;
+    rowsCount: number;
 }
 
 export interface FlowPairsTableProps {
     connections: FlowPairResponse[];
-    addressId: string;
     onGetFilters: Function;
     rowsCount: number;
 }

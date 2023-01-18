@@ -50,11 +50,13 @@ const columns = [
     },
 ];
 
-const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
+const ServersTable: FC<ProcessesTableProps> = function ({ processes, onGetFilters, rowsCount }) {
     return (
         <SkTable
             columns={columns}
             rows={processes}
+            rowsCount={rowsCount}
+            onGetFilters={onGetFilters}
             components={{
                 nameLinkCellProcess: (props: LinkCellProps<ProcessResponse>) =>
                     LinkCell({

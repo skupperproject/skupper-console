@@ -47,8 +47,8 @@ export enum FlowPairsColumnsNames {
 export enum FlowPairsLabels {
     Servers = 'Servers',
     Connections = 'Connections',
-    TopClientTxTraffic = 'Top 10 clients - Tx Traffic',
-    TopClientRxTraffic = 'Top 10 clients - Rx Traffic',
+    TopClientTxTraffic = 'Top 5 clients - Tx Traffic',
+    TopClientRxTraffic = 'Top 5 clients - Rx Traffic',
     ViewDetails = 'view details',
 }
 
