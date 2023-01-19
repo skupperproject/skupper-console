@@ -6,7 +6,6 @@ import {
     getFlowsPairsByAddressPATH,
     getProcessesBySitePATH,
     getProcessesByAddressPATH,
-    getConnectorByProcessPATH,
     getSitePATH,
     getRoutersBySitePATH,
     getLinksBySitePATH,
@@ -22,7 +21,6 @@ import {
     PROCESS_GROUP_PAIRS_PATH,
     geProcessPATH,
     getLinkPATH,
-    getConnectorPATH,
     getRouterPATH,
     getFlowPairPATH,
     getSitePairPATH,
@@ -33,9 +31,8 @@ import {
 import {
     ProcessGroupResponse,
     AddressResponse,
-    DeviceResponse,
     ProcessResponse,
-    FlowPairResponse,
+    FlowPairsResponse,
     SiteResponse,
     LinkResponse,
     RouterResponse,
@@ -180,18 +177,6 @@ export const RESTApi = {
         return getResults<ProcessResponse[]>(data);
     },
 
-    // PROCESSES  APIs
-    fetchConnectorByProcess: async (
-        id: string,
-        options?: RequestOptions,
-    ): Promise<DeviceResponse> => {
-        const { data } = await axiosFetch(getConnectorByProcessPATH(id), {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return getResults(data);
-    },
-
     // LINKS  APIs
     fetchLinks: async (options?: RequestOptions): Promise<LinkResponse[]> => {
         const { data } = await axiosFetch(`${LINKS_PATH}`, {
@@ -203,18 +188,6 @@ export const RESTApi = {
 
     fetchLink: async (id: string, options?: RequestOptions): Promise<LinkResponse> => {
         const { data } = await axiosFetch(getLinkPATH(id), {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return getResults(data);
-    },
-
-    // CONNECTORS APIs
-    fetchConnector: async (
-        id: string,
-        options?: RequestOptions,
-    ): Promise<DeviceResponse | null> => {
-        const { data } = await axiosFetch(getConnectorPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -233,7 +206,7 @@ export const RESTApi = {
     fetchFlowPairsByAddress: async (
         id: string,
         options?: RequestOptions,
-    ): Promise<ResponseWrapper<FlowPairResponse[]>> => {
+    ): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
         const { data } = await axiosFetch(getFlowsPairsByAddressPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
@@ -253,7 +226,7 @@ export const RESTApi = {
     },
 
     // FLOW PAIRS  APIs
-    fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairResponse> => {
+    fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse> => {
         const { data } = await axiosFetch(getFlowPairPATH(id), {
             params: options ? addQueryParams(options) : null,
         });

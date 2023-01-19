@@ -12,8 +12,8 @@ export enum AddressesLabels {
     Description = 'Set of processes that are exposed across the Virtual application network',
     CurrentConnections = 'Connections',
     ConnectionsByAddress = 'Top  5 - Active Connections By address',
-    CurrentRequestResponses = 'Requests/Responses',
-    RequestResponsesByAddress = 'Top  5 - Active Requests/Responses By address',
+    CurrentRequests = 'Requests',
+    RequestsByAddress = 'Top  5 - Active Requests By address',
     CurrentServer = 'Servers',
 }
 
@@ -23,8 +23,8 @@ export enum AddressesColumnsNames {
     TotalConnectors = 'Servers',
     CurrentFlowPairs = 'Current connections',
     TotalFlowPairs = 'Total connections',
-    CurrentFlowPairsHTTP = 'Current Requests/Responses',
-    TotalFlowPairsHTTP = 'Total Requests/Responses',
+    CurrentRequests = 'Current Requests',
+    TotalRequests = 'Total Requests',
 }
 
 // FLOWS PAIRS VIEW
@@ -43,15 +43,17 @@ export enum FlowPairsColumnsNames {
     ByteRateRX = 'Rx Byte Rate',
     Host = 'Host',
     Port = 'Port',
+    Method = 'Method',
     StartTime = 'Created at',
     Protocol = 'Protocol',
     ImageName = 'Image',
+    Trace = 'Trace',
 }
 
 export enum FlowPairsLabels {
     Servers = 'Servers',
     Connections = 'Connections',
-    RequestsResponses = 'Requests/Responses',
+    Requests = 'Requests',
     TopClientTxTraffic = 'Top 5 clients - Tx Traffic',
     TopClientRxTraffic = 'Top 5 clients - Rx Traffic',
     ViewDetails = 'view details',

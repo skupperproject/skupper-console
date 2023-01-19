@@ -30,14 +30,9 @@ export const getRouterPATH = (id: string) => `${ROUTERS_PATH}${id}`;
 export const LINKS_PATH = `${API_URL}/links/`;
 export const getLinkPATH = (id: string) => `${LINKS_PATH}${id}`;
 
-// CONNECTORS
-const CONNECTORS_PATH = `${API_URL}/connectors/`;
-export const getConnectorPATH = (id: string) => `${CONNECTORS_PATH}${id}`;
-
 // PROCESSES
 export const PROCESSES_PATH = `${API_URL}/processes/`;
 export const geProcessPATH = (id: string) => `${PROCESSES_PATH}${id}`;
-export const getConnectorByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/connector`;
 export const getAddressesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/addresses`;
 
 // PROCESS_GROUPS

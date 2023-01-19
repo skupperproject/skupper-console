@@ -156,7 +156,7 @@ const Addresses = function () {
                             LinkCell({
                                 ...props,
                                 type: 'address',
-                                link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}`,
+                                link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}@${props.data.protocol}`,
                             }),
                     }}
                 />
@@ -167,7 +167,7 @@ const Addresses = function () {
                     <CardTitle>
                         {isTcp(protocolSelected)
                             ? AddressesLabels.CurrentConnections
-                            : AddressesLabels.CurrentRequestResponses}
+                            : AddressesLabels.CurrentRequests}
                     </CardTitle>
                     {topCurrentConnectionsChartData?.length ? (
                         <RealTimeLineChart
@@ -192,7 +192,7 @@ const Addresses = function () {
                     <CardTitle>
                         {isTcp(protocolSelected)
                             ? AddressesLabels.ConnectionsByAddress
-                            : AddressesLabels.RequestResponsesByAddress}
+                            : AddressesLabels.RequestsByAddress}
                     </CardTitle>
                     <ChartPie
                         constrainToVisibleArea
@@ -237,13 +237,13 @@ function generateColumns(protocol: AvailableProtocols) {
         {
             name: isTcp(protocol)
                 ? AddressesColumnsNames.TotalFlowPairs
-                : AddressesColumnsNames.TotalFlowPairsHTTP,
+                : AddressesColumnsNames.TotalRequests,
             prop: 'totalFlows' as keyof AddressResponse,
         },
         {
             name: isTcp(protocol)
                 ? AddressesColumnsNames.CurrentFlowPairs
-                : AddressesColumnsNames.CurrentFlowPairsHTTP,
+                : AddressesColumnsNames.CurrentRequests,
             prop: 'currentFlows' as keyof AddressResponse,
         },
         {

@@ -26,7 +26,7 @@ import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
-import { FlowResponse } from 'API/REST.interfaces';
+import { ConnectionTCP } from 'API/REST.interfaces';
 
 import { AddressesRoutesPathLabel, AddressesRoutesPaths, FlowLabels } from '../Addresses.enum';
 import { QueriesAddresses } from '../services/services.enum';
@@ -113,7 +113,7 @@ export default FlowsPair;
 
 interface DescriptionProps {
     title: string;
-    flow: FlowResponse;
+    flow: ConnectionTCP;
     isCounterflow?: boolean;
 }
 

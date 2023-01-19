@@ -7,6 +7,7 @@ import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import LinkCell from '../../../core/components/LinkCell';
 import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
@@ -50,13 +51,12 @@ const columns = [
     },
 ];
 
-const ServersTable: FC<ProcessesTableProps> = function ({ processes, onGetFilters, rowsCount }) {
+const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
     return (
         <SkTable
             columns={columns}
             rows={processes}
-            rowsCount={rowsCount}
-            onGetFilters={onGetFilters}
+            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
             components={{
                 nameLinkCellProcess: (props: LinkCellProps<ProcessResponse>) =>
                     LinkCell({

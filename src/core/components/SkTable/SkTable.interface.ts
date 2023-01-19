@@ -1,12 +1,5 @@
 export interface SKTableProps<T> {
-    columns: {
-        name: string;
-        prop?: keyof T;
-        component?: string;
-        callback?: Function;
-        format?: Function;
-        width?: number;
-    }[];
+    columns: SKColumn<T>[];
     rows?: T[];
     rowsCount?: number;
     pageSizeStart?: number;
@@ -21,4 +14,13 @@ export interface SKTableProps<T> {
     onGetFilters?: Function;
     onError?: Function;
     onLoaded?: Function;
+}
+
+export interface SKColumn<T> {
+    name: string;
+    prop?: keyof T;
+    component?: string;
+    callback?: Function;
+    format?: Function;
+    width?: number;
 }

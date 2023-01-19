@@ -1,4 +1,5 @@
-import { AddressResponse, FlowPairResponse, ProcessResponse } from 'API/REST.interfaces';
+import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { AddressResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface AddressesTableProps {
     addresses: AddressResponse[];
@@ -6,12 +7,13 @@ export interface AddressesTableProps {
 
 export interface ProcessesTableProps {
     processes: ProcessResponse[];
-    onGetFilters: Function;
-    rowsCount: number;
+    onGetFilters?: Function;
+    rowsCount?: number;
 }
 
 export interface FlowPairsTableProps {
-    connections: FlowPairResponse[];
-    onGetFilters: Function;
-    rowsCount: number;
+    connections: FlowPairsResponse[];
+    columns: SKColumn<FlowPairsResponse>[];
+    onGetFilters?: Function;
+    rowsCount?: number;
 }

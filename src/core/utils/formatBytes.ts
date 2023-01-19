@@ -21,3 +21,19 @@ export function formatByteRate(byteRate: number, decimals = 2) {
 
     return byteRateFormatted ? `${byteRateFormatted}/s` : '';
 }
+
+export function formatTraceBySites(trace: string) {
+    const traceParts = trace.split('|');
+
+    if (traceParts.length < 2) {
+        return 'local';
+    }
+
+    return traceParts
+        .map((part) => {
+            const traceSite = part.split('@')[1];
+
+            return traceSite;
+        })
+        .join(' -> ');
+}

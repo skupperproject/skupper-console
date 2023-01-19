@@ -1,6 +1,6 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { SortDirection } from './REST.enum';
+import { AvailableProtocols, SortDirection } from './REST.enum';
 
 export type ResponseWrapper<T> = {
     results: T;
@@ -73,16 +73,6 @@ export interface RouterResponse extends EntityBaseResponse {
     buildVersion: string;
 }
 
-export interface DeviceResponse extends EntityBaseResponse {
-    parent: string;
-    address: string;
-    protocol: string;
-    destHost: string;
-    destPort: string;
-    flowRateL4: number;
-    flowCountL4: number;
-}
-
 export interface HostResponse extends EntityBaseResponse {
     parent: string;
     provider: string;
@@ -93,10 +83,10 @@ export interface AddressResponse extends EntityBaseResponse {
     connectorCount: number;
     totalFlows: number;
     currentFlows: number;
-    protocol: string;
+    protocol: AvailableProtocols;
 }
 
-export interface FlowResponse extends BaseResponse {
+export interface ConnectionTCP extends BaseResponse {
     parent: string;
     octets: number;
     octetRate: number;
@@ -107,17 +97,31 @@ export interface FlowResponse extends BaseResponse {
     latency: number;
     process: string;
     processName: string;
-    trace?: string;
     endTime?: number;
+    protocol: AvailableProtocols;
 }
 
-export interface FlowPairResponse extends BaseResponse {
+export interface RequestHTTP extends BaseResponse {
+    parent: string;
+    octets: number;
+    octetRate: number;
+    method: string;
+    latency: number;
+    process: string;
+    processName: string;
+    endTime?: number;
+    protocol: AvailableProtocols;
+    streamIdentity: number;
+}
+
+export interface FlowPairsResponse extends BaseResponse {
     sourceSiteId: string;
     sourceSiteName: string;
     destinationSiteId: string;
     destinationSiteName: string;
-    forwardFlow: FlowResponse;
-    counterFlow: FlowResponse;
+    forwardFlow: ConnectionTCP & RequestHTTP;
+    counterFlow: ConnectionTCP & RequestHTTP;
+    flowTrace: string;
     siteAggregateId: string;
     processGroupAggregateId: string;
     processAggregateId: string;
