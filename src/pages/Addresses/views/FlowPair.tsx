@@ -66,6 +66,7 @@ const FlowsPair = function () {
     const { forwardFlow, counterFlow } = connection;
 
     //In the address space a server (counterflow) listen to the port indicated in the name of the address
+    // the sourcePort from the API is internal
     const counterFlowWithAddressPort = {
         ...counterFlow,
         sourcePort: addressName?.split(':')[1] as string,

@@ -34,7 +34,6 @@ import {
     TopologyViews,
 } from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
-import { AvailableProtocols } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
@@ -47,7 +46,7 @@ import { QueriesAddresses } from '../services/services.enum';
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
 const ITEM_DISPLAY_COUNT = 6;
 
-const defaultFilters = {
+const serversQueryStringParams = {
     offset: 0,
     limit: DEFAULT_TABLE_PAGE_SIZE,
 };
@@ -62,7 +61,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
     const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
     const [addressView, setAddressView] = useState<number>(0);
-    const [flowPairsFilters, setFlowPairsFilters] = useState<RequestOptions>(defaultFilters);
+    const [serversQueryString, setServersQueryString] =
+        useState<RequestOptions>(serversQueryStringParams);
 
     const { data: allFlowPairsData, isLoading: isLoadingTopFlowPairs } = useQuery(
         [QueriesAddresses.GetFlowPairsByAddressForChart, addressId],
@@ -75,8 +75,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     );
 
     const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
-        [QueriesAddresses.GetProcessesByAddress, addressId, flowPairsFilters],
-        () => (addressId ? RESTApi.fetchServersByAddress(addressId, flowPairsFilters) : null),
+        [QueriesAddresses.GetProcessesByAddress, addressId, serversQueryString],
+        () => (addressId ? RESTApi.fetchServersByAddress(addressId, serversQueryString) : null),
         {
             onError: handleError,
             keepPreviousData: true,
@@ -96,19 +96,16 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         _: React.MouseEvent<HTMLElement, MouseEvent>,
         tabIndex: string | number,
     ) {
-        setFlowPairsFilters(defaultFilters);
+        setServersQueryString(serversQueryString);
         setAddressView(tabIndex as number);
     }
 
     const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
-        setFlowPairsFilters(params);
+        setServersQueryString(params);
     }, []);
 
     const flowPairs = allFlowPairsData?.results.filter(({ endTime }) => !endTime) || [];
-    const FlowPairsForCharts =
-        allFlowPairsData?.results.filter(
-            ({ forwardFlow: { protocol } }) => protocol === AvailableProtocols.Tcp,
-        ) || [];
+    const FlowPairsForCharts = allFlowPairsData?.results.filter(({ endTime }) => !endTime) || [];
 
     const servers = serversByAddressData?.results || [];
     const serversRowsCount = serversByAddressData?.totalCount;

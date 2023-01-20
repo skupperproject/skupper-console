@@ -203,8 +203,8 @@ const SkTable = function <T>({
     rowsSorted = rowsSorted.sort((a, b) => {
         const columnName = columns[activeSortIndex || 0].prop as keyof T;
 
-        const paramA = a[columnName];
-        const paramB = b[columnName];
+        const paramA = getProperty(a, columnName);
+        const paramB = getProperty(b, columnName);
 
         if (paramA === paramB) {
             return 0;
