@@ -1,102 +1,139 @@
-[
-    {
-        "recType": "VanAddress",
-        "identity": "0c5c8133-2fe9-461c-9a90-073c6aa1f85f",
-        "startTime": 1668696782562299469,
-        "name": "recommendationservice:8080",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 0,
-        "currentFlows": 0
+{
+    "results": [
+        {
+            "recType": "VanAddress",
+            "identity": "09d858f8-3e64-49af-ab6f-5fdd939c8a3b",
+            "startTime": 1674048767157175,
+            "endTime": 0,
+            "name": "recommendationservice:8080",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 6,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "17fb0931-0693-45c3-b697-05b3f8e6d827",
+            "startTime": 1674202465339186,
+            "endTime": 0,
+            "name": "adservice:9555",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 10,
+            "currentFlows": 4
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "41076a6d-3b49-4692-a85c-9ebb55aa1563",
+            "startTime": 1674048760591125,
+            "endTime": 0,
+            "name": "productcatalogservice:3550",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 48,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "71a4e53f-0805-4119-832e-70179355f81d",
+            "startTime": 1674048834131782,
+            "endTime": 0,
+            "name": "emailservice:5000",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 2,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "973c18a5-f6fa-463b-8e44-5f6d5bd5670e",
+            "startTime": 1674048842621152,
+            "endTime": 0,
+            "name": "paymentservice:50051",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 2,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "a0a3ebb2-b3d6-4ab4-971c-d1a964e855e9",
+            "startTime": 1674048850609890,
+            "endTime": 0,
+            "name": "shippingservice:50051",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 6,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "a5dd18e6-3f2c-4fe4-8269-680336a880cc",
+            "startTime": 1674202465339131,
+            "endTime": 0,
+            "name": "checkoutservice:5050",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 2,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "ae2743f1-160d-4f07-ab91-8590a13cfd59",
+            "startTime": 1674202465339183,
+            "endTime": 0,
+            "name": "currencyservice:7000",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 56,
+            "currentFlows": 0
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "bb23f2f4-9604-4632-b9f7-228b50094f35",
+            "startTime": 1674202465339190,
+            "endTime": 0,
+            "name": "redis-cart:6379",
+            "protocol": "tcp",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 4,
+            "currentFlows": 4
+        },
+        {
+            "recType": "VanAddress",
+            "identity": "d32e4ea9-9745-4f73-ad34-336fbb54c39f",
+            "startTime": 1674048798835955,
+            "endTime": 0,
+            "name": "cartservice:7070",
+            "protocol": "http2",
+            "listenerCount": 3,
+            "connectorCount": 1,
+            "totalFlows": 14,
+            "currentFlows": 0
+        }
+    ],
+    "queryParams": {
+        "offset": -1,
+        "limit": -1,
+        "sortBy": "identity.asc",
+        "filter": "",
+        "timeRangeStart": 1674202292177172,
+        "timeRangeEnd": 1674203192177172,
+        "timeRangeOperation": 0
     },
-    {
-        "recType": "VanAddress",
-        "identity": "11b1c6c5-8d08-4a4e-9f27-a0a7b933c0a1",
-        "startTime": 1668696782562315162,
-        "name": "redis-cart:6379",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 4,
-        "currentFlows": 4
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "36a03f9d-6999-4bd1-b8dd-d31960380e67",
-        "startTime": 1668696782562318302,
-        "name": "emailservice:5000",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 0,
-        "currentFlows": 0
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "4134ca3d-a498-40fb-a9dd-99c935caf17c",
-        "startTime": 1668696782562303559,
-        "name": "checkoutservice:5050",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 1,
-        "currentFlows": 1
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "56e11ded-7f23-44dc-b42b-ef7890c15095",
-        "startTime": 1668696782562286572,
-        "name": "productcatalogservice:3550",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 0,
-        "currentFlows": 0
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "7866be14-89d1-4ed7-a694-7b177964fc0c",
-        "startTime": 1668696782562306259,
-        "name": "cartservice:7070",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 95,
-        "currentFlows": 1
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "bab20c8d-ac14-49c8-89fe-7c317d6bd1be",
-        "startTime": 1668696782562309331,
-        "name": "currencyservice:7000",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 1,
-        "currentFlows": 1
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "c1401407-b762-462e-91f2-e0b2d3da0c87",
-        "startTime": 1668696782562374145,
-        "name": "paymentservice:50051",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 0,
-        "currentFlows": 0
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "d7eda1ab-1bfb-460d-be9b-8d16d16d8b46",
-        "startTime": 1668696782562379147,
-        "name": "shippingservice:50051",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 1,
-        "currentFlows": 1
-    },
-    {
-        "recType": "VanAddress",
-        "identity": "e0baa106-6e1a-4761-96d4-7c66b05a552f",
-        "startTime": 1668696782562312410,
-        "name": "adservice:9555",
-        "listenerCount": 3,
-        "connectorCount": 1,
-        "totalFlows": 1,
-        "currentFlows": 1
-    }
-]
+    "status": "",
+    "timestamp": 1674203192177175,
+    "elapsed": 770,
+    "count": 10,
+    "timeRangeCount": 10,
+    "totalCount": 10
+}
