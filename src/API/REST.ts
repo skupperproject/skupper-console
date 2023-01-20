@@ -301,6 +301,7 @@ export function getResults<T>(data: { results: T }) {
 
 function addQueryParams({
     filters,
+    filter,
     offset,
     limit,
     sortDirection,
@@ -310,6 +311,7 @@ function addQueryParams({
 }: RequestOptions) {
     return {
         ...filters,
+        filter,
         offset,
         limit,
         timeRangeEnd,

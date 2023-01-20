@@ -299,7 +299,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                                     right: 100,
                                     top: 0,
                                 }}
-                                themeColor={ChartThemeColors.Orange}
+                                themeColor={ChartThemeColors.Green}
                                 height={REAL_TIME_CONNECTION_HEIGHT_CHART}
                             />
                         ) : (

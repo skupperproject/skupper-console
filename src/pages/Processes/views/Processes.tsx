@@ -17,32 +17,58 @@ import { ProcessesLabels } from '../Processes.enum';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
-const filterOptionsForCharts = {
-    sortName: 'octetsSent',
+const BYTES_SENT_PROP = 'octetsSent';
+const BYTES_RECEIVED_PROP = 'octetsReceived';
+
+const bytesSentQueryString = {
+    sortName: BYTES_SENT_PROP,
     sortDirection: SortDirection.DESC,
     limit: 5,
     offset: 0,
 };
 
+const bytesReceivedQueryString = {
+    sortName: BYTES_RECEIVED_PROP,
+    sortDirection: SortDirection.DESC,
+    limit: 5,
+    offset: 0,
+};
+
+const processesPaginatedQueryString = {
+    limit: 10,
+    offset: 0,
+    filter: 'processRole.external',
+};
+
 const Processes = function () {
     const navigate = useNavigate();
-    const [filterOptions, setFilterOptions] = useState<RequestOptions>({
-        limit: 10,
-        offset: 0,
-        timeRangeStart: 0,
-    });
 
-    const { data: processesChartInfo, isLoading: isLoadingProcessesChartInfo } = useQuery(
-        [QueriesProcesses.GetProcessesForChart, filterOptionsForCharts],
-        () => RESTApi.fetchProcesses(filterOptionsForCharts),
+    const [ProcessesPaginatedQueryString, setProcessesPaginatedQueryString] =
+        useState<RequestOptions>(processesPaginatedQueryString);
+
+    const { data: processesByOctetsSentData, isLoading: isLoadingProcessesByOctetsSentData } =
+        useQuery(
+            [QueriesProcesses.GetProcessesMetrics, bytesSentQueryString],
+            () => RESTApi.fetchProcesses(bytesSentQueryString),
+            {
+                onError: handleError,
+            },
+        );
+
+    const {
+        data: processesByOctetsReceivedData,
+        isLoading: isLoadingProcessesByOctetsReceivedData,
+    } = useQuery(
+        [QueriesProcesses.GetProcessesMetrics, bytesReceivedQueryString],
+        () => RESTApi.fetchProcesses(bytesReceivedQueryString),
         {
             onError: handleError,
         },
     );
 
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcessesFiltered, filterOptions],
-        () => RESTApi.fetchProcesses(filterOptions),
+    const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
+        [QueriesProcesses.GetProcessesPaginated, ProcessesPaginatedQueryString],
+        () => RESTApi.fetchProcesses(ProcessesPaginatedQueryString),
         {
             keepPreviousData: true,
             onError: handleError,
@@ -56,23 +82,25 @@ const Processes = function () {
                 : ErrorRoutesPaths.ErrConnection;
 
         navigate(route, { state: { httpStatus } });
-
-        return;
     }
 
     const handleGetFilters = useCallback((params: RequestOptions) => {
-        setFilterOptions(params);
+        setProcessesPaginatedQueryString({ ...processesPaginatedQueryString, ...params });
     }, []);
 
-    const bytesSent = ProcessesController.getTopProcessGroupsSentSortedByBytes(
-        processesChartInfo?.results || [],
-    );
-    const bytesReceived = ProcessesController.getTopProcessGroupsReceivedSortedByBytes(
-        processesChartInfo?.results || [],
-    );
+    const processes = processesData?.results || [];
 
-    const bytesSentLabels = ProcessesController.getBytesLabels(bytesSent);
-    const bytesReceivedLabels = ProcessesController.getBytesLabels(bytesReceived);
+    const { labels: bytesSentLabels, values: bytesSent } =
+        ProcessesController.formatProcessesBytesForChart(
+            processesByOctetsSentData?.results || [],
+            BYTES_SENT_PROP,
+        );
+
+    const { labels: bytesReceivedLabels, values: bytesReceived } =
+        ProcessesController.formatProcessesBytesForChart(
+            processesByOctetsReceivedData?.results || [],
+            BYTES_RECEIVED_PROP,
+        );
 
     return (
         <>
@@ -95,15 +123,16 @@ const Processes = function () {
                 </GridItem>
                 <GridItem span={12}>
                     <ProcessesTable
-                        processes={processes?.results || []}
-                        rowsCount={processes?.totalCount}
+                        processes={processes}
+                        rowsCount={processesData?.timeRangeCount}
                         onGetFilters={handleGetFilters}
                     />
                 </GridItem>
             </Grid>
-            {(isLoadingProcesses || isLoadingProcessesChartInfo) && (
-                <LoadingPage isFLoating={true} />
-            )}
+
+            {(isLoadingProcessesData ||
+                isLoadingProcessesByOctetsSentData ||
+                isLoadingProcessesByOctetsReceivedData) && <LoadingPage isFLoating={true} />}
         </>
     );
 };

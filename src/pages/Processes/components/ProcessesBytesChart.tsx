@@ -2,6 +2,8 @@ import React, { FC, useCallback, useState } from 'react';
 
 import { ChartPie } from '@patternfly/react-charts';
 
+import EmptyData from '@core/components/EmptyData';
+
 import { ProcessesBytesChartProps } from '../Processes.interfaces';
 
 const CHART_HEIGHT = 350;
@@ -24,18 +26,21 @@ const ProcessesBytesChart: FC<ProcessesBytesChartProps> = function ({ bytes, lab
 
     return (
         <div ref={chartContainerRef} style={{ height: `${CHART_HEIGHT}px`, width: `100%` }}>
-            <ChartPie
-                constrainToVisibleArea
-                data={bytes}
-                labels={labels?.map(({ name }) => name)}
-                legendData={labels}
-                legendOrientation="vertical"
-                legendPosition="right"
-                padding={CHART_PADDING}
-                width={chartContainerDimension.width}
-                height={CHART_HEIGHT}
-                {...props}
-            />
+            {!bytes.length && <EmptyData />}
+            {bytes.length && (
+                <ChartPie
+                    constrainToVisibleArea
+                    data={bytes}
+                    labels={labels?.map(({ name }) => name)}
+                    legendData={labels}
+                    legendOrientation="vertical"
+                    legendPosition="right"
+                    padding={CHART_PADDING}
+                    width={chartContainerDimension.width}
+                    height={CHART_HEIGHT}
+                    {...props}
+                />
+            )}
         </div>
     );
 };

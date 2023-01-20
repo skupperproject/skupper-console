@@ -22,7 +22,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
-import RealTimeLineChart from '@core/components/RealTimeLineChart';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -34,7 +33,6 @@ import {
     TopologyViews,
 } from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
-import { AvailableProtocols } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
@@ -105,10 +103,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     }, []);
 
     const flowPairs = allFlowPairsData?.results.filter(({ endTime }) => !endTime);
-    const FlowPairsForCharts =
-        allFlowPairsData?.results.filter(
-            ({ forwardFlow: { protocol } }) => protocol === AvailableProtocols.Tcp,
-        ) || [];
+    const FlowPairsForCharts = allFlowPairsData?.results || [];
 
     const servers = serversByAddressData?.results || [];
     const serversRowsCount = serversByAddressData?.totalCount;
@@ -195,47 +190,25 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                     </Flex>
                 </GridItem>
 
-                <GridItem span={8} rowSpan={2}>
-                    <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabels.Connections}</CardTitle>
-                        {FlowPairsForCharts?.length ? (
-                            <RealTimeLineChart
-                                options={{
-                                    height: REAL_TIME_CONNECTION_HEIGHT_CHART,
-                                    padding: {
-                                        top: 0,
-                                        bottom: 50,
-                                        left: 50,
-                                        right: 20,
-                                    },
-                                }}
-                                data={[{ name: 'Connections', value: FlowPairsForCharts.length }]}
-                            />
-                        ) : (
-                            <EmptyData />
-                        )}
-                    </Card>
-                </GridItem>
-
-                <GridItem span={2}>
+                <GridItem span={3}>
                     <Card isFullHeight>
                         <CardTitle>Total Bytes TX</CardTitle>
                         <CardBody>{formatBytes(totalBytesSent)}</CardBody>
                     </Card>
                 </GridItem>
-                <GridItem span={2}>
+                <GridItem span={3}>
                     <Card isFullHeight>
                         <CardTitle>Total Bytes RX</CardTitle>
                         <CardBody>{formatBytes(totalBytesReceived)}</CardBody>
                     </Card>
                 </GridItem>
-                <GridItem span={2}>
+                <GridItem span={3}>
                     <Card isFullHeight>
                         <CardTitle>Average Byte rate TX</CardTitle>
                         <CardBody>{formatByteRate(AvgByteRateSent)}</CardBody>
                     </Card>
                 </GridItem>
-                <GridItem span={2}>
+                <GridItem span={3}>
                     <Card isFullHeight>
                         <CardTitle>Average Byte rate RX</CardTitle>
                         <CardBody>{formatByteRate(AvgByteRateReceived)}</CardBody>
@@ -299,7 +272,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                                     right: 100,
                                     top: 0,
                                 }}
-                                themeColor={ChartThemeColors.Orange}
+                                themeColor={ChartThemeColors.Green}
                                 height={REAL_TIME_CONNECTION_HEIGHT_CHART}
                             />
                         ) : (
@@ -314,9 +287,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                             {flowPairs && (
                                 <Tab
                                     eventKey={0}
-                                    title={
-                                        <TabTitleText>{FlowPairsLabels.Connections}</TabTitleText>
-                                    }
+                                    title={<TabTitleText>{FlowPairsLabels.Requests}</TabTitleText>}
                                 >
                                     <FlowPairsTable
                                         columns={RequestsByAddressColumns}

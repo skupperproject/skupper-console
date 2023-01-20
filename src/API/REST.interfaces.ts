@@ -5,8 +5,15 @@ import { AvailableProtocols, SortDirection } from './REST.enum';
 export type ResponseWrapper<T> = {
     results: T;
     totalCount: number;
+    count: number;
+    timeRangeCount: number;
+    status: string;
+    timestamp: number;
+    elapsed: number;
+    queryParams: RequestOptions;
 };
 export interface RequestOptions {
+    filter?: string;
     filters?: Record<string, string>;
     offset?: number;
     limit?: number;
@@ -14,6 +21,7 @@ export interface RequestOptions {
     sortName?: string;
     timeRangeStart?: number;
     timeRangeEnd?: number;
+    timeRangeOperation?: number; // 0: intersect , 1: contains, 2: within
 }
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
@@ -30,6 +38,7 @@ interface BaseResponse {
 
 interface EntityBaseResponse extends BaseResponse {
     name: string;
+    processGroupRole: 'external' | 'internal';
 }
 
 interface EntityMetricsResponse {
@@ -119,6 +128,7 @@ export interface FlowPairsResponse extends BaseResponse {
     sourceSiteName: string;
     destinationSiteId: string;
     destinationSiteName: string;
+    protocol: string;
     forwardFlow: ConnectionTCP & RequestHTTP;
     counterFlow: ConnectionTCP & RequestHTTP;
     flowTrace: string;

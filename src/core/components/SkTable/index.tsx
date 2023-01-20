@@ -1,16 +1,21 @@
 import React, { useCallback, useState } from 'react';
 
 import {
+    Bullseye,
     Card,
     CardTitle,
+    EmptyState,
+    EmptyStateIcon,
+    EmptyStateVariant,
     Flex,
     Pagination,
     Text,
     TextContent,
     TextVariants,
+    Title,
     Tooltip,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import {
     TableComposable,
     TableText,
@@ -33,6 +38,7 @@ import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 import { SKTableProps } from './SkTable.interface';
 
 const FIRST_PAGE_NUMBER = 1;
+const NO_RESULT_FOUND_LABEL = 'No results found';
 
 function getProperty(obj: any, prop: any) {
     if (!prop) {
@@ -271,53 +277,68 @@ const SkTable = function <T>({
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {skRows.map((row) => (
-                        <Tr key={row.id}>
-                            {row.columns.map(
-                                ({ data, value, component, callback, format, width }) => {
-                                    const Component =
-                                        components && component && components[component];
-
-                                    return Component ? (
-                                        <Td
-                                            width={
-                                                width as
-                                                    | 10
-                                                    | 15
-                                                    | 20
-                                                    | 25
-                                                    | 30
-                                                    | 35
-                                                    | 40
-                                                    | 45
-                                                    | 50
-                                                    | 60
-                                                    | 70
-                                                    | 80
-                                                    | 90
-                                                    | 100
-                                                    | undefined
-                                            }
-                                            key={generateUUID()}
-                                        >
-                                            <Component
-                                                data={data}
-                                                value={value}
-                                                callback={callback}
-                                                format={format && format(value)}
-                                            />
-                                        </Td>
-                                    ) : (
-                                        <Td key={generateUUID()}>
-                                            <TableText wrapModifier="truncate">
-                                                {(format && format(value)) || (value as string)}
-                                            </TableText>
-                                        </Td>
-                                    );
-                                },
-                            )}
+                    {skRows.length === 0 && (
+                        <Tr>
+                            <Td colSpan={8}>
+                                <Bullseye>
+                                    <EmptyState variant={EmptyStateVariant.small}>
+                                        <EmptyStateIcon icon={SearchIcon} />
+                                        <Title headingLevel="h2" size="lg">
+                                            {NO_RESULT_FOUND_LABEL}
+                                        </Title>
+                                    </EmptyState>
+                                </Bullseye>
+                            </Td>
                         </Tr>
-                    ))}
+                    )}
+                    {!(skRows.length === 0) &&
+                        skRows.map((row) => (
+                            <Tr key={row.id}>
+                                {row.columns.map(
+                                    ({ data, value, component, callback, format, width }) => {
+                                        const Component =
+                                            components && component && components[component];
+
+                                        return Component ? (
+                                            <Td
+                                                width={
+                                                    width as
+                                                        | 10
+                                                        | 15
+                                                        | 20
+                                                        | 25
+                                                        | 30
+                                                        | 35
+                                                        | 40
+                                                        | 45
+                                                        | 50
+                                                        | 60
+                                                        | 70
+                                                        | 80
+                                                        | 90
+                                                        | 100
+                                                        | undefined
+                                                }
+                                                key={generateUUID()}
+                                            >
+                                                <Component
+                                                    data={data}
+                                                    value={value}
+                                                    callback={callback}
+                                                    format={format && format(value)}
+                                                />
+                                            </Td>
+                                        ) : (
+                                            <Td key={generateUUID()}>
+                                                <TableText wrapModifier="truncate">
+                                                    {(format && format(value)) || (value as string)}
+                                                </TableText>
+                                            </Td>
+                                        );
+                                    },
+                                )}
+                            </Tr>
+                        ))}
                 </Tbody>
             </TableComposable>
             {(pageSizeStart || urlPagination || onGetFilters) && (
