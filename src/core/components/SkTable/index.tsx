@@ -279,7 +279,7 @@ const SkTable = function <T>({
                 <Tbody>
                     {skRows.length === 0 && (
                         <Tr>
-                            <Td colSpan={8}>
+                            <Td colSpan={12}>
                                 <Bullseye>
                                     <EmptyState variant={EmptyStateVariant.small}>
                                         <EmptyStateIcon icon={SearchIcon} />

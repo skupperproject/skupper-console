@@ -19,6 +19,8 @@ const processGroupsQueryString = {
     filter: 'processGroupRole.external',
 };
 
+const MAX_COMPONENT_BYTES_COUNT = 5;
+
 const ProcessGroups = function () {
     const navigate = useNavigate();
 
@@ -46,12 +48,19 @@ const ProcessGroups = function () {
         return null;
     }
 
-    const bytesSent = ProcessGroupsController.getTop10processGroupsSentSortedByBytes(processGroups);
-    const bytesReceived =
-        ProcessGroupsController.getTop10processGroupsReceivedSortedByBytes(processGroups);
+    const { labels: bytesSentLabels, values: bytesSent } =
+        ProcessGroupsController.formatProcessGroupsBytesForChart(
+            processGroups,
+            'octetsSent',
+            MAX_COMPONENT_BYTES_COUNT,
+        );
 
-    const bytesSentLabels = ProcessGroupsController.getBytesLabels(bytesSent);
-    const bytesReceivedLabels = ProcessGroupsController.getBytesLabels(bytesReceived);
+    const { labels: bytesReceivedLabels, values: bytesReceived } =
+        ProcessGroupsController.formatProcessGroupsBytesForChart(
+            processGroups,
+            'octetsReceived',
+            MAX_COMPONENT_BYTES_COUNT,
+        );
 
     return (
         <Grid hasGutter>
