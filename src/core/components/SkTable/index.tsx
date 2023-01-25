@@ -240,7 +240,7 @@ const SkTable = function <T>({
     const { isPlain = false, shouldSort = true, ...restProps } = props;
 
     return (
-        <Card isPlain={isPlain}>
+        <Card isPlain={isPlain} isFullHeight>
             {title && (
                 <CardTitle>
                     <Flex>
@@ -258,6 +258,7 @@ const SkTable = function <T>({
                 </CardTitle>
             )}
             <TableComposable
+                height={'100%'}
                 borders={false}
                 variant="compact"
                 isStickyHeader

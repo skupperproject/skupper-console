@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 
-import { ChartPie } from '@patternfly/react-charts';
+import { Chart, ChartBar, ChartPie, ChartVoronoiContainer } from '@patternfly/react-charts';
 import {
     Breadcrumb,
     BreadcrumbHeading,
@@ -34,7 +34,7 @@ import {
 } from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
 import { RequestOptions } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
+import { UPDATE_INTERVAL } from 'config';
 
 import { RequestsByAddressColumns } from '../Addresses.constants';
 import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
@@ -42,12 +42,15 @@ import { QueriesAddresses } from '../services/services.enum';
 import FlowPairsTable from './FlowPairsTable';
 import ServersTable from './ServersTable';
 
-const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
-const ITEM_DISPLAY_COUNT = 6;
+const DEFAULT_HEIGHT_CHART = 350;
 
 const serversQueryStringParams = {
     offset: 0,
-    limit: DEFAULT_TABLE_PAGE_SIZE,
+    timeRangeStart: 0,
+};
+
+const flowPairsQueryStringParams = {
+    timeRangeStart: 0,
 };
 
 interface RequestsByAddressProps {
@@ -55,19 +58,27 @@ interface RequestsByAddressProps {
     addressId: string;
 }
 
+interface ChartData {
+    name: string;
+    x: string;
+    y: number;
+}
+
 const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName }) {
     const navigate = useNavigate();
 
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL * 2);
     const [addressView, setAddressView] = useState<number>(0);
     const [serverQueryString, setServersQueryString] =
         useState<RequestOptions>(serversQueryStringParams);
 
     const { data: allFlowPairsData, isLoading: isLoadingTopFlowPairs } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddressForChart, addressId],
-        () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : null),
+        [QueriesAddresses.GetFlowPairsByAddressForChart, addressId, flowPairsQueryStringParams],
+        () =>
+            addressId
+                ? RESTApi.fetchFlowPairsByAddress(addressId, flowPairsQueryStringParams)
+                : null,
         {
-            cacheTime: 0,
             refetchInterval,
             onError: handleError,
         },
@@ -103,62 +114,79 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         setServersQueryString(params);
     }, []);
 
-    const flowPairs = allFlowPairsData?.results?.filter(({ endTime }) => !endTime);
-    const FlowPairsForCharts = allFlowPairsData?.results.filter(({ endTime }) => !endTime) || [];
+    const flowPairs = allFlowPairsData?.results || [];
+    const FlowPairsForCharts = allFlowPairsData?.results || [];
 
     const servers = serversByAddressData?.results || [];
     const serversRowsCount = serversByAddressData?.totalCount;
 
     const topConnections = FlowPairsForCharts || [];
 
-    const topClientsMap = topConnections.reduce(
-        (acc, { forwardFlow: { process, processName, octets } }, index) => {
-            if (index < ITEM_DISPLAY_COUNT) {
-                acc[processName] = {
-                    name: processName,
-                    value: (acc[process]?.value || 0) + octets,
-                };
-            }
+    const methodsSummaryMap = topConnections.reduce((acc, { forwardFlow: { method } }) => {
+        acc[method] = { name: method, x: method, y: (acc[method]?.y || 0) + 1 };
+
+        return acc;
+    }, {} as Record<string, ChartData>);
+    const methodsSummary = Object.values(methodsSummaryMap);
+
+    const topTrafficUploadByClient = topConnections.reduce(
+        (acc, { forwardFlow: { process, processName, octets } }) => {
+            acc[processName] = {
+                name: processName,
+                x: processName,
+                y: (acc[process]?.y || 0) + octets,
+            };
 
             return acc;
         },
-        {} as Record<string, { name: string; value: number }>,
+        {} as Record<string, ChartData>,
     );
+    const topTrafficUpload = Object.values(topTrafficUploadByClient);
 
     const topClientsRxMap = topConnections.reduce(
-        (acc, { forwardFlow: { process, processName, octets } }, index) => {
-            if (index < ITEM_DISPLAY_COUNT) {
-                acc[processName] = {
-                    name: processName,
-                    value: (acc[process]?.value || 0) + octets,
-                };
-            }
+        (acc, { counterFlow: { process, processName, octets } }) => {
+            acc[processName] = {
+                name: processName,
+                x: processName,
+                y: (acc[process]?.y || 0) + octets,
+            };
 
             return acc;
         },
-        {} as Record<string, { name: string; value: number }>,
+        {} as Record<string, ChartData>,
     );
+    const tcpTrafficDownloaded = Object.values(topClientsRxMap);
 
-    const topClients = Object.values(topClientsMap);
-    const topClientsRx = Object.values(topClientsRxMap);
-
-    const totalBytesSent = topConnections.reduce(
+    const UploadTraffic = topConnections.reduce(
         (acc, { forwardFlow: { octets } }) => acc + octets,
         0,
     );
-    const totalBytesReceived = topConnections.reduce(
+    const downloadTraffic = topConnections.reduce(
         (acc, { counterFlow: { octets } }) => acc + octets,
         0,
     );
 
+    let count = 0;
     const AvgByteRateSent = Math.round(
-        topConnections.reduce((acc, { forwardFlow: { octetRate } }) => acc + octetRate, 0) /
-            (topConnections.length || 1),
+        topConnections.reduce((acc, { forwardFlow: { octetRate } }) => {
+            if (octetRate) {
+                count += 1;
+                acc = (acc + octetRate) / count;
+            }
+
+            return acc;
+        }, 0),
     );
 
     const AvgByteRateReceived = Math.round(
-        topConnections.reduce((acc, { counterFlow: { octetRate } }) => acc + octetRate, 0) /
-            (topConnections.length || 1),
+        topConnections.reduce((acc, { counterFlow: { octetRate } }) => {
+            if (octetRate) {
+                count += 1;
+                acc = (acc + octetRate) / count;
+            }
+
+            return acc;
+        }, 0),
     );
 
     return (
@@ -193,88 +221,58 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
 
                 <GridItem span={3}>
                     <Card isFullHeight>
-                        <CardTitle>Total Bytes TX</CardTitle>
-                        <CardBody>{formatBytes(totalBytesSent)}</CardBody>
+                        <CardTitle>Bytes Downloaded</CardTitle>
+                        <CardBody>{formatBytes(downloadTraffic)}</CardBody>
                     </Card>
                 </GridItem>
                 <GridItem span={3}>
                     <Card isFullHeight>
-                        <CardTitle>Total Bytes RX</CardTitle>
-                        <CardBody>{formatBytes(totalBytesReceived)}</CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem span={3}>
-                    <Card isFullHeight>
-                        <CardTitle>Average Byte rate TX</CardTitle>
-                        <CardBody>{formatByteRate(AvgByteRateSent)}</CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem span={3}>
-                    <Card isFullHeight>
-                        <CardTitle>Average Byte rate RX</CardTitle>
+                        <CardTitle>Average Download speed</CardTitle>
                         <CardBody>{formatByteRate(AvgByteRateReceived)}</CardBody>
                     </Card>
                 </GridItem>
+                <GridItem span={3}>
+                    <Card isFullHeight>
+                        <CardTitle>Bytes Uploaded</CardTitle>
+                        <CardBody>{formatBytes(UploadTraffic)}</CardBody>
+                    </Card>
+                </GridItem>
+                <GridItem span={3}>
+                    <Card isFullHeight>
+                        <CardTitle>Average Upload speed</CardTitle>
+                        <CardBody>{formatByteRate(AvgByteRateSent)}</CardBody>
+                    </Card>
+                </GridItem>
 
-                <GridItem span={6}>
-                    <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabels.TopClientTxTraffic}</CardTitle>
-                        {topClients?.length ? (
-                            <ChartPie
-                                constrainToVisibleArea
-                                data={topClients?.map(({ name, value }) => ({
-                                    x: name,
-                                    y: formatBytes(value),
-                                }))}
-                                labels={topClients?.map(
-                                    ({ name, value }) => `${name}: ${formatBytes(value)}`,
-                                )}
-                                legendData={topClients?.map(({ name, value }) => ({
-                                    name: `${name}: ${formatBytes(value)}`,
-                                }))}
-                                legendOrientation="vertical"
-                                legendPosition="right"
-                                padding={{
-                                    bottom: 100,
-                                    left: -300,
-                                    right: 100,
-                                    top: 0,
-                                }}
-                                themeColor={ChartThemeColors.Blue}
-                                height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-                            />
+                <GridItem span={2}>
+                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                        <CardTitle>{FlowPairsLabels.RequestMethodsSummary}</CardTitle>
+                        {methodsSummary?.length ? (
+                            <MethodsSummaryChart data={methodsSummary} />
                         ) : (
                             <EmptyData />
                         )}
                     </Card>
                 </GridItem>
 
-                <GridItem span={6}>
-                    <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabels.TopClientRxTraffic}</CardTitle>
-                        {topClientsRx?.length ? (
-                            <ChartPie
-                                constrainToVisibleArea
-                                data={topClientsRx?.map(({ name, value }) => ({
-                                    x: name,
-                                    y: formatBytes(value),
-                                }))}
-                                labels={topClientsRx?.map(
-                                    ({ name, value }) => `${name}: ${formatBytes(value)}`,
-                                )}
-                                legendData={topClientsRx?.map(({ name, value }) => ({
-                                    name: `${name}: ${formatBytes(value)}`,
-                                }))}
-                                legendOrientation="vertical"
-                                legendPosition="right"
-                                padding={{
-                                    bottom: 100,
-                                    left: -300,
-                                    right: 100,
-                                    top: 0,
-                                }}
-                                themeColor={ChartThemeColors.Green}
-                                height={REAL_TIME_CONNECTION_HEIGHT_CHART}
+                <GridItem span={5}>
+                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                        <CardTitle>{FlowPairsLabels.TopClientUploadTraffic}</CardTitle>
+                        {topTrafficUpload?.length ? (
+                            <TopTrafficChart data={topTrafficUpload} />
+                        ) : (
+                            <EmptyData />
+                        )}
+                    </Card>
+                </GridItem>
+
+                <GridItem span={5}>
+                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                        <CardTitle>{FlowPairsLabels.TopClientDownloadTraffic}</CardTitle>
+                        {tcpTrafficDownloaded?.length ? (
+                            <TopTrafficChart
+                                data={tcpTrafficDownloaded}
+                                options={{ themeColor: ChartThemeColors.Green }}
                             />
                         ) : (
                             <EmptyData />
@@ -317,3 +315,60 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
 };
 
 export default RequestsByAddress;
+
+interface ChartProps {
+    data: ChartData[];
+    options?: { themeColor: ChartThemeColors };
+}
+
+const TopTrafficChart: FC<ChartProps> = function ({ data, options }) {
+    return (
+        <ChartPie
+            constrainToVisibleArea
+            data={data?.map(({ x, y }) => ({
+                x,
+                y: formatBytes(y),
+            }))}
+            labels={data?.map(({ name, y }) => `${name}: ${formatBytes(y)}`)}
+            legendData={data?.map(({ name, y }) => ({
+                name: `${name}: ${formatBytes(y)}`,
+            }))}
+            legendOrientation="vertical"
+            legendPosition="right"
+            padding={{
+                bottom: 100,
+                left: -200,
+                right: 20,
+                top: 50,
+            }}
+            themeColor={options?.themeColor || ChartThemeColors.Blue}
+            height={DEFAULT_HEIGHT_CHART}
+        />
+    );
+};
+
+const MethodsSummaryChart: FC<ChartProps> = function ({ data }) {
+    return (
+        <Chart
+            containerComponent={
+                <ChartVoronoiContainer
+                    labels={({ datum }) => `${datum.name}: ${datum.y}`}
+                    constrainToVisibleArea
+                />
+            }
+            legendData={[{ name: 'POST' }, { name: 'GET' }]}
+            legendOrientation="vertical"
+            legendPosition="right"
+            height={DEFAULT_HEIGHT_CHART}
+            themeColor={ChartThemeColors.Orange}
+            padding={{
+                bottom: 100,
+                left: 50,
+                right: 200,
+                top: 50,
+            }}
+        >
+            <ChartBar data={data} barWidth={50} />
+        </Chart>
+    );
+};

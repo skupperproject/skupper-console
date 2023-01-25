@@ -39,6 +39,7 @@ const components = {
             link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`,
         }),
 };
+
 const FlowPairsTable: FC<FlowPairsTableProps> = function ({ connections, columns }) {
     const { address } = useParams();
 

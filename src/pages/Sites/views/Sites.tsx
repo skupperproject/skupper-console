@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,7 +34,13 @@ const Sites = function () {
         return <LoadingPage />;
     }
 
-    return <SitesTable sites={sites || []} />;
+    return (
+        <Grid hasGutter>
+            <GridItem>
+                <SitesTable sites={sites || []} />
+            </GridItem>
+        </Grid>
+    );
 };
 
 export default Sites;

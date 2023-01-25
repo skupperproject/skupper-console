@@ -274,7 +274,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
                 <GridItem span={6}>
                     <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabels.TopClientRxTraffic}</CardTitle>
+                        <CardTitle>{FlowPairsLabels.TopClientDownloadTraffic}</CardTitle>
                         {topClientsRx?.length ? (
                             <ChartPie
                                 constrainToVisibleArea

@@ -23,10 +23,14 @@ export function formatByteRate(byteRate: number, decimals = 2) {
 }
 
 export function formatTraceBySites(trace: string) {
-    const traceParts = trace.split('|');
+    if (!trace) {
+        return '';
+    }
+
+    let traceParts = trace.split('|');
 
     if (traceParts.length < 2) {
-        return 'local';
+        traceParts = [traceParts[0]];
     }
 
     return traceParts
@@ -35,5 +39,5 @@ export function formatTraceBySites(trace: string) {
 
             return traceSite;
         })
-        .join(' -> ');
+        .join(' <-> ');
 }

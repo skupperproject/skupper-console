@@ -26,7 +26,8 @@ import { formatTime } from '@core/utils/formatTime';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
-import { ConnectionTCP } from 'API/REST.interfaces';
+import { AvailableProtocols } from 'API/REST.enum';
+import { ConnectionTCP, RequestHTTP } from 'API/REST.interfaces';
 
 import { AddressesRoutesPathLabel, AddressesRoutesPaths, FlowLabels } from '../Addresses.enum';
 import { QueriesAddresses } from '../services/services.enum';
@@ -90,21 +91,61 @@ const FlowsPair = function () {
                 </Breadcrumb>
             </GridItem>
 
-            <TextContent>
-                <Text component={TextVariants.h4}>
-                    Connection {forwardFlow?.endTime ? 'closed' : 'open'}
-                </Text>
-            </TextContent>
+            {connection.protocol === AvailableProtocols.Tcp && (
+                <TextContent>
+                    <Text component={TextVariants.h4}>
+                        Connection {forwardFlow?.endTime ? 'closed' : 'open'}
+                    </Text>
+                </TextContent>
+            )}
+            {connection.protocol !== AvailableProtocols.Tcp && (
+                <>
+                    <TextContent>
+                        <Text component={TextVariants.h4}>
+                            Request {forwardFlow?.endTime ? 'closed' : 'open'}
+                        </Text>
+                    </TextContent>
+                    <Card>
+                        <CardBody>
+                            <DescriptionList>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
+                                    <DescriptionListDescription>
+                                        {forwardFlow.protocol}
+                                    </DescriptionListDescription>
+                                    <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
+                                    <DescriptionListDescription>
+                                        {forwardFlow.method}
+                                    </DescriptionListDescription>
+                                </DescriptionListGroup>
+                            </DescriptionList>
+                        </CardBody>
+                    </Card>
+                </>
+            )}
+
             <GridItem span={6}>
-                <Description title={FlowLabels.Flow} flow={forwardFlow} />
+                {connection.protocol === AvailableProtocols.Tcp ? (
+                    <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
+                ) : (
+                    <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
+                )}
             </GridItem>
 
             <GridItem span={6}>
-                <Description
-                    title={FlowLabels.CounterFlow}
-                    flow={counterFlowWithAddressPort}
-                    isCounterflow={true}
-                />
+                {connection.protocol === AvailableProtocols.Tcp ? (
+                    <ConnectionDetail
+                        title={FlowLabels.CounterFlow}
+                        flow={counterFlowWithAddressPort}
+                        isCounterflow={true}
+                    />
+                ) : (
+                    <RequestDetail
+                        title={FlowLabels.CounterFlow}
+                        flow={counterFlowWithAddressPort}
+                        isCounterflow={true}
+                    />
+                )}
             </GridItem>
         </Grid>
     );
@@ -114,11 +155,11 @@ export default FlowsPair;
 
 interface DescriptionProps {
     title: string;
-    flow: ConnectionTCP;
+    flow: ConnectionTCP & RequestHTTP;
     isCounterflow?: boolean;
 }
 
-const Description: FC<DescriptionProps> = function ({ title, flow, isCounterflow = false }) {
+const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow = false }) {
     return (
         <Card isFullHeight isRounded>
             <CardTitle>
@@ -145,7 +186,9 @@ const Description: FC<DescriptionProps> = function ({ title, flow, isCounterflow
                                 <DescriptionListDescription>
                                     {flow.sourcePort}
                                 </DescriptionListDescription>
-                                <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
+                                {!!flow.octetRate && (
+                                    <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
+                                )}
                                 <DescriptionListDescription>
                                     {formatByteRate(flow.octetRate)}
                                 </DescriptionListDescription>
@@ -164,6 +207,50 @@ const Description: FC<DescriptionProps> = function ({ title, flow, isCounterflow
                                     {formatBytes(flow.windowSize)}
                                 </DescriptionListDescription>
                                 <DescriptionListTerm>{FlowLabels.TTFB}</DescriptionListTerm>
+                                <DescriptionListDescription>
+                                    {formatTime(flow.latency)}
+                                </DescriptionListDescription>
+                            </DescriptionListGroup>
+                        </GridItem>
+                    </Grid>
+                </DescriptionList>
+            </CardBody>
+        </Card>
+    );
+};
+
+const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow = false }) {
+    return (
+        <Card isFullHeight isRounded>
+            <CardTitle>
+                <Title headingLevel="h2">{title}</Title>
+            </CardTitle>
+            <CardBody>
+                <DescriptionList>
+                    <Grid hasGutter>
+                        <GridItem span={6}>
+                            <DescriptionListGroup>
+                                <DescriptionListTerm>{FlowLabels.Process}</DescriptionListTerm>
+                                <DescriptionListDescription>
+                                    {flow.processName}
+                                </DescriptionListDescription>
+                                {!!flow.octetRate && (
+                                    <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
+                                )}
+                                <DescriptionListDescription>
+                                    {formatByteRate(flow.octetRate)}
+                                </DescriptionListDescription>
+                                <DescriptionListTerm>
+                                    {FlowLabels.BytesTransferred}
+                                </DescriptionListTerm>
+                                <DescriptionListDescription>
+                                    {formatBytes(flow.octets)}
+                                </DescriptionListDescription>
+                                <DescriptionListTerm>
+                                    {isCounterflow
+                                        ? FlowLabels.DownloadLatency
+                                        : FlowLabels.UploadLatency}
+                                </DescriptionListTerm>
                                 <DescriptionListDescription>
                                     {formatTime(flow.latency)}
                                 </DescriptionListDescription>

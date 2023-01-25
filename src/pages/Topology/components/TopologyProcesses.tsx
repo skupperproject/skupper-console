@@ -33,6 +33,10 @@ import { Labels } from '../Topology.enum';
 import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
 
+const processesQueryParams = {
+    filter: 'processRole.external',
+};
+
 const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | null }> = function ({
     addressId,
     processId,
@@ -66,8 +70,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     );
 
     const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcess],
-        () => RESTApi.fetchProcesses(),
+        [QueriesProcesses.GetProcess, processesQueryParams],
+        () => RESTApi.fetchProcesses(processesQueryParams),
         {
             refetchInterval,
             onError: handleError,
