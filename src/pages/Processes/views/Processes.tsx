@@ -20,21 +20,21 @@ import { QueriesProcesses } from '../services/services.enum';
 const BYTES_SENT_PROP = 'octetsSent';
 const BYTES_RECEIVED_PROP = 'octetsReceived';
 
-const bytesSentQueryString = {
+const initBytesSentQueryParams = {
     sortName: BYTES_SENT_PROP,
     sortDirection: SortDirection.DESC,
     limit: 5,
     offset: 0,
 };
 
-const bytesReceivedQueryString = {
+const initBytesReceivedQueryParams = {
     sortName: BYTES_RECEIVED_PROP,
     sortDirection: SortDirection.DESC,
     limit: 5,
     offset: 0,
 };
 
-const processesPaginatedQueryString = {
+const initProcessesPaginatedQueryParams = {
     limit: 10,
     offset: 0,
     filter: 'processRole.external',
@@ -43,13 +43,13 @@ const processesPaginatedQueryString = {
 const Processes = function () {
     const navigate = useNavigate();
 
-    const [ProcessesPaginatedQueryString, setProcessesPaginatedQueryString] =
-        useState<RequestOptions>(processesPaginatedQueryString);
+    const [ProcessesPaginatedQueryParams, setProcessesPaginatedQueryParams] =
+        useState<RequestOptions>(initProcessesPaginatedQueryParams);
 
     const { data: processesByOctetsSentData, isLoading: isLoadingProcessesByOctetsSentData } =
         useQuery(
-            [QueriesProcesses.GetProcessesMetrics, bytesSentQueryString],
-            () => RESTApi.fetchProcesses(bytesSentQueryString),
+            [QueriesProcesses.GetProcessesMetrics],
+            () => RESTApi.fetchProcesses(initBytesSentQueryParams),
             {
                 onError: handleError,
             },
@@ -59,16 +59,16 @@ const Processes = function () {
         data: processesByOctetsReceivedData,
         isLoading: isLoadingProcessesByOctetsReceivedData,
     } = useQuery(
-        [QueriesProcesses.GetProcessesMetrics, bytesReceivedQueryString],
-        () => RESTApi.fetchProcesses(bytesReceivedQueryString),
+        [QueriesProcesses.GetProcessesMetrics],
+        () => RESTApi.fetchProcesses(initBytesReceivedQueryParams),
         {
             onError: handleError,
         },
     );
 
     const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
-        [QueriesProcesses.GetProcessesPaginated, ProcessesPaginatedQueryString],
-        () => RESTApi.fetchProcesses(ProcessesPaginatedQueryString),
+        [QueriesProcesses.GetProcessesPaginated, ProcessesPaginatedQueryParams],
+        () => RESTApi.fetchProcesses(ProcessesPaginatedQueryParams),
         {
             keepPreviousData: true,
             onError: handleError,
@@ -85,7 +85,7 @@ const Processes = function () {
     }
 
     const handleGetFilters = useCallback((params: RequestOptions) => {
-        setProcessesPaginatedQueryString({ ...processesPaginatedQueryString, ...params });
+        setProcessesPaginatedQueryParams({ ...initProcessesPaginatedQueryParams, ...params });
     }, []);
 
     const processes = processesData?.results || [];

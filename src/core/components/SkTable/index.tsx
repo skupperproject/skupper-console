@@ -258,7 +258,6 @@ const SkTable = function <T>({
                 </CardTitle>
             )}
             <TableComposable
-                height={'100%'}
                 borders={false}
                 variant="compact"
                 isStickyHeader
@@ -267,11 +266,16 @@ const SkTable = function <T>({
             >
                 <Thead>
                     <Tr>
-                        {columns.map(({ name, prop }, index) => (
+                        {columns.map(({ name, prop, columnDescription }, index) => (
                             <Th
                                 key={name}
                                 sort={(prop && shouldSort && getSortParams(index)) || undefined}
                             >
+                                {columnDescription && (
+                                    <Tooltip position="right" content={columnDescription}>
+                                        <OutlinedQuestionCircleIcon />
+                                    </Tooltip>
+                                )}{' '}
                                 {name}
                             </Th>
                         ))}

@@ -1,8 +1,5 @@
 import { axiosFetch } from './axiosMiddleware';
 import {
-    LINKS_PATH,
-    SITES_PATH,
-    ADDRESSES_PATH,
     getFlowsPairsByAddressPATH,
     getProcessesBySitePATH,
     getProcessesByAddressPATH,
@@ -10,15 +7,8 @@ import {
     getRoutersBySitePATH,
     getLinksBySitePATH,
     getHostsBySitePATH,
-    PROCESS_PAIRS_PATH,
-    ROUTERS_PATH,
-    PROCESSES_PATH,
-    SITE_PAIRS_PATH,
-    HOSTS_PATH,
-    PROCESS_GROUPS_PATH,
     getProcessesByProcessGroupPATH,
     getProcessGroupPATH,
-    PROCESS_GROUP_PAIRS_PATH,
     geProcessPATH,
     getLinkPATH,
     getRouterPATH,
@@ -27,6 +17,17 @@ import {
     getProcessGroupPairPATH,
     getProcessPairPATH,
     getAddressesByProcessPATH,
+    getFlowPairsPATH,
+    getRoutersPATH,
+    geProcessesPATH,
+    getSitesPATH,
+    getLinksPATH,
+    getAddressesPath,
+    getSitePairsPATH,
+    getHostsPATH,
+    getProcessGroupPairsPATH,
+    getProcessPairsPATH,
+    getProcessGroupsPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
@@ -46,12 +47,13 @@ import {
 export const RESTApi = {
     // SITES APIs
     fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
-        const { data } = await axiosFetch(SITES_PATH, {
+        const { data } = await axiosFetch(getSitesPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
         return getResults(data);
     },
+
     fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
         const { data } = await axiosFetch(getSitePATH(id), {
             params: options ? addQueryParams(options) : null,
@@ -59,6 +61,7 @@ export const RESTApi = {
 
         return getResults(data);
     },
+
     fetchProcessesBySite: async (
         id: string,
         options?: RequestOptions,
@@ -69,6 +72,7 @@ export const RESTApi = {
 
         return getResults(data);
     },
+
     fetchRoutersBySite: async (id: string, options?: RequestOptions): Promise<RouterResponse[]> => {
         const { data } = await axiosFetch(getRoutersBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
@@ -76,6 +80,7 @@ export const RESTApi = {
 
         return getResults(data);
     },
+
     fetchLinksBySite: async (id: string, options?: RequestOptions): Promise<LinkResponse[]> => {
         const { data } = await axiosFetch(getLinksBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
@@ -83,6 +88,7 @@ export const RESTApi = {
 
         return getResults(data);
     },
+
     fetchHostsBySite: async (id: string, options?: RequestOptions): Promise<HostResponse[]> => {
         const { data } = await axiosFetch(getHostsBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
@@ -93,12 +99,13 @@ export const RESTApi = {
 
     // ROUTER APIs
     fetchRouters: async (options?: RequestOptions): Promise<RouterResponse[]> => {
-        const { data } = await axiosFetch(ROUTERS_PATH, {
+        const { data } = await axiosFetch(getRoutersPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
         return getResults(data);
     },
+
     fetchRouter: async (id: string, options?: RequestOptions): Promise<RouterResponse> => {
         const { data } = await axiosFetch(getRouterPATH(id), {
             params: options ? addQueryParams(options) : null,
@@ -111,7 +118,7 @@ export const RESTApi = {
     fetchProcesses: async (
         options?: RequestOptions,
     ): Promise<ResponseWrapper<ProcessResponse[]>> => {
-        const { data } = await axiosFetch(PROCESSES_PATH, {
+        const { data } = await axiosFetch(geProcessesPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -139,7 +146,7 @@ export const RESTApi = {
 
     // HOST APIs
     fetchHost: async (options?: RequestOptions): Promise<HostResponse[]> => {
-        const { data } = await axiosFetch(HOSTS_PATH, {
+        const { data } = await axiosFetch(getHostsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -148,7 +155,7 @@ export const RESTApi = {
 
     // PROCESS GROUPS APIs
     fetchProcessGroups: async (options?: RequestOptions): Promise<ProcessGroupResponse[]> => {
-        const { data } = await axiosFetch(PROCESS_GROUPS_PATH, {
+        const { data } = await axiosFetch(getProcessGroupsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -179,7 +186,7 @@ export const RESTApi = {
 
     // LINKS  APIs
     fetchLinks: async (options?: RequestOptions): Promise<LinkResponse[]> => {
-        const { data } = await axiosFetch(`${LINKS_PATH}`, {
+        const { data } = await axiosFetch(getLinksPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -196,7 +203,7 @@ export const RESTApi = {
 
     // ADDRESSES APIs
     fetchAddresses: async (options?: RequestOptions): Promise<AddressResponse[]> => {
-        const { data } = await axiosFetch(ADDRESSES_PATH, {
+        const { data } = await axiosFetch(getAddressesPath(), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -226,6 +233,14 @@ export const RESTApi = {
     },
 
     // FLOW PAIRS  APIs
+    fetchFlowPairs: async (options?: RequestOptions): Promise<FlowPairsResponse[]> => {
+        const { data } = await axiosFetch(getFlowPairsPATH(), {
+            params: options ? addQueryParams(options) : null,
+        });
+
+        return getResults(data);
+    },
+
     fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse> => {
         const { data } = await axiosFetch(getFlowPairPATH(id), {
             params: options ? addQueryParams(options) : null,
@@ -236,7 +251,7 @@ export const RESTApi = {
 
     // AGGREGATE  APIs
     fetchSitesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await axiosFetch(SITE_PAIRS_PATH, {
+        const { data } = await axiosFetch(getSitePairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
@@ -256,9 +271,9 @@ export const RESTApi = {
 
     fetchProcessgroupsPairs: async (
         options?: RequestOptions,
-    ): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await axiosFetch(PROCESS_GROUP_PAIRS_PATH, {
-            params: options?.filters,
+    ): Promise<FlowAggregatesResponse[]> => {
+        const { data } = await axiosFetch(getProcessGroupPairsPATH(), {
+            params: options ? addQueryParams(options) : null,
         });
 
         return getResults(data);
@@ -275,8 +290,8 @@ export const RESTApi = {
         return getResults(data);
     },
 
-    fetchProcessesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await axiosFetch(PROCESS_PAIRS_PATH, {
+    fetchProcessesPairs: async (options?: RequestOptions): Promise<FlowAggregatesResponse[]> => {
+        const { data } = await axiosFetch(getProcessPairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 

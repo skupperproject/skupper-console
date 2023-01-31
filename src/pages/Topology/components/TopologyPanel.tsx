@@ -145,7 +145,7 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         });
 
         const Details = (
-            <DrawerPanelContent>
+            <DrawerPanelContent widths={{ default: 'width_50' }}>
                 <DrawerHead>
                     {children}
                     <DrawerActions>

@@ -105,73 +105,34 @@ export const TopologyController = {
 
     getProcessMetrics: async (id: string): Promise<ProcessesMetrics> => {
         const process = await RESTApi.fetchProcess(id);
-        const flowAggregatesPairs = await RESTApi.fetchProcessesPairs({
-            filters: {
-                sourceId: id,
-                destinationId: id,
-            },
+        const processPairsTx = await RESTApi.fetchProcessesPairs({
+            filter: `sourceId.${id}`,
         });
-
-        const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
-            .filter(({ sourceId }) => id === sourceId)
-            .map(({ identity }) => identity);
-
-        const flowAggregatesIncomingPairsIds = flowAggregatesPairs
-            .filter(({ destinationId }) => id === destinationId)
-            .map(({ identity }) => identity);
-
-        const flowAggregatesOutgoingPairs = await Promise.all(
-            flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchProcessPairs(flowAggregatesPairsId),
-            ),
-        );
-
-        const flowAggregatesIncomingPairs = await Promise.all(
-            flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchProcessPairs(flowAggregatesPairsId),
-            ),
-        );
+        const processPairsRx = await RESTApi.fetchProcessesPairs({
+            filter: `destinationId.${id}`,
+        });
 
         return {
             ...process,
-            tcpConnectionsOut: flowAggregatesOutgoingPairs,
-            tcpConnectionsIn: flowAggregatesIncomingPairs,
+            tcpConnectionsOut: processPairsTx,
+            tcpConnectionsIn: processPairsRx,
         };
     },
 
     getProcessGroupMetrics: async (id: string): Promise<ProcessGroupMetrics> => {
-        const process = await RESTApi.fetchProcessGroup(id);
-        const flowAggregatesPairs = await RESTApi.fetchProcessgroupsPairs({
-            filters: {
-                sourceId: id,
-                destinationId: id,
-            },
+        const processGroup = await RESTApi.fetchProcessGroup(id);
+        const flowAggregatesPairsTx = await RESTApi.fetchProcessgroupsPairs({
+            filter: `sourceId.${id}`,
         });
 
-        const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
-            .filter(({ sourceId }) => id === sourceId)
-            .map(({ identity }) => identity);
-
-        const flowAggregatesIncomingPairsIds = flowAggregatesPairs
-            .filter(({ destinationId }) => id === destinationId)
-            .map(({ identity }) => identity);
-
-        const flowAggregatesOutgoingPairs = await Promise.all(
-            flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchProcessGroupPairs(flowAggregatesPairsId),
-            ),
-        );
-
-        const flowAggregatesIncomingPairs = await Promise.all(
-            flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) =>
-                RESTApi.fetchProcessGroupPairs(flowAggregatesPairsId),
-            ),
-        );
+        const flowAggregatesPairsRx = await RESTApi.fetchProcessgroupsPairs({
+            filter: `destinationId.${id}`,
+        });
 
         return {
-            ...process,
-            tcpConnectionsOut: flowAggregatesOutgoingPairs,
-            tcpConnectionsIn: flowAggregatesIncomingPairs,
+            ...processGroup,
+            tcpConnectionsOut: flowAggregatesPairsTx,
+            tcpConnectionsIn: flowAggregatesPairsRx,
         };
     },
 
@@ -180,7 +141,7 @@ export const TopologyController = {
     ): GraphNode[] =>
         entities
             ?.sort((a, b) => a.identity.localeCompare(b.identity))
-            .map(({ identity, name, recType, type }, index) => {
+            .map(({ identity, name, recType, processGroupRole }, index) => {
                 const { fx, fy } = getPosition(identity);
 
                 return {
@@ -192,9 +153,9 @@ export const TopologyController = {
                     fy,
                     groupName: name,
                     group: index,
-                    color: getColor(type === 'skupper' ? 16 : index),
+                    color: getColor(processGroupRole === 'internal' ? 16 : index),
                     img:
-                        type === 'skupper'
+                        processGroupRole === 'internal'
                             ? skupperProcessSVG
                             : recType === 'SITE'
                             ? siteSVG
@@ -204,7 +165,7 @@ export const TopologyController = {
 
     getNodesFromProcesses: (processes: ProcessResponse[], parentNodes: GraphNode[]): GraphNode[] =>
         processes
-            ?.map(({ name, identity, parent, type }) => {
+            ?.map(({ name, identity, parent, processRole }) => {
                 const groupId = parent;
                 const parentNode = parentNodes?.find(({ id }) => id === groupId);
                 const groupIndex = parentNode?.group || 0;
@@ -220,8 +181,8 @@ export const TopologyController = {
                     fy,
                     groupName: parentNode?.name || '',
                     group: groupIndex,
-                    color: getColor(type === 'skupper' ? 16 : groupIndex),
-                    img: type === 'skupper' ? skupperProcessSVG : processSVG,
+                    color: getColor(processRole === 'internal' ? 16 : groupIndex),
+                    img: processRole === 'internal' ? skupperProcessSVG : processSVG,
                 };
             })
             .sort((a, b) => a.group - b.group),

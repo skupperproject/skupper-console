@@ -55,6 +55,7 @@ const TopologyProcessesDetails: FC<TopologyDeploymentDetailsProps> = function ({
 
     return (
         <TopologyDetails
+            identity={processesWithMetrics.identity}
             name={title}
             link={ProcessesRoutesPaths.Processes}
             tcpConnectionsInEntries={tcpConnectionsInEntries}

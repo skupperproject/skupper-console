@@ -10,7 +10,7 @@ import { ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import LinkCell from '../../../core/components/LinkCell';
-import { FlowPairsColumnsNames, ProcessesColumnsNames } from '../Addresses.enum';
+import { ProcessesColumnsNames } from '../Addresses.enum';
 import { ProcessesTableProps } from '../Addresses.interfaces';
 
 const columns = [
@@ -35,17 +35,22 @@ const columns = [
         prop: 'sourceHost' as keyof ProcessResponse,
     },
     {
-        name: FlowPairsColumnsNames.ImageName,
-        prop: 'imageName' as keyof ProcessResponse,
-        width: 10,
+        name: ProcessesColumnsNames.ByteRateRx,
+        prop: 'octetReceivedRate' as keyof ProcessResponse,
+        format: formatByteRate,
     },
     {
-        name: ProcessesColumnsNames.ByteRate,
+        name: ProcessesColumnsNames.BytesRx,
+        prop: 'octetsReceived' as keyof ProcessResponse,
+        format: formatBytes,
+    },
+    {
+        name: ProcessesColumnsNames.ByteRateTx,
         prop: 'octetSentRate' as keyof ProcessResponse,
         format: formatByteRate,
     },
     {
-        name: ProcessesColumnsNames.Bytes,
+        name: ProcessesColumnsNames.BytesTx,
         prop: 'octetsSent' as keyof ProcessResponse,
         format: formatBytes,
     },

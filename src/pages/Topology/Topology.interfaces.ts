@@ -4,6 +4,7 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { FlowAggregatesResponse } from 'API/REST.interfaces';
 
 export interface TopologyDetailsProps {
+    identity: string;
     name: string;
     link: string;
     tcpConnectionsOutEntries: FlowAggregatesResponse[];

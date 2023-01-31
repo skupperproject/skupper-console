@@ -15,7 +15,7 @@ import { QueriesTopology } from '../services/services.enum';
 import TopologyProcessGroupsDetails from './DetailsProcessGroups';
 import TopologyPanel from './TopologyPanel';
 
-const processGroupsQueryString = {
+const processGroupsQueryParams = {
     filter: 'processGroupRole.external',
 };
 
@@ -27,8 +27,8 @@ const TopologyProcessGroups = function () {
     const [nodeSelected, setNodeSelected] = useState<string | null>(null);
 
     const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
-        [QueriesProcessGroups.GetProcessGroups, processGroupsQueryString],
-        () => RESTApi.fetchProcessGroups(processGroupsQueryString),
+        [QueriesProcessGroups.GetProcessGroups],
+        () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
         {
             refetchInterval,
             onError: handleError,

@@ -10,7 +10,13 @@ import { ProcessGroupNameLinkCellProps } from '../ProcessGroups.interfaces';
 const ProcessGroupNameLinkCell: FC<ProcessGroupNameLinkCellProps> = function ({ data, value }) {
     return (
         <>
-            <ResourceIcon type={data.type === 'skupper' ? 'skupper' : 'service'} />
+            <ResourceIcon
+                type={
+                    !data.processGroupRole || data.processGroupRole === 'external'
+                        ? 'service'
+                        : 'skupper'
+                }
+            />
             <Link to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${data.identity}`}>{value}</Link>
         </>
     );

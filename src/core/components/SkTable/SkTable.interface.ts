@@ -23,4 +23,5 @@ export interface SKColumn<T> {
     callback?: Function;
     format?: Function;
     width?: number;
+    columnDescription?: string;
 }

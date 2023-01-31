@@ -4,7 +4,7 @@ export const AddressesController = {
     getAddressesWithFlowPairsCounts: (addresses: AddressResponse[]): AddressResponse[] =>
         addresses.map((address) => ({
             ...address,
-            totalFlows: Math.floor(address.totalFlows / 2),
-            currentFlows: Math.floor(address.currentFlows / 2),
+            totalFlows: Math.ceil(address.totalFlows / 2),
+            currentFlows: Math.ceil(address.currentFlows / 2),
         })),
 };

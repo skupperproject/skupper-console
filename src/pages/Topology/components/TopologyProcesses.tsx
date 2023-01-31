@@ -70,7 +70,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
     );
 
     const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcess, processesQueryParams],
+        [QueriesProcesses.GetProcess],
         () => RESTApi.fetchProcesses(processesQueryParams),
         {
             refetchInterval,

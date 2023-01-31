@@ -32,7 +32,6 @@ import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const REAL_TIME_CONNECTION_HEIGHT_CHART = 360;
-const ITEM_DISPLAY_COUNT = 5;
 
 const Addresses = function () {
     const navigate = useNavigate();
@@ -83,36 +82,9 @@ const Addresses = function () {
         acc[protocol] = { name: protocol, x: protocol, y: (acc[protocol]?.y || 0) + 1 };
 
         return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, { name: string; x: string; y: number }>);
 
     const topTrafficUpload = Object.values(topTrafficUploadByClient);
-
-    const topCurrentConnectionsChartDataTCP = sortedAddressesTCP
-        .map(({ name, currentFlows }) => ({
-            x: name,
-            name,
-            y: currentFlows,
-        }))
-        .reduce((acc, item, index) => {
-            if (index < ITEM_DISPLAY_COUNT && item.y) {
-                acc.push(item);
-            }
-
-            return acc;
-        }, [] as { x: string; name: string; y: number }[]);
-
-    const topCurrentConnectionsChartDataHTTP = sortedAddressesHTTP
-        .map(({ name, currentFlows }) => ({
-            name,
-            value: currentFlows,
-        }))
-        .reduce((acc, item, index) => {
-            if (index < ITEM_DISPLAY_COUNT && item.value) {
-                acc.push(item);
-            }
-
-            return acc;
-        }, [] as { name: string; value: number }[]);
 
     if (isLoading) {
         return <LoadingPage />;
@@ -131,7 +103,7 @@ const Addresses = function () {
                 </Flex>
             </GridItem>
 
-            <GridItem span={4}>
+            <GridItem>
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
                     <CardTitle>{AddressesLabels.ProtocolDistribution}</CardTitle>
                     <ChartPie
@@ -153,87 +125,31 @@ const Addresses = function () {
                         legendOrientation="horizontal"
                         legendPosition="bottom"
                         height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-                        themeColor={ChartThemeColors.Orange}
+                        themeColor={ChartThemeColors.Multi}
                     />
                 </Card>
             </GridItem>
-            <GridItem span={4}>
+
+            <GridItem span={6}>
                 <Card isFullHeight>
                     <SkTable
                         title={AddressesLabels.TCP}
                         columns={generateColumns(AvailableProtocols.Tcp)}
                         rows={sortedAddressesTCP}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
+                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                         components={{ AddressNameLinkCell }}
                     />
                 </Card>
             </GridItem>
 
-            <GridItem span={4}>
+            <GridItem span={6}>
                 <Card isFullHeight>
                     <SkTable
                         title={AddressesLabels.HTTP}
                         columns={generateColumns(AvailableProtocols.Http)}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
+                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                         rows={sortedAddressesHTTP}
                         components={{ AddressNameLinkCell }}
-                    />
-                </Card>
-            </GridItem>
-
-            <GridItem span={6}>
-                <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{AddressesLabels.ConnectionsByAddress}</CardTitle>
-                    <ChartPie
-                        constrainToVisibleArea
-                        data={topCurrentConnectionsChartDataTCP?.map(({ x, y }) => ({
-                            x,
-                            y,
-                        }))}
-                        labels={topCurrentConnectionsChartDataTCP?.map(
-                            ({ name, y }) => `${name}: ${y}`,
-                        )}
-                        padding={{
-                            bottom: 100,
-                            left: -100,
-                            right: 100,
-                            top: 0,
-                        }}
-                        legendData={topCurrentConnectionsChartDataTCP?.map(({ name, y }) => ({
-                            name: `${name}: ${y}`,
-                        }))}
-                        legendOrientation="vertical"
-                        legendPosition="right"
-                        height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-                    />
-                </Card>
-            </GridItem>
-
-            <GridItem span={6}>
-                <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{AddressesLabels.RequestsByAddress}</CardTitle>
-                    <ChartPie
-                        constrainToVisibleArea
-                        data={topCurrentConnectionsChartDataHTTP?.map(({ name, value }) => ({
-                            x: name,
-                            y: value,
-                        }))}
-                        labels={topCurrentConnectionsChartDataHTTP?.map(
-                            ({ name, value }) => `${name}: ${value}`,
-                        )}
-                        padding={{
-                            bottom: 100,
-                            left: -100,
-                            right: 100,
-                            top: 0,
-                        }}
-                        legendData={topCurrentConnectionsChartDataHTTP?.map(({ name, value }) => ({
-                            name: `${name}: ${value}`,
-                        }))}
-                        legendOrientation="vertical"
-                        legendPosition="right"
-                        themeColor={ChartThemeColors.Green}
-                        height={REAL_TIME_CONNECTION_HEIGHT_CHART}
                     />
                 </Card>
             </GridItem>

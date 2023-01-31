@@ -22,6 +22,9 @@ export enum ProcessesLabels {
     Host = 'Host',
     MetricBytesSent = 'Top 5 processes bytes sent',
     MetricBytesReceived = 'Top 5 processes bytes received',
-    CurrentBytesInfoByteRateIn = 'Incoming byte rate',
-    CurrentBytesInfoByteRateOut = 'Outgoing byte rate',
+    TrafficInOutDistribution = 'Inbound vs Outbound Traffic',
+    TrafficSent = 'Outbound traffic',
+    TrafficReceived = 'Inbound Traffic',
+    Clients = 'Clients',
+    Servers = 'Servers',
 }

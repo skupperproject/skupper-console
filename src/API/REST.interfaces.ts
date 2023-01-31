@@ -46,7 +46,6 @@ interface EntityMetricsResponse {
     octetSentRate: number;
     octetsReceived: number;
     octetReceivedRate: number;
-    type: 'skupper' | 'app';
 }
 
 export interface SiteResponse extends EntityBaseResponse, EntityMetricsResponse {
@@ -121,6 +120,9 @@ export interface RequestHTTP extends BaseResponse {
     endTime?: number;
     protocol: AvailableProtocols;
     streamIdentity: number;
+    result: number;
+    reason?: string;
+    place: 1 | 2;
 }
 
 export interface FlowPairsResponse extends BaseResponse {

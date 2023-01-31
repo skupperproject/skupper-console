@@ -15,7 +15,7 @@ import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
 
-const processGroupsQueryString = {
+const initProcessGroupsQueryParams = {
     filter: 'processGroupRole.external',
 };
 
@@ -25,8 +25,8 @@ const ProcessGroups = function () {
     const navigate = useNavigate();
 
     const { data: processGroups, isLoading } = useQuery(
-        [QueriesProcessGroups.GetProcessGroups, processGroupsQueryString],
-        () => RESTApi.fetchProcessGroups(processGroupsQueryString),
+        [QueriesProcessGroups.GetProcessGroups, initProcessGroupsQueryParams],
+        () => RESTApi.fetchProcessGroups(initProcessGroupsQueryParams),
         {
             onError: handleError,
         },
