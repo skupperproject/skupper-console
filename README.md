@@ -36,7 +36,7 @@ You can also run the console using external endpoints for the skupper collector:
 **remember to enable CORS**
 The flow-collector need to enable the CORS. We can do that doing ```kubectl set env <container-name> USE_CORS=yes``` .  
 
-ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=yes```. Then restart the pod
+ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=yes```.
 
 ## Tests
 
@@ -46,7 +46,8 @@ ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=
 
 ### Integration
 
+> `yarn cy`
+
 #### Development mode
 
-> `yarn start`
 > `yarn cy:open`
