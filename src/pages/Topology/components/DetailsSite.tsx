@@ -24,8 +24,8 @@ import { RESTApi } from 'API/REST';
 import { ProcessResponse } from 'API/REST.interfaces';
 import { UPDATE_INTERVAL } from 'config';
 
-import { ConnectionsLabels } from '../Topology.enum';
 import TopologyDetails from './Details';
+import { ConnectionsLabels } from '../Topology.enum';
 
 interface TopologySiteDetailsProps {
     id: string;

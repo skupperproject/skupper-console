@@ -21,9 +21,9 @@ import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
 import EventEmitter from '@core/components/Graph/EventEmitter';
 
-import { colors } from '../../../pages/Topology/Topology.constant';
 import { GraphEvents } from './Graph.enum';
 import { GraphNode, GraphEdge, GraphEdgeModifiedByForce } from './Graph.interfaces';
+import { colors } from '../../../pages/Topology/Topology.constant';
 
 const ARROW_SIZE = 10;
 const NODE_SIZE = 40;
