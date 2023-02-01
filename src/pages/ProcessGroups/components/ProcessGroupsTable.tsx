@@ -3,9 +3,9 @@ import React, { FC } from 'react';
 import SkTable from '@core/components/SkTable';
 import { ProcessGroupResponse } from 'API/REST.interfaces';
 
+import ProcessGroupNameLinkCell from './ProcessGroupNameLinkCell';
 import { ProcessGroupsLabels, ProcessGroupsTableColumns } from '../ProcessGroups.enum';
 import { ProcessGroupsTableProps } from '../ProcessGroups.interfaces';
-import ProcessGroupNameLinkCell from './ProcessGroupNameLinkCell';
 
 const ProcessGroupsTable: FC<ProcessGroupsTableProps> = function ({ processGroups }) {
     const columns = [

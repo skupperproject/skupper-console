@@ -9,9 +9,9 @@ import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enu
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { UPDATE_INTERVAL } from 'config';
 
+import TopologyDetails from './Details';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import TopologyDetails from './Details';
 
 interface TopologyDeploymentDetailsProps {
     id: string;

@@ -1,6 +1,7 @@
 const { ROOT, path } = require('./webpack.constant');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -30,6 +31,12 @@ const prodConfig = {
             generateStatsFile: true,
             statsOptions: { source: false },
             reportFilename: path.join(ROOT, '/reports/bundle-size.html'),
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                path.resolve(ROOT, 'public', 'manifest.json'),
+                path.resolve(ROOT, 'public', 'favicon.ico'),
+            ],
         }),
     ],
 };

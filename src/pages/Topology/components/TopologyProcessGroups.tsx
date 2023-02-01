@@ -10,10 +10,10 @@ import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import { TopologyController } from '../services';
-import { QueriesTopology } from '../services/services.enum';
 import TopologyProcessGroupsDetails from './DetailsProcessGroups';
 import TopologyPanel from './TopologyPanel';
+import { TopologyController } from '../services';
+import { QueriesTopology } from '../services/services.enum';
 
 const processGroupsQueryParams = {
     filter: 'processGroupRole.external',

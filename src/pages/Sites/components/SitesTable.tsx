@@ -3,9 +3,9 @@ import React, { FC } from 'react';
 import SkTable from '@core/components/SkTable';
 import { SiteResponse } from 'API/REST.interfaces';
 
+import SiteNameLinkCell from './SiteNameLinkCell';
 import { Labels, SitesTableColumns } from '../Sites.enum';
 import { SitesTableProps } from '../Sites.interfaces';
-import SiteNameLinkCell from './SiteNameLinkCell';
 
 const SitesTable: FC<SitesTableProps> = function ({ sites }) {
     const columns = [

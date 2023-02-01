@@ -26,12 +26,12 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
+import TopologyProcessesDetails from './DetailsProcesses';
+import TopologyPanel from './TopologyPanel';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { colors } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
-import TopologyProcessesDetails from './DetailsProcesses';
-import TopologyPanel from './TopologyPanel';
 
 const processesQueryParams = {
     filter: 'processRole.external',

@@ -15,13 +15,13 @@ import {
     SiteResponse,
 } from 'API/REST.interfaces';
 
-import { colors } from '../Topology.constant';
 import {
     LinkTopology,
     ProcessesMetrics,
     ProcessGroupMetrics,
     SitesMetrics,
 } from './services.interfaces';
+import { colors } from '../Topology.constant';
 
 export const TopologyController = {
     // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'

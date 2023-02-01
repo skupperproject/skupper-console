@@ -37,6 +37,9 @@ import { RESTApi } from 'API/REST';
 import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
+import { minutesAgo } from './ConnectionsByAddress';
+import FlowPairsTable from './FlowPairsTable';
+import ServersTable from './ServersTable';
 import { RequestsByAddressColumns } from '../Addresses.constants';
 import {
     FlowPairsLabelsHttp,
@@ -46,9 +49,6 @@ import {
 } from '../Addresses.enum';
 import { ChartData, ChartProps, RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
-import { minutesAgo } from './ConnectionsByAddress';
-import FlowPairsTable from './FlowPairsTable';
-import ServersTable from './ServersTable';
 
 const DEFAULT_HEIGHT_CHART = 350;
 const MINUTES_AGO = 20;

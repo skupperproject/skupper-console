@@ -10,9 +10,9 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import { TopologyController } from '../services';
 import TopologySiteDetails from './DetailsSite';
 import TopologyPanel from './TopologyPanel';
+import { TopologyController } from '../services';
 
 const TopologySite = function () {
     const navigate = useNavigate();
