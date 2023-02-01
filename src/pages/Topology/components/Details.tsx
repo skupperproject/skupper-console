@@ -6,11 +6,16 @@ import {
     DescriptionListDescription,
     DescriptionListGroup,
     DescriptionListTerm,
+    Divider,
     Panel,
+    PanelHeader,
+    PanelMainBody,
     Title,
     TitleSizes,
     Tooltip,
+    Truncate,
 } from '@patternfly/react-core';
+import { Link } from 'react-router-dom';
 
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -23,6 +28,7 @@ import { ConnectionsColumns, ConnectionsLabels } from '../Topology.enum';
 import { TopologyDetailsProps, TrafficData, TrafficProps } from '../Topology.interfaces';
 
 const TopologyDetails: FC<TopologyDetailsProps> = function ({
+    identity: nodeIdentity,
     name,
     link,
     tcpConnectionsOutEntries,
@@ -38,9 +44,10 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
     > | null>(null);
 
     const tcpConnectionsOutEntriesChartData = tcpConnectionsOutEntries.map(
-        ({ identity, destinationId, destinationName, sourceOctetRate }) => ({
+        ({ identity, destinationId, destinationName, sourceOctetRate, recordCount }) => ({
             identity,
             targetIdentity: destinationId,
+            recordCount,
             name: destinationName,
             value: sourceOctetRate || 0,
             show: !checkBoxSelectedSent || checkBoxSelectedSent[identity],
@@ -48,9 +55,10 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
     );
 
     const tcpConnectionsInEntriesChartData = tcpConnectionsInEntries.map(
-        ({ identity, sourceId, sourceName, sourceOctetRate }) => ({
+        ({ identity, sourceId, sourceName, sourceOctetRate, recordCount }) => ({
             identity,
             targetIdentity: sourceId,
+            recordCount,
             name: sourceName,
             value: sourceOctetRate || 0,
             show: !checkBoxSelectedReceived || checkBoxSelectedReceived[identity],
@@ -71,18 +79,23 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
             prop: '' as keyof TrafficData,
             callback: handleSelectedSent,
             component: 'checkboxCell',
-            with: 10,
+            width: 10,
         },
         {
             name: ConnectionsColumns.Name,
             prop: 'name' as keyof TrafficData,
             component: 'nameLinkCell',
+            width: 60,
+        },
+        {
+            name: ConnectionsColumns.FlowPairs,
+            prop: 'recordCount' as keyof TrafficData,
         },
         {
             name: ConnectionsColumns.ByteRate,
             prop: 'value' as keyof TrafficData,
             format: formatByteRate,
-            width: 30,
+            width: 15,
         },
     ];
 
@@ -98,84 +111,92 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
             name: ConnectionsColumns.Name,
             prop: 'name' as keyof TrafficData,
             component: 'nameLinkCell',
+            width: 60,
+        },
+        {
+            name: ConnectionsColumns.FlowPairs,
+            prop: 'recordCount' as keyof TrafficData,
         },
         {
             name: ConnectionsColumns.ByteRate,
             prop: 'value' as keyof TrafficData,
             format: formatByteRate,
-            width: 30,
+            width: 15,
         },
     ];
 
     return (
         <Panel>
-            <Tooltip content={name}>
-                <Title
-                    headingLevel="h1"
-                    size={TitleSizes['2xl']}
-                    className="pf-u-mb-md text-ellipsis"
-                    style={{ width: '300px' }}
-                >
-                    {name}
+            <PanelHeader>
+                <Title headingLevel="h1" size={TitleSizes['2xl']}>
+                    <Link to={`${link}/${nodeIdentity}`}>
+                        <Tooltip content={name}>
+                            <Truncate content={name} />
+                        </Tooltip>
+                    </Link>
                 </Title>
-            </Tooltip>
-            {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
-                <DescriptionList>
-                    {!!tcpConnectionsOutEntries.length && (
-                        <DescriptionListGroup>
-                            <DescriptionListTerm>
-                                {ConnectionsLabels.TCPConnectionsOut}
-                            </DescriptionListTerm>
-                            <DescriptionListDescription>
-                                <TrafficChart data={tcpConnectionsOutEntriesChartData} />
-                                <SkTable
-                                    borders={false}
-                                    isStriped={false}
-                                    isPlain={true}
-                                    columns={columnsTCPConnectionsOut}
-                                    shouldSort={false}
-                                    rows={tcpConnectionsOutEntriesChartData}
-                                    components={{
-                                        checkboxCell: TopologyCheckBoxCell,
-                                        nameLinkCell: (props: LinkCellProps<TrafficData>) =>
-                                            LinkCell({
-                                                ...props,
-                                                type: 'process',
-                                                link: `${link}/${props.data.targetIdentity}`,
-                                            }),
-                                    }}
-                                />
-                            </DescriptionListDescription>
-                        </DescriptionListGroup>
-                    )}
-                    {!!tcpConnectionsInEntries.length && (
-                        <DescriptionListGroup>
-                            <DescriptionListTerm>
-                                {ConnectionsLabels.TCPConnectionsIn}
-                            </DescriptionListTerm>
-                            <DescriptionListDescription>
-                                <TrafficChart data={tcpConnectionsInEntriesChartData} />
-                                <SkTable
-                                    borders={false}
-                                    isStriped={false}
-                                    isPlain={true}
-                                    shouldSort={false}
-                                    columns={columnsTCPConnectionsIn}
-                                    rows={tcpConnectionsInEntriesChartData}
-                                    components={{
-                                        checkboxCell: TopologyCheckBoxCell,
-                                        nameLinkCell: (props: LinkCellProps<TrafficData>) =>
-                                            LinkCell({
-                                                ...props,
-                                                link: `${link}/${props.data.targetIdentity}`,
-                                            }),
-                                    }}
-                                />
-                            </DescriptionListDescription>
-                        </DescriptionListGroup>
-                    )}
-                </DescriptionList>
-            )}
+            </PanelHeader>
+            <Divider />
+            <PanelMainBody>
+                {(!!tcpConnectionsOutEntries.length || !!tcpConnectionsInEntries.length) && (
+                    <DescriptionList>
+                        {!!tcpConnectionsOutEntries.length && (
+                            <DescriptionListGroup>
+                                <DescriptionListTerm>
+                                    {ConnectionsLabels.TCPConnectionsOut}
+                                </DescriptionListTerm>
+                                <DescriptionListDescription>
+                                    <TrafficChart data={tcpConnectionsOutEntriesChartData} />
+                                    <SkTable
+                                        borders={false}
+                                        isStriped={false}
+                                        isPlain={true}
+                                        columns={columnsTCPConnectionsOut}
+                                        shouldSort={false}
+                                        rows={tcpConnectionsOutEntriesChartData}
+                                        components={{
+                                            checkboxCell: TopologyCheckBoxCell,
+                                            nameLinkCell: (props: LinkCellProps<TrafficData>) =>
+                                                LinkCell({
+                                                    ...props,
+                                                    type: 'process',
+                                                    link: `${link}/${props.data.targetIdentity}`,
+                                                }),
+                                        }}
+                                    />
+                                </DescriptionListDescription>
+                            </DescriptionListGroup>
+                        )}
+                        {!!tcpConnectionsInEntries.length && (
+                            <DescriptionListGroup>
+                                <DescriptionListTerm>
+                                    {ConnectionsLabels.TCPConnectionsIn}
+                                </DescriptionListTerm>
+                                <DescriptionListDescription>
+                                    <TrafficChart data={tcpConnectionsInEntriesChartData} />
+                                    <SkTable
+                                        borders={false}
+                                        isStriped={false}
+                                        isPlain={true}
+                                        shouldSort={false}
+                                        columns={columnsTCPConnectionsIn}
+                                        rows={tcpConnectionsInEntriesChartData}
+                                        components={{
+                                            checkboxCell: TopologyCheckBoxCell,
+                                            nameLinkCell: (props: LinkCellProps<TrafficData>) =>
+                                                LinkCell({
+                                                    ...props,
+                                                    type: 'process',
+                                                    link: `${link}/${props.data.targetIdentity}`,
+                                                }),
+                                        }}
+                                    />
+                                </DescriptionListDescription>
+                            </DescriptionListGroup>
+                        )}
+                    </DescriptionList>
+                )}
+            </PanelMainBody>
         </Panel>
     );
 };

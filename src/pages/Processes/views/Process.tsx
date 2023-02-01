@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 
+import { ChartThemeColor } from '@patternfly/react-charts';
 import {
     Breadcrumb,
     BreadcrumbHeading,
@@ -23,18 +24,23 @@ import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icon
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import RealTimeLineChart from '@core/components/RealTimeLineChart';
+import EmptyData from '@core/components/EmptyData';
+import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { RESTApi } from 'API/REST';
-import { ProcessResponse } from 'API/REST.interfaces';
-import { UPDATE_INTERVAL } from 'config';
+import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
+import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
 import AddressNameLinkCell from '../components/AddressNameLinkCell';
+import ProcessesBytesChart from '../components/ProcessesBytesChart';
+import { processesConnectedColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { CurrentBytesInfoProps } from '../Processes.interfaces';
 import { QueriesProcesses } from '../services/services.enum';
@@ -42,11 +48,37 @@ import { QueriesProcesses } from '../services/services.enum';
 const Process = function () {
     const navigate = useNavigate();
     const { id: processId } = useParams() as { id: string };
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL / 2);
+    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: process, isLoading: isLoadingProcess } = useQuery(
         [QueriesProcesses.GetProcess, processId],
         () => RESTApi.fetchProcess(processId),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processesPairsDataTx, isLoading: isLoadingProcessesPairsData } = useQuery(
+        [QueriesProcesses.GetProcessPairsTx, processId],
+        () =>
+            RESTApi.fetchProcessesPairs({
+                filter: `sourceId.${processId}`,
+                timeRangeStart: 0,
+            }),
+        {
+            refetchInterval,
+            onError: handleError,
+        },
+    );
+
+    const { data: processesPairsRxData, isLoading: isLoadingProcessesPairsRxData } = useQuery(
+        [QueriesProcesses.GetProcessPairsRx, processId],
+        () =>
+            RESTApi.fetchProcessesPairs({
+                filter: `destinationId.${processId}`,
+                timeRangeStart: 0,
+            }),
         {
             refetchInterval,
             onError: handleError,
@@ -70,7 +102,12 @@ const Process = function () {
         navigate(route);
     }
 
-    if (isLoadingProcess || isLoadingAddressesByProcess) {
+    if (
+        isLoadingProcess ||
+        isLoadingAddressesByProcess ||
+        isLoadingProcessesPairsData ||
+        isLoadingProcessesPairsRxData
+    ) {
         return <LoadingPage />;
     }
 
@@ -88,6 +125,38 @@ const Process = function () {
         octetSentRate,
         octetsSent,
     } = process as ProcessResponse;
+
+    const processesPairsTx = processesPairsDataTx || [];
+
+    const processesPairsRxReverse =
+        processesPairsRxData?.map((processPairsData) => ({
+            ...processPairsData,
+            sourceId: processPairsData.destinationId,
+            sourceName: processPairsData.destinationName,
+            destinationName: processPairsData.sourceName,
+            destinationId: processPairsData.sourceId,
+            sourceOctets: processPairsData.destinationOctets,
+            destinationOctets: processPairsData.sourceOctets,
+            sourceAverageLatency: processPairsData.destinationAverageLatency,
+            destinationAverageLatency: processPairsData.sourceAverageLatency,
+        })) || [];
+
+    const totalBytes = (process?.octetsSent || 0) + (process?.octetsReceived || 0);
+
+    const processTrafficChartData = totalBytes && [
+        {
+            x: `${ProcessesLabels.TrafficSent}: ${Math.round(
+                ((process?.octetsSent || 0) / totalBytes) * 100,
+            )}%`,
+            y: process?.octetsSent || 0,
+        },
+        {
+            x: `${ProcessesLabels.TrafficReceived}: ${Math.round(
+                ((process?.octetsReceived || 0) / totalBytes) * 100,
+            )}%`,
+            y: process?.octetsReceived || 0,
+        },
+    ];
 
     return (
         <Grid hasGutter>
@@ -160,6 +229,7 @@ const Process = function () {
                                         </DescriptionListGroup>
                                     </GridItem>
                                 )}
+
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>
@@ -170,6 +240,7 @@ const Process = function () {
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>
                                 </GridItem>
+
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>
@@ -180,6 +251,7 @@ const Process = function () {
                                         </DescriptionListDescription>
                                     </DescriptionListGroup>
                                 </GridItem>
+
                                 <GridItem span={6}>
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>
@@ -196,64 +268,82 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem>
-                <Card>
+            <GridItem span={8} rowSpan={2}>
+                <Card isFullHeight>
+                    <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
+                    {!processTrafficChartData && <EmptyData />}
+                    {!!processTrafficChartData && (
+                        <ProcessesBytesChart
+                            bytes={processTrafficChartData}
+                            themeColor={ChartThemeColor.multi}
+                        />
+                    )}
+                </Card>
+            </GridItem>
+
+            <GridItem span={4}>
+                <Card isFullHeight>
+                    <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
                     <CardBody>
-                        <Grid>
-                            <GridItem span={6}>
-                                <CurrentBytesInfo
-                                    description={`${ProcessesLabels.CurrentBytesInfoByteRateOut}:`}
-                                    direction="up"
-                                    style={{
-                                        color: 'var(--pf-global--palette--blue-400)',
-                                    }}
-                                    byteRate={octetSentRate}
-                                    bytes={octetsSent}
-                                />
-                            </GridItem>
-                            <GridItem span={6}>
-                                <CurrentBytesInfo
-                                    description={`${ProcessesLabels.CurrentBytesInfoByteRateIn}:`}
-                                    style={{
-                                        color: 'var(--pf-global--palette--red-100)',
-                                    }}
-                                    byteRate={octetReceivedRate}
-                                    bytes={octetsReceived}
-                                />
-                            </GridItem>
-                        </Grid>
+                        <CurrentBytesInfo
+                            direction="up"
+                            style={{
+                                color: 'var(--pf-global--palette--blue-400)',
+                            }}
+                            byteRate={octetSentRate}
+                            bytes={octetsSent}
+                        />
                     </CardBody>
                 </Card>
             </GridItem>
 
-            <GridItem>
-                <Card>
-                    <RealTimeLineChart
-                        data={[
-                            {
-                                name: ProcessesLabels.CurrentBytesInfoByteRateIn,
-                                value: octetReceivedRate,
-                            },
-                            {
-                                name: ProcessesLabels.CurrentBytesInfoByteRateOut,
-                                value: octetSentRate,
-                            },
-                        ]}
-                        options={{
-                            formatter: formatByteRate,
-                            colorScale: [
-                                'var(--pf-global--palette--red-100)',
-                                'var(--pf-global--palette--blue-400)',
-                            ],
-                            padding: {
-                                left: 75,
-                                right: 20,
-                                top: 20,
-                                bottom: 40,
-                            },
-                        }}
-                    />
+            <GridItem span={4}>
+                <Card isFullHeight>
+                    <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
+                    <CardBody>
+                        <CurrentBytesInfo
+                            style={{
+                                color: 'var(--pf-global--palette--green-400)',
+                            }}
+                            byteRate={octetReceivedRate}
+                            bytes={octetsReceived}
+                        />
+                    </CardBody>
                 </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <SkTable
+                    title={ProcessesLabels.Servers}
+                    columns={processesConnectedColumns}
+                    rows={processesPairsTx}
+                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                    components={{
+                        linkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                            LinkCell({
+                                ...props,
+                                type: 'process',
+                                link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
+                            }),
+                    }}
+                />
+            </GridItem>
+
+            <GridItem span={6}>
+                <SkTable
+                    title={ProcessesLabels.Clients}
+                    columns={processesConnectedColumns}
+                    rows={processesPairsRxReverse}
+                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                    components={{
+                        linkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                            LinkCell({
+                                ...props,
+                                type: 'process',
+                                link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
+                            }),
+                    }}
+                />
             </GridItem>
         </Grid>
     );
@@ -271,23 +361,22 @@ const CurrentBytesInfo: FC<CurrentBytesInfoProps> = function ({
     const { style } = props;
 
     return (
-        <DescriptionListGroup>
-            <TextContent className="pf-u-color-300">
-                <Flex>
-                    {description}
-                    <Text component={TextVariants.h1} style={style}>
-                        {direction === 'up' ? (
-                            <LongArrowAltUpIcon className="pf-u-ml-md" />
-                        ) : (
-                            <LongArrowAltDownIcon className="pf-u-ml-md" />
-                        )}
-                        {formatByteRate(byteRate)}
-                    </Text>
-                </Flex>
-                <DescriptionListDescription>
-                    <Text component={TextVariants.h1}>{formatBytes(bytes)}</Text>
-                </DescriptionListDescription>
-            </TextContent>
-        </DescriptionListGroup>
+        <TextContent className="pf-u-color-300">
+            {description}
+            <Flex>
+                <Text style={style} component={TextVariants.h1}>
+                    {formatBytes(bytes)}
+                </Text>
+
+                <Text component={TextVariants.h1}>
+                    {direction === 'up' ? (
+                        <LongArrowAltUpIcon className="pf-u-ml-md" />
+                    ) : (
+                        <LongArrowAltDownIcon className="pf-u-ml-md" />
+                    )}
+                    {formatByteRate(byteRate)}
+                </Text>
+            </Flex>
+        </TextContent>
     );
 };

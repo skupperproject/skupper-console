@@ -91,6 +91,7 @@ const TopologySiteDetails: FC<TopologySiteDetailsProps> = function ({ id }) {
         <Grid hasGutter>
             <GridItem span={12}>
                 <TopologyDetails
+                    identity={site.identity}
                     name={title}
                     link={SitesRoutesPaths.Sites}
                     tcpConnectionsInEntries={[]}

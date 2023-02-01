@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,12 +13,12 @@ import { QueriesSites } from '../services/services.enum';
 
 const Sites = function () {
     const navigate = useNavigate();
-
     const { data: sites, isLoading } = useQuery(
         [QueriesSites.GetSites],
         () => RESTApi.fetchSites(),
         {
             onError: handleError,
+            keepPreviousData: true,
         },
     );
 
@@ -33,7 +34,13 @@ const Sites = function () {
         return <LoadingPage />;
     }
 
-    return <SitesTable sites={sites || []} />;
+    return (
+        <Grid hasGutter>
+            <GridItem>
+                <SitesTable sites={sites || []} />
+            </GridItem>
+        </Grid>
+    );
 };
 
 export default Sites;

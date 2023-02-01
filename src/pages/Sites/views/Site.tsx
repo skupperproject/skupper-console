@@ -32,6 +32,8 @@ import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SitesRoutesPathLabel, Labels } from '../Sites.enum';
 
+const processQueryParams = { filter: 'processRole.external' };
+
 const Site = function () {
     const navigate = useNavigate();
     const { id: siteId } = useParams() as { id: string };
@@ -70,7 +72,7 @@ const Site = function () {
 
     const { data: processes, isLoading: isLoadingProcesses } = useQuery(
         [QueriesSites.GetProcessesBySiteId, siteId],
-        () => RESTApi.fetchProcessesBySite(siteId),
+        () => RESTApi.fetchProcessesBySite(siteId, processQueryParams),
         {
             onError: handleError,
         },

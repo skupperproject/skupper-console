@@ -1,11 +1,27 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
+import { AvailableProtocols, SortDirection } from './REST.enum';
+
+export type ResponseWrapper<T> = {
+    results: T;
+    totalCount: number;
+    count: number;
+    timeRangeCount: number;
+    status: string;
+    timestamp: number;
+    elapsed: number;
+    queryParams: RequestOptions;
+};
 export interface RequestOptions {
+    filter?: string;
     filters?: Record<string, string>;
     offset?: number;
     limit?: number;
-    sortDirection?: 'asc' | 'desc';
+    sortDirection?: SortDirection;
     sortName?: string;
+    timeRangeStart?: number;
+    timeRangeEnd?: number;
+    timeRangeOperation?: number; // 0: intersect , 1: contains, 2: within
 }
 
 export type FetchWithTimeoutOptions = AxiosRequestConfig;
@@ -22,6 +38,7 @@ interface BaseResponse {
 
 interface EntityBaseResponse extends BaseResponse {
     name: string;
+    processGroupRole: 'external' | 'internal';
 }
 
 interface EntityMetricsResponse {
@@ -29,7 +46,6 @@ interface EntityMetricsResponse {
     octetSentRate: number;
     octetsReceived: number;
     octetReceivedRate: number;
-    type: 'skupper' | 'app';
 }
 
 export interface SiteResponse extends EntityBaseResponse, EntityMetricsResponse {
@@ -46,6 +62,7 @@ export interface ProcessResponse extends EntityBaseResponse, EntityMetricsRespon
     imageName: string;
     sourceHost: string;
     hostName: string;
+    processRole: 'external' | 'internal';
     endTime?: number;
 }
 export interface LinkResponse extends EntityBaseResponse {
@@ -64,16 +81,6 @@ export interface RouterResponse extends EntityBaseResponse {
     buildVersion: string;
 }
 
-export interface DeviceResponse extends EntityBaseResponse {
-    parent: string;
-    address: string;
-    protocol: string;
-    destHost: string;
-    destPort: string;
-    flowRateL4: number;
-    flowCountL4: number;
-}
-
 export interface HostResponse extends EntityBaseResponse {
     parent: string;
     provider: string;
@@ -84,9 +91,10 @@ export interface AddressResponse extends EntityBaseResponse {
     connectorCount: number;
     totalFlows: number;
     currentFlows: number;
+    protocol: AvailableProtocols;
 }
 
-export interface FlowResponse extends BaseResponse {
+export interface ConnectionTCP extends BaseResponse {
     parent: string;
     octets: number;
     octetRate: number;
@@ -97,18 +105,39 @@ export interface FlowResponse extends BaseResponse {
     latency: number;
     process: string;
     processName: string;
-    trace?: string;
     endTime?: number;
+    protocol: AvailableProtocols;
 }
 
-export interface FlowPairResponse extends BaseResponse {
+export interface RequestHTTP extends BaseResponse {
+    parent: string;
+    octets: number;
+    octetRate: number;
+    method: string;
+    latency: number;
+    process: string;
+    processName: string;
+    endTime?: number;
+    protocol: AvailableProtocols;
+    streamIdentity: number;
+    result: number;
+    reason?: string;
+    place: 1 | 2;
+}
+
+export interface FlowPairsResponse extends BaseResponse {
     sourceSiteId: string;
+    sourceSiteName: string;
     destinationSiteId: string;
-    forwardFlow: FlowResponse;
-    counterFlow: FlowResponse;
+    destinationSiteName: string;
+    protocol: string;
+    forwardFlow: ConnectionTCP & RequestHTTP;
+    counterFlow: ConnectionTCP & RequestHTTP;
+    flowTrace: string;
     siteAggregateId: string;
     processGroupAggregateId: string;
     processAggregateId: string;
+    endTime?: number;
 }
 export interface FlowAggregatesMapResponse extends BaseResponse {
     rectType: string;

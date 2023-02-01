@@ -1,7 +1,9 @@
-import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
+import { AddressResponse, FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
-    processes: ProcessResponse[];
+    processes?: ProcessResponse[];
+    onGetFilters?: Function;
+    rowsCount?: number;
 }
 
 export interface ProcessesBytesChartProps {
@@ -13,6 +15,11 @@ export interface ProcessesBytesChartProps {
 export interface ProcessNameLinkCellProps {
     data: ProcessResponse;
     value: ProcessResponse[keyof ProcessResponse];
+}
+
+export interface ProcessNamePairsLinkCellProps {
+    data: FlowAggregatesResponse;
+    value: FlowAggregatesResponse[keyof FlowAggregatesResponse];
 }
 
 export interface CurrentBytesInfoProps {

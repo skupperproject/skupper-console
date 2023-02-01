@@ -9,47 +9,59 @@ export enum AddressesRoutesPathLabel {
 // ADDRESSES VIEW
 export enum AddressesLabels {
     Section = 'Addresses',
+    HTTP = ' HTTP/2',
+    TCP = 'TCP',
     Description = 'Set of processes that are exposed across the Virtual application network',
+    ProtocolDistribution = 'Distribution of addresses by protocol',
     CurrentConnections = 'Connections',
-    ConnectionsByAddress = 'Top  6 - Connections By address',
+    ConnectionsByAddress = 'Top  5 - Active Connections By address',
+    CurrentRequests = 'Requests',
+    RequestsByAddress = 'Top  5 - Active Requests By address',
     CurrentServer = 'Servers',
 }
 
-export enum AddressesColumns {
+export enum AddressesColumnsNames {
     Name = 'Name',
     TotalListeners = 'Clients',
     TotalConnectors = 'Servers',
+    Protocol = 'Protocol',
     CurrentFlowPairs = 'Current connections',
     TotalFlowPairs = 'Total connections',
+    CurrentRequests = 'Current Requests',
+    TotalRequests = 'Total Requests',
 }
 
 // FLOWS PAIRS VIEW
-export enum FlowPairsColumnsNames {
-    Status = 'Status',
-    FlowForward = 'From Client',
-    FlowReverse = 'To Server',
-    Site = 'Site',
-    ServerSite = 'Server Site',
-    Process = 'process',
-    Client = 'Client',
-    Server = 'Server',
-    BytesTx = 'Tx Bytes',
-    BytesRx = 'Rx Bytes',
-    ByteRateTX = 'Tx Byte Rate',
-    ByteRateRX = 'Rx Byte Rate',
-    Host = 'Host',
-    Port = 'Port',
-    StartTime = 'Created at',
-    Protocol = 'Protocol',
-    ImageName = 'Image',
+export enum FlowPairsLabelsTcp {
+    Servers = 'Servers',
+    ActiveConnections = 'Live connections',
+    TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 20 minutes',
+    TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 20 minutes',
+    ViewDetails = 'view details',
+    TrafficTx = 'Outbound Traffic ',
+    TrafficRx = 'Inbound traffic',
+    AvgByteRateRx = 'Average Inbound speed',
+    AvgByteRateTx = 'Average Outbound speed',
 }
 
-export enum FlowPairsLabels {
+export enum FlowPairsLabelsHttp {
     Servers = 'Servers',
-    Connections = 'Connections',
-    TopClientTxTraffic = 'Top 10 clients - Tx Traffic',
-    TopClientRxTraffic = 'Top 10 clients - Rx Traffic',
+    Requests = 'Requests',
+    RequestMethodsSummary = 'HTTP Methods summary in the last 20 minutes',
+    StatusCodeSummary = 'HTTP Status Codes distribution in the last 20 minutes',
+    TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 20 minutes',
+    TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 20 minutes',
+    TopResponseAvgLatency = 'Top 10 Client latency response: Average time in the last 20 minutes',
+    TopRequestAvgLatency = 'Top 10 Server latency request: Average time in the last 20 minutes',
+    TrafficTx = 'Response Traffic ',
+    TrafficRx = 'Request traffic',
+    AvgByteRateRx = 'Avg speed Responses',
+    AvgByteRateTx = 'Avg speed Requests',
+}
+
+export enum FlowPairsLabel {
     ViewDetails = 'view details',
+    GoToTopology = 'Go to the network view',
 }
 
 // PROCESSES TABLE
@@ -57,17 +69,21 @@ export enum ProcessesColumnsNames {
     Site = 'Site',
     Process = 'Process',
     ProcessGroup = 'Component',
-    Bytes = 'Rx Bytes',
-    ByteRate = 'Rx Byte Rate',
+    BytesTx = 'Tx Bytes',
+    BytesRx = 'Rx Bytes',
+    ByteRateTx = 'Tx speed',
+    ByteRateRx = 'Rx speed',
     Host = 'Host',
     Port = 'Port',
     Image = 'Image',
 }
 
 export enum FlowLabels {
+    Protocol = 'Protocol',
     Process = 'Process',
     Host = 'Source Host',
     Port = 'Source Port',
+    Method = 'Method',
     DestHost = 'Destination Host',
     DestPort = 'Destination Port',
     Flow = 'Client',
@@ -77,4 +93,5 @@ export enum FlowLabels {
     BytesTransferred = 'Bytes transferred',
     ByteUnacked = 'Byte unacked',
     WindowSize = 'Window Size',
+    Latency = 'Latency',
 }

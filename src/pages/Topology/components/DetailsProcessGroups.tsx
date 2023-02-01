@@ -55,6 +55,7 @@ const TopologyProcessGroupsDetails: FC<TopologyDeploymentDetailsProps> = functio
 
     return (
         <TopologyDetails
+            identity={deployment.identity}
             name={title}
             link={ProcessGroupsRoutesPaths.ProcessGroups}
             tcpConnectionsInEntries={tcpConnectionsInEntries}

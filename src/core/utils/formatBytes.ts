@@ -16,6 +16,28 @@ export function formatBytes(bytes: number, decimals = 2) {
     return isNaN(bytesSized) ? '' : `${bytesSized} ${sizes[i]}`;
 }
 
-export function formatByteRate(bytes: number, decimals = 2) {
-    return `${formatBytes(bytes, decimals)}/s`;
+export function formatByteRate(byteRate: number, decimals = 2) {
+    const byteRateFormatted = formatBytes(byteRate, decimals);
+
+    return byteRateFormatted ? `${byteRateFormatted}/s` : '';
+}
+
+export function formatTraceBySites(trace: string) {
+    if (!trace) {
+        return '';
+    }
+
+    let traceParts = trace.split('|');
+
+    if (traceParts.length < 2) {
+        traceParts = [traceParts[0]];
+    }
+
+    return traceParts
+        .map((part) => {
+            const traceSite = part.split('@')[1];
+
+            return traceSite;
+        })
+        .join(' <-> ');
 }

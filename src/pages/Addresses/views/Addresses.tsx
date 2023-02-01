@@ -1,36 +1,45 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 
 import { ChartPie } from '@patternfly/react-charts';
-import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
+import {
+    Card,
+    CardTitle,
+    Flex,
+    Grid,
+    GridItem,
+    Text,
+    TextContent,
+    TextVariants,
+    Tooltip,
+} from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import EmptyData from '@core/components/EmptyData';
-import RealTimeLineChart from '@core/components/RealTimeLineChart';
+import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
+import SkTable from '@core/components/SkTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
-import { UPDATE_INTERVAL } from 'config';
+import { AvailableProtocols } from 'API/REST.enum';
+import { AddressResponse } from 'API/REST.interfaces';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import { AddressesLabels } from '../Addresses.enum';
-import AddressesTable from '../components/AddressesTable';
+import { AddressesColumnsNames, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
-const REAL_TIME_CONNECTION_HEIGHT_CHART = 350;
-const ITEM_DISPLAY_COUNT = 6;
+const REAL_TIME_CONNECTION_HEIGHT_CHART = 360;
 
 const Addresses = function () {
     const navigate = useNavigate();
-
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
     const { data: addresses, isLoading } = useQuery(
         [QueriesAddresses.GetAddresses],
         () => RESTApi.fetchAddresses(),
         {
-            refetchInterval,
             onError: handleError,
         },
     );
@@ -40,88 +49,106 @@ const Addresses = function () {
             ? ErrorRoutesPaths.error[httpStatus]
             : ErrorRoutesPaths.ErrConnection;
 
-        setRefetchInterval(0);
         navigate(route);
     }
 
-    if (isLoading || !addresses) {
-        return <LoadingPage />;
-    }
-    const addressesWithFlowPairsCounts =
-        AddressesController.getAddressesWithFlowPairsCounts(addresses);
+    const AddressNameLinkCell = useCallback(
+        (props: LinkCellProps<AddressResponse>) =>
+            LinkCell({
+                ...props,
+                type: 'address',
+                link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}@${props.data.protocol}`,
+            }),
+        [],
+    );
+
+    const addressesWithFlowPairsCounts = AddressesController.getAddressesWithFlowPairsCounts(
+        addresses || [],
+    );
 
     const sortedAddresses = addressesWithFlowPairsCounts.sort(
         (a, b) => b.currentFlows - a.currentFlows,
     );
 
-    const topCurrentConnectionsChartData = sortedAddresses
-        .map(({ name, currentFlows }) => ({
-            name,
-            value: currentFlows,
-        }))
-        .reduce((acc, item, index) => {
-            if (index < ITEM_DISPLAY_COUNT) {
-                acc.push(item);
-            }
-
-            return acc;
-        }, [] as { name: string; value: number }[]);
-
-    const ActiveConnectionsChartData = topCurrentConnectionsChartData.reduce(
-        (acc, address) => acc + address.value,
-        0,
+    const sortedAddressesTCP = sortedAddresses.filter(
+        ({ protocol }) => protocol === AvailableProtocols.Tcp,
     );
+
+    const sortedAddressesHTTP = sortedAddresses.filter(
+        ({ protocol }) => protocol !== AvailableProtocols.Tcp,
+    );
+
+    const topTrafficUploadByClient = sortedAddresses.reduce((acc, { protocol }) => {
+        acc[protocol] = { name: protocol, x: protocol, y: (acc[protocol]?.y || 0) + 1 };
+
+        return acc;
+    }, {} as Record<string, { name: string; x: string; y: number }>);
+
+    const topTrafficUpload = Object.values(topTrafficUploadByClient);
+
+    if (isLoading) {
+        return <LoadingPage />;
+    }
 
     return (
         <Grid hasGutter data-cy="sk-addresses">
             <GridItem>
-                <AddressesTable addresses={sortedAddresses} />
+                <Flex>
+                    <TextContent>
+                        <Text component={TextVariants.h1}>{AddressesLabels.Section}</Text>
+                    </TextContent>
+                    <Tooltip position="right" content={AddressesLabels.Description}>
+                        <OutlinedQuestionCircleIcon />
+                    </Tooltip>
+                </Flex>
             </GridItem>
 
-            <GridItem span={8}>
+            <GridItem>
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{AddressesLabels.CurrentConnections}</CardTitle>
-                    {topCurrentConnectionsChartData?.length ? (
-                        <RealTimeLineChart
-                            options={{
-                                height: REAL_TIME_CONNECTION_HEIGHT_CHART,
-                                padding: {
-                                    top: 0,
-                                    bottom: 50,
-                                    left: 50,
-                                    right: 20,
-                                },
-                            }}
-                            data={[{ name: 'Connections', value: ActiveConnectionsChartData }]}
-                        />
-                    ) : (
-                        <EmptyData />
-                    )}
-                </Card>
-            </GridItem>
-            <GridItem span={4}>
-                <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{AddressesLabels.ConnectionsByAddress}</CardTitle>
+                    <CardTitle>{AddressesLabels.ProtocolDistribution}</CardTitle>
                     <ChartPie
-                        constrainToVisibleArea
-                        data={topCurrentConnectionsChartData?.map(({ name, value }) => ({
-                            x: name,
-                            y: value,
+                        data={topTrafficUpload?.map(({ x, y }) => ({
+                            x,
+                            y,
                         }))}
-                        labels={topCurrentConnectionsChartData?.map(
-                            ({ name, value }) => `${name}: ${value}`,
-                        )}
+                        labels={topTrafficUpload?.map(({ name, y }) => `${name}: ${y}`)}
                         padding={{
                             bottom: 100,
-                            left: -100,
-                            right: 100,
+                            left: 0,
+                            right: 0,
                             top: 0,
                         }}
-                        legendData={topCurrentConnectionsChartData?.map(({ name }) => ({ name }))}
-                        legendOrientation="vertical"
-                        legendPosition="right"
-                        themeColor={ChartThemeColors.Multi}
+                        legendData={topTrafficUpload?.map(({ name, y }) => ({
+                            name: `${name}: ${y}`,
+                        }))}
+                        legendOrientation="horizontal"
+                        legendPosition="bottom"
                         height={REAL_TIME_CONNECTION_HEIGHT_CHART}
+                        themeColor={ChartThemeColors.Multi}
+                    />
+                </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <Card isFullHeight>
+                    <SkTable
+                        title={AddressesLabels.TCP}
+                        columns={generateColumns(AvailableProtocols.Tcp)}
+                        rows={sortedAddressesTCP}
+                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                        components={{ AddressNameLinkCell }}
+                    />
+                </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <Card isFullHeight>
+                    <SkTable
+                        title={AddressesLabels.HTTP}
+                        columns={generateColumns(AvailableProtocols.Http)}
+                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                        rows={sortedAddressesHTTP}
+                        components={{ AddressNameLinkCell }}
                     />
                 </Card>
             </GridItem>
@@ -130,3 +157,46 @@ const Addresses = function () {
 };
 
 export default Addresses;
+
+function isTcp(protocolSelected: AvailableProtocols) {
+    return protocolSelected === AvailableProtocols.Tcp;
+}
+
+function generateColumns(protocol: AvailableProtocols) {
+    const columns = [
+        {
+            name: AddressesColumnsNames.Name,
+            prop: 'name' as keyof AddressResponse,
+            component: 'AddressNameLinkCell',
+            width: 35,
+        },
+        {
+            name: isTcp(protocol)
+                ? AddressesColumnsNames.TotalFlowPairs
+                : AddressesColumnsNames.TotalRequests,
+            prop: 'totalFlows' as keyof AddressResponse,
+        },
+        {
+            name: isTcp(protocol)
+                ? AddressesColumnsNames.CurrentFlowPairs
+                : AddressesColumnsNames.CurrentRequests,
+            prop: 'currentFlows' as keyof AddressResponse,
+        },
+        {
+            name: AddressesColumnsNames.TotalConnectors,
+            prop: 'connectorCount' as keyof AddressResponse,
+        },
+    ];
+
+    if (!isTcp(protocol)) {
+        return [
+            ...columns,
+            {
+                name: AddressesColumnsNames.Protocol,
+                prop: 'protocol' as keyof AddressResponse,
+            },
+        ];
+    }
+
+    return columns;
+}

@@ -20,8 +20,20 @@ export enum ProcessesLabels {
     Image = 'Image',
     SourceIP = 'Source IP',
     Host = 'Host',
-    MetricBytesSent = 'Top 10 processes bytes sent',
-    MetricBytesReceived = 'Top 10 processes bytes received',
-    CurrentBytesInfoByteRateIn = 'Incoming byte rate',
-    CurrentBytesInfoByteRateOut = 'Outgoing byte rate',
+    MetricBytesSent = 'Top 5 processes bytes sent',
+    MetricBytesReceived = 'Top 5 processes bytes received',
+    TrafficInOutDistribution = 'Inbound vs Outbound Traffic',
+    TrafficSent = 'Outbound traffic',
+    TrafficReceived = 'Inbound Traffic',
+    Clients = 'Clients',
+    Servers = 'Servers',
+}
+
+export enum ProcessPairsColumnsNames {
+    Process = 'Process',
+    BytesTx = 'Outbound',
+    BytesRx = 'Inbound',
+    LatencyAvgTx = 'Avg Out Latency',
+    LatencyAvgRx = 'Avg In Latency',
+    Flows = 'Flows',
 }

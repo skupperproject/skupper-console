@@ -33,6 +33,10 @@ import { Labels } from '../Topology.enum';
 import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
 
+const processesQueryParams = {
+    filter: 'processRole.external',
+};
+
 const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | null }> = function ({
     addressId,
     processId,
@@ -65,14 +69,16 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
         },
     );
 
-    const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+    const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
         [QueriesProcesses.GetProcess],
-        () => RESTApi.fetchProcesses(),
+        () => RESTApi.fetchProcesses(processesQueryParams),
         {
             refetchInterval,
             onError: handleError,
         },
     );
+
+    const processes = processesRaw?.results;
 
     const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
         [QueriesAddresses.GetAddresses],
@@ -176,8 +182,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; processId?: string | nu
                 return;
             }
 
-            const processesLinksByAddress = processesPairsByAddress
-                ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress)
+            const processesLinksByAddress = processesPairsByAddress?.results
+                ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress.results)
                 : undefined;
 
             const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);

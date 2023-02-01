@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
+    Bullseye,
     Card,
     CardTitle,
+    EmptyState,
+    EmptyStateIcon,
+    EmptyStateVariant,
     Flex,
     Pagination,
     Text,
     TextContent,
     TextVariants,
+    Title,
     Tooltip,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import {
     TableComposable,
     TableText,
@@ -21,101 +26,221 @@ import {
     ThProps,
     Tr,
 } from '@patternfly/react-table';
+import { useQuery } from '@tanstack/react-query';
 
 import { generateUUID } from '@core/utils/generateUUID';
+import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
+import { axiosFetch } from 'API/axiosMiddleware';
+import { getResults } from 'API/REST';
+import { SortDirection } from 'API/REST.enum';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import { SKTableProps } from './Sktable.interfaces';
+import { SKTableProps } from './SkTable.interface';
 
-const DEFAULT_PAGE_SIZE = 20;
-const FIRST_PAGE_INDEX = 0;
+const FIRST_PAGE_NUMBER = 1;
+const NO_RESULT_FOUND_LABEL = 'No results found';
+
+function getProperty(obj: any, prop: any) {
+    if (!prop) {
+        return {};
+    }
+
+    const parts = prop.split('.');
+
+    if (parts.length === 1) {
+        return obj[prop];
+    }
+
+    if (Array.isArray(parts)) {
+        const last = parts.pop();
+        const l = parts.length;
+        let i = 1;
+        let current = parts[0];
+
+        while ((obj = obj[current]) && i < l) {
+            current = parts[i];
+            i++;
+        }
+
+        if (obj) {
+            return obj[last];
+        }
+    } else {
+        throw 'parts is not valid array';
+    }
+}
 
 const SkTable = function <T>({
     title,
     titleDescription,
     columns,
-    rows,
+    rows = [],
     rowsCount = rows.length,
     components,
-    onSort,
+    urlPagination = '',
+    onGetFilters,
+    onError,
+    onLoaded,
+    pageSizeStart,
     ...props
 }: SKTableProps<T>) {
+    // sort
     const [activeSortIndex, setActiveSortIndex] = useState<number>();
-    const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>();
-    const [currentPageIndex, setCurrentPageIndex] = useState<number>(FIRST_PAGE_INDEX);
-    const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
+    const [activeSortDirection, setActiveSortDirection] = useState<SortDirection>();
+    // pagination
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
+    const [pageSize, setPageSize] = useState<number>(pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
 
-    function getSortParams(columnIndex: number): ThProps['sort'] {
-        return {
+    const { data: page } = useQuery({
+        queryKey: [
+            urlPagination, // name of the query
+            currentPageNumber,
+            pageSize,
+            activeSortIndex,
+            activeSortDirection,
+        ],
+        queryFn: () =>
+            fetchRows(currentPageNumber - 1, pageSize, activeSortIndex, activeSortDirection),
+        keepPreviousData: true,
+        onError: handleError,
+        enabled: !!urlPagination,
+    });
+
+    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+        if (onError) {
+            onError(httpStatus);
+        }
+    }
+
+    const fetchRows = async (
+        offset: number,
+        limit: number,
+        sortColumnIndex?: number,
+        sortColumnDirection?: SortDirection,
+    ) => {
+        const prop =
+            sortColumnIndex !== undefined
+                ? columns[sortColumnIndex].prop?.toString().split('.')
+                : undefined;
+
+        const { data } = await axiosFetch(urlPagination || '', {
+            params: {
+                offset: offset * limit,
+                limit,
+                sortBy:
+                    prop !== undefined ? `${prop[prop?.length - 1]}.${sortColumnDirection}` : null,
+            },
+        });
+
+        if (onLoaded) {
+            onLoaded(true);
+        }
+
+        return data;
+    };
+
+    const getSortParams = useCallback(
+        (columnIndex: number): ThProps['sort'] => ({
             sortBy: {
                 index: activeSortIndex,
                 direction: activeSortDirection,
             },
             onSort: (_event: React.MouseEvent, index: number, direction: 'asc' | 'desc') => {
-                setActiveSortIndex(index);
-                setActiveSortDirection(direction);
-
-                if (onSort) {
-                    onSort({ prop: columns[index].prop, direction });
+                if (onGetFilters) {
+                    onGetFilters({
+                        limit: pageSize,
+                        offset: (currentPageNumber - 1) * pageSize,
+                        sortName: index !== undefined && columns[index].prop,
+                        sortDirection: direction,
+                    });
                 }
+
+                setActiveSortIndex(index);
+                setActiveSortDirection(direction as SortDirection);
             },
             columnIndex,
-        };
-    }
+        }),
+        [activeSortDirection, activeSortIndex, columns, currentPageNumber, pageSize, onGetFilters],
+    );
 
-    function handleSetPage(
+    function handleSetPageNumber(
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-        perPage: number,
+        pageNumber: number,
     ) {
-        setCurrentPageIndex(perPage);
+        setCurrentPageNumber(pageNumber);
+
+        if (onGetFilters) {
+            onGetFilters({
+                limit: pageSize,
+                offset: (pageNumber - 1) * pageSize,
+                sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
+                sortDirection: activeSortDirection,
+            });
+        }
     }
 
-    function handlePerPageSelect(
+    function handleSetPageSize(
         _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-        perPageSelect: number,
+        pageSizeSelected: number,
+        newPage: number,
     ) {
-        setPageSize(perPageSelect);
-        setCurrentPageIndex(FIRST_PAGE_INDEX);
+        setPageSize(pageSizeSelected);
+        setCurrentPageNumber(FIRST_PAGE_NUMBER);
+
+        if (onGetFilters) {
+            onGetFilters({
+                limit: pageSizeSelected,
+                offset: (newPage - 1) * pageSizeSelected,
+                sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
+                sortDirection: activeSortDirection,
+            });
+        }
     }
 
-    let rowsSorted = rows;
+    const totalRows = page ? page.totalCount : rowsCount;
+    let rowsSorted = page ? (getResults(page) as T[]) || [] : rows;
 
-    if (!onSort) {
-        rowsSorted = rows.sort((a, b) => {
-            const columnName = columns[activeSortIndex || 0].prop as keyof T;
+    rowsSorted = rowsSorted.sort((a, b) => {
+        const columnName = columns[activeSortIndex || 0].prop as keyof T;
 
-            const paramA = a[columnName];
-            const paramB = b[columnName];
+        const paramA = getProperty(a, columnName);
+        const paramB = getProperty(b, columnName);
 
-            if (paramA === paramB) {
-                return 0;
-            }
-
-            if (activeSortDirection === 'asc') {
-                return paramA > paramB ? 1 : -1;
-            }
-
-            if (activeSortDirection === 'desc') {
-                return paramA < paramB ? 1 : -1;
-            }
-
+        if (paramA === paramB) {
             return 0;
-        });
+        }
+
+        if (activeSortDirection === 'asc') {
+            return paramA > paramB ? 1 : -1;
+        }
+
+        if (activeSortDirection === 'desc') {
+            return paramA < paramB ? 1 : -1;
+        }
+
+        return 0;
+    });
+
+    let skRows = rowsSorted.map((row) => ({
+        id: generateUUID(),
+        columns: columns.map((column) => ({
+            ...column,
+            data: row,
+            value: getProperty(row, column.prop),
+        })),
+    }));
+
+    if (!urlPagination && !onGetFilters && pageSizeStart) {
+        skRows = skRows.slice(
+            (currentPageNumber - 1) * pageSize,
+            (currentPageNumber - 1) * pageSize + pageSize,
+        );
     }
 
-    const skRows = rowsSorted
-        .map((row) => ({
-            columns: columns.map((column) => ({
-                ...column,
-                data: row,
-                value: row[column.prop as keyof T],
-            })),
-        }))
-        .slice(currentPageIndex * pageSize, currentPageIndex * pageSize + pageSize);
-
-    const { isPlain, shouldSort = true, ...restProps } = props;
+    const { isPlain = false, shouldSort = true, ...restProps } = props;
 
     return (
-        <Card isPlain={isPlain || false}>
+        <Card isPlain={isPlain} isFullHeight>
             {title && (
                 <CardTitle>
                     <Flex>
@@ -141,75 +266,95 @@ const SkTable = function <T>({
             >
                 <Thead>
                     <Tr>
-                        {columns.map(({ name, prop }, index) => (
+                        {columns.map(({ name, prop, columnDescription }, index) => (
                             <Th
                                 key={name}
                                 sort={(prop && shouldSort && getSortParams(index)) || undefined}
                             >
+                                {columnDescription && (
+                                    <Tooltip position="right" content={columnDescription}>
+                                        <OutlinedQuestionCircleIcon />
+                                    </Tooltip>
+                                )}{' '}
                                 {name}
                             </Th>
                         ))}
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {skRows.map((row) => (
-                        <Tr key={generateUUID()}>
-                            {row.columns.map(
-                                ({ data, value, component, callback, format, width }) => {
-                                    const Component =
-                                        components && component && components[component];
-
-                                    return Component ? (
-                                        <Td
-                                            width={
-                                                width as
-                                                    | 10
-                                                    | 15
-                                                    | 20
-                                                    | 25
-                                                    | 30
-                                                    | 35
-                                                    | 40
-                                                    | 45
-                                                    | 50
-                                                    | 60
-                                                    | 70
-                                                    | 80
-                                                    | 90
-                                                    | 100
-                                                    | undefined
-                                            }
-                                            key={generateUUID()}
-                                        >
-                                            <Component
-                                                data={data}
-                                                value={value}
-                                                callback={callback}
-                                                format={format && format(value)}
-                                            />
-                                        </Td>
-                                    ) : (
-                                        <Td key={generateUUID()}>
-                                            <TableText wrapModifier="truncate">
-                                                {(format && format(value)) || (value as string)}
-                                            </TableText>
-                                        </Td>
-                                    );
-                                },
-                            )}
+                    {skRows.length === 0 && (
+                        <Tr>
+                            <Td colSpan={12}>
+                                <Bullseye>
+                                    <EmptyState variant={EmptyStateVariant.small}>
+                                        <EmptyStateIcon icon={SearchIcon} />
+                                        <Title headingLevel="h2" size="lg">
+                                            {NO_RESULT_FOUND_LABEL}
+                                        </Title>
+                                    </EmptyState>
+                                </Bullseye>
+                            </Td>
                         </Tr>
-                    ))}
+                    )}
+                    {!(skRows.length === 0) &&
+                        skRows.map((row) => (
+                            <Tr key={row.id}>
+                                {row.columns.map(
+                                    ({ data, value, component, callback, format, width }) => {
+                                        const Component =
+                                            components && component && components[component];
+
+                                        return Component ? (
+                                            <Td
+                                                width={
+                                                    width as
+                                                        | 10
+                                                        | 15
+                                                        | 20
+                                                        | 25
+                                                        | 30
+                                                        | 35
+                                                        | 40
+                                                        | 45
+                                                        | 50
+                                                        | 60
+                                                        | 70
+                                                        | 80
+                                                        | 90
+                                                        | 100
+                                                        | undefined
+                                                }
+                                                key={generateUUID()}
+                                            >
+                                                <Component
+                                                    data={data}
+                                                    value={value}
+                                                    callback={callback}
+                                                    format={format && format(value)}
+                                                />
+                                            </Td>
+                                        ) : (
+                                            <Td key={generateUUID()}>
+                                                <TableText wrapModifier="truncate">
+                                                    {(format && format(value)) || (value as string)}
+                                                </TableText>
+                                            </Td>
+                                        );
+                                    },
+                                )}
+                            </Tr>
+                        ))}
                 </Tbody>
             </TableComposable>
-            {rows.length > pageSize && (
+            {(pageSizeStart || urlPagination || onGetFilters) && totalRows > pageSize && (
                 <Pagination
                     className="pf-u-my-xs"
                     perPageComponent="button"
-                    itemCount={rowsCount}
+                    itemCount={totalRows}
                     perPage={pageSize}
-                    page={currentPageIndex + 1}
-                    onSetPage={handleSetPage}
-                    onPerPageSelect={handlePerPageSelect}
+                    page={currentPageNumber}
+                    onSetPage={handleSetPageNumber}
+                    onPerPageSelect={handleSetPageSize}
                 />
             )}
         </Card>

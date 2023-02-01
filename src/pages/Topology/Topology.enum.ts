@@ -22,14 +22,15 @@ export enum ConnectionsLabels {
     TCPProtocol = 'TCP protocol',
     HTTPRequestsIn = 'HTTP Requests Received',
     HTTPRequestsOut = 'HTTP Requests Sent',
-    TCPConnectionsIn = 'TCP traffic received',
-    TCPConnectionsOut = 'TCP traffic sent',
+    TCPConnectionsIn = 'Traffic received',
+    TCPConnectionsOut = 'Traffic sent',
     Processes = 'Processes',
 }
 
 export enum ConnectionsColumns {
     Name = 'Name',
-    ByteRate = 'Byte-rate',
+    ByteRate = 'Speed',
+    FlowPairs = 'Flow pairs',
 }
 
 export enum TopologyURLFilters {

@@ -11,7 +11,9 @@ const AddressNameLinkCell: FC<AddressNameLinkCellProps> = function ({ data, valu
     return (
         <>
             <ResourceIcon type="address" />
-            <Link to={`${AddressesRoutesPaths.Addresses}/${data.name}@${data.identity}`}>
+            <Link
+                to={`${AddressesRoutesPaths.Addresses}/${data.name}@${data.identity}@${data.protocol}`}
+            >
                 {value}
             </Link>
         </>

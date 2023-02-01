@@ -1,42 +1,39 @@
 import { axiosFetch } from './axiosMiddleware';
 import {
-    LINKS_PATH,
-    SITES_PATH,
-    ADDRESSES_PATH,
     getFlowsPairsByAddressPATH,
     getProcessesBySitePATH,
     getProcessesByAddressPATH,
-    getConnectorByProcessPATH,
     getSitePATH,
     getRoutersBySitePATH,
     getLinksBySitePATH,
     getHostsBySitePATH,
-    PROCESS_PAIRS_PATH,
-    ROUTERS_PATH,
-    PROCESSES_PATH,
-    SITE_PAIRS_PATH,
-    HOSTS_PATH,
-    PROCESS_GROUPS_PATH,
     getProcessesByProcessGroupPATH,
     getProcessGroupPATH,
-    PROCESS_GROUP_PAIRS_PATH,
     geProcessPATH,
-    getConnectorsByAddressPATH,
     getLinkPATH,
-    getConnectorPATH,
     getRouterPATH,
     getFlowPairPATH,
     getSitePairPATH,
     getProcessGroupPairPATH,
     getProcessPairPATH,
     getAddressesByProcessPATH,
+    getFlowPairsPATH,
+    getRoutersPATH,
+    geProcessesPATH,
+    getSitesPATH,
+    getLinksPATH,
+    getAddressesPath,
+    getSitePairsPATH,
+    getHostsPATH,
+    getProcessGroupPairsPATH,
+    getProcessPairsPATH,
+    getProcessGroupsPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
     AddressResponse,
-    DeviceResponse,
     ProcessResponse,
-    FlowPairResponse,
+    FlowPairsResponse,
     SiteResponse,
     LinkResponse,
     RouterResponse,
@@ -44,24 +41,27 @@ import {
     FlowAggregatesMapResponse,
     FlowAggregatesResponse,
     RequestOptions,
+    ResponseWrapper,
 } from './REST.interfaces';
 
 export const RESTApi = {
     // SITES APIs
     fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
-        const { data } = await axiosFetch(SITES_PATH, {
+        const { data } = await axiosFetch(getSitesPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
         const { data } = await axiosFetch(getSitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchProcessesBySite: async (
         id: string,
         options?: RequestOptions,
@@ -70,58 +70,59 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchRoutersBySite: async (id: string, options?: RequestOptions): Promise<RouterResponse[]> => {
         const { data } = await axiosFetch(getRoutersBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchLinksBySite: async (id: string, options?: RequestOptions): Promise<LinkResponse[]> => {
         const { data } = await axiosFetch(getLinksBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchHostsBySite: async (id: string, options?: RequestOptions): Promise<HostResponse[]> => {
         const { data } = await axiosFetch(getHostsBySitePATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // ROUTER APIs
     fetchRouters: async (options?: RequestOptions): Promise<RouterResponse[]> => {
-        const { data } = await axiosFetch(ROUTERS_PATH, {
+        const { data } = await axiosFetch(getRoutersPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchRouter: async (id: string, options?: RequestOptions): Promise<RouterResponse> => {
         const { data } = await axiosFetch(getRouterPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // PROCESS APIs
-    fetchProcesses: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
-        const { data } = await axiosFetch(PROCESSES_PATH, {
+    fetchProcesses: async (
+        options?: RequestOptions,
+    ): Promise<ResponseWrapper<ProcessResponse[]>> => {
+        const { data } = await axiosFetch(geProcessesPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data
-            .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
-            .map((process: ProcessResponse) => ({
-                ...process,
-                type: getProcessType(process.name),
-            }));
+        return data;
     },
 
     fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
@@ -129,7 +130,7 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchAddressesByProcess: async (
@@ -140,32 +141,27 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // HOST APIs
     fetchHost: async (options?: RequestOptions): Promise<HostResponse[]> => {
-        const { data } = await axiosFetch(HOSTS_PATH, {
+        const { data } = await axiosFetch(getHostsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // PROCESS GROUPS APIs
     fetchProcessGroups: async (options?: RequestOptions): Promise<ProcessGroupResponse[]> => {
-        const { data } = await axiosFetch(PROCESS_GROUPS_PATH, {
+        const { data } = await axiosFetch(getProcessGroupsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        //TODO remove when api provide flag to recognize internal process groups
-        return data
-            .filter(({ name }: ProcessGroupResponse) => !isSkupperEntity(name))
-            .map((processGroup: ProcessGroupResponse) => ({
-                ...processGroup,
-                type: getProcessType(processGroup.name),
-            }));
+        return getResults<ProcessGroupResponse[]>(data);
     },
+
     fetchProcessGroup: async (
         id: string,
         options?: RequestOptions,
@@ -174,8 +170,9 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
+
     fetchProcessesByProcessGroup: async (
         id: string,
         options?: RequestOptions,
@@ -184,34 +181,16 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        //TODO remove when api provide flag to recognize internal processes
-        return data
-            .filter(({ name }: ProcessResponse) => !isSkupperEntity(name))
-            .map((processGroup: ProcessResponse) => ({
-                ...processGroup,
-                type: getProcessType(processGroup.name),
-            }));
-    },
-
-    // PROCESSES  APIs
-    fetchConnectorByProcess: async (
-        id: string,
-        options?: RequestOptions,
-    ): Promise<DeviceResponse> => {
-        const { data } = await axiosFetch(getConnectorByProcessPATH(id), {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return data;
+        return getResults<ProcessResponse[]>(data);
     },
 
     // LINKS  APIs
     fetchLinks: async (options?: RequestOptions): Promise<LinkResponse[]> => {
-        const { data } = await axiosFetch(`${LINKS_PATH}`, {
+        const { data } = await axiosFetch(getLinksPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchLink: async (id: string, options?: RequestOptions): Promise<LinkResponse> => {
@@ -219,34 +198,22 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
-    },
-
-    // CONNECTORS APIs
-    fetchConnector: async (
-        id: string,
-        options?: RequestOptions,
-    ): Promise<DeviceResponse | null> => {
-        const { data } = await axiosFetch(getConnectorPATH(id), {
-            params: options ? addQueryParams(options) : null,
-        });
-
-        return data;
+        return getResults(data);
     },
 
     // ADDRESSES APIs
     fetchAddresses: async (options?: RequestOptions): Promise<AddressResponse[]> => {
-        const { data } = await axiosFetch(ADDRESSES_PATH, {
+        const { data } = await axiosFetch(getAddressesPath(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchFlowPairsByAddress: async (
         id: string,
         options?: RequestOptions,
-    ): Promise<FlowPairResponse[]> => {
+    ): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
         const { data } = await axiosFetch(getFlowsPairsByAddressPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
@@ -257,7 +224,7 @@ export const RESTApi = {
     fetchServersByAddress: async (
         id: string,
         options?: RequestOptions,
-    ): Promise<ProcessResponse[]> => {
+    ): Promise<ResponseWrapper<ProcessResponse[]>> => {
         const { data } = await axiosFetch(getProcessesByAddressPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
@@ -265,33 +232,30 @@ export const RESTApi = {
         return data;
     },
 
-    fetchConnectorsByAddresses: async (
-        id: string,
-        options?: RequestOptions,
-    ): Promise<ProcessResponse[]> => {
-        const { data } = await axiosFetch(getConnectorsByAddressPATH(id), {
+    // FLOW PAIRS  APIs
+    fetchFlowPairs: async (options?: RequestOptions): Promise<FlowPairsResponse[]> => {
+        const { data } = await axiosFetch(getFlowPairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
-    // FLOW PAIRS  APIs
-    fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairResponse> => {
+    fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse> => {
         const { data } = await axiosFetch(getFlowPairPATH(id), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     // AGGREGATE  APIs
     fetchSitesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await axiosFetch(SITE_PAIRS_PATH, {
+        const { data } = await axiosFetch(getSitePairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchSitePairs: async (
@@ -302,17 +266,17 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessgroupsPairs: async (
         options?: RequestOptions,
-    ): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await axiosFetch(PROCESS_GROUP_PAIRS_PATH, {
-            params: options?.filters,
+    ): Promise<FlowAggregatesResponse[]> => {
+        const { data } = await axiosFetch(getProcessGroupPairsPATH(), {
+            params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessGroupPairs: async (
@@ -323,15 +287,15 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
-    fetchProcessesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
-        const { data } = await axiosFetch(PROCESS_PAIRS_PATH, {
+    fetchProcessesPairs: async (options?: RequestOptions): Promise<FlowAggregatesResponse[]> => {
+        const { data } = await axiosFetch(getProcessPairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 
     fetchProcessPairs: async (
@@ -342,23 +306,31 @@ export const RESTApi = {
             params: options ? addQueryParams(options) : null,
         });
 
-        return data;
+        return getResults(data);
     },
 };
 
-function addQueryParams({ filters, offset, limit, sortDirection, sortName }: RequestOptions) {
+export function getResults<T>(data: { results: T }) {
+    return data.results;
+}
+
+function addQueryParams({
+    filters,
+    filter,
+    offset,
+    limit,
+    sortDirection,
+    sortName,
+    timeRangeEnd,
+    timeRangeStart,
+}: RequestOptions) {
     return {
         ...filters,
+        filter,
         offset,
         limit,
+        timeRangeEnd,
+        timeRangeStart,
         sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
     };
-}
-
-function isSkupperEntity(name: string) {
-    return name.startsWith('skupper') || name.startsWith('vanflow');
-}
-
-function getProcessType(name: string) {
-    return name.startsWith('skupper-') || name.startsWith('vanflow') ? 'skupper' : 'app';
 }

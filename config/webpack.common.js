@@ -35,8 +35,8 @@ module.exports = {
             'process.env.API_HOST_FLOW_COLLECTOR': JSON.stringify(
                 process.env.API_HOST_FLOW_COLLECTOR || '',
             ),
-            'process.env.NODE_API_HOST_FLOW_COLLECTOR': JSON.stringify(
-                process.env.NODE_API_HOST_FLOW_COLLECTOR || '',
+            'process.env.DEFAULT_TABLE_PAGE_SIZE': JSON.stringify(
+                process.env.DEFAULT_TABLE_PAGE_SIZE,
             ),
         }),
         new HtmlWebpackPlugin({
