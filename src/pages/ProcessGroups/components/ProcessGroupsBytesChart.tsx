@@ -29,7 +29,6 @@ const ProcessesBytesChart: FC<ProcessGroupsBytesChartProps> = function ({
     return (
         <div ref={chartContainerRef} style={{ height: `${CHART_HEIGHT}px`, width: `100%` }}>
             <ChartPie
-                constrainToVisibleArea
                 data={bytes}
                 labels={labels?.map(({ name }) => name)}
                 legendData={labels}

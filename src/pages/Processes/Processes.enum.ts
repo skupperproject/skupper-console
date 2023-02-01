@@ -28,3 +28,12 @@ export enum ProcessesLabels {
     Clients = 'Clients',
     Servers = 'Servers',
 }
+
+export enum ProcessPairsColumnsNames {
+    Process = 'Process',
+    BytesTx = 'Outbound',
+    BytesRx = 'Inbound',
+    LatencyAvgTx = 'Avg Out Latency',
+    LatencyAvgRx = 'Avg In Latency',
+    Flows = 'Flows',
+}

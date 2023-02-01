@@ -9,7 +9,7 @@ import { FlowPairsResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import LinkCell from '../../../core/components/LinkCell';
-import { AddressesRoutesPaths, FlowPairsLabels } from '../Addresses.enum';
+import { AddressesRoutesPaths, FlowPairsLabel } from '../Addresses.enum';
 import { FlowPairsTableProps } from '../Addresses.interfaces';
 
 const FlowPairsTable: FC<FlowPairsTableProps> = function ({
@@ -33,7 +33,7 @@ const FlowPairsTable: FC<FlowPairsTableProps> = function ({
                     LinkCell({
                         ...props,
                         link: `${AddressesRoutesPaths.Addresses}/${address}/${props.data.identity}`,
-                        value: FlowPairsLabels.ViewDetails,
+                        value: FlowPairsLabel.ViewDetails,
                     }),
             }}
         />

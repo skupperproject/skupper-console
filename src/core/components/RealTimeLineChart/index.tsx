@@ -82,7 +82,6 @@ const RealTimeLineChart = function ({ data, options }: RealTimeLineChartProps) {
                         labels={({ datum: { name, y } }) =>
                             `${name}: ${options?.formatter ? options.formatter(y, 2) : y}`
                         }
-                        constrainToVisibleArea
                     />
                 }
                 legendData={options?.dataLegend}

@@ -107,7 +107,6 @@ const Addresses = function () {
                 <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
                     <CardTitle>{AddressesLabels.ProtocolDistribution}</CardTitle>
                     <ChartPie
-                        constrainToVisibleArea
                         data={topTrafficUpload?.map(({ x, y }) => ({
                             x,
                             y,

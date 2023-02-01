@@ -29,7 +29,6 @@ const ProcessesBytesChart: FC<ProcessesBytesChartProps> = function ({ bytes, lab
             {!bytes.length && <EmptyData />}
             {bytes.length && (
                 <ChartPie
-                    constrainToVisibleArea
                     data={bytes}
                     labels={labels?.map(({ name }) => name)}
                     legendData={labels}

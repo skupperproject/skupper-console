@@ -1,10 +1,14 @@
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
-import { FlowPairsColumnsNames } from '@pages/Addresses/Addresses.enum';
 import { FlowAggregatesMapResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { ProcessesLabels, ProcessesRoutesPaths, ProcessesTableColumns } from './Processes.enum';
+import {
+    ProcessesLabels,
+    ProcessesRoutesPaths,
+    ProcessesTableColumns,
+    ProcessPairsColumnsNames,
+} from './Processes.enum';
 
 export const ProcessesPaths = {
     path: ProcessesRoutesPaths.Processes,
@@ -26,33 +30,33 @@ export const processesTableColumns = [
 
 export const processesConnectedColumns: SKColumn<FlowAggregatesMapResponse>[] = [
     {
-        name: FlowPairsColumnsNames.Process,
+        name: ProcessPairsColumnsNames.Process,
         prop: 'destinationName' as keyof FlowAggregatesMapResponse,
         width: 30,
         component: 'linkCell',
     },
     {
-        name: FlowPairsColumnsNames.BytesRx,
+        name: ProcessPairsColumnsNames.BytesRx,
         prop: 'sourceOctets' as keyof FlowAggregatesMapResponse,
         format: formatBytes,
     },
     {
-        name: FlowPairsColumnsNames.BytesTx,
+        name: ProcessPairsColumnsNames.BytesTx,
         prop: 'destinationOctets' as keyof FlowAggregatesMapResponse,
         format: formatBytes,
     },
     {
-        name: FlowPairsColumnsNames.LatencyAvgRx,
+        name: ProcessPairsColumnsNames.LatencyAvgRx,
         prop: 'sourceAverageLatency' as keyof FlowAggregatesMapResponse,
         format: formatTime,
     },
     {
-        name: FlowPairsColumnsNames.LatencyAvgTx,
+        name: ProcessPairsColumnsNames.LatencyAvgTx,
         prop: 'destinationAverageLatency' as keyof FlowAggregatesMapResponse,
         format: formatTime,
     },
     {
-        name: FlowPairsColumnsNames.Flows,
+        name: ProcessPairsColumnsNames.Flows,
         prop: 'recordCount' as keyof FlowAggregatesMapResponse,
         columnDescription: 'number of connections or requests',
     },

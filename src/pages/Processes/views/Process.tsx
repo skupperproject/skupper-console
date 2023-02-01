@@ -35,7 +35,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { RESTApi } from 'API/REST';
-import { ProcessResponse } from 'API/REST.interfaces';
+import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
 import AddressNameLinkCell from '../components/AddressNameLinkCell';
@@ -268,7 +268,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={6} rowSpan={2}>
+            <GridItem span={8} rowSpan={2}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
                     {!processTrafficChartData && <EmptyData />}
@@ -281,10 +281,9 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={6}>
+            <GridItem span={4}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
-
                     <CardBody>
                         <CurrentBytesInfo
                             direction="up"
@@ -298,7 +297,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={6}>
+            <GridItem span={4}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
                     <CardBody>
@@ -320,11 +319,11 @@ const Process = function () {
                     rows={processesPairsTx}
                     pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                     components={{
-                        linkCell: (props: LinkCellProps<ProcessResponse>) =>
+                        linkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
                             LinkCell({
                                 ...props,
                                 type: 'process',
-                                link: `${ProcessesRoutesPaths.Processes}/${props.data.identity}`,
+                                link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
                             }),
                     }}
                 />
@@ -337,11 +336,11 @@ const Process = function () {
                     rows={processesPairsRxReverse}
                     pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                     components={{
-                        linkCell: (props: LinkCellProps<ProcessResponse>) =>
+                        linkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
                             LinkCell({
                                 ...props,
                                 type: 'process',
-                                link: `${ProcessesRoutesPaths.Processes}/${props.data.identity}`,
+                                link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
                             }),
                     }}
                 />

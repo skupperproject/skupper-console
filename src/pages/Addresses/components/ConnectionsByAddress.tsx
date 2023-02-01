@@ -37,14 +37,18 @@ import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
 import { ConnectionsByAddressColumns } from '../Addresses.constants';
-import { FlowPairsLabels, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
+import {
+    FlowPairsLabelsTcp,
+    AddressesRoutesPathLabel,
+    AddressesRoutesPaths,
+} from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
 const CONNECTION_HEIGHT_CHART = 350;
-const MINUTES_AGO = 5;
+const MINUTES_AGO = 20;
 const TOP_CLIENT_MAX = 10;
 
 export const minutesAgo = function (timestamp: number, min = 1) {
@@ -231,38 +235,37 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
                 <GridItem span={3}>
                     <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabels.TrafficRx}</CardTitle>
+                        <CardTitle>{FlowPairsLabelsTcp.TrafficRx}</CardTitle>
                         <CardBody>{formatBytes(totalBytesReceived)}</CardBody>
                     </Card>
                 </GridItem>
 
                 <GridItem span={3}>
                     <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabels.TrafficTx}</CardTitle>
+                        <CardTitle>{FlowPairsLabelsTcp.TrafficTx}</CardTitle>
                         <CardBody>{formatBytes(totalBytesSent)}</CardBody>
                     </Card>
                 </GridItem>
 
                 <GridItem span={3}>
                     <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabels.AvgByteRateRx}</CardTitle>
+                        <CardTitle>{FlowPairsLabelsTcp.AvgByteRateRx}</CardTitle>
                         <CardBody>{formatByteRate(avgSpeedReceived)}</CardBody>
                     </Card>
                 </GridItem>
 
                 <GridItem span={3}>
                     <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabels.AvgByteRateTx}</CardTitle>
+                        <CardTitle>{FlowPairsLabelsTcp.AvgByteRateTx}</CardTitle>
                         <CardBody>{formatByteRate(avgSpeedSent)}</CardBody>
                     </Card>
                 </GridItem>
 
                 <GridItem span={6}>
                     <Card style={{ height: `${CONNECTION_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabels.TopClientTxTraffic}</CardTitle>
+                        <CardTitle>{FlowPairsLabelsTcp.TopClientTxTraffic}</CardTitle>
                         {topClientsTx?.length ? (
                             <ChartPie
-                                constrainToVisibleArea
                                 data={topClientsTx?.map(({ name, value }) => ({
                                     x: name,
                                     y: formatBytes(value),
@@ -292,10 +295,9 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
                 <GridItem span={6}>
                     <Card style={{ height: `${CONNECTION_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabels.TopClientRxTraffic}</CardTitle>
+                        <CardTitle>{FlowPairsLabelsTcp.TopClientRxTraffic}</CardTitle>
                         {topClientsRx?.length ? (
                             <ChartPie
-                                constrainToVisibleArea
                                 data={topClientsRx?.map(({ name, value }) => ({
                                     x: name,
                                     y: formatBytes(value),
@@ -331,7 +333,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                                     eventKey={0}
                                     title={
                                         <TabTitleText>
-                                            {FlowPairsLabels.ActiveConnections}
+                                            {FlowPairsLabelsTcp.ActiveConnections}
                                         </TabTitleText>
                                     }
                                 >
@@ -346,7 +348,9 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                             {serversRowsCount && (
                                 <Tab
                                     eventKey={1}
-                                    title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}
+                                    title={
+                                        <TabTitleText>{FlowPairsLabelsTcp.Servers}</TabTitleText>
+                                    }
                                 >
                                     <ServersTable processes={servers} />
                                 </Tab>

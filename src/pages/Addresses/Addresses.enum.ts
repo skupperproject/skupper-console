@@ -32,62 +32,35 @@ export enum AddressesColumnsNames {
 }
 
 // FLOWS PAIRS VIEW
-export enum FlowPairsColumnsNames {
-    Status = 'Status',
-    FlowForward = 'From Client',
-    FlowReverse = 'To Server',
-    Site = 'Site',
-    ServerSite = 'Server Site',
-    Process = 'process',
-    Client = 'Client',
-    From = 'From',
-    Server = 'Server',
-    To = 'To',
-    BytesTx = 'Outbound',
-    Download = 'Download',
-    BytesRx = 'Inbound',
-    Upload = 'Upload',
-    ByteRateTX = 'Tx speed',
-    UploadRate = 'Speed U/L ',
-    ByteRateRX = 'Rx speed',
-    DownloadRate = 'Speed D/L',
-    LatencyAvgTx = 'Avg Out Latency',
-    LatencyMinTx = 'Tx Min Latency',
-    LatencyMaxTx = 'Tx Max Latency',
-    LatencyAvgRx = 'Avg In Latency',
-    LatencyMinRx = 'Rx Min Latency',
-    LatencyMaxRx = 'Rx Max Latency',
-    DownloadLatency = 'D/L Latency',
-    UploadLatency = 'U/L Latency',
-    RequestCompleted = 'Completed',
-    ResponseTime = 'Response time',
-    Host = 'Host',
-    Port = 'Port',
-    Method = 'Method',
-    StatusCode = 'Status',
-    StartTime = 'Created at',
-    Protocol = 'Protocol',
-    ImageName = 'Image',
-    Trace = 'Trace',
-    Flows = 'Flows',
-}
-
-export enum FlowPairsLabels {
+export enum FlowPairsLabelsTcp {
     Servers = 'Servers',
     ActiveConnections = 'Live connections',
-    ActiveRequests = 'Active Requests',
-    Requests = 'Requests',
-    RequestMethodsSummary = 'HTTP Methods summary in the last 5 minutes',
-    StatusCodeSummary = 'HTTP Status Codes distribution in the last 5 minutes',
-    TopClientTxTraffic = 'Outbound traffic in the last 5 minutes - Top 10 servers',
-    TopClientRxTraffic = 'Inbound traffic in the last 5 minutes - Top 10 servers',
-    TopClientDownloadTraffic = 'Distribution of the traffic received by Servers',
-    TopClientUploadTraffic = 'Distribution of the traffic sent by Servers',
+    TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 20 minutes',
+    TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 20 minutes',
     ViewDetails = 'view details',
     TrafficTx = 'Outbound Traffic ',
     TrafficRx = 'Inbound traffic',
-    AvgByteRateRx = 'Avg speed In',
-    AvgByteRateTx = 'Avg speed Out',
+    AvgByteRateRx = 'Average Inbound speed',
+    AvgByteRateTx = 'Average Outbound speed',
+}
+
+export enum FlowPairsLabelsHttp {
+    Servers = 'Servers',
+    Requests = 'Requests',
+    RequestMethodsSummary = 'HTTP Methods summary in the last 20 minutes',
+    StatusCodeSummary = 'HTTP Status Codes distribution in the last 20 minutes',
+    TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 20 minutes',
+    TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 20 minutes',
+    TopResponseAvgLatency = 'Top 10 Client latency response: Average time in the last 20 minutes',
+    TopRequestAvgLatency = 'Top 10 Server latency request: Average time in the last 20 minutes',
+    TrafficTx = 'Response Traffic ',
+    TrafficRx = 'Request traffic',
+    AvgByteRateRx = 'Avg speed Responses',
+    AvgByteRateTx = 'Avg speed Requests',
+}
+
+export enum FlowPairsLabel {
+    ViewDetails = 'view details',
     GoToTopology = 'Go to the network view',
 }
 
@@ -120,6 +93,5 @@ export enum FlowLabels {
     BytesTransferred = 'Bytes transferred',
     ByteUnacked = 'Byte unacked',
     WindowSize = 'Window Size',
-    DownloadLatency = 'D/L Latency',
-    UploadLatency = 'U/L Latency',
+    Latency = 'Latency',
 }

@@ -219,7 +219,7 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
     );
 };
 
-const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow = false }) {
+const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
     return (
         <Card isFullHeight isRounded>
             <CardTitle>
@@ -246,11 +246,7 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterfl
                                 <DescriptionListDescription>
                                     {formatBytes(flow.octets)}
                                 </DescriptionListDescription>
-                                <DescriptionListTerm>
-                                    {isCounterflow
-                                        ? FlowLabels.DownloadLatency
-                                        : FlowLabels.UploadLatency}
-                                </DescriptionListTerm>
+                                <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
                                 <DescriptionListDescription>
                                     {formatTime(flow.latency)}
                                 </DescriptionListDescription>

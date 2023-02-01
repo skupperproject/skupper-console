@@ -26,7 +26,7 @@ export interface ChartData {
 }
 export interface ChartProps {
     data: ChartData[];
-    options?: { themeColor: ChartThemeColors };
+    options?: { themeColor?: ChartThemeColors; format?: Function };
 }
 
 export interface RequestsByAddressProps {

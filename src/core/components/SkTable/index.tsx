@@ -346,7 +346,7 @@ const SkTable = function <T>({
                         ))}
                 </Tbody>
             </TableComposable>
-            {(pageSizeStart || urlPagination || onGetFilters) && (
+            {(pageSizeStart || urlPagination || onGetFilters) && totalRows > pageSize && (
                 <Pagination
                     className="pf-u-my-xs"
                     perPageComponent="button"
