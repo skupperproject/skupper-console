@@ -18,10 +18,12 @@ export interface GraphEdge {
     source: string;
     target: string;
     type?: 'dashed';
+    isActive?: boolean;
 }
 
 export interface GraphEdgeModifiedByForce {
     source: GraphNode;
     target: GraphNode;
     type?: 'dashed';
+    isActive?: boolean;
 }

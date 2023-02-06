@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -19,12 +19,12 @@ const processGroupsQueryParams = {
     filter: 'processGroupRole.external',
 };
 
-const TopologyProcessGroups = function () {
+const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
-    const [nodeSelected, setNodeSelected] = useState<string | null>(null);
+    const [nodeSelected, setNodeSelected] = useState<string | null>(id || null);
 
     const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
         [QueriesProcessGroups.GetProcessGroups],
@@ -54,9 +54,9 @@ const TopologyProcessGroups = function () {
     }
 
     const handleGetSelectedNode = useCallback(
-        (id: string) => {
-            if (id !== nodeSelected) {
-                setNodeSelected(id);
+        (idSelected: string) => {
+            if (idSelected !== nodeSelected) {
+                setNodeSelected(idSelected);
             }
         },
         [nodeSelected],
@@ -87,9 +87,10 @@ const TopologyProcessGroups = function () {
     return (
         <TopologyPanel
             nodes={nodes}
-            links={links}
+            edges={links}
             onGetSelectedNode={handleGetSelectedNode}
             options={{ shouldOpenDetails: !!nodeSelected }}
+            nodeSelected={nodeSelected}
         >
             {nodeSelected && <TopologyProcessGroupsDetails id={nodeSelected} />}
         </TopologyPanel>

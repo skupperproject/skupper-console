@@ -15,6 +15,7 @@ export enum FlowPairsColumnsNames {
     DownloadLatency = 'Latency Response',
     UploadLatency = 'Latency Request',
     RequestCompleted = 'Completed',
+    Duration = 'Duration',
     Host = 'Host',
     Port = 'Port',
     Method = 'Method',

@@ -4,7 +4,7 @@ import SkTable from '@core/components/SkTable';
 import { SiteResponse } from 'API/REST.interfaces';
 
 import SiteNameLinkCell from './SiteNameLinkCell';
-import { Labels, SitesTableColumns } from '../Sites.enum';
+import { SiteLabels, SitesTableColumns } from '../Sites.enum';
 import { SitesTableProps } from '../Sites.interfaces';
 
 const SitesTable: FC<SitesTableProps> = function ({ sites }) {
@@ -14,12 +14,16 @@ const SitesTable: FC<SitesTableProps> = function ({ sites }) {
             prop: 'name' as keyof SiteResponse,
             component: 'linkCell',
         },
+        {
+            name: SitesTableColumns.NameSpace,
+            prop: 'nameSpace' as keyof SiteResponse,
+        },
     ];
 
     return (
         <SkTable
-            title={Labels.Sites}
-            titleDescription={Labels.SitesDescription}
+            title={SiteLabels.Sites}
+            titleDescription={SiteLabels.SitesDescription}
             columns={columns}
             rows={sites}
             components={{ linkCell: SiteNameLinkCell }}

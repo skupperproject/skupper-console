@@ -48,8 +48,8 @@ const TopologyProcessGroupsDetails: FC<TopologyDeploymentDetailsProps> = functio
         return null;
     }
 
-    const tcpConnectionsInEntries = Object.values(deployment.tcpConnectionsIn);
-    const tcpConnectionsOutEntries = Object.values(deployment.tcpConnectionsOut);
+    const tcpConnectionsInEntries = deployment.tcpConnectionsIn;
+    const tcpConnectionsOutEntries = deployment.tcpConnectionsOut;
 
     const title = `${capitalizeFirstLetter(deployment.name)}`;
 

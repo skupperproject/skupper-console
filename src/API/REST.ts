@@ -38,7 +38,6 @@ import {
     LinkResponse,
     RouterResponse,
     HostResponse,
-    FlowAggregatesMapResponse,
     FlowAggregatesResponse,
     RequestOptions,
     ResponseWrapper,
@@ -250,7 +249,7 @@ export const RESTApi = {
     },
 
     // AGGREGATE  APIs
-    fetchSitesPairs: async (options?: RequestOptions): Promise<FlowAggregatesMapResponse[]> => {
+    fetchSitesPairs: async (options?: RequestOptions): Promise<FlowAggregatesResponse[]> => {
         const { data } = await axiosFetch(getSitePairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });

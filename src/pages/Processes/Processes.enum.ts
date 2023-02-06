@@ -27,6 +27,7 @@ export enum ProcessesLabels {
     TrafficReceived = 'Inbound Traffic',
     Clients = 'Clients',
     Servers = 'Servers',
+    GoToTopology = 'Go to the network view',
 }
 
 export enum ProcessPairsColumnsNames {

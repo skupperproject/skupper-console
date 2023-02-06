@@ -96,6 +96,7 @@ export interface AddressResponse extends EntityBaseResponse {
 
 export interface ConnectionTCP extends BaseResponse {
     parent: string;
+    counterFlow: string;
     octets: number;
     octetRate: number;
     octetsUnacked: number;
@@ -110,6 +111,7 @@ export interface ConnectionTCP extends BaseResponse {
 }
 
 export interface RequestHTTP extends BaseResponse {
+    counterFlow: string;
     parent: string;
     octets: number;
     octetRate: number;
@@ -139,11 +141,20 @@ export interface FlowPairsResponse extends BaseResponse {
     processAggregateId: string;
     endTime?: number;
 }
-export interface FlowAggregatesMapResponse extends BaseResponse {
-    rectType: string;
-    pairType: string;
-    sourceId: string;
-    destinationId: string;
+
+export interface ProcessPairs extends BaseResponse {
+    sourceSiteId: string;
+    sourceSiteName: string;
+    destinationSiteId: string;
+    destinationSiteName: string;
+    protocol: string;
+    forwardFlow: ConnectionTCP & RequestHTTP;
+    counterFlow: ConnectionTCP & RequestHTTP;
+    flowTrace: string;
+    siteAggregateId: string;
+    processGroupAggregateId: string;
+    processAggregateId: string;
+    endTime?: number;
 }
 
 export interface FlowAggregatesResponse extends BaseResponse {

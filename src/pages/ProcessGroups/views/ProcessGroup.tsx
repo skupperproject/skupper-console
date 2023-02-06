@@ -23,6 +23,11 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import {
+    TopologyRoutesPaths,
+    TopologyURLFilters,
+    TopologyViews,
+} from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
 
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
@@ -80,6 +85,12 @@ const ProcessGroup = function () {
             <Flex alignItems={{ default: 'alignItemsCenter' }}>
                 <ResourceIcon type="service" />
                 <Title headingLevel="h1">{name}</Title>
+
+                <Link
+                    to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+                >
+                    {`(${ProcessGroupsLabels.GoToTopology})`}
+                </Link>
             </Flex>
 
             <GridItem span={12}>

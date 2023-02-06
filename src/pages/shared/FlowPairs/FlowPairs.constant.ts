@@ -29,12 +29,8 @@ export const flowPairsComponentsTable = {
             type: 'process',
             link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.process}`,
         }),
-    TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-        LinkCell({
-            ...props,
-            type: 'site',
-            link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`,
-        }),
+    DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
+        formatTime((props.data.endTime || Date.now() * 1000) - props.data.startTime),
 };
 
 export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
@@ -90,6 +86,10 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         format: formatTraceBySites,
         width: 20,
     },
+    {
+        name: FlowPairsColumnsNames.Duration,
+        component: 'DurationCell',
+    },
 ];
 
 export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
@@ -143,5 +143,9 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         name: FlowPairsColumnsNames.RequestCompleted,
         prop: 'counterFlow.endTime' as keyof FlowPairsResponse,
         format: timeAgo,
+    },
+    {
+        name: FlowPairsColumnsNames.Duration,
+        component: 'DurationCell',
     },
 ];

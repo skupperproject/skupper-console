@@ -25,6 +25,7 @@ import EmptyData from '@core/components/EmptyData';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { setMinutesAgo } from '@core/utils/setMinutesAgo';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import {
@@ -51,10 +52,6 @@ const CONNECTION_HEIGHT_CHART = 350;
 const MINUTES_AGO = 20;
 const TOP_CLIENT_MAX = 10;
 
-export const minutesAgo = function (timestamp: number, min = 1) {
-    return timestamp - min * 60000;
-};
-
 const initConnectionsQueryParamsPaginated = {
     offset: 0,
     limit: DEFAULT_TABLE_PAGE_SIZE,
@@ -62,7 +59,7 @@ const initConnectionsQueryParamsPaginated = {
 };
 
 const initConnectionsTimeLimitedQueryParams = {
-    timeRangeStart: minutesAgo(new Date().getTime(), MINUTES_AGO),
+    timeRangeStart: setMinutesAgo(new Date().getTime(), MINUTES_AGO) * 1000,
 };
 
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName }) {

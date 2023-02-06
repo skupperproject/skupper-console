@@ -34,6 +34,11 @@ import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enu
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import {
+    TopologyRoutesPaths,
+    TopologyURLFilters,
+    TopologyViews,
+} from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
 import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
@@ -170,6 +175,12 @@ const Process = function () {
             <Flex alignItems={{ default: 'alignItemsCenter' }}>
                 <ResourceIcon type="process" />
                 <Title headingLevel="h1">{name}</Title>
+
+                <Link
+                    to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
+                >
+                    {`(${ProcessesLabels.GoToTopology})`}
+                </Link>
             </Flex>
 
             <GridItem>

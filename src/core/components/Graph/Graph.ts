@@ -58,11 +58,12 @@ export default class Graph {
         boxWidth: number,
         boxHeight: number,
         options?: { showGroup?: boolean },
+        nodeSelected?: string | null,
     ) {
         this.$root = $node;
         this.nodes = nodes;
         this.links = edges;
-        this.selectedNode = null;
+        this.selectedNode = nodeSelected || null;
         this.width = boxWidth;
         this.height = boxHeight;
         this.options = options;
@@ -347,14 +348,16 @@ export default class Graph {
                     ? '8,8'
                     : '0,0',
             )
-            .style('stroke', ({ source, target }) => {
+            .style('stroke', ({ source, target, isActive }) => {
                 const isEdgeConnectedToTheNode =
                     this.selectedNode &&
                     (this.selectedNode === source.id || this.selectedNode === target.id);
 
-                return isEdgeConnectedToTheNode
+                const isConnected = isEdgeConnectedToTheNode
                     ? 'var(--pf-global--palette--blue-400)'
                     : 'var(--pf-global--palette--black-400)';
+
+                return isActive ? 'var(--pf-global--palette--red-100)' : isConnected;
             })
             .style('opacity', ({ source, target }) => {
                 const isEdgeConnectedToTheNode =
@@ -525,9 +528,9 @@ export default class Graph {
             });
     }
 
-    private redrawTopology = (nodes: GraphNode[], links: GraphEdge[]) => {
+    private redrawTopology = (nodes: GraphNode[], edges: GraphEdge[]) => {
         this.svgContainerGroupNodes.selectAll('*').remove();
-        this.links = JSON.parse(JSON.stringify(links));
+        this.links = JSON.parse(JSON.stringify(edges));
         this.nodes = JSON.parse(JSON.stringify(nodes));
 
         this.force.nodes(this.nodes).on('tick', this.ticked);
@@ -541,10 +544,10 @@ export default class Graph {
         this.redrawNodes();
     };
 
-    updateTopology = (nodes: GraphNode[], links: GraphEdge[], options?: { showGroup: boolean }) => {
+    updateTopology = (nodes: GraphNode[], edges: GraphEdge[], options?: { showGroup: boolean }) => {
         if (this.isGraphLoaded && !this.isDraggingNode) {
             this.options = { ...this.options, showGroup: !!options?.showGroup };
-            this.redrawTopology(nodes, links);
+            this.redrawTopology(nodes, edges);
         }
     };
 

@@ -21,5 +21,5 @@ export function timeAgo(timestamp: number) {
         return mineAgo + (mineAgo > 1 ? ' mins ago' : ' min ago');
     }
 
-    return 'less than an hour ago';
+    return 'less than an minute ago';
 }

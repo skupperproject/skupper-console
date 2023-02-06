@@ -36,5 +36,5 @@ export enum ConnectionsColumns {
 export enum TopologyURLFilters {
     Type = 'type',
     AddressId = 'addressId',
-    ProcessIdSelected = 'processId',
+    IdSelected = 'id',
 }
