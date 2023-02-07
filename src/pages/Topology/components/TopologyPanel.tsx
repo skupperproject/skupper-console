@@ -49,14 +49,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
             [onGetSelectedNode],
         );
 
-        const handleExpandEdgeDetails = useCallback(
-            ({ data: { id } }: { data: GraphNode }) => {
-                console.log(id);
-                setIsExpandedDetails(!!id);
-            },
-            [onGetSelectedNode],
-        );
-
         function handleCloseDetails() {
             topologyGraphInstance?.deselectAll();
             setIsExpandedDetails(false);
@@ -85,7 +77,7 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         // Create Graph
         const graphRef = useCallback(
             ($node: HTMLDivElement | null) => {
-                if ($node && nodes.length && edges.length && !topologyGraphInstance) {
+                if ($node && nodes.length && !topologyGraphInstance) {
                     $node.replaceChildren();
 
                     const topologyGraph = new Graph(
@@ -99,7 +91,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                     );
 
                     topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleExpandDetails);
-                    topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleExpandEdgeDetails);
                     topologyGraph.EventEmitter.on(GraphEvents.IsGraphLoaded, handleIsGraphLoaded);
                     topologyGraph.EventEmitter.on(
                         GraphEvents.IsDraggingNodesEnd,
@@ -120,7 +111,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                 options,
                 nodeSelected,
                 handleExpandDetails,
-                handleExpandEdgeDetails,
                 handleIsGraphLoaded,
                 handleSaveNodesPositions,
             ],

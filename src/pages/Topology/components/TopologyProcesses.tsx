@@ -9,6 +9,7 @@ import {
     Select,
     SelectOption,
     SelectOptionObject,
+    Text,
     Toolbar,
     ToolbarContent,
     ToolbarItem,
@@ -18,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -26,7 +28,6 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import TopologyProcessesDetails from './DetailsProcesses';
 import TopologyPanel from './TopologyPanel';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
@@ -35,6 +36,10 @@ import { Labels } from '../Topology.enum';
 
 const processesQueryParams = {
     filter: 'processRole.external',
+};
+
+const processGroupsQueryParams = {
+    filter: 'processGroupRole.external',
 };
 
 const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> = function ({
@@ -48,7 +53,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
-    const [nodeSelected, setNodeSelected] = useState<string | null>(processId || null);
+    const [nodeSelected] = useState<string | null>(processId || null);
     const [edgeSelected, setEdgeSelected] = useState<string | null>(null);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -61,8 +66,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     });
 
     const { data: processGroups } = useQuery(
-        [QueriesProcessGroups.GetProcessGroups],
-        () => RESTApi.fetchProcessGroups(),
+        [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
+        () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
         {
             enabled: shouldShowProcessGroups,
             refetchInterval,
@@ -71,7 +76,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     );
 
     const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
-        [QueriesProcesses.GetProcess],
+        [QueriesProcesses.GetProcess, processesQueryParams],
         () => RESTApi.fetchProcesses(processesQueryParams),
         {
             refetchInterval,
@@ -122,12 +127,15 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     }
 
     const handleGetSelectedNode = useCallback(
-        (id: string) => {
-            if (id !== nodeSelected) {
-                setNodeSelected(id);
+        (idSelected: string) => {
+            if (idSelected) {
+                navigate(`${ProcessesRoutesPaths.Processes}/${idSelected}`);
             }
+            // if (idSelected !== nodeSelected) {
+            //     setNodeSelected(idSelected);
+            // }
         },
-        [nodeSelected],
+        [navigate],
     );
 
     const handleGetSelectedEdge = useCallback(
@@ -293,16 +301,19 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
                 onGetSelectedNode={handleGetSelectedNode}
                 onGetSelectedEdge={handleGetSelectedEdge}
                 nodeSelected={nodeSelected}
-                options={{ showGroup: true, shouldOpenDetails: !!nodeSelected || !!edgeSelected }}
-            >
-                {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
+                options={{ showGroup: true, shouldOpenDetails: false }}
+            />
+            {/* {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
                 {edgeSelected && <TopologyProcessesDetails id={edgeSelected} />}
-            </TopologyPanel>
+            </TopologyPanel> */}
 
             <Divider />
             <Panel>
                 <PanelMainBody>
                     <Flex>
+                        <Text>
+                            <b>{shouldShowProcessGroups ? 'Components: ' : ' Sites: '}</b>
+                        </Text>
                         {(shouldShowProcessGroups ? processGroups : sites)?.map((node, index) => (
                             <Flex key={node.identity}>
                                 <div

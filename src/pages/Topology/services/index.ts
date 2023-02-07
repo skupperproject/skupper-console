@@ -48,7 +48,7 @@ export const TopologyController = {
             key: identity,
             source: sourceId,
             target: destinationId,
-            isActive: false,
+            isActive: false, // TODO: update when the router bug is resolved !!(sourceOctetRate || destinationOctetRate),
         }));
 
         return processesLinks;
@@ -119,7 +119,7 @@ export const TopologyController = {
                 identity,
                 processId: destinationId,
                 processName: destinationName,
-                octetRate: destinationOctetRate,
+                octetRate: destinationOctetRate || 0,
                 recordCount,
             }),
         );
@@ -129,7 +129,7 @@ export const TopologyController = {
                 identity,
                 processId: sourceId,
                 processName: sourceName,
-                octetRate: sourceOctetRate,
+                octetRate: sourceOctetRate || 0,
                 recordCount,
             }),
         );
@@ -157,7 +157,7 @@ export const TopologyController = {
                     identity,
                     processId: sourceId,
                     processName: sourceName,
-                    octetRate: sourceOctetRate,
+                    octetRate: sourceOctetRate || 0,
                     recordCount,
                 };
 
@@ -175,7 +175,7 @@ export const TopologyController = {
                     identity,
                     processId: destinationId,
                     processName: destinationName,
-                    octetRate: destinationOctetRate,
+                    octetRate: destinationOctetRate || 0,
                     recordCount,
                 };
 

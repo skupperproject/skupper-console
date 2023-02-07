@@ -46,6 +46,7 @@ export default class Graph {
     handleZoom: ZoomBehavior<SVGSVGElement, GraphNode>;
     valueline: Line<[number, number]>;
     groupIds: string[];
+    nodeInitialized: null | string;
     selectedNode: null | string;
     EventEmitter: EventEmitter;
     options: { showGroup?: boolean | undefined } | undefined;
@@ -58,12 +59,13 @@ export default class Graph {
         boxWidth: number,
         boxHeight: number,
         options?: { showGroup?: boolean },
-        nodeSelected?: string | null,
+        nodeInitialized?: string | null,
     ) {
         this.$root = $node;
         this.nodes = nodes;
         this.links = edges;
-        this.selectedNode = nodeSelected || null;
+        this.nodeInitialized = nodeInitialized || null;
+        this.selectedNode = null;
         this.width = boxWidth;
         this.height = boxHeight;
         this.options = options;
@@ -338,20 +340,15 @@ export default class Graph {
     };
 
     private redrawEdges() {
+        const node = this.selectedNode || this.nodeInitialized;
         this.svgContainerGroupNodes
             .selectAll<SVGElement, GraphEdgeModifiedByForce>('.serviceLink')
             .style('stroke-width', '1px')
             .style('stroke-dasharray', ({ type, source, target }) =>
-                type === 'dashed' ||
-                this.selectedNode === source.id ||
-                this.selectedNode === target.id
-                    ? '8,8'
-                    : '0,0',
+                type === 'dashed' || node === source.id || node === target.id ? '8,8' : '0,0',
             )
             .style('stroke', ({ source, target, isActive }) => {
-                const isEdgeConnectedToTheNode =
-                    this.selectedNode &&
-                    (this.selectedNode === source.id || this.selectedNode === target.id);
+                const isEdgeConnectedToTheNode = node && (node === source.id || node === target.id);
 
                 const isConnected = isEdgeConnectedToTheNode
                     ? 'var(--pf-global--palette--blue-400)'
@@ -360,16 +357,30 @@ export default class Graph {
                 return isActive ? 'var(--pf-global--palette--red-100)' : isConnected;
             })
             .style('opacity', ({ source, target }) => {
-                const isEdgeConnectedToTheNode =
-                    !this.selectedNode ||
-                    this.selectedNode === source.id ||
-                    this.selectedNode === target.id;
+                const isEdgeConnectedToTheNode = !node || node === source.id || node === target.id;
 
                 return isEdgeConnectedToTheNode ? '1' : OPACITY_NO_SELECTED_ITEM;
+            })
+            .each((svgLink) => {
+                const isLinkConnectedToTheNode =
+                    node === svgLink.source.id || node === svgLink.target.id;
+
+                if (!this.selectedNode && isLinkConnectedToTheNode) {
+                    addAnimateEdges(svgLink);
+                }
+            })
+            .on('click', (_, nodeSelected) => {
+                this.EventEmitter.emit(GraphEvents.EdgeClick, [
+                    {
+                        type: 'click',
+                        name: GraphEvents.EdgeClick,
+                        data: { ...nodeSelected, id: this.selectedNode },
+                    },
+                ]);
             });
     }
 
-    private redrawNodes = () => {
+    private redrawGroupNodes = () => {
         const nodes = this.nodes;
 
         this.groupIds = set(nodes.map((n) => +n.group))
@@ -399,6 +410,10 @@ export default class Graph {
                     .on('drag', this.groupDragged)
                     .on('end', this.groupDragEnded),
             );
+    };
+
+    private redrawNodes = () => {
+        const nodes = this.nodes;
 
         const svgNodesData = this.svgContainerGroupNodes.selectAll('.node').data(nodes);
         const svgNodes = svgNodesData.enter();
@@ -426,6 +441,8 @@ export default class Graph {
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .on('mouseover', (_, { id }) => {
+                this.nodeInitialized = null;
+
                 if (!this.isDraggingNode && !this.selectedNode) {
                     this.svgContainerGroupNodes
                         .selectAll<SVGElement, GraphEdgeModifiedByForce>('.serviceLink')
@@ -540,6 +557,7 @@ export default class Graph {
 
         this.force.restart();
 
+        this.redrawGroupNodes();
         this.updateEdges();
         this.redrawNodes();
     };
@@ -575,6 +593,7 @@ export default class Graph {
 
     deselectAll() {
         this.selectedNode = null;
+        this.redrawGroupNodes();
         this.updateEdges();
         this.redrawNodes();
         this.svgContainerGroupNodes

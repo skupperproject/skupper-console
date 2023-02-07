@@ -4,13 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import TopologyProcessGroupsDetails from './DetailsProcessGroups';
 import TopologyPanel from './TopologyPanel';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
@@ -24,7 +24,7 @@ const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
-    const [nodeSelected, setNodeSelected] = useState<string | null>(id || null);
+    const [nodeSelected] = useState<string | null>(id || null);
 
     const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
         [QueriesProcessGroups.GetProcessGroups],
@@ -55,11 +55,9 @@ const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
 
     const handleGetSelectedNode = useCallback(
         (idSelected: string) => {
-            if (idSelected !== nodeSelected) {
-                setNodeSelected(idSelected);
-            }
+            navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${idSelected}`);
         },
-        [nodeSelected],
+        [navigate],
     );
     // Refresh topology data
     const updateTopologyData = useCallback(async () => {
@@ -89,11 +87,8 @@ const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
             nodes={nodes}
             edges={links}
             onGetSelectedNode={handleGetSelectedNode}
-            options={{ shouldOpenDetails: !!nodeSelected }}
             nodeSelected={nodeSelected}
-        >
-            {nodeSelected && <TopologyProcessGroupsDetails id={nodeSelected} />}
-        </TopologyPanel>
+        />
     );
 };
 

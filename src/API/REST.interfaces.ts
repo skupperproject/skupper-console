@@ -164,14 +164,14 @@ export interface FlowAggregatesResponse extends BaseResponse {
     sourceId: string;
     sourceName: string;
     sourceOctets: number;
-    sourceOctetRate: number;
+    sourceOctetRate?: number;
     sourceMinLatency: number;
     sourceMaxLatency: number;
     sourceAverageLatency: number;
     destinationId: string;
     destinationName: string;
     destinationOctets: number;
-    destinationOctetRate: number;
+    destinationOctetRate?: number;
     destinationMinLatency: number;
     destinationAverageLatency: number;
 }
