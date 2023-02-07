@@ -44,23 +44,23 @@ const TopologyDetails: FC<TopologyDetailsProps> = function ({
     > | null>(null);
 
     const tcpConnectionsOutEntriesChartData = tcpConnectionsOutEntries.map(
-        ({ identity, destinationId, destinationName, sourceOctetRate, recordCount }) => ({
+        ({ identity, processId, processName, octetRate, recordCount }) => ({
             identity,
-            targetIdentity: destinationId,
+            targetIdentity: processId,
             recordCount,
-            name: destinationName,
-            value: sourceOctetRate || 0,
+            name: processName,
+            value: octetRate || 0,
             show: !checkBoxSelectedSent || checkBoxSelectedSent[identity],
         }),
     );
 
     const tcpConnectionsInEntriesChartData = tcpConnectionsInEntries.map(
-        ({ identity, sourceId, sourceName, sourceOctetRate, recordCount }) => ({
+        ({ identity, processId, processName, octetRate, recordCount }) => ({
             identity,
-            targetIdentity: sourceId,
+            targetIdentity: processId,
             recordCount,
-            name: sourceName,
-            value: sourceOctetRate || 0,
+            name: processName,
+            value: octetRate || 0,
             show: !checkBoxSelectedReceived || checkBoxSelectedReceived[identity],
         }),
     );

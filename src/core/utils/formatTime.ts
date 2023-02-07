@@ -18,17 +18,21 @@ export function formatTime(time: number, options?: FormatTimeOptions) {
     const k = 1000;
     const dm = decimals < 0 ? 0 : decimals;
 
-    const sizes = ['µs', 'ms', 'sec'];
+    const sizes = ['µs', 'ms', 'sec', 'min', 'hours', 'days', 'months'];
     const sizeFromIndex = sizes.findIndex((size) => size === startSize);
     const sizeFrom = sizes.slice(sizeFromIndex);
 
     const i = Math.floor(Math.log(time) / Math.log(k));
     const timeSized = parseFloat((time / Math.pow(k, i)).toFixed(dm));
 
+    if (isNaN(timeSized)) {
+        return '';
+    }
+
     const timeFormatted =
         timeSized >= 60 && sizeFrom[i] === 'sec'
             ? `${Math.floor(timeSized / 60)} min`
             : `${timeSized} ${sizeFrom[i]}`;
 
-    return isNaN(timeSized) ? '' : timeFormatted;
+    return timeFormatted;
 }

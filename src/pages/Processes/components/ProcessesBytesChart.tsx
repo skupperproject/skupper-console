@@ -27,7 +27,7 @@ const ProcessesBytesChart: FC<ProcessesBytesChartProps> = function ({ bytes, lab
     return (
         <div ref={chartContainerRef} style={{ height: `${CHART_HEIGHT}px`, width: `100%` }}>
             {!bytes.length && <EmptyData />}
-            {bytes.length && (
+            {!!bytes.length && (
                 <ChartPie
                     data={bytes}
                     labels={labels?.map(({ name }) => name)}

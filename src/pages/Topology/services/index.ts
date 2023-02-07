@@ -6,7 +6,7 @@ import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import {
-    FlowAggregatesMapResponse,
+    FlowAggregatesResponse,
     FlowPairsResponse,
     LinkResponse,
     ProcessGroupResponse,
@@ -17,6 +17,7 @@ import {
 
 import {
     LinkTopology,
+    ProcessConnectedDetail,
     ProcessesMetrics,
     ProcessGroupMetrics,
     SitesMetrics,
@@ -42,11 +43,12 @@ export const TopologyController = {
         return sitesConnected;
     },
 
-    getProcessesLinks: (processesPairs: FlowAggregatesMapResponse[]): LinkTopology[] => {
+    getProcessesLinks: (processesPairs: FlowAggregatesResponse[]): LinkTopology[] => {
         const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,
             target: destinationId,
+            isActive: false, // TODO: update when the router bug is resolved !!(sourceOctetRate || destinationOctetRate),
         }));
 
         return processesLinks;
@@ -62,7 +64,7 @@ export const TopologyController = {
         return processesLinks;
     },
 
-    getProcessGroupsLinks: (links: FlowAggregatesMapResponse[]): LinkTopology[] => {
+    getProcessGroupsLinks: (links: FlowAggregatesResponse[]): LinkTopology[] => {
         const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
             key: identity,
             source: sourceId,
@@ -112,10 +114,30 @@ export const TopologyController = {
             filter: `destinationId.${id}`,
         });
 
+        const tcpConnectionsOut = processPairsTx.map(
+            ({ identity, destinationId, destinationName, recordCount, destinationOctetRate }) => ({
+                identity,
+                processId: destinationId,
+                processName: destinationName,
+                octetRate: destinationOctetRate || 0,
+                recordCount,
+            }),
+        );
+
+        const tcpConnectionsIn = processPairsRx.map(
+            ({ identity, sourceId, sourceName, sourceOctetRate, recordCount }) => ({
+                identity,
+                processId: sourceId,
+                processName: sourceName,
+                octetRate: sourceOctetRate || 0,
+                recordCount,
+            }),
+        );
+
         return {
             ...process,
-            tcpConnectionsOut: processPairsTx,
-            tcpConnectionsIn: processPairsRx,
+            tcpConnectionsOut,
+            tcpConnectionsIn,
         };
     },
 
@@ -129,10 +151,43 @@ export const TopologyController = {
             filter: `destinationId.${id}`,
         });
 
+        const processPairsTx = flowAggregatesPairsTx.reduce(
+            (acc, { sourceOctetRate, sourceName, sourceId, identity, recordCount }) => {
+                acc[identity] = {
+                    identity,
+                    processId: sourceId,
+                    processName: sourceName,
+                    octetRate: sourceOctetRate || 0,
+                    recordCount,
+                };
+
+                return acc;
+            },
+            {} as Record<string, ProcessConnectedDetail>,
+        );
+
+        const processPairsRx = flowAggregatesPairsRx.reduce(
+            (
+                acc,
+                { destinationId, destinationName, identity, destinationOctetRate, recordCount },
+            ) => {
+                acc[identity] = {
+                    identity,
+                    processId: destinationId,
+                    processName: destinationName,
+                    octetRate: destinationOctetRate || 0,
+                    recordCount,
+                };
+
+                return acc;
+            },
+            {} as Record<string, ProcessConnectedDetail>,
+        );
+
         return {
             ...processGroup,
-            tcpConnectionsOut: flowAggregatesPairsTx,
-            tcpConnectionsIn: flowAggregatesPairsRx,
+            tcpConnectionsOut: Object.values(processPairsTx),
+            tcpConnectionsIn: Object.values(processPairsRx),
         };
     },
 
@@ -188,9 +243,10 @@ export const TopologyController = {
             .sort((a, b) => a.group - b.group),
 
     getEdgesFromLinks: (links: LinkTopology[]): GraphEdge[] =>
-        links?.map(({ source, target }) => ({
+        links?.map(({ source, target, isActive }) => ({
             source,
             target,
+            isActive,
         })),
 
     getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge[] =>

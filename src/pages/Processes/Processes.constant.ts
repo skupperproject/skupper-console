@@ -1,7 +1,7 @@
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
-import { FlowAggregatesMapResponse, ProcessResponse } from 'API/REST.interfaces';
+import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import {
     ProcessesLabels,
@@ -28,36 +28,36 @@ export const processesTableColumns = [
     },
 ];
 
-export const processesConnectedColumns: SKColumn<FlowAggregatesMapResponse>[] = [
+export const processesConnectedColumns: SKColumn<FlowAggregatesResponse>[] = [
     {
         name: ProcessPairsColumnsNames.Process,
-        prop: 'destinationName' as keyof FlowAggregatesMapResponse,
+        prop: 'destinationName' as keyof FlowAggregatesResponse,
         width: 30,
         component: 'linkCell',
     },
     {
         name: ProcessPairsColumnsNames.BytesRx,
-        prop: 'sourceOctets' as keyof FlowAggregatesMapResponse,
+        prop: 'sourceOctets' as keyof FlowAggregatesResponse,
         format: formatBytes,
     },
     {
         name: ProcessPairsColumnsNames.BytesTx,
-        prop: 'destinationOctets' as keyof FlowAggregatesMapResponse,
+        prop: 'destinationOctets' as keyof FlowAggregatesResponse,
         format: formatBytes,
     },
     {
         name: ProcessPairsColumnsNames.LatencyAvgRx,
-        prop: 'sourceAverageLatency' as keyof FlowAggregatesMapResponse,
+        prop: 'sourceAverageLatency' as keyof FlowAggregatesResponse,
         format: formatTime,
     },
     {
         name: ProcessPairsColumnsNames.LatencyAvgTx,
-        prop: 'destinationAverageLatency' as keyof FlowAggregatesMapResponse,
+        prop: 'destinationAverageLatency' as keyof FlowAggregatesResponse,
         format: formatTime,
     },
     {
         name: ProcessPairsColumnsNames.Flows,
-        prop: 'recordCount' as keyof FlowAggregatesMapResponse,
+        prop: 'recordCount' as keyof FlowAggregatesResponse,
         columnDescription: 'number of connections or requests',
     },
 ];

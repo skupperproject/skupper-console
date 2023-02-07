@@ -11,17 +11,26 @@ export interface SitesMetrics extends SiteResponse {
 }
 
 export interface ProcessGroupMetrics extends ProcessGroupResponse {
-    tcpConnectionsIn: FlowAggregatesResponse[];
-    tcpConnectionsOut: FlowAggregatesResponse[];
+    tcpConnectionsIn: ProcessConnectedDetail[];
+    tcpConnectionsOut: ProcessConnectedDetail[];
+}
+
+export interface ProcessConnectedDetail {
+    identity: string;
+    processId: string;
+    processName: string;
+    octetRate: number;
+    recordCount: number;
 }
 
 export interface ProcessesMetrics extends ProcessResponse {
-    tcpConnectionsIn: FlowAggregatesResponse[];
-    tcpConnectionsOut: FlowAggregatesResponse[];
+    tcpConnectionsIn: ProcessConnectedDetail[];
+    tcpConnectionsOut: ProcessConnectedDetail[];
 }
 
 export interface LinkTopology {
     key: string;
     source: string;
     target: string;
+    isActive?: boolean;
 }

@@ -26,6 +26,7 @@ import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLin
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
+import { setMinutesAgo } from '@core/utils/setMinutesAgo';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import {
@@ -37,7 +38,6 @@ import { RESTApi } from 'API/REST';
 import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
-import { minutesAgo } from './ConnectionsByAddress';
 import FlowPairsTable from './FlowPairsTable';
 import ServersTable from './ServersTable';
 import { RequestsByAddressColumns } from '../Addresses.constants';
@@ -60,7 +60,7 @@ const initAllRequestsQueryParamsPaginated = {
 };
 
 const initRequestsTimeLimitedQueryParams = {
-    timeRangeStart: minutesAgo(new Date().getTime() * 1000, MINUTES_AGO),
+    timeRangeStart: setMinutesAgo(new Date().getTime(), MINUTES_AGO) * 1000,
 };
 
 const initServersQueryParams = {
@@ -76,10 +76,20 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         useState<RequestOptions>(initAllRequestsQueryParamsPaginated);
 
     const { data: requestsDataPaginated, isLoading: isLoadingRequestsPaginated } = useQuery(
-        [QueriesAddresses.GetFlowPairsByAddress, addressId, requestsQueryParamsPaginated],
+        [
+            QueriesAddresses.GetFlowPairsByAddress,
+            addressId,
+            {
+                ...initAllRequestsQueryParamsPaginated,
+                ...requestsQueryParamsPaginated,
+            },
+        ],
         () =>
             addressId
-                ? RESTApi.fetchFlowPairsByAddress(addressId, requestsQueryParamsPaginated)
+                ? RESTApi.fetchFlowPairsByAddress(addressId, {
+                      ...initAllRequestsQueryParamsPaginated,
+                      ...requestsQueryParamsPaginated,
+                  })
                 : null,
         {
             keepPreviousData: true,

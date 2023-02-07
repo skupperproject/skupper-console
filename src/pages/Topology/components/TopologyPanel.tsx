@@ -31,7 +31,7 @@ import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
 
 const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps>(
-    ({ nodes, links, onGetSelectedNode, children, options }, ref) => {
+    ({ nodes, edges, onGetSelectedNode, children, options, nodeSelected }, ref) => {
         const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
         const [areDetailsExpanded, setIsExpandedDetails] = useState(
             !!options?.shouldOpenDetails || false,
@@ -77,16 +77,17 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         // Create Graph
         const graphRef = useCallback(
             ($node: HTMLDivElement | null) => {
-                if ($node && nodes.length && links.length && !topologyGraphInstance) {
+                if ($node && nodes.length && !topologyGraphInstance) {
                     $node.replaceChildren();
 
                     const topologyGraph = new Graph(
                         $node,
                         nodes,
-                        links,
+                        edges,
                         $node.getBoundingClientRect().width,
                         $node.getBoundingClientRect().height,
                         options,
+                        nodeSelected,
                     );
 
                     topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleExpandDetails);
@@ -104,13 +105,14 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                 }
             },
             [
+                nodes,
+                edges,
+                topologyGraphInstance,
+                options,
+                nodeSelected,
                 handleExpandDetails,
                 handleIsGraphLoaded,
                 handleSaveNodesPositions,
-                links,
-                nodes,
-                options,
-                topologyGraphInstance,
             ],
         );
 
@@ -124,16 +126,16 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         useEffect(() => {
             if (
                 topologyGraphInstance &&
-                links &&
+                edges &&
                 nodes &&
                 JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes)
             ) {
-                topologyGraphInstance.updateTopology(nodes, links, {
+                topologyGraphInstance.updateTopology(nodes, edges, {
                     showGroup: !!options?.showGroup,
                 });
                 prevNodesRef.current = nodes;
             }
-        }, [nodes, links, topologyGraphInstance, options?.showGroup]);
+        }, [nodes, edges, topologyGraphInstance, options?.showGroup]);
 
         const ControlButtons = createTopologyControlButtons({
             ...defaultControlButtonsOptions,

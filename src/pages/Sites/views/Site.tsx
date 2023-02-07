@@ -26,11 +26,16 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import {
+    TopologyRoutesPaths,
+    TopologyURLFilters,
+    TopologyViews,
+} from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel, Labels } from '../Sites.enum';
+import { SitesRoutesPaths, SitesRoutesPathLabel, SiteLabels } from '../Sites.enum';
 
 const processQueryParams = { filter: 'processRole.external' };
 
@@ -130,25 +135,30 @@ const Site = function () {
             <GridItem>
                 <Flex alignItems={{ default: 'alignItemsCenter' }}>
                     <ResourceIcon type="site" />
-
                     <Title headingLevel="h1">{name}</Title>
+
+                    <Link
+                        to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
+                    >
+                        {`(${SiteLabels.GoToTopology})`}
+                    </Link>
                 </Flex>
             </GridItem>
 
             <GridItem>
                 <Card isFullHeight isRounded>
                     <CardTitle>
-                        <Title headingLevel="h2">{Labels.Details}</Title>
+                        <Title headingLevel="h2">{SiteLabels.Details}</Title>
                     </CardTitle>
                     <CardBody>
                         <DescriptionList>
                             <DescriptionListGroup>
-                                <DescriptionListTerm>{Labels.Name}</DescriptionListTerm>
+                                <DescriptionListTerm>{SiteLabels.Name}</DescriptionListTerm>
                                 <DescriptionListDescription>{name}</DescriptionListDescription>
                             </DescriptionListGroup>
 
                             <DescriptionListGroup>
-                                <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
+                                <DescriptionListTerm>{SiteLabels.Namespace}</DescriptionListTerm>
                                 <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
                             </DescriptionListGroup>
                         </DescriptionList>
@@ -158,7 +168,7 @@ const Site = function () {
             <GridItem span={4}>
                 <Card isFullHeight isRounded>
                     <CardTitle>
-                        <Title headingLevel="h2">{Labels.Links}</Title>
+                        <Title headingLevel="h2">{SiteLabels.Links}</Title>
                     </CardTitle>
                     <CardBody>
                         {(!!linkedSites.length && (
@@ -181,7 +191,7 @@ const Site = function () {
             <GridItem span={4}>
                 <Card isFullHeight isRounded>
                     <CardTitle>
-                        <Title headingLevel="h2">{Labels.Hosts}</Title>
+                        <Title headingLevel="h2">{SiteLabels.Hosts}</Title>
                     </CardTitle>
                     <CardBody>
                         {(!!hosts.length && (
@@ -199,7 +209,7 @@ const Site = function () {
             <GridItem span={4}>
                 <Card isFullHeight isRounded>
                     <CardTitle>
-                        <Title headingLevel="h2">{Labels.Processes}</Title>
+                        <Title headingLevel="h2">{SiteLabels.Processes}</Title>
                     </CardTitle>
                     <CardBody>
                         {(!!liveProcesses.length && (

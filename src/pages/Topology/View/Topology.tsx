@@ -11,7 +11,7 @@ import { TopologyURLFilters, TopologyViews } from '../Topology.enum';
 const Topology = function () {
     const [searchParams] = useSearchParams();
     const addressId = searchParams.get(TopologyURLFilters.AddressId);
-    const processId = searchParams.get(TopologyURLFilters.ProcessIdSelected);
+    const id = searchParams.get(TopologyURLFilters.IdSelected);
 
     const type = searchParams.get(TopologyURLFilters.Type);
 
@@ -21,6 +21,7 @@ const Topology = function () {
         _: React.MouseEvent<HTMLElement, MouseEvent>,
         tabIndex: string | number,
     ) {
+        searchParams.delete('id');
         setTopologyType(tabIndex as string);
     }
 
@@ -41,9 +42,9 @@ const Topology = function () {
                 />
             </Tabs>
             {topologyType === TopologyViews.Sites && <TopologySite />}
-            {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups />}
+            {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}
             {topologyType === TopologyViews.Processes && (
-                <TopologyProcesses addressId={addressId} processId={processId} />
+                <TopologyProcesses addressId={addressId} id={id} />
             )}
         </Card>
     );

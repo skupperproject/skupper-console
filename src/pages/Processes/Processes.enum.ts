@@ -22,17 +22,18 @@ export enum ProcessesLabels {
     Host = 'Host',
     MetricBytesSent = 'Top 5 processes bytes sent',
     MetricBytesReceived = 'Top 5 processes bytes received',
-    TrafficInOutDistribution = 'Inbound vs Outbound Traffic',
-    TrafficSent = 'Outbound traffic',
-    TrafficReceived = 'Inbound Traffic',
+    TrafficInOutDistribution = 'Traffic Sent vs Received',
+    TrafficSent = 'Sent',
+    TrafficReceived = 'Received',
     Clients = 'Clients',
     Servers = 'Servers',
+    GoToTopology = 'Go to the network view',
 }
 
 export enum ProcessPairsColumnsNames {
     Process = 'Process',
-    BytesTx = 'Outbound',
-    BytesRx = 'Inbound',
+    BytesTx = 'Sent',
+    BytesRx = 'Received',
     LatencyAvgTx = 'Avg Out Latency',
     LatencyAvgRx = 'Avg In Latency',
     Flows = 'Flows',

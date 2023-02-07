@@ -14,4 +14,5 @@ export enum ProcessGroupsLabels {
     Name = 'Name',
     MetricBytesSent = 'Top 5 components bytes sent',
     MetricBytesReceived = 'Top 5 components bytes received',
+    GoToTopology = 'Go to the network view',
 }
