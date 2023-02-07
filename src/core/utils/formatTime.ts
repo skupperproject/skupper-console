@@ -29,6 +29,14 @@ export function formatTime(time: number, options?: FormatTimeOptions) {
         return '';
     }
 
+    if (timeSized >= 60 && sizeFrom[i] === 'hours') {
+        return `${Math.floor(timeSized / 24)} days`;
+    }
+
+    if (timeSized >= 60 && sizeFrom[i] === 'min') {
+        return `${Math.floor(timeSized / 60)} hours`;
+    }
+
     const timeFormatted =
         timeSized >= 60 && sizeFrom[i] === 'sec'
             ? `${Math.floor(timeSized / 60)} min`
