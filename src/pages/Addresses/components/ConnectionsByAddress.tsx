@@ -49,7 +49,7 @@ import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
 const CONNECTION_HEIGHT_CHART = 350;
-const MINUTES_AGO = 20;
+const MINUTES_AGO = 5;
 const TOP_CLIENT_MAX = 10;
 
 const initConnectionsQueryParamsPaginated = {

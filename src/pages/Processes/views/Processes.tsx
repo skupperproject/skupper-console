@@ -5,6 +5,7 @@ import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import SkTable from '@core/components/SkTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
@@ -12,7 +13,9 @@ import { SortDirection } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
-import ProcessesTable from '../components/ProcessesTable';
+import ProcessNameLinkCell from '../components/ProcessesNameLinkCell';
+import SiteNameLinkCell from '../components/SiteNameLinkCell';
+import { processesTableColumns } from '../Processes.constant';
 import { ProcessesLabels } from '../Processes.enum';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
@@ -88,17 +91,21 @@ const Processes = function () {
         setProcessesPaginatedQueryParams({ ...initProcessesPaginatedQueryParams, ...params });
     }, []);
 
-    const processes = processesData?.results || [];
+    if (!processesData || !processesByOctetsSentData || !processesByOctetsReceivedData) {
+        return null;
+    }
+
+    const processes = processesData.results || [];
 
     const { labels: bytesSentLabels, values: bytesSent } =
         ProcessesController.formatProcessesBytesForChart(
-            processesByOctetsSentData?.results || [],
+            processesByOctetsSentData.results || [],
             BYTES_SENT_PROP,
         );
 
     const { labels: bytesReceivedLabels, values: bytesReceived } =
         ProcessesController.formatProcessesBytesForChart(
-            processesByOctetsReceivedData?.results || [],
+            processesByOctetsReceivedData.results || [],
             BYTES_RECEIVED_PROP,
         );
 
@@ -122,8 +129,15 @@ const Processes = function () {
                     </Card>
                 </GridItem>
                 <GridItem span={12}>
-                    <ProcessesTable
-                        processes={processes}
+                    <SkTable
+                        title={ProcessesLabels.Section}
+                        titleDescription={ProcessesLabels.Description}
+                        columns={processesTableColumns}
+                        rows={processes}
+                        components={{
+                            linkCell: ProcessNameLinkCell,
+                            linkCellSite: SiteNameLinkCell,
+                        }}
                         rowsCount={processesData?.timeRangeCount}
                         onGetFilters={handleGetFilters}
                     />

@@ -2,7 +2,6 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
     Checkbox,
-    Divider,
     Flex,
     Panel,
     PanelMainBody,
@@ -128,12 +127,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
     const handleGetSelectedNode = useCallback(
         (idSelected: string) => {
+            let id = idSelected;
             if (idSelected) {
-                navigate(`${ProcessesRoutesPaths.Processes}/${idSelected}`);
+                if (idSelected.startsWith('pGroup')) {
+                    id = idSelected.split('pGroup')[1];
+                }
+
+                navigate(`${ProcessesRoutesPaths.Processes}/${id}`);
             }
-            // if (idSelected !== nodeSelected) {
-            //     setNodeSelected(idSelected);
-            // }
         },
         [navigate],
     );
@@ -268,7 +269,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     return (
         <>
             <Toolbar>
-                <ToolbarContent>
+                <ToolbarContent style={{ height: '30px' }}>
                     <ToolbarItem>
                         <Checkbox
                             label={Labels.ShowProcessGroups}
@@ -292,7 +293,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
                     )}
                 </ToolbarContent>
             </Toolbar>
-            <Divider />
 
             <TopologyPanel
                 ref={topologyRef}
@@ -303,11 +303,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
                 nodeSelected={nodeSelected}
                 options={{ showGroup: true, shouldOpenDetails: false }}
             />
-            {/* {nodeSelected && <TopologyProcessesDetails id={nodeSelected} />}
-                {edgeSelected && <TopologyProcessesDetails id={edgeSelected} />}
-            </TopologyPanel> */}
 
-            <Divider />
             <Panel>
                 <PanelMainBody>
                     <Flex>

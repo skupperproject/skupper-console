@@ -7,22 +7,8 @@ import React, {
     useState,
 } from 'react';
 
-import {
-    Drawer,
-    DrawerActions,
-    DrawerCloseButton,
-    DrawerContent,
-    DrawerHead,
-    DrawerPanelBody,
-    DrawerPanelContent,
-    Panel,
-} from '@patternfly/react-core';
-import {
-    createTopologyControlButtons,
-    defaultControlButtonsOptions,
-    TopologyControlBar,
-    TopologyView,
-} from '@patternfly/react-topology';
+import { Button, Card } from '@patternfly/react-core';
+import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
@@ -31,17 +17,12 @@ import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
 
 const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps>(
-    ({ nodes, edges, onGetSelectedNode, children, options, nodeSelected }, ref) => {
+    ({ nodes, edges, onGetSelectedNode, options, nodeSelected }, ref) => {
         const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
-        const [areDetailsExpanded, setIsExpandedDetails] = useState(
-            !!options?.shouldOpenDetails || false,
-        );
 
         const prevNodesRef = useRef<GraphNode[]>();
         const handleExpandDetails = useCallback(
             ({ data: { id } }: { data: GraphNode }) => {
-                setIsExpandedDetails(!!id);
-
                 if (onGetSelectedNode) {
                     onGetSelectedNode(id);
                 }
@@ -51,7 +32,6 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
 
         function handleCloseDetails() {
             topologyGraphInstance?.deselectAll();
-            setIsExpandedDetails(false);
         }
 
         const handleIsGraphLoaded = useCallback((topologyNodes: GraphNode[]) => {
@@ -137,38 +117,35 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
             }
         }, [nodes, edges, topologyGraphInstance, options?.showGroup]);
 
-        const ControlButtons = createTopologyControlButtons({
-            ...defaultControlButtonsOptions,
-            zoomInCallback: () => topologyGraphInstance?.zoomIn(),
-            zoomOutCallback: () => topologyGraphInstance?.zoomOut(),
-            resetViewCallback: () => topologyGraphInstance?.zoomReset(),
-            fitToScreenHidden: true,
-            legendHidden: true,
-        });
-
-        const Details = (
-            <DrawerPanelContent widths={{ default: 'width_50' }}>
-                <DrawerHead>
-                    {children}
-                    <DrawerActions>
-                        <DrawerCloseButton onClick={handleCloseDetails} />
-                    </DrawerActions>
-                </DrawerHead>
-            </DrawerPanelContent>
-        );
-
         return (
-            <Drawer isExpanded={areDetailsExpanded} position="right">
-                <DrawerContent panelContent={Details} style={{ overflow: 'hidden' }}>
-                    <DrawerPanelBody>
-                        <TopologyView
-                            controlBar={<TopologyControlBar controlButtons={ControlButtons} />}
-                        >
-                            <Panel ref={graphRef} style={{ width: '100%', height: '100%' }} />
-                        </TopologyView>
-                    </DrawerPanelBody>
-                </DrawerContent>
-            </Drawer>
+            <Card isFullHeight style={{ position: 'relative' }}>
+                <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
+                <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+                    <Button
+                        isActive={true}
+                        className="pf-u-m-xs"
+                        variant="primary"
+                        onClick={() => topologyGraphInstance?.zoomIn()}
+                        icon={<SearchPlusIcon />}
+                    />
+
+                    <Button
+                        isActive={true}
+                        className="pf-u-m-xs"
+                        variant="primary"
+                        onClick={() => topologyGraphInstance?.zoomOut()}
+                        icon={<SearchMinusIcon />}
+                    />
+
+                    <Button
+                        isActive={true}
+                        className="pf-u-m-xs"
+                        variant="primary"
+                        onClick={() => topologyGraphInstance?.zoomReset()}
+                        icon={<ExpandIcon />}
+                    />
+                </span>
+            </Card>
         );
     },
 );

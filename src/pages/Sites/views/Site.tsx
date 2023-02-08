@@ -105,15 +105,13 @@ const Site = function () {
         isLoadingLinks ||
         isLoadingProcesses ||
         isLoadingRouters ||
-        isLoadingSites ||
-        !sites ||
-        !routers ||
-        !site ||
-        !hosts ||
-        !links ||
-        !processes
+        isLoadingSites
     ) {
         return <LoadingPage />;
+    }
+
+    if (!sites || !routers || !site || !hosts || !links || !processes) {
+        return null;
     }
 
     const { name, nameSpace } = site;

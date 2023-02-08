@@ -21,8 +21,10 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
@@ -93,7 +95,7 @@ const FlowsPair = function () {
 
             {connection.protocol === AvailableProtocols.Tcp && (
                 <TextContent>
-                    <Text component={TextVariants.h4}>
+                    <Text component={TextVariants.h2}>
                         Connection {forwardFlow?.endTime ? 'closed' : 'open'}
                     </Text>
                 </TextContent>
@@ -101,8 +103,8 @@ const FlowsPair = function () {
             {connection.protocol !== AvailableProtocols.Tcp && (
                 <>
                     <TextContent>
-                        <Text component={TextVariants.h4}>
-                            Request {forwardFlow?.endTime ? 'closed' : 'open'}
+                        <Text component={TextVariants.h2}>
+                            Request {forwardFlow?.endTime ? 'terminated' : 'open'}
                         </Text>
                     </TextContent>
                     <Card>
@@ -116,6 +118,13 @@ const FlowsPair = function () {
                                     <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
                                     <DescriptionListDescription>
                                         {forwardFlow.method}
+                                    </DescriptionListDescription>
+                                    <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                                    <DescriptionListDescription>
+                                        {formatTime(
+                                            (connection.endTime || Date.now() * 1000) -
+                                                connection.startTime,
+                                        )}{' '}
                                     </DescriptionListDescription>
                                 </DescriptionListGroup>
                             </DescriptionList>
@@ -172,7 +181,14 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                             <DescriptionListGroup>
                                 <DescriptionListTerm>{FlowLabels.Process}</DescriptionListTerm>
                                 <DescriptionListDescription>
-                                    {flow.processName}
+                                    <>
+                                        {<ResourceIcon type="process" />}
+                                        <Link
+                                            to={`${ProcessesRoutesPaths.Processes}/${flow.process}`}
+                                        >
+                                            {flow.processName}
+                                        </Link>
+                                    </>
                                 </DescriptionListDescription>
                                 <DescriptionListTerm>
                                     {isCounterflow ? FlowLabels.DestHost : FlowLabels.Host}
@@ -186,12 +202,16 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                                 <DescriptionListDescription>
                                     {flow.sourcePort}
                                 </DescriptionListDescription>
-                                {!!flow.octetRate && (
-                                    <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
+                                {flow.octetRate && (
+                                    <>
+                                        <DescriptionListTerm>
+                                            {FlowLabels.ByteRate}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {formatByteRate(flow.octetRate)}
+                                        </DescriptionListDescription>
+                                    </>
                                 )}
-                                <DescriptionListDescription>
-                                    {formatByteRate(flow.octetRate)}
-                                </DescriptionListDescription>
                                 <DescriptionListTerm>
                                     {FlowLabels.BytesTransferred}
                                 </DescriptionListTerm>
@@ -206,7 +226,7 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                                 <DescriptionListDescription>
                                     {formatBytes(flow.windowSize)}
                                 </DescriptionListDescription>
-                                <DescriptionListTerm>{FlowLabels.TTFB}</DescriptionListTerm>
+                                <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
                                 <DescriptionListDescription>
                                     {formatTime(flow.latency)}
                                 </DescriptionListDescription>
@@ -232,14 +252,25 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
                             <DescriptionListGroup>
                                 <DescriptionListTerm>{FlowLabels.Process}</DescriptionListTerm>
                                 <DescriptionListDescription>
-                                    {flow.processName}
+                                    <>
+                                        {<ResourceIcon type="process" />}
+                                        <Link
+                                            to={`${ProcessesRoutesPaths.Processes}/${flow.process}`}
+                                        >
+                                            {flow.processName}
+                                        </Link>
+                                    </>
                                 </DescriptionListDescription>
-                                {!!flow.octetRate && (
-                                    <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
+                                {flow.octetRate && (
+                                    <>
+                                        <DescriptionListTerm>
+                                            {FlowLabels.ByteRate}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {formatByteRate(flow.octetRate)}
+                                        </DescriptionListDescription>
+                                    </>
                                 )}
-                                <DescriptionListDescription>
-                                    {formatByteRate(flow.octetRate)}
-                                </DescriptionListDescription>
                                 <DescriptionListTerm>
                                     {FlowLabels.BytesTransferred}
                                 </DescriptionListTerm>

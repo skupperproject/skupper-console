@@ -4,12 +4,15 @@ import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import SkTable from '@core/components/SkTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 
-import SitesTable from '../components/SitesTable';
+import SiteNameLinkCell from '../components/SiteNameLinkCell';
 import { QueriesSites } from '../services/services.enum';
+import { siteColumns } from '../Sites.constant';
+import { SiteLabels } from '../Sites.enum';
 
 const Sites = function () {
     const navigate = useNavigate();
@@ -34,10 +37,20 @@ const Sites = function () {
         return <LoadingPage />;
     }
 
+    if (!sites) {
+        return null;
+    }
+
     return (
         <Grid hasGutter>
             <GridItem>
-                <SitesTable sites={sites || []} />
+                <SkTable
+                    title={SiteLabels.Sites}
+                    titleDescription={SiteLabels.SitesDescription}
+                    columns={siteColumns}
+                    rows={sites}
+                    components={{ linkCell: SiteNameLinkCell }}
+                />
             </GridItem>
         </Grid>
     );
