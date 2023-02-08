@@ -18,8 +18,8 @@ const TopologySite: FC<{ id?: string | null }> = function () {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
-    const [nodes, setNodes] = useState<GraphNode[]>([]);
-    const [edges, setEdges] = useState<GraphEdge[]>([]);
+    const [nodes, setNodes] = useState<GraphNode[]>();
+    const [edges, setEdges] = useState<GraphEdge[]>();
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
         [QueriesSites.GetSites],
@@ -88,6 +88,10 @@ const TopologySite: FC<{ id?: string | null }> = function () {
 
     if (isLoadingSites || isLoadingLinks || isLoadingRouters) {
         return <LoadingPage />;
+    }
+
+    if (!nodes || !edges) {
+        return null;
     }
 
     return <TopologyPanel nodes={nodes} edges={edges} onGetSelectedNode={handleGetSelectedNode} />;

@@ -99,7 +99,6 @@ export default class Graph {
             });
 
         this.svgContainer.call(this.handleZoom);
-        this.redrawTopology(this.nodes, this.links);
     }
 
     private createSvgContainer() {
@@ -563,7 +562,7 @@ export default class Graph {
     };
 
     updateTopology = (nodes: GraphNode[], edges: GraphEdge[], options?: { showGroup: boolean }) => {
-        if (this.isGraphLoaded && !this.isDraggingNode) {
+        if (!this.isDraggingNode) {
             this.options = { ...this.options, showGroup: !!options?.showGroup };
             this.redrawTopology(nodes, edges);
         }

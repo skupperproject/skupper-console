@@ -11,7 +11,7 @@ import { Button, Card } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
-import { GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
@@ -21,6 +21,8 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
         const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
 
         const prevNodesRef = useRef<GraphNode[]>();
+        const prevEdgesRef = useRef<GraphEdge[]>();
+
         const handleExpandDetails = useCallback(
             ({ data: { id } }: { data: GraphNode }) => {
                 if (onGetSelectedNode) {
@@ -108,12 +110,15 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                 topologyGraphInstance &&
                 edges &&
                 nodes &&
-                JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes)
+                (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
+                    JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
             ) {
                 topologyGraphInstance.updateTopology(nodes, edges, {
                     showGroup: !!options?.showGroup,
                 });
+
                 prevNodesRef.current = nodes;
+                prevEdgesRef.current = edges;
             }
         }, [nodes, edges, topologyGraphInstance, options?.showGroup]);
 
