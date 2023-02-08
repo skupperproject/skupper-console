@@ -5,12 +5,14 @@ import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import SkTable from '@core/components/SkTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 
+import ProcessGroupNameLinkCell from '../components/ProcessGroupNameLinkCell';
 import ProcessesBytesChart from '../components/ProcessGroupsBytesChart';
-import ProcessGroupsTable from '../components/ProcessGroupsTable';
+import { processGroupsColumns } from '../ProcessGroups.constant';
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
@@ -81,7 +83,13 @@ const ProcessGroups = function () {
                 </Card>
             </GridItem>
             <GridItem span={12}>
-                <ProcessGroupsTable processGroups={processGroups || []} />
+                <SkTable
+                    title={ProcessGroupsLabels.Section}
+                    titleDescription={ProcessGroupsLabels.Description}
+                    columns={processGroupsColumns}
+                    rows={processGroups}
+                    components={{ linkCell: ProcessGroupNameLinkCell }}
+                />
             </GridItem>
         </Grid>
     );

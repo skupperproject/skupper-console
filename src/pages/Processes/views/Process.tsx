@@ -116,6 +116,10 @@ const Process = function () {
         return <LoadingPage />;
     }
 
+    if (!process || !processesPairsDataTx || !processesPairsRxData || !addresses) {
+        return null;
+    }
+
     const {
         parent,
         parentName,
@@ -131,10 +135,10 @@ const Process = function () {
         octetsSent,
     } = process as ProcessResponse;
 
-    const processesPairsTx = processesPairsDataTx || [];
+    const processesPairsTx = processesPairsDataTx;
 
     const processesPairsRxReverse =
-        processesPairsRxData?.map((processPairsData) => ({
+        processesPairsRxData.map((processPairsData) => ({
             ...processPairsData,
             sourceId: processPairsData.destinationId,
             sourceName: processPairsData.destinationName,
@@ -146,20 +150,20 @@ const Process = function () {
             destinationAverageLatency: processPairsData.sourceAverageLatency,
         })) || [];
 
-    const totalBytes = (process?.octetsSent || 0) + (process?.octetsReceived || 0);
+    const totalBytes = process.octetsSent + process.octetsReceived;
 
     const processTrafficChartData = totalBytes && [
         {
             x: `${ProcessesLabels.TrafficSent}: ${Math.round(
-                ((process?.octetsSent || 0) / totalBytes) * 100,
+                (process.octetsSent / totalBytes) * 100,
             )}%`,
-            y: process?.octetsSent || 0,
+            y: process.octetsSent,
         },
         {
             x: `${ProcessesLabels.TrafficReceived}: ${Math.round(
-                ((process?.octetsReceived || 0) / totalBytes) * 100,
+                (process.octetsReceived / totalBytes) * 100,
             )}%`,
-            y: process?.octetsReceived || 0,
+            y: process.octetsReceived,
         },
     ];
 
@@ -220,7 +224,7 @@ const Process = function () {
                                     </DescriptionListGroup>
                                 </GridItem>
 
-                                {!!addresses?.length && (
+                                {!!addresses.length && (
                                     <GridItem span={6}>
                                         <DescriptionListGroup>
                                             <DescriptionListTerm>
@@ -228,7 +232,7 @@ const Process = function () {
                                             </DescriptionListTerm>
                                             <DescriptionListDescription>
                                                 <Flex>
-                                                    {addresses?.map((address) => (
+                                                    {addresses.map((address) => (
                                                         <AddressNameLinkCell
                                                             key={address.identity}
                                                             data={address}

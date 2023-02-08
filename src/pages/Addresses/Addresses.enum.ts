@@ -12,7 +12,7 @@ export enum AddressesLabels {
     HTTP = ' HTTP/2',
     TCP = 'TCP',
     Description = 'Set of processes that are exposed across the Virtual application network',
-    ProtocolDistribution = 'Distribution of addresses by protocol',
+    ProtocolDistribution = 'TCP vs HTTP',
     CurrentConnections = 'Connections',
     ConnectionsByAddress = 'Top  5 - Active Connections By address',
     CurrentRequests = 'Requests',
