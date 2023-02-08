@@ -35,8 +35,8 @@ export enum AddressesColumnsNames {
 export enum FlowPairsLabelsTcp {
     Servers = 'Servers',
     ActiveConnections = 'Live connections',
-    TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 20 minutes',
-    TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 20 minutes',
+    TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 5 minutes',
+    TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 5 minutes',
     ViewDetails = 'view details',
     TrafficTx = 'Outbound Traffic ',
     TrafficRx = 'Inbound traffic',
@@ -88,10 +88,10 @@ export enum FlowLabels {
     DestPort = 'Destination Port',
     Flow = 'Client',
     CounterFlow = 'Server',
-    TTFB = 'Time to first byte',
     ByteRate = 'Byte rate',
     BytesTransferred = 'Bytes transferred',
     ByteUnacked = 'Byte unacked',
     WindowSize = 'Window Size',
     Latency = 'Latency',
+    Duration = 'Duration',
 }

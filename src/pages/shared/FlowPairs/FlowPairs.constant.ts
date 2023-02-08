@@ -23,12 +23,20 @@ export const flowPairsComponentsTable = {
             type: 'site',
             link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteId}`,
         }),
+    TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
+        LinkCell({
+            ...props,
+            type: 'site',
+            link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`,
+        }),
     TargetProcessNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
         LinkCell({
             ...props,
             type: 'process',
             link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.process}`,
         }),
+    ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
+        formatTime((props.data.counterFlow.latency + props.data.forwardFlow.latency) / 2),
     DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
         formatTime((props.data.endTime || Date.now() * 1000) - props.data.startTime),
 };
@@ -68,6 +76,11 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         name: FlowPairsColumnsNames.BytesRx,
         prop: 'counterFlow.octets' as keyof FlowPairsResponse,
         format: formatBytes,
+    },
+    {
+        name: FlowPairsColumnsNames.Latency,
+        columnDescription: 'time elapsed between client and server',
+        component: 'ClientServerLatencyCell',
     },
     {
         name: FlowPairsColumnsNames.Server,
@@ -120,11 +133,6 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         width: 20,
     },
     {
-        name: FlowPairsColumnsNames.UploadRate,
-        prop: 'forwardFlow.octetRate' as keyof FlowPairsResponse,
-        format: formatByteRate,
-    },
-    {
         name: FlowPairsColumnsNames.DownloadRate,
         prop: 'counterFlow.octetRate' as keyof FlowPairsResponse,
         format: formatByteRate,
@@ -134,11 +142,7 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         prop: 'counterFlow.latency' as keyof FlowPairsResponse,
         format: formatTime,
     },
-    {
-        name: FlowPairsColumnsNames.UploadLatency,
-        prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
-        format: formatTime,
-    },
+
     {
         name: FlowPairsColumnsNames.RequestCompleted,
         prop: 'counterFlow.endTime' as keyof FlowPairsResponse,

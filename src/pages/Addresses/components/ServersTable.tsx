@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -9,7 +10,6 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import LinkCell from '../../../core/components/LinkCell';
 import { ProcessesColumnsNames } from '../Addresses.enum';
 import { ProcessesTableProps } from '../Addresses.interfaces';
 
@@ -28,7 +28,7 @@ const columns = [
     {
         name: ProcessesColumnsNames.Site,
         prop: 'parentName' as keyof ProcessResponse,
-        component: 'name[LinkCell]Site',
+        component: 'nameLinkCellSite',
     },
     {
         name: ProcessesColumnsNames.Host,

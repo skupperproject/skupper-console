@@ -59,6 +59,7 @@ const Addresses = function () {
         (props: LinkCellProps<AddressResponse>) =>
             LinkCell({
                 ...props,
+                isDisabled: !props.data.totalFlows,
                 type: 'address',
                 link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}@${props.data.protocol}`,
             }),

@@ -1,6 +1,6 @@
-import { easeLinear } from 'd3';
 import { set } from 'd3-collection';
 import { drag } from 'd3-drag';
+import { easeLinear } from 'd3-ease';
 import {
     forceSimulation,
     forceCenter,

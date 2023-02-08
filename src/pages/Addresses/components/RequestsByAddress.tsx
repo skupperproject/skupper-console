@@ -156,7 +156,9 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     const methodsSummary = Object.values(methodsSummaryMap);
 
     const statusCodesSummaryMap = requestsTimeLimited.reduce((acc, { counterFlow: { result } }) => {
-        acc[`${result}`] = { name: `${result}`, x: `${result}`, y: (acc[result]?.y || 0) + 1 };
+        if (result) {
+            acc[`${result}`] = { name: `${result}`, x: `${result}`, y: (acc[result]?.y || 0) + 1 };
+        }
 
         return acc;
     }, {} as Record<string, ChartData>);
@@ -444,14 +446,15 @@ const MethodsSummaryChart: FC<ChartProps> = function ({ data, options }) {
             legendPosition="right"
             themeColor={options?.themeColor || ChartThemeColors.Orange}
             height={DEFAULT_HEIGHT_CHART}
+            domainPadding={{ x: [30, 25] }}
             padding={{
                 bottom: 100,
-                left: 50,
+                left: 0,
                 right: 200,
                 top: 50,
             }}
         >
-            <ChartBar data={data} barWidth={50} />
+            <ChartBar data={data} barWidth={25} />
         </Chart>
     );
 };
