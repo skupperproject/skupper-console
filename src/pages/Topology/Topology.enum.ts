@@ -29,7 +29,7 @@ export enum ConnectionsLabels {
 
 export enum ConnectionsColumns {
     Name = 'Name',
-    ByteRate = 'Speed',
+    ByteRate = 'Rate',
     FlowPairs = 'Flow pairs',
 }
 

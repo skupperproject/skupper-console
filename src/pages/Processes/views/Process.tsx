@@ -8,10 +8,6 @@ import {
     Card,
     CardBody,
     CardTitle,
-    DescriptionList,
-    DescriptionListDescription,
-    DescriptionListGroup,
-    DescriptionListTerm,
     Flex,
     Grid,
     GridItem,
@@ -30,10 +26,8 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTable from '@core/components/SkTable';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import {
     TopologyRoutesPaths,
     TopologyURLFilters,
@@ -43,12 +37,25 @@ import { RESTApi } from 'API/REST';
 import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
-import AddressNameLinkCell from '../components/AddressNameLinkCell';
+import ProcessDescription from '../components/ProcessDescription';
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import { processesConnectedColumns } from '../Processes.constant';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { CurrentBytesInfoProps } from '../Processes.interfaces';
 import { QueriesProcesses } from '../services/services.enum';
+
+const ProcessesConnectedComponentsTable = {
+    ProcessLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+        LinkCell({
+            ...props,
+            type: 'process',
+            link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
+        }),
+    TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
+        formatBytes(props.data.sourceOctets + props.data.destinationOctets),
+    AvgLatency: (props: LinkCellProps<FlowAggregatesResponse>) =>
+        formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2),
+};
 
 const Process = function () {
     const navigate = useNavigate();
@@ -64,7 +71,7 @@ const Process = function () {
         },
     );
 
-    const { data: processesPairsDataTx, isLoading: isLoadingProcessesPairsData } = useQuery(
+    const { data: processesPairsTxData, isLoading: isLoadingProcessesPairsTxData } = useQuery(
         [QueriesProcesses.GetProcessPairsTx, processId],
         () =>
             RESTApi.fetchProcessesPairs({
@@ -110,32 +117,20 @@ const Process = function () {
     if (
         isLoadingProcess ||
         isLoadingAddressesByProcess ||
-        isLoadingProcessesPairsData ||
+        isLoadingProcessesPairsTxData ||
         isLoadingProcessesPairsRxData
     ) {
         return <LoadingPage />;
     }
 
-    if (!process || !processesPairsDataTx || !processesPairsRxData || !addresses) {
+    if (!process || !processesPairsTxData || !processesPairsRxData || !addresses) {
         return null;
     }
 
-    const {
-        parent,
-        parentName,
-        name,
-        imageName,
-        groupName,
-        groupIdentity,
-        sourceHost,
-        hostName,
-        octetReceivedRate,
-        octetsReceived,
-        octetSentRate,
-        octetsSent,
-    } = process as ProcessResponse;
+    const { name, octetReceivedRate, octetsReceived, octetSentRate, octetsSent } =
+        process as ProcessResponse;
 
-    const processesPairsTx = processesPairsDataTx;
+    const processesPairsTx = processesPairsTxData;
 
     const processesPairsRxReverse =
         processesPairsRxData.map((processPairsData) => ({
@@ -188,102 +183,10 @@ const Process = function () {
             </Flex>
 
             <GridItem>
-                <Card isFullHeight isRounded>
-                    <CardTitle>
-                        <Title headingLevel="h2">{ProcessesLabels.Details}</Title>
-                    </CardTitle>
-                    <CardBody>
-                        <DescriptionList>
-                            <Grid hasGutter>
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.Site}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            <ResourceIcon type="site" />
-                                            <Link to={`${SitesRoutesPaths.Sites}/${parent}`}>
-                                                {parentName}
-                                            </Link>
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.ProcessGroup}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            <ResourceIcon type="service" />
-                                            <Link
-                                                to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupIdentity}`}
-                                            >
-                                                {groupName}
-                                            </Link>
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
-
-                                {!!addresses.length && (
-                                    <GridItem span={6}>
-                                        <DescriptionListGroup>
-                                            <DescriptionListTerm>
-                                                {ProcessesLabels.Addresses}
-                                            </DescriptionListTerm>
-                                            <DescriptionListDescription>
-                                                <Flex>
-                                                    {addresses.map((address) => (
-                                                        <AddressNameLinkCell
-                                                            key={address.identity}
-                                                            data={address}
-                                                            value={address.name}
-                                                        />
-                                                    ))}
-                                                </Flex>
-                                            </DescriptionListDescription>
-                                        </DescriptionListGroup>
-                                    </GridItem>
-                                )}
-
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.Image}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            {imageName}
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
-
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.SourceIP}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            {sourceHost}
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
-
-                                <GridItem span={6}>
-                                    <DescriptionListGroup>
-                                        <DescriptionListTerm>
-                                            {ProcessesLabels.Host}
-                                        </DescriptionListTerm>
-                                        <DescriptionListDescription>
-                                            {hostName}
-                                        </DescriptionListDescription>
-                                    </DescriptionListGroup>
-                                </GridItem>
-                            </Grid>
-                        </DescriptionList>
-                    </CardBody>
-                </Card>
+                <ProcessDescription process={process} title={ProcessesLabels.Details} />
             </GridItem>
 
-            <GridItem span={8} rowSpan={2}>
+            <GridItem span={8} rowSpan={3}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
                     {!processTrafficChartData && <EmptyData />}
@@ -293,6 +196,19 @@ const Process = function () {
                             themeColor={ChartThemeColor.multi}
                         />
                     )}
+                </Card>
+            </GridItem>
+
+            <GridItem span={4}>
+                <Card isFullHeight>
+                    <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
+                    <CardBody>
+                        <TextContent>
+                            <Text component={TextVariants.h1}>
+                                {formatBytes(octetsReceived + octetsSent)}
+                            </Text>
+                        </TextContent>
+                    </CardBody>
                 </Card>
             </GridItem>
 
@@ -334,11 +250,12 @@ const Process = function () {
                     rows={processesPairsTx}
                     pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                     components={{
-                        linkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                        ...ProcessesConnectedComponentsTable,
+                        viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
                             LinkCell({
                                 ...props,
-                                type: 'process',
-                                link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
+                                link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
+                                value: ProcessPairsColumnsNames.ViewDetails,
                             }),
                     }}
                 />
@@ -351,11 +268,12 @@ const Process = function () {
                     rows={processesPairsRxReverse}
                     pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                     components={{
-                        linkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                        ...ProcessesConnectedComponentsTable,
+                        viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
                             LinkCell({
                                 ...props,
-                                type: 'process',
-                                link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
+                                link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,
+                                value: ProcessPairsColumnsNames.ViewDetails,
                             }),
                     }}
                 />

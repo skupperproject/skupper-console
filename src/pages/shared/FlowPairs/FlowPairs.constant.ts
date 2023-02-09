@@ -36,7 +36,7 @@ export const flowPairsComponentsTable = {
             link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.process}`,
         }),
     ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
-        formatTime((props.data.counterFlow.latency + props.data.forwardFlow.latency) / 2),
+        formatTime(props.data.counterFlow.latency + props.data.forwardFlow.latency),
     DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
         formatTime((props.data.endTime || Date.now() * 1000) - props.data.startTime),
 };
@@ -58,27 +58,27 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         component: 'SiteNameLinkCell',
     },
     {
-        name: FlowPairsColumnsNames.ByteRateTX,
+        name: FlowPairsColumnsNames.TxByteRate,
         prop: 'forwardFlow.octetRate' as keyof FlowPairsResponse,
         format: formatByteRate,
     },
     {
-        name: FlowPairsColumnsNames.ByteRateRX,
+        name: FlowPairsColumnsNames.RxByteRate,
         prop: 'counterFlow.octetRate' as keyof FlowPairsResponse,
         format: formatByteRate,
     },
     {
-        name: FlowPairsColumnsNames.BytesTx,
+        name: FlowPairsColumnsNames.TxBytes,
         prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
         format: formatBytes,
     },
     {
-        name: FlowPairsColumnsNames.BytesRx,
+        name: FlowPairsColumnsNames.RxBytes,
         prop: 'counterFlow.octets' as keyof FlowPairsResponse,
         format: formatBytes,
     },
     {
-        name: FlowPairsColumnsNames.Latency,
+        name: FlowPairsColumnsNames.TTFB,
         columnDescription: 'time elapsed between client and server',
         component: 'ClientServerLatencyCell',
     },
@@ -133,12 +133,12 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         width: 20,
     },
     {
-        name: FlowPairsColumnsNames.DownloadRate,
+        name: FlowPairsColumnsNames.RxByteRate,
         prop: 'counterFlow.octetRate' as keyof FlowPairsResponse,
         format: formatByteRate,
     },
     {
-        name: FlowPairsColumnsNames.DownloadLatency,
+        name: FlowPairsColumnsNames.RxLatency,
         prop: 'counterFlow.latency' as keyof FlowPairsResponse,
         format: formatTime,
     },
