@@ -33,7 +33,7 @@ const initAllFlowParisQueryParamsPaginated = {
     limit: DEFAULT_TABLE_PAGE_SIZE,
 };
 
-const ProcessFlowPairs = function () {
+const ProcessPairs = function () {
     const { processId, flowPairId } = useParams();
 
     const ids = flowPairId?.split('-to-') || [];
@@ -149,7 +149,7 @@ const ProcessFlowPairs = function () {
                     justifyContent: 'center',
                 }}
             >
-                <Icon status="danger" size="xl">
+                <Icon status="success" size="xl">
                     <LongArrowAltRightIcon />
                 </Icon>
                 <Icon status="info" size="xl">
@@ -197,7 +197,7 @@ const ProcessFlowPairs = function () {
     );
 };
 
-export default ProcessFlowPairs;
+export default ProcessPairs;
 
 function isTcp(protocolSelected: AvailableProtocols) {
     return protocolSelected === AvailableProtocols.Tcp;

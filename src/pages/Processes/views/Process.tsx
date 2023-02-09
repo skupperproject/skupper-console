@@ -199,7 +199,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={4}>
+            <GridItem span={4} rowSpan={2}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
                     <CardBody>
@@ -212,7 +212,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={4}>
+            <GridItem span={2}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
                     <CardBody>
@@ -228,7 +228,7 @@ const Process = function () {
                 </Card>
             </GridItem>
 
-            <GridItem span={4}>
+            <GridItem span={2}>
                 <Card isFullHeight>
                     <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
                     <CardBody>
