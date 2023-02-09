@@ -62,10 +62,6 @@ export const TcpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
         prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
     },
     {
-        name: FlowPairsColumnsNames.ServerPort,
-        prop: 'counterFlow.sourcePort' as keyof FlowPairsResponse,
-    },
-    {
         name: FlowPairsColumnsNames.TxByteRate,
         prop: 'forwardFlow.octetRate' as keyof FlowPairsResponse,
         format: formatByteRate,
