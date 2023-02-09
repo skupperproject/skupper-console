@@ -1,7 +1,9 @@
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
-import { formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
-import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
+import { timeAgo } from '@core/utils/timeAgo';
+import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
+import { FlowAggregatesResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import {
     ProcessesLabels,
@@ -33,31 +35,109 @@ export const processesConnectedColumns: SKColumn<FlowAggregatesResponse>[] = [
         name: ProcessPairsColumnsNames.Process,
         prop: 'destinationName' as keyof FlowAggregatesResponse,
         width: 30,
-        component: 'linkCell',
+        component: 'ProcessLinkCell',
     },
     {
-        name: ProcessPairsColumnsNames.BytesRx,
-        prop: 'sourceOctets' as keyof FlowAggregatesResponse,
-        format: formatBytes,
+        name: ProcessPairsColumnsNames.Traffic,
+        component: 'TotalBytesExchanged',
     },
     {
-        name: ProcessPairsColumnsNames.BytesTx,
-        prop: 'destinationOctets' as keyof FlowAggregatesResponse,
-        format: formatBytes,
-    },
-    {
-        name: ProcessPairsColumnsNames.LatencyAvgRx,
-        prop: 'sourceAverageLatency' as keyof FlowAggregatesResponse,
-        format: formatTime,
-    },
-    {
-        name: ProcessPairsColumnsNames.LatencyAvgTx,
-        prop: 'destinationAverageLatency' as keyof FlowAggregatesResponse,
-        format: formatTime,
+        name: ProcessPairsColumnsNames.AvgLatency,
+        component: 'AvgLatency',
     },
     {
         name: ProcessPairsColumnsNames.Flows,
         prop: 'recordCount' as keyof FlowAggregatesResponse,
         columnDescription: 'number of connections or requests',
+    },
+    {
+        name: '',
+        component: 'viewDetailsLinkCell',
+    },
+];
+
+export const TcpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+    {
+        name: FlowPairsColumnsNames.ClientPort,
+        prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
+    },
+    {
+        name: FlowPairsColumnsNames.ServerPort,
+        prop: 'counterFlow.sourcePort' as keyof FlowPairsResponse,
+    },
+    {
+        name: FlowPairsColumnsNames.TxByteRate,
+        prop: 'forwardFlow.octetRate' as keyof FlowPairsResponse,
+        format: formatByteRate,
+    },
+    {
+        name: FlowPairsColumnsNames.RxByteRate,
+        prop: 'counterFlow.octetRate' as keyof FlowPairsResponse,
+        format: formatByteRate,
+    },
+    {
+        name: FlowPairsColumnsNames.TxBytes,
+        prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
+        format: formatBytes,
+    },
+    {
+        name: FlowPairsColumnsNames.RxBytes,
+        prop: 'counterFlow.octets' as keyof FlowPairsResponse,
+        format: formatBytes,
+    },
+    {
+        name: FlowPairsColumnsNames.TTFB,
+        columnDescription: 'time elapsed between client and server',
+        component: 'ClientServerLatencyCell',
+    },
+    {
+        name: FlowPairsColumnsNames.Trace,
+        prop: 'flowTrace' as keyof FlowPairsResponse,
+        format: formatTraceBySites,
+        width: 20,
+    },
+    {
+        name: FlowPairsColumnsNames.Duration,
+        component: 'DurationCell',
+    },
+];
+
+export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+    {
+        name: FlowPairsColumnsNames.Method,
+        prop: 'forwardFlow.method' as keyof FlowPairsResponse,
+    },
+    {
+        name: FlowPairsColumnsNames.StatusCode,
+        prop: 'counterFlow.result' as keyof FlowPairsResponse,
+    },
+    {
+        name: FlowPairsColumnsNames.TxBytes,
+        prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
+        format: formatBytes,
+    },
+    {
+        name: FlowPairsColumnsNames.RxBytes,
+        prop: 'counterFlow.octets' as keyof FlowPairsResponse,
+        format: formatBytes,
+    },
+    {
+        name: FlowPairsColumnsNames.TxLatency,
+        prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
+        format: formatTime,
+    },
+    {
+        name: FlowPairsColumnsNames.RxLatency,
+        prop: 'counterFlow.latency' as keyof FlowPairsResponse,
+        format: formatTime,
+    },
+    {
+        name: FlowPairsColumnsNames.RequestCompleted,
+        prop: 'counterFlow.endTime' as keyof FlowPairsResponse,
+        format: timeAgo,
+    },
+    {
+        name: FlowPairsColumnsNames.Duration,
+        component: 'DurationCell',
     },
 ];

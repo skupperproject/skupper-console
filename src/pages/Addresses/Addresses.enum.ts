@@ -55,8 +55,8 @@ export enum FlowPairsLabelsHttp {
     TopRequestAvgLatency = 'Top 10 Server latency request: Average time in the last 20 minutes',
     TrafficTx = 'Response Traffic ',
     TrafficRx = 'Request traffic',
-    AvgByteRateRx = 'Avg speed Responses',
-    AvgByteRateTx = 'Avg speed Requests',
+    AvgByteRateRx = 'Avg rate Responses',
+    AvgByteRateTx = 'Avg rate Requests',
 }
 
 export enum FlowPairsLabel {
@@ -71,8 +71,8 @@ export enum ProcessesColumnsNames {
     ProcessGroup = 'Component',
     BytesTx = 'Tx Bytes',
     BytesRx = 'Rx Bytes',
-    ByteRateTx = 'Tx speed',
-    ByteRateRx = 'Rx speed',
+    ByteRateTx = 'Tx rate',
+    ByteRateRx = 'Rx rate',
     Host = 'Host',
     Port = 'Port',
     Image = 'Image',

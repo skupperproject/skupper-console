@@ -232,12 +232,14 @@ export const RESTApi = {
     },
 
     // FLOW PAIRS  APIs
-    fetchFlowPairs: async (options?: RequestOptions): Promise<FlowPairsResponse[]> => {
+    fetchFlowPairs: async (
+        options?: RequestOptions,
+    ): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
         const { data } = await axiosFetch(getFlowPairsPATH(), {
             params: options ? addQueryParams(options) : null,
         });
 
-        return getResults(data);
+        return data;
     },
 
     fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse> => {
