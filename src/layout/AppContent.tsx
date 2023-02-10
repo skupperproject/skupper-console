@@ -19,7 +19,9 @@ const AppContent = function ({ children }: AppContentProps) {
     return (
         <div className="pf-u-px-md pf-u-py-md" style={{ flex: 1 }}>
             <img src={BrandImg} alt="skupper brand" className="sk-main" />
-            <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
+            <div style={{ position: 'relative', height: '100%' }}>
+                <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
+            </div>
         </div>
     );
 };
