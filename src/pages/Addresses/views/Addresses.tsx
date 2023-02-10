@@ -20,6 +20,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import SkTable from '@core/components/SkTable';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
@@ -95,68 +96,70 @@ const Addresses = function () {
     }
 
     return (
-        <Grid hasGutter data-cy="sk-addresses">
-            <GridItem>
-                <Flex>
-                    <TextContent>
-                        <Text component={TextVariants.h1}>{AddressesLabels.Section}</Text>
-                    </TextContent>
-                    <Tooltip position="right" content={AddressesLabels.Description}>
-                        <OutlinedQuestionCircleIcon />
-                    </Tooltip>
-                </Flex>
-            </GridItem>
+        <TransitionPage>
+            <Grid hasGutter data-cy="sk-addresses">
+                <GridItem>
+                    <Flex>
+                        <TextContent>
+                            <Text component={TextVariants.h1}>{AddressesLabels.Section}</Text>
+                        </TextContent>
+                        <Tooltip position="right" content={AddressesLabels.Description}>
+                            <OutlinedQuestionCircleIcon />
+                        </Tooltip>
+                    </Flex>
+                </GridItem>
 
-            <GridItem>
-                <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-                    <CardTitle>{AddressesLabels.ProtocolDistribution}</CardTitle>
-                    <ChartPie
-                        data={topTrafficUpload?.map(({ x, y }) => ({
-                            x,
-                            y,
-                        }))}
-                        labels={topTrafficUpload?.map(({ name, y }) => `${name}: ${y}`)}
-                        padding={{
-                            bottom: 100,
-                            left: 0,
-                            right: 0,
-                            top: 0,
-                        }}
-                        legendData={topTrafficUpload?.map(({ name, y }) => ({
-                            name: `${name}: ${y}`,
-                        }))}
-                        legendOrientation="horizontal"
-                        legendPosition="bottom"
-                        height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-                        themeColor={ChartThemeColors.Multi}
-                    />
-                </Card>
-            </GridItem>
+                <GridItem>
+                    <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
+                        <CardTitle>{AddressesLabels.ProtocolDistribution}</CardTitle>
+                        <ChartPie
+                            data={topTrafficUpload?.map(({ x, y }) => ({
+                                x,
+                                y,
+                            }))}
+                            labels={topTrafficUpload?.map(({ name, y }) => `${name}: ${y}`)}
+                            padding={{
+                                bottom: 100,
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                            }}
+                            legendData={topTrafficUpload?.map(({ name, y }) => ({
+                                name: `${name}: ${y}`,
+                            }))}
+                            legendOrientation="horizontal"
+                            legendPosition="bottom"
+                            height={REAL_TIME_CONNECTION_HEIGHT_CHART}
+                            themeColor={ChartThemeColors.Multi}
+                        />
+                    </Card>
+                </GridItem>
 
-            <GridItem span={6}>
-                <Card isFullHeight>
-                    <SkTable
-                        title={AddressesLabels.TCP}
-                        columns={generateColumns(AvailableProtocols.Tcp)}
-                        rows={sortedAddressesTCP}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                        components={{ AddressNameLinkCell }}
-                    />
-                </Card>
-            </GridItem>
+                <GridItem span={6}>
+                    <Card isFullHeight>
+                        <SkTable
+                            title={AddressesLabels.TCP}
+                            columns={generateColumns(AvailableProtocols.Tcp)}
+                            rows={sortedAddressesTCP}
+                            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                            components={{ AddressNameLinkCell }}
+                        />
+                    </Card>
+                </GridItem>
 
-            <GridItem span={6}>
-                <Card isFullHeight>
-                    <SkTable
-                        title={AddressesLabels.HTTP}
-                        columns={generateColumns(AvailableProtocols.Http)}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                        rows={sortedAddressesHTTP}
-                        components={{ AddressNameLinkCell }}
-                    />
-                </Card>
-            </GridItem>
-        </Grid>
+                <GridItem span={6}>
+                    <Card isFullHeight>
+                        <SkTable
+                            title={AddressesLabels.HTTP}
+                            columns={generateColumns(AvailableProtocols.Http)}
+                            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                            rows={sortedAddressesHTTP}
+                            components={{ AddressNameLinkCell }}
+                        />
+                    </Card>
+                </GridItem>
+            </Grid>
+        </TransitionPage>
     );
 };
 

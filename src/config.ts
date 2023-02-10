@@ -10,11 +10,11 @@ export const BASE_URL_COLLECTOR =
 
 // Navigation config
 export const RoutesPropsConfig = [
-    TopologyPaths,
     SitesPaths,
     ProcessGroupsPaths,
     ProcessesPaths,
     AddressesPaths,
+    TopologyPaths,
 ];
 
 export const DEFAULT_VIEW = RoutesPropsConfig[0].path; // Firs page to load when the app is open

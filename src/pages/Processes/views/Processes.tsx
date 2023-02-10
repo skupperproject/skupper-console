@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import SkTable from '@core/components/SkTable';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
@@ -110,44 +111,46 @@ const Processes = function () {
         );
 
     return (
-        <>
-            <Grid hasGutter>
-                <GridItem span={6}>
-                    <Card>
-                        <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
-                        <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
-                    </Card>
-                </GridItem>
-                <GridItem span={6}>
-                    <Card>
-                        <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
-                        <ProcessesBytesChart
-                            bytes={bytesReceived}
-                            labels={bytesReceivedLabels}
-                            themeColor={ChartThemeColor.green}
+        <TransitionPage>
+            <>
+                <Grid hasGutter>
+                    <GridItem span={6}>
+                        <Card>
+                            <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
+                            <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
+                        </Card>
+                    </GridItem>
+                    <GridItem span={6}>
+                        <Card>
+                            <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
+                            <ProcessesBytesChart
+                                bytes={bytesReceived}
+                                labels={bytesReceivedLabels}
+                                themeColor={ChartThemeColor.green}
+                            />
+                        </Card>
+                    </GridItem>
+                    <GridItem span={12}>
+                        <SkTable
+                            title={ProcessesLabels.Section}
+                            titleDescription={ProcessesLabels.Description}
+                            columns={processesTableColumns}
+                            rows={processes}
+                            components={{
+                                linkCell: ProcessNameLinkCell,
+                                linkCellSite: SiteNameLinkCell,
+                            }}
+                            rowsCount={processesData?.timeRangeCount}
+                            onGetFilters={handleGetFilters}
                         />
-                    </Card>
-                </GridItem>
-                <GridItem span={12}>
-                    <SkTable
-                        title={ProcessesLabels.Section}
-                        titleDescription={ProcessesLabels.Description}
-                        columns={processesTableColumns}
-                        rows={processes}
-                        components={{
-                            linkCell: ProcessNameLinkCell,
-                            linkCellSite: SiteNameLinkCell,
-                        }}
-                        rowsCount={processesData?.timeRangeCount}
-                        onGetFilters={handleGetFilters}
-                    />
-                </GridItem>
-            </Grid>
+                    </GridItem>
+                </Grid>
 
-            {(isLoadingProcessesData ||
-                isLoadingProcessesByOctetsSentData ||
-                isLoadingProcessesByOctetsReceivedData) && <LoadingPage isFLoating={true} />}
-        </>
+                {(isLoadingProcessesData ||
+                    isLoadingProcessesByOctetsSentData ||
+                    isLoadingProcessesByOctetsReceivedData) && <LoadingPage isFLoating={true} />}
+            </>
+        </TransitionPage>
     );
 };
 

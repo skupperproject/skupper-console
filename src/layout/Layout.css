@@ -1,0 +1,41 @@
+.pf-c-page__main{
+    z-index: 0!important;
+    background:linear-gradient(to bottom, rgb(202, 215, 228)  0%, var(--pf-global--palette--black-100) 80%);
+}
+
+.pf-c-page__header {
+    z-index: 1!important;
+    box-shadow: 0 3px 3px var(--pf-global--palette--black-700);
+    background: linear-gradient(to bottom, rgb(36, 45, 57) 11.2%, var(--pf-global--palette--black-900)51.2%, var(--pf-global--palette--black-900) 98.6%)
+}
+
+.pf-c-page__sidebar{
+    box-shadow: 3px 3px 3px var(--pf-global--palette--black-600)!important;
+    background: linear-gradient(to top, rgb(36, 45, 57) 11.2%, rgb(16, 37, 60) 51.2%, var(--pf-global--palette--black-900) 98.6%)!important
+}
+
+.pf-c-page__sidebar-body {
+    padding: 0!important;
+}
+
+.pf-c-nav__link {
+    font-weight: lighter;
+}
+
+.pf-c-nav__link:hover, .pf-c-nav__link.pf-m-current {
+    background:linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);
+    color: var(--pf-global--palette--black-900)!important
+}
+
+.sk-main {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+    width: 30%;
+    opacity: 0.017;
+}
+
+
+
+

@@ -14,6 +14,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import LinkCell from '@core/components/LinkCell';
 import SkTable from '@core/components/SkTable';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
@@ -112,88 +113,92 @@ const ProcessPairs = function () {
     const processName = processId === sourceId ? sourceProcess.name : destinationProcess.name;
 
     return (
-        <Grid hasGutter>
-            <GridItem>
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                        <Link
-                            to={`${ProcessesRoutesPaths.Processes}/${processId}`}
-                        >{`${processName}`}</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{'flow pairs'}</BreadcrumbHeading>
-                </Breadcrumb>
-            </GridItem>
-
-            <GridItem span={5}>
-                <ProcessDescription
-                    process={sourceProcess}
-                    title={LinkCell<ProcessResponse>({
-                        data: sourceProcess,
-                        value: sourceProcess.name,
-                        link: `${ProcessesRoutesPaths.Processes}/${sourceId}`,
-                        type: 'process',
-                    })}
-                />
-            </GridItem>
-
-            <GridItem
-                span={2}
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                <Icon status="success" size="xl">
-                    <LongArrowAltRightIcon />
-                </Icon>
-                <Icon status="info" size="xl">
-                    <LongArrowAltLeftIcon />
-                </Icon>
-            </GridItem>
-
-            <GridItem span={5}>
-                <ProcessDescription
-                    process={destinationProcess}
-                    title={LinkCell<ProcessResponse>({
-                        data: destinationProcess,
-                        value: destinationProcess.name,
-                        link: `${ProcessesRoutesPaths.Processes}/${destinationId}`,
-                        type: 'process',
-                    })}
-                />
-            </GridItem>
-
-            {!!TcpFlowPairs.length && (
+        <TransitionPage>
+            <Grid hasGutter>
                 <GridItem>
-                    <SkTable
-                        title={ProcessesLabels.TcpConnection}
-                        columns={TcpProcessesFlowPairsColumns}
-                        rows={TcpFlowPairs}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                        components={flowPairsComponentsTable}
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <Link to={ProcessesRoutesPaths.Processes}>
+                                {ProcessesLabels.Section}
+                            </Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem>
+                            <Link
+                                to={`${ProcessesRoutesPaths.Processes}/${processId}`}
+                            >{`${processName}`}</Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbHeading to="#">{'flow pairs'}</BreadcrumbHeading>
+                    </Breadcrumb>
+                </GridItem>
+
+                <GridItem span={5}>
+                    <ProcessDescription
+                        process={sourceProcess}
+                        title={LinkCell<ProcessResponse>({
+                            data: sourceProcess,
+                            value: sourceProcess.name,
+                            link: `${ProcessesRoutesPaths.Processes}/${sourceId}`,
+                            type: 'process',
+                        })}
                     />
                 </GridItem>
-            )}
 
-            {!!HttpFlowPairs.length && (
-                <GridItem>
-                    <SkTable
-                        title={ProcessesLabels.HttpRequests}
-                        columns={HttpProcessesFlowPairsColumns}
-                        rows={HttpFlowPairs}
-                        onGetFilters={handleGetFiltersFlowPairs}
-                        rowsCount={flowPairsPaginatedCount}
-                        components={flowPairsComponentsTable}
+                <GridItem
+                    span={2}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Icon status="success" size="xl">
+                        <LongArrowAltRightIcon />
+                    </Icon>
+                    <Icon status="info" size="xl">
+                        <LongArrowAltLeftIcon />
+                    </Icon>
+                </GridItem>
+
+                <GridItem span={5}>
+                    <ProcessDescription
+                        process={destinationProcess}
+                        title={LinkCell<ProcessResponse>({
+                            data: destinationProcess,
+                            value: destinationProcess.name,
+                            link: `${ProcessesRoutesPaths.Processes}/${destinationId}`,
+                            type: 'process',
+                        })}
                     />
                 </GridItem>
-            )}
-        </Grid>
+
+                {!!TcpFlowPairs.length && (
+                    <GridItem>
+                        <SkTable
+                            title={ProcessesLabels.TcpConnection}
+                            columns={TcpProcessesFlowPairsColumns}
+                            rows={TcpFlowPairs}
+                            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                            components={flowPairsComponentsTable}
+                        />
+                    </GridItem>
+                )}
+
+                {!!HttpFlowPairs.length && (
+                    <GridItem>
+                        <SkTable
+                            title={ProcessesLabels.HttpRequests}
+                            columns={HttpProcessesFlowPairsColumns}
+                            rows={HttpFlowPairs}
+                            onGetFilters={handleGetFiltersFlowPairs}
+                            rowsCount={flowPairsPaginatedCount}
+                            components={flowPairsComponentsTable}
+                        />
+                    </GridItem>
+                )}
+            </Grid>
+        </TransitionPage>
     );
 };
 

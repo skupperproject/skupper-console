@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import SkTable from '@core/components/SkTable';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
@@ -65,33 +66,35 @@ const ProcessGroups = function () {
         );
 
     return (
-        <Grid hasGutter>
-            <GridItem span={6}>
-                <Card>
-                    <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
-                    <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
-                </Card>
-            </GridItem>
-            <GridItem span={6}>
-                <Card>
-                    <CardTitle>{ProcessGroupsLabels.MetricBytesReceived}</CardTitle>
-                    <ProcessesBytesChart
-                        bytes={bytesReceived}
-                        labels={bytesReceivedLabels}
-                        themeColor={ChartThemeColor.green}
+        <TransitionPage>
+            <Grid hasGutter>
+                <GridItem span={6}>
+                    <Card>
+                        <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
+                        <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
+                    </Card>
+                </GridItem>
+                <GridItem span={6}>
+                    <Card>
+                        <CardTitle>{ProcessGroupsLabels.MetricBytesReceived}</CardTitle>
+                        <ProcessesBytesChart
+                            bytes={bytesReceived}
+                            labels={bytesReceivedLabels}
+                            themeColor={ChartThemeColor.green}
+                        />
+                    </Card>
+                </GridItem>
+                <GridItem span={12}>
+                    <SkTable
+                        title={ProcessGroupsLabels.Section}
+                        titleDescription={ProcessGroupsLabels.Description}
+                        columns={processGroupsColumns}
+                        rows={processGroups}
+                        components={{ linkCell: ProcessGroupNameLinkCell }}
                     />
-                </Card>
-            </GridItem>
-            <GridItem span={12}>
-                <SkTable
-                    title={ProcessGroupsLabels.Section}
-                    titleDescription={ProcessGroupsLabels.Description}
-                    columns={processGroupsColumns}
-                    rows={processGroups}
-                    components={{ linkCell: ProcessGroupNameLinkCell }}
-                />
-            </GridItem>
-        </Grid>
+                </GridItem>
+            </Grid>
+        </TransitionPage>
     );
 };
 

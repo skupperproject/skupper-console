@@ -12,6 +12,7 @@ import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-i
 
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 
 import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
@@ -124,7 +125,9 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
 
         return (
             <Card isFullHeight style={{ position: 'relative' }}>
-                <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
+                <TransitionPage>
+                    <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
+                </TransitionPage>
                 <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
                     <Button
                         isActive={true}
