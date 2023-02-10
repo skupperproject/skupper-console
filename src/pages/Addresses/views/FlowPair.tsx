@@ -211,7 +211,7 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                                 <DescriptionListDescription>
                                     {flow.sourcePort}
                                 </DescriptionListDescription>
-                                {flow.octetRate && (
+                                {!!flow.octetRate && (
                                     <>
                                         <DescriptionListTerm>
                                             {FlowLabels.ByteRate}
@@ -270,7 +270,7 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
                                         </Link>
                                     </>
                                 </DescriptionListDescription>
-                                {flow.octetRate && (
+                                {!!flow.octetRate && (
                                     <>
                                         <DescriptionListTerm>
                                             {FlowLabels.ByteRate}
