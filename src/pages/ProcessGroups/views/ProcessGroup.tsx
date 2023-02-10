@@ -20,6 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -72,48 +73,50 @@ const ProcessGroup = function () {
     const { name } = processGroup;
 
     return (
-        <Grid hasGutter>
-            <Breadcrumb>
-                <BreadcrumbItem>
-                    <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
-                        {ProcessGroupsLabels.Section}
+        <TransitionPage>
+            <Grid hasGutter>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
+                            {ProcessGroupsLabels.Section}
+                        </Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
+                </Breadcrumb>
+
+                <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                    <ResourceIcon type="service" />
+                    <Title headingLevel="h1">{name}</Title>
+
+                    <Link
+                        to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+                    >
+                        {`(${ProcessGroupsLabels.GoToTopology})`}
                     </Link>
-                </BreadcrumbItem>
-                <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-            </Breadcrumb>
+                </Flex>
 
-            <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                <ResourceIcon type="service" />
-                <Title headingLevel="h1">{name}</Title>
-
-                <Link
-                    to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
-                >
-                    {`(${ProcessGroupsLabels.GoToTopology})`}
-                </Link>
-            </Flex>
-
-            <GridItem span={12}>
-                <Card isFullHeight isRounded>
-                    <CardTitle>
-                        <Title headingLevel="h2">{ProcessGroupsLabels.Details}</Title>
-                    </CardTitle>
-                    <CardBody>
-                        <DescriptionList>
-                            <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                    {ProcessGroupsLabels.Name}
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>{name}</DescriptionListDescription>
-                            </DescriptionListGroup>
-                        </DescriptionList>
-                    </CardBody>
-                </Card>
-            </GridItem>
-            <GridItem span={12}>
-                <ProcessesTable processes={processes} />
-            </GridItem>
-        </Grid>
+                <GridItem span={12}>
+                    <Card isFullHeight isRounded>
+                        <CardTitle>
+                            <Title headingLevel="h2">{ProcessGroupsLabels.Details}</Title>
+                        </CardTitle>
+                        <CardBody>
+                            <DescriptionList>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>
+                                        {ProcessGroupsLabels.Name}
+                                    </DescriptionListTerm>
+                                    <DescriptionListDescription>{name}</DescriptionListDescription>
+                                </DescriptionListGroup>
+                            </DescriptionList>
+                        </CardBody>
+                    </Card>
+                </GridItem>
+                <GridItem span={12}>
+                    <ProcessesTable processes={processes} />
+                </GridItem>
+            </Grid>
+        </TransitionPage>
     );
 };
 

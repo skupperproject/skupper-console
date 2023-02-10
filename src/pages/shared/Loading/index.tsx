@@ -52,7 +52,7 @@ interface LoadingPageProps {
     isFLoating?: boolean;
 }
 
-const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating }) {
+const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
     return (
         <Grid
             span={12}

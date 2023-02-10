@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { Card, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Card, Tab, Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
+import { CogIcon, CogsIcon, ProjectDiagramIcon } from '@patternfly/react-icons';
 import { useSearchParams } from 'react-router-dom';
 
 import TopologyProcesses from '../components/TopologyProcesses';
@@ -30,15 +31,36 @@ const Topology = function () {
             <Tabs activeKey={topologyType} isFilled onSelect={handleChangeTopologyType} isBox>
                 <Tab
                     eventKey={TopologyViews.Sites}
-                    title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>}
+                    title={
+                        <>
+                            <TabTitleIcon>
+                                <ProjectDiagramIcon />
+                            </TabTitleIcon>{' '}
+                            <TabTitleText>{TopologyViews.Sites}</TabTitleText>
+                        </>
+                    }
                 />
                 <Tab
                     eventKey={TopologyViews.ProcessGroups}
-                    title={<TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>}
+                    title={
+                        <>
+                            <TabTitleIcon>
+                                <CogsIcon />
+                            </TabTitleIcon>{' '}
+                            <TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>
+                        </>
+                    }
                 />
                 <Tab
                     eventKey={TopologyViews.Processes}
-                    title={<TabTitleText>{TopologyViews.Processes}</TabTitleText>}
+                    title={
+                        <>
+                            <TabTitleIcon>
+                                <CogIcon />
+                            </TabTitleIcon>{' '}
+                            <TabTitleText>{TopologyViews.Processes}</TabTitleText>
+                        </>
+                    }
                 />
             </Tabs>
             {topologyType === TopologyViews.Sites && <TopologySite />}

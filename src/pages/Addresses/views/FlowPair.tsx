@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatTime } from '@core/utils/formatTime';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -76,87 +77,95 @@ const FlowsPair = function () {
     };
 
     return (
-        <Grid hasGutter data-cy="sk-address">
-            <GridItem>
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <Link to={AddressesRoutesPaths.Addresses}>
-                            {AddressesRoutesPathLabel.Addresses}
-                        </Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                        <Link
-                            to={`/${AddressesRoutesPathLabel.Addresses}/${address}`}
-                        >{`${addressName}`}</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{flowPairId}</BreadcrumbHeading>
-                </Breadcrumb>
-            </GridItem>
+        <TransitionPage>
+            <Grid hasGutter data-cy="sk-address">
+                <GridItem>
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <Link to={AddressesRoutesPaths.Addresses}>
+                                {AddressesRoutesPathLabel.Addresses}
+                            </Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem>
+                            <Link
+                                to={`/${AddressesRoutesPathLabel.Addresses}/${address}`}
+                            >{`${addressName}`}</Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbHeading to="#">{flowPairId}</BreadcrumbHeading>
+                    </Breadcrumb>
+                </GridItem>
 
-            {connection.protocol === AvailableProtocols.Tcp && (
-                <TextContent>
-                    <Text component={TextVariants.h2}>
-                        Connection {forwardFlow?.endTime ? 'closed' : 'open'}
-                    </Text>
-                </TextContent>
-            )}
-            {connection.protocol !== AvailableProtocols.Tcp && (
-                <>
+                {connection.protocol === AvailableProtocols.Tcp && (
                     <TextContent>
                         <Text component={TextVariants.h2}>
-                            Request {forwardFlow?.endTime ? 'terminated' : 'open'}
+                            Connection {forwardFlow?.endTime ? 'closed' : 'open'}
                         </Text>
                     </TextContent>
-                    <Card>
-                        <CardBody>
-                            <DescriptionList>
-                                <DescriptionListGroup>
-                                    <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
-                                    <DescriptionListDescription>
-                                        {forwardFlow.protocol}
-                                    </DescriptionListDescription>
-                                    <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
-                                    <DescriptionListDescription>
-                                        {forwardFlow.method}
-                                    </DescriptionListDescription>
-                                    <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
-                                    <DescriptionListDescription>
-                                        {formatTime(
-                                            (connection.endTime || Date.now() * 1000) -
-                                                connection.startTime,
-                                        )}{' '}
-                                    </DescriptionListDescription>
-                                </DescriptionListGroup>
-                            </DescriptionList>
-                        </CardBody>
-                    </Card>
-                </>
-            )}
-
-            <GridItem span={6}>
-                {connection.protocol === AvailableProtocols.Tcp ? (
-                    <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
-                ) : (
-                    <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
                 )}
-            </GridItem>
-
-            <GridItem span={6}>
-                {connection.protocol === AvailableProtocols.Tcp ? (
-                    <ConnectionDetail
-                        title={FlowLabels.CounterFlow}
-                        flow={counterFlowWithAddressPort}
-                        isCounterflow={true}
-                    />
-                ) : (
-                    <RequestDetail
-                        title={FlowLabels.CounterFlow}
-                        flow={counterFlowWithAddressPort}
-                        isCounterflow={true}
-                    />
+                {connection.protocol !== AvailableProtocols.Tcp && (
+                    <>
+                        <TextContent>
+                            <Text component={TextVariants.h2}>
+                                Request {forwardFlow?.endTime ? 'terminated' : 'open'}
+                            </Text>
+                        </TextContent>
+                        <Card>
+                            <CardBody>
+                                <DescriptionList>
+                                    <DescriptionListGroup>
+                                        <DescriptionListTerm>
+                                            {FlowLabels.Protocol}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {forwardFlow.protocol}
+                                        </DescriptionListDescription>
+                                        <DescriptionListTerm>
+                                            {FlowLabels.Method}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {forwardFlow.method}
+                                        </DescriptionListDescription>
+                                        <DescriptionListTerm>
+                                            {FlowLabels.Duration}
+                                        </DescriptionListTerm>
+                                        <DescriptionListDescription>
+                                            {formatTime(
+                                                (connection.endTime || Date.now() * 1000) -
+                                                    connection.startTime,
+                                            )}{' '}
+                                        </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                </DescriptionList>
+                            </CardBody>
+                        </Card>
+                    </>
                 )}
-            </GridItem>
-        </Grid>
+
+                <GridItem span={6}>
+                    {connection.protocol === AvailableProtocols.Tcp ? (
+                        <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
+                    ) : (
+                        <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
+                    )}
+                </GridItem>
+
+                <GridItem span={6}>
+                    {connection.protocol === AvailableProtocols.Tcp ? (
+                        <ConnectionDetail
+                            title={FlowLabels.CounterFlow}
+                            flow={counterFlowWithAddressPort}
+                            isCounterflow={true}
+                        />
+                    ) : (
+                        <RequestDetail
+                            title={FlowLabels.CounterFlow}
+                            flow={counterFlowWithAddressPort}
+                            isCounterflow={true}
+                        />
+                    )}
+                </GridItem>
+            </Grid>
+        </TransitionPage>
     );
 };
 

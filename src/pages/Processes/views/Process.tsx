@@ -25,6 +25,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTable from '@core/components/SkTable';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -163,122 +164,124 @@ const Process = function () {
     ];
 
     return (
-        <Grid hasGutter>
-            <Breadcrumb>
-                <BreadcrumbItem>
-                    <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
-                </BreadcrumbItem>
-                <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-            </Breadcrumb>
+        <TransitionPage>
+            <Grid hasGutter>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
+                </Breadcrumb>
 
-            <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                <ResourceIcon type="process" />
-                <Title headingLevel="h1">{name}</Title>
+                <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                    <ResourceIcon type="process" />
+                    <Title headingLevel="h1">{name}</Title>
 
-                <Link
-                    to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
-                >
-                    {`(${ProcessesLabels.GoToTopology})`}
-                </Link>
-            </Flex>
+                    <Link
+                        to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
+                    >
+                        {`(${ProcessesLabels.GoToTopology})`}
+                    </Link>
+                </Flex>
 
-            <GridItem>
-                <ProcessDescription process={process} title={ProcessesLabels.Details} />
-            </GridItem>
+                <GridItem>
+                    <ProcessDescription process={process} title={ProcessesLabels.Details} />
+                </GridItem>
 
-            <GridItem span={8} rowSpan={3}>
-                <Card isFullHeight>
-                    <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
-                    {!processTrafficChartData && <EmptyData />}
-                    {!!processTrafficChartData && (
-                        <ProcessesBytesChart
-                            bytes={processTrafficChartData}
-                            themeColor={ChartThemeColor.multi}
-                        />
-                    )}
-                </Card>
-            </GridItem>
+                <GridItem span={8} rowSpan={3}>
+                    <Card isFullHeight>
+                        <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
+                        {!processTrafficChartData && <EmptyData />}
+                        {!!processTrafficChartData && (
+                            <ProcessesBytesChart
+                                bytes={processTrafficChartData}
+                                themeColor={ChartThemeColor.multi}
+                            />
+                        )}
+                    </Card>
+                </GridItem>
 
-            <GridItem span={4} rowSpan={2}>
-                <Card isFullHeight>
-                    <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
-                    <CardBody>
-                        <TextContent>
-                            <Text component={TextVariants.h1}>
-                                {formatBytes(octetsReceived + octetsSent)}
-                            </Text>
-                        </TextContent>
-                    </CardBody>
-                </Card>
-            </GridItem>
+                <GridItem span={4} rowSpan={2}>
+                    <Card isFullHeight>
+                        <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
+                        <CardBody>
+                            <TextContent>
+                                <Text component={TextVariants.h1}>
+                                    {formatBytes(octetsReceived + octetsSent)}
+                                </Text>
+                            </TextContent>
+                        </CardBody>
+                    </Card>
+                </GridItem>
 
-            <GridItem span={2}>
-                <Card isFullHeight>
-                    <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
-                    <CardBody>
-                        <CurrentBytesInfo
-                            direction="up"
-                            style={{
-                                color: 'var(--pf-global--palette--blue-400)',
-                            }}
-                            byteRate={octetSentRate}
-                            bytes={octetsSent}
-                        />
-                    </CardBody>
-                </Card>
-            </GridItem>
+                <GridItem span={2}>
+                    <Card isFullHeight>
+                        <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
+                        <CardBody>
+                            <CurrentBytesInfo
+                                direction="up"
+                                style={{
+                                    color: 'var(--pf-global--palette--blue-400)',
+                                }}
+                                byteRate={octetSentRate}
+                                bytes={octetsSent}
+                            />
+                        </CardBody>
+                    </Card>
+                </GridItem>
 
-            <GridItem span={2}>
-                <Card isFullHeight>
-                    <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
-                    <CardBody>
-                        <CurrentBytesInfo
-                            style={{
-                                color: 'var(--pf-global--palette--green-400)',
-                            }}
-                            byteRate={octetReceivedRate}
-                            bytes={octetsReceived}
-                        />
-                    </CardBody>
-                </Card>
-            </GridItem>
+                <GridItem span={2}>
+                    <Card isFullHeight>
+                        <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
+                        <CardBody>
+                            <CurrentBytesInfo
+                                style={{
+                                    color: 'var(--pf-global--palette--green-400)',
+                                }}
+                                byteRate={octetReceivedRate}
+                                bytes={octetsReceived}
+                            />
+                        </CardBody>
+                    </Card>
+                </GridItem>
 
-            <GridItem span={6}>
-                <SkTable
-                    title={ProcessesLabels.Servers}
-                    columns={processesConnectedColumns}
-                    rows={processesPairsTx}
-                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                    components={{
-                        ...ProcessesConnectedComponentsTable,
-                        viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
-                            LinkCell({
-                                ...props,
-                                link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
-                                value: ProcessPairsColumnsNames.ViewDetails,
-                            }),
-                    }}
-                />
-            </GridItem>
+                <GridItem span={6}>
+                    <SkTable
+                        title={ProcessesLabels.Servers}
+                        columns={processesConnectedColumns}
+                        rows={processesPairsTx}
+                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                        components={{
+                            ...ProcessesConnectedComponentsTable,
+                            viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                                LinkCell({
+                                    ...props,
+                                    link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
+                                    value: ProcessPairsColumnsNames.ViewDetails,
+                                }),
+                        }}
+                    />
+                </GridItem>
 
-            <GridItem span={6}>
-                <SkTable
-                    title={ProcessesLabels.Clients}
-                    columns={processesConnectedColumns}
-                    rows={processesPairsRxReverse}
-                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                    components={{
-                        ...ProcessesConnectedComponentsTable,
-                        viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
-                            LinkCell({
-                                ...props,
-                                link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,
-                                value: ProcessPairsColumnsNames.ViewDetails,
-                            }),
-                    }}
-                />
-            </GridItem>
-        </Grid>
+                <GridItem span={6}>
+                    <SkTable
+                        title={ProcessesLabels.Clients}
+                        columns={processesConnectedColumns}
+                        rows={processesPairsRxReverse}
+                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                        components={{
+                            ...ProcessesConnectedComponentsTable,
+                            viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                                LinkCell({
+                                    ...props,
+                                    link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,
+                                    value: ProcessPairsColumnsNames.ViewDetails,
+                                }),
+                        }}
+                    />
+                </GridItem>
+            </Grid>
+        </TransitionPage>
     );
 };
 

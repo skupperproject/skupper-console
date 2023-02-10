@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useParams } from 'react-router-dom';
 
+import TransitionPage from '@core/components/TransitionPages/Slide';
 import { AvailableProtocols } from 'API/REST.enum';
 
 import ConnectionsByAddress from '../components/ConnectionsByAddress';
@@ -14,10 +15,23 @@ const FlowsPairs = function () {
     const addressId = address?.split('@')[1];
     const protocol = address?.split('@')[2];
 
-    return protocol === AvailableProtocols.Tcp ? (
-        <ConnectionsByAddress addressName={addressName || ''} addressId={addressId || ''} />
-    ) : (
-        <RequestsByAddress addressName={addressName || ''} addressId={addressId || ''} />
+    return (
+        <TransitionPage>
+            <>
+                {protocol === AvailableProtocols.Tcp && (
+                    <ConnectionsByAddress
+                        addressName={addressName || ''}
+                        addressId={addressId || ''}
+                    />
+                )}
+                {protocol !== AvailableProtocols.Tcp && (
+                    <RequestsByAddress
+                        addressName={addressName || ''}
+                        addressId={addressId || ''}
+                    />
+                )}
+            </>
+        </TransitionPage>
     );
 };
 export default FlowsPairs;
