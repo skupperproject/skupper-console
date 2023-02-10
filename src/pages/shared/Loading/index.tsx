@@ -5,8 +5,10 @@ import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@pattern
 import { CogIcon } from '@patternfly/react-icons';
 
 import BrandImg from '@assets/skupper.svg';
+import TransitionPage from '@core/components/TransitionPages/Slide';
 
 import './Loading.css';
+
 import { Labels } from './Loading.enum';
 
 const PleaseWait = function () {
@@ -54,24 +56,26 @@ interface LoadingPageProps {
 
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
     return (
-        <Grid
-            span={12}
-            className=" pf-u-p-4xl sk-loading-page floating"
-            style={isFLoating ? floatLoader : undefined}
-        >
-            <GridItem span={6} className=" pf-u-p-2xl">
-                <TextContent className="pf-u-text-align-center">
-                    <Text component={TextVariants.h1}>{Labels.LoadingBrandTitle}</Text>
-                </TextContent>
-                <PleaseWait />
-            </GridItem>
-            <GridItem span={6} className=" pf-u-p-2xl">
-                <Brand src={BrandImg} alt="skupper brand" />
-                <TextContent>
-                    <Text>{Labels.LoadingBrandMessage}</Text>
-                </TextContent>
-            </GridItem>
-        </Grid>
+        <TransitionPage delay={1}>
+            <Grid
+                span={12}
+                className=" pf-u-p-4xl sk-loading-page floating"
+                style={isFLoating ? floatLoader : undefined}
+            >
+                <GridItem span={6} className=" pf-u-p-2xl">
+                    <TextContent className="pf-u-text-align-center">
+                        <Text component={TextVariants.h1}>{Labels.LoadingBrandTitle}</Text>
+                    </TextContent>
+                    <PleaseWait />
+                </GridItem>
+                <GridItem span={6} className=" pf-u-p-2xl">
+                    <Brand src={BrandImg} alt="skupper brand" />
+                    <TextContent>
+                        <Text>{Labels.LoadingBrandMessage}</Text>
+                    </TextContent>
+                </GridItem>
+            </Grid>
+        </TransitionPage>
     );
 };
 

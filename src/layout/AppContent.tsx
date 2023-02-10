@@ -1,29 +1,25 @@
-import React, { useEffect, cloneElement } from 'react';
+import React from 'react';
 
 import { AnimatePresence } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRoutes, RouteObject } from 'react-router-dom';
 
 import BrandImg from '@assets/skupper-logo-full.svg';
-import { DEFAULT_VIEW } from 'config';
 
 interface AppContentProps {
-    children: React.ReactElement;
+    children: RouteObject[];
 }
 
 const AppContent = function ({ children }: AppContentProps) {
-    const navigate = useNavigate();
-    const { pathname, key } = useLocation();
+    const appRoutes = useRoutes([...children, { path: '/', element: children[0].element }]);
 
-    useEffect(() => {
-        if (pathname === '/') {
-            navigate(DEFAULT_VIEW);
-        }
-    }, [pathname, navigate]);
+    if (!appRoutes) {
+        return null;
+    }
 
     return (
         <div className="pf-u-px-md pf-u-py-md" style={{ flex: 1 }}>
             <img src={BrandImg} alt="skupper brand" className="sk-main" />
-            <AnimatePresence mode="wait">{cloneElement(children, { key })}</AnimatePresence>
+            <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
         </div>
     );
 };
