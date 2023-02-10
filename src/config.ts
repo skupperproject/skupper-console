@@ -17,6 +17,8 @@ export const RoutesPropsConfig = [
     TopologyPaths,
 ];
 
+export const REDIRECT_TO_PATH = RoutesPropsConfig[0].path;
+
 // React query lib config
 export const queryClientConfig = {
     defaultOptions: {
