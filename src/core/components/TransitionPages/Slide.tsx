@@ -2,7 +2,10 @@ import React, { FC } from 'react';
 
 import { motion } from 'framer-motion';
 
-const TransitionPage: FC<{ children: React.ReactElement }> = function ({ children }) {
+const TransitionPage: FC<{ children: React.ReactElement; delay?: number }> = function ({
+    children,
+    delay = 0,
+}) {
     const transition = {
         in: {
             opacity: 1,
@@ -18,6 +21,7 @@ const TransitionPage: FC<{ children: React.ReactElement }> = function ({ childre
             initial="out"
             animate="in"
             exit="out"
+            transition={{ delay, duration: 0.2 }}
             variants={transition}
         >
             {children}

@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 
 import { Page } from '@patternfly/react-core';
-import { useRoutes } from 'react-router-dom';
 
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
@@ -13,8 +12,6 @@ import '@patternfly/patternfly/patternfly-addons.css';
 import './App.css';
 
 const App = function () {
-    const appRoutes = useRoutes(routes);
-
     return (
         <Page
             header={<Header />}
@@ -22,10 +19,8 @@ const App = function () {
             isManagedSidebar
             className="app-main-container"
         >
-            {!appRoutes && null}
-
             <Suspense fallback={<div />}>
-                {appRoutes && <AppContent>{appRoutes}</AppContent>}
+                <AppContent>{routes}</AppContent>
             </Suspense>
         </Page>
     );

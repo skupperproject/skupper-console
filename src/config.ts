@@ -17,8 +17,6 @@ export const RoutesPropsConfig = [
     TopologyPaths,
 ];
 
-export const DEFAULT_VIEW = RoutesPropsConfig[0].path; // Firs page to load when the app is open
-
 // React query lib config
 export const queryClientConfig = {
     defaultOptions: {
