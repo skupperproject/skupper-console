@@ -39,6 +39,9 @@ const GROUP_NODE_PATHS_CLASS_NAME = 'group-node-paths';
 const EDGE_CLASS_NAME = 'edge';
 
 const ZOOM_TEXT = 1.5;
+const DEFAULT_COLOR = 'var(--pf-global--palette--black-400)';
+const SELECTED_EDGE_COLOR = 'var(--pf-global--palette--blue-300)';
+const SELECTED_TEXT_COLOR = 'var(--pf-global--palette--black-800)';
 
 export default class Graph {
     $root: HTMLElement;
@@ -377,7 +380,7 @@ export default class Graph {
             .attr('stroke-opacity', 0)
             .attr('id', ({ source, target }) => `edge-path${source.id}-${target.id}`)
             .style('pointer-events', 'visibleStroke')
-            .attr('stroke', 'black')
+            .attr('stroke', DEFAULT_COLOR)
             .attr('stroke-width', '30px')
             .style('cursor', 'pointer')
             .on('mouseover', (_, { source, target }) => {
@@ -410,7 +413,7 @@ export default class Graph {
         text.append('textPath') //To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.
             .attr('xlink:href', ({ source, target }) => `#edge-path${source.id}-${target.id}`)
             .style('text-anchor', 'middle')
-            .style('fill', 'var(--pf-global--palette--black-500)')
+            .style('fill', DEFAULT_COLOR)
             .attr('startOffset', '50%')
             .text(() => '');
 
@@ -432,11 +435,6 @@ export default class Graph {
             })
             .style('stroke-dasharray', ({ type, source, target }) =>
                 type === 'dashed' || isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0',
-            )
-            .style('opacity', ({ source, target }) =>
-                !nodeId || isEdgeBetweenNodes({ source, target }, nodeId)
-                    ? '1'
-                    : OPACITY_NO_SELECTED_ITEM,
             );
     }
 
@@ -514,7 +512,7 @@ export default class Graph {
                     : FONT_SIZE_DEFAULT,
             )
             .attr('y', NODE_SIZE / 2 + FONT_SIZE_DEFAULT)
-            .style('fill', 'var(--pf-global--palette--black-500)')
+            .style('fill', DEFAULT_COLOR)
             .text(({ name }) => name)
             .attr('id', ({ id }) => `node-label-${id}`);
 
@@ -525,6 +523,10 @@ export default class Graph {
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .attr('id', ({ id }) => `node-cover-${id}`);
+
+        svgNode.on('mousedown', (_, { id }) => {
+            select(`#node-cover-${id}`).style('cursor', 'grab');
+        });
 
         svgNode.on('mouseover', (_, { id }) => {
             this.nodeInitialized = id;
@@ -572,7 +574,10 @@ export default class Graph {
             drag<SVGGElement, GraphNode>()
                 .on('start', this.dragStarted)
                 .on('drag', this.dragged)
-                .on('end', this.dragEnded),
+                .on('end', (event, node) => {
+                    this.dragEnded(event, node);
+                    select(`#node-cover-${node.id}`).style('cursor', 'pointer');
+                }),
         );
     };
 
@@ -635,7 +640,7 @@ export default class Graph {
 
 function animateEdges({ source, target }: { source: { id: string }; target: { id: string } }) {
     select<SVGSVGElement, GraphEdgeModifiedByForce>(`#edge${source.id}-${target.id}`)
-        .style('stroke', 'var(--pf-global--palette--blue-400)')
+        .style('stroke', SELECTED_EDGE_COLOR)
         .style('stroke-dasharray', '8, 8')
         .transition()
         .duration(750)
@@ -646,9 +651,8 @@ function animateEdges({ source, target }: { source: { id: string }; target: { id
 
 function stopAnimateEdges({ source, target }: GraphEdgeModifiedByForce) {
     select(`#edge${source.id}-${target.id}`)
-        .style('stroke', 'var(--pf-global--palette--black-500)')
+        .style('stroke', DEFAULT_COLOR)
         .style('stroke-dasharray', '0, 0')
-        .style('opacity', '1')
         .transition()
         .on('end', null);
 }
@@ -657,6 +661,7 @@ function selectElementStyle(id: string) {
     select(`#node-label-${id}`)
         .transition()
         .duration(300)
+        .style('fill', SELECTED_TEXT_COLOR)
         .attr('font-size', DEFAULT_TABLE_PAGE_SIZE * ZOOM_TEXT);
 }
 
@@ -664,6 +669,7 @@ function deselectElementStyle(id: string) {
     select(`#node-label-${id}`)
         .transition()
         .duration(300)
+        .style('fill', DEFAULT_COLOR)
         .attr('font-size', DEFAULT_TABLE_PAGE_SIZE);
 }
 
