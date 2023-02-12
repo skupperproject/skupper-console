@@ -422,19 +422,21 @@ export default class Graph {
 
         this.getAllEdges()
             .each((svgLink) => {
-                stopAnimateEdges(svgLink);
+                if (!isEdgeBetweenNodes(svgLink, nodeId)) {
+                    stopAnimateEdges(svgLink);
+                }
 
                 if (!this.selectedNode && isEdgeBetweenNodes(svgLink, nodeId)) {
                     animateEdges(svgLink);
                 }
             })
+            .style('stroke-dasharray', ({ type, source, target }) =>
+                type === 'dashed' || isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0',
+            )
             .style('opacity', ({ source, target }) =>
                 !nodeId || isEdgeBetweenNodes({ source, target }, nodeId)
                     ? '1'
                     : OPACITY_NO_SELECTED_ITEM,
-            )
-            .style('stroke-dasharray', ({ type, source, target }) =>
-                type === 'dashed' || isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0',
             );
     }
 
@@ -459,13 +461,22 @@ export default class Graph {
                 .attr('class', GROUP_NODE_PATHS_CLASS_NAME)
                 .attr('fill', (groupId) => colors[Number(groupId)])
                 .attr('opacity', OPACITY_NO_SELECTED_ITEM)
-                .style('cursor', 'pointer')
+                .style('cursor', 'grab')
                 .call(
                     drag<SVGPathElement, string>()
                         .on('start', this.groupDragStarted)
                         .on('drag', this.groupDragged)
                         .on('end', this.groupDragEnded),
-                );
+                )
+                .on('click', (_, nodeSelected) => {
+                    this.EventEmitter.emit(GraphEvents.EdgeClick, [
+                        {
+                            type: 'click',
+                            name: GraphEvents.NodeGroupClick,
+                            data: nodeSelected,
+                        },
+                    ]);
+                });
         }
     };
 
@@ -643,12 +654,6 @@ function stopAnimateEdges({ source, target }: GraphEdgeModifiedByForce) {
 }
 
 function selectElementStyle(id: string) {
-    select(`#node-cover-${id}`)
-        .transition()
-        .duration(500)
-        .style('fill', 'white')
-        .attr('opacity', 0.7);
-
     select(`#node-label-${id}`)
         .transition()
         .duration(300)
@@ -656,12 +661,6 @@ function selectElementStyle(id: string) {
 }
 
 function deselectElementStyle(id: string) {
-    select(`#node-cover-${id}`)
-        .transition()
-        .duration(500)
-        .style('fill', 'transparent')
-        .attr('opacity', 1);
-
     select(`#node-label-${id}`)
         .transition()
         .duration(300)
