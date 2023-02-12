@@ -43,4 +43,5 @@ export enum ProcessPairsColumnsNames {
     LatencyAvgRx = 'Avg Rx Latency',
     Flows = 'Flows',
     ViewDetails = 'view details',
+    Title = 'Communications between processes',
 }

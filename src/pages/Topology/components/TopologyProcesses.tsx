@@ -16,7 +16,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import {
+    GraphEdge,
+    GraphEdgeModifiedByForce,
+    GraphNode,
+} from '@core/components/Graph/Graph.interfaces';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
@@ -53,7 +57,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     const [nodes, setNodes] = useState<GraphNode[]>([]);
     const [links, setLinks] = useState<GraphEdge[]>([]);
     const [nodeSelected] = useState<string | null>(processId || null);
-    const [edgeSelected, setEdgeSelected] = useState<string | null>(null);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
@@ -140,12 +143,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     );
 
     const handleGetSelectedEdge = useCallback(
-        (id: string) => {
-            if (id !== edgeSelected) {
-                setEdgeSelected(id);
-            }
+        (edge: GraphEdgeModifiedByForce) => {
+            const sourceId = edge.source.id;
+            const destinationId = edge.target.id;
+            navigate(
+                `${ProcessesRoutesPaths.Processes}/${sourceId}/${sourceId}-to-${destinationId}`,
+            );
         },
-        [edgeSelected],
+        [navigate],
     );
 
     function handleToggle(isSelectAddressOpen: boolean) {
@@ -191,9 +196,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
                 setLinks(
                     TopologyController.getEdgesFromLinks(
-                        processesLinks.map(({ source, target, key, isActive }) => ({
+                        processesLinks.map(({ source, target, key, isActive, rate }) => ({
                             source: `pGroup${source}`,
                             target: `pGroup${target}`,
+                            rate,
                             key,
                             isActive,
                         })),

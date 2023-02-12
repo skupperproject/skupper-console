@@ -18,19 +18,27 @@ import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
 
 const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps>(
-    ({ nodes, edges, onGetSelectedNode, options, nodeSelected }, ref) => {
+    ({ nodes, edges, onGetSelectedNode, onGetSelectedEdge, options, nodeSelected }, ref) => {
         const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
-
         const prevNodesRef = useRef<GraphNode[]>();
         const prevEdgesRef = useRef<GraphEdge[]>();
 
-        const handleExpandDetails = useCallback(
+        const handleOnClickNode = useCallback(
             ({ data: { id } }: { data: GraphNode }) => {
                 if (onGetSelectedNode) {
                     onGetSelectedNode(id);
                 }
             },
             [onGetSelectedNode],
+        );
+
+        const handleOnClickEdge = useCallback(
+            ({ data }: { data: GraphNode }) => {
+                if (onGetSelectedEdge) {
+                    onGetSelectedEdge(data);
+                }
+            },
+            [onGetSelectedEdge],
         );
 
         function handleCloseDetails() {
@@ -73,7 +81,9 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
                         nodeSelected,
                     );
 
-                    topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleExpandDetails);
+                    topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
+                    topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
+
                     topologyGraph.EventEmitter.on(GraphEvents.IsGraphLoaded, handleIsGraphLoaded);
                     topologyGraph.EventEmitter.on(
                         GraphEvents.IsDraggingNodesEnd,
@@ -89,11 +99,12 @@ const TopologyPanel = forwardRef<{ deselectAll: () => void }, TopologyPanelProps
             },
             [
                 nodes,
-                edges,
                 topologyGraphInstance,
+                edges,
                 options,
                 nodeSelected,
-                handleExpandDetails,
+                handleOnClickNode,
+                handleOnClickEdge,
                 handleIsGraphLoaded,
                 handleSaveNodesPositions,
             ],

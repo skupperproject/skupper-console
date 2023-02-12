@@ -3,6 +3,7 @@ import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
+import { formatByteRate } from '@core/utils/formatBytes';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import { RESTApi } from 'API/REST';
 import {
@@ -44,12 +45,15 @@ export const TopologyController = {
     },
 
     getProcessesLinks: (processesPairs: FlowAggregatesResponse[]): LinkTopology[] => {
-        const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
-            key: identity,
-            source: sourceId,
-            target: destinationId,
-            isActive: false, // TODO: update when the router bug is resolved !!(sourceOctetRate || destinationOctetRate),
-        }));
+        const processesLinks = processesPairs.map(
+            ({ identity, sourceId, destinationId, sourceOctetRate }) => ({
+                key: identity,
+                source: sourceId,
+                target: destinationId,
+                rate: sourceOctetRate ? formatByteRate(sourceOctetRate) : '',
+                isActive: false, // TODO: update when the router bug is resolved !!(sourceOctetRate || destinationOctetRate),
+            }),
+        );
 
         return processesLinks;
     },
@@ -243,10 +247,11 @@ export const TopologyController = {
             .sort((a, b) => a.group - b.group),
 
     getEdgesFromLinks: (links: LinkTopology[]): GraphEdge[] =>
-        links?.map(({ source, target, isActive }) => ({
+        links?.map(({ source, target, isActive, rate }) => ({
             source,
             target,
             isActive,
+            rate,
         })),
 
     getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge[] =>

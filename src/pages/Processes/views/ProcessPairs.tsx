@@ -4,9 +4,11 @@ import {
     Breadcrumb,
     BreadcrumbHeading,
     BreadcrumbItem,
+    Flex,
     Grid,
     GridItem,
     Icon,
+    Title,
 } from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -18,6 +20,11 @@ import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
+import {
+    TopologyRoutesPaths,
+    TopologyURLFilters,
+    TopologyViews,
+} from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
@@ -25,7 +32,7 @@ import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { HttpProcessesFlowPairsColumns, TcpProcessesFlowPairsColumns } from '../Processes.constant';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
 const initAllFlowParisQueryParamsPaginated = {
@@ -131,6 +138,16 @@ const ProcessPairs = function () {
                     </Breadcrumb>
                 </GridItem>
 
+                <GridItem>
+                    <Flex>
+                        <Title headingLevel="h1">{ProcessPairsColumnsNames.Title}</Title>
+                        <Link
+                            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${flowPairId}`}
+                        >
+                            {`(${ProcessesLabels.GoToTopology})`}
+                        </Link>
+                    </Flex>
+                </GridItem>
                 <GridItem span={5}>
                     <ProcessDescription
                         process={sourceProcess}
