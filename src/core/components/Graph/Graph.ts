@@ -39,7 +39,7 @@ const GROUP_NODE_PATHS_CLASS_NAME = 'group-node-paths';
 const EDGE_CLASS_NAME = 'edge';
 
 const ZOOM_TEXT = 1.5;
-const DEFAULT_COLOR = 'var(--pf-global--palette--black-400)';
+const DEFAULT_COLOR = 'var(--pf-global--palette--black-300)';
 const SELECTED_EDGE_COLOR = 'var(--pf-global--palette--blue-300)';
 const SELECTED_TEXT_COLOR = 'var(--pf-global--palette--black-800)';
 
