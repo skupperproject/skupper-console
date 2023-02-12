@@ -166,23 +166,29 @@ const Process = function () {
     return (
         <TransitionPage>
             <Grid hasGutter>
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-                </Breadcrumb>
+                <GridItem>
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <Link to={ProcessesRoutesPaths.Processes}>
+                                {ProcessesLabels.Section}
+                            </Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
+                    </Breadcrumb>
+                </GridItem>
 
-                <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                    <ResourceIcon type="process" />
-                    <Title headingLevel="h1">{name}</Title>
+                <GridItem>
+                    <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                        <ResourceIcon type="process" />
+                        <Title headingLevel="h1">{name}</Title>
 
-                    <Link
-                        to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
-                    >
-                        {`(${ProcessesLabels.GoToTopology})`}
-                    </Link>
-                </Flex>
+                        <Link
+                            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
+                        >
+                            {`(${ProcessesLabels.GoToTopology})`}
+                        </Link>
+                    </Flex>
+                </GridItem>
 
                 <GridItem>
                     <ProcessDescription process={process} title={ProcessesLabels.Details} />

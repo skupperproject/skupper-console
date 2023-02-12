@@ -19,11 +19,10 @@ export interface GraphEdge {
     target: string;
     type?: 'dashed';
     isActive?: boolean;
+    rate?: string;
 }
 
-export interface GraphEdgeModifiedByForce {
+export interface GraphEdgeModifiedByForce extends Omit<GraphEdge, 'source' | 'target'> {
     source: GraphNode;
     target: GraphNode;
-    type?: 'dashed';
-    isActive?: boolean;
 }

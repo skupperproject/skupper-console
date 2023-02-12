@@ -56,7 +56,7 @@ interface LoadingPageProps {
 
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
     return (
-        <TransitionPage delay={1}>
+        <TransitionPage delay={0.5}>
             <Grid
                 span={12}
                 className=" pf-u-p-4xl sk-loading-page floating"

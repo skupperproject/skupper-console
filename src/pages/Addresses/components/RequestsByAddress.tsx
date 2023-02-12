@@ -114,6 +114,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         [QueriesAddresses.GetProcessesByAddress, addressId, initServersQueryParams],
         () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
         {
+            refetchInterval,
             keepPreviousData: true,
             onError: handleError,
         },
@@ -138,6 +139,10 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
         setRequestsQueryParamsPaginated(params);
     }, []);
+
+    if (isLoadingRequestsTimeLimited || isLoadingServersByAddress || isLoadingRequestsPaginated) {
+        return <LoadingPage isFLoating={true} />;
+    }
 
     const servers = serversByAddressData?.results || [];
     const serversRowsCount = serversByAddressData?.totalCount;
@@ -244,163 +249,154 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     );
 
     return (
-        <>
-            <Grid hasGutter data-cy="sk-address">
-                <GridItem>
-                    <Breadcrumb>
-                        <BreadcrumbItem>
-                            <Link to={AddressesRoutesPaths.Addresses}>
-                                {AddressesRoutesPathLabel.Addresses}
-                            </Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
-                    </Breadcrumb>
-                </GridItem>
+        <Grid hasGutter data-cy="sk-address">
+            <GridItem>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <Link to={AddressesRoutesPaths.Addresses}>
+                            {AddressesRoutesPathLabel.Addresses}
+                        </Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
+                </Breadcrumb>
+            </GridItem>
 
-                <GridItem>
-                    <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                        <ResourceIcon type="address" />
-                        <TextContent>
-                            <Text component={TextVariants.h1}>{addressName}</Text>
-                        </TextContent>
-                        {!!requestsTimeLimited?.length && (
-                            <Link
-                                to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+            <GridItem>
+                <Flex alignItems={{ default: 'alignItemsCenter' }}>
+                    <ResourceIcon type="address" />
+                    <TextContent>
+                        <Text component={TextVariants.h1}>{addressName}</Text>
+                    </TextContent>
+                    {!!requestsTimeLimited?.length && (
+                        <Link
+                            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+                        >
+                            {`(${FlowPairsLabel.GoToTopology})`}
+                        </Link>
+                    )}
+                </Flex>
+            </GridItem>
+
+            <GridItem span={3}>
+                <Card isFullHeight>
+                    <CardTitle>{FlowPairsLabelsHttp.TrafficRx}</CardTitle>
+                    <CardBody>{formatBytes(downloadedTraffic)}</CardBody>
+                </Card>
+            </GridItem>
+
+            <GridItem span={3}>
+                <Card isFullHeight>
+                    <CardTitle>{FlowPairsLabelsHttp.TrafficTx}</CardTitle>
+                    <CardBody>{formatBytes(uploadedTraffic)}</CardBody>
+                </Card>
+            </GridItem>
+
+            <GridItem span={3}>
+                <Card isFullHeight>
+                    <CardTitle>{FlowPairsLabelsHttp.AvgByteRateRx}</CardTitle>
+                    <CardBody>{formatByteRate(avgSpeedIn)}</CardBody>
+                </Card>
+            </GridItem>
+
+            <GridItem span={3}>
+                <Card isFullHeight>
+                    <CardTitle>{FlowPairsLabelsHttp.AvgByteRateTx}</CardTitle>
+                    <CardBody>{formatByteRate(avgSpeedOut)}</CardBody>
+                </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                    <CardTitle>{FlowPairsLabelsHttp.RequestMethodsSummary}</CardTitle>
+                    {methodsSummary?.length ? (
+                        <MethodsSummaryChart
+                            data={methodsSummary}
+                            options={{ themeColor: ChartThemeColors.Blue }}
+                        />
+                    ) : (
+                        <EmptyData />
+                    )}
+                </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                    <CardTitle>{FlowPairsLabelsHttp.StatusCodeSummary}</CardTitle>
+                    {statusCodesSummary.length ? (
+                        <MethodsSummaryChart
+                            data={statusCodesSummary}
+                            options={{
+                                themeColor: ChartThemeColors.Green,
+                            }}
+                        />
+                    ) : (
+                        <EmptyData />
+                    )}
+                </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                    <CardTitle>{FlowPairsLabelsHttp.TopResponseAvgLatency}</CardTitle>
+                    {topAvgLatencyFromServers?.length ? (
+                        <DistributionChart
+                            data={topAvgLatencyFromServers}
+                            options={{
+                                themeColor: ChartThemeColors.Orange,
+                                format: formatTime,
+                            }}
+                        />
+                    ) : (
+                        <EmptyData />
+                    )}
+                </Card>
+            </GridItem>
+
+            <GridItem span={6}>
+                <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
+                    <CardTitle>{FlowPairsLabelsHttp.TopRequestAvgLatency}</CardTitle>
+                    {topAvgLatencyFromClients.length ? (
+                        <DistributionChart
+                            data={topAvgLatencyFromClients}
+                            options={{
+                                themeColor: ChartThemeColors.Purple,
+                                format: formatTime,
+                            }}
+                        />
+                    ) : (
+                        <EmptyData />
+                    )}
+                </Card>
+            </GridItem>
+
+            <GridItem>
+                <Card isRounded className="pf-u-pt-md">
+                    <Tabs activeKey={addressView} onSelect={handleTabClick}>
+                        {requestsPaginated && (
+                            <Tab
+                                eventKey={0}
+                                title={<TabTitleText>{FlowPairsLabelsHttp.Requests}</TabTitleText>}
                             >
-                                {`(${FlowPairsLabel.GoToTopology})`}
-                            </Link>
+                                <FlowPairsTable
+                                    columns={RequestsByAddressColumns}
+                                    connections={requestsPaginated}
+                                    onGetFilters={handleGetFiltersConnections}
+                                    rowsCount={requestsPaginatedCount}
+                                />
+                            </Tab>
                         )}
-                    </Flex>
-                </GridItem>
-
-                <GridItem span={3}>
-                    <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabelsHttp.TrafficRx}</CardTitle>
-                        <CardBody>{formatBytes(downloadedTraffic)}</CardBody>
-                    </Card>
-                </GridItem>
-
-                <GridItem span={3}>
-                    <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabelsHttp.TrafficTx}</CardTitle>
-                        <CardBody>{formatBytes(uploadedTraffic)}</CardBody>
-                    </Card>
-                </GridItem>
-
-                <GridItem span={3}>
-                    <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabelsHttp.AvgByteRateRx}</CardTitle>
-                        <CardBody>{formatByteRate(avgSpeedIn)}</CardBody>
-                    </Card>
-                </GridItem>
-
-                <GridItem span={3}>
-                    <Card isFullHeight>
-                        <CardTitle>{FlowPairsLabelsHttp.AvgByteRateTx}</CardTitle>
-                        <CardBody>{formatByteRate(avgSpeedOut)}</CardBody>
-                    </Card>
-                </GridItem>
-
-                <GridItem span={6}>
-                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabelsHttp.RequestMethodsSummary}</CardTitle>
-                        {methodsSummary?.length ? (
-                            <MethodsSummaryChart
-                                data={methodsSummary}
-                                options={{ themeColor: ChartThemeColors.Blue }}
-                            />
-                        ) : (
-                            <EmptyData />
+                        {serversRowsCount && (
+                            <Tab
+                                eventKey={1}
+                                title={<TabTitleText>{FlowPairsLabelsHttp.Servers}</TabTitleText>}
+                            >
+                                <ServersTable processes={servers} />
+                            </Tab>
                         )}
-                    </Card>
-                </GridItem>
-
-                <GridItem span={6}>
-                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabelsHttp.StatusCodeSummary}</CardTitle>
-                        {statusCodesSummary.length ? (
-                            <MethodsSummaryChart
-                                data={statusCodesSummary}
-                                options={{
-                                    themeColor: ChartThemeColors.Green,
-                                }}
-                            />
-                        ) : (
-                            <EmptyData />
-                        )}
-                    </Card>
-                </GridItem>
-
-                <GridItem span={6}>
-                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabelsHttp.TopResponseAvgLatency}</CardTitle>
-                        {topAvgLatencyFromServers?.length ? (
-                            <DistributionChart
-                                data={topAvgLatencyFromServers}
-                                options={{
-                                    themeColor: ChartThemeColors.Orange,
-                                    format: formatTime,
-                                }}
-                            />
-                        ) : (
-                            <EmptyData />
-                        )}
-                    </Card>
-                </GridItem>
-
-                <GridItem span={6}>
-                    <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
-                        <CardTitle>{FlowPairsLabelsHttp.TopRequestAvgLatency}</CardTitle>
-                        {topAvgLatencyFromClients.length ? (
-                            <DistributionChart
-                                data={topAvgLatencyFromClients}
-                                options={{
-                                    themeColor: ChartThemeColors.Purple,
-                                    format: formatTime,
-                                }}
-                            />
-                        ) : (
-                            <EmptyData />
-                        )}
-                    </Card>
-                </GridItem>
-
-                <GridItem>
-                    <Card isRounded className="pf-u-pt-md">
-                        <Tabs activeKey={addressView} onSelect={handleTabClick}>
-                            {requestsPaginated && (
-                                <Tab
-                                    eventKey={0}
-                                    title={
-                                        <TabTitleText>{FlowPairsLabelsHttp.Requests}</TabTitleText>
-                                    }
-                                >
-                                    <FlowPairsTable
-                                        columns={RequestsByAddressColumns}
-                                        connections={requestsPaginated}
-                                        onGetFilters={handleGetFiltersConnections}
-                                        rowsCount={requestsPaginatedCount}
-                                    />
-                                </Tab>
-                            )}
-                            {serversRowsCount && (
-                                <Tab
-                                    eventKey={1}
-                                    title={
-                                        <TabTitleText>{FlowPairsLabelsHttp.Servers}</TabTitleText>
-                                    }
-                                >
-                                    <ServersTable processes={servers} />
-                                </Tab>
-                            )}
-                        </Tabs>
-                    </Card>
-                </GridItem>
-            </Grid>
-            {(isLoadingRequestsTimeLimited ||
-                isLoadingServersByAddress ||
-                isLoadingRequestsPaginated) && <LoadingPage isFLoating={true} />}
-        </>
+                    </Tabs>
+                </Card>
+            </GridItem>
+        </Grid>
     );
 };
 

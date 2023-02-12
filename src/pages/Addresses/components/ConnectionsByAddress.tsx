@@ -106,6 +106,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 ? RESTApi.fetchServersByAddress(addressId, connectionsQueryParamsPaginated)
                 : null,
         {
+            refetchInterval,
             onError: handleError,
             keepPreviousData: true,
         },
