@@ -512,7 +512,7 @@ export default class Graph {
                     : FONT_SIZE_DEFAULT,
             )
             .attr('y', NODE_SIZE / 2 + FONT_SIZE_DEFAULT)
-            .style('fill', DEFAULT_COLOR)
+            .style('fill', SELECTED_TEXT_COLOR)
             .text(({ name }) => name)
             .attr('id', ({ id }) => `node-label-${id}`);
 
