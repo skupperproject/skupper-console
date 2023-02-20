@@ -19,7 +19,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
     const [nodes, setNodes] = useState<GraphNode[]>();
-    const [edges, setEdges] = useState<GraphEdge[]>();
+    const [edges, setEdges] = useState<GraphEdge<string>[]>();
 
     const { data: sites, isLoading: isLoadingSites } = useQuery(
         [QueriesSites.GetSites],

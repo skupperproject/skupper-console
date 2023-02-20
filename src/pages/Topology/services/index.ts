@@ -246,7 +246,7 @@ export const TopologyController = {
             })
             .sort((a, b) => a.group - b.group),
 
-    getEdgesFromLinks: (links: LinkTopology[]): GraphEdge[] =>
+    getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
         links?.map(({ source, target, isActive, rate }) => ({
             source,
             target,
@@ -254,7 +254,7 @@ export const TopologyController = {
             rate,
         })),
 
-    getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge[] =>
+    getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge<string>[] =>
         sites?.flatMap(({ identity: sourceId, connected }) =>
             connected.flatMap((targetId) => [
                 {

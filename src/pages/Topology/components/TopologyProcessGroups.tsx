@@ -23,7 +23,7 @@ const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
     const navigate = useNavigate();
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
-    const [links, setLinks] = useState<GraphEdge[]>([]);
+    const [links, setLinks] = useState<GraphEdge<string>[]>([]);
     const [nodeSelected] = useState<string | null>(id || null);
 
     const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
