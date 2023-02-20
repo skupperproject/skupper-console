@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import { ProcessConnectedDetail } from './services/services.interfaces';
@@ -14,12 +12,11 @@ export interface TopologyDetailsProps {
 
 export interface TopologyPanelProps {
     nodes: GraphNode[];
-    edges: GraphEdge[];
+    edges: GraphEdge<string>[];
     nodeSelected?: string | null;
-    options?: { showGroup?: boolean; shouldOpenDetails?: boolean };
+    options?: { showGroup?: boolean };
     onGetSelectedNode?: Function;
     onGetSelectedEdge?: Function;
-    children?: ReactNode;
 }
 
 export interface TrafficData {

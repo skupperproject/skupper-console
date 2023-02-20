@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
     Checkbox,
@@ -16,11 +16,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    GraphEdge,
-    GraphEdgeModifiedByForce,
-    GraphNode,
-} from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
@@ -51,11 +47,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 }) {
     const navigate = useNavigate();
 
-    const topologyRef = useRef<{ deselectAll: () => void } | null>(null);
-
     const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
     const [nodes, setNodes] = useState<GraphNode[]>([]);
-    const [links, setLinks] = useState<GraphEdge[]>([]);
+    const [links, setLinks] = useState<GraphEdge<string>[]>([]);
     const [nodeSelected] = useState<string | null>(processId || null);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -143,7 +137,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     );
 
     const handleGetSelectedEdge = useCallback(
-        (edge: GraphEdgeModifiedByForce) => {
+        (edge: GraphEdge) => {
             const sourceId = edge.source.id;
             const destinationId = edge.target.id;
             navigate(
@@ -166,7 +160,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
         setAddressId(id);
         setIsOpen(false);
-        topologyRef?.current?.deselectAll();
     }
 
     // Refresh topology data
@@ -301,13 +294,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
             </Toolbar>
 
             <TopologyPanel
-                ref={topologyRef}
                 nodes={nodes}
                 edges={links}
                 onGetSelectedNode={handleGetSelectedNode}
                 onGetSelectedEdge={handleGetSelectedEdge}
                 nodeSelected={nodeSelected}
-                options={{ showGroup: true, shouldOpenDetails: false }}
+                options={{ showGroup: true }}
             />
 
             <Panel>
