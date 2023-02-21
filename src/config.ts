@@ -44,4 +44,4 @@ export const LINK_DIRECTIONS = {
     INCOMING: 'incoming',
 };
 
-export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZE) || 12; //TODO: env variable used for debugging scope
+export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZE) || 10; //TODO: env variable used for debugging scope
