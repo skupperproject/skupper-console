@@ -169,6 +169,7 @@ const Site = function () {
                         </CardBody>
                     </Card>
                 </GridItem>
+
                 <GridItem span={4}>
                     <Card isFullHeight isRounded>
                         <CardTitle>
@@ -192,6 +193,7 @@ const Site = function () {
                         </CardBody>
                     </Card>
                 </GridItem>
+
                 <GridItem span={4}>
                     <Card isFullHeight isRounded>
                         <CardTitle>
@@ -210,6 +212,7 @@ const Site = function () {
                         </CardBody>
                     </Card>
                 </GridItem>
+
                 <GridItem span={4}>
                     <Card isFullHeight isRounded>
                         <CardTitle>

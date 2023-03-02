@@ -21,8 +21,8 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import EmptyData from '@core/components/EmptyData';
-import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { setMinutesAgo } from '@core/utils/setMinutesAgo';

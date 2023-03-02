@@ -16,9 +16,9 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';

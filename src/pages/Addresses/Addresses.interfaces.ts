@@ -1,4 +1,4 @@
-import { ChartThemeColors } from '@core/components/RealTimeLineChart/RealTimeLineChart.enum';
+import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { AddressResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
