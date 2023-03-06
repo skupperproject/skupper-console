@@ -1,9 +1,3 @@
-export enum TrafficChartLabels {
-    TickFormatUpperBoundLabel = 'now',
-    TickFormatLowerBoundLabel = 'ago',
-    TickFormatLowerBoundLabelOverflow = '1 min ago',
-}
-
 export enum ChartThemeColors {
     Blue = 'blue',
     Cyan = 'cyan',
