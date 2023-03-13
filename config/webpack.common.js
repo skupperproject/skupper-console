@@ -35,6 +35,7 @@ module.exports = {
             'process.env.API_HOST_FLOW_COLLECTOR': JSON.stringify(
                 process.env.API_HOST_FLOW_COLLECTOR || '',
             ),
+            'process.env.PROMETHEUS_URL': JSON.stringify(process.env.PROMETHEUS_URL || ''),
             'process.env.DEFAULT_TABLE_PAGE_SIZE': JSON.stringify(
                 process.env.DEFAULT_TABLE_PAGE_SIZE,
             ),

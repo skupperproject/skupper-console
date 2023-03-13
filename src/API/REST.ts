@@ -28,6 +28,7 @@ import {
     getProcessGroupPairsPATH,
     getProcessPairsPATH,
     getProcessGroupsPATH,
+    getConfigPrometheusPATH,
 } from './REST.constant';
 import {
     ProcessGroupResponse,
@@ -44,6 +45,12 @@ import {
 } from './REST.interfaces';
 
 export const RESTApi = {
+    getPrometheusUrl: async (): Promise<string> => {
+        const { data } = await axiosFetch(getConfigPrometheusPATH());
+
+        return getResults(data);
+    },
+
     // SITES APIs
     fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
         const { data } = await axiosFetch(getSitesPATH(), {
