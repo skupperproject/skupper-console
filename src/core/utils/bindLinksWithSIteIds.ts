@@ -10,7 +10,7 @@ export function bindLinksWithSiteIds(links: LinkResponse[], routers: RouterRespo
 
     // Extends each link adding the source site id and destination site id info
     const linksExtended = links.map((link) => {
-        const routerIdConnected = `${link.name.split('-').at(-1)}:0`;
+        const routerIdConnected = `${link.name?.split('-').at(-1)}:0`;
 
         const siteId = routersMap[link.parent];
         const siteIdConnected = routersMap[routerIdConnected];
