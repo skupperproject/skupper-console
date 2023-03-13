@@ -8,6 +8,7 @@ import { TopologyPaths } from '@pages/Topology/Topology.constant';
 export const BASE_URL_COLLECTOR =
     process.env.API_HOST_FLOW_COLLECTOR || `${window.location.protocol}//${window.location.host}`;
 
+export const BASE_PROMETHEUS_URL = process.env.PROMETHEUS_URL;
 // Navigation config
 export const RoutesPropsConfig = [
     SitesPaths,
