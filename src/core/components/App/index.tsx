@@ -12,7 +12,7 @@ import { setPrometheusUrl } from 'API/REST.constant';
 import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from 'config';
 import { routes } from 'routes';
 
-import '@patternfly/patternfly/patternfly.css';
+import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/patternfly-addons.css';
 
 import './App.css';
