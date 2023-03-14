@@ -73,11 +73,3 @@ export const getProcessGroupPairPATH = (id: string) => `${PROCESS_GROUP_PAIRS_PA
 export const PROCESS_PAIRS_PATH = `${API_URL}/processpairs/`;
 export const getProcessPairsPATH = () => PROCESS_PAIRS_PATH;
 export const getProcessPairPATH = (id: string) => `${PROCESS_PAIRS_PATH}${id}`;
-
-// PROMETHEUS
-export let PROMETHEUS_PATH: string | undefined = undefined;
-// Override the default prometheus path with the value from the skupper flow collector api
-export const setPrometheusUrl = (url: string | undefined) => (PROMETHEUS_PATH = url);
-
-export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
-    queryType === 'range' ? `${PROMETHEUS_PATH}/query_range` : `${PROMETHEUS_PATH}/query`;

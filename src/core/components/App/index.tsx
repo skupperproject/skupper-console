@@ -7,8 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
+import { setPrometheusUrl } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
-import { setPrometheusUrl } from 'API/REST.constant';
 import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from 'config';
 import { routes } from 'routes';
 
