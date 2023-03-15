@@ -1,20 +1,6 @@
-# Skupper console
+# ![alt text](https://user-images.githubusercontent.com/79913332/225248562-80d8f046-dba6-4b1e-94d2-75b4ece046f0.png)
 
-## Installation in Skupper
-
-The skupper console is installed when skupper is initialized using
-
-> `skupper init --enable-console`
-
-note: You should enable the console only for one installation to avoid more traffic load for redundant collections.
-
-## Securing the console
-
-When you run skupper init you can specify the --console-user and --console-password, otherwise they will be generated (admin and a random password held in secrets/skupper-console-users).
-
-You can also disable authentication by specifying
-
-> `--console-auth unsecured`
+[![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
 
 ## Development
 
@@ -23,20 +9,24 @@ You can also disable authentication by specifying
 
 the last command install husky to improves commits. You need to run this command just one time
 
-To run the console in develop mode using a mock data example, type in the terminal
+## Run
+
+Run this command using the flow collector endpoints from Skupper:
+
+> `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
+
+### Demo mode
+
+Run the console using a mock data example:
 
 > `yarn start`
 
 and open <http://localhost:3000>
 
-You can also run the console using external endpoints for the skupper collector:
-
-> `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
-
 **remember to enable CORS**
 The flow-collector need to enable the CORS. We can do that doing ```kubectl set env <container-name> USE_CORS=yes``` .
 
-ie in openshift: ```kubectl set env deployment/skupper-vflow-collector USE_CORS=yes```.
+example: ```kubectl set env deployment/skupper-flow-collector USE_CORS=yes```.
 
 ## Tests
 
