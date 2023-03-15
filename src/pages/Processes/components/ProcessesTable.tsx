@@ -9,17 +9,17 @@ import { ProcessesLabels } from '../Processes.enum';
 import { ProcessesTableProps } from '../Processes.interfaces';
 
 const ProcessesTable: FC<ProcessesTableProps> = function ({ processes, rowsCount, onGetFilters }) {
-    return (
-        <SkTable
-            title={ProcessesLabels.Section}
-            titleDescription={ProcessesLabels.Description}
-            columns={processesTableColumns}
-            rows={processes}
-            components={{ linkCell: ProcessNameLinkCell, linkCellSite: SiteNameLinkCell }}
-            rowsCount={rowsCount}
-            onGetFilters={onGetFilters}
-        />
-    );
+  return (
+    <SkTable
+      title={ProcessesLabels.Section}
+      titleDescription={ProcessesLabels.Description}
+      columns={processesTableColumns}
+      rows={processes}
+      components={{ linkCell: ProcessNameLinkCell, linkCellSite: SiteNameLinkCell }}
+      rowsCount={rowsCount}
+      onGetFilters={onGetFilters}
+    />
+  );
 };
 
 export default ProcessesTable;

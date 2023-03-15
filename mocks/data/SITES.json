@@ -1,55 +1,55 @@
 {
-    "results": [
-        {
-            "recType": "SITE",
-            "identity": "939fd445-9f7c-4261-aba0-951f77cfdc4a",
-            "startTime": 1674048683000000,
-            "endTime": 0,
-            "name": "public2",
-            "nameSpace": "config-grpc-public2-test",
-            "octetsSent": 113,
-            "octetSentRate": 0,
-            "octetsReceived": 450,
-            "octetReceivedRate": 0
-        },
-        {
-            "recType": "SITE",
-            "identity": "e5335ee7-cf53-4431-a653-9e6e585ece5e",
-            "startTime": 1674048662000000,
-            "endTime": 0,
-            "name": "public1",
-            "nameSpace": "config-grpc-public1-test",
-            "octetsSent": 540346,
-            "octetSentRate": 2,
-            "octetsReceived": 1153900,
-            "octetReceivedRate": 2
-        },
-        {
-            "recType": "SITE",
-            "identity": "ee50101e-a44f-449e-bcdb-d4febed6daf4",
-            "startTime": 1674048705000000,
-            "endTime": 0,
-            "name": "private1",
-            "nameSpace": "config-grpc-private-test",
-            "octetsSent": 1658,
-            "octetSentRate": 0,
-            "octetsReceived": 11820,
-            "octetReceivedRate": 0
-        }
-    ],
-    "queryParams": {
-        "offset": -1,
-        "limit": -1,
-        "sortBy": "identity.asc",
-        "filter": "",
-        "timeRangeStart": 1674202183865932,
-        "timeRangeEnd": 1674203083865932,
-        "timeRangeOperation": 0
+  "results": [
+    {
+      "recType": "SITE",
+      "identity": "939fd445-9f7c-4261-aba0-951f77cfdc4a",
+      "startTime": 1674048683000000,
+      "endTime": 0,
+      "name": "public2",
+      "nameSpace": "config-grpc-public2-test",
+      "octetsSent": 113,
+      "octetSentRate": 0,
+      "octetsReceived": 450,
+      "octetReceivedRate": 0
     },
-    "status": "",
-    "timestamp": 1674203083865935,
-    "elapsed": 105,
-    "count": 3,
-    "timeRangeCount": 3,
-    "totalCount": 3
+    {
+      "recType": "SITE",
+      "identity": "e5335ee7-cf53-4431-a653-9e6e585ece5e",
+      "startTime": 1674048662000000,
+      "endTime": 0,
+      "name": "public1",
+      "nameSpace": "config-grpc-public1-test",
+      "octetsSent": 540346,
+      "octetSentRate": 2,
+      "octetsReceived": 1153900,
+      "octetReceivedRate": 2
+    },
+    {
+      "recType": "SITE",
+      "identity": "ee50101e-a44f-449e-bcdb-d4febed6daf4",
+      "startTime": 1674048705000000,
+      "endTime": 0,
+      "name": "private1",
+      "nameSpace": "config-grpc-private-test",
+      "octetsSent": 1658,
+      "octetSentRate": 0,
+      "octetsReceived": 11820,
+      "octetReceivedRate": 0
+    }
+  ],
+  "queryParams": {
+    "offset": -1,
+    "limit": -1,
+    "sortBy": "identity.asc",
+    "filter": "",
+    "timeRangeStart": 1674202183865932,
+    "timeRangeEnd": 1674203083865932,
+    "timeRangeOperation": 0
+  },
+  "status": "",
+  "timestamp": 1674203083865935,
+  "elapsed": 105,
+  "count": 3,
+  "timeRangeCount": 3,
+  "totalCount": 3
 }

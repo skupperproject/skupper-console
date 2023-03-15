@@ -1,3 +1,3 @@
 export enum EmptyDataLabels {
-    Default = 'no data found',
+  Default = 'no data found'
 }

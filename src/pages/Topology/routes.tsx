@@ -5,8 +5,8 @@ import { TopologyRoutesPaths } from './Topology.enum';
 const Topology = lazy(() => import(/* webpackChunkName: "topology" */ './View/Topology'));
 
 export const topologyRoutes = [
-    {
-        path: TopologyRoutesPaths.Topology,
-        element: <Topology />,
-    },
+  {
+    path: TopologyRoutesPaths.Topology,
+    element: <Topology />
+  }
 ];

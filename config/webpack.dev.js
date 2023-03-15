@@ -10,40 +10,38 @@ const MAX_CYCLES = 5;
 let numCyclesDetected = 0;
 
 const devConfig = {
-    mode: 'development',
-    output: {
-        publicPath: '/',
-    },
-    devServer: {
-        port: 3000,
-        open: false,
-        historyApiFallback: true,
-    },
-    plugins: [
-        new ForkTsCheckerWebpackPlugin(),
-        new CircularDependencyPlugin({
-            exclude: /node_modules/,
-            failOnError: true,
-            allowAsyncCycles: false,
-            cwd: process.cwd(),
-            onStart({ compilation }) {
-                numCyclesDetected = 0;
-            },
-            onDetected({ module: webpackModuleRecord, paths, compilation }) {
-                numCyclesDetected++;
-                compilation.warnings.push(new Error(paths.join(' -> ')));
-            },
-            onEnd({ compilation }) {
-                if (numCyclesDetected > MAX_CYCLES) {
-                    compilation.errors.push(
-                        new Error(
-                            `Detected ${numCyclesDetected} cycles which exceeds configured limit of ${MAX_CYCLES}`,
-                        ),
-                    );
-                }
-            },
-        }),
-    ],
+  mode: 'development',
+  output: {
+    publicPath: '/'
+  },
+  devServer: {
+    port: 3000,
+    open: false,
+    historyApiFallback: true
+  },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin(),
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: true,
+      allowAsyncCycles: false,
+      cwd: process.cwd(),
+      onStart({ compilation }) {
+        numCyclesDetected = 0;
+      },
+      onDetected({ module: webpackModuleRecord, paths, compilation }) {
+        numCyclesDetected++;
+        compilation.warnings.push(new Error(paths.join(' -> ')));
+      },
+      onEnd({ compilation }) {
+        if (numCyclesDetected > MAX_CYCLES) {
+          compilation.errors.push(
+            new Error(`Detected ${numCyclesDetected} cycles which exceeds configured limit of ${MAX_CYCLES}`)
+          );
+        }
+      }
+    })
+  ]
 };
 
 module.exports = merge(commonConfig, devConfig);

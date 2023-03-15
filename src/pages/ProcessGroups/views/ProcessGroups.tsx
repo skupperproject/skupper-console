@@ -19,83 +19,80 @@ import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const initProcessGroupsQueryParams = {
-    filter: 'processGroupRole.external',
+  filter: 'processGroupRole.external'
 };
 
 const MAX_COMPONENT_BYTES_COUNT = 5;
 
 const ProcessGroups = function () {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const { data: processGroups, isLoading } = useQuery(
-        [QueriesProcessGroups.GetProcessGroups, initProcessGroupsQueryParams],
-        () => RESTApi.fetchProcessGroups(initProcessGroupsQueryParams),
-        {
-            onError: handleError,
-        },
+  const { data: processGroups, isLoading } = useQuery(
+    [QueriesProcessGroups.GetProcessGroups, initProcessGroupsQueryParams],
+    () => RESTApi.fetchProcessGroups(initProcessGroupsQueryParams),
+    {
+      onError: handleError
+    }
+  );
+
+  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
+
+    navigate(route);
+  }
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  if (!processGroups) {
+    return null;
+  }
+
+  const { labels: bytesSentLabels, values: bytesSent } = ProcessGroupsController.formatProcessGroupsBytesForChart(
+    processGroups,
+    'octetsSent',
+    MAX_COMPONENT_BYTES_COUNT
+  );
+
+  const { labels: bytesReceivedLabels, values: bytesReceived } =
+    ProcessGroupsController.formatProcessGroupsBytesForChart(
+      processGroups,
+      'octetsReceived',
+      MAX_COMPONENT_BYTES_COUNT
     );
 
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        navigate(route);
-    }
-
-    if (isLoading) {
-        return <LoadingPage />;
-    }
-
-    if (!processGroups) {
-        return null;
-    }
-
-    const { labels: bytesSentLabels, values: bytesSent } =
-        ProcessGroupsController.formatProcessGroupsBytesForChart(
-            processGroups,
-            'octetsSent',
-            MAX_COMPONENT_BYTES_COUNT,
-        );
-
-    const { labels: bytesReceivedLabels, values: bytesReceived } =
-        ProcessGroupsController.formatProcessGroupsBytesForChart(
-            processGroups,
-            'octetsReceived',
-            MAX_COMPONENT_BYTES_COUNT,
-        );
-
-    return (
-        <TransitionPage>
-            <Grid hasGutter>
-                <GridItem span={6}>
-                    <Card>
-                        <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
-                        <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
-                    </Card>
-                </GridItem>
-                <GridItem span={6}>
-                    <Card>
-                        <CardTitle>{ProcessGroupsLabels.MetricBytesReceived}</CardTitle>
-                        <ProcessesBytesChart
-                            bytes={bytesReceived}
-                            labels={bytesReceivedLabels}
-                            themeColor={ChartThemeColor.green}
-                        />
-                    </Card>
-                </GridItem>
-                <GridItem span={12}>
-                    <SkTable
-                        title={ProcessGroupsLabels.Section}
-                        titleDescription={ProcessGroupsLabels.Description}
-                        columns={processGroupsColumns}
-                        rows={processGroups}
-                        components={{ linkCell: ProcessGroupNameLinkCell }}
-                    />
-                </GridItem>
-            </Grid>
-        </TransitionPage>
-    );
+  return (
+    <TransitionPage>
+      <Grid hasGutter>
+        <GridItem span={6}>
+          <Card>
+            <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
+            <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
+          </Card>
+        </GridItem>
+        <GridItem span={6}>
+          <Card>
+            <CardTitle>{ProcessGroupsLabels.MetricBytesReceived}</CardTitle>
+            <ProcessesBytesChart
+              bytes={bytesReceived}
+              labels={bytesReceivedLabels}
+              themeColor={ChartThemeColor.green}
+            />
+          </Card>
+        </GridItem>
+        <GridItem span={12}>
+          <SkTable
+            title={ProcessGroupsLabels.Section}
+            titleDescription={ProcessGroupsLabels.Description}
+            columns={processGroupsColumns}
+            rows={processGroups}
+            components={{ linkCell: ProcessGroupNameLinkCell }}
+          />
+        </GridItem>
+      </Grid>
+    </TransitionPage>
+  );
 };
 
 export default ProcessGroups;

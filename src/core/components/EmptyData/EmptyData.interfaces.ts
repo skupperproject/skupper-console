@@ -1,3 +1,3 @@
 export interface EmptyDataProps {
-    message?: string;
+  message?: string;
 }

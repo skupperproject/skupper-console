@@ -16,80 +16,72 @@ import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 
 const processGroupsQueryParams = {
-    filter: 'processGroupRole.external',
+  filter: 'processGroupRole.external'
 };
 
 const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
-    const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-    const [nodes, setNodes] = useState<GraphNode[]>([]);
-    const [links, setLinks] = useState<GraphEdge<string>[]>([]);
-    const [nodeSelected] = useState<string | null>(id || null);
+  const navigate = useNavigate();
+  const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
+  const [nodes, setNodes] = useState<GraphNode[]>([]);
+  const [links, setLinks] = useState<GraphEdge<string>[]>([]);
+  const [nodeSelected] = useState<string | null>(id || null);
 
-    const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
-        [QueriesProcessGroups.GetProcessGroups],
-        () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: processGroupsPairs, isLoading: isLoadingProcessGroupsPairs } = useQuery(
-        [QueriesTopology.GetProcessGroupsLinks],
-        () => RESTApi.fetchProcessgroupsPairs(),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
+  const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
+    [QueriesProcessGroups.GetProcessGroups],
+    () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
+    {
+      refetchInterval,
+      onError: handleError
     }
+  );
 
-    const handleGetSelectedNode = useCallback(
-        (idSelected: string) => {
-            navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${idSelected}`);
-        },
-        [navigate],
-    );
-    // Refresh topology data
-    const updateTopologyData = useCallback(async () => {
-        if (processGroups && processGroupsPairs) {
-            const processGroupsLinks = TopologyController.getProcessGroupsLinks(processGroupsPairs);
-
-            const processGroupsNodes =
-                TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
-
-            processGroupsLinks;
-
-            setNodes(processGroupsNodes);
-            setLinks(TopologyController.getEdgesFromLinks(processGroupsLinks));
-        }
-    }, [processGroups, processGroupsPairs]);
-
-    useEffect(() => {
-        updateTopologyData();
-    }, [updateTopologyData]);
-
-    if (isLoadingProcessGroups || isLoadingProcessGroupsPairs) {
-        return <LoadingPage />;
+  const { data: processGroupsPairs, isLoading: isLoadingProcessGroupsPairs } = useQuery(
+    [QueriesTopology.GetProcessGroupsLinks],
+    () => RESTApi.fetchProcessgroupsPairs(),
+    {
+      refetchInterval,
+      onError: handleError
     }
+  );
 
-    return (
-        <TopologyPanel
-            nodes={nodes}
-            edges={links}
-            onGetSelectedNode={handleGetSelectedNode}
-            nodeSelected={nodeSelected}
-        />
-    );
+  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
+
+    setRefetchInterval(0);
+    navigate(route);
+  }
+
+  const handleGetSelectedNode = useCallback(
+    (idSelected: string) => {
+      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${idSelected}`);
+    },
+    [navigate]
+  );
+  // Refresh topology data
+  const updateTopologyData = useCallback(async () => {
+    if (processGroups && processGroupsPairs) {
+      const processGroupsLinks = TopologyController.getProcessGroupsLinks(processGroupsPairs);
+
+      const processGroupsNodes = TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
+
+      processGroupsLinks;
+
+      setNodes(processGroupsNodes);
+      setLinks(TopologyController.getEdgesFromLinks(processGroupsLinks));
+    }
+  }, [processGroups, processGroupsPairs]);
+
+  useEffect(() => {
+    updateTopologyData();
+  }, [updateTopologyData]);
+
+  if (isLoadingProcessGroups || isLoadingProcessGroupsPairs) {
+    return <LoadingPage />;
+  }
+
+  return (
+    <TopologyPanel nodes={nodes} edges={links} onGetSelectedNode={handleGetSelectedNode} nodeSelected={nodeSelected} />
+  );
 };
 
 export default TopologyProcessGroups;

@@ -3,44 +3,42 @@
  */
 
 interface FormatTimeOptions {
-    decimals?: number;
-    startSize?: 'µs' | 'ms' | 'sec';
+  decimals?: number;
+  startSize?: 'µs' | 'ms' | 'sec';
 }
 
 export function formatTime(time: number, options?: FormatTimeOptions) {
-    const startSize = options?.startSize || 'µs';
-    const decimals = options?.decimals || 2;
+  const startSize = options?.startSize || 'µs';
+  const decimals = options?.decimals || 2;
 
-    if (time === 0) {
-        return `0 ${startSize}`;
-    }
+  if (time === 0) {
+    return `0 ${startSize}`;
+  }
 
-    const k = 1000;
-    const dm = decimals < 0 ? 0 : decimals;
+  const k = 1000;
+  const dm = decimals < 0 ? 0 : decimals;
 
-    const sizes = ['µs', 'ms', 'sec', 'min', 'hours', 'days', 'months'];
-    const sizeFromIndex = sizes.findIndex((size) => size === startSize);
-    const sizeFrom = sizes.slice(sizeFromIndex);
+  const sizes = ['µs', 'ms', 'sec', 'min', 'hours', 'days', 'months'];
+  const sizeFromIndex = sizes.findIndex((size) => size === startSize);
+  const sizeFrom = sizes.slice(sizeFromIndex);
 
-    const i = Math.floor(Math.log(time) / Math.log(k));
-    const timeSized = parseFloat((time / Math.pow(k, i)).toFixed(dm));
+  const i = Math.floor(Math.log(time) / Math.log(k));
+  const timeSized = parseFloat((time / Math.pow(k, i)).toFixed(dm));
 
-    if (isNaN(timeSized)) {
-        return '';
-    }
+  if (isNaN(timeSized)) {
+    return '';
+  }
 
-    if (timeSized >= 60 && sizeFrom[i] === 'hours') {
-        return `${Math.floor(timeSized / 24)} days`;
-    }
+  if (timeSized >= 60 && sizeFrom[i] === 'hours') {
+    return `${Math.floor(timeSized / 24)} days`;
+  }
 
-    if (timeSized >= 60 && sizeFrom[i] === 'min') {
-        return `${Math.floor(timeSized / 60)} hours`;
-    }
+  if (timeSized >= 60 && sizeFrom[i] === 'min') {
+    return `${Math.floor(timeSized / 60)} hours`;
+  }
 
-    const timeFormatted =
-        timeSized >= 60 && sizeFrom[i] === 'sec'
-            ? `${Math.floor(timeSized / 60)} min`
-            : `${timeSized} ${sizeFrom[i]}`;
+  const timeFormatted =
+    timeSized >= 60 && sizeFrom[i] === 'sec' ? `${Math.floor(timeSized / 60)} min` : `${timeSized} ${sizeFrom[i]}`;
 
-    return timeFormatted;
+  return timeFormatted;
 }

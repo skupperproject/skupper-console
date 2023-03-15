@@ -1,10 +1,10 @@
 export enum SortDirection {
-    ASC = 'asc',
-    DESC = 'desc',
+  ASC = 'asc',
+  DESC = 'desc'
 }
 
 export enum AvailableProtocols {
-    Tcp = 'tcp',
-    Http = 'http',
-    Http2 = 'http2',
+  Tcp = 'tcp',
+  Http = 'http',
+  Http2 = 'http2'
 }

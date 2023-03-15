@@ -1,85 +1,85 @@
 {
-    "results": [
-        {
-            "recType": "LINK",
-            "identity": "52tjs:1",
-            "parent": "52tjs:0",
-            "startTime": 1674048706622878,
-            "endTime": 0,
-            "mode": "interior",
-            "name": "public2-skupper-router-5487fdd5c8-hth7l",
-            "linkCost": 1,
-            "direction": "incoming"
-        },
-        {
-            "recType": "LINK",
-            "identity": "52tjs:1402",
-            "parent": "52tjs:0",
-            "startTime": 1674151543561656,
-            "endTime": 0,
-            "mode": "interior",
-            "name": "private1-skupper-router-bcd8f5469-6z7k6",
-            "linkCost": 1,
-            "direction": "incoming"
-        },
-        {
-            "recType": "LINK",
-            "identity": "6z7k6:1701",
-            "parent": "6z7k6:0",
-            "startTime": 1674149422366200,
-            "endTime": 0,
-            "mode": "interior",
-            "name": "public2-skupper-router-5487fdd5c8-hth7l",
-            "linkCost": 1,
-            "direction": "outgoing"
-        },
-        {
-            "recType": "LINK",
-            "identity": "6z7k6:2",
-            "parent": "6z7k6:0",
-            "startTime": 1674048729859049,
-            "endTime": 0,
-            "mode": "interior",
-            "name": "public1-skupper-router-7b45b6b8f4-52tjs",
-            "linkCost": 1,
-            "direction": "outgoing"
-        },
-        {
-            "recType": "LINK",
-            "identity": "hth7l:1",
-            "parent": "hth7l:0",
-            "startTime": 1674048705833609,
-            "endTime": 0,
-            "mode": "interior",
-            "name": "public1-skupper-router-7b45b6b8f4-52tjs",
-            "linkCost": 1,
-            "direction": "outgoing"
-        },
-        {
-            "recType": "LINK",
-            "identity": "hth7l:31",
-            "parent": "hth7l:0",
-            "startTime": 1674151543581947,
-            "endTime": 0,
-            "mode": "interior",
-            "name": "private1-skupper-router-bcd8f5469-6z7k6",
-            "linkCost": 1,
-            "direction": "incoming"
-        }
-    ],
-    "queryParams": {
-        "offset": -1,
-        "limit": -1,
-        "sortBy": "identity.asc",
-        "filter": "",
-        "timeRangeStart": 1674202313097192,
-        "timeRangeEnd": 1674203213097192,
-        "timeRangeOperation": 0
+  "results": [
+    {
+      "recType": "LINK",
+      "identity": "52tjs:1",
+      "parent": "52tjs:0",
+      "startTime": 1674048706622878,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "public2-skupper-router-5487fdd5c8-hth7l",
+      "linkCost": 1,
+      "direction": "incoming"
     },
-    "status": "",
-    "timestamp": 1674203213097194,
-    "elapsed": 65,
-    "count": 6,
-    "timeRangeCount": 6,
-    "totalCount": 6
+    {
+      "recType": "LINK",
+      "identity": "52tjs:1402",
+      "parent": "52tjs:0",
+      "startTime": 1674151543561656,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "private1-skupper-router-bcd8f5469-6z7k6",
+      "linkCost": 1,
+      "direction": "incoming"
+    },
+    {
+      "recType": "LINK",
+      "identity": "6z7k6:1701",
+      "parent": "6z7k6:0",
+      "startTime": 1674149422366200,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "public2-skupper-router-5487fdd5c8-hth7l",
+      "linkCost": 1,
+      "direction": "outgoing"
+    },
+    {
+      "recType": "LINK",
+      "identity": "6z7k6:2",
+      "parent": "6z7k6:0",
+      "startTime": 1674048729859049,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "public1-skupper-router-7b45b6b8f4-52tjs",
+      "linkCost": 1,
+      "direction": "outgoing"
+    },
+    {
+      "recType": "LINK",
+      "identity": "hth7l:1",
+      "parent": "hth7l:0",
+      "startTime": 1674048705833609,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "public1-skupper-router-7b45b6b8f4-52tjs",
+      "linkCost": 1,
+      "direction": "outgoing"
+    },
+    {
+      "recType": "LINK",
+      "identity": "hth7l:31",
+      "parent": "hth7l:0",
+      "startTime": 1674151543581947,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "private1-skupper-router-bcd8f5469-6z7k6",
+      "linkCost": 1,
+      "direction": "incoming"
+    }
+  ],
+  "queryParams": {
+    "offset": -1,
+    "limit": -1,
+    "sortBy": "identity.asc",
+    "filter": "",
+    "timeRangeStart": 1674202313097192,
+    "timeRangeEnd": 1674203213097192,
+    "timeRangeOperation": 0
+  },
+  "status": "",
+  "timestamp": 1674203213097194,
+  "elapsed": 65,
+  "count": 6,
+  "timeRangeCount": 6,
+  "totalCount": 6
 }

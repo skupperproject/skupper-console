@@ -3,9 +3,9 @@ import { BASE_URL_COLLECTOR } from 'config';
 import { AvailableProtocols } from './REST.enum';
 
 export const protocols = [
-    { name: AvailableProtocols.Tcp, identity: 1 },
-    { name: AvailableProtocols.Http, identity: 2 },
-    { name: AvailableProtocols.Http2, identity: 3 },
+  { name: AvailableProtocols.Tcp, identity: 1 },
+  { name: AvailableProtocols.Http, identity: 2 },
+  { name: AvailableProtocols.Http2, identity: 3 }
 ];
 
 const API_VERSION = '/api/v1alpha1';
@@ -48,8 +48,7 @@ export const getAddressesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}
 export const PROCESS_GROUPS_PATH = `${API_URL}/processgroups/`;
 export const getProcessGroupsPATH = () => PROCESS_GROUPS_PATH;
 export const getProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}`;
-export const getProcessesByProcessGroupPATH = (id: string) =>
-    `${PROCESS_GROUPS_PATH}${id}/processes`;
+export const getProcessesByProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}/processes`;
 
 // ADDRESSES
 export const ADDRESSES_PATH = `${API_URL}/addresses/`;

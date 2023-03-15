@@ -2,19 +2,19 @@ import React, { FC, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import {
-    Breadcrumb,
-    BreadcrumbHeading,
-    BreadcrumbItem,
-    Card,
-    CardBody,
-    CardTitle,
-    Flex,
-    Grid,
-    GridItem,
-    Text,
-    TextContent,
-    TextVariants,
-    Title,
+  Breadcrumb,
+  BreadcrumbHeading,
+  BreadcrumbItem,
+  Card,
+  CardBody,
+  CardTitle,
+  Flex,
+  Grid,
+  GridItem,
+  Text,
+  TextContent,
+  TextVariants,
+  Title
 } from '@patternfly/react-core';
 import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -29,11 +29,7 @@ import TransitionPage from '@core/components/TransitionPages/Slide';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import {
-    TopologyRoutesPaths,
-    TopologyURLFilters,
-    TopologyViews,
-} from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RESTApi } from 'API/REST';
 import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
@@ -46,279 +42,265 @@ import { CurrentBytesInfoProps } from '../Processes.interfaces';
 import { QueriesProcesses } from '../services/services.enum';
 
 const ProcessesConnectedComponentsTable = {
-    ProcessLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
-        LinkCell({
-            ...props,
-            type: 'process',
-            link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`,
-        }),
-    TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
-        formatBytes(props.data.sourceOctets + props.data.destinationOctets),
-    AvgLatency: (props: LinkCellProps<FlowAggregatesResponse>) =>
-        formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2),
+  ProcessLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    LinkCell({
+      ...props,
+      type: 'process',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`
+    }),
+  TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    formatBytes(props.data.sourceOctets + props.data.destinationOctets),
+  AvgLatency: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2)
 };
 
 const Process = function () {
-    const navigate = useNavigate();
-    const { id: processId } = useParams() as { id: string };
-    const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+  const navigate = useNavigate();
+  const { id: processId } = useParams() as { id: string };
+  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
 
-    const { data: process, isLoading: isLoadingProcess } = useQuery(
-        [QueriesProcesses.GetProcess, processId],
-        () => RESTApi.fetchProcess(processId),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: processesPairsTxData, isLoading: isLoadingProcessesPairsTxData } = useQuery(
-        [QueriesProcesses.GetProcessPairsTx, processId],
-        () =>
-            RESTApi.fetchProcessesPairs({
-                filter: `sourceId.${processId}`,
-                timeRangeStart: 0,
-            }),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: processesPairsRxData, isLoading: isLoadingProcessesPairsRxData } = useQuery(
-        [QueriesProcesses.GetProcessPairsRx, processId],
-        () =>
-            RESTApi.fetchProcessesPairs({
-                filter: `destinationId.${processId}`,
-                timeRangeStart: 0,
-            }),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: addresses, isLoading: isLoadingAddressesByProcess } = useQuery(
-        [QueriesProcesses.GetAddressesByProcessId, processId],
-        () => RESTApi.fetchAddressesByProcess(processId),
-        {
-            onError: handleError,
-        },
-    );
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
+  const { data: process, isLoading: isLoadingProcess } = useQuery(
+    [QueriesProcesses.GetProcess, processId],
+    () => RESTApi.fetchProcess(processId),
+    {
+      refetchInterval,
+      onError: handleError
     }
+  );
 
-    if (
-        isLoadingProcess ||
-        isLoadingAddressesByProcess ||
-        isLoadingProcessesPairsTxData ||
-        isLoadingProcessesPairsRxData
-    ) {
-        return <LoadingPage />;
+  const { data: processesPairsTxData, isLoading: isLoadingProcessesPairsTxData } = useQuery(
+    [QueriesProcesses.GetProcessPairsTx, processId],
+    () =>
+      RESTApi.fetchProcessesPairs({
+        filter: `sourceId.${processId}`,
+        timeRangeStart: 0
+      }),
+    {
+      refetchInterval,
+      onError: handleError
     }
+  );
 
-    if (!process || !processesPairsTxData || !processesPairsRxData || !addresses) {
-        return null;
+  const { data: processesPairsRxData, isLoading: isLoadingProcessesPairsRxData } = useQuery(
+    [QueriesProcesses.GetProcessPairsRx, processId],
+    () =>
+      RESTApi.fetchProcessesPairs({
+        filter: `destinationId.${processId}`,
+        timeRangeStart: 0
+      }),
+    {
+      refetchInterval,
+      onError: handleError
     }
+  );
 
-    const { name, octetReceivedRate, octetsReceived, octetSentRate, octetsSent } =
-        process as ProcessResponse;
+  const { data: addresses, isLoading: isLoadingAddressesByProcess } = useQuery(
+    [QueriesProcesses.GetAddressesByProcessId, processId],
+    () => RESTApi.fetchAddressesByProcess(processId),
+    {
+      onError: handleError
+    }
+  );
 
-    const processesPairsTx = processesPairsTxData;
+  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-    const processesPairsRxReverse =
-        processesPairsRxData.map((processPairsData) => ({
-            ...processPairsData,
-            sourceId: processPairsData.destinationId,
-            sourceName: processPairsData.destinationName,
-            destinationName: processPairsData.sourceName,
-            destinationId: processPairsData.sourceId,
-            sourceOctets: processPairsData.destinationOctets,
-            destinationOctets: processPairsData.sourceOctets,
-            sourceAverageLatency: processPairsData.destinationAverageLatency,
-            destinationAverageLatency: processPairsData.sourceAverageLatency,
-        })) || [];
+    setRefetchInterval(0);
+    navigate(route);
+  }
 
-    const totalBytes = process.octetsSent + process.octetsReceived;
+  if (
+    isLoadingProcess ||
+    isLoadingAddressesByProcess ||
+    isLoadingProcessesPairsTxData ||
+    isLoadingProcessesPairsRxData
+  ) {
+    return <LoadingPage />;
+  }
 
-    const processTrafficChartData = totalBytes && [
-        {
-            x: `${ProcessesLabels.TrafficSent}: ${Math.round(
-                (process.octetsSent / totalBytes) * 100,
-            )}%`,
-            y: process.octetsSent,
-        },
-        {
-            x: `${ProcessesLabels.TrafficReceived}: ${Math.round(
-                (process.octetsReceived / totalBytes) * 100,
-            )}%`,
-            y: process.octetsReceived,
-        },
-    ];
+  if (!process || !processesPairsTxData || !processesPairsRxData || !addresses) {
+    return null;
+  }
 
-    return (
-        <TransitionPage>
-            <Grid hasGutter>
-                <GridItem>
-                    <Breadcrumb>
-                        <BreadcrumbItem>
-                            <Link to={ProcessesRoutesPaths.Processes}>
-                                {ProcessesLabels.Section}
-                            </Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-                    </Breadcrumb>
-                </GridItem>
+  const { name, octetReceivedRate, octetsReceived, octetSentRate, octetsSent } = process as ProcessResponse;
 
-                <GridItem>
-                    <Flex alignItems={{ default: 'alignItemsCenter' }}>
-                        <ResourceIcon type="process" />
-                        <Title headingLevel="h1">{name}</Title>
+  const processesPairsTx = processesPairsTxData;
 
-                        <Link
-                            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
-                        >
-                            {`(${ProcessesLabels.GoToTopology})`}
-                        </Link>
-                    </Flex>
-                </GridItem>
+  const processesPairsRxReverse =
+    processesPairsRxData.map((processPairsData) => ({
+      ...processPairsData,
+      sourceId: processPairsData.destinationId,
+      sourceName: processPairsData.destinationName,
+      destinationName: processPairsData.sourceName,
+      destinationId: processPairsData.sourceId,
+      sourceOctets: processPairsData.destinationOctets,
+      destinationOctets: processPairsData.sourceOctets,
+      sourceAverageLatency: processPairsData.destinationAverageLatency,
+      destinationAverageLatency: processPairsData.sourceAverageLatency
+    })) || [];
 
-                <GridItem>
-                    <ProcessDescription process={process} title={ProcessesLabels.Details} />
-                </GridItem>
+  const totalBytes = process.octetsSent + process.octetsReceived;
 
-                <GridItem span={8} rowSpan={3}>
-                    <Card isFullHeight>
-                        <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
-                        {!processTrafficChartData && <EmptyData />}
-                        {!!processTrafficChartData && (
-                            <ProcessesBytesChart
-                                bytes={processTrafficChartData}
-                                themeColor={ChartThemeColor.multi}
-                            />
-                        )}
-                    </Card>
-                </GridItem>
+  const processTrafficChartData = totalBytes && [
+    {
+      x: `${ProcessesLabels.TrafficSent}: ${Math.round((process.octetsSent / totalBytes) * 100)}%`,
+      y: process.octetsSent
+    },
+    {
+      x: `${ProcessesLabels.TrafficReceived}: ${Math.round((process.octetsReceived / totalBytes) * 100)}%`,
+      y: process.octetsReceived
+    }
+  ];
 
-                <GridItem span={4} rowSpan={2}>
-                    <Card isFullHeight>
-                        <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
-                        <CardBody>
-                            <TextContent>
-                                <Text component={TextVariants.h1}>
-                                    {formatBytes(octetsReceived + octetsSent)}
-                                </Text>
-                            </TextContent>
-                        </CardBody>
-                    </Card>
-                </GridItem>
+  return (
+    <TransitionPage>
+      <Grid hasGutter>
+        <GridItem>
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
+            </BreadcrumbItem>
+            <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
+          </Breadcrumb>
+        </GridItem>
 
-                <GridItem span={2}>
-                    <Card isFullHeight>
-                        <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
-                        <CardBody>
-                            <CurrentBytesInfo
-                                direction="up"
-                                style={{
-                                    color: 'var(--pf-global--palette--blue-400)',
-                                }}
-                                byteRate={octetSentRate}
-                                bytes={octetsSent}
-                            />
-                        </CardBody>
-                    </Card>
-                </GridItem>
+        <GridItem>
+          <Flex alignItems={{ default: 'alignItemsCenter' }}>
+            <ResourceIcon type="process" />
+            <Title headingLevel="h1">{name}</Title>
 
-                <GridItem span={2}>
-                    <Card isFullHeight>
-                        <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
-                        <CardBody>
-                            <CurrentBytesInfo
-                                style={{
-                                    color: 'var(--pf-global--palette--green-400)',
-                                }}
-                                byteRate={octetReceivedRate}
-                                bytes={octetsReceived}
-                            />
-                        </CardBody>
-                    </Card>
-                </GridItem>
+            <Link
+              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
+            >
+              {`(${ProcessesLabels.GoToTopology})`}
+            </Link>
+          </Flex>
+        </GridItem>
 
-                <GridItem span={6}>
-                    <SkTable
-                        title={ProcessesLabels.Servers}
-                        columns={processesConnectedColumns}
-                        rows={processesPairsTx}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                        components={{
-                            ...ProcessesConnectedComponentsTable,
-                            viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
-                                LinkCell({
-                                    ...props,
-                                    link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
-                                    value: ProcessPairsColumnsNames.ViewDetails,
-                                }),
-                        }}
-                    />
-                </GridItem>
+        <GridItem>
+          <ProcessDescription process={process} title={ProcessesLabels.Details} />
+        </GridItem>
 
-                <GridItem span={6}>
-                    <SkTable
-                        title={ProcessesLabels.Clients}
-                        columns={processesConnectedColumns}
-                        rows={processesPairsRxReverse}
-                        pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                        components={{
-                            ...ProcessesConnectedComponentsTable,
-                            viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
-                                LinkCell({
-                                    ...props,
-                                    link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,
-                                    value: ProcessPairsColumnsNames.ViewDetails,
-                                }),
-                        }}
-                    />
-                </GridItem>
-            </Grid>
-        </TransitionPage>
-    );
+        <GridItem span={8} rowSpan={3}>
+          <Card isFullHeight>
+            <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
+            {!processTrafficChartData && <EmptyData />}
+            {!!processTrafficChartData && (
+              <ProcessesBytesChart bytes={processTrafficChartData} themeColor={ChartThemeColor.multi} />
+            )}
+          </Card>
+        </GridItem>
+
+        <GridItem span={4} rowSpan={2}>
+          <Card isFullHeight>
+            <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
+            <CardBody>
+              <TextContent>
+                <Text component={TextVariants.h1}>{formatBytes(octetsReceived + octetsSent)}</Text>
+              </TextContent>
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem span={2}>
+          <Card isFullHeight>
+            <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
+            <CardBody>
+              <CurrentBytesInfo
+                direction="up"
+                style={{
+                  color: 'var(--pf-global--palette--blue-400)'
+                }}
+                byteRate={octetSentRate}
+                bytes={octetsSent}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem span={2}>
+          <Card isFullHeight>
+            <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
+            <CardBody>
+              <CurrentBytesInfo
+                style={{
+                  color: 'var(--pf-global--palette--green-400)'
+                }}
+                byteRate={octetReceivedRate}
+                bytes={octetsReceived}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem span={6}>
+          <SkTable
+            title={ProcessesLabels.Servers}
+            columns={processesConnectedColumns}
+            rows={processesPairsTx}
+            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+            components={{
+              ...ProcessesConnectedComponentsTable,
+              viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                LinkCell({
+                  ...props,
+                  link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
+                  value: ProcessPairsColumnsNames.ViewDetails
+                })
+            }}
+          />
+        </GridItem>
+
+        <GridItem span={6}>
+          <SkTable
+            title={ProcessesLabels.Clients}
+            columns={processesConnectedColumns}
+            rows={processesPairsRxReverse}
+            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+            components={{
+              ...ProcessesConnectedComponentsTable,
+              viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+                LinkCell({
+                  ...props,
+                  link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,
+                  value: ProcessPairsColumnsNames.ViewDetails
+                })
+            }}
+          />
+        </GridItem>
+      </Grid>
+    </TransitionPage>
+  );
 };
 
 export default Process;
 
 const CurrentBytesInfo: FC<CurrentBytesInfoProps> = function ({
-    description,
-    direction = 'down',
-    byteRate,
-    bytes,
-    ...props
+  description,
+  direction = 'down',
+  byteRate,
+  bytes,
+  ...props
 }) {
-    const { style } = props;
+  const { style } = props;
 
-    return (
-        <TextContent className="pf-u-color-300">
-            {description}
-            <Flex>
-                <Text style={style} component={TextVariants.h1}>
-                    {formatBytes(bytes)}
-                </Text>
+  return (
+    <TextContent className="pf-u-color-300">
+      {description}
+      <Flex>
+        <Text style={style} component={TextVariants.h1}>
+          {formatBytes(bytes)}
+        </Text>
 
-                <Text component={TextVariants.h1}>
-                    {direction === 'up' ? (
-                        <LongArrowAltUpIcon className="pf-u-ml-md" />
-                    ) : (
-                        <LongArrowAltDownIcon className="pf-u-ml-md" />
-                    )}
-                    {formatByteRate(byteRate)}
-                </Text>
-            </Flex>
-        </TextContent>
-    );
+        <Text component={TextVariants.h1}>
+          {direction === 'up' ? (
+            <LongArrowAltUpIcon className="pf-u-ml-md" />
+          ) : (
+            <LongArrowAltDownIcon className="pf-u-ml-md" />
+          )}
+          {formatByteRate(byteRate)}
+        </Text>
+      </Flex>
+    </TextContent>
+  );
 };

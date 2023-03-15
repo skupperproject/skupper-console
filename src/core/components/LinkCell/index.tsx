@@ -9,15 +9,15 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { LinkCellProps } from './LinkCell.interfaces';
 
 const LinkCell = function <T>({ value, link, type, isDisabled = false }: LinkCellProps<T>) {
-    return (
-        <Tooltip content={value}>
-            <TableText wrapModifier="truncate">
-                {type && <ResourceIcon type={type} />}
-                {isDisabled && value}
-                {!isDisabled && <Link to={link}>{value}</Link>}
-            </TableText>
-        </Tooltip>
-    );
+  return (
+    <Tooltip content={value}>
+      <TableText wrapModifier="truncate">
+        {type && <ResourceIcon type={type} />}
+        {isDisabled && value}
+        {!isDisabled && <Link to={link}>{value}</Link>}
+      </TableText>
+    </Tooltip>
+  );
 };
 
 export default LinkCell;

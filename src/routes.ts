@@ -8,10 +8,10 @@ import { siteRoutes } from '@pages/Sites/routes';
 import { topologyRoutes } from '@pages/Topology/routes';
 
 export const routes: RouteObject[] = [
-    ...siteRoutes,
-    ...addressesRoutes,
-    ...processGroupsRoutes,
-    ...processesRoutes,
-    ...errorsRoutes,
-    ...topologyRoutes,
+  ...siteRoutes,
+  ...addressesRoutes,
+  ...processGroupsRoutes,
+  ...processesRoutes,
+  ...errorsRoutes,
+  ...topologyRoutes
 ];

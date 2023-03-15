@@ -1,14 +1,14 @@
 import { SiteResponse } from 'API/REST.interfaces';
 
 export interface SitesTableProps {
-    sites: SiteResponse[];
+  sites: SiteResponse[];
 }
 
 export interface SiteExtended extends SiteResponse {
-    connected: string[];
+  connected: string[];
 }
 
 export interface SiteNameLinkCellProps {
-    data: SiteResponse;
-    value: SiteResponse[keyof SiteResponse];
+  data: SiteResponse;
+  value: SiteResponse[keyof SiteResponse];
 }
