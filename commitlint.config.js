@@ -87,7 +87,7 @@ const Configuration = {
       }
     ],
     useEmoji: true,
-    emojiAlign: 'left',
+    emojiAlign: 'center',
     useAI: false,
     aiNumber: 1,
     themeColorCode: '',
@@ -111,7 +111,7 @@ const Configuration = {
     allowEmptyIssuePrefix: true,
     confirmColorize: true,
     maxHeaderLength: Infinity,
-    maxSubjectLength: 100,
+    maxSubjectLength: 60,
     minSubjectLength: 0,
     scopeOverrides: undefined,
     defaultBody: '',
