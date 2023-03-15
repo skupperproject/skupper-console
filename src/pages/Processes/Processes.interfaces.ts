@@ -12,8 +12,8 @@ export interface ProcessAxisDataChart {
 }
 
 export interface ProcessMetrics {
-  trafficDataSeries: ProcessDataChart;
-  trafficDataSeriesPerSecond: ProcessDataChart;
+  trafficDataSeries: ProcessDataChart | null;
+  trafficDataSeriesPerSecond: ProcessDataChart | null;
 }
 
 export interface ProcessDataChart {

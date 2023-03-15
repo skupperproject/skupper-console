@@ -212,11 +212,11 @@ const Process = function () {
     return [
       {
         x: 'Sent',
-        y: trafficData.trafficDataSeries.totalDataSent
+        y: trafficData.trafficDataSeries?.totalDataSent || 0
       },
       {
         x: 'Received',
-        y: trafficData.trafficDataSeries.totalDataReceived
+        y: trafficData.trafficDataSeries?.totalDataReceived || 0
       }
     ];
   }
@@ -302,11 +302,14 @@ const Process = function () {
 
             {/* Total Traffic card */}
             <GridItem span={4}>
-              <MetricCard
-                title={ProcessesLabels.TrafficTotal}
-                value={formatBytes(metrics.trafficDataSeries.totalData)}
-                bgColor={'--pf-global--palette--cyan-200'}
-              />
+              {!metrics.trafficDataSeries && <EmptyData />}
+              {!!metrics.trafficDataSeries && (
+                <MetricCard
+                  title={ProcessesLabels.TrafficTotal}
+                  value={formatBytes(metrics.trafficDataSeries.totalData)}
+                  bgColor={'--pf-global--palette--cyan-200'}
+                />
+              )}
             </GridItem>
 
             {/* Chart distribution data traffic card*/}

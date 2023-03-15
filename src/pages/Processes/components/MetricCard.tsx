@@ -31,7 +31,7 @@ const MetricCard: FC<MetricCardProps> = function ({
           </Title>
         </Bullseye>
       </CardBody>
-      {showChart && dataChart && (
+      {showChart && !!dataChart && (
         <CardFooter>
           <MetricChart color={colorChart} data={dataChart} />
         </CardFooter>

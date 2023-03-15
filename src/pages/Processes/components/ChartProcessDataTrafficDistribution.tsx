@@ -1,6 +1,6 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
-import { ChartPie, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
+import { ChartPie, ChartThemeColor, ChartTooltip, getResizeObserver } from '@patternfly/react-charts';
 
 import EmptyData from '@core/components/EmptyData';
 import { formatBytes } from '@core/utils/formatBytes';
@@ -8,19 +8,33 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { ProcessesBytesChartProps } from '../Processes.interfaces';
 
 const CHART_PADDING = {
-  bottom: -30,
+  bottom: 10,
   left: 0,
   right: 0,
-  top: -30
+  top: 10
 };
 
 const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = function ({ data, ...props }) {
-  const [chartContainerDimension, setChartContainerDimension] = useState({ width: 0, height: 0 });
+  const observer = useRef<Function>(() => null);
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState<number>(0);
 
-  const chartContainerRef = useCallback((node: HTMLDivElement | null) => {
-    if (node) {
-      const dimensions = node?.getBoundingClientRect();
-      setChartContainerDimension({ width: dimensions.width, height: dimensions.height });
+  function handleResize() {
+    if (
+      chartContainerRef.current &&
+      chartContainerRef.current?.clientWidth &&
+      chartContainerRef.current?.clientHeight
+    ) {
+      setWidth(chartContainerRef.current.clientWidth);
+    }
+  }
+
+  useEffect(() => {
+    if (chartContainerRef.current) {
+      observer.current = getResizeObserver(chartContainerRef.current, handleResize);
+      handleResize();
+
+      () => observer.current();
     }
   }, []);
 
@@ -33,7 +47,7 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
   return (
     <div ref={chartContainerRef} style={{ height: `100%`, width: `100%` }}>
       {!totalBytes && <EmptyData message="Chart not available" />}
-      {totalBytes && (
+      {!!totalBytes && (
         <ChartPie
           data={data}
           labels={[
@@ -59,8 +73,7 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
           ]}
           legendOrientation="vertical"
           legendPosition="right"
-          width={chartContainerDimension.width}
-          height={chartContainerDimension.height}
+          width={width}
           themeColor={ChartThemeColor.cyan}
           {...props}
         />

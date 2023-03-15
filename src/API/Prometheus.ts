@@ -109,8 +109,8 @@ export const PrometheusApi = {
     isRate = false
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
-    let param1 = `direction="incoming", sourceProcess="${id}"`;
-    let param2 = `direction="outgoing",destProcess="${id}"`;
+    let param1 = `sourceProcess="${id}"`;
+    let param2 = `destProcess="${id}"`;
 
     if (processIdDest) {
       param1 = [param1, `destProcess="${processIdDest}"`].join(',');
