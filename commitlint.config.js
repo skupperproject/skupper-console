@@ -44,7 +44,7 @@ const Configuration = {
     types: [
       { value: 'feat', name: 'feat:     ✨  A new feature', emoji: ':sparkles:' },
       { value: 'fix', name: 'fix:      🐞  A bug fix', emoji: ':lady_beetle:' },
-      { value: 'docs', name: 'docs:     📝  Documentation only changes', emoji: ':memo:' },
+      { value: 'docs', name: 'docs:    📚  Documentation only changes', emoji: ':books:' },
       {
         value: 'style',
         name: 'style:    💄  Changes that do not affect the meaning of the code',
@@ -87,7 +87,7 @@ const Configuration = {
       }
     ],
     useEmoji: true,
-    emojiAlign: 'right',
+    emojiAlign: 'left',
     useAI: false,
     aiNumber: 1,
     themeColorCode: '',
