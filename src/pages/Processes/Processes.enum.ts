@@ -22,7 +22,7 @@ export enum ProcessesLabels {
   Host = 'Host',
   MetricBytesSent = 'Top 5 processes bytes sent',
   MetricBytesReceived = 'Top 5 processes bytes received',
-  TrafficInOutDistribution = 'Traffic Sent vs Received',
+  TrafficInOutDistribution = 'Traffic distribution',
   TrafficTotal = 'Total',
   TrafficSent = 'Sent',
   TrafficReceived = 'Received',

@@ -19,6 +19,7 @@ export const startDateOffsetMap: Record<string, number> = {
   [timeIntervalMap.OneHours]: 3600,
   [timeIntervalMap.TwoHours]: 2 * 3600,
   [timeIntervalMap.SixHours]: 6 * 3600,
+  [timeIntervalMap.TwelveHours]: 12 * 3600,
   [timeIntervalMap.OneDay]: 24 * 3600,
   [timeIntervalMap.OneWeek]: 7 * 24 * 3600,
   [timeIntervalMap.TwoWeeks]: 14 * 24 * 3600
@@ -31,9 +32,10 @@ export const rangeStepIntervalMap: Record<string, string> = {
   [timeIntervalMap.OneHours]: `${startDateOffsetMap[timeIntervalMap.OneHours] / 60}s`,
   [timeIntervalMap.TwoHours]: `${startDateOffsetMap[timeIntervalMap.TwoHours] / 60}s`,
   [timeIntervalMap.SixHours]: `${startDateOffsetMap[timeIntervalMap.SixHours] / 60}s`,
+  [timeIntervalMap.TwelveHours]: `${startDateOffsetMap[timeIntervalMap.TwelveHours] / 60}s`,
   [timeIntervalMap.OneDay]: `${startDateOffsetMap[timeIntervalMap.OneDay] / 60}s`,
-  [timeIntervalMap.OneWeek]: '12h',
-  [timeIntervalMap.TwoWeeks]: '24h'
+  [timeIntervalMap.OneWeek]: `${startDateOffsetMap[timeIntervalMap.OneWeek] / 60}s`,
+  [timeIntervalMap.TwoWeeks]: `${startDateOffsetMap[timeIntervalMap.TwoWeeks] / 60}s`
 };
 
 export let PROMETHEUS_PATH: string | undefined = undefined;

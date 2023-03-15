@@ -1,28 +1,22 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts';
 import {
   Breadcrumb,
   BreadcrumbHeading,
   BreadcrumbItem,
   Card,
-  CardBody,
-  CardTitle,
   Flex,
   Grid,
   GridItem,
   Select,
   SelectOption,
   SelectOptionObject,
-  Text,
-  TextContent,
-  TextVariants,
   Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem
 } from '@patternfly/react-core';
-import { ClockIcon, ClusterIcon, LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
+import { ClockIcon, ClusterIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -32,20 +26,22 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { timeIntervalMap } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
-import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
+import { FlowAggregatesResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
+import ChartProcessDataTrafficDistribution from '../components/ChartProcessDataTrafficDistribution';
+import ChartProcessDataTrafficSeries from '../components/ChartProcessDataTrafficSeries';
+import MetricCard from '../components/MetricCard';
 import ProcessDescription from '../components/ProcessDescription';
-import ProcessesBytesChart from '../components/ProcessesBytesChart';
 import { processesConnectedColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
-import { CurrentBytesInfoProps } from '../Processes.interfaces';
+import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
 const ProcessesConnectedComponentsTable = {
@@ -71,7 +67,7 @@ const Process = function () {
   const [destinationProcess, setDestinationProcess] = useState<string>();
 
   const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
-  const [timeInterval, setTimeInterval] = useState<string>(defaultTimeInterval);
+  const [timeInterval, setTimeInterval] = useState<any>(defaultTimeInterval);
 
   const { data: process, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcesses.GetProcess, processId],
@@ -109,6 +105,17 @@ const Process = function () {
     [QueriesProcesses.GetAddressesByProcessId, processId],
     () => RESTApi.fetchAddressesByProcess(processId),
     {
+      onError: handleError
+    }
+  );
+
+  // Metrics query
+  const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
+    [QueriesProcesses.GetProcessMetrics, process?.name, timeInterval, destinationProcess],
+    () => ProcessesController.getMetrics(process?.name || '', timeInterval, destinationProcess || ''),
+    {
+      keepPreviousData: true,
+      enabled: !!process,
       onError: handleError
     }
   );
@@ -174,16 +181,15 @@ const Process = function () {
     isLoadingProcess ||
     isLoadingAddressesByProcess ||
     isLoadingProcessesPairsTxData ||
-    isLoadingProcessesPairsRxData
+    isLoadingProcessesPairsRxData ||
+    isLoadingMetrics
   ) {
     return <LoadingPage />;
   }
 
-  if (!process || !processesPairsTxData || !processesPairsRxData || !addresses) {
+  if (!process || !processesPairsTxData || !processesPairsRxData || !addresses || !metrics) {
     return null;
   }
-
-  const { name, octetReceivedRate, octetsReceived, octetSentRate, octetsSent } = process as ProcessResponse;
 
   const processesPairsTx = processesPairsTxData;
 
@@ -200,16 +206,16 @@ const Process = function () {
       destinationAverageLatency: processPairsData.sourceAverageLatency
     })) || [];
 
-  const totalBytes = process.octetsSent + process.octetsReceived;
+  const totalBytes = metrics.trafficDataSeries.totalData;
 
-  const processTrafficChartData = totalBytes && [
+  const processTrafficChartData = [
     {
-      x: `${ProcessesLabels.TrafficSent}: ${Math.round((process.octetsSent / totalBytes) * 100)}%`,
-      y: process.octetsSent
+      x: 'Sent',
+      y: metrics.trafficDataSeries.totalDataSent
     },
     {
-      x: `${ProcessesLabels.TrafficReceived}: ${Math.round((process.octetsReceived / totalBytes) * 100)}%`,
-      y: process.octetsReceived
+      x: 'Received',
+      y: metrics.trafficDataSeries.totalDataReceived
     }
   ];
 
@@ -221,13 +227,14 @@ const Process = function () {
             <BreadcrumbItem>
               <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
             </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
+            <BreadcrumbHeading to="#">{process.name}</BreadcrumbHeading>
           </Breadcrumb>
         </GridItem>
+
         <GridItem>
           <Flex alignItems={{ default: 'alignItemsCenter' }}>
             <ResourceIcon type="process" />
-            <Title headingLevel="h1">{name}</Title>
+            <Title headingLevel="h1">{process.name}</Title>
 
             <Link
               to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
@@ -236,11 +243,13 @@ const Process = function () {
             </Link>
           </Flex>
         </GridItem>
+
+        {/* Process Details */}
         <GridItem>
           <ProcessDescription process={process} title={ProcessesLabels.Details} />
         </GridItem>
 
-        {/* Metrics charts */}
+        {/* Metrics Filters */}
         <GridItem>
           <Card>
             <Toolbar>
@@ -272,54 +281,39 @@ const Process = function () {
           </Card>
         </GridItem>
 
-        <GridItem span={8} rowSpan={3}>
+        {/* Chart data traffic time series card */}
+        <GridItem span={8} rowSpan={2}>
           <Card isFullHeight>
-            <CardTitle>{ProcessesLabels.TrafficInOutDistribution}</CardTitle>
-            {!processTrafficChartData && <EmptyData />}
-            {!!processTrafficChartData && (
-              <ProcessesBytesChart bytes={processTrafficChartData} themeColor={ChartThemeColor.multi} />
+            {!metrics.trafficDataSeriesPerSecond && <EmptyData />}
+            {!!metrics.trafficDataSeriesPerSecond && (
+              <ChartProcessDataTrafficSeries
+                data={[
+                  metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
+                  metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
+                ]}
+              />
             )}
           </Card>
         </GridItem>
-        <GridItem span={4} rowSpan={2}>
+
+        {/* Total Traffic card */}
+        <GridItem span={4}>
+          <MetricCard
+            title={ProcessesLabels.TrafficTotal}
+            value={formatBytes(totalBytes)}
+            bgColor={'--pf-global--palette--cyan-200'}
+          />
+        </GridItem>
+
+        {/* Chart distribution data traffic card*/}
+        <GridItem span={4}>
           <Card isFullHeight>
-            <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
-            <CardBody>
-              <TextContent>
-                <Text component={TextVariants.h1}>{formatBytes(octetsReceived + octetsSent)}</Text>
-              </TextContent>
-            </CardBody>
+            {!processTrafficChartData && <EmptyData />}
+            {!!processTrafficChartData && <ChartProcessDataTrafficDistribution data={processTrafficChartData} />}
           </Card>
         </GridItem>
-        <GridItem span={2}>
-          <Card isFullHeight>
-            <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
-            <CardBody>
-              <CurrentBytesInfo
-                direction="up"
-                style={{
-                  color: 'var(--pf-global--palette--blue-400)'
-                }}
-                byteRate={octetSentRate}
-                bytes={octetsSent}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-        <GridItem span={2}>
-          <Card isFullHeight>
-            <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
-            <CardBody>
-              <CurrentBytesInfo
-                style={{
-                  color: 'var(--pf-global--palette--green-400)'
-                }}
-                byteRate={octetReceivedRate}
-                bytes={octetsReceived}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
+
+        {/* Table server processes*/}
         <GridItem span={6}>
           <SkTable
             title={ProcessesLabels.Servers}
@@ -337,6 +331,8 @@ const Process = function () {
             }}
           />
         </GridItem>
+
+        {/* Table client processes*/}
         <GridItem span={6}>
           <SkTable
             title={ProcessesLabels.Clients}
@@ -360,33 +356,3 @@ const Process = function () {
 };
 
 export default Process;
-
-const CurrentBytesInfo: FC<CurrentBytesInfoProps> = function ({
-  description,
-  direction = 'down',
-  byteRate,
-  bytes,
-  ...props
-}) {
-  const { style } = props;
-
-  return (
-    <TextContent className="pf-u-color-300">
-      {description}
-      <Flex>
-        <Text style={style} component={TextVariants.h1}>
-          {formatBytes(bytes)}
-        </Text>
-
-        <Text component={TextVariants.h1}>
-          {direction === 'up' ? (
-            <LongArrowAltUpIcon className="pf-u-ml-md" />
-          ) : (
-            <LongArrowAltDownIcon className="pf-u-ml-md" />
-          )}
-          {formatByteRate(byteRate)}
-        </Text>
-      </Flex>
-    </TextContent>
-  );
-};

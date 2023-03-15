@@ -1,6 +1,11 @@
 import { axiosFetch } from './axiosMiddleware';
 import { gePrometheusQueryPATH, queries, rangeStepIntervalMap, startDateOffsetMap } from './Prometheus.constant';
-import { PrometheusApiResult, PrometheusQueryParams, ValidWindowTime } from './Prometheus.interfaces';
+import {
+  PrometheusApiResult,
+  PrometheusApiResultValue,
+  PrometheusQueryParams,
+  ValidWindowTime
+} from './Prometheus.interfaces';
 
 export const PrometheusApi = {
   fetchTotalRequestByProcess: async ({
@@ -8,7 +13,7 @@ export const PrometheusApi = {
     range,
     processIdDest,
     isRate = false
-  }: PrometheusQueryParams): Promise<PrometheusApiResult> => {
+  }: PrometheusQueryParams): Promise<PrometheusApiResultValue> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `sourceProcess="${id}"`;
 
@@ -39,7 +44,7 @@ export const PrometheusApi = {
     range,
     processIdDest,
     quantile
-  }: PrometheusQueryParams): Promise<PrometheusApiResult> => {
+  }: PrometheusQueryParams): Promise<PrometheusApiResultValue> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `sourceProcess="${id}"`;
 

@@ -6,9 +6,21 @@ export interface ProcessesTableProps {
   rowsCount?: number;
 }
 
+export interface ProcessAxisDataChart {
+  x: number;
+  y: number;
+}
+
+export interface ProcessDataChart {
+  timeSeriesDataReceived: ProcessAxisDataChart[];
+  timeSeriesDataSent: ProcessAxisDataChart[];
+  totalDataReceived: number;
+  totalDataSent: number;
+  totalData: number;
+}
+
 export interface ProcessesBytesChartProps {
-  bytes: { x: string; y: number }[];
-  labels?: { name: string }[];
+  data: { x: string; y: number }[];
   themeColor?: string;
 }
 
@@ -25,7 +37,7 @@ export interface ProcessNamePairsLinkCellProps {
 export interface CurrentBytesInfoProps {
   description?: string;
   direction?: 'down' | 'up';
-  byteRate: number;
+  byteRate?: number;
   bytes: number;
   style?: Record<string, string>;
 }
@@ -38,4 +50,20 @@ export interface SiteNameLinkCellProps {
 export interface AddressNameLinkCellProps {
   data: AddressResponse;
   value: AddressResponse[keyof AddressResponse];
+}
+
+export interface ChartProcessDataTrafficSeriesProps {
+  data: ProcessAxisDataChart[][];
+  formatY?: Function;
+  formatX?: Function;
+}
+
+export interface MetricCardProps {
+  title: string;
+  value: string | number;
+  bgColor?: string;
+  fontColor?: string;
+  showChart?: boolean;
+  colorChart?: string;
+  dataChart?: { x: number | string; y: number }[];
 }

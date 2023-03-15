@@ -31,9 +31,7 @@ const App = function () {
     }
   }, [pathname, navigate]);
 
-  if (!BASE_PROMETHEUS_URL) {
-    setPrometheusUrl(BASE_PROMETHEUS_URL || url || '');
-  }
+  setPrometheusUrl(BASE_PROMETHEUS_URL || url || '');
 
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
