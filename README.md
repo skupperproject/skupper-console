@@ -4,8 +4,10 @@
 
 ## Development
 
-> `yarn install`
-> `yarn prepare`
+```bash
+yarn install
+yarn prepare
+```
 
 the last command install husky to improves commits. You need to run this command just one time
 
@@ -13,31 +15,49 @@ the last command install husky to improves commits. You need to run this command
 
 Run this command using the flow collector endpoints from Skupper:
 
-> `API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start`
+```bash
+API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start
+```
 
 ### Demo mode
 
 Run the console using a mock data example:
 
-> `yarn start`
+```bash
+yarn start
+```
 
 and open <http://localhost:3000>
 
 **remember to enable CORS**
-The flow-collector need to enable the CORS. We can do that doing ```kubectl set env <container-name> USE_CORS=yes``` .
+The flow-collector need to enable the CORS. We can do that doing:
 
-example: ```kubectl set env deployment/skupper-flow-collector USE_CORS=yes```.
+```bash
+kubectl set env <container-name> USE_CORS=yes
+```
+
+example:
+
+```bash
+kubectl set env deployment/skupper-flow-collector USE_CORS=yes
+```
 
 ## Tests
 
 ### Unit
 
-> `yarn test`
+```bash
+yarn test
+```
 
 ### Integration
 
-> `yarn cy`
+```bash
+yarn cy
+```
 
 #### Development mode
 
-> `yarn cy:open`
+```bash
+yarn cy:open
+```
