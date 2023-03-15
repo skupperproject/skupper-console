@@ -1,5 +1,7 @@
 # Skupper console
 
+[![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
+
 ## Installation in Skupper
 
 The skupper console is installed when skupper is initialized using
