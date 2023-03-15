@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-        "paths": {
-            "@core/*": ["core/*"],
-            "@layout/*": ["layout/*"],
-            "@assets/*": ["assets/*"],
-            "@models/*": ["models/*"],
-            "@pages/*": ["pages/*"],
-            "@utils/*": ["utils/*"]
-        }
+  "compilerOptions": {
+    "paths": {
+      "@core/*": ["core/*"],
+      "@layout/*": ["layout/*"],
+      "@assets/*": ["assets/*"],
+      "@models/*": ["models/*"],
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"]
     }
+  }
 }

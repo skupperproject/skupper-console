@@ -1,25 +1,25 @@
 {
-    "extends": "./config/tsconfig.paths.json",
-    "compilerOptions": {
-        "target": "ES2022",
-        "lib": ["dom", "esnext"],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "jsx": "react",
-        "sourceMap": true,
-        "typeRoots": ["node_modules/@types", "@types_app"],
-        "baseUrl": "./src",
-        "downlevelIteration": true
-    },
-    "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
-    "exclude": ["**/node_modules", "**/build"]
+  "extends": "./config/tsconfig.paths.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "sourceMap": true,
+    "typeRoots": ["node_modules/@types", "@types_app"],
+    "baseUrl": "./src",
+    "downlevelIteration": true
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
+  "exclude": ["**/node_modules", "**/build"]
 }
