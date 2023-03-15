@@ -30,7 +30,8 @@ export enum ProcessesLabels {
   Servers = 'Data sent to servers',
   TcpConnection = 'TCP connections',
   HttpRequests = 'Http requests',
-  GoToTopology = 'Go to the network view'
+  GoToTopology = 'Go to the network view',
+  FilterDestinationProcessDefault = 'All processes'
 }
 
 export enum ProcessPairsColumnsNames {

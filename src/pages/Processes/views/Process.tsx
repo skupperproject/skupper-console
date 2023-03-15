@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import {
@@ -11,12 +11,18 @@ import {
   Flex,
   Grid,
   GridItem,
+  Select,
+  SelectOption,
+  SelectOptionObject,
   Text,
   TextContent,
   TextVariants,
-  Title
+  Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem
 } from '@patternfly/react-core';
-import { LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
+import { ClockIcon, ClusterIcon, LongArrowAltDownIcon, LongArrowAltUpIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -30,9 +36,10 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { timeIntervalMap } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
 import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import ProcessDescription from '../components/ProcessDescription';
 import ProcessesBytesChart from '../components/ProcessesBytesChart';
@@ -54,16 +61,22 @@ const ProcessesConnectedComponentsTable = {
     formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2)
 };
 
+const defaultTimeInterval = timeIntervalMap.FifteenMinutes;
+
 const Process = function () {
   const navigate = useNavigate();
   const { id: processId } = useParams() as { id: string };
-  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
+
+  const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
+  const [destinationProcess, setDestinationProcess] = useState<string>();
+
+  const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
+  const [timeInterval, setTimeInterval] = useState<string>(defaultTimeInterval);
 
   const { data: process, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcesses.GetProcess, processId],
     () => RESTApi.fetchProcess(processId),
     {
-      refetchInterval,
       onError: handleError
     }
   );
@@ -76,7 +89,6 @@ const Process = function () {
         timeRangeStart: 0
       }),
     {
-      refetchInterval,
       onError: handleError
     }
   );
@@ -89,7 +101,6 @@ const Process = function () {
         timeRangeStart: 0
       }),
     {
-      refetchInterval,
       onError: handleError
     }
   );
@@ -105,9 +116,59 @@ const Process = function () {
   function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-    setRefetchInterval(0);
     navigate(route);
   }
+
+  function handleSelectDestinationProcessMenu(
+    _: React.MouseEvent | React.ChangeEvent,
+    selection: string | SelectOptionObject,
+    isPlaceholder?: boolean
+  ) {
+    const id = isPlaceholder ? undefined : (selection as string);
+
+    setDestinationProcess(id);
+    setIsOpenDestinationProcessMenu(false);
+  }
+
+  function handleToggleDestinationProcessMenu(isOpen: boolean) {
+    setIsOpenDestinationProcessMenu(isOpen);
+  }
+
+  function handleSelectTimeIntervalMenu(
+    _: React.MouseEvent | React.ChangeEvent,
+    selection: string | SelectOptionObject,
+    isPlaceholder?: boolean
+  ) {
+    const id = isPlaceholder ? defaultTimeInterval : (selection as string);
+
+    setTimeInterval(id);
+    setIsOpenTimeIntervalMenu(false);
+  }
+
+  function handleToggleTimeIntervalMenu(isOpen: boolean) {
+    setIsOpenTimeIntervalMenu(isOpen);
+  }
+
+  const optionsDestinationProcessWithDefault = useMemo(() => {
+    const destinationProcessTxOptions = (processesPairsTxData || []).map((option, index) => (
+      <SelectOption key={index + 1} value={option.destinationName} />
+    ));
+
+    const destinationProcessRxOptions = (processesPairsRxData || []).map((option, index) => (
+      <SelectOption key={index + 1} value={option.sourceName} />
+    ));
+
+    return [
+      <SelectOption key={0} value={ProcessesLabels.FilterDestinationProcessDefault} isPlaceholder />,
+      ...destinationProcessTxOptions,
+      ...destinationProcessRxOptions
+    ];
+  }, [processesPairsRxData, processesPairsTxData]);
+
+  const optionsTimeIntervalWithDefault = useMemo(
+    () => Object.values(timeIntervalMap).map((interval, index) => <SelectOption key={index + 1} value={interval} />),
+    []
+  );
 
   if (
     isLoadingProcess ||
@@ -163,7 +224,6 @@ const Process = function () {
             <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
           </Breadcrumb>
         </GridItem>
-
         <GridItem>
           <Flex alignItems={{ default: 'alignItemsCenter' }}>
             <ResourceIcon type="process" />
@@ -176,9 +236,40 @@ const Process = function () {
             </Link>
           </Flex>
         </GridItem>
-
         <GridItem>
           <ProcessDescription process={process} title={ProcessesLabels.Details} />
+        </GridItem>
+
+        {/* Metrics charts */}
+        <GridItem>
+          <Card>
+            <Toolbar>
+              <ToolbarContent>
+                <ToolbarItem spacer={{ default: 'spacerSm' }} alignment={{ default: 'alignRight' }}>
+                  <Select
+                    isOpen={isOpenDestinationProcessMenu}
+                    onSelect={handleSelectDestinationProcessMenu}
+                    onToggle={handleToggleDestinationProcessMenu}
+                    toggleIcon={<ClusterIcon />}
+                    selections={destinationProcess}
+                  >
+                    {optionsDestinationProcessWithDefault}
+                  </Select>
+                </ToolbarItem>
+                <ToolbarItem>
+                  <Select
+                    isOpen={isOpenTimeInterval}
+                    onSelect={handleSelectTimeIntervalMenu}
+                    onToggle={handleToggleTimeIntervalMenu}
+                    toggleIcon={<ClockIcon />}
+                    selections={timeInterval}
+                  >
+                    {optionsTimeIntervalWithDefault}
+                  </Select>
+                </ToolbarItem>
+              </ToolbarContent>
+            </Toolbar>
+          </Card>
         </GridItem>
 
         <GridItem span={8} rowSpan={3}>
@@ -190,7 +281,6 @@ const Process = function () {
             )}
           </Card>
         </GridItem>
-
         <GridItem span={4} rowSpan={2}>
           <Card isFullHeight>
             <CardTitle>{ProcessesLabels.TrafficTotal}</CardTitle>
@@ -201,7 +291,6 @@ const Process = function () {
             </CardBody>
           </Card>
         </GridItem>
-
         <GridItem span={2}>
           <Card isFullHeight>
             <CardTitle>{ProcessesLabels.TrafficSent}</CardTitle>
@@ -217,7 +306,6 @@ const Process = function () {
             </CardBody>
           </Card>
         </GridItem>
-
         <GridItem span={2}>
           <Card isFullHeight>
             <CardTitle>{ProcessesLabels.TrafficReceived}</CardTitle>
@@ -232,7 +320,6 @@ const Process = function () {
             </CardBody>
           </Card>
         </GridItem>
-
         <GridItem span={6}>
           <SkTable
             title={ProcessesLabels.Servers}
@@ -250,7 +337,6 @@ const Process = function () {
             }}
           />
         </GridItem>
-
         <GridItem span={6}>
           <SkTable
             title={ProcessesLabels.Clients}
