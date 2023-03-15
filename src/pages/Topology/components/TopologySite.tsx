@@ -15,86 +15,72 @@ import TopologyPanel from './TopologyPanel';
 import { TopologyController } from '../services';
 
 const TopologySite: FC<{ id?: string | null }> = function () {
-    const navigate = useNavigate();
-    const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
+  const navigate = useNavigate();
+  const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
-    const [nodes, setNodes] = useState<GraphNode[]>();
-    const [edges, setEdges] = useState<GraphEdge<string>[]>();
+  const [nodes, setNodes] = useState<GraphNode[]>();
+  const [edges, setEdges] = useState<GraphEdge<string>[]>();
 
-    const { data: sites, isLoading: isLoadingSites } = useQuery(
-        [QueriesSites.GetSites],
-        () => RESTApi.fetchSites(),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
+  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
+    refetchInterval,
+    onError: handleError
+  });
 
-    const { data: routers, isLoading: isLoadingRouters } = useQuery(
-        [QueriesSites.GetRouters],
-        () => RESTApi.fetchRouters(),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    const { data: links, isLoading: isLoadingLinks } = useQuery(
-        [QueriesSites.GetLinks],
-        () => RESTApi.fetchLinks(),
-        {
-            refetchInterval,
-            onError: handleError,
-        },
-    );
-
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
-
-        setRefetchInterval(0);
-        navigate(route);
+  const { data: routers, isLoading: isLoadingRouters } = useQuery(
+    [QueriesSites.GetRouters],
+    () => RESTApi.fetchRouters(),
+    {
+      refetchInterval,
+      onError: handleError
     }
+  );
 
-    const handleGetSelectedNode = useCallback(
-        (idSelected: string) => {
-            if (idSelected) {
-                navigate(`${SitesRoutesPaths.Sites}/${idSelected}`);
-            }
-        },
-        [navigate],
-    );
+  const { data: links, isLoading: isLoadingLinks } = useQuery([QueriesSites.GetLinks], () => RESTApi.fetchLinks(), {
+    refetchInterval,
+    onError: handleError
+  });
 
-    // Refresh topology data
-    const updateTopologyData = useCallback(async () => {
-        if (sites && routers && links) {
-            const sitesWithLinks = TopologyController.getSitesWithLinksCreated(
-                sites,
-                routers,
-                links,
-            );
+  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-            const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+    setRefetchInterval(0);
+    navigate(route);
+  }
 
-            setNodes(siteNodes);
-            setEdges(TopologyController.getEdgesFromSitesConnected(sitesWithLinks));
-        }
-    }, [links, routers, sites]);
+  const handleGetSelectedNode = useCallback(
+    (idSelected: string) => {
+      if (idSelected) {
+        navigate(`${SitesRoutesPaths.Sites}/${idSelected}`);
+      }
+    },
+    [navigate]
+  );
 
-    useEffect(() => {
-        updateTopologyData();
-    }, [updateTopologyData]);
+  // Refresh topology data
+  const updateTopologyData = useCallback(async () => {
+    if (sites && routers && links) {
+      const sitesWithLinks = TopologyController.getSitesWithLinksCreated(sites, routers, links);
 
-    if (isLoadingSites || isLoadingLinks || isLoadingRouters) {
-        return <LoadingPage />;
+      const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+
+      setNodes(siteNodes);
+      setEdges(TopologyController.getEdgesFromSitesConnected(sitesWithLinks));
     }
+  }, [links, routers, sites]);
 
-    if (!nodes || !edges) {
-        return null;
-    }
+  useEffect(() => {
+    updateTopologyData();
+  }, [updateTopologyData]);
 
-    return <TopologyPanel nodes={nodes} edges={edges} onGetSelectedNode={handleGetSelectedNode} />;
+  if (isLoadingSites || isLoadingLinks || isLoadingRouters) {
+    return <LoadingPage />;
+  }
+
+  if (!nodes || !edges) {
+    return null;
+  }
+
+  return <TopologyPanel nodes={nodes} edges={edges} onGetSelectedNode={handleGetSelectedNode} />;
 };
 
 export default TopologySite;

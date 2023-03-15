@@ -9,16 +9,16 @@ const ErrorServer = lazy(() => import(/* webpackChunkName: "server err" */ './Se
 const NotFound = lazy(() => import(/* webpackChunkName: "not-found" */ './NotFound'));
 
 export const errorsRoutes = [
-    {
-        path: ErrorConnectionRoutesPaths.ErrConnection,
-        element: <ErrorConnection />,
-    },
-    {
-        path: ErrorServerRoutesPaths.ErrServer,
-        element: <ErrorServer />,
-    },
-    {
-        path: NotFoundRoutesPaths.NotFound,
-        element: <NotFound />,
-    },
+  {
+    path: ErrorConnectionRoutesPaths.ErrConnection,
+    element: <ErrorConnection />
+  },
+  {
+    path: ErrorServerRoutesPaths.ErrServer,
+    element: <ErrorServer />
+  },
+  {
+    path: NotFoundRoutesPaths.NotFound,
+    element: <NotFound />
+  }
 ];

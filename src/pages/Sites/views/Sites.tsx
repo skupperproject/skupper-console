@@ -16,47 +16,41 @@ import { siteColumns } from '../Sites.constant';
 import { SiteLabels } from '../Sites.enum';
 
 const Sites = function () {
-    const navigate = useNavigate();
-    const { data: sites, isLoading } = useQuery(
-        [QueriesSites.GetSites],
-        () => RESTApi.fetchSites(),
-        {
-            onError: handleError,
-            keepPreviousData: true,
-        },
-    );
+  const navigate = useNavigate();
+  const { data: sites, isLoading } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
+    onError: handleError,
+    keepPreviousData: true
+  });
 
-    function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-        const route = httpStatus
-            ? ErrorRoutesPaths.error[httpStatus]
-            : ErrorRoutesPaths.ErrConnection;
+  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-        navigate(route);
-    }
+    navigate(route);
+  }
 
-    if (isLoading) {
-        return <LoadingPage />;
-    }
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
-    if (!sites) {
-        return null;
-    }
+  if (!sites) {
+    return null;
+  }
 
-    return (
-        <TransitionPage>
-            <Grid hasGutter>
-                <GridItem>
-                    <SkTable
-                        title={SiteLabels.Sites}
-                        titleDescription={SiteLabels.SitesDescription}
-                        columns={siteColumns}
-                        rows={sites}
-                        components={{ linkCell: SiteNameLinkCell }}
-                    />
-                </GridItem>
-            </Grid>
-        </TransitionPage>
-    );
+  return (
+    <TransitionPage>
+      <Grid hasGutter>
+        <GridItem>
+          <SkTable
+            title={SiteLabels.Sites}
+            titleDescription={SiteLabels.SitesDescription}
+            columns={siteColumns}
+            rows={sites}
+            components={{ linkCell: SiteNameLinkCell }}
+          />
+        </GridItem>
+      </Grid>
+    </TransitionPage>
+  );
 };
 
 export default Sites;

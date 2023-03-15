@@ -18,37 +18,30 @@ import '@patternfly/patternfly/patternfly-addons.css';
 import './App.css';
 
 const App = function () {
-    const navigate = useNavigate();
-    const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
-    const { data: url } = useQuery(
-        ['QueriesAddresses.GetPrometheusURL'],
-        () => RESTApi.getPrometheusUrl(),
-        { enabled: !BASE_PROMETHEUS_URL },
-    );
+  const { data: url } = useQuery(['QueriesAddresses.GetPrometheusURL'], () => RESTApi.getPrometheusUrl(), {
+    enabled: !BASE_PROMETHEUS_URL
+  });
 
-    useEffect(() => {
-        if (pathname === '/') {
-            navigate(REDIRECT_TO_PATH);
-        }
-    }, [pathname, navigate]);
-
-    if (!BASE_PROMETHEUS_URL) {
-        setPrometheusUrl(BASE_PROMETHEUS_URL || url || '');
+  useEffect(() => {
+    if (pathname === '/') {
+      navigate(REDIRECT_TO_PATH);
     }
+  }, [pathname, navigate]);
 
-    return (
-        <Page
-            header={<Header />}
-            sidebar={<SideBar />}
-            isManagedSidebar
-            className="app-main-container"
-        >
-            <Suspense fallback={<span />}>
-                <AppContent>{routes}</AppContent>
-            </Suspense>
-        </Page>
-    );
+  if (!BASE_PROMETHEUS_URL) {
+    setPrometheusUrl(BASE_PROMETHEUS_URL || url || '');
+  }
+
+  return (
+    <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
+      <Suspense fallback={<span />}>
+        <AppContent>{routes}</AppContent>
+      </Suspense>
+    </Page>
+  );
 };
 
 export default App;

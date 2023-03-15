@@ -1,71 +1,67 @@
 .pf-c-page__main {
-    z-index: 0 !important;
-    background: linear-gradient(
-        to bottom,
-        rgb(202, 215, 228) 0%,
-        var(--pf-global--palette--black-100) 80%
-    );
+  z-index: 0 !important;
+  background: linear-gradient(to bottom, rgb(202, 215, 228) 0%, var(--pf-global--palette--black-100) 80%);
 }
 
 .pf-c-page__header {
-    z-index: 1 !important;
-    box-shadow: 0 3px 3px var(--pf-global--palette--black-700);
-    background: linear-gradient(
-        to bottom,
-        rgb(36, 45, 57) 11.2%,
-        var(--pf-global--palette--black-900) 51.2%,
-        var(--pf-global--palette--black-900) 98.6%
-    );
+  z-index: 1 !important;
+  box-shadow: 0 3px 3px var(--pf-global--palette--black-700);
+  background: linear-gradient(
+    to bottom,
+    rgb(36, 45, 57) 11.2%,
+    var(--pf-global--palette--black-900) 51.2%,
+    var(--pf-global--palette--black-900) 98.6%
+  );
 }
 
 .pf-c-page__sidebar {
-    box-shadow: 3px 3px 3px var(--pf-global--palette--black-600) !important;
-    background: linear-gradient(
-        to top,
-        rgb(36, 45, 57) 11.2%,
-        rgb(16, 37, 60) 51.2%,
-        var(--pf-global--palette--black-900) 98.6%
-    ) !important;
+  box-shadow: 3px 3px 3px var(--pf-global--palette--black-600) !important;
+  background: linear-gradient(
+    to top,
+    rgb(36, 45, 57) 11.2%,
+    rgb(16, 37, 60) 51.2%,
+    var(--pf-global--palette--black-900) 98.6%
+  ) !important;
 }
 
 .pf-c-page__sidebar-body {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .pf-c-nav__link {
-    position: relative !important;
-    background: transparent !important;
-    font-weight: lighter !important;
+  position: relative !important;
+  background: transparent !important;
+  font-weight: lighter !important;
 }
 
 .pf-c-nav__link::before {
-    content: '' !important;
-    position: absolute !important;
-    width: 100% !important;
-    height: 2px !important;
-    bottom: 10px !important;
-    margin: -5px 0 !important;
-    background-color: white !important;
-    visibility: hidden !important;
-    transform: scaleX(0) !important;
-    transition: all 0.3s ease-in-out 0s !important;
+  content: '' !important;
+  position: absolute !important;
+  width: 100% !important;
+  height: 2px !important;
+  bottom: 10px !important;
+  margin: -5px 0 !important;
+  background-color: white !important;
+  visibility: hidden !important;
+  transform: scaleX(0) !important;
+  transition: all 0.3s ease-in-out 0s !important;
 }
 
 .pf-c-nav__link:hover::before,
 .pf-c-nav__link.pf-m-current::before {
-    visibility: visible !important;
-    transform: scaleX(0.7) !important;
+  visibility: visible !important;
+  transform: scaleX(0.7) !important;
 }
 
 .pf-c-nav__link.pf-m-current {
-    text-shadow: 1px 0 1px currentColor;
+  text-shadow: 1px 0 1px currentColor;
 }
 
 .sk-main {
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%, -50%);
-    width: 30%;
-    opacity: 0.04;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  width: 30%;
+  opacity: 0.04;
 }

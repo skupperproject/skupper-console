@@ -11,151 +11,143 @@ import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
 
 const TopologyPanel: FC<TopologyPanelProps> = function ({
-    nodes,
-    edges,
-    onGetSelectedNode,
-    onGetSelectedEdge,
-    options,
-    nodeSelected,
+  nodes,
+  edges,
+  onGetSelectedNode,
+  onGetSelectedEdge,
+  options,
+  nodeSelected
 }) {
-    const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
-    const prevNodesRef = useRef<GraphNode[]>();
-    const prevEdgesRef = useRef<GraphEdge<string>[]>();
+  const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
+  const prevNodesRef = useRef<GraphNode[]>();
+  const prevEdgesRef = useRef<GraphEdge<string>[]>();
 
-    const handleOnClickNode = useCallback(
-        ({ data: { id } }: { data: GraphNode }) => {
-            if (onGetSelectedNode) {
-                onGetSelectedNode(id);
-            }
-        },
-        [onGetSelectedNode],
-    );
+  const handleOnClickNode = useCallback(
+    ({ data: { id } }: { data: GraphNode }) => {
+      if (onGetSelectedNode) {
+        onGetSelectedNode(id);
+      }
+    },
+    [onGetSelectedNode]
+  );
 
-    const handleOnClickEdge = useCallback(
-        ({ data }: { data: GraphNode }) => {
-            if (onGetSelectedEdge) {
-                onGetSelectedEdge(data);
-            }
-        },
-        [onGetSelectedEdge],
-    );
+  const handleOnClickEdge = useCallback(
+    ({ data }: { data: GraphNode }) => {
+      if (onGetSelectedEdge) {
+        onGetSelectedEdge(data);
+      }
+    },
+    [onGetSelectedEdge]
+  );
 
-    const handleSaveNodePosition = useCallback((node: GraphNode) => {
-        if (node.x && node.y) {
-            localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
-        }
-    }, []);
+  const handleSaveNodePosition = useCallback((node: GraphNode) => {
+    if (node.x && node.y) {
+      localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+    }
+  }, []);
 
-    const handleSaveNodesPositions = useCallback(
-        (topologyNodes: GraphNode[]) => {
-            topologyNodes.forEach((node) => {
-                handleSaveNodePosition(node);
-            });
-        },
-        [handleSaveNodePosition],
-    );
+  const handleSaveNodesPositions = useCallback(
+    (topologyNodes: GraphNode[]) => {
+      topologyNodes.forEach((node) => {
+        handleSaveNodePosition(node);
+      });
+    },
+    [handleSaveNodePosition]
+  );
 
-    // Creates topology
-    const graphRef = useCallback(
-        ($node: HTMLDivElement | null) => {
-            if ($node && nodes.length && !topologyGraphInstance) {
-                $node.replaceChildren();
+  // Creates topology
+  const graphRef = useCallback(
+    ($node: HTMLDivElement | null) => {
+      if ($node && nodes.length && !topologyGraphInstance) {
+        $node.replaceChildren();
 
-                const topologyGraph = new Graph(
-                    $node,
-                    nodes,
-                    edges,
-                    $node.getBoundingClientRect().width,
-                    $node.getBoundingClientRect().height,
-                    options,
-                    nodeSelected,
-                );
+        const topologyGraph = new Graph(
+          $node,
+          nodes,
+          edges,
+          $node.getBoundingClientRect().width,
+          $node.getBoundingClientRect().height,
+          options,
+          nodeSelected
+        );
 
-                topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
-                topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
+        topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
+        topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
 
-                topologyGraph.run();
-                setTopologyGraphInstance(topologyGraph);
-            }
-        },
-        [
-            nodes,
-            topologyGraphInstance,
-            edges,
-            options,
-            nodeSelected,
-            handleOnClickNode,
-            handleOnClickEdge,
-        ],
-    );
+        topologyGraph.run();
+        setTopologyGraphInstance(topologyGraph);
+      }
+    },
+    [nodes, topologyGraphInstance, edges, options, nodeSelected, handleOnClickNode, handleOnClickEdge]
+  );
 
-    // Updates topology
-    useEffect(() => {
-        if (
-            topologyGraphInstance &&
-            nodes &&
-            (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
-                JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
-        ) {
-            const topologyNodes = topologyGraphInstance?.getNodes();
+  // Updates topology
+  useEffect(() => {
+    if (
+      topologyGraphInstance &&
+      nodes &&
+      (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
+        JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
+    ) {
+      const topologyNodes = topologyGraphInstance?.getNodes();
 
-            if (topologyNodes) {
-                handleSaveNodesPositions(topologyNodes);
-            }
+      if (topologyNodes) {
+        handleSaveNodesPositions(topologyNodes);
+      }
 
-            topologyGraphInstance.updateTopology(nodes, edges, {
-                showGroup: !!options?.showGroup,
-            });
+      topologyGraphInstance.updateTopology(nodes, edges, {
+        showGroup: !!options?.showGroup
+      });
 
-            prevNodesRef.current = nodes;
-            prevEdgesRef.current = edges;
-        }
-    }, [nodes, edges, topologyGraphInstance, options?.showGroup, handleSaveNodesPositions]);
+      prevNodesRef.current = nodes;
+      prevEdgesRef.current = edges;
+    }
+  }, [nodes, edges, topologyGraphInstance, options?.showGroup, handleSaveNodesPositions]);
 
-    // Save topology positions to the local storage before exit
-    useEffect(
-        () => () => {
-            const topologyNodes = topologyGraphInstance?.getNodes();
+  // Save topology positions to the local storage before exit
+  useEffect(
+    () => () => {
+      const topologyNodes = topologyGraphInstance?.getNodes();
 
-            if (topologyNodes) {
-                handleSaveNodesPositions(topologyNodes);
-            }
-        },
-        [handleSaveNodesPositions, topologyGraphInstance],
-    );
+      if (topologyNodes) {
+        handleSaveNodesPositions(topologyNodes);
+      }
+    },
+    [handleSaveNodesPositions, topologyGraphInstance]
+  );
 
-    return (
-        <Card isFullHeight style={{ position: 'relative' }}>
-            <TransitionPage>
-                <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
-            </TransitionPage>
-            <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
-                <Button
-                    isActive={true}
-                    className="pf-u-m-xs"
-                    variant="primary"
-                    onClick={() => topologyGraphInstance?.zoomIn()}
-                    icon={<SearchPlusIcon />}
-                />
+  return (
+    <Card isFullHeight style={{ position: 'relative' }}>
+      <TransitionPage>
+        <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
+      </TransitionPage>
+      <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+        <Button
+          isActive={true}
+          className="pf-u-m-xs"
+          variant="primary"
+          onClick={() => topologyGraphInstance?.zoomIn()}
+          icon={<SearchPlusIcon />}
+        />
 
-                <Button
-                    isActive={true}
-                    className="pf-u-m-xs"
-                    variant="primary"
-                    onClick={() => topologyGraphInstance?.zoomOut()}
-                    icon={<SearchMinusIcon />}
-                />
+        <Button
+          isActive={true}
+          className="pf-u-m-xs"
+          variant="primary"
+          onClick={() => topologyGraphInstance?.zoomOut()}
+          icon={<SearchMinusIcon />}
+        />
 
-                <Button
-                    isActive={true}
-                    className="pf-u-m-xs"
-                    variant="primary"
-                    onClick={() => topologyGraphInstance?.zoomReset()}
-                    icon={<ExpandIcon />}
-                />
-            </span>
-        </Card>
-    );
+        <Button
+          isActive={true}
+          className="pf-u-m-xs"
+          variant="primary"
+          onClick={() => topologyGraphInstance?.zoomReset()}
+          icon={<ExpandIcon />}
+        />
+      </span>
+    </Card>
+  );
 };
 
 export default TopologyPanel;

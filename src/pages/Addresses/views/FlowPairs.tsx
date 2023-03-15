@@ -9,29 +9,23 @@ import ConnectionsByAddress from '../components/ConnectionsByAddress';
 import RequestsByAddress from '../components/RequestsByAddress';
 
 const FlowsPairs = function () {
-    const { address } = useParams();
+  const { address } = useParams();
 
-    const addressName = address?.split('@')[0];
-    const addressId = address?.split('@')[1];
-    const protocol = address?.split('@')[2];
+  const addressName = address?.split('@')[0];
+  const addressId = address?.split('@')[1];
+  const protocol = address?.split('@')[2];
 
-    return (
-        <TransitionPage>
-            <>
-                {protocol === AvailableProtocols.Tcp && (
-                    <ConnectionsByAddress
-                        addressName={addressName || ''}
-                        addressId={addressId || ''}
-                    />
-                )}
-                {protocol !== AvailableProtocols.Tcp && (
-                    <RequestsByAddress
-                        addressName={addressName || ''}
-                        addressId={addressId || ''}
-                    />
-                )}
-            </>
-        </TransitionPage>
-    );
+  return (
+    <TransitionPage>
+      <>
+        {protocol === AvailableProtocols.Tcp && (
+          <ConnectionsByAddress addressName={addressName || ''} addressId={addressId || ''} />
+        )}
+        {protocol !== AvailableProtocols.Tcp && (
+          <RequestsByAddress addressName={addressName || ''} addressId={addressId || ''} />
+        )}
+      </>
+    </TransitionPage>
+  );
 };
 export default FlowsPairs;
