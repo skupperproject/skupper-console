@@ -1,6 +1,6 @@
 import { ValidWindowTime } from './Prometheus.interfaces';
 
-const MetricsDuration: ValidWindowTime = {
+export const timeIntervalMap: ValidWindowTime = {
   FifteenMinutes: '15m',
   ThirtyMinutes: '30m',
   OneHours: '1h',
@@ -14,26 +14,26 @@ const MetricsDuration: ValidWindowTime = {
 
 // Bind the Time range selected to display prometheus metrics and seconds
 export const startDateOffsetMap: Record<string, number> = {
-  [MetricsDuration.FifteenMinutes]: 15 * 60,
-  [MetricsDuration.ThirtyMinutes]: 30 * 60,
-  [MetricsDuration.OneHours]: 3600,
-  [MetricsDuration.TwoHours]: 2 * 3600,
-  [MetricsDuration.SixHours]: 6 * 3600,
-  [MetricsDuration.OneDay]: 24 * 3600,
-  [MetricsDuration.OneWeek]: 7 * 24 * 3600,
-  [MetricsDuration.TwoWeeks]: 14 * 24 * 3600
+  [timeIntervalMap.FifteenMinutes]: 15 * 60,
+  [timeIntervalMap.ThirtyMinutes]: 30 * 60,
+  [timeIntervalMap.OneHours]: 3600,
+  [timeIntervalMap.TwoHours]: 2 * 3600,
+  [timeIntervalMap.SixHours]: 6 * 3600,
+  [timeIntervalMap.OneDay]: 24 * 3600,
+  [timeIntervalMap.OneWeek]: 7 * 24 * 3600,
+  [timeIntervalMap.TwoWeeks]: 14 * 24 * 3600
 };
 
 // Bind the Time range selected to display prometheus metrics  and Time interval before record a new sample
 export const rangeStepIntervalMap: Record<string, string> = {
-  [MetricsDuration.FifteenMinutes]: `${startDateOffsetMap[MetricsDuration.FifteenMinutes] / 60}s`,
-  [MetricsDuration.ThirtyMinutes]: `${startDateOffsetMap[MetricsDuration.ThirtyMinutes] / 60}s`,
-  [MetricsDuration.OneHours]: `${startDateOffsetMap[MetricsDuration.OneHours] / 60}s`,
-  [MetricsDuration.TwoHours]: `${startDateOffsetMap[MetricsDuration.TwoHours] / 60}s`,
-  [MetricsDuration.SixHours]: `${startDateOffsetMap[MetricsDuration.SixHours] / 60}s`,
-  [MetricsDuration.OneDay]: `${startDateOffsetMap[MetricsDuration.OneDay] / 60}s`,
-  [MetricsDuration.OneWeek]: '12h',
-  [MetricsDuration.TwoWeeks]: '24h'
+  [timeIntervalMap.FifteenMinutes]: `${startDateOffsetMap[timeIntervalMap.FifteenMinutes] / 60}s`,
+  [timeIntervalMap.ThirtyMinutes]: `${startDateOffsetMap[timeIntervalMap.ThirtyMinutes] / 60}s`,
+  [timeIntervalMap.OneHours]: `${startDateOffsetMap[timeIntervalMap.OneHours] / 60}s`,
+  [timeIntervalMap.TwoHours]: `${startDateOffsetMap[timeIntervalMap.TwoHours] / 60}s`,
+  [timeIntervalMap.SixHours]: `${startDateOffsetMap[timeIntervalMap.SixHours] / 60}s`,
+  [timeIntervalMap.OneDay]: `${startDateOffsetMap[timeIntervalMap.OneDay] / 60}s`,
+  [timeIntervalMap.OneWeek]: '12h',
+  [timeIntervalMap.TwoWeeks]: '24h'
 };
 
 export let PROMETHEUS_PATH: string | undefined = undefined;
