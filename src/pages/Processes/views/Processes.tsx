@@ -110,13 +110,13 @@ const Processes = function () {
       <>
         <Grid hasGutter>
           <GridItem span={6}>
-            <Card>
+            <Card isFullHeight>
               <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
               <ChartProcessDataTrafficDistribution data={bytesSent} />
             </Card>
           </GridItem>
           <GridItem span={6}>
-            <Card>
+            <Card isFullHeight>
               <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
               <ChartProcessDataTrafficDistribution data={bytesReceived} themeColor={ChartThemeColor.green} />
             </Card>
