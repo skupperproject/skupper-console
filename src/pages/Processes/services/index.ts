@@ -3,17 +3,14 @@ import { PrometheusApi } from 'API/Prometheus';
 import { PrometheusApiResult, ValidWindowTime } from 'API/Prometheus.interfaces';
 import { ProcessResponse } from 'API/REST.interfaces';
 
-import { ProcessAxisDataChart, ProcessDataChart } from '../Processes.interfaces';
+import { ProcessAxisDataChart, ProcessMetrics } from '../Processes.interfaces';
 
 const ProcessesController = {
   getMetrics: async (
     processesIdSource: string,
     durationFormatted: keyof ValidWindowTime,
     processIdDest: string
-  ): Promise<{
-    trafficDataSeries: ProcessDataChart;
-    trafficDataSeriesPerSecond: ProcessDataChart;
-  }> => {
+  ): Promise<ProcessMetrics> => {
     const params = {
       id: processesIdSource,
       range: durationFormatted,

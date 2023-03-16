@@ -30,7 +30,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { timeIntervalMap } from 'API/Prometheus.constant';
+import { isPrometheusActive, timeIntervalMap } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
 import { FlowAggregatesResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
@@ -41,6 +41,7 @@ import MetricCard from '../components/MetricCard';
 import ProcessDescription from '../components/ProcessDescription';
 import { processesConnectedColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
+import { ProcessMetrics } from '../Processes.interfaces';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -62,6 +63,7 @@ const defaultTimeInterval = timeIntervalMap.FifteenMinutes;
 const Process = function () {
   const navigate = useNavigate();
   const { id: processId } = useParams() as { id: string };
+  const metricsEnabled = isPrometheusActive();
 
   const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
   const [destinationProcess, setDestinationProcess] = useState<string>();
@@ -115,7 +117,7 @@ const Process = function () {
     () => ProcessesController.getMetrics(process?.name || '', timeInterval, destinationProcess || ''),
     {
       keepPreviousData: true,
-      enabled: !!process,
+      enabled: !!process && metricsEnabled,
       onError: handleError
     }
   );
@@ -182,12 +184,12 @@ const Process = function () {
     isLoadingAddressesByProcess ||
     isLoadingProcessesPairsTxData ||
     isLoadingProcessesPairsRxData ||
-    isLoadingMetrics
+    (metricsEnabled && isLoadingMetrics)
   ) {
     return <LoadingPage />;
   }
 
-  if (!process || !processesPairsTxData || !processesPairsRxData || !addresses || !metrics) {
+  if (!process || !processesPairsTxData || !processesPairsRxData || !addresses) {
     return null;
   }
 
@@ -206,18 +208,18 @@ const Process = function () {
       destinationAverageLatency: processPairsData.sourceAverageLatency
     })) || [];
 
-  const totalBytes = metrics.trafficDataSeries.totalData;
-
-  const processTrafficChartData = [
-    {
-      x: 'Sent',
-      y: metrics.trafficDataSeries.totalDataSent
-    },
-    {
-      x: 'Received',
-      y: metrics.trafficDataSeries.totalDataReceived
-    }
-  ];
+  function getProcessTrafficChartData(trafficData: ProcessMetrics) {
+    return [
+      {
+        x: 'Sent',
+        y: trafficData.trafficDataSeries.totalDataSent
+      },
+      {
+        x: 'Received',
+        y: trafficData.trafficDataSeries.totalDataReceived
+      }
+    ];
+  }
 
   return (
     <TransitionPage>
@@ -249,69 +251,75 @@ const Process = function () {
           <ProcessDescription process={process} title={ProcessesLabels.Details} />
         </GridItem>
 
-        {/* Metrics Filters */}
-        <GridItem>
-          <Card>
-            <Toolbar>
-              <ToolbarContent>
-                <ToolbarItem spacer={{ default: 'spacerSm' }} alignment={{ default: 'alignRight' }}>
-                  <Select
-                    isOpen={isOpenDestinationProcessMenu}
-                    onSelect={handleSelectDestinationProcessMenu}
-                    onToggle={handleToggleDestinationProcessMenu}
-                    toggleIcon={<ClusterIcon />}
-                    selections={destinationProcess}
-                  >
-                    {optionsDestinationProcessWithDefault}
-                  </Select>
-                </ToolbarItem>
-                <ToolbarItem>
-                  <Select
-                    isOpen={isOpenTimeInterval}
-                    onSelect={handleSelectTimeIntervalMenu}
-                    onToggle={handleToggleTimeIntervalMenu}
-                    toggleIcon={<ClockIcon />}
-                    selections={timeInterval}
-                  >
-                    {optionsTimeIntervalWithDefault}
-                  </Select>
-                </ToolbarItem>
-              </ToolbarContent>
-            </Toolbar>
-          </Card>
-        </GridItem>
+        {metrics && (
+          <>
+            {/* Metrics Filters */}
+            <GridItem>
+              <Card>
+                <Toolbar>
+                  <ToolbarContent>
+                    <ToolbarItem spacer={{ default: 'spacerSm' }} alignment={{ default: 'alignRight' }}>
+                      <Select
+                        isOpen={isOpenDestinationProcessMenu}
+                        onSelect={handleSelectDestinationProcessMenu}
+                        onToggle={handleToggleDestinationProcessMenu}
+                        toggleIcon={<ClusterIcon />}
+                        selections={destinationProcess}
+                      >
+                        {optionsDestinationProcessWithDefault}
+                      </Select>
+                    </ToolbarItem>
+                    <ToolbarItem>
+                      <Select
+                        isOpen={isOpenTimeInterval}
+                        onSelect={handleSelectTimeIntervalMenu}
+                        onToggle={handleToggleTimeIntervalMenu}
+                        toggleIcon={<ClockIcon />}
+                        selections={timeInterval}
+                      >
+                        {optionsTimeIntervalWithDefault}
+                      </Select>
+                    </ToolbarItem>
+                  </ToolbarContent>
+                </Toolbar>
+              </Card>
+            </GridItem>
 
-        {/* Chart data traffic time series card */}
-        <GridItem span={8} rowSpan={2}>
-          <Card isFullHeight>
-            {!metrics.trafficDataSeriesPerSecond && <EmptyData />}
-            {!!metrics.trafficDataSeriesPerSecond && (
-              <ChartProcessDataTrafficSeries
-                data={[
-                  metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
-                  metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
-                ]}
+            {/* Chart data traffic time series card */}
+            <GridItem span={8} rowSpan={2}>
+              <Card isFullHeight>
+                {!metrics.trafficDataSeriesPerSecond && <EmptyData />}
+                {!!metrics.trafficDataSeriesPerSecond && (
+                  <ChartProcessDataTrafficSeries
+                    data={[
+                      metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
+                      metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
+                    ]}
+                  />
+                )}
+              </Card>
+            </GridItem>
+
+            {/* Total Traffic card */}
+            <GridItem span={4}>
+              <MetricCard
+                title={ProcessesLabels.TrafficTotal}
+                value={formatBytes(metrics.trafficDataSeries.totalData)}
+                bgColor={'--pf-global--palette--cyan-200'}
               />
-            )}
-          </Card>
-        </GridItem>
+            </GridItem>
 
-        {/* Total Traffic card */}
-        <GridItem span={4}>
-          <MetricCard
-            title={ProcessesLabels.TrafficTotal}
-            value={formatBytes(totalBytes)}
-            bgColor={'--pf-global--palette--cyan-200'}
-          />
-        </GridItem>
-
-        {/* Chart distribution data traffic card*/}
-        <GridItem span={4}>
-          <Card isFullHeight>
-            {!processTrafficChartData && <EmptyData />}
-            {!!processTrafficChartData && <ChartProcessDataTrafficDistribution data={processTrafficChartData} />}
-          </Card>
-        </GridItem>
+            {/* Chart distribution data traffic card*/}
+            <GridItem span={4}>
+              <Card isFullHeight>
+                {!getProcessTrafficChartData(metrics) && <EmptyData />}
+                {!!getProcessTrafficChartData(metrics) && (
+                  <ChartProcessDataTrafficDistribution data={getProcessTrafficChartData(metrics)} />
+                )}
+              </Card>
+            </GridItem>
+          </>
+        )}
 
         {/* Table server processes*/}
         <GridItem span={6}>

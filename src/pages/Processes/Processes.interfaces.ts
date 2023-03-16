@@ -11,6 +11,11 @@ export interface ProcessAxisDataChart {
   y: number;
 }
 
+export interface ProcessMetrics {
+  trafficDataSeries: ProcessDataChart;
+  trafficDataSeriesPerSecond: ProcessDataChart;
+}
+
 export interface ProcessDataChart {
   timeSeriesDataReceived: ProcessAxisDataChart[];
   timeSeriesDataSent: ProcessAxisDataChart[];

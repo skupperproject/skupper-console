@@ -175,3 +175,7 @@ export interface FlowAggregatesResponse extends BaseResponse {
   destinationMinLatency: number;
   destinationAverageLatency: number;
 }
+
+export interface CollectorsResponse {
+  PrometheusHost: string;
+}
