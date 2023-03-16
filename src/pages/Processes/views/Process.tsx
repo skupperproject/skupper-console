@@ -211,12 +211,12 @@ const Process = function () {
   function getProcessTrafficChartData(trafficData: ProcessMetrics) {
     return [
       {
-        x: 'Sent',
-        y: trafficData.trafficDataSeries?.totalDataSent || 0
-      },
-      {
         x: 'Received',
         y: trafficData.trafficDataSeries?.totalDataReceived || 0
+      },
+      {
+        x: 'Sent',
+        y: trafficData.trafficDataSeries?.totalDataSent || 0
       }
     ];
   }

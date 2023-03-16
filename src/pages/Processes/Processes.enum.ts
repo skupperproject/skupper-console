@@ -23,6 +23,7 @@ export enum ProcessesLabels {
   MetricBytesSent = 'Top 5 processes bytes sent',
   MetricBytesReceived = 'Top 5 processes bytes received',
   TrafficInOutDistribution = 'Traffic distribution',
+  ChartProcessDataTrafficSeriesAxisTLabel = 'Throughput',
   TrafficTotal = 'Total',
   TrafficSent = 'Sent',
   TrafficReceived = 'Received',

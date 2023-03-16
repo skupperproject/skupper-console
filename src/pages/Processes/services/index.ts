@@ -66,7 +66,7 @@ function normalizeTrafficData(data: PrometheusApiResult[]) {
     timeSeriesDataSent,
     totalDataReceived: trafficDataRx,
     totalDataSent: trafficDataTx,
-    totalData: trafficDataRx + trafficDataRx
+    totalData: trafficDataTx + trafficDataRx
   };
 }
 

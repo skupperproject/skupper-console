@@ -14,6 +14,7 @@ import { getResizeObserver } from '@patternfly/react-core';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { formatDate } from '@core/utils/formatDate';
 
+import { ProcessesLabels } from '../Processes.enum';
 import { ChartProcessDataTrafficSeriesProps, ProcessAxisDataChart } from '../Processes.interfaces';
 
 const CHART_PADDING = {
@@ -50,8 +51,8 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
 
   const childNames = ['received', 'sent'];
   const legendData = [
-    { childName: childNames[0], name: 'Received' },
-    { childName: childNames[1], name: 'Sent' }
+    { childName: childNames[0], name: childNames[0] },
+    { childName: childNames[1], name: childNames[1] }
   ];
 
   const CursorVoronoiContainer = createContainer('voronoi', 'cursor');
@@ -76,7 +77,6 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
                 legendData={legendData}
                 title={(datum: ProcessAxisDataChart) => `${formatX(datum.x, startDate)}`}
                 cornerRadius={5}
-                style={{ fill: 'red' }}
                 flyoutStyle={{
                   fillOpacity: 0.75
                 }}
@@ -95,7 +95,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
           tickFormat={(tick) => tick && formatX(tick, startDate)}
         />
         <ChartAxis
-          label={'Throughput'}
+          label={ProcessesLabels.ChartProcessDataTrafficSeriesAxisTLabel}
           dependentAxis
           minDomain={{ y: 0 }}
           style={{
