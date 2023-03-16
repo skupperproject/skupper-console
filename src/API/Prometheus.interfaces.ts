@@ -10,12 +10,17 @@ export type ValidWindowTime = {
   TwoWeeks: '2w';
 };
 
-export type PrometheusApiResult = [number, string];
+export type PrometheusApiResultValue = [number, string];
+
+export type PrometheusApiResult = {
+  metric: Record<string, string>;
+  values: PrometheusApiResultValue[];
+};
 
 export interface PrometheusQueryParams {
   id: string;
   range: keyof ValidWindowTime;
   processIdDest?: string;
-  isRate: boolean;
+  isRate?: boolean;
   quantile?: 0.5 | 0.9 | 0.99;
 }

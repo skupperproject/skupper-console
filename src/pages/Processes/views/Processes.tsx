@@ -13,7 +13,7 @@ import { RESTApi } from 'API/REST';
 import { SortDirection } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
-import ProcessesBytesChart from '../components/ProcessesBytesChart';
+import ChartProcessDataTrafficDistribution from '../components/ChartProcessDataTrafficDistribution';
 import ProcessNameLinkCell from '../components/ProcessesNameLinkCell';
 import SiteNameLinkCell from '../components/SiteNameLinkCell';
 import { processesTableColumns } from '../Processes.constant';
@@ -95,12 +95,12 @@ const Processes = function () {
 
   const processes = processesData.results || [];
 
-  const { labels: bytesSentLabels, values: bytesSent } = ProcessesController.formatProcessesBytesForChart(
+  const { values: bytesSent } = ProcessesController.formatProcessesBytesForChart(
     processesByOctetsSentData.results || [],
     BYTES_SENT_PROP
   );
 
-  const { labels: bytesReceivedLabels, values: bytesReceived } = ProcessesController.formatProcessesBytesForChart(
+  const { values: bytesReceived } = ProcessesController.formatProcessesBytesForChart(
     processesByOctetsReceivedData.results || [],
     BYTES_RECEIVED_PROP
   );
@@ -112,17 +112,13 @@ const Processes = function () {
           <GridItem span={6}>
             <Card>
               <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
-              <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
+              <ChartProcessDataTrafficDistribution data={bytesSent} />
             </Card>
           </GridItem>
           <GridItem span={6}>
             <Card>
               <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
-              <ProcessesBytesChart
-                bytes={bytesReceived}
-                labels={bytesReceivedLabels}
-                themeColor={ChartThemeColor.green}
-              />
+              <ChartProcessDataTrafficDistribution data={bytesReceived} themeColor={ChartThemeColor.green} />
             </Card>
           </GridItem>
           <GridItem span={12}>

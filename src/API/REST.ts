@@ -41,14 +41,15 @@ import {
   HostResponse,
   FlowAggregatesResponse,
   RequestOptions,
-  ResponseWrapper
+  ResponseWrapper,
+  CollectorsResponse
 } from './REST.interfaces';
 
 export const RESTApi = {
   getPrometheusUrl: async (): Promise<string> => {
     const { data } = await axiosFetch(getConfigPrometheusPATH());
 
-    return getResults(data);
+    return getResults<CollectorsResponse[]>(data)[0].PrometheusHost;
   },
 
   // SITES APIs

@@ -12,7 +12,7 @@ const API_VERSION = '/api/v1alpha1';
 const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
 //CONFIG
 // ask to Skupper the url to call the api that retrieves the url of the prometheus server
-export const CONFIG_PROMETHEUS_PATH = `${API_URL}/prometheus/`;
+export const CONFIG_PROMETHEUS_PATH = `${API_URL}/collectors/`;
 export const getConfigPrometheusPATH = () => CONFIG_PROMETHEUS_PATH;
 
 // SITES
