@@ -1,8 +1,9 @@
+import DurationCell from '@core/components/DurationCell';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
+import { formatLatency } from '@core/utils/formatTime';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -36,9 +37,10 @@ export const flowPairsComponentsTable = {
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.process}`
     }),
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    formatTime(props.data.counterFlow.latency + props.data.forwardFlow.latency),
-  DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    formatTime((props.data.endTime || Date.now() * 1000) - props.data.startTime)
+    formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
+  DurationCell: (props: LinkCellProps<FlowPairsResponse>) => {
+    DurationCell({ ...props, endTime: props.data.endTime, startTime: props.data.startTime });
+  }
 };
 
 export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
@@ -97,11 +99,12 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Trace,
     prop: 'flowTrace' as keyof FlowPairsResponse,
     format: formatTraceBySites,
-    width: 20
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.Duration,
-    component: 'DurationCell'
+    component: 'DurationCell',
+    width: 10
   }
 ];
 
@@ -130,7 +133,7 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Trace,
     prop: 'flowTrace' as keyof FlowPairsResponse,
     format: formatTraceBySites,
-    width: 20
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.RxByteRate,
@@ -140,16 +143,18 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.RxLatency,
     prop: 'counterFlow.latency' as keyof FlowPairsResponse,
-    format: formatTime
+    format: formatLatency
   },
 
   {
     name: FlowPairsColumnsNames.RequestCompleted,
     prop: 'counterFlow.endTime' as keyof FlowPairsResponse,
-    format: timeAgo
+    format: timeAgo,
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.Duration,
-    component: 'DurationCell'
+    component: 'DurationCell',
+    width: 10
   }
 ];

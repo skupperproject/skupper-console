@@ -1,5 +1,6 @@
 /**
- *  Converts input time in the most appropriate format
+ *  Converts the latency in the most appropriate format
+ *  By default the resolution expected from time is microseconds
  */
 
 interface FormatTimeOptions {
@@ -7,7 +8,7 @@ interface FormatTimeOptions {
   startSize?: 'µs' | 'ms' | 'sec';
 }
 
-export function formatTime(time: number, options?: FormatTimeOptions) {
+export function formatLatency(time: number, options?: FormatTimeOptions) {
   const startSize = options?.startSize || 'µs';
   const decimals = options?.decimals || 2;
 
@@ -18,7 +19,7 @@ export function formatTime(time: number, options?: FormatTimeOptions) {
   const k = 1000;
   const dm = decimals < 0 ? 0 : decimals;
 
-  const sizes = ['µs', 'ms', 'sec', 'min', 'hours', 'days', 'months'];
+  const sizes = ['µs', 'ms', 'sec'];
   const sizeFromIndex = sizes.findIndex((size) => size === startSize);
   const sizeFrom = sizes.slice(sizeFromIndex);
 
@@ -29,16 +30,5 @@ export function formatTime(time: number, options?: FormatTimeOptions) {
     return '';
   }
 
-  if (timeSized >= 60 && sizeFrom[i] === 'hours') {
-    return `${Math.floor(timeSized / 24)} days`;
-  }
-
-  if (timeSized >= 60 && sizeFrom[i] === 'min') {
-    return `${Math.floor(timeSized / 60)} hours`;
-  }
-
-  const timeFormatted =
-    timeSized >= 60 && sizeFrom[i] === 'sec' ? `${Math.floor(timeSized / 60)} min` : `${timeSized} ${sizeFrom[i]}`;
-
-  return timeFormatted;
+  return `${timeSized} ${sizeFrom[i]}`;
 }

@@ -281,7 +281,10 @@ const SkTable = function <T>({
                       <Component data={data} value={value} callback={callback} format={format && format(value)} />
                     </Td>
                   ) : (
-                    <Td key={generateUUID()}>
+                    <Td
+                      width={width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined}
+                      key={generateUUID()}
+                    >
                       <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
                     </Td>
                   );

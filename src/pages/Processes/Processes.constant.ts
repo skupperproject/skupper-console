@@ -1,6 +1,8 @@
+import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
+import { formatLatency } from '@core/utils/formatTime';
 import { timeAgo } from '@core/utils/timeAgo';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
 import { FlowAggregatesResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
@@ -15,6 +17,19 @@ import {
 export const ProcessesPaths = {
   path: ProcessesRoutesPaths.Processes,
   name: ProcessesLabels.Section
+};
+
+export const ProcessesConnectedComponentsTable = {
+  ProcessLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    LinkCell({
+      ...props,
+      type: 'process',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`
+    }),
+  TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    formatBytes(props.data.sourceOctets + props.data.destinationOctets),
+  AvgLatency: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2)
 };
 
 export const processesTableColumns = [
@@ -131,13 +146,13 @@ export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.TxLatency,
     prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
-    format: formatTime,
+    format: formatLatency,
     width: 10
   },
   {
     name: FlowPairsColumnsNames.RxLatency,
     prop: 'counterFlow.latency' as keyof FlowPairsResponse,
-    format: formatTime,
+    format: formatLatency,
     width: 10
   },
   {

@@ -25,7 +25,7 @@ import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
+import { formatLatency } from '@core/utils/formatTime';
 import { setMinutesAgo } from '@core/utils/setMinutesAgo';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -322,7 +322,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
               data={topAvgLatencyFromServers}
               options={{
                 themeColor: ChartThemeColors.Orange,
-                format: formatTime
+                format: formatLatency
               }}
             />
           ) : (
@@ -339,7 +339,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
               data={topAvgLatencyFromClients}
               options={{
                 themeColor: ChartThemeColors.Purple,
-                format: formatTime
+                format: formatLatency
               }}
             />
           ) : (

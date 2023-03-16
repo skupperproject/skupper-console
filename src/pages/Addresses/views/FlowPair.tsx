@@ -24,7 +24,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatTime } from '@core/utils/formatTime';
+import { formatLatency } from '@core/utils/formatTime';
+import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -109,7 +110,7 @@ const FlowsPair = function () {
                     <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
                     <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
                     <DescriptionListDescription>
-                      {formatTime((connection.endTime || Date.now() * 1000) - connection.startTime)}{' '}
+                      {formatTimeInterval(connection.endTime || Date.now() * 1000, connection.startTime)}
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 </DescriptionList>
@@ -181,7 +182,7 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                 <DescriptionListTerm>{FlowLabels.WindowSize}</DescriptionListTerm>
                 <DescriptionListDescription>{formatBytes(flow.windowSize)}</DescriptionListDescription>
                 <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
-                <DescriptionListDescription>{formatTime(flow.latency)}</DescriptionListDescription>
+                <DescriptionListDescription>{formatLatency(flow.latency)}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
           </Grid>
@@ -218,7 +219,7 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
                 <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
                 <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>
                 <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
-                <DescriptionListDescription>{formatTime(flow.latency)}</DescriptionListDescription>
+                <DescriptionListDescription>{formatLatency(flow.latency)}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
           </Grid>

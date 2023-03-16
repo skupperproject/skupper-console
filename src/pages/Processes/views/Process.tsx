@@ -39,24 +39,11 @@ import ChartProcessDataTrafficDistribution from '../components/ChartProcessDataT
 import ChartProcessDataTrafficSeries from '../components/ChartProcessDataTrafficSeries';
 import MetricCard from '../components/MetricCard';
 import ProcessDescription from '../components/ProcessDescription';
-import { processesConnectedColumns } from '../Processes.constant';
+import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { ProcessMetrics } from '../Processes.interfaces';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
-
-const ProcessesConnectedComponentsTable = {
-  ProcessLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
-    LinkCell({
-      ...props,
-      type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`
-    }),
-  TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
-    formatBytes(props.data.sourceOctets + props.data.destinationOctets),
-  AvgLatency: (props: LinkCellProps<FlowAggregatesResponse>) =>
-    formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2)
-};
 
 const defaultTimeInterval = timeIntervalMap.FifteenMinutes;
 
