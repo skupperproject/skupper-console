@@ -13,18 +13,18 @@ the last command install husky to improves commits. You need to run this command
 
 ## Run the console standalone
 
-The console must work with the *flow collector* module enabled in Skupper. In case you want to run the console standalone you need to expose this url and set the following env variables (you can combine them).
+The console must work with the *flow collector* module enabled in Skupper. In case you to run the console standalone you need to expose this url and set the following env variables (you can combine them).
 
-### Enable the Flow collector
+### Enable the Flow collector (mandatory)
 
 ```bash
 API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start
 ```
 
-### Enable Prometheus
+### Enable Prometheus (optional)
 
 ```bash
-PROMETHEUS_URL=<prometheus server url> yarn start
+PROMETHEUS_URL=<prometheus server url/api/v1> yarn start
 ```
 
 ### Demo mode
