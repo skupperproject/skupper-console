@@ -1,10 +1,5 @@
-import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
-import { AddressResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
-
-export interface AddressesTableProps {
-  addresses: AddressResponse[];
-}
+import { FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
   processes: ProcessResponse[];
@@ -26,7 +21,7 @@ export interface ChartData {
 }
 export interface ChartProps {
   data: ChartData[];
-  options?: { themeColor?: ChartThemeColors; format?: Function };
+  options?: { themeColor?: string; format?: Function };
 }
 
 export interface RequestsByAddressProps {

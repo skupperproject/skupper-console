@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 
-import { Chart, ChartBar, ChartPie, ChartVoronoiContainer } from '@patternfly/react-charts';
+import { Chart, ChartBar, ChartPie, ChartThemeColor, ChartVoronoiContainer } from '@patternfly/react-charts';
 import {
   Breadcrumb,
   BreadcrumbHeading,
@@ -21,7 +21,6 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -291,7 +290,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         <Card style={{ height: `${DEFAULT_HEIGHT_CHART}px` }}>
           <CardTitle>{FlowPairsLabelsHttp.RequestMethodsSummary}</CardTitle>
           {methodsSummary?.length ? (
-            <MethodsSummaryChart data={methodsSummary} options={{ themeColor: ChartThemeColors.Blue }} />
+            <MethodsSummaryChart data={methodsSummary} options={{ themeColor: ChartThemeColor.blue }} />
           ) : (
             <EmptyData />
           )}
@@ -305,7 +304,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
             <MethodsSummaryChart
               data={statusCodesSummary}
               options={{
-                themeColor: ChartThemeColors.Green
+                themeColor: ChartThemeColor.green
               }}
             />
           ) : (
@@ -321,7 +320,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
             <DistributionChart
               data={topAvgLatencyFromServers}
               options={{
-                themeColor: ChartThemeColors.Orange,
+                themeColor: ChartThemeColor.orange,
                 format: formatLatency
               }}
             />
@@ -338,7 +337,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
             <DistributionChart
               data={topAvgLatencyFromClients}
               options={{
-                themeColor: ChartThemeColors.Purple,
+                themeColor: ChartThemeColor.purple,
                 format: formatLatency
               }}
             />
@@ -394,7 +393,7 @@ const DistributionChart: FC<ChartProps> = function ({ data, options }) {
         right: 20,
         top: 50
       }}
-      themeColor={options?.themeColor || ChartThemeColors.Blue}
+      themeColor={options?.themeColor || ChartThemeColor.blue}
       height={DEFAULT_HEIGHT_CHART}
     />
   );
@@ -409,7 +408,7 @@ const MethodsSummaryChart: FC<ChartProps> = function ({ data, options }) {
       }))}
       legendOrientation="vertical"
       legendPosition="right"
-      themeColor={options?.themeColor || ChartThemeColors.Orange}
+      themeColor={options?.themeColor || ChartThemeColor.orange}
       height={DEFAULT_HEIGHT_CHART}
       domainPadding={{ x: [30, 25] }}
       padding={{

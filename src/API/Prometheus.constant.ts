@@ -38,7 +38,7 @@ export const rangeStepIntervalMap: Record<string, string> = {
   [timeIntervalMap.TwoWeeks]: `4838`
 };
 
-export let PROMETHEUS_PATH: string | undefined = undefined;
+let PROMETHEUS_PATH: string | undefined = undefined;
 // Override the default prometheus path with the value from the skupper flow collector api
 export const setPrometheusUrl = (url: string | undefined) => (PROMETHEUS_PATH = url);
 export const isPrometheusActive = () => !!PROMETHEUS_PATH;

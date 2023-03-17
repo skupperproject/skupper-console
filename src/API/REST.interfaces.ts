@@ -142,21 +142,6 @@ export interface FlowPairsResponse extends BaseResponse {
   endTime?: number;
 }
 
-export interface ProcessPairs extends BaseResponse {
-  sourceSiteId: string;
-  sourceSiteName: string;
-  destinationSiteId: string;
-  destinationSiteName: string;
-  protocol: string;
-  forwardFlow: ConnectionTCP & RequestHTTP;
-  counterFlow: ConnectionTCP & RequestHTTP;
-  flowTrace: string;
-  siteAggregateId: string;
-  processGroupAggregateId: string;
-  processAggregateId: string;
-  endTime?: number;
-}
-
 export interface FlowAggregatesResponse extends BaseResponse {
   rectType: string;
   pairType: string;

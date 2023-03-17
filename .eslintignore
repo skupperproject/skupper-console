@@ -6,4 +6,5 @@
 **/cypress
 ./public/mocks/data/*
 jest.*
-
+cypress.config.js
+commitlint.config.js
