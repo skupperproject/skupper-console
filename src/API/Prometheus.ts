@@ -4,7 +4,7 @@ import {
   PrometheusApiResult,
   PrometheusApiResultValue,
   PrometheusQueryParams,
-  ValidWindowTime
+  ValidWindowTimeValues
 } from './Prometheus.interfaces';
 
 export const PrometheusApi = {
@@ -137,7 +137,7 @@ export const PrometheusApi = {
   }
 };
 
-function getRangeTimestamp(range: keyof ValidWindowTime): { start: number; end: number } {
+function getRangeTimestamp(range: ValidWindowTimeValues): { start: number; end: number } {
   return {
     start: new Date().getTime() / 1000 - startDateOffsetMap[range] || 0,
     end: new Date().getTime() / 1000

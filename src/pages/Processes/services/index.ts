@@ -1,6 +1,6 @@
 import { formatBytes } from '@core/utils/formatBytes';
 import { PrometheusApi } from 'API/Prometheus';
-import { PrometheusApiResult, ValidWindowTime } from 'API/Prometheus.interfaces';
+import { PrometheusApiResult, ValidWindowTimeValues } from 'API/Prometheus.interfaces';
 import { ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessAxisDataChart, ProcessMetrics } from '../Processes.interfaces';
@@ -8,7 +8,7 @@ import { ProcessAxisDataChart, ProcessMetrics } from '../Processes.interfaces';
 const ProcessesController = {
   getMetrics: async (
     processesIdSource: string,
-    durationFormatted: keyof ValidWindowTime,
+    durationFormatted: ValidWindowTimeValues,
     processIdDest: string
   ): Promise<ProcessMetrics> => {
     const params = {

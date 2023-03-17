@@ -1,4 +1,4 @@
-import { ValidWindowTime } from './Prometheus.interfaces';
+import { ValidWindowTime, ValidWindowTimeValues } from './Prometheus.interfaces';
 
 export const timeIntervalMap: ValidWindowTime = {
   FifteenMinutes: '15m',
@@ -27,15 +27,15 @@ export const startDateOffsetMap: Record<string, number> = {
 
 // Bind the Time range selected to display prometheus metrics  and Time interval before record a new sample
 export const rangeStepIntervalMap: Record<string, string> = {
-  [timeIntervalMap.FifteenMinutes]: `${startDateOffsetMap[timeIntervalMap.FifteenMinutes] / 60}s`,
-  [timeIntervalMap.ThirtyMinutes]: `${startDateOffsetMap[timeIntervalMap.ThirtyMinutes] / 60}s`,
-  [timeIntervalMap.OneHours]: `${startDateOffsetMap[timeIntervalMap.OneHours] / 60}s`,
-  [timeIntervalMap.TwoHours]: `${startDateOffsetMap[timeIntervalMap.TwoHours] / 60}s`,
-  [timeIntervalMap.SixHours]: `${startDateOffsetMap[timeIntervalMap.SixHours] / 60}s`,
-  [timeIntervalMap.TwelveHours]: `${startDateOffsetMap[timeIntervalMap.TwelveHours] / 60}s`,
-  [timeIntervalMap.OneDay]: `${startDateOffsetMap[timeIntervalMap.OneDay] / 60}s`,
-  [timeIntervalMap.OneWeek]: `${startDateOffsetMap[timeIntervalMap.OneWeek] / 60}s`,
-  [timeIntervalMap.TwoWeeks]: `${startDateOffsetMap[timeIntervalMap.TwoWeeks] / 60}s`
+  [timeIntervalMap.FifteenMinutes]: `3s`,
+  [timeIntervalMap.ThirtyMinutes]: `7s`,
+  [timeIntervalMap.OneHours]: `14s`,
+  [timeIntervalMap.TwoHours]: `28s`,
+  [timeIntervalMap.SixHours]: `86s`,
+  [timeIntervalMap.TwelveHours]: `172s`,
+  [timeIntervalMap.OneDay]: `345s`,
+  [timeIntervalMap.OneWeek]: `2419s`,
+  [timeIntervalMap.TwoWeeks]: `4838`
 };
 
 export let PROMETHEUS_PATH: string | undefined = undefined;
@@ -51,25 +51,25 @@ export const queries = {
   getTotalRequestsByProcess(param: string) {
     return `sum(http_requests_method_total{${param}})`;
   },
-  getTotalRequestPerSecondByProcess(param: string, range: keyof ValidWindowTime) {
+  getTotalRequestPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum(rate(http_requests_method_total{${param}}[${range}]))`;
   },
-  getLatencyByProcess(param: string, range: keyof ValidWindowTime, quantile: 0.5 | 0.9 | 0.99) {
+  getLatencyByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
     return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
-  getAvgLatencyByProcess(param: string, range: keyof ValidWindowTime) {
+  getAvgLatencyByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
   getResponseStatusCodesByProcess(param: string) {
     return `sum by (code) (http_requests_result_total{${param}})`;
   },
-  getResponseStatusCodesPerSecondByProcess(param: string, range: keyof ValidWindowTime) {
+  getResponseStatusCodesPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum by (code) (rate(http_requests_result_total{${param}}[${range}]))`;
   },
   getDataTraffic(paramSource: string, paramDest: string) {
     return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
   },
-  getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: keyof ValidWindowTime) {
-    return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]) or rate(octets_total{${paramDest}}[${range}]))`;
+  getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
+    return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
   }
 };
