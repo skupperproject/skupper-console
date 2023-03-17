@@ -5,7 +5,6 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
-import { RESTApi } from 'API/REST';
 import {
   FlowAggregatesResponse,
   FlowPairsResponse,
@@ -16,13 +15,7 @@ import {
   SiteResponse
 } from 'API/REST.interfaces';
 
-import {
-  LinkTopology,
-  ProcessConnectedDetail,
-  ProcessesMetrics,
-  ProcessGroupMetrics,
-  SitesMetrics
-} from './services.interfaces';
+import { LinkTopology } from './services.interfaces';
 import { colors } from '../Topology.constant';
 
 export const TopologyController = {
@@ -49,8 +42,7 @@ export const TopologyController = {
       key: identity,
       source: sourceId,
       target: destinationId,
-      rate: sourceOctetRate ? formatByteRate(sourceOctetRate) : '',
-      isActive: false // TODO: update when the router bug is resolved !!(sourceOctetRate || destinationOctetRate),
+      rate: sourceOctetRate ? formatByteRate(sourceOctetRate) : ''
     }));
 
     return processesLinks;
@@ -74,114 +66,6 @@ export const TopologyController = {
     }));
 
     return processGroupsLinks;
-  },
-
-  getSiteMetrics: async (id: string): Promise<SitesMetrics> => {
-    const site = await RESTApi.fetchSite(id);
-    const flowAggregatesPairs = await RESTApi.fetchSitesPairs();
-
-    const flowAggregatesOutgoingPairsIds = flowAggregatesPairs
-      .filter(({ sourceId }) => id === sourceId)
-      .map(({ identity }) => identity);
-
-    const flowAggregatesIncomingPairsIds = flowAggregatesPairs
-      .filter(({ destinationId }) => id === destinationId)
-      .map(({ identity }) => identity);
-
-    const flowAggregatesOutgoingPairs = await Promise.all(
-      flowAggregatesOutgoingPairsIds.map(async (flowAggregatesPairsId) => RESTApi.fetchSitePairs(flowAggregatesPairsId))
-    );
-
-    const flowAggregatesIncomingPairs = await Promise.all(
-      flowAggregatesIncomingPairsIds.map(async (flowAggregatesPairsId) => RESTApi.fetchSitePairs(flowAggregatesPairsId))
-    );
-
-    return {
-      ...site,
-      tcpConnectionsOut: flowAggregatesOutgoingPairs,
-      tcpConnectionsIn: flowAggregatesIncomingPairs
-    };
-  },
-
-  getProcessMetrics: async (id: string): Promise<ProcessesMetrics> => {
-    const process = await RESTApi.fetchProcess(id);
-    const processPairsTx = await RESTApi.fetchProcessesPairs({
-      filter: `sourceId.${id}`
-    });
-    const processPairsRx = await RESTApi.fetchProcessesPairs({
-      filter: `destinationId.${id}`
-    });
-
-    const tcpConnectionsOut = processPairsTx.map(
-      ({ identity, destinationId, destinationName, recordCount, destinationOctetRate }) => ({
-        identity,
-        processId: destinationId,
-        processName: destinationName,
-        octetRate: destinationOctetRate || 0,
-        recordCount
-      })
-    );
-
-    const tcpConnectionsIn = processPairsRx.map(({ identity, sourceId, sourceName, sourceOctetRate, recordCount }) => ({
-      identity,
-      processId: sourceId,
-      processName: sourceName,
-      octetRate: sourceOctetRate || 0,
-      recordCount
-    }));
-
-    return {
-      ...process,
-      tcpConnectionsOut,
-      tcpConnectionsIn
-    };
-  },
-
-  getProcessGroupMetrics: async (id: string): Promise<ProcessGroupMetrics> => {
-    const processGroup = await RESTApi.fetchProcessGroup(id);
-    const flowAggregatesPairsTx = await RESTApi.fetchProcessgroupsPairs({
-      filter: `sourceId.${id}`
-    });
-
-    const flowAggregatesPairsRx = await RESTApi.fetchProcessgroupsPairs({
-      filter: `destinationId.${id}`
-    });
-
-    const processPairsTx = flowAggregatesPairsTx.reduce(
-      (acc, { sourceOctetRate, sourceName, sourceId, identity, recordCount }) => {
-        acc[identity] = {
-          identity,
-          processId: sourceId,
-          processName: sourceName,
-          octetRate: sourceOctetRate || 0,
-          recordCount
-        };
-
-        return acc;
-      },
-      {} as Record<string, ProcessConnectedDetail>
-    );
-
-    const processPairsRx = flowAggregatesPairsRx.reduce(
-      (acc, { destinationId, destinationName, identity, destinationOctetRate, recordCount }) => {
-        acc[identity] = {
-          identity,
-          processId: destinationId,
-          processName: destinationName,
-          octetRate: destinationOctetRate || 0,
-          recordCount
-        };
-
-        return acc;
-      },
-      {} as Record<string, ProcessConnectedDetail>
-    );
-
-    return {
-      ...processGroup,
-      tcpConnectionsOut: Object.values(processPairsTx),
-      tcpConnectionsIn: Object.values(processPairsRx)
-    };
   },
 
   getNodesFromSitesOrProcessGroups: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
@@ -229,10 +113,9 @@ export const TopologyController = {
       .sort((a, b) => a.group - b.group),
 
   getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
-    links?.map(({ source, target, isActive, rate }) => ({
+    links?.map(({ source, target, rate }) => ({
       source,
       target,
-      isActive,
       rate
     })),
 

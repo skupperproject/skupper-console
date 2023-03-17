@@ -18,6 +18,5 @@ export interface GraphEdge<T = GraphNode> {
   source: T;
   target: T;
   type?: 'dashed';
-  isActive?: boolean;
   rate?: string;
 }

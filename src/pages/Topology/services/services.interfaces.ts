@@ -27,6 +27,5 @@ export interface LinkTopology {
   key: string;
   source: string;
   target: string;
-  isActive?: boolean;
   rate?: string;
 }
