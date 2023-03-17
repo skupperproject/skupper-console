@@ -31,6 +31,7 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive, timeIntervalMap } from 'API/Prometheus.constant';
+import { ValidWindowTimeValues } from 'API/Prometheus.interfaces';
 import { RESTApi } from 'API/REST';
 import { FlowAggregatesResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
@@ -56,7 +57,7 @@ const Process = function () {
   const [destinationProcess, setDestinationProcess] = useState<string>();
 
   const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
-  const [timeInterval, setTimeInterval] = useState<any>(defaultTimeInterval);
+  const [timeInterval, setTimeInterval] = useState<ValidWindowTimeValues>(defaultTimeInterval);
 
   const { data: process, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcesses.GetProcess, processId],
@@ -117,7 +118,7 @@ const Process = function () {
 
   function handleSelectDestinationProcessMenu(
     _: React.MouseEvent | React.ChangeEvent,
-    selection: string | SelectOptionObject,
+    selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {
     const id = isPlaceholder ? undefined : (selection as string);
@@ -132,10 +133,10 @@ const Process = function () {
 
   function handleSelectTimeIntervalMenu(
     _: React.MouseEvent | React.ChangeEvent,
-    selection: string | SelectOptionObject,
+    selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {
-    const id = isPlaceholder ? defaultTimeInterval : (selection as string);
+    const id = isPlaceholder ? defaultTimeInterval : (selection as ValidWindowTimeValues);
 
     setTimeInterval(id);
     setIsOpenTimeIntervalMenu(false);
@@ -250,7 +251,7 @@ const Process = function () {
                         isOpen={isOpenDestinationProcessMenu}
                         onSelect={handleSelectDestinationProcessMenu}
                         onToggle={handleToggleDestinationProcessMenu}
-                        toggleIcon={<ClusterIcon />}
+                        toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
                         selections={destinationProcess}
                       >
                         {optionsDestinationProcessWithDefault}
@@ -261,7 +262,7 @@ const Process = function () {
                         isOpen={isOpenTimeInterval}
                         onSelect={handleSelectTimeIntervalMenu}
                         onToggle={handleToggleTimeIntervalMenu}
-                        toggleIcon={<ClockIcon />}
+                        toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
                         selections={timeInterval}
                       >
                         {optionsTimeIntervalWithDefault}

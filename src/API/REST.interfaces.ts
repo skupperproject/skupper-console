@@ -177,5 +177,12 @@ export interface FlowAggregatesResponse extends BaseResponse {
 }
 
 export interface CollectorsResponse {
+  recType: 'COLLECTOR';
+  identity: string;
+  startTime: number;
+  endTime: number;
   PrometheusHost: string;
+  PrometheusAuthMethod: string;
+  PrometheusUser: string;
+  PrometheusPassword: string;
 }

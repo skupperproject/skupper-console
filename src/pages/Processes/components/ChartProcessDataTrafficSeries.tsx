@@ -19,7 +19,7 @@ import { ChartProcessDataTrafficSeriesProps, ProcessAxisDataChart } from '../Pro
 
 const CHART_PADDING = {
   bottom: 60,
-  left: 100,
+  left: 120,
   right: 50, // Adjusted to accommodate legend
   top: 50
 };
@@ -100,13 +100,13 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
           minDomain={{ y: 0 }}
           style={{
             tickLabels: { fontSize: 10 },
-            axisLabel: { fontSize: 15, padding: 60 }
+            axisLabel: { fontSize: 15, padding: 90 }
           }}
           tickFormat={(tick) => tick && formatY(tick)}
         />
         <ChartGroup>
           {data.map((row, index: number) => (
-            <ChartArea key={index} data={row} interpolation="step" name={childNames[index]} />
+            <ChartArea key={index} data={row} name={childNames[index]} />
           ))}
         </ChartGroup>
       </Chart>
