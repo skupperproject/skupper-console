@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { ChartPie } from '@patternfly/react-charts';
+import { ChartPie, ChartThemeColor } from '@patternfly/react-charts';
 import {
   Card,
   CardTitle,
@@ -16,7 +16,6 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -116,7 +115,7 @@ const Addresses = function () {
               legendOrientation="horizontal"
               legendPosition="bottom"
               height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-              themeColor={ChartThemeColors.Multi}
+              themeColor={ChartThemeColor.multi}
             />
           </Card>
         </GridItem>

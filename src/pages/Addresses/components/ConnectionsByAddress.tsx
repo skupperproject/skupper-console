@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 
-import { ChartPie } from '@patternfly/react-charts';
+import { ChartPie, ChartThemeColor } from '@patternfly/react-charts';
 import {
   Breadcrumb,
   BreadcrumbHeading,
@@ -21,7 +21,6 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { ChartThemeColors } from '@core/components/Chart/Chart.enum';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -251,7 +250,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                   right: 100,
                   top: 0
                 }}
-                themeColor={ChartThemeColors.Blue}
+                themeColor={ChartThemeColor.blue}
                 height={CONNECTION_HEIGHT_CHART}
               />
             ) : (
@@ -281,7 +280,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                   right: 100,
                   top: 0
                 }}
-                themeColor={ChartThemeColors.Green}
+                themeColor={ChartThemeColor.green}
                 height={CONNECTION_HEIGHT_CHART}
               />
             ) : (

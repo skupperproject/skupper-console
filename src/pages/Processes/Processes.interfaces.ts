@@ -1,4 +1,4 @@
-import { AddressResponse, FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
+import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
   processes?: ProcessResponse[];
@@ -16,7 +16,7 @@ export interface ProcessMetrics {
   trafficDataSeriesPerSecond: ProcessDataChart | null;
 }
 
-export interface ProcessDataChart {
+interface ProcessDataChart {
   timeSeriesDataReceived: ProcessAxisDataChart[];
   timeSeriesDataSent: ProcessAxisDataChart[];
   totalDataReceived: number;
@@ -32,19 +32,6 @@ export interface ProcessesBytesChartProps {
 export interface ProcessNameLinkCellProps {
   data: ProcessResponse;
   value: ProcessResponse[keyof ProcessResponse];
-}
-
-export interface ProcessNamePairsLinkCellProps {
-  data: FlowAggregatesResponse;
-  value: FlowAggregatesResponse[keyof FlowAggregatesResponse];
-}
-
-export interface CurrentBytesInfoProps {
-  description?: string;
-  direction?: 'down' | 'up';
-  byteRate?: number;
-  bytes: number;
-  style?: Record<string, string>;
 }
 
 export interface SiteNameLinkCellProps {

@@ -25,8 +25,3 @@ export enum SitesTableColumns {
   NumProcesses = 'Processes',
   NumSitesLinked = 'Links'
 }
-
-export enum ProcessesTableColumns {
-  Name = 'Name',
-  SourceHost = 'Source IP'
-}

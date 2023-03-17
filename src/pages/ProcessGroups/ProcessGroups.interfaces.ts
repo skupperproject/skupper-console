@@ -1,8 +1,4 @@
-import { ProcessResponse, ProcessGroupResponse } from 'API/REST.interfaces';
-
-export interface ProcessGroupsTableProps {
-  processGroups: ProcessGroupResponse[];
-}
+import { ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessGroupsBytesChartProps {
   bytes: { x: string; y: number }[];
