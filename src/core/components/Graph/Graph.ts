@@ -76,7 +76,8 @@ export default class Graph {
     this.isDraggingNode = false;
 
     this.nodes = JSON.parse(JSON.stringify(nodes));
-    this.links = JSON.parse(JSON.stringify(edges));
+    this.links = JSON.parse(JSON.stringify(sanitizeEdges(nodes, edges)));
+
     this.EventEmitter = new EventEmitter();
     this.force = this.configureForceSimulation(this.nodes);
 
@@ -554,7 +555,7 @@ export default class Graph {
       }, {} as Record<string, GraphNode>);
 
       // it creates a new copy of the object and avoids to bind the edges with the original object and modify it
-      this.links = JSON.parse(JSON.stringify(edges));
+      this.links = JSON.parse(JSON.stringify(sanitizeEdges(nodes, edges)));
       this.nodes = JSON.parse(
         JSON.stringify(
           // attach position to the nodes if exist
@@ -683,4 +684,15 @@ function polygonGenerator(nodes: GraphNode[], groupId: string) {
   }
 
   return polygonHull(node_coords);
+}
+
+// TODO: remove this function when Backend sanitize the old process pairs
+function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge<string>[]) {
+  const availableNodesMap = nodes.reduce((acc, node) => {
+    acc[node.id] = node.id;
+
+    return acc;
+  }, {} as Record<string, string>);
+
+  return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
 }

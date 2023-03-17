@@ -179,12 +179,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
         setLinks(
           TopologyController.getEdgesFromLinks(
-            processesLinks.map(({ source, target, key, isActive, rate }) => ({
+            processesLinks.map(({ source, target, key, rate }) => ({
               source: `pGroup${source}`,
               target: `pGroup${target}`,
               rate,
-              key,
-              isActive
+              key
             }))
           )
         );

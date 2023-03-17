@@ -5,10 +5,6 @@ const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 const k = 1024;
 
 export function formatBytes(bytes: number, decimals = 2) {
-  if (!Number.isFinite(bytes)) {
-    throw new TypeError(`Expected a finite number, got ${typeof bytes}: ${bytes}`);
-  }
-
   const dm = decimals < 0 ? 0 : decimals;
 
   const i = Math.floor(Math.log(bytes < 1 ? 1 : bytes) / Math.log(k));
