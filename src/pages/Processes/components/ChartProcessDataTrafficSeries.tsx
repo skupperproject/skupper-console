@@ -14,7 +14,6 @@ import { getResizeObserver } from '@patternfly/react-core';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { formatDate } from '@core/utils/formatDate';
 
-import { ProcessesLabels } from '../Processes.enum';
 import { ChartProcessDataTrafficSeriesProps, ProcessAxisDataChart } from '../Processes.interfaces';
 
 const CHART_PADDING = {
@@ -28,6 +27,8 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
   data,
   formatY = formatByteRate,
   formatX = (timestamp: number, start: number) => formatDate(timestamp, start),
+  axisYLabel,
+  legendLabels = [],
   ...props
 }) {
   const observer = useRef<Function>(() => null);
@@ -49,11 +50,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
     }
   }, []);
 
-  const childNames = ['received', 'sent'];
-  const legendData = [
-    { childName: childNames[0], name: childNames[0] },
-    { childName: childNames[1], name: childNames[1] }
-  ];
+  const legendData = legendLabels.map((name) => ({ childName: name, name }));
 
   const CursorVoronoiContainer = createContainer('voronoi', 'cursor');
   const startDate = data[0][0].x;
@@ -84,9 +81,9 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
             }
             mouseFollowTooltips
             voronoiPadding={20}
-            {...props}
           />
         }
+        {...props}
       >
         <ChartAxis
           style={{
@@ -95,18 +92,18 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
           tickFormat={(tick) => tick && formatX(tick, startDate)}
         />
         <ChartAxis
-          label={ProcessesLabels.ChartProcessDataTrafficSeriesAxisTLabel}
+          label={axisYLabel}
           dependentAxis
           minDomain={{ y: 0 }}
           style={{
             tickLabels: { fontSize: 10 },
             axisLabel: { fontSize: 15, padding: 90 }
           }}
-          tickFormat={(tick) => tick && formatY(tick)}
+          tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
         />
         <ChartGroup>
           {data.map((row, index: number) => (
-            <ChartArea key={index} data={row} name={childNames[index]} />
+            <ChartArea key={index} data={row} name={legendData[index]?.name} />
           ))}
         </ChartGroup>
       </Chart>

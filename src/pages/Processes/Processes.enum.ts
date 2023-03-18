@@ -23,7 +23,8 @@ export enum ProcessesLabels {
   MetricBytesSent = 'Top 5 processes bytes sent',
   MetricBytesReceived = 'Top 5 processes bytes received',
   TrafficInOutDistribution = 'Traffic distribution',
-  ChartProcessDataTrafficSeriesAxisTLabel = 'Throughput',
+  ChartProcessDataTrafficSeriesAxisYLabel = 'Throughput',
+  ChartProcessLatencySeriesAxisYLabel = 'Latency',
   TrafficTotal = 'Total',
   TrafficSent = 'Sent',
   TrafficReceived = 'Received',
@@ -32,7 +33,13 @@ export enum ProcessesLabels {
   TcpConnection = 'TCP connections',
   HttpRequests = 'Http requests',
   GoToTopology = 'Go to the network view',
-  FilterDestinationProcessDefault = 'All processes'
+  FilterProcessesConnectedDefault = 'All Processes',
+  FilterProtocolsDefault = 'All Protocols',
+  NoMetricFoundMessage = 'No metrics found. Try adjusting your filter options',
+  LatencyMetricAvg = 'Avg latency',
+  LatencyMetric50quantile = '.5 quantile',
+  LatencyMetric90quantile = '.9 quantile',
+  LatencyMetric99quantile = '.99 quantile'
 }
 
 export enum ProcessPairsColumnsNames {

@@ -1,3 +1,5 @@
+import { ValidWindowTimeValues } from 'API/Prometheus.interfaces';
+import { AvailableProtocols } from 'API/REST.enum';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
@@ -11,12 +13,18 @@ export interface ProcessAxisDataChart {
   y: number;
 }
 
+export interface ProcessLatenciesChart {
+  data: ProcessAxisDataChart[];
+  label: string;
+}
+
 export interface ProcessMetrics {
   trafficDataSeries: ProcessDataChart | null;
   trafficDataSeriesPerSecond: ProcessDataChart | null;
+  latencies: ProcessLatenciesChart[] | null;
 }
 
-interface ProcessDataChart {
+export interface ProcessDataChart {
   timeSeriesDataReceived: ProcessAxisDataChart[];
   timeSeriesDataSent: ProcessAxisDataChart[];
   totalDataReceived: number;
@@ -48,6 +56,9 @@ export interface ChartProcessDataTrafficSeriesProps {
   data: ProcessAxisDataChart[][];
   formatY?: Function;
   formatX?: Function;
+  axisYLabel?: string;
+  legendLabels?: string[];
+  themeColor?: string;
 }
 
 export interface MetricCardProps {
@@ -58,4 +69,11 @@ export interface MetricCardProps {
   showChart?: boolean;
   colorChart?: string;
   dataChart?: { x: number | string; y: number }[];
+}
+
+export interface MetricsFilters {
+  id: string;
+  timeInterval: ValidWindowTimeValues;
+  processIdDest?: string;
+  protocol?: AvailableProtocols;
 }

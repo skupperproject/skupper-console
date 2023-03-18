@@ -43,8 +43,9 @@ export const PrometheusApi = {
     id,
     range,
     processIdDest,
-    quantile
-  }: PrometheusQueryParams): Promise<PrometheusApiResultValue> => {
+    quantile,
+    protocol
+  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `sourceProcess="${id}"`;
 
@@ -52,6 +53,9 @@ export const PrometheusApi = {
       param = [param, `destProcess="${processIdDest}"`].join(',');
     }
 
+    if (processIdDest) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
     const {
       data: {
         data: { result }
@@ -67,7 +71,7 @@ export const PrometheusApi = {
       }
     });
 
-    return result.length ? result[0].values : [];
+    return result;
   },
 
   fetchStatusCodesByProcess: async ({
@@ -77,7 +81,7 @@ export const PrometheusApi = {
     isRate = false
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
-    let param = `destProcess="${id}"`;
+    let param = `destProcess="${id} "`;
 
     if (processIdDest) {
       param = [param, `sourceProcess="${processIdDest}"`].join(',');
@@ -106,7 +110,8 @@ export const PrometheusApi = {
     id,
     range,
     processIdDest,
-    isRate = false
+    isRate = false,
+    protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
     let param1 = `sourceProcess="${id}"`;
@@ -115,6 +120,11 @@ export const PrometheusApi = {
     if (processIdDest) {
       param1 = [param1, `destProcess="${processIdDest}"`].join(',');
       param2 = [param2, `sourceProcess="${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param1 = [param1, `protocol=~"${protocol}"`].join(',');
+      param2 = [param2, `protocol=~"${protocol}"`].join(',');
     }
 
     const {
