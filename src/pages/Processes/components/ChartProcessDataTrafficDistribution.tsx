@@ -46,7 +46,7 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
 
   return (
     <div ref={chartContainerRef} style={{ height: `100%`, width: `100%` }}>
-      {!totalBytes && <EmptyData message="Chart not available" />}
+      {!totalBytes && <EmptyData message="Data traffic not available" />}
       {!!totalBytes && (
         <ChartPie
           data={data}

@@ -24,7 +24,7 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { RESTApi } from 'API/REST';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { HttpProcessesFlowPairsColumns, TcpProcessesFlowPairsColumns } from '../Processes.constant';
@@ -45,7 +45,6 @@ const ProcessPairs = function () {
   const destinationId = ids[1];
 
   const navigate = useNavigate();
-  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
   const [flowPairsQueryParamsPaginated, setFlowParisQueryParamsPaginated] = useState<RequestOptions>(
     initAllFlowParisQueryParamsPaginated
   );
@@ -76,7 +75,6 @@ const ProcessPairs = function () {
       }),
     {
       keepPreviousData: true,
-      refetchInterval,
       onError: handleError
     }
   );
@@ -84,7 +82,6 @@ const ProcessPairs = function () {
   function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-    setRefetchInterval(0);
     navigate(route);
   }
 

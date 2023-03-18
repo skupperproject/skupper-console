@@ -12,7 +12,7 @@ import {
 import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatByteRate } from '@core/utils/formatBytes';
-import { formatDate } from '@core/utils/formatDate';
+import { formatChartDate } from '@core/utils/formatChartDate';
 
 import { ChartProcessDataTrafficSeriesProps, ProcessAxisDataChart } from '../Processes.interfaces';
 
@@ -26,7 +26,7 @@ const CHART_PADDING = {
 const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = function ({
   data,
   formatY = formatByteRate,
-  formatX = (timestamp: number, start: number) => formatDate(timestamp, start),
+  formatX = (timestamp: number, start: number) => formatChartDate(timestamp, start),
   axisYLabel,
   legendLabels = [],
   ...props

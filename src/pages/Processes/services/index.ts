@@ -1,5 +1,6 @@
 import { formatBytes } from '@core/utils/formatBytes';
 import { PrometheusApi } from 'API/Prometheus';
+import { startDateOffsetMap } from 'API/Prometheus.constant';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
 import { ProcessResponse } from 'API/REST.interfaces';
 
@@ -28,8 +29,8 @@ const ProcessesController = {
       const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 });
       const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 });
 
-      const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse);
-      const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse);
+      const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
+      const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse, timeInterval);
       const latencies = normalizeLatencies({ avgLatency, quantile50latency, quantile90latency, quantile99latency });
 
       if (!(trafficDataSeries && trafficDataSeriesPerSecond && latencies)) {
@@ -67,17 +68,19 @@ const ProcessesController = {
 
 export default ProcessesController;
 
+interface NormalizeLatenciesProps {
+  avgLatency: PrometheusApiResult[];
+  quantile50latency: PrometheusApiResult[];
+  quantile90latency: PrometheusApiResult[];
+  quantile99latency: PrometheusApiResult[];
+}
+
 function normalizeLatencies({
   avgLatency,
   quantile50latency,
   quantile90latency,
   quantile99latency
-}: {
-  avgLatency: PrometheusApiResult[];
-  quantile50latency: PrometheusApiResult[];
-  quantile90latency: PrometheusApiResult[];
-  quantile99latency: PrometheusApiResult[];
-}): ProcessLatenciesChart[] | null {
+}: NormalizeLatenciesProps): ProcessLatenciesChart[] | null {
   const avgLatencyNormalized = normalizeMetric(avgLatency);
   const quantile50latencyNormalized = normalizeMetric(quantile50latency);
   const quantile90latencyNormalized = normalizeMetric(quantile90latency);
@@ -104,7 +107,7 @@ function normalizeLatencies({
   return latenciesNormalized.length ? latenciesNormalized : null;
 }
 
-function normalizeTrafficData(data: PrometheusApiResult[]): ProcessDataChart | null {
+function normalizeTrafficData(data: PrometheusApiResult[], timeInterval: string): ProcessDataChart | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
   const axisValues = normalizeMetric(data);
   if (!axisValues) {
@@ -113,15 +116,40 @@ function normalizeTrafficData(data: PrometheusApiResult[]): ProcessDataChart | n
 
   const timeSeriesDataReceived = axisValues[0];
   const timeSeriesDataSent = axisValues[1];
-  const totalDataReceived = timeSeriesDataReceived[timeSeriesDataReceived.length - 1].y - timeSeriesDataReceived[1].y;
-  const totalDataSent = timeSeriesDataSent[timeSeriesDataSent.length - 1].y - timeSeriesDataSent[1].y;
+
+  const fistTimeSample =
+    timeSeriesDataSent[0].x - (new Date().getTime() / 1000 - startDateOffsetMap[timeInterval] || 0);
+
+  const currentTrafficReceived = timeSeriesDataReceived[timeSeriesDataReceived.length - 1].y;
+  const currentTrafficSent = timeSeriesDataSent[timeSeriesDataSent.length - 1].y;
+
+  const maxTrafficReceived = Math.max(...timeSeriesDataReceived.map(({ y }) => y));
+  const maxTrafficSent = Math.max(...timeSeriesDataSent.map(({ y }) => y));
+
+  // total data for bytes
+  const totalDataReceived = currentTrafficReceived - (fistTimeSample > 0 ? 0 : timeSeriesDataReceived[1].y);
+  const totalDataSent = currentTrafficSent - (fistTimeSample > 0 ? 0 : timeSeriesDataSent[1].y);
+
+  // total data for byte rate. Used by "per second" time series
+  const sumDataReceived = timeSeriesDataReceived.reduce((acc, { y }) => acc + y, 0);
+  const sumDataSent = timeSeriesDataSent.reduce((acc, { y }) => acc + y, 0);
+
+  const avgTrafficReceived = sumDataReceived / timeSeriesDataReceived.length;
+  const avgTrafficSent = sumDataSent / timeSeriesDataReceived.length;
 
   return {
     timeSeriesDataReceived,
     timeSeriesDataSent,
     totalDataReceived,
     totalDataSent,
-    totalData: totalDataSent + totalDataReceived
+    avgTrafficSent,
+    avgTrafficReceived,
+    maxTrafficSent,
+    maxTrafficReceived,
+    currentTrafficSent,
+    currentTrafficReceived,
+    sumDataSent,
+    sumDataReceived
   };
 }
 

@@ -29,7 +29,14 @@ export interface ProcessDataChart {
   timeSeriesDataSent: ProcessAxisDataChart[];
   totalDataReceived: number;
   totalDataSent: number;
-  totalData: number;
+  avgTrafficSent: number;
+  avgTrafficReceived: number;
+  maxTrafficSent: number;
+  maxTrafficReceived: number;
+  currentTrafficSent: number;
+  currentTrafficReceived: number;
+  sumDataSent: number;
+  sumDataReceived: number;
 }
 
 export interface ProcessesBytesChartProps {
@@ -76,4 +83,17 @@ export interface MetricsFilters {
   timeInterval: ValidWindowTimeValues;
   processIdDest?: string;
   protocol?: AvailableProtocols;
+}
+
+interface FilterOptionsProp {
+  protocols?: { disabled?: boolean; name?: string };
+  timeIntervals?: { disabled?: boolean };
+  destinationProcesses?: { disabled?: boolean; name?: string };
+}
+
+export interface MetricsProps {
+  parent: { id: string; name: string };
+  processesConnected: { destinationName: string }[];
+  protocolDefault?: AvailableProtocols;
+  disableFilter?: FilterOptionsProp;
 }

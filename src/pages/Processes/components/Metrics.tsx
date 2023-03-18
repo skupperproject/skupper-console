@@ -2,45 +2,51 @@ import React, { FC, useMemo, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import {
+  Bullseye,
   Card,
+  CardBody,
   Grid,
   GridItem,
+  Icon,
   Select,
   SelectOption,
   SelectOptionObject,
+  Spinner,
+  Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem
 } from '@patternfly/react-core';
-import { ClockIcon, ClusterIcon } from '@patternfly/react-icons';
+import { CircleIcon, ClockIcon, ClusterIcon } from '@patternfly/react-icons';
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
-import { formatBytes } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatTime';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatLatency } from '@core/utils/formatLatency';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import LoadingPage from '@pages/shared/Loading';
-import { timeIntervalMap } from 'API/Prometheus.constant';
+import { defaultTimeInterval, timeIntervalMap } from 'API/Prometheus.constant';
 import { ValidWindowTimeValues } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
-import { FlowAggregatesResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import ChartProcessDataTrafficDistribution from './ChartProcessDataTrafficDistribution';
 import ChartProcessDataTrafficSeries from './ChartProcessDataTrafficSeries';
-import MetricCard from './MetricCard';
 import { ProcessesLabels } from '../Processes.enum';
-import { ProcessMetrics } from '../Processes.interfaces';
+import { MetricsProps, ProcessMetrics } from '../Processes.interfaces';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
-const defaultTimeInterval = timeIntervalMap.FifteenMinutes;
+const filterOptionsDefault = {
+  protocols: { disabled: false, name: ProcessesLabels.FilterProtocolsDefault },
+  timeIntervals: { disabled: false },
+  destinationProcesses: { disabled: false, name: ProcessesLabels.FilterProcessesConnectedDefault }
+};
 
-const Metrics: FC<{
-  process: ProcessResponse;
-  processesConnected: FlowAggregatesResponse[];
-}> = function ({ process, processesConnected }) {
+const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protocolDefault, disableFilter }) {
   const navigate = useNavigate();
+
+  const filterOptions = { ...filterOptionsDefault, ...disableFilter };
 
   const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
   const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
@@ -48,10 +54,10 @@ const Metrics: FC<{
 
   const [destinationProcess, setDestinationProcess] = useState<string>();
   const [timeInterval, setTimeInterval] = useState<ValidWindowTimeValues>(defaultTimeInterval);
-  const [protocol, setProtocol] = useState<AvailableProtocols | undefined>();
+  const [protocol, setProtocol] = useState<AvailableProtocols | undefined>(protocolDefault);
 
   // Metrics query
-  const filters = { id: process.name, timeInterval, destinationProcess, protocol };
+  const filters = { id: parent.name, timeInterval, destinationProcess, protocol };
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
     [QueriesProcesses.GetProcessMetrics, filters],
     () => ProcessesController.getMetrics(filters),
@@ -127,15 +133,15 @@ const Metrics: FC<{
 
   // process connected select options
   const optionsProcessConnectedWithDefault = useMemo(() => {
-    const processConnectedOptions = processesConnected.map((option, index) => (
-      <SelectOption key={index + 1} value={option.destinationName} />
+    const processConnectedOptions = processesConnected.map(({ destinationName }, index) => (
+      <SelectOption key={index + 1} value={destinationName} />
     ));
 
     return [
-      <SelectOption key={0} value={ProcessesLabels.FilterProcessesConnectedDefault} isPlaceholder />,
+      <SelectOption key={0} value={filterOptions.destinationProcesses.name} isPlaceholder />,
       ...processConnectedOptions
     ];
-  }, [processesConnected]);
+  }, [filterOptions.destinationProcesses.name, processesConnected]);
 
   // protocol select options
   const optionsProtocolsWithDefault = useMemo(() => {
@@ -143,24 +149,20 @@ const Metrics: FC<{
       (option, index) => <SelectOption key={index + 1} value={option} />
     );
 
-    return [<SelectOption key={0} value={ProcessesLabels.FilterProtocolsDefault} isPlaceholder />, ...protocolOptions];
-  }, []);
+    return [<SelectOption key={0} value={filterOptions.protocols.name} isPlaceholder />, ...protocolOptions];
+  }, [filterOptions.protocols.name]);
 
-  // time interval  select options
+  // time interval select options
   const optionsTimeIntervalWithDefault = useMemo(
     () => Object.values(timeIntervalMap).map((interval, index) => <SelectOption key={index + 1} value={interval} />),
     []
   );
 
-  if (isLoadingMetrics) {
-    return <LoadingPage />;
-  }
-
   return (
-    <Grid>
+    <Grid hasGutter>
       {/* Metrics Filters */}
       <GridItem>
-        <Card>
+        <Card isFullHeight isRounded>
           <Toolbar>
             <ToolbarContent>
               <ToolbarItem spacer={{ default: 'spacerSm' }} alignment={{ default: 'alignRight' }}>
@@ -170,6 +172,7 @@ const Metrics: FC<{
                   onToggle={handleToggleDestinationProcessMenu}
                   toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
                   selections={destinationProcess}
+                  isDisabled={filterOptions.destinationProcesses.disabled}
                 >
                   {optionsProcessConnectedWithDefault}
                 </Select>
@@ -181,13 +184,14 @@ const Metrics: FC<{
                   onToggle={handleToggleTimeIntervalMenu}
                   toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
                   selections={timeInterval}
+                  isDisabled={filterOptions.timeIntervals.disabled}
                 >
                   {optionsTimeIntervalWithDefault}
                 </Select>
               </ToolbarItem>
-
               <ToolbarItem>
                 <Select
+                  isDisabled={filterOptions.protocols.disabled}
                   isOpen={isOpenProtocolInterval}
                   onSelect={handleSelectProtocolMenu}
                   onToggle={handleToggleProtocolMenu}
@@ -201,13 +205,26 @@ const Metrics: FC<{
         </Card>
       </GridItem>
 
-      {!metrics && (
-        <Card isFullHeight>
-          <EmptyData message={ProcessesLabels.NoMetricFoundMessage} />
+      {/* loader */}
+      {isLoadingMetrics && (
+        <Card style={{ minHeight: '500px' }}>
+          <Bullseye>
+            <Spinner />
+          </Bullseye>
         </Card>
       )}
+
+      {/* data not found card */}
+      {!metrics && !isLoadingMetrics && (
+        <Card isFullHeight>
+          <CardBody>
+            <EmptyData message={ProcessesLabels.NoMetricFoundMessage} />
+          </CardBody>
+        </Card>
+      )}
+
       {/* Chart data traffic time series card */}
-      {!!metrics && (
+      {!!metrics && !isLoadingMetrics && (
         <>
           <GridItem span={8} rowSpan={2}>
             <Card isFullHeight>
@@ -227,23 +244,64 @@ const Metrics: FC<{
 
           {/* Total Traffic card */}
           <GridItem span={4}>
-            {!metrics.trafficDataSeries && <EmptyData />}
-            {!!metrics.trafficDataSeries && (
-              <MetricCard
-                title={ProcessesLabels.TrafficTotal}
-                value={formatBytes(metrics.trafficDataSeries.totalData)}
-                bgColor={'--pf-global--palette--cyan-200'}
-              />
+            {!metrics.trafficDataSeriesPerSecond && metrics.trafficDataSeries && <EmptyData />}
+            {!!metrics.trafficDataSeriesPerSecond && metrics.trafficDataSeries && (
+              <Card>
+                <TableComposable borders={false}>
+                  <Thead noWrap>
+                    <Tr>
+                      <Th />
+                      <Th>{ProcessesLabels.ByteRateMaxCol}</Th>
+                      <Th>{ProcessesLabels.ByteRateAvgCol}</Th>
+                      <Th>{ProcessesLabels.ByteRateCurrentCol}</Th>
+                      <Th>{ProcessesLabels.ByteRateTotalCol}</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>
+                        <Icon size="sm">
+                          <CircleIcon color={`var(--pf-chart-theme--cyan--ColorScale--100, #009596)`} />
+                        </Icon>{' '}
+                        {ProcessesLabels.TrafficReceived.toLocaleLowerCase()}
+                      </Td>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficReceived)}</Th>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficReceived)}</Th>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.currentTrafficReceived)}</Th>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.sumDataReceived)}</Th>
+                    </Tr>
+                    <Tr>
+                      <Td>
+                        <Icon size="sm">
+                          <CircleIcon color={`var(--pf-chart-theme--cyan--ColorScale--200, #a2d9d9)`} />
+                        </Icon>{' '}
+                        {ProcessesLabels.TrafficSent.toLocaleLowerCase()}
+                      </Td>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficSent)}</Th>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficSent)}</Th>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.currentTrafficSent)}</Th>
+                      <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.sumDataSent)}</Th>
+                    </Tr>
+                  </Tbody>
+                </TableComposable>
+              </Card>
             )}
           </GridItem>
 
-          {/* Chart distribution data traffic card*/}
+          {/* Chart pie distribution data traffic card and total bytes */}
           <GridItem span={4}>
             <Card isFullHeight>
-              {!getProcessTrafficChartData(metrics) && <EmptyData />}
-              {!!getProcessTrafficChartData(metrics) && (
+              <>
+                {!!metrics.trafficDataSeries &&
+                  !!(metrics.trafficDataSeries.totalDataSent + metrics.trafficDataSeries.totalDataReceived) && (
+                    <Title headingLevel="h2" className="pf-u-text-align-center pf-u-p-md">
+                      {formatBytes(
+                        metrics.trafficDataSeries.totalDataSent + metrics.trafficDataSeries.totalDataReceived
+                      )}
+                    </Title>
+                  )}
                 <ChartProcessDataTrafficDistribution data={getProcessTrafficChartData(metrics)} />
-              )}
+              </>
             </Card>
           </GridItem>
 

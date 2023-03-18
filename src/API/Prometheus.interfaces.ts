@@ -1,4 +1,5 @@
 export type ValidWindowTime = {
+  FiveMinutes: '5m';
   FifteenMinutes: '15m';
   ThirtyMinutes: '30m';
   OneHours: '1h';

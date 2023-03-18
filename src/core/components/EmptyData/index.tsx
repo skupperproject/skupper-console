@@ -1,18 +1,25 @@
 import React, { FC } from 'react';
 
-import { TextContent, Text, TextVariants, Bullseye } from '@patternfly/react-core';
+import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title } from '@patternfly/react-core';
 
 import { EmptyDataLabels } from './EmptyData.enum';
-import { EmptyDataProps } from './EmptyData.interfaces';
 
-const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Default }) {
+interface EmptyDataProps {
+  message?: string;
+  icon?: React.ComponentType;
+}
+
+const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Default, icon }) {
   return (
     <Bullseye>
-      <TextContent>
-        <Text component={TextVariants.p} className="pf-u-color-400">
-          {message}
-        </Text>
-      </TextContent>
+      <EmptyState variant={EmptyStateVariant.xl}>
+        <EmptyStateBody>
+          {icon && <EmptyStateIcon icon={icon} />}
+          <Title headingLevel="h2" color="var(--pf-u-color-400)">
+            {message}
+          </Title>
+        </EmptyStateBody>
+      </EmptyState>
     </Bullseye>
   );
 };

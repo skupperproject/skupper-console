@@ -5,7 +5,7 @@ export enum ProcessesRoutesPaths {
 export enum ProcessesTableColumns {
   Name = 'Name',
   Site = 'Site',
-  SourceIP = 'Source IP'
+  Component = 'Component'
 }
 
 export enum ProcessesLabels {
@@ -28,8 +28,8 @@ export enum ProcessesLabels {
   TrafficTotal = 'Total',
   TrafficSent = 'Sent',
   TrafficReceived = 'Received',
-  Clients = 'Data received from clients',
-  Servers = 'Data sent to servers',
+  Clients = 'Clients',
+  Servers = 'Servers',
   TcpConnection = 'TCP connections',
   HttpRequests = 'Http requests',
   GoToTopology = 'Go to the network view',
@@ -39,7 +39,11 @@ export enum ProcessesLabels {
   LatencyMetricAvg = 'Avg latency',
   LatencyMetric50quantile = '.5 quantile',
   LatencyMetric90quantile = '.9 quantile',
-  LatencyMetric99quantile = '.99 quantile'
+  LatencyMetric99quantile = '.99 quantile',
+  ByteRateAvgCol = 'avg',
+  ByteRateTotalCol = 'total',
+  ByteRateCurrentCol = 'current',
+  ByteRateMaxCol = 'max'
 }
 
 export enum ProcessPairsColumnsNames {
@@ -47,6 +51,7 @@ export enum ProcessPairsColumnsNames {
   Traffic = 'Data Traffic',
   BytesTx = 'Sent',
   BytesRx = 'Received',
+  Latency = 'Latency',
   AvgLatency = 'Avg  Latency',
   LatencyAvgTx = 'Avg Tx Latency',
   LatencyAvgRx = 'Avg Rx Latency',

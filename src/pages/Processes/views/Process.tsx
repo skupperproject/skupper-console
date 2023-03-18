@@ -26,7 +26,6 @@ import { QueriesProcesses } from '../services/services.enum';
 const Process = function () {
   const navigate = useNavigate();
   const { id: processId } = useParams() as { id: string };
-  const metricsEnabled = isPrometheusActive();
 
   const { data: process, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcesses.GetProcess, processId],
@@ -130,18 +129,13 @@ const Process = function () {
           <ProcessDescription process={process} title={ProcessesLabels.Details} />
         </GridItem>
 
-        {/* Process Metrics*/}
-        {metricsEnabled && (
-          <Metrics process={process} processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]} />
-        )}
-
         {/* Table server processes*/}
         <GridItem span={6}>
           <SkTable
             title={ProcessesLabels.Servers}
             columns={processesConnectedColumns}
             rows={processesPairsTxData}
-            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
             components={{
               ...ProcessesConnectedComponentsTable,
               viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
@@ -172,6 +166,16 @@ const Process = function () {
             }}
           />
         </GridItem>
+
+        {/* Process Metrics*/}
+        {isPrometheusActive() && (
+          <GridItem>
+            <Metrics
+              parent={{ id: processId, name: process.name }}
+              processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
+            />
+          </GridItem>
+        )}
       </Grid>
     </TransitionPage>
   );

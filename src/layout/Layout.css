@@ -5,7 +5,7 @@
 
 .pf-c-page__header {
   z-index: 1 !important;
-  box-shadow: 0 3px 3px var(--pf-global--palette--black-700);
+  box-shadow: 0 2px 2px var(--pf-global--palette--black-700);
   background: linear-gradient(
     to bottom,
     rgb(36, 45, 57) 11.2%,
@@ -15,7 +15,7 @@
 }
 
 .pf-c-page__sidebar {
-  box-shadow: 3px 3px 3px var(--pf-global--palette--black-600) !important;
+  box-shadow: 2px 2px 2px var(--pf-global--palette--black-600) !important;
   background: linear-gradient(
     to top,
     rgb(36, 45, 57) 11.2%,

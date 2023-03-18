@@ -2,7 +2,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatTime';
+import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
 import { FlowAggregatesResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
@@ -28,8 +28,8 @@ export const ProcessesConnectedComponentsTable = {
     }),
   TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
     formatBytes(props.data.sourceOctets + props.data.destinationOctets),
-  AvgLatency: (props: LinkCellProps<FlowAggregatesResponse>) =>
-    formatBytes((props.data.sourceAverageLatency + props.data.destinationAverageLatency) / 2)
+  Latency: (props: LinkCellProps<FlowAggregatesResponse>) =>
+    formatLatency(props.data.sourceAverageLatency + props.data.destinationAverageLatency)
 };
 
 export const processesTableColumns = [
@@ -37,6 +37,11 @@ export const processesTableColumns = [
     name: ProcessesTableColumns.Name,
     prop: 'name' as keyof ProcessResponse,
     component: 'linkCell'
+  },
+  {
+    name: ProcessesTableColumns.Component,
+    prop: 'groupName' as keyof ProcessResponse,
+    component: 'linkComponentCell'
   },
   {
     name: ProcessesTableColumns.Site,
@@ -49,7 +54,6 @@ export const processesConnectedColumns: SKColumn<FlowAggregatesResponse>[] = [
   {
     name: ProcessPairsColumnsNames.Process,
     prop: 'destinationName' as keyof FlowAggregatesResponse,
-    width: 30,
     component: 'ProcessLinkCell'
   },
   {
@@ -57,17 +61,19 @@ export const processesConnectedColumns: SKColumn<FlowAggregatesResponse>[] = [
     component: 'TotalBytesExchanged'
   },
   {
-    name: ProcessPairsColumnsNames.AvgLatency,
-    component: 'AvgLatency'
+    name: ProcessPairsColumnsNames.Latency,
+    component: 'Latency'
   },
   {
     name: ProcessPairsColumnsNames.Flows,
     prop: 'recordCount' as keyof FlowAggregatesResponse,
-    columnDescription: 'number of connections or requests'
+    columnDescription: 'number of connections or requests',
+    width: 15
   },
   {
     name: '',
-    component: 'viewDetailsLinkCell'
+    component: 'viewDetailsLinkCell',
+    width: 15
   }
 ];
 
