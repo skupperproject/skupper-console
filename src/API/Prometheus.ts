@@ -1,11 +1,6 @@
 import { axiosFetch } from './axiosMiddleware';
 import { gePrometheusQueryPATH, queries, rangeStepIntervalMap, startDateOffsetMap } from './Prometheus.constant';
-import {
-  PrometheusApiResult,
-  PrometheusApiResultValue,
-  PrometheusQueryParams,
-  ValidWindowTimeValues
-} from './Prometheus.interfaces';
+import { PrometheusApiResult, PrometheusQueryParams, ValidWindowTimeValues } from './Prometheus.interfaces';
 
 export const PrometheusApi = {
   fetchTotalRequestByProcess: async ({
@@ -13,7 +8,7 @@ export const PrometheusApi = {
     range,
     processIdDest,
     isRate = false
-  }: PrometheusQueryParams): Promise<PrometheusApiResultValue> => {
+  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `sourceProcess="${id}"`;
 
@@ -28,15 +23,15 @@ export const PrometheusApi = {
     } = await axiosFetch(gePrometheusQueryPATH(), {
       params: {
         query: isRate
-          ? queries.getTotalRequestPerSecondByProcess(param, range)
+          ? queries.getTotalRequestPerSecondByProcess(param, '5m')
           : queries.getTotalRequestsByProcess(param),
         start,
         end,
-        step: rangeStepIntervalMap[range]
+        step: isRate ? rangeStepIntervalMap[range] : range
       }
     });
 
-    return result.length ? result[0].values : [];
+    return result;
   },
 
   fetchLatencyByProcess: async ({
@@ -63,8 +58,8 @@ export const PrometheusApi = {
     } = await axiosFetch(gePrometheusQueryPATH(), {
       params: {
         query: quantile
-          ? queries.getLatencyByProcess(param, range, quantile)
-          : queries.getAvgLatencyByProcess(param, range),
+          ? queries.getLatencyIrateByProcess(param, '5m', quantile)
+          : queries.getAvgLatencyIrateByProcess(param, '5m'),
         start,
         end,
         step: rangeStepIntervalMap[range]
@@ -94,11 +89,11 @@ export const PrometheusApi = {
     } = await axiosFetch(gePrometheusQueryPATH(), {
       params: {
         query: isRate
-          ? queries.getResponseStatusCodesPerSecondByProcess(param, range)
+          ? queries.getResponseStatusCodesPerSecondByProcess(param, '5m')
           : queries.getResponseStatusCodesByProcess(param),
         start,
         end,
-        step: rangeStepIntervalMap[range]
+        step: isRate ? rangeStepIntervalMap[range] : range
       }
     });
 
@@ -134,11 +129,11 @@ export const PrometheusApi = {
     } = await axiosFetch(gePrometheusQueryPATH(), {
       params: {
         query: isRate
-          ? queries.getDataTrafficPerSecondByProcess(param1, param2, range)
+          ? queries.getDataTrafficPerSecondByProcess(param1, param2, '5m')
           : queries.getDataTraffic(param1, param2),
         start,
         end,
-        step: rangeStepIntervalMap[range]
+        step: isRate ? rangeStepIntervalMap[range] : range
       }
     });
 
@@ -148,8 +143,10 @@ export const PrometheusApi = {
 };
 
 function getRangeTimestamp(range: ValidWindowTimeValues): { start: number; end: number } {
+  const now = new Date().getTime() / 1000; // convert in second
+
   return {
-    start: new Date().getTime() / 1000 - startDateOffsetMap[range] || 0,
-    end: new Date().getTime() / 1000
+    start: now - startDateOffsetMap[range] || 0,
+    end: now
   };
 }

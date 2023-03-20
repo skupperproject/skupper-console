@@ -18,10 +18,19 @@ export interface ProcessLatenciesChart {
   label: string;
 }
 
+export interface ProcessRequestsChart {
+  data: ProcessAxisDataChart[];
+  label: string;
+  totalRequestInterval: number;
+  avgRequestRateInterval: number;
+}
+
 export interface ProcessMetrics {
   trafficDataSeries: ProcessDataChart | null;
   trafficDataSeriesPerSecond: ProcessDataChart | null;
   latencies: ProcessLatenciesChart[] | null;
+  requestSeries: ProcessRequestsChart[] | null;
+  requestPerSecondSeries: ProcessRequestsChart[] | null;
 }
 
 export interface ProcessDataChart {
