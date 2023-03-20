@@ -43,7 +43,8 @@ const initAllRequestsQueryParamsPaginated = {
 
 const initServersQueryParams = {
   timeRangeStart: 0,
-  limit: DEFAULT_TABLE_PAGE_SIZE
+  limit: DEFAULT_TABLE_PAGE_SIZE,
+  filter: 'endTime.0' // open connections
 };
 
 const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName }) {
@@ -166,7 +167,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
             parent={{ id: serverNames, name: serverNames }}
             processesConnected={serverNameFilters}
             protocolDefault={AvailableProtocols.AllHttp}
-            disableFilter={{
+            filterOptions={{
               protocols: { disabled: true },
               destinationProcesses: { name: FlowPairsLabelsHttp.Servers }
             }}

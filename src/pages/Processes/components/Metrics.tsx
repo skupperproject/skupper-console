@@ -44,7 +44,12 @@ const filterOptionsDefault = {
   destinationProcesses: { disabled: false, name: ProcessesLabels.FilterProcessesConnectedDefault }
 };
 
-const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protocolDefault, disableFilter }) {
+const Metrics: FC<MetricsProps> = function ({
+  parent,
+  processesConnected,
+  protocolDefault,
+  filterOptions: disableFilter
+}) {
   const navigate = useNavigate();
 
   const filterOptions = { ...filterOptionsDefault, ...disableFilter };
@@ -121,7 +126,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
 
   // process connected select options
   const optionsProcessConnectedWithDefault = useMemo(() => {
-    const processConnectedOptions = processesConnected.map(({ destinationName }, index) => (
+    const processConnectedOptions = (processesConnected || []).map(({ destinationName }, index) => (
       <SelectOption key={index + 1} value={destinationName} />
     ));
 
