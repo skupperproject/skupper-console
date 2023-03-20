@@ -11,7 +11,8 @@ import {
   ProcessAxisDataChart,
   ProcessDataChart,
   ProcessLatenciesChart,
-  ProcessMetrics
+  ProcessMetrics,
+  ProcessRequestsChart
 } from '../Processes.interfaces';
 
 const ProcessesController = {
@@ -23,6 +24,11 @@ const ProcessesController = {
       protocol
     };
     try {
+      const requestPerSecondSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess({
+        ...params,
+        isRate: true
+      });
+      const requestSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess(params);
       const trafficDataSeriesResponse = await PrometheusApi.fetchDataTraffic(params);
       const trafficDataSeriesPerSecondResponse = await PrometheusApi.fetchDataTraffic({ ...params, isRate: true });
 
@@ -38,6 +44,8 @@ const ProcessesController = {
 
       const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
       const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse, timeInterval);
+      const requestSeries = normalizeRequests(requestSeriesResponse, id);
+      const requestPerSecondSeries = normalizeRequests(requestPerSecondSeriesResponse, id);
 
       if (!(trafficDataSeries && trafficDataSeriesPerSecond)) {
         return null;
@@ -46,7 +54,9 @@ const ProcessesController = {
       return {
         trafficDataSeries,
         trafficDataSeriesPerSecond,
-        latencies
+        latencies,
+        requestSeries,
+        requestPerSecondSeries
       };
     } catch (e: unknown) {
       throw new Error(e as string);
@@ -79,6 +89,25 @@ interface NormalizeLatenciesProps {
   quantile50latency: PrometheusApiResult[];
   quantile90latency: PrometheusApiResult[];
   quantile99latency: PrometheusApiResult[];
+}
+
+function normalizeRequests(data: PrometheusApiResult[], id: string) {
+  const axisValues = normalizeMetric(data);
+
+  if (!axisValues) {
+    return null;
+  }
+
+  const values = axisValues[0];
+  const totalRequestInterval = values[values.length - 1].y - values[0].y;
+
+  const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
+  const avgRequestRateInterval = Number((sumRequestRateInterval / values.length).toFixed(2));
+
+  const requestsNormalized: ProcessRequestsChart[] = [];
+  requestsNormalized.push({ data: values, label: id, totalRequestInterval, avgRequestRateInterval });
+
+  return requestsNormalized;
 }
 
 function normalizeLatencies({
@@ -133,8 +162,8 @@ function normalizeTrafficData(data: PrometheusApiResult[], timeInterval: string)
   const maxTrafficSent = Math.max(...timeSeriesDataSent.map(({ y }) => y));
 
   // total data for bytes
-  const totalDataReceived = currentTrafficReceived - (fistTimeSample > 0 ? 0 : timeSeriesDataReceived[1].y);
-  const totalDataSent = currentTrafficSent - (fistTimeSample > 0 ? 0 : timeSeriesDataSent[1].y);
+  const totalDataReceived = currentTrafficReceived - (fistTimeSample > 0 ? 0 : timeSeriesDataReceived[0].y);
+  const totalDataSent = currentTrafficSent - (fistTimeSample > 0 ? 0 : timeSeriesDataSent[0].y);
 
   // total data for byte rate. Used by "per second" time series
   const sumDataReceived = timeSeriesDataReceived.reduce((acc, { y }) => acc + y, 0);

@@ -11,7 +11,6 @@ import {
 } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 
-import { formatByteRate } from '@core/utils/formatBytes';
 import { formatChartDate } from '@core/utils/formatChartDate';
 
 import { ChartProcessDataTrafficSeriesProps, ProcessAxisDataChart } from '../Processes.interfaces';
@@ -25,7 +24,7 @@ const CHART_PADDING = {
 
 const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = function ({
   data,
-  formatY = formatByteRate,
+  formatY = (y: number) => y,
   formatX = (timestamp: number, start: number) => formatChartDate(timestamp, start),
   axisYLabel,
   legendLabels = [],
@@ -90,6 +89,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
             tickLabels: { fontSize: 10 }
           }}
           tickFormat={(tick) => tick && formatX(tick, startDate)}
+          showGrid
         />
         <ChartAxis
           label={axisYLabel}
@@ -100,6 +100,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
             axisLabel: { fontSize: 15, padding: 90 }
           }}
           tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
+          showGrid
         />
         <ChartGroup>
           {data.map((row, index: number) => (

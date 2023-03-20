@@ -30,18 +30,17 @@ export const startDateOffsetMap: Record<string, number> = {
 export const defaultTimeInterval = timeIntervalMap.FiveMinutes;
 
 // Bind the Time range selected to display prometheus metrics  and Time interval before record a new sample
-const multiplier = 1;
 export const rangeStepIntervalMap: Record<string, string> = {
-  [timeIntervalMap.FiveMinutes]: `${1 * multiplier}s`,
-  [timeIntervalMap.FifteenMinutes]: `${3 * multiplier}s`,
-  [timeIntervalMap.ThirtyMinutes]: `${7 * multiplier}s`,
-  [timeIntervalMap.OneHours]: `${14 * multiplier}s`,
-  [timeIntervalMap.TwoHours]: `${28 * multiplier}s`,
-  [timeIntervalMap.SixHours]: `${86 * multiplier}s`,
-  [timeIntervalMap.TwelveHours]: `${172 * multiplier}s`,
-  [timeIntervalMap.OneDay]: `${345 * multiplier}s`,
-  [timeIntervalMap.OneWeek]: `${2419 * multiplier}s`,
-  [timeIntervalMap.TwoWeeks]: `${4838 * multiplier}s`
+  [timeIntervalMap.FiveMinutes]: `15s`,
+  [timeIntervalMap.FifteenMinutes]: `15s`,
+  [timeIntervalMap.ThirtyMinutes]: `15s`,
+  [timeIntervalMap.OneHours]: `15s`,
+  [timeIntervalMap.TwoHours]: `30s`,
+  [timeIntervalMap.SixHours]: `1m`,
+  [timeIntervalMap.TwelveHours]: `1m`,
+  [timeIntervalMap.OneDay]: `5m`,
+  [timeIntervalMap.OneWeek]: `10m`,
+  [timeIntervalMap.TwoWeeks]: `20m`
 };
 
 let PROMETHEUS_PATH: string | undefined = undefined;
@@ -69,11 +68,11 @@ export const queries = {
   },
 
   // latency queries
-  getLatencyByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
-    return `histogram_quantile(${quantile},sum(irate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
+  getLatencyIrateByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
+    return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
-  getAvgLatencyByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum(irate(flow_latency_microseconds_sum{${param}}[${range}])/irate(flow_latency_microseconds_count{${param}}[${range}]))`;
+  getAvgLatencyIrateByProcess(param: string, range: ValidWindowTimeValues) {
+    return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
 
   // data transfer queries
@@ -81,9 +80,6 @@ export const queries = {
     return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
   },
   getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
-    return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
-  },
-  getMin(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
-    return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
+    return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]) or rate(octets_total{${paramDest}}[${range}]))`;
   }
 };
