@@ -53,12 +53,12 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
   const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
   const [isOpenProtocolInterval, setIsOpenProtocolIntervalMenu] = useState<boolean>(false);
 
-  const [destinationProcess, setDestinationProcess] = useState<string>();
+  const [processIdDest, setProcessIdDest] = useState<string>();
   const [timeInterval, setTimeInterval] = useState<ValidWindowTimeValues>(defaultTimeInterval);
   const [protocol, setProtocol] = useState<AvailableProtocols | undefined>(protocolDefault);
 
   // Metrics query
-  const filters = { id: parent.name, timeInterval, destinationProcess, protocol };
+  const filters = { id: parent.name, timeInterval, processIdDest, protocol };
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
     [QueriesProcesses.GetProcessMetrics, filters],
     () => ProcessesController.getMetrics(filters),
@@ -81,7 +81,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
   ) {
     const id = isPlaceholder ? undefined : (selection as string);
 
-    setDestinationProcess(id);
+    setProcessIdDest(id);
     setIsOpenDestinationProcessMenu(false);
   }
 
@@ -159,7 +159,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                   onSelect={handleSelectDestinationProcessMenu}
                   onToggle={handleToggleDestinationProcessMenu}
                   toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
-                  selections={destinationProcess}
+                  selections={processIdDest}
                   isDisabled={filterOptions.destinationProcesses.disabled}
                 >
                   {optionsProcessConnectedWithDefault}
