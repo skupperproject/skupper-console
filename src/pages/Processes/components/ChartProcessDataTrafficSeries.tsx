@@ -19,7 +19,7 @@ const CHART_PADDING = {
   bottom: 60,
   left: 120,
   right: 50, // Adjusted to accommodate legend
-  top: 50
+  top: 20
 };
 
 const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = function ({
@@ -60,7 +60,6 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
         legendData={legendData}
         legendOrientation="horizontal"
         legendPosition="bottom"
-        height={500}
         width={width}
         themeColor={ChartThemeColor.cyan}
         padding={CHART_PADDING}
