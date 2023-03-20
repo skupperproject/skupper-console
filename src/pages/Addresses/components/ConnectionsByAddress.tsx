@@ -1,13 +1,10 @@
 import React, { FC, useCallback, useState } from 'react';
 
-import { ChartPie, ChartThemeColor } from '@patternfly/react-charts';
 import {
   Breadcrumb,
   BreadcrumbHeading,
   BreadcrumbItem,
   Card,
-  CardBody,
-  CardTitle,
   Flex,
   Grid,
   GridItem,
@@ -21,27 +18,23 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { setMinutesAgo } from '@core/utils/setMinutesAgo';
+import Metrics from '@pages/Processes/components/Metrics';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
+import { AvailableProtocols } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { ConnectionsByAddressColumns } from '../Addresses.constants';
-import { FlowPairsLabelsTcp, AddressesRoutesPathLabel, AddressesRoutesPaths } from '../Addresses.enum';
+import { FlowPairsLabelsTcp, AddressesRoutesPathLabel, AddressesRoutesPaths, FlowPairsLabel } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
-
-const CONNECTION_HEIGHT_CHART = 350;
-const MINUTES_AGO = 5;
-const TOP_CLIENT_MAX = 10;
 
 const initConnectionsQueryParamsPaginated = {
   offset: 0,
@@ -49,14 +42,9 @@ const initConnectionsQueryParamsPaginated = {
   filter: 'endTime.0' // open connections
 };
 
-const initConnectionsTimeLimitedQueryParams = {
-  timeRangeStart: setMinutesAgo(new Date().getTime(), MINUTES_AGO) * 1000
-};
-
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName }) {
   const navigate = useNavigate();
 
-  const [refetchInterval, setRefetchInterval] = useState(UPDATE_INTERVAL);
   const [addressView, setAddressView] = useState<number>(0);
   const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
     initConnectionsQueryParamsPaginated
@@ -67,16 +55,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, connectionsQueryParamsPaginated) : undefined),
     {
       keepPreviousData: true,
-      refetchInterval,
-      onError: handleError
-    }
-  );
-
-  const { data: connectionsFromLastMinutesData, isLoading: isLoadingConnectionsFromLastMinutes } = useQuery(
-    ['QueriesAddresses.GetFlowPairsByAddressForChart', addressId],
-    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, initConnectionsTimeLimitedQueryParams) : undefined),
-    {
-      refetchInterval,
       onError: handleError
     }
   );
@@ -85,7 +63,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     [QueriesAddresses.GetProcessesByAddress, addressId],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, connectionsQueryParamsPaginated) : null),
     {
-      refetchInterval,
       onError: handleError,
       keepPreviousData: true
     }
@@ -94,7 +71,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-    setRefetchInterval(0);
     navigate(route);
   }
 
@@ -110,68 +86,11 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const activeConnections = activeConnectionsData?.results.filter(({ endTime }) => !endTime) || [];
   const activeConnectionsCount = activeConnectionsData?.totalCount;
 
-  const connectionsFromLastMinutes = connectionsFromLastMinutesData?.results.filter(({ endTime }) => !endTime) || [];
-
   const servers = serversByAddressData?.results || [];
   const serversRowsCount = serversByAddressData?.totalCount;
 
-  const topClientsTxMap = connectionsFromLastMinutes.reduce(
-    (acc, { counterFlow: { process, processName, octets } }) => {
-      acc[process] = {
-        name: processName,
-        value: (acc[process]?.value || 0) + octets
-      };
-
-      return acc;
-    },
-    {} as Record<string, { name: string; value: number }>
-  );
-
-  const topClientsTx = Object.values(topClientsTxMap)
-    .sort((a, b) => b.value - a.value)
-    .slice(0, TOP_CLIENT_MAX - 1);
-
-  const topClientsRxMap = connectionsFromLastMinutes.reduce(
-    (acc, { counterFlow: { processName, process }, forwardFlow: { octets } }) => {
-      acc[process] = {
-        name: processName,
-        value: (acc[process]?.value || 0) + octets
-      };
-
-      return acc;
-    },
-    {} as Record<string, { name: string; value: number }>
-  );
-  const topClientsRx = Object.values(topClientsRxMap)
-    .sort((a, b) => b.value - a.value)
-    .slice(0, TOP_CLIENT_MAX - 1);
-
-  const totalBytesSent = servers.reduce((acc, { octetsSent }) => acc + octetsSent, 0);
-  const totalBytesReceived = servers.reduce((acc, { octetsReceived }) => acc + octetsReceived, 0);
-
-  let count = 0;
-  const avgSpeedSent = Math.round(
-    servers.reduce((acc, { octetSentRate }) => {
-      if (octetSentRate) {
-        count += 1;
-        acc = (acc + octetSentRate) / count;
-      }
-
-      return acc;
-    }, 0)
-  );
-
-  count = 0;
-  const avgSpeedReceived = Math.round(
-    servers.reduce((acc, { octetReceivedRate }) => {
-      if (octetReceivedRate) {
-        count += 1;
-        acc = (acc + octetReceivedRate) / count;
-      }
-
-      return acc;
-    }, 0)
-  );
+  const serverNameFilters = Object.values(servers).map(({ name }) => ({ destinationName: name }));
+  const serverNames = servers.map(({ name }) => name).join('|');
 
   return (
     <>
@@ -191,104 +110,15 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
             <TextContent>
               <Text component={TextVariants.h1}>{addressName}</Text>
             </TextContent>
-            {!!connectionsFromLastMinutes?.length && (
-              <Link
-                to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
-              >
-                {'( Go to Network view )'}
-              </Link>
-            )}
+            <Link
+              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+            >
+              {FlowPairsLabel.GoToTopology}
+            </Link>
           </Flex>
         </GridItem>
 
-        <GridItem span={3}>
-          <Card isFullHeight>
-            <CardTitle>{FlowPairsLabelsTcp.TrafficRx}</CardTitle>
-            <CardBody>{formatBytes(totalBytesReceived)}</CardBody>
-          </Card>
-        </GridItem>
-
-        <GridItem span={3}>
-          <Card isFullHeight>
-            <CardTitle>{FlowPairsLabelsTcp.TrafficTx}</CardTitle>
-            <CardBody>{formatBytes(totalBytesSent)}</CardBody>
-          </Card>
-        </GridItem>
-
-        <GridItem span={3}>
-          <Card isFullHeight>
-            <CardTitle>{FlowPairsLabelsTcp.AvgByteRateRx}</CardTitle>
-            <CardBody>{formatByteRate(avgSpeedReceived)}</CardBody>
-          </Card>
-        </GridItem>
-
-        <GridItem span={3}>
-          <Card isFullHeight>
-            <CardTitle>{FlowPairsLabelsTcp.AvgByteRateTx}</CardTitle>
-            <CardBody>{formatByteRate(avgSpeedSent)}</CardBody>
-          </Card>
-        </GridItem>
-
-        <GridItem span={6}>
-          <Card style={{ height: `${CONNECTION_HEIGHT_CHART}px` }}>
-            <CardTitle>{FlowPairsLabelsTcp.TopClientTxTraffic}</CardTitle>
-            {topClientsTx?.length ? (
-              <ChartPie
-                data={topClientsTx?.map(({ name, value }) => ({
-                  x: name,
-                  y: formatBytes(value)
-                }))}
-                labels={topClientsTx?.map(({ name, value }) => `${name}: ${formatBytes(value)}`)}
-                legendData={topClientsTx?.map(({ name, value }) => ({
-                  name: `${name}: ${formatBytes(value)}`
-                }))}
-                legendOrientation="vertical"
-                legendPosition="right"
-                padding={{
-                  bottom: 100,
-                  left: -300,
-                  right: 100,
-                  top: 0
-                }}
-                themeColor={ChartThemeColor.blue}
-                height={CONNECTION_HEIGHT_CHART}
-              />
-            ) : (
-              <EmptyData />
-            )}
-          </Card>
-        </GridItem>
-
-        <GridItem span={6}>
-          <Card style={{ height: `${CONNECTION_HEIGHT_CHART}px` }}>
-            <CardTitle>{FlowPairsLabelsTcp.TopClientRxTraffic}</CardTitle>
-            {topClientsRx?.length ? (
-              <ChartPie
-                data={topClientsRx?.map(({ name, value }) => ({
-                  x: name,
-                  y: formatBytes(value)
-                }))}
-                labels={topClientsRx?.map(({ name, value }) => `${name}: ${formatBytes(value)}`)}
-                legendData={topClientsRx?.map(({ name, value }) => ({
-                  name: `${name}: ${formatBytes(value)}`
-                }))}
-                legendOrientation="vertical"
-                legendPosition="right"
-                padding={{
-                  bottom: 100,
-                  left: -300,
-                  right: 100,
-                  top: 0
-                }}
-                themeColor={ChartThemeColor.green}
-                height={CONNECTION_HEIGHT_CHART}
-              />
-            ) : (
-              <EmptyData />
-            )}
-          </Card>
-        </GridItem>
-
+        {/* connection table*/}
         <GridItem>
           <Card isRounded className="pf-u-pt-md">
             <Tabs activeKey={addressView} onSelect={handleTabClick}>
@@ -310,10 +140,23 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
             </Tabs>
           </Card>
         </GridItem>
+
+        {/* Process Metrics*/}
+        {isPrometheusActive() && (
+          <GridItem>
+            <Metrics
+              parent={{ id: serverNames, name: serverNames }}
+              processesConnected={serverNameFilters}
+              protocolDefault={AvailableProtocols.Tcp}
+              disableFilter={{
+                protocols: { disabled: true },
+                destinationProcesses: { name: FlowPairsLabelsTcp.Servers }
+              }}
+            />
+          </GridItem>
+        )}
       </Grid>
-      {(isLoadingServersByAddress || isLoadingActiveConnections || isLoadingConnectionsFromLastMinutes) && (
-        <LoadingPage isFLoating={true} />
-      )}
+      {(isLoadingServersByAddress || isLoadingActiveConnections) && <LoadingPage isFLoating={true} />}
     </>
   );
 };

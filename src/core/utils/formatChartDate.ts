@@ -1,6 +1,6 @@
 import { startDateOffsetMap, timeIntervalMap } from 'API/Prometheus.constant';
 
-export function formatDate(timestamp: number, start: number) {
+export function formatChartDate(timestamp: number, start: number) {
   // one week ago
   if (start * 1000 <= Date.now() - startDateOffsetMap[timeIntervalMap.OneWeek] * 1000) {
     return getDayFromTimestamp(timestamp);

@@ -1,20 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import {
-  Bullseye,
-  Card,
-  CardTitle,
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateVariant,
-  Flex,
-  Pagination,
-  Text,
-  TextContent,
-  TextVariants,
-  Title,
-  Tooltip
-} from '@patternfly/react-core';
+import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
@@ -27,6 +13,7 @@ import { SortDirection } from 'API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { SKTableProps } from './SkTable.interface';
+import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
 const NO_RESULT_FOUND_LABEL = 'No results found';
@@ -256,41 +243,45 @@ const SkTable = function <T>({
           {skRows.length === 0 && (
             <Tr>
               <Td colSpan={12}>
-                <Bullseye>
-                  <EmptyState variant={EmptyStateVariant.small}>
-                    <EmptyStateIcon icon={SearchIcon} />
-                    <Title headingLevel="h2" size="lg">
-                      {NO_RESULT_FOUND_LABEL}
-                    </Title>
-                  </EmptyState>
-                </Bullseye>
+                <EmptyData message={NO_RESULT_FOUND_LABEL} icon={SearchIcon} />
               </Td>
             </Tr>
           )}
           {!(skRows.length === 0) &&
-            skRows.map((row) => (
-              <Tr key={row.id}>
-                {row.columns.map(({ data, value, component, callback, format, width }) => {
-                  const Component = components && component && components[component];
+            skRows.map((row, rowIndex) => {
+              const isOddRow = (rowIndex + 1) % 2;
+              const customStyle = {
+                backgroundColor: 'var(--pf-global--palette--blue-50)'
+              };
 
-                  return Component ? (
-                    <Td
-                      width={width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined}
-                      key={generateUUID()}
-                    >
-                      <Component data={data} value={value} callback={callback} format={format && format(value)} />
-                    </Td>
-                  ) : (
-                    <Td
-                      width={width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined}
-                      key={generateUUID()}
-                    >
-                      <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
-                    </Td>
-                  );
-                })}
-              </Tr>
-            ))}
+              return (
+                <Tr key={row.id} style={isOddRow ? customStyle : {}}>
+                  {row.columns.map(({ data, value, component, callback, format, width }) => {
+                    const Component = components && component && components[component];
+
+                    return Component ? (
+                      <Td
+                        width={
+                          width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined
+                        }
+                        key={generateUUID()}
+                      >
+                        <Component data={data} value={value} callback={callback} format={format && format(value)} />
+                      </Td>
+                    ) : (
+                      <Td
+                        width={
+                          width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined
+                        }
+                        key={generateUUID()}
+                      >
+                        <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
+                      </Td>
+                    );
+                  })}
+                </Tr>
+              );
+            })}
         </Tbody>
       </TableComposable>
       {(pageSizeStart || urlPagination || onGetFilters) && totalRows > pageSize && (

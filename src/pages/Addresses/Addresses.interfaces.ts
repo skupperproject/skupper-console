@@ -14,16 +14,6 @@ export interface FlowPairsTableProps {
   rowsCount?: number;
 }
 
-export interface ChartData {
-  name: string;
-  x: string;
-  y: number;
-}
-export interface ChartProps {
-  data: ChartData[];
-  options?: { themeColor?: string; format?: Function };
-}
-
 export interface RequestsByAddressProps {
   addressName: string;
   addressId: string;

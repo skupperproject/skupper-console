@@ -21,10 +21,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
+import Metrics from '@pages/Processes/components/Metrics';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
 
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
@@ -66,6 +68,9 @@ const ProcessGroup = function () {
 
   const { name } = processGroup;
 
+  const serverNameFilters = Object.values(processes).map(({ name: destinationName }) => ({ destinationName }));
+  const serverNames = processes.map(({ name: processName }) => processName).join('|');
+
   return (
     <TransitionPage>
       <Grid hasGutter>
@@ -87,6 +92,7 @@ const ProcessGroup = function () {
           </Link>
         </Flex>
 
+        {/* Component description*/}
         <GridItem span={12}>
           <Card isFullHeight isRounded>
             <CardTitle>
@@ -102,9 +108,18 @@ const ProcessGroup = function () {
             </CardBody>
           </Card>
         </GridItem>
+
+        {/* Processes table*/}
         <GridItem span={12}>
           <ProcessesTable processes={processes} />
         </GridItem>
+
+        {/* Component Metrics*/}
+        {isPrometheusActive() && (
+          <GridItem>
+            <Metrics parent={{ id: serverNames, name: serverNames }} processesConnected={serverNameFilters} />
+          </GridItem>
+        )}
       </Grid>
     </TransitionPage>
   );

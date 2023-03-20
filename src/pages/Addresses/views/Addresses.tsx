@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 
 import { ChartPie, ChartThemeColor } from '@patternfly/react-charts';
 import {
@@ -25,7 +25,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 import { AvailableProtocols } from 'API/REST.enum';
 import { AddressResponse } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from 'config';
+import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { AddressesColumnsNames, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
 import { AddressesController } from '../services';
@@ -35,17 +35,14 @@ const REAL_TIME_CONNECTION_HEIGHT_CHART = 360;
 
 const Addresses = function () {
   const navigate = useNavigate();
-  const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
 
   const { data: addresses, isLoading } = useQuery([QueriesAddresses.GetAddresses], () => RESTApi.fetchAddresses(), {
-    refetchInterval,
     onError: handleError
   });
 
   function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-    setRefetchInterval(0);
     navigate(route);
   }
 

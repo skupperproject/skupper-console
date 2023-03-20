@@ -2,6 +2,7 @@ import { BASE_URL_COLLECTOR } from 'config';
 
 const API_VERSION = '/api/v1alpha1';
 const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
+
 //CONFIG
 // ask to Skupper the url to call the api that retrieves the url of the prometheus server
 const CONFIG_PROMETHEUS_PATH = `${API_URL}/collectors/`;

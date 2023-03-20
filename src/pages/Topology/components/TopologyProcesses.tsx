@@ -261,7 +261,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
           {!shouldShowProcessGroups && (
             <ToolbarItem>
               <Select
-                disabled={shouldShowProcessGroups}
+                isDisabled={shouldShowProcessGroups}
                 isOpen={isOpen}
                 onSelect={handleSelect}
                 onToggle={handleToggle}

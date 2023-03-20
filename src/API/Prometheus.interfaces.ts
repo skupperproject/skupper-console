@@ -1,4 +1,5 @@
 export type ValidWindowTime = {
+  FiveMinutes: '5m';
   FifteenMinutes: '15m';
   ThirtyMinutes: '30m';
   OneHours: '1h';
@@ -24,5 +25,6 @@ export interface PrometheusQueryParams {
   range: ValidWindowTimeValues;
   processIdDest?: string;
   isRate?: boolean;
+  protocol?: string;
   quantile?: 0.5 | 0.9 | 0.99;
 }

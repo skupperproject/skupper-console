@@ -24,7 +24,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatTime';
+import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';

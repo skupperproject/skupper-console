@@ -14,6 +14,7 @@ import { SortDirection } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
 import ChartProcessDataTrafficDistribution from '../components/ChartProcessDataTrafficDistribution';
+import ComponentNameLinkCell from '../components/ComponentNameLinkCell';
 import ProcessNameLinkCell from '../components/ProcessesNameLinkCell';
 import SiteNameLinkCell from '../components/SiteNameLinkCell';
 import { processesTableColumns } from '../Processes.constant';
@@ -129,7 +130,8 @@ const Processes = function () {
               rows={processes}
               components={{
                 linkCell: ProcessNameLinkCell,
-                linkCellSite: SiteNameLinkCell
+                linkCellSite: SiteNameLinkCell,
+                linkComponentCell: ComponentNameLinkCell
               }}
               rowsCount={processesData?.timeRangeCount}
               onGetFilters={handleGetFilters}

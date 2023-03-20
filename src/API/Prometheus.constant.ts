@@ -1,6 +1,7 @@
 import { ValidWindowTime, ValidWindowTimeValues } from './Prometheus.interfaces';
 
 export const timeIntervalMap: ValidWindowTime = {
+  FiveMinutes: '5m',
   FifteenMinutes: '15m',
   ThirtyMinutes: '30m',
   OneHours: '1h',
@@ -14,6 +15,7 @@ export const timeIntervalMap: ValidWindowTime = {
 
 // Bind the Time range selected to display prometheus metrics and seconds
 export const startDateOffsetMap: Record<string, number> = {
+  [timeIntervalMap.FiveMinutes]: 5 * 60,
   [timeIntervalMap.FifteenMinutes]: 15 * 60,
   [timeIntervalMap.ThirtyMinutes]: 30 * 60,
   [timeIntervalMap.OneHours]: 3600,
@@ -25,17 +27,21 @@ export const startDateOffsetMap: Record<string, number> = {
   [timeIntervalMap.TwoWeeks]: 14 * 24 * 3600
 };
 
+export const defaultTimeInterval = timeIntervalMap.FiveMinutes;
+
 // Bind the Time range selected to display prometheus metrics  and Time interval before record a new sample
+const multiplier = 1;
 export const rangeStepIntervalMap: Record<string, string> = {
-  [timeIntervalMap.FifteenMinutes]: `3s`,
-  [timeIntervalMap.ThirtyMinutes]: `7s`,
-  [timeIntervalMap.OneHours]: `14s`,
-  [timeIntervalMap.TwoHours]: `28s`,
-  [timeIntervalMap.SixHours]: `86s`,
-  [timeIntervalMap.TwelveHours]: `172s`,
-  [timeIntervalMap.OneDay]: `345s`,
-  [timeIntervalMap.OneWeek]: `2419s`,
-  [timeIntervalMap.TwoWeeks]: `4838`
+  [timeIntervalMap.FiveMinutes]: `${1 * multiplier}s`,
+  [timeIntervalMap.FifteenMinutes]: `${3 * multiplier}s`,
+  [timeIntervalMap.ThirtyMinutes]: `${7 * multiplier}s`,
+  [timeIntervalMap.OneHours]: `${14 * multiplier}s`,
+  [timeIntervalMap.TwoHours]: `${28 * multiplier}s`,
+  [timeIntervalMap.SixHours]: `${86 * multiplier}s`,
+  [timeIntervalMap.TwelveHours]: `${172 * multiplier}s`,
+  [timeIntervalMap.OneDay]: `${345 * multiplier}s`,
+  [timeIntervalMap.OneWeek]: `${2419 * multiplier}s`,
+  [timeIntervalMap.TwoWeeks]: `${4838 * multiplier}s`
 };
 
 let PROMETHEUS_PATH: string | undefined = undefined;
@@ -48,17 +54,12 @@ export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =
 
 // Prometheus queries
 export const queries = {
+  // http request/response queries
   getTotalRequestsByProcess(param: string) {
     return `sum(http_requests_method_total{${param}})`;
   },
   getTotalRequestPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum(rate(http_requests_method_total{${param}}[${range}]))`;
-  },
-  getLatencyByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
-    return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
-  },
-  getAvgLatencyByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
   getResponseStatusCodesByProcess(param: string) {
     return `sum by (code) (http_requests_result_total{${param}})`;
@@ -66,10 +67,23 @@ export const queries = {
   getResponseStatusCodesPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum by (code) (rate(http_requests_result_total{${param}}[${range}]))`;
   },
+
+  // latency queries
+  getLatencyByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
+    return `histogram_quantile(${quantile},sum(irate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
+  },
+  getAvgLatencyByProcess(param: string, range: ValidWindowTimeValues) {
+    return `sum(irate(flow_latency_microseconds_sum{${param}}[${range}])/irate(flow_latency_microseconds_count{${param}}[${range}]))`;
+  },
+
+  // data transfer queries
   getDataTraffic(paramSource: string, paramDest: string) {
     return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
   },
   getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
+    return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
+  },
+  getMin(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
     return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
   }
 };
