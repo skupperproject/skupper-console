@@ -102,7 +102,7 @@ interface FilterOptionsProp {
 
 export interface MetricsProps {
   parent: { id: string; name: string };
-  processesConnected: { destinationName: string }[];
+  processesConnected?: { destinationName: string }[];
   protocolDefault?: AvailableProtocols;
-  disableFilter?: FilterOptionsProp;
+  filterOptions?: FilterOptionsProp;
 }
