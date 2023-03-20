@@ -2,6 +2,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { PrometheusApi } from 'API/Prometheus';
 import { startDateOffsetMap } from 'API/Prometheus.constant';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
+import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels } from '../Processes.enum';
@@ -24,16 +25,21 @@ const ProcessesController = {
     try {
       const trafficDataSeriesResponse = await PrometheusApi.fetchDataTraffic(params);
       const trafficDataSeriesPerSecondResponse = await PrometheusApi.fetchDataTraffic({ ...params, isRate: true });
-      const avgLatency = await PrometheusApi.fetchLatencyByProcess(params);
-      const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5 });
-      const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 });
-      const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 });
+
+      let latencies = null;
+      if (protocol !== AvailableProtocols.Tcp) {
+        const avgLatency = await PrometheusApi.fetchLatencyByProcess(params);
+        const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5 });
+        const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 });
+        const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 });
+
+        latencies = normalizeLatencies({ avgLatency, quantile50latency, quantile90latency, quantile99latency });
+      }
 
       const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
       const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse, timeInterval);
-      const latencies = normalizeLatencies({ avgLatency, quantile50latency, quantile90latency, quantile99latency });
 
-      if (!(trafficDataSeries && trafficDataSeriesPerSecond && latencies)) {
+      if (!(trafficDataSeries && trafficDataSeriesPerSecond)) {
         return null;
       }
 

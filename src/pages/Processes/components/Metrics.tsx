@@ -33,7 +33,7 @@ import { AvailableProtocols } from 'API/REST.enum';
 import ChartProcessDataTrafficDistribution from './ChartProcessDataTrafficDistribution';
 import ChartProcessDataTrafficSeries from './ChartProcessDataTrafficSeries';
 import { ProcessesLabels } from '../Processes.enum';
-import { MetricsProps, ProcessMetrics } from '../Processes.interfaces';
+import { MetricsProps } from '../Processes.interfaces';
 import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -116,19 +116,6 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
 
   function handleToggleProtocolMenu(isOpen: boolean) {
     setIsOpenProtocolIntervalMenu(isOpen);
-  }
-
-  function getProcessTrafficChartData(trafficData: ProcessMetrics) {
-    return [
-      {
-        x: 'Received',
-        y: trafficData.trafficDataSeries?.totalDataReceived || 0
-      },
-      {
-        x: 'Sent',
-        y: trafficData.trafficDataSeries?.totalDataSent || 0
-      }
-    ];
   }
 
   // process connected select options
@@ -300,26 +287,39 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                       )}
                     </Title>
                   )}
-                <ChartProcessDataTrafficDistribution data={getProcessTrafficChartData(metrics)} />
+                <ChartProcessDataTrafficDistribution
+                  data={[
+                    {
+                      x: 'Received',
+                      y: metrics.trafficDataSeries?.totalDataReceived || 0
+                    },
+                    {
+                      x: 'Sent',
+                      y: metrics.trafficDataSeries?.totalDataSent || 0
+                    }
+                  ]}
+                />
               </>
             </Card>
           </GridItem>
 
           {/* Chart latencies time series card*/}
-          <GridItem span={12}>
-            <Card isFullHeight>
-              {!metrics.latencies && <EmptyData />}
-              {!!metrics.latencies && (
-                <ChartProcessDataTrafficSeries
-                  formatY={formatLatency}
-                  axisYLabel={ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}
-                  themeColor={ChartThemeColor.multiOrdered}
-                  legendLabels={metrics.latencies.map(({ label }) => label)}
-                  data={metrics.latencies.map(({ data }) => data)}
-                />
-              )}
-            </Card>
-          </GridItem>
+          {protocol !== AvailableProtocols.Tcp && (
+            <GridItem span={12}>
+              <Card isFullHeight>
+                {!metrics.latencies && <EmptyData />}
+                {!!metrics.latencies && (
+                  <ChartProcessDataTrafficSeries
+                    formatY={formatLatency}
+                    axisYLabel={ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}
+                    themeColor={ChartThemeColor.multiOrdered}
+                    legendLabels={metrics.latencies.map(({ label }) => label)}
+                    data={metrics.latencies.map(({ data }) => data)}
+                  />
+                )}
+              </Card>
+            </GridItem>
+          )}
         </>
       )}
     </Grid>

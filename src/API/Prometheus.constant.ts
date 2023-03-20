@@ -54,17 +54,12 @@ export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =
 
 // Prometheus queries
 export const queries = {
+  // http request/response queries
   getTotalRequestsByProcess(param: string) {
     return `sum(http_requests_method_total{${param}})`;
   },
   getTotalRequestPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum(rate(http_requests_method_total{${param}}[${range}]))`;
-  },
-  getLatencyByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
-    return `histogram_quantile(${quantile},sum(irate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
-  },
-  getAvgLatencyByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum(irate(flow_latency_microseconds_sum{${param}}[${range}])/irate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
   getResponseStatusCodesByProcess(param: string) {
     return `sum by (code) (http_requests_result_total{${param}})`;
@@ -72,10 +67,23 @@ export const queries = {
   getResponseStatusCodesPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
     return `sum by (code) (rate(http_requests_result_total{${param}}[${range}]))`;
   },
+
+  // latency queries
+  getLatencyByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
+    return `histogram_quantile(${quantile},sum(irate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
+  },
+  getAvgLatencyByProcess(param: string, range: ValidWindowTimeValues) {
+    return `sum(irate(flow_latency_microseconds_sum{${param}}[${range}])/irate(flow_latency_microseconds_count{${param}}[${range}]))`;
+  },
+
+  // data transfer queries
   getDataTraffic(paramSource: string, paramDest: string) {
     return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
   },
   getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
+    return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
+  },
+  getMin(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
     return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
   }
 };
