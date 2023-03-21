@@ -4,8 +4,10 @@ import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
+import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
-import { FlowAggregatesResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import {
   ProcessesLabels,
@@ -20,16 +22,33 @@ export const ProcessesPaths = {
 };
 
 export const ProcessesConnectedComponentsTable = {
-  ProcessLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+  ProcessLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
     LinkCell({
       ...props,
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationId}`
+    })
+};
+
+export const ProcessesComponentsTable = {
+  linkCell: (props: LinkCellProps<ProcessResponse>) =>
+    LinkCell({
+      ...props,
+      type: 'process',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.identity}`
     }),
-  TotalBytesExchanged: (props: LinkCellProps<FlowAggregatesResponse>) =>
-    formatBytes(props.data.sourceOctets + props.data.destinationOctets),
-  Latency: (props: LinkCellProps<FlowAggregatesResponse>) =>
-    formatLatency(props.data.sourceAverageLatency + props.data.destinationAverageLatency)
+  linkCellSite: (props: LinkCellProps<ProcessResponse>) =>
+    LinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.parent}`
+    }),
+  linkComponentCell: (props: LinkCellProps<ProcessResponse>) =>
+    LinkCell({
+      ...props,
+      type: 'service',
+      link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupIdentity}`
+    })
 };
 
 export const processesTableColumns = [
@@ -50,25 +69,11 @@ export const processesTableColumns = [
   }
 ];
 
-export const processesConnectedColumns: SKColumn<FlowAggregatesResponse>[] = [
+export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessPairsColumnsNames.Process,
-    prop: 'destinationName' as keyof FlowAggregatesResponse,
+    prop: 'destinationName' as keyof ProcessPairsResponse,
     component: 'ProcessLinkCell'
-  },
-  {
-    name: ProcessPairsColumnsNames.Traffic,
-    component: 'TotalBytesExchanged'
-  },
-  {
-    name: ProcessPairsColumnsNames.Latency,
-    component: 'Latency'
-  },
-  {
-    name: ProcessPairsColumnsNames.Flows,
-    prop: 'recordCount' as keyof FlowAggregatesResponse,
-    columnDescription: 'number of connections or requests',
-    width: 15
   },
   {
     name: '',
@@ -122,7 +127,7 @@ export const TcpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Trace,
     prop: 'flowTrace' as keyof FlowPairsResponse,
     format: formatTraceBySites,
-    width: 20
+    width: 10
   }
 ];
 
@@ -168,14 +173,9 @@ export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     width: 10
   },
   {
-    name: FlowPairsColumnsNames.Duration,
-    component: 'DurationCell',
-    width: 10
-  },
-  {
     name: FlowPairsColumnsNames.Trace,
     prop: 'flowTrace' as keyof FlowPairsResponse,
     format: formatTraceBySites,
-    width: 20
+    width: 10
   }
 ];

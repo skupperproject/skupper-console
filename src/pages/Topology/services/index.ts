@@ -3,10 +3,9 @@ import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
-import { formatByteRate } from '@core/utils/formatBytes';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import {
-  FlowAggregatesResponse,
+  ProcessPairsResponse,
   FlowPairsResponse,
   LinkResponse,
   ProcessGroupResponse,
@@ -37,12 +36,11 @@ export const TopologyController = {
     return sitesConnected;
   },
 
-  getProcessesLinks: (processesPairs: FlowAggregatesResponse[]): LinkTopology[] => {
-    const processesLinks = processesPairs.map(({ identity, sourceId, destinationId, sourceOctetRate }) => ({
+  getProcessesLinks: (processesPairs: ProcessPairsResponse[]): LinkTopology[] => {
+    const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
       key: identity,
       source: sourceId,
-      target: destinationId,
-      rate: sourceOctetRate ? formatByteRate(sourceOctetRate) : ''
+      target: destinationId
     }));
 
     return processesLinks;
@@ -58,7 +56,7 @@ export const TopologyController = {
     return processesLinks;
   },
 
-  getProcessGroupsLinks: (links: FlowAggregatesResponse[]): LinkTopology[] => {
+  getProcessGroupsLinks: (links: ProcessPairsResponse[]): LinkTopology[] => {
     const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
       key: identity,
       source: sourceId,

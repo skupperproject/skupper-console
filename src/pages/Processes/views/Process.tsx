@@ -14,7 +14,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
-import { FlowAggregatesResponse } from 'API/REST.interfaces';
+import { ProcessPairsResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import Metrics from '../components/Metrics';
@@ -92,11 +92,7 @@ const Process = function () {
       sourceId: processPairsData.destinationId,
       sourceName: processPairsData.destinationName,
       destinationName: processPairsData.sourceName,
-      destinationId: processPairsData.sourceId,
-      sourceOctets: processPairsData.destinationOctets,
-      destinationOctets: processPairsData.sourceOctets,
-      sourceAverageLatency: processPairsData.destinationAverageLatency,
-      destinationAverageLatency: processPairsData.sourceAverageLatency
+      destinationId: processPairsData.sourceId
     })) || [];
 
   return (
@@ -138,7 +134,7 @@ const Process = function () {
             pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
             components={{
               ...ProcessesConnectedComponentsTable,
-              viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+              viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
                 LinkCell({
                   ...props,
                   link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
@@ -157,7 +153,7 @@ const Process = function () {
             pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
             components={{
               ...ProcessesConnectedComponentsTable,
-              viewDetailsLinkCell: (props: LinkCellProps<FlowAggregatesResponse>) =>
+              viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
                 LinkCell({
                   ...props,
                   link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,

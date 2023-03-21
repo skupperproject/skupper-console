@@ -17,12 +17,12 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import { AddressesRoutesPaths } from '@pages/Addresses/Addresses.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { RESTApi } from 'API/REST';
 import { ProcessResponse } from 'API/REST.interfaces';
 
-import AddressNameLinkCell from './AddressNameLinkCell';
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -96,7 +96,14 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
                   <DescriptionListDescription>
                     <Flex>
                       {addresses.map((address) => (
-                        <AddressNameLinkCell key={address.identity} data={address} value={address.name} />
+                        <div key={address.identity}>
+                          <ResourceIcon type="address" />
+                          <Link
+                            to={`${AddressesRoutesPaths.Addresses}/${address.name}@${address.identity}@${address.protocol}`}
+                          >
+                            {address.name}
+                          </Link>
+                        </div>
                       ))}
                     </Flex>
                   </DescriptionListDescription>

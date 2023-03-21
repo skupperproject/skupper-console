@@ -2,7 +2,7 @@ import { createServer, Response } from 'miragejs';
 
 import {
   AddressResponse,
-  FlowAggregatesResponse,
+  ProcessPairsResponse,
   HostResponse,
   LinkResponse,
   ProcessGroupResponse,
@@ -76,7 +76,7 @@ export function loadMockServer() {
         this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
 
         this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => ({
-          results: processGroupPairs.results.find(({ identity }: FlowAggregatesResponse) => identity === id)
+          results: processGroupPairs.results.find(({ identity }: ProcessPairsResponse) => identity === id)
         }));
 
         this.get(`${prefix}/processes`, () => processes);
@@ -100,13 +100,13 @@ export function loadMockServer() {
           }
 
           return processPairs.filter(
-            (pair: FlowAggregatesResponse) =>
+            (pair: ProcessPairsResponse) =>
               pair.sourceId === queryParams?.sourceId || pair.destinationId === queryParams?.destinationId
           );
         });
 
         this.get(`${prefix}/processpairs/:id`, (_, { params: { id } }) => ({
-          results: processPairs.results.find(({ identity }: FlowAggregatesResponse) => identity === id)
+          results: processPairs.results.find(({ identity }: ProcessPairsResponse) => identity === id)
         }));
 
         this.get(`${prefix}/addresses`, () => addresses);

@@ -38,9 +38,8 @@ export const flowPairsComponentsTable = {
     }),
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
-  DurationCell: (props: LinkCellProps<FlowPairsResponse>) => {
-    DurationCell({ ...props, endTime: props.data.endTime, startTime: props.data.startTime });
-  }
+  DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
+    DurationCell({ ...props, endTime: props.data.endTime, startTime: props.data.startTime })
 };
 
 export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
@@ -136,9 +135,19 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     width: 10
   },
   {
-    name: FlowPairsColumnsNames.RxByteRate,
-    prop: 'counterFlow.octetRate' as keyof FlowPairsResponse,
-    format: formatByteRate
+    name: FlowPairsColumnsNames.TxBytes,
+    prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
+    format: formatBytes
+  },
+  {
+    name: FlowPairsColumnsNames.RxBytes,
+    prop: 'counterFlow.octets' as keyof FlowPairsResponse,
+    format: formatBytes
+  },
+  {
+    name: FlowPairsColumnsNames.TxLatency,
+    prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
+    format: formatLatency
   },
   {
     name: FlowPairsColumnsNames.RxLatency,
@@ -150,11 +159,6 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.RequestCompleted,
     prop: 'counterFlow.endTime' as keyof FlowPairsResponse,
     format: timeAgo,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.Duration,
-    component: 'DurationCell',
     width: 10
   }
 ];

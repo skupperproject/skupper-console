@@ -81,7 +81,7 @@ export default class Graph {
     this.EventEmitter = new EventEmitter();
     this.force = this.configureForceSimulation(this.nodes);
 
-    this.zoom = zoom<SVGSVGElement, GraphNode>().scaleExtent([0.5, 4]);
+    this.zoom = zoom<SVGSVGElement, GraphNode>().scaleExtent([0.2, 5]);
     this.zoom.on('zoom', ({ transform }) => {
       this.svgGraphGroup.attr('transform', transform);
     });
@@ -593,11 +593,11 @@ export default class Graph {
   }
 
   zoomIn() {
-    return this.svgGraph.transition().duration(300).call(this.zoom.scaleBy, 1.5);
+    return this.svgGraph.transition().duration(250).call(this.zoom.scaleBy, 1.5);
   }
 
   zoomOut() {
-    return this.svgGraph.transition().duration(300).call(this.zoom.scaleBy, 0.5);
+    return this.svgGraph.transition().duration(250).call(this.zoom.scaleBy, 0.5);
   }
 }
 

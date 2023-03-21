@@ -64,4 +64,3 @@ export const getProcessGroupPairPATH = (id: string) => `${PROCESS_GROUP_PAIRS_PA
 
 const PROCESS_PAIRS_PATH = `${API_URL}/processpairs/`;
 export const getProcessPairsPATH = () => PROCESS_PAIRS_PATH;
-export const getProcessPairPATH = (id: string) => `${PROCESS_PAIRS_PATH}${id}`;

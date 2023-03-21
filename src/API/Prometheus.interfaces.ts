@@ -13,7 +13,7 @@ export type ValidWindowTime = {
 
 export type ValidWindowTimeValues = ValidWindowTime[keyof ValidWindowTime];
 
-export type PrometheusApiResultValue = [number, string];
+type PrometheusApiResultValue = [number, string];
 
 export type PrometheusApiResult = {
   metric: Record<string, string>;

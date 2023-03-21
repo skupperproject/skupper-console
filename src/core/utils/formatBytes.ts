@@ -36,5 +36,5 @@ export function formatTraceBySites(trace: string) {
 
       return traceSite;
     })
-    .join(' <-> ');
+    .join(' - ');
 }
