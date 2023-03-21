@@ -1,4 +1,4 @@
-import { ValidWindowTimeValues } from 'API/Prometheus.interfaces';
+import { PrometheusApiResult, ValidWindowTimeValues } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
@@ -11,6 +11,11 @@ export interface ProcessesTableProps {
 export interface ProcessAxisDataChart {
   x: number;
   y: number;
+}
+
+export interface ProcessMetric {
+  values: ProcessAxisDataChart[];
+  labels: string[];
 }
 
 export interface ProcessLatenciesChart {
@@ -70,12 +75,24 @@ export interface ChartProcessDataTrafficSeriesProps {
   showLegend?: boolean;
 }
 
+interface StatusCodeResponse {
+  label: string;
+  total: number;
+}
+
 export interface ProcessMetrics {
   trafficDataSeries: ProcessDataChart | null;
   trafficDataSeriesPerSecond: ProcessDataChart | null;
   latencies: ProcessLatenciesChart[] | null;
   requestSeries: ProcessRequestsChart[] | null;
   requestPerSecondSeries: ProcessRequestsChart[] | null;
+  responseSeries: {
+    statusCode2xx: StatusCodeResponse;
+    statusCode3xx: StatusCodeResponse;
+    statusCode4xx: StatusCodeResponse;
+    statusCode5xx: StatusCodeResponse;
+    total: number;
+  } | null;
 }
 
 export interface MetricCardProps {
@@ -105,5 +122,10 @@ export interface MetricsProps {
   parent: { id: string; name: string };
   processesConnected?: { destinationName: string }[];
   protocolDefault?: AvailableProtocols;
-  filterOptions?: FilterOptionsProp;
+  customFilters?: FilterOptionsProp;
+}
+export interface NormalizeLatenciesProps {
+  quantile50latency: PrometheusApiResult[];
+  quantile90latency: PrometheusApiResult[];
+  quantile99latency: PrometheusApiResult[];
 }

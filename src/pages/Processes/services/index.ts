@@ -8,9 +8,11 @@ import { ProcessResponse } from 'API/REST.interfaces';
 import { ProcessesLabels } from '../Processes.enum';
 import {
   MetricsFilters,
+  NormalizeLatenciesProps,
   ProcessAxisDataChart,
   ProcessDataChart,
   ProcessLatenciesChart,
+  ProcessMetric,
   ProcessMetrics,
   ProcessRequestsChart
 } from '../Processes.interfaces';
@@ -24,13 +26,6 @@ const ProcessesController = {
       protocol
     };
     try {
-      // requests metrics
-      const requestPerSecondSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess({
-        ...params,
-        isRate: true
-      });
-      const requestSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess(params);
-
       // traffic metrics
       const trafficDataSeriesResponse = await PrometheusApi.fetchDataTraffic(params);
       const trafficDataSeriesPerSecondResponse = await PrometheusApi.fetchDataTraffic({ ...params, isRate: true });
@@ -45,10 +40,22 @@ const ProcessesController = {
         latencies = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
       }
 
+      // requests metrics
+      const requestPerSecondSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess({
+        ...params,
+        isRate: true
+      });
+      const requestSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess(params);
+
+      // responses metrics
+      const responseSeriesResponse = await PrometheusApi.fetchSResponsesByProcess(params);
+
+      // data normalization
       const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
       const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse, timeInterval);
       const requestSeries = normalizeRequests(requestSeriesResponse, id);
       const requestPerSecondSeries = normalizeRequests(requestPerSecondSeriesResponse, id);
+      const responseSeries = normalizeResponses(responseSeriesResponse);
 
       if (!(trafficDataSeries && trafficDataSeriesPerSecond)) {
         return null;
@@ -59,7 +66,8 @@ const ProcessesController = {
         trafficDataSeriesPerSecond,
         latencies,
         requestSeries,
-        requestPerSecondSeries
+        requestPerSecondSeries,
+        responseSeries
       };
     } catch (e: unknown) {
       throw new Error(e as string);
@@ -87,14 +95,31 @@ const ProcessesController = {
 
 export default ProcessesController;
 
-interface NormalizeLatenciesProps {
-  quantile50latency: PrometheusApiResult[];
-  quantile90latency: PrometheusApiResult[];
-  quantile99latency: PrometheusApiResult[];
+function normalizeResponses(data: PrometheusApiResult[]) {
+  const dataNormalized = normalizeMetric(data);
+
+  if (!dataNormalized) {
+    return null;
+  }
+
+  const { values } = dataNormalized;
+
+  const statusCode2xx = { total: values[1] ? values[1].y - values[0].y : 0, label: '2xx' };
+  const statusCode3xx = { total: values[2] ? values[2].y - values[0].y : 0, label: '3xx' };
+  const statusCode4xx = { total: values[3] ? values[3].y - values[0].y : 0, label: '4xx' };
+  const statusCode5xx = { total: values[4] ? values[4].y - values[0].y : 0, label: '5xx' };
+
+  return {
+    statusCode2xx,
+    statusCode3xx,
+    statusCode4xx,
+    statusCode5xx,
+    total: statusCode2xx.total + statusCode3xx.total + statusCode4xx.total + statusCode5xx.total
+  };
 }
 
 function normalizeRequests(data: PrometheusApiResult[], label: string) {
-  const axisValues = normalizeMetric(data);
+  const axisValues = normalizeMetricValues(data);
 
   if (!axisValues) {
     return null;
@@ -123,9 +148,9 @@ function normalizeLatencies({
   quantile90latency,
   quantile99latency
 }: NormalizeLatenciesProps): ProcessLatenciesChart[] | null {
-  const quantile50latencyNormalized = normalizeMetric(quantile50latency);
-  const quantile90latencyNormalized = normalizeMetric(quantile90latency);
-  const quantile99latencyNormalized = normalizeMetric(quantile99latency);
+  const quantile50latencyNormalized = normalizeMetricValues(quantile50latency);
+  const quantile90latencyNormalized = normalizeMetricValues(quantile90latency);
+  const quantile99latencyNormalized = normalizeMetricValues(quantile99latency);
 
   const latenciesNormalized: ProcessLatenciesChart[] = [];
 
@@ -146,7 +171,7 @@ function normalizeLatencies({
 
 function normalizeTrafficData(data: PrometheusApiResult[], timeInterval: string): ProcessDataChart | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
-  const axisValues = normalizeMetric(data);
+  const axisValues = normalizeMetricValues(data);
   if (!axisValues) {
     return null;
   }
@@ -190,7 +215,7 @@ function normalizeTrafficData(data: PrometheusApiResult[], timeInterval: string)
   };
 }
 
-function normalizeMetric(data: PrometheusApiResult[]): ProcessAxisDataChart[][] | null {
+function normalizeMetricValues(data: PrometheusApiResult[]): ProcessAxisDataChart[][] | null {
   if (!data.length) {
     return null;
   }
@@ -201,4 +226,33 @@ function normalizeMetric(data: PrometheusApiResult[]): ProcessAxisDataChart[][] 
       y: isNaN(Number(value[1])) ? 0 : Number(value[1])
     }))
   );
+}
+
+function normalizeMetricLabels(data: PrometheusApiResult[]): string[][] | null {
+  if (!data.length) {
+    return null;
+  }
+
+  return data.map(({ metric }) => Object.values(metric).map((label) => label));
+}
+
+function normalizeMetric(data: PrometheusApiResult[]): ProcessMetric | null {
+  if (!data.length) {
+    return null;
+  }
+
+  const values = normalizeMetricValues(data) as ProcessAxisDataChart[][];
+  const labels = normalizeMetricLabels(data) as string[][];
+
+  return { values: values[0], labels: labels[0] };
+}
+
+export function formatPercentage(value: number, total: number) {
+  const percentage = (value / total) * 100;
+
+  if (isNaN(percentage)) {
+    return 0;
+  }
+
+  return `${percentage.toFixed(0)}%`;
 }

@@ -58,21 +58,21 @@ export const queries = {
     return `sum(http_requests_method_total{${param}})`;
   },
   getTotalRequestPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum(rate(http_requests_method_total{${param}}[${range}]))`;
+    return `sum(irate(http_requests_method_total{${param}}[${range}]))`;
   },
   getResponseStatusCodesByProcess(param: string) {
     return `sum by (code) (http_requests_result_total{${param}})`;
   },
   getResponseStatusCodesPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum by (code) (rate(http_requests_result_total{${param}}[${range}]))`;
+    return `sum by (code) (irate(http_requests_result_total{${param}}[${range}]))`;
   },
 
   // latency queries
   getLatencyIrateByProcess(param: string, range: ValidWindowTimeValues, quantile: 0.5 | 0.9 | 0.99) {
-    return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
+    return `histogram_quantile(${quantile},sum(irate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
   getAvgLatencyIrateByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
+    return `sum(irate(flow_latency_microseconds_sum{${param}}[${range}])/irate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
 
   // data transfer queries
@@ -80,6 +80,6 @@ export const queries = {
     return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
   },
   getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: ValidWindowTimeValues) {
-    return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]) or rate(octets_total{${paramDest}}[${range}]))`;
+    return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
   }
 };

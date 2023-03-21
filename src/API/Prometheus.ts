@@ -3,104 +3,6 @@ import { gePrometheusQueryPATH, queries, rangeStepIntervalMap, startDateOffsetMa
 import { PrometheusApiResult, PrometheusQueryParams, ValidWindowTimeValues } from './Prometheus.interfaces';
 
 export const PrometheusApi = {
-  fetchTotalRequestByProcess: async ({
-    id,
-    range,
-    processIdDest,
-    isRate = false
-  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
-    let param = `sourceProcess="${id}"`;
-
-    if (processIdDest) {
-      param = [param, `destProcess="${processIdDest}"`].join(',');
-    }
-
-    const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
-      params: {
-        query: isRate
-          ? queries.getTotalRequestPerSecondByProcess(param, '5m')
-          : queries.getTotalRequestsByProcess(param),
-        start,
-        end,
-        step: isRate ? rangeStepIntervalMap[range] : range
-      }
-    });
-
-    return result;
-  },
-
-  fetchLatencyByProcess: async ({
-    id,
-    range,
-    processIdDest,
-    quantile,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
-    let param = `sourceProcess="${id}"`;
-
-    if (processIdDest) {
-      param = [param, `destProcess="${processIdDest}"`].join(',');
-    }
-
-    if (processIdDest) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-    const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
-      params: {
-        query: quantile
-          ? queries.getLatencyIrateByProcess(param, '5m', quantile)
-          : queries.getAvgLatencyIrateByProcess(param, '5m'),
-        start,
-        end,
-        step: rangeStepIntervalMap[range]
-      }
-    });
-
-    return result;
-  },
-
-  fetchStatusCodesByProcess: async ({
-    id,
-    range,
-    processIdDest,
-    isRate = false
-  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
-    let param = `destProcess="${id} "`;
-
-    if (processIdDest) {
-      param = [param, `sourceProcess="${processIdDest}"`].join(',');
-    }
-
-    const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
-      params: {
-        query: isRate
-          ? queries.getResponseStatusCodesPerSecondByProcess(param, '5m')
-          : queries.getResponseStatusCodesByProcess(param),
-        start,
-        end,
-        step: isRate ? rangeStepIntervalMap[range] : range
-      }
-    });
-
-    // it retrieves X arrays of [values, timestamps], 2XX, 3XX, 4XX, 5XX
-    return result;
-  },
-
   fetchDataTraffic: async ({
     id,
     range,
@@ -142,6 +44,104 @@ export const PrometheusApi = {
     });
 
     // it retrieves 2 arrays of [values, timestamps], 1) received traffic 2) sent traffic
+    return result;
+  },
+
+  fetchLatencyByProcess: async ({
+    id,
+    range,
+    processIdDest,
+    quantile,
+    protocol
+  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
+    const { start, end } = getRangeTimestamp(range);
+    let param = `sourceProcess="${id}"`;
+
+    if (processIdDest) {
+      param = [param, `destProcess="${processIdDest}"`].join(',');
+    }
+
+    if (processIdDest) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+    const {
+      data: {
+        data: { result }
+      }
+    } = await axiosFetch(gePrometheusQueryPATH(), {
+      params: {
+        query: quantile
+          ? queries.getLatencyIrateByProcess(param, '5m', quantile)
+          : queries.getAvgLatencyIrateByProcess(param, '5m'),
+        start,
+        end,
+        step: rangeStepIntervalMap[range]
+      }
+    });
+
+    return result;
+  },
+
+  fetchTotalRequestByProcess: async ({
+    id,
+    range,
+    processIdDest,
+    isRate = false
+  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
+    const { start, end } = getRangeTimestamp(range);
+    let param = `sourceProcess="${id}"`;
+
+    if (processIdDest) {
+      param = [param, `destProcess="${processIdDest}"`].join(',');
+    }
+
+    const {
+      data: {
+        data: { result }
+      }
+    } = await axiosFetch(gePrometheusQueryPATH(), {
+      params: {
+        query: isRate
+          ? queries.getTotalRequestPerSecondByProcess(param, '5m')
+          : queries.getTotalRequestsByProcess(param),
+        start,
+        end,
+        step: isRate ? rangeStepIntervalMap[range] : range
+      }
+    });
+
+    return result;
+  },
+
+  fetchSResponsesByProcess: async ({
+    id,
+    range,
+    processIdDest,
+    isRate = false
+  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
+    const { start, end } = getRangeTimestamp(range);
+    let param = `destProcess="${id}"`;
+
+    if (processIdDest) {
+      param = [param, `sourceProcess="${processIdDest}"`].join(',');
+    }
+
+    const {
+      data: {
+        data: { result }
+      }
+    } = await axiosFetch(gePrometheusQueryPATH(), {
+      params: {
+        query: isRate
+          ? queries.getResponseStatusCodesPerSecondByProcess(param, '5m')
+          : queries.getResponseStatusCodesByProcess(param),
+        start,
+        end,
+        step: isRate ? rangeStepIntervalMap[range] : range
+      }
+    });
+
+    // it retrieves X arrays of [values, timestamps], 2XX, 3XX, 4XX, 5XX
     return result;
   }
 };

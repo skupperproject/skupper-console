@@ -35,7 +35,7 @@ import ChartProcessDataTrafficSeries from './ChartProcessDataTrafficSeries';
 import MetricCard from './MetricCard';
 import { ProcessesLabels } from '../Processes.enum';
 import { MetricsProps } from '../Processes.interfaces';
-import ProcessesController from '../services';
+import ProcessesController, { formatPercentage } from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
 const filterOptionsDefault = {
@@ -44,15 +44,10 @@ const filterOptionsDefault = {
   destinationProcesses: { disabled: false, name: ProcessesLabels.FilterProcessesConnectedDefault }
 };
 
-const Metrics: FC<MetricsProps> = function ({
-  parent,
-  processesConnected,
-  protocolDefault,
-  filterOptions: disableFilter
-}) {
+const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protocolDefault, customFilters }) {
   const navigate = useNavigate();
 
-  const filterOptions = { ...filterOptionsDefault, ...disableFilter };
+  const filterOptions = { ...filterOptionsDefault, ...customFilters };
 
   const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
   const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
@@ -312,64 +307,100 @@ const Metrics: FC<MetricsProps> = function ({
 
           {/* Chart latencies time series card*/}
           {protocol !== AvailableProtocols.Tcp && (
-            <GridItem span={12}>
-              <Card isFullHeight>
-                {!metrics.latencies && <EmptyData />}
-                {!!metrics.latencies && (
-                  <ChartProcessDataTrafficSeries
-                    formatY={formatLatency}
-                    axisYLabel={ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}
-                    themeColor={ChartThemeColor.multiOrdered}
-                    legendLabels={metrics.latencies.map(({ label }) => label)}
-                    data={metrics.latencies.map(({ data }) => data)}
+            <>
+              <GridItem span={12}>
+                <Card isFullHeight>
+                  {!metrics.latencies && <EmptyData />}
+                  {!!metrics.latencies && (
+                    <ChartProcessDataTrafficSeries
+                      formatY={formatLatency}
+                      axisYLabel={ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}
+                      themeColor={ChartThemeColor.multiOrdered}
+                      legendLabels={metrics.latencies.map(({ label }) => label)}
+                      data={metrics.latencies.map(({ data }) => data)}
+                    />
+                  )}
+                </Card>
+              </GridItem>
+
+              {/* Chart requests time series card*/}
+              <GridItem span={8} rowSpan={2}>
+                <Card isFullHeight>
+                  {!!metrics.requestPerSecondSeries && (
+                    <ChartProcessDataTrafficSeries
+                      formatY={(y: number) => y.toFixed(3)}
+                      axisYLabel={ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}
+                      themeColor={ChartThemeColor.purple}
+                      legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
+                      data={metrics.requestPerSecondSeries.map(({ data }) => data)}
+                    />
+                  )}
+                </Card>
+              </GridItem>
+
+              {/*  Partial total request card*/}
+              {!!metrics.requestSeries && (
+                <GridItem span={4}>
+                  <MetricCard
+                    title={'Total Hits'}
+                    value={metrics.requestSeries[0].totalRequestInterval}
+                    bgColor={'--pf-global--palette--purple-400'}
+                    colorChart={ChartThemeColor.purple}
+                    showChart={false}
                   />
-                )}
-              </Card>
-            </GridItem>
-          )}
+                </GridItem>
+              )}
 
-          {/* Chart requests time series card*/}
-          {protocol !== AvailableProtocols.Tcp && (
-            <GridItem span={8} rowSpan={2}>
-              <Card isFullHeight>
-                {!metrics.requestPerSecondSeries && <EmptyData />}
-
-                {!!metrics.requestPerSecondSeries && (
-                  <ChartProcessDataTrafficSeries
-                    formatY={(y: number) => y.toFixed(3)}
-                    axisYLabel={ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}
-                    themeColor={ChartThemeColor.purple}
-                    legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
-                    data={metrics.requestPerSecondSeries.map(({ data }) => data)}
+              {/*  avg request per second card*/}
+              {!!metrics.requestPerSecondSeries && (
+                <GridItem span={4}>
+                  <MetricCard
+                    title={'Avg. hits rate'}
+                    value={metrics.requestPerSecondSeries[0].avgRequestRateInterval}
+                    bgColor={'--pf-global--palette--purple-200'}
+                    showChart={false}
                   />
-                )}
-              </Card>
-            </GridItem>
-          )}
+                </GridItem>
+              )}
 
-          {/*  Partial total request card*/}
-          {!!metrics.requestSeries && (
-            <GridItem span={4}>
-              <MetricCard
-                title={'Total Hits'}
-                value={metrics.requestSeries[0].totalRequestInterval}
-                bgColor={'--pf-global--palette--purple-400'}
-                colorChart={ChartThemeColor.purple}
-                showChart={false}
-              />
-            </GridItem>
-          )}
-
-          {/*  avg request per second card*/}
-          {!!metrics.requestPerSecondSeries && (
-            <GridItem span={4}>
-              <MetricCard
-                title={'Avg. hits rate'}
-                value={metrics.requestPerSecondSeries[0].avgRequestRateInterval}
-                bgColor={'--pf-global--palette--purple-200'}
-                showChart={false}
-              />
-            </GridItem>
+              {/*  response card*/}
+              {!!metrics.responseSeries && (
+                <>
+                  <GridItem span={3}>
+                    <MetricCard
+                      title={metrics.responseSeries.statusCode2xx.label}
+                      value={formatPercentage(metrics.responseSeries.statusCode2xx.total, metrics.responseSeries.total)}
+                      bgColor={'--pf-global--palette--green-400'}
+                      showChart={false}
+                    />
+                  </GridItem>
+                  <GridItem span={3}>
+                    <MetricCard
+                      title={metrics.responseSeries.statusCode3xx.label}
+                      value={formatPercentage(metrics.responseSeries.statusCode3xx.total, metrics.responseSeries.total)}
+                      bgColor={'--pf-global--palette--blue-400'}
+                      showChart={false}
+                    />
+                  </GridItem>
+                  <GridItem span={3}>
+                    <MetricCard
+                      title={metrics.responseSeries.statusCode4xx.label}
+                      value={formatPercentage(metrics.responseSeries.statusCode4xx.total, metrics.responseSeries.total)}
+                      bgColor={'--pf-global--palette--orange-100'}
+                      showChart={false}
+                    />
+                  </GridItem>
+                  <GridItem span={3}>
+                    <MetricCard
+                      title={metrics.responseSeries.statusCode5xx.label}
+                      value={formatPercentage(metrics.responseSeries.statusCode5xx.total, metrics.responseSeries.total)}
+                      bgColor={'--pf-global--palette--red-100'}
+                      showChart={false}
+                    />
+                  </GridItem>
+                </>
+              )}
+            </>
           )}
         </>
       )}
