@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts';
-import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
+import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,17 +11,13 @@ import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 
 import ProcessGroupNameLinkCell from '../components/ProcessGroupNameLinkCell';
-import ProcessesBytesChart from '../components/ProcessGroupsBytesChart';
 import { processGroupsColumns } from '../ProcessGroups.constant';
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
-import ProcessGroupsController from '../services';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const initProcessGroupsQueryParams = {
   filter: 'processGroupRole.external'
 };
-
-const MAX_COMPONENT_BYTES_COUNT = 5;
 
 const ProcessGroups = function () {
   const navigate = useNavigate();
@@ -49,38 +44,9 @@ const ProcessGroups = function () {
     return null;
   }
 
-  const { labels: bytesSentLabels, values: bytesSent } = ProcessGroupsController.formatProcessGroupsBytesForChart(
-    processGroups,
-    'octetsSent',
-    MAX_COMPONENT_BYTES_COUNT
-  );
-
-  const { labels: bytesReceivedLabels, values: bytesReceived } =
-    ProcessGroupsController.formatProcessGroupsBytesForChart(
-      processGroups,
-      'octetsReceived',
-      MAX_COMPONENT_BYTES_COUNT
-    );
-
   return (
     <TransitionPage>
       <Grid hasGutter>
-        <GridItem span={6}>
-          <Card>
-            <CardTitle>{ProcessGroupsLabels.MetricBytesSent}</CardTitle>
-            <ProcessesBytesChart bytes={bytesSent} labels={bytesSentLabels} />
-          </Card>
-        </GridItem>
-        <GridItem span={6}>
-          <Card>
-            <CardTitle>{ProcessGroupsLabels.MetricBytesReceived}</CardTitle>
-            <ProcessesBytesChart
-              bytes={bytesReceived}
-              labels={bytesReceivedLabels}
-              themeColor={ChartThemeColor.green}
-            />
-          </Card>
-        </GridItem>
         <GridItem span={12}>
           <SkTable
             title={ProcessGroupsLabels.Section}

@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts';
-import { Card, CardTitle, Grid, GridItem } from '@patternfly/react-core';
+import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,13 +12,11 @@ import { RESTApi } from 'API/REST';
 import { SortDirection } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
-import ChartProcessDataTrafficDistribution from '../components/ChartProcessDataTrafficDistribution';
 import ComponentNameLinkCell from '../components/ComponentNameLinkCell';
 import ProcessNameLinkCell from '../components/ProcessesNameLinkCell';
 import SiteNameLinkCell from '../components/SiteNameLinkCell';
 import { processesTableColumns } from '../Processes.constant';
 import { ProcessesLabels } from '../Processes.enum';
-import ProcessesController from '../services';
 import { QueriesProcesses } from '../services/services.enum';
 
 const BYTES_SENT_PROP = 'octetsSent';
@@ -96,32 +93,10 @@ const Processes = function () {
 
   const processes = processesData.results || [];
 
-  const { values: bytesSent } = ProcessesController.formatProcessesBytesForChart(
-    processesByOctetsSentData.results || [],
-    BYTES_SENT_PROP
-  );
-
-  const { values: bytesReceived } = ProcessesController.formatProcessesBytesForChart(
-    processesByOctetsReceivedData.results || [],
-    BYTES_RECEIVED_PROP
-  );
-
   return (
     <TransitionPage>
       <>
         <Grid hasGutter>
-          <GridItem span={6}>
-            <Card isFullHeight>
-              <CardTitle>{ProcessesLabels.MetricBytesSent}</CardTitle>
-              <ChartProcessDataTrafficDistribution data={bytesSent} />
-            </Card>
-          </GridItem>
-          <GridItem span={6}>
-            <Card isFullHeight>
-              <CardTitle>{ProcessesLabels.MetricBytesReceived}</CardTitle>
-              <ChartProcessDataTrafficDistribution data={bytesReceived} themeColor={ChartThemeColor.green} />
-            </Card>
-          </GridItem>
           <GridItem span={12}>
             <SkTable
               title={ProcessesLabels.Section}
