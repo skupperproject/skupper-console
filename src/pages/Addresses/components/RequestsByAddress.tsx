@@ -37,7 +37,6 @@ import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
 
 const initAllRequestsQueryParamsPaginated = {
-  timeRangeStart: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE
 };
 

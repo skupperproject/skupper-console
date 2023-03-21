@@ -122,15 +122,19 @@ export const PrometheusApi = {
       param2 = [param2, `protocol=~"${protocol}"`].join(',');
     }
 
+    let query = queries.getDataTraffic(param1, param2);
+
+    if (isRate) {
+      query = queries.getDataTrafficPerSecondByProcess(param1, param2, '5m');
+    }
+
     const {
       data: {
         data: { result }
       }
     } = await axiosFetch(gePrometheusQueryPATH(), {
       params: {
-        query: isRate
-          ? queries.getDataTrafficPerSecondByProcess(param1, param2, '5m')
-          : queries.getDataTraffic(param1, param2),
+        query,
         start,
         end,
         step: isRate ? rangeStepIntervalMap[range] : range
