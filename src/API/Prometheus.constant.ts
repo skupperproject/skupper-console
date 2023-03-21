@@ -61,10 +61,10 @@ export const queries = {
     return `sum(irate(http_requests_method_total{${param}}[${range}]))`;
   },
   getResponseStatusCodesByProcess(param: string) {
-    return `sum by (code) (http_requests_result_total{${param}})`;
+    return `sum by (partial_code) (label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
   },
   getResponseStatusCodesPerSecondByProcess(param: string, range: ValidWindowTimeValues) {
-    return `sum by (code) (irate(http_requests_result_total{${param}}[${range}]))`;
+    return `sum by (partial_code) (label_replace(irate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
   },
 
   // latency queries

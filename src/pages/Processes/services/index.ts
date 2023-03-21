@@ -41,14 +41,19 @@ const ProcessesController = {
       }
 
       // requests metrics
-      const requestPerSecondSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess({
+      const requestPerSecondSeriesResponse = await PrometheusApi.fetchRequestsByProcess({
         ...params,
         isRate: true
       });
-      const requestSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess(params);
+      const requestSeriesResponse = await PrometheusApi.fetchRequestsByProcess(params);
 
       // responses metrics
       const responseSeriesResponse = await PrometheusApi.fetchSResponsesByProcess(params);
+      const responseRateSeriesResponse = await PrometheusApi.fetchSResponsesByProcess({
+        ...params,
+        isRate: true,
+        onlyErrors: true
+      });
 
       // data normalization
       const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
@@ -56,6 +61,7 @@ const ProcessesController = {
       const requestSeries = normalizeRequests(requestSeriesResponse, id);
       const requestPerSecondSeries = normalizeRequests(requestPerSecondSeriesResponse, id);
       const responseSeries = normalizeResponses(responseSeriesResponse);
+      const responseRateSeries = normalizeResponses(responseRateSeriesResponse);
 
       if (!(trafficDataSeries && trafficDataSeriesPerSecond)) {
         return null;
@@ -67,7 +73,8 @@ const ProcessesController = {
         latencies,
         requestSeries,
         requestPerSecondSeries,
-        responseSeries
+        responseSeries,
+        responseRateSeries
       };
     } catch (e: unknown) {
       throw new Error(e as string);

@@ -5,6 +5,7 @@ import {
   Bullseye,
   Card,
   CardBody,
+  CardTitle,
   Grid,
   GridItem,
   Icon,
@@ -12,7 +13,6 @@ import {
   SelectOption,
   SelectOptionObject,
   Spinner,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem
@@ -23,7 +23,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { defaultTimeInterval, timeIntervalMap } from 'API/Prometheus.constant';
@@ -218,15 +218,19 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
             <Card isFullHeight>
               {!metrics.trafficDataSeriesPerSecond && <EmptyData />}
               {!!metrics.trafficDataSeriesPerSecond && (
-                <ChartProcessDataTrafficSeries
-                  formatY={formatByteRate}
-                  axisYLabel={ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}
-                  legendLabels={['Received', 'Sent']}
-                  data={[
-                    metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
-                    metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
-                  ]}
-                />
+                <>
+                  <CardTitle>{ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}</CardTitle>
+                  <CardBody>
+                    <ChartProcessDataTrafficSeries
+                      formatY={formatByteRate}
+                      legendLabels={['Received', 'Sent']}
+                      data={[
+                        metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
+                        metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
+                      ]}
+                    />
+                  </CardBody>
+                </>
               )}
             </Card>
           </GridItem>
@@ -280,28 +284,18 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
           {/* Chart pie distribution data traffic card and total bytes */}
           <GridItem span={4}>
             <Card isFullHeight>
-              <>
-                {!!metrics.trafficDataSeries &&
-                  !!(metrics.trafficDataSeries.totalDataSent + metrics.trafficDataSeries.totalDataReceived) && (
-                    <Title headingLevel="h2" className="pf-u-text-align-center pf-u-p-md">
-                      {formatBytes(
-                        metrics.trafficDataSeries.totalDataSent + metrics.trafficDataSeries.totalDataReceived
-                      )}
-                    </Title>
-                  )}
-                <ChartProcessDataTrafficDistribution
-                  data={[
-                    {
-                      x: 'Received',
-                      y: metrics.trafficDataSeries?.totalDataReceived || 0
-                    },
-                    {
-                      x: 'Sent',
-                      y: metrics.trafficDataSeries?.totalDataSent || 0
-                    }
-                  ]}
-                />
-              </>
+              <ChartProcessDataTrafficDistribution
+                data={[
+                  {
+                    x: 'Received',
+                    y: metrics.trafficDataSeries?.totalDataReceived || 0
+                  },
+                  {
+                    x: 'Sent',
+                    y: metrics.trafficDataSeries?.totalDataSent || 0
+                  }
+                ]}
+              />
             </Card>
           </GridItem>
 
@@ -312,13 +306,17 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                 <Card isFullHeight>
                   {!metrics.latencies && <EmptyData />}
                   {!!metrics.latencies && (
-                    <ChartProcessDataTrafficSeries
-                      formatY={formatLatency}
-                      axisYLabel={ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}
-                      themeColor={ChartThemeColor.multiOrdered}
-                      legendLabels={metrics.latencies.map(({ label }) => label)}
-                      data={metrics.latencies.map(({ data }) => data)}
-                    />
+                    <>
+                      <CardTitle>{ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}</CardTitle>
+                      <CardBody>
+                        <ChartProcessDataTrafficSeries
+                          formatY={formatLatency}
+                          themeColor={ChartThemeColor.multiOrdered}
+                          legendLabels={metrics.latencies.map(({ label }) => label)}
+                          data={metrics.latencies.map(({ data }) => data)}
+                        />
+                      </CardBody>
+                    </>
                   )}
                 </Card>
               </GridItem>
@@ -327,13 +325,17 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
               <GridItem span={8} rowSpan={2}>
                 <Card isFullHeight>
                   {!!metrics.requestPerSecondSeries && (
-                    <ChartProcessDataTrafficSeries
-                      formatY={(y: number) => y.toFixed(3)}
-                      axisYLabel={ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}
-                      themeColor={ChartThemeColor.purple}
-                      legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
-                      data={metrics.requestPerSecondSeries.map(({ data }) => data)}
-                    />
+                    <>
+                      <CardTitle>{ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}</CardTitle>
+                      <CardBody>
+                        <ChartProcessDataTrafficSeries
+                          formatY={(y: number) => y.toFixed(3)}
+                          themeColor={ChartThemeColor.purple}
+                          legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
+                          data={metrics.requestPerSecondSeries.map(({ data }) => data)}
+                        />
+                      </CardBody>
+                    </>
                   )}
                 </Card>
               </GridItem>
@@ -397,6 +399,33 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                       bgColor={'--pf-global--palette--red-100'}
                       showChart={false}
                     />
+                  </GridItem>
+
+                  {/* Chart pie distribution data traffic card and total bytes */}
+                  <GridItem span={4}>
+                    <Card isFullHeight>
+                      <>
+                        {!metrics.responseSeries.statusCode5xx.total && !metrics.responseSeries.statusCode4xx.total && (
+                          <EmptyData message="No error found" />
+                        )}
+
+                        {(!!metrics.responseSeries.statusCode5xx.total ||
+                          !!metrics.responseSeries.statusCode4xx.total) && (
+                          <ChartProcessDataTrafficDistribution
+                            data={[
+                              {
+                                x: metrics.responseSeries.statusCode4xx.label,
+                                y: metrics.responseSeries.statusCode4xx.total
+                              },
+                              {
+                                x: metrics.responseSeries.statusCode5xx.label,
+                                y: metrics.responseSeries.statusCode5xx.total
+                              }
+                            ]}
+                          />
+                        )}
+                      </>
+                    </Card>
                   </GridItem>
                 </>
               )}

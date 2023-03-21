@@ -82,7 +82,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchTotalRequestByProcess: async ({
+  fetchRequestsByProcess: async ({
     id,
     range,
     processIdDest,
@@ -117,10 +117,15 @@ export const PrometheusApi = {
     id,
     range,
     processIdDest,
-    isRate = false
+    isRate = false,
+    onlyErrors = false
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `destProcess="${id}"`;
+
+    if (onlyErrors) {
+      param = [param, `code=~"4.*|5.*"`].join(',');
+    }
 
     if (processIdDest) {
       param = [param, `sourceProcess="${processIdDest}"`].join(',');
