@@ -23,7 +23,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -43,7 +43,7 @@ const FlowsPair = function () {
   const addressId = address?.split('@')[1];
   const addressName = address?.split('@')[0];
 
-  const { data: connection, isLoading: isLoadingConnections } = useQuery(
+  const { data: flowPairs, isLoading: isLoadingFlowPairs } = useQuery(
     [QueriesAddresses.GetFlowPair, flowPairId],
     () => (addressId && flowPairId ? RESTApi.fetchFlowPair(flowPairId as string) : null),
     {
@@ -58,15 +58,15 @@ const FlowsPair = function () {
     navigate(route);
   }
 
-  if (isLoadingConnections) {
+  if (isLoadingFlowPairs) {
     return <LoadingPage />;
   }
 
-  if (!connection) {
+  if (!flowPairs) {
     return null;
   }
 
-  const { forwardFlow, counterFlow } = connection;
+  const { forwardFlow, counterFlow } = flowPairs;
 
   //In the address space a server (counterflow) listen to the port indicated in the name of the address
   // the sourcePort from the API is internal
@@ -74,6 +74,7 @@ const FlowsPair = function () {
     ...counterFlow,
     sourcePort: addressName?.split(':')[1] as string
   };
+  const duration = formatTimeInterval(flowPairs.endTime || Date.now() * 1000, flowPairs.startTime);
 
   return (
     <TransitionPage>
@@ -90,12 +91,31 @@ const FlowsPair = function () {
           </Breadcrumb>
         </GridItem>
 
-        {connection.protocol === AvailableProtocols.Tcp && (
-          <TextContent>
-            <Text component={TextVariants.h2}>Connection {forwardFlow?.endTime ? 'closed' : 'open'}</Text>
-          </TextContent>
+        {flowPairs.protocol === AvailableProtocols.Tcp && (
+          <>
+            <TextContent>
+              <Text component={TextVariants.h2}>Connection {forwardFlow?.endTime ? 'closed' : 'open'}</Text>
+            </TextContent>
+
+            <Card>
+              <CardBody>
+                <DescriptionList>
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                    <DescriptionListDescription>{formatTraceBySites(flowPairs.flowTrace)}</DescriptionListDescription>
+                    {duration && (
+                      <>
+                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                        <DescriptionListDescription>{duration}</DescriptionListDescription>
+                      </>
+                    )}
+                  </DescriptionListGroup>
+                </DescriptionList>
+              </CardBody>
+            </Card>
+          </>
         )}
-        {connection.protocol !== AvailableProtocols.Tcp && (
+        {flowPairs.protocol !== AvailableProtocols.Tcp && (
           <>
             <TextContent>
               <Text component={TextVariants.h2}>Request {forwardFlow?.endTime ? 'terminated' : 'open'}</Text>
@@ -108,10 +128,14 @@ const FlowsPair = function () {
                     <DescriptionListDescription>{forwardFlow.protocol}</DescriptionListDescription>
                     <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
                     <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
-                    <DescriptionListDescription>
-                      {formatTimeInterval(connection.endTime || Date.now() * 1000, connection.startTime)}
-                    </DescriptionListDescription>
+                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                    <DescriptionListDescription>{formatTraceBySites(flowPairs.flowTrace)}</DescriptionListDescription>
+                    {duration && (
+                      <>
+                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                        <DescriptionListDescription>{duration}</DescriptionListDescription>
+                      </>
+                    )}
                   </DescriptionListGroup>
                 </DescriptionList>
               </CardBody>
@@ -120,7 +144,7 @@ const FlowsPair = function () {
         )}
 
         <GridItem span={6}>
-          {connection.protocol === AvailableProtocols.Tcp ? (
+          {flowPairs.protocol === AvailableProtocols.Tcp ? (
             <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
           ) : (
             <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
@@ -128,7 +152,7 @@ const FlowsPair = function () {
         </GridItem>
 
         <GridItem span={6}>
-          {connection.protocol === AvailableProtocols.Tcp ? (
+          {flowPairs.protocol === AvailableProtocols.Tcp ? (
             <ConnectionDetail title={FlowLabels.CounterFlow} flow={counterFlowWithAddressPort} isCounterflow={true} />
           ) : (
             <RequestDetail title={FlowLabels.CounterFlow} flow={counterFlowWithAddressPort} isCounterflow={true} />

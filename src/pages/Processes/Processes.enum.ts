@@ -10,7 +10,7 @@ export enum ProcessesTableColumns {
 
 export enum ProcessesLabels {
   Section = 'Processes',
-  Description = '',
+  Description = 'A process represents one specific instance that is currently executing. It contains all runtime information related to that instance',
   Details = 'Details',
   Processes = 'Processes',
   Addresses = 'Addresses',

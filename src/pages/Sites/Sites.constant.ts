@@ -4,7 +4,7 @@ import { SiteLabels, SitesRoutesPaths, SitesTableColumns } from './Sites.enum';
 
 export const SitesPaths = {
   path: SitesRoutesPaths.Sites,
-  name: SiteLabels.Sites
+  name: SiteLabels.Section
 };
 
 export const siteColumns = [

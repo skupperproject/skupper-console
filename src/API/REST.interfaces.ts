@@ -142,23 +142,14 @@ export interface FlowPairsResponse extends BaseResponse {
   endTime?: number;
 }
 
-export interface FlowAggregatesResponse extends BaseResponse {
+export interface ProcessPairsResponse extends BaseResponse {
   rectType: string;
   pairType: string;
   recordCount: number;
   sourceId: string;
   sourceName: string;
-  sourceOctets: number;
-  sourceOctetRate?: number;
-  sourceMinLatency: number;
-  sourceMaxLatency: number;
-  sourceAverageLatency: number;
   destinationId: string;
   destinationName: string;
-  destinationOctets: number;
-  destinationOctetRate?: number;
-  destinationMinLatency: number;
-  destinationAverageLatency: number;
 }
 
 export interface CollectorsResponse {

@@ -240,7 +240,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
             {!metrics.trafficDataSeriesPerSecond && metrics.trafficDataSeries && <EmptyData />}
             {!!metrics.trafficDataSeriesPerSecond && metrics.trafficDataSeries && (
               <Card>
-                <TableComposable borders={false}>
+                <TableComposable borders={false} variant="compact">
                   <Thead noWrap>
                     <Tr>
                       <Th />

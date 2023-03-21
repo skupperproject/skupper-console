@@ -7,8 +7,8 @@ export enum SitesRoutesPathLabel {
 }
 
 export enum SiteLabels {
-  Sites = 'Sites',
-  SitesDescription = 'Set of applications running under the same geographical area',
+  Section = 'Sites',
+  Description = 'Set of applications running under the same geographical area',
   Details = 'Details',
   Links = 'Linked to sites',
   Hosts = 'Hosts',

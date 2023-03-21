@@ -1,43 +1,24 @@
 import React, { useCallback, useState } from 'react';
 
-import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import SectionTitle from '@core/components/SectionTitle';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
-import { SortDirection } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
-import ComponentNameLinkCell from '../components/ComponentNameLinkCell';
-import ProcessNameLinkCell from '../components/ProcessesNameLinkCell';
-import SiteNameLinkCell from '../components/SiteNameLinkCell';
-import { processesTableColumns } from '../Processes.constant';
+import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constant';
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const BYTES_SENT_PROP = 'octetsSent';
-const BYTES_RECEIVED_PROP = 'octetsReceived';
-
-const initBytesSentQueryParams = {
-  sortName: BYTES_SENT_PROP,
-  sortDirection: SortDirection.DESC,
-  limit: 5,
-  offset: 0
-};
-
-const initBytesReceivedQueryParams = {
-  sortName: BYTES_RECEIVED_PROP,
-  sortDirection: SortDirection.DESC,
-  limit: 5,
-  offset: 0
-};
+const PAGINATION_SIZE = 50;
 
 const initProcessesPaginatedQueryParams = {
-  limit: 10,
+  limit: PAGINATION_SIZE,
   offset: 0,
   filter: 'processRole.external'
 };
@@ -47,22 +28,6 @@ const Processes = function () {
 
   const [ProcessesPaginatedQueryParams, setProcessesPaginatedQueryParams] = useState<RequestOptions>(
     initProcessesPaginatedQueryParams
-  );
-
-  const { data: processesByOctetsSentData, isLoading: isLoadingProcessesByOctetsSentData } = useQuery(
-    [QueriesProcesses.GetProcessesMetrics],
-    () => RESTApi.fetchProcesses(initBytesSentQueryParams),
-    {
-      onError: handleError
-    }
-  );
-
-  const { data: processesByOctetsReceivedData, isLoading: isLoadingProcessesByOctetsReceivedData } = useQuery(
-    [QueriesProcesses.GetProcessesMetrics],
-    () => RESTApi.fetchProcesses(initBytesReceivedQueryParams),
-    {
-      onError: handleError
-    }
   );
 
   const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
@@ -87,7 +52,11 @@ const Processes = function () {
     setProcessesPaginatedQueryParams({ ...initProcessesPaginatedQueryParams, ...params });
   }, []);
 
-  if (!processesData || !processesByOctetsSentData || !processesByOctetsReceivedData) {
+  if (isLoadingProcessesData) {
+    <LoadingPage />;
+  }
+
+  if (!processesData) {
     return null;
   }
 
@@ -96,27 +65,16 @@ const Processes = function () {
   return (
     <TransitionPage>
       <>
-        <Grid hasGutter>
-          <GridItem span={12}>
-            <SkTable
-              title={ProcessesLabels.Section}
-              titleDescription={ProcessesLabels.Description}
-              columns={processesTableColumns}
-              rows={processes}
-              components={{
-                linkCell: ProcessNameLinkCell,
-                linkCellSite: SiteNameLinkCell,
-                linkComponentCell: ComponentNameLinkCell
-              }}
-              rowsCount={processesData?.timeRangeCount}
-              onGetFilters={handleGetFilters}
-            />
-          </GridItem>
-        </Grid>
-
-        {(isLoadingProcessesData || isLoadingProcessesByOctetsSentData || isLoadingProcessesByOctetsReceivedData) && (
-          <LoadingPage isFLoating={true} />
-        )}
+        <SectionTitle title={ProcessesLabels.Section} description={ProcessesLabels.Description} />
+        <div>
+          <SkTable
+            pageSizeStart={PAGINATION_SIZE}
+            columns={processesTableColumns}
+            rows={processes}
+            components={ProcessesComponentsTable}
+            onGetFilters={handleGetFilters}
+          />
+        </div>
       </>
     </TransitionPage>
   );

@@ -8,7 +8,7 @@ export enum ProcessGroupsTableColumns {
 
 export enum ProcessGroupsLabels {
   Section = 'Components',
-  Description = '',
+  Description = 'Group of processes that performs the same functionalities',
   Details = 'Details',
   Processes = 'Processes',
   Name = 'Name',

@@ -1,6 +1,6 @@
 import { PrometheusApiResult, ValidWindowTimeValues } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
-import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
+import { ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
   processes?: ProcessResponse[];
@@ -48,21 +48,6 @@ export interface ProcessDataChart {
 export interface ProcessesBytesChartProps {
   data: { x: string; y: number }[];
   themeColor?: string;
-}
-
-export interface ProcessNameLinkCellProps {
-  data: ProcessResponse;
-  value: ProcessResponse[keyof ProcessResponse];
-}
-
-export interface SiteNameLinkCellProps {
-  data: ProcessResponse;
-  value: ProcessResponse[keyof ProcessResponse];
-}
-
-export interface AddressNameLinkCellProps {
-  data: AddressResponse;
-  value: AddressResponse[keyof AddressResponse];
 }
 
 export interface ChartProcessDataTrafficSeriesProps {

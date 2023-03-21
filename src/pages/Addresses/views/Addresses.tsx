@@ -1,23 +1,12 @@
 import React, { useCallback } from 'react';
 
-import { ChartPie, ChartThemeColor } from '@patternfly/react-charts';
-import {
-  Card,
-  CardTitle,
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  TextContent,
-  TextVariants,
-  Tooltip
-} from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SectionTitle from '@core/components/SectionTitle';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -28,10 +17,7 @@ import { AddressResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { AddressesColumnsNames, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
-import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
-
-const REAL_TIME_CONNECTION_HEIGHT_CHART = 360;
 
 const Addresses = function () {
   const navigate = useNavigate();
@@ -57,90 +43,48 @@ const Addresses = function () {
     []
   );
 
-  const addressesWithFlowPairsCounts = AddressesController.getAddressesWithFlowPairsCounts(addresses || []);
-
-  const sortedAddresses = addressesWithFlowPairsCounts.sort((a, b) => b.currentFlows - a.currentFlows);
-
-  const sortedAddressesTCP = sortedAddresses.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
-
-  const sortedAddressesHTTP = sortedAddresses.filter(({ protocol }) => protocol !== AvailableProtocols.Tcp);
-
-  const topTrafficUploadByClient = sortedAddresses.reduce((acc, { protocol }) => {
-    acc[protocol] = { name: protocol, x: protocol, y: (acc[protocol]?.y || 0) + 1 };
-
-    return acc;
-  }, {} as Record<string, { name: string; x: string; y: number }>);
-
-  const topTrafficUpload = Object.values(topTrafficUploadByClient);
-
   if (isLoading) {
     return <LoadingPage />;
   }
 
+  if (!addresses) {
+    return null;
+  }
+
+  const sortedAddressesTCP = addresses.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
+  const sortedAddressesHTTP = addresses.filter(({ protocol }) => protocol !== AvailableProtocols.Tcp);
+
   return (
     <TransitionPage>
-      <Grid hasGutter data-cy="sk-addresses">
-        <GridItem>
-          <Flex>
-            <TextContent>
-              <Text component={TextVariants.h1}>{AddressesLabels.Section}</Text>
-            </TextContent>
-            <Tooltip position="right" content={AddressesLabels.Description}>
-              <OutlinedQuestionCircleIcon />
-            </Tooltip>
-          </Flex>
-        </GridItem>
+      <>
+        <SectionTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
 
-        <GridItem>
-          <Card style={{ height: `${REAL_TIME_CONNECTION_HEIGHT_CHART}px` }}>
-            <CardTitle>{AddressesLabels.ProtocolDistribution}</CardTitle>
-            <ChartPie
-              data={topTrafficUpload?.map(({ x, y }) => ({
-                x,
-                y
-              }))}
-              labels={topTrafficUpload?.map(({ name, y }) => `${name}: ${y}`)}
-              padding={{
-                bottom: 100,
-                left: 0,
-                right: 0,
-                top: 0
-              }}
-              legendData={topTrafficUpload?.map(({ name, y }) => ({
-                name: `${name}: ${y}`
-              }))}
-              legendOrientation="horizontal"
-              legendPosition="bottom"
-              height={REAL_TIME_CONNECTION_HEIGHT_CHART}
-              themeColor={ChartThemeColor.multi}
-            />
-          </Card>
-        </GridItem>
+        <Grid hasGutter data-cy="sk-addresses">
+          <GridItem span={6}>
+            <Card isFullHeight>
+              <SkTable
+                title={AddressesLabels.TCP}
+                columns={generateColumns(AvailableProtocols.Tcp)}
+                rows={sortedAddressesTCP}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                components={{ AddressNameLinkCell }}
+              />
+            </Card>
+          </GridItem>
 
-        <GridItem span={6}>
-          <Card isFullHeight>
-            <SkTable
-              title={AddressesLabels.TCP}
-              columns={generateColumns(AvailableProtocols.Tcp)}
-              rows={sortedAddressesTCP}
-              pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-              components={{ AddressNameLinkCell }}
-            />
-          </Card>
-        </GridItem>
-
-        <GridItem span={6}>
-          <Card isFullHeight>
-            <SkTable
-              title={AddressesLabels.HTTP}
-              columns={generateColumns(AvailableProtocols.Http)}
-              pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-              rows={sortedAddressesHTTP}
-              components={{ AddressNameLinkCell }}
-            />
-          </Card>
-        </GridItem>
-      </Grid>
+          <GridItem span={6}>
+            <Card isFullHeight>
+              <SkTable
+                title={AddressesLabels.HTTP}
+                columns={generateColumns(AvailableProtocols.Http)}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                rows={sortedAddressesHTTP}
+                components={{ AddressNameLinkCell }}
+              />
+            </Card>
+          </GridItem>
+        </Grid>
+      </>
     </TransitionPage>
   );
 };

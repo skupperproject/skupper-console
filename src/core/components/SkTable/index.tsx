@@ -213,7 +213,7 @@ const SkTable = function <T>({
           <Flex>
             {title && (
               <TextContent>
-                <Text component={TextVariants.h1}>{title}</Text>
+                <Text component={TextVariants.h2}>{title}</Text>
               </TextContent>
             )}
             {titleDescription && (
