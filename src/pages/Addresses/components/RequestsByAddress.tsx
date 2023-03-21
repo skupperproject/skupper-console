@@ -166,7 +166,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
             parent={{ id: serverNames, name: serverNames }}
             processesConnected={serverNameFilters}
             protocolDefault={AvailableProtocols.AllHttp}
-            filterOptions={{
+            customFilters={{
               protocols: { disabled: true },
               destinationProcesses: { name: FlowPairsLabelsHttp.Servers }
             }}

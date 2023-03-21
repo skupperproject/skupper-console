@@ -148,7 +148,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               parent={{ id: serverNames, name: serverNames }}
               processesConnected={serverNameFilters}
               protocolDefault={AvailableProtocols.Tcp}
-              filterOptions={{
+              customFilters={{
                 protocols: { disabled: true },
                 destinationProcesses: { name: FlowPairsLabelsTcp.Servers }
               }}

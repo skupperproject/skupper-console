@@ -173,6 +173,7 @@ const Process = function () {
             <Metrics
               parent={{ id: processId, name: process.name }}
               processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
+              customFilters={{ destinationProcesses: { name: 'Servers and Clients' } }}
             />
           </GridItem>
         )}
