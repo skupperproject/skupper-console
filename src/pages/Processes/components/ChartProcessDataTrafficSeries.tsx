@@ -28,6 +28,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
   formatX = (timestamp: number, start: number) => formatChartDate(timestamp, start),
   axisYLabel,
   legendLabels = [],
+  showLegend = true,
   ...props
 }) {
   const observer = useRef<Function>(() => null);
@@ -57,7 +58,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
   return (
     <div style={{ width: '100%', height: `100%` }} ref={chartContainerRef}>
       <Chart
-        legendData={legendData}
+        legendData={showLegend ? legendData : []}
         legendOrientation="horizontal"
         legendPosition="bottom"
         width={width}
@@ -66,6 +67,7 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
+            voronoiDimension="x"
             labels={({ datum }: { datum: ProcessAxisDataChart }) => formatY(datum.y)}
             labelComponent={
               <ChartLegendTooltip

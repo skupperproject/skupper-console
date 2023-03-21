@@ -25,14 +25,6 @@ export interface ProcessRequestsChart {
   avgRequestRateInterval: number;
 }
 
-export interface ProcessMetrics {
-  trafficDataSeries: ProcessDataChart | null;
-  trafficDataSeriesPerSecond: ProcessDataChart | null;
-  latencies: ProcessLatenciesChart[] | null;
-  requestSeries: ProcessRequestsChart[] | null;
-  requestPerSecondSeries: ProcessRequestsChart[] | null;
-}
-
 export interface ProcessDataChart {
   timeSeriesDataReceived: ProcessAxisDataChart[];
   timeSeriesDataSent: ProcessAxisDataChart[];
@@ -75,6 +67,15 @@ export interface ChartProcessDataTrafficSeriesProps {
   axisYLabel?: string;
   legendLabels?: string[];
   themeColor?: string;
+  showLegend?: boolean;
+}
+
+export interface ProcessMetrics {
+  trafficDataSeries: ProcessDataChart | null;
+  trafficDataSeriesPerSecond: ProcessDataChart | null;
+  latencies: ProcessLatenciesChart[] | null;
+  requestSeries: ProcessRequestsChart[] | null;
+  requestPerSecondSeries: ProcessRequestsChart[] | null;
 }
 
 export interface MetricCardProps {

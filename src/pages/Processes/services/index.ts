@@ -24,22 +24,25 @@ const ProcessesController = {
       protocol
     };
     try {
+      // requests metrics
       const requestPerSecondSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess({
         ...params,
         isRate: true
       });
       const requestSeriesResponse = await PrometheusApi.fetchTotalRequestByProcess(params);
+
+      // traffic metrics
       const trafficDataSeriesResponse = await PrometheusApi.fetchDataTraffic(params);
       const trafficDataSeriesPerSecondResponse = await PrometheusApi.fetchDataTraffic({ ...params, isRate: true });
 
+      // latency metrics
       let latencies = null;
       if (protocol !== AvailableProtocols.Tcp) {
-        const avgLatency = await PrometheusApi.fetchLatencyByProcess(params);
         const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5 });
         const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 });
         const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 });
 
-        latencies = normalizeLatencies({ avgLatency, quantile50latency, quantile90latency, quantile99latency });
+        latencies = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
       }
 
       const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
@@ -85,47 +88,46 @@ const ProcessesController = {
 export default ProcessesController;
 
 interface NormalizeLatenciesProps {
-  avgLatency: PrometheusApiResult[];
   quantile50latency: PrometheusApiResult[];
   quantile90latency: PrometheusApiResult[];
   quantile99latency: PrometheusApiResult[];
 }
 
-function normalizeRequests(data: PrometheusApiResult[], id: string) {
+function normalizeRequests(data: PrometheusApiResult[], label: string) {
   const axisValues = normalizeMetric(data);
 
   if (!axisValues) {
     return null;
   }
 
-  const values = axisValues[0];
-  const totalRequestInterval = values[values.length - 1].y - values[0].y;
+  return axisValues.flatMap((values) => {
+    const totalRequestInterval = values[values.length - 1].y - values[0].y;
 
-  const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
-  const avgRequestRateInterval = Number((sumRequestRateInterval / values.length).toFixed(2));
+    const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
+    const avgRequestRateInterval = Number((sumRequestRateInterval / values.length).toFixed(2));
 
-  const requestsNormalized: ProcessRequestsChart[] = [];
-  requestsNormalized.push({ data: values, label: id, totalRequestInterval, avgRequestRateInterval });
+    const requestsNormalized: ProcessRequestsChart[] = [];
+    requestsNormalized.push({
+      data: values,
+      label,
+      totalRequestInterval,
+      avgRequestRateInterval
+    });
 
-  return requestsNormalized;
+    return requestsNormalized;
+  });
 }
 
 function normalizeLatencies({
-  avgLatency,
   quantile50latency,
   quantile90latency,
   quantile99latency
 }: NormalizeLatenciesProps): ProcessLatenciesChart[] | null {
-  const avgLatencyNormalized = normalizeMetric(avgLatency);
   const quantile50latencyNormalized = normalizeMetric(quantile50latency);
   const quantile90latencyNormalized = normalizeMetric(quantile90latency);
   const quantile99latencyNormalized = normalizeMetric(quantile99latency);
 
   const latenciesNormalized: ProcessLatenciesChart[] = [];
-
-  if (avgLatencyNormalized) {
-    latenciesNormalized.push({ data: avgLatencyNormalized[0], label: ProcessesLabels.LatencyMetricAvg });
-  }
 
   if (quantile50latencyNormalized) {
     latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: ProcessesLabels.LatencyMetric50quantile });
