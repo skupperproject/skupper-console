@@ -80,19 +80,22 @@ interface StatusCodeResponse {
   total: number;
 }
 
+interface ResponseSeries {
+  statusCode2xx: StatusCodeResponse;
+  statusCode3xx: StatusCodeResponse;
+  statusCode4xx: StatusCodeResponse;
+  statusCode5xx: StatusCodeResponse;
+  total: number;
+}
+
 export interface ProcessMetrics {
   trafficDataSeries: ProcessDataChart | null;
   trafficDataSeriesPerSecond: ProcessDataChart | null;
   latencies: ProcessLatenciesChart[] | null;
   requestSeries: ProcessRequestsChart[] | null;
   requestPerSecondSeries: ProcessRequestsChart[] | null;
-  responseSeries: {
-    statusCode2xx: StatusCodeResponse;
-    statusCode3xx: StatusCodeResponse;
-    statusCode4xx: StatusCodeResponse;
-    statusCode5xx: StatusCodeResponse;
-    total: number;
-  } | null;
+  responseSeries: ResponseSeries | null;
+  responseRateSeries: ResponseSeries | null;
 }
 
 export interface MetricCardProps {

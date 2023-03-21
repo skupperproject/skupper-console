@@ -25,6 +25,7 @@ export interface PrometheusQueryParams {
   range: ValidWindowTimeValues;
   processIdDest?: string;
   isRate?: boolean;
+  onlyErrors?: boolean;
   protocol?: string;
   quantile?: 0.5 | 0.9 | 0.99;
 }

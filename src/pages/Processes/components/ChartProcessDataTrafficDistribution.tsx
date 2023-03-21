@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 
-import { ChartPie, ChartThemeColor, ChartTooltip, getResizeObserver } from '@patternfly/react-charts';
+import { ChartDonut, ChartThemeColor, ChartTooltip, getResizeObserver } from '@patternfly/react-charts';
 
 import EmptyData from '@core/components/EmptyData';
 import { formatBytes } from '@core/utils/formatBytes';
@@ -46,9 +46,10 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
 
   return (
     <div ref={chartContainerRef} style={{ height: `100%`, width: `100%` }}>
-      {!totalBytes && <EmptyData message="Data traffic not available" />}
+      {!totalBytes && <EmptyData message="Data not available" />}
       {!!totalBytes && (
-        <ChartPie
+        <ChartDonut
+          title={formatBytes(trafficDataTx.y + trafficDataRx.y)}
           data={data}
           labels={[
             `${trafficDataRx.x}: ${formatBytes(trafficDataRx.y)}`,
