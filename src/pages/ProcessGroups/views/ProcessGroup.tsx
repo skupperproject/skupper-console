@@ -32,6 +32,10 @@ import { RESTApi } from 'API/REST';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
+const initProcessesQueryParams = {
+  filter: 'endTime.0'
+};
+
 const ProcessGroup = function () {
   const navigate = useNavigate();
   const { id: processGroupId } = useParams() as { id: string };
@@ -45,8 +49,8 @@ const ProcessGroup = function () {
   );
 
   const { data: processes, isLoading: isLoadingProcess } = useQuery(
-    [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
-    () => RESTApi.fetchProcessesByProcessGroup(processGroupId),
+    [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId, initProcessesQueryParams],
+    () => RESTApi.fetchProcessesByProcessGroup(processGroupId, initProcessesQueryParams),
     {
       onError: handleError
     }

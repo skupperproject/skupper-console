@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Tooltip } from '@patternfly/react-core';
-import { TableText } from '@patternfly/react-table';
+import { Truncate } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -10,13 +9,15 @@ import { LinkCellProps } from './LinkCell.interfaces';
 
 const LinkCell = function <T>({ value, link, type, isDisabled = false }: LinkCellProps<T>) {
   return (
-    <Tooltip content={value}>
-      <TableText wrapModifier="truncate">
-        {type && <ResourceIcon type={type} />}
-        {isDisabled && value}
-        {!isDisabled && <Link to={link}>{value}</Link>}
-      </TableText>
-    </Tooltip>
+    <div style={{ display: 'flex' }}>
+      {type && <ResourceIcon type={type} />}
+      {isDisabled && <Truncate content={value}>{value}</Truncate>}
+      {!isDisabled && (
+        <Link to={link}>
+          <Truncate content={value}>{value}</Truncate>
+        </Link>
+      )}
+    </div>
   );
 };
 

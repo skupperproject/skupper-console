@@ -26,6 +26,7 @@ export enum ProcessesLabels {
   ChartProcessDataTrafficSeriesAxisYLabel = 'Throughput',
   ChartProcessLatencySeriesAxisYLabel = 'Latency',
   RequestsPerSecondsSeriesAxisYLabel = 'Hits per second',
+  ErrorRateSeriesAxisYLabel = 'Error rate',
   TrafficTotal = 'Total',
   TrafficSent = 'Sent',
   TrafficReceived = 'Received',

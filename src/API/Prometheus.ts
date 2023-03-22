@@ -61,7 +61,7 @@ export const PrometheusApi = {
       param = [param, `destProcess="${processIdDest}"`].join(',');
     }
 
-    if (processIdDest) {
+    if (protocol) {
       param = [param, `protocol=~"${protocol}"`].join(',');
     }
     const {
@@ -86,13 +86,18 @@ export const PrometheusApi = {
     id,
     range,
     processIdDest,
-    isRate = false
+    isRate = false,
+    protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
       param = [param, `destProcess="${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
     }
 
     const {
@@ -118,17 +123,23 @@ export const PrometheusApi = {
     range,
     processIdDest,
     isRate = false,
-    onlyErrors = false
+    onlyErrors = false,
+    protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
     const { start, end } = getRangeTimestamp(range);
     let param = `destProcess="${id}"`;
 
     if (onlyErrors) {
-      param = [param, `code=~"4.*|5.*"`].join(',');
+      const code = onlyErrors ? '"4.*|5.*"' : '"2.*|3.*|4.*|5.*"';
+      param = [param, `code=~${code}`].join(',');
     }
 
     if (processIdDest) {
       param = [param, `sourceProcess="${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
     }
 
     const {
@@ -146,7 +157,6 @@ export const PrometheusApi = {
       }
     });
 
-    // it retrieves X arrays of [values, timestamps], 2XX, 3XX, 4XX, 5XX
     return result;
   }
 };

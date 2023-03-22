@@ -53,7 +53,7 @@ const Processes = function () {
   }, []);
 
   if (isLoadingProcessesData) {
-    <LoadingPage />;
+    return <LoadingPage />;
   }
 
   if (!processesData) {
