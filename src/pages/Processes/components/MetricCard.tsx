@@ -26,7 +26,7 @@ const MetricCard: FC<MetricCardProps> = function ({
       <CardBody>
         <Title headingLevel="h3">{title}</Title>
         <Bullseye>
-          <Title style={{ fontSize: '60px' }} headingLevel="h1">
+          <Title style={{ fontSize: '50px' }} headingLevel="h1">
             {value}
           </Title>
         </Bullseye>
