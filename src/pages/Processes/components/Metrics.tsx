@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import EmptyData from '@core/components/EmptyData';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
+import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { defaultTimeInterval, timeIntervalMap } from 'API/Prometheus.constant';
 import { ValidWindowTimeValues } from 'API/Prometheus.interfaces';
@@ -330,7 +331,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                         <CardTitle>{ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}</CardTitle>
                         <CardBody>
                           <ChartProcessDataTrafficSeries
-                            formatY={(y: number) => y.toFixed(3)}
+                            formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                             themeColor={ChartThemeColor.purple}
                             legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
                             data={metrics.requestPerSecondSeries.map(({ data }) => data)}
@@ -429,7 +430,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                             <CardTitle>{ProcessesLabels.ErrorRateSeriesAxisYLabel}</CardTitle>
                             <CardBody>
                               <ChartProcessDataTrafficSeries
-                                formatY={(y: number) => y.toFixed(3)}
+                                formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                                 themeColor={ChartThemeColor.orange}
                                 legendLabels={[
                                   metrics.responseRateSeries.statusCode4xx.label,

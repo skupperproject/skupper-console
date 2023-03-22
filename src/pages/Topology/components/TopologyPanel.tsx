@@ -40,20 +40,13 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
     [onGetSelectedEdge]
   );
 
-  const handleSaveNodePosition = useCallback((node: GraphNode) => {
-    if (node.x && node.y) {
-      localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
-    }
+  const handleSaveNodesPositions = useCallback((topologyNodes: GraphNode[]) => {
+    topologyNodes.forEach((node) => {
+      if (node.x && node.y) {
+        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+      }
+    });
   }, []);
-
-  const handleSaveNodesPositions = useCallback(
-    (topologyNodes: GraphNode[]) => {
-      topologyNodes.forEach((node) => {
-        handleSaveNodePosition(node);
-      });
-    },
-    [handleSaveNodePosition]
-  );
 
   // Creates topology
   const graphRef = useCallback(

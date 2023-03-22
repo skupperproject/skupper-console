@@ -1,4 +1,5 @@
 import { formatBytes } from '@core/utils/formatBytes';
+import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { PrometheusApi } from 'API/Prometheus';
 import { startDateOffsetMap } from 'API/Prometheus.constant';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
@@ -160,7 +161,7 @@ function normalizeRequests(data: PrometheusApiResult[], label: string) {
     const totalRequestInterval = values[values.length - 1].y - values[0].y;
 
     const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
-    const avgRequestRateInterval = Number((sumRequestRateInterval / values.length).toFixed(2));
+    const avgRequestRateInterval = formatToDecimalPlacesIfCents(sumRequestRateInterval / values.length, 2);
 
     const requestsNormalized: ProcessRequestsChart[] = [];
     requestsNormalized.push({
@@ -285,5 +286,5 @@ export function formatPercentage(value: number, total: number) {
     return 0;
   }
 
-  return `${percentage.toFixed(0)}%`;
+  return `${formatToDecimalPlacesIfCents(percentage, 0)}%`;
 }

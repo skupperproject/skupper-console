@@ -25,7 +25,7 @@ import { GraphNode, GraphEdge } from './Graph.interfaces';
 import { colors } from '../../../pages/Topology/Topology.constant';
 
 const ARROW_SIZE = 10;
-const NODE_SIZE = 40;
+const NODE_SIZE = 30;
 const FONT_SIZE_DEFAULT = 12;
 const OPACITY_NO_SELECTED_ITEM = 0.1;
 
