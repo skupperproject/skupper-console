@@ -8,7 +8,8 @@ import {
   ProcessGroupResponse,
   ProcessResponse,
   RouterResponse,
-  SiteResponse
+  SiteResponse,
+  FlowPairsResponse
 } from 'API/REST.interfaces';
 
 const DELAY_RESPONSE = 250;
@@ -19,6 +20,7 @@ export function loadMockServer() {
     (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)
   ) {
     const path = './data';
+    const collectors = require(`${path}/COLLECTORS.json`);
     const sites = require(`${path}/SITES.json`);
     const processGroups = require(`${path}/PROCESS_GROUPS.json`);
     const processGroupPairs = require(`${path}/PROCESS_GROUP_PAIRS.json`);
@@ -27,6 +29,7 @@ export function loadMockServer() {
     const hosts = require(`${path}/HOSTS.json`);
     const addresses = require(`${path}/ADDRESSES.json`);
     const addressProcesses = require(`${path}/ADDRESS_PROCESSES.json`);
+    const flowPairs = require(`${path}/FLOW_PAIRS.json`);
     const addressesFlowPairs = require(`${path}/ADDRESS_FLOW_PAIRS.json`);
     const routers = require(`${path}/ROUTERS.json`);
     const links = require(`${path}/LINKS.json`);
@@ -39,7 +42,7 @@ export function loadMockServer() {
         this.pretender.get('*', this.pretender.passthrough);
 
         this.get('/error', () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }));
-
+        this.get(`${prefix}/collectors`, () => collectors);
         this.get(`${prefix}/sites`, () => sites);
         this.get(`${prefix}/sites/:id`, (_, { params: { id } }) => ({
           results: sites.results.find(({ identity }: SiteResponse) => identity === id)
@@ -98,11 +101,13 @@ export function loadMockServer() {
           if (queryParams && !Object.keys(queryParams).length) {
             return processPairs;
           }
+          const value = queryParams.filter.split('.')[1];
 
-          return processPairs.filter(
-            (pair: ProcessPairsResponse) =>
-              pair.sourceId === queryParams?.sourceId || pair.destinationId === queryParams?.destinationId
+          const results = processPairs.results.filter(
+            (pair: ProcessPairsResponse) => pair.sourceId === value || pair.destinationId === value
           );
+
+          return { ...processPairs, results };
         });
 
         this.get(`${prefix}/processpairs/:id`, (_, { params: { id } }) => ({
@@ -114,6 +119,16 @@ export function loadMockServer() {
         this.get(`${prefix}/addresses/:id`, (_, { params: { id } }) => ({
           results: addresses.results.find(({ identity }: AddressResponse) => identity === id)
         }));
+
+        this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
+          const value = queryParams.filter.split('.')[1];
+
+          const results = flowPairs.results.filter((pair: FlowPairsResponse) => pair.processAggregateId === value);
+
+          return { ...processPairs, results };
+        });
+
+        this.get(`${prefix}/flowpairs/:id`, () => flowPairs);
 
         this.get(`${prefix}/addresses/:id/flowpairs`, () => addressesFlowPairs);
 

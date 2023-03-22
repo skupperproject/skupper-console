@@ -1,6 +1,6 @@
 import { axiosFetch } from './axiosMiddleware';
-import { gePrometheusQueryPATH, queries, rangeStepIntervalMap, startDateOffsetMap } from './Prometheus.constant';
-import { PrometheusApiResult, PrometheusQueryParams, ValidWindowTimeValues } from './Prometheus.interfaces';
+import { gePrometheusQueryPATH, queries } from './Prometheus.constant';
+import { PrometheusApiResult, PrometheusQueryParams } from './Prometheus.interfaces';
 
 export const PrometheusApi = {
   fetchDataTraffic: async ({
@@ -10,7 +10,7 @@ export const PrometheusApi = {
     isRate = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
+    const { start, end } = getRangeTimestamp(range.seconds);
     let param1 = `sourceProcess="${id}"`;
     let param2 = `destProcess="${id}"`;
 
@@ -29,7 +29,6 @@ export const PrometheusApi = {
     if (isRate) {
       query = queries.getDataTrafficPerSecondByProcess(param1, param2, '5m');
     }
-
     const {
       data: {
         data: { result }
@@ -39,7 +38,7 @@ export const PrometheusApi = {
         query,
         start,
         end,
-        step: isRate ? rangeStepIntervalMap[range] : range
+        step: isRate ? range.step : range.value
       }
     });
 
@@ -54,7 +53,7 @@ export const PrometheusApi = {
     quantile,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
+    const { start, end } = getRangeTimestamp(range.seconds);
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -75,7 +74,7 @@ export const PrometheusApi = {
           : queries.getAvgLatencyIrateByProcess(param, '5m'),
         start,
         end,
-        step: rangeStepIntervalMap[range]
+        step: range.step
       }
     });
 
@@ -89,7 +88,7 @@ export const PrometheusApi = {
     isRate = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
+    const { start, end } = getRangeTimestamp(range.seconds);
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -111,7 +110,7 @@ export const PrometheusApi = {
           : queries.getTotalRequestsByProcess(param),
         start,
         end,
-        step: isRate ? rangeStepIntervalMap[range] : range
+        step: isRate ? range.step : range.value
       }
     });
 
@@ -126,7 +125,7 @@ export const PrometheusApi = {
     onlyErrors = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range);
+    const { start, end } = getRangeTimestamp(range.seconds);
     let param = `destProcess="${id}"`;
 
     if (onlyErrors) {
@@ -153,7 +152,7 @@ export const PrometheusApi = {
           : queries.getResponseStatusCodesByProcess(param),
         start,
         end,
-        step: isRate ? rangeStepIntervalMap[range] : range
+        step: isRate ? range.step : range.value
       }
     });
 
@@ -161,11 +160,11 @@ export const PrometheusApi = {
   }
 };
 
-function getRangeTimestamp(range: ValidWindowTimeValues): { start: number; end: number } {
+function getRangeTimestamp(interval: number): { start: number; end: number } {
   const now = new Date().getTime() / 1000; // convert in second
 
   return {
-    start: now - startDateOffsetMap[range] || 0,
+    start: now - interval,
     end: now
   };
 }

@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import { timeAgo } from '@core/utils/timeAgo';
 import { AddressesRoutesPaths } from '@pages/Addresses/Addresses.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -30,7 +31,7 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
   process,
   title
 }) {
-  const { identity, parent, parentName, imageName, groupName, groupIdentity, sourceHost, hostName } =
+  const { identity, parent, parentName, imageName, groupName, groupIdentity, sourceHost, hostName, startTime } =
     process as ProcessResponse;
 
   const { data: addresses } = useQuery([QueriesProcesses.GetAddressesByProcessId, identity], () =>
@@ -79,6 +80,13 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.Host}</DescriptionListTerm>
                 <DescriptionListDescription>{hostName}</DescriptionListDescription>
+              </DescriptionListGroup>
+            </GridItem>
+
+            <GridItem span={6}>
+              <DescriptionListGroup>
+                <DescriptionListTerm>{ProcessesLabels.Created}</DescriptionListTerm>
+                <DescriptionListDescription>{timeAgo(startTime)}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 

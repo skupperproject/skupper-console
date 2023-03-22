@@ -1,17 +1,9 @@
-export type ValidWindowTime = {
-  FiveMinutes: '5m';
-  FifteenMinutes: '15m';
-  ThirtyMinutes: '30m';
-  OneHours: '1h';
-  TwoHours: '2h';
-  SixHours: '6h';
-  TwelveHours: '12h';
-  OneDay: '1d';
-  OneWeek: '1w';
-  TwoWeeks: '2w';
+export type IntervalTimeMap = {
+  [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
 };
 
-export type ValidWindowTimeValues = ValidWindowTime[keyof ValidWindowTime];
+export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];
+export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
 
 type PrometheusApiResultValue = [number, string];
 
@@ -22,7 +14,7 @@ export type PrometheusApiResult = {
 
 export interface PrometheusQueryParams {
   id: string;
-  range: ValidWindowTimeValues;
+  range: IntervalTimeProp;
   processIdDest?: string;
   isRate?: boolean;
   onlyErrors?: boolean;

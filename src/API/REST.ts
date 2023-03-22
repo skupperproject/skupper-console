@@ -45,10 +45,11 @@ import {
 } from './REST.interfaces';
 
 export const RESTApi = {
-  getPrometheusUrl: async (): Promise<string> => {
+  getPrometheusConfig: async (): Promise<CollectorsResponse> => {
     const { data } = await axiosFetch(getConfigPrometheusPATH());
 
-    return getResults<CollectorsResponse[]>(data)[0].PrometheusHost;
+    // we receive an array of info because we suppose to use multiple Prometheus servers in the future, but for now we are using just one
+    return getResults<CollectorsResponse[]>(data)[0];
   },
 
   // SITES APIs

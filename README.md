@@ -29,7 +29,7 @@ PROMETHEUS_URL=<prometheus server url/api/v1> yarn start
 
 ### Demo mode
 
-Run the console using a mock data example:
+Run the console using a mock data example (no metrics available):
 
 ```bash
 yarn start

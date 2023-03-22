@@ -1,7 +1,6 @@
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { PrometheusApi } from 'API/Prometheus';
-import { startDateOffsetMap } from 'API/Prometheus.constant';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
@@ -57,8 +56,8 @@ const ProcessesController = {
       });
 
       // data normalization
-      const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse, timeInterval);
-      const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse, timeInterval);
+      const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse);
+      const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse);
       const requestSeries = normalizeRequests(requestSeriesResponse, id);
       const requestPerSecondSeries = normalizeRequests(requestPerSecondSeriesResponse, id);
       const responseSeries = normalizeResponses(responseSeriesResponse);
@@ -120,23 +119,23 @@ function normalizeResponses(data: PrometheusApiResult[]) {
   const { values } = dataNormalized;
 
   const statusCode2xx = {
-    total: values[0] && values[0][1] ? values[0][1].y - values[0][0].y : 0,
+    total: values[0] ? (values[0].length > 1 ? values[0][1].y - values[0][0].y : values[0][0].y) : 0,
     label: '2xx',
     data: values[0]
   };
 
   const statusCode3xx = {
-    total: values[1] && values[1][1] ? values[1][1].y - values[1][0].y : 0,
+    total: values[1] ? (values[1].length > 1 ? values[1][1].y - values[1][0].y : values[1][0].y) : 0,
     label: '3xx',
     data: values[1]
   };
   const statusCode4xx = {
-    total: values[2] && values[2][1] ? values[2][1].y - values[2][0].y : 0,
+    total: values[2] ? (values[2].length > 1 ? values[2][1].y - values[2][0].y : values[2][0].y) : 0,
     label: '4xx',
     data: values[2]
   };
   const statusCode5xx = {
-    total: values[3] && values[3][1] ? values[3][1].y - values[3][0].y : 0,
+    total: values[3] ? (values[3].length > 1 ? values[3][1].y - values[3][0].y : values[3][0].y) : 0,
     label: '5xx',
     data: values[3]
   };
@@ -158,7 +157,7 @@ function normalizeRequests(data: PrometheusApiResult[], label: string) {
   }
 
   return axisValues.flatMap((values) => {
-    const totalRequestInterval = values[values.length - 1].y - values[0].y;
+    const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
 
     const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
     const avgRequestRateInterval = formatToDecimalPlacesIfCents(sumRequestRateInterval / values.length, 2);
@@ -201,18 +200,14 @@ function normalizeLatencies({
   return latenciesNormalized.length ? latenciesNormalized : null;
 }
 
-function normalizeTrafficData(data: PrometheusApiResult[], timeInterval: string): ProcessDataChart | null {
+function normalizeTrafficData(data: PrometheusApiResult[]): ProcessDataChart | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
   const axisValues = normalizeMetricValues(data);
   if (!axisValues) {
     return null;
   }
-
   const timeSeriesDataReceived = axisValues[0];
   const timeSeriesDataSent = axisValues[1];
-
-  const fistTimeSample =
-    timeSeriesDataSent[0].x - (new Date().getTime() / 1000 - startDateOffsetMap[timeInterval] || 0);
 
   const currentTrafficReceived = timeSeriesDataReceived[timeSeriesDataReceived.length - 1].y;
   const currentTrafficSent = timeSeriesDataSent[timeSeriesDataSent.length - 1].y;
@@ -221,8 +216,13 @@ function normalizeTrafficData(data: PrometheusApiResult[], timeInterval: string)
   const maxTrafficSent = Math.max(...timeSeriesDataSent.map(({ y }) => y));
 
   // total data for bytes
-  const totalDataReceived = currentTrafficReceived - (fistTimeSample > 0 ? 0 : timeSeriesDataReceived[0].y);
-  const totalDataSent = currentTrafficSent - (fistTimeSample > 0 ? 0 : timeSeriesDataSent[0].y);
+  const totalDataReceived =
+    timeSeriesDataReceived.length === 1
+      ? timeSeriesDataReceived[0].y
+      : currentTrafficReceived - timeSeriesDataReceived[0].y;
+
+  const totalDataSent =
+    timeSeriesDataSent.length === 1 ? timeSeriesDataSent[0].y : currentTrafficSent - timeSeriesDataSent[0].y;
 
   // total data for byte rate. Used by "per second" time series
   const sumDataReceived = timeSeriesDataReceived.reduce((acc, { y }) => acc + y, 0);

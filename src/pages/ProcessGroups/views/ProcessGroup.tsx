@@ -74,6 +74,7 @@ const ProcessGroup = function () {
 
   const serverNameFilters = Object.values(processes).map(({ name: destinationName }) => ({ destinationName }));
   const serverNames = processes.map(({ name: processName }) => processName).join('|');
+  const startTime = processes.reduce((acc, process) => (acc = Math.max(acc, process.startTime)), 0);
 
   return (
     <TransitionPage>
@@ -121,7 +122,10 @@ const ProcessGroup = function () {
         {/* Component Metrics*/}
         {isPrometheusActive() && (
           <GridItem>
-            <Metrics parent={{ id: serverNames, name: serverNames }} processesConnected={serverNameFilters} />
+            <Metrics
+              parent={{ id: serverNames, name: serverNames, startTime }}
+              processesConnected={serverNameFilters}
+            />
           </GridItem>
         )}
       </Grid>
