@@ -322,47 +322,49 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
               </GridItem>
 
               {/* Chart requests time series card*/}
-              <GridItem span={8} rowSpan={2}>
-                <Card isFullHeight>
-                  {!!metrics.requestPerSecondSeries && (
-                    <>
-                      <CardTitle>{ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}</CardTitle>
-                      <CardBody>
-                        <ChartProcessDataTrafficSeries
-                          formatY={(y: number) => y.toFixed(3)}
-                          themeColor={ChartThemeColor.purple}
-                          legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
-                          data={metrics.requestPerSecondSeries.map(({ data }) => data)}
-                        />
-                      </CardBody>
-                    </>
-                  )}
-                </Card>
-              </GridItem>
-
-              {/*  Partial total request card*/}
-              {!!metrics.requestSeries && (
-                <GridItem span={4}>
-                  <MetricCard
-                    title={'Total Hits'}
-                    value={metrics.requestSeries[0].totalRequestInterval}
-                    bgColor={'--pf-global--palette--purple-400'}
-                    colorChart={ChartThemeColor.purple}
-                    showChart={false}
-                  />
-                </GridItem>
-              )}
-
-              {/*  avg request per second card*/}
               {!!metrics.requestPerSecondSeries && (
-                <GridItem span={4}>
-                  <MetricCard
-                    title={'Avg. hits rate'}
-                    value={metrics.requestPerSecondSeries[0].avgRequestRateInterval}
-                    bgColor={'--pf-global--palette--purple-200'}
-                    showChart={false}
-                  />
-                </GridItem>
+                <>
+                  <GridItem span={8} rowSpan={2}>
+                    <Card isFullHeight>
+                      <>
+                        <CardTitle>{ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}</CardTitle>
+                        <CardBody>
+                          <ChartProcessDataTrafficSeries
+                            formatY={(y: number) => y.toFixed(3)}
+                            themeColor={ChartThemeColor.purple}
+                            legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
+                            data={metrics.requestPerSecondSeries.map(({ data }) => data)}
+                          />
+                        </CardBody>
+                      </>
+                    </Card>
+                  </GridItem>
+
+                  {/*  Partial total request card*/}
+                  {!!metrics.requestSeries && (
+                    <GridItem span={4}>
+                      <MetricCard
+                        title={'Total Hits'}
+                        value={metrics.requestSeries[0].totalRequestInterval}
+                        bgColor={'--pf-global--palette--purple-400'}
+                        colorChart={ChartThemeColor.purple}
+                        showChart={false}
+                      />
+                    </GridItem>
+                  )}
+
+                  {/*  avg request per second card*/}
+                  {!!metrics.requestPerSecondSeries && (
+                    <GridItem span={4}>
+                      <MetricCard
+                        title={'Avg. hits rate'}
+                        value={metrics.requestPerSecondSeries[0].avgRequestRateInterval}
+                        bgColor={'--pf-global--palette--purple-200'}
+                        showChart={false}
+                      />
+                    </GridItem>
+                  )}
+                </>
               )}
 
               {/*  response card*/}
@@ -402,31 +404,47 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                   </GridItem>
 
                   {/* Chart pie distribution data traffic card and total bytes */}
-                  <GridItem span={4}>
-                    <Card isFullHeight>
+                  {!!metrics.responseRateSeries?.statusCode4xx.data &&
+                    !!metrics.responseRateSeries?.statusCode5xx.data && (
                       <>
-                        {!metrics.responseSeries.statusCode5xx.total && !metrics.responseSeries.statusCode4xx.total && (
-                          <EmptyData message="No error found" />
-                        )}
+                        <GridItem span={4}>
+                          <Card isFullHeight>
+                            <ChartProcessDataTrafficDistribution
+                              data={[
+                                {
+                                  x: metrics.responseSeries.statusCode4xx.label,
+                                  y: metrics.responseSeries.statusCode4xx.total
+                                },
+                                {
+                                  x: metrics.responseSeries.statusCode5xx.label,
+                                  y: metrics.responseSeries.statusCode5xx.total
+                                }
+                              ]}
+                            />
+                          </Card>
+                        </GridItem>
 
-                        {(!!metrics.responseSeries.statusCode5xx.total ||
-                          !!metrics.responseSeries.statusCode4xx.total) && (
-                          <ChartProcessDataTrafficDistribution
-                            data={[
-                              {
-                                x: metrics.responseSeries.statusCode4xx.label,
-                                y: metrics.responseSeries.statusCode4xx.total
-                              },
-                              {
-                                x: metrics.responseSeries.statusCode5xx.label,
-                                y: metrics.responseSeries.statusCode5xx.total
-                              }
-                            ]}
-                          />
-                        )}
+                        <GridItem span={8}>
+                          <Card isFullHeight>
+                            <CardTitle>{ProcessesLabels.ErrorRateSeriesAxisYLabel}</CardTitle>
+                            <CardBody>
+                              <ChartProcessDataTrafficSeries
+                                formatY={(y: number) => y.toFixed(3)}
+                                themeColor={ChartThemeColor.orange}
+                                legendLabels={[
+                                  metrics.responseRateSeries.statusCode4xx.label,
+                                  metrics.responseRateSeries.statusCode5xx.label
+                                ]}
+                                data={[
+                                  metrics.responseRateSeries.statusCode4xx.data,
+                                  metrics.responseRateSeries.statusCode5xx.data
+                                ]}
+                              />
+                            </CardBody>
+                          </Card>
+                        </GridItem>
                       </>
-                    </Card>
-                  </GridItem>
+                    )}
                 </>
               )}
             </>

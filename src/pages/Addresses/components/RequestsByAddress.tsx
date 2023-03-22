@@ -99,7 +99,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   }, []);
 
   if (isLoadingServersByAddress || isLoadingRequestsPaginated) {
-    return <LoadingPage isFLoating={true} />;
+    return <LoadingPage />;
   }
 
   const servers = serversByAddressData?.results || [];

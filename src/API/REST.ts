@@ -122,8 +122,10 @@ export const RESTApi = {
     const { data } = await axiosFetch(geProcessesPATH(), {
       params: options ? addQueryParams(options) : null
     });
+    const results = data.results.filter(({ endTime }: ProcessResponse) => !endTime);
 
-    return data;
+    // TODO: remove when BE enable multi-filter
+    return { ...data, results };
   },
 
   fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
@@ -275,8 +277,10 @@ export const RESTApi = {
     const { data } = await axiosFetch(getProcessPairsPATH(), {
       params: options ? addQueryParams(options) : null
     });
+    const results = data.results.filter(({ endTime }: ProcessResponse) => !endTime);
 
-    return getResults(data);
+    // TODO: remove when BE enable multi-filter
+    return getResults({ ...data, results });
   }
 };
 

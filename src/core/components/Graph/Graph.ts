@@ -121,7 +121,7 @@ export default class Graph {
       .force(
         'link',
         forceLink<GraphNode, GraphEdge>()
-          .distance(20)
+          .distance(5)
           .strength(1)
           .id(({ id }) => id)
       )

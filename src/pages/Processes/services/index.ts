@@ -52,7 +52,7 @@ const ProcessesController = {
       const responseRateSeriesResponse = await PrometheusApi.fetchSResponsesByProcess({
         ...params,
         isRate: true,
-        onlyErrors: true
+        onlyErrors: false
       });
 
       // data normalization
@@ -63,7 +63,14 @@ const ProcessesController = {
       const responseSeries = normalizeResponses(responseSeriesResponse);
       const responseRateSeries = normalizeResponses(responseRateSeriesResponse);
 
-      if (!(trafficDataSeries && trafficDataSeriesPerSecond)) {
+      if (
+        !(
+          (trafficDataSeries && trafficDataSeriesPerSecond) ||
+          latencies ||
+          (requestSeries && requestPerSecondSeries) ||
+          (responseSeries && responseRateSeries)
+        )
+      ) {
         return null;
       }
 
@@ -111,10 +118,27 @@ function normalizeResponses(data: PrometheusApiResult[]) {
 
   const { values } = dataNormalized;
 
-  const statusCode2xx = { total: values[1] ? values[1].y - values[0].y : 0, label: '2xx' };
-  const statusCode3xx = { total: values[2] ? values[2].y - values[0].y : 0, label: '3xx' };
-  const statusCode4xx = { total: values[3] ? values[3].y - values[0].y : 0, label: '4xx' };
-  const statusCode5xx = { total: values[4] ? values[4].y - values[0].y : 0, label: '5xx' };
+  const statusCode2xx = {
+    total: values[0] && values[0][1] ? values[0][1].y - values[0][0].y : 0,
+    label: '2xx',
+    data: values[0]
+  };
+
+  const statusCode3xx = {
+    total: values[1] && values[1][1] ? values[1][1].y - values[1][0].y : 0,
+    label: '3xx',
+    data: values[1]
+  };
+  const statusCode4xx = {
+    total: values[2] && values[2][1] ? values[2][1].y - values[2][0].y : 0,
+    label: '4xx',
+    data: values[2]
+  };
+  const statusCode5xx = {
+    total: values[3] && values[3][1] ? values[3][1].y - values[3][0].y : 0,
+    label: '5xx',
+    data: values[3]
+  };
 
   return {
     statusCode2xx,
@@ -251,7 +275,7 @@ function normalizeMetric(data: PrometheusApiResult[]): ProcessMetric | null {
   const values = normalizeMetricValues(data) as ProcessAxisDataChart[][];
   const labels = normalizeMetricLabels(data) as string[][];
 
-  return { values: values[0], labels: labels[0] };
+  return { values, labels };
 }
 
 export function formatPercentage(value: number, total: number) {

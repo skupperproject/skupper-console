@@ -14,8 +14,8 @@ export interface ProcessAxisDataChart {
 }
 
 export interface ProcessMetric {
-  values: ProcessAxisDataChart[];
-  labels: string[];
+  values: ProcessAxisDataChart[][];
+  labels: string[][];
 }
 
 export interface ProcessLatenciesChart {
@@ -63,6 +63,7 @@ export interface ChartProcessDataTrafficSeriesProps {
 interface StatusCodeResponse {
   label: string;
   total: number;
+  data: ProcessAxisDataChart[] | undefined;
 }
 
 interface ResponseSeries {

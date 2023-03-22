@@ -83,6 +83,10 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     setConnectionsQueryParamsPaginated(params);
   }, []);
 
+  if (isLoadingServersByAddress || isLoadingActiveConnections) {
+    return <LoadingPage />;
+  }
+
   const activeConnections = activeConnectionsData?.results.filter(({ endTime }) => !endTime) || [];
   const activeConnectionsCount = activeConnectionsData?.totalCount;
 
@@ -93,71 +97,68 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const serverNames = servers.map(({ name }) => name).join('|');
 
   return (
-    <>
-      <Grid hasGutter data-cy="sk-address">
-        <GridItem>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to={AddressesRoutesPaths.Addresses}>{AddressesRoutesPathLabel.Addresses}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
-          </Breadcrumb>
-        </GridItem>
+    <Grid hasGutter data-cy="sk-address">
+      <GridItem>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to={AddressesRoutesPaths.Addresses}>{AddressesRoutesPathLabel.Addresses}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
+        </Breadcrumb>
+      </GridItem>
 
-        <GridItem>
-          <Flex alignItems={{ default: 'alignItemsCenter' }}>
-            <ResourceIcon type="address" />
-            <TextContent>
-              <Text component={TextVariants.h1}>{addressName}</Text>
-            </TextContent>
-            <Link
-              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
-            >
-              {FlowPairsLabel.GoToTopology}
-            </Link>
-          </Flex>
-        </GridItem>
+      <GridItem>
+        <Flex alignItems={{ default: 'alignItemsCenter' }}>
+          <ResourceIcon type="address" />
+          <TextContent>
+            <Text component={TextVariants.h1}>{addressName}</Text>
+          </TextContent>
+          <Link
+            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+          >
+            {FlowPairsLabel.GoToTopology}
+          </Link>
+        </Flex>
+      </GridItem>
 
-        {/* connection table*/}
-        <GridItem>
-          <Card isRounded className="pf-u-pt-md">
-            <Tabs activeKey={addressView} onSelect={handleTabClick}>
-              {activeConnections && (
-                <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
-                  <FlowPairsTable
-                    columns={ConnectionsByAddressColumns}
-                    connections={activeConnections}
-                    onGetFilters={handleGetFiltersConnections}
-                    rowsCount={activeConnectionsCount}
-                  />
-                </Tab>
-              )}
-              {serversRowsCount && (
-                <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsTcp.Servers}</TabTitleText>}>
-                  <ServersTable processes={servers} />
-                </Tab>
-              )}
-            </Tabs>
-          </Card>
-        </GridItem>
+      {/* connection table*/}
+      <GridItem>
+        <Card isRounded className="pf-u-pt-md">
+          <Tabs activeKey={addressView} onSelect={handleTabClick}>
+            {activeConnections && (
+              <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
+                <FlowPairsTable
+                  columns={ConnectionsByAddressColumns}
+                  connections={activeConnections}
+                  onGetFilters={handleGetFiltersConnections}
+                  rowsCount={activeConnectionsCount}
+                />
+              </Tab>
+            )}
+            {serversRowsCount && (
+              <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsTcp.Servers}</TabTitleText>}>
+                <ServersTable processes={servers} />
+              </Tab>
+            )}
+          </Tabs>
+        </Card>
+      </GridItem>
 
-        {/* Process Metrics*/}
-        {isPrometheusActive() && (
-          <GridItem>
-            <Metrics
-              parent={{ id: serverNames, name: serverNames }}
-              processesConnected={serverNameFilters}
-              protocolDefault={AvailableProtocols.Tcp}
-              customFilters={{
-                protocols: { disabled: true },
-                destinationProcesses: { name: FlowPairsLabelsTcp.Servers }
-              }}
-            />
-          </GridItem>
-        )}
-      </Grid>
-      {(isLoadingServersByAddress || isLoadingActiveConnections) && <LoadingPage isFLoating={true} />}
-    </>
+      {/* Process Metrics*/}
+      {isPrometheusActive() && (
+        <GridItem>
+          <Metrics
+            parent={{ id: serverNames, name: serverNames }}
+            processesConnected={serverNameFilters}
+            protocolDefault={AvailableProtocols.Tcp}
+            customFilters={{
+              protocols: { disabled: true },
+              destinationProcesses: { name: FlowPairsLabelsTcp.Servers }
+            }}
+          />
+        </GridItem>
+      )}
+    </Grid>
   );
 };
 
