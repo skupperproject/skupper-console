@@ -1,4 +1,4 @@
-import { PrometheusApiResult, ValidWindowTimeValues } from 'API/Prometheus.interfaces';
+import { PrometheusApiResult, IntervalTimeProp } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 
@@ -96,7 +96,7 @@ export interface MetricCardProps {
 
 export interface MetricsFilters {
   id: string;
-  timeInterval: ValidWindowTimeValues;
+  timeInterval: IntervalTimeProp;
   processIdDest?: string;
   protocol?: AvailableProtocols;
 }
@@ -108,7 +108,7 @@ interface FilterOptionsProp {
 }
 
 export interface MetricsProps {
-  parent: { id: string; name: string };
+  parent: { id: string; name: string; startTime: number }; // startTime set the max Time Interval available to filter the Prometheus data (1 min, 1 day...)
   processesConnected?: { destinationName: string }[];
   protocolDefault?: AvailableProtocols;
   customFilters?: FilterOptionsProp;

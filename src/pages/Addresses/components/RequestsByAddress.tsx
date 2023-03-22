@@ -110,6 +110,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
 
   const serverNameFilters = Object.values(servers).map(({ name }) => ({ destinationName: name }));
   const serverNames = servers.map(({ name }) => name).join('|');
+  const startTime = servers.reduce((acc, process) => (acc = Math.max(acc, process.startTime)), 0);
 
   return (
     <Grid hasGutter data-cy="sk-address">
@@ -163,7 +164,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
-            parent={{ id: serverNames, name: serverNames }}
+            parent={{ id: serverNames, name: serverNames, startTime }}
             processesConnected={serverNameFilters}
             protocolDefault={AvailableProtocols.AllHttp}
             customFilters={{

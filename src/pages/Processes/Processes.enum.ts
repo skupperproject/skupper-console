@@ -18,6 +18,7 @@ export enum ProcessesLabels {
   Site = 'Site',
   ProcessGroup = 'Component',
   Image = 'Image',
+  Created = 'Created',
   SourceIP = 'Source IP',
   Host = 'Host',
   MetricBytesSent = 'Top 5 processes bytes sent',

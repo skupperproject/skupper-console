@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
-import { setPrometheusUrl } from 'API/Prometheus.constant';
+import { setPrometheusStartTime, setPrometheusUrl } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
 import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from 'config';
 import { routes } from 'routes';
@@ -21,9 +21,7 @@ const App = function () {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { data: url } = useQuery(['QueriesAddresses.GetPrometheusURL'], () => RESTApi.getPrometheusUrl(), {
-    enabled: !BASE_PROMETHEUS_URL
-  });
+  const { data } = useQuery(['QueriesAddresses.GetPrometheusURL'], () => RESTApi.getPrometheusConfig());
 
   useEffect(() => {
     if (pathname === '/') {
@@ -31,7 +29,11 @@ const App = function () {
     }
   }, [pathname, navigate]);
 
-  setPrometheusUrl(BASE_PROMETHEUS_URL || url || '');
+  setPrometheusUrl(BASE_PROMETHEUS_URL || data?.PrometheusHost || '');
+
+  if (data) {
+    setPrometheusStartTime(data.startTime / 1000);
+  }
 
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">

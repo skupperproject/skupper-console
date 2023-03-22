@@ -1,13 +1,13 @@
-import { startDateOffsetMap, timeIntervalMap } from 'API/Prometheus.constant';
+import { timeIntervalMap } from 'API/Prometheus.constant';
 
 export function formatChartDate(timestamp: number, start: number) {
   // one week ago
-  if (start * 1000 <= Date.now() - startDateOffsetMap[timeIntervalMap.OneWeek] * 1000) {
+  if (start * 1000 <= Date.now() - timeIntervalMap.oneWeek.seconds * 1000) {
     return getDayFromTimestamp(timestamp);
   }
 
   // 14 days ago
-  if (start * 1000 <= Date.now() - startDateOffsetMap[timeIntervalMap.TwoWeeks] * 1000) {
+  if (start * 1000 <= Date.now() - timeIntervalMap.twoWeeks.seconds * 1000) {
     return getMonthAndDay(timestamp);
   }
 

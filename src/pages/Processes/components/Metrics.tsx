@@ -27,8 +27,8 @@ import { formatByteRate } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import { defaultTimeInterval, timeIntervalMap } from 'API/Prometheus.constant';
-import { ValidWindowTimeValues } from 'API/Prometheus.interfaces';
+import { defaultTimeInterval, gePrometheusStartTime, timeIntervalMap } from 'API/Prometheus.constant';
+import { IntervalTimeProp } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 
 import ChartProcessDataTrafficDistribution from './ChartProcessDataTrafficDistribution';
@@ -55,11 +55,11 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
   const [isOpenProtocolInterval, setIsOpenProtocolIntervalMenu] = useState<boolean>(false);
 
   const [processIdDest, setProcessIdDest] = useState<string>();
-  const [timeInterval, setTimeInterval] = useState<ValidWindowTimeValues>(defaultTimeInterval);
+  const [timeInterval, setTimeInterval] = useState<IntervalTimeProp['key']>(defaultTimeInterval.key);
   const [protocol, setProtocol] = useState<AvailableProtocols | undefined>(protocolDefault);
 
   // Metrics query
-  const filters = { id: parent.name, timeInterval, processIdDest, protocol };
+  const filters = { id: parent.name, timeInterval: timeIntervalMap[timeInterval], processIdDest, protocol };
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
     [QueriesProcesses.GetProcessMetrics, filters],
     () => ProcessesController.getMetrics(filters),
@@ -95,7 +95,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
     selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {
-    const id = isPlaceholder ? defaultTimeInterval : (selection as ValidWindowTimeValues);
+    const id = isPlaceholder ? defaultTimeInterval.key : (selection as IntervalTimeProp['key']);
 
     setTimeInterval(id);
     setIsOpenTimeIntervalMenu(false);
@@ -143,8 +143,18 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
 
   // time interval select options
   const optionsTimeIntervalWithDefault = useMemo(
-    () => Object.values(timeIntervalMap).map((interval, index) => <SelectOption key={index + 1} value={interval} />),
-    []
+    () =>
+      Object.values(timeIntervalMap)
+        .filter(
+          ({ seconds }) =>
+            new Date().getTime() - seconds * 1000 > Math.max(gePrometheusStartTime(), parent.startTime / 1000)
+        )
+        .map((interval, index) => (
+          <SelectOption key={index + 1} value={interval.key}>
+            {interval.label}
+          </SelectOption>
+        )),
+    [parent.startTime]
   );
 
   return (
@@ -166,18 +176,20 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                   {optionsProcessConnectedWithDefault}
                 </Select>
               </ToolbarItem>
-              <ToolbarItem>
-                <Select
-                  isOpen={isOpenTimeInterval}
-                  onSelect={handleSelectTimeIntervalMenu}
-                  onToggle={handleToggleTimeIntervalMenu}
-                  toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
-                  selections={timeInterval}
-                  isDisabled={filterOptions.timeIntervals.disabled}
-                >
-                  {optionsTimeIntervalWithDefault}
-                </Select>
-              </ToolbarItem>
+              {!!optionsTimeIntervalWithDefault.length && (
+                <ToolbarItem>
+                  <Select
+                    isOpen={isOpenTimeInterval}
+                    onSelect={handleSelectTimeIntervalMenu}
+                    onToggle={handleToggleTimeIntervalMenu}
+                    toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
+                    selections={timeInterval}
+                    isDisabled={filterOptions.timeIntervals.disabled}
+                  >
+                    {optionsTimeIntervalWithDefault}
+                  </Select>
+                </ToolbarItem>
+              )}
               <ToolbarItem>
                 <Select
                   isDisabled={filterOptions.protocols.disabled}
@@ -223,6 +235,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                   <CardTitle>{ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}</CardTitle>
                   <CardBody>
                     <ChartProcessDataTrafficSeries
+                      themeColor={ChartThemeColor.orange}
                       formatY={formatByteRate}
                       legendLabels={['Received', 'Sent']}
                       data={[
@@ -255,7 +268,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                     <Tr>
                       <Td>
                         <Icon size="sm">
-                          <CircleIcon color={`var(--pf-chart-theme--cyan--ColorScale--100, #009596)`} />
+                          <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--100, #ec7a08)`} />
                         </Icon>{' '}
                         {ProcessesLabels.TrafficReceived.toLocaleLowerCase()}
                       </Td>
@@ -267,7 +280,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                     <Tr>
                       <Td>
                         <Icon size="sm">
-                          <CircleIcon color={`var(--pf-chart-theme--cyan--ColorScale--200, #a2d9d9)`} />
+                          <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--200, #f4b678)`} />
                         </Icon>{' '}
                         {ProcessesLabels.TrafficSent.toLocaleLowerCase()}
                       </Td>
@@ -286,6 +299,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
           <GridItem span={4}>
             <Card isFullHeight>
               <ChartProcessDataTrafficDistribution
+                themeColor={ChartThemeColor.orange}
                 data={[
                   {
                     x: 'Received',
@@ -312,7 +326,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                       <CardBody>
                         <ChartProcessDataTrafficSeries
                           formatY={formatLatency}
-                          themeColor={ChartThemeColor.multiOrdered}
+                          themeColor={ChartThemeColor.multi}
                           legendLabels={metrics.latencies.map(({ label }) => label)}
                           data={metrics.latencies.map(({ data }) => data)}
                         />
