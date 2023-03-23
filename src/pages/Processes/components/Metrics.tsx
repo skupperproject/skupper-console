@@ -10,6 +10,7 @@ import {
   GridItem,
   Icon,
   Select,
+  SelectGroup,
   SelectOption,
   SelectOptionObject,
   Spinner,
@@ -42,24 +43,39 @@ import { QueriesProcesses } from '../services/services.enum';
 const filterOptionsDefault = {
   protocols: { disabled: false, name: ProcessesLabels.FilterProtocolsDefault },
   timeIntervals: { disabled: false },
-  destinationProcesses: { disabled: false, name: ProcessesLabels.FilterProcessesConnectedDefault }
+  sourceProcesses: { disabled: false, name: ProcessesLabels.FilterAllSourceProcesses },
+  destinationProcesses: { disabled: false, name: ProcessesLabels.FilterAllDestinationProcesses }
 };
 
-const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protocolDefault, customFilters }) {
+const Metrics: FC<MetricsProps> = function ({
+  parent,
+  sourceProcesses,
+  processesConnected,
+  protocolDefault,
+  customFilters
+}) {
   const navigate = useNavigate();
 
   const filterOptions = { ...filterOptionsDefault, ...customFilters };
 
+  const [isOpenSourceProcessMenu, setIsOpenSourceProcessMenu] = useState<boolean>(false);
   const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
   const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
   const [isOpenProtocolInterval, setIsOpenProtocolIntervalMenu] = useState<boolean>(false);
 
+  const [processIdSource, setProcessIdSource] = useState<string>();
   const [processIdDest, setProcessIdDest] = useState<string>();
   const [timeInterval, setTimeInterval] = useState<IntervalTimeProp['key']>(defaultTimeInterval.key);
   const [protocol, setProtocol] = useState<AvailableProtocols | undefined>(protocolDefault);
 
   // Metrics query
-  const filters = { id: parent.name, timeInterval: timeIntervalMap[timeInterval], processIdDest, protocol };
+  const filters = {
+    id: processIdSource || parent.id, // our queries to prometheus must have a source id or list of ids ("id1|id2|id3...")
+    timeInterval: timeIntervalMap[timeInterval],
+    processIdDest,
+    protocol
+  };
+
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
     [QueriesProcesses.GetProcessMetrics, filters],
     () => ProcessesController.getMetrics(filters),
@@ -73,6 +89,21 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
     navigate(route);
+  }
+
+  function handleSelectSourceProcessMenu(
+    _: React.MouseEvent | React.ChangeEvent,
+    selection: SelectOptionObject,
+    isPlaceholder?: boolean
+  ) {
+    const id = isPlaceholder ? undefined : (selection as string);
+
+    setProcessIdSource(id);
+    setIsOpenSourceProcessMenu(false);
+  }
+
+  function handleToggleSourceProcessMenu(isOpen: boolean) {
+    setIsOpenSourceProcessMenu(isOpen);
   }
 
   function handleSelectDestinationProcessMenu(
@@ -120,6 +151,22 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
     setIsOpenProtocolIntervalMenu(isOpen);
   }
 
+  // process sources select options
+  const optionsProcessSourcesWithDefault = useMemo(() => {
+    const sourceProcessOptions = (sourceProcesses || []).map(({ destinationName }, index) => (
+      <SelectOption key={index + 1} value={destinationName} />
+    ));
+
+    return [
+      <SelectGroup label="" key="source-group1">
+        <SelectOption key={0} value={filterOptions.sourceProcesses.name} isPlaceholder />
+      </SelectGroup>,
+      <SelectGroup label="processes" key="source-group2">
+        {...sourceProcessOptions}
+      </SelectGroup>
+    ];
+  }, [filterOptions.sourceProcesses.name, sourceProcesses]);
+
   // process connected select options
   const optionsProcessConnectedWithDefault = useMemo(() => {
     const processConnectedOptions = (processesConnected || []).map(({ destinationName }, index) => (
@@ -127,8 +174,12 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
     ));
 
     return [
-      <SelectOption key={0} value={filterOptions.destinationProcesses.name} isPlaceholder />,
-      ...processConnectedOptions
+      <SelectGroup label="" key="dest-group1">
+        <SelectOption key={0} value={filterOptions.destinationProcesses.name} isPlaceholder />
+      </SelectGroup>,
+      <SelectGroup label="processes" key="dest-group2">
+        {...processConnectedOptions}
+      </SelectGroup>
     ];
   }, [filterOptions.destinationProcesses.name, processesConnected]);
 
@@ -160,22 +211,42 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
   return (
     <Grid hasGutter>
       {/* Metrics Filters */}
-      <GridItem>
+      <GridItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
         <Card isFullHeight isRounded>
           <Toolbar>
             <ToolbarContent>
-              <ToolbarItem spacer={{ default: 'spacerSm' }} alignment={{ default: 'alignRight' }}>
+              <ToolbarItem alignment={{ default: 'alignRight' }}>
                 <Select
-                  isOpen={isOpenDestinationProcessMenu}
-                  onSelect={handleSelectDestinationProcessMenu}
-                  onToggle={handleToggleDestinationProcessMenu}
+                  isGrouped
+                  placeholderText={filterOptions.sourceProcesses.name}
+                  isOpen={isOpenSourceProcessMenu}
+                  onSelect={handleSelectSourceProcessMenu}
+                  onToggle={handleToggleSourceProcessMenu}
                   toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
-                  selections={processIdDest}
-                  isDisabled={filterOptions.destinationProcesses.disabled}
+                  selections={processIdSource}
+                  isDisabled={filterOptions.sourceProcesses.disabled}
                 >
-                  {optionsProcessConnectedWithDefault}
+                  {optionsProcessSourcesWithDefault}
                 </Select>
               </ToolbarItem>
+
+              {!filterOptions.destinationProcesses.disabled && (
+                <ToolbarItem>
+                  <Select
+                    isGrouped
+                    placeholderText={filterOptions.destinationProcesses.name}
+                    isOpen={isOpenDestinationProcessMenu}
+                    onSelect={handleSelectDestinationProcessMenu}
+                    onToggle={handleToggleDestinationProcessMenu}
+                    toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
+                    selections={processIdDest}
+                    isDisabled={filterOptions.destinationProcesses.disabled}
+                  >
+                    {optionsProcessConnectedWithDefault}
+                  </Select>
+                </ToolbarItem>
+              )}
+
               {!!optionsTimeIntervalWithDefault.length && (
                 <ToolbarItem>
                   <Select
@@ -190,6 +261,7 @@ const Metrics: FC<MetricsProps> = function ({ parent, processesConnected, protoc
                   </Select>
                 </ToolbarItem>
               )}
+
               <ToolbarItem>
                 <Select
                   isDisabled={filterOptions.protocols.disabled}

@@ -23,6 +23,7 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import Metrics from '@pages/Processes/components/Metrics';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
+import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -124,7 +125,11 @@ const ProcessGroup = function () {
           <GridItem>
             <Metrics
               parent={{ id: serverNames, name: serverNames, startTime }}
-              processesConnected={serverNameFilters}
+              sourceProcesses={serverNameFilters}
+              customFilters={{
+                destinationProcesses: { disabled: true, name: ProcessesLabels.FilterAllDestinationProcesses },
+                sourceProcesses: { name: ProcessesLabels.FilterAllSourceProcesses }
+              }}
             />
           </GridItem>
         )}

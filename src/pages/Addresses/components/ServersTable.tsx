@@ -9,7 +9,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import { ProcessesColumnsNames } from '../Addresses.enum';
+import { ServerColumnsNames } from '../Addresses.enum';
 import { ProcessesTableProps } from '../Addresses.interfaces';
 
 const components = {
@@ -35,23 +35,23 @@ const components = {
 
 const columns = [
   {
-    name: ProcessesColumnsNames.Process,
+    name: ServerColumnsNames.Process,
     prop: 'name' as keyof ProcessResponse,
     component: 'nameLinkCellProcess',
     width: 20
   },
   {
-    name: ProcessesColumnsNames.ProcessGroup,
+    name: ServerColumnsNames.ProcessGroup,
     prop: 'groupName' as keyof ProcessResponse,
     component: 'nameLinkCellProcessGroup'
   },
   {
-    name: ProcessesColumnsNames.Site,
+    name: ServerColumnsNames.Site,
     prop: 'parentName' as keyof ProcessResponse,
     component: 'nameLinkCellSite'
   },
   {
-    name: ProcessesColumnsNames.Host,
+    name: ServerColumnsNames.Host,
     prop: 'sourceHost' as keyof ProcessResponse
   }
 ];

@@ -11,6 +11,8 @@
   padding: 1px 4px;
   text-align: center;
   white-space: nowrap;
+
+  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .sk-resource-site {

@@ -1,11 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SectionTitle from '@core/components/SectionTitle';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -16,7 +14,8 @@ import { AvailableProtocols } from 'API/REST.enum';
 import { AddressResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import { AddressesColumnsNames, AddressesLabels, AddressesRoutesPaths } from '../Addresses.enum';
+import { addressesComponentsTables } from '../Addresses.constants';
+import { AddressesColumnsNames, AddressesLabels } from '../Addresses.enum';
 import { QueriesAddresses } from '../services/services.enum';
 
 const Addresses = function () {
@@ -31,17 +30,6 @@ const Addresses = function () {
 
     navigate(route);
   }
-
-  const AddressNameLinkCell = useCallback(
-    (props: LinkCellProps<AddressResponse>) =>
-      LinkCell({
-        ...props,
-        isDisabled: !props.data.totalFlows,
-        type: 'address',
-        link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
-      }),
-    []
-  );
 
   if (isLoading) {
     return <LoadingPage />;
@@ -67,7 +55,7 @@ const Addresses = function () {
                 columns={generateColumns(AvailableProtocols.Tcp)}
                 rows={sortedAddressesTCP}
                 pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                components={{ AddressNameLinkCell }}
+                components={addressesComponentsTables}
               />
             </Card>
           </GridItem>
@@ -79,7 +67,7 @@ const Addresses = function () {
                 columns={generateColumns(AvailableProtocols.Http)}
                 pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                 rows={sortedAddressesHTTP}
-                components={{ AddressNameLinkCell }}
+                components={addressesComponentsTables}
               />
             </Card>
           </GridItem>
@@ -100,20 +88,7 @@ function generateColumns(protocol: AvailableProtocols) {
     {
       name: AddressesColumnsNames.Name,
       prop: 'name' as keyof AddressResponse,
-      component: 'AddressNameLinkCell',
-      width: 35
-    },
-    {
-      name: isTcp(protocol) ? AddressesColumnsNames.TotalFlowPairs : AddressesColumnsNames.TotalRequests,
-      prop: 'totalFlows' as keyof AddressResponse
-    },
-    {
-      name: isTcp(protocol) ? AddressesColumnsNames.CurrentFlowPairs : AddressesColumnsNames.CurrentRequests,
-      prop: 'currentFlows' as keyof AddressResponse
-    },
-    {
-      name: AddressesColumnsNames.TotalConnectors,
-      prop: 'connectorCount' as keyof AddressResponse
+      component: 'AddressNameLinkCell'
     }
   ];
 
@@ -122,7 +97,8 @@ function generateColumns(protocol: AvailableProtocols) {
       ...columns,
       {
         name: AddressesColumnsNames.Protocol,
-        prop: 'protocol' as keyof AddressResponse
+        prop: 'protocol' as keyof AddressResponse,
+        width: 15
       }
     ];
   }

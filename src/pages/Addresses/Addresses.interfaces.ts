@@ -1,4 +1,5 @@
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { AvailableProtocols } from 'API/REST.enum';
 import { FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface ProcessesTableProps {
@@ -17,6 +18,7 @@ export interface FlowPairsTableProps {
 export interface RequestsByAddressProps {
   addressName: string;
   addressId: string;
+  protocol: AvailableProtocols;
 }
 
 export type ConnectionsByAddressProps = RequestsByAddressProps;

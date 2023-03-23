@@ -30,7 +30,14 @@ import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { ConnectionsByAddressColumns } from '../Addresses.constants';
-import { FlowPairsLabelsTcp, AddressesRoutesPathLabel, AddressesRoutesPaths, FlowPairsLabel } from '../Addresses.enum';
+import {
+  FlowPairsLabelsTcp,
+  AddressesRoutesPathLabel,
+  AddressesRoutesPaths,
+  FlowPairsLabels,
+  FlowPairsLabelsHttp,
+  AddressesLabels
+} from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
@@ -42,7 +49,7 @@ const initConnectionsQueryParamsPaginated = {
   filter: 'endTime.0' // open connections
 };
 
-const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName }) {
+const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {
   const navigate = useNavigate();
 
   const [addressView, setAddressView] = useState<number>(0);
@@ -93,8 +100,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const servers = serversByAddressData?.results || [];
   const serversRowsCount = serversByAddressData?.totalCount;
 
-  const serverNameFilters = Object.values(servers).map(({ name }) => ({ destinationName: name }));
-  const serverNames = servers.map(({ name }) => name).join('|');
+  const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
+  const serverNamesId = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => (acc = Math.max(acc, process.startTime)), 0);
 
   return (
@@ -112,12 +119,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           <ResourceIcon type="address" />
           <TextContent>
-            <Text component={TextVariants.h1}>{addressName}</Text>
+            <Text component={TextVariants.h1}>{addressName} </Text>
           </TextContent>
           <Link
             to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
           >
-            {FlowPairsLabel.GoToTopology}
+            {FlowPairsLabels.GoToTopology}
           </Link>
         </Flex>
       </GridItem>
@@ -126,19 +133,19 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       <GridItem>
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
+            {serversRowsCount && (
+              <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}>
+                <ServersTable processes={servers} />
+              </Tab>
+            )}
             {activeConnections && (
-              <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
+              <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
                 <FlowPairsTable
                   columns={ConnectionsByAddressColumns}
                   connections={activeConnections}
                   onGetFilters={handleGetFiltersConnections}
                   rowsCount={activeConnectionsCount}
                 />
-              </Tab>
-            )}
-            {serversRowsCount && (
-              <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsTcp.Servers}</TabTitleText>}>
-                <ServersTable processes={servers} />
               </Tab>
             )}
           </Tabs>
@@ -149,12 +156,13 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
-            parent={{ id: serverNames, name: serverNames, startTime }}
-            processesConnected={serverNameFilters}
+            parent={{ id: serverNamesId, name: serverNamesId, startTime }}
+            sourceProcesses={serverNames}
             protocolDefault={AvailableProtocols.Tcp}
             customFilters={{
-              protocols: { disabled: true },
-              destinationProcesses: { name: FlowPairsLabelsTcp.Servers }
+              protocols: { disabled: true, name: protocol },
+              sourceProcesses: { name: AddressesLabels.MetricDestinationProcessFilter },
+              destinationProcesses: { name: FlowPairsLabelsHttp.Clients, disabled: true }
             }}
           />
         </GridItem>

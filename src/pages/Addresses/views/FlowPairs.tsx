@@ -19,10 +19,10 @@ const FlowsPairs = function () {
     <TransitionPage>
       <>
         {protocol === AvailableProtocols.Tcp && (
-          <ConnectionsByAddress addressName={addressName || ''} addressId={addressId || ''} />
+          <ConnectionsByAddress addressName={addressName || ''} addressId={addressId || ''} protocol={protocol} />
         )}
-        {protocol !== AvailableProtocols.Tcp && (
-          <RequestsByAddress addressName={addressName || ''} addressId={addressId || ''} />
+        {(protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2) && (
+          <RequestsByAddress addressName={addressName || ''} addressId={addressId || ''} protocol={protocol} />
         )}
       </>
     </TransitionPage>
