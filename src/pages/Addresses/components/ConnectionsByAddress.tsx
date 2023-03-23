@@ -95,10 +95,10 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   }
 
   const activeConnections = activeConnectionsData?.results.filter(({ endTime }) => !endTime) || [];
-  const activeConnectionsCount = activeConnectionsData?.totalCount;
+  const activeConnectionsCount = activeConnectionsData?.timeRangeCount;
 
   const servers = serversByAddressData?.results || [];
-  const serversRowsCount = serversByAddressData?.totalCount;
+  const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
   const serverNamesId = servers.map(({ name }) => name).join('|');

@@ -167,7 +167,7 @@ const SkTable = function <T>({
     }
   }
 
-  const totalRows = page ? page.totalCount : rowsCount;
+  const totalRows = page ? page.timeRangeCount : rowsCount;
   let rowsSorted = page ? (getResults(page) as T[]) || [] : rows;
 
   rowsSorted = rowsSorted.sort((a, b) => {

@@ -157,7 +157,7 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
 
   {
     name: FlowPairsColumnsNames.RequestCompleted,
-    prop: 'counterFlow.endTime' as keyof FlowPairsResponse,
+    prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
     width: 10
   }

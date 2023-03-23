@@ -107,10 +107,10 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   }
 
   const servers = serversByAddressData?.results || [];
-  const serversRowsCount = serversByAddressData?.totalCount;
+  const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const requestsPaginated = requestsDataPaginated?.results || [];
-  const requestsPaginatedCount = requestsDataPaginated?.totalCount;
+  const requestsPaginatedCount = requestsDataPaginated?.timeRangeCount;
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
   const serverNamesId = servers.map(({ name }) => name).join('|');
