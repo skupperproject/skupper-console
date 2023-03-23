@@ -87,10 +87,6 @@ export interface HostResponse extends EntityBaseResponse {
 }
 
 export interface AddressResponse extends EntityBaseResponse {
-  listenerCount: number;
-  connectorCount: number;
-  totalFlows: number;
-  currentFlows: number;
   protocol: AvailableProtocols;
 }
 

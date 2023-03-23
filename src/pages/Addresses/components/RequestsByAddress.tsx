@@ -25,14 +25,19 @@ import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
-import { AvailableProtocols } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import FlowPairsTable from './FlowPairsTable';
 import ServersTable from './ServersTable';
 import { RequestsByAddressColumns } from '../Addresses.constants';
-import { FlowPairsLabelsHttp, AddressesRoutesPathLabel, AddressesRoutesPaths, FlowPairsLabel } from '../Addresses.enum';
+import {
+  FlowPairsLabelsHttp,
+  AddressesRoutesPathLabel,
+  AddressesRoutesPaths,
+  FlowPairsLabels,
+  AddressesLabels
+} from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
 
@@ -41,12 +46,11 @@ const initAllRequestsQueryParamsPaginated = {
 };
 
 const initServersQueryParams = {
-  timeRangeStart: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE,
   filter: 'endTime.0' // open connections
 };
 
-const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName }) {
+const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol }) {
   const navigate = useNavigate();
   const [addressView, setAddressView] = useState<number>(0);
   const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
@@ -108,8 +112,8 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   const requestsPaginated = requestsDataPaginated?.results || [];
   const requestsPaginatedCount = requestsDataPaginated?.totalCount;
 
-  const serverNameFilters = Object.values(servers).map(({ name }) => ({ destinationName: name }));
-  const serverNames = servers.map(({ name }) => name).join('|');
+  const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
+  const serverNamesId = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => (acc = Math.max(acc, process.startTime)), 0);
 
   return (
@@ -132,7 +136,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
           <Link
             to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
           >
-            {`(${FlowPairsLabel.GoToTopology})`}
+            {`(${FlowPairsLabels.GoToTopology})`}
           </Link>
         </Flex>
       </GridItem>
@@ -141,19 +145,19 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       <GridItem>
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
+            {serversRowsCount && (
+              <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}>
+                <ServersTable processes={servers} />
+              </Tab>
+            )}
             {requestsPaginated && (
-              <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabelsHttp.Requests}</TabTitleText>}>
+              <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsHttp.Requests}</TabTitleText>}>
                 <FlowPairsTable
                   columns={RequestsByAddressColumns}
                   connections={requestsPaginated}
                   onGetFilters={handleGetFiltersConnections}
                   rowsCount={requestsPaginatedCount}
                 />
-              </Tab>
-            )}
-            {serversRowsCount && (
-              <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsHttp.Servers}</TabTitleText>}>
-                <ServersTable processes={servers} />
               </Tab>
             )}
           </Tabs>
@@ -164,12 +168,12 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
-            parent={{ id: serverNames, name: serverNames, startTime }}
-            processesConnected={serverNameFilters}
-            protocolDefault={AvailableProtocols.AllHttp}
+            parent={{ id: serverNamesId, name: serverNamesId, startTime }}
+            sourceProcesses={serverNames}
             customFilters={{
-              protocols: { disabled: true },
-              destinationProcesses: { name: FlowPairsLabelsHttp.Servers }
+              protocols: { disabled: true, name: protocol },
+              sourceProcesses: { name: AddressesLabels.MetricDestinationProcessFilter },
+              destinationProcesses: { name: FlowPairsLabelsHttp.Clients, disabled: true }
             }}
           />
         </GridItem>

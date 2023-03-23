@@ -22,11 +22,11 @@ const RESOURCE_MAP = {
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {
   return (
     <Tooltip content={type}>
-      <div>
+      <span className="pf-u-m-r-xs">
         <span className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
           {RESOURCE_MAP[type].symbol || <img src={skupperProcessSVG} alt="Skupper Icon" />}
         </span>
-      </div>
+      </span>
     </Tooltip>
   );
 };

@@ -32,7 +32,6 @@ import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from 
 import { QueriesProcesses } from '../services/services.enum';
 
 const initAllFlowParisQueryParamsPaginated = {
-  timeRangeStart: 0,
   offset: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE
 };

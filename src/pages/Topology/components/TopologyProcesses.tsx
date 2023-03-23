@@ -238,8 +238,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     return <LoadingPage />;
   }
 
-  const options = addresses?.map(({ name, identity, currentFlows }, index) => (
-    <SelectOption key={index + 1} value={identity} isDisabled={!currentFlows}>
+  const options = addresses?.map(({ name, identity }, index) => (
+    <SelectOption key={index + 1} value={identity}>
       {name}
     </SelectOption>
   ));

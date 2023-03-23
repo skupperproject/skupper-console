@@ -39,8 +39,7 @@ const Process = function () {
     [QueriesProcesses.GetProcessPairsTx, processId],
     () =>
       RESTApi.fetchProcessesPairs({
-        filter: `sourceId.${processId}`,
-        timeRangeStart: 0
+        filter: `sourceId.${processId}`
       }),
     {
       onError: handleError
@@ -51,8 +50,7 @@ const Process = function () {
     [QueriesProcesses.GetProcessPairsRx, processId],
     () =>
       RESTApi.fetchProcessesPairs({
-        filter: `destinationId.${processId}`,
-        timeRangeStart: 0
+        filter: `destinationId.${processId}`
       }),
     {
       onError: handleError
@@ -167,9 +165,12 @@ const Process = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
-              parent={{ id: processId, name: process.name, startTime: process.startTime }}
+              parent={{ id: process.name, name: process.name, startTime: process.startTime }}
               processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
-              customFilters={{ destinationProcesses: { name: 'Servers and Clients' } }}
+              customFilters={{
+                destinationProcesses: { name: ProcessesLabels.FilterAllDestinationProcesses },
+                sourceProcesses: { disabled: true, name: process.name }
+              }}
             />
           </GridItem>
         )}

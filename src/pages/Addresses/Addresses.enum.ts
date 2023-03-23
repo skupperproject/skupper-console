@@ -12,59 +12,40 @@ export enum AddressesLabels {
   HTTP = ' HTTP/2',
   TCP = 'TCP',
   Description = 'Set of processes that are exposed across the Virtual application network',
-  CurrentConnections = 'Connections',
-  ConnectionsByAddress = 'Top  5 - Active Connections By address',
-  CurrentRequests = 'Requests',
-  RequestsByAddress = 'Top  5 - Active Requests By address',
-  CurrentServer = 'Servers'
+  MetricDestinationProcessFilter = 'All servers'
 }
 
 export enum AddressesColumnsNames {
   Name = 'Name',
-  TotalListeners = 'Clients',
-  TotalConnectors = 'Servers',
-  Protocol = 'Protocol',
-  CurrentFlowPairs = 'Current connections',
-  TotalFlowPairs = 'Total connections',
-  CurrentRequests = 'Current Requests',
-  TotalRequests = 'Total Requests'
+  Protocol = 'Protocol'
 }
 
 // FLOWS PAIRS VIEW
 export enum FlowPairsLabelsTcp {
-  Servers = 'Servers',
   ActiveConnections = 'Live connections',
-  TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 5 minutes',
-  TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 5 minutes',
-  ViewDetails = 'view details',
   TrafficTx = 'Outbound Traffic ',
   TrafficRx = 'Inbound traffic',
-  AvgByteRateRx = 'Average Inbound speed',
-  AvgByteRateTx = 'Average Outbound speed'
+  AvgByteRateRx = 'Avg. Inbound speed',
+  AvgByteRateTx = 'Avg. Outbound speed'
 }
 
 export enum FlowPairsLabelsHttp {
-  Servers = 'Servers',
-  Requests = 'Requests',
-  RequestMethodsSummary = 'HTTP Methods summary in the last 20 minutes',
-  StatusCodeSummary = 'HTTP Status Codes distribution in the last 20 minutes',
-  TopClientTxTraffic = 'Top 10 servers Outbound traffic in the last 20 minutes',
-  TopClientRxTraffic = 'Top 10 servers Inbound traffic in the last 20 minutes',
-  TopResponseAvgLatency = 'Top 10 Client latency response: Average time in the last 20 minutes',
-  TopRequestAvgLatency = 'Top 10 Server latency request: Average time in the last 20 minutes',
+  Clients = 'Clients',
+  Requests = 'Requests in the last 15 minutes',
   TrafficTx = 'Response Traffic ',
   TrafficRx = 'Request traffic',
-  AvgByteRateRx = 'Avg rate Responses',
-  AvgByteRateTx = 'Avg rate Requests'
+  AvgByteRateRx = 'Avg. rate Responses',
+  AvgByteRateTx = 'Avg. rate Requests'
 }
 
-export enum FlowPairsLabel {
+export enum FlowPairsLabels {
+  Servers = 'Servers',
   ViewDetails = 'view details',
   GoToTopology = 'Go to the network view'
 }
 
 // PROCESSES TABLE
-export enum ProcessesColumnsNames {
+export enum ServerColumnsNames {
   Site = 'Site',
   Process = 'Process',
   ProcessGroup = 'Component',
