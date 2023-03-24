@@ -30,6 +30,11 @@ const columns = [
     name: AddressesColumnsNames.Protocol,
     prop: 'protocol' as keyof AddressResponse,
     width: 10
+  },
+  {
+    name: AddressesColumnsNames.Servers,
+    prop: 'connectorCount' as keyof AddressResponse,
+    width: 10
   }
 ];
 

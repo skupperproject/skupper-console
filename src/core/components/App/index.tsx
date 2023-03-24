@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 
-import { Page } from '@patternfly/react-core';
+import { Divider, Page } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/patternfly-addons.css';
 
 import './App.css';
+import AppMenu from '../AppMenu/AppMenu';
 
 const App = function () {
   const navigate = useNavigate();
@@ -38,7 +39,13 @@ const App = function () {
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
       <Suspense fallback={<span />}>
-        <AppContent>{routes}</AppContent>
+        <div className="pf-u-mx-md pf-u-mt-md">
+          <AppMenu />
+        </div>
+        <Divider />
+        <div style={{ overflow: 'auto', flex: 1 }}>
+          <AppContent>{routes}</AppContent>
+        </div>
       </Suspense>
     </Page>
   );
