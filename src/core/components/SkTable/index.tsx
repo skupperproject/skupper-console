@@ -228,12 +228,22 @@ const SkTable = function <T>({
         <Thead>
           <Tr>
             {columns.map(({ name, prop, columnDescription }, index) => (
-              <Th key={name} sort={(prop && shouldSort && getSortParams(index)) || undefined}>
-                {columnDescription && (
-                  <Tooltip position="right" content={columnDescription}>
-                    <OutlinedQuestionCircleIcon />
-                  </Tooltip>
-                )}{' '}
+              <Th
+                colSpan={1}
+                key={name}
+                sort={(prop && shouldSort && getSortParams(index)) || undefined}
+                info={
+                  columnDescription
+                    ? {
+                        tooltip: columnDescription,
+                        className: 'repositories-info-tip',
+                        tooltipProps: {
+                          isContentLeftAligned: true
+                        }
+                      }
+                    : undefined
+                }
+              >
                 {name}
               </Th>
             ))}

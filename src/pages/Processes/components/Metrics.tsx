@@ -24,7 +24,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
-import { formatByteRate } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
@@ -371,6 +371,7 @@ const Metrics: FC<MetricsProps> = function ({
           <GridItem span={4}>
             <Card isFullHeight>
               <ChartProcessDataTrafficDistribution
+                format={formatBytes}
                 themeColor={ChartThemeColor.orange}
                 data={[
                   {
@@ -497,6 +498,7 @@ const Metrics: FC<MetricsProps> = function ({
                         <GridItem span={4}>
                           <Card isFullHeight>
                             <ChartProcessDataTrafficDistribution
+                              format={formatBytes}
                               data={[
                                 {
                                   x: metrics.responseSeries.statusCode4xx.label,

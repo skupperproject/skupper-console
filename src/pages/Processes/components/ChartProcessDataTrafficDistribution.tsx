@@ -3,7 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { ChartDonut, ChartThemeColor, ChartTooltip, getResizeObserver } from '@patternfly/react-charts';
 
 import EmptyData from '@core/components/EmptyData';
-import { formatBytes } from '@core/utils/formatBytes';
+import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
 import { ProcessesBytesChartProps } from '../Processes.interfaces';
 
@@ -14,7 +14,11 @@ const CHART_PADDING = {
   top: 10
 };
 
-const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = function ({ data, ...props }) {
+const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = function ({
+  data,
+  format = (y: number) => y,
+  ...props
+}) {
   const observer = useRef<Function>(() => null);
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState<number>(0);
@@ -38,23 +42,21 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
     }
   }, []);
 
-  const trafficDataRx = data[0];
-  const trafficDataTx = data[1];
-  const totalBytes = trafficDataRx.y + trafficDataTx.y;
-  const trafficDataRxRate = totalBytes ? trafficDataRx.y / totalBytes : 0;
-  const trafficDataTxRate = totalBytes ? trafficDataTx.y / totalBytes : 0;
+  const total = data.reduce((acc, { y }) => acc + y, 0);
+  const labels = data.map(({ x, y }) => `${x}: ${format(y)}`);
+  const legendData = data.map(({ x, y }) => ({
+    name: `${x}: ${total ? formatToDecimalPlacesIfCents((y * 100) / total, 1) : 0}%`
+  }));
 
   return (
     <div ref={chartContainerRef} style={{ height: `100%`, width: `100%` }}>
-      {!totalBytes && <EmptyData message="Data not available" />}
-      {!!totalBytes && (
+      {!total && <EmptyData message="Data not available" />}
+      {!!total && (
         <ChartDonut
-          title={formatBytes(trafficDataTx.y + trafficDataRx.y)}
+          legendAllowWrap
+          title={format(total)}
           data={data}
-          labels={[
-            `${trafficDataRx.x}: ${formatBytes(trafficDataRx.y)}`,
-            `${trafficDataTx.x}: ${formatBytes(trafficDataTx.y)}`
-          ]}
+          labels={labels}
           labelComponent={
             <ChartTooltip
               cornerRadius={5}
@@ -64,14 +66,7 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
             />
           }
           padding={CHART_PADDING}
-          legendData={[
-            {
-              name: `${trafficDataRx.x}: ${Math.round(trafficDataRxRate * 100)}%`
-            },
-            {
-              name: `${trafficDataTx.x}: ${Math.round(trafficDataTxRate * 100)}%`
-            }
-          ]}
+          legendData={legendData}
           legendOrientation="vertical"
           legendPosition="right"
           width={width}

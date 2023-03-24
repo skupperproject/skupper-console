@@ -3,5 +3,6 @@ export enum QueriesAddresses {
   GetFlowPairsByAddress = 'addresses-flowpairs-by-address-query',
   GetFlowPairsByAddressForChart = 'addresses-flowpairs-by-address-for-chart-query',
   GetProcessesByAddress = 'processes-by-address-query',
-  GetAddresses = 'addresses-query'
+  GetAddresses = 'addresses-query',
+  GetFlowsByProtocol = 'addresses-get-flows-by-protocol'
 }

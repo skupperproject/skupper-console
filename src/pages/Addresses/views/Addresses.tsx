@@ -9,14 +9,47 @@ import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import { PrometheusApi } from 'API/Prometheus';
+import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
-import { AvailableProtocols } from 'API/REST.enum';
 import { AddressResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { addressesComponentsTables } from '../Addresses.constants';
 import { AddressesColumnsNames, AddressesLabels } from '../Addresses.enum';
+import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
+
+const columns = [
+  {
+    name: AddressesColumnsNames.Name,
+    prop: 'name' as keyof AddressResponse,
+    component: 'AddressNameLinkCell'
+  },
+  {
+    name: AddressesColumnsNames.Protocol,
+    prop: 'protocol' as keyof AddressResponse,
+    width: 10
+  }
+];
+
+const columnsWithFlowPairsCounters = [
+  ...columns,
+  {
+    name: AddressesColumnsNames.CurrentFlowPairs,
+    columnDescription: 'Active connection or requests',
+
+    prop: 'currentFlows' as keyof AddressResponse,
+    width: 15
+  },
+  {
+    name: AddressesColumnsNames.TotalFLowPairs,
+    columnDescription: 'Total connection or requests',
+
+    prop: 'totalFlows' as keyof AddressResponse,
+    width: 15
+  }
+];
 
 const Addresses = function () {
   const navigate = useNavigate();
@@ -25,13 +58,31 @@ const Addresses = function () {
     onError: handleError
   });
 
+  const { data: tcpActiveFlows, isLoading: isLoadingTcpActiveFlows } = useQuery(
+    ['QueriesAddresses.GetFlowsByProtocol'],
+    () => PrometheusApi.fetchFlowsByAddress({ onlyActive: true }),
+    {
+      enabled: isPrometheusActive(),
+      onError: handleError
+    }
+  );
+
+  const { data: httpTotalFlows, isLoading: isLoadingHttpTotalFlows } = useQuery(
+    ['QueriesAddresses.GetHttpFlowsByProtocol'],
+    () => PrometheusApi.fetchFlowsByAddress({}),
+    {
+      enabled: isPrometheusActive(),
+      onError: handleError
+    }
+  );
+
   function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
     navigate(route);
   }
 
-  if (isLoading) {
+  if (isLoading || ((isLoadingTcpActiveFlows || isLoadingHttpTotalFlows) && isPrometheusActive())) {
     return <LoadingPage />;
   }
 
@@ -39,34 +90,30 @@ const Addresses = function () {
     return null;
   }
 
-  const sortedAddressesTCP = addresses.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
-  const sortedAddressesHTTP = addresses.filter(({ protocol }) => protocol !== AvailableProtocols.Tcp);
+  let addressExtended = addresses;
+  let columnsExtend = columns;
+
+  if (httpTotalFlows && tcpActiveFlows) {
+    addressExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(addresses, {
+      httpTotalFlows,
+      tcpActiveFlows
+    });
+
+    columnsExtend = columnsWithFlowPairsCounters;
+  }
 
   return (
     <TransitionPage>
       <>
         <SectionTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
-
+        {/* addresses table */}
         <Grid hasGutter data-cy="sk-addresses">
-          <GridItem span={6}>
+          <GridItem>
             <Card isFullHeight>
               <SkTable
-                title={AddressesLabels.TCP}
-                columns={generateColumns(AvailableProtocols.Tcp)}
-                rows={sortedAddressesTCP}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                components={addressesComponentsTables}
-              />
-            </Card>
-          </GridItem>
-
-          <GridItem span={6}>
-            <Card isFullHeight>
-              <SkTable
-                title={AddressesLabels.HTTP}
-                columns={generateColumns(AvailableProtocols.Http)}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                rows={sortedAddressesHTTP}
+                rows={addressExtended}
+                columns={columnsExtend}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE * 5}
                 components={addressesComponentsTables}
               />
             </Card>
@@ -78,30 +125,3 @@ const Addresses = function () {
 };
 
 export default Addresses;
-
-function isTcp(protocolSelected: AvailableProtocols) {
-  return protocolSelected === AvailableProtocols.Tcp;
-}
-
-function generateColumns(protocol: AvailableProtocols) {
-  const columns = [
-    {
-      name: AddressesColumnsNames.Name,
-      prop: 'name' as keyof AddressResponse,
-      component: 'AddressNameLinkCell'
-    }
-  ];
-
-  if (!isTcp(protocol)) {
-    return [
-      ...columns,
-      {
-        name: AddressesColumnsNames.Protocol,
-        prop: 'protocol' as keyof AddressResponse,
-        width: 15
-      }
-    ];
-  }
-
-  return columns;
-}

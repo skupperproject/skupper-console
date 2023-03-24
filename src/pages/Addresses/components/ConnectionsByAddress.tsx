@@ -102,7 +102,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
   const serverNamesId = servers.map(({ name }) => name).join('|');
-  const startTime = servers.reduce((acc, process) => (acc = Math.max(acc, process.startTime)), 0);
+  const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
   return (
     <Grid hasGutter data-cy="sk-address">

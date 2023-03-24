@@ -60,5 +60,12 @@ export const queries = {
   },
   getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: IntervalTimePropValue) {
     return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
+  },
+
+  getTotalFlowsByAddress() {
+    return `sum by(address)(flows_total)`;
+  },
+  getActiveFlowsByAddress() {
+    return `sum by(address)(active_flows)`;
   }
 };

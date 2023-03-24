@@ -47,6 +47,7 @@ export interface ProcessDataChart {
 
 export interface ProcessesBytesChartProps {
   data: { x: string; y: number }[];
+  format?: Function;
   themeColor?: string;
 }
 
