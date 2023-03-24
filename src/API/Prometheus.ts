@@ -1,6 +1,11 @@
 import { axiosFetch } from './axiosMiddleware';
 import { gePrometheusQueryPATH, queries } from './Prometheus.constant';
-import { PrometheusApiResult, PrometheusQueryParams } from './Prometheus.interfaces';
+import {
+  PrometheusApiResult,
+  PrometheusApiResultSingle,
+  PrometheusFlowsQueryParams,
+  PrometheusQueryParams
+} from './Prometheus.interfaces';
 
 export const PrometheusApi = {
   fetchDataTraffic: async ({
@@ -10,7 +15,7 @@ export const PrometheusApi = {
     isRate = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range.seconds);
+    const { start, end } = getStartEndTimeFromInterval(range.seconds);
     let param1 = `sourceProcess="${id}"`;
     let param2 = `destProcess="${id}"`;
 
@@ -53,7 +58,7 @@ export const PrometheusApi = {
     quantile,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range.seconds);
+    const { start, end } = getStartEndTimeFromInterval(range.seconds);
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -88,7 +93,7 @@ export const PrometheusApi = {
     isRate = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range.seconds);
+    const { start, end } = getStartEndTimeFromInterval(range.seconds);
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -117,7 +122,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchSResponsesByProcess: async ({
+  fetchResponsesByProcess: async ({
     id,
     range,
     processIdDest,
@@ -125,7 +130,7 @@ export const PrometheusApi = {
     onlyErrors = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getRangeTimestamp(range.seconds);
+    const { start, end } = getStartEndTimeFromInterval(range.seconds);
     let param = `destProcess="${id}"`;
 
     if (onlyErrors) {
@@ -157,10 +162,26 @@ export const PrometheusApi = {
     });
 
     return result;
+  },
+
+  fetchFlowsByAddress: async ({
+    onlyActive = false
+  }: PrometheusFlowsQueryParams): Promise<PrometheusApiResultSingle[]> => {
+    const {
+      data: {
+        data: { result }
+      }
+    } = await axiosFetch(gePrometheusQueryPATH('single'), {
+      params: {
+        query: onlyActive ? queries.getActiveFlowsByAddress() : queries.getTotalFlowsByAddress()
+      }
+    });
+
+    return result;
   }
 };
 
-function getRangeTimestamp(interval: number): { start: number; end: number } {
+function getStartEndTimeFromInterval(interval: number): { start: number; end: number } {
   const now = new Date().getTime() / 1000; // convert in second
 
   return {

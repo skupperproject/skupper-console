@@ -48,8 +48,8 @@ const ProcessesController = {
       const requestSeriesResponse = await PrometheusApi.fetchRequestsByProcess(params);
 
       // responses metrics
-      const responseSeriesResponse = await PrometheusApi.fetchSResponsesByProcess(params);
-      const responseRateSeriesResponse = await PrometheusApi.fetchSResponsesByProcess({
+      const responseSeriesResponse = await PrometheusApi.fetchResponsesByProcess(params);
+      const responseRateSeriesResponse = await PrometheusApi.fetchResponsesByProcess({
         ...params,
         isRate: true,
         onlyErrors: false

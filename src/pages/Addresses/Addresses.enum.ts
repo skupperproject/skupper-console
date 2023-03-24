@@ -17,7 +17,9 @@ export enum AddressesLabels {
 
 export enum AddressesColumnsNames {
   Name = 'Name',
-  Protocol = 'Protocol'
+  Protocol = 'Protocol',
+  CurrentFlowPairs = 'Active',
+  TotalFLowPairs = 'Total'
 }
 
 // FLOWS PAIRS VIEW
