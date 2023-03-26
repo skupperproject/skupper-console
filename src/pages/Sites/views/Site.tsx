@@ -24,6 +24,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
+import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -38,7 +39,8 @@ const processQueryParams = { filter: 'processRole.external' };
 
 const Site = function () {
   const navigate = useNavigate();
-  const { id: siteId } = useParams() as { id: string };
+  const { id } = useParams() as { id: string };
+  const { id: siteId } = getIdAndNameFromUrlParams(id);
 
   const { data: site, isLoading: isLoadingSite } = useQuery(
     [QueriesSites.GetSite, siteId],
@@ -161,7 +163,7 @@ const Site = function () {
                     <ListItem key={identity}>
                       <Flex>
                         <ResourceIcon type="site" />
-                        <Link to={`${SitesRoutesPaths.Sites}/${identity}`}>{linkedSiteName}</Link>
+                        <Link to={`${SitesRoutesPaths.Sites}/${linkedSiteName}@${identity}`}>{linkedSiteName}</Link>
                       </Flex>
                     </ListItem>
                   ))}
@@ -200,7 +202,7 @@ const Site = function () {
                     <ListItem key={identity}>
                       <Flex>
                         <ResourceIcon type="process" />
-                        <Link to={`${ProcessesRoutesPaths.Processes}/${identity}`}>{processName}</Link>
+                        <Link to={`${ProcessesRoutesPaths.Processes}/${processName}}@${identity}`}>{processName}</Link>
                       </Flex>
                     </ListItem>
                   ))}

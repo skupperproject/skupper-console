@@ -112,7 +112,7 @@ const ProcessPairs = function () {
               <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <Link to={`${ProcessesRoutesPaths.Processes}/${processId}`}>{`${processName}`}</Link>
+              <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${processId}`}>{`${processName}`}</Link>
             </BreadcrumbItem>
             <BreadcrumbHeading to="#">{'flow pairs'}</BreadcrumbHeading>
           </Breadcrumb>

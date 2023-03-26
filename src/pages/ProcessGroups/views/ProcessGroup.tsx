@@ -21,6 +21,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
+import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import Metrics from '@pages/Processes/components/Metrics';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
@@ -39,7 +40,8 @@ const initProcessesQueryParams = {
 
 const ProcessGroup = function () {
   const navigate = useNavigate();
-  const { id: processGroupId } = useParams() as { id: string };
+  const { id } = useParams() as { id: string };
+  const { id: processGroupId } = getIdAndNameFromUrlParams(id);
 
   const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
     [QueriesProcessGroups.GetProcessGroup, processGroupId],

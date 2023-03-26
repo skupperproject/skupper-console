@@ -59,7 +59,7 @@ const ProcessGroups = function () {
                 LinkCell({
                   ...props,
                   type: 'service',
-                  link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.identity}`
+                  link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}`
                 })
             }}
           />

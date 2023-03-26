@@ -23,9 +23,9 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
   const prevEdgesRef = useRef<GraphEdge<string>[]>();
 
   const handleOnClickNode = useCallback(
-    ({ data: { id } }: { data: GraphNode }) => {
+    ({ data: { id, name } }: { data: GraphNode }) => {
       if (onGetSelectedNode) {
-        onGetSelectedNode(id);
+        onGetSelectedNode({ id, name });
       }
     },
     [onGetSelectedNode]

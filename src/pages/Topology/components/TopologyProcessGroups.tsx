@@ -52,8 +52,8 @@ const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
   }
 
   const handleGetSelectedNode = useCallback(
-    (idSelected: string) => {
-      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${idSelected}`);
+    ({ id: idSelected, name }: { id: string; name: string }) => {
+      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${name}@${idSelected}`);
     },
     [navigate]
   );
