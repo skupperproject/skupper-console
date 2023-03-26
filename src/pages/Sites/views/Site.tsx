@@ -1,9 +1,6 @@
 import React from 'react';
 
 import {
-  Breadcrumb,
-  BreadcrumbHeading,
-  BreadcrumbItem,
   Card,
   CardBody,
   CardTitle,
@@ -33,7 +30,7 @@ import { RESTApi } from 'API/REST';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SitesRoutesPathLabel, SiteLabels } from '../Sites.enum';
+import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
 
 const processQueryParams = { filter: 'processRole.external' };
 
@@ -108,15 +105,6 @@ const Site = function () {
   return (
     <TransitionPage>
       <Grid hasGutter>
-        <GridItem>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to={SitesRoutesPaths.Sites}>{SitesRoutesPathLabel.Sites}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-          </Breadcrumb>
-        </GridItem>
-
         <GridItem>
           <Flex alignItems={{ default: 'alignItemsCenter' }}>
             <ResourceIcon type="site" />

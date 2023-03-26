@@ -2,10 +2,6 @@ export enum AddressesRoutesPaths {
   Addresses = '/addresses'
 }
 
-export enum AddressesRoutesPathLabel {
-  Addresses = 'addresses'
-}
-
 // ADDRESSES VIEW
 export enum AddressesLabels {
   Section = 'Addresses',

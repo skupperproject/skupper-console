@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
 
 import {
-  Breadcrumb,
-  BreadcrumbHeading,
-  BreadcrumbItem,
   Card,
   CardBody,
   CardTitle,
@@ -33,7 +30,7 @@ import { RESTApi } from 'API/REST';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ConnectionTCP, RequestHTTP } from 'API/REST.interfaces';
 
-import { AddressesRoutesPathLabel, AddressesRoutesPaths, FlowLabels } from '../Addresses.enum';
+import { FlowLabels } from '../Addresses.enum';
 import { QueriesAddresses } from '../services/services.enum';
 
 const FlowsPair = function () {
@@ -79,18 +76,6 @@ const FlowsPair = function () {
   return (
     <TransitionPage>
       <Grid hasGutter data-cy="sk-address">
-        <GridItem>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to={AddressesRoutesPaths.Addresses}>{AddressesRoutesPathLabel.Addresses}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <Link to={`/${AddressesRoutesPathLabel.Addresses}/${address}`}>{`${addressName}`}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{flowPairId}</BreadcrumbHeading>
-          </Breadcrumb>
-        </GridItem>
-
         {flowPairs.protocol === AvailableProtocols.Tcp && (
           <>
             <TextContent>

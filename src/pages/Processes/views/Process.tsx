@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem, Flex, Grid, GridItem, Title } from '@patternfly/react-core';
+import { Flex, Grid, GridItem, Title } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -98,15 +98,6 @@ const Process = function () {
   return (
     <TransitionPage>
       <Grid hasGutter>
-        <GridItem>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{process.name}</BreadcrumbHeading>
-          </Breadcrumb>
-        </GridItem>
-
         <GridItem>
           <Flex alignItems={{ default: 'alignItemsCenter' }}>
             <ResourceIcon type="process" />

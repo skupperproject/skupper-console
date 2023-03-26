@@ -1,15 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import {
-  Breadcrumb,
-  BreadcrumbHeading,
-  BreadcrumbItem,
-  Flex,
-  Grid,
-  GridItem,
-  Icon,
-  Title
-} from '@patternfly/react-core';
+import { Flex, Grid, GridItem, Icon, Title } from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -37,7 +28,7 @@ const initAllFlowParisQueryParamsPaginated = {
 };
 
 const ProcessPairs = function () {
-  const { processId, flowPairId } = useParams();
+  const { flowPairId } = useParams();
 
   const ids = flowPairId?.split('-to-') || [];
   const sourceId = ids[0];
@@ -97,27 +88,12 @@ const ProcessPairs = function () {
   }
 
   const TcpFlowPairs = flowPairsPairsData.results.filter(({ protocol }) => isTcp(protocol as AvailableProtocols));
-
   const HttpFlowPairs = flowPairsPairsData.results.filter(({ protocol }) => !isTcp(protocol as AvailableProtocols));
-
   const flowPairsPaginatedCount = flowPairsPairsData.timeRangeCount;
-  const processName = processId === sourceId ? sourceProcess.name : destinationProcess.name;
 
   return (
     <TransitionPage>
       <Grid hasGutter>
-        <GridItem>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${processId}`}>{`${processName}`}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{'flow pairs'}</BreadcrumbHeading>
-          </Breadcrumb>
-        </GridItem>
-
         <GridItem>
           <Flex>
             <Title headingLevel="h1">{ProcessPairsColumnsNames.Title}</Title>

@@ -1,9 +1,6 @@
 import React from 'react';
 
 import {
-  Breadcrumb,
-  BreadcrumbHeading,
-  BreadcrumbItem,
   Card,
   CardBody,
   CardTitle,
@@ -31,7 +28,7 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
 
-import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
+import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const initProcessesQueryParams = {
@@ -82,13 +79,6 @@ const ProcessGroup = function () {
   return (
     <TransitionPage>
       <Grid hasGutter>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>{ProcessGroupsLabels.Section}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbHeading to="#">{name}</BreadcrumbHeading>
-        </Breadcrumb>
-
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           <ResourceIcon type="service" />
           <Title headingLevel="h1">{name}</Title>

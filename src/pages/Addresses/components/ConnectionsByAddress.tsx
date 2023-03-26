@@ -1,9 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 
 import {
-  Breadcrumb,
-  BreadcrumbHeading,
-  BreadcrumbItem,
   Card,
   Flex,
   Grid,
@@ -30,14 +27,7 @@ import { RequestOptions } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { ConnectionsByAddressColumns } from '../Addresses.constants';
-import {
-  FlowPairsLabelsTcp,
-  AddressesRoutesPathLabel,
-  AddressesRoutesPaths,
-  FlowPairsLabels,
-  FlowPairsLabelsHttp,
-  AddressesLabels
-} from '../Addresses.enum';
+import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
@@ -106,15 +96,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
   return (
     <Grid hasGutter data-cy="sk-address">
-      <GridItem>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to={AddressesRoutesPaths.Addresses}>{AddressesRoutesPathLabel.Addresses}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbHeading to="#">{addressName}</BreadcrumbHeading>
-        </Breadcrumb>
-      </GridItem>
-
       <GridItem>
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           <ResourceIcon type="address" />
