@@ -16,30 +16,30 @@ export const flowPairsComponentsTable = {
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.forwardFlow.process}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.forwardFlow.processName}@${props.data.forwardFlow.process}`
     }),
   SiteNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
     LinkCell({
       ...props,
       type: 'site',
-      link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteId}`
+      link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteName}@${props.data.sourceSiteId}`
     }),
   TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
     LinkCell({
       ...props,
       type: 'site',
-      link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteId}`
+      link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
     }),
   TargetProcessNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.process}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    DurationCell({ ...props, endTime: props.data.endTime, startTime: props.data.startTime })
+    DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime })
 };
 
 export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [

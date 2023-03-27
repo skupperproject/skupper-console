@@ -55,7 +55,7 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
                 <DescriptionListTerm>{ProcessesLabels.Site}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="site" />
-                  <Link to={`${SitesRoutesPaths.Sites}/${parent}`}>{parentName}</Link>
+                  <Link to={`${SitesRoutesPaths.Sites}/${parentName}@${parent}`}>{parentName}</Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
@@ -64,7 +64,9 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
                 <DescriptionListTerm>{ProcessesLabels.ProcessGroup}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="service" />
-                  <Link to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupIdentity}`}>{groupName}</Link>
+                  <Link to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupName}@${groupIdentity}`}>
+                    {groupName}
+                  </Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>

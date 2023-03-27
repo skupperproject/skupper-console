@@ -3,11 +3,11 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
+import Graph from '@core/components/Graph/Graph';
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
-import Graph from '../../../core/components/Graph/Graph';
 import { TopologyPanelProps } from '../Topology.interfaces';
 
 const TopologyPanel: FC<TopologyPanelProps> = function ({
@@ -23,9 +23,9 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
   const prevEdgesRef = useRef<GraphEdge<string>[]>();
 
   const handleOnClickNode = useCallback(
-    ({ data: { id } }: { data: GraphNode }) => {
+    ({ data: { id, name } }: { data: GraphNode }) => {
       if (onGetSelectedNode) {
-        onGetSelectedNode(id);
+        onGetSelectedNode({ id, name });
       }
     },
     [onGetSelectedNode]

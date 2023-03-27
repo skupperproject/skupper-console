@@ -2,10 +2,6 @@ export enum AddressesRoutesPaths {
   Addresses = '/addresses'
 }
 
-export enum AddressesRoutesPathLabel {
-  Addresses = 'addresses'
-}
-
 // ADDRESSES VIEW
 export enum AddressesLabels {
   Section = 'Addresses',
@@ -19,7 +15,8 @@ export enum AddressesColumnsNames {
   Name = 'Name',
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',
-  TotalFLowPairs = 'Total'
+  TotalFLowPairs = 'Total',
+  Servers = 'Servers'
 }
 
 // FLOWS PAIRS VIEW

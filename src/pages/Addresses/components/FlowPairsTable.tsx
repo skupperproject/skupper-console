@@ -2,13 +2,13 @@ import React, { FC } from 'react';
 
 import { useParams } from 'react-router-dom';
 
+import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import { FlowPairsResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import LinkCell from '../../../core/components/LinkCell';
 import { AddressesRoutesPaths, FlowPairsLabels } from '../Addresses.enum';
 import { FlowPairsTableProps } from '../Addresses.interfaces';
 

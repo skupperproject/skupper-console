@@ -121,15 +121,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
   }
 
   const handleGetSelectedNode = useCallback(
-    (idSelected: string) => {
-      let id = idSelected;
-      if (idSelected) {
-        if (idSelected.startsWith('pGroup')) {
-          id = idSelected.split('pGroup')[1];
-        }
-
-        navigate(`${ProcessesRoutesPaths.Processes}/${id}`);
-      }
+    ({ id, name }: { id: string; name: string }) => {
+      const idSelected = id.startsWith('pGroup') ? id.split('pGroup')[1] : id;
+      navigate(`${ProcessesRoutesPaths.Processes}/${name}@${idSelected}`);
     },
     [navigate]
   );

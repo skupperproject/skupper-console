@@ -10,8 +10,8 @@ import { DurationCellProps } from './DurationCell';
 /**
  *  startTime and endTime are expected to be in microseconds
  */
-const DurationCell = function <T>({ startTime, endTime = Date.now() * 1000 }: DurationCellProps<T>) {
-  const duration = formatTimeInterval(endTime / 1000, startTime / 1000);
+const DurationCell = function <T>({ startTime, endTime }: DurationCellProps<T>) {
+  const duration = formatTimeInterval(endTime, startTime);
 
   return (
     <Tooltip content={duration}>

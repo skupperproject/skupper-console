@@ -17,19 +17,19 @@ const components = {
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.identity}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.name}@${props.data.identity}`
     }),
   nameLinkCellProcessGroup: (props: LinkCellProps<ProcessResponse>) =>
     LinkCell({
       ...props,
       type: 'service',
-      link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupIdentity}`
+      link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
   nameLinkCellSite: (props: LinkCellProps<ProcessResponse>) =>
     LinkCell({
       ...props,
       type: 'site',
-      link: `${SitesRoutesPaths.Sites}/${props.data.parent}`
+      link: `${SitesRoutesPaths.Sites}/${props.data.parentName}@${props.data.parent}`
     })
 };
 

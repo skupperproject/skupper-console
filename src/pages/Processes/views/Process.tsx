@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem, Flex, Grid, GridItem, Title } from '@patternfly/react-core';
+import { Flex, Grid, GridItem, Title } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
+import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -25,7 +26,8 @@ import { QueriesProcesses } from '../services/services.enum';
 
 const Process = function () {
   const navigate = useNavigate();
-  const { id: processId } = useParams() as { id: string };
+  const { id } = useParams() as { id: string };
+  const { id: processId } = getIdAndNameFromUrlParams(id);
 
   const { data: process, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcesses.GetProcess, processId],
@@ -97,15 +99,6 @@ const Process = function () {
     <TransitionPage>
       <Grid hasGutter>
         <GridItem>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to={ProcessesRoutesPaths.Processes}>{ProcessesLabels.Section}</Link>
-            </BreadcrumbItem>
-            <BreadcrumbHeading to="#">{process.name}</BreadcrumbHeading>
-          </Breadcrumb>
-        </GridItem>
-
-        <GridItem>
           <Flex alignItems={{ default: 'alignItemsCenter' }}>
             <ResourceIcon type="process" />
             <Title headingLevel="h1">{process.name}</Title>
@@ -154,7 +147,7 @@ const Process = function () {
               viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
                 LinkCell({
                   ...props,
-                  link: `${ProcessesRoutesPaths.Processes}/${processId}/${props.data.identity}`,
+                  link: `${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${props.data.identity}`,
                   value: ProcessPairsColumnsNames.ViewDetails
                 })
             }}

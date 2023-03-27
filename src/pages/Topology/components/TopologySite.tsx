@@ -48,10 +48,8 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   }
 
   const handleGetSelectedNode = useCallback(
-    (idSelected: string) => {
-      if (idSelected) {
-        navigate(`${SitesRoutesPaths.Sites}/${idSelected}`);
-      }
+    ({ id, name }: { id: string; name: string }) => {
+      navigate(`${SitesRoutesPaths.Sites}/${name}@${id}`);
     },
     [navigate]
   );

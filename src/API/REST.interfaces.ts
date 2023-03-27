@@ -88,6 +88,8 @@ export interface HostResponse extends EntityBaseResponse {
 
 export interface AddressResponse extends EntityBaseResponse {
   protocol: AvailableProtocols;
+  connectorCount: number;
+  listenerCount: number;
 }
 
 export interface ConnectionTCP extends BaseResponse {

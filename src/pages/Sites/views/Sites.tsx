@@ -51,7 +51,7 @@ const Sites = function () {
                 LinkCell({
                   ...props,
                   type: 'site',
-                  link: `${SitesRoutesPaths.Sites}/${props.data.identity}`
+                  link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
                 })
             }}
           />
