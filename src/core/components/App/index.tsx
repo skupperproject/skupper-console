@@ -15,8 +15,8 @@ import { routes } from 'routes';
 import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/patternfly-addons.css';
 
-import './App.css';
 import AppMenu from '../AppMenu/AppMenu';
+import './App.css';
 
 const App = function () {
   const navigate = useNavigate();

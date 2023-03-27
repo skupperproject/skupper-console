@@ -39,7 +39,7 @@ export const flowPairsComponentsTable = {
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    DurationCell({ ...props, endTime: props.data.endTime, startTime: props.data.startTime })
+    DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime })
 };
 
 export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [

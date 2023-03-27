@@ -71,6 +71,10 @@ const FlowsPair = function () {
     ...counterFlow,
     sourcePort: addressName?.split(':')[1] as string
   };
+
+  /**
+   *  endTime and startTime are microseconds (because the Apis give us microseconds)
+   */
   const duration = formatTimeInterval(flowPairs.endTime || Date.now() * 1000, flowPairs.startTime);
 
   return (
