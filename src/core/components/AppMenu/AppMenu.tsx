@@ -70,7 +70,7 @@ const AppMenu = function () {
   }
 
   return (
-    <Toolbar>
+    <Toolbar isFullHeight>
       <ToolbarContent>
         <ToolbarItem>
           <Breadcrumb>
