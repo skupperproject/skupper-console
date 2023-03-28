@@ -2,6 +2,10 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
 
+Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
+
+This demo is synchronized with the current main branch and utilizes either the latest version of Skupper or a modified version thereof.
+
 ## Enable the console from Skupper
 
 The Web console has been integrated into [Skupper](https://github.com/skupperproject/skupper). To facilitate access to the console, please refer to the step-by-step instructions detailed in [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc).

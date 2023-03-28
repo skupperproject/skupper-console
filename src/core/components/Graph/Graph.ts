@@ -317,7 +317,7 @@ export default class Graph {
       .attr('id', ({ source, target }) => `edge-path${source.id}-${target.id}`)
       .style('pointer-events', 'visibleStroke')
       .attr('stroke-width', '30px')
-      .style('cursor', 'pointer')
+      .style('cursor', (data) => (data.clickable ? 'pointer' : 'default'))
       .on('mouseover', (_, { source, target }) => {
         this.nodeInitialized = `${source.id}-to-${target.id}`;
         this.reStyleEdges();
