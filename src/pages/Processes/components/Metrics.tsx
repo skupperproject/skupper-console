@@ -404,8 +404,8 @@ const Metrics: FC<MetricsProps> = function ({
                             <ChartProcessDataTrafficSeries
                               formatY={formatLatency}
                               themeColor={ChartThemeColor.multi}
-                              legendLabels={metrics.latencies.map(({ label }) => label)}
-                              data={metrics.latencies.map(({ data }) => data)}
+                              legendLabels={metrics.latencies.timeSeriesLatencies.map(({ label }) => label)}
+                              data={metrics.latencies.timeSeriesLatencies.map(({ data }) => data)}
                             />
                           </CardBody>
                         </>

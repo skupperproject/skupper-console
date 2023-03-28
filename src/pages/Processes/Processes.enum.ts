@@ -35,7 +35,7 @@ export enum ProcessesLabels {
   Servers = 'Servers',
   TcpConnection = 'Live tcp connections',
   HttpRequests = 'Http requests in the last 15 minutes',
-  GoToTopology = 'Go to the network view',
+  GoToTopology = 'Go to the Topology view',
   FilterAllSourceProcesses = 'All component processes',
   FilterAllDestinationProcesses = 'All clients and servers',
   FilterProtocolsDefault = 'All Protocols',

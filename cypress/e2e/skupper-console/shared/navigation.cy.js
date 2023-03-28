@@ -6,7 +6,7 @@ context('Navigation', () => {
   });
 
   it('Navigate to the Network section', () => {
-    cy.get('[data-cy=sk-nav-bar]').contains('Network').click({ force: true });
+    cy.get('[data-cy=sk-nav-bar]').contains('Topology').click({ force: true });
     cy.location('hash').should('include', 'topology');
   });
 

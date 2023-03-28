@@ -16,10 +16,10 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
-import { UPDATE_INTERVAL } from 'config';
+import { SYNC_DATA_INTERVAL } from 'config';
 
 const TOOLTIP_UPDATE = 'Data Update';
-const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${UPDATE_INTERVAL} ms). PERFORMANCE MAY BE IMPACTED`!;
+const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${SYNC_DATA_INTERVAL} ms). PERFORMANCE MAY BE IMPACTED`!;
 const COLOR_ICON_MOUSE_LEAVE = 'var(--pf-global--palette--black-500)';
 const COLOR_ICON_MOUSE_ENTER = 'var(--pf-global--palette--green-500)';
 
@@ -40,7 +40,7 @@ const AppMenu = function () {
   }, [queryClient]);
 
   const handleActivateRealTIme = useCallback(() => {
-    setUpdateInterval(!updateInterval ? UPDATE_INTERVAL : 0);
+    setUpdateInterval(!updateInterval ? SYNC_DATA_INTERVAL : 0);
   }, [updateInterval]);
 
   useEffect(() => {

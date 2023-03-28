@@ -40,7 +40,7 @@ export enum FlowPairsLabelsHttp {
 export enum FlowPairsLabels {
   Servers = 'Servers',
   ViewDetails = 'view details',
-  GoToTopology = 'Go to the network view'
+  GoToTopology = 'Go to the Topology view'
 }
 
 // PROCESSES TABLE
