@@ -392,24 +392,21 @@ const Metrics: FC<MetricsProps> = function ({
               </GridItem>
 
               {/* Chart latencies time series card*/}
-              {protocol !== AvailableProtocols.Tcp && (
+              {protocol !== AvailableProtocols.Tcp && metrics.latencies && (
                 <>
                   <GridItem span={12}>
                     <Card isFullHeight>
-                      {!metrics.latencies && <EmptyData />}
-                      {!!metrics.latencies && (
-                        <>
-                          <CardTitle>{ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}</CardTitle>
-                          <CardBody>
-                            <ChartProcessDataTrafficSeries
-                              formatY={formatLatency}
-                              themeColor={ChartThemeColor.multi}
-                              legendLabels={metrics.latencies.timeSeriesLatencies.map(({ label }) => label)}
-                              data={metrics.latencies.timeSeriesLatencies.map(({ data }) => data)}
-                            />
-                          </CardBody>
-                        </>
-                      )}
+                      <>
+                        <CardTitle>{ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}</CardTitle>
+                        <CardBody>
+                          <ChartProcessDataTrafficSeries
+                            formatY={formatLatency}
+                            themeColor={ChartThemeColor.multi}
+                            legendLabels={metrics.latencies.timeSeriesLatencies.map(({ label }) => label)}
+                            data={metrics.latencies.timeSeriesLatencies.map(({ data }) => data)}
+                          />
+                        </CardBody>
+                      </>
                     </Card>
                   </GridItem>
 

@@ -186,7 +186,11 @@ function normalizeLatencies({
   const quantile90latencyNormalized = normalizeMetricValues(quantile90latency);
   const quantile99latencyNormalized = normalizeMetricValues(quantile99latency);
 
-  if (!quantile50latencyNormalized && !quantile90latencyNormalized && !quantile99latencyNormalized) {
+  if (
+    (!quantile50latencyNormalized || !quantile50latencyNormalized[0]?.filter(({ y }) => y).length) &&
+    (!quantile90latencyNormalized || !quantile90latencyNormalized[0]?.filter(({ y }) => y).length) &&
+    (!quantile99latencyNormalized || !quantile99latencyNormalized[0]?.filter(({ y }) => y).length)
+  ) {
     return null;
   }
 
