@@ -29,6 +29,11 @@ export interface PrometheusQueryParams {
   quantile?: 0.5 | 0.9 | 0.99;
 }
 
+export interface PrometheusQueryParamsWithStartAndEndTime extends PrometheusQueryParams {
+  start: number;
+  end: number;
+}
+
 export interface PrometheusFlowsQueryParams {
   onlyActive?: boolean;
 }

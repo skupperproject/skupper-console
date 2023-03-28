@@ -4,7 +4,8 @@ import {
   PrometheusApiResult,
   PrometheusApiResultSingle,
   PrometheusFlowsQueryParams,
-  PrometheusQueryParams
+  PrometheusQueryParams,
+  PrometheusQueryParamsWithStartAndEndTime
 } from './Prometheus.interfaces';
 
 export const PrometheusApi = {
@@ -56,9 +57,10 @@ export const PrometheusApi = {
     range,
     processIdDest,
     quantile,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getStartEndTimeFromInterval(range.seconds);
+    protocol,
+    start,
+    end
+  }: PrometheusQueryParamsWithStartAndEndTime): Promise<PrometheusApiResult[]> => {
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -181,7 +183,7 @@ export const PrometheusApi = {
   }
 };
 
-function getStartEndTimeFromInterval(interval: number): { start: number; end: number } {
+export function getStartEndTimeFromInterval(interval: number): { start: number; end: number } {
   const now = new Date().getTime() / 1000; // convert in second
 
   return {
