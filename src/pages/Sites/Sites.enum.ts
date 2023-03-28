@@ -11,7 +11,7 @@ export enum SiteLabels {
   Processes = 'Processes',
   Name = 'Name',
   Namespace = 'Namespace',
-  GoToTopology = 'Go to the network view'
+  GoToTopology = 'Go to the Topology view'
 }
 
 export enum SitesTableColumns {

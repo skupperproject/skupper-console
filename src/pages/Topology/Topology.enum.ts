@@ -10,7 +10,7 @@ export enum TopologyViews {
 }
 
 export enum Labels {
-  Topology = 'Network',
+  Topology = 'Topology',
   LegendGroupsItems = 'Sites',
   ShowAll = 'Show all addresses',
   ShowProcessGroups = 'Group by Components'

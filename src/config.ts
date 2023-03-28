@@ -10,7 +10,7 @@ export const BASE_URL_COLLECTOR =
 
 export const BASE_PROMETHEUS_URL = process.env.PROMETHEUS_URL;
 // Navigation config
-export const RoutesPropsConfig = [SitesPaths, ProcessGroupsPaths, ProcessesPaths, AddressesPaths, TopologyPaths];
+export const RoutesPropsConfig = [TopologyPaths, AddressesPaths, SitesPaths, ProcessGroupsPaths, ProcessesPaths];
 
 export const REDIRECT_TO_PATH = RoutesPropsConfig[0].path;
 
@@ -31,7 +31,8 @@ export const queryClientConfig = {
 };
 
 // general config
-export const UPDATE_INTERVAL = 5 * 1000; // time to request updated data to BE
+export const SYNC_DATA_INTERVAL = 15 * 1000; // time to request updated data to BE
+export const UPDATE_INTERVAL = 7 * 1000; // time to request updated data to BE
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
 export const LINK_DIRECTIONS = {

@@ -27,7 +27,7 @@ import {
   getProcessGroupPairsPATH,
   getProcessPairsPATH,
   getProcessGroupsPATH,
-  getConfigPrometheusPATH
+  getCollectorsPATH
 } from './REST.constant';
 import {
   ProcessGroupResponse,
@@ -46,7 +46,7 @@ import {
 
 export const RESTApi = {
   getPrometheusConfig: async (): Promise<CollectorsResponse> => {
-    const { data } = await axiosFetch(getConfigPrometheusPATH());
+    const { data } = await axiosFetch(getCollectorsPATH());
 
     // we receive an array of info because we suppose to use multiple Prometheus servers in the future, but for now we are using just one
     return getResults<CollectorsResponse[]>(data)[0];

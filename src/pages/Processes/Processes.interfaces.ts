@@ -19,6 +19,10 @@ export interface ProcessMetric {
 }
 
 export interface ProcessLatenciesChart {
+  timeSeriesLatencies: ProcessLatencies[];
+}
+
+export interface ProcessLatencies {
   data: ProcessAxisDataChart[];
   label: string;
 }
@@ -78,7 +82,7 @@ interface ResponseSeries {
 export interface ProcessMetrics {
   trafficDataSeries: ProcessDataChart | null;
   trafficDataSeriesPerSecond: ProcessDataChart | null;
-  latencies: ProcessLatenciesChart[] | null;
+  latencies: ProcessLatenciesChart | null;
   requestSeries: ProcessRequestsChart[] | null;
   requestPerSecondSeries: ProcessRequestsChart[] | null;
   responseSeries: ResponseSeries | null;

@@ -11,6 +11,7 @@ import {
   NormalizeLatenciesProps,
   ProcessAxisDataChart,
   ProcessDataChart,
+  ProcessLatencies,
   ProcessLatenciesChart,
   ProcessMetric,
   ProcessMetrics,
@@ -178,12 +179,16 @@ function normalizeLatencies({
   quantile50latency,
   quantile90latency,
   quantile99latency
-}: NormalizeLatenciesProps): ProcessLatenciesChart[] | null {
+}: NormalizeLatenciesProps): ProcessLatenciesChart | null {
   const quantile50latencyNormalized = normalizeMetricValues(quantile50latency);
   const quantile90latencyNormalized = normalizeMetricValues(quantile90latency);
   const quantile99latencyNormalized = normalizeMetricValues(quantile99latency);
 
-  const latenciesNormalized: ProcessLatenciesChart[] = [];
+  if (!quantile50latencyNormalized && !quantile90latencyNormalized && !quantile99latencyNormalized) {
+    return null;
+  }
+
+  const latenciesNormalized: ProcessLatencies[] = [];
 
   if (quantile50latencyNormalized) {
     latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: ProcessesLabels.LatencyMetric50quantile });
@@ -197,7 +202,7 @@ function normalizeLatencies({
     latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: ProcessesLabels.LatencyMetric99quantile });
   }
 
-  return latenciesNormalized.length ? latenciesNormalized : null;
+  return { timeSeriesLatencies: latenciesNormalized };
 }
 
 function normalizeTrafficData(data: PrometheusApiResult[]): ProcessDataChart | null {
@@ -254,7 +259,7 @@ function normalizeMetricValues(data: PrometheusApiResult[]): ProcessAxisDataChar
 
   return data.map(({ values }) =>
     values.map((value) => ({
-      x: value[0],
+      x: Number(value[0].toFixed(0)),
       y: isNaN(Number(value[1])) ? 0 : Number(value[1])
     }))
   );

@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
-import { setPrometheusStartTime, setPrometheusUrl } from 'API/Prometheus.constant';
+import { isPrometheusActive, setPrometheusStartTime, setPrometheusUrl } from 'API/Prometheus.constant';
 import { RESTApi } from 'API/REST';
 import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from 'config';
 import { routes } from 'routes';
@@ -22,7 +22,9 @@ const App = function () {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { data } = useQuery(['QueriesAddresses.GetPrometheusURL'], () => RESTApi.getPrometheusConfig());
+  const { data } = useQuery(['QueriesAddresses.GetPrometheusURL'], () => RESTApi.getPrometheusConfig(), {
+    enabled: !isPrometheusActive()
+  });
 
   useEffect(() => {
     if (pathname === '/') {
