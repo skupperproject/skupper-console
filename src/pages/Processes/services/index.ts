@@ -1,6 +1,6 @@
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-import { PrometheusApi } from 'API/Prometheus';
+import { getStartEndTimeFromInterval, PrometheusApi } from 'API/Prometheus';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
@@ -34,9 +34,11 @@ const ProcessesController = {
       // latency metrics
       let latencies = null;
       if (protocol !== AvailableProtocols.Tcp) {
-        const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5 });
-        const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 });
-        const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 });
+        const { start, end } = getStartEndTimeFromInterval(timeInterval.seconds);
+
+        const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end });
+        const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end });
+        const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end });
 
         latencies = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
       }
@@ -259,7 +261,7 @@ function normalizeMetricValues(data: PrometheusApiResult[]): ProcessAxisDataChar
 
   return data.map(({ values }) =>
     values.map((value) => ({
-      x: Number(value[0].toFixed(0)),
+      x: Number(value[0]),
       y: isNaN(Number(value[1])) ? 0 : Number(value[1])
     }))
   );
