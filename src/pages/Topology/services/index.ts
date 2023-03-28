@@ -40,6 +40,7 @@ export const TopologyController = {
     const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
       key: identity,
       source: sourceId,
+      clickable: true,
       target: destinationId
     }));
 
@@ -49,6 +50,7 @@ export const TopologyController = {
   getProcessesLinksByAddress: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] => {
     const processesLinks = flowPairsByAddress.map(({ identity, processAggregateId }) => ({
       key: identity,
+      clickable: true,
       source: processAggregateId.split('-to-')[0],
       target: processAggregateId.split('-to-')[1]
     }));
@@ -111,10 +113,11 @@ export const TopologyController = {
       .sort((a, b) => a.group - b.group),
 
   getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
-    links?.map(({ source, target, rate }) => ({
+    links?.map(({ source, target, rate, clickable }) => ({
       source,
       target,
-      rate
+      rate,
+      clickable
     })),
 
   getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge<string>[] =>

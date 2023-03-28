@@ -130,9 +130,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
   const handleGetSelectedEdge = useCallback(
     (edge: GraphEdge) => {
+      const sourceName = edge.source.name;
       const sourceId = edge.source.id;
       const destinationId = edge.target.id;
-      navigate(`${ProcessesRoutesPaths.Processes}/${sourceId}/${sourceId}-to-${destinationId}`);
+      navigate(`${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${sourceId}-to-${destinationId}`);
     },
     [navigate]
   );
@@ -244,14 +245,17 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     <>
       <Toolbar>
         <ToolbarContent style={{ height: '30px' }}>
-          <ToolbarItem>
-            <Checkbox
-              label={Labels.ShowProcessGroups}
-              isChecked={shouldShowProcessGroups}
-              onChange={handleChangeShouldShowProcesses}
-              id="show_process"
-            />
-          </ToolbarItem>
+          {/*  TODO: remove that if confirmed */}
+          {shouldShowProcessGroups && (
+            <ToolbarItem>
+              <Checkbox
+                label={Labels.ShowProcessGroups}
+                isChecked={shouldShowProcessGroups}
+                onChange={handleChangeShouldShowProcesses}
+                id="show_process"
+              />
+            </ToolbarItem>
+          )}
           {!shouldShowProcessGroups && (
             <ToolbarItem>
               <Select

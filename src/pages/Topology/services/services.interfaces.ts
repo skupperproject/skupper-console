@@ -3,4 +3,5 @@ export interface LinkTopology {
   source: string;
   target: string;
   rate?: string;
+  clickable?: boolean;
 }
