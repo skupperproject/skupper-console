@@ -2,6 +2,11 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
 
+
+Web console status: **Tech Preview**
+
+---
+
 Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
 
 This demo is synchronized with the current main branch and utilizes either the latest version of Skupper or a modified version thereof.
