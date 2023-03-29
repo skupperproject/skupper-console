@@ -313,7 +313,7 @@ const Metrics: FC<MetricsProps> = function ({
                         <ChartProcessDataTrafficSeries
                           themeColor={ChartThemeColor.orange}
                           formatY={formatByteRate}
-                          legendLabels={['Received', 'Sent']}
+                          legendLabels={[ProcessesLabels.TrafficReceived, ProcessesLabels.TrafficSent]}
                           data={[
                             metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
                             metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
@@ -346,7 +346,7 @@ const Metrics: FC<MetricsProps> = function ({
                             <Icon size="sm">
                               <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--100, #ec7a08)`} />
                             </Icon>{' '}
-                            {ProcessesLabels.TrafficReceived.toLocaleLowerCase()}
+                            {ProcessesLabels.TrafficReceived}
                           </Td>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficReceived)}</Th>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficReceived)}</Th>
@@ -358,7 +358,7 @@ const Metrics: FC<MetricsProps> = function ({
                             <Icon size="sm">
                               <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--200, #f4b678)`} />
                             </Icon>{' '}
-                            {ProcessesLabels.TrafficSent.toLocaleLowerCase()}
+                            {ProcessesLabels.TrafficSent}
                           </Td>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficSent)}</Th>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficSent)}</Th>
@@ -379,11 +379,11 @@ const Metrics: FC<MetricsProps> = function ({
                     themeColor={ChartThemeColor.orange}
                     data={[
                       {
-                        x: 'Received',
+                        x: ProcessesLabels.TrafficReceived,
                         y: metrics.trafficDataSeries?.totalDataReceived || 0
                       },
                       {
-                        x: 'Sent',
+                        x: ProcessesLabels.TrafficSent,
                         y: metrics.trafficDataSeries?.totalDataSent || 0
                       }
                     ]}
@@ -433,7 +433,7 @@ const Metrics: FC<MetricsProps> = function ({
                       {!!metrics.requestSeries && (
                         <GridItem span={4}>
                           <MetricCard
-                            title={'Total Hits'}
+                            title={'Total Requests'}
                             value={metrics.requestSeries[0].totalRequestInterval}
                             bgColor={'--pf-global--palette--purple-400'}
                             colorChart={ChartThemeColor.purple}
@@ -446,7 +446,7 @@ const Metrics: FC<MetricsProps> = function ({
                       {!!metrics.requestPerSecondSeries && (
                         <GridItem span={4}>
                           <MetricCard
-                            title={'Avg. hits rate'}
+                            title={'Avg. Request rate'}
                             value={metrics.requestPerSecondSeries[0].avgRequestRateInterval}
                             bgColor={'--pf-global--palette--purple-200'}
                             showChart={false}
