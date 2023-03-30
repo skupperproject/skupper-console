@@ -6,11 +6,7 @@
       "startTime": 1674048683000000,
       "endTime": 0,
       "name": "site 1",
-      "nameSpace": "config-grpc-public2-test",
-      "octetsSent": 113,
-      "octetSentRate": 0,
-      "octetsReceived": 450,
-      "octetReceivedRate": 0
+      "nameSpace": "config-grpc-site-1-test"
     },
     {
       "recType": "SITE",
@@ -18,11 +14,7 @@
       "startTime": 1674048662000000,
       "endTime": 0,
       "name": "site 2",
-      "nameSpace": "config-grpc-public1-test",
-      "octetsSent": 540346,
-      "octetSentRate": 2,
-      "octetsReceived": 1153900,
-      "octetReceivedRate": 2
+      "nameSpace": "config-grpc-site-2-test"
     },
     {
       "recType": "SITE",
@@ -30,11 +22,23 @@
       "startTime": 1674048705000000,
       "endTime": 0,
       "name": "site 3",
-      "nameSpace": "config-grpc-private-test",
-      "octetsSent": 1658,
-      "octetSentRate": 0,
-      "octetsReceived": 11820,
-      "octetReceivedRate": 0
+      "nameSpace": "config-grpc-site-3-test"
+    },
+    {
+      "recType": "SITE",
+      "identity": "site-4",
+      "startTime": 1674048705000000,
+      "endTime": 0,
+      "name": "site 4",
+      "nameSpace": "config-grpc-site-4-test"
+    },
+    {
+      "recType": "SITE",
+      "identity": "site-5",
+      "startTime": 1674048705000000,
+      "endTime": 0,
+      "name": "site 5",
+      "nameSpace": "config-grpc-site-5-test"
     }
   ],
   "queryParams": {
@@ -49,7 +53,7 @@
   "status": "",
   "timestamp": 1674203083865935,
   "elapsed": 105,
-  "count": 3,
-  "timeRangeCount": 3,
-  "totalCount": 3
+  "count": 5,
+  "timeRangeCount": 5,
+  "totalCount": 5
 }

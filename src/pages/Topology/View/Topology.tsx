@@ -11,15 +11,15 @@ import { TopologyURLFilters, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
   const [searchParams] = useSearchParams();
+
   const addressId = searchParams.get(TopologyURLFilters.AddressId);
   const id = searchParams.get(TopologyURLFilters.IdSelected);
-
   const type = searchParams.get(TopologyURLFilters.Type);
 
   const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
 
   function handleChangeTopologyType(_: React.MouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    searchParams.delete('id');
+    searchParams.delete('id'); // remove the id from the url when the topology view change
     setTopologyType(tabIndex as string);
   }
 

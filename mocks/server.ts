@@ -114,7 +114,6 @@ export function loadMockServer() {
 
         this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
           const value = queryParams.filter.split('.')[1];
-
           const results = flowPairs.results.filter((pair: FlowPairsResponse) => pair.processAggregateId === value);
 
           return { ...processPairs, results };

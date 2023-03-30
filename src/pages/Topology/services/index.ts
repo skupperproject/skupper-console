@@ -135,14 +135,7 @@ export const TopologyController = {
 const getColor = (index: number) => colors[index % colors.length];
 
 function getPosition(identity: string): { fx: number; fy: number } {
-  let positions = localStorage.getItem(identity);
-
-  if (!positions) {
-    const newIdentity = identity.split('pGroup');
-    if (newIdentity[1]) {
-      positions = localStorage.getItem(newIdentity[1]);
-    }
-  }
+  const positions = localStorage.getItem(identity);
 
   const fx = positions ? JSON.parse(positions).fx : null;
   const fy = positions ? JSON.parse(positions).fy : null;

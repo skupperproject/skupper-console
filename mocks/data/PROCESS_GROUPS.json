@@ -15,6 +15,14 @@
       "endTime": 0,
       "name": "component 2",
       "processGroupRole": "external"
+    },
+    {
+      "recType": "PROCESS_GROUP",
+      "identity": "group-3",
+      "startTime": 1674202475303866,
+      "endTime": 0,
+      "name": "component 3",
+      "processGroupRole": "external"
     }
   ],
   "queryParams": {
@@ -29,7 +37,7 @@
   "status": "",
   "timestamp": 1674203266943928,
   "elapsed": 511,
-  "count": 2,
-  "timeRangeCount": 2,
-  "totalCount": 2
+  "count": 3,
+  "timeRangeCount": 3,
+  "totalCount": 3
 }

@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
-  Checkbox,
   Flex,
   Panel,
   PanelMainBody,
@@ -20,7 +19,6 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
-import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
@@ -37,10 +35,6 @@ const processesQueryParams = {
   filter: 'processRole.external'
 };
 
-const processGroupsQueryParams = {
-  filter: 'processGroupRole.external'
-};
-
 const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> = function ({
   addressId,
   id: processId
@@ -54,22 +48,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
-  const [shouldShowProcessGroups, setShouldShowProcessGroups] = useState<boolean>(false);
 
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
     refetchInterval,
     onError: handleError
   });
-
-  const { data: processGroups } = useQuery(
-    [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
-    () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
-    {
-      enabled: shouldShowProcessGroups,
-      refetchInterval,
-      onError: handleError
-    }
-  );
 
   const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
     [QueriesProcesses.GetProcess, processesQueryParams],
@@ -116,14 +99,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     navigate(route);
   }
 
-  function handleChangeShouldShowProcesses(checked: boolean) {
-    setShouldShowProcessGroups(checked);
-  }
-
   const handleGetSelectedNode = useCallback(
     ({ id, name }: { id: string; name: string }) => {
-      const idSelected = id.startsWith('pGroup') ? id.split('pGroup')[1] : id;
-      navigate(`${ProcessesRoutesPaths.Processes}/${name}@${idSelected}`);
+      navigate(`${ProcessesRoutesPaths.Processes}/${name}@${id}`);
     },
     [navigate]
   );
@@ -158,34 +136,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     if (sites && processesPairs && processes && !(isLoadingProcessPairsByAddress && addressIdSelected)) {
       const processesLinks = TopologyController.getProcessesLinks(processesPairs);
 
-      if (shouldShowProcessGroups && processGroups) {
-        const processGroupsNodes = TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
-
-        const processesNodes = TopologyController.getNodesFromProcesses(
-          processes.map((process) => ({
-            ...process,
-            identity: `pGroup${process.identity}`,
-            parent: process.groupIdentity
-          })),
-          processGroupsNodes
-        );
-
-        setNodes(processesNodes);
-
-        setLinks(
-          TopologyController.getEdgesFromLinks(
-            processesLinks.map(({ source, target, key, rate }) => ({
-              source: `pGroup${source}`,
-              target: `pGroup${target}`,
-              rate,
-              key
-            }))
-          )
-        );
-
-        return;
-      }
-
       const processesLinksByAddress = processesPairsByAddress?.results
         ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress.results)
         : undefined;
@@ -214,16 +164,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
       setLinks(TopologyController.getEdgesFromLinks(uniqueProcessesLinksByAddress || processesLinks));
     }
-  }, [
-    sites,
-    processes,
-    processesPairs,
-    processGroups,
-    isLoadingProcessPairsByAddress,
-    addressIdSelected,
-    shouldShowProcessGroups,
-    processesPairsByAddress
-  ]);
+  }, [sites, processes, processesPairs, isLoadingProcessPairsByAddress, addressIdSelected, processesPairsByAddress]);
 
   useEffect(() => {
     updateTopologyData();
@@ -245,30 +186,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     <>
       <Toolbar>
         <ToolbarContent style={{ height: '30px' }}>
-          {/*  TODO: remove that if confirmed */}
-          {shouldShowProcessGroups && (
-            <ToolbarItem>
-              <Checkbox
-                label={Labels.ShowProcessGroups}
-                isChecked={shouldShowProcessGroups}
-                onChange={handleChangeShouldShowProcesses}
-                id="show_process"
-              />
-            </ToolbarItem>
-          )}
-          {!shouldShowProcessGroups && (
-            <ToolbarItem>
-              <Select
-                isDisabled={shouldShowProcessGroups}
-                isOpen={isOpen}
-                onSelect={handleSelect}
-                onToggle={handleToggle}
-                selections={addressIdSelected}
-              >
-                {optionsWithDefault}
-              </Select>
-            </ToolbarItem>
-          )}
+          <ToolbarItem>
+            <Select isOpen={isOpen} onSelect={handleSelect} onToggle={handleToggle} selections={addressIdSelected}>
+              {optionsWithDefault}
+            </Select>
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
@@ -285,9 +207,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
         <PanelMainBody>
           <Flex>
             <Text>
-              <b>{shouldShowProcessGroups ? 'Components: ' : ' Sites: '}</b>
+              <b>{Labels.LegendGroupsItems}:</b>
             </Text>
-            {(shouldShowProcessGroups ? processGroups : sites)?.map((node, index) => (
+            {sites?.map((node, index) => (
               <Flex key={node.identity}>
                 <div
                   className="pf-u-mr-xs"
