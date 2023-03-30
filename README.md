@@ -2,10 +2,7 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
 
-
 Web console status: **Tech Preview**
-
----
 
 Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
 
@@ -15,59 +12,62 @@ This demo is synchronized with the current main branch and utilizes either the l
 
 The Web console has been integrated into [Skupper](https://github.com/skupperproject/skupper). To facilitate access to the console, please refer to the step-by-step instructions detailed in [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc).
 
-## Run the console standalone
+---
 
-### Installation
+## Development
+
+We use `yarn` as the package manager, if adding dependencies to `package.json`
+make sure you install them with `yarn` and commit the `yarn.lock` file.
+
+### Quick start
 
 ```bash
 yarn install
 yarn prepare
+yarn start
 ```
 
-the last command install husky to improves commits. You need to run this command just one time.
+then open <http://localhost:3000>
+
+*Note*:
+
+* `yarn prepare` install husky.  run this command just one time.
+* `yarn start` run the application using the data in the mocks folder. No metrics data and charts are available at the moment.
 
 ### Run the console with demo routes
-
- These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
 
 ```bash
 API_HOST_FLOW_COLLECTOR=https://flow-collector-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud PROMETHEUS_URL=https://prometheus-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud/api/v1 yarn start
 ```
 
-### Run the console with Skupper
+ These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
+
+### Run the console with Skupper (work in progress)
 
 When running skupper, executing `skupper init --enable-flow-collector` will generate publicly accessible routes to the collector and Prometheus. These routes can be secured or unsecured, depending on the desired level of security.
 
-If you intend to run the console as a standalone application, you must use the designated routes alongside the appropriate API environment variables.
+If you intend to run the console as a standalone application, you must use the designated routes alongside the appropriate API environment variable.
 
-### Enable the Flow collector (mandatory)
+#### Enable the Flow collector
 
 ```bash
-API_HOST_FLOW_COLLECTOR=<flows APIs url> yarn start
+API_HOST_FLOW_COLLECTOR=<skupper url> yarn start
 ```
 
-### Enable Prometheus (optional)
+**Cross-Origin Resource Sharing (CORS) issue**
+ For security reasons, browsers forbid requests that come in from cross-domain sources. We need to allow the CORS manually:
 
 ```bash
-PROMETHEUS_URL=<prometheus server url/api/v1> yarn start
-```
-
-and open <http://localhost:3000>
-
-**remember to enable CORS**
-The flow-collector need to enable the CORS. We can do that doing:
-
-```bash
-kubectl set env <container-name> USE_CORS=yes
+kubectl set env <name of your skupper controller deployed> USE_CORS=yes
 ```
 
 example:
 
 ```bash
-kubectl set env deployment/skupper-flow-collector USE_CORS=yes
+kubectl set env deployment/skupper-service-controller USE_CORS=yes
 ```
 
-## Tests
+## Testing
 
 ### Unit
 
@@ -86,3 +86,25 @@ yarn cy
 ```bash
 yarn cy:open
 ```
+
+## Directory Structure
+
+* `build`: Production build output
+* `config`: dev tool configurations
+* `cypress`: Integration testing
+* `mocks`: static dataset representing a basic network and mock server
+* `public`: Home of index.html
+* `src`: Source and test code
+* `src/API`: React top level component
+* `src/assets`: Images and other assets
+* `src/core/components`: App level and reusable React components
+* `src/core/utils`: Generic app functionalities like dates and formatting utilities.
+* `src/layout`: High level components like header, sidebar and container.
+* `src/pages`: Top level pages and nested components
+* `src/pages<page>/components`: components of the view
+* `src/pages<page>/services`:  data normalization/sanitization/manipulation utilities for this specific page
+* `src/pages<page>/views`: Collection of page components
+* `src/config`: Configuration
+* `src/routes`: Aggregation of page routes
+
+Each page section includes constants, interfaces, and enums that are specific to the React views and components used in the section. If you require more generic modules or API-related items, it is recommended that you access them from the modules located in the `services` folder.

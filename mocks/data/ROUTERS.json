@@ -3,7 +3,7 @@
     {
       "recType": "ROUTER",
       "identity": "52tjs:0",
-      "parent": "e5335ee7-cf53-4431-a653-9e6e585ece5e",
+      "parent": "site-1",
       "startTime": 1674048674810887,
       "endTime": 0,
       "name": "0/public1-skupper-router-7b45b6b8f4-52tjs",
@@ -16,7 +16,7 @@
     {
       "recType": "ROUTER",
       "identity": "6z7k6:0",
-      "parent": "ee50101e-a44f-449e-bcdb-d4febed6daf4",
+      "parent": "site-2",
       "startTime": 1674048715265181,
       "endTime": 0,
       "name": "0/private1-skupper-router-bcd8f5469-6z7k6",
@@ -29,7 +29,7 @@
     {
       "recType": "ROUTER",
       "identity": "hth7l:0",
-      "parent": "939fd445-9f7c-4261-aba0-951f77cfdc4a",
+      "parent": "site-3",
       "startTime": 1674048695584567,
       "endTime": 0,
       "name": "0/public2-skupper-router-5487fdd5c8-hth7l",

@@ -110,7 +110,7 @@ const ProcessPairs = function () {
             title={LinkCell<ProcessResponse>({
               data: sourceProcess,
               value: sourceProcess.name,
-              link: `${ProcessesRoutesPaths.Processes}/${sourceId}`,
+              link: `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceId}`,
               type: 'process'
             })}
           />
@@ -140,7 +140,7 @@ const ProcessPairs = function () {
             title={LinkCell<ProcessResponse>({
               data: destinationProcess,
               value: destinationProcess.name,
-              link: `${ProcessesRoutesPaths.Processes}/${destinationId}`,
+              link: `${ProcessesRoutesPaths.Processes}/${destinationProcess.name}@${destinationId}`,
               type: 'process'
             })}
           />

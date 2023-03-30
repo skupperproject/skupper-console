@@ -2,159 +2,19 @@
   "results": [
     {
       "recType": "PROCESS_GROUP",
-      "identity": "13cb1f00-0d83-433a-89cc-c6ad7155bd31",
+      "identity": "group-1",
       "startTime": 1674202485253544,
       "endTime": 0,
-      "name": "paymentservice",
-      "processGroupRole": "external",
-      "octetsSent": 43,
-      "octetSentRate": 0,
-      "octetsReceived": 51,
-      "octetReceivedRate": 0
+      "name": "component 1",
+      "processGroupRole": "external"
     },
     {
       "recType": "PROCESS_GROUP",
-      "identity": "58cf665d-482e-4821-b4bc-606355078567",
+      "identity": "group-2",
       "startTime": 1674202475303866,
       "endTime": 0,
-      "name": "adservice",
-      "processGroupRole": "external",
-      "octetsSent": 574,
-      "octetSentRate": 0,
-      "octetsReceived": 38,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "59e823ef-74fd-48f7-9722-0a3f9f5f263c",
-      "startTime": 1674202475287811,
-      "endTime": 0,
-      "name": "cartservice",
-      "processGroupRole": "external",
-      "octetsSent": 538421,
-      "octetSentRate": 2,
-      "octetsReceived": 1154252,
-      "octetReceivedRate": 1
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "6529d4e8-de25-4e4d-babf-8e09e5417deb",
-      "startTime": 1674202485246237,
-      "endTime": 0,
-      "name": "productcatalogservice",
-      "processGroupRole": "external",
-      "octetsSent": 9731,
-      "octetSentRate": 0,
-      "octetsReceived": 348,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "7fa3ac7c-2353-45ca-a48d-b5df1509b238",
-      "startTime": 1674202475302045,
-      "endTime": 0,
-      "name": "redis",
-      "processGroupRole": "external",
-      "octetsSent": 1153935,
-      "octetSentRate": 1,
-      "octetsReceived": 538354,
-      "octetReceivedRate": 2
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "9db40fa9-d386-4834-9c8a-cb8eb1f815a0",
-      "startTime": 1674202485251678,
-      "endTime": 0,
-      "name": "emailservice",
-      "processGroupRole": "external",
-      "octetsSent": 5,
-      "octetSentRate": 0,
-      "octetsReceived": 202,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "a20d0ab3-9671-4880-9658-662256556fc3",
-      "startTime": 1674202475283192,
-      "endTime": 0,
-      "name": "checkoutservice",
-      "processGroupRole": "external",
-      "octetsSent": 763,
-      "octetSentRate": 0,
-      "octetsReceived": 489,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "a43ecfe1-6e22-4a15-bdb3-005954244818",
-      "startTime": 1674202485247214,
-      "endTime": 0,
-      "name": "vanflow",
-      "processGroupRole": "external",
-      "octetsSent": 0,
-      "octetSentRate": 0,
-      "octetsReceived": 0,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "a8164be2-9a53-4543-a718-77b47741c10b",
-      "startTime": 1674202475291987,
-      "endTime": 0,
-      "name": "currencyservice",
-      "processGroupRole": "external",
-      "octetsSent": 1264,
-      "octetSentRate": 0,
-      "octetsReceived": 600,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "ad7db9ce-7cba-4401-9d7c-4efd7fc9c7a9",
-      "startTime": 1674202485255432,
-      "endTime": 0,
-      "name": "shippingservice",
-      "processGroupRole": "external",
-      "octetsSent": 65,
-      "octetSentRate": 0,
-      "octetsReceived": 197,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "b79dd6d6-e056-4f13-820d-a682b3d68f2b",
-      "startTime": 1674202485244798,
-      "endTime": 0,
-      "name": "frontend",
-      "processGroupRole": "external",
-      "octetsSent": 1476,
-      "octetSentRate": 0,
-      "octetsReceived": 7693,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "caf1d3d8-2e36-42f6-9a4b-dc5d7a394f7b",
-      "startTime": 1674202475279245,
-      "endTime": 0,
-      "name": "skupper",
-      "processGroupRole": "internal",
-      "octetsSent": 0,
-      "octetSentRate": 0,
-      "octetsReceived": 0,
-      "octetReceivedRate": 0
-    },
-    {
-      "recType": "PROCESS_GROUP",
-      "identity": "dc1e710f-2843-42ed-95dd-4a9307a3a1d7",
-      "startTime": 1674202485249508,
-      "endTime": 0,
-      "name": "recommendationservice",
-      "processGroupRole": "external",
-      "octetsSent": 210,
-      "octetSentRate": 0,
-      "octetsReceived": 4263,
-      "octetReceivedRate": 0
+      "name": "component 2",
+      "processGroupRole": "external"
     }
   ],
   "queryParams": {
@@ -169,7 +29,7 @@
   "status": "",
   "timestamp": 1674203266943928,
   "elapsed": 511,
-  "count": 13,
-  "timeRangeCount": 13,
-  "totalCount": 13
+  "count": 2,
+  "timeRangeCount": 2,
+  "totalCount": 2
 }
