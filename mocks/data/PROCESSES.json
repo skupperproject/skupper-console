@@ -68,11 +68,26 @@
       "endTime": 0,
       "name": "process alone",
       "parentName": "site 2",
-      "imageName": "gcr.io/google-samples/microservices-demo/process-2-alone:v0.3.0",
+      "imageName": "gcr.io/google-samples/microservices-demo/process-alone:v0.3.0",
       "groupName": "component 2",
       "groupIdentity": "group-2",
       "hostName": "10.242.0.3",
       "sourceHost": "172.17.13.253",
+      "processRole": "external"
+    },
+    {
+      "recType": "PROCESS",
+      "identity": "process-nb",
+      "parent": "site-5",
+      "startTime": 1674048729000000,
+      "endTime": 0,
+      "name": "process nb",
+      "parentName": "site 5",
+      "imageName": "gcr.io/google-samples/microservices-demo/process-nb:v0.3.0",
+      "groupName": "component 5",
+      "groupIdentity": "group-5",
+      "hostName": "10.242.0.3",
+      "sourceHost": "172.17.12.233",
       "processRole": "external"
     }
   ],
@@ -88,7 +103,7 @@
   "status": "",
   "timestamp": 1674203136115674,
   "elapsed": 1347,
-  "count": 5,
-  "timeRangeCount": 5,
-  "totalCount": 5
+  "count": 6,
+  "timeRangeCount": 6,
+  "totalCount": 6
 }
