@@ -101,24 +101,16 @@ export function loadMockServer() {
           if (queryParams && !Object.keys(queryParams).length) {
             return processPairs;
           }
-          const value = queryParams.filter.split('.')[1];
+          const filterArray = queryParams.filter.split('.');
+          const key = filterArray[0] as keyof ProcessPairsResponse;
+          const value = filterArray[1];
 
-          const results = processPairs.results.filter(
-            (pair: ProcessPairsResponse) => pair.sourceId === value || pair.destinationId === value
-          );
+          const results = processPairs.results.filter((pair: ProcessPairsResponse) => pair[key] === value);
 
           return { ...processPairs, results };
         });
 
-        this.get(`${prefix}/processpairs/:id`, (_, { params: { id } }) => ({
-          results: processPairs.results.find(({ identity }: ProcessPairsResponse) => identity === id)
-        }));
-
         this.get(`${prefix}/addresses`, () => addresses);
-
-        this.get(`${prefix}/addresses/:id`, (_, { params: { id } }) => ({
-          results: addresses.results.find(({ identity }: AddressResponse) => identity === id)
-        }));
 
         this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
           const value = queryParams.filter.split('.')[1];
@@ -128,7 +120,9 @@ export function loadMockServer() {
           return { ...processPairs, results };
         });
 
-        this.get(`${prefix}/flowpairs/:id`, () => flowPairs);
+        this.get(`${prefix}/flowpairs/:id`, (_, { params: { id } }) => ({
+          results: flowPairs.results.find(({ identity }: AddressResponse) => identity === id)
+        }));
 
         this.get(`${prefix}/addresses/:id/flowpairs`, () => addressesFlowPairs);
 

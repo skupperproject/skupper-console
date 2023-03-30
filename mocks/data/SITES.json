@@ -2,10 +2,10 @@
   "results": [
     {
       "recType": "SITE",
-      "identity": "939fd445-9f7c-4261-aba0-951f77cfdc4a",
+      "identity": "site-1",
       "startTime": 1674048683000000,
       "endTime": 0,
-      "name": "public2",
+      "name": "site 1",
       "nameSpace": "config-grpc-public2-test",
       "octetsSent": 113,
       "octetSentRate": 0,
@@ -14,10 +14,10 @@
     },
     {
       "recType": "SITE",
-      "identity": "e5335ee7-cf53-4431-a653-9e6e585ece5e",
+      "identity": "site-2",
       "startTime": 1674048662000000,
       "endTime": 0,
-      "name": "public1",
+      "name": "site 2",
       "nameSpace": "config-grpc-public1-test",
       "octetsSent": 540346,
       "octetSentRate": 2,
@@ -26,10 +26,10 @@
     },
     {
       "recType": "SITE",
-      "identity": "ee50101e-a44f-449e-bcdb-d4febed6daf4",
+      "identity": "site-3",
       "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "private1",
+      "name": "site 3",
       "nameSpace": "config-grpc-private-test",
       "octetsSent": 1658,
       "octetSentRate": 0,

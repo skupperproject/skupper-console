@@ -128,7 +128,7 @@ const Process = function () {
               viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
                 LinkCell({
                   ...props,
-                  link: `${ProcessesRoutesPaths.Processes}/${process.identity}/${props.data.identity}`,
+                  link: `${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${props.data.identity}`,
                   value: ProcessPairsColumnsNames.ViewDetails
                 })
             }}

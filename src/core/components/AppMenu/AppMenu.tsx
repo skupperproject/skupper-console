@@ -32,7 +32,7 @@ const AppMenu = function () {
   const [buttonAutomaticUpdateColor, setButtonAutomaticUpdateColor] = useState(COLOR_ICON_MOUSE_LEAVE);
 
   const paths = pathname.split('/').filter(Boolean);
-  const pathsNormalized = paths.map((path) => getIdAndNameFromUrlParams(path));
+  const pathsNormalized = paths.map((path) => getIdAndNameFromUrlParams(path.replace(/%20/g, ' '))); //sanitize %20 url space
   const lastPath = pathsNormalized.pop();
 
   const handleRefetchQueries = useCallback(() => {

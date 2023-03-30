@@ -40,7 +40,7 @@ const FlowsPair = function () {
   const addressId = address?.split('@')[1];
   const addressName = address?.split('@')[0];
 
-  const { data: flowPairs, isLoading: isLoadingFlowPairs } = useQuery(
+  const { data: flowPair, isLoading: isLoadingFlowPairs } = useQuery(
     [QueriesAddresses.GetFlowPair, flowPairId],
     () => (addressId && flowPairId ? RESTApi.fetchFlowPair(flowPairId as string) : null),
     {
@@ -59,11 +59,11 @@ const FlowsPair = function () {
     return <LoadingPage />;
   }
 
-  if (!flowPairs) {
+  if (!flowPair) {
     return null;
   }
 
-  const { forwardFlow, counterFlow } = flowPairs;
+  const { forwardFlow, counterFlow } = flowPair;
 
   //In the address space a server (counterflow) listen to the port indicated in the name of the address
   // the sourcePort from the API is internal
@@ -75,12 +75,12 @@ const FlowsPair = function () {
   /**
    *  endTime and startTime are microseconds (because the Apis give us microseconds)
    */
-  const duration = formatTimeInterval(flowPairs.endTime || Date.now() * 1000, flowPairs.startTime);
+  const duration = formatTimeInterval(flowPair.endTime || Date.now() * 1000, flowPair.startTime);
 
   return (
     <TransitionPage>
       <Grid hasGutter data-cy="sk-address">
-        {flowPairs.protocol === AvailableProtocols.Tcp && (
+        {flowPair.protocol === AvailableProtocols.Tcp && (
           <>
             <TextContent>
               <Text component={TextVariants.h2}>Connection {forwardFlow?.endTime ? 'closed' : 'open'}</Text>
@@ -91,7 +91,7 @@ const FlowsPair = function () {
                 <DescriptionList>
                   <DescriptionListGroup>
                     <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(flowPairs.flowTrace)}</DescriptionListDescription>
+                    <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
                     {duration && (
                       <>
                         <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
@@ -104,7 +104,7 @@ const FlowsPair = function () {
             </Card>
           </>
         )}
-        {flowPairs.protocol !== AvailableProtocols.Tcp && (
+        {flowPair.protocol !== AvailableProtocols.Tcp && (
           <>
             <TextContent>
               <Text component={TextVariants.h2}>Request {forwardFlow?.endTime ? 'terminated' : 'open'}</Text>
@@ -118,7 +118,7 @@ const FlowsPair = function () {
                     <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
                     <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
                     <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(flowPairs.flowTrace)}</DescriptionListDescription>
+                    <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
                     {duration && (
                       <>
                         <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
@@ -133,7 +133,7 @@ const FlowsPair = function () {
         )}
 
         <GridItem span={6}>
-          {flowPairs.protocol === AvailableProtocols.Tcp ? (
+          {flowPair.protocol === AvailableProtocols.Tcp ? (
             <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
           ) : (
             <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
@@ -141,7 +141,7 @@ const FlowsPair = function () {
         </GridItem>
 
         <GridItem span={6}>
-          {flowPairs.protocol === AvailableProtocols.Tcp ? (
+          {flowPair.protocol === AvailableProtocols.Tcp ? (
             <ConnectionDetail title={FlowLabels.CounterFlow} flow={counterFlowWithAddressPort} isCounterflow={true} />
           ) : (
             <RequestDetail title={FlowLabels.CounterFlow} flow={counterFlowWithAddressPort} isCounterflow={true} />
@@ -175,7 +175,9 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                 <DescriptionListDescription>
                   <>
                     {<ResourceIcon type="process" />}
-                    <Link to={`${ProcessesRoutesPaths.Processes}/${flow.process}`}>{flow.processName}</Link>
+                    <Link to={`${ProcessesRoutesPaths.Processes}/${flow.processName}@${flow.process}`}>
+                      {flow.processName}
+                    </Link>
                   </>
                 </DescriptionListDescription>
                 <DescriptionListTerm>{isCounterflow ? FlowLabels.DestHost : FlowLabels.Host}</DescriptionListTerm>
@@ -220,7 +222,9 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
                 <DescriptionListDescription>
                   <>
                     {<ResourceIcon type="process" />}
-                    <Link to={`${ProcessesRoutesPaths.Processes}/${flow.process}`}>{flow.processName}</Link>
+                    <Link to={`${ProcessesRoutesPaths.Processes}/${flow.processName}@${flow.process}`}>
+                      {flow.processName}
+                    </Link>
                   </>
                 </DescriptionListDescription>
                 {!!flow.octetRate && (
