@@ -4,8 +4,8 @@ import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import SectionTitle from '@core/components/SectionTitle';
 import SkTable from '@core/components/SkTable';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -77,7 +77,7 @@ const Addresses = function () {
   return (
     <TransitionPage>
       <>
-        <SectionTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
+        <SkTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
         {/* addresses table */}
         <Grid hasGutter data-cy="sk-addresses">
           <GridItem>

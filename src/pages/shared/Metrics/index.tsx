@@ -24,27 +24,28 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
+import SkChartArea from '@core/components/SkChartArea';
+import SkChartPie from '@core/components/SkChartPie';
+import SkCounterCard from '@core/components/SkCounterCard';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
+import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { defaultTimeInterval, gePrometheusStartTime, timeIntervalMap } from 'API/Prometheus.constant';
 import { IntervalTimeProp } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 
-import ChartProcessDataTrafficDistribution from './ChartProcessDataTrafficDistribution';
-import ChartProcessDataTrafficSeries from './ChartProcessDataTrafficSeries';
-import MetricCard from './MetricCard';
-import { ProcessesLabels } from '../Processes.enum';
-import { MetricsProps } from '../Processes.interfaces';
-import ProcessesController, { formatPercentage } from '../services';
-import { QueriesProcesses } from '../services/services.enum';
+import { MetricsLabels } from './Metrics.enum';
+import { MetricsProps } from './Metrics.interfaces';
+import MetricsController, { formatPercentage } from './services';
+import { QueriesMetrics } from './services/services.enum';
 
 const filterOptionsDefault = {
-  protocols: { disabled: false, name: ProcessesLabels.FilterProtocolsDefault },
+  protocols: { disabled: false, name: MetricsLabels.FilterProtocolsDefault },
   timeIntervals: { disabled: false },
-  sourceProcesses: { disabled: false, name: ProcessesLabels.FilterAllSourceProcesses },
-  destinationProcesses: { disabled: false, name: ProcessesLabels.FilterAllDestinationProcesses }
+  sourceProcesses: { disabled: false, name: MetricsLabels.FilterAllSourceProcesses },
+  destinationProcesses: { disabled: false, name: MetricsLabels.FilterAllDestinationProcesses }
 };
 
 const Metrics: FC<MetricsProps> = function ({
@@ -77,8 +78,8 @@ const Metrics: FC<MetricsProps> = function ({
   };
 
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
-    [QueriesProcesses.GetProcessMetrics, filters],
-    () => ProcessesController.getMetrics(filters),
+    [QueriesMetrics.GetMetrics, filters],
+    () => MetricsController.getMetrics(filters),
     {
       keepPreviousData: true,
       onError: handleError
@@ -294,7 +295,7 @@ const Metrics: FC<MetricsProps> = function ({
             <GridItem>
               <Card isFullHeight>
                 <CardBody>
-                  <EmptyData message={ProcessesLabels.NoMetricFoundMessage} />
+                  <EmptyData message={MetricsLabels.NoMetricFoundMessage} />
                 </CardBody>
               </Card>
             </GridItem>
@@ -310,10 +311,10 @@ const Metrics: FC<MetricsProps> = function ({
                     <>
                       <CardTitle>{ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}</CardTitle>
                       <CardBody>
-                        <ChartProcessDataTrafficSeries
+                        <SkChartArea
                           themeColor={ChartThemeColor.orange}
                           formatY={formatByteRate}
-                          legendLabels={[ProcessesLabels.TrafficReceived, ProcessesLabels.TrafficSent]}
+                          legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
                           data={[
                             metrics.trafficDataSeriesPerSecond.timeSeriesDataReceived,
                             metrics.trafficDataSeriesPerSecond.timeSeriesDataSent
@@ -334,10 +335,10 @@ const Metrics: FC<MetricsProps> = function ({
                       <Thead noWrap>
                         <Tr>
                           <Th />
-                          <Th>{ProcessesLabels.ByteRateMaxCol}</Th>
-                          <Th>{ProcessesLabels.ByteRateAvgCol}</Th>
-                          <Th>{ProcessesLabels.ByteRateCurrentCol}</Th>
-                          <Th>{ProcessesLabels.ByteRateTotalCol}</Th>
+                          <Th>{MetricsLabels.ByteRateMaxCol}</Th>
+                          <Th>{MetricsLabels.ByteRateAvgCol}</Th>
+                          <Th>{MetricsLabels.ByteRateCurrentCol}</Th>
+                          <Th>{MetricsLabels.ByteRateTotalCol}</Th>
                         </Tr>
                       </Thead>
                       <Tbody>
@@ -346,7 +347,7 @@ const Metrics: FC<MetricsProps> = function ({
                             <Icon size="sm">
                               <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--100, #ec7a08)`} />
                             </Icon>{' '}
-                            {ProcessesLabels.TrafficReceived}
+                            {MetricsLabels.TrafficReceived}
                           </Td>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficReceived)}</Th>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficReceived)}</Th>
@@ -358,7 +359,7 @@ const Metrics: FC<MetricsProps> = function ({
                             <Icon size="sm">
                               <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--200, #f4b678)`} />
                             </Icon>{' '}
-                            {ProcessesLabels.TrafficSent}
+                            {MetricsLabels.TrafficSent}
                           </Td>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficSent)}</Th>
                           <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficSent)}</Th>
@@ -374,16 +375,16 @@ const Metrics: FC<MetricsProps> = function ({
               {/* Chart pie distribution data traffic card and total bytes */}
               <GridItem span={4}>
                 <Card isFullHeight>
-                  <ChartProcessDataTrafficDistribution
+                  <SkChartPie
                     format={formatBytes}
                     themeColor={ChartThemeColor.orange}
                     data={[
                       {
-                        x: ProcessesLabels.TrafficReceived,
+                        x: MetricsLabels.TrafficReceived,
                         y: metrics.trafficDataSeries?.totalDataReceived || 0
                       },
                       {
-                        x: ProcessesLabels.TrafficSent,
+                        x: MetricsLabels.TrafficSent,
                         y: metrics.trafficDataSeries?.totalDataSent || 0
                       }
                     ]}
@@ -399,7 +400,7 @@ const Metrics: FC<MetricsProps> = function ({
                       <>
                         <CardTitle>{ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}</CardTitle>
                         <CardBody>
-                          <ChartProcessDataTrafficSeries
+                          <SkChartArea
                             formatY={formatLatency}
                             themeColor={ChartThemeColor.multi}
                             legendLabels={metrics.latencies.timeSeriesLatencies.map(({ label }) => label)}
@@ -416,9 +417,9 @@ const Metrics: FC<MetricsProps> = function ({
                       <GridItem span={8} rowSpan={2}>
                         <Card isFullHeight>
                           <>
-                            <CardTitle>{ProcessesLabels.RequestsPerSecondsSeriesAxisYLabel}</CardTitle>
+                            <CardTitle>{MetricsLabels.RequestsPerSecondsSeriesAxisYLabel}</CardTitle>
                             <CardBody>
-                              <ChartProcessDataTrafficSeries
+                              <SkChartArea
                                 formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                                 themeColor={ChartThemeColor.purple}
                                 legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
@@ -432,7 +433,7 @@ const Metrics: FC<MetricsProps> = function ({
                       {/*  Partial total request card*/}
                       {!!metrics.requestSeries && (
                         <GridItem span={4}>
-                          <MetricCard
+                          <SkCounterCard
                             title={'Total Requests'}
                             value={metrics.requestSeries[0].totalRequestInterval}
                             bgColor={'--pf-global--palette--purple-400'}
@@ -445,7 +446,7 @@ const Metrics: FC<MetricsProps> = function ({
                       {/*  avg request per second card*/}
                       {!!metrics.requestPerSecondSeries && (
                         <GridItem span={4}>
-                          <MetricCard
+                          <SkCounterCard
                             title={'Avg. Request rate'}
                             value={metrics.requestPerSecondSeries[0].avgRequestRateInterval}
                             bgColor={'--pf-global--palette--purple-200'}
@@ -460,7 +461,7 @@ const Metrics: FC<MetricsProps> = function ({
                   {!!metrics.responseSeries && (
                     <>
                       <GridItem span={3}>
-                        <MetricCard
+                        <SkCounterCard
                           title={metrics.responseSeries.statusCode2xx.label}
                           value={formatPercentage(
                             metrics.responseSeries.statusCode2xx.total,
@@ -471,7 +472,7 @@ const Metrics: FC<MetricsProps> = function ({
                         />
                       </GridItem>
                       <GridItem span={3}>
-                        <MetricCard
+                        <SkCounterCard
                           title={metrics.responseSeries.statusCode3xx.label}
                           value={formatPercentage(
                             metrics.responseSeries.statusCode3xx.total,
@@ -482,7 +483,7 @@ const Metrics: FC<MetricsProps> = function ({
                         />
                       </GridItem>
                       <GridItem span={3}>
-                        <MetricCard
+                        <SkCounterCard
                           title={metrics.responseSeries.statusCode4xx.label}
                           value={formatPercentage(
                             metrics.responseSeries.statusCode4xx.total,
@@ -493,7 +494,7 @@ const Metrics: FC<MetricsProps> = function ({
                         />
                       </GridItem>
                       <GridItem span={3}>
-                        <MetricCard
+                        <SkCounterCard
                           title={metrics.responseSeries.statusCode5xx.label}
                           value={formatPercentage(
                             metrics.responseSeries.statusCode5xx.total,
@@ -510,7 +511,7 @@ const Metrics: FC<MetricsProps> = function ({
                           <>
                             <GridItem span={4}>
                               <Card isFullHeight>
-                                <ChartProcessDataTrafficDistribution
+                                <SkChartPie
                                   format={formatBytes}
                                   data={[
                                     {
@@ -528,9 +529,9 @@ const Metrics: FC<MetricsProps> = function ({
 
                             <GridItem span={8}>
                               <Card isFullHeight>
-                                <CardTitle>{ProcessesLabels.ErrorRateSeriesAxisYLabel}</CardTitle>
+                                <CardTitle>{MetricsLabels.ErrorRateSeriesAxisYLabel}</CardTitle>
                                 <CardBody>
-                                  <ChartProcessDataTrafficSeries
+                                  <SkChartArea
                                     formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                                     themeColor={ChartThemeColor.orange}
                                     legendLabels={[

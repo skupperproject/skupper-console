@@ -1,6 +1,4 @@
 export enum QueriesProcesses {
-  GetProcessesMetrics = 'get-processes-metrics-query',
-  GetProcessMetrics = 'get-processes-metrics-query',
   GetProcessesPaginated = 'get-processes-paginated-query',
   GetProcesses = 'get-processes-query',
   GetProcess = 'get-process-query',

@@ -20,6 +20,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -106,16 +107,11 @@ const Site = function () {
     <TransitionPage>
       <Grid hasGutter>
         <GridItem>
-          <Flex alignItems={{ default: 'alignItemsCenter' }}>
-            <ResourceIcon type="site" />
-            <Title headingLevel="h1">{name}</Title>
-
-            <Link
-              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
-            >
-              {`(${SiteLabels.GoToTopology})`}
-            </Link>
-          </Flex>
+          <SkTitle
+            title={name}
+            icon="site"
+            link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
+          />
         </GridItem>
 
         <GridItem>

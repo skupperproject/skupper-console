@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import SectionTitle from '@core/components/SectionTitle';
 import SkTable from '@core/components/SkTable';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -41,7 +41,7 @@ const Sites = function () {
   return (
     <TransitionPage>
       <>
-        <SectionTitle title={SiteLabels.Section} description={SiteLabels.Description} />
+        <SkTitle title={SiteLabels.Section} description={SiteLabels.Description} />
         <div>
           <SkTable
             columns={siteColumns}

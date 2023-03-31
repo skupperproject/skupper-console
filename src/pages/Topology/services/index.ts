@@ -1,6 +1,7 @@
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
+import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
@@ -15,7 +16,6 @@ import {
 } from 'API/REST.interfaces';
 
 import { LinkTopology } from './services.interfaces';
-import { colors } from '../Topology.constant';
 
 export const TopologyController = {
   // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
@@ -132,7 +132,7 @@ export const TopologyController = {
     )
 };
 
-const getColor = (index: number) => colors[index % colors.length];
+const getColor = (index: number) => nodeColors[index % nodeColors.length];
 
 function getPosition(identity: string): { fx: number; fy: number } {
   const positions = localStorage.getItem(identity);

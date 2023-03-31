@@ -15,6 +15,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -28,7 +29,6 @@ import { UPDATE_INTERVAL } from 'config';
 import TopologyPanel from './TopologyPanel';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import { colors } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
 
 const processesQueryParams = {
@@ -216,7 +216,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
                   style={{
                     width: 10,
                     height: 10,
-                    backgroundColor: colors[index]
+                    backgroundColor: nodeColors[index]
                   }}
                 />
                 {node.name}

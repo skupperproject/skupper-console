@@ -3,8 +3,8 @@ import React, { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import SectionTitle from '@core/components/SectionTitle';
 import SkTable from '@core/components/SkTable';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -65,7 +65,7 @@ const Processes = function () {
   return (
     <TransitionPage>
       <>
-        <SectionTitle title={ProcessesLabels.Section} description={ProcessesLabels.Description} />
+        <SkTitle title={ProcessesLabels.Section} description={ProcessesLabels.Description} />
         <div>
           <SkTable
             pageSizeStart={PAGINATION_SIZE}

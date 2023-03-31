@@ -6,7 +6,7 @@ import skupperProcessSVG from '@assets/skupper.svg';
 
 import './ResourceIcon.css';
 
-interface ResourceIconProps {
+export interface ResourceIconProps {
   type: 'site' | 'deployment' | 'service' | 'address' | 'process' | 'skupper';
 }
 

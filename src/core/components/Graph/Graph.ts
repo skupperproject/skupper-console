@@ -20,9 +20,9 @@ import { zoom, zoomTransform, zoomIdentity, ZoomBehavior } from 'd3-zoom';
 
 import EventEmitter from '@core/components/Graph/EventEmitter';
 
+import { nodeColors } from './Graph.constants';
 import { GraphEvents } from './Graph.enum';
 import { GraphNode, GraphEdge } from './Graph.interfaces';
-import { colors } from '../../../pages/Topology/Topology.constant';
 
 const ARROW_SIZE = 10;
 const NODE_SIZE = 30;
@@ -393,7 +393,7 @@ export default class Graph {
         .attr('class', 'group_node')
         .append('path')
         .attr('class', GROUP_NODE_PATHS_CLASS_NAME)
-        .attr('fill', (groupId) => colors[Number(groupId)])
+        .attr('fill', (groupId) => nodeColors[Number(groupId)])
         .attr('opacity', OPACITY_NO_SELECTED_ITEM)
         .style('cursor', 'grab')
         .call(
@@ -478,10 +478,6 @@ export default class Graph {
     });
 
     svgNode.on('click', (_, node) => {
-      if (node.isDisabled) {
-        return;
-      }
-
       const id = node.id;
       if (this.selectedNode === id) {
         this.selectedNode = null;
@@ -651,8 +647,8 @@ function highlightSelectedNode(
   nodes: Selection<SVGSVGElement, GraphNode, SVGGElement, GraphNode>,
   selectedNodeId: string | null
 ) {
-  nodes.style('opacity', ({ id, isDisabled }) => {
-    if ((selectedNodeId && id !== selectedNodeId) || isDisabled) {
+  nodes.style('opacity', ({ id }) => {
+    if (selectedNodeId && id !== selectedNodeId) {
       return OPACITY_NO_SELECTED_ITEM;
     }
 

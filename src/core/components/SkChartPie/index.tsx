@@ -5,7 +5,7 @@ import { ChartDonut, ChartThemeColor, ChartTooltip, getResizeObserver } from '@p
 import EmptyData from '@core/components/EmptyData';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
-import { ProcessesBytesChartProps } from '../Processes.interfaces';
+import { SkChartPieProps } from './ChartPie.interfaces';
 
 const CHART_PADDING = {
   bottom: 10,
@@ -14,11 +14,7 @@ const CHART_PADDING = {
   top: 10
 };
 
-const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = function ({
-  data,
-  format = (y: number) => y,
-  ...props
-}) {
+const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) => y, ...props }) {
   const observer = useRef<Function>(() => null);
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState<number>(0);
@@ -78,4 +74,4 @@ const ChartProcessDataTrafficDistribution: FC<ProcessesBytesChartProps> = functi
   );
 };
 
-export default ChartProcessDataTrafficDistribution;
+export default SkChartPie;

@@ -10,7 +10,7 @@ This demo is synchronized with the current main branch and utilizes either the l
 
 ## Enable the console from Skupper
 
-The Web console has been integrated into [Skupper](https://github.com/skupperproject/skupper). To facilitate access to the console, please refer to the step-by-step instructions detailed in [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc).
+The Web console has been integrated into [Skupper](https://github.com/skupperproject/skupper) from the version **1.3**. To facilitate access to the console, please refer to the step-by-step instructions detailed in [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc).
 
 ---
 

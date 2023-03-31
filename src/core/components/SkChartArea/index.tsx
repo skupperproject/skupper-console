@@ -13,7 +13,7 @@ import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatChartDate } from '@core/utils/formatChartDate';
 
-import { ChartProcessDataTrafficSeriesProps, ProcessAxisDataChart } from '../Processes.interfaces';
+import { SkChartAreaProps, SkChartAreaData } from './SkChartArea.interfaces';
 
 const CHART_PADDING = {
   bottom: 60,
@@ -22,7 +22,7 @@ const CHART_PADDING = {
   top: 20
 };
 
-const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = function ({
+const SkChartArea: FC<SkChartAreaProps> = function ({
   data,
   formatY = (y: number) => y,
   formatX = (timestamp: number, start: number) => formatChartDate(timestamp, start),
@@ -68,11 +68,11 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
           <CursorVoronoiContainer
             cursorDimension="x"
             voronoiDimension="x"
-            labels={({ datum }: { datum: ProcessAxisDataChart }) => formatY(datum.y)}
+            labels={({ datum }: { datum: SkChartAreaData }) => formatY(datum.y)}
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData}
-                title={(datum: ProcessAxisDataChart) => `${formatX(datum.x, startDate)}`}
+                title={(datum: SkChartAreaData) => `${formatX(datum.x, startDate)}`}
                 cornerRadius={5}
                 flyoutStyle={{
                   fillOpacity: 0.75
@@ -113,4 +113,4 @@ const ChartProcessDataTrafficSeries: FC<ChartProcessDataTrafficSeriesProps> = fu
   );
 };
 
-export default ChartProcessDataTrafficSeries;
+export default SkChartArea;
