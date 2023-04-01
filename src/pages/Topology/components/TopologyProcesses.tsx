@@ -54,21 +54,20 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     onError: handleError
   });
 
-  const { data: processesRaw, isLoading: isLoadingProcesses } = useQuery(
-    [QueriesProcesses.GetProcess, processesQueryParams],
-    () => RESTApi.fetchProcesses(processesQueryParams),
+  const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+    [QueriesProcesses.GetProcessResult, processesQueryParams],
+    () => RESTApi.fetchProcessesResult(processesQueryParams),
     {
       refetchInterval,
       onError: handleError
     }
   );
 
-  const processes = processesRaw?.results;
-
   const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
     [QueriesAddresses.GetAddresses],
     () => RESTApi.fetchAddresses(),
     {
+      refetchInterval,
       onError: handleError
     }
   );
@@ -82,8 +81,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     }
   );
 
-  const { data: processesPairsByAddress, isLoading: isLoadingProcessPairsByAddress } = useQuery(
-    [QueriesTopology.GetProcessesPairsByAddress, addressIdSelected],
+  const { data: flowPairsByAddress } = useQuery(
+    [QueriesTopology.GetFlowPairsByAddress, addressIdSelected],
     () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddress(addressIdSelected) : undefined),
     {
       enabled: !!addressIdSelected,
@@ -132,39 +131,47 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
   }
 
   // Refresh topology data
-  const updateTopologyData = useCallback(async () => {
-    if (sites && processesPairs && processes && !(isLoadingProcessPairsByAddress && addressIdSelected)) {
-      const processesLinks = TopologyController.getProcessesLinks(processesPairs);
-
-      const processesLinksByAddress = processesPairsByAddress?.results
-        ? TopologyController.getProcessesLinksByAddress(processesPairsByAddress.results)
-        : undefined;
-
-      const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
-      const processesSourcesIds = processesLinksByAddress?.map((p) => p.source) || [];
-      const processesTargetIds = processesLinksByAddress?.map((p) => p.target) || [];
-      const processesAddressIds = [...processesSourcesIds, ...processesTargetIds];
-
-      const uniqueProcessesLinksByAddress = processesLinksByAddress?.filter(
-        (v, i, a) => a.findIndex((v2) => v2.source === v.source && v2.target === v.target) === i
+  const updateTopologyData = useCallback(() => {
+    if (sites && processes) {
+      const processesNodes = TopologyController.getNodesFromProcesses(
+        processes,
+        TopologyController.getNodesFromSitesOrProcessGroups(sites)
       );
 
-      setNodes(
-        uniqueProcessesLinksByAddress
-          ? processesNodes.map((node) => {
-              if (!processesAddressIds.includes(node.id)) {
-                return { ...node, isDisabled: true };
-              }
+      // no address id selected
+      if (processesPairs && !addressIdSelected) {
+        const processesLinks = TopologyController.getProcessesLinksFromProcessPairs(processesPairs);
 
-              return node;
-            })
-          : processesNodes
-      );
+        setNodes(processesNodes);
+        setLinks(TopologyController.getEdgesFromLinks(processesLinks));
 
-      setLinks(TopologyController.getEdgesFromLinks(uniqueProcessesLinksByAddress || processesLinks));
+        return;
+      }
+      // address id selected
+      if (addressIdSelected && flowPairsByAddress) {
+        const processesLinksByAddress = TopologyController.getProcessesLinksFromFlowPairs(flowPairsByAddress.results);
+
+        // all process ids in the address space selected
+        const processIdsFromAddress = [
+          ...(processesLinksByAddress?.map(({ source }) => source) || []),
+          ...(processesLinksByAddress?.map(({ target }) => target) || [])
+        ];
+
+        setNodes(
+          //disable all processes that are not part of the address selected
+          processesNodes.map((node) => {
+            if (!processIdsFromAddress.includes(node.id)) {
+              return { ...node, isDisabled: true };
+            }
+
+            return node;
+          })
+        );
+
+        setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
+      }
     }
-  }, [sites, processes, processesPairs, isLoadingProcessPairsByAddress, addressIdSelected, processesPairsByAddress]);
+  }, [sites, processes, processesPairs, addressIdSelected, flowPairsByAddress]);
 
   useEffect(() => {
     updateTopologyData();
@@ -185,7 +192,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
   return (
     <>
       <Toolbar>
-        <ToolbarContent style={{ height: '30px' }}>
+        <ToolbarContent>
           <ToolbarItem>
             <Select isOpen={isOpen} onSelect={handleSelect} onToggle={handleToggle} selections={addressIdSelected}>
               {optionsWithDefault}

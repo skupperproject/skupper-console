@@ -129,6 +129,12 @@ export const RESTApi = {
     return { ...data, results };
   },
 
+  fetchProcessesResult: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
+    const data = await RESTApi.fetchProcesses(options);
+
+    return getResults(data);
+  },
+
   fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
     const { data } = await axiosFetch(geProcessPATH(id), {
       params: options ? addQueryParams(options) : null

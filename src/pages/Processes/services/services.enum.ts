@@ -2,6 +2,7 @@ export enum QueriesProcesses {
   GetProcessesPaginated = 'get-processes-paginated-query',
   GetProcesses = 'get-processes-query',
   GetProcess = 'get-process-query',
+  GetProcessResult = 'get-process-result-query',
   GetSourceProcess = 'get-process-query',
   GetDestinationProcess = 'get-destination-process-query',
   GetProcessPairs = 'get-process-pairs',
