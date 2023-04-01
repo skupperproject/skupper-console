@@ -3,11 +3,12 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
-import Graph from '@core/components/Graph/Graph';
+import Graph from '@core/components/Graph';
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
+import { savePositionInLocalStorage } from '../services';
 import { TopologyPanelProps } from '../Topology.interfaces';
 
 const TopologyPanel: FC<TopologyPanelProps> = function ({
@@ -43,7 +44,7 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
   const handleSaveNodesPositions = useCallback((topologyNodes: GraphNode[]) => {
     topologyNodes.forEach((node) => {
       if (node.x && node.y) {
-        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+        savePositionInLocalStorage(node);
       }
     });
   }, []);
@@ -52,22 +53,14 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
   const graphRef = useCallback(
     ($node: HTMLDivElement | null) => {
       if ($node && nodes.length && !topologyGraphInstance) {
-        $node.replaceChildren();
+        const { width, height } = $node.getBoundingClientRect();
 
-        const topologyGraph = new Graph(
-          $node,
-          nodes,
-          edges,
-          $node.getBoundingClientRect().width,
-          $node.getBoundingClientRect().height,
-          options,
-          nodeSelected
-        );
+        const topologyGraph = new Graph($node, width, height, options, nodeSelected);
 
         topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
         topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
+        topologyGraph.run(nodes, sanitizeEdges(nodes, edges));
 
-        topologyGraph.run();
         setTopologyGraphInstance(topologyGraph);
       }
     },
@@ -82,32 +75,32 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
       (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
         JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
     ) {
-      const topologyNodes = topologyGraphInstance?.getNodes();
-
-      if (topologyNodes) {
-        handleSaveNodesPositions(topologyNodes);
-      }
-
-      topologyGraphInstance.updateTopology(nodes, edges, {
-        showGroup: !!options?.showGroup
-      });
+      topologyGraphInstance.updateModel(nodes, sanitizeEdges(nodes, edges));
 
       prevNodesRef.current = nodes;
       prevEdgesRef.current = edges;
     }
   }, [nodes, edges, topologyGraphInstance, options?.showGroup, handleSaveNodesPositions]);
 
-  // Save topology positions to the local storage before exit
-  useEffect(
-    () => () => {
-      const topologyNodes = topologyGraphInstance?.getNodes();
+  const saveNodesPositions = useCallback(() => {
+    const topologyNodes = topologyGraphInstance?.getNodes();
 
-      if (topologyNodes) {
-        handleSaveNodesPositions(topologyNodes);
-      }
-    },
-    [handleSaveNodesPositions, topologyGraphInstance]
-  );
+    if (topologyNodes) {
+      handleSaveNodesPositions(topologyNodes);
+    }
+  }, [handleSaveNodesPositions, topologyGraphInstance]);
+
+  // Save topology positions in the local storage before exit
+  useEffect(() => {
+    // handle events like browser refresh, close tab, back button
+    window.addEventListener('beforeunload', saveNodesPositions);
+
+    return () => {
+      // handle switch tab
+      saveNodesPositions();
+      window.removeEventListener('beforeunload', saveNodesPositions);
+    };
+  }, [handleSaveNodesPositions, saveNodesPositions, topologyGraphInstance]);
 
   return (
     <Card isFullHeight style={{ position: 'relative' }}>
@@ -144,3 +137,14 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
 };
 
 export default TopologyPanel;
+
+// TODO: remove this function when Backend sanitize the old process pairs
+function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge<string>[]) {
+  const availableNodesMap = nodes.reduce((acc, node) => {
+    acc[node.id] = node.id;
+
+    return acc;
+  }, {} as Record<string, string>);
+
+  return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
+}

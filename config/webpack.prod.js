@@ -26,7 +26,7 @@ const prodConfig = {
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: process.env.STATS || 'disabled',
-      generateStatsFile: true,
+      generateStatsFile: false,
       statsOptions: { source: false },
       reportFilename: path.join(ROOT, '/reports/bundle-size.html')
     }),

@@ -10,6 +10,7 @@ export interface GraphNode {
   fy?: number | null;
   groupFx?: number;
   groupFy?: number;
+  isDisabled?: boolean;
 }
 
 export interface GraphEdge<T = GraphNode> {

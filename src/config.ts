@@ -31,8 +31,8 @@ export const queryClientConfig = {
 };
 
 // general config
-export const SYNC_DATA_INTERVAL = 15 * 1000; // time to request updated data to BE
-export const UPDATE_INTERVAL = 7 * 1000; // time to request updated data to BE
+export const SYNC_DATA_INTERVAL = 17 * 1000; // time to request updated data to BE
+export const UPDATE_INTERVAL = 5 * 1000; // time to request updated data to BE
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
 export const LINK_DIRECTIONS = {

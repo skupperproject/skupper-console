@@ -72,7 +72,7 @@ export const TopologyController = {
     entities
       ?.sort((a, b) => a.identity.localeCompare(b.identity))
       .map(({ identity, name, recType, processGroupRole }, index) => {
-        const { fx, fy } = getPosition(identity);
+        const { fx, fy } = getPositionFromLocalStorage(identity);
 
         return {
           id: identity,
@@ -95,7 +95,7 @@ export const TopologyController = {
         const parentNode = parentNodes?.find(({ id }) => id === groupId);
         const groupIndex = parentNode?.group || 0;
 
-        const { fx, fy } = getPosition(identity);
+        const { fx, fy } = getPositionFromLocalStorage(identity);
 
         return {
           id: identity,
@@ -113,10 +113,9 @@ export const TopologyController = {
       .sort((a, b) => a.group - b.group),
 
   getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
-    links?.map(({ source, target, rate, clickable }) => ({
+    links?.map(({ source, target, clickable }) => ({
       source,
       target,
-      rate,
       clickable
     })),
 
@@ -134,11 +133,15 @@ export const TopologyController = {
 
 const getColor = (index: number) => nodeColors[index % nodeColors.length];
 
-function getPosition(identity: string): { fx: number; fy: number } {
+function getPositionFromLocalStorage(identity: string): { fx: number; fy: number } {
   const positions = localStorage.getItem(identity);
 
   const fx = positions ? JSON.parse(positions).fx : null;
   const fy = positions ? JSON.parse(positions).fy : null;
 
   return { fx, fy };
+}
+
+export function savePositionInLocalStorage(node: GraphNode) {
+  localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
 }

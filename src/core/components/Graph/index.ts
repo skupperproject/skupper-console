@@ -59,8 +59,6 @@ export default class Graph {
 
   constructor(
     $node: HTMLElement,
-    nodes: GraphNode[],
-    edges: GraphEdge<string>[],
     boxWidth: number,
     boxHeight: number,
     options?: { showGroup?: boolean },
@@ -75,11 +73,12 @@ export default class Graph {
     this.options = options;
     this.isDraggingNode = false;
 
-    this.nodes = JSON.parse(JSON.stringify(nodes));
-    this.links = JSON.parse(JSON.stringify(sanitizeEdges(nodes, edges)));
+    this.nodes = [];
+    this.groupIds = [];
+    this.links = [];
 
     this.EventEmitter = new EventEmitter();
-    this.force = this.configureForceSimulation(this.nodes);
+    this.force = this.configureForceSimulation();
 
     this.zoom = zoom<SVGSVGElement, GraphNode>().scaleExtent([0.2, 5]);
     this.zoom.on('zoom', ({ transform }) => {
@@ -89,18 +88,13 @@ export default class Graph {
     this.svgGraph = this.createGraphContainer();
     this.svgGraphGroup = this.createGraphGroup();
 
-    // It enables the movement/zoom of the topology with the track pad
+    // It enables the movement/zoom of the graph with the track pad
     this.svgGraph.call(this.zoom);
   }
 
-  private configureForceSimulation(nodes: GraphNode[]) {
-    const groupsIds = [...new Set(nodes.map(({ group }) => group.toString()))];
-
-    const rangeValuesX = groupsIds.map((_, i) => (i ? (this.width - NODE_SIZE) / i : 0));
-    const rangeValuesY = groupsIds.map((_, i) => (i ? (this.height / groupsIds.length) * i : 100));
-
-    const xScale = scaleOrdinal().domain(groupsIds).range(rangeValuesX);
-    const yScale = scaleOrdinal().domain(groupsIds).range(rangeValuesY);
+  private configureForceSimulation() {
+    let xScale: Function;
+    let yScale: Function;
 
     return forceSimulation<GraphNode, GraphEdge>()
       .force('center', forceCenter(this.width / 2, this.height / 2))
@@ -110,18 +104,34 @@ export default class Graph {
         'x',
         forceX<GraphNode>()
           .strength(1)
-          .x(({ group, fx }) => fx || (xScale(group.toString()) as number))
+          .x(({ group, fx }) => {
+            if (!xScale) {
+              xScale = scaleOrdinal()
+                .domain(this.groupIds)
+                .range(this.groupIds.map((_, i) => (this.width / this.groupIds.length) * i));
+            }
+
+            return fx || Math.min(xScale(group.toString()) as number, this.width - NODE_SIZE);
+          })
       )
       .force(
         'y',
         forceY<GraphNode>()
           .strength(1)
-          .y(({ group, fy }) => fy || (yScale(group.toString()) as number))
+          .y(({ group, fy }) => {
+            if (!yScale) {
+              yScale = scaleOrdinal()
+                .domain(this.groupIds)
+                .range([NODE_SIZE, this.height - NODE_SIZE]);
+            }
+
+            return fy || Math.min(yScale(group.toString()) as number, this.height - NODE_SIZE);
+          })
       )
       .force(
         'link',
         forceLink<GraphNode, GraphEdge>()
-          .distance(5)
+          .distance(25)
           .strength(1)
           .id(({ id }) => id)
       )
@@ -246,10 +256,6 @@ export default class Graph {
     });
 
     // move groups
-    this.moveGroupNodes();
-  };
-
-  private moveGroupNodes() {
     if (this.options?.showGroup) {
       this.groupIds.forEach((groupId) => {
         let centroid: [number, number] = [0, 0];
@@ -283,7 +289,7 @@ export default class Graph {
         select($parentNode).attr('transform', `translate(${centroid[0]},${centroid[1]}) scale(${1.5})`);
       });
     }
-  }
+  };
 
   private redrawEdges = () => {
     addEdgeArrows(this.svgGraphGroup);
@@ -375,43 +381,32 @@ export default class Graph {
   }
 
   private redrawGroups = () => {
-    if (this.options?.showGroup) {
-      const nodes = this.nodes;
-      this.groupIds = Array.from(new Set(nodes.map((n) => n.group.toString())))
-        .map((groupId) => ({
-          groupId,
-          count: nodes.filter((n) => n.group === Number(groupId)).length
-        }))
-        .filter((group) => group.count > 0)
-        .map((group) => group.groupId);
-
-      this.svgGraphGroup
-        .selectAll('.group_node') // for performance we select the group class instead every  paths of the group
-        .data(this.groupIds)
-        .enter()
-        .append('g')
-        .attr('class', 'group_node')
-        .append('path')
-        .attr('class', GROUP_NODE_PATHS_CLASS_NAME)
-        .attr('fill', (groupId) => nodeColors[Number(groupId)])
-        .attr('opacity', OPACITY_NO_SELECTED_ITEM)
-        .style('cursor', 'grab')
-        .call(
-          drag<SVGPathElement, string>()
-            .on('start', this.groupDragStarted)
-            .on('drag', this.groupDragged)
-            .on('end', this.groupDragEnded)
-        )
-        .on('click', (_, nodeSelected) => {
-          this.EventEmitter.emit(GraphEvents.EdgeClick, [
-            {
-              type: 'click',
-              name: GraphEvents.NodeGroupClick,
-              data: nodeSelected
-            }
-          ]);
-        });
-    }
+    this.svgGraphGroup
+      .selectAll('.group_node') // for performance we select the group class instead every  paths of the group
+      .data(this.groupIds)
+      .enter()
+      .append('g')
+      .attr('class', 'group_node')
+      .append('path')
+      .attr('class', GROUP_NODE_PATHS_CLASS_NAME)
+      .attr('fill', (groupId) => nodeColors[Number(groupId)])
+      .attr('opacity', OPACITY_NO_SELECTED_ITEM)
+      .style('cursor', 'grab')
+      .call(
+        drag<SVGPathElement, string>()
+          .on('start', this.groupDragStarted)
+          .on('drag', this.groupDragged)
+          .on('end', this.groupDragEnded)
+      )
+      .on('click', (_, nodeSelected) => {
+        this.EventEmitter.emit(GraphEvents.EdgeClick, [
+          {
+            type: 'click',
+            name: GraphEvents.NodeGroupClick,
+            data: nodeSelected
+          }
+        ]);
+      });
   };
 
   private redrawNodes = () => {
@@ -511,65 +506,70 @@ export default class Graph {
     );
   };
 
-  private runTopologySimulation() {
-    this.force.nodes(this.nodes);
-    this.force.force<ForceLink<GraphNode, GraphEdge>>('link')?.links(this.links);
+  // exposed methods
+  getNodes() {
+    return this.nodes;
+  }
 
+  run(nodes: GraphNode[], edges: GraphEdge<string>[]) {
+    // run the simulation
+    this.nodes = cloneGraphNodeOrEdge(nodes);
+    this.groupIds = getGroupIdsFromNodes(nodes);
+    this.links = cloneGraphNodeOrEdge(edges);
+
+    this.force.nodes(this.nodes);
+    // this function mutate this.link from GraphEdge<string> to GraphEdge<GraphNode>
+    this.force.force<ForceLink<GraphNode, GraphEdge>>('link')?.links(this.links);
     this.force.tick(ITERATIONS);
 
+    // update node positions
     this.nodes.forEach((node) => {
       if (!node.fx || !node.fy) {
         node.fx = node.x;
         node.fy = node.y;
       }
     });
-  }
 
-  // exposed methods
-  getNodes() {
-    return this.nodes;
-  }
-
-  run() {
-    this.runTopologySimulation();
-
+    // redraw graph
     this.svgGraphGroup.selectAll('*').remove();
-    this.redrawGroups();
+
+    if (this.options?.showGroup) {
+      this.redrawGroups();
+    }
     this.redrawEdges();
     this.redrawNodes();
     this.redrawPositions();
   }
 
-  updateTopology = (nodes: GraphNode[], edges: GraphEdge<string>[], options?: { showGroup?: boolean }) => {
+  updateModel = (nodes: GraphNode[], edges: GraphEdge<string>[]) => {
     if (!this.isDraggingNode) {
-      this.options = { ...this.options, showGroup: !!options?.showGroup };
-
       const nodeMap = this.nodes.reduce((acc, node) => {
         acc[node.id] = node;
 
         return acc;
       }, {} as Record<string, GraphNode>);
 
-      // it creates a new copy of the object and avoids to bind the edges with the original object and modify it
-      this.links = JSON.parse(JSON.stringify(sanitizeEdges(nodes, edges)));
-      this.nodes = JSON.parse(
-        JSON.stringify(
-          // attach position to the nodes if exist
-          nodes.map((node) => {
-            const existingNode = nodeMap[node.id];
+      const nodesUpdated =
+        // attach position to an existing node in the model
+        nodes.map((node) => {
+          const existingNode = nodeMap[node.id];
 
-            if (existingNode) {
-              const { fx, fy } = existingNode;
+          if (existingNode) {
+            const fx = node.x || existingNode.fx;
+            const fy = node.y || existingNode.fy;
 
-              return { ...node, fx, fy };
-            }
+            return { ...node, fx, fy };
+          }
 
-            return node;
-          })
-        )
-      );
+          // place a new node close to the first node of the group. In case the group doesn't exist place the node close to the first node of the topology
+          const nodeGroups = this.nodes.filter(({ group }) => group === node.group);
+          const fx = (nodeGroups.length ? nodeGroups[0].x : this.nodes[0].x) + NODE_SIZE * 2;
+          const fy = (nodeGroups.length ? nodeGroups[0].y : this.nodes[0].y) + NODE_SIZE * 2;
 
-      this.run();
+          return { ...node, fx, fy };
+        });
+
+      this.run(nodesUpdated, edges);
     }
   };
 
@@ -595,6 +595,10 @@ export default class Graph {
   zoomOut() {
     return this.svgGraph.transition().duration(250).call(this.zoom.scaleBy, 0.5);
   }
+}
+
+function getGroupIdsFromNodes(nodes: GraphNode[]) {
+  return Array.from(new Set(nodes.map((n) => n.group.toString())));
 }
 
 function animateEdges({ source, target }: { source: { id: string }; target: { id: string } }) {
@@ -647,8 +651,8 @@ function highlightSelectedNode(
   nodes: Selection<SVGSVGElement, GraphNode, SVGGElement, GraphNode>,
   selectedNodeId: string | null
 ) {
-  nodes.style('opacity', ({ id }) => {
-    if (selectedNodeId && id !== selectedNodeId) {
+  nodes.style('opacity', ({ id, isDisabled }) => {
+    if ((selectedNodeId && id !== selectedNodeId) || isDisabled) {
       return OPACITY_NO_SELECTED_ITEM;
     }
 
@@ -682,13 +686,7 @@ function polygonGenerator(nodes: GraphNode[], groupId: string) {
   return polygonHull(node_coords);
 }
 
-// TODO: remove this function when Backend sanitize the old process pairs
-function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge<string>[]) {
-  const availableNodesMap = nodes.reduce((acc, node) => {
-    acc[node.id] = node.id;
-
-    return acc;
-  }, {} as Record<string, string>);
-
-  return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
+// deep clone
+function cloneGraphNodeOrEdge(array: GraphNode[] | GraphEdge<string>[]): GraphNode[] & GraphEdge[] {
+  return JSON.parse(JSON.stringify(array));
 }

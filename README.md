@@ -92,18 +92,18 @@ yarn cy:open
 * `build`: Production build output
 * `config`: dev tool configurations
 * `cypress`: Integration testing
-* `mocks`: static dataset representing a basic network and mock server
+* `mocks`:It contains a mock server to run a static dataset representing a basic network
 * `public`: Home of index.html
 * `src`: Source and test code
 * `src/API`: React top level component
 * `src/assets`: Images and other assets
-* `src/core/components`: App level and reusable React components
-* `src/core/utils`: Generic app functionalities like dates and formatting utilities.
-* `src/layout`: High level components like header, sidebar and container.
-* `src/pages`: Top level pages and nested components
-* `src/pages<page>/components`: components of the view
-* `src/pages<page>/services`:  data normalization/sanitization/manipulation utilities for this specific page
-* `src/pages<page>/views`: Collection of page components
+* `src/core/components`: Generic and reusable React components
+* `src/core/utils`: Generic app functionalities like dates and formatting utilities
+* `src/layout`: The components that form the foundation of the application's structure
+* `src/pages`:The components displayed within the container
+* `src/pages/<page>/components`: components of the view
+* `src/pages/<page>/services`:  data normalization/sanitization/manipulation utilities for this specific page
+* `src/pages/<page>/views`: Collection of views
 * `src/config`: Configuration
 * `src/routes`: Aggregation of page routes
 
