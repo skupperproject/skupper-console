@@ -26,7 +26,7 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import TopologyPanel from './TopologyPanel';
+import GraphReactAdaptor from '../../../core/components/Graph/GraphReactAdaptor';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { Labels } from '../Topology.enum';
@@ -82,8 +82,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
   );
 
   const { data: flowPairsByAddress } = useQuery(
-    [QueriesTopology.GetFlowPairsByAddress, addressIdSelected],
-    () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddress(addressIdSelected) : undefined),
+    [QueriesTopology.GetFlowPairsByAddressResult, addressIdSelected],
+    () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddressResults(addressIdSelected) : undefined),
     {
       enabled: !!addressIdSelected,
       refetchInterval,
@@ -130,6 +130,18 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     setIsOpen(false);
   }
 
+  const getOptions = useCallback(() => {
+    const options = addresses?.map(({ name, identity }, index) => (
+      <SelectOption key={index + 1} value={identity}>
+        {name}
+      </SelectOption>
+    ));
+
+    const optionsWithDefault = [<SelectOption key={0} value={Labels.ShowAll} isPlaceholder />, ...(options || [])];
+
+    return optionsWithDefault;
+  }, [addresses]);
+
   // Refresh topology data
   const updateTopologyData = useCallback(() => {
     if (sites && processes) {
@@ -147,9 +159,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
 
         return;
       }
+
       // address id selected
       if (addressIdSelected && flowPairsByAddress) {
-        const processesLinksByAddress = TopologyController.getProcessesLinksFromFlowPairs(flowPairsByAddress.results);
+        const processesLinksByAddress = TopologyController.getProcessesLinksFromFlowPairs(flowPairsByAddress);
 
         // all process ids in the address space selected
         const processIdsFromAddress = [
@@ -157,17 +170,16 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
           ...(processesLinksByAddress?.map(({ target }) => target) || [])
         ];
 
-        setNodes(
-          //disable all processes that are not part of the address selected
-          processesNodes.map((node) => {
-            if (!processIdsFromAddress.includes(node.id)) {
-              return { ...node, isDisabled: true };
-            }
+        //disable all processes that are not part of the address selected
+        const nodesFiltered = processesNodes.map((node) => {
+          if (!processIdsFromAddress.includes(node.id)) {
+            return { ...node, isDisabled: true };
+          }
 
-            return node;
-          })
-        );
+          return node;
+        });
 
+        setNodes(nodesFiltered);
         setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
       }
     }
@@ -181,31 +193,23 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     return <LoadingPage />;
   }
 
-  const options = addresses?.map(({ name, identity }, index) => (
-    <SelectOption key={index + 1} value={identity}>
-      {name}
-    </SelectOption>
-  ));
-
-  const optionsWithDefault = [<SelectOption key={0} value={Labels.ShowAll} isPlaceholder />, ...(options || [])];
-
   return (
     <>
       <Toolbar>
         <ToolbarContent>
           <ToolbarItem>
             <Select isOpen={isOpen} onSelect={handleSelect} onToggle={handleToggle} selections={addressIdSelected}>
-              {optionsWithDefault}
+              {getOptions()}
             </Select>
           </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
-      <TopologyPanel
+      <GraphReactAdaptor
         nodes={nodes}
         edges={links}
-        onGetSelectedNode={handleGetSelectedNode}
-        onGetSelectedEdge={handleGetSelectedEdge}
+        onClickNode={handleGetSelectedNode}
+        onClickEdge={handleGetSelectedEdge}
         nodeSelected={nodeSelected}
         options={{ showGroup: true }}
       />

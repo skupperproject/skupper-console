@@ -144,7 +144,3 @@ function getPositionFromLocalStorage(identity: string): { fx: number; fy: number
 
   return { fx, fy };
 }
-
-export function savePositionInLocalStorage(node: GraphNode) {
-  localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
-}

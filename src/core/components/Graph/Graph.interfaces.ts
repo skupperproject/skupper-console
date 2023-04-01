@@ -19,3 +19,12 @@ export interface GraphEdge<T = GraphNode> {
   type?: 'dashed';
   clickable?: boolean;
 }
+
+export interface GraphReactAdaptorProps {
+  nodes: GraphNode[];
+  edges: GraphEdge<string>[];
+  nodeSelected?: string | null;
+  options?: { showGroup?: boolean };
+  onClickNode?: Function;
+  onClickEdge?: Function;
+}

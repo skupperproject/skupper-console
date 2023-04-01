@@ -222,6 +222,12 @@ export const RESTApi = {
     return data;
   },
 
+  fetchFlowPairsByAddressResults: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse[]> => {
+    const data = await RESTApi.fetchFlowPairsByAddress(id, options);
+
+    return getResults(data);
+  },
+
   fetchServersByAddress: async (id: string, options?: RequestOptions): Promise<ResponseWrapper<ProcessResponse[]>> => {
     const { data } = await axiosFetch(getProcessesByAddressPATH(id), {
       params: options ? addQueryParams(options) : null

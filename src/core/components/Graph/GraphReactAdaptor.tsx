@@ -1,21 +1,19 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { Button, Card } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
-import Graph from '@core/components/Graph';
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
-import { savePositionInLocalStorage } from '../services';
-import { TopologyPanelProps } from '../Topology.interfaces';
+import Graph from './Graph';
 
-const TopologyPanel: FC<TopologyPanelProps> = function ({
+const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
   nodes,
   edges,
-  onGetSelectedNode,
-  onGetSelectedEdge,
+  onClickEdge,
+  onClickNode,
   options,
   nodeSelected
 }) {
@@ -25,26 +23,27 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
 
   const handleOnClickNode = useCallback(
     ({ data: { id, name } }: { data: GraphNode }) => {
-      if (onGetSelectedNode) {
-        onGetSelectedNode({ id, name });
+      if (onClickNode) {
+        onClickNode({ id, name });
       }
     },
-    [onGetSelectedNode]
+    [onClickNode]
   );
 
   const handleOnClickEdge = useCallback(
     ({ data }: { data: GraphNode }) => {
-      if (onGetSelectedEdge) {
-        onGetSelectedEdge(data);
+      if (onClickEdge) {
+        onClickEdge(data);
       }
     },
-    [onGetSelectedEdge]
+    [onClickEdge]
   );
 
   const handleSaveNodesPositions = useCallback((topologyNodes: GraphNode[]) => {
     topologyNodes.forEach((node) => {
       if (node.x && node.y) {
-        savePositionInLocalStorage(node);
+        //save the position of the node to the local storage
+        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
       }
     });
   }, []);
@@ -103,10 +102,11 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
   }, [handleSaveNodesPositions, saveNodesPositions, topologyGraphInstance]);
 
   return (
-    <Card isFullHeight style={{ position: 'relative' }}>
+    <div style={{ height: '100%', position: 'relative' }}>
       <TransitionPage>
         <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
       </TransitionPage>
+
       <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
         <Button
           isActive={true}
@@ -132,11 +132,11 @@ const TopologyPanel: FC<TopologyPanelProps> = function ({
           icon={<ExpandIcon />}
         />
       </span>
-    </Card>
+    </div>
   );
 };
 
-export default TopologyPanel;
+export default GraphReactAdaptor;
 
 // TODO: remove this function when Backend sanitize the old process pairs
 function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge<string>[]) {

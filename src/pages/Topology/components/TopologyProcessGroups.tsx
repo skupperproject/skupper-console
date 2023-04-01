@@ -10,7 +10,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import TopologyPanel from './TopologyPanel';
+import GraphReactAdaptor from '../../../core/components/Graph/GraphReactAdaptor';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 
@@ -67,7 +67,7 @@ const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
   const nodes = TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
 
   return (
-    <TopologyPanel nodes={nodes} edges={links} onGetSelectedNode={handleGetSelectedNode} nodeSelected={nodeSelected} />
+    <GraphReactAdaptor nodes={nodes} edges={links} onClickNode={handleGetSelectedNode} nodeSelected={nodeSelected} />
   );
 };
 

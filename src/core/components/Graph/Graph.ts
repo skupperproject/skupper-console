@@ -451,6 +451,7 @@ export default class Graph {
       .attr('r', NODE_SIZE / 2)
       .attr('fill', 'transparent')
       .style('cursor', 'pointer')
+      .attr('opacity', OPACITY_NO_SELECTED_ITEM * 5)
       .attr('id', ({ id }) => `node-cover-${id}`);
 
     svgNode.on('mousedown', (_, { id }) => {
@@ -621,6 +622,7 @@ function stopAnimateEdges({ source, target }: GraphEdge) {
 }
 
 function selectNodeTextStyle(id: string) {
+  select(`#node-cover-${id}`).attr('fill', 'white');
   select(`#node-label-${id}`)
     .transition()
     .duration(300)
@@ -628,6 +630,7 @@ function selectNodeTextStyle(id: string) {
 }
 
 function deselectNodeTextStyle(id: string) {
+  select(`#node-cover-${id}`).attr('fill', 'transparent');
   select(`#node-label-${id}`).transition().duration(300).attr('font-size', FONT_SIZE_DEFAULT);
 }
 

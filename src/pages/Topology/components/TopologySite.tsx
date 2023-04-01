@@ -10,7 +10,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
-import TopologyPanel from './TopologyPanel';
+import GraphReactAdaptor from '../../../core/components/Graph/GraphReactAdaptor';
 import { TopologyController } from '../services';
 
 const TopologySite: FC<{ id?: string | null }> = function () {
@@ -63,7 +63,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   );
   const nodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
 
-  return <TopologyPanel nodes={nodes} edges={edges} onGetSelectedNode={handleGetSelectedNode} />;
+  return <GraphReactAdaptor nodes={nodes} edges={edges} onClickNode={handleGetSelectedNode} />;
 };
 
 export default TopologySite;
