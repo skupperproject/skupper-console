@@ -1,16 +1,17 @@
 import React, { FC } from 'react';
 
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
+import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { ServerColumnsNames } from '../Addresses.enum';
-import { ProcessesTableProps } from '../Addresses.interfaces';
+import { ServerTableProps } from '../Addresses.interfaces';
 
 const components = {
   nameLinkCellProcess: (props: LinkCellProps<ProcessResponse>) =>
@@ -33,7 +34,7 @@ const components = {
     })
 };
 
-const columns = [
+const columns: SKColumn<ProcessResponse>[] = [
   {
     name: ServerColumnsNames.Process,
     prop: 'name' as keyof ProcessResponse,
@@ -56,7 +57,7 @@ const columns = [
   }
 ];
 
-const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
+const ServersTable: FC<ServerTableProps> = function ({ processes }) {
   return <SkTable columns={columns} rows={processes} pageSizeStart={DEFAULT_TABLE_PAGE_SIZE} components={components} />;
 };
 

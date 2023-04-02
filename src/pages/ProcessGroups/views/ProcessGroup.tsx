@@ -8,25 +8,24 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Flex,
   Grid,
   GridItem,
   Title
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import ResourceIcon from '@core/components/ResourceIcon';
+import { RESTApi } from '@API/REST';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import Metrics from '@pages/Processes/components/Metrics';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import Metrics from '@pages/shared/Metrics';
+import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
-import { RESTApi } from 'API/REST';
 
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
@@ -79,16 +78,11 @@ const ProcessGroup = function () {
   return (
     <TransitionPage>
       <Grid hasGutter>
-        <Flex alignItems={{ default: 'alignItemsCenter' }}>
-          <ResourceIcon type="service" />
-          <Title headingLevel="h1">{name}</Title>
-
-          <Link
-            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
-          >
-            {`(${ProcessGroupsLabels.GoToTopology})`}
-          </Link>
-        </Flex>
+        <SkTitle
+          title={name}
+          icon="service"
+          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+        />
 
         {/* Component description*/}
         <GridItem span={12}>
@@ -119,8 +113,8 @@ const ProcessGroup = function () {
               parent={{ id: serverNames, name: serverNames, startTime }}
               sourceProcesses={serverNameFilters}
               customFilters={{
-                destinationProcesses: { disabled: true, name: ProcessesLabels.FilterAllDestinationProcesses },
-                sourceProcesses: { name: ProcessesLabels.FilterAllSourceProcesses }
+                destinationProcesses: { disabled: true, name: MetricsLabels.FilterAllDestinationProcesses },
+                sourceProcesses: { name: MetricsLabels.FilterAllSourceProcesses }
               }}
             />
           </GridItem>

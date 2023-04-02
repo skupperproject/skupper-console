@@ -3,9 +3,9 @@ import React, { FC } from 'react';
 import { ChartArea, ChartGroup, ChartThemeColor, ChartVoronoiContainer } from '@patternfly/react-charts';
 import { Bullseye, Card, CardBody, CardFooter, Title } from '@patternfly/react-core';
 
-import { MetricCardProps } from '../Processes.interfaces';
+import { MetricCardProps } from './SkCounterCart.interfaces';
 
-const MetricCard: FC<MetricCardProps> = function ({
+const SkCounterCard: FC<MetricCardProps> = function ({
   title,
   value,
   bgColor = '--pf-global--palette--black-400',
@@ -56,4 +56,4 @@ const MetricChart = function ({ data, color }: { data: { x: number | string; y: 
   );
 };
 
-export default MetricCard;
+export default SkCounterCard;

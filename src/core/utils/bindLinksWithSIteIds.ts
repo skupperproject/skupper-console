@@ -1,5 +1,5 @@
-import { LinkResponse, RouterResponse } from 'API/REST.interfaces';
-import { LINK_DIRECTIONS } from 'config';
+import { LinkResponse, RouterResponse } from '@API/REST.interfaces';
+import { LINK_DIRECTIONS } from '@config/config';
 
 export function bindLinksWithSiteIds(links: LinkResponse[], routers: RouterResponse[]) {
   const routersMap = routers.reduce(function (acc, { identity, parent }) {

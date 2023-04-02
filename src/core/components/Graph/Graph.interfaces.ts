@@ -1,12 +1,18 @@
+export interface GraphProps {
+  $node: HTMLElement;
+  width: number;
+  height: number;
+  nodeSelected?: string;
+}
+
 export interface GraphNode {
   id: string;
   name: string;
-  color: string;
-  groupName: string;
-  group: number;
-  img?: string;
   x: number;
   y: number;
+  color: string;
+  group: string;
+  img?: string;
   fx?: number | null;
   fy?: number | null;
   groupFx?: number;
@@ -14,10 +20,24 @@ export interface GraphNode {
   isDisabled?: boolean;
 }
 
+export interface GraphGroup {
+  id: string;
+  name: string;
+  color?: string;
+}
+
 export interface GraphEdge<T = GraphNode> {
   source: T;
   target: T;
   type?: 'dashed';
-  rate?: string;
   clickable?: boolean;
+}
+
+export interface GraphReactAdaptorProps {
+  nodes: GraphNode[];
+  edges: GraphEdge<string>[];
+  groups?: GraphGroup[];
+  nodeSelected?: string;
+  onClickNode?: Function;
+  onClickEdge?: Function;
 }

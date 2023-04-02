@@ -1,29 +1,18 @@
 import React, { FC, useCallback, useState } from 'react';
 
-import {
-  Card,
-  Flex,
-  Grid,
-  GridItem,
-  Tab,
-  Tabs,
-  TabTitleText,
-  Text,
-  TextContent,
-  TextVariants
-} from '@patternfly/react-core';
+import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import ResourceIcon from '@core/components/ResourceIcon';
-import Metrics from '@pages/Processes/components/Metrics';
+import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
+import SkTitle from '@core/components/SkTitle';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import Metrics from '@pages/shared/Metrics';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
-import { RESTApi } from 'API/REST';
 import { RequestOptions } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import FlowPairsTable from './FlowPairsTable';
 import ServersTable from './ServersTable';
@@ -110,17 +99,11 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   return (
     <Grid hasGutter data-cy="sk-address">
       <GridItem>
-        <Flex alignItems={{ default: 'alignItemsCenter' }}>
-          <ResourceIcon type="address" />
-          <TextContent>
-            <Text component={TextVariants.h1}>{addressName}</Text>
-          </TextContent>
-          <Link
-            to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
-          >
-            {`(${FlowPairsLabels.GoToTopology})`}
-          </Link>
-        </Flex>
+        <SkTitle
+          title={addressName}
+          icon="address"
+          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+        />
       </GridItem>
 
       {/* requests table*/}

@@ -3,10 +3,10 @@ const { ROOT, path } = require('./webpack.constant');
 const SRC_PATH = `${ROOT}/src`;
 const CONFIG_PATH = `${ROOT}/config`;
 const TS_CONFIG_PATH = path.join(CONFIG_PATH, '/tsconfig.paths.json');
-
 const SVG_TRANSFORM_FILENAME = 'jest.config.svgTransform';
 const FILE_MOCK_TRANSFORM_FILENAME = 'jest.config.fileMock';
 const STYLE_MOCK_TRANSFORM_FILENAME = 'jest.config.styleMock';
+const ENV_FILE = 'jest.config.setEnvVars';
 
 const extensionsAllowed = {
   '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/': `${CONFIG_PATH}/${FILE_MOCK_TRANSFORM_FILENAME}`,
@@ -30,6 +30,7 @@ function makeModuleNameMapper(srcPath, tsconfigPath) {
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  setupFiles: [`./${ENV_FILE}`],
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
   moduleDirectories: ['node_modules'],

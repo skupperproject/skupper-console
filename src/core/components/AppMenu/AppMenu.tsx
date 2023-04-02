@@ -14,12 +14,14 @@ import { ClockIcon, SyncIcon } from '@patternfly/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 
+import { SYNC_DATA_INTERVAL } from '@config/config';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
-import { SYNC_DATA_INTERVAL } from 'config';
 
 const TOOLTIP_UPDATE = 'Data Update';
-const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${SYNC_DATA_INTERVAL} ms). PERFORMANCE MAY BE IMPACTED`!;
+const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${
+  SYNC_DATA_INTERVAL / 1000
+} sec). PERFORMANCE MAY BE IMPACTED`!;
 const COLOR_ICON_MOUSE_LEAVE = 'var(--pf-global--palette--black-500)';
 const COLOR_ICON_MOUSE_ENTER = 'var(--pf-global--palette--green-500)';
 

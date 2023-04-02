@@ -1,25 +1,24 @@
-import { formatBytes } from '@core/utils/formatBytes';
+import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getStartEndTimeFromInterval, PrometheusApi } from 'API/Prometheus';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
-import { ProcessResponse } from 'API/REST.interfaces';
 
-import { ProcessesLabels } from '../Processes.enum';
 import {
-  MetricsFilters,
-  NormalizeLatenciesProps,
-  ProcessAxisDataChart,
-  ProcessDataChart,
-  ProcessLatencies,
-  ProcessLatenciesChart,
-  ProcessMetric,
-  ProcessMetrics,
-  ProcessRequestsChart
-} from '../Processes.interfaces';
+  Metrics,
+  QueryMetricsParams,
+  LatencyMetricsProps,
+  TrafficMetrics,
+  LatencyData,
+  LatencyMetrics,
+  MetricData,
+  RequestMetrics,
+  ResponseMetrics
+} from './services.enum';
+import { MetricsLabels } from '../Metrics.enum';
 
-const ProcessesController = {
-  getMetrics: async ({ id, timeInterval, processIdDest, protocol }: MetricsFilters): Promise<ProcessMetrics | null> => {
+const MetricsController = {
+  getMetrics: async ({ id, timeInterval, processIdDest, protocol }: QueryMetricsParams): Promise<Metrics | null> => {
     const params = {
       id,
       range: timeInterval,
@@ -89,102 +88,76 @@ const ProcessesController = {
     } catch (e: unknown) {
       throw new Error(e as string);
     }
-  },
-
-  formatProcessesBytesForChart: (
-    processes: ProcessResponse[],
-    property: keyof Pick<ProcessResponse, 'octetsSent' | 'octetsReceived'>
-  ) => {
-    const values = processes
-      .map((process) => ({
-        x: process.name,
-        y: process[property]
-      }))
-      .filter(({ y }) => y);
-
-    const labels = values.map(({ x, y }) => ({
-      name: `${x}: ${formatBytes(y)}`
-    }));
-
-    return { labels, values };
   }
 };
 
-export default ProcessesController;
+export default MetricsController;
 
-function normalizeResponses(data: PrometheusApiResult[]) {
-  const dataNormalized = normalizeMetric(data);
+function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null {
+  // Convert the Prometheus API result into a chart data format
+  const prometheusData = convertPrometheusDataInChartData(data);
 
-  if (!dataNormalized) {
+  if (!prometheusData) {
     return null;
   }
 
-  const { values } = dataNormalized;
+  const { values } = prometheusData;
 
-  const statusCode2xx = {
-    total: values[0] ? (values[0].length > 1 ? values[0][1].y - values[0][0].y : values[0][0].y) : 0,
-    label: '2xx',
-    data: values[0]
-  };
+  // Helper function to create a statusCodeMetric object
+  const createStatusCodeMetric = (index: number, label: string): ResponseMetrics['statusCode2xx'] => {
+    const responseValues = values[index] ?? [];
 
-  const statusCode3xx = {
-    total: values[1] ? (values[1].length > 1 ? values[1][1].y - values[1][0].y : values[1][0].y) : 0,
-    label: '3xx',
-    data: values[1]
-  };
-  const statusCode4xx = {
-    total: values[2] ? (values[2].length > 1 ? values[2][1].y - values[2][0].y : values[2][0].y) : 0,
-    label: '4xx',
-    data: values[2]
-  };
-  const statusCode5xx = {
-    total: values[3] ? (values[3].length > 1 ? values[3][1].y - values[3][0].y : values[3][0].y) : 0,
-    label: '5xx',
-    data: values[3]
+    // Calculate the total count of requests with the status code
+    const total =
+      responseValues.length > 1 ? responseValues[data.length - 1].y - responseValues[0].y : responseValues[0]?.y ?? 0;
+
+    return { total, label, data: responseValues };
   };
 
-  return {
-    statusCode2xx,
-    statusCode3xx,
-    statusCode4xx,
-    statusCode5xx,
-    total: statusCode2xx.total + statusCode3xx.total + statusCode4xx.total + statusCode5xx.total
-  };
+  // Create the statusCodeMetric objects for each status code
+  const statusCode2xx = createStatusCodeMetric(0, '2xx');
+  const statusCode3xx = createStatusCodeMetric(1, '3xx');
+  const statusCode4xx = createStatusCodeMetric(2, '4xx');
+  const statusCode5xx = createStatusCodeMetric(3, '5xx');
+
+  const total = statusCode2xx.total + statusCode3xx.total + statusCode4xx.total + statusCode5xx.total;
+
+  return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
-function normalizeRequests(data: PrometheusApiResult[], label: string) {
-  const axisValues = normalizeMetricValues(data);
+function normalizeRequests(data: PrometheusApiResult[], label: string): RequestMetrics[] | null {
+  const axisValues = convertPrometheusDataInChartAxisValues(data);
 
   if (!axisValues) {
     return null;
   }
 
-  return axisValues.flatMap((values) => {
-    const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
+  const requestsNormalized: RequestMetrics[] = [];
 
+  for (const values of axisValues) {
+    const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
     const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
     const avgRequestRateInterval = formatToDecimalPlacesIfCents(sumRequestRateInterval / values.length, 2);
 
-    const requestsNormalized: ProcessRequestsChart[] = [];
     requestsNormalized.push({
       data: values,
       label,
       totalRequestInterval,
       avgRequestRateInterval
     });
+  }
 
-    return requestsNormalized;
-  });
+  return requestsNormalized;
 }
 
 function normalizeLatencies({
   quantile50latency,
   quantile90latency,
   quantile99latency
-}: NormalizeLatenciesProps): ProcessLatenciesChart | null {
-  const quantile50latencyNormalized = normalizeMetricValues(quantile50latency);
-  const quantile90latencyNormalized = normalizeMetricValues(quantile90latency);
-  const quantile99latencyNormalized = normalizeMetricValues(quantile99latency);
+}: LatencyMetricsProps): LatencyMetrics | null {
+  const quantile50latencyNormalized = convertPrometheusDataInChartAxisValues(quantile50latency);
+  const quantile90latencyNormalized = convertPrometheusDataInChartAxisValues(quantile90latency);
+  const quantile99latencyNormalized = convertPrometheusDataInChartAxisValues(quantile99latency);
 
   if (
     (!quantile50latencyNormalized || !quantile50latencyNormalized[0]?.filter(({ y }) => y).length) &&
@@ -194,26 +167,26 @@ function normalizeLatencies({
     return null;
   }
 
-  const latenciesNormalized: ProcessLatencies[] = [];
+  const latenciesNormalized: LatencyData[] = [];
 
   if (quantile50latencyNormalized) {
-    latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: ProcessesLabels.LatencyMetric50quantile });
+    latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: MetricsLabels.LatencyMetric50quantile });
   }
 
   if (quantile90latencyNormalized) {
-    latenciesNormalized.push({ data: quantile90latencyNormalized[0], label: ProcessesLabels.LatencyMetric90quantile });
+    latenciesNormalized.push({ data: quantile90latencyNormalized[0], label: MetricsLabels.LatencyMetric90quantile });
   }
 
   if (quantile99latencyNormalized) {
-    latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: ProcessesLabels.LatencyMetric99quantile });
+    latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: MetricsLabels.LatencyMetric99quantile });
   }
 
   return { timeSeriesLatencies: latenciesNormalized };
 }
 
-function normalizeTrafficData(data: PrometheusApiResult[]): ProcessDataChart | null {
+function normalizeTrafficData(data: PrometheusApiResult[]): TrafficMetrics | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
-  const axisValues = normalizeMetricValues(data);
+  const axisValues = convertPrometheusDataInChartAxisValues(data);
   if (!axisValues) {
     return null;
   }
@@ -258,7 +231,7 @@ function normalizeTrafficData(data: PrometheusApiResult[]): ProcessDataChart | n
   };
 }
 
-function normalizeMetricValues(data: PrometheusApiResult[]): ProcessAxisDataChart[][] | null {
+function convertPrometheusDataInChartAxisValues(data: PrometheusApiResult[]): SkChartAreaData[][] | null {
   if (!data.length) {
     return null;
   }
@@ -271,7 +244,7 @@ function normalizeMetricValues(data: PrometheusApiResult[]): ProcessAxisDataChar
   );
 }
 
-function normalizeMetricLabels(data: PrometheusApiResult[]): string[][] | null {
+function convertPrometheusDataInChartLabels(data: PrometheusApiResult[]): string[][] | null {
   if (!data.length) {
     return null;
   }
@@ -279,13 +252,13 @@ function normalizeMetricLabels(data: PrometheusApiResult[]): string[][] | null {
   return data.map(({ metric }) => Object.values(metric).map((label) => label));
 }
 
-function normalizeMetric(data: PrometheusApiResult[]): ProcessMetric | null {
+function convertPrometheusDataInChartData(data: PrometheusApiResult[]): MetricData | null {
   if (!data.length) {
     return null;
   }
 
-  const values = normalizeMetricValues(data) as ProcessAxisDataChart[][];
-  const labels = normalizeMetricLabels(data) as string[][];
+  const values = convertPrometheusDataInChartAxisValues(data) as SkChartAreaData[][];
+  const labels = convertPrometheusDataInChartLabels(data) as string[][];
 
   return { values, labels };
 }

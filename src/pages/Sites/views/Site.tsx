@@ -18,15 +18,16 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { RESTApi } from 'API/REST';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
@@ -104,18 +105,13 @@ const Site = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter>
+      <Grid hasGutter data-testid="sk-site-view">
         <GridItem>
-          <Flex alignItems={{ default: 'alignItemsCenter' }}>
-            <ResourceIcon type="site" />
-            <Title headingLevel="h1">{name}</Title>
-
-            <Link
-              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
-            >
-              {`(${SiteLabels.GoToTopology})`}
-            </Link>
-          </Flex>
+          <SkTitle
+            title={name}
+            icon="site"
+            link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
+          />
         </GridItem>
 
         <GridItem>

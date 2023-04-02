@@ -1,24 +1,25 @@
 import React from 'react';
 
-import { Flex, Grid, GridItem, Title } from '@patternfly/react-core';
+import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import ResourceIcon from '@core/components/ResourceIcon';
 import SkTable from '@core/components/SkTable';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
+import Metrics from '@pages/shared/Metrics';
+import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
-import { RESTApi } from 'API/REST';
 import { ProcessPairsResponse } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
-import Metrics from '../components/Metrics';
 import ProcessDescription from '../components/ProcessDescription';
 import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
@@ -99,16 +100,11 @@ const Process = function () {
     <TransitionPage>
       <Grid hasGutter>
         <GridItem>
-          <Flex alignItems={{ default: 'alignItemsCenter' }}>
-            <ResourceIcon type="process" />
-            <Title headingLevel="h1">{process.name}</Title>
-
-            <Link
-              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
-            >
-              {`(${ProcessesLabels.GoToTopology})`}
-            </Link>
-          </Flex>
+          <SkTitle
+            title={process.name}
+            icon="process"
+            link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
+          />
         </GridItem>
 
         {/* Process Details */}
@@ -161,7 +157,7 @@ const Process = function () {
               parent={{ id: process.name, name: process.name, startTime: process.startTime }}
               processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
               customFilters={{
-                destinationProcesses: { name: ProcessesLabels.FilterAllDestinationProcesses },
+                destinationProcesses: { name: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: { disabled: true, name: process.name }
               }}
             />

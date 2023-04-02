@@ -6,13 +6,12 @@ import skupperProcessSVG from '@assets/skupper.svg';
 
 import './ResourceIcon.css';
 
-interface ResourceIconProps {
-  type: 'site' | 'deployment' | 'service' | 'address' | 'process' | 'skupper';
+export interface ResourceIconProps {
+  type: 'site' | 'service' | 'address' | 'process' | 'skupper';
 }
 
 const RESOURCE_MAP = {
   site: { class: 'sk-resource-site', symbol: 'S' },
-  deployment: { class: 'sk-resource-deployment', symbol: 'D' },
   service: { class: 'sk-resource-process-group', symbol: 'C' },
   address: { class: 'sk-resource-address', symbol: 'A' },
   process: { class: 'sk-resource-process', symbol: 'P' },
@@ -21,10 +20,10 @@ const RESOURCE_MAP = {
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {
   return (
-    <Tooltip content={type}>
+    <Tooltip content={`resource type: ${type}`}>
       <span className="pf-u-m-r-xs">
-        <span className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
-          {RESOURCE_MAP[type].symbol || <img src={skupperProcessSVG} alt="Skupper Icon" />}
+        <span role={`${type}-resource-icon`} className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
+          {RESOURCE_MAP[type].symbol || <img src={skupperProcessSVG} alt={'Skupper Icon'} />}
         </span>
       </span>
     </Tooltip>

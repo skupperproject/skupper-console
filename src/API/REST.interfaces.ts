@@ -34,6 +34,7 @@ interface BaseResponse {
   identity: string;
   recType: string;
   startTime: number;
+  endTime?: number;
 }
 
 interface EntityBaseResponse extends BaseResponse {

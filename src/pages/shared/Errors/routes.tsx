@@ -4,9 +4,9 @@ import { ErrorConnectionRoutesPaths } from './Connection/Connection.enum';
 import { NotFoundRoutesPaths } from './NotFound/NotFound.enum';
 import { ErrorServerRoutesPaths } from './Server/Server.enum';
 
-const ErrorConnection = lazy(() => import(/* webpackChunkName: "connection-err" */ './Connection'));
-const ErrorServer = lazy(() => import(/* webpackChunkName: "server err" */ './Server'));
-const NotFound = lazy(() => import(/* webpackChunkName: "not-found" */ './NotFound'));
+const ErrorConnection = lazy(() => import(/* webpackChunkName: "connection-error" */ './Connection'));
+const ErrorServer = lazy(() => import(/* webpackChunkName: "server-error" */ './Server'));
+const NotFound = lazy(() => import(/* webpackChunkName: "not-found-error" */ './NotFound'));
 
 export const errorsRoutes = [
   {

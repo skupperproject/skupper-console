@@ -17,16 +17,19 @@ module.exports = {
         loader: 'ts-loader',
         options: {
           transpileOnly: true
-        },
-        exclude: /build/
+        }
       },
       {
-        test: /\.s?css$/,
+        test: /\.css/,
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
+        test: /\.(png|jpg|jpeg|gif|ico)$/i,
         type: 'asset/resource'
+      },
+      {
+        test: /\.svg/,
+        type: 'asset/inline'
       }
     ]
   },

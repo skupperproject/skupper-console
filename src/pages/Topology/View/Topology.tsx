@@ -13,7 +13,7 @@ const Topology = function () {
   const [searchParams] = useSearchParams();
 
   const addressId = searchParams.get(TopologyURLFilters.AddressId);
-  const id = searchParams.get(TopologyURLFilters.IdSelected);
+  const id = searchParams.get(TopologyURLFilters.IdSelected) || undefined;
   const type = searchParams.get(TopologyURLFilters.Type);
 
   const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);

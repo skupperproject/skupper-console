@@ -1,6 +1,7 @@
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
+import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
@@ -15,7 +16,6 @@ import {
 } from 'API/REST.interfaces';
 
 import { LinkTopology } from './services.interfaces';
-import { colors } from '../Topology.constant';
 
 export const TopologyController = {
   // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
@@ -36,7 +36,7 @@ export const TopologyController = {
     return sitesConnected;
   },
 
-  getProcessesLinks: (processesPairs: ProcessPairsResponse[]): LinkTopology[] => {
+  getProcessesLinksFromProcessPairs: (processesPairs: ProcessPairsResponse[]): LinkTopology[] => {
     const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
       key: identity,
       source: sourceId,
@@ -47,7 +47,7 @@ export const TopologyController = {
     return processesLinks;
   },
 
-  getProcessesLinksByAddress: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] => {
+  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] => {
     const processesLinks = flowPairsByAddress.map(({ identity, processAggregateId }) => ({
       key: identity,
       clickable: true,
@@ -55,7 +55,10 @@ export const TopologyController = {
       target: processAggregateId.split('-to-')[1]
     }));
 
-    return processesLinks;
+    // we just need to find one flow pairs between 2 processes to detect a process pair
+    return processesLinks.filter(
+      (v, i, a) => a.findIndex((v2) => v2.source === v.source && v2.target === v.target) === i
+    );
   },
 
   getProcessGroupsLinks: (links: ProcessPairsResponse[]): LinkTopology[] => {
@@ -72,51 +75,42 @@ export const TopologyController = {
     entities
       ?.sort((a, b) => a.identity.localeCompare(b.identity))
       .map(({ identity, name, recType, processGroupRole }, index) => {
-        const { fx, fy } = getPosition(identity);
+        const { fx, fy } = getPositionFromLocalStorage(identity);
 
         return {
           id: identity,
           name,
           x: fx || 0,
           y: fy || 0,
-          fx,
-          fy,
-          groupName: name,
-          group: index,
+          group: identity,
           color: getColor(processGroupRole === 'internal' ? 16 : index),
           img: processGroupRole === 'internal' ? skupperProcessSVG : recType === 'SITE' ? siteSVG : processSVG
         };
       }),
 
-  getNodesFromProcesses: (processes: ProcessResponse[], parentNodes: GraphNode[]): GraphNode[] =>
+  getNodesFromProcesses: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
     processes
-      ?.map(({ name, identity, parent, processRole }) => {
-        const groupId = parent;
-        const parentNode = parentNodes?.find(({ id }) => id === groupId);
-        const groupIndex = parentNode?.group || 0;
+      ?.map(({ name, identity, parent: siteId, processRole }) => {
+        const { fx, fy } = getPositionFromLocalStorage(identity);
 
-        const { fx, fy } = getPosition(identity);
+        const groupIndex = groups.findIndex(({ id }) => id === siteId);
 
         return {
           id: identity,
           name,
           x: fx || 0,
           y: fy || 0,
-          fx,
-          fy,
-          groupName: parentNode?.name || '',
-          group: groupIndex,
+          group: siteId,
           color: getColor(processRole === 'internal' ? 16 : groupIndex),
           img: processRole === 'internal' ? skupperProcessSVG : processSVG
         };
       })
-      .sort((a, b) => a.group - b.group),
+      .sort((a, b) => a.group.localeCompare(b.group)),
 
   getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
-    links?.map(({ source, target, rate, clickable }) => ({
+    links?.map(({ source, target, clickable }) => ({
       source,
       target,
-      rate,
       clickable
     })),
 
@@ -132,9 +126,9 @@ export const TopologyController = {
     )
 };
 
-const getColor = (index: number) => colors[index % colors.length];
+const getColor = (index: number) => nodeColors[index % nodeColors.length];
 
-function getPosition(identity: string): { fx: number; fy: number } {
+function getPositionFromLocalStorage(identity: string): { fx: number; fy: number } {
   const positions = localStorage.getItem(identity);
 
   const fx = positions ? JSON.parse(positions).fx : null;

@@ -1,6 +1,9 @@
+export type WidthValue = 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100;
+type NonNullableValue<T> = T extends null | undefined ? never : T;
+
 export interface SKTableProps<T> {
-  columns: SKColumn<T>[];
-  rows?: T[];
+  columns: SKColumn<NonNullableValue<T>>[];
+  rows?: NonNullableValue<T>[];
   rowsCount?: number;
   pageSizeStart?: number;
   title?: string;
@@ -10,10 +13,7 @@ export interface SKTableProps<T> {
   isStriped?: boolean;
   isPlain?: boolean;
   shouldSort?: boolean;
-  urlPagination?: string;
   onGetFilters?: Function;
-  onError?: Function;
-  onLoaded?: Function;
 }
 
 export interface SKColumn<T> {
@@ -22,6 +22,6 @@ export interface SKColumn<T> {
   component?: string;
   callback?: Function;
   format?: Function;
-  width?: number;
+  width?: WidthValue;
   columnDescription?: string;
 }

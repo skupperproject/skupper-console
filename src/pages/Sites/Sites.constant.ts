@@ -1,4 +1,4 @@
-import { SiteResponse } from 'API/REST.interfaces';
+import { SiteResponse } from '@API/REST.interfaces';
 
 import { SiteLabels, SitesRoutesPaths, SitesTableColumns } from './Sites.enum';
 
