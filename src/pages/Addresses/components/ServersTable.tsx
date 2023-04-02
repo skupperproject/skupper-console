@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
+import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -33,7 +34,7 @@ const components = {
     })
 };
 
-const columns = [
+const columns: SKColumn<ProcessResponse>[] = [
   {
     name: ServerColumnsNames.Process,
     prop: 'name' as keyof ProcessResponse,

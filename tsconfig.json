@@ -21,5 +21,5 @@
     "downlevelIteration": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
-  "exclude": ["**/node_modules", "**/build"]
+  "exclude": ["**/node_modules", "**/build", "./cypress.config.ts"]
 }

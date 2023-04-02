@@ -5,6 +5,7 @@ import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons'
 import { TableComposable, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 
 import { generateUUID } from '@core/utils/generateUUID';
+import { getNestedProperty } from '@core/utils/getNestedProperties';
 import { SortDirection } from 'API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
@@ -13,25 +14,6 @@ import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
 const NO_RESULT_FOUND_LABEL = 'No results found';
-
-function getNestedProperty<T, K extends keyof T>(obj: T, keys: K[]): T[K] | undefined {
-  // Return undefined if prop is falsy or prop is not a string
-  if (!keys.length) {
-    return undefined;
-  }
-
-  let nestedObject: any = obj;
-  for (const key of keys) {
-    // Add a type guard to ensure the nested object is not null or undefined
-    if (nestedObject == null) {
-      return undefined;
-    }
-
-    nestedObject = nestedObject[key];
-  }
-
-  return nestedObject as T[K];
-}
 
 const SkTable = function <T>({
   title,
@@ -213,21 +195,11 @@ const SkTable = function <T>({
                     const Component = components && component && components[component];
 
                     return Component ? (
-                      <Td
-                        width={
-                          width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined
-                        }
-                        key={generateUUID()}
-                      >
+                      <Td width={width} key={generateUUID()}>
                         <Component data={data} value={value} callback={callback} format={format && format(value)} />
                       </Td>
                     ) : (
-                      <Td
-                        width={
-                          width as 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100 | undefined
-                        }
-                        key={generateUUID()}
-                      >
+                      <Td width={width} key={generateUUID()}>
                         <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
                       </Td>
                     );
