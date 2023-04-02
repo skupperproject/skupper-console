@@ -3,12 +3,12 @@ import React, { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { RESTApi } from 'API/REST';
 import { RequestOptions } from 'API/REST.interfaces';
 
 import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constant';

@@ -3,11 +3,11 @@ import React, { FC, useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { RESTApi } from 'API/REST';
 import { UPDATE_INTERVAL } from 'config';
 
 import GraphReactAdaptor from '../../../core/components/Graph/GraphReactAdaptor';

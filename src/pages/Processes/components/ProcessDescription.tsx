@@ -16,12 +16,12 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
 import { AddressesRoutesPaths } from '@pages/Addresses/Addresses.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { RESTApi } from 'API/REST';
 import { ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels } from '../Processes.enum';

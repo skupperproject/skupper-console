@@ -5,8 +5,8 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
 import App from 'App';
-import { queryClientConfig } from 'config';
 
+import { queryClientConfig } from './config';
 import { loadMockServer } from '../mocks/server';
 
 const queryClient = new QueryClient(queryClientConfig);

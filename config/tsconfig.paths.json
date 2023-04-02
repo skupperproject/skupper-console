@@ -5,7 +5,8 @@
       "@layout/*": ["layout/*"],
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@API/*": ["API/*"]
     }
   }
 }

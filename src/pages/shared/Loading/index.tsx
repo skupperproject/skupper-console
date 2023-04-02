@@ -54,7 +54,12 @@ interface LoadingPageProps {
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
   return (
     <TransitionPage delay={0.5}>
-      <Grid span={12} className=" pf-u-p-4xl sk-loading-page floating" style={isFLoating ? floatLoader : undefined}>
+      <Grid
+        span={12}
+        className=" pf-u-p-4xl sk-loading-page floating"
+        style={isFLoating ? floatLoader : undefined}
+        data-testid="sk-loading-page"
+      >
         <GridItem span={6} className=" pf-u-p-2xl">
           <TextContent className="pf-u-text-align-center">
             <Text component={TextVariants.h1}>{Labels.LoadingBrandTitle}</Text>

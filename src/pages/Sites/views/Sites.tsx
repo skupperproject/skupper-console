@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -10,7 +11,6 @@ import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { RESTApi } from 'API/REST';
 import { SiteResponse } from 'API/REST.interfaces';
 
 import { QueriesSites } from '../services/services.enum';

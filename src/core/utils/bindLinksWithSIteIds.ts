@@ -1,4 +1,4 @@
-import { LinkResponse, RouterResponse } from 'API/REST.interfaces';
+import { LinkResponse, RouterResponse } from '@API/REST.interfaces';
 import { LINK_DIRECTIONS } from 'config';
 
 export function bindLinksWithSiteIds(links: LinkResponse[], routers: RouterResponse[]) {

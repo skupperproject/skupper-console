@@ -18,6 +18,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTitle from '@core/components/SkTitle';
@@ -27,7 +28,6 @@ import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { RESTApi } from 'API/REST';
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';

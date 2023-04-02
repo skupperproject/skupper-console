@@ -15,6 +15,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
@@ -25,7 +26,6 @@ import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
-import { RESTApi } from 'API/REST';
 
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';

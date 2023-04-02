@@ -16,7 +16,8 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
-import { SYNC_DATA_INTERVAL } from 'config';
+
+import { SYNC_DATA_INTERVAL } from '../../../config';
 
 const TOOLTIP_UPDATE = 'Data Update';
 const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${

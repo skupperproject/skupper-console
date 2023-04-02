@@ -4,6 +4,7 @@ import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -16,7 +17,6 @@ import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
-import { RESTApi } from 'API/REST';
 import { ProcessPairsResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 

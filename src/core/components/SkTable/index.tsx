@@ -4,12 +4,12 @@ import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Too
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 
+import { SortDirection } from '@API/REST.enum';
 import { generateUUID } from '@core/utils/generateUUID';
 import { getNestedProperty } from '@core/utils/getNestedProperties';
-import { SortDirection } from 'API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { SKTableProps } from './SkTable.interface';
+import { DEFAULT_TABLE_PAGE_SIZE } from '../../../config';
 import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
