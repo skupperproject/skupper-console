@@ -14,10 +14,9 @@ import { ClockIcon, SyncIcon } from '@patternfly/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 
+import { SYNC_DATA_INTERVAL } from '@config/config';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
-
-import { SYNC_DATA_INTERVAL } from '../../../config';
 
 const TOOLTIP_UPDATE = 'Data Update';
 const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${

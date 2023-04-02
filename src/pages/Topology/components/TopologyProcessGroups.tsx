@@ -4,13 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { UPDATE_INTERVAL } from '@config/config';
+import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
-import { UPDATE_INTERVAL } from 'config';
 
-import GraphReactAdaptor from '../../../core/components/Graph/GraphReactAdaptor';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 

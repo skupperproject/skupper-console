@@ -12,7 +12,7 @@ import SideBar from '@layout/SideBar';
 import { isPrometheusActive, setPrometheusStartTime, setPrometheusUrl } from 'API/Prometheus.constant';
 import { routes } from 'routes';
 
-import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from './config';
+import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from './config/config';
 
 import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/patternfly-addons.css';

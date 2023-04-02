@@ -16,17 +16,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { UPDATE_INTERVAL } from '@config/config';
 import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphGroup, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
-import { UPDATE_INTERVAL } from 'config';
 
-import GraphReactAdaptor from '../../../core/components/Graph/GraphReactAdaptor';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { Labels } from '../Topology.enum';

@@ -36,7 +36,7 @@ export function loadMockServer() {
 
     const prefix = '/api/v1alpha1';
 
-    createServer({
+    return createServer({
       routes() {
         this.timing = DELAY_RESPONSE;
         this.pretender.get('*', this.pretender.passthrough);

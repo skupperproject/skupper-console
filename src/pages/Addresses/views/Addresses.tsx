@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -12,7 +13,6 @@ import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.
 import LoadingPage from '@pages/shared/Loading';
 import { PrometheusApi } from 'API/Prometheus';
 import { isPrometheusActive } from 'API/Prometheus.constant';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import {
   addressesColumns,

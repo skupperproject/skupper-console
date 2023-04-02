@@ -1,4 +1,4 @@
-import { BASE_URL_COLLECTOR } from '../config';
+import { BASE_URL_COLLECTOR } from '../config/config';
 
 const API_VERSION = '/api/v1alpha1';
 const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;

@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -8,7 +9,6 @@ import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { ServerColumnsNames } from '../Addresses.enum';
 import { ServerTableProps } from '../Addresses.interfaces';

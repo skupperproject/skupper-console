@@ -3,7 +3,7 @@ import React from 'react';
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
 import { Link, useLocation } from 'react-router-dom';
 
-import { RoutesPropsConfig } from 'config';
+import { RoutesPropsConfig } from '@config/config';
 
 const NavBar = function () {
   const { pathname } = useLocation();

@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -18,7 +19,6 @@ import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
 import { ProcessPairsResponse } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '../Processes.constant';

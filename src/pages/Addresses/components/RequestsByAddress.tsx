@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
@@ -12,7 +13,6 @@ import Metrics from '@pages/shared/Metrics';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { isPrometheusActive } from 'API/Prometheus.constant';
 import { RequestOptions } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import FlowPairsTable from './FlowPairsTable';
 import ServersTable from './ServersTable';

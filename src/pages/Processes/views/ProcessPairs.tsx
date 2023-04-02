@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -15,7 +16,6 @@ import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
-import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { HttpProcessesFlowPairsColumns, TcpProcessesFlowPairsColumns } from '../Processes.constant';

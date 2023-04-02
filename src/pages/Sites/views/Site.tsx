@@ -105,7 +105,7 @@ const Site = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter>
+      <Grid hasGutter data-testid="sk-site-view">
         <GridItem>
           <SkTitle
             title={name}

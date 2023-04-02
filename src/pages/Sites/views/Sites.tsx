@@ -40,23 +40,21 @@ const Sites = function () {
 
   return (
     <TransitionPage>
-      <>
+      <div data-testid="sk-sites-view">
         <SkTitle title={SiteLabels.Section} description={SiteLabels.Description} />
-        <div>
-          <SkTable
-            columns={siteColumns}
-            rows={sites}
-            components={{
-              linkCell: (props: LinkCellProps<SiteResponse>) =>
-                LinkCell({
-                  ...props,
-                  type: 'site',
-                  link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
-                })
-            }}
-          />
-        </div>
-      </>
+        <SkTable
+          columns={siteColumns}
+          rows={sites}
+          components={{
+            linkCell: (props: LinkCellProps<SiteResponse>) =>
+              LinkCell({
+                ...props,
+                type: 'site',
+                link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
+              })
+          }}
+        />
+      </div>
     </TransitionPage>
   );
 };
