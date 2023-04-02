@@ -3,12 +3,8 @@ import React, { useCallback, useState } from 'react';
 import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { TableComposable, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
-import { useQuery } from '@tanstack/react-query';
 
 import { generateUUID } from '@core/utils/generateUUID';
-import { HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
-import { axiosFetch } from 'API/axiosMiddleware';
-import { getResults } from 'API/REST';
 import { SortDirection } from 'API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
@@ -18,34 +14,23 @@ import EmptyData from '../EmptyData';
 const FIRST_PAGE_NUMBER = 1;
 const NO_RESULT_FOUND_LABEL = 'No results found';
 
-function getProperty(obj: any, prop: any) {
-  if (!prop) {
-    return {};
+function getNestedProperty<T, K extends keyof T>(obj: T, keys: K[]): T[K] | undefined {
+  // Return undefined if prop is falsy or prop is not a string
+  if (!keys.length) {
+    return undefined;
   }
 
-  const parts = prop.split('.');
-
-  if (parts.length === 1) {
-    return obj[prop];
-  }
-
-  if (Array.isArray(parts)) {
-    const last = parts.pop();
-    const l = parts.length;
-    let i = 1;
-    let current = parts[0];
-
-    while ((obj = obj[current]) && i < l) {
-      current = parts[i];
-      i++;
+  let nestedObject: any = obj;
+  for (const key of keys) {
+    // Add a type guard to ensure the nested object is not null or undefined
+    if (nestedObject == null) {
+      return undefined;
     }
 
-    if (obj) {
-      return obj[last];
-    }
-  } else {
-    throw 'parts is not valid array';
+    nestedObject = nestedObject[key];
   }
+
+  return nestedObject as T[K];
 }
 
 const SkTable = function <T>({
@@ -55,62 +40,14 @@ const SkTable = function <T>({
   rows = [],
   rowsCount = rows.length,
   components,
-  urlPagination = '',
-  onGetFilters,
-  onError,
-  onLoaded,
+  onGetFilters, // if defined the remote pagination/sort is activated
   pageSizeStart,
   ...props
 }: SKTableProps<T>) {
-  // sort
   const [activeSortIndex, setActiveSortIndex] = useState<number>();
   const [activeSortDirection, setActiveSortDirection] = useState<SortDirection>();
-  // pagination
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
   const [pageSize, setPageSize] = useState<number>(pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
-
-  const { data: page } = useQuery({
-    queryKey: [
-      urlPagination, // name of the query
-      currentPageNumber,
-      pageSize,
-      activeSortIndex,
-      activeSortDirection
-    ],
-    queryFn: () => fetchRows(currentPageNumber - 1, pageSize, activeSortIndex, activeSortDirection),
-    keepPreviousData: true,
-    onError: handleError,
-    enabled: !!urlPagination
-  });
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    if (onError) {
-      onError(httpStatus);
-    }
-  }
-
-  const fetchRows = async (
-    offset: number,
-    limit: number,
-    sortColumnIndex?: number,
-    sortColumnDirection?: SortDirection
-  ) => {
-    const prop = sortColumnIndex !== undefined ? columns[sortColumnIndex].prop?.toString().split('.') : undefined;
-
-    const { data } = await axiosFetch(urlPagination || '', {
-      params: {
-        offset: offset * limit,
-        limit,
-        sortBy: prop !== undefined ? `${prop[prop?.length - 1]}.${sortColumnDirection}` : null
-      }
-    });
-
-    if (onLoaded) {
-      onLoaded(true);
-    }
-
-    return data;
-  };
 
   const getSortParams = useCallback(
     (columnIndex: number): ThProps['sort'] => ({
@@ -167,40 +104,46 @@ const SkTable = function <T>({
     }
   }
 
-  const totalRows = page ? page.timeRangeCount : rowsCount;
-  let rowsSorted = page ? (getResults(page) as T[]) || [] : rows;
+  let rowsSorted = rows;
 
-  rowsSorted = rowsSorted.sort((a, b) => {
-    const columnName = columns[activeSortIndex || 0].prop as keyof T;
+  // enable the local sort in case the onGetFilters (remote pagination) is not defined
+  if (!onGetFilters) {
+    // Get the name of the currently active sort column, if any.
+    const columnName = columns[activeSortIndex || 0].prop as string | undefined;
+    const sortDirectionMultiplier = activeSortDirection === 'desc' ? -1 : 1;
 
-    const paramA = getProperty(a, columnName);
-    const paramB = getProperty(b, columnName);
+    // Sort the rows array based on the values of the currently active sort column and direction.
+    rowsSorted = rows.sort((a, b) => {
+      if (!columnName) {
+        return 0;
+      }
 
-    if (paramA === paramB) {
-      return 0;
-    }
+      // Get the values of the sort column for the two rows being compared, and handle null values.
+      const paramA = getNestedProperty(a, (columnName as string).split('.') as (keyof T)[]);
+      const paramB = getNestedProperty(b, (columnName as string).split('.') as (keyof T)[]);
 
-    if (activeSortDirection === 'asc') {
-      return paramA > paramB ? 1 : -1;
-    }
+      if (paramA == null || paramB == null || paramA === paramB) {
+        return 0;
+      }
 
-    if (activeSortDirection === 'desc') {
-      return paramA < paramB ? 1 : -1;
-    }
-
-    return 0;
-  });
-
+      return paramA > paramB ? sortDirectionMultiplier : -sortDirectionMultiplier;
+    });
+  }
   let skRows = rowsSorted.map((row) => ({
     id: generateUUID(),
-    columns: columns.map((column) => ({
-      ...column,
-      data: row,
-      value: getProperty(row, column.prop)
-    }))
+    columns: columns.map((column) => {
+      const { prop } = column;
+      const value = prop ? getNestedProperty(row, (prop as string).split('.') as (keyof T)[]) : '';
+
+      return {
+        ...column,
+        data: row,
+        value
+      };
+    })
   }));
 
-  if (!urlPagination && !onGetFilters && pageSizeStart) {
+  if (!onGetFilters && pageSizeStart) {
     skRows = skRows.slice((currentPageNumber - 1) * pageSize, (currentPageNumber - 1) * pageSize + pageSize);
   }
 
@@ -294,11 +237,11 @@ const SkTable = function <T>({
             })}
         </Tbody>
       </TableComposable>
-      {(pageSizeStart || urlPagination || onGetFilters) && totalRows > pageSize && (
+      {(pageSizeStart || onGetFilters) && rowsCount > pageSize && (
         <Pagination
           className="pf-u-my-xs"
           perPageComponent="button"
-          itemCount={totalRows}
+          itemCount={rowsCount}
           perPage={pageSize}
           page={currentPageNumber}
           onSetPage={handleSetPageNumber}

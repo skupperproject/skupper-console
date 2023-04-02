@@ -12,9 +12,9 @@ import Graph from './Graph';
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
   nodes,
   edges,
+  groups,
   onClickEdge,
   onClickNode,
-  options,
   nodeSelected
 }) {
   const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
@@ -54,19 +54,24 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
       if ($node && nodes.length && !topologyGraphInstance) {
         const { width, height } = $node.getBoundingClientRect();
 
-        const topologyGraph = new Graph($node, width, height, options, nodeSelected);
+        const topologyGraph = new Graph({
+          $node,
+          width,
+          height,
+          nodeSelected
+        });
 
         topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
         topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
-        topologyGraph.run(nodes, sanitizeEdges(nodes, edges));
+        topologyGraph.run({ nodes, edges: sanitizeEdges(nodes, edges), groups });
 
         setTopologyGraphInstance(topologyGraph);
       }
     },
-    [nodes, topologyGraphInstance, edges, options, nodeSelected, handleOnClickNode, handleOnClickEdge]
+    [nodes, topologyGraphInstance, edges, groups, nodeSelected, handleOnClickNode, handleOnClickEdge]
   );
 
-  // Updates topology
+  // This effect updates the topology graph instance when there are changes to the nodes, edges or groups.
   useEffect(() => {
     if (
       topologyGraphInstance &&
@@ -74,12 +79,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
       (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
         JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
     ) {
-      topologyGraphInstance.updateModel(nodes, sanitizeEdges(nodes, edges));
+      topologyGraphInstance.updateModel({ nodes, edges: sanitizeEdges(nodes, edges), groups });
 
       prevNodesRef.current = nodes;
       prevEdgesRef.current = edges;
     }
-  }, [nodes, edges, topologyGraphInstance, options?.showGroup, handleSaveNodesPositions]);
+  }, [nodes, edges, groups, topologyGraphInstance, handleSaveNodesPositions]);
 
   const saveNodesPositions = useCallback(() => {
     const topologyNodes = topologyGraphInstance?.getNodes();
@@ -89,13 +94,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
     }
   }, [handleSaveNodesPositions, topologyGraphInstance]);
 
-  // Save topology positions in the local storage before exit
+  /**This useEffect function is responsible for saving the positions of the nodes on the topology to the local storage before the user exits the page.**/
   useEffect(() => {
-    // handle events like browser refresh, close tab, back button
     window.addEventListener('beforeunload', saveNodesPositions);
 
+    // clean up function to remove the event listener when the component unmounts
     return () => {
-      // handle switch tab
+      // call the saveNodesPositions function to save the nodes positions one last time
       saveNodesPositions();
       window.removeEventListener('beforeunload', saveNodesPositions);
     };
@@ -107,31 +112,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
         <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
       </TransitionPage>
 
-      <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={() => topologyGraphInstance?.zoomIn()}
-          icon={<SearchPlusIcon />}
-        />
-
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={() => topologyGraphInstance?.zoomOut()}
-          icon={<SearchMinusIcon />}
-        />
-
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={() => topologyGraphInstance?.zoomReset()}
-          icon={<ExpandIcon />}
-        />
-      </span>
+      {topologyGraphInstance && <ZoomControls topologyGraphInstance={topologyGraphInstance} />}
     </div>
   );
 };
@@ -148,3 +129,41 @@ function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge<string>[]) {
 
   return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
 }
+
+type ZoomControlsProps = {
+  topologyGraphInstance: Graph;
+};
+
+export const ZoomControls = function ({ topologyGraphInstance }: ZoomControlsProps) {
+  const handleIncreaseZoom = () => topologyGraphInstance?.increaseZoomLevel();
+  const handleDecreaseZoom = () => topologyGraphInstance?.decreaseZoomLevel();
+  const handleZoomToDefault = () => topologyGraphInstance?.zoomToDefaultPosition();
+
+  return (
+    <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+      <Button
+        isActive={true}
+        className="pf-u-m-xs"
+        variant="primary"
+        onClick={handleIncreaseZoom}
+        icon={<SearchPlusIcon />}
+      />
+
+      <Button
+        isActive={true}
+        className="pf-u-m-xs"
+        variant="primary"
+        onClick={handleDecreaseZoom}
+        icon={<SearchMinusIcon />}
+      />
+
+      <Button
+        isActive={true}
+        className="pf-u-m-xs"
+        variant="primary"
+        onClick={handleZoomToDefault}
+        icon={<ExpandIcon />}
+      />
+    </span>
+  );
+};

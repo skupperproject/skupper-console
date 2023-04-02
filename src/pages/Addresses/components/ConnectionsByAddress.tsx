@@ -37,7 +37,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   );
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
-    [QueriesAddresses.GetFlowPairsByAddress, addressId],
+    [QueriesAddresses.GetFlowPairsByAddress, addressId, connectionsQueryParamsPaginated],
     () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, connectionsQueryParamsPaginated) : undefined),
     {
       keepPreviousData: true,
@@ -46,7 +46,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   );
 
   const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
-    [QueriesAddresses.GetProcessesByAddress, addressId],
+    [QueriesAddresses.GetProcessesByAddress, addressId, connectionsQueryParamsPaginated],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, connectionsQueryParamsPaginated) : null),
     {
       onError: handleError,

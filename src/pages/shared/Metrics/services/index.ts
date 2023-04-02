@@ -94,43 +94,35 @@ const MetricsController = {
 export default MetricsController;
 
 function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null {
-  const dataNormalized = convertPrometheusDataInChartData(data);
+  // Convert the Prometheus API result into a chart data format
+  const prometheusData = convertPrometheusDataInChartData(data);
 
-  if (!dataNormalized) {
+  if (!prometheusData) {
     return null;
   }
 
-  const { values } = dataNormalized;
+  const { values } = prometheusData;
 
-  const statusCode2xx = {
-    total: values[0] ? (values[0].length > 1 ? values[0][1].y - values[0][0].y : values[0][0].y) : 0,
-    label: '2xx',
-    data: values[0]
-  };
+  // Helper function to create a statusCodeMetric object
+  const createStatusCodeMetric = (index: number, label: string): ResponseMetrics['statusCode2xx'] => {
+    const responseValues = values[index] ?? [];
 
-  const statusCode3xx = {
-    total: values[1] ? (values[1].length > 1 ? values[1][1].y - values[1][0].y : values[1][0].y) : 0,
-    label: '3xx',
-    data: values[1]
-  };
-  const statusCode4xx = {
-    total: values[2] ? (values[2].length > 1 ? values[2][1].y - values[2][0].y : values[2][0].y) : 0,
-    label: '4xx',
-    data: values[2]
-  };
-  const statusCode5xx = {
-    total: values[3] ? (values[3].length > 1 ? values[3][1].y - values[3][0].y : values[3][0].y) : 0,
-    label: '5xx',
-    data: values[3]
+    // Calculate the total count of requests with the status code
+    const total =
+      responseValues.length > 1 ? responseValues[data.length - 1].y - responseValues[0].y : responseValues[0]?.y ?? 0;
+
+    return { total, label, data: responseValues };
   };
 
-  return {
-    statusCode2xx,
-    statusCode3xx,
-    statusCode4xx,
-    statusCode5xx,
-    total: statusCode2xx.total + statusCode3xx.total + statusCode4xx.total + statusCode5xx.total
-  };
+  // Create the statusCodeMetric objects for each status code
+  const statusCode2xx = createStatusCodeMetric(0, '2xx');
+  const statusCode3xx = createStatusCodeMetric(1, '3xx');
+  const statusCode4xx = createStatusCodeMetric(2, '4xx');
+  const statusCode5xx = createStatusCodeMetric(3, '5xx');
+
+  const total = statusCode2xx.total + statusCode3xx.total + statusCode4xx.total + statusCode5xx.total;
+
+  return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
 function normalizeRequests(data: PrometheusApiResult[], label: string): RequestMetrics[] | null {
@@ -140,13 +132,12 @@ function normalizeRequests(data: PrometheusApiResult[], label: string): RequestM
     return null;
   }
 
-  return axisValues.flatMap((values) => {
-    const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
+  const requestsNormalized: RequestMetrics[] = [];
 
+  for (const values of axisValues) {
+    const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
     const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
     const avgRequestRateInterval = formatToDecimalPlacesIfCents(sumRequestRateInterval / values.length, 2);
-
-    const requestsNormalized: RequestMetrics[] = [];
 
     requestsNormalized.push({
       data: values,
@@ -154,9 +145,9 @@ function normalizeRequests(data: PrometheusApiResult[], label: string): RequestM
       totalRequestInterval,
       avgRequestRateInterval
     });
+  }
 
-    return requestsNormalized;
-  });
+  return requestsNormalized;
 }
 
 function normalizeLatencies({

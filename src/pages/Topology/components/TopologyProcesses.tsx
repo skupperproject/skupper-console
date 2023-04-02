@@ -16,7 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { nodeColors } from '@core/components/Graph/Graph.constants';
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphGroup, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
@@ -35,7 +35,7 @@ const processesQueryParams = {
   filter: 'processRole.external'
 };
 
-const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> = function ({
+const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined }> = function ({
   addressId,
   id: processId
 }) {
@@ -44,7 +44,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
   const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge<string>[]>([]);
-  const [nodeSelected] = useState<string | null>(processId || null);
+  const [groups, setGroups] = useState<GraphGroup[]>();
+
+  const [nodeSelected] = useState<string | undefined>(processId);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
@@ -142,35 +144,42 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
     return optionsWithDefault;
   }, [addresses]);
 
-  // Refresh topology data
-  const updateTopologyData = useCallback(() => {
+  // This effect is triggered when no address is currently selected
+  useEffect(() => {
     if (sites && processes) {
-      const processesNodes = TopologyController.getNodesFromProcesses(
-        processes,
-        TopologyController.getNodesFromSitesOrProcessGroups(sites)
-      );
+      // Get nodes from site and process groups
+      const siteGroups = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteGroups);
 
-      // no address id selected
+      // Check if no address is selected
       if (processesPairs && !addressIdSelected) {
         const processesLinks = TopologyController.getProcessesLinksFromProcessPairs(processesPairs);
 
         setNodes(processesNodes);
         setLinks(TopologyController.getEdgesFromLinks(processesLinks));
-
-        return;
+        setGroups(siteGroups);
       }
+    }
+  }, [sites, processes, processesPairs, addressIdSelected]);
 
-      // address id selected
+  // This effect is triggered when one address is currently selected
+  useEffect(() => {
+    if (sites && processes) {
+      // Get nodes from site and process groups
+      const siteGroups = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteGroups);
+
       if (addressIdSelected && flowPairsByAddress) {
+        // Get links between processes in the selected address
         const processesLinksByAddress = TopologyController.getProcessesLinksFromFlowPairs(flowPairsByAddress);
 
-        // all process ids in the address space selected
+        // Merge all process IDs in the selected address
         const processIdsFromAddress = [
           ...(processesLinksByAddress?.map(({ source }) => source) || []),
           ...(processesLinksByAddress?.map(({ target }) => target) || [])
         ];
 
-        //disable all processes that are not part of the address selected
+        // Disable all processes that are not part of the selected address
         const nodesFiltered = processesNodes.map((node) => {
           if (!processIdsFromAddress.includes(node.id)) {
             return { ...node, isDisabled: true };
@@ -179,15 +188,13 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
           return node;
         });
 
+        // Set the nodes, links and groups for the topology
         setNodes(nodesFiltered);
         setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
+        setGroups(siteGroups);
       }
     }
   }, [sites, processes, processesPairs, addressIdSelected, flowPairsByAddress]);
-
-  useEffect(() => {
-    updateTopologyData();
-  }, [updateTopologyData]);
 
   if (isLoadingProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
     return <LoadingPage />;
@@ -208,10 +215,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | null }> =
       <GraphReactAdaptor
         nodes={nodes}
         edges={links}
+        groups={groups}
         onClickNode={handleGetSelectedNode}
         onClickEdge={handleGetSelectedEdge}
         nodeSelected={nodeSelected}
-        options={{ showGroup: true }}
       />
 
       <Panel>

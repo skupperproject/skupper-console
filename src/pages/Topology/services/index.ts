@@ -82,38 +82,30 @@ export const TopologyController = {
           name,
           x: fx || 0,
           y: fy || 0,
-          fx,
-          fy,
-          groupName: name,
-          group: index,
+          group: identity,
           color: getColor(processGroupRole === 'internal' ? 16 : index),
           img: processGroupRole === 'internal' ? skupperProcessSVG : recType === 'SITE' ? siteSVG : processSVG
         };
       }),
 
-  getNodesFromProcesses: (processes: ProcessResponse[], parentNodes: GraphNode[]): GraphNode[] =>
+  getNodesFromProcesses: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
     processes
-      ?.map(({ name, identity, parent, processRole }) => {
-        const groupId = parent;
-        const parentNode = parentNodes?.find(({ id }) => id === groupId);
-        const groupIndex = parentNode?.group || 0;
-
+      ?.map(({ name, identity, parent: siteId, processRole }) => {
         const { fx, fy } = getPositionFromLocalStorage(identity);
+
+        const groupIndex = groups.findIndex(({ id }) => id === siteId);
 
         return {
           id: identity,
           name,
           x: fx || 0,
           y: fy || 0,
-          fx,
-          fy,
-          groupName: parentNode?.name || '',
-          group: groupIndex,
+          group: siteId,
           color: getColor(processRole === 'internal' ? 16 : groupIndex),
           img: processRole === 'internal' ? skupperProcessSVG : processSVG
         };
       })
-      .sort((a, b) => a.group - b.group),
+      .sort((a, b) => a.group.localeCompare(b.group)),
 
   getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
     links?.map(({ source, target, clickable }) => ({

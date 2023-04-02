@@ -10,10 +10,7 @@ export interface SKTableProps<T> {
   isStriped?: boolean;
   isPlain?: boolean;
   shouldSort?: boolean;
-  urlPagination?: string;
   onGetFilters?: Function;
-  onError?: Function;
-  onLoaded?: Function;
 }
 
 export interface SKColumn<T> {

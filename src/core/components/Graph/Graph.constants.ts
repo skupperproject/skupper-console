@@ -20,3 +20,5 @@ export const nodeColors = [
   '#9edae5',
   '#aec7e8'
 ];
+
+export const nodeColorsDefault = nodeColors[nodeColors.length - 1];

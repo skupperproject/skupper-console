@@ -18,10 +18,10 @@ const processGroupsQueryParams = {
   filter: 'processGroupRole.external'
 };
 
-const TopologyProcessGroups: FC<{ id?: string | null }> = function ({ id }) {
+const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
   const navigate = useNavigate();
   const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
-  const [nodeSelected] = useState<string | null>(id || null);
+  const [nodeSelected] = useState<string | undefined>(id);
 
   const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],

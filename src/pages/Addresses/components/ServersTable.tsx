@@ -10,7 +10,7 @@ import { ProcessResponse } from 'API/REST.interfaces';
 import { DEFAULT_TABLE_PAGE_SIZE } from 'config';
 
 import { ServerColumnsNames } from '../Addresses.enum';
-import { ProcessesTableProps } from '../Addresses.interfaces';
+import { ServerTableProps } from '../Addresses.interfaces';
 
 const components = {
   nameLinkCellProcess: (props: LinkCellProps<ProcessResponse>) =>
@@ -56,7 +56,7 @@ const columns = [
   }
 ];
 
-const ServersTable: FC<ProcessesTableProps> = function ({ processes }) {
+const ServersTable: FC<ServerTableProps> = function ({ processes }) {
   return <SkTable columns={columns} rows={processes} pageSizeStart={DEFAULT_TABLE_PAGE_SIZE} components={components} />;
 };
 
