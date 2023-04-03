@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
 
-# Table of Contents
+## Table of Contents
 
 - [Skupper Console](#skupper-console)
   - [Status](#status)
@@ -25,8 +25,6 @@ This demo is synchronized with the latest version of the Skupper or a modified v
 ## Enable the console from Skupper
 
 To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this  [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
-
----
 
 ## Development
 
@@ -112,23 +110,23 @@ Note that the above commands assume that you have the necessary dependencies ins
 
 The project has the following directory structure:
 
-* `build`: Contains the output of the production build, which is the compiled and optimized version of the application that can be deployed to a server.
-* `config`: Contains the configuration files for the development tools used in the project, such as webpack, jest, typescript paths, eslint, etc.
-* `cypress`: Contains the integration testing code using Cypress framework, which is used to test the application's user interface and user interactions.
-* `mocks`: Contains a mock server that runs on a static dataset to simulate a basic network, which is useful for testing the application's data handling and network requests.
-* `public`: Contains the index.html file, which is the entry point of the application and serves as the shell for the application's content.
-* `src`: Contains the source and test code of the application, including all the React components, utility functions, and data models.
-  * `API`: Contains the Api, which is responsible for handling all the network requests and data fetching for the application.
-  * `assets`: Contains images and other assets used in the application, such as icons, logos, and background images.
-  * `core/components`: Contains generic and reusable React components, such as Navbar, topology graph, and table, that can be used throughout the application.
-  * `core/utils`: Contains generic app functionalities such as date and formatting utilities that are used throughout the application.
-  * `layout`: Contains the components that form the foundation of the application's structure, such as the header, footer, and navigation menu.
-  * `pages`: Contains the components that are displayed within the container, which represent the different pages or views of the application.
-    * `<page>/components`: Contains the components of a particular view, such as the list and  details.
-    * `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
-    * `<page>/views`: Contains a collection of views for a particular page, such as the  list view or details view.
-  * `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
-  * `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
+- `build`: Contains the output of the production build, which is the compiled and optimized version of the application that can be deployed to a server.
+- `config`: Contains the configuration files for the development tools used in the project, such as webpack, jest, typescript paths, eslint, etc.
+- `cypress`: Contains the integration testing code using Cypress framework, which is used to test the application's user interface and user interactions.
+- `mocks`: Contains a mock server that runs on a static dataset to simulate a basic network, which is useful for testing the application's data handling and network requests.
+- `public`: Contains the index.html file, which is the entry point of the application and serves as the shell for the application's content.
+- `src`: Contains the source and test code of the application, including all the React components, utility functions, and data models.
+  - `API`: Contains the Api, which is responsible for handling all the network requests and data fetching for the application.
+  - `assets`: Contains images and other assets used in the application, such as icons, logos, and background images.
+  - `core/components`: Contains generic and reusable React components, such as Navbar, topology graph, and table, that can be used throughout the application.
+  - `core/utils`: Contains generic app functionalities such as date and formatting utilities that are used throughout the application.
+  - `layout`: Contains the components that form the foundation of the application's structure, such as the header, footer, and navigation menu.
+  - `pages`: Contains the components that are displayed within the container, which represent the different pages or views of the application.
+    - `<page>/components`: Contains the components of a particular view, such as the list and  details.
+    - `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
+    - `<page>/views`: Contains a collection of views for a particular page, such as the  list view or details view.
+  - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
+  - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
 
 ### Page sections
 

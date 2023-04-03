@@ -98,7 +98,7 @@ const Process = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter>
+      <Grid hasGutter data-testid={`sk-process-view-${processId}`}>
         <GridItem>
           <SkTitle
             title={process.name}

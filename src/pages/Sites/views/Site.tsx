@@ -105,7 +105,7 @@ const Site = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter data-testid="sk-site-view">
+      <Grid hasGutter data-testid={`sk-site-view-${siteId}`}>
         <GridItem>
           <SkTitle
             title={name}
@@ -121,11 +121,6 @@ const Site = function () {
             </CardTitle>
             <CardBody>
               <DescriptionList>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>{SiteLabels.Name}</DescriptionListTerm>
-                  <DescriptionListDescription>{name}</DescriptionListDescription>
-                </DescriptionListGroup>
-
                 <DescriptionListGroup>
                   <DescriptionListTerm>{SiteLabels.Namespace}</DescriptionListTerm>
                   <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
@@ -186,7 +181,7 @@ const Site = function () {
                     <ListItem key={identity}>
                       <Flex>
                         <ResourceIcon type="process" />
-                        <Link to={`${ProcessesRoutesPaths.Processes}/${processName}}@${identity}`}>{processName}</Link>
+                        <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${identity}`}>{processName}</Link>
                       </Flex>
                     </ListItem>
                   ))}

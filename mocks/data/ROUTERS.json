@@ -6,11 +6,11 @@
       "parent": "site-1",
       "startTime": 1674048674810887,
       "endTime": 0,
-      "name": "0/public1-skupper-router-7b45b6b8f4-52tjs",
-      "namespace": "config-grpc-public1-test",
+      "name": "0/public1-skupper-router-site-1",
+      "namespace": "config-site-1",
       "imageName": "skupper-router",
       "imageVersion": "latest",
-      "hostname": "skupper-router-7b45b6b8f4-52tjs",
+      "hostname": "skupper-router-site-1",
       "buildVersion": "UNKNOWN"
     },
     {
@@ -19,11 +19,11 @@
       "parent": "site-2",
       "startTime": 1674048715265181,
       "endTime": 0,
-      "name": "0/private1-skupper-router-bcd8f5469-6z7k6",
-      "namespace": "config-grpc-private-test",
+      "name": "0/private1-skupper-router-site-2",
+      "namespace": "config-site-2",
       "imageName": "skupper-router",
       "imageVersion": "latest",
-      "hostname": "skupper-router-bcd8f5469-6z7k6",
+      "hostname": "skupper-router-site-2",
       "buildVersion": "UNKNOWN"
     },
     {
@@ -32,11 +32,11 @@
       "parent": "site-3",
       "startTime": 1674048695584567,
       "endTime": 0,
-      "name": "0/public2-skupper-router-5487fdd5c8-hth7l",
-      "namespace": "config-grpc-public2-test",
+      "name": "0/public2-skupper-router-site-3",
+      "namespace": "config-site-3",
       "imageName": "skupper-router",
       "imageVersion": "latest",
-      "hostname": "skupper-router-5487fdd5c8-hth7l",
+      "hostname": "skupper-router-site-3",
       "buildVersion": "UNKNOWN"
     }
   ],
