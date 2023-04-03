@@ -7,7 +7,7 @@
       "startTime": 1674048706622878,
       "endTime": 0,
       "mode": "interior",
-      "name": "public2-skupper-router-5487fdd5c8-hth7l",
+      "name": "public2-skupper-router-site-3",
       "linkCost": 1,
       "direction": "incoming"
     },
@@ -18,7 +18,7 @@
       "startTime": 1674151543561656,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-bcd8f5469-6z7k6",
+      "name": "private1-skupper-router-site-2",
       "linkCost": 1,
       "direction": "incoming"
     },
@@ -29,7 +29,7 @@
       "startTime": 1674149422366200,
       "endTime": 0,
       "mode": "interior",
-      "name": "public2-skupper-router-5487fdd5c8-hth7l",
+      "name": "public2-skupper-router-site-3",
       "linkCost": 1,
       "direction": "outgoing"
     },
@@ -40,7 +40,7 @@
       "startTime": 1674048729859049,
       "endTime": 0,
       "mode": "interior",
-      "name": "public1-skupper-router-7b45b6b8f4-52tjs",
+      "name": "public1-skupper-router-site-1",
       "linkCost": 1,
       "direction": "outgoing"
     },
@@ -51,7 +51,7 @@
       "startTime": 1674048705833609,
       "endTime": 0,
       "mode": "interior",
-      "name": "public1-skupper-router-7b45b6b8f4-52tjs",
+      "name": "public1-skupper-router-site-1",
       "linkCost": 1,
       "direction": "outgoing"
     },
@@ -62,7 +62,7 @@
       "startTime": 1674151543581947,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-bcd8f5469-6z7k6",
+      "name": "private1-skupper-router-site-2",
       "linkCost": 1,
       "direction": "incoming"
     }

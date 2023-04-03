@@ -2,17 +2,29 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)
 
-Web console status: **Tech Preview**
+## Table of Contents
 
-Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
+- [Skupper Console](#skupper-console)
+  - [Status](#status)
+  - [Enable the console from Skupper](#enable-the-console-from-skupper)
+- [Development](#development)
+  - [Quick start](#quick-start)
+  - [Run the console with demo routes](#run-the-console-with-demo-routes)
+  - [Run the console with Skupper (work in progress)](#run-the-console-with-skupper-work-in-progress)
+  - [Testing](#testing)
+  - [Project Structure](#project-structure)
 
-This demo is synchronized with the current main branch and utilizes either the latest version of Skupper or a modified version thereof.
+Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
+
+## Status
+
+Skupper Console is currently in Tech Preview. Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
+
+This demo is synchronized with the latest version of the Skupper or a modified version of it, using the current main branch.
 
 ## Enable the console from Skupper
 
-The Web console has been integrated into [Skupper](https://github.com/skupperproject/skupper) from the version **1.3**. To facilitate access to the console, please refer to the step-by-step instructions detailed in [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc).
-
----
+To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this  [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
 
 ## Development
 
@@ -21,20 +33,19 @@ make sure you install them with `yarn` and commit the `yarn.lock` file.
 
 ### Quick start
 
-```bash
-yarn install
-yarn prepare
-yarn start
-```
+To get started quickly, follow the steps below:
 
-then open <http://localhost:3000>
+1. Install the required dependencies by running `yarn install`.
+2. Start the application by running `yarn start`.
+3. Open <http://localhost:3000> in your web browser.
 
 *Note*:
 
-* `yarn prepare` install husky.  run this command just one time.
-* `yarn start` run the application using the data in the mocks folder. No metrics data and charts are available at the moment.
+Running `yarn start` uses the data in the mock folder, which means that no metrics data or charts will be available.
 
 ### Run the console with demo routes
+
+To run the console with demo routes, execute the following command:
 
 ```bash
 API_HOST_FLOW_COLLECTOR=https://flow-collector-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud PROMETHEUS_URL=https://prometheus-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud/api/v1 yarn start
@@ -71,11 +82,15 @@ kubectl set env deployment/skupper-service-controller USE_CORS=yes
 
 ### Unit
 
+To run unit tests, use the following command:
+
 ```bash
 yarn test
 ```
 
 ### Integration
+
+To run integration tests, use the following command:
 
 ```bash
 yarn cy
@@ -83,28 +98,38 @@ yarn cy
 
 #### Development mode
 
+To run integration tests in development mode and open the Cypress test runner, use the following command:
+
 ```bash
 yarn cy:open
 ```
 
-## Directory Structure
+Note that the above commands assume that you have the necessary dependencies installed and configured for testing.
 
-* `build`: Production build output
-* `config`: dev tool configurations
-* `cypress`: Integration testing
-* `mocks`:It contains a mock server to run a static dataset representing a basic network
-* `public`: Home of index.html
-* `src`: Source and test code
-* `src/API`: React top level component
-* `src/assets`: Images and other assets
-* `src/core/components`: Generic and reusable React components
-* `src/core/utils`: Generic app functionalities like dates and formatting utilities
-* `src/layout`: The components that form the foundation of the application's structure
-* `src/pages`:The components displayed within the container
-* `src/pages/<page>/components`: components of the view
-* `src/pages/<page>/services`:  data normalization/sanitization/manipulation utilities for this specific page
-* `src/pages/<page>/views`: Collection of views
-* `src/config`: Configuration
-* `src/routes`: Aggregation of page routes
+## Project Structure
 
-Each page section includes constants, interfaces, and enums that are specific to the React views and components used in the section. If you require more generic modules or API-related items, it is recommended that you access them from the modules located in the `services` folder.
+The project has the following directory structure:
+
+- `build`: Contains the output of the production build, which is the compiled and optimized version of the application that can be deployed to a server.
+- `config`: Contains the configuration files for the development tools used in the project, such as webpack, jest, typescript paths, eslint, etc.
+- `cypress`: Contains the integration testing code using Cypress framework, which is used to test the application's user interface and user interactions.
+- `mocks`: Contains a mock server that runs on a static dataset to simulate a basic network, which is useful for testing the application's data handling and network requests.
+- `public`: Contains the index.html file, which is the entry point of the application and serves as the shell for the application's content.
+- `src`: Contains the source and test code of the application, including all the React components, utility functions, and data models.
+  - `API`: Contains the Api, which is responsible for handling all the network requests and data fetching for the application.
+  - `assets`: Contains images and other assets used in the application, such as icons, logos, and background images.
+  - `core/components`: Contains generic and reusable React components, such as Navbar, topology graph, and table, that can be used throughout the application.
+  - `core/utils`: Contains generic app functionalities such as date and formatting utilities that are used throughout the application.
+  - `layout`: Contains the components that form the foundation of the application's structure, such as the header, footer, and navigation menu.
+  - `pages`: Contains the components that are displayed within the container, which represent the different pages or views of the application.
+    - `<page>/components`: Contains the components of a particular view, such as the list and  details.
+    - `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
+    - `<page>/views`: Contains a collection of views for a particular page, such as the  list view or details view.
+  - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
+  - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
+
+### Page sections
+
+Each page section includes constants, interfaces, and enums that are specific to the React views and components used in that section. If you require more generic modules or API-related items, we recommend accessing them from the services folder modules.
+
+Please note that the `services` folder contains utilities for data normalization, sanitization, and manipulation for a specific page, while other generic app functionalities such as date and formatting utilities can be found in the `core/utils` folder.
