@@ -47,19 +47,21 @@ export const TopologyController = {
     return processesLinks;
   },
 
-  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] => {
-    const processesLinks = flowPairsByAddress.map(({ identity, processAggregateId }) => ({
-      key: identity,
-      clickable: true,
-      source: processAggregateId.split('-to-')[0],
-      target: processAggregateId.split('-to-')[1]
-    }));
+  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] =>
+    flowPairsByAddress.reduce<LinkTopology[]>((acc, { identity, processAggregateId }) => {
+      const [source, target] = processAggregateId.split('-to-');
+      const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
+      if (!exists) {
+        acc.push({
+          key: identity,
+          clickable: true,
+          source,
+          target
+        });
+      }
 
-    // we just need to find one flow pairs between 2 processes to detect a process pair
-    return processesLinks.filter(
-      (v, i, a) => a.findIndex((v2) => v2.source === v.source && v2.target === v.target) === i
-    );
-  },
+      return acc;
+    }, []),
 
   getProcessGroupsLinks: (links: ProcessPairsResponse[]): LinkTopology[] => {
     const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
