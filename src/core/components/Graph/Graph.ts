@@ -1,5 +1,4 @@
 import { drag } from 'd3-drag';
-import { easeLinear } from 'd3-ease';
 import {
   forceSimulation,
   forceCenter,
@@ -11,19 +10,15 @@ import {
   forceCollide,
   forceManyBody
 } from 'd3-force';
-import { interpolate } from 'd3-interpolate';
-import { polygonCentroid, polygonHull } from 'd3-polygon';
+import { polygonCentroid } from 'd3-polygon';
 import { scaleOrdinal } from 'd3-scale';
 import { select, Selection } from 'd3-selection';
 import { line, curveCardinalClosed } from 'd3-shape';
-import { zoom, zoomIdentity, ZoomBehavior, zoomTransform } from 'd3-zoom';
 
 import EventEmitter from '@core/components/Graph/EventEmitter';
 import { deepCloneArray } from '@core/utils/deepCloneArray';
 
 import {
-  ARROW_SIZE,
-  DEFAULT_COLOR,
   EDGE_CLASS_NAME,
   FONT_SIZE_DEFAULT,
   GROUP_NODE_PATHS_CLASS_NAME,
@@ -31,13 +26,14 @@ import {
   NODE_CLASS_NAME,
   NODE_SIZE,
   OPACITY_NO_SELECTED_ITEM,
-  SELECTED_EDGE_COLOR,
   SELECTED_TEXT_COLOR,
   ZOOM_TEXT
 } from './config';
 import { nodeColorsDefault } from './Graph.constants';
 import { GraphEvents } from './Graph.enum';
 import { GraphNode, GraphEdge, GraphProps, GraphGroup } from './Graph.interfaces';
+import { GraphController } from './services';
+import GraphZoom from './Zoom';
 
 export default class Graph {
   $root: HTMLElement;
@@ -49,7 +45,7 @@ export default class Graph {
   svgGraph: Selection<SVGSVGElement, GraphNode, null, undefined>;
   svgGraphGroup: Selection<SVGGElement, GraphNode, null, undefined>;
   isDraggingNode: boolean;
-  zoom: ZoomBehavior<SVGSVGElement, GraphNode>;
+  zoom: GraphZoom;
   groups?: GraphGroup[];
   nodeInitialized?: string;
   EventEmitter: EventEmitter;
@@ -68,16 +64,9 @@ export default class Graph {
     this.EventEmitter = new EventEmitter();
     this.force = this.configureForceSimulation();
 
-    this.zoom = zoom<SVGSVGElement, GraphNode>().scaleExtent([0.2, 5]);
-    this.zoom.on('zoom', ({ transform }) => {
-      this.svgGraphGroup.attr('transform', transform);
-    });
-
     this.svgGraph = this.createGraphContainer();
     this.svgGraphGroup = this.createGraphGroup();
-
-    // It enables the movement/zoom of the graph with the track pad
-    this.svgGraph.call(this.zoom);
+    this.zoom = new GraphZoom({ svgGraph: this.svgGraph, svgGraphGroup: this.svgGraphGroup });
   }
 
   private configureForceSimulation() {
@@ -237,7 +226,7 @@ export default class Graph {
           .filter(({ id }) => id === groupId)
           .attr('transform', 'scale(1) translate(0,0)')
           .attr('d', ({ id }) => {
-            const polygon = polygonGenerator(this.nodes, id);
+            const polygon = GraphController.polygonGenerator(this.nodes, id);
             centroid = polygon ? polygonCentroid(polygon) : [0, 0];
 
             const points: [number, number][] = (polygon || [])?.map(function (point) {
@@ -264,7 +253,7 @@ export default class Graph {
   };
 
   private redrawEdges = () => {
-    addEdgeArrows(this.svgGraphGroup);
+    GraphController.addEdgeArrows(this.svgGraphGroup);
 
     const links = this.links as GraphEdge[];
 
@@ -330,16 +319,16 @@ export default class Graph {
 
     this.getAllEdges()
       .each((svgLink) => {
-        if (!isEdgeBetweenNodes(svgLink, nodeId)) {
-          stopAnimateEdges(svgLink);
+        if (!GraphController.isEdgeBetweenNodes(svgLink, nodeId)) {
+          GraphController.stopAnimateEdges(svgLink);
         }
 
-        if (isEdgeBetweenNodes(svgLink, nodeId)) {
-          animateEdges(svgLink);
+        if (GraphController.isEdgeBetweenNodes(svgLink, nodeId)) {
+          GraphController.animateEdges(svgLink);
         }
       })
       .style('stroke-dasharray', ({ type, source, target }) =>
-        type === 'dashed' || isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0'
+        type === 'dashed' || GraphController.isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0'
       );
   }
 
@@ -471,7 +460,7 @@ export default class Graph {
 
     svgNode.on('mouseover', (_, { id }) => {
       this.nodeInitialized = id;
-      selectNodeTextStyle(id);
+      GraphController.selectNodeTextStyle(id);
 
       if (!this.isDraggingNode) {
         this.reStyleEdges();
@@ -480,7 +469,7 @@ export default class Graph {
 
     svgNode.on('mouseout', (_, { id }) => {
       this.nodeInitialized = undefined;
-      deselectNodeTextStyle(id);
+      GraphController.deselectNodeTextStyle(id);
       this.reStyleEdges();
     });
 
@@ -605,128 +594,14 @@ export default class Graph {
    * Resets the zoom level and position of the graph to its original state.
    */
   zoomToDefaultPosition() {
-    const $parent = this.svgGraph.node();
-
-    if (!$parent) {
-      return;
-    }
-
-    const { width, height } = $parent.getBBox();
-    const center: [number, number] = [width / 2, height / 2];
-    const transform = zoomTransform($parent).invert(center);
-
-    (this.svgGraph as any).transition().duration(300).call(this.zoom.transform, zoomIdentity, transform);
+    this.zoom.zoomToDefaultPosition();
   }
 
   increaseZoomLevel() {
-    return (this.svgGraph as any).transition().duration(250).call(this.zoom.scaleBy, 1.5);
+    this.zoom.increaseZoomLevel();
   }
 
   decreaseZoomLevel() {
-    return (this.svgGraph as any).transition().duration(250).call(this.zoom.scaleBy, 0.5);
+    this.zoom.decreaseZoomLevel();
   }
-}
-
-function animateEdges({ source, target }: { source: { id: string }; target: { id: string } }) {
-  (select<SVGSVGElement, GraphEdge>(`#edge${source.id}-${target.id}`) as any)
-    .style('stroke', SELECTED_EDGE_COLOR)
-    .style('stroke-dasharray', '8, 8')
-    .transition()
-    .duration(750)
-    .ease(easeLinear)
-    .styleTween('stroke-dashoffset', () => interpolate('30', '0'))
-    .on('end', animateEdges);
-}
-
-function stopAnimateEdges({ source, target }: GraphEdge) {
-  (select(`#edge${source.id}-${target.id}`) as any)
-    .style('stroke', DEFAULT_COLOR)
-    .style('stroke-dasharray', '0, 0')
-    .transition()
-    .on('end', null);
-}
-
-function selectNodeTextStyle(id: string) {
-  select(`#node-cover-${id}`).attr('fill', 'white');
-  (select(`#node-label-${id}`) as any)
-    .transition()
-    .duration(300)
-    .attr('font-size', FONT_SIZE_DEFAULT * ZOOM_TEXT);
-}
-
-function deselectNodeTextStyle(id: string) {
-  select(`#node-cover-${id}`).attr('fill', 'transparent');
-  (select(`#node-label-${id}`) as any).transition().duration(300).attr('font-size', FONT_SIZE_DEFAULT);
-}
-
-function addEdgeArrows(container: Selection<SVGGElement, GraphNode, null, undefined>) {
-  return container
-    .append('svg:defs')
-    .append('svg:marker')
-    .attr('id', 'arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', NODE_SIZE / 2 + ARROW_SIZE)
-    .attr('refY', 0)
-    .attr('markerWidth', ARROW_SIZE)
-    .attr('markerHeight', ARROW_SIZE)
-    .attr('orient', 'auto-start-reverse')
-    .append('svg:path')
-    .style('fill', 'gray')
-    .attr('d', 'M0,-5L10,0L0,5');
-}
-
-function isEdgeBetweenNodes(svgLink: { source: { id: string }; target: { id: string } }, id: string | undefined) {
-  if (!id) {
-    return false;
-  }
-
-  const nodeIds = id.split('-to-');
-
-  return (
-    (nodeIds.length === 2 && svgLink.source.id === nodeIds[0] && svgLink.target.id === nodeIds[1]) ||
-    id === svgLink.source.id ||
-    id === svgLink.target.id
-  );
-}
-
-/**
- * Generates a polygon hull from a group of nodes in a graph.
- */
-function polygonGenerator(nodes: GraphNode[], groupId: string): [number, number][] | null {
-  // Validate input parameters
-  if (!groupId || !Array.isArray(nodes)) {
-    return null;
-  }
-
-  // Filter nodes by group ID and get their coordinates
-  const nodeCoords: [number, number][] = nodes.filter(({ group }) => group === groupId).map(({ x, y }) => [x, y]);
-
-  // Ensure there are at least three nodes to create a polygon
-  if (nodeCoords.length < 3) {
-    // If there are less than three nodes, add additional nodes with NODE_SIZE distance and close to the first one
-    // If this is an empty group, use default coordinates [0, 0]
-    const [x, y] = nodeCoords[0] || [0, 0];
-
-    for (let i = nodeCoords.length; i < 3; i++) {
-      nodeCoords.push([x + NODE_SIZE * i, y + NODE_SIZE * i]);
-    }
-  }
-
-  // Generate the polygon hull from the node coordinates
-  const polygon = polygonHull(nodeCoords);
-
-  // Return the polygon hull, or null if it couldn't be generated
-  return polygon || null;
-}
-
-/**
- * Convert a GraphEdge object with string source and target properties to a GraphEdge object
- * with GraphNode source and target properties.
- */
-export function mapGraphEdges(edges: GraphEdge<string>[], nodes: GraphNode[]): GraphEdge<GraphNode>[] {
-  return edges.map((edge, index) => ({
-    index,
-    source: nodes.find((node) => node.id === edge.source) as GraphNode,
-    target: nodes.find((node) => node.id === edge.target) as GraphNode
-  }));
 }

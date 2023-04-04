@@ -1,5 +1,6 @@
-import Graph, { mapGraphEdges } from '../Graph';
+import Graph from '../Graph';
 import { GraphEdge, GraphNode } from '../Graph.interfaces';
+import { GraphController } from '../services';
 
 describe('Graph', () => {
   const nodes: GraphNode[] = [
@@ -62,6 +63,6 @@ describe('Graph', () => {
     graph.updateModel({ nodes: updatedNodes, edges });
 
     expect(graph.nodes).toEqual(updatedNodesAfterForceSimulation);
-    expect(graph.links).toEqual(mapGraphEdges(edges, updatedNodesAfterForceSimulation));
+    expect(graph.links).toEqual(GraphController.mapGraphEdges(edges, updatedNodesAfterForceSimulation));
   });
 });
