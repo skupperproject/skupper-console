@@ -12,6 +12,7 @@ export interface GraphNode {
   y: number;
   color: string;
   group: string;
+  groupName: string;
   img?: string;
   fx?: number | null;
   fy?: number | null;

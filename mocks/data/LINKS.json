@@ -7,9 +7,9 @@
       "startTime": 1674048706622878,
       "endTime": 0,
       "mode": "interior",
-      "name": "public2-skupper-router-site-3",
+      "name": "public2-skupper-router-site-3-hth7l",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "outgoing"
     },
     {
       "recType": "LINK",
@@ -18,9 +18,9 @@
       "startTime": 1674151543561656,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-site-2",
+      "name": "private1-skupper-router-site-2-6z7k6",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "outgoing"
     },
     {
       "recType": "LINK",
@@ -29,9 +29,9 @@
       "startTime": 1674149422366200,
       "endTime": 0,
       "mode": "interior",
-      "name": "public2-skupper-router-site-3",
+      "name": "public2-skupper-router-site-3-hth7l",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "incoming"
     },
     {
       "recType": "LINK",
@@ -40,9 +40,9 @@
       "startTime": 1674048729859049,
       "endTime": 0,
       "mode": "interior",
-      "name": "public1-skupper-router-site-1",
+      "name": "public1-skupper-router-site-1-52tjs",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "incoming"
     },
     {
       "recType": "LINK",
@@ -51,9 +51,9 @@
       "startTime": 1674048705833609,
       "endTime": 0,
       "mode": "interior",
-      "name": "public1-skupper-router-site-1",
+      "name": "public1-skupper-router-site-1-52tjs",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "incoming"
     },
     {
       "recType": "LINK",
@@ -62,9 +62,9 @@
       "startTime": 1674151543581947,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-site-2",
+      "name": "private1-skupper-router-site-2-6z7k6",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "outgoing"
     }
   ],
   "queryParams": {

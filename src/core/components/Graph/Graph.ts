@@ -19,6 +19,7 @@ import { line, curveCardinalClosed } from 'd3-shape';
 import { zoom, zoomIdentity, ZoomBehavior, zoomTransform } from 'd3-zoom';
 
 import EventEmitter from '@core/components/Graph/EventEmitter';
+import { deepCloneArray } from '@core/utils/deepCloneArray';
 
 import {
   ARROW_SIZE,
@@ -231,7 +232,6 @@ export default class Graph {
     if (this.groups) {
       this.groups.forEach(({ id: groupId }) => {
         let centroid: [number, number] = [0, 0];
-
         const paths = this.svgGraphGroup
           .selectAll<SVGPathElement, GraphGroup>(`.${GROUP_NODE_PATHS_CLASS_NAME}`)
           .filter(({ id }) => id === groupId)
@@ -522,8 +522,8 @@ export default class Graph {
     groups?: GraphGroup[];
   }) {
     // clone nodes and edges to avoid modifying the original data
-    const clonedNodeData = cloneGraphNodeOrEdge(nodes);
-    const clonedEdgeData = cloneGraphNodeOrEdge(edges) as GraphEdge<string>[];
+    const clonedNodeData = deepCloneArray(nodes);
+    const clonedEdgeData = deepCloneArray(edges) as GraphEdge<string>[];
 
     // set the cloned nodes and groupIds to the simulation
     this.nodes = clonedNodeData;
@@ -690,21 +690,32 @@ function isEdgeBetweenNodes(svgLink: { source: { id: string }; target: { id: str
   );
 }
 
-function polygonGenerator(nodes: GraphNode[], groupId: string) {
+/**
+ * Generates a polygon hull from a group of nodes in a graph.
+ */
+function polygonGenerator(nodes: GraphNode[], groupId: string): [number, number][] | null {
+  // Validate input parameters
+  if (!groupId || !Array.isArray(nodes)) {
+    return null;
+  }
+
   // Filter nodes by group ID and get their coordinates
-  const nodeCoords: [number, number][] = nodes.filter((node) => node.group === groupId).map(({ x, y }) => [x, y]);
+  const nodeCoords: [number, number][] = nodes.filter(({ group }) => group === groupId).map(({ x, y }) => [x, y]);
 
   // Ensure there are at least three nodes to create a polygon
-  while (nodeCoords.length < 3) {
-    const [x, y] = nodeCoords[0];
-    nodeCoords.push([x + NODE_SIZE, y], [x - NODE_SIZE, y], [x, y + NODE_SIZE], [x, y - NODE_SIZE]);
+  if (nodeCoords.length < 3) {
+    // If there are less than three nodes, add additional nodes with NODE_SIZE distance and close to the first one
+    // If this is an empty group, use default coordinates [0, 0]
+    const [x, y] = nodeCoords[0] || [0, 0];
+
+    for (let i = nodeCoords.length; i < 3; i++) {
+      nodeCoords.push([x + NODE_SIZE * i, y + NODE_SIZE * i]);
+    }
   }
 
   // Generate the polygon hull from the node coordinates
-  return polygonHull(nodeCoords);
-}
+  const polygon = polygonHull(nodeCoords);
 
-// deep clone
-function cloneGraphNodeOrEdge(array: GraphNode[] | GraphEdge<string>[]): GraphNode[] & GraphEdge<string>[] {
-  return JSON.parse(JSON.stringify(array));
+  // Return the polygon hull, or null if it couldn't be generated
+  return polygon || null;
 }

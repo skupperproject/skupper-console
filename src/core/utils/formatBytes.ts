@@ -2,13 +2,24 @@
  *  Converts input bytes in the most appropriate format
  */
 const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-const k = 1024;
+const K = 1024;
 
 export function formatBytes(bytes: number, decimals = 2) {
-  const dm = decimals < 0 ? 0 : decimals;
+  if (isNaN(bytes) || bytes < 0) {
+    return '';
+  }
 
-  const i = Math.floor(Math.log(bytes < 1 ? 1 : bytes) / Math.log(k));
-  const bytesSized = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+  if (bytes === 0) {
+    return '0 B';
+  }
+
+  const dm = decimals < 0 ? 0 : decimals;
+  const i = Math.floor(Math.log(bytes < 1 ? 1 : bytes) / Math.log(K));
+  const bytesSized = parseFloat((bytes / Math.pow(K, i)).toFixed(dm));
+
+  if (isNaN(bytesSized)) {
+    return '';
+  }
 
   return isNaN(bytesSized) ? '' : `${bytesSized} ${sizes[i]}`;
 }

@@ -9,7 +9,8 @@ import {
   ProcessResponse,
   RouterResponse,
   SiteResponse,
-  FlowPairsResponse
+  FlowPairsResponse,
+  ResponseWrapper
 } from 'API/REST.interfaces';
 
 const DELAY_RESPONSE = 250;
@@ -24,7 +25,7 @@ export function loadMockServer() {
 
   const path = './data';
   const collectors = require(`${path}/COLLECTORS.json`);
-  const sites = require(`${path}/SITES.json`);
+  const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
   const processGroups = require(`${path}/PROCESS_GROUPS.json`);
   const processGroupPairs = require(`${path}/PROCESS_GROUP_PAIRS.json`);
   const processes = require(`${path}/PROCESSES.json`);
@@ -34,8 +35,8 @@ export function loadMockServer() {
   const addressProcesses = require(`${path}/ADDRESS_PROCESSES.json`);
   const flowPairs = require(`${path}/FLOW_PAIRS.json`);
   const addressesFlowPairs = require(`${path}/ADDRESS_FLOW_PAIRS.json`);
-  const routers = require(`${path}/ROUTERS.json`);
-  const links = require(`${path}/LINKS.json`);
+  const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json`);
+  const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
   const prefix = '/api/v1alpha1';
 
@@ -48,7 +49,7 @@ export function loadMockServer() {
       this.get(`${prefix}/collectors`, () => collectors);
       this.get(`${prefix}/sites`, () => sites);
       this.get(`${prefix}/sites/:id`, (_, { params: { id } }) => ({
-        results: sites.results.find(({ identity }: SiteResponse) => identity === id)
+        results: sites.results.find(({ identity }) => identity === id)
       }));
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
@@ -60,11 +61,13 @@ export function loadMockServer() {
       }));
 
       this.get(`${prefix}/sites/:id/routers`, (_, { params: { id } }) => ({
-        results: routers.results.filter(({ parent }: RouterResponse) => parent === id)
+        results: routers.results.filter(({ parent }) => parent === id)
       }));
 
       this.get(`${prefix}/sites/:id/links`, (_, { params: { id } }) => ({
-        results: links.results.filter(({ parent }: LinkResponse) => parent === id)
+        results: links.results.filter((link) =>
+          routers.results.find((router) => router.parent === id && router.identity === link.parent)
+        )
       }));
 
       this.get(`${prefix}/processgroups`, () => processGroups);
