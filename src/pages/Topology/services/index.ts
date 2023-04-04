@@ -2,7 +2,7 @@ import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { nodeColors } from '@core/components/Graph/Graph.constants';
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphGroup, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import {
@@ -47,19 +47,21 @@ export const TopologyController = {
     return processesLinks;
   },
 
-  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] => {
-    const processesLinks = flowPairsByAddress.map(({ identity, processAggregateId }) => ({
-      key: identity,
-      clickable: true,
-      source: processAggregateId.split('-to-')[0],
-      target: processAggregateId.split('-to-')[1]
-    }));
+  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] =>
+    flowPairsByAddress.reduce<LinkTopology[]>((acc, { identity, processAggregateId }) => {
+      const [source, target] = processAggregateId.split('-to-');
+      const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
+      if (!exists) {
+        acc.push({
+          key: identity,
+          clickable: true,
+          source,
+          target
+        });
+      }
 
-    // we just need to find one flow pairs between 2 processes to detect a process pair
-    return processesLinks.filter(
-      (v, i, a) => a.findIndex((v2) => v2.source === v.source && v2.target === v.target) === i
-    );
-  },
+      return acc;
+    }, []),
 
   getProcessGroupsLinks: (links: ProcessPairsResponse[]): LinkTopology[] => {
     const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
@@ -83,24 +85,35 @@ export const TopologyController = {
           x: fx || 0,
           y: fy || 0,
           group: identity,
+          groupName: name,
           color: getColor(processGroupRole === 'internal' ? 16 : index),
           img: processGroupRole === 'internal' ? skupperProcessSVG : recType === 'SITE' ? siteSVG : processSVG
         };
       }),
 
+  getGroupsFromProcesses: (processes: GraphNode[]) =>
+    Object.values(
+      processes.reduce((acc, { group: id, color, groupName: name }) => {
+        acc[id] = { id, color, name };
+
+        return acc;
+      }, {} as Record<string, GraphGroup>)
+    ),
+
   getNodesFromProcesses: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
     processes
-      ?.map(({ name, identity, parent: siteId, processRole }) => {
+      ?.map(({ name, identity, parent: group, parentName: groupName, processRole }) => {
         const { fx, fy } = getPositionFromLocalStorage(identity);
 
-        const groupIndex = groups.findIndex(({ id }) => id === siteId);
+        const groupIndex = groups.findIndex(({ id }) => id === group);
 
         return {
           id: identity,
           name,
           x: fx || 0,
           y: fy || 0,
-          group: siteId,
+          group,
+          groupName,
           color: getColor(processRole === 'internal' ? 16 : groupIndex),
           img: processRole === 'internal' ? skupperProcessSVG : processSVG
         };

@@ -19,26 +19,25 @@ import { line, curveCardinalClosed } from 'd3-shape';
 import { zoom, zoomIdentity, ZoomBehavior, zoomTransform } from 'd3-zoom';
 
 import EventEmitter from '@core/components/Graph/EventEmitter';
+import { deepCloneArray } from '@core/utils/deepCloneArray';
 
+import {
+  ARROW_SIZE,
+  DEFAULT_COLOR,
+  EDGE_CLASS_NAME,
+  FONT_SIZE_DEFAULT,
+  GROUP_NODE_PATHS_CLASS_NAME,
+  ITERATIONS,
+  NODE_CLASS_NAME,
+  NODE_SIZE,
+  OPACITY_NO_SELECTED_ITEM,
+  SELECTED_EDGE_COLOR,
+  SELECTED_TEXT_COLOR,
+  ZOOM_TEXT
+} from './config';
 import { nodeColorsDefault } from './Graph.constants';
 import { GraphEvents } from './Graph.enum';
 import { GraphNode, GraphEdge, GraphProps, GraphGroup } from './Graph.interfaces';
-
-const ARROW_SIZE = 10;
-const NODE_SIZE = 30;
-const FONT_SIZE_DEFAULT = 12;
-const OPACITY_NO_SELECTED_ITEM = 0.1;
-
-const NODE_CLASS_NAME = 'node';
-const GROUP_NODE_PATHS_CLASS_NAME = 'group-node-paths';
-const EDGE_CLASS_NAME = 'edge';
-
-const ZOOM_TEXT = 1.5;
-const DEFAULT_COLOR = 'var(--pf-global--palette--black-300)';
-const SELECTED_EDGE_COLOR = 'var(--pf-global--palette--blue-300)';
-const SELECTED_TEXT_COLOR = 'var(--pf-global--palette--black-800)';
-
-const ITERATIONS = 100; // number of the cycles to simulate the first positioning of the graph
 
 export default class Graph {
   $root: HTMLElement;
@@ -204,13 +203,7 @@ export default class Graph {
 
   private redrawPositions = () => {
     // move nodes
-    this.getAllNodes().attr(
-      'transform',
-      ({ x, y }) => `translate(
-                    ${x},
-                    ${y}
-                )`
-    );
+    this.getAllNodes().attr('transform', ({ x, y }) => `translate(${x},${y})`);
 
     // move edges
     this.getAllEdges()
@@ -272,30 +265,21 @@ export default class Graph {
 
   private redrawEdges = () => {
     addEdgeArrows(this.svgGraphGroup);
-    // links services
-    const svgEdgesData = this.getAllEdges()
-      .data(this.links as GraphEdge[])
-      .enter();
 
-    const svgEdgesPaths = this.getAllEdgesPaths()
-      .data(this.links as GraphEdge[])
-      .enter();
+    const links = this.links as GraphEdge[];
 
-    const svgEdgesLabels = this.getAllEdgesLabels()
-      .data(this.links as GraphEdge[])
-      .enter();
-
-    // create edge line with arrow
-    svgEdgesData
-      .append('line')
+    // Use selection.join() instead of enter() to simplify code
+    this.getAllEdges()
+      .data(links)
+      .join('line')
       .style('stroke-width', '1px')
       .attr('id', ({ source, target }) => `edge${source.id}-${target.id}`)
       .attr('class', EDGE_CLASS_NAME)
       .attr('marker-end', 'url(#arrow)');
 
-    // create a transparent path to place the label
-    svgEdgesPaths
-      .append('path')
+    this.getAllEdgesPaths()
+      .data(links)
+      .join('path')
       .attr('class', `${EDGE_CLASS_NAME}_path`)
       .attr('fill-opacity', 0)
       .attr('stroke-opacity', 0)
@@ -321,17 +305,17 @@ export default class Graph {
         ]);
       });
 
-    // create edge label
-    const text = svgEdgesLabels
-      .append('text')
+    this.getAllEdgesLabels()
+      .data(links)
+      .join('text')
       .style('pointer-events', 'none')
       .attr('class', `${EDGE_CLASS_NAME}_label`)
       .attr('id', ({ source, target }) => `edge-label${source.id}-${target.id}`)
       .attr('font-size', FONT_SIZE_DEFAULT)
-      .style('transform', 'translate(0px,-5px)');
-
-    text
-      .append('textPath') //To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.
+      .style('transform', 'translate(0px,-5px)')
+      .selectAll('textPath')
+      .data((d) => [d])
+      .join('textPath')
       .attr('xlink:href', ({ source, target }) => `#edge-path${source.id}-${target.id}`)
       .style('text-anchor', 'middle')
       .style('fill', SELECTED_TEXT_COLOR)
@@ -412,6 +396,7 @@ export default class Graph {
       .enter()
       .append('g')
       .attr('class', NODE_CLASS_NAME)
+      .attr('opacity', ({ isDisabled }) => (isDisabled ? 0.2 : 1))
       .attr('id', ({ id }) => `node-${id}`);
 
     // merge node containers
@@ -537,8 +522,8 @@ export default class Graph {
     groups?: GraphGroup[];
   }) {
     // clone nodes and edges to avoid modifying the original data
-    const clonedNodeData = cloneGraphNodeOrEdge(nodes);
-    const clonedEdgeData = cloneGraphNodeOrEdge(edges) as GraphEdge<string>[];
+    const clonedNodeData = deepCloneArray(nodes);
+    const clonedEdgeData = deepCloneArray(edges) as GraphEdge<string>[];
 
     // set the cloned nodes and groupIds to the simulation
     this.nodes = clonedNodeData;
@@ -582,6 +567,10 @@ export default class Graph {
     edges: GraphEdge<string>[];
     groups?: GraphGroup[];
   }) => {
+    if (!nodes || !edges) {
+      throw new Error('Graph - updateModel: Invalid input data');
+    }
+
     if (!this.isDraggingNode) {
       // Create a map of node IDs to their corresponding nodes to help find matching nodes more efficiently
       const nodeIdToNodeMap = this.nodes.reduce((acc, node) => {
@@ -688,30 +677,45 @@ function addEdgeArrows(container: Selection<SVGGElement, GraphNode, null, undefi
 }
 
 function isEdgeBetweenNodes(svgLink: { source: { id: string }; target: { id: string } }, id: string | undefined) {
-  const nodeIds = id?.split('-to-');
-
-  if (nodeIds?.length === 2 && svgLink.source.id === nodeIds[0] && svgLink.target.id === nodeIds[1]) {
-    return true;
+  if (!id) {
+    return false;
   }
 
-  return id === svgLink.source.id || id === svgLink.target.id;
+  const nodeIds = id.split('-to-');
+
+  return (
+    (nodeIds.length === 2 && svgLink.source.id === nodeIds[0] && svgLink.target.id === nodeIds[1]) ||
+    id === svgLink.source.id ||
+    id === svgLink.target.id
+  );
 }
 
-function polygonGenerator(nodes: GraphNode[], groupId: string) {
-  const node_coords: [number, number][] = nodes.filter(({ group }) => group === groupId).map(({ x, y }) => [x, y]);
-
-  // When the number of the nodes is less than 3, we need to create fake points x,y to create a polygon. At least 3.
-  if (node_coords.length < 3) {
-    node_coords.push([node_coords[0][0] + NODE_SIZE, node_coords[0][1]]);
-    node_coords.push([node_coords[0][0] - NODE_SIZE, node_coords[0][1]]);
-    node_coords.push([node_coords[0][0], node_coords[0][1] + NODE_SIZE]);
-    node_coords.push([node_coords[0][0], node_coords[0][1] - NODE_SIZE]);
+/**
+ * Generates a polygon hull from a group of nodes in a graph.
+ */
+function polygonGenerator(nodes: GraphNode[], groupId: string): [number, number][] | null {
+  // Validate input parameters
+  if (!groupId || !Array.isArray(nodes)) {
+    return null;
   }
 
-  return polygonHull(node_coords);
-}
+  // Filter nodes by group ID and get their coordinates
+  const nodeCoords: [number, number][] = nodes.filter(({ group }) => group === groupId).map(({ x, y }) => [x, y]);
 
-// deep clone
-function cloneGraphNodeOrEdge(array: GraphNode[] | GraphEdge<string>[]): GraphNode[] & GraphEdge<string>[] {
-  return JSON.parse(JSON.stringify(array));
+  // Ensure there are at least three nodes to create a polygon
+  if (nodeCoords.length < 3) {
+    // If there are less than three nodes, add additional nodes with NODE_SIZE distance and close to the first one
+    // If this is an empty group, use default coordinates [0, 0]
+    const [x, y] = nodeCoords[0] || [0, 0];
+
+    for (let i = nodeCoords.length; i < 3; i++) {
+      nodeCoords.push([x + NODE_SIZE * i, y + NODE_SIZE * i]);
+    }
+  }
+
+  // Generate the polygon hull from the node coordinates
+  const polygon = polygonHull(nodeCoords);
+
+  // Return the polygon hull, or null if it couldn't be generated
+  return polygon || null;
 }

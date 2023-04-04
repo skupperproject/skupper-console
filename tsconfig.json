@@ -18,7 +18,10 @@
     "sourceMap": true,
     "typeRoots": ["node_modules/@types", "@types_app"],
     "baseUrl": "./src",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "strictFunctionTypes": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
   "exclude": ["**/node_modules", "**/build", "./cypress.config.ts"]

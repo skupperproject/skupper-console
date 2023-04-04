@@ -148,8 +148,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   useEffect(() => {
     if (sites && processes) {
       // Get nodes from site and process groups
-      const siteGroups = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteGroups);
+      const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
+      const processGroups = TopologyController.getGroupsFromProcesses(processesNodes);
 
       // Check if no address is selected
       if (processesPairs && !addressIdSelected) {
@@ -157,7 +158,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
         setNodes(processesNodes);
         setLinks(TopologyController.getEdgesFromLinks(processesLinks));
-        setGroups(siteGroups);
+        setGroups(processGroups);
       }
     }
   }, [sites, processes, processesPairs, addressIdSelected]);
@@ -166,8 +167,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   useEffect(() => {
     if (sites && processes) {
       // Get nodes from site and process groups
-      const siteGroups = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteGroups);
+      const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
+      const processGroups = TopologyController.getGroupsFromProcesses(processesNodes);
 
       if (addressIdSelected && flowPairsByAddress) {
         // Get links between processes in the selected address
@@ -191,7 +193,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         // Set the nodes, links and groups for the topology
         setNodes(nodesFiltered);
         setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
-        setGroups(siteGroups);
+        setGroups(processGroups);
       }
     }
   }, [sites, processes, processesPairs, addressIdSelected, flowPairsByAddress]);
@@ -227,8 +229,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
             <Text>
               <b>{Labels.LegendGroupsItems}:</b>
             </Text>
-            {sites?.map((node, index) => (
-              <Flex key={node.identity}>
+            {groups?.map(({ id, name }, index) => (
+              <Flex key={id}>
                 <div
                   className="pf-u-mr-xs"
                   style={{
@@ -237,7 +239,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                     backgroundColor: nodeColors[index]
                   }}
                 />
-                {node.name}
+                {name}
               </Flex>
             ))}
           </Flex>
