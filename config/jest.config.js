@@ -1,12 +1,13 @@
-const { ROOT, path } = require('./webpack.constant');
-
-const SRC_PATH = `${ROOT}/src`;
-const CONFIG_PATH = `${ROOT}/config`;
-const TS_CONFIG_PATH = path.join(CONFIG_PATH, '/tsconfig.paths.json');
-const SVG_TRANSFORM_FILENAME = 'jest.config.svgTransform';
-const FILE_MOCK_TRANSFORM_FILENAME = 'jest.config.fileMock';
-const STYLE_MOCK_TRANSFORM_FILENAME = 'jest.config.styleMock';
-const ENV_FILE = 'jest.config.setEnvVars';
+const {
+  SRC_PATH,
+  CONFIG_PATH,
+  TS_CONFIG_PATH,
+  SVG_TRANSFORM_FILENAME,
+  FILE_MOCK_TRANSFORM_FILENAME,
+  STYLE_MOCK_TRANSFORM_FILENAME,
+  ENV_FILE,
+  ROOT_PROJECT
+} = require('./jest.config.var');
 
 const extensionsAllowed = {
   '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/': `${CONFIG_PATH}/${FILE_MOCK_TRANSFORM_FILENAME}`,
@@ -32,11 +33,20 @@ module.exports = {
   testEnvironment: 'jsdom',
   setupFiles: [`./${ENV_FILE}`],
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
-  moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
+  moduleNameMapper: {
+    //resolve module imports for the D3.js library and other project dependencies during testing, ensuring that the correct files are loaded without errors.
+    '^d3-(.*)$': `${ROOT_PROJECT}/node_modules/d3-$1/dist/d3-$1`,
+    ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
+  },
   moduleDirectories: ['node_modules'],
   roots: [SRC_PATH],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': 'ts-jest',
     '^.+\\.svg$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`
+  },
+  globals: {
+    'ts-jest': {
+      tsconfig: `${ROOT_PROJECT}/tsconfig.test.json`
+    }
   }
 };

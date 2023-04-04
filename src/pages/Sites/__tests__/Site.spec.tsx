@@ -23,6 +23,8 @@ describe('Site component', () => {
 
   beforeEach(() => {
     server = loadMockServer() as Server;
+    server.logging = false;
+
     jest.spyOn(Router, 'useParams').mockReturnValue({ id: `${siteResults[0].name}@${siteResults[0].identity}` });
 
     render(

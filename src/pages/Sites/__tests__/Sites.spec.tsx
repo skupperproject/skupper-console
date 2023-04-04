@@ -21,6 +21,7 @@ describe('Begin testing the Sites component', () => {
 
   beforeEach(() => {
     server = loadMockServer() as Server;
+    server.logging = false;
 
     render(
       <Wrapper>

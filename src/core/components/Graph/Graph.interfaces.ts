@@ -16,6 +16,9 @@ export interface GraphNode {
   img?: string;
   fx?: number | null;
   fy?: number | null;
+  vx?: number;
+  vy?: number;
+  index?: number;
   groupFx?: number;
   groupFy?: number;
   isDisabled?: boolean;

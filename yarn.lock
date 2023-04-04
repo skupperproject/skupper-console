@@ -1226,7 +1226,7 @@
 
 "@types/d3-drag@^3.0.2":
   version "3.0.2"
-  resolved "https://registry.npmjs.org/@types/d3-drag/-/d3-drag-3.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/@types/d3-drag/-/d3-drag-3.0.2.tgz#5562da3e7b33d782c2c1f9e65c5e91bb01ee82cf"
   integrity sha512-qmODKEDvyKWVHcWWCOVcuVcOwikLVsyc4q4EBJMREsoQnR2Qoc2cZQUyFUPgO9q4S3qdSqJKBsuefv+h0Qy+tw==
   dependencies:
     "@types/d3-selection" "*"
@@ -1265,10 +1265,15 @@
   dependencies:
     "@types/d3-time" "*"
 
-"@types/d3-selection@*", "@types/d3-selection@^3.0.4":
+"@types/d3-selection@*":
   version "3.0.4"
   resolved "https://registry.npmjs.org/@types/d3-selection/-/d3-selection-3.0.4.tgz"
   integrity sha512-ZeykX7286BCyMg9sH5fIAORyCB6hcATPSRQpN47jwBA2bMbAT0s+EvtDP5r1FZYJ95R8QoEE1CKJX+n0/M5Vhg==
+
+"@types/d3-selection@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/d3-selection/-/d3-selection-3.0.5.tgz#27cd53b7672d405025e2414d98532d7934c16ebd"
+  integrity sha512-xCB0z3Hi8eFIqyja3vW8iV01+OHGYR2di/+e+AiOcXIOrY82lcvWW8Ke1DYE/EUVMsBl4Db9RppSBS3X1U6J0w==
 
 "@types/d3-shape@^3.1.0":
   version "3.1.1"
@@ -1286,13 +1291,6 @@
   version "3.0.0"
   resolved "https://registry.npmjs.org/@types/d3-timer/-/d3-timer-3.0.0.tgz"
   integrity sha512-HNB/9GHqu7Fo8AQiugyJbv6ZxYz58wef0esl4Mv828w1ZKpAshw/uFWVDUcIB9KKFeFKoxS3cHY07FFgtTRZ1g==
-
-"@types/d3-transition@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.npmjs.org/@types/d3-transition/-/d3-transition-3.0.3.tgz"
-  integrity sha512-/S90Od8Id1wgQNvIA8iFv9jRhCiZcGhPd2qX0bKF/PS+y0W5CrXKgIiELd2CvG1mlQrWK/qlYh3VxicqG1ZvgA==
-  dependencies:
-    "@types/d3-selection" "*"
 
 "@types/d3-zoom@^3.0.2":
   version "3.0.2"
