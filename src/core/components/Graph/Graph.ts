@@ -465,6 +465,10 @@ export default class Graph {
       select(`#node-cover-${id}`).style('cursor', 'grab');
     });
 
+    svgNode.on('mouseup', (_, { id }) => {
+      select(`#node-cover-${id}`).style('cursor', 'pointer');
+    });
+
     svgNode.on('mouseover', (_, { id }) => {
       this.nodeInitialized = id;
       selectNodeTextStyle(id);
@@ -494,13 +498,7 @@ export default class Graph {
 
     // attach drag and drop events
     svgNodesGEnter.call(
-      drag<SVGGElement, GraphNode>()
-        .on('start', this.dragStarted)
-        .on('drag', this.dragged)
-        .on('end', (event, node) => {
-          this.dragEnded(event, node);
-          select(`#node-cover-${node.id}`).style('cursor', 'pointer');
-        })
+      drag<SVGGElement, GraphNode>().on('start', this.dragStarted).on('drag', this.dragged).on('end', this.dragEnded)
     );
   };
 
@@ -523,7 +521,7 @@ export default class Graph {
   }) {
     // clone nodes and edges to avoid modifying the original data
     const clonedNodeData = deepCloneArray(nodes);
-    const clonedEdgeData = deepCloneArray(edges) as GraphEdge<string>[];
+    const clonedEdgeData = deepCloneArray(edges);
 
     // set the cloned nodes and groupIds to the simulation
     this.nodes = clonedNodeData;
@@ -571,8 +569,9 @@ export default class Graph {
       throw new Error('Graph - updateModel: Invalid input data');
     }
 
-    if (!this.isDraggingNode) {
+    if (!this.isDraggingNode && this.nodes.length) {
       // Create a map of node IDs to their corresponding nodes to help find matching nodes more efficiently
+
       const nodeIdToNodeMap = this.nodes.reduce((acc, node) => {
         acc[node.id] = node;
 
@@ -616,20 +615,20 @@ export default class Graph {
     const center: [number, number] = [width / 2, height / 2];
     const transform = zoomTransform($parent).invert(center);
 
-    this.svgGraph.transition().duration(300).call(this.zoom.transform, zoomIdentity, transform);
+    (this.svgGraph as any).transition().duration(300).call(this.zoom.transform, zoomIdentity, transform);
   }
 
   increaseZoomLevel() {
-    return this.svgGraph.transition().duration(250).call(this.zoom.scaleBy, 1.5);
+    return (this.svgGraph as any).transition().duration(250).call(this.zoom.scaleBy, 1.5);
   }
 
   decreaseZoomLevel() {
-    return this.svgGraph.transition().duration(250).call(this.zoom.scaleBy, 0.5);
+    return (this.svgGraph as any).transition().duration(250).call(this.zoom.scaleBy, 0.5);
   }
 }
 
 function animateEdges({ source, target }: { source: { id: string }; target: { id: string } }) {
-  select<SVGSVGElement, GraphEdge>(`#edge${source.id}-${target.id}`)
+  (select<SVGSVGElement, GraphEdge>(`#edge${source.id}-${target.id}`) as any)
     .style('stroke', SELECTED_EDGE_COLOR)
     .style('stroke-dasharray', '8, 8')
     .transition()
@@ -640,7 +639,7 @@ function animateEdges({ source, target }: { source: { id: string }; target: { id
 }
 
 function stopAnimateEdges({ source, target }: GraphEdge) {
-  select(`#edge${source.id}-${target.id}`)
+  (select(`#edge${source.id}-${target.id}`) as any)
     .style('stroke', DEFAULT_COLOR)
     .style('stroke-dasharray', '0, 0')
     .transition()
@@ -649,7 +648,7 @@ function stopAnimateEdges({ source, target }: GraphEdge) {
 
 function selectNodeTextStyle(id: string) {
   select(`#node-cover-${id}`).attr('fill', 'white');
-  select(`#node-label-${id}`)
+  (select(`#node-label-${id}`) as any)
     .transition()
     .duration(300)
     .attr('font-size', FONT_SIZE_DEFAULT * ZOOM_TEXT);
@@ -657,7 +656,7 @@ function selectNodeTextStyle(id: string) {
 
 function deselectNodeTextStyle(id: string) {
   select(`#node-cover-${id}`).attr('fill', 'transparent');
-  select(`#node-label-${id}`).transition().duration(300).attr('font-size', FONT_SIZE_DEFAULT);
+  (select(`#node-label-${id}`) as any).transition().duration(300).attr('font-size', FONT_SIZE_DEFAULT);
 }
 
 function addEdgeArrows(container: Selection<SVGGElement, GraphNode, null, undefined>) {
@@ -718,4 +717,16 @@ function polygonGenerator(nodes: GraphNode[], groupId: string): [number, number]
 
   // Return the polygon hull, or null if it couldn't be generated
   return polygon || null;
+}
+
+/**
+ * Convert a GraphEdge object with string source and target properties to a GraphEdge object
+ * with GraphNode source and target properties.
+ */
+export function mapGraphEdges(edges: GraphEdge<string>[], nodes: GraphNode[]): GraphEdge<GraphNode>[] {
+  return edges.map((edge, index) => ({
+    index,
+    source: nodes.find((node) => node.id === edge.source) as GraphNode,
+    target: nodes.find((node) => node.id === edge.target) as GraphNode
+  }));
 }

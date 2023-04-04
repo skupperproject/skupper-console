@@ -1,32 +1,41 @@
 name: skupper-console
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout 🛎️
-              uses: actions/checkout@v3
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
 
-            - name: Install 📦
-              run: |
-                  yarn install --frozen-lockfile
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
 
-            - name: Lint 🎨
-              run: |
-                  yarn lint
+      - name: Install 📦
+        run: |
+          yarn install --frozen-lockfile --prefer-offline
 
-            - name: Build 🚧
-              run: |
-                  yarn build
+      - name: Lint 🎨
+        run: |
+          yarn lint
 
-            - name: Unit tests 🔧
-              run: |
-                  yarn test
+      - name: Build 🚧
+        run: |
+          yarn build
 
-            - name: Integration tests 🚨
-              run: |
-                  yarn ci
+      - name: Get number of CPU cores
+        id: cpu-cores
+        uses: SimenB/github-actions-cpu-cores@v1
+      - name: Unit tests 🔧
+        run: |
+          yarn test --max-workers ${{ steps.cpu-cores.outputs.count }} --silent
+
+      - name: Integration tests 🚨
+        run: |
+          yarn ci
