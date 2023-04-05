@@ -62,7 +62,7 @@ export function loadMockServer() {
   // The mock server should be disabled if the current environment is not 'development' AND the ENABLE_MOCK_SERVER environment variable is not defined or is falsy
   const shouldDisableTheMockServer = process.env.NODE_ENV !== 'development' && !process.env.ENABLE_MOCK_SERVER;
 
-  if (process.env.API_HOST_FLOW_COLLECTOR || shouldDisableTheMockServer) {
+  if (process.env.COLLECTOR_URL || shouldDisableTheMockServer) {
     return undefined;
   }
 

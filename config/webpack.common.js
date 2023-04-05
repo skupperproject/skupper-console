@@ -35,7 +35,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.API_HOST_FLOW_COLLECTOR': JSON.stringify(process.env.API_HOST_FLOW_COLLECTOR || ''),
+      'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.PROMETHEUS_URL': JSON.stringify(process.env.PROMETHEUS_URL || ''),
       'process.env.DEFAULT_TABLE_PAGE_SIZE': JSON.stringify(process.env.DEFAULT_TABLE_PAGE_SIZE)
     }),

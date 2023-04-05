@@ -4,17 +4,19 @@ import { ProcessGroupsPaths } from '@pages/ProcessGroups/ProcessGroups.constant'
 import { SitesPaths } from '@pages/Sites/Sites.constant';
 import { TopologyPaths } from '@pages/Topology/Topology.constant';
 
-// URL config
-export const BASE_URL_COLLECTOR =
-  process.env.API_HOST_FLOW_COLLECTOR || `${window.location.protocol}//${window.location.host}`;
+/**  URL config: contains configuration options and constants related to backend URLs and routing */
 
+// Base URL for the collector backend. Defaults to current host if not set in environment variables.
+export const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
+// Base URL for the Prometheus backend. Set in environment variables.
 export const BASE_PROMETHEUS_URL = process.env.PROMETHEUS_URL;
+
 // Navigation config
 export const RoutesPropsConfig = [TopologyPaths, AddressesPaths, SitesPaths, ProcessGroupsPaths, ProcessesPaths];
-
+// Default URL path to redirect to. Set to the path for the first page.
 export const REDIRECT_TO_PATH = RoutesPropsConfig[0].path;
 
-// React query lib config
+/** React query library config: contains configuration options for the React query library, used for fetching and caching data in the UI */
 export const queryClientConfig = {
   defaultOptions: {
     queries: {
@@ -30,14 +32,10 @@ export const queryClientConfig = {
   }
 };
 
-// general config
-export const SYNC_DATA_INTERVAL = 17 * 1000; // time to request updated data to BE
-export const UPDATE_INTERVAL = 5 * 1000; // time to request updated data to BE
-export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
+/** General config: contains various global settings and constants */
+export const SYNC_DATA_INTERVAL = 17 * 1000; // Time in milliseconds to request updated data from the backend
+export const UPDATE_INTERVAL = 5 * 1000; // Time in milliseconds to request updated data from the backend
+export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
 
-export const LINK_DIRECTIONS = {
-  OUTGOING: 'outgoing',
-  INCOMING: 'incoming'
-};
-
+// Default page size for tables. Set in environment variables, but can be overridden.
 export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZE) || 10; //TODO: env variable used for debugging scope
