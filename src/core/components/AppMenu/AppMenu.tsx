@@ -81,7 +81,7 @@ const AppMenu = function () {
                 <Link to={[...paths].slice(0, index + 1).join('/')}>{path.name}</Link>
               </BreadcrumbItem>
             ))}
-            <BreadcrumbHeading to="#">{lastPath?.name}</BreadcrumbHeading>
+            <BreadcrumbHeading>{lastPath?.name}</BreadcrumbHeading>
           </Breadcrumb>
         </ToolbarItem>
         <ToolbarItem alignment={{ default: 'alignRight' }}>
