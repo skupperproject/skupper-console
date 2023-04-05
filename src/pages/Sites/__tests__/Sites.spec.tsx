@@ -4,6 +4,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
+import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
 import { MockApiPaths, MockApi, loadMockServer } from '@mocks/server';
@@ -11,10 +12,6 @@ import { ErrorConnectionRoutesPaths } from '@pages/shared/Errors/Connection/Conn
 import { ErrorServerRoutesPaths } from '@pages/shared/Errors/Server/Server.enum';
 
 import Sites from '../views/Sites';
-
-// Define constants to identify specific elements in the rendered component.
-const TEST_ID_LOADING_PAGE = 'sk-loading-page';
-const TEST_ID_SITES_VIEW = 'sk-sites-view';
 
 const siteResults = sitesData.results;
 
@@ -39,7 +36,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    expect(screen.getByTestId(TEST_ID_LOADING_PAGE)).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
   });
 
   it('should render the sites view after the data loading is complete', async () => {
@@ -49,11 +46,11 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    expect(screen.getByTestId(TEST_ID_LOADING_PAGE)).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByTestId(TEST_ID_SITES_VIEW)).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.sitesView())).toBeInTheDocument();
   });
 
   it('should render a table with the site data after the data has loaded.', async () => {
@@ -63,7 +60,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
   });
@@ -75,7 +72,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: siteResults[0].name })).toHaveAttribute(
       'href',
@@ -101,7 +98,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer);
   });
@@ -124,7 +121,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(mockedNavigator).toHaveBeenCalledWith(ErrorConnectionRoutesPaths.ErrConnection);
   });

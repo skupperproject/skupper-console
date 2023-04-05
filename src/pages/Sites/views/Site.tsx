@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { getTestsIds } from '@config/testIds.config';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTitle from '@core/components/SkTitle';
@@ -75,7 +76,7 @@ const Site = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter data-testid={`sk-site-view-${siteId}`}>
+      <Grid hasGutter data-testid={getTestsIds.siteView(siteId)}>
         <GridItem>
           <SkTitle
             title={name}
