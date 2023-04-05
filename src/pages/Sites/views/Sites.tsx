@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST';
+import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -28,7 +29,7 @@ const Sites = function () {
 
   return (
     <TransitionPage>
-      <div data-testid="sk-sites-view">
+      <div data-testid={getTestsIds.sitesView()}>
         <SkTitle title={SiteLabels.Section} description={SiteLabels.Description} />
         <SkTable
           columns={siteColumns}

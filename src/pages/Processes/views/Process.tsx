@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
+import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -98,7 +99,7 @@ const Process = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter data-testid={`sk-process-view-${processId}`}>
+      <Grid hasGutter data-testid={getTestsIds.processView(processId)}>
         <GridItem>
           <SkTitle
             title={process.name}

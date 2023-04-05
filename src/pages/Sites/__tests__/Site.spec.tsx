@@ -5,6 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessResponse, SiteResponse } from '@API/REST.interfaces';
+import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import sitesData from '@mocks/data/SITES.json';
@@ -12,9 +13,6 @@ import { MockApi, MockApiPaths, loadMockServer } from '@mocks/server';
 import { ErrorServerRoutesPaths } from '@pages/shared/Errors/Server/Server.enum';
 
 import Site from '../views/Site';
-
-const TEST_ID_LOADING_PAGE = 'sk-loading-page';
-const TEST_ID_SITE_VIEW = 'sk-site-view';
 
 const siteResults = sitesData.results as SiteResponse[];
 const processResults = processesData.results as ProcessResponse[];
@@ -42,11 +40,11 @@ describe('Site component', () => {
       </Wrapper>
     );
     // Wait for all queries to resolve
-    expect(screen.getByTestId(TEST_ID_LOADING_PAGE)).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByTestId(`${TEST_ID_SITE_VIEW}-${siteResults[0].identity}`)).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.siteView(siteResults[0].identity))).toBeInTheDocument();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
@@ -55,7 +53,7 @@ describe('Site component', () => {
         <Site />
       </Wrapper>
     );
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
     expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
@@ -68,7 +66,7 @@ describe('Site component', () => {
         <Site />
       </Wrapper>
     );
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
       'href',
@@ -94,7 +92,7 @@ describe('Site component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(TEST_ID_LOADING_PAGE));
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer);
   });

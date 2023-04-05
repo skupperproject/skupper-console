@@ -5,11 +5,12 @@ import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@pattern
 import { CogIcon } from '@patternfly/react-icons';
 
 import BrandImg from '@assets/skupper.svg';
+import { getTestsIds } from '@config/testIds.config';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
-import './Loading.css';
-
 import { Labels } from './Loading.enum';
+
+import './Loading.css';
 
 const PleaseWait = function () {
   return (
@@ -58,7 +59,7 @@ const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
         span={12}
         className=" pf-u-p-4xl sk-loading-page floating"
         style={isFLoating ? floatLoader : undefined}
-        data-testid="sk-loading-page"
+        data-testid={getTestsIds.loadingView()}
       >
         <GridItem span={6} className=" pf-u-p-2xl">
           <TextContent className="pf-u-text-align-center">
