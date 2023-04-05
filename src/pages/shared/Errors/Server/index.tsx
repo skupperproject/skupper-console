@@ -11,7 +11,7 @@ const ErrorServer = function () {
   const { state } = useLocation();
 
   return (
-    <Grid className=" pf-u-p-4xl">
+    <Grid className=" pf-u-p-4xl" data-testid="sk-server-error-view">
       <GridItem span={6} className=" pf-u-p-2xl">
         <TextContent className="pf-u-text-align-center pf-u-mb-4xl">
           <Text component={TextVariants.h1}>

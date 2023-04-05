@@ -1,20 +1,43 @@
 import React from 'react';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HashRouter } from 'react-router-dom';
+import { QueryCache, QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
+import { HashRouter, useNavigate } from 'react-router-dom';
 
 import { queryClientConfig } from '@config/config';
+import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 
-export const QueryClientContext = function ({ children }: { children: React.ReactElement }) {
-  const queryClient = new QueryClient(queryClientConfig);
+export const QueryClientContext = function ({
+  config = {},
+  children
+}: {
+  config?: QueryClientConfig;
+  children: React.ReactElement;
+}) {
+  const navigate = useNavigate();
+
+  const queryClient = new QueryClient({
+    ...queryClientConfig,
+    ...config,
+    queryCache: new QueryCache({
+      onError: (error) => {
+        handleError(error as { httpStatus?: HttpStatusErrors });
+      }
+    })
+  });
+
+  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
+    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
+
+    navigate(route);
+  }
 
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
-export const Wrapper = function ({ children }: { children: React.ReactElement }) {
+export const Wrapper = function ({ children, config }: { config?: QueryClientConfig; children: React.ReactElement }) {
   return (
-    <QueryClientContext>
-      <HashRouter>{children}</HashRouter>
-    </QueryClientContext>
+    <HashRouter>
+      <QueryClientContext config={config}>{children}</QueryClientContext>
+    </HashRouter>
   );
 };

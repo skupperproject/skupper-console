@@ -16,7 +16,7 @@ import {
   Title
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import EmptyData from '@core/components/EmptyData';
@@ -25,7 +25,6 @@ import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
@@ -36,59 +35,30 @@ import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
 const processQueryParams = { filter: 'processRole.external' };
 
 const Site = function () {
-  const navigate = useNavigate();
   const { id } = useParams() as { id: string };
   const { id: siteId } = getIdAndNameFromUrlParams(id);
 
-  const { data: site, isLoading: isLoadingSite } = useQuery(
-    [QueriesSites.GetSite, siteId],
-    () => RESTApi.fetchSite(siteId),
-    {
-      onError: handleError
-    }
+  const { data: site, isLoading: isLoadingSite } = useQuery([QueriesSites.GetSite, siteId], () =>
+    RESTApi.fetchSite(siteId)
   );
 
-  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
-    onError: handleError
-  });
+  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
 
-  const { data: hosts, isLoading: isLoadingHosts } = useQuery(
-    [QueriesSites.GetHostsBySiteId, siteId],
-    () => RESTApi.fetchHostsBySite(siteId),
-    {
-      onError: handleError
-    }
+  const { data: hosts, isLoading: isLoadingHosts } = useQuery([QueriesSites.GetHostsBySiteId, siteId], () =>
+    RESTApi.fetchHostsBySite(siteId)
   );
 
-  const { data: links, isLoading: isLoadingLinks } = useQuery(
-    [QueriesSites.GetLinksBySiteId, siteId],
-    () => RESTApi.fetchLinksBySite(siteId),
-    {
-      onError: handleError
-    }
+  const { data: links, isLoading: isLoadingLinks } = useQuery([QueriesSites.GetLinksBySiteId, siteId], () =>
+    RESTApi.fetchLinksBySite(siteId)
   );
 
-  const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-    [QueriesSites.GetProcessesBySiteId, siteId],
-    () => RESTApi.fetchProcessesBySite(siteId, processQueryParams),
-    {
-      onError: handleError
-    }
+  const { data: processes, isLoading: isLoadingProcesses } = useQuery([QueriesSites.GetProcessesBySiteId, siteId], () =>
+    RESTApi.fetchProcessesBySite(siteId, processQueryParams)
   );
 
-  const { data: routers, isLoading: isLoadingRouters } = useQuery(
-    [QueriesSites.GetRouters],
-    () => RESTApi.fetchRouters(),
-    {
-      onError: handleError
-    }
+  const { data: routers, isLoading: isLoadingRouters } = useQuery([QueriesSites.GetRouters], () =>
+    RESTApi.fetchRouters()
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   if (isLoadingSite || isLoadingHosts || isLoadingLinks || isLoadingProcesses || isLoadingRouters || isLoadingSites) {
     return <LoadingPage />;
