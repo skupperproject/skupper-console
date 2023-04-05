@@ -12,11 +12,12 @@ import { FlowPairsResponse } from 'API/REST.interfaces';
 import { AddressesRoutesPaths, FlowPairsLabels } from '../Addresses.enum';
 import { FlowPairsTableProps } from '../Addresses.interfaces';
 
-const FlowPairsTable: FC<FlowPairsTableProps> = function ({ connections, columns, onGetFilters, rowsCount }) {
+const FlowPairsTable: FC<FlowPairsTableProps> = function ({ connections, columns, onGetFilters, rowsCount, title }) {
   const { address } = useParams();
 
   return (
     <SkTable
+      title={title}
       columns={columns}
       rows={connections}
       pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}

@@ -134,7 +134,7 @@ type ZoomControlsProps = {
   topologyGraphInstance: Graph;
 };
 
-export const ZoomControls = function ({ topologyGraphInstance }: ZoomControlsProps) {
+const ZoomControls = function ({ topologyGraphInstance }: ZoomControlsProps) {
   const handleIncreaseZoom = () => topologyGraphInstance?.increaseZoomLevel();
   const handleDecreaseZoom = () => topologyGraphInstance?.decreaseZoomLevel();
   const handleZoomToDefault = () => topologyGraphInstance?.zoomToDefaultPosition();

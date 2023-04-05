@@ -6,7 +6,7 @@ import { HashRouter, useNavigate } from 'react-router-dom';
 import { queryClientConfig } from '@config/config';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 
-export const QueryClientContext = function ({
+const QueryClientContext = function ({
   config = {},
   children
 }: {
