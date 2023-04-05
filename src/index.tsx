@@ -16,9 +16,6 @@ root.render(
   </Wrapper>
 );
 
-if (
-  !process.env.API_HOST_FLOW_COLLECTOR &&
-  (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)
-) {
+if (!process.env.COLLECTOR_URL && (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)) {
   loadMockServer();
 }
