@@ -18,6 +18,7 @@ export interface FlowPairsTableProps {
   columns: SKColumn<FlowPairsResponse>[];
   onGetFilters?: Function;
   rowsCount?: number;
+  title?: string;
 }
 
 export interface RequestsByAddressProps {

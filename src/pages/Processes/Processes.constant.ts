@@ -128,6 +128,11 @@ export const TcpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     prop: 'flowTrace' as keyof FlowPairsResponse,
     format: formatTraceBySites,
     width: 10
+  },
+  {
+    name: '',
+    component: 'viewDetailsLinkCell',
+    width: 10
   }
 ];
 
@@ -176,6 +181,11 @@ export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Trace,
     prop: 'flowTrace' as keyof FlowPairsResponse,
     format: formatTraceBySites,
+    width: 10
+  },
+  {
+    name: '',
+    component: 'viewDetailsLinkCell',
     width: 10
   }
 ];

@@ -297,7 +297,7 @@ export const RESTApi = {
   }
 };
 
-export function getResults<T>(data: { results: T }) {
+function getResults<T>(data: { results: T }) {
   return data.results;
 }
 

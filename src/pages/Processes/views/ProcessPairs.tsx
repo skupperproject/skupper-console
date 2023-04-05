@@ -8,14 +8,16 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
+import { FlowPairsLabels } from '@pages/Addresses/Addresses.enum';
 import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { AvailableProtocols } from 'API/REST.enum';
-import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
+import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { HttpProcessesFlowPairsColumns, TcpProcessesFlowPairsColumns } from '../Processes.constant';
@@ -28,9 +30,9 @@ const initAllFlowParisQueryParamsPaginated = {
 };
 
 const ProcessPairs = function () {
-  const { flowPairId } = useParams();
+  const { processPairId, process } = useParams();
 
-  const ids = flowPairId?.split('-to-') || [];
+  const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
   const destinationId = ids[1];
 
@@ -61,7 +63,7 @@ const ProcessPairs = function () {
       RESTApi.fetchFlowPairs({
         ...initAllFlowParisQueryParamsPaginated,
         ...flowPairsQueryParamsPaginated,
-        filter: `processAggregateId.${flowPairId}`
+        filter: `processAggregateId.${processPairId}`
       }),
     {
       keepPreviousData: true,
@@ -98,7 +100,7 @@ const ProcessPairs = function () {
           <Flex>
             <Title headingLevel="h1">{ProcessPairsColumnsNames.Title}</Title>
             <Link
-              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${flowPairId}`}
+              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
             >
               {`(${ProcessesLabels.GoToTopology})`}
             </Link>
@@ -153,7 +155,15 @@ const ProcessPairs = function () {
               columns={TcpProcessesFlowPairsColumns}
               rows={TcpFlowPairs}
               pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-              components={flowPairsComponentsTable}
+              components={{
+                ...flowPairsComponentsTable,
+                viewDetailsLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
+                  LinkCell({
+                    ...props,
+                    link: `${ProcessesRoutesPaths.Processes}/${process}s/${processPairId}/${props.data.identity}/flowPairId`,
+                    value: FlowPairsLabels.ViewDetails
+                  })
+              }}
             />
           </GridItem>
         )}
@@ -166,7 +176,15 @@ const ProcessPairs = function () {
               rows={HttpFlowPairs}
               onGetFilters={handleGetFiltersFlowPairs}
               rowsCount={flowPairsPaginatedCount}
-              components={flowPairsComponentsTable}
+              components={{
+                ...flowPairsComponentsTable,
+                viewDetailsLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
+                  LinkCell({
+                    ...props,
+                    link: `${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${props.data.identity}`,
+                    value: FlowPairsLabels.ViewDetails
+                  })
+              }}
             />
           </GridItem>
         )}
