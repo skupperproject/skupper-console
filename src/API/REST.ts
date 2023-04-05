@@ -43,85 +43,86 @@ import {
   ResponseWrapper,
   CollectorsResponse
 } from './REST.interfaces';
+import { mapOptionsToQueryParams, getApiResults } from './REST.utils';
 
 export const RESTApi = {
   getPrometheusConfig: async (): Promise<CollectorsResponse> => {
-    const { data } = await axiosFetch(getCollectorsPATH());
+    const data = await axiosFetch<ResponseWrapper<CollectorsResponse[]>>(getCollectorsPATH());
 
     // we receive an array of info because we suppose to use multiple Prometheus servers in the future, but for now we are using just one
-    return getResults<CollectorsResponse[]>(data)[0];
+    return getApiResults<CollectorsResponse[]>(data)[0];
   },
 
   // SITES APIs
   fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
-    const { data } = await axiosFetch(getSitesPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<SiteResponse[]>>(getSitesPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
-    const { data } = await axiosFetch(getSitePATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<SiteResponse>>(getSitePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchProcessesBySite: async (id: string, options?: RequestOptions): Promise<ProcessResponse[]> => {
-    const { data } = await axiosFetch(getProcessesBySitePATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesBySitePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchRoutersBySite: async (id: string, options?: RequestOptions): Promise<RouterResponse[]> => {
-    const { data } = await axiosFetch(getRoutersBySitePATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<RouterResponse[]>>(getRoutersBySitePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchLinksBySite: async (id: string, options?: RequestOptions): Promise<LinkResponse[]> => {
-    const { data } = await axiosFetch(getLinksBySitePATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksBySitePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchHostsBySite: async (id: string, options?: RequestOptions): Promise<HostResponse[]> => {
-    const { data } = await axiosFetch(getHostsBySitePATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<HostResponse[]>>(getHostsBySitePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   // ROUTER APIs
   fetchRouters: async (options?: RequestOptions): Promise<RouterResponse[]> => {
-    const { data } = await axiosFetch(getRoutersPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<RouterResponse[]>>(getRoutersPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchRouter: async (id: string, options?: RequestOptions): Promise<RouterResponse> => {
-    const { data } = await axiosFetch(getRouterPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<RouterResponse>>(getRouterPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   // PROCESS APIs
   fetchProcesses: async (options?: RequestOptions): Promise<ResponseWrapper<ProcessResponse[]>> => {
-    const { data } = await axiosFetch(geProcessesPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(geProcessesPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
     const results = data.results.filter(({ endTime }: ProcessResponse) => !endTime);
 
@@ -132,91 +133,91 @@ export const RESTApi = {
   fetchProcessesResult: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
     const data = await RESTApi.fetchProcesses(options);
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
-    const { data } = await axiosFetch(geProcessPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessResponse>>(geProcessPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchAddressesByProcess: async (id: string, options?: RequestOptions): Promise<AddressResponse[]> => {
-    const { data } = await axiosFetch(getAddressesByProcessPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<AddressResponse[]>>(getAddressesByProcessPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   // HOST APIs
-  fetchHost: async (options?: RequestOptions): Promise<HostResponse[]> => {
-    const { data } = await axiosFetch(getHostsPATH(), {
-      params: options ? addQueryParams(options) : null
+  fetchHosts: async (options?: RequestOptions): Promise<HostResponse[]> => {
+    const data = await axiosFetch<ResponseWrapper<HostResponse[]>>(getHostsPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   // PROCESS GROUPS APIs
   fetchProcessGroups: async (options?: RequestOptions): Promise<ProcessGroupResponse[]> => {
-    const { data } = await axiosFetch(getProcessGroupsPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessGroupResponse[]>>(getProcessGroupsPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults<ProcessGroupResponse[]>(data);
+    return getApiResults<ProcessGroupResponse[]>(data);
   },
 
   fetchProcessGroup: async (id: string, options?: RequestOptions): Promise<ProcessGroupResponse> => {
-    const { data } = await axiosFetch(getProcessGroupPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessGroupResponse>>(getProcessGroupPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchProcessesByProcessGroup: async (id: string, options?: RequestOptions): Promise<ProcessResponse[]> => {
-    const { data } = await axiosFetch(getProcessesByProcessGroupPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByProcessGroupPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults<ProcessResponse[]>(data);
+    return getApiResults<ProcessResponse[]>(data);
   },
 
   // LINKS  APIs
   fetchLinks: async (options?: RequestOptions): Promise<LinkResponse[]> => {
-    const { data } = await axiosFetch(getLinksPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchLink: async (id: string, options?: RequestOptions): Promise<LinkResponse> => {
-    const { data } = await axiosFetch(getLinkPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<LinkResponse>>(getLinkPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   // ADDRESSES APIs
   fetchAddresses: async (options?: RequestOptions): Promise<AddressResponse[]> => {
-    const { data } = await axiosFetch(getAddressesPath(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<AddressResponse[]>>(getAddressesPath(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchFlowPairsByAddress: async (
     id: string,
     options?: RequestOptions
   ): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
-    const { data } = await axiosFetch(getFlowsPairsByAddressPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse[]>>(getFlowsPairsByAddressPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
@@ -225,12 +226,12 @@ export const RESTApi = {
   fetchFlowPairsByAddressResults: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse[]> => {
     const data = await RESTApi.fetchFlowPairsByAddress(id, options);
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchServersByAddress: async (id: string, options?: RequestOptions): Promise<ResponseWrapper<ProcessResponse[]>> => {
-    const { data } = await axiosFetch(getProcessesByAddressPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByAddressPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
@@ -238,86 +239,61 @@ export const RESTApi = {
 
   // FLOW PAIRS  APIs
   fetchFlowPairs: async (options?: RequestOptions): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
-    const { data } = await axiosFetch(getFlowPairsPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse[]>>(getFlowPairsPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
   },
 
   fetchFlowPair: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse> => {
-    const { data } = await axiosFetch(getFlowPairPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse>>(getFlowPairPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   // AGGREGATE  APIs
   fetchSitesPairs: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
-    const { data } = await axiosFetch(getSitePairsPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getSitePairsPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchSitePairs: async (id: string, options?: RequestOptions): Promise<ProcessPairsResponse> => {
-    const { data } = await axiosFetch(getSitePairPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getSitePairPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchProcessgroupsPairs: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
-    const { data } = await axiosFetch(getProcessGroupPairsPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessGroupPairsPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchProcessGroupPairs: async (id: string, options?: RequestOptions): Promise<ProcessPairsResponse> => {
-    const { data } = await axiosFetch(getProcessGroupPairPATH(id), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getProcessGroupPairPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getResults(data);
+    return getApiResults(data);
   },
 
   fetchProcessesPairs: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
-    const { data } = await axiosFetch(getProcessPairsPATH(), {
-      params: options ? addQueryParams(options) : null
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessPairsPATH(), {
+      params: options ? mapOptionsToQueryParams(options) : null
     });
-    const results = data.results.filter(({ endTime }: ProcessResponse) => !endTime);
+    const results = data.results.filter(({ endTime }: ProcessPairsResponse) => !endTime);
 
     // TODO: remove when BE enable multi-filter
-    return getResults({ ...data, results });
+    return getApiResults({ ...data, results });
   }
 };
-
-function getResults<T>(data: { results: T }) {
-  return data.results;
-}
-
-function addQueryParams({
-  filters,
-  filter,
-  offset,
-  limit,
-  sortDirection,
-  sortName,
-  timeRangeEnd,
-  timeRangeStart
-}: RequestOptions) {
-  return {
-    ...filters,
-    filter,
-    offset,
-    limit,
-    timeRangeEnd,
-    timeRangeStart,
-    sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null
-  };
-}

@@ -1,3 +1,5 @@
+import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
+
 import { axiosFetch } from './axiosMiddleware';
 import { gePrometheusQueryPATH, queries } from './Prometheus.constant';
 import {
@@ -5,7 +7,8 @@ import {
   PrometheusApiResultSingle,
   PrometheusFlowsQueryParams,
   PrometheusQueryParams,
-  PrometheusQueryParamsWithStartAndEndTime
+  PrometheusQueryParamsWithStartAndEndTime,
+  PrometheusResponse
 } from './Prometheus.interfaces';
 
 export const PrometheusApi = {
@@ -16,7 +19,7 @@ export const PrometheusApi = {
     isRate = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getStartEndTimeFromInterval(range.seconds);
+    const { start, end } = getCurrentAndPastTimestamps(range.seconds);
     let param1 = `sourceProcess="${id}"`;
     let param2 = `destProcess="${id}"`;
 
@@ -36,10 +39,8 @@ export const PrometheusApi = {
       query = queries.getDataTrafficPerSecondByProcess(param1, param2, '5m');
     }
     const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusApiResult[]>>(gePrometheusQueryPATH(), {
       params: {
         query,
         start,
@@ -71,10 +72,8 @@ export const PrometheusApi = {
       param = [param, `protocol=~"${protocol}"`].join(',');
     }
     const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusApiResult[]>>(gePrometheusQueryPATH(), {
       params: {
         query: quantile
           ? queries.getLatencyIrateByProcess(param, '5m', quantile)
@@ -95,7 +94,7 @@ export const PrometheusApi = {
     isRate = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getStartEndTimeFromInterval(range.seconds);
+    const { start, end } = getCurrentAndPastTimestamps(range.seconds);
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -107,10 +106,8 @@ export const PrometheusApi = {
     }
 
     const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusApiResult[]>>(gePrometheusQueryPATH(), {
       params: {
         query: isRate
           ? queries.getTotalRequestPerSecondByProcess(param, '5m')
@@ -132,7 +129,7 @@ export const PrometheusApi = {
     onlyErrors = false,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusApiResult[]> => {
-    const { start, end } = getStartEndTimeFromInterval(range.seconds);
+    const { start, end } = getCurrentAndPastTimestamps(range.seconds);
     let param = `destProcess="${id}"`;
 
     if (onlyErrors) {
@@ -149,10 +146,8 @@ export const PrometheusApi = {
     }
 
     const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH(), {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusApiResult[]>>(gePrometheusQueryPATH(), {
       params: {
         query: isRate
           ? queries.getResponseStatusCodesPerSecondByProcess(param, '5m')
@@ -170,10 +165,8 @@ export const PrometheusApi = {
     onlyActive = false
   }: PrometheusFlowsQueryParams): Promise<PrometheusApiResultSingle[]> => {
     const {
-      data: {
-        data: { result }
-      }
-    } = await axiosFetch(gePrometheusQueryPATH('single'), {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusApiResultSingle[]>>(gePrometheusQueryPATH('single'), {
       params: {
         query: onlyActive ? queries.getActiveFlowsByAddress() : queries.getTotalFlowsByAddress()
       }
@@ -182,12 +175,3 @@ export const PrometheusApi = {
     return result;
   }
 };
-
-export function getStartEndTimeFromInterval(interval: number): { start: number; end: number } {
-  const now = new Date().getTime() / 1000; // convert in second
-
-  return {
-    start: now - interval,
-    end: now
-  };
-}
