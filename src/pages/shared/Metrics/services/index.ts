@@ -1,6 +1,7 @@
 import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-import { getStartEndTimeFromInterval, PrometheusApi } from 'API/Prometheus';
+import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
+import { PrometheusApi } from 'API/Prometheus';
 import { PrometheusApiResult } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 
@@ -33,7 +34,7 @@ const MetricsController = {
       // latency metrics
       let latencies = null;
       if (protocol !== AvailableProtocols.Tcp) {
-        const { start, end } = getStartEndTimeFromInterval(timeInterval.seconds);
+        const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
 
         const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end });
         const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end });

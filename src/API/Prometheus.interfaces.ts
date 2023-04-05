@@ -9,6 +9,12 @@ export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['valu
 
 type PrometheusApiResultValue = [number, string];
 
+export interface PrometheusResponse<T> {
+  data: {
+    result: T;
+  };
+}
+
 export type PrometheusApiResultSingle = {
   metric: Record<string, string>;
   value: PrometheusApiResultValue;

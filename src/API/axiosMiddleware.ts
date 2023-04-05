@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError } from 'axios';
 
-import { FetchWithTimeoutOptions, HTTPError } from './REST.interfaces';
+import { FetchWithOptions, HTTPError } from './REST.interfaces';
 import { MSG_TIMEOUT_ERROR } from '../config/config';
 
 function handleStatusError(e: AxiosError) {
@@ -22,12 +22,12 @@ function handleStatusError(e: AxiosError) {
   return Promise.reject(error);
 }
 
-export async function axiosFetch(url: string, options: FetchWithTimeoutOptions = {}): Promise<AxiosResponse> {
+export async function axiosFetch<T = unknown>(url: string, options: FetchWithOptions = {}): Promise<T> {
   const response = await axios(url, {
     ...options
   });
 
-  return response;
+  return response.data;
 }
 
 axios.interceptors.response.use(

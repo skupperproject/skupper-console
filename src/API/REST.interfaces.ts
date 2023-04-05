@@ -14,7 +14,6 @@ export type ResponseWrapper<T> = {
 };
 export interface RequestOptions {
   filter?: string;
-  filters?: Record<string, string>;
   offset?: number;
   limit?: number;
   sortDirection?: SortDirection;
@@ -24,7 +23,7 @@ export interface RequestOptions {
   timeRangeOperation?: number; // 0: intersect , 1: contains, 2: within
 }
 
-export type FetchWithTimeoutOptions = AxiosRequestConfig;
+export type FetchWithOptions = AxiosRequestConfig;
 
 export interface HTTPError extends AxiosError {
   httpStatus?: string;
@@ -47,6 +46,15 @@ interface EntityMetricsResponse {
   octetSentRate: number;
   octetsReceived: number;
   octetReceivedRate: number;
+}
+
+export interface QueryParams {
+  filter?: string;
+  offset?: number;
+  limit?: number;
+  timeRangeEnd?: number;
+  timeRangeStart?: number;
+  sortBy?: string | null;
 }
 
 export interface SiteResponse extends EntityBaseResponse, EntityMetricsResponse {
