@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST';
 import { UPDATE_INTERVAL } from '@config/config';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -15,33 +14,23 @@ import { TopologyController } from '../services';
 
 const TopologySite: FC<{ id?: string | null }> = function () {
   const navigate = useNavigate();
-  const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
+  const [refetchInterval] = useState<number>(UPDATE_INTERVAL);
 
   const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
-    refetchInterval,
-    onError: handleError
+    refetchInterval
   });
 
   const { data: routers, isLoading: isLoadingRouters } = useQuery(
     [QueriesSites.GetRouters],
     () => RESTApi.fetchRouters(),
     {
-      refetchInterval,
-      onError: handleError
+      refetchInterval
     }
   );
 
   const { data: links, isLoading: isLoadingLinks } = useQuery([QueriesSites.GetLinks], () => RESTApi.fetchLinks(), {
-    refetchInterval,
-    onError: handleError
+    refetchInterval
   });
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    setRefetchInterval(0);
-    navigate(route);
-  }
 
   const handleGetSelectedNode = useCallback(
     ({ id, name }: { id: string; name: string }) => {

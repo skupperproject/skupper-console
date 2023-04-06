@@ -37,7 +37,7 @@ export const queries = {
     return `sum(http_requests_method_total{${param}})`;
   },
   getTotalRequestPerSecondByProcess(param: string, range: IntervalTimePropValue) {
-    return `sum(irate(http_requests_method_total{${param}}[${range}]))`;
+    return `sum by (method)(irate(http_requests_method_total{${param}}[${range}]))`;
   },
   getResponseStatusCodesByProcess(param: string) {
     return `sum by (partial_code) (label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
@@ -66,6 +66,6 @@ export const queries = {
     return `sum by(address)(flows_total)`;
   },
   getActiveFlowsByAddress() {
-    return `sum by(address)(active_flows)`;
+    return `sum by (address)(increase(active_flows{protocol=~"http.*"}[30s]) or active_flows{protocol="tcp"})`;
   }
 };

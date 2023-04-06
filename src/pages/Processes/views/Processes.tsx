@@ -1,13 +1,11 @@
 import React, { useCallback, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { RequestOptions } from 'API/REST.interfaces';
 
@@ -24,8 +22,6 @@ const initProcessesPaginatedQueryParams = {
 };
 
 const Processes = function () {
-  const navigate = useNavigate();
-
   const [ProcessesPaginatedQueryParams, setProcessesPaginatedQueryParams] = useState<RequestOptions>(
     initProcessesPaginatedQueryParams
   );
@@ -34,19 +30,9 @@ const Processes = function () {
     [QueriesProcesses.GetProcessesPaginated, ProcessesPaginatedQueryParams],
     () => RESTApi.fetchProcesses(ProcessesPaginatedQueryParams),
     {
-      keepPreviousData: true,
-      onError: handleError
+      keepPreviousData: true
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route =
-      httpStatus && ErrorRoutesPaths.error[httpStatus]
-        ? ErrorRoutesPaths.error[httpStatus]
-        : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route, { state: { httpStatus } });
-  }
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
     setProcessesPaginatedQueryParams({ ...initProcessesPaginatedQueryParams, ...params });

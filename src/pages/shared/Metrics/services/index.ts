@@ -110,9 +110,11 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
 
     // Calculate the total count of requests with the status code
     const total =
-      responseValues.length > 1 ? responseValues[data.length - 1].y - responseValues[0].y : responseValues[0]?.y ?? 0;
+      responseValues.length > 1
+        ? responseValues[responseValues.length - 1].y - responseValues[0].y
+        : responseValues[0]?.y ?? 0;
 
-    return { total, label, data: responseValues };
+    return { total, label, data: responseValues.length ? responseValues : undefined };
   };
 
   // Create the statusCodeMetric objects for each status code

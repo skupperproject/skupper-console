@@ -2,6 +2,7 @@ import React, { Suspense, useEffect } from 'react';
 
 import { Divider, Page } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
@@ -9,6 +10,7 @@ import AppMenu from '@core/components/AppMenu/AppMenu';
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
 import SideBar from '@layout/SideBar';
+import Console from '@pages/shared/Errors/Console';
 import { isPrometheusActive, setPrometheusStartTime, setPrometheusUrl } from 'API/Prometheus.constant';
 import { routes } from 'routes';
 
@@ -40,15 +42,17 @@ const App = function () {
 
   return (
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
-      <Suspense fallback={<span />}>
-        <div className="pf-u-mx-md pf-u-mt-md">
-          <AppMenu />
-        </div>
-        <Divider />
-        <div style={{ overflow: 'auto', flex: 1 }}>
-          <AppContent>{routes}</AppContent>
-        </div>
-      </Suspense>
+      <ErrorBoundary FallbackComponent={Console}>
+        <Suspense fallback={<span />}>
+          <div className="pf-u-mx-md pf-u-mt-md">
+            <AppMenu />
+          </div>
+          <Divider />
+          <div style={{ overflow: 'auto', flex: 1 }}>
+            <AppContent>{routes}</AppContent>
+          </div>
+        </Suspense>
+      </ErrorBoundary>
     </Page>
   );
 };
