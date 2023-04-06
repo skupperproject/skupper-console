@@ -27,6 +27,7 @@ import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
 import SkCounterCard from '@core/components/SkCounterCard';
+import { convertToPercentage } from '@core/utils/convertToPercentage';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
@@ -38,7 +39,7 @@ import { AvailableProtocols } from 'API/REST.enum';
 
 import { MetricsLabels } from './Metrics.enum';
 import { MetricsProps } from './Metrics.interfaces';
-import MetricsController, { formatPercentage } from './services';
+import MetricsController from './services';
 import { QueriesMetrics } from './services/services.enum';
 
 const filterOptionsDefault = {
@@ -463,10 +464,12 @@ const Metrics: FC<MetricsProps> = function ({
                       <GridItem span={3}>
                         <SkCounterCard
                           title={metrics.responseSeries.statusCode2xx.label}
-                          value={formatPercentage(
-                            metrics.responseSeries.statusCode2xx.total,
-                            metrics.responseSeries.total
-                          )}
+                          value={
+                            convertToPercentage(
+                              metrics.responseSeries.statusCode2xx.total,
+                              metrics.responseSeries.total
+                            ) || ' - '
+                          }
                           bgColor={'--pf-global--palette--green-400'}
                           showChart={false}
                         />
@@ -474,10 +477,12 @@ const Metrics: FC<MetricsProps> = function ({
                       <GridItem span={3}>
                         <SkCounterCard
                           title={metrics.responseSeries.statusCode3xx.label}
-                          value={formatPercentage(
-                            metrics.responseSeries.statusCode3xx.total,
-                            metrics.responseSeries.total
-                          )}
+                          value={
+                            convertToPercentage(
+                              metrics.responseSeries.statusCode3xx.total,
+                              metrics.responseSeries.total
+                            ) || ' - '
+                          }
                           bgColor={'--pf-global--palette--blue-400'}
                           showChart={false}
                         />
@@ -485,10 +490,12 @@ const Metrics: FC<MetricsProps> = function ({
                       <GridItem span={3}>
                         <SkCounterCard
                           title={metrics.responseSeries.statusCode4xx.label}
-                          value={formatPercentage(
-                            metrics.responseSeries.statusCode4xx.total,
-                            metrics.responseSeries.total
-                          )}
+                          value={
+                            convertToPercentage(
+                              metrics.responseSeries.statusCode4xx.total,
+                              metrics.responseSeries.total
+                            ) || ' - '
+                          }
                           bgColor={'--pf-global--palette--orange-100'}
                           showChart={false}
                         />
@@ -496,10 +503,12 @@ const Metrics: FC<MetricsProps> = function ({
                       <GridItem span={3}>
                         <SkCounterCard
                           title={metrics.responseSeries.statusCode5xx.label}
-                          value={formatPercentage(
-                            metrics.responseSeries.statusCode5xx.total,
-                            metrics.responseSeries.total
-                          )}
+                          value={
+                            convertToPercentage(
+                              metrics.responseSeries.statusCode5xx.total,
+                              metrics.responseSeries.total
+                            ) || ' - '
+                          }
                           bgColor={'--pf-global--palette--red-100'}
                           showChart={false}
                         />

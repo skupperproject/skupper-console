@@ -96,7 +96,7 @@ export default MetricsController;
 
 function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
-  const prometheusData = convertPrometheusDataInChartData(data);
+  const prometheusData = getChartValuesAndLabels(data);
 
   if (!prometheusData) {
     return null;
@@ -129,7 +129,7 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
 }
 
 function normalizeRequests(data: PrometheusApiResult[], label: string): RequestMetrics[] | null {
-  const axisValues = convertPrometheusDataInChartAxisValues(data);
+  const axisValues = extractPrometheusValues(data);
 
   if (!axisValues) {
     return null;
@@ -158,9 +158,9 @@ function normalizeLatencies({
   quantile90latency,
   quantile99latency
 }: LatencyMetricsProps): LatencyMetrics | null {
-  const quantile50latencyNormalized = convertPrometheusDataInChartAxisValues(quantile50latency);
-  const quantile90latencyNormalized = convertPrometheusDataInChartAxisValues(quantile90latency);
-  const quantile99latencyNormalized = convertPrometheusDataInChartAxisValues(quantile99latency);
+  const quantile50latencyNormalized = extractPrometheusValues(quantile50latency);
+  const quantile90latencyNormalized = extractPrometheusValues(quantile90latency);
+  const quantile99latencyNormalized = extractPrometheusValues(quantile99latency);
 
   if (
     (!quantile50latencyNormalized || !quantile50latencyNormalized[0]?.filter(({ y }) => y).length) &&
@@ -189,7 +189,7 @@ function normalizeLatencies({
 
 function normalizeTrafficData(data: PrometheusApiResult[]): TrafficMetrics | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
-  const axisValues = convertPrometheusDataInChartAxisValues(data);
+  const axisValues = extractPrometheusValues(data);
   if (!axisValues) {
     return null;
   }
@@ -234,7 +234,7 @@ function normalizeTrafficData(data: PrometheusApiResult[]): TrafficMetrics | nul
   };
 }
 
-function convertPrometheusDataInChartAxisValues(data: PrometheusApiResult[]): SkChartAreaData[][] | null {
+function extractPrometheusValues(data: PrometheusApiResult[]): SkChartAreaData[][] | null {
   if (!data.length) {
     return null;
   }
@@ -247,31 +247,26 @@ function convertPrometheusDataInChartAxisValues(data: PrometheusApiResult[]): Sk
   );
 }
 
-function convertPrometheusDataInChartLabels(data: PrometheusApiResult[]): string[][] | null {
-  if (!data.length) {
+/**
+ * Converts an array of Prometheus result objects to a two-dimensional array of metric labels.
+ */
+function extractPrometheusLabels(data: PrometheusApiResult[]): string[][] | null {
+  // Validate the input
+  if (!Array.isArray(data) || data.length === 0) {
     return null;
   }
 
-  return data.map(({ metric }) => Object.values(metric).map((label) => label));
+  // Map the input array to an array of label arrays using array destructuring
+  return data.map(({ metric }) => Object.values(metric));
 }
 
-function convertPrometheusDataInChartData(data: PrometheusApiResult[]): MetricData | null {
+function getChartValuesAndLabels(data: PrometheusApiResult[]): MetricData | null {
   if (!data.length) {
     return null;
   }
 
-  const values = convertPrometheusDataInChartAxisValues(data) as SkChartAreaData[][];
-  const labels = convertPrometheusDataInChartLabels(data) as string[][];
+  const values = extractPrometheusValues(data) as SkChartAreaData[][];
+  const labels = extractPrometheusLabels(data) as string[][];
 
   return { values, labels };
-}
-
-export function formatPercentage(value: number, total: number) {
-  const percentage = (value / total) * 100;
-
-  if (isNaN(percentage)) {
-    return 0;
-  }
-
-  return `${formatToDecimalPlacesIfCents(percentage, 0)}%`;
 }
