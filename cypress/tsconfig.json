@@ -2,11 +2,10 @@
   "extends": "../config/tsconfig.paths.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "noEmit": true,
     "target": "ES2022",
     "lib": ["dom", "es2022"],
-    "types": ["cypress", "node"],
-    "moduleResolution": "node",
+    "types": ["cypress"],
     "baseUrl": "../src"
-  }
+  },
+  "include": ["**/*.ts"]
 }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -9,7 +7,7 @@ const NavBar = function () {
   const { pathname } = useLocation();
 
   return (
-    <Nav data-cy="sk-nav-bar">
+    <Nav data-testid="sk-nav-bar-component">
       <NavList>
         {RoutesPropsConfig.map(({ name, path }) => (
           <NavItem key={path} isActive={pathname.startsWith(`${path}`)}>

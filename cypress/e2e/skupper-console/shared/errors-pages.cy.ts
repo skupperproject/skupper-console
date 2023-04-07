@@ -1,10 +1,10 @@
-/// <reference types="Cypress" />
+import { getTestsIds } from '@config/testIds.config';
 
 context('Error pages', () => {
   beforeEach(() => {});
 
   it('should redirect to the Not found page when url not exists', () => {
     cy.visit('/#/wrong-page');
-    cy.get('[data-cy=sk-not-found]').contains('Page not found').should('be.visible');
+    cy.get(`[data-testid=${getTestsIds.notFoundView()}]`).contains('Page not found').should('be.visible');
   });
 });

@@ -41,7 +41,7 @@ module.exports = {
   moduleDirectories: ['node_modules'],
   roots: [SRC_PATH],
   transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${CONFIG_PATH}/tsconfig.test.json`, isolatedModules: true }],
+    '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
     '^.+\\.svg$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`
   }
 };
