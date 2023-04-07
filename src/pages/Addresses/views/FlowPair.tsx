@@ -66,7 +66,7 @@ const FlowsPair = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter data-cy="sk-address">
+      <Grid hasGutter>
         {flowPair.protocol === AvailableProtocols.Tcp && (
           <>
             <TextContent>

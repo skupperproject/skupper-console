@@ -65,7 +65,7 @@ const Addresses = function () {
       <>
         <SkTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
         {/* addresses table */}
-        <Grid hasGutter data-cy="sk-addresses">
+        <Grid hasGutter>
           <GridItem>
             <Card isFullHeight>
               <SkTable

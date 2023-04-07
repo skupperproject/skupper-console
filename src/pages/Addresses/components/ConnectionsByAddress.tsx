@@ -72,7 +72,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
   return (
-    <Grid hasGutter data-cy="sk-address">
+    <Grid hasGutter>
       <GridItem>
         <SkTitle
           title={addressName}

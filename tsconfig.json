@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "jsx": "react-jsx",
     "typeRoots": ["node_modules/@types", "@types_app"],
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "sourceMap": true,
     "allowJs": true,
     "esModuleInterop": true,
@@ -16,6 +16,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "noEmit": true,
+    "skipLibCheck": true,
     "downlevelIteration": true,
     "strictNullChecks": true,
     "noImplicitReturns": true,
@@ -23,6 +24,6 @@
     "noUnusedParameters": true,
     "strictPropertyInitialization": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
-  "exclude": ["node_modules", "build", "src/**/*.spec.ts", "src/**/*.spec.tsx"] // spec avoid errors from cypress
+  "include": ["src", "@types_app/index.d.ts"],
+  "exclude": ["node_modules", "build"]
 }
