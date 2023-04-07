@@ -7,6 +7,6 @@
     "lib": ["dom", "es2022"],
     "types": ["cypress", "node"],
     "moduleResolution": "node",
-    "baseUrl": "./src"
+    "baseUrl": "../src"
   }
 }
