@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useState } from 'react';
 
 import { Card, Tab, Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
 import { CogIcon, CogsIcon, ProjectDiagramIcon } from '@patternfly/react-icons';
@@ -18,7 +18,7 @@ const Topology = function () {
 
   const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
 
-  function handleChangeTopologyType(_: React.MouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
+  function handleChangeTopologyType(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     searchParams.delete('id'); // remove the id from the url when the topology view change
     setTopologyType(tabIndex as string);
   }

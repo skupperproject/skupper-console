@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PageSidebar } from '@patternfly/react-core';
 
 import NavBar from '@core/components/NavBar';

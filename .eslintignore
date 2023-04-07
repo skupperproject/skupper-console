@@ -1,6 +1,7 @@
-**/node_modules
-**/public
-**/build
-**/config
-**/cypress
-./public/mocks/data/*
+node_modules
+public
+build
+config
+cypress
+**/*.config.js
+

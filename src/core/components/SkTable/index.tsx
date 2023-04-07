@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 
 import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
@@ -37,7 +37,7 @@ const SkTable = function <T>({
         index: activeSortIndex,
         direction: activeSortDirection
       },
-      onSort: (_event: React.MouseEvent, index: number, direction: 'asc' | 'desc') => {
+      onSort: (_event: ReactMouseEvent, index: number, direction: 'asc' | 'desc') => {
         if (onGetFilters) {
           onGetFilters({
             limit: pageSize,
@@ -55,7 +55,7 @@ const SkTable = function <T>({
     [activeSortDirection, activeSortIndex, columns, currentPageNumber, pageSize, onGetFilters]
   );
 
-  function handleSetPageNumber(_: React.MouseEvent | React.KeyboardEvent | MouseEvent, pageNumber: number) {
+  function handleSetPageNumber(_: ReactMouseEvent | KeyboardEvent | MouseEvent, pageNumber: number) {
     setCurrentPageNumber(pageNumber);
 
     if (onGetFilters) {
@@ -69,7 +69,7 @@ const SkTable = function <T>({
   }
 
   function handleSetPageSize(
-    _: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    _: ReactMouseEvent | KeyboardEvent | MouseEvent,
     pageSizeSelected: number,
     newPage: number
   ) {

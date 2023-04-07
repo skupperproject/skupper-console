@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';

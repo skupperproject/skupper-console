@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Tooltip } from '@patternfly/react-core';
 import { TableText } from '@patternfly/react-table';
 

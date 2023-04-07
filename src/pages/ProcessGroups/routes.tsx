@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 
 import { ProcessGroupsRoutesPaths } from './ProcessGroups.enum';
 

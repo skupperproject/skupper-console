@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Flex, Grid, GridItem, Icon, Title } from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';

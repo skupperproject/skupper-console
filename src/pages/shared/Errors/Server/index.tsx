@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Brand, Grid, GridItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useLocation } from 'react-router-dom';
 

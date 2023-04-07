@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 
 import { QueryCache, QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter, useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ const QueryClientContext = function ({
   children
 }: {
   config?: QueryClientConfig;
-  children: React.ReactElement;
+  children: ReactElement;
 }) {
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const QueryClientContext = function ({
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
-export const Wrapper = function ({ children, config }: { config?: QueryClientConfig; children: React.ReactElement }) {
+export const Wrapper = function ({ children, config }: { config?: QueryClientConfig; children: ReactElement }) {
   return (
     <HashRouter>
       <QueryClientContext config={config}>{children}</QueryClientContext>

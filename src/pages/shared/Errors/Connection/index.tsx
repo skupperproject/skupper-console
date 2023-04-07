@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Brand, Grid, GridItem, TextContent, Text, TextVariants, List, ListItem, Button } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 

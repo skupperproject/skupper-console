@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { ComponentType, FC } from 'react';
 
 import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title } from '@patternfly/react-core';
 
@@ -6,7 +6,7 @@ import { EmptyDataLabels } from './EmptyData.enum';
 
 interface EmptyDataProps {
   message?: string;
-  icon?: React.ComponentType;
+  icon?: ComponentType;
 }
 
 const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Default, icon }) {

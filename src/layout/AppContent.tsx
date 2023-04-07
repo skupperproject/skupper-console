@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { AnimatePresence } from 'framer-motion';
 import { useRoutes, RouteObject } from 'react-router-dom';
 

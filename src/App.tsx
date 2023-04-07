@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { Divider, Page } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';

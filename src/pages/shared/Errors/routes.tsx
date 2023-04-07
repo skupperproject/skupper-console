@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 
 import { ErrorConnectionRoutesPaths } from './Connection/Connection.enum';
 import { NotFoundRoutesPaths } from './NotFound/NotFound.enum';
