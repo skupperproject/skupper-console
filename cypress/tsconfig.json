@@ -8,7 +8,5 @@
     "types": ["cypress", "node"],
     "moduleResolution": "node",
     "baseUrl": "./src"
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["**/*.spec.ts", "**/*.spec.tsx"]
+  }
 }
