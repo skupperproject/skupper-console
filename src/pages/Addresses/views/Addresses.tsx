@@ -2,14 +2,12 @@ import React from 'react';
 
 import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { PrometheusApi } from 'API/Prometheus';
 import { isPrometheusActive } from 'API/Prometheus.constant';
@@ -24,18 +22,13 @@ import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
 const Addresses = function () {
-  const navigate = useNavigate();
-
-  const { data: addresses, isLoading } = useQuery([QueriesAddresses.GetAddresses], () => RESTApi.fetchAddresses(), {
-    onError: handleError
-  });
+  const { data: addresses, isLoading } = useQuery([QueriesAddresses.GetAddresses], () => RESTApi.fetchAddresses());
 
   const { data: tcpActiveFlows, isLoading: isLoadingTcpActiveFlows } = useQuery(
     ['QueriesAddresses.GetFlowsByProtocol'],
     () => PrometheusApi.fetchFlowsByAddress({ onlyActive: true }),
     {
-      enabled: isPrometheusActive(),
-      onError: handleError
+      enabled: isPrometheusActive()
     }
   );
 
@@ -43,16 +36,9 @@ const Addresses = function () {
     ['QueriesAddresses.GetHttpFlowsByProtocol'],
     () => PrometheusApi.fetchFlowsByAddress({}),
     {
-      enabled: isPrometheusActive(),
-      onError: handleError
+      enabled: isPrometheusActive()
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   if (isLoading || ((isLoadingTcpActiveFlows || isLoadingHttpTotalFlows) && isPrometheusActive())) {
     return <LoadingPage />;

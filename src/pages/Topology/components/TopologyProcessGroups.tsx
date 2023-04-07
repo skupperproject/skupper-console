@@ -8,7 +8,6 @@ import { UPDATE_INTERVAL } from '@config/config';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 
 import { TopologyController } from '../services';
@@ -20,15 +19,13 @@ const processGroupsQueryParams = {
 
 const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
   const navigate = useNavigate();
-  const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
   const [nodeSelected] = useState<string | undefined>(id);
 
   const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
     () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
     {
-      refetchInterval,
-      onError: handleError
+      refetchInterval: UPDATE_INTERVAL
     }
   );
 
@@ -36,17 +33,9 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
     [QueriesTopology.GetProcessGroupsLinks],
     () => RESTApi.fetchProcessgroupsPairs(),
     {
-      refetchInterval,
-      onError: handleError
+      refetchInterval: UPDATE_INTERVAL
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    setRefetchInterval(0);
-    navigate(route);
-  }
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected, name }: { id: string; name: string }) => {

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import LinkCell from '@core/components/LinkCell';
@@ -9,7 +8,6 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { ProcessGroupResponse } from 'API/REST.interfaces';
 
@@ -22,21 +20,10 @@ const initProcessGroupsQueryParams = {
 };
 
 const ProcessGroups = function () {
-  const navigate = useNavigate();
-
   const { data: processGroups, isLoading } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, initProcessGroupsQueryParams],
-    () => RESTApi.fetchProcessGroups(initProcessGroupsQueryParams),
-    {
-      onError: handleError
-    }
+    () => RESTApi.fetchProcessGroups(initProcessGroupsQueryParams)
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   if (isLoading) {
     return <LoadingPage />;

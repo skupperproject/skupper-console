@@ -16,7 +16,7 @@ import {
   Title
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -25,7 +25,6 @@ import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/for
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { AvailableProtocols } from 'API/REST.enum';
 import { ConnectionTCP, RequestHTTP } from 'API/REST.interfaces';
@@ -34,26 +33,14 @@ import { FlowLabels } from '../Addresses.enum';
 import { QueriesAddresses } from '../services/services.enum';
 
 const FlowsPair = function () {
-  const navigate = useNavigate();
   const { address, flowPairId } = useParams();
 
   const addressId = address?.split('@')[1];
   const addressName = address?.split('@')[0];
 
-  const { data: flowPair, isLoading: isLoadingFlowPairs } = useQuery(
-    [QueriesAddresses.GetFlowPair, flowPairId],
-    () => (addressId && flowPairId ? RESTApi.fetchFlowPair(flowPairId as string) : null),
-    {
-      cacheTime: 0,
-      onError: handleError
-    }
+  const { data: flowPair, isLoading: isLoadingFlowPairs } = useQuery([QueriesAddresses.GetFlowPair, flowPairId], () =>
+    addressId && flowPairId ? RESTApi.fetchFlowPair(flowPairId as string) : null
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   if (isLoadingFlowPairs) {
     return <LoadingPage />;

@@ -2,12 +2,10 @@ import React, { FC, useCallback, useState } from 'react';
 
 import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -31,7 +29,6 @@ const initServersQueryParams = {
 };
 
 const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol }) {
-  const navigate = useNavigate();
   const [addressView, setAddressView] = useState<number>(0);
   const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
     initAllRequestsQueryParamsPaginated
@@ -54,8 +51,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
           })
         : null,
     {
-      keepPreviousData: true,
-      onError: handleError
+      keepPreviousData: true
     }
   );
 
@@ -63,16 +59,9 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     [QueriesAddresses.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
-      keepPreviousData: true,
-      onError: handleError
+      keepPreviousData: true
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   function handleTabClick(_: React.MouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setAddressView(tabIndex as number);

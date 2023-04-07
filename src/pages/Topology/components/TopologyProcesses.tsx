@@ -23,7 +23,6 @@ import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 
@@ -41,7 +40,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 }) {
   const navigate = useNavigate();
 
-  const [refetchInterval, setRefetchInterval] = useState<number>(UPDATE_INTERVAL);
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge<string>[]>([]);
   const [groups, setGroups] = useState<GraphGroup[]>();
@@ -52,16 +50,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
 
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
-    refetchInterval,
-    onError: handleError
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: processes, isLoading: isLoadingProcesses } = useQuery(
     [QueriesProcesses.GetProcessResult, processesQueryParams],
     () => RESTApi.fetchProcessesResult(processesQueryParams),
     {
-      refetchInterval,
-      onError: handleError
+      refetchInterval: UPDATE_INTERVAL
     }
   );
 
@@ -69,8 +65,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesAddresses.GetAddresses],
     () => RESTApi.fetchAddresses(),
     {
-      refetchInterval,
-      onError: handleError
+      refetchInterval: UPDATE_INTERVAL
     }
   );
 
@@ -78,8 +73,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetProcessesPairs],
     () => RESTApi.fetchProcessesPairs(),
     {
-      refetchInterval,
-      onError: handleError
+      refetchInterval: UPDATE_INTERVAL
     }
   );
 
@@ -88,17 +82,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddressResults(addressIdSelected) : undefined),
     {
       enabled: !!addressIdSelected,
-      refetchInterval,
-      onError: handleError
+      refetchInterval: UPDATE_INTERVAL
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    setRefetchInterval(0);
-    navigate(route);
-  }
 
   const handleGetSelectedNode = useCallback(
     ({ id, name }: { id: string; name: string }) => {

@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Flex, Grid, GridItem, Icon, Title } from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
@@ -12,7 +12,6 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { FlowPairsLabels } from '@pages/Addresses/Addresses.enum';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -36,25 +35,17 @@ const ProcessPairs = function () {
   const sourceId = ids[0];
   const destinationId = ids[1];
 
-  const navigate = useNavigate();
   const [flowPairsQueryParamsPaginated, setFlowParisQueryParamsPaginated] = useState<RequestOptions>(
     initAllFlowParisQueryParamsPaginated
   );
 
-  const { data: sourceProcess, isLoading: isLoadingSourceProcess } = useQuery(
-    [QueriesProcesses.GetProcess],
-    () => (sourceId ? RESTApi.fetchProcess(sourceId) : undefined),
-    {
-      onError: handleError
-    }
+  const { data: sourceProcess, isLoading: isLoadingSourceProcess } = useQuery([QueriesProcesses.GetProcess], () =>
+    sourceId ? RESTApi.fetchProcess(sourceId) : undefined
   );
 
   const { data: destinationProcess, isLoading: isLoadingDestinationProcess } = useQuery(
     [QueriesProcesses.GetDestinationProcess],
-    () => (destinationId ? RESTApi.fetchProcess(destinationId) : undefined),
-    {
-      onError: handleError
-    }
+    () => (destinationId ? RESTApi.fetchProcess(destinationId) : undefined)
   );
 
   const { data: flowPairsPairsData, isLoading: isLoadingFlowPairsPairsData } = useQuery(
@@ -66,16 +57,9 @@ const ProcessPairs = function () {
         filter: `processAggregateId.${processPairId}`
       }),
     {
-      keepPreviousData: true,
-      onError: handleError
+      keepPreviousData: true
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   const handleGetFiltersFlowPairs = useCallback((params: RequestOptions) => {
     setFlowParisQueryParamsPaginated(params);

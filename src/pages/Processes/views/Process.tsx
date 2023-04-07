@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
@@ -13,7 +13,6 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
@@ -27,53 +26,33 @@ import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from 
 import { QueriesProcesses } from '../services/services.enum';
 
 const Process = function () {
-  const navigate = useNavigate();
   const { id } = useParams() as { id: string };
   const { id: processId } = getIdAndNameFromUrlParams(id);
 
-  const { data: process, isLoading: isLoadingProcess } = useQuery(
-    [QueriesProcesses.GetProcess, processId],
-    () => RESTApi.fetchProcess(processId),
-    {
-      onError: handleError
-    }
+  const { data: process, isLoading: isLoadingProcess } = useQuery([QueriesProcesses.GetProcess, processId], () =>
+    RESTApi.fetchProcess(processId)
   );
 
   const { data: processesPairsTxData, isLoading: isLoadingProcessesPairsTxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsTx, processId],
+    [QueriesProcesses.GetProcessPairsTx, `sourceId.${processId}`],
     () =>
       RESTApi.fetchProcessesPairs({
         filter: `sourceId.${processId}`
-      }),
-    {
-      onError: handleError
-    }
+      })
   );
 
   const { data: processesPairsRxData, isLoading: isLoadingProcessesPairsRxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsRx, processId],
+    [QueriesProcesses.GetProcessPairsRx, `destinationId.${processId}`],
     () =>
       RESTApi.fetchProcessesPairs({
         filter: `destinationId.${processId}`
-      }),
-    {
-      onError: handleError
-    }
+      })
   );
 
   const { data: addresses, isLoading: isLoadingAddressesByProcess } = useQuery(
     [QueriesProcesses.GetAddressesByProcessId, processId],
-    () => RESTApi.fetchAddressesByProcess(processId),
-    {
-      onError: handleError
-    }
+    () => RESTApi.fetchAddressesByProcess(processId)
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   if (
     isLoadingProcess ||

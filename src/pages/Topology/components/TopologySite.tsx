@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -14,22 +14,21 @@ import { TopologyController } from '../services';
 
 const TopologySite: FC<{ id?: string | null }> = function () {
   const navigate = useNavigate();
-  const [refetchInterval] = useState<number>(UPDATE_INTERVAL);
 
   const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
-    refetchInterval
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: routers, isLoading: isLoadingRouters } = useQuery(
     [QueriesSites.GetRouters],
     () => RESTApi.fetchRouters(),
     {
-      refetchInterval
+      refetchInterval: UPDATE_INTERVAL
     }
   );
 
   const { data: links, isLoading: isLoadingLinks } = useQuery([QueriesSites.GetLinks], () => RESTApi.fetchLinks(), {
-    refetchInterval
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const handleGetSelectedNode = useCallback(
