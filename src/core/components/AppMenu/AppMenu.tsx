@@ -15,6 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 
 import { SYNC_DATA_INTERVAL } from '@config/config';
+import { getTestsIds } from '@config/testIds.config';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
 
@@ -72,7 +73,7 @@ const AppMenu = function () {
   }
 
   return (
-    <Toolbar isFullHeight>
+    <Toolbar isFullHeight data-testid={getTestsIds.breadcrumbComponent()}>
       <ToolbarContent>
         <ToolbarItem>
           <Breadcrumb>

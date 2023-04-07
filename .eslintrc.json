@@ -33,14 +33,14 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
+    "tsconfigRootDir": "./",
     "comment": true,
     "ecmaFeatures": {
       "jsx": true
     },
     "ecmaVersion": 12,
     "extraFileExtensions": [".json"],
-    "sourceType": "module",
-    "tsconfigRootDir": "./"
+    "sourceType": "module"
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {

@@ -24,5 +24,5 @@
     "strictPropertyInitialization": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
-  "exclude": ["**/node_modules", "**/build", "./cypress.config.ts"]
+  "exclude": ["**/node_modules", "**/build", "./cypress.config.ts", "**/*.spec.ts", "**/*.spec.tsx"]
 }
