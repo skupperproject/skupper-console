@@ -39,7 +39,8 @@
     "ecmaVersion": 12,
     "extraFileExtensions": [".json"],
     "sourceType": "module",
-    "project": "./tsconfig.eslint.json"
+    "project": "tsconfig.eslint.json",
+    "tsconfigRootDir": "./config"
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
@@ -122,6 +123,7 @@
     ],
     "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
     "react/jsx-fragments": "error",
+    "react/react-in-jsx-scope": "off",
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",

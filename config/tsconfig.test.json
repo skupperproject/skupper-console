@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "types": ["jest", "jest-dom", "@testing-library/jest-dom"],
     "module": "commonjs"
