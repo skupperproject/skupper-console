@@ -13,14 +13,13 @@ import {
   Title
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import ProcessesTable from '@pages/Processes/components/ProcessesTable';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
@@ -35,31 +34,18 @@ const initProcessesQueryParams = {
 };
 
 const ProcessGroup = function () {
-  const navigate = useNavigate();
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
 
   const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
     [QueriesProcessGroups.GetProcessGroup, processGroupId],
-    () => RESTApi.fetchProcessGroup(processGroupId),
-    {
-      onError: handleError
-    }
+    () => RESTApi.fetchProcessGroup(processGroupId)
   );
 
   const { data: processes, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId, initProcessesQueryParams],
-    () => RESTApi.fetchProcessesByProcessGroup(processGroupId, initProcessesQueryParams),
-    {
-      onError: handleError
-    }
+    () => RESTApi.fetchProcessesByProcessGroup(processGroupId, initProcessesQueryParams)
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   if (isLoadingProcessGroup || isLoadingProcess) {
     return <LoadingPage />;

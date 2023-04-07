@@ -21,7 +21,6 @@ import {
 import { CircleIcon, ClockIcon, ClusterIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
@@ -32,7 +31,6 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
 import { defaultTimeInterval, gePrometheusStartTime, timeIntervalMap } from 'API/Prometheus.constant';
 import { IntervalTimeProp } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
@@ -56,8 +54,6 @@ const Metrics: FC<MetricsProps> = function ({
   protocolDefault,
   customFilters
 }) {
-  const navigate = useNavigate();
-
   const filterOptions = { ...filterOptionsDefault, ...customFilters };
 
   const [isOpenSourceProcessMenu, setIsOpenSourceProcessMenu] = useState<boolean>(false);
@@ -82,16 +78,9 @@ const Metrics: FC<MetricsProps> = function ({
     [QueriesMetrics.GetMetrics, filters],
     () => MetricsController.getMetrics(filters),
     {
-      keepPreviousData: true,
-      onError: handleError
+      keepPreviousData: true
     }
   );
-
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
-
-    navigate(route);
-  }
 
   function handleSelectSourceProcessMenu(
     _: React.MouseEvent | React.ChangeEvent,
