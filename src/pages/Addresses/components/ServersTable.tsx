@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { CSSProperties, FC } from 'react';
 
 // eslint-disable-next-line import/no-unresolved
 import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@patternfly/react-core';
@@ -38,7 +38,7 @@ const PleaseWait = function () {
   );
 };
 
-const floatLoader: React.CSSProperties = {
+const floatLoader: CSSProperties = {
   top: 0,
   position: 'absolute',
   backgroundColor: 'white',

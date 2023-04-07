@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';

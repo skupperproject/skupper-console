@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import { FC, MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 
 import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -63,7 +63,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     }
   );
 
-  function handleTabClick(_: React.MouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
+  function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setAddressView(tabIndex as number);
   }
 

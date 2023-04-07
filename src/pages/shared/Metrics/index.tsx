@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useMemo, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import {
@@ -83,7 +83,7 @@ const Metrics: FC<MetricsProps> = function ({
   );
 
   function handleSelectSourceProcessMenu(
-    _: React.MouseEvent | React.ChangeEvent,
+    _: MouseEvent | ChangeEvent,
     selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {
@@ -98,7 +98,7 @@ const Metrics: FC<MetricsProps> = function ({
   }
 
   function handleSelectDestinationProcessMenu(
-    _: React.MouseEvent | React.ChangeEvent,
+    _: MouseEvent | ChangeEvent,
     selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {
@@ -113,7 +113,7 @@ const Metrics: FC<MetricsProps> = function ({
   }
 
   function handleSelectTimeIntervalMenu(
-    _: React.MouseEvent | React.ChangeEvent,
+    _: MouseEvent | ChangeEvent,
     selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {
@@ -128,7 +128,7 @@ const Metrics: FC<MetricsProps> = function ({
   }
 
   function handleSelectProtocolMenu(
-    _: React.MouseEvent | React.ChangeEvent,
+    _: MouseEvent | ChangeEvent,
     selection: SelectOptionObject,
     isPlaceholder?: boolean
   ) {

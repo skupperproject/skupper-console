@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Brand, PageHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import Logo from '@assets/skupper.svg';

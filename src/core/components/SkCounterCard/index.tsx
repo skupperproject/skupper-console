@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { ChartArea, ChartGroup, ChartThemeColor, ChartVoronoiContainer } from '@patternfly/react-charts';
 import { Bullseye, Card, CardBody, CardFooter, Title } from '@patternfly/react-core';

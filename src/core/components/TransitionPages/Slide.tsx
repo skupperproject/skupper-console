@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactElement } from 'react';
 
 import { motion } from 'framer-motion';
 
-const TransitionPage: FC<{ children: React.ReactElement; delay?: number }> = function ({ children, delay = 0 }) {
+const TransitionPage: FC<{ children: ReactElement; delay?: number }> = function ({ children, delay = 0 }) {
   const transition = {
     in: {
       opacity: 1

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
 import {
   Flex,
@@ -107,11 +107,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     setIsOpen(isSelectAddressOpen);
   }
 
-  function handleSelect(
-    _: React.MouseEvent | React.ChangeEvent,
-    selection: string | SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
+  function handleSelect(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject, isPlaceholder?: boolean) {
     const id = isPlaceholder ? undefined : (selection as string);
 
     setAddressId(id);

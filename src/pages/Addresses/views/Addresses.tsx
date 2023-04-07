@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 

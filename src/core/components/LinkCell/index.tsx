@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Truncate } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 

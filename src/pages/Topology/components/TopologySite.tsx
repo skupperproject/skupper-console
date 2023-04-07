@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
