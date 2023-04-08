@@ -1,23 +1,11 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
-import {
-  Flex,
-  Panel,
-  PanelMainBody,
-  Select,
-  SelectOption,
-  SelectOptionObject,
-  Text,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem
-} from '@patternfly/react-core';
+import { Select, SelectOption, SelectOptionObject, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { UPDATE_INTERVAL } from '@config/config';
-import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphGroup, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
@@ -204,29 +192,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         onClickEdge={handleGetSelectedEdge}
         nodeSelected={nodeSelected}
       />
-
-      <Panel>
-        <PanelMainBody>
-          <Flex>
-            <Text>
-              <b>{Labels.LegendGroupsItems}:</b>
-            </Text>
-            {groups?.map(({ id, name }, index) => (
-              <Flex key={id}>
-                <div
-                  className="pf-u-mr-xs"
-                  style={{
-                    width: 10,
-                    height: 10,
-                    backgroundColor: nodeColors[index]
-                  }}
-                />
-                {name}
-              </Flex>
-            ))}
-          </Flex>
-        </PanelMainBody>
-      </Panel>
     </>
   );
 };
