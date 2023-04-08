@@ -21,7 +21,7 @@
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "strictPropertyInitialization": true
   },
   "include": ["src", "@types_app/index.d.ts"],

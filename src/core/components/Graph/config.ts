@@ -1,4 +1,4 @@
-export const NODE_SIZE = 35;
+export const NODE_SIZE = 45;
 export const ARROW_SIZE = 10;
 export const FONT_SIZE_DEFAULT = 14;
 export const OPACITY_NO_SELECTED_ITEM = 0.1;

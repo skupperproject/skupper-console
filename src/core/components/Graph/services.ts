@@ -75,15 +75,21 @@ export const GraphController = {
     // Filter nodes by group ID and get their coordinates
     const nodeCoords: [number, number][] = nodes.filter(({ group }) => group === groupId).map(({ x, y }) => [x, y]);
 
-    // Ensure there are at least three nodes to create a polygon
-    if (nodeCoords.length < 3) {
-      // If there are less than three nodes, add additional nodes with NODE_SIZE distance and close to the first one
-      // If this is an empty group, use default coordinates [0, 0]
-      const [x, y] = nodeCoords[0] || [0, 0];
+    const [x, y] = nodeCoords[0] || [0, 0];
 
+    // Ensure there are at least three nodes to create a polygon
+    if (nodeCoords.length === 2) {
       for (let i = nodeCoords.length; i < 3; i++) {
         nodeCoords.push([x + NODE_SIZE * i, y + NODE_SIZE * i]);
       }
+    }
+
+    // Ensure there are at least three nodes to create a polygon
+    if (nodeCoords.length < 2) {
+      nodeCoords.push([x + NODE_SIZE * 2, y]);
+      nodeCoords.push([x - NODE_SIZE * 2, y]);
+      nodeCoords.push([x, y - NODE_SIZE * 2]);
+      nodeCoords.push([x, y + NODE_SIZE * 2]);
     }
 
     // Generate the polygon hull from the node coordinates

@@ -217,37 +217,54 @@ export default class Graph {
     });
 
     // move groups
-    if (this.groups) {
-      this.groups.forEach(({ id: groupId }) => {
-        let centroid: [number, number] = [0, 0];
-        const paths = this.svgGraphGroup
-          .selectAll<SVGPathElement, GraphGroup>(`.${GROUP_NODE_PATHS_CLASS_NAME}`)
-          .filter(({ id }) => id === groupId)
-          .attr('transform', 'scale(1) translate(0,0)')
-          .attr('d', ({ id }) => {
-            const polygon = GraphController.polygonGenerator(this.nodes, id);
-            centroid = polygon ? polygonCentroid(polygon) : [0, 0];
-            const points: [number, number][] = (polygon || [])?.map(function (point) {
-              return [point[0] - centroid[0] || 0, point[1] - centroid[1] || 0];
-            });
-
-            const createCurve = line()
-              .x(function (d) {
-                return d[0];
-              })
-              .y(function (d) {
-                return d[1];
-              })
-              .curve(curveCardinalClosed);
-
-            return createCurve(points);
-          });
-
-        const $parentNode = paths.filter(({ id }) => id === groupId).node()?.parentNode as HTMLElement | null;
-
-        select($parentNode).attr('transform', `translate(${centroid[0]},${centroid[1]}) scale(${1.5})`); // scale works as a padding around the nodes
-      });
+    if (!this.groups) {
+      return;
     }
+
+    const groupPaths = this.svgGraphGroup.selectAll<SVGPathElement, GraphGroup>(`.${GROUP_NODE_PATHS_CLASS_NAME}`);
+
+    this.groups.forEach(({ id: groupId }) => {
+      let centroid: [number, number] = [0, 0];
+      let points: [number, number][] = [[0, 0]];
+
+      const paths = groupPaths
+        .filter(({ id }) => id === groupId)
+        .attr('transform', 'scale(1) translate(0,0)')
+        .attr('d', ({ id }) => {
+          const polygon = GraphController.polygonGenerator(this.nodes, id);
+
+          centroid = polygon ? polygonCentroid(polygon) : [0, 0];
+          // point is an array that contains array [x,y]
+          points = (polygon || []).map((point) => [point[0] - centroid[0] || 0, point[1] - centroid[1] || 0]);
+
+          const createCurve = line()
+            .x((d) => d[0])
+            .y((d) => d[1])
+            .curve(curveCardinalClosed);
+
+          return createCurve(points);
+        });
+
+      const path = paths.filter(({ id }) => id === groupId).node();
+
+      if (path) {
+        const $parentNode = path.parentNode as HTMLElement | null;
+
+        // move group
+        select($parentNode).attr('transform', `translate(${centroid[0]},${centroid[1]}) scale(${1.5})`); // scale works as a padding around the nodes
+
+        // move group labels
+        const yValues = points.flatMap((point) => point[1]);
+
+        const y = Math.min(...yValues);
+        const x = points.filter((point) => point[1] === y)[0][0];
+
+        this.svgGraphGroup
+          .select(`#group-label-${groupId}`)
+          .attr('x', x)
+          .attr('y', y - FONT_SIZE_DEFAULT);
+      }
+    });
   };
 
   private redrawEdges = () => {
@@ -344,8 +361,12 @@ export default class Graph {
       // Create path elements for each new group node and set up drag and click events
       groupNodesEnter
         .append('path')
+        .attr('id', ({ id }) => `group-path-${id}`)
         .attr('class', GROUP_NODE_PATHS_CLASS_NAME)
         .attr('fill', ({ color }) => color || nodeColorsDefault)
+        .attr('stroke', ({ color }) => color || nodeColorsDefault)
+        .attr('stroke-width', NODE_SIZE)
+        .attr('stroke-linejoin', 'round')
         .attr('opacity', OPACITY_NO_SELECTED_ITEM)
         .style('cursor', 'grab')
         .call(
@@ -369,10 +390,10 @@ export default class Graph {
       groupNodesEnter
         .merge(groupNodes)
         .append('text')
+        .attr('id', ({ id }) => `group-label-${id}`)
+        .attr('class', `${GROUP_NODE_PATHS_CLASS_NAME}-label`)
         .text(({ name }) => name)
-        .attr('fill', ({ color }) => color || nodeColorsDefault)
-        .attr('font-size', FONT_SIZE_DEFAULT)
-        .attr('text-anchor', 'start');
+        .attr('font-size', FONT_SIZE_DEFAULT);
     }
   };
 
@@ -426,7 +447,7 @@ export default class Graph {
       .style('fill', 'white');
 
     // create node labels
-    const textNodes = svgNodesGEnter
+    svgNodesGEnter
       .append('g')
       .append('text')
       .attr('font-size', FONT_SIZE_DEFAULT)
@@ -435,27 +456,30 @@ export default class Graph {
       .attr('id', ({ id }) => `node-label-${id}`)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .style('fill', SELECTED_TEXT_COLOR);
+      .style('fill', SELECTED_TEXT_COLOR)
+      .each(function ({ id }) {
+        const textNode = select<SVGSVGElement, GraphNode>(`#node-label-${id}`);
+        const textNodeElement = textNode.node();
 
-    textNodes.each(function ({ id }) {
-      if (this.parentNode) {
-        const gTextBox = select(this.parentNode as SVGGElement);
-        const { x, y, width, height } = this.getBBox();
+        if (textNodeElement) {
+          const gTextBox = select(this.parentNode as SVGGElement);
+          const { x, y, width, height } = textNodeElement.getBBox();
 
-        gTextBox
-          .insert('rect', ':first-child')
-          .attr('x', x - 5)
-          .attr('y', y - 2.5)
-          .attr('width', width + 10)
-          .attr('height', height + 5)
-          .attr('rx', 5)
-          .attr('ry', 5)
-          .style('fill', 'white')
-          .style('stroke', 'grey')
-          .style('stroke-width', 1)
-          .attr('id', `node-label-container-${id}`);
-      }
-    });
+          gTextBox
+            .insert('rect', ':first-child')
+            .attr('id', `node-label-container-${id}`)
+            .attr('x', x - 5)
+            .attr('y', y - 2.5)
+            .attr('width', width + 10)
+            .attr('height', height + 5)
+            .attr('rx', 5)
+            .attr('ry', 5)
+            .attr('opacity', 0.5)
+            .style('fill', 'white')
+            .style('stroke', 'grey')
+            .style('stroke-width', 1);
+        }
+      });
     // create transparent circles over the images to make a clean drag and drop
     const svgNode = svgNodesGMerge
       .append('circle')
