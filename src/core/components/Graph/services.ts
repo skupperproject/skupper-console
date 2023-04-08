@@ -3,7 +3,7 @@ import { interpolate } from 'd3-interpolate';
 import { polygonHull } from 'd3-polygon';
 import { Selection, select } from 'd3-selection';
 
-import { DEFAULT_COLOR, FONT_SIZE_DEFAULT, ZOOM_TEXT, ARROW_SIZE, NODE_SIZE, SELECTED_EDGE_COLOR } from './config';
+import { DEFAULT_COLOR, ARROW_SIZE, NODE_SIZE, SELECTED_EDGE_COLOR } from './config';
 import { GraphEdge, GraphNode } from './Graph.interfaces';
 
 export const GraphController = {
@@ -12,7 +12,7 @@ export const GraphController = {
       .style('stroke', SELECTED_EDGE_COLOR)
       .style('stroke-dasharray', '8, 8')
       .transition()
-      .duration(750)
+      .duration(1000)
       .ease(easeLinear)
       .styleTween('stroke-dashoffset', () => interpolate('30', '0'))
       .on('end', GraphController.animateEdges);
@@ -20,23 +20,18 @@ export const GraphController = {
 
   stopAnimateEdges: ({ source, target }: GraphEdge) => {
     (select(`#edge${source.id}-${target.id}`) as any)
-      .style('stroke', DEFAULT_COLOR)
       .style('stroke-dasharray', '0, 0')
       .transition()
+      .style('stroke', DEFAULT_COLOR)
       .on('end', null);
   },
 
   selectNodeTextStyle: (id: string) => {
     select(`#node-cover-${id}`).attr('fill', 'white');
-    (select(`#node-label-${id}`) as any)
-      .transition()
-      .duration(300)
-      .attr('font-size', FONT_SIZE_DEFAULT * ZOOM_TEXT);
   },
 
   deselectNodeTextStyle: (id: string) => {
     select(`#node-cover-${id}`).attr('fill', 'transparent');
-    (select(`#node-label-${id}`) as any).transition().duration(300).attr('font-size', FONT_SIZE_DEFAULT);
   },
 
   addEdgeArrows: (container: Selection<SVGGElement, GraphNode, null, undefined>) =>

@@ -84,8 +84,8 @@
       "name": "process nb",
       "parentName": "site 5",
       "imageName": "gcr.io/google-samples/microservices-demo/process-nb:v0.3.0",
-      "groupName": "component 5",
-      "groupIdentity": "group-5",
+      "groupName": "component 3",
+      "groupIdentity": "group-3",
       "hostName": "10.242.0.3",
       "sourceHost": "172.17.12.233",
       "processRole": "external"
