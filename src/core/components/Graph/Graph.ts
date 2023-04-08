@@ -26,8 +26,7 @@ import {
   NODE_CLASS_NAME,
   NODE_SIZE,
   OPACITY_NO_SELECTED_ITEM,
-  SELECTED_TEXT_COLOR,
-  ZOOM_TEXT
+  SELECTED_TEXT_COLOR
 } from './config';
 import { nodeColorsDefault } from './Graph.constants';
 import { GraphEvents } from './Graph.enum';
@@ -228,7 +227,6 @@ export default class Graph {
           .attr('d', ({ id }) => {
             const polygon = GraphController.polygonGenerator(this.nodes, id);
             centroid = polygon ? polygonCentroid(polygon) : [0, 0];
-
             const points: [number, number][] = (polygon || [])?.map(function (point) {
               return [point[0] - centroid[0] || 0, point[1] - centroid[1] || 0];
             });
@@ -347,6 +345,7 @@ export default class Graph {
       groupNodesEnter
         .append('path')
         .attr('class', GROUP_NODE_PATHS_CLASS_NAME)
+        .attr('fill', ({ color }) => color || nodeColorsDefault)
         .attr('opacity', OPACITY_NO_SELECTED_ITEM)
         .style('cursor', 'grab')
         .call(
@@ -366,11 +365,14 @@ export default class Graph {
           ]);
         });
 
-      // Update the fill color of all group node paths
+      // append the text element to the new container
       groupNodesEnter
         .merge(groupNodes)
-        .select('path')
-        .attr('fill', (groupId) => groupId.color || nodeColorsDefault);
+        .append('text')
+        .text(({ name }) => name)
+        .attr('fill', ({ color }) => color || nodeColorsDefault)
+        .attr('font-size', FONT_SIZE_DEFAULT)
+        .attr('text-anchor', 'start');
     }
   };
 
@@ -424,23 +426,36 @@ export default class Graph {
       .style('fill', 'white');
 
     // create node labels
-    svgNodesGEnter
+    const textNodes = svgNodesGEnter
+      .append('g')
       .append('text')
-      .attr('font-size', ({ id }) => (this.nodeInitialized === id ? FONT_SIZE_DEFAULT * ZOOM_TEXT : FONT_SIZE_DEFAULT))
-      .attr('y', NODE_SIZE / 2 + FONT_SIZE_DEFAULT)
+      .attr('font-size', FONT_SIZE_DEFAULT)
+      .attr('y', NODE_SIZE)
       .text(({ name }) => name)
       .attr('id', ({ id }) => `node-label-${id}`)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
       .style('fill', SELECTED_TEXT_COLOR);
 
-    // update node labels
-    svgNodesG
-      .select('text')
-      .attr('font-size', ({ id }) => (this.nodeInitialized === id ? FONT_SIZE_DEFAULT * ZOOM_TEXT : FONT_SIZE_DEFAULT))
-      .attr('y', NODE_SIZE / 2 + FONT_SIZE_DEFAULT)
-      .text(({ name }) => name)
-      .attr('id', ({ id }) => `node-label-${id}`)
-      .style('fill', SELECTED_TEXT_COLOR);
+    textNodes.each(function ({ id }) {
+      if (this.parentNode) {
+        const gTextBox = select(this.parentNode as SVGGElement);
+        const { x, y, width, height } = this.getBBox();
 
+        gTextBox
+          .insert('rect', ':first-child')
+          .attr('x', x - 5)
+          .attr('y', y - 2.5)
+          .attr('width', width + 10)
+          .attr('height', height + 5)
+          .attr('rx', 5)
+          .attr('ry', 5)
+          .style('fill', 'white')
+          .style('stroke', 'grey')
+          .style('stroke-width', 1)
+          .attr('id', `node-label-container-${id}`);
+      }
+    });
     // create transparent circles over the images to make a clean drag and drop
     const svgNode = svgNodesGMerge
       .append('circle')
