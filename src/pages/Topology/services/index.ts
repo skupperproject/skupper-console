@@ -97,7 +97,7 @@ export const TopologyController = {
 
     return sites
       .filter((site) => groups.includes(site.group))
-      .map(({ id, style, label }) => ({ id, color: style.fill, name: label }));
+      .map(({ id, style, label }) => ({ id, color: style.fill, label }));
   },
 
   getNodesFromProcesses: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>

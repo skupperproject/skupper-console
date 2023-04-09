@@ -123,6 +123,10 @@ export default class Graph {
     return this.svgGraphGroup.selectAll<SVGSVGElement, GraphNodeWithForce>(`.${NODE_CLASS_NAME}`);
   }
 
+  private getNode(id: string) {
+    return this.svgGraphGroup.select<SVGSVGElement>(`#node-${id}`);
+  }
+
   private getAllEdges() {
     return this.svgGraphGroup.selectAll<SVGSVGElement, GraphEdge>(`.${EDGE_CLASS_NAME}`);
   }
@@ -142,7 +146,7 @@ export default class Graph {
     node.fy = node.y;
 
     this.force.tick(1);
-    this.redrawPositions();
+    this.redrawPositions(node.id);
   };
 
   private dragged = ({ x, y }: { x: number; y: number }, node: GraphNodeWithForce) => {
@@ -150,7 +154,7 @@ export default class Graph {
     node.fy = y;
 
     this.force.tick(1);
-    this.redrawPositions();
+    this.redrawPositions(node.id);
   };
 
   private dragEnded = (_: {}, node: GraphNodeWithForce) => {
@@ -189,9 +193,10 @@ export default class Graph {
     this.EventEmitter.emit(GraphEvents.IsDraggingNodesEnd, [this.nodes.filter(({ group }) => group === groupId)]);
   };
 
-  private redrawPositions = () => {
+  private redrawPositions = (idSelected?: string) => {
     // move nodes
-    this.getAllNodes().attr('transform', ({ x, y }) => `translate(${x},${y})`);
+    const nodes = idSelected ? this.getNode(idSelected) : this.getAllNodes();
+    nodes.attr('transform', ({ x, y }) => `translate(${x},${y})`);
 
     // move edges
     this.getAllEdges()
@@ -404,7 +409,7 @@ export default class Graph {
         .append('text')
         .attr('id', ({ id }) => `group-label-${id}`)
         .attr('class', `${GROUP_NODE_PATHS_CLASS_NAME}-label`)
-        .text(({ name }) => name)
+        .text(({ label }) => label)
         .attr('font-size', FONT_SIZE_DEFAULT);
     }
   };
@@ -560,25 +565,25 @@ export default class Graph {
   run({
     nodes,
     edges,
-    groups = this.groups
+    combos = this.groups
   }: {
     nodes: GraphNode[];
     edges: GraphEdge<string>[];
-    groups?: GraphGroup[];
+    combos?: GraphGroup[];
   }) {
     // clone nodes and edges to avoid modifying the original data
     const clonedNodeData = deepCloneArray(nodes);
     const clonedEdgeData = deepCloneArray(edges);
 
-    this.groups = groups;
+    this.groups = combos;
 
     // set the cloned nodes  to the simulation
     this.nodes = clonedNodeData.map((node) => ({
       ...node,
       x: node.x || 0,
       y: node.y || 0,
-      fx: node.x,
-      fy: node.y
+      fx: node.x, // can be undefined before the simulation
+      fy: node.y // can be undefined before the simulation
     }));
 
     // set the cloned edges to the simulation
@@ -593,14 +598,14 @@ export default class Graph {
     this.force.force<ForceLink<GraphNodeWithForce, GraphEdge>>('link')?.links(this.links);
     this.force.tick(ITERATIONS);
 
-    // update node positions if fx or fy is not defined
+    // update node positions if fx or fy are not defined
+    // this is the case when new nodes are added to the graph and they don't have x, y before the simulation
     this.nodes.forEach((node) => {
       if (!node.fx || !node.fy) {
         node.fx = node.x;
         node.fy = node.y;
       }
     });
-
     // clear the SVG container and redraw the graph elements
     this.svgGraphGroup.selectAll('*').remove();
     // To ensure proper rendering of elements based on their respective Z-index values, it is important to maintain the current order.
@@ -613,11 +618,11 @@ export default class Graph {
   updateModel = ({
     nodes,
     edges,
-    groups
+    combos
   }: {
     nodes: GraphNode[];
     edges: GraphEdge<string>[];
-    groups?: GraphGroup[];
+    combos?: GraphGroup[];
   }) => {
     if (!nodes || !edges) {
       throw new Error('Graph - updateModel: Invalid input data');
@@ -635,23 +640,24 @@ export default class Graph {
       // Update node data based on whether they are matched to an existing node or a new node
       const updatedNodeData = nodes.map((node): GraphNode => {
         const matchedNode = nodeIdToNodeMap[node.id];
-        // If the node already exists in the model, update its position
+        //  In case the node already exists in the model and its position is undefined, updating its position becomes necessary.
+        // Please note that in the event of local storage being cleaned while viewing the page, an existing node may have either x or y undefined
         if (matchedNode) {
-          const x = node.x || matchedNode.fx;
-          const y = node.y || matchedNode.fy;
+          const x = node.x !== undefined ? node.x : matchedNode.fx;
+          const y = node.y !== undefined ? node.y : matchedNode.fy;
 
           return { ...node, x, y };
         }
 
         // If the node is new, place it close to the first node of its group or the first node in the topology if the group doesn't exist
         const nodesInGroup = this.nodes.filter(({ group }) => group === node.group);
-        const x = (nodesInGroup.length ? nodesInGroup[0].x : this.nodes[0].x) + NODE_SIZE * 2;
-        const y = (nodesInGroup.length ? nodesInGroup[0].y : this.nodes[0].y) + NODE_SIZE * 2;
+        const x = node.x || (nodesInGroup.length ? nodesInGroup[0].x : this.nodes[0].x) + NODE_SIZE * 2;
+        const y = node.y || (nodesInGroup.length ? nodesInGroup[0].y : this.nodes[0].y) + NODE_SIZE * 2;
 
         return { ...node, x, y };
       });
 
-      this.run({ nodes: updatedNodeData, edges, groups });
+      this.run({ nodes: updatedNodeData, edges, combos });
     }
   };
 

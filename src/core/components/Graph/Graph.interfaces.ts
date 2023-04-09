@@ -32,7 +32,7 @@ export interface GraphNodeWithForce extends GraphNode {
 
 export interface GraphGroup {
   id: string;
-  name: string;
+  label: string;
   color?: string;
 }
 

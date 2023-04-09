@@ -48,6 +48,7 @@ describe('Graph', () => {
 
   it('updates existing node positions', () => {
     graph.run({ nodes, edges });
+
     const updatedNodes: GraphNode[] = [
       { id: '1', label: 'Node 1', x: 5, y: 5, style: { fill: 'red' }, group: 'group1' },
       { id: '2', label: 'Node 2', x: 15, y: 15, style: { fill: 'blue' }, group: 'group1' },
@@ -61,6 +62,31 @@ describe('Graph', () => {
     ];
 
     graph.updateModel({ nodes: updatedNodes, edges });
+
+    expect(graph.nodes).toEqual(updatedNodesAfterForceSimulation);
+    expect(graph.links).toEqual(GraphController.mapGraphEdges(edges, updatedNodesAfterForceSimulation));
+  });
+
+  it('add new node', () => {
+    graph.run({ nodes, edges });
+
+    const newNodes: GraphNode[] = [
+      { id: 'new', label: 'new Node', x: 45, y: 45, style: { fill: 'green' }, group: 'group1' },
+      ...nodes
+    ];
+
+    const updatedNodesAfterForceSimulation: GraphNodeWithForce[] = newNodes.map((node, index) => ({
+      ...node,
+      x: node.x,
+      y: node.y,
+      fx: node.x,
+      fy: node.y,
+      vx: 0,
+      vy: 0,
+      index
+    })) as GraphNodeWithForce[];
+
+    graph.updateModel({ nodes: newNodes, edges });
 
     expect(graph.nodes).toEqual(updatedNodesAfterForceSimulation);
     expect(graph.links).toEqual(GraphController.mapGraphEdges(edges, updatedNodesAfterForceSimulation));

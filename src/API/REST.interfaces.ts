@@ -38,7 +38,7 @@ interface BaseResponse {
 
 interface EntityBaseResponse extends BaseResponse {
   name: string;
-  processGroupRole: 'external' | 'internal';
+  processGroupRole?: 'external' | 'internal';
 }
 
 interface EntityMetricsResponse {
@@ -57,7 +57,7 @@ export interface QueryParams {
   sortBy?: string | null;
 }
 
-export interface SiteResponse extends EntityBaseResponse, EntityMetricsResponse {
+export interface SiteResponse extends EntityBaseResponse {
   nameSpace: string;
 }
 

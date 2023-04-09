@@ -11,4 +11,4 @@ export const DEFAULT_COLOR = 'var(--pf-global--palette--black-300)';
 export const SELECTED_EDGE_COLOR = 'var(--pf-global--palette--blue-300)';
 export const SELECTED_TEXT_COLOR = 'var(--pf-global--palette--black-800)';
 
-export const ITERATIONS = 100; // number of the cycles to simulate the first positioning of the graph
+export const ITERATIONS = 20; // number of the cycles to simulate the first positioning of the graph

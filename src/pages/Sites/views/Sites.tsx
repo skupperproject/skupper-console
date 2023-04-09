@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST';
+import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -32,6 +33,7 @@ const Sites = function () {
         <SkTable
           columns={siteColumns}
           rows={sites}
+          pageSizeStart={DEFAULT_TABLE_PAGE_SIZE * 3}
           components={{
             linkCell: (props: LinkCellProps<SiteResponse>) =>
               LinkCell({

@@ -75,7 +75,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
         topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
         topologyGraph.EventEmitter.on(GraphEvents.GroupNodesClick, handleOnClickCombo);
 
-        topologyGraph.run({ nodes, edges: sanitizeEdges(nodes, edges), groups });
+        topologyGraph.run({ nodes, edges: sanitizeEdges(nodes, edges), combos: groups });
 
         setTopologyGraphInstance(topologyGraph);
       }
@@ -100,7 +100,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
       (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
         JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
     ) {
-      topologyGraphInstance.updateModel({ nodes, edges: sanitizeEdges(nodes, edges), groups });
+      topologyGraphInstance.updateModel({ nodes, edges: sanitizeEdges(nodes, edges), combos: groups });
 
       prevNodesRef.current = nodes;
       prevEdgesRef.current = edges;

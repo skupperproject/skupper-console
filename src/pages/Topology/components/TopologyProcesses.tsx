@@ -76,8 +76,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   );
 
   const handleGetSelectedGroup = useCallback(
-    ({ id, name }: GraphGroup) => {
-      navigate(`${SitesRoutesPaths.Sites}/${name}@${id}`);
+    ({ id, label }: GraphGroup) => {
+      navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
     },
     [navigate]
   );
@@ -144,32 +144,23 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   // This effect is triggered when one address is currently selected
   useEffect(() => {
     if (sites && processes) {
-      // Get nodes from site and process groups
-      const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
-      const siteGroups = TopologyController.getGroupsOfNotEmptySites(processesNodes, siteNodes);
-
       if (addressIdSelected && flowPairsByAddress) {
-        // Get links between processes in the selected address
+        // Get nodes from site and process groups
         const processesLinksByAddress = TopologyController.getProcessesLinksFromFlowPairs(flowPairsByAddress);
-
         // Merge all process IDs in the selected address
         const processIdsFromAddress = [
           ...(processesLinksByAddress?.map(({ source }) => source) || []),
           ...(processesLinksByAddress?.map(({ target }) => target) || [])
         ];
 
-        // Disable all processes that are not part of the selected address
-        const nodesFiltered = processesNodes.map((node) => {
-          if (!processIdsFromAddress.includes(node.id)) {
-            return { ...node, style: { fill: node.style.fill, opacity: 0.1 } };
-          }
+        const filteredProcesses = processes.filter((node) => processIdsFromAddress.includes(node.identity));
 
-          return node;
-        });
+        const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
+        const processesNodes = TopologyController.getNodesFromProcesses(filteredProcesses, siteNodes);
+        const siteGroups = TopologyController.getGroupsOfNotEmptySites(processesNodes, siteNodes);
 
         // Set the nodes, links and groups for the topology
-        setNodes(nodesFiltered);
+        setNodes(processesNodes);
         setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
         setGroups(siteGroups);
       }

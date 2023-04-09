@@ -1,5 +1,5 @@
 export enum NotFoundRoutesPaths {
-  NotFound = '/not-found'
+  NotFound = '*' //The global route '*' is used to handle cases where the requested page is not found
 }
 
 export enum Labels {
