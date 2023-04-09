@@ -30,19 +30,19 @@ import {
 } from './config';
 import { nodeColorsDefault } from './Graph.constants';
 import { GraphEvents } from './Graph.enum';
-import { GraphNode, GraphEdge, GraphProps, GraphGroup } from './Graph.interfaces';
+import { GraphNode, GraphEdge, GraphProps, GraphGroup, GraphNodeWithForce } from './Graph.interfaces';
 import { GraphController } from './services';
 import GraphZoom from './Zoom';
 
 export default class Graph {
   $root: HTMLElement;
-  nodes: GraphNode[];
+  nodes: GraphNodeWithForce[];
   links: GraphEdge[];
   width: number;
   height: number;
-  force: Simulation<GraphNode, GraphEdge>;
-  svgGraph: Selection<SVGSVGElement, GraphNode, null, undefined>;
-  svgGraphGroup: Selection<SVGGElement, GraphNode, null, undefined>;
+  force: Simulation<GraphNodeWithForce, GraphEdge>;
+  svgGraph: Selection<SVGSVGElement, GraphNodeWithForce, null, undefined>;
+  svgGraphGroup: Selection<SVGGElement, GraphNodeWithForce, null, undefined>;
   isDraggingNode: boolean;
   zoom: GraphZoom;
   groups?: GraphGroup[];
@@ -74,7 +74,7 @@ export default class Graph {
     const yScale = scaleOrdinal<string, number>();
 
     // define a function to calculate the x-coordinate of a node
-    const getNodeX = ({ group, fx }: GraphNode) => {
+    const getNodeX = ({ group, fx }: GraphNodeWithForce) => {
       const domain = this.groups || this.nodes;
       // map each id to a corresponding x-coordinate and set it as the domain for the x-scale
       xScale.domain(domain.map(({ id }) => id)).range(domain.map((_, i) => (this.width / domain.length) * i));
@@ -84,7 +84,7 @@ export default class Graph {
     };
 
     // define a function to calculate the y-coordinate of a node
-    const getNodeY = ({ group, fy }: GraphNode) => {
+    const getNodeY = ({ group, fy }: GraphNodeWithForce) => {
       const domain = this.groups || this.nodes;
       // set the range of the y-scale to be within the bounds of the graph
       yScale.domain(domain.map(({ id }) => id)).range([NODE_SIZE, this.height - NODE_SIZE * 2]);
@@ -93,22 +93,22 @@ export default class Graph {
       return fy || Math.min(yScale(group) as number, this.height - NODE_SIZE * 2);
     };
 
-    const linkForce = forceLink<GraphNode, GraphEdge>()
+    const linkForce = forceLink<GraphNodeWithForce, GraphEdge>()
       .distance(25)
       .id(({ id }) => id);
 
-    return forceSimulation<GraphNode, GraphEdge>()
+    return forceSimulation<GraphNodeWithForce, GraphEdge>()
       .force('center', forceCenter(this.width / 2, this.height / 2))
       .force('charge', forceManyBody())
       .force('collide', forceCollide().radius(NODE_SIZE * 2))
-      .force('x', forceX<GraphNode>().x(getNodeX).strength(0.8))
-      .force('y', forceY<GraphNode>().y(getNodeY).strength(0.8))
+      .force('x', forceX<GraphNodeWithForce>().x(getNodeX).strength(0.8))
+      .force('y', forceY<GraphNodeWithForce>().y(getNodeY).strength(0.8))
       .force('link', linkForce)
       .stop(); // stop the simulation (since we only want to run it once to set the initial positions)
   }
 
   private createGraphContainer() {
-    return select<HTMLElement, GraphNode>(this.$root)
+    return select<HTMLElement, GraphNodeWithForce>(this.$root)
       .append('svg')
       .attr('class', 'graph-container')
       .attr('width', '100%')
@@ -120,7 +120,7 @@ export default class Graph {
   }
 
   private getAllNodes() {
-    return this.svgGraphGroup.selectAll<SVGSVGElement, GraphNode>(`.${NODE_CLASS_NAME}`);
+    return this.svgGraphGroup.selectAll<SVGSVGElement, GraphNodeWithForce>(`.${NODE_CLASS_NAME}`);
   }
 
   private getAllEdges() {
@@ -135,7 +135,7 @@ export default class Graph {
     return this.svgGraphGroup.selectAll<SVGSVGElement, GraphEdge>(`.${EDGE_CLASS_NAME}_label`);
   }
 
-  private dragStarted = (_: {}, node: GraphNode) => {
+  private dragStarted = (_: {}, node: GraphNodeWithForce) => {
     this.isDraggingNode = true;
 
     node.fx = node.x;
@@ -145,7 +145,7 @@ export default class Graph {
     this.redrawPositions();
   };
 
-  private dragged = ({ x, y }: { x: number; y: number }, node: GraphNode) => {
+  private dragged = ({ x, y }: { x: number; y: number }, node: GraphNodeWithForce) => {
     node.fx = x;
     node.fy = y;
 
@@ -153,7 +153,7 @@ export default class Graph {
     this.redrawPositions();
   };
 
-  private dragEnded = (_: {}, node: GraphNode) => {
+  private dragEnded = (_: {}, node: GraphNodeWithForce) => {
     this.isDraggingNode = false;
     this.EventEmitter.emit(GraphEvents.IsDraggingNodeEnd, [node]);
   };
@@ -272,7 +272,7 @@ export default class Graph {
 
     const links = this.links as GraphEdge[];
 
-    // Use selection.join() instead of enter() to simplify code
+    // draw the line
     this.getAllEdges()
       .data(links)
       .join('line')
@@ -281,23 +281,28 @@ export default class Graph {
       .attr('class', EDGE_CLASS_NAME)
       .attr('marker-end', 'url(#arrow)');
 
+    // draw the clickable shadow line
     this.getAllEdgesPaths()
       .data(links)
       .join('path')
+      .attr('id', ({ source, target }) => `edge-path${source.id}-${target.id}`)
       .attr('class', `${EDGE_CLASS_NAME}_path`)
       .attr('fill-opacity', 0)
       .attr('stroke-opacity', 0)
-      .attr('id', ({ source, target }) => `edge-path${source.id}-${target.id}`)
       .style('pointer-events', 'visibleStroke')
       .attr('stroke-width', '30px')
       .style('cursor', (data) => (data.clickable ? 'pointer' : 'default'))
       .on('mouseover', (_, { source, target }) => {
-        this.nodeInitialized = `${source.id}-to-${target.id}`;
-        this.reStyleEdges();
+        if (!this.isDraggingNode) {
+          this.nodeInitialized = `${source.id}-to-${target.id}`;
+          this.reStyleEdges();
+        }
       })
       .on('mouseout', () => {
-        this.nodeInitialized = undefined;
-        this.reStyleEdges();
+        if (!this.isDraggingNode) {
+          this.nodeInitialized = undefined;
+          this.reStyleEdges();
+        }
       })
       .on('click', (_, nodeSelected) => {
         this.EventEmitter.emit(GraphEvents.EdgeClick, [
@@ -333,6 +338,10 @@ export default class Graph {
     const nodeId = this.nodeInitialized;
 
     this.getAllEdges()
+      // TODO: this code probably it's unnecessary because handled in stop and animateEdges. Test all use cases before remove this code.
+      // .style('stroke-dasharray', ({ type, source, target }) =>
+      //   type === 'dashed' || GraphController.isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0'
+      // )
       .each((svgLink) => {
         if (!GraphController.isEdgeBetweenNodes(svgLink, nodeId)) {
           GraphController.stopAnimateEdges(svgLink);
@@ -341,10 +350,7 @@ export default class Graph {
         if (GraphController.isEdgeBetweenNodes(svgLink, nodeId)) {
           GraphController.animateEdges(svgLink);
         }
-      })
-      .style('stroke-dasharray', ({ type, source, target }) =>
-        type === 'dashed' || GraphController.isEdgeBetweenNodes({ source, target }, nodeId) ? '8,8' : '0,0'
-      );
+      });
   }
 
   // Redraw the group nodes in the graph based on the current group IDs
@@ -368,19 +374,25 @@ export default class Graph {
         .attr('stroke-width', NODE_SIZE)
         .attr('stroke-linejoin', 'round')
         .attr('opacity', OPACITY_NO_SELECTED_ITEM)
-        .style('cursor', 'grab')
+        .style('cursor', 'pointer')
         .call(
           drag<SVGPathElement, GraphGroup>()
-            .on('start', this.groupDragStarted)
+            .on('start', (e, group) => {
+              this.groupDragStarted(e, group);
+              select(`#group-path-${group.id}`).style('cursor', 'grab');
+            })
             .on('drag', this.groupDragged)
-            .on('end', this.groupDragEnded)
+            .on('end', (e, group) => {
+              this.groupDragEnded(e, group);
+              select(`#group-path-${group.id}`).style('cursor', 'pointer');
+            })
         )
         .on('click', (_, nodeSelected) => {
           // Emit an event when a group node is clicked
-          this.EventEmitter.emit(GraphEvents.EdgeClick, [
+          this.EventEmitter.emit(GraphEvents.GroupNodesClick, [
             {
               type: 'click',
-              name: GraphEvents.NodeGroupClick,
+              name: GraphEvents.GroupNodesClick,
               data: nodeSelected
             }
           ]);
@@ -408,7 +420,7 @@ export default class Graph {
       .enter()
       .append('g')
       .attr('class', NODE_CLASS_NAME)
-      .attr('opacity', ({ isDisabled }) => (isDisabled ? 0.2 : 1))
+      .attr('opacity', ({ style }) => style.opacity || 1)
       .attr('id', ({ id }) => `node-${id}`);
 
     // merge node containers
@@ -418,18 +430,19 @@ export default class Graph {
     svgNodesGEnter
       .append('circle')
       .attr('r', NODE_SIZE / 2)
-      .style('fill', ({ color }) => color);
+      .attr('opacity', OPACITY_NO_SELECTED_ITEM * 5)
+      .style('fill', ({ style }) => style.fill);
 
     // update node circles
     svgNodesG
       .select('circle')
       .attr('r', NODE_SIZE / 2)
-      .style('fill', ({ color }) => color);
+      .style('fill', ({ style }) => style.fill);
 
     // node internal images
     svgNodesGEnter
       .append('image')
-      .attr('xlink:href', ({ img }) => img || null)
+      .attr('xlink:href', ({ style }) => style.img || null)
       .attr('width', NODE_SIZE / 2)
       .attr('x', -NODE_SIZE / 4)
       .attr('y', -NODE_SIZE / 2)
@@ -439,7 +452,7 @@ export default class Graph {
     // update node internal images
     svgNodesG
       .select('image')
-      .attr('xlink:href', ({ img }) => img || null)
+      .attr('xlink:href', ({ style }) => style.img || null)
       .attr('width', NODE_SIZE / 2)
       .attr('x', -NODE_SIZE / 4)
       .attr('y', -NODE_SIZE / 2)
@@ -452,13 +465,13 @@ export default class Graph {
       .append('text')
       .attr('font-size', FONT_SIZE_DEFAULT)
       .attr('y', NODE_SIZE)
-      .text(({ name }) => name)
+      .text(({ label }) => label)
       .attr('id', ({ id }) => `node-label-${id}`)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .style('fill', SELECTED_TEXT_COLOR)
       .each(function ({ id }) {
-        const textNode = select<SVGSVGElement, GraphNode>(`#node-label-${id}`);
+        const textNode = select<SVGSVGElement, GraphNodeWithForce>(`#node-label-${id}`);
         const textNodeElement = textNode.node();
 
         if (textNodeElement) {
@@ -487,29 +500,26 @@ export default class Graph {
       .attr('fill', 'transparent')
       .style('cursor', 'pointer')
       .attr('opacity', OPACITY_NO_SELECTED_ITEM * 5)
-      .attr('id', ({ id }) => `node-cover-${id}`);
-
-    svgNode.on('mousedown', (_, { id }) => {
-      select(`#node-cover-${id}`).style('cursor', 'grab');
-    });
-
-    svgNode.on('mouseup', (_, { id }) => {
-      select(`#node-cover-${id}`).style('cursor', 'pointer');
-    });
+      .attr('id', ({ id }) => `node-cover-${id}`)
+      .style('stroke-width', 1)
+      .attr('stroke', ({ style }) => style.fill);
 
     svgNode.on('mouseover', (_, { id }) => {
-      this.nodeInitialized = id;
-      GraphController.selectNodeTextStyle(id);
-
       if (!this.isDraggingNode) {
+        this.nodeInitialized = id;
+        GraphController.selectNodeTextStyle(id);
+
         this.reStyleEdges();
       }
     });
 
     svgNode.on('mouseout', (_, { id }) => {
-      this.nodeInitialized = undefined;
-      GraphController.deselectNodeTextStyle(id);
-      this.reStyleEdges();
+      if (!this.isDraggingNode) {
+        this.nodeInitialized = undefined;
+        GraphController.deselectNodeTextStyle(id);
+
+        this.reStyleEdges();
+      }
     });
 
     svgNode.on('click', (_, node) => {
@@ -526,7 +536,16 @@ export default class Graph {
 
     // attach drag and drop events
     svgNodesGEnter.call(
-      drag<SVGGElement, GraphNode>().on('start', this.dragStarted).on('drag', this.dragged).on('end', this.dragEnded)
+      drag<SVGGElement, GraphNodeWithForce>()
+        .on('start', (e, node) => {
+          this.dragStarted(e, node);
+          select(`#node-cover-${node.id}`).style('cursor', 'grab');
+        })
+        .on('drag', this.dragged)
+        .on('end', (e, node) => {
+          this.dragEnded(e, node);
+          select(`#node-cover-${node.id}`).style('cursor', 'pointer');
+        })
     );
   };
 
@@ -551,20 +570,27 @@ export default class Graph {
     const clonedNodeData = deepCloneArray(nodes);
     const clonedEdgeData = deepCloneArray(edges);
 
-    // set the cloned nodes and groupIds to the simulation
-    this.nodes = clonedNodeData;
     this.groups = groups;
+
+    // set the cloned nodes  to the simulation
+    this.nodes = clonedNodeData.map((node) => ({
+      ...node,
+      x: node.x || 0,
+      y: node.y || 0,
+      fx: node.x,
+      fy: node.y
+    }));
 
     // set the cloned edges to the simulation
     this.links = clonedEdgeData.map((edge) => ({
       ...edge,
-      source: clonedNodeData.find((node) => node.id === edge.source) as GraphNode,
-      target: clonedNodeData.find((node) => node.id === edge.target) as GraphNode
+      source: this.nodes.find((node) => node.id === edge.source) as GraphNodeWithForce,
+      target: this.nodes.find((node) => node.id === edge.target) as GraphNodeWithForce
     }));
 
     // set the nodes to the simulation and update the links
     this.force.nodes(this.nodes);
-    this.force.force<ForceLink<GraphNode, GraphEdge>>('link')?.links(this.links);
+    this.force.force<ForceLink<GraphNodeWithForce, GraphEdge>>('link')?.links(this.links);
     this.force.tick(ITERATIONS);
 
     // update node positions if fx or fy is not defined
@@ -604,25 +630,25 @@ export default class Graph {
         acc[node.id] = node;
 
         return acc;
-      }, {} as Record<string, GraphNode>);
+      }, {} as Record<string, GraphNodeWithForce>);
 
       // Update node data based on whether they are matched to an existing node or a new node
-      const updatedNodeData = nodes.map((node) => {
+      const updatedNodeData = nodes.map((node): GraphNode => {
         const matchedNode = nodeIdToNodeMap[node.id];
         // If the node already exists in the model, update its position
         if (matchedNode) {
-          const fx = node.x || matchedNode.fx;
-          const fy = node.y || matchedNode.fy;
+          const x = node.x || matchedNode.fx;
+          const y = node.y || matchedNode.fy;
 
-          return { ...node, fx, fy };
+          return { ...node, x, y };
         }
 
         // If the node is new, place it close to the first node of its group or the first node in the topology if the group doesn't exist
         const nodesInGroup = this.nodes.filter(({ group }) => group === node.group);
-        const fx = (nodesInGroup.length ? nodesInGroup[0].x : this.nodes[0].x) + NODE_SIZE * 2;
-        const fy = (nodesInGroup.length ? nodesInGroup[0].y : this.nodes[0].y) + NODE_SIZE * 2;
+        const x = (nodesInGroup.length ? nodesInGroup[0].x : this.nodes[0].x) + NODE_SIZE * 2;
+        const y = (nodesInGroup.length ? nodesInGroup[0].y : this.nodes[0].y) + NODE_SIZE * 2;
 
-        return { ...node, fx, fy };
+        return { ...node, x, y };
       });
 
       this.run({ nodes: updatedNodeData, edges, groups });

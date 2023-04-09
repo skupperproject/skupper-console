@@ -1,5 +1,5 @@
 export enum NotFoundRoutesPaths {
-  NotFound = '*'
+  NotFound = '/not-found'
 }
 
 export enum Labels {

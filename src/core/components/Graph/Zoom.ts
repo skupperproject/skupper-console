@@ -1,24 +1,24 @@
 import { Selection } from 'd3-selection';
 import { zoom, zoomIdentity, ZoomBehavior, zoomTransform } from 'd3-zoom';
 
-import { GraphNode } from './Graph.interfaces';
+import { GraphNodeWithForce } from './Graph.interfaces';
 
 interface GraphProps {
-  svgGraph: Selection<SVGSVGElement, GraphNode, null, undefined>;
-  svgGraphGroup: Selection<SVGGElement, GraphNode, null, undefined>;
+  svgGraph: Selection<SVGSVGElement, GraphNodeWithForce, null, undefined>;
+  svgGraphGroup: Selection<SVGGElement, GraphNodeWithForce, null, undefined>;
 }
 
 class GraphZoom {
-  zoom: ZoomBehavior<SVGSVGElement, GraphNode>;
-  private svgGraph: Selection<SVGSVGElement, GraphNode, null, undefined>;
-  private svgGraphGroup: Selection<SVGGElement, GraphNode, null, undefined>;
+  zoom: ZoomBehavior<SVGSVGElement, GraphNodeWithForce>;
+  private svgGraph: Selection<SVGSVGElement, GraphNodeWithForce, null, undefined>;
+  private svgGraphGroup: Selection<SVGGElement, GraphNodeWithForce, null, undefined>;
 
   constructor({ svgGraph, svgGraphGroup }: GraphProps) {
     this.svgGraph = svgGraph;
     this.svgGraphGroup = svgGraphGroup;
 
     // Create a zoom behavior and set its scale extent to limit the zoom level
-    this.zoom = zoom<SVGSVGElement, GraphNode>()
+    this.zoom = zoom<SVGSVGElement, GraphNodeWithForce>()
       .scaleExtent([0.2, 5])
       .on('zoom', ({ transform }) => {
         this.svgGraphGroup.attr('transform', transform);

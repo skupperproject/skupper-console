@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { UPDATE_INTERVAL } from '@config/config';
+import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
@@ -32,8 +33,8 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   });
 
   const handleGetSelectedNode = useCallback(
-    ({ id, name }: { id: string; name: string }) => {
-      navigate(`${SitesRoutesPaths.Sites}/${name}@${id}`);
+    ({ id, label }: GraphNode) => {
+      navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
     },
     [navigate]
   );

@@ -4,13 +4,13 @@ import { polygonHull } from 'd3-polygon';
 import { Selection, select } from 'd3-selection';
 
 import { DEFAULT_COLOR, ARROW_SIZE, NODE_SIZE, SELECTED_EDGE_COLOR } from './config';
-import { GraphEdge, GraphNode } from './Graph.interfaces';
+import { GraphEdge, GraphNode, GraphNodeWithForce } from './Graph.interfaces';
 
 export const GraphController = {
   animateEdges: ({ source, target }: { source: { id: string }; target: { id: string } }) => {
     (select<SVGSVGElement, GraphEdge>(`#edge${source.id}-${target.id}`) as any)
-      .style('stroke', SELECTED_EDGE_COLOR)
       .style('stroke-dasharray', '8, 8')
+      .style('stroke', SELECTED_EDGE_COLOR)
       .transition()
       .duration(1000)
       .ease(easeLinear)
@@ -21,8 +21,8 @@ export const GraphController = {
   stopAnimateEdges: ({ source, target }: GraphEdge) => {
     (select(`#edge${source.id}-${target.id}`) as any)
       .style('stroke-dasharray', '0, 0')
-      .transition()
       .style('stroke', DEFAULT_COLOR)
+      .transition()
       .on('end', null);
   },
 
@@ -34,7 +34,7 @@ export const GraphController = {
     select(`#node-cover-${id}`).attr('fill', 'transparent');
   },
 
-  addEdgeArrows: (container: Selection<SVGGElement, GraphNode, null, undefined>) =>
+  addEdgeArrows: (container: Selection<SVGGElement, GraphNodeWithForce, null, undefined>) =>
     container
       .append('svg:defs')
       .append('svg:marker')
@@ -66,7 +66,7 @@ export const GraphController = {
   /**
    * Generates a polygon hull from a group of nodes in a graph.
    */
-  polygonGenerator: (nodes: GraphNode[], groupId: string): [number, number][] | null => {
+  polygonGenerator: (nodes: GraphNodeWithForce[], groupId: string): [number, number][] | null => {
     // Validate input parameters
     if (!groupId || !Array.isArray(nodes)) {
       return null;
@@ -103,10 +103,10 @@ export const GraphController = {
    * Convert a GraphEdge object with string source and target properties to a GraphEdge object
    * with GraphNode source and target properties.
    */
-  mapGraphEdges: (edges: GraphEdge<string>[], nodes: GraphNode[]): GraphEdge<GraphNode>[] =>
+  mapGraphEdges: (edges: GraphEdge<string>[], nodes: GraphNode[]): GraphEdge[] =>
     edges.map((edge, index) => ({
       index,
-      source: nodes.find((node) => node.id === edge.source) as GraphNode,
-      target: nodes.find((node) => node.id === edge.target) as GraphNode
+      source: nodes.find((node) => node.id === edge.source) as GraphNodeWithForce,
+      target: nodes.find((node) => node.id === edge.target) as GraphNodeWithForce
     }))
 };

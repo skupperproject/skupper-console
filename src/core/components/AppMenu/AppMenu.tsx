@@ -67,7 +67,8 @@ const AppMenu = function () {
     }
   }
 
-  // TODO: topology already update automatically the data. Waiting to get push notifications from BE instead making polling
+  // TODO: The topology already update automatically the data using polling.
+  //Waiting to get implemented push notifications from BE to remove polling form the topology
   if (pathname === TopologyRoutesPaths.Topology) {
     return null;
   }
