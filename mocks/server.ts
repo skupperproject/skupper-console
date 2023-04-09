@@ -34,8 +34,22 @@ const addressesFlowPairs = require(`${path}/ADDRESS_FLOW_PAIRS.json`);
 const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
+const PERF_TEST = false;
+const ITEMS_TEST = 200;
 interface ApiProps {
   params: Record<string, string>;
+}
+
+const mockSitesForPerf: SiteResponse[] = [];
+for (let i = 0; i < ITEMS_TEST; i++) {
+  mockSitesForPerf.push({
+    recType: 'SITE',
+    identity: `site-perf-${i}`,
+    startTime: 1674048705000000,
+    endTime: 0,
+    name: `site ${i}`,
+    nameSpace: `config-grpc-site-${i}-test`
+  });
 }
 
 // api functions
@@ -45,7 +59,12 @@ export const MockApi = {
   get404Error: () => new Response(404, { some: 'header' }, { errors: ['Not Found'] }),
   getConnectionError: () => null,
   getCollectors: () => collectors,
-  getSites: () => sites,
+  getSites: () => {
+    const sitesForPerfTests = PERF_TEST ? mockSitesForPerf : [];
+    const results = [...sites.results, ...sitesForPerfTests];
+
+    return { ...sites, results };
+  },
   getSite: (_: unknown, { params: { id } }: ApiProps) => ({
     results: sites.results.find(({ identity }) => identity === id)
   })
