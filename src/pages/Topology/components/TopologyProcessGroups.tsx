@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { UPDATE_INTERVAL } from '@config/config';
+import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
@@ -38,8 +39,8 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
   );
 
   const handleGetSelectedNode = useCallback(
-    ({ id: idSelected, name }: { id: string; name: string }) => {
-      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${name}@${idSelected}`);
+    ({ id: idSelected, label }: GraphNode) => {
+      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${label}@${idSelected}`);
     },
     [navigate]
   );

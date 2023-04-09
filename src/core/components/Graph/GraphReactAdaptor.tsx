@@ -4,7 +4,7 @@ import { Button } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import { GraphEvents } from '@core/components/Graph/Graph.enum';
-import { GraphEdge, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphGroup, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
 import Graph from './Graph';
@@ -15,6 +15,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
   groups,
   onClickEdge,
   onClickNode,
+  onClickCombo,
   nodeSelected
 }) {
   const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
@@ -22,12 +23,21 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
   const prevEdgesRef = useRef<GraphEdge<string>[]>();
 
   const handleOnClickNode = useCallback(
-    ({ data: { id, name } }: { data: GraphNode }) => {
+    ({ data: { id, label } }: { data: GraphNode }) => {
       if (onClickNode) {
-        onClickNode({ id, name });
+        onClickNode({ id, label });
       }
     },
     [onClickNode]
+  );
+
+  const handleOnClickCombo = useCallback(
+    ({ data }: { data: GraphGroup }) => {
+      if (onClickCombo) {
+        onClickCombo(data);
+      }
+    },
+    [onClickCombo]
   );
 
   const handleOnClickEdge = useCallback(
@@ -40,10 +50,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
   );
 
   const handleSaveNodesPositions = useCallback((topologyNodes: GraphNode[]) => {
-    topologyNodes.forEach((node) => {
-      if (node.x && node.y) {
+    topologyNodes.forEach(({ id, x, y }) => {
+      if (x && y) {
         //save the position of the node to the local storage
-        localStorage.setItem(node.id, JSON.stringify({ fx: node.x, fy: node.y }));
+        localStorage.setItem(id, JSON.stringify({ x, y }));
       }
     });
   }, []);
@@ -63,12 +73,23 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
 
         topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
         topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
+        topologyGraph.EventEmitter.on(GraphEvents.GroupNodesClick, handleOnClickCombo);
+
         topologyGraph.run({ nodes, edges: sanitizeEdges(nodes, edges), groups });
 
         setTopologyGraphInstance(topologyGraph);
       }
     },
-    [nodes, topologyGraphInstance, edges, groups, nodeSelected, handleOnClickNode, handleOnClickEdge]
+    [
+      nodes,
+      topologyGraphInstance,
+      nodeSelected,
+      handleOnClickNode,
+      handleOnClickEdge,
+      handleOnClickCombo,
+      edges,
+      groups
+    ]
   );
 
   // This effect updates the topology graph instance when there are changes to the nodes, edges or groups.

@@ -4,5 +4,6 @@ export enum GraphEvents {
   IsDraggingNodesEnd = 'nodes:drag-end',
   NodeClick = 'node:click',
   NodeGroupClick = 'node-group:click',
-  EdgeClick = 'edge:click'
+  EdgeClick = 'edge:click',
+  GroupNodesClick = 'group:click'
 }

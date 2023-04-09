@@ -76,46 +76,47 @@ export const TopologyController = {
   getNodesFromSitesOrProcessGroups: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
     entities
       ?.sort((a, b) => a.identity.localeCompare(b.identity))
-      .map(({ identity, name, recType, processGroupRole }, index) => {
-        const { fx, fy } = getPositionFromLocalStorage(identity);
+      .map(({ identity, name: label, recType, processGroupRole }, index) => {
+        const { x, y } = getPositionFromLocalStorage(identity);
 
         return {
           id: identity,
-          name,
-          x: fx || 0,
-          y: fy || 0,
+          label,
+          x,
+          y,
           group: identity,
-          groupName: name,
-          color: getColor(processGroupRole === 'internal' ? 16 : index),
-          img: processGroupRole === 'internal' ? skupperProcessSVG : recType === 'SITE' ? siteSVG : processSVG
+          style: {
+            fill: getColor(processGroupRole === 'internal' ? 16 : index),
+            img: processGroupRole === 'internal' ? skupperProcessSVG : recType === 'SITE' ? siteSVG : processSVG
+          }
         };
       }),
 
-  getGroupsFromProcesses: (processes: GraphNode[]) =>
-    Object.values(
-      processes.reduce((acc, { group: id, color, groupName: name }) => {
-        acc[id] = { id, color, name };
+  getGroupsOfNotEmptySites: (processes: GraphNode[], sites: GraphNode[]): GraphGroup[] => {
+    const groups = processes.map(({ group }) => group);
 
-        return acc;
-      }, {} as Record<string, GraphGroup>)
-    ),
+    return sites
+      .filter((site) => groups.includes(site.group))
+      .map(({ id, style, label }) => ({ id, color: style.fill, name: label }));
+  },
 
   getNodesFromProcesses: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
     processes
-      ?.map(({ name, identity, parent: group, parentName: groupName, processRole }) => {
-        const { fx, fy } = getPositionFromLocalStorage(identity);
+      ?.map(({ name: label, identity, parent: group, processRole }) => {
+        const { x, y } = getPositionFromLocalStorage(identity);
 
         const groupIndex = groups.findIndex(({ id }) => id === group);
 
         return {
           id: identity,
-          name,
-          x: fx || 0,
-          y: fy || 0,
+          label,
+          x,
+          y,
           group,
-          groupName,
-          color: getColor(processRole === 'internal' ? 16 : groupIndex),
-          img: processRole === 'internal' ? skupperProcessSVG : processSVG
+          style: {
+            fill: getColor(processRole === 'internal' ? 16 : groupIndex),
+            img: processRole === 'internal' ? skupperProcessSVG : processSVG
+          }
         };
       })
       .sort((a, b) => a.group.localeCompare(b.group)),
@@ -141,11 +142,11 @@ export const TopologyController = {
 
 const getColor = (index: number) => nodeColors[index % nodeColors.length];
 
-function getPositionFromLocalStorage(identity: string): { fx: number; fy: number } {
+function getPositionFromLocalStorage(identity: string): { x: number; y: number } {
   const positions = localStorage.getItem(identity);
 
-  const fx = positions ? JSON.parse(positions).fx : null;
-  const fy = positions ? JSON.parse(positions).fy : null;
+  const x = positions ? JSON.parse(positions).x : null;
+  const y = positions ? JSON.parse(positions).y : null;
 
-  return { fx, fy };
+  return { x, y };
 }

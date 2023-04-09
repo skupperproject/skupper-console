@@ -7,21 +7,27 @@ export interface GraphProps {
 
 export interface GraphNode {
   id: string;
-  name: string;
+  label: string;
+  group: string;
+  style: {
+    img?: string;
+    fill: string;
+    opacity?: number;
+  };
+  x?: number;
+  y?: number;
+}
+
+export interface GraphNodeWithForce extends GraphNode {
+  index?: number;
   x: number;
   y: number;
-  color: string;
-  group: string;
-  groupName: string;
-  img?: string;
-  fx?: number | null;
-  fy?: number | null;
+  fx?: number;
+  fy?: number;
   vx?: number;
   vy?: number;
-  index?: number;
   groupFx?: number;
   groupFy?: number;
-  isDisabled?: boolean;
 }
 
 export interface GraphGroup {
@@ -30,7 +36,7 @@ export interface GraphGroup {
   color?: string;
 }
 
-export interface GraphEdge<T = GraphNode> {
+export interface GraphEdge<T = GraphNodeWithForce> {
   source: T;
   target: T;
   type?: 'dashed';
@@ -42,6 +48,7 @@ export interface GraphReactAdaptorProps {
   edges: GraphEdge<string>[];
   groups?: GraphGroup[];
   nodeSelected?: string;
+  onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
 }

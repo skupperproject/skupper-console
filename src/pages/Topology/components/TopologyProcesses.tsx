@@ -13,6 +13,7 @@ import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
@@ -74,16 +75,23 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     }
   );
 
+  const handleGetSelectedGroup = useCallback(
+    ({ id, name }: GraphGroup) => {
+      navigate(`${SitesRoutesPaths.Sites}/${name}@${id}`);
+    },
+    [navigate]
+  );
+
   const handleGetSelectedNode = useCallback(
-    ({ id, name }: { id: string; name: string }) => {
-      navigate(`${ProcessesRoutesPaths.Processes}/${name}@${id}`);
+    ({ id, label }: GraphNode) => {
+      navigate(`${ProcessesRoutesPaths.Processes}/${label}@${id}`);
     },
     [navigate]
   );
 
   const handleGetSelectedEdge = useCallback(
     (edge: GraphEdge) => {
-      const sourceName = edge.source.name;
+      const sourceName = edge.source.label;
       const sourceId = edge.source.id;
       const destinationId = edge.target.id;
       navigate(`${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${sourceId}-to-${destinationId}`);
@@ -120,7 +128,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       // Get nodes from site and process groups
       const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
       const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
-      const processGroups = TopologyController.getGroupsFromProcesses(processesNodes);
+      const siteGroups = TopologyController.getGroupsOfNotEmptySites(processesNodes, siteNodes);
 
       // Check if no address is selected
       if (processesPairs && !addressIdSelected) {
@@ -128,7 +136,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
         setNodes(processesNodes);
         setLinks(TopologyController.getEdgesFromLinks(processesLinks));
-        setGroups(processGroups);
+        setGroups(siteGroups);
       }
     }
   }, [sites, processes, processesPairs, addressIdSelected]);
@@ -139,7 +147,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       // Get nodes from site and process groups
       const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
       const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
-      const processGroups = TopologyController.getGroupsFromProcesses(processesNodes);
+      const siteGroups = TopologyController.getGroupsOfNotEmptySites(processesNodes, siteNodes);
 
       if (addressIdSelected && flowPairsByAddress) {
         // Get links between processes in the selected address
@@ -154,7 +162,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         // Disable all processes that are not part of the selected address
         const nodesFiltered = processesNodes.map((node) => {
           if (!processIdsFromAddress.includes(node.id)) {
-            return { ...node, isDisabled: true };
+            return { ...node, style: { fill: node.style.fill, opacity: 0.1 } };
           }
 
           return node;
@@ -163,7 +171,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         // Set the nodes, links and groups for the topology
         setNodes(nodesFiltered);
         setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
-        setGroups(processGroups);
+        setGroups(siteGroups);
       }
     }
   }, [sites, processes, processesPairs, addressIdSelected, flowPairsByAddress]);
@@ -188,6 +196,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         nodes={nodes}
         edges={links}
         groups={groups}
+        onClickCombo={handleGetSelectedGroup}
         onClickNode={handleGetSelectedNode}
         onClickEdge={handleGetSelectedEdge}
         nodeSelected={nodeSelected}

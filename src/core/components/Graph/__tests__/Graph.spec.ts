@@ -1,12 +1,12 @@
 import Graph from '../Graph';
-import { GraphEdge, GraphNode } from '../Graph.interfaces';
+import { GraphEdge, GraphNode, GraphNodeWithForce } from '../Graph.interfaces';
 import { GraphController } from '../services';
 
 describe('Graph', () => {
   const nodes: GraphNode[] = [
-    { id: '1', name: 'Node 1', x: 0, y: 0, color: 'red', group: 'group1', groupName: 'Group 1' },
-    { id: '2', name: 'Node 2', x: 10, y: 10, color: 'blue', group: 'group1', groupName: 'Group 1' },
-    { id: '3', name: 'Node 3', x: 20, y: 20, color: 'green', group: 'group2', groupName: 'Group 2' }
+    { id: '1', label: 'Node 1', x: 0, y: 0, style: { fill: 'red' }, group: 'group1' },
+    { id: '2', label: 'Node 2', x: 10, y: 10, style: { fill: 'blue' }, group: 'group1' },
+    { id: '3', label: 'Node 3', x: 20, y: 20, style: { fill: 'green' }, group: 'group2' }
   ];
 
   const edges: GraphEdge<string>[] = [
@@ -49,15 +49,15 @@ describe('Graph', () => {
   it('updates existing node positions', () => {
     graph.run({ nodes, edges });
     const updatedNodes: GraphNode[] = [
-      { id: '1', name: 'Node 1', x: 5, y: 5, color: 'red', group: 'group1', groupName: 'Group 1' },
-      { id: '2', name: 'Node 2', x: 15, y: 15, color: 'blue', group: 'group1', groupName: 'Group 1' },
-      { id: '3', name: 'Node 3', x: 25, y: 25, color: 'green', group: 'group2', groupName: 'Group 2' }
+      { id: '1', label: 'Node 1', x: 5, y: 5, style: { fill: 'red' }, group: 'group1' },
+      { id: '2', label: 'Node 2', x: 15, y: 15, style: { fill: 'blue' }, group: 'group1' },
+      { id: '3', label: 'Node 3', x: 25, y: 25, style: { fill: 'green' }, group: 'group2' }
     ];
 
-    const updatedNodesAfterForceSimulation: GraphNode[] = [
-      { ...updatedNodes[0], fx: 5, fy: 5, vx: 0, vy: 0, index: 0 },
-      { ...updatedNodes[1], fx: 15, fy: 15, vx: 0, vy: 0, index: 1 },
-      { ...updatedNodes[2], fx: 25, fy: 25, vx: 0, vy: 0, index: 2 }
+    const updatedNodesAfterForceSimulation: GraphNodeWithForce[] = [
+      { ...updatedNodes[0], x: 5, y: 5, fx: 5, fy: 5, vx: 0, vy: 0, index: 0 },
+      { ...updatedNodes[1], x: 15, y: 15, fx: 15, fy: 15, vx: 0, vy: 0, index: 1 },
+      { ...updatedNodes[2], x: 25, y: 25, fx: 25, fy: 25, vx: 0, vy: 0, index: 2 }
     ];
 
     graph.updateModel({ nodes: updatedNodes, edges });
