@@ -2,7 +2,6 @@ import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import G6, { Graph, ICombo, IEdge, INode, NodeConfig } from '@antv/g6';
 
-import siteSVG from '@assets/site.svg';
 import {
   GraphEdge,
   GraphCombo,
@@ -86,13 +85,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               ]
             },
 
-            defaultNode: {
-              ...DEFAULT_NODE_CONFIG,
-              icon: {
-                show: true,
-                img: siteSVG
-              }
-            },
+            defaultNode: DEFAULT_NODE_CONFIG,
             defaultCombo: DEFAULT_COMBO_CONFIG,
             defaultEdge: DEFAULT_EDGE_CONFIG,
             nodeStateStyles: DEFAULT_NODE_STATE_CONFIG

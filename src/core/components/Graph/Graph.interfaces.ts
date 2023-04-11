@@ -2,6 +2,10 @@ export interface GraphNode {
   id: string;
   label: string;
   comboId?: string;
+  icon?: {
+    show?: boolean;
+    img?: string;
+  };
   style?: Record<string, string>;
   x?: number;
   y?: number;
