@@ -173,6 +173,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     return <LoadingPage />;
   }
 
+  // links in the topology processes view are clickable
+  const linksWithStyles = links.map((link) => ({ ...link, style: { cursor: 'pointer' } }));
+
   return (
     <>
       <Toolbar>
@@ -192,7 +195,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       <GraphReactAdaptor
         nodes={nodes}
-        edges={links}
+        edges={linksWithStyles}
         combos={groups}
         onClickCombo={handleGetSelectedGroup}
         onClickNode={handleGetSelectedNode}

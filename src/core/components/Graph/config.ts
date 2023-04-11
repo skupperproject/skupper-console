@@ -61,8 +61,7 @@ export const DEFAULT_NODE_CONFIG = {
   style: {
     fillOpacity: 0.55,
     stroke: NODE_COLOR_DEFAULT,
-    lineWidth: 2,
-    cursor: 'pointer'
+    lineWidth: 2
   },
   labelCfg: {
     position: 'bottom',
@@ -87,7 +86,6 @@ export const DEFAULT_EDGE_CONFIG = {
     lineWidth: 1,
     lineDash: [0, 0, 0, 0],
     stroke: EDGE_COLOR_DEFAULT,
-    cursor: 'pointer',
     endArrow: {
       path: 'M 0,0 L 8,4 L 8,-4 Z',
       fill: EDGE_COLOR_DEFAULT
@@ -100,7 +98,8 @@ export const DEFAULT_NODE_STATE_CONFIG = {
     fill: NODE_COLOR_HOVER_DEFAULT,
     stroke: NODE_COLOR_HOVER_EDGE_DEFAULT,
     shadowBlur: 10,
-    shadowColor: NODE_COLOR_HOVER_EDGE_DEFAULT
+    shadowColor: NODE_COLOR_HOVER_EDGE_DEFAULT,
+    cursor: 'pointer'
   }
 };
 

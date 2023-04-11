@@ -1,3 +1,4 @@
+import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
@@ -29,7 +30,7 @@ export const TopologyController = {
     entities.map(({ identity, name: label, processGroupRole: role }, index) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const color = getColor(role === 'internal' ? 16 : index);
-      const img = role === 'internal' ? skupperProcessSVG : processSVG;
+      const img = role === 'internal' ? skupperProcessSVG : componentSVG;
 
       return convertEntityToNode({ id: identity, comboId: identity, label, x, y, color, img });
     }),
@@ -118,6 +119,10 @@ function convertEntityToNode({ id, comboId, label, x, y, color, img }: Entity): 
     label,
     x,
     y,
+    icon: {
+      show: true,
+      img
+    },
     style: {
       fill: color,
       stroke: color,
