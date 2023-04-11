@@ -17,7 +17,7 @@ import {
 } from 'API/REST.interfaces';
 
 export const TopologyController = {
-  convertSitesToNodes: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
+  convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
     entities.map(({ identity, name: label }, index) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const color = getColor(index);
@@ -26,7 +26,7 @@ export const TopologyController = {
       return convertEntityToNode({ id: identity, comboId: identity, label, x, y, color, img });
     }),
 
-  convertProcessGroupsToNodes: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
+  convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
     entities.map(({ identity, name: label, processGroupRole: role }, index) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const color = getColor(role === 'internal' ? 16 : index);
