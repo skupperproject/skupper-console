@@ -25,7 +25,7 @@ const Topology = function () {
 
   return (
     <Card isFullHeight>
-      <Tabs activeKey={topologyType} isFilled onSelect={handleChangeTopologyType} isBox>
+      <Tabs activeKey={topologyType} style={{ minHeight: '40px' }} isFilled onSelect={handleChangeTopologyType} isBox>
         <Tab
           eventKey={TopologyViews.Sites}
           title={

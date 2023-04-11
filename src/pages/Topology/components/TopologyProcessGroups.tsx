@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -18,9 +18,8 @@ const processGroupsQueryParams = {
   filter: 'processGroupRole.external'
 };
 
-const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
+const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupId }) {
   const navigate = useNavigate();
-  const [nodeSelected] = useState<string | undefined>(id);
 
   const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
@@ -39,8 +38,8 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
   );
 
   const handleGetSelectedNode = useCallback(
-    ({ id: idSelected, label }: GraphNode) => {
-      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${label}@${idSelected}`);
+    ({ id, label }: GraphNode) => {
+      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${label}@${id}`);
     },
     [navigate]
   );
@@ -53,11 +52,11 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
     return null;
   }
 
-  const links = TopologyController.getEdgesFromProcessGroups(processGroupsPairs);
-  const nodes = TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
+  const nodes = TopologyController.convertProcessGroupsToNodes(processGroups);
+  const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
 
   return (
-    <GraphReactAdaptor nodes={nodes} edges={links} onClickNode={handleGetSelectedNode} itemSelected={nodeSelected} />
+    <GraphReactAdaptor nodes={nodes} edges={links} onClickNode={handleGetSelectedNode} itemSelected={processGroupId} />
   );
 };
 

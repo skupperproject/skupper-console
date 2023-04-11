@@ -47,12 +47,10 @@ const TopologySite: FC<{ id?: string | null }> = function () {
     return null;
   }
 
-  const nodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-  const edges = TopologyController.getEdgesFromSitesConnected(
-    TopologyController.getSitesWithLinksCreated(sites, routers, links)
-  );
+  const nodes = TopologyController.convertSitesToNodes(sites);
+  const siteLinks = TopologyController.getLinksFromSites(sites, routers, links);
 
-  return <GraphReactAdaptor nodes={nodes} edges={edges} onClickNode={handleGetSelectedNode} />;
+  return <GraphReactAdaptor nodes={nodes} edges={siteLinks} onClickNode={handleGetSelectedNode} />;
 };
 
 export default TopologySite;
