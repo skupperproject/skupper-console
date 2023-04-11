@@ -36,18 +36,6 @@ interface BaseResponse {
   endTime?: number;
 }
 
-interface EntityBaseResponse extends BaseResponse {
-  name: string;
-  processGroupRole?: 'external' | 'internal';
-}
-
-interface EntityMetricsResponse {
-  octetsSent: number;
-  octetSentRate: number;
-  octetsReceived: number;
-  octetReceivedRate: number;
-}
-
 export interface QueryParams {
   filter?: string;
   offset?: number;
@@ -57,13 +45,18 @@ export interface QueryParams {
   sortBy?: string | null;
 }
 
-export interface SiteResponse extends EntityBaseResponse {
+export interface SiteResponse extends BaseResponse {
+  name: string;
   nameSpace: string;
 }
 
-export type ProcessGroupResponse = EntityBaseResponse & EntityMetricsResponse;
+export interface ProcessGroupResponse extends BaseResponse {
+  name: string;
+  processGroupRole: 'external' | 'internal';
+}
 
-export interface ProcessResponse extends EntityBaseResponse, EntityMetricsResponse {
+export interface ProcessResponse extends BaseResponse {
+  name: string;
   parent: string;
   parentName: string;
   groupIdentity: string;
@@ -74,14 +67,16 @@ export interface ProcessResponse extends EntityBaseResponse, EntityMetricsRespon
   processRole: 'external' | 'internal';
   endTime?: number;
 }
-export interface LinkResponse extends EntityBaseResponse {
+export interface LinkResponse extends BaseResponse {
+  name?: string;
   parent: string;
   mode: string;
   direction: 'outgoing' | 'incoming';
   linkCost: number;
 }
 
-export interface RouterResponse extends EntityBaseResponse {
+export interface RouterResponse extends BaseResponse {
+  name: string;
   parent: string;
   namespace: string;
   hostname: string;
@@ -90,12 +85,14 @@ export interface RouterResponse extends EntityBaseResponse {
   buildVersion: string;
 }
 
-export interface HostResponse extends EntityBaseResponse {
+export interface HostResponse extends BaseResponse {
+  name: string;
   parent: string;
   provider: string;
 }
 
-export interface AddressResponse extends EntityBaseResponse {
+export interface AddressResponse extends BaseResponse {
+  name: string;
   protocol: AvailableProtocols;
   connectorCount: number;
   listenerCount: number;

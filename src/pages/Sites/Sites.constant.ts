@@ -14,3 +14,8 @@ export const siteColumns = [
     component: 'linkCell'
   }
 ];
+
+export const LINK_DIRECTIONS = {
+  OUTGOING: 'outgoing',
+  INCOMING: 'incoming'
+};

@@ -1,11 +1,7 @@
 import { LinkResponse, RouterResponse, SiteResponse } from 'API/REST.interfaces';
 
+import { LINK_DIRECTIONS } from '../Sites.constant';
 import { SiteWithLinks } from '../Sites.interfaces';
-
-const LINK_DIRECTIONS = {
-  OUTGOING: 'outgoing',
-  INCOMING: 'incoming'
-};
 
 const SitesController = {
   //Binds the links with the site ids, given the links and routers.
