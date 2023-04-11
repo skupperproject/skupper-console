@@ -1,54 +1,37 @@
-export interface GraphProps {
-  $node: HTMLElement;
-  width: number;
-  height: number;
-  nodeSelected?: string;
-}
-
 export interface GraphNode {
   id: string;
   label: string;
-  group: string;
-  style: {
-    img?: string;
-    fill: string;
-    opacity?: number;
-  };
+  comboId?: string;
+  style?: Record<string, string>;
   x?: number;
   y?: number;
 }
 
-export interface GraphNodeWithForce extends GraphNode {
-  index?: number;
-  x: number;
-  y: number;
-  fx?: number;
-  fy?: number;
-  vx?: number;
-  vy?: number;
-  groupFx?: number;
-  groupFy?: number;
-}
-
-export interface GraphGroup {
+export interface GraphCombo {
   id: string;
   label: string;
-  color?: string;
+  style?: Record<string, string>;
 }
 
-export interface GraphEdge<T = GraphNodeWithForce> {
-  source: T;
-  target: T;
-  type?: 'dashed';
-  clickable?: boolean;
+export interface GraphEdge {
+  source: string;
+  target: string;
+  id: string;
+  style?: Record<string, string>;
 }
 
 export interface GraphReactAdaptorProps {
   nodes: GraphNode[];
-  edges: GraphEdge<string>[];
-  groups?: GraphGroup[];
-  nodeSelected?: string;
+  edges: GraphEdge[];
+  combos?: GraphCombo[];
+  itemSelected?: string;
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
+}
+
+export interface LocalStorageData {
+  id: string;
+  x: number;
+  y: number;
 }

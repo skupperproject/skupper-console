@@ -1,14 +1,127 @@
-export const NODE_SIZE = 45;
-export const ARROW_SIZE = 10;
-export const FONT_SIZE_DEFAULT = 14;
-export const OPACITY_NO_SELECTED_ITEM = 0.1;
+import { LayoutConfig } from '@antv/g6-core';
 
-export const NODE_CLASS_NAME = 'node';
-export const GROUP_NODE_PATHS_CLASS_NAME = 'group-node-paths';
-export const EDGE_CLASS_NAME = 'edge';
+import {
+  COMBO_COLOR_DEFAULT,
+  EDGE_COLOR_DEFAULT,
+  NODE_COLOR_DEFAULT,
+  NODE_COLOR_HOVER_DEFAULT,
+  NODE_COLOR_HOVER_EDGE_DEFAULT
+} from './Graph.constants';
 
-export const DEFAULT_COLOR = 'var(--pf-global--palette--black-300)';
-export const SELECTED_EDGE_COLOR = 'var(--pf-global--palette--blue-300)';
-export const SELECTED_TEXT_COLOR = 'var(--pf-global--palette--black-800)';
+const NODE_SIZE = 50;
 
-export const ITERATIONS = 20; // number of the cycles to simulate the first positioning of the graph
+export const DEFAULT_MODE = {
+  default: [
+    { type: 'drag-node', onlyChangeComboSize: true },
+    {
+      type: 'drag-combo',
+      enableDelegate: true,
+      activeState: 'actived',
+      onlyChangeComboSize: true,
+      shouldUpdate: () => true
+    },
+    'zoom-canvas',
+    'drag-canvas'
+  ]
+};
+
+export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG = {
+  type: 'comboForce',
+  nodeSize: 30,
+  nodeSpacing: 30,
+  comboSpacing: 80,
+  linkDistance: 150,
+  nodeStrength: -50,
+  edgeStrength: 1,
+  collideStrength: 1,
+  preventOverlap: true,
+  preventComboOverlap: true,
+  comboCollideStrength: 1
+};
+
+export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
+  type: 'force',
+  clustering: true,
+  clusterNodeStrength: -1000,
+  clusterEdgeDistance: 1000,
+  clusterFociStrength: 1.2,
+  linkDistance: 250,
+  nodeStrength: -4000,
+  edgeStrength: 0.7,
+  collideStrength: 1,
+  nodeSpacing: NODE_SIZE,
+  preventOverlap: true,
+  alpha: 0.1
+};
+
+export const DEFAULT_NODE_CONFIG = {
+  type: 'circle',
+  size: [NODE_SIZE],
+
+  style: {
+    fillOpacity: 0.55,
+    stroke: NODE_COLOR_DEFAULT,
+    lineWidth: 2,
+    cursor: 'pointer'
+  },
+  labelCfg: {
+    position: 'bottom',
+    offset: 15,
+    style: {
+      fill: NODE_COLOR_DEFAULT,
+      fontSize: 10,
+      background: {
+        fill: '#FFFFFF',
+        stroke: NODE_COLOR_DEFAULT,
+        lineWidth: 1,
+        padding: [5, 8, 5, 8],
+        radius: 2
+      }
+    }
+  }
+};
+
+export const DEFAULT_EDGE_CONFIG = {
+  type: 'line-dash',
+  style: {
+    lineWidth: 1,
+    lineDash: [0, 0, 0, 0],
+    stroke: EDGE_COLOR_DEFAULT,
+    cursor: 'pointer',
+    endArrow: {
+      path: 'M 0,0 L 8,4 L 8,-4 Z',
+      fill: EDGE_COLOR_DEFAULT
+    }
+  }
+};
+
+export const DEFAULT_NODE_STATE_CONFIG = {
+  hover: {
+    fill: NODE_COLOR_HOVER_DEFAULT,
+    stroke: NODE_COLOR_HOVER_EDGE_DEFAULT,
+    shadowBlur: 10,
+    shadowColor: NODE_COLOR_HOVER_EDGE_DEFAULT
+  }
+};
+
+export const DEFAULT_COMBO_CONFIG = {
+  type: 'rect',
+
+  style: {
+    cursor: 'pointer',
+    lineWidth: 2,
+    fillOpacity: 0.1,
+    shadowBlur: 10,
+    radius: 8
+  },
+
+  labelCfg: {
+    refY: -32,
+    offset: 15,
+    position: 'top',
+    style: {
+      fill: COMBO_COLOR_DEFAULT,
+      fontSize: 28
+    }
+  }
+};

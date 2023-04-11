@@ -1,47 +1,56 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { Button } from '@patternfly/react-core';
-import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
+import G6, { Graph, ICombo, IEdge, INode, NodeConfig } from '@antv/g6';
 
-import { GraphEvents } from '@core/components/Graph/Graph.enum';
-import { GraphEdge, GraphGroup, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import siteSVG from '@assets/site.svg';
+import {
+  GraphEdge,
+  GraphCombo,
+  GraphNode,
+  GraphReactAdaptorProps,
+  LocalStorageData
+} from '@core/components/Graph/Graph.interfaces';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
-import Graph from './Graph';
+import {
+  DEFAULT_COMBO_CONFIG,
+  DEFAULT_EDGE_CONFIG,
+  DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+  DEFAULT_MODE,
+  DEFAULT_NODE_CONFIG,
+  DEFAULT_NODE_STATE_CONFIG
+} from './config';
+import { registerCustomBehaviours } from './customBehaviours';
+import GraphMenuControl from './GraphMenuControl';
+import { GraphController } from './services';
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
   nodes,
   edges,
-  groups,
+  combos,
   onClickEdge,
   onClickNode,
   onClickCombo,
-  nodeSelected
+  itemSelected
 }) {
-  const [topologyGraphInstance, setTopologyGraphInstance] = useState<Graph>();
+  const [isGraphLoaded, setIsGraphLoaded] = useState(false);
+
   const prevNodesRef = useRef<GraphNode[]>();
-  const prevEdgesRef = useRef<GraphEdge<string>[]>();
+  const prevEdgesRef = useRef<GraphEdge[]>();
+  const prevCombosRef = useRef<GraphCombo[]>();
+  const topologyGraphRef = useRef<Graph>();
 
   const handleOnClickNode = useCallback(
-    ({ data: { id, label } }: { data: GraphNode }) => {
+    (data: GraphNode) => {
       if (onClickNode) {
-        onClickNode({ id, label });
+        onClickNode(data);
       }
     },
     [onClickNode]
   );
 
-  const handleOnClickCombo = useCallback(
-    ({ data }: { data: GraphGroup }) => {
-      if (onClickCombo) {
-        onClickCombo(data);
-      }
-    },
-    [onClickCombo]
-  );
-
   const handleOnClickEdge = useCallback(
-    ({ data }: { data: GraphNode }) => {
+    (data: GraphEdge) => {
       if (onClickEdge) {
         onClickEdge(data);
       }
@@ -49,83 +58,291 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
     [onClickEdge]
   );
 
-  const handleSaveNodesPositions = useCallback((topologyNodes: GraphNode[]) => {
-    topologyNodes.forEach(({ id, x, y }) => {
-      if (x && y) {
-        //save the position of the node to the local storage
-        localStorage.setItem(id, JSON.stringify({ x, y }));
+  const handleOnClickCombo = useCallback(
+    (data: GraphCombo) => {
+      if (onClickCombo) {
+        onClickCombo(data);
       }
-    });
-  }, []);
+    },
+    [onClickCombo]
+  );
 
   // Creates topology
   const graphRef = useCallback(
     ($node: HTMLDivElement | null) => {
-      if ($node && nodes.length && !topologyGraphInstance) {
-        const { width, height } = $node.getBoundingClientRect();
+      if ($node && nodes.length && !topologyGraphRef.current) {
+        const topologyGraph = new G6.Graph({
+          container: $node,
+          width: $node.scrollWidth,
+          height: $node.scrollHeight,
 
-        const topologyGraph = new Graph({
-          $node,
-          width,
-          height,
-          nodeSelected
+          modes: DEFAULT_MODE,
+          layout: {
+            pipes: [
+              //  If  nodes already have positions,load the 'force' layout without a simulation to visually arrange them in a graph.
+              {
+                type: 'force',
+                alpha: 0,
+                nodesFilter: ({ x, y }: GraphNode) => !!(x && y)
+              },
+              {
+                ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+                center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
+                nodesFilter: ({ x, y }: GraphNode) => !!(!x || !y)
+              }
+            ]
+          },
+
+          defaultNode: {
+            ...DEFAULT_NODE_CONFIG,
+            icon: {
+              show: true,
+              img: siteSVG
+            }
+          },
+          defaultCombo: DEFAULT_COMBO_CONFIG,
+          defaultEdge: DEFAULT_EDGE_CONFIG,
+          nodeStateStyles: DEFAULT_NODE_STATE_CONFIG
         });
 
-        topologyGraph.EventEmitter.on(GraphEvents.NodeClick, handleOnClickNode);
-        topologyGraph.EventEmitter.on(GraphEvents.EdgeClick, handleOnClickEdge);
-        topologyGraph.EventEmitter.on(GraphEvents.GroupNodesClick, handleOnClickCombo);
+        topologyGraph.on('node:click', ({ item }) => {
+          if (item) {
+            const node = item.getModel() as GraphNode;
+            handleOnClickNode(node);
+          }
+        });
 
-        topologyGraph.run({ nodes, edges: sanitizeEdges(nodes, edges), combos: groups });
+        topologyGraph.on('edge:click', ({ item }) => {
+          if (item) {
+            const edge = item.getModel() as GraphEdge;
+            handleOnClickEdge(edge);
+          }
+        });
 
-        setTopologyGraphInstance(topologyGraph);
+        topologyGraph.on('node:dragstart', ({ item }) => {
+          const nodeItem = item;
+          if (nodeItem) {
+            topologyGraph.updateItem(nodeItem, { style: { cursor: 'grab' } });
+          }
+        });
+
+        topologyGraph.on('node:dragend', ({ item }) => {
+          if (item) {
+            topologyGraph.updateItem(item, { style: { cursor: 'pointer' } });
+
+            const { id, x, y } = item.getModel() as NodeConfig;
+            GraphController.saveDataInLocalStorage([{ id, x, y }]);
+          }
+        });
+
+        topologyGraph.on('node:mouseenter', ({ item }) => {
+          const node = item as INode | null;
+          if (node) {
+            // To ensure that only one node is selected at a time, we need to clean up any previously selected nodes.
+            //This situation can arise when we automatically select an element from another pager through nodeSelect.
+            topologyGraph.findAllByState<INode>('node', 'hover').forEach((nodeWithHoverState) => {
+              topologyGraph.setItemState(nodeWithHoverState, 'hover', false);
+
+              nodeWithHoverState.getEdges().forEach((edgeConnectedWithHoverState) => {
+                topologyGraph.setItemState(edgeConnectedWithHoverState, 'hover', false);
+              });
+            });
+
+            topologyGraph.setItemState(node, 'hover', true);
+
+            node.getEdges().forEach((edgeConnected) => {
+              topologyGraph.setItemState(edgeConnected, 'hover', true);
+            });
+            node.getNeighbors().forEach((neighbor) => {
+              topologyGraph.setItemState(neighbor, 'hover', true);
+            });
+          }
+        });
+
+        topologyGraph.on('node:mouseleave', ({ item }) => {
+          const node = item as INode | null;
+
+          if (node) {
+            topologyGraph.setItemState(node, 'hover', false);
+
+            node.getEdges().forEach((edgeConnected) => {
+              topologyGraph.setItemState(edgeConnected, 'hover', false);
+            });
+
+            node.getNeighbors().forEach((neighbor) => {
+              topologyGraph.setItemState(neighbor, 'hover', false);
+            });
+          }
+        });
+
+        topologyGraph.on('edge:mouseenter', ({ item }) => {
+          const edge = item as IEdge | null;
+
+          if (edge) {
+            topologyGraph.setItemState(edge, 'hover', true);
+
+            const source = edge.getSource();
+            const target = edge.getTarget();
+
+            topologyGraph.setItemState(source, 'hover', true);
+            topologyGraph.setItemState(target, 'hover', true);
+
+            // To ensure that only one node is selected at a time, we need to clean up any previously selected nodes.
+            //This situation can arise when we automatically select an element from another pager through nodeSelect.
+            topologyGraph.findAllByState<INode>('node', 'hover').forEach((nodeWithHoverState) => {
+              if (nodeWithHoverState !== source && nodeWithHoverState !== target) {
+                topologyGraph.setItemState(nodeWithHoverState, 'hover', false);
+
+                nodeWithHoverState.getEdges().forEach((edgeConnectedWithHoverState) => {
+                  topologyGraph.setItemState(edgeConnectedWithHoverState, 'hover', false);
+                });
+              }
+            });
+          }
+        });
+
+        topologyGraph.on('edge:mouseleave', ({ item }) => {
+          const edge = item as IEdge | null;
+
+          if (edge) {
+            topologyGraph.setItemState(edge, 'hover', false);
+
+            const source = edge.getSource();
+            const target = edge.getTarget();
+
+            topologyGraph.setItemState(source, 'hover', false);
+            topologyGraph.setItemState(target, 'hover', false);
+          }
+        });
+
+        if (combos?.length) {
+          topologyGraph.on('combo:click', ({ item }) => {
+            if (item) {
+              handleOnClickCombo(item.getModel() as GraphCombo);
+            }
+          });
+
+          topologyGraph.on('combo:dragstart', ({ item }) => {
+            if (item) {
+              topologyGraph.updateItem(item, { style: { cursor: 'grab' } });
+            }
+          });
+
+          topologyGraph.on('combo:dragend', ({ item }) => {
+            if (item) {
+              const combo = item as ICombo;
+              topologyGraph.updateItem(combo, { style: { cursor: 'pointer' } });
+
+              // Retrieve the nodes contained within the combo box and store their positions in memory
+              const { nodes: comboNodes } = topologyGraph.getComboChildren(combo);
+
+              comboNodes.forEach((comboNode) => {
+                const { id, x, y } = comboNode.getModel() as NodeConfig;
+                GraphController.saveDataInLocalStorage([{ id, x, y }]);
+              });
+            }
+          });
+        }
+
+        topologyGraph.on('afterlayout', () => {
+          topologyGraphRef.current = topologyGraph;
+          setIsGraphLoaded(true);
+        });
+
+        registerCustomBehaviours();
+
+        topologyGraph.data(GraphController.getG6Model({ edges, nodes, combos }));
+        topologyGraph.render();
       }
     },
-    [
-      nodes,
-      topologyGraphInstance,
-      nodeSelected,
-      handleOnClickNode,
-      handleOnClickEdge,
-      handleOnClickCombo,
-      edges,
-      groups
-    ]
+    [nodes, combos, edges, handleOnClickNode, handleOnClickEdge, handleOnClickCombo]
   );
+
+  // This effect persist the  coordinates for each element of topology after the first simulation.
+  useEffect(() => {
+    const graphInstance = topologyGraphRef.current;
+
+    if (isGraphLoaded && graphInstance) {
+      const updateNodes = graphInstance
+        .getNodes()
+        .map((node) => {
+          const model = node.getModel();
+
+          if (model.id) {
+            return {
+              id: model.id,
+              x: model.x,
+              y: model.y
+            };
+          }
+
+          return undefined;
+        })
+        .filter(Boolean) as LocalStorageData[];
+
+      GraphController.saveDataInLocalStorage(updateNodes);
+    }
+  }, [isGraphLoaded]);
 
   // This effect updates the topology graph instance when there are changes to the nodes, edges or groups.
   useEffect(() => {
+    const graphInstance = topologyGraphRef.current;
+
     if (
-      topologyGraphInstance &&
-      nodes &&
+      isGraphLoaded &&
+      graphInstance &&
       (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
-        JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
+        JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
+        (combos && JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos)))
     ) {
-      topologyGraphInstance.updateModel({ nodes, edges: sanitizeEdges(nodes, edges), combos: groups });
+      graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
       prevNodesRef.current = nodes;
       prevEdgesRef.current = edges;
+
+      if (combos) {
+        prevCombosRef.current = combos;
+      }
     }
-  }, [nodes, edges, groups, topologyGraphInstance, handleSaveNodesPositions]);
+  }, [nodes, edges, combos, isGraphLoaded]);
 
-  const saveNodesPositions = useCallback(() => {
-    const topologyNodes = topologyGraphInstance?.getNodes();
-
-    if (topologyNodes) {
-      handleSaveNodesPositions(topologyNodes);
-    }
-  }, [handleSaveNodesPositions, topologyGraphInstance]);
-
-  /**This useEffect function is responsible for saving the positions of the nodes on the topology to the local storage before the user exits the page.**/
+  // This effect handle the initial  UI status when an element is selected from an other page
+  // it can be a node or edge
   useEffect(() => {
-    window.addEventListener('beforeunload', saveNodesPositions);
+    const graphInstance = topologyGraphRef.current;
 
-    // clean up function to remove the event listener when the component unmounts
-    return () => {
-      // call the saveNodesPositions function to save the nodes positions one last time
-      saveNodesPositions();
-      window.removeEventListener('beforeunload', saveNodesPositions);
-    };
-  }, [handleSaveNodesPositions, saveNodesPositions, topologyGraphInstance]);
+    if (isGraphLoaded && graphInstance && itemSelected) {
+      const item = graphInstance.findById(itemSelected);
+
+      if (item) {
+        graphInstance.setItemState(item, 'hover', true);
+
+        if (item.get('type') === 'node') {
+          const node = item as INode;
+
+          // Update the style of edges connected to this node
+          node.getEdges().forEach((edgeConnected) => {
+            graphInstance.setItemState(edgeConnected, 'hover', true);
+          });
+
+          // Update the style of neighboring nodes
+          node.getNeighbors().forEach((neighbor) => {
+            graphInstance.setItemState(neighbor, 'hover', true);
+          });
+        }
+
+        if (item.get('type') === 'edge') {
+          const edge = item as IEdge;
+
+          const source = edge.getSource();
+          const target = edge.getTarget();
+
+          graphInstance.setItemState(source, 'hover', true);
+          graphInstance.setItemState(target, 'hover', true);
+        }
+      }
+    }
+  }, [itemSelected, isGraphLoaded]);
 
   return (
     <div style={{ height: '100%', position: 'relative' }}>
@@ -133,58 +350,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = function ({
         <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
       </TransitionPage>
 
-      {topologyGraphInstance && <ZoomControls topologyGraphInstance={topologyGraphInstance} />}
+      {topologyGraphRef.current && <GraphMenuControl graphInstance={topologyGraphRef.current} />}
     </div>
   );
 };
 
 export default GraphReactAdaptor;
-
-// TODO: remove this function when Backend sanitize the old process pairs
-function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge<string>[]) {
-  const availableNodesMap = nodes.reduce((acc, node) => {
-    acc[node.id] = node.id;
-
-    return acc;
-  }, {} as Record<string, string>);
-
-  return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
-}
-
-type ZoomControlsProps = {
-  topologyGraphInstance: Graph;
-};
-
-const ZoomControls = function ({ topologyGraphInstance }: ZoomControlsProps) {
-  const handleIncreaseZoom = () => topologyGraphInstance?.increaseZoomLevel();
-  const handleDecreaseZoom = () => topologyGraphInstance?.decreaseZoomLevel();
-  const handleZoomToDefault = () => topologyGraphInstance?.zoomToDefaultPosition();
-
-  return (
-    <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
-      <Button
-        isActive={true}
-        className="pf-u-m-xs"
-        variant="primary"
-        onClick={handleIncreaseZoom}
-        icon={<SearchPlusIcon />}
-      />
-
-      <Button
-        isActive={true}
-        className="pf-u-m-xs"
-        variant="primary"
-        onClick={handleDecreaseZoom}
-        icon={<SearchMinusIcon />}
-      />
-
-      <Button
-        isActive={true}
-        className="pf-u-m-xs"
-        variant="primary"
-        onClick={handleZoomToDefault}
-        icon={<ExpandIcon />}
-      />
-    </span>
-  );
-};

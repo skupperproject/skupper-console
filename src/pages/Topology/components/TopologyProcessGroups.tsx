@@ -53,11 +53,11 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id }) {
     return null;
   }
 
-  const links = TopologyController.getProcessGroupsLinks(processGroupsPairs);
+  const links = TopologyController.getEdgesFromProcessGroups(processGroupsPairs);
   const nodes = TopologyController.getNodesFromSitesOrProcessGroups(processGroups);
 
   return (
-    <GraphReactAdaptor nodes={nodes} edges={links} onClickNode={handleGetSelectedNode} nodeSelected={nodeSelected} />
+    <GraphReactAdaptor nodes={nodes} edges={links} onClickNode={handleGetSelectedNode} itemSelected={nodeSelected} />
   );
 };
 
