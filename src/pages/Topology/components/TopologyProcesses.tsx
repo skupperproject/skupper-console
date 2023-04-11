@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { UPDATE_INTERVAL } from '@config/config';
-import { GraphEdge, GraphGroup, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -30,8 +30,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const navigate = useNavigate();
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
-  const [links, setLinks] = useState<GraphEdge<string>[]>([]);
-  const [groups, setGroups] = useState<GraphGroup[]>();
+  const [links, setLinks] = useState<GraphEdge[]>([]);
+  const [groups, setGroups] = useState<GraphCombo[]>();
 
   const [nodeSelected] = useState<string | undefined>(processId);
 
@@ -76,7 +76,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   );
 
   const handleGetSelectedGroup = useCallback(
-    ({ id, label }: GraphGroup) => {
+    ({ id, label }: GraphCombo) => {
       navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
     },
     [navigate]
@@ -91,9 +91,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   const handleGetSelectedEdge = useCallback(
     (edge: GraphEdge) => {
-      const sourceName = edge.source.label;
-      const sourceId = edge.source.id;
-      const destinationId = edge.target.id;
+      const sourceName = edge.source;
+      const sourceId = edge.source;
+      const destinationId = edge.target;
       navigate(`${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${sourceId}-to-${destinationId}`);
     },
     [navigate]
@@ -135,7 +135,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         const processesLinks = TopologyController.getProcessesLinksFromProcessPairs(processesPairs);
 
         setNodes(processesNodes);
-        setLinks(TopologyController.getEdgesFromLinks(processesLinks));
+        setLinks(processesLinks);
         setGroups(siteGroups);
       }
     }
@@ -161,7 +161,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
         // Set the nodes, links and groups for the topology
         setNodes(processesNodes);
-        setLinks(TopologyController.getEdgesFromLinks(processesLinksByAddress));
+        setLinks(processesLinksByAddress);
         setGroups(siteGroups);
       }
     }
@@ -186,11 +186,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       <GraphReactAdaptor
         nodes={nodes}
         edges={links}
-        groups={groups}
+        combos={groups}
         onClickCombo={handleGetSelectedGroup}
         onClickNode={handleGetSelectedNode}
         onClickEdge={handleGetSelectedEdge}
-        nodeSelected={nodeSelected}
+        itemSelected={nodeSelected}
       />
     </>
   );

@@ -35,7 +35,7 @@ const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
 const PERF_TEST = false;
-const ITEMS_TEST = 200;
+const ITEMS_TEST = 500;
 interface ApiProps {
   params: Record<string, string>;
 }

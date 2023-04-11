@@ -2,7 +2,7 @@ import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { nodeColors } from '@core/components/Graph/Graph.constants';
-import { GraphEdge, GraphGroup, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
 import { SiteExtended } from '@pages/Sites/Sites.interfaces';
 import {
@@ -14,8 +14,6 @@ import {
   RouterResponse,
   SiteResponse
 } from 'API/REST.interfaces';
-
-import { LinkTopology } from './services.interfaces';
 
 export const TopologyController = {
   // Add to each site the prop connected that is a collection of bound site ids  using the command 'skupper link create'
@@ -36,25 +34,20 @@ export const TopologyController = {
     return sitesConnected;
   },
 
-  getProcessesLinksFromProcessPairs: (processesPairs: ProcessPairsResponse[]): LinkTopology[] => {
-    const processesLinks = processesPairs.map(({ identity, sourceId, destinationId }) => ({
-      key: identity,
+  getProcessesLinksFromProcessPairs: (processesPairs: ProcessPairsResponse[]): GraphEdge[] =>
+    processesPairs.map(({ identity, sourceId, destinationId }) => ({
+      id: identity,
       source: sourceId,
-      clickable: true,
       target: destinationId
-    }));
+    })),
 
-    return processesLinks;
-  },
-
-  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): LinkTopology[] =>
-    flowPairsByAddress.reduce<LinkTopology[]>((acc, { identity, processAggregateId }) => {
+  getProcessesLinksFromFlowPairs: (flowPairsByAddress: FlowPairsResponse[]): GraphEdge[] =>
+    flowPairsByAddress.reduce<GraphEdge[]>((acc, { processAggregateId }) => {
       const [source, target] = processAggregateId.split('-to-');
       const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
       if (!exists) {
         acc.push({
-          key: identity,
-          clickable: true,
+          id: processAggregateId,
           source,
           target
         });
@@ -63,78 +56,71 @@ export const TopologyController = {
       return acc;
     }, []),
 
-  getProcessGroupsLinks: (links: ProcessPairsResponse[]): LinkTopology[] => {
-    const processGroupsLinks = links.map(({ identity, sourceId, destinationId }) => ({
-      key: identity,
-      source: sourceId,
-      target: destinationId
-    }));
-
-    return processGroupsLinks;
-  },
-
   getNodesFromSitesOrProcessGroups: (entities: SiteResponse[] | ProcessGroupResponse[]): GraphNode[] =>
     entities
       ?.sort((a, b) => a.identity.localeCompare(b.identity))
       .map(({ identity, name: label, recType, processGroupRole }, index) => {
         const { x, y } = getPositionFromLocalStorage(identity);
+        const color = getColor(processGroupRole === 'internal' ? 16 : index);
 
         return {
           id: identity,
           label,
           x,
           y,
-          group: identity,
+          comboId: identity,
           style: {
-            fill: getColor(processGroupRole === 'internal' ? 16 : index),
+            fill: color,
+            stroke: color,
+            shadowColor: color,
             img: processGroupRole === 'internal' ? skupperProcessSVG : recType === 'SITE' ? siteSVG : processSVG
           }
         };
       }),
 
-  getGroupsOfNotEmptySites: (processes: GraphNode[], sites: GraphNode[]): GraphGroup[] => {
-    const groups = processes.map(({ group }) => group);
+  getGroupsOfNotEmptySites: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
+    const groups = processes.map(({ comboId }) => comboId);
 
-    return sites
-      .filter((site) => groups.includes(site.group))
-      .map(({ id, style, label }) => ({ id, color: style.fill, label }));
+    return sites.filter((site) => groups.includes(site.comboId)).map(({ id, style, label }) => ({ id, label, style }));
   },
 
   getNodesFromProcesses: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
     processes
-      ?.map(({ name: label, identity, parent: group, processRole }) => {
+      ?.map(({ name: label, identity, parent: comboId, processRole }) => {
         const { x, y } = getPositionFromLocalStorage(identity);
 
-        const groupIndex = groups.findIndex(({ id }) => id === group);
+        const groupIndex = groups.findIndex(({ id }) => id === comboId);
+        const color = getColor(processRole === 'internal' ? 16 : groupIndex);
 
         return {
           id: identity,
           label,
           x,
           y,
-          group,
+          comboId,
           style: {
-            fill: getColor(processRole === 'internal' ? 16 : groupIndex),
+            fill: color,
+            stroke: color,
             img: processRole === 'internal' ? skupperProcessSVG : processSVG
           }
         };
       })
-      .sort((a, b) => a.group.localeCompare(b.group)),
+      .sort((a, b) => a.comboId.localeCompare(b.comboId)),
 
-  getEdgesFromLinks: (links: LinkTopology[]): GraphEdge<string>[] =>
-    links?.map(({ source, target, clickable }) => ({
-      source,
-      target,
-      clickable
+  getEdgesFromProcessGroups: (links: ProcessPairsResponse[]): GraphEdge[] =>
+    links.map(({ identity, sourceId, destinationId }) => ({
+      id: identity,
+      source: sourceId,
+      target: destinationId
     })),
 
-  getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge<string>[] =>
+  getEdgesFromSitesConnected: (sites: SiteExtended[]): GraphEdge[] =>
     sites?.flatMap(({ identity: sourceId, connected }) =>
       connected.flatMap((targetId) => [
         {
+          id: `${sourceId}-to${targetId}`,
           source: sourceId,
-          target: targetId,
-          type: 'dashed'
+          target: targetId
         }
       ])
     )
