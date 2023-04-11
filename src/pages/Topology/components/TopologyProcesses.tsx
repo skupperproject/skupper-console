@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
@@ -32,10 +33,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>();
-
-  const [nodeSelected] = useState<string | undefined>(processId);
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
 
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
@@ -90,24 +88,29 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   );
 
   const handleGetSelectedEdge = useCallback(
-    (edge: GraphEdge) => {
-      const sourceName = edge.source;
-      const sourceId = edge.source;
-      const destinationId = edge.target;
-      navigate(`${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${sourceId}-to-${destinationId}`);
+    ({ id: linkId, source }: GraphEdge) => {
+      const sourceProcess = processes?.find(({ identity }) => identity === source) as ProcessResponse;
+
+      if (sourceProcess) {
+        navigate(`${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${linkId}`);
+      }
     },
-    [navigate]
+    [navigate, processes]
   );
 
-  function handleToggle(isSelectAddressOpen: boolean) {
-    setIsOpen(isSelectAddressOpen);
+  function handleToggleAddressDropdownMenu(isSelectAddressOpen: boolean) {
+    setIsAddressSelectMenuOpen(isSelectAddressOpen);
   }
 
-  function handleSelect(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject, isPlaceholder?: boolean) {
+  function handleSelectAddress(
+    _: MouseEvent | ChangeEvent,
+    selection: string | SelectOptionObject,
+    isPlaceholder?: boolean
+  ) {
     const id = isPlaceholder ? undefined : (selection as string);
 
     setAddressId(id);
-    setIsOpen(false);
+    setIsAddressSelectMenuOpen(false);
   }
 
   const getOptions = useCallback(() => {
@@ -126,13 +129,13 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   useEffect(() => {
     if (sites && processes) {
       // Get nodes from site and process groups
-      const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-      const processesNodes = TopologyController.getNodesFromProcesses(processes, siteNodes);
-      const siteGroups = TopologyController.getGroupsOfNotEmptySites(processesNodes, siteNodes);
+      const siteNodes = TopologyController.convertSitesToNodes(sites);
+      const processesNodes = TopologyController.convertProcessesToNodes(processes, siteNodes);
+      const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
 
       // Check if no address is selected
       if (processesPairs && !addressIdSelected) {
-        const processesLinks = TopologyController.getProcessesLinksFromProcessPairs(processesPairs);
+        const processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs);
 
         setNodes(processesNodes);
         setLinks(processesLinks);
@@ -144,10 +147,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   // This effect is triggered when one address is currently selected
   useEffect(() => {
     if (sites && processes) {
+      // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
       if (addressIdSelected && flowPairsByAddress) {
-        // Get nodes from site and process groups
-        const processesLinksByAddress = TopologyController.getProcessesLinksFromFlowPairs(flowPairsByAddress);
-        // Merge all process IDs in the selected address
+        const processesLinksByAddress = TopologyController.convertFlowPairsToLinks(flowPairsByAddress);
         const processIdsFromAddress = [
           ...(processesLinksByAddress?.map(({ source }) => source) || []),
           ...(processesLinksByAddress?.map(({ target }) => target) || [])
@@ -155,9 +157,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
         const filteredProcesses = processes.filter((node) => processIdsFromAddress.includes(node.identity));
 
-        const siteNodes = TopologyController.getNodesFromSitesOrProcessGroups(sites);
-        const processesNodes = TopologyController.getNodesFromProcesses(filteredProcesses, siteNodes);
-        const siteGroups = TopologyController.getGroupsOfNotEmptySites(processesNodes, siteNodes);
+        const siteNodes = TopologyController.convertSitesToNodes(sites);
+        const processesNodes = TopologyController.convertProcessesToNodes(filteredProcesses, siteNodes);
+        const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
 
         // Set the nodes, links and groups for the topology
         setNodes(processesNodes);
@@ -176,7 +178,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       <Toolbar>
         <ToolbarContent>
           <ToolbarItem>
-            <Select isOpen={isOpen} onSelect={handleSelect} onToggle={handleToggle} selections={addressIdSelected}>
+            <Select
+              isOpen={isAddressSelectMenuOpen}
+              onSelect={handleSelectAddress}
+              onToggle={handleToggleAddressDropdownMenu}
+              selections={addressIdSelected}
+            >
               {getOptions()}
             </Select>
           </ToolbarItem>
@@ -190,7 +197,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         onClickCombo={handleGetSelectedGroup}
         onClickNode={handleGetSelectedNode}
         onClickEdge={handleGetSelectedEdge}
-        itemSelected={nodeSelected}
+        itemSelected={processId}
       />
     </>
   );

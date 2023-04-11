@@ -1,13 +1,22 @@
-import { GraphCombo, GraphEdge, GraphNode } from './Graph.interfaces';
+import { GraphCombo, GraphEdge, GraphNode, LocalStorageData } from './Graph.interfaces';
 
 export const GraphController = {
-  saveDataInLocalStorage: (topologyNodes: { id: string; x?: number; y?: number }[]) => {
+  saveDataInLocalStorage: (topologyNodes: Partial<LocalStorageData>[]) => {
     topologyNodes.forEach(({ id, x, y }) => {
-      if (x && y) {
+      if (id && x && y) {
         //save the position of the node to the local storage
         localStorage.setItem(id, JSON.stringify({ x, y }));
       }
     });
+  },
+
+  getPositionFromLocalStorage(identity: string): LocalStorageData {
+    const positions = localStorage.getItem(identity);
+
+    const x = positions ? JSON.parse(positions).x : null;
+    const y = positions ? JSON.parse(positions).y : null;
+
+    return { id: identity, x, y };
   },
   // TODO: remove this function when Backend sanitize the old process pairs
   sanitizeEdges: (nodes: GraphNode[], edges: GraphEdge[]) => {
