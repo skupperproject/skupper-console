@@ -68,8 +68,8 @@ const Site = function () {
   }
 
   const { name, nameSpace } = site;
-  const { connected } = SitesController.getLinkedSites(site, links, routers);
-  const linkedSites = sites.filter(({ identity }) => connected.includes(identity));
+  const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
+  const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
   const liveProcesses = processes.filter(({ endTime }) => !endTime);
 
   return (

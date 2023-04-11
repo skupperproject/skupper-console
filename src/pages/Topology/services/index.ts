@@ -5,7 +5,7 @@ import skupperProcessSVG from '@assets/skupper.svg';
 import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
-import { bindLinksWithSiteIds } from '@core/utils/bindLinksWithSIteIds';
+import SitesController from '@pages/Sites/services';
 import {
   ProcessPairsResponse,
   FlowPairsResponse,
@@ -78,15 +78,9 @@ export const TopologyController = {
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
   // The purpose of this property is to display the edges between different sites in the topology.
   getLinksFromSites: (sites: SiteResponse[], routers: RouterResponse[], links: LinkResponse[]): GraphEdge[] => {
-    // Create a linksExtendedMap object that maps each site's identity to an array of the IDs of the sites it is connected to
-    const linksExtendedMap = bindLinksWithSiteIds(links, routers);
+    const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links, routers);
 
-    const sitesWithConnectedProp = sites.map((site) => ({
-      ...site,
-      targetIds: [...new Set(linksExtendedMap[site.identity])] // 'Set' remove duplicates
-    }));
-
-    return sitesWithConnectedProp?.flatMap(({ identity: sourceId, targetIds }) =>
+    return sitesWithLinks.flatMap(({ identity: sourceId, targetIds }) =>
       targetIds.flatMap((targetId) => [
         {
           id: `${sourceId}-to${targetId}`,
