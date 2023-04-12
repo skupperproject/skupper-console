@@ -22,6 +22,7 @@ import { CircleIcon, ClockIcon, ClusterIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 
+import { defaultTimeInterval, gePrometheusStartTime, timeIntervalMap } from '@API/Prometheus.queries';
 import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
@@ -31,7 +32,6 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { defaultTimeInterval, gePrometheusStartTime, timeIntervalMap } from 'API/Prometheus.constant';
 import { IntervalTimeProp } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 

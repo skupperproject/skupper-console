@@ -2,6 +2,7 @@ import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
+import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
@@ -15,7 +16,6 @@ import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { isPrometheusActive } from 'API/Prometheus.constant';
 import { ProcessPairsResponse } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';

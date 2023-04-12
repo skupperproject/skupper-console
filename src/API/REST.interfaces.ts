@@ -2,16 +2,8 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 
 import { AvailableProtocols, SortDirection } from './REST.enum';
 
-export type ResponseWrapper<T> = {
-  results: T;
-  totalCount: number;
-  count: number;
-  timeRangeCount: number;
-  status: string;
-  timestamp: number;
-  elapsed: number;
-  queryParams: RequestOptions;
-};
+export type FetchWithOptions = AxiosRequestConfig;
+
 export interface RequestOptions {
   filter?: string;
   offset?: number;
@@ -23,19 +15,6 @@ export interface RequestOptions {
   timeRangeOperation?: number; // 0: intersect , 1: contains, 2: within
 }
 
-export type FetchWithOptions = AxiosRequestConfig;
-
-export interface HTTPError extends AxiosError {
-  httpStatus?: string;
-}
-
-interface BaseResponse {
-  identity: string;
-  recType: string;
-  startTime: number;
-  endTime?: number;
-}
-
 export interface QueryParams {
   filter?: string;
   offset?: number;
@@ -43,6 +22,31 @@ export interface QueryParams {
   timeRangeEnd?: number;
   timeRangeStart?: number;
   sortBy?: string | null;
+}
+
+export interface HTTPError extends AxiosError {
+  httpStatus?: string;
+}
+
+export type ResponseWrapper<T> = {
+  results: T; // Type based on the Response interface
+  totalCount: number;
+  count: number;
+  timeRangeCount: number;
+  status: string;
+  timestamp: number;
+  elapsed: number;
+  queryParams: RequestOptions;
+};
+
+/* Response Interfaces */
+
+// Properties that are shared by every response
+interface BaseResponse {
+  identity: string;
+  recType: string;
+  startTime: number;
+  endTime?: number;
 }
 
 export interface SiteResponse extends BaseResponse {
@@ -67,28 +71,15 @@ export interface ProcessResponse extends BaseResponse {
   processRole: 'external' | 'internal';
   endTime?: number;
 }
-export interface LinkResponse extends BaseResponse {
-  name?: string;
-  parent: string;
-  mode: string;
-  direction: 'outgoing' | 'incoming';
-  linkCost: number;
-}
 
-export interface RouterResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  namespace: string;
-  hostname: string;
-  imageName: string;
-  imageVersion: string;
-  buildVersion: string;
-}
-
-export interface HostResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  provider: string;
+export interface ProcessPairsResponse extends BaseResponse {
+  rectType: string;
+  pairType: string;
+  recordCount: number;
+  sourceId: string;
+  sourceName: string;
+  destinationId: string;
+  destinationName: string;
 }
 
 export interface AddressResponse extends BaseResponse {
@@ -96,6 +87,21 @@ export interface AddressResponse extends BaseResponse {
   protocol: AvailableProtocols;
   connectorCount: number;
   listenerCount: number;
+}
+
+export interface FlowPairsResponse extends BaseResponse {
+  sourceSiteId: string;
+  sourceSiteName: string;
+  destinationSiteId: string;
+  destinationSiteName: string;
+  protocol: string;
+  forwardFlow: ConnectionTCP & RequestHTTP;
+  counterFlow: ConnectionTCP & RequestHTTP;
+  flowTrace: string;
+  siteAggregateId: string;
+  processGroupAggregateId: string;
+  processAggregateId: string;
+  endTime?: number;
 }
 
 export interface ConnectionTCP extends BaseResponse {
@@ -131,33 +137,33 @@ export interface RequestHTTP extends BaseResponse {
   place: 1 | 2;
 }
 
-export interface FlowPairsResponse extends BaseResponse {
-  sourceSiteId: string;
-  sourceSiteName: string;
-  destinationSiteId: string;
-  destinationSiteName: string;
-  protocol: string;
-  forwardFlow: ConnectionTCP & RequestHTTP;
-  counterFlow: ConnectionTCP & RequestHTTP;
-  flowTrace: string;
-  siteAggregateId: string;
-  processGroupAggregateId: string;
-  processAggregateId: string;
-  endTime?: number;
+export interface RouterResponse extends BaseResponse {
+  name: string;
+  parent: string;
+  namespace: string;
+  hostname: string;
+  imageName: string;
+  imageVersion: string;
+  buildVersion: string;
 }
 
-export interface ProcessPairsResponse extends BaseResponse {
-  rectType: string;
-  pairType: string;
-  recordCount: number;
-  sourceId: string;
-  sourceName: string;
-  destinationId: string;
-  destinationName: string;
+export interface LinkResponse extends BaseResponse {
+  name?: string;
+  parent: string;
+  mode: string;
+  direction: 'outgoing' | 'incoming';
+  linkCost: number;
 }
 
+export interface HostResponse extends BaseResponse {
+  name: string;
+  parent: string;
+  provider: string;
+}
+
+// The collector is not part of the data model. It retrieves setup information such as prometheus properties
 export interface CollectorsResponse {
-  recType: 'COLLECTOR';
+  recType: string;
   identity: string;
   startTime: number;
   endTime: number;

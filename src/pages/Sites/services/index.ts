@@ -21,6 +21,7 @@ const SitesController = {
       .map((link) => {
         // TODO : Backend bug.  the name property of a link can sometimes be undefined even if the link itself exists.
         //The solution is to include the optional chaining operator ? until the bug is fixed.
+        // To bind router and link we have to use part of the link name
         const routerIdConnected = `${link.name?.split('-').at(-1)}:0`;
 
         // Retrieves the site ids of the source and destination routers

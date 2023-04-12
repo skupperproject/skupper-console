@@ -13,6 +13,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
+import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -22,7 +23,6 @@ import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { isPrometheusActive } from 'API/Prometheus.constant';
 
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';

@@ -1,6 +1,7 @@
 import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
+import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTable from '@core/components/SkTable';
@@ -8,7 +9,6 @@ import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import LoadingPage from '@pages/shared/Loading';
 import { PrometheusApi } from 'API/Prometheus';
-import { isPrometheusActive } from 'API/Prometheus.constant';
 
 import {
   addressesColumns,
@@ -23,16 +23,16 @@ const Addresses = function () {
   const { data: addresses, isLoading } = useQuery([QueriesAddresses.GetAddresses], () => RESTApi.fetchAddresses());
 
   const { data: tcpActiveFlows, isLoading: isLoadingTcpActiveFlows } = useQuery(
-    ['QueriesAddresses.GetFlowsByProtocol'],
-    () => PrometheusApi.fetchFlowsByAddress({ onlyActive: true }),
+    [QueriesAddresses.GetPrometheusActiveFlows],
+    () => PrometheusApi.fetchActiveFlowsByAddress(),
     {
       enabled: isPrometheusActive()
     }
   );
 
   const { data: httpTotalFlows, isLoading: isLoadingHttpTotalFlows } = useQuery(
-    ['QueriesAddresses.GetHttpFlowsByProtocol'],
-    () => PrometheusApi.fetchFlowsByAddress({}),
+    [QueriesAddresses.GetPrometheusTotalFlows],
+    () => PrometheusApi.fetchFlowsByAddress(),
     {
       enabled: isPrometheusActive()
     }

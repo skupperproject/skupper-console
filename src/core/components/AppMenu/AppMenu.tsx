@@ -17,7 +17,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { SYNC_DATA_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
 
 const TOOLTIP_UPDATE = 'Data Update';
 const TOOLTIP_CONTINUOS_UPDATE = `Automatic data update (${
@@ -65,12 +64,6 @@ const AppMenu = function () {
     if (!updateInterval) {
       setButtonAutomaticUpdateColor(COLOR_ICON_MOUSE_LEAVE);
     }
-  }
-
-  // TODO: The topology already update automatically the data using polling.
-  //Waiting to get implemented push notifications from BE to remove polling form the topology
-  if (pathname === TopologyRoutesPaths.Topology) {
-    return null;
   }
 
   return (

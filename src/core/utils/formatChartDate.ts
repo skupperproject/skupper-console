@@ -1,4 +1,4 @@
-import { timeIntervalMap } from 'API/Prometheus.constant';
+import { timeIntervalMap } from '@API/Prometheus.queries';
 
 export function formatChartDate(timestamp: number, start: number) {
   // one week ago
