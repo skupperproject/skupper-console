@@ -1,5 +1,19 @@
 import { axiosFetch } from './axiosMiddleware';
 import {
+  ProcessGroupResponse,
+  AddressResponse,
+  ProcessResponse,
+  FlowPairsResponse,
+  SiteResponse,
+  LinkResponse,
+  RouterResponse,
+  HostResponse,
+  ProcessPairsResponse,
+  RequestOptions,
+  ResponseWrapper,
+  CollectorsResponse
+} from './REST.interfaces';
+import {
   getFlowsPairsByAddressPATH,
   getProcessesBySitePATH,
   getProcessesByAddressPATH,
@@ -28,21 +42,7 @@ import {
   getProcessPairsPATH,
   getProcessGroupsPATH,
   getCollectorsPATH
-} from './REST.constant';
-import {
-  ProcessGroupResponse,
-  AddressResponse,
-  ProcessResponse,
-  FlowPairsResponse,
-  SiteResponse,
-  LinkResponse,
-  RouterResponse,
-  HostResponse,
-  ProcessPairsResponse,
-  RequestOptions,
-  ResponseWrapper,
-  CollectorsResponse
-} from './REST.interfaces';
+} from './REST.paths';
 import { mapOptionsToQueryParams, getApiResults } from './REST.utils';
 
 export const RESTApi = {

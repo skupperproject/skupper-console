@@ -51,7 +51,7 @@ export interface TrafficMetrics {
 
 export interface MetricData {
   values: SkChartAreaData[][];
-  labels: string[][];
+  labels: string[];
 }
 
 export interface LatencyData {

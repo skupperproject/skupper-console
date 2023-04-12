@@ -1,8 +1,8 @@
 export enum QueriesAddresses {
   GetFlowPair = 'addresses-flowpair-query',
   GetFlowPairsByAddress = 'addresses-flowpairs-by-address-query',
-  GetFlowPairsByAddressForChart = 'addresses-flowpairs-by-address-for-chart-query',
   GetProcessesByAddress = 'processes-by-address-query',
   GetAddresses = 'addresses-query',
-  GetFlowsByProtocol = 'addresses-get-flows-by-protocol'
+  GetPrometheusActiveFlows = 'addresses-get-prometheus-active-flows',
+  GetPrometheusTotalFlows = 'addresses-get-prometheus-total-flows'
 }

@@ -1,15 +1,13 @@
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import { axiosFetch } from './axiosMiddleware';
-import { gePrometheusQueryPATH, queries } from './Prometheus.constant';
 import {
   PrometheusApiResult as PrometheusMetricData,
-  PrometheusApiResultSingle as PrometheusMetricSingleData,
-  PrometheusFlowsQueryParams,
+  PrometheusApiSingleResult as PrometheusMetricSingleData,
   PrometheusQueryParams,
-  PrometheusQueryParamsWithStartAndEndTime,
   PrometheusResponse
 } from './Prometheus.interfaces';
+import { gePrometheusQueryPATH, queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
   fetchDataTraffic: async ({
@@ -33,10 +31,10 @@ export const PrometheusApi = {
       param2 = [param2, `protocol=~"${protocol}"`].join(',');
     }
 
-    let query = queries.getDataTraffic(param1, param2);
+    let query = queries.getBytesByDirection(param1, param2);
 
     if (isRate) {
-      query = queries.getDataTrafficPerSecondByProcess(param1, param2, '5m');
+      query = queries.getByteRateByDirection(param1, param2, '5m');
     }
     const {
       data: { result }
@@ -61,7 +59,7 @@ export const PrometheusApi = {
     protocol,
     start,
     end
-  }: PrometheusQueryParamsWithStartAndEndTime): Promise<PrometheusMetricData[]> => {
+  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     let param = `sourceProcess="${id}"`;
 
     if (processIdDest) {
@@ -75,9 +73,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: quantile
-          ? queries.getLatencyIrateByProcess(param, '5m', quantile)
-          : queries.getAvgLatencyIrateByProcess(param, '5m'),
+        query: quantile ? queries.getQuantile(param, '5m', quantile) : queries.getAvgLatency(param, '5m'),
         start,
         end,
         step: range.step
@@ -109,9 +105,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: isRate
-          ? queries.getTotalRequestPerSecondByProcess(param, '5m')
-          : queries.getTotalRequestsByProcess(param),
+        query: isRate ? queries.getTotalRequestRateByMethod(param, '5m') : queries.getTotalRequests(param),
         start,
         end,
         step: isRate ? range.step : range.value
@@ -149,9 +143,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: isRate
-          ? queries.getResponseStatusCodesPerSecondByProcess(param, '5m')
-          : queries.getResponseStatusCodesByProcess(param),
+        query: isRate ? queries.getHttpPartialStatusRate(param, '5m') : queries.getHttpPartialStatus(param),
         start,
         end,
         step: isRate ? range.step : range.value
@@ -161,15 +153,21 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchFlowsByAddress: async ({
-    onlyActive = false
-  }: PrometheusFlowsQueryParams): Promise<PrometheusMetricSingleData[]> => {
+  fetchFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: {
-        query: onlyActive ? queries.getActiveFlowsByAddress() : queries.getTotalFlowsByAddress()
-      }
+      params: { query: queries.getTotalFlowsByAddress() }
+    });
+
+    return result;
+  },
+
+  fetchActiveFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: { query: queries.getActiveFlowsByAddress() }
     });
 
     return result;

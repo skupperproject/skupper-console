@@ -1,12 +1,5 @@
 import { AvailableProtocols } from './REST.enum';
 
-export type IntervalTimeMap = {
-  [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
-};
-
-export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];
-export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
-
 type PrometheusApiResultValue = [number, string];
 
 export interface PrometheusResponse<T> {
@@ -15,7 +8,7 @@ export interface PrometheusResponse<T> {
   };
 }
 
-export type PrometheusApiResultSingle = {
+export type PrometheusApiSingleResult = {
   metric: Record<string, string>;
   value: PrometheusApiResultValue;
 };
@@ -33,13 +26,12 @@ export interface PrometheusQueryParams {
   onlyErrors?: boolean;
   protocol?: AvailableProtocols;
   quantile?: 0.5 | 0.9 | 0.99;
+  start?: number;
+  end?: number;
 }
 
-export interface PrometheusQueryParamsWithStartAndEndTime extends PrometheusQueryParams {
-  start: number;
-  end: number;
-}
-
-export interface PrometheusFlowsQueryParams {
-  onlyActive?: boolean;
-}
+export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];
+export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
+export type IntervalTimeMap = {
+  [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
+};

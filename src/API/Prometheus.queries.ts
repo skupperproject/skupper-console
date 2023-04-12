@@ -9,7 +9,7 @@ export const timeIntervalMap: IntervalTimeMap = {
   oneHours: { value: '1h', seconds: 3600, step: '15s', key: 'oneHours', label: '1 hour' },
   twoHours: { value: '2h', seconds: 2 * 3600, step: '30s', key: 'twoHours', label: '2 hours' },
   sixHours: { value: '6h', seconds: 6 * 3600, step: '1m', key: 'sixHours', label: '6 hours' },
-  twelveHours: { value: '12h', seconds: 12 * 3600, step: '1m', key: 'twelveHours', label: '12 hours' },
+  twelveHours: { value: '12h', seconds: 12 * 3600, step: '5m', key: 'twelveHours', label: '12 hours' },
   oneDay: { value: '1d', seconds: 24 * 3600, step: '5m', key: 'oneDay', label: '1 day' },
   oneWeek: { value: '1w', seconds: 7 * 24 * 3600, step: '10m', key: 'oneWeek', label: '1 week' },
   twoWeeks: { value: '2w', seconds: 14 * 24 * 3600, step: '20m', key: 'twoWeeks', label: '2 weeks' }
@@ -24,7 +24,7 @@ let PROMETHEUS_START_TIME: number = new Date().getTime();
 export const setPrometheusStartTime = (time: number) => (PROMETHEUS_START_TIME = time);
 export const gePrometheusStartTime = () => PROMETHEUS_START_TIME;
 
-export const setPrometheusUrl = (url: string | undefined) => (PROMETHEUS_PATH = url);
+export const setPrometheusUrl = (url: string | undefined) => (PROMETHEUS_PATH = url || '');
 export const isPrometheusActive = () => !!PROMETHEUS_PATH;
 
 export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
@@ -33,35 +33,36 @@ export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =
 // Prometheus queries
 export const queries = {
   // http request/response queries
-  getTotalRequestsByProcess(param: string) {
+  getTotalRequests(param: string) {
     return `sum(http_requests_method_total{${param}})`;
   },
-  getTotalRequestPerSecondByProcess(param: string, range: IntervalTimePropValue) {
+  getTotalRequestRateByMethod(param: string, range: IntervalTimePropValue) {
     return `sum by (method)(irate(http_requests_method_total{${param}}[${range}]))`;
   },
-  getResponseStatusCodesByProcess(param: string) {
+  getHttpPartialStatus(param: string) {
     return `sum by (partial_code) (label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
   },
-  getResponseStatusCodesPerSecondByProcess(param: string, range: IntervalTimePropValue) {
+  getHttpPartialStatusRate(param: string, range: IntervalTimePropValue) {
     return `sum by (partial_code) (label_replace(irate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
   },
 
   // latency queries
-  getLatencyIrateByProcess(param: string, range: IntervalTimePropValue, quantile: 0.5 | 0.9 | 0.99) {
+  getQuantile(param: string, range: IntervalTimePropValue, quantile: 0.5 | 0.9 | 0.99) {
     return `histogram_quantile(${quantile},sum(irate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
-  getAvgLatencyIrateByProcess(param: string, range: IntervalTimePropValue) {
+  getAvgLatency(param: string, range: IntervalTimePropValue) {
     return `sum(irate(flow_latency_microseconds_sum{${param}}[${range}])/irate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
 
   // data transfer queries
-  getDataTraffic(paramSource: string, paramDest: string) {
+  getBytesByDirection(paramSource: string, paramDest: string) {
     return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
   },
-  getDataTrafficPerSecondByProcess(paramSource: string, paramDest: string, range: IntervalTimePropValue) {
+  getByteRateByDirection(paramSource: string, paramDest: string, range: IntervalTimePropValue) {
     return `sum by(direction)(irate(octets_total{${paramSource}}[${range}]) or irate(octets_total{${paramDest}}[${range}]))`;
   },
 
+  // counters for addresses
   getTotalFlowsByAddress() {
     return `sum by(address)(flows_total)`;
   },

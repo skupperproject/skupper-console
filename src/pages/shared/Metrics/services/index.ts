@@ -61,8 +61,10 @@ const MetricsController = {
       // data normalization
       const trafficDataSeries = normalizeTrafficData(trafficDataSeriesResponse);
       const trafficDataSeriesPerSecond = normalizeTrafficData(trafficDataSeriesPerSecondResponse);
-      const requestSeries = normalizeRequests(requestSeriesResponse, id);
-      const requestPerSecondSeries = normalizeRequests(requestPerSecondSeriesResponse, id);
+
+      const requestSeries = normalizeRequests(requestSeriesResponse);
+      const requestPerSecondSeries = normalizeRequests([...requestPerSecondSeriesResponse]);
+
       const responseSeries = normalizeResponses(responseSeriesResponse);
       const responseRateSeries = normalizeResponses(responseRateSeriesResponse);
 
@@ -128,29 +130,26 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
   return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
-function normalizeRequests(data: PrometheusApiResult[], label: string): RequestMetrics[] | null {
+function normalizeRequests(data: PrometheusApiResult[]): RequestMetrics[] | null {
   const axisValues = extractPrometheusValues(data);
+  const labels = extractPrometheusLabels(data);
 
   if (!axisValues) {
     return null;
   }
 
-  const requestsNormalized: RequestMetrics[] = [];
-
-  for (const values of axisValues) {
+  return axisValues.flatMap((values, index) => {
     const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
     const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
     const avgRequestRateInterval = formatToDecimalPlacesIfCents(sumRequestRateInterval / values.length, 2);
 
-    requestsNormalized.push({
+    return {
       data: values,
-      label,
+      label: labels ? labels[index] : '',
       totalRequestInterval,
       avgRequestRateInterval
-    });
-  }
-
-  return requestsNormalized;
+    };
+  });
 }
 
 function normalizeLatencies({
@@ -250,14 +249,14 @@ function extractPrometheusValues(data: PrometheusApiResult[]): SkChartAreaData[]
 /**
  * Converts an array of Prometheus result objects to a two-dimensional array of metric labels.
  */
-function extractPrometheusLabels(data: PrometheusApiResult[]): string[][] | null {
+function extractPrometheusLabels(data: PrometheusApiResult[]): string[] | null {
   // Validate the input
   if (!Array.isArray(data) || data.length === 0) {
     return null;
   }
 
   // Map the input array to an array of label arrays using array destructuring
-  return data.map(({ metric }) => Object.values(metric));
+  return data.flatMap(({ metric }) => Object.values(metric));
 }
 
 function getChartValuesAndLabels(data: PrometheusApiResult[]): MetricData | null {
@@ -266,7 +265,7 @@ function getChartValuesAndLabels(data: PrometheusApiResult[]): MetricData | null
   }
 
   const values = extractPrometheusValues(data) as SkChartAreaData[][];
-  const labels = extractPrometheusLabels(data) as string[][];
+  const labels = extractPrometheusLabels(data) as string[];
 
   return { values, labels };
 }

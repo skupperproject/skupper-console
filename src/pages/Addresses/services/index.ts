@@ -1,4 +1,4 @@
-import { PrometheusApiResultSingle } from 'API/Prometheus.interfaces';
+import { PrometheusApiSingleResult } from 'API/Prometheus.interfaces';
 import { AddressResponse } from 'API/REST.interfaces';
 
 export const AddressesController = {
@@ -7,7 +7,7 @@ export const AddressesController = {
     {
       httpTotalFlows,
       tcpActiveFlows
-    }: { httpTotalFlows: PrometheusApiResultSingle[]; tcpActiveFlows: PrometheusApiResultSingle[] }
+    }: { httpTotalFlows: PrometheusApiSingleResult[]; tcpActiveFlows: PrometheusApiSingleResult[] }
   ) => {
     const tcpActiveFlowsMap =
       tcpActiveFlows.length &&
