@@ -27,10 +27,6 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
-const initProcessesQueryParams = {
-  filter: 'endTime.0'
-};
-
 const ProcessGroup = function () {
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
@@ -41,8 +37,8 @@ const ProcessGroup = function () {
   );
 
   const { data: processes, isLoading: isLoadingProcess } = useQuery(
-    [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId, initProcessesQueryParams],
-    () => RESTApi.fetchProcessesByProcessGroup(processGroupId, initProcessesQueryParams)
+    [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
+    () => RESTApi.fetchProcessesByProcessGroup(processGroupId)
   );
 
   if (isLoadingProcessGroup || isLoadingProcess) {
@@ -94,9 +90,10 @@ const ProcessGroup = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
-              parent={{ id: serverNames, name: serverNames, startTime }}
+              filters={{ processIdSource: serverNames }}
+              startTime={startTime}
               sourceProcesses={serverNameFilters}
-              customFilters={{
+              customFilterOptions={{
                 destinationProcesses: { disabled: true, name: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: { name: MetricsLabels.FilterAllSourceProcesses }
               }}

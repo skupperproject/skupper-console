@@ -132,9 +132,10 @@ const Process = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
-              parent={{ id: process.name, name: process.name, startTime: process.startTime }}
+              filters={{ processIdSource: process.name }}
+              startTime={process.startTime}
               processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
-              customFilters={{
+              customFilterOptions={{
                 destinationProcesses: { name: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: { disabled: true, name: process.name }
               }}

@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
+import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
 import LoadingPage from '@pages/shared/Loading';
@@ -122,9 +123,10 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
-            parent={{ id: serverNamesId, name: serverNamesId, startTime }}
+            filters={{ processIdSource: serverNamesId, protocol: AvailableProtocols.AllHttp }}
+            startTime={startTime}
             sourceProcesses={serverNames}
-            customFilters={{
+            customFilterOptions={{
               protocols: { disabled: true, name: protocol },
               sourceProcesses: { name: AddressesLabels.MetricDestinationProcessFilter },
               destinationProcesses: { name: FlowPairsLabelsHttp.Clients, disabled: true }

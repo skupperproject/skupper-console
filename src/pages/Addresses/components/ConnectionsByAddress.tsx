@@ -68,7 +68,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
-  const serverNamesId = servers.map(({ name }) => name).join('|');
+  const serverNamesIds = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
   return (
@@ -108,10 +108,10 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
-            parent={{ id: serverNamesId, name: serverNamesId, startTime }}
+            filters={{ processIdSource: serverNamesIds, protocol: AvailableProtocols.Tcp }}
+            startTime={startTime}
             sourceProcesses={serverNames}
-            protocolDefault={AvailableProtocols.Tcp}
-            customFilters={{
+            customFilterOptions={{
               protocols: { disabled: true, name: protocol },
               sourceProcesses: { name: AddressesLabels.MetricDestinationProcessFilter },
               destinationProcesses: { name: FlowPairsLabelsHttp.Clients, disabled: true }
