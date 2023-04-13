@@ -15,6 +15,7 @@ export enum MetricsLabels {
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',
   ByteRateMaxCol = 'max',
-  FiltersLabel = 'Filters',
-  DisplayLabel = 'Display'
+  MetricFilters = 'Filters',
+  MetricDisplayFilters = 'Display',
+  RefetchData = 'Data update'
 }

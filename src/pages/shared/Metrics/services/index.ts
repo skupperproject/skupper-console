@@ -15,17 +15,23 @@ import {
   MetricData,
   RequestMetrics,
   ResponseMetrics
-} from './services.enum';
+} from './services.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 
 const MetricsController = {
-  getMetrics: async ({ id, timeInterval, processIdDest, protocol }: QueryMetricsParams): Promise<Metrics | null> => {
+  getMetrics: async ({
+    processIdSource,
+    timeInterval,
+    processIdDest,
+    protocol
+  }: QueryMetricsParams): Promise<Metrics | null> => {
     const params = {
-      id,
+      id: processIdSource,
       range: timeInterval,
       processIdDest,
       protocol
     };
+
     try {
       // traffic metrics
       const trafficDataSeriesResponse = await PrometheusApi.fetchDataTraffic(params);

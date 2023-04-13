@@ -48,18 +48,18 @@ Running `yarn start` uses the data in the mock folder, which means that no metri
 To run the console with demo routes, execute the following command:
 
 ```bash
-COLLECTOR_URL=https://flow-collector-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud PROMETHEUS_URL=https://prometheus-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud/api/v1 yarn start
+COLLECTOR_URL=https://skupper-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud yarn start
 ```
 
  These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
 
-### Run the console with Skupper (work in progress)
+### Run the console with Skupper
 
-When running skupper, executing `skupper init --enable-flow-collector` will generate publicly accessible routes to the collector and Prometheus. These routes can be secured or unsecured, depending on the desired level of security.
+When running skupper, executing `skupper init --enable-flow-collector` will generate a publicly accessible route to the collector. This route can be secured or unsecured, depending on the desired level of security.
 
-If you intend to run the console as a standalone application, you must use the designated routes alongside the appropriate API environment variable.
 
-#### Enable the Flow collector
+
+#### Use the Flow collector
 
 ```bash
 COLLECTOR_URL=<skupper url> yarn start

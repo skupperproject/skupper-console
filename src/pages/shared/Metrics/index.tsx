@@ -1,31 +1,12 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
-import {
-  Bullseye,
-  Button,
-  Card,
-  CardBody,
-  CardTitle,
-  Grid,
-  GridItem,
-  Icon,
-  Select,
-  SelectGroup,
-  SelectOption,
-  SelectOptionObject,
-  Spinner,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-  ToolbarToggleGroup,
-  Tooltip
-} from '@patternfly/react-core';
-import { CircleIcon, ClockIcon, ClusterIcon, FilterIcon, SyncIcon } from '@patternfly/react-icons';
+import { Bullseye, Card, CardBody, CardTitle, Grid, GridItem, Icon, Spinner } from '@patternfly/react-core';
+import { CircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 
-import { defaultTimeInterval, gePrometheusStartTime, timeIntervalMap } from '@API/Prometheus.queries';
+import { defaultTimeInterval, timeIntervalMap } from '@API/Prometheus.queries';
 import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
@@ -35,221 +16,56 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { IntervalTimeProp } from 'API/Prometheus.interfaces';
 import { AvailableProtocols } from 'API/REST.enum';
 
+import MetricFilters from './Filters';
 import { MetricsLabels } from './Metrics.enum';
 import { MetricsProps } from './Metrics.interfaces';
 import MetricsController from './services';
-import { QueriesMetrics } from './services/services.enum';
-
-const TOOLTIP_UPDATE = 'Data Update';
-
-const displayIntervalMap = [
-  {
-    value: 0,
-    label: 'Pause'
-  },
-  {
-    value: 20 * 1000,
-    label: 'every 20s'
-  },
-  {
-    value: 40 * 1000,
-    label: 'every 40s'
-  },
-  {
-    value: 60 * 1000,
-    label: 'every 1m'
-  },
-  {
-    value: 120 * 1000,
-    label: 'every 2m'
-  }
-];
-
-const filterOptionsDefault = {
-  protocols: { disabled: false, name: MetricsLabels.FilterProtocolsDefault },
-  timeIntervals: { disabled: false },
-  sourceProcesses: { disabled: false, name: MetricsLabels.FilterAllSourceProcesses },
-  destinationProcesses: { disabled: false, name: MetricsLabels.FilterAllDestinationProcesses }
-};
+import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
 
 const Metrics: FC<MetricsProps> = function ({
-  parent,
+  filters,
+  startTime,
   sourceProcesses,
   processesConnected,
-  protocolDefault,
-  customFilters
+  customFilterOptions
 }) {
-  const filterOptions = { ...filterOptionsDefault, ...customFilters };
-
-  const [isOpenSourceProcessMenu, setIsOpenSourceProcessMenu] = useState<boolean>(false);
-  const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
-  const [isOpenProtocolInterval, setIsOpenProtocolIntervalMenu] = useState<boolean>(false);
-  const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
-  const [isOpenDisplayInterval, setIsOpenDisplayInterval] = useState<boolean>(false);
-
-  const [processIdSource, setProcessIdSource] = useState<string>();
-  const [processIdDest, setProcessIdDest] = useState<string>();
-  const [protocol, setProtocol] = useState<AvailableProtocols | undefined>(protocolDefault);
-  const [timeInterval, setTimeInterval] = useState<IntervalTimeProp['key']>(defaultTimeInterval.key);
-  const [displayInterval, setDisplayInterval] = useState(displayIntervalMap[0].label);
-
-  // Metrics query
-  const filters = {
-    id: processIdSource || parent.id, // our queries to prometheus must have a source id or list of ids ("id1|id2|id3...")
-    timeInterval: timeIntervalMap[timeInterval],
-    processIdDest,
-    protocol
-  };
+  const [refetchInterval, setRefetchInterval] = useState(0);
+  const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>({
+    processIdSource: filters.processIdSource,
+    timeInterval: timeIntervalMap[defaultTimeInterval.key],
+    processIdDest: undefined,
+    protocol: filters.protocol
+  });
 
   const {
     data: metrics,
     isLoading: isLoadingMetrics,
     isRefetching,
     refetch
-  } = useQuery([QueriesMetrics.GetMetrics, filters], () => MetricsController.getMetrics(filters), {
-    refetchInterval: displayIntervalMap.find(({ label }) => label === displayInterval)?.value,
-    keepPreviousData: true
-  });
-
+  } = useQuery(
+    [QueriesMetrics.GetMetrics, prometheusQueryParams],
+    () => MetricsController.getMetrics(prometheusQueryParams),
+    {
+      refetchInterval,
+      keepPreviousData: true
+    }
+  );
+  //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
     refetch();
   }, [refetch]);
 
-  function handleSelectSourceProcessMenu(
-    _: MouseEvent | ChangeEvent,
-    selection: SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
-    const id = isPlaceholder ? undefined : (selection as string);
+  // Filters: Set the interval to automatically refetch prometheus API
+  const handleRefetchIntervalMetrics = useCallback((interval: number) => {
+    setRefetchInterval(interval);
+  }, []);
 
-    setProcessIdSource(id);
-    setIsOpenSourceProcessMenu(false);
-  }
-
-  function handleToggleSourceProcessMenu(isOpen: boolean) {
-    setIsOpenSourceProcessMenu(isOpen);
-  }
-
-  function handleSelectDestinationProcessMenu(
-    _: MouseEvent | ChangeEvent,
-    selection: SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
-    const id = isPlaceholder ? undefined : (selection as string);
-
-    setProcessIdDest(id);
-    setIsOpenDestinationProcessMenu(false);
-  }
-
-  function handleToggleDestinationProcessMenu(isOpen: boolean) {
-    setIsOpenDestinationProcessMenu(isOpen);
-  }
-
-  function handleSelectTimeIntervalMenu(
-    _: MouseEvent | ChangeEvent,
-    selection: SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
-    const id = isPlaceholder ? defaultTimeInterval.key : (selection as IntervalTimeProp['key']);
-
-    setTimeInterval(id);
-    setIsOpenTimeIntervalMenu(false);
-  }
-
-  function handleToggleTimeIntervalMenu(isOpen: boolean) {
-    setIsOpenTimeIntervalMenu(isOpen);
-  }
-
-  function handleSelectDisplayInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
-    const id = selection as string;
-    setDisplayInterval(id);
-    setIsOpenDisplayInterval(false);
-  }
-
-  function handleToggleDisplayInterval(isOpen: boolean) {
-    setIsOpenDisplayInterval(isOpen);
-  }
-
-  function handleSelectProtocolMenu(
-    _: MouseEvent | ChangeEvent,
-    selection: SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
-    const id = isPlaceholder ? undefined : (selection as AvailableProtocols);
-
-    setProtocol(id);
-    setIsOpenProtocolIntervalMenu(false);
-  }
-
-  function handleToggleProtocolMenu(isOpen: boolean) {
-    setIsOpenProtocolIntervalMenu(isOpen);
-  }
-
-  // process sources select options
-  const optionsProcessSourcesWithDefault = useMemo(() => {
-    const sourceProcessOptions = (sourceProcesses || []).map(({ destinationName }, index) => (
-      <SelectOption key={index + 1} value={destinationName} />
-    ));
-
-    return [
-      <SelectGroup label="" key="source-group1">
-        <SelectOption key={0} value={filterOptions.sourceProcesses.name} isPlaceholder />
-      </SelectGroup>,
-      <SelectGroup label="processes" key="source-group2">
-        {...sourceProcessOptions}
-      </SelectGroup>
-    ];
-  }, [filterOptions.sourceProcesses.name, sourceProcesses]);
-
-  // process connected select options
-  const optionsProcessConnectedWithDefault = useMemo(() => {
-    const processConnectedOptions = (processesConnected || []).map(({ destinationName }, index) => (
-      <SelectOption key={index + 1} value={destinationName} />
-    ));
-
-    return [
-      <SelectGroup label="" key="dest-group1">
-        <SelectOption key={0} value={filterOptions.destinationProcesses.name} isPlaceholder />
-      </SelectGroup>,
-      <SelectGroup label="processes" key="dest-group2">
-        {...processConnectedOptions}
-      </SelectGroup>
-    ];
-  }, [filterOptions.destinationProcesses.name, processesConnected]);
-
-  // protocol select options
-  const optionsProtocolsWithDefault = useMemo(() => {
-    const protocolOptions = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp].map(
-      (option, index) => <SelectOption key={index + 1} value={option} />
-    );
-
-    return [<SelectOption key={0} value={filterOptions.protocols.name} isPlaceholder />, ...protocolOptions];
-  }, [filterOptions.protocols.name]);
-
-  // time interval select options
-  const optionsTimeIntervalWithDefault = useMemo(
-    () =>
-      Object.values(timeIntervalMap)
-        .filter(
-          ({ seconds }) =>
-            new Date().getTime() - seconds * 1000 > Math.max(gePrometheusStartTime(), parent.startTime / 1000)
-        )
-        .map((interval, index) => (
-          <SelectOption key={index + 1} value={interval.key}>
-            {interval.label}
-          </SelectOption>
-        )),
-    [parent.startTime]
-  );
-
-  // displayInterval select options
-  const optionsDisplayIntervalWithDefault = useMemo(
-    () => displayIntervalMap.map(({ label }, index) => <SelectOption key={index + 1} value={label} />),
-    []
-  );
+  // Filters: Set the prometheus query params with the filter values
+  const handleFilters = useCallback((updatedFilters: QueryMetricsParams) => {
+    setPrometheusQueryParams(updatedFilters);
+  }, []);
 
   return (
     <>
@@ -261,101 +77,28 @@ const Metrics: FC<MetricsProps> = function ({
           </Bullseye>
         </Card>
       )}
+
+      {/* Metrics component */}
       {!isLoadingMetrics && (
         <Grid hasGutter>
           {/* Metrics Filters */}
           <GridItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
             <Card isRounded>
-              <Toolbar>
-                <ToolbarContent>
-                  <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-                    <ToolbarItem variant="label">{MetricsLabels.FiltersLabel}</ToolbarItem>
-
-                    <ToolbarItem>
-                      <Select
-                        isGrouped
-                        placeholderText={filterOptions.sourceProcesses.name}
-                        isOpen={isOpenSourceProcessMenu}
-                        onSelect={handleSelectSourceProcessMenu}
-                        onToggle={handleToggleSourceProcessMenu}
-                        toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
-                        selections={processIdSource}
-                        isDisabled={filterOptions.sourceProcesses.disabled}
-                      >
-                        {optionsProcessSourcesWithDefault}
-                      </Select>
-                    </ToolbarItem>
-
-                    {!filterOptions.destinationProcesses.disabled && (
-                      <ToolbarItem>
-                        <Select
-                          isGrouped
-                          placeholderText={filterOptions.destinationProcesses.name}
-                          isOpen={isOpenDestinationProcessMenu}
-                          onSelect={handleSelectDestinationProcessMenu}
-                          onToggle={handleToggleDestinationProcessMenu}
-                          toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
-                          selections={processIdDest}
-                          isDisabled={filterOptions.destinationProcesses.disabled}
-                        >
-                          {optionsProcessConnectedWithDefault}
-                        </Select>
-                      </ToolbarItem>
-                    )}
-
-                    <ToolbarItem>
-                      <Select
-                        isDisabled={filterOptions.protocols.disabled}
-                        isOpen={isOpenProtocolInterval}
-                        onSelect={handleSelectProtocolMenu}
-                        onToggle={handleToggleProtocolMenu}
-                        selections={protocol}
-                      >
-                        {optionsProtocolsWithDefault}
-                      </Select>
-                    </ToolbarItem>
-                  </ToolbarToggleGroup>
-
-                  <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl" alignment={{ default: 'alignRight' }}>
-                    <ToolbarItem variant="label">{MetricsLabels.DisplayLabel}</ToolbarItem>
-                    <Select
-                      isOpen={isOpenTimeInterval}
-                      onSelect={handleSelectTimeIntervalMenu}
-                      onToggle={handleToggleTimeIntervalMenu}
-                      toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
-                      selections={timeInterval}
-                      isDisabled={filterOptions.timeIntervals.disabled}
-                    >
-                      {optionsTimeIntervalWithDefault}
-                    </Select>
-
-                    <ToolbarItem>
-                      <Select
-                        isOpen={isOpenDisplayInterval}
-                        onSelect={handleSelectDisplayInterval}
-                        onToggle={handleToggleDisplayInterval}
-                        selections={displayInterval}
-                      >
-                        {optionsDisplayIntervalWithDefault}
-                      </Select>
-
-                      <Tooltip content={TOOLTIP_UPDATE}>
-                        <Button
-                          isLoading={isRefetching}
-                          variant="plain"
-                          onClick={handleRefetchMetrics}
-                          isDisabled={displayInterval !== displayIntervalMap[0].label}
-                          icon={<SyncIcon />}
-                        />
-                      </Tooltip>
-                    </ToolbarItem>
-                  </ToolbarToggleGroup>
-                </ToolbarContent>
-              </Toolbar>
+              <MetricFilters
+                sourceProcesses={sourceProcesses}
+                processesConnected={processesConnected}
+                filters={prometheusQueryParams}
+                customFilterOptions={customFilterOptions}
+                startTime={startTime}
+                isRefetching={isRefetching}
+                onRefetch={handleRefetchMetrics}
+                onRefetchInterval={handleRefetchIntervalMetrics}
+                onSelectFilters={handleFilters}
+              />
             </Card>
           </GridItem>
 
-          {/* data not found card */}
+          {/* display an empty message if no metrics found */}
           {!metrics && (
             <GridItem>
               <Card isFullHeight>
@@ -366,7 +109,7 @@ const Metrics: FC<MetricsProps> = function ({
             </GridItem>
           )}
 
-          {/* Chart data traffic time series card */}
+          {/* Display the chart for data traffic */}
           {!!metrics && (
             <>
               <GridItem span={8} rowSpan={2}>
@@ -437,7 +180,7 @@ const Metrics: FC<MetricsProps> = function ({
                 )}
               </GridItem>
 
-              {/* Chart pie distribution data traffic card and total bytes */}
+              {/* Chart pie for the distribution of the data traffic */}
               <GridItem span={4}>
                 <Card isFullHeight>
                   <SkChartPie
@@ -458,7 +201,7 @@ const Metrics: FC<MetricsProps> = function ({
               </GridItem>
 
               {/* Chart latencies time series card*/}
-              {protocol !== AvailableProtocols.Tcp && metrics.latencies && (
+              {prometheusQueryParams.protocol !== AvailableProtocols.Tcp && metrics.latencies && (
                 <>
                   <GridItem span={12}>
                     <Card isFullHeight>
