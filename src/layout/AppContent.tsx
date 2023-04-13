@@ -1,8 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import { useRoutes, RouteObject } from 'react-router-dom';
 
-import BrandImg from '@assets/skupper-logo-full.svg';
-
 interface AppContentProps {
   children: RouteObject[];
 }
@@ -16,7 +14,6 @@ const AppContent = function ({ children }: AppContentProps) {
 
   return (
     <div className="pf-u-px-md pf-u-py-md" style={{ height: '100%' }}>
-      <img src={BrandImg} alt="skupper brand" className="sk-main" />
       <div style={{ position: 'relative', height: '100%' }}>
         <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
       </div>

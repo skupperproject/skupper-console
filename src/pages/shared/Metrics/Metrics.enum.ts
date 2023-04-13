@@ -3,7 +3,7 @@ export enum MetricsLabels {
   TrafficReceived = 'From clients',
   RequestsPerSecondsSeriesAxisYLabel = 'Request rate',
   ErrorRateSeriesAxisYLabel = 'Error rate',
-  FilterAllSourceProcesses = 'All component processes',
+  FilterAllSourceProcesses = 'All processes',
   FilterAllDestinationProcesses = 'All clients and servers',
   FilterProtocolsDefault = 'All Protocols',
   NoMetricFoundMessage = 'No metrics found. Try adjusting your filter options',
@@ -14,5 +14,7 @@ export enum MetricsLabels {
   ByteRateAvgCol = 'avg',
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',
-  ByteRateMaxCol = 'max'
+  ByteRateMaxCol = 'max',
+  FiltersLabel = 'Filters',
+  DisplayLabel = 'Display'
 }
