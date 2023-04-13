@@ -1,8 +1,9 @@
-import { ChangeEvent, FC, MouseEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useCallback, useMemo, useState } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import {
   Bullseye,
+  Button,
   Card,
   CardBody,
   CardTitle,
@@ -16,9 +17,11 @@ import {
   Spinner,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
+  ToolbarToggleGroup,
+  Tooltip
 } from '@patternfly/react-core';
-import { CircleIcon, ClockIcon, ClusterIcon } from '@patternfly/react-icons';
+import { CircleIcon, ClockIcon, ClusterIcon, FilterIcon, SyncIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useQuery } from '@tanstack/react-query';
 
@@ -40,6 +43,31 @@ import { MetricsProps } from './Metrics.interfaces';
 import MetricsController from './services';
 import { QueriesMetrics } from './services/services.enum';
 
+const TOOLTIP_UPDATE = 'Data Update';
+
+const displayIntervalMap = [
+  {
+    value: 0,
+    label: 'Pause'
+  },
+  {
+    value: 20 * 1000,
+    label: 'every 20s'
+  },
+  {
+    value: 40 * 1000,
+    label: 'every 40s'
+  },
+  {
+    value: 60 * 1000,
+    label: 'every 1m'
+  },
+  {
+    value: 120 * 1000,
+    label: 'every 2m'
+  }
+];
+
 const filterOptionsDefault = {
   protocols: { disabled: false, name: MetricsLabels.FilterProtocolsDefault },
   timeIntervals: { disabled: false },
@@ -58,13 +86,15 @@ const Metrics: FC<MetricsProps> = function ({
 
   const [isOpenSourceProcessMenu, setIsOpenSourceProcessMenu] = useState<boolean>(false);
   const [isOpenDestinationProcessMenu, setIsOpenDestinationProcessMenu] = useState<boolean>(false);
-  const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
   const [isOpenProtocolInterval, setIsOpenProtocolIntervalMenu] = useState<boolean>(false);
+  const [isOpenTimeInterval, setIsOpenTimeIntervalMenu] = useState<boolean>(false);
+  const [isOpenDisplayInterval, setIsOpenDisplayInterval] = useState<boolean>(false);
 
   const [processIdSource, setProcessIdSource] = useState<string>();
   const [processIdDest, setProcessIdDest] = useState<string>();
-  const [timeInterval, setTimeInterval] = useState<IntervalTimeProp['key']>(defaultTimeInterval.key);
   const [protocol, setProtocol] = useState<AvailableProtocols | undefined>(protocolDefault);
+  const [timeInterval, setTimeInterval] = useState<IntervalTimeProp['key']>(defaultTimeInterval.key);
+  const [displayInterval, setDisplayInterval] = useState(displayIntervalMap[0].label);
 
   // Metrics query
   const filters = {
@@ -74,13 +104,19 @@ const Metrics: FC<MetricsProps> = function ({
     protocol
   };
 
-  const { data: metrics, isLoading: isLoadingMetrics } = useQuery(
-    [QueriesMetrics.GetMetrics, filters],
-    () => MetricsController.getMetrics(filters),
-    {
-      keepPreviousData: true
-    }
-  );
+  const {
+    data: metrics,
+    isLoading: isLoadingMetrics,
+    isRefetching,
+    refetch
+  } = useQuery([QueriesMetrics.GetMetrics, filters], () => MetricsController.getMetrics(filters), {
+    refetchInterval: displayIntervalMap.find(({ label }) => label === displayInterval)?.value,
+    keepPreviousData: true
+  });
+
+  const handleRefetchMetrics = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   function handleSelectSourceProcessMenu(
     _: MouseEvent | ChangeEvent,
@@ -125,6 +161,16 @@ const Metrics: FC<MetricsProps> = function ({
 
   function handleToggleTimeIntervalMenu(isOpen: boolean) {
     setIsOpenTimeIntervalMenu(isOpen);
+  }
+
+  function handleSelectDisplayInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
+    const id = selection as string;
+    setDisplayInterval(id);
+    setIsOpenDisplayInterval(false);
+  }
+
+  function handleToggleDisplayInterval(isOpen: boolean) {
+    setIsOpenDisplayInterval(isOpen);
   }
 
   function handleSelectProtocolMenu(
@@ -199,6 +245,12 @@ const Metrics: FC<MetricsProps> = function ({
     [parent.startTime]
   );
 
+  // displayInterval select options
+  const optionsDisplayIntervalWithDefault = useMemo(
+    () => displayIntervalMap.map(({ label }, index) => <SelectOption key={index + 1} value={label} />),
+    []
+  );
+
   return (
     <>
       {/* loader */}
@@ -209,72 +261,95 @@ const Metrics: FC<MetricsProps> = function ({
           </Bullseye>
         </Card>
       )}
-
       {!isLoadingMetrics && (
         <Grid hasGutter>
           {/* Metrics Filters */}
           <GridItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-            <Card isFullHeight isRounded>
+            <Card isRounded>
               <Toolbar>
                 <ToolbarContent>
-                  <ToolbarItem alignment={{ default: 'alignRight' }}>
-                    <Select
-                      isGrouped
-                      placeholderText={filterOptions.sourceProcesses.name}
-                      isOpen={isOpenSourceProcessMenu}
-                      onSelect={handleSelectSourceProcessMenu}
-                      onToggle={handleToggleSourceProcessMenu}
-                      toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
-                      selections={processIdSource}
-                      isDisabled={filterOptions.sourceProcesses.disabled}
-                    >
-                      {optionsProcessSourcesWithDefault}
-                    </Select>
-                  </ToolbarItem>
+                  <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+                    <ToolbarItem variant="label">{MetricsLabels.FiltersLabel}</ToolbarItem>
 
-                  {!filterOptions.destinationProcesses.disabled && (
                     <ToolbarItem>
                       <Select
                         isGrouped
-                        placeholderText={filterOptions.destinationProcesses.name}
-                        isOpen={isOpenDestinationProcessMenu}
-                        onSelect={handleSelectDestinationProcessMenu}
-                        onToggle={handleToggleDestinationProcessMenu}
+                        placeholderText={filterOptions.sourceProcesses.name}
+                        isOpen={isOpenSourceProcessMenu}
+                        onSelect={handleSelectSourceProcessMenu}
+                        onToggle={handleToggleSourceProcessMenu}
                         toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
-                        selections={processIdDest}
-                        isDisabled={filterOptions.destinationProcesses.disabled}
+                        selections={processIdSource}
+                        isDisabled={filterOptions.sourceProcesses.disabled}
                       >
-                        {optionsProcessConnectedWithDefault}
+                        {optionsProcessSourcesWithDefault}
                       </Select>
                     </ToolbarItem>
-                  )}
 
-                  {!!optionsTimeIntervalWithDefault.length && (
+                    {!filterOptions.destinationProcesses.disabled && (
+                      <ToolbarItem>
+                        <Select
+                          isGrouped
+                          placeholderText={filterOptions.destinationProcesses.name}
+                          isOpen={isOpenDestinationProcessMenu}
+                          onSelect={handleSelectDestinationProcessMenu}
+                          onToggle={handleToggleDestinationProcessMenu}
+                          toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
+                          selections={processIdDest}
+                          isDisabled={filterOptions.destinationProcesses.disabled}
+                        >
+                          {optionsProcessConnectedWithDefault}
+                        </Select>
+                      </ToolbarItem>
+                    )}
+
                     <ToolbarItem>
                       <Select
-                        isOpen={isOpenTimeInterval}
-                        onSelect={handleSelectTimeIntervalMenu}
-                        onToggle={handleToggleTimeIntervalMenu}
-                        toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
-                        selections={timeInterval}
-                        isDisabled={filterOptions.timeIntervals.disabled}
+                        isDisabled={filterOptions.protocols.disabled}
+                        isOpen={isOpenProtocolInterval}
+                        onSelect={handleSelectProtocolMenu}
+                        onToggle={handleToggleProtocolMenu}
+                        selections={protocol}
                       >
-                        {optionsTimeIntervalWithDefault}
+                        {optionsProtocolsWithDefault}
                       </Select>
                     </ToolbarItem>
-                  )}
+                  </ToolbarToggleGroup>
 
-                  <ToolbarItem>
+                  <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl" alignment={{ default: 'alignRight' }}>
+                    <ToolbarItem variant="label">{MetricsLabels.DisplayLabel}</ToolbarItem>
                     <Select
-                      isDisabled={filterOptions.protocols.disabled}
-                      isOpen={isOpenProtocolInterval}
-                      onSelect={handleSelectProtocolMenu}
-                      onToggle={handleToggleProtocolMenu}
-                      selections={protocol}
+                      isOpen={isOpenTimeInterval}
+                      onSelect={handleSelectTimeIntervalMenu}
+                      onToggle={handleToggleTimeIntervalMenu}
+                      toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
+                      selections={timeInterval}
+                      isDisabled={filterOptions.timeIntervals.disabled}
                     >
-                      {optionsProtocolsWithDefault}
+                      {optionsTimeIntervalWithDefault}
                     </Select>
-                  </ToolbarItem>
+
+                    <ToolbarItem>
+                      <Select
+                        isOpen={isOpenDisplayInterval}
+                        onSelect={handleSelectDisplayInterval}
+                        onToggle={handleToggleDisplayInterval}
+                        selections={displayInterval}
+                      >
+                        {optionsDisplayIntervalWithDefault}
+                      </Select>
+
+                      <Tooltip content={TOOLTIP_UPDATE}>
+                        <Button
+                          isLoading={isRefetching}
+                          variant="plain"
+                          onClick={handleRefetchMetrics}
+                          isDisabled={displayInterval !== displayIntervalMap[0].label}
+                          icon={<SyncIcon />}
+                        />
+                      </Tooltip>
+                    </ToolbarItem>
+                  </ToolbarToggleGroup>
                 </ToolbarContent>
               </Toolbar>
             </Card>
