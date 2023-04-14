@@ -80,6 +80,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
                 {
                   ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
                   center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
+                  maxIteration: GraphController.calculateMaxIteration(nodes.length),
                   nodesFilter: ({ x, y }: GraphNode) => !!(!x || !y)
                 }
               ]

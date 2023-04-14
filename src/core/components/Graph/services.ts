@@ -41,5 +41,32 @@ export const GraphController = {
     ),
     edges: JSON.parse(JSON.stringify(GraphController.sanitizeEdges(nodes, edges))),
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
-  })
+  }),
+  calculateMaxIteration(nodeCount: number) {
+    if (nodeCount > 900) {
+      return 10;
+    }
+
+    if (nodeCount > 750) {
+      return 10;
+    }
+
+    if (nodeCount > 600) {
+      return 15;
+    }
+
+    if (nodeCount > 450) {
+      return 20;
+    }
+
+    if (nodeCount > 300) {
+      return 50;
+    }
+
+    if (nodeCount > 150) {
+      return 75;
+    }
+
+    return 100;
+  }
 };

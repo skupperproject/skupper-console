@@ -35,7 +35,7 @@ const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
 const PERF_TEST = false;
-const ITEMS_TEST = 500;
+const ITEMS_TEST = 200;
 interface ApiProps {
   params: Record<string, string>;
 }
@@ -44,13 +44,64 @@ const mockSitesForPerf: SiteResponse[] = [];
 for (let i = 0; i < ITEMS_TEST; i++) {
   mockSitesForPerf.push({
     recType: 'SITE',
-    identity: `site-perf-${i}`,
+    identity: `sitePerf${i}`,
     startTime: 1674048705000000,
     endTime: 0,
     name: `site ${i}`,
     nameSpace: `config-grpc-site-${i}-test`
   });
 }
+
+const mockRoutersForPerf: RouterResponse[] = [];
+mockSitesForPerf.forEach((site, index) => {
+  mockRoutersForPerf.push({
+    recType: 'ROUTER',
+    identity: `router${index}:0`,
+    parent: site.identity,
+    startTime: 1674048674810887,
+    endTime: 0,
+    name: `0/${site.name}-skupper-router-${`router${index}`}`,
+    namespace: `router-namespace-${`router${index}`}`,
+    imageName: 'skupper-router',
+    imageVersion: 'latest',
+    hostname: `skupper-router-${`router${index}`}`,
+    buildVersion: 'UNKNOWN'
+  });
+});
+
+const mockLinksForPerf: LinkResponse[] = [];
+mockRoutersForPerf.forEach((_, index) => {
+  const idx1 = Math.floor(Math.random() * ITEMS_TEST);
+  const idx2 = Math.floor(Math.random() * ITEMS_TEST);
+
+  const router1 = mockRoutersForPerf[idx1];
+  const router2 = mockRoutersForPerf[idx2];
+
+  mockLinksForPerf.push(
+    {
+      recType: 'LINK',
+      identity: `link-out-${index}`,
+      parent: router1.identity,
+      startTime: 1674048706622878,
+      endTime: 0,
+      mode: 'interior',
+      name: router2.name?.split('/')[1],
+      linkCost: 1,
+      direction: 'outgoing'
+    },
+    {
+      recType: 'LINK',
+      identity: `link-in-${index}`,
+      parent: router2.identity,
+      startTime: 1674151543561656,
+      endTime: 0,
+      mode: 'interior',
+      name: router1.name?.split('/')[1],
+      linkCost: 1,
+      direction: 'incoming'
+    }
+  );
+});
 
 // api functions
 export const MockApi = {
@@ -67,14 +118,28 @@ export const MockApi = {
   },
   getSite: (_: unknown, { params: { id } }: ApiProps) => ({
     results: sites.results.find(({ identity }) => identity === id)
-  })
+  }),
+  getRouters: () => {
+    const routersForPerfTests = PERF_TEST ? mockRoutersForPerf : [];
+    const results = [...routers.results, ...routersForPerfTests];
+
+    return { ...routers, results };
+  },
+  getLinks: () => {
+    const linksForPerfTests = PERF_TEST ? mockLinksForPerf : [];
+    const results = [...links.results, ...linksForPerfTests];
+
+    return { ...links, results };
+  }
 };
 
 // api paths
 export const MockApiPaths = {
   Collectors: `${prefix}/collectors`,
   Sites: `${prefix}/sites`,
-  Site: `${prefix}/sites/:id`
+  Site: `${prefix}/sites/:id`,
+  Routers: `${prefix}/routers`,
+  Links: `${prefix}/links`
 };
 
 export function loadMockServer() {
@@ -95,6 +160,8 @@ export function loadMockServer() {
       this.get(MockApiPaths.Collectors, MockApi.getCollectors);
       this.get(MockApiPaths.Sites, MockApi.getSites);
       this.get(MockApiPaths.Site, MockApi.getSite);
+      this.get(MockApiPaths.Routers, MockApi.getRouters);
+      this.get(MockApiPaths.Links, MockApi.getLinks);
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
@@ -176,10 +243,6 @@ export function loadMockServer() {
       this.get(`${prefix}/addresses/:id/flowpairs`, () => addressesFlowPairs);
 
       this.get(`${prefix}/addresses/:id/processes`, () => addressProcesses);
-
-      this.get(`${prefix}/routers`, () => routers);
-
-      this.get(`${prefix}/links`, () => links);
     }
   });
 }
