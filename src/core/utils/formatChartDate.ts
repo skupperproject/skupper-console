@@ -1,12 +1,14 @@
 import { timeIntervalMap } from '@API/Prometheus.queries';
 
 export function formatChartDate(timestamp: number, start: number) {
-  // one week ago
-  if (start * 1000 <= Date.now() - timeIntervalMap.oneWeek.seconds * 1000) {
+  if (start * 1000 <= Date.now() - timeIntervalMap.oneMinute.seconds * 1000) {
+    return getTimeFromTimestamp(timestamp, true);
+  }
+
+  if (start * 1000 <= Date.now() - timeIntervalMap.twoDay.seconds * 1000) {
     return getDayFromTimestamp(timestamp);
   }
 
-  // 14 days ago
   if (start * 1000 <= Date.now() - timeIntervalMap.twoWeeks.seconds * 1000) {
     return getMonthAndDay(timestamp);
   }
@@ -14,7 +16,7 @@ export function formatChartDate(timestamp: number, start: number) {
   return getTimeFromTimestamp(timestamp);
 }
 
-function getTimeFromTimestamp(timestamp: number) {
+function getTimeFromTimestamp(timestamp: number, withSeconds = false) {
   // Convert timestamp to milliseconds
   const milliseconds = timestamp * 1000;
 
@@ -31,6 +33,15 @@ function getTimeFromTimestamp(timestamp: number) {
 
   // Use the String object's padStart() method to add padding to the minutes
   const paddedMinutes = minutes.toString().padStart(2, '0');
+
+  if (withSeconds) {
+    //Use the Date object's getSeconds() method to get the seconds
+    const seconds = dateObject.getSeconds() || 0;
+    // Use the String object's padStart() method to add padding to the seconds
+    const paddedSeconds = seconds.toString().padStart(2, '0');
+
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+  }
 
   // Return the padded hours and minutes as a string
   return `${paddedHours}:${paddedMinutes}`;

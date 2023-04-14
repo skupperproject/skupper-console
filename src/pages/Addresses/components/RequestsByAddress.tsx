@@ -123,13 +123,13 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
-            filters={{ processIdSource: serverNamesId, protocol: AvailableProtocols.AllHttp }}
+            selectedFilters={{ processIdSource: serverNamesId, protocol: AvailableProtocols.AllHttp }}
             startTime={startTime}
             sourceProcesses={serverNames}
-            customFilterOptions={{
-              protocols: { disabled: true, name: protocol },
-              sourceProcesses: { name: AddressesLabels.MetricDestinationProcessFilter },
-              destinationProcesses: { name: FlowPairsLabelsHttp.Clients, disabled: true }
+            filterOptions={{
+              protocols: { disabled: true, placeholder: protocol },
+              sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
+              destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
             }}
           />
         </GridItem>

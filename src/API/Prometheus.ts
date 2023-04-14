@@ -34,7 +34,7 @@ export const PrometheusApi = {
     let query = queries.getBytesByDirection(param1, param2);
 
     if (isRate) {
-      query = queries.getByteRateByDirection(param1, param2, '5m');
+      query = queries.getByteRateByDirection(param1, param2, '1m');
     }
     const {
       data: { result }
@@ -73,7 +73,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: quantile ? queries.getQuantile(param, '5m', quantile) : queries.getAvgLatency(param, '5m'),
+        query: quantile ? queries.getQuantile(param, '1m', quantile) : queries.getAvgLatency(param, '1m'),
         start,
         end,
         step: range.step
@@ -105,7 +105,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: isRate ? queries.getTotalRequestRateByMethod(param, '5m') : queries.getTotalRequests(param),
+        query: isRate ? queries.getTotalRequestRateByMethod(param, '1m') : queries.getTotalRequests(param),
         start,
         end,
         step: isRate ? range.step : range.value
