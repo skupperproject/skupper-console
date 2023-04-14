@@ -15,6 +15,8 @@ import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_EDGE_CONFIG,
   DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
+  DEFAULT_LAYOUT_GFORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
@@ -81,7 +83,17 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
                   ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
                   center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
                   maxIteration: GraphController.calculateMaxIteration(nodes.length),
-                  nodesFilter: ({ x, y }: GraphNode) => !!(!x || !y)
+                  nodesFilter: ({ x, y, comboId }: GraphNode) => !!(!x || !y) && comboId
+                },
+                {
+                  ...DEFAULT_LAYOUT_FORCE_CONFIG,
+                  center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
+                  nodesFilter: ({ x, y, comboId }: GraphNode) => !!(!x || !y) && !comboId && nodes.length < 250
+                },
+                {
+                  ...DEFAULT_LAYOUT_GFORCE_CONFIG,
+                  center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
+                  nodesFilter: ({ x, y, comboId }: GraphNode) => !!(!x || !y) && !comboId && nodes.length >= 250
                 }
               ]
             },
@@ -233,6 +245,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           topologyGraph.on('afterlayout', () => {
             topologyGraphRef.current = topologyGraph;
+            prevNodesRef.current = nodes;
+            prevEdgesRef.current = edges;
             setIsGraphLoaded(true);
           });
 
@@ -279,8 +293,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         isGraphLoaded &&
         graphInstance &&
         (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
-          JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
-          (combos && JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos)))
+          JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
       ) {
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
