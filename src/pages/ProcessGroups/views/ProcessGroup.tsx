@@ -90,12 +90,12 @@ const ProcessGroup = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
-              filters={{ processIdSource: serverNames }}
+              selectedFilters={{ processIdSource: serverNames }}
               startTime={startTime}
               sourceProcesses={serverNameFilters}
-              customFilterOptions={{
-                destinationProcesses: { disabled: true, name: MetricsLabels.FilterAllDestinationProcesses },
-                sourceProcesses: { name: MetricsLabels.FilterAllSourceProcesses }
+              filterOptions={{
+                destinationProcesses: { disabled: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                sourceProcesses: { placeholder: MetricsLabels.FilterAllSourceProcesses }
               }}
             />
           </GridItem>
