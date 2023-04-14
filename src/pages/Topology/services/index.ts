@@ -23,7 +23,7 @@ export const TopologyController = {
       const color = getColor(index);
       const img = siteSVG;
 
-      return convertEntityToNode({ id: identity, comboId: identity, label, x, y, color, img });
+      return convertEntityToNode({ id: identity, label, x, y, color, img });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
@@ -32,7 +32,7 @@ export const TopologyController = {
       const color = getColor(role === 'internal' ? 16 : index);
       const img = role === 'internal' ? skupperProcessSVG : componentSVG;
 
-      return convertEntityToNode({ id: identity, comboId: identity, label, x, y, color, img });
+      return convertEntityToNode({ id: identity, label, x, y, color, img });
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
@@ -49,7 +49,7 @@ export const TopologyController = {
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
     const groups = processes.map(({ comboId }) => comboId);
 
-    return sites.filter((site) => groups.includes(site.comboId)).map(({ id, style, label }) => ({ id, label, style }));
+    return sites.filter((site) => groups.includes(site.id)).map(({ id, style, label }) => ({ id, label, style }));
   },
 
   convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[]): GraphEdge[] =>

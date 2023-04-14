@@ -25,13 +25,13 @@ export const DEFAULT_MODE = {
   ]
 };
 
-export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG = {
+export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
   type: 'comboForce',
   nodeSize: 30,
   nodeSpacing: 30,
-  comboSpacing: 80,
+  comboSpacing: 50,
   linkDistance: 150,
-  nodeStrength: -50,
+  nodeStrength: -100,
   edgeStrength: 1,
   collideStrength: 1,
   preventOverlap: true,
@@ -41,17 +41,25 @@ export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG = {
 
 export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   type: 'force',
-  clustering: true,
-  clusterNodeStrength: -1000,
-  clusterEdgeDistance: 1000,
-  clusterFociStrength: 1.2,
   linkDistance: 250,
-  nodeStrength: -4000,
+  nodeStrength: -200,
   edgeStrength: 0.7,
   collideStrength: 1,
   nodeSpacing: NODE_SIZE,
   preventOverlap: true,
+  alphaMin: 0.08,
   alpha: 0.1
+};
+
+export const DEFAULT_LAYOUT_GFORCE_CONFIG: LayoutConfig = {
+  type: 'gForce',
+  linkDistance: 200,
+  nodeStrength: 500,
+  edgeStrength: 200,
+  collideStrength: 1,
+  nodeSpacing: NODE_SIZE,
+  preventOverlap: true,
+  gpuEnabled: true
 };
 
 export const DEFAULT_NODE_CONFIG = {
