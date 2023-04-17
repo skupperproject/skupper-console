@@ -1,8 +1,6 @@
 import { Brand, PageHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-import Logo from '@assets/skupper.svg';
-
-const SKUPPER_TEXT_LOGO = 'Skupper';
+import { brandLogo, brandName } from '@config/config';
 
 const Header = function () {
   return (
@@ -10,11 +8,11 @@ const Header = function () {
       className="sk-header"
       logo={
         <>
-          <Brand src={Logo} alt="skupper logo" />
+          <Brand src={brandLogo} alt="skupper logo" />
 
           <TextContent>
             <Text component={TextVariants.h1} className="pf-u-pl-md pf-u-font-weight-bold">
-              {SKUPPER_TEXT_LOGO}
+              {brandName}
             </Text>
           </TextContent>
         </>

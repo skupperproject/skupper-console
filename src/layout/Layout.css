@@ -6,6 +6,7 @@
 .pf-c-page__header {
   z-index: 1 !important;
   box-shadow: 0 2px 2px var(--pf-global--palette--black-700);
+  white-space: nowrap;
   background: linear-gradient(
     to bottom,
     rgb(36, 45, 57) 11.2%,

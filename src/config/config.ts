@@ -3,6 +3,7 @@ import { ProcessesPaths } from '@pages/Processes/Processes.constant';
 import { ProcessGroupsPaths } from '@pages/ProcessGroups/ProcessGroups.constant';
 import { SitesPaths } from '@pages/Sites/Sites.constant';
 import { TopologyPaths } from '@pages/Topology/Topology.constant';
+import Logo from '@assets/skupper.svg';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
 
@@ -39,3 +40,7 @@ export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
 // Default page size for tables. Set in environment variables, but can be overridden.
 export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZE) || 10; //TODO: env variable used for debugging scope
+
+// Brand
+export const brandName = process.env.BRAND_APP_NAME !== undefined ? process.env.BRAND_APP_NAME : 'Skupper';
+export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;

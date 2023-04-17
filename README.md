@@ -133,3 +133,13 @@ The project has the following directory structure:
 Each page section includes constants, interfaces, and enums that are specific to the React views and components used in that section. If you require more generic modules or API-related items, we recommend accessing them from the services folder modules.
 
 Please note that the `services` folder contains utilities for data normalization, sanitization, and manipulation for a specific page, while other generic app functionalities such as date and formatting utilities can be found in the `core/utils` folder.
+
+## Brand Customization
+
+To customize the Skupper logo and the application name on the left side of the Header, we can utilize the following environment variables: `BRAND_APP_LOGO` and `BRAND_APP_NAME`
+
+example
+
+```bash
+BRAND_APP_LOGO="/skupper_repo/new_skupper_logo.png" BRAND_APP_NAME="New skupper name" yarn build
+```
