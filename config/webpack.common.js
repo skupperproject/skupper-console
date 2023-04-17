@@ -35,6 +35,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      'process.env.BRAND_APP_NAME': JSON.stringify(process.env.BRAND_APP_NAME),
+      'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.PROMETHEUS_URL': JSON.stringify(process.env.PROMETHEUS_URL || ''),
       'process.env.DEFAULT_TABLE_PAGE_SIZE': JSON.stringify(process.env.DEFAULT_TABLE_PAGE_SIZE)
