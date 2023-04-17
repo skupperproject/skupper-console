@@ -6,25 +6,25 @@ type ZoomControlsProps = {
   graphInstance: Graph;
 };
 
-const ZOOM_DELTA = 0.4;
+const ZOOM_DELTA = 0.25;
 
 const GraphMenuControl = function ({ graphInstance }: ZoomControlsProps) {
   const center = graphInstance.getGraphCenterPoint();
 
   const handleIncreaseZoom = () => {
     const zoom = graphInstance.getZoom();
-    const newZoom = zoom > 1 ? zoom + ZOOM_DELTA : 1 + ZOOM_DELTA;
-    graphInstance.zoom(newZoom, center, true);
+    const newZoom = zoom + ZOOM_DELTA;
+    graphInstance.zoomTo(newZoom, center, true, { duration: 250 });
   };
 
   const handleDecreaseZoom = () => {
     const zoom = graphInstance.getZoom();
-    const newZoom = zoom < 1 ? zoom - ZOOM_DELTA : 1 - ZOOM_DELTA;
-    graphInstance.zoom(newZoom, center, true);
+    const newZoom = zoom - ZOOM_DELTA;
+    graphInstance.zoomTo(newZoom, center, true, { duration: 250 });
   };
 
   const handleZoomToDefault = () => {
-    graphInstance.fitView(undefined, undefined, true);
+    graphInstance.fitView(5, undefined, true, { duration: 250 });
   };
 
   return (
