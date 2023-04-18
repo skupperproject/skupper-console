@@ -15,6 +15,12 @@
   );
 }
 
+.pf-c-page__header a {
+  color: white;
+  text-decoration: none;
+  cursor: default;
+}
+
 .pf-c-page__sidebar {
   box-shadow: 2px 2px 2px var(--pf-global--palette--black-600) !important;
   background: linear-gradient(

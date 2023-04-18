@@ -3,6 +3,7 @@ const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const { version } = require(path.join(ROOT, '/package.json'));
 
 module.exports = {
   entry: path.join(ROOT, 'src/index.tsx'),
@@ -37,6 +38,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.BRAND_APP_NAME': JSON.stringify(process.env.BRAND_APP_NAME),
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
+      'process.env.APP_VERSION': JSON.stringify(process.env.APP_VERSION) || version,
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.PROMETHEUS_URL': JSON.stringify(process.env.PROMETHEUS_URL || ''),
       'process.env.DEFAULT_TABLE_PAGE_SIZE': JSON.stringify(process.env.DEFAULT_TABLE_PAGE_SIZE)

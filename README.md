@@ -10,9 +10,11 @@
 - [Development](#development)
   - [Quick start](#quick-start)
   - [Run the console with demo routes](#run-the-console-with-demo-routes)
-  - [Run the console with Skupper (work in progress)](#run-the-console-with-skupper-work-in-progress)
+  - [Run the console with Skupper](#run-the-console-with-skupper)
   - [Testing](#testing)
-  - [Project Structure](#project-structure)
+- [Project structure](#project-structure)
+  - [Page sections](#page-sections)
+- [Brand customization](#brand-customization)
 
 Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
 
@@ -56,8 +58,6 @@ COLLECTOR_URL=https://skupper-grpc-private.vabar-vpc-cluster-153f1de160110098c19
 ### Run the console with Skupper
 
 When running skupper, executing `skupper init --enable-flow-collector` will generate a publicly accessible route to the collector. This route can be secured or unsecured, depending on the desired level of security.
-
-
 
 #### Use the Flow collector
 
@@ -136,10 +136,17 @@ Please note that the `services` folder contains utilities for data normalization
 
 ## Brand Customization
 
-To customize the Skupper logo and the application name on the left side of the Header, we can utilize the following environment variables: `BRAND_APP_LOGO` and `BRAND_APP_NAME`
+To customize the Skupper logo and the application name on the left side of the Header, we can use the following environment variables:
 
-example
+- **BRAND_APP_LOGO**: The path to a custom logo image file to be used instead of the default Skupper logo.
+- **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is 'Skupper'.
+- **APP_VERSION**: The version of the console. By default this value match with the package.json version.
+
+For example, you can customize the logo and application name by running the following command:
 
 ```bash
-BRAND_APP_LOGO="/skupper_repo/new_skupper_logo.png" BRAND_APP_NAME="New skupper name" yarn build
+BRAND_APP_LOGO="/local_path/new_logo.png" BRAND_APP_NAME="New name" yarn build
 ```
+
+If you want to skip the branding title and only display the logo, you can set the **BRAND_APP_NAME** environment variable to an empty string ('').
+If you want to use the default branding title  you should unset the **BRAND_APP_NAME** environment variable.
