@@ -1,20 +1,29 @@
-import { Brand, PageHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Brand, PageHeader, PageHeaderTools, Title } from '@patternfly/react-core';
 
-import { brandLogo, brandName } from '@config/config';
+import { brandLogo, brandName, skupperVersion } from '@config/config';
 
 const Header = function () {
   return (
     <PageHeader
       className="sk-header"
+      headerTools={
+        <PageHeaderTools>
+          <Title headingLevel="h4" className="pf-u-pl-md">
+            v.{skupperVersion}
+          </Title>
+        </PageHeaderTools>
+      }
       logo={
         <>
-          <Brand src={brandLogo} alt="skupper logo" />
+          <Brand src={brandLogo} alt="skupper logo" heights={{ default: '70px' }}>
+            <source srcSet={brandLogo} />
+          </Brand>
 
-          <TextContent>
-            <Text component={TextVariants.h1} className="pf-u-pl-md pf-u-font-weight-bold">
+          {brandName && (
+            <Title headingLevel="h1" className="pf-u-pl-md">
               {brandName}
-            </Text>
-          </TextContent>
+            </Title>
+          )}
         </>
       }
       showNavToggle

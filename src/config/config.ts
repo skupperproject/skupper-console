@@ -6,7 +6,6 @@ import { TopologyPaths } from '@pages/Topology/Topology.constant';
 import Logo from '@assets/skupper.svg';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
-
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
 export const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
 // Base URL for the Prometheus backend. Set in environment variables.
@@ -44,3 +43,5 @@ export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZ
 // Brand
 export const brandName = process.env.BRAND_APP_NAME !== undefined ? process.env.BRAND_APP_NAME : 'Skupper';
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
+
+export const skupperVersion = process.env.APP_VERSION;
