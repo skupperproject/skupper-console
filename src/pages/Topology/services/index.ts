@@ -85,7 +85,10 @@ export const TopologyController = {
         {
           id: `${sourceId}-to${targetId}`,
           source: sourceId,
-          target: targetId
+          target: targetId,
+          style: {
+            lineDash: [4, 4]
+          }
         }
       ])
     );
