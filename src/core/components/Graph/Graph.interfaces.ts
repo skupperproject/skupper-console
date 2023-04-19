@@ -21,7 +21,7 @@ export interface GraphEdge {
   source: string;
   target: string;
   id: string;
-  style?: Record<string, string>;
+  style?: Record<string, string | number[]>;
 }
 
 export interface GraphReactAdaptorProps {
