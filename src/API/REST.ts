@@ -11,17 +11,16 @@ import {
   ProcessPairsResponse,
   RequestOptions,
   ResponseWrapper,
-  CollectorsResponse
+  CollectorsResponse,
+  SitePairsResponse
 } from './REST.interfaces';
 import {
   getFlowsPairsByAddressPATH,
-  getProcessesBySitePATH,
   getProcessesByAddressPATH,
   getSitePATH,
   getRoutersBySitePATH,
   getLinksBySitePATH,
   getHostsBySitePATH,
-  getProcessesByProcessGroupPATH,
   getProcessGroupPATH,
   geProcessPATH,
   getLinkPATH,
@@ -64,14 +63,6 @@ export const RESTApi = {
 
   fetchSite: async (id: string, options?: RequestOptions): Promise<SiteResponse> => {
     const data = await axiosFetch<ResponseWrapper<SiteResponse>>(getSitePATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
-  },
-
-  fetchProcessesBySite: async (id: string, options?: RequestOptions): Promise<ProcessResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesBySitePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
@@ -124,10 +115,8 @@ export const RESTApi = {
     const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(geProcessesPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
-    const results = data.results.filter(({ endTime }: ProcessResponse) => !endTime);
 
-    // TODO: remove when BE enable multi-filter
-    return { ...data, results };
+    return data;
   },
 
   fetchProcessesResult: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
@@ -176,14 +165,6 @@ export const RESTApi = {
     });
 
     return getApiResults(data);
-  },
-
-  fetchProcessesByProcessGroup: async (id: string, options?: RequestOptions): Promise<ProcessResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByProcessGroupPATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults<ProcessResponse[]>(data);
   },
 
   // LINKS  APIs
@@ -255,16 +236,16 @@ export const RESTApi = {
   },
 
   // AGGREGATE  APIs
-  fetchSitesPairs: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getSitePairsPATH(), {
+  fetchSitesPairs: async (options?: RequestOptions): Promise<SitePairsResponse[]> => {
+    const data = await axiosFetch<ResponseWrapper<SitePairsResponse[]>>(getSitePairsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return getApiResults(data);
   },
 
-  fetchSitePairs: async (id: string, options?: RequestOptions): Promise<ProcessPairsResponse> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getSitePairPATH(id), {
+  fetchSitePairs: async (id: string, options?: RequestOptions): Promise<SitePairsResponse> => {
+    const data = await axiosFetch<ResponseWrapper<SitePairsResponse>>(getSitePairPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
@@ -291,9 +272,7 @@ export const RESTApi = {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessPairsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
-    const results = data.results.filter(({ endTime }: ProcessPairsResponse) => !endTime);
 
-    // TODO: remove when BE enable multi-filter
-    return getApiResults({ ...data, results });
+    return getApiResults(data);
   }
 };

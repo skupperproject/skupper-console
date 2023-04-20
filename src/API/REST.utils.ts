@@ -17,7 +17,8 @@ export function mapOptionsToQueryParams({
   sortDirection,
   sortName,
   timeRangeEnd,
-  timeRangeStart
+  timeRangeStart,
+  ...queryParams
 }: RequestOptions): QueryParams {
   return {
     filter,
@@ -25,6 +26,7 @@ export function mapOptionsToQueryParams({
     limit,
     timeRangeEnd,
     timeRangeStart,
-    sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null
+    sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
+    ...queryParams
   };
 }

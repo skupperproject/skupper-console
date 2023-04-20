@@ -12,7 +12,6 @@ export const getCollectorsPATH = () => COLLECTORS_PATH;
 const SITES_PATH = `${API_URL}/sites/`;
 export const getSitesPATH = () => SITES_PATH;
 export const getSitePATH = (id: string) => `${SITES_PATH}${id}`;
-export const getProcessesBySitePATH = (id: string) => `${SITES_PATH}${id}/processes`;
 export const getRoutersBySitePATH = (id: string) => `${SITES_PATH}${id}/routers`;
 export const getLinksBySitePATH = (id: string) => `${SITES_PATH}${id}/links`;
 export const getHostsBySitePATH = (id: string) => `${SITES_PATH}${id}/hosts`;
@@ -41,7 +40,6 @@ export const getAddressesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}
 const PROCESS_GROUPS_PATH = `${API_URL}/processgroups/`;
 export const getProcessGroupsPATH = () => PROCESS_GROUPS_PATH;
 export const getProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}`;
-export const getProcessesByProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}/processes`;
 
 // ADDRESSES
 const ADDRESSES_PATH = `${API_URL}/addresses/`;
@@ -49,10 +47,10 @@ export const getAddressesPath = () => ADDRESSES_PATH;
 export const getFlowsPairsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/flowpairs`;
 export const getProcessesByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/processes`;
 
-// CONNECTIONS
-const FLOWPAIRS_PATH = `${API_URL}/flowpairs/`;
-export const getFlowPairsPATH = () => FLOWPAIRS_PATH;
-export const getFlowPairPATH = (id: string) => `${FLOWPAIRS_PATH}${id}`;
+// CONNECTIONS & RESPONSES
+const FLOW_PAIRS_PATH = `${API_URL}/flowpairs/`;
+export const getFlowPairsPATH = () => FLOW_PAIRS_PATH;
+export const getFlowPairPATH = (id: string) => `${FLOW_PAIRS_PATH}${id}`;
 
 const SITE_PAIRS_PATH = `${API_URL}/sitepairs/`;
 export const getSitePairsPATH = () => SITE_PAIRS_PATH;

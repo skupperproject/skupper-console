@@ -6,7 +6,7 @@ export enum SiteLabels {
   Section = 'Sites',
   Description = 'Set of applications running under the same geographical area',
   Details = 'Details',
-  Links = 'Linked to sites',
+  Links = 'Links created to',
   Hosts = 'Hosts',
   Processes = 'Processes',
   Name = 'Name',

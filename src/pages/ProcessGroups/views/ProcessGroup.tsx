@@ -37,8 +37,8 @@ const ProcessGroup = function () {
   );
 
   const { data: processes, isLoading: isLoadingProcess } = useQuery(
-    [QueriesProcessGroups.GetProcessesByProcessGroup, processGroupId],
-    () => RESTApi.fetchProcessesByProcessGroup(processGroupId)
+    [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
+    () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
   );
 
   if (isLoadingProcessGroup || isLoadingProcess) {
@@ -51,9 +51,10 @@ const ProcessGroup = function () {
 
   const { name } = processGroup;
 
-  const serverNameFilters = Object.values(processes).map(({ name: destinationName }) => ({ destinationName }));
-  const serverNames = processes.map(({ name: processName }) => processName).join('|');
-  const startTime = processes.reduce((acc, process) => Math.max(acc, process.startTime), 0);
+  const processResults = processes.results;
+  const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
+  const serverNames = processResults.map(({ name: processName }) => processName).join('|');
+  const startTime = processResults.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
   return (
     <TransitionPage>
@@ -83,7 +84,7 @@ const ProcessGroup = function () {
 
         {/* Processes table*/}
         <GridItem span={12}>
-          <ProcessesTable processes={processes} />
+          <ProcessesTable processes={processResults} />
         </GridItem>
 
         {/* Component Metrics*/}

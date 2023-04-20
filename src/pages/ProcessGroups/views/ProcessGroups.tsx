@@ -14,7 +14,7 @@ import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const initProcessGroupsQueryParams = {
-  filter: 'processGroupRole.external'
+  processGroupRole: 'external'
 };
 
 const ProcessGroups = function () {

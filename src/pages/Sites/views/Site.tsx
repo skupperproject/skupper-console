@@ -31,7 +31,7 @@ import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
 
-const processQueryParams = { filter: 'processRole.external' };
+const processQueryParams = { processRole: 'external', endTime: 0 };
 
 const Site = function () {
   const { id } = useParams() as { id: string };
@@ -51,8 +51,9 @@ const Site = function () {
     RESTApi.fetchLinksBySite(siteId)
   );
 
-  const { data: processes, isLoading: isLoadingProcesses } = useQuery([QueriesSites.GetProcessesBySiteId, siteId], () =>
-    RESTApi.fetchProcessesBySite(siteId, processQueryParams)
+  const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+    [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
+    () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
   );
 
   const { data: routers, isLoading: isLoadingRouters } = useQuery([QueriesSites.GetRouters], () =>
@@ -70,7 +71,6 @@ const Site = function () {
   const { name, nameSpace } = site;
   const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
   const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
-  const liveProcesses = processes.filter(({ endTime }) => !endTime);
 
   return (
     <TransitionPage>
@@ -144,9 +144,9 @@ const Site = function () {
               <Title headingLevel="h2">{SiteLabels.Processes}</Title>
             </CardTitle>
             <CardBody>
-              {(!!liveProcesses.length && (
+              {(!!processes.results.length && (
                 <List isPlain>
-                  {liveProcesses.map(({ identity, name: processName }) => (
+                  {processes.results.map(({ identity, name: processName }) => (
                     <ListItem key={identity}>
                       <Flex>
                         <ResourceIcon type="process" />
