@@ -26,7 +26,7 @@ const initAllRequestsQueryParamsPaginated = {
 
 const initServersQueryParams = {
   limit: DEFAULT_TABLE_PAGE_SIZE,
-  filter: 'endTime.0' // open connections
+  endTime: 0 // open connections
 };
 
 const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol }) {

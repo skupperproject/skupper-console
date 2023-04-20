@@ -33,7 +33,6 @@ export const queryClientConfig = {
 };
 
 /** General config: contains various global settings and constants */
-export const SYNC_DATA_INTERVAL = 17 * 1000; // Time in milliseconds to request updated data from the backend
 export const UPDATE_INTERVAL = 5 * 1000; // Time in milliseconds to request updated data from the backend
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
 

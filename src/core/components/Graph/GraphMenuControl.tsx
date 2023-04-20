@@ -1,5 +1,5 @@
 import { Graph } from '@antv/g6-pc';
-import { Button } from '@patternfly/react-core';
+import { Button, Tooltip } from '@patternfly/react-core';
 import { ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 type ZoomControlsProps = {
@@ -29,29 +29,35 @@ const GraphMenuControl = function ({ graphInstance }: ZoomControlsProps) {
 
   return (
     <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
-      <Button
-        isActive={true}
-        className="pf-u-m-xs"
-        variant="primary"
-        onClick={handleIncreaseZoom}
-        icon={<SearchPlusIcon />}
-      />
+      <Tooltip content={'zoom in'}>
+        <Button
+          isActive={true}
+          className="pf-u-m-xs"
+          variant="primary"
+          onClick={handleIncreaseZoom}
+          icon={<SearchPlusIcon />}
+        />
+      </Tooltip>
 
-      <Button
-        isActive={true}
-        className="pf-u-m-xs"
-        variant="primary"
-        onClick={handleDecreaseZoom}
-        icon={<SearchMinusIcon />}
-      />
+      <Tooltip content={'zoom out'}>
+        <Button
+          isActive={true}
+          className="pf-u-m-xs"
+          variant="primary"
+          onClick={handleDecreaseZoom}
+          icon={<SearchMinusIcon />}
+        />
+      </Tooltip>
 
-      <Button
-        isActive={true}
-        className="pf-u-m-xs"
-        variant="primary"
-        onClick={handleZoomToDefault}
-        icon={<ExpandIcon />}
-      />
+      <Tooltip content={'fit view'}>
+        <Button
+          isActive={true}
+          className="pf-u-m-xs"
+          variant="primary"
+          onClick={handleZoomToDefault}
+          icon={<ExpandIcon />}
+        />
+      </Tooltip>
     </span>
   );
 };

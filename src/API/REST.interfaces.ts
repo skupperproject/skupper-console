@@ -4,7 +4,7 @@ import { AvailableProtocols, SortDirection } from './REST.enum';
 
 export type FetchWithOptions = AxiosRequestConfig;
 
-export interface RequestOptions {
+export interface RequestOptions extends Record<string, string | number | SortDirection | undefined> {
   filter?: string;
   offset?: number;
   limit?: number;
@@ -46,7 +46,7 @@ interface BaseResponse {
   identity: string;
   recType: string;
   startTime: number;
-  endTime?: number;
+  endTime: number;
 }
 
 export interface SiteResponse extends BaseResponse {
@@ -69,7 +69,6 @@ export interface ProcessResponse extends BaseResponse {
   sourceHost: string;
   hostName: string;
   processRole: 'external' | 'internal';
-  endTime?: number;
 }
 
 export interface ProcessPairsResponse extends BaseResponse {
@@ -81,6 +80,8 @@ export interface ProcessPairsResponse extends BaseResponse {
   destinationId: string;
   destinationName: string;
 }
+
+export type SitePairsResponse = ProcessPairsResponse;
 
 export interface AddressResponse extends BaseResponse {
   name: string;
@@ -101,7 +102,6 @@ export interface FlowPairsResponse extends BaseResponse {
   siteAggregateId: string;
   processGroupAggregateId: string;
   processAggregateId: string;
-  endTime?: number;
 }
 
 export interface ConnectionTCP extends BaseResponse {
@@ -116,7 +116,6 @@ export interface ConnectionTCP extends BaseResponse {
   latency: number;
   process: string;
   processName: string;
-  endTime?: number;
   protocol: AvailableProtocols;
 }
 
@@ -129,7 +128,6 @@ export interface RequestHTTP extends BaseResponse {
   latency: number;
   process: string;
   processName: string;
-  endTime?: number;
   protocol: AvailableProtocols;
   streamIdentity: number;
   result: number;

@@ -35,7 +35,8 @@ const Process = function () {
     [QueriesProcesses.GetProcessPairsTx, `sourceId.${processId}`],
     () =>
       RESTApi.fetchProcessesPairs({
-        filter: `sourceId.${processId}`
+        sourceId: processId,
+        endTime: 0
       })
   );
 
@@ -43,7 +44,8 @@ const Process = function () {
     [QueriesProcesses.GetProcessPairsRx, `destinationId.${processId}`],
     () =>
       RESTApi.fetchProcessesPairs({
-        filter: `destinationId.${processId}`
+        destinationId: processId,
+        endTime: 0
       })
   );
 

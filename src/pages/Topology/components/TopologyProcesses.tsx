@@ -21,7 +21,7 @@ import { QueriesTopology } from '../services/services.enum';
 import { Labels } from '../Topology.enum';
 
 const processesQueryParams = {
-  filter: 'processRole.external'
+  processRole: 'external'
 };
 
 const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined }> = function ({

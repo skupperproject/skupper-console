@@ -167,10 +167,6 @@ export function loadMockServer() {
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
       }));
 
-      this.get(`${prefix}/sites/:id/processes`, (_, { params: { id } }) => ({
-        results: processes.results.filter(({ parent }: ProcessResponse) => parent === id)
-      }));
-
       this.get(`${prefix}/sites/:id/routers`, (_, { params: { id } }) => ({
         results: routers.results.filter(({ parent }) => parent === id)
       }));
@@ -189,10 +185,6 @@ export function loadMockServer() {
         return { results };
       });
 
-      this.get(`${prefix}/processgroups/:id/processes`, (_, { params: { id } }) => ({
-        results: processes.results.filter(({ groupIdentity }: ProcessResponse) => groupIdentity === id)
-      }));
-
       this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
 
       this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => ({
@@ -210,7 +202,7 @@ export function loadMockServer() {
         const processNamePrefix = process.name.split('-')[0];
 
         return {
-          results: addresses.results.filter((address: AddressResponse) => address.name.includes(processNamePrefix))
+          results: addresses.results.filter(({ name }: AddressResponse) => name.includes(processNamePrefix))
         };
       });
 
@@ -218,20 +210,19 @@ export function loadMockServer() {
         if (queryParams && !Object.keys(queryParams).length) {
           return processPairs;
         }
-        const filterArray = queryParams.filter.split('.');
-        const key = filterArray[0] as keyof ProcessPairsResponse;
-        const value = filterArray[1];
 
-        const results = processPairs.results.filter((pair: ProcessPairsResponse) => pair[key] === value);
+        const results = processPairs.results.filter(
+          ({ sourceId, endTime }: ProcessPairsResponse) =>
+            sourceId === queryParams.sourceId && endTime === Number(queryParams.endTime)
+        );
 
         return { ...processPairs, results };
       });
 
-      this.get(`${prefix}/addresses`, () => addresses);
-
       this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
-        const value = queryParams.filter.split('.')[1];
-        const results = flowPairs.results.filter((pair: FlowPairsResponse) => pair.processAggregateId === value);
+        const results = flowPairs.results.filter(
+          ({ processAggregateId }: FlowPairsResponse) => processAggregateId === queryParams.processAggregateId
+        );
 
         return { ...processPairs, results };
       });
@@ -240,8 +231,8 @@ export function loadMockServer() {
         results: flowPairs.results.find(({ identity }: AddressResponse) => identity === id)
       }));
 
+      this.get(`${prefix}/addresses`, () => addresses);
       this.get(`${prefix}/addresses/:id/flowpairs`, () => addressesFlowPairs);
-
       this.get(`${prefix}/addresses/:id/processes`, () => addressProcesses);
     }
   });

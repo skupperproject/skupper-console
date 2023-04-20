@@ -23,7 +23,7 @@ import { QueriesAddresses } from '../services/services.enum';
 const initConnectionsQueryParamsPaginated = {
   offset: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE,
-  filter: 'endTime.0' // open connections
+  endTime: 0 // open connections
 };
 
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {

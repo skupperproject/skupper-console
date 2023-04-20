@@ -18,7 +18,8 @@ const PAGINATION_SIZE = 50;
 const initProcessesPaginatedQueryParams = {
   limit: PAGINATION_SIZE,
   offset: 0,
-  filter: 'processRole.external'
+  processRole: 'external',
+  endTime: 0
 };
 
 const Processes = function () {

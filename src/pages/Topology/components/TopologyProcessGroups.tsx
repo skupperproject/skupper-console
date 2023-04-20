@@ -15,7 +15,7 @@ import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 
 const processGroupsQueryParams = {
-  filter: 'processGroupRole.external'
+  processGroupRole: 'external'
 };
 
 const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupId }) {
