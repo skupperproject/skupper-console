@@ -1,23 +1,32 @@
 import { GraphCombo, GraphEdge, GraphNode, LocalStorageData } from './Graph.interfaces';
 
+const prefixLocalStorageItem = 'skupper';
+
 export const GraphController = {
   saveDataInLocalStorage: (topologyNodes: Partial<LocalStorageData>[]) => {
     topologyNodes.forEach(({ id, x, y }) => {
       if (id && x && y) {
         //save the position of the node to the local storage
-        localStorage.setItem(id, JSON.stringify({ x, y }));
+        localStorage.setItem(`${prefixLocalStorageItem}-${id}`, JSON.stringify({ x, y }));
       }
     });
   },
 
-  getPositionFromLocalStorage(identity: string): LocalStorageData {
-    const positions = localStorage.getItem(identity);
+  getPositionFromLocalStorage(id: string): LocalStorageData {
+    const positions = localStorage.getItem(`${prefixLocalStorageItem}-${id}`);
 
     const x = positions ? JSON.parse(positions).x : null;
     const y = positions ? JSON.parse(positions).y : null;
 
-    return { id: identity, x, y };
+    return { id, x, y };
   },
+
+  cleanPositionsFromLocalStorage() {
+    Object.keys(localStorage)
+      .filter((x) => x.startsWith(prefixLocalStorageItem))
+      .forEach((x) => localStorage.removeItem(x));
+  },
+
   // TODO: remove this function when Backend sanitize the old process pairs
   sanitizeEdges: (nodes: GraphNode[], edges: GraphEdge[]) => {
     const availableNodesMap = nodes.reduce((acc, node) => {
