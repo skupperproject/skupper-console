@@ -134,3 +134,27 @@ export const DEFAULT_COMBO_CONFIG = {
     }
   }
 };
+
+export const legendTypeConfigs = {
+  type1: {
+    type: 'diamond',
+    size: 12,
+    style: {
+      fill: 'grey'
+    }
+  },
+  type2: {
+    type: 'circle',
+    size: 20,
+    style: {
+      fill: 'grey'
+    }
+  },
+  type3: {
+    type: 'rect',
+    size: [20, 20],
+    style: {
+      fill: 'grey'
+    }
+  }
+};

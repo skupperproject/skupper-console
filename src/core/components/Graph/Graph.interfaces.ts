@@ -1,3 +1,5 @@
+import { GraphData } from '@antv/g6';
+
 export interface GraphNode {
   id: string;
   label: string;
@@ -6,6 +8,7 @@ export interface GraphNode {
     show?: boolean;
     img?: string;
   };
+  type: string;
   style?: Record<string, string>;
   x?: number;
   y?: number;
@@ -32,6 +35,7 @@ export interface GraphReactAdaptorProps {
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
+  legendData?: GraphData;
 }
 
 export interface LocalStorageData {

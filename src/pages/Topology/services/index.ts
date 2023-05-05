@@ -2,6 +2,7 @@ import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
+import { DEFAULT_NODE_CONFIG } from '@core/components/Graph/config';
 import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
@@ -15,6 +16,8 @@ import {
   RouterResponse,
   SiteResponse
 } from 'API/REST.interfaces';
+
+import { Entity } from '../Topology.interfaces';
 
 export const TopologyController = {
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
@@ -36,14 +39,16 @@ export const TopologyController = {
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
-    processes?.map(({ identity, name: label, parent: comboId, processRole: role }) => {
+    processes?.map(({ identity, name: label, parent: comboId, processRole: role, processBinding }) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
 
       const groupIndex = groups.findIndex(({ id }) => id === comboId);
-      const color = getColor(role === 'internal' ? 16 : groupIndex);
+      const color = processBinding === 'bound' ? getColor(role === 'internal' ? 16 : groupIndex) : 'grey';
+      const type = processBinding === 'bound' ? 'circle' : 'diamond';
+
       const img = role === 'internal' ? skupperProcessSVG : processSVG;
 
-      return convertEntityToNode({ id: identity, comboId, label, x, y, color, img });
+      return convertEntityToNode({ id: identity, comboId, label, x, y, color, img, type });
     }),
 
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
@@ -99,23 +104,15 @@ function getColor(index: number) {
   return nodeColors[index % nodeColors.length];
 }
 
-interface Entity {
-  id: string;
-  comboId?: string;
-  label: string;
-  img: string;
-  color: string;
-  x: number;
-  y: number;
-}
-
-function convertEntityToNode({ id, comboId, label, x, y, color, img }: Entity): GraphNode {
+function convertEntityToNode({ id, comboId, label, x, y, color, img, type = 'circle' }: Entity): GraphNode {
   return {
     id,
     comboId,
     label,
     x,
     y,
+    ...{ ...DEFAULT_NODE_CONFIG },
+    type,
     icon: {
       show: true,
       img
@@ -123,8 +120,7 @@ function convertEntityToNode({ id, comboId, label, x, y, color, img }: Entity): 
     style: {
       fill: color,
       stroke: color,
-      shadowColor: color,
-      img
+      shadowColor: color
     }
   };
 }

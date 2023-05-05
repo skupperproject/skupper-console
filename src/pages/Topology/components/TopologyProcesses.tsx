@@ -18,6 +18,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
+import { legendData } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
 
 const processesQueryParams = {
@@ -201,6 +202,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         onClickNode={handleGetSelectedNode}
         onClickEdge={handleGetSelectedEdge}
         itemSelected={processId}
+        legendData={legendData}
       />
     </>
   );
