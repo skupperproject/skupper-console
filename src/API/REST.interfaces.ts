@@ -68,6 +68,7 @@ export interface ProcessResponse extends BaseResponse {
   imageName: string;
   sourceHost: string;
   hostName: string;
+  processBinding: 'bound' | 'unbound';
   processRole: 'external' | 'internal';
 }
 

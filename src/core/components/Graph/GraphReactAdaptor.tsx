@@ -21,12 +21,12 @@ import {
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
 } from './config';
-import { registerCustomBehaviours } from './customBehaviours';
+import { createLegend, registerCustomBehaviours } from './customBehaviours';
 import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
-  ({ nodes, edges, combos, onClickEdge, onClickNode, onClickCombo, itemSelected }) => {
+  ({ nodes, edges, combos, onClickEdge, onClickNode, onClickCombo, itemSelected, legendData }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
 
     const prevNodesRef = useRef<GraphNode[]>();
@@ -65,11 +65,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const graphRef = useCallback(
       ($node: HTMLDivElement | null) => {
         if ($node && nodes.length && !topologyGraphRef.current) {
+          const legend = legendData ? createLegend(legendData) : '';
+
           const topologyGraph = new G6.Graph({
             container: $node,
             width: $node.scrollWidth,
             height: $node.scrollHeight,
-
+            plugins: [legend],
             modes: DEFAULT_MODE,
             layout: {
               pipes: [
