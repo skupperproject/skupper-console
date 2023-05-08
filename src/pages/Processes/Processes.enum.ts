@@ -5,7 +5,8 @@ export enum ProcessesRoutesPaths {
 export enum ProcessesTableColumns {
   Name = 'Name',
   Site = 'Site',
-  Component = 'Component'
+  Component = 'Component',
+  Exposed = 'Exposed'
 }
 
 export enum ProcessesLabels {
@@ -37,7 +38,11 @@ export enum ProcessesLabels {
   ByteRateAvgCol = 'avg',
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',
-  ByteRateMaxCol = 'max'
+  ByteRateMaxCol = 'max',
+  ExposedTitle = 'Exposed',
+  Exposed = 'yes',
+  NotExposed = 'no'
+
 }
 
 export enum ProcessPairsColumnsNames {
