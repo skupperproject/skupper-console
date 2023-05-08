@@ -31,8 +31,18 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
   process,
   title
 }) {
-  const { identity, parent, parentName, imageName, groupName, groupIdentity, sourceHost, hostName, startTime } =
-    process as ProcessResponse;
+  const {
+    identity,
+    parent,
+    parentName,
+    imageName,
+    groupName,
+    groupIdentity,
+    sourceHost,
+    hostName,
+    startTime,
+    processBinding
+  } = process as ProcessResponse;
 
   const { data: addresses } = useQuery([QueriesProcesses.GetAddressesByProcessId, identity], () =>
     RESTApi.fetchAddressesByProcess(identity)
@@ -96,6 +106,13 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.Image}</DescriptionListTerm>
                 <DescriptionListDescription>{imageName}</DescriptionListDescription>
+              </DescriptionListGroup>
+            </GridItem>
+
+            <GridItem span={6}>
+              <DescriptionListGroup>
+                <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
+                <DescriptionListDescription>{processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
