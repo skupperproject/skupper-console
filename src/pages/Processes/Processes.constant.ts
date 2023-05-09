@@ -49,7 +49,8 @@ export const ProcessesComponentsTable = {
       type: 'service',
       link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
-  ExposedCell: (props: LinkCellProps<ProcessResponse>) => (props.data.processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed)
+  ExposedCell: (props: LinkCellProps<ProcessResponse>) =>
+    props.data.processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed
 };
 
 export const processesTableColumns = [

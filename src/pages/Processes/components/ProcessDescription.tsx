@@ -112,7 +112,9 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
             <GridItem span={6}>
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
-                <DescriptionListDescription>{processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed}</DescriptionListDescription>
+                <DescriptionListDescription>
+                  {processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed}
+                </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
