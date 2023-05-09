@@ -13,13 +13,13 @@ export const legendData: GraphData = {
   nodes: [
     {
       id: 'type1',
-      label: 'process not exposed',
+      label: 'process',
       order: 2,
       ...legendTypeConfigs.type1
     },
     {
       id: 'type2',
-      label: 'process',
+      label: 'process exposed',
       order: 1,
       ...legendTypeConfigs.type2
     },

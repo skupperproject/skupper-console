@@ -42,7 +42,6 @@ export enum ProcessesLabels {
   ExposedTitle = 'Exposed',
   Exposed = 'yes',
   NotExposed = 'no'
-
 }
 
 export enum ProcessPairsColumnsNames {
