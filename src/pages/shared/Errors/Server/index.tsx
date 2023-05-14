@@ -1,7 +1,7 @@
 import { Brand, Grid, GridItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useLocation } from 'react-router-dom';
 
-import BrandImg from '@assets/skupper.svg';
+import { brandImg } from '@config/config';
 
 import { Labels } from './Server.enum';
 
@@ -21,7 +21,7 @@ const ErrorServer = function () {
         </TextContent>
       </GridItem>
       <GridItem span={6} className=" pf-u-p-2xl">
-        <Brand src={BrandImg} alt="skupper brand" />
+        <Brand src={brandImg} alt="brand" />
         <TextContent>
           <Text>{Labels.Description}</Text>
         </TextContent>

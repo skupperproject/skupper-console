@@ -42,5 +42,6 @@ export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZ
 // Brand
 export const brandName = process.env.BRAND_APP_NAME !== undefined ? process.env.BRAND_APP_NAME : 'Skupper';
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
+export const brandImg = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
 
 export const skupperVersion = process.env.APP_VERSION;

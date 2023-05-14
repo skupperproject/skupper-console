@@ -11,7 +11,7 @@ import {
   TextVariants
 } from '@patternfly/react-core';
 
-import BrandImg from '@assets/skupper.svg';
+import { brandImg } from '@config/config';
 
 import { Labels } from './Console.enum';
 
@@ -38,7 +38,7 @@ const Console: FC<ConsoleProps> = function ({ error }) {
         </TextContent>
       </GridItem>
       <GridItem span={6} className=" pf-u-p-2xl">
-        <Brand src={BrandImg} alt="skupper brand" />
+        <Brand src={brandImg} alt="brand" />
         <TextContent>
           <Text>{Labels.ErrorBrandMessage}</Text>
         </TextContent>
