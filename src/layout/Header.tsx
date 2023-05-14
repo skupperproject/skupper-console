@@ -15,7 +15,7 @@ const Header = function () {
       }
       logo={
         <>
-          <Brand src={brandLogo} alt="skupper logo" heights={{ default: '70px' }}>
+          <Brand src={brandLogo} alt="logo" heights={{ default: '70px' }}>
             <source srcSet={brandLogo} />
           </Brand>
 

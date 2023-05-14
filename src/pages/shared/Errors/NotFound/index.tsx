@@ -1,6 +1,6 @@
 import { Brand, Grid, GridItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-import BrandImg from '@assets/skupper.svg';
+import { brandImg } from '@config/config';
 
 import { Labels } from './NotFound.enum';
 
@@ -16,7 +16,7 @@ const NotFound = function () {
         </TextContent>
       </GridItem>
       <GridItem span={6} className=" pf-u-p-2xl">
-        <Brand src={BrandImg} alt="skupper brand" />
+        <Brand src={brandImg} alt="brand" />
         <TextContent>
           <Text>{Labels.ErrorBrandMessage}</Text>
         </TextContent>

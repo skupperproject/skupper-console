@@ -4,7 +4,7 @@ import { CSSProperties, FC } from 'react';
 import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
-import BrandImg from '@assets/skupper.svg';
+import { brandImg } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
@@ -68,7 +68,7 @@ const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
           <PleaseWait />
         </GridItem>
         <GridItem span={6} className=" pf-u-p-2xl">
-          <Brand src={BrandImg} alt="skupper brand" />
+          <Brand src={brandImg} alt="brand" />
           <TextContent>
             <Text>{Labels.LoadingBrandMessage}</Text>
           </TextContent>
