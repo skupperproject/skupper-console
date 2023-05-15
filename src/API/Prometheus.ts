@@ -18,12 +18,12 @@ export const PrometheusApi = {
     protocol
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end } = getCurrentAndPastTimestamps(range.seconds);
-    let param1 = `sourceProcess="${id}"`;
-    let param2 = `destProcess="${id}"`;
+    let param1 = `sourceProcess=~"${id}"`;
+    let param2 = `destProcess=~"${id}"`;
 
     if (processIdDest) {
-      param1 = [param1, `destProcess="${processIdDest}"`].join(',');
-      param2 = [param2, `sourceProcess="${processIdDest}"`].join(',');
+      param1 = [param1, `destProcess=~"${processIdDest}"`].join(',');
+      param2 = [param2, `sourceProcess=~"${processIdDest}"`].join(',');
     }
 
     if (protocol) {
@@ -60,10 +60,10 @@ export const PrometheusApi = {
     start,
     end
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    let param = `sourceProcess="${id}"`;
+    let param = `sourceProcess=~"${id}"`;
 
     if (processIdDest) {
-      param = [param, `destProcess="${processIdDest}"`].join(',');
+      param = [param, `destProcess=~"${processIdDest}"`].join(',');
     }
 
     if (protocol) {
@@ -91,10 +91,10 @@ export const PrometheusApi = {
     protocol
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end } = getCurrentAndPastTimestamps(range.seconds);
-    let param = `sourceProcess="${id}"`;
+    let param = `sourceProcess=~"${id}"`;
 
     if (processIdDest) {
-      param = [param, `destProcess="${processIdDest}"`].join(',');
+      param = [param, `destProcess=~"${processIdDest}"`].join(',');
     }
 
     if (protocol) {
@@ -124,7 +124,7 @@ export const PrometheusApi = {
     protocol
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end } = getCurrentAndPastTimestamps(range.seconds);
-    let param = `destProcess="${id}"`;
+    let param = `destProcess=~"${id}"`;
 
     if (onlyErrors) {
       const code = onlyErrors ? '"4.*|5.*"' : '"2.*|3.*|4.*|5.*"';
@@ -132,7 +132,7 @@ export const PrometheusApi = {
     }
 
     if (processIdDest) {
-      param = [param, `sourceProcess="${processIdDest}"`].join(',');
+      param = [param, `sourceProcess=~"${processIdDest}"`].join(',');
     }
 
     if (protocol) {

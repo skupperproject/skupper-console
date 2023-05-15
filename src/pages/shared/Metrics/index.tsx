@@ -20,13 +20,20 @@ const Metrics: FC<MetricsProps> = function ({
   processesConnected,
   filterOptions
 }) {
-  const [refetchInterval, setRefetchInterval] = useState(0);
-  const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>({
+  const queryInit = {
     processIdSource: selectedFilters.processIdSource,
     protocol: selectedFilters.protocol,
     timeInterval: timeIntervalMap[defaultTimeInterval.key],
     processIdDest: undefined
-  });
+  };
+
+  const initialFilters = {
+    ...queryInit,
+    processIdSource: queryInit.processIdSource.split('|').length > 1 ? undefined : queryInit.processIdSource
+  };
+
+  const [refetchInterval, setRefetchInterval] = useState(0);
+  const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>(queryInit);
 
   const {
     data: metrics,
@@ -73,7 +80,7 @@ const Metrics: FC<MetricsProps> = function ({
               <MetricFilters
                 sourceProcesses={sourceProcesses}
                 processesConnected={processesConnected}
-                filters={prometheusQueryParams}
+                initialFilters={initialFilters}
                 customFilterOptions={filterOptions}
                 startTime={startTime}
                 isRefetching={isRefetching}
