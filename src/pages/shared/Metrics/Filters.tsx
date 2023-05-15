@@ -18,8 +18,7 @@ import { gePrometheusStartTime, timeIntervalMap } from '@API/Prometheus.queries'
 import { AvailableProtocols } from '@API/REST.enum';
 
 import { MetricsLabels } from './Metrics.enum';
-import { FilterMetricProps } from './Metrics.interfaces';
-import { QueryMetricsParams } from './services/services.interfaces';
+import { MetricFilterProps, FilterProps } from './Metrics.interfaces';
 
 const displayIntervalMap = [
   {
@@ -60,12 +59,12 @@ const filterToggleDefault = {
   displayInterval: false
 };
 
-const MetricFilters: FC<FilterMetricProps> = memo(
+const MetricFilters: FC<MetricFilterProps> = memo(
   ({
     sourceProcesses,
     processesConnected,
     customFilterOptions,
-    filters: customFilters,
+    initialFilters,
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
     onRefetch,
@@ -82,13 +81,8 @@ const MetricFilters: FC<FilterMetricProps> = memo(
     );
 
     const [displayInterval, setDisplayInterval] = useState(displayIntervalMap[0].label);
-    const [filterSelectedIsOpen, setFilterSelectedIsOpen] = useState(filterToggleDefault);
-    const [filters, setFilterSelected] = useState<QueryMetricsParams>({
-      processIdSource: customFilters.processIdSource, // our queries to prometheus must have a source id or list of ids ("id1|id2|id3...")
-      processIdDest: customFilters.processIdDest,
-      protocol: customFilters.protocol,
-      timeInterval: customFilters.timeInterval
-    });
+    const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
+    const [selectedFilter, setSelectedFilter] = useState<FilterProps>(initialFilters);
 
     const handleRefetchMetrics = useCallback(() => {
       if (onRefetch) {
@@ -98,68 +92,68 @@ const MetricFilters: FC<FilterMetricProps> = memo(
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceProcessMenu(isOpen: boolean) {
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, processIdSource: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdSource: isOpen });
     }
 
     function handleToggleDestinationProcessMenu(isOpen: boolean) {
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, processIdDest: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdDest: isOpen });
     }
 
     function handleToggleProtocol(isOpen: boolean) {
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, protocol: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: isOpen });
     }
 
     function handleToggleTimeIntervalMenu(isOpen: boolean) {
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, timeInterval: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, timeInterval: isOpen });
     }
 
     function handleToggleDisplayInterval(isOpen: boolean) {
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, displayInterval: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: isOpen });
     }
 
     // Handler for selecting filters in a Select element
     function handleSelectSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
-      // sourceID is mandatory. if the element selected is a placeholder use  the default value passed to the filter
-      const processIdSource = (selection || customFilters.processIdSource) as string;
+      const processIdSource = selection as string | undefined;
 
-      setFilterSelected({ ...filters, processIdSource });
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, processIdSource: false });
+      setSelectedFilter({ ...selectedFilter, processIdSource });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdSource: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...filters, processIdSource });
+        // sourceID is mandatory. if the element selected is a placeholder use  the default value passed to the filter
+        onSelectFilters({ ...selectedFilter, processIdSource: processIdSource || initialFilters.processIdSource });
       }
     }
 
     function handleSelectDestination(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const processIdDest = selection as string | undefined;
 
-      setFilterSelected({ ...filters, processIdDest });
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, processIdDest: false });
+      setSelectedFilter({ ...selectedFilter, processIdDest });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdDest: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...filters, processIdDest });
+        onSelectFilters({ ...selectedFilter, processIdDest });
       }
     }
 
     function handleSelectProtocol(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const protocol = selection as AvailableProtocols | undefined;
 
-      setFilterSelected({ ...filters, protocol });
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, protocol: false });
+      setSelectedFilter({ ...selectedFilter, protocol });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...filters, protocol });
+        onSelectFilters({ ...selectedFilter, protocol });
       }
     }
 
     function handleSelectTimeIntervalMenu(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
       const timeIntervalKey = selection as IntervalTimeProp['key'];
 
-      setFilterSelected({ ...filters, timeInterval: timeIntervalMap[timeIntervalKey] });
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, timeInterval: false });
+      setSelectedFilter({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey] });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, timeInterval: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...filters, timeInterval: timeIntervalMap[timeIntervalKey] });
+        onSelectFilters({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey] });
       }
     }
 
@@ -168,7 +162,7 @@ const MetricFilters: FC<FilterMetricProps> = memo(
       const interval = displayIntervalMap.find(({ label }) => label === intervalLabel)?.value || 0;
 
       setDisplayInterval(intervalLabel);
-      setFilterSelectedIsOpen({ ...filterSelectedIsOpen, displayInterval: false });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: false });
 
       if (onRefetchInterval) {
         onRefetchInterval(interval);
@@ -228,9 +222,9 @@ const MetricFilters: FC<FilterMetricProps> = memo(
 
             <ToolbarItem>
               <Select
-                selections={filters.processIdSource}
+                selections={selectedFilter.processIdSource}
                 placeholderText={filterOptions.sourceProcesses.placeholder}
-                isOpen={filterSelectedIsOpen.processIdSource}
+                isOpen={selectedFilterIsOpen.processIdSource}
                 isDisabled={filterOptions.sourceProcesses.disabled}
                 onSelect={handleSelectSource}
                 onClear={
@@ -248,10 +242,10 @@ const MetricFilters: FC<FilterMetricProps> = memo(
             <ToolbarItem>
               {!filterOptions.destinationProcesses.disabled && (
                 <Select
-                  selections={filters.processIdDest}
+                  selections={selectedFilter.processIdDest}
                   placeholderText={filterOptions.destinationProcesses.placeholder}
                   isDisabled={filterOptions.destinationProcesses.disabled}
-                  isOpen={filterSelectedIsOpen.processIdDest}
+                  isOpen={selectedFilterIsOpen.processIdDest}
                   onSelect={handleSelectDestination}
                   onClear={
                     optionsProcessConnectedWithDefault.length > 1 && !filterOptions.destinationProcesses.disabled
@@ -268,9 +262,9 @@ const MetricFilters: FC<FilterMetricProps> = memo(
 
             <ToolbarItem>
               <Select
-                selections={filters.protocol}
+                selections={selectedFilter.protocol}
                 placeholderText={MetricsLabels.FilterProtocolsDefault}
-                isOpen={filterSelectedIsOpen.protocol}
+                isOpen={selectedFilterIsOpen.protocol}
                 isDisabled={filterOptions.protocols.disabled}
                 onToggle={handleToggleProtocol}
                 onSelect={handleSelectProtocol}
@@ -291,8 +285,8 @@ const MetricFilters: FC<FilterMetricProps> = memo(
 
             <ToolbarItem>
               <Select
-                selections={filters.timeInterval.label}
-                isOpen={filterSelectedIsOpen.timeInterval}
+                selections={selectedFilter.timeInterval.label}
+                isOpen={selectedFilterIsOpen.timeInterval}
                 isDisabled={filterOptions.timeIntervals.disabled}
                 onSelect={handleSelectTimeIntervalMenu}
                 onToggle={handleToggleTimeIntervalMenu}
@@ -305,7 +299,7 @@ const MetricFilters: FC<FilterMetricProps> = memo(
             <ToolbarItem>
               <Select
                 selections={displayInterval}
-                isOpen={filterSelectedIsOpen.displayInterval}
+                isOpen={selectedFilterIsOpen.displayInterval}
                 onSelect={handleSelectDisplayInterval}
                 onToggle={handleToggleDisplayInterval}
               >

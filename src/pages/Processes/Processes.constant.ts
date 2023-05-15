@@ -73,6 +73,11 @@ export const processesTableColumns = [
     name: ProcessesTableColumns.Exposed,
     prop: 'processBinding' as keyof ProcessResponse,
     component: 'ExposedCell'
+  },
+  {
+    name: ProcessesTableColumns.Created,
+    prop: 'startTime' as keyof ProcessResponse,
+    format: timeAgo
   }
 ];
 

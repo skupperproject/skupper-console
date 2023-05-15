@@ -6,7 +6,8 @@ export enum ProcessesTableColumns {
   Name = 'Name',
   Site = 'Site',
   Component = 'Component',
-  Exposed = 'Exposed'
+  Exposed = 'Exposed',
+  Created = 'Created'
 }
 
 export enum ProcessesLabels {
