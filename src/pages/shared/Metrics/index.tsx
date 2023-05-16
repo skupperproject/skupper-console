@@ -59,9 +59,15 @@ const Metrics: FC<MetricsProps> = function ({
   }, []);
 
   // Filters: Set the prometheus query params with the filter values
-  const handleFilters = useCallback((updatedFilters: QueryMetricsParams) => {
-    setPrometheusQueryParams(updatedFilters);
-  }, []);
+  const handleFilters = useCallback(
+    (updatedFilters: QueryMetricsParams) => {
+      setPrometheusQueryParams({
+        ...updatedFilters,
+        processIdSource: updatedFilters.processIdSource || queryInit.processIdSource
+      });
+    },
+    [queryInit.processIdSource]
+  );
 
   return (
     <>
