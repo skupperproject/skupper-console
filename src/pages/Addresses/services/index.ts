@@ -27,8 +27,10 @@ export const AddressesController = {
 
     return addresses.map((address) => ({
       ...address,
-      totalFlows: httpTotalFlowsMap ? Math.round(httpTotalFlowsMap[address.name]) : 0,
-      currentFlows: tcpActiveFlowsMap ? Math.round(tcpActiveFlowsMap[address.name]) : 0
+      totalFlows:
+        httpTotalFlowsMap && httpTotalFlowsMap[address.name] ? Math.round(httpTotalFlowsMap[address.name]) : 0,
+      currentFlows:
+        tcpActiveFlowsMap && tcpActiveFlowsMap[address.name] ? Math.round(tcpActiveFlowsMap[address.name]) : 0
     }));
   }
 };
