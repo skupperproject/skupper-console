@@ -57,6 +57,7 @@ export interface SiteResponse extends BaseResponse {
 export interface ProcessGroupResponse extends BaseResponse {
   name: string;
   processGroupRole: 'external' | 'internal';
+  processCount: number;
 }
 
 export interface ProcessResponse extends BaseResponse {

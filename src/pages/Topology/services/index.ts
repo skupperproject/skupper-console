@@ -17,6 +17,7 @@ import {
   SiteResponse
 } from 'API/REST.interfaces';
 
+import { Labels } from '../Topology.enum';
 import { Entity } from '../Topology.interfaces';
 
 export const TopologyController = {
@@ -30,10 +31,13 @@ export const TopologyController = {
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
-    entities.map(({ identity, name: label, processGroupRole: role }, index) => {
+    entities.map(({ identity, name, processGroupRole, processCount }, index) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
-      const color = getColor(role === 'internal' ? 16 : index);
-      const img = role === 'internal' ? skupperProcessSVG : componentSVG;
+      const color = getColor(processGroupRole === 'internal' ? 16 : index);
+      const img = processGroupRole === 'internal' ? skupperProcessSVG : componentSVG;
+
+      const suffix = processCount > 1 ? Labels.Processes : Labels.Process;
+      const label = `${name} (${processCount} ${suffix})`;
 
       return convertEntityToNode({ id: identity, label, x, y, color, img });
     }),

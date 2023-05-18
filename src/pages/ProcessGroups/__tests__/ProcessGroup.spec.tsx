@@ -23,7 +23,9 @@ describe('Component component', () => {
     server = loadMockServer() as Server;
     server.logging = false;
     // Mock URL query parameters and inject them into the component
-    jest.spyOn(router, 'useParams').mockReturnValue({ id: `${processGroupResults[0].name}@${processGroupResults[0].identity}` });
+    jest
+      .spyOn(router, 'useParams')
+      .mockReturnValue({ id: `${processGroupResults[0].name}@${processGroupResults[0].identity}` });
   });
 
   afterEach(() => {

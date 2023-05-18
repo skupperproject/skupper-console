@@ -13,7 +13,9 @@ export enum Labels {
   Topology = 'Topology',
   LegendGroupsItems = 'Sites',
   ShowAll = 'Show all addresses',
-  ShowProcessGroups = 'Group by Components'
+  ShowProcessGroups = 'Group by Components',
+  Process = 'process',
+  Processes = 'processes'
 }
 
 export enum TopologyURLFilters {
