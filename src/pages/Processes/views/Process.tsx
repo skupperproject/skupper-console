@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
+import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
@@ -76,6 +77,16 @@ const Process = function () {
       destinationId: processPairsData.sourceId
     })) || [];
 
+  const TCPServers = processesPairsTxData.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
+  const TCPClients = processesPairsRxReverse.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
+
+  const HTTPServers = processesPairsTxData.filter(
+    ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
+  );
+  const HTTPClients = processesPairsRxReverse.filter(
+    ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
+  );
+
   return (
     <TransitionPage>
       <Grid hasGutter data-testid={getTestsIds.processView(processId)}>
@@ -92,43 +103,87 @@ const Process = function () {
           <ProcessDescription process={process} title={ProcessesLabels.Details} />
         </GridItem>
 
-        {/* Table server processes*/}
-        <GridItem span={6}>
-          <SkTable
-            title={ProcessesLabels.Servers}
-            columns={processesConnectedColumns}
-            rows={processesPairsTxData}
-            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
-            components={{
-              ...ProcessesConnectedComponentsTable,
-              viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-                LinkCell({
-                  ...props,
-                  link: `${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${props.data.identity}`,
-                  value: ProcessPairsColumnsNames.ViewDetails
-                })
-            }}
-          />
-        </GridItem>
+        {/* TCP clients and server processes*/}
+        {!!(TCPServers.length || TCPClients.length) && (
+          <>
+            <GridItem span={6}>
+              <SkTable
+                title={ProcessesLabels.TCPServers}
+                columns={processesConnectedColumns}
+                rows={TCPServers}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
+                components={{
+                  ...ProcessesConnectedComponentsTable,
+                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
+                    LinkCell({
+                      ...props,
+                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${props.data.identity}`,
+                      value: ProcessPairsColumnsNames.ViewDetails
+                    })
+                }}
+              />
+            </GridItem>
 
-        {/* Table client processes*/}
-        <GridItem span={6}>
-          <SkTable
-            title={ProcessesLabels.Clients}
-            columns={processesConnectedColumns}
-            rows={processesPairsRxReverse}
-            pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-            components={{
-              ...ProcessesConnectedComponentsTable,
-              viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-                LinkCell({
-                  ...props,
-                  link: `${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${props.data.identity}`,
-                  value: ProcessPairsColumnsNames.ViewDetails
-                })
-            }}
-          />
-        </GridItem>
+            <GridItem span={6}>
+              <SkTable
+                title={ProcessesLabels.TCPClients}
+                columns={processesConnectedColumns}
+                rows={TCPClients}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                components={{
+                  ...ProcessesConnectedComponentsTable,
+                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
+                    LinkCell({
+                      ...props,
+                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${props.data.identity}`,
+                      value: ProcessPairsColumnsNames.ViewDetails
+                    })
+                }}
+              />
+            </GridItem>
+          </>
+        )}
+
+        {/* HTTP client and server processes*/}
+        {!!(HTTPServers.length || HTTPClients.length) && (
+          <>
+            <GridItem span={6}>
+              <SkTable
+                title={ProcessesLabels.HTTPServers}
+                columns={processesConnectedColumns}
+                rows={HTTPServers}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
+                components={{
+                  ...ProcessesConnectedComponentsTable,
+                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
+                    LinkCell({
+                      ...props,
+                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${props.data.identity}`,
+                      value: ProcessPairsColumnsNames.ViewDetails
+                    })
+                }}
+              />
+            </GridItem>
+
+            <GridItem span={6}>
+              <SkTable
+                title={ProcessesLabels.HTTPClients}
+                columns={processesConnectedColumns}
+                rows={HTTPClients}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                components={{
+                  ...ProcessesConnectedComponentsTable,
+                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
+                    LinkCell({
+                      ...props,
+                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${props.data.identity}`,
+                      value: ProcessPairsColumnsNames.ViewDetails
+                    })
+                }}
+              />
+            </GridItem>
+          </>
+        )}
 
         {/* Process Metrics*/}
         {isPrometheusActive() && (

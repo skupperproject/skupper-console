@@ -81,6 +81,7 @@ export interface ProcessPairsResponse extends BaseResponse {
   sourceName: string;
   destinationId: string;
   destinationName: string;
+  protocol: AvailableProtocols;
 }
 
 export type SitePairsResponse = ProcessPairsResponse;
