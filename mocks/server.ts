@@ -130,6 +130,12 @@ export const MockApi = {
     const results = [...links.results, ...linksForPerfTests];
 
     return { ...links, results };
+  },
+  getComponents: () => processGroups,
+  getComponent: (_: unknown, { params: { id } }: ApiProps) => {
+    const results = processGroups.results.find(({ identity }: ProcessGroupResponse) => identity === id);
+
+    return { results };
   }
 };
 
@@ -138,6 +144,8 @@ export const MockApiPaths = {
   Collectors: `${prefix}/collectors`,
   Sites: `${prefix}/sites`,
   Site: `${prefix}/sites/:id`,
+  Components: `${prefix}/processgroups`,
+  Component: `${prefix}/processgroups/:id`,
   Routers: `${prefix}/routers`,
   Links: `${prefix}/links`
 };
@@ -162,6 +170,9 @@ export function loadMockServer() {
       this.get(MockApiPaths.Site, MockApi.getSite);
       this.get(MockApiPaths.Routers, MockApi.getRouters);
       this.get(MockApiPaths.Links, MockApi.getLinks);
+      this.get(MockApiPaths.Components, MockApi.getComponents);
+      this.get(MockApiPaths.Component, MockApi.getComponent);
+
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
@@ -176,14 +187,6 @@ export function loadMockServer() {
           routers.results.find((router) => router.parent === id && router.identity === link.parent)
         )
       }));
-
-      this.get(`${prefix}/processgroups`, () => processGroups);
-
-      this.get(`${prefix}/processgroups/:id`, (_, { params: { id } }) => {
-        const results = processGroups.results.find(({ identity }: ProcessGroupResponse) => identity === id);
-
-        return { results };
-      });
 
       this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
 

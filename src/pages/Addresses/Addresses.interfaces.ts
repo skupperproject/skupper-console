@@ -1,5 +1,5 @@
+import { AvailableProtocols } from '@API/REST.enum';
 import { SKColumn, WidthValue } from '@core/components/SkTable/SkTable.interface';
-import { AvailableProtocols } from 'API/REST.enum';
 import { FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 export interface viewDetailsColumnProps {

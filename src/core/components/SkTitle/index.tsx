@@ -23,11 +23,11 @@ const SkTitle: FC<SkTitleProps> = function ({
   description
 }) {
   return (
-    <Card>
+    <Card role='sk-heading'>
       <CardHeader>
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           {icon && <ResourceIcon type={icon} />}
-          <Title headingLevel="h1">{title}</Title>
+          <Title headingLevel="h1" >{title}</Title>
           {description && (
             <Tooltip position="right" content={description}>
               <OutlinedQuestionCircleIcon />

@@ -1,9 +1,9 @@
+import { PrometheusApi } from '@API/Prometheus';
+import { PrometheusApiResult } from '@API/Prometheus.interfaces';
+import { AvailableProtocols } from '@API/REST.enum';
 import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
-import { PrometheusApi } from 'API/Prometheus';
-import { PrometheusApiResult } from 'API/Prometheus.interfaces';
-import { AvailableProtocols } from 'API/REST.enum';
 
 import {
   Metrics,

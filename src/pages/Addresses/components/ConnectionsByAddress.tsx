@@ -5,12 +5,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
+import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { AvailableProtocols } from 'API/REST.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
 import { ConnectionsByAddressColumns } from '../Addresses.constants';

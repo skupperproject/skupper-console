@@ -5,6 +5,7 @@ import { Card, CardBody, CardTitle, GridItem, Icon } from '@patternfly/react-cor
 import { CircleIcon } from '@patternfly/react-icons';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import { AvailableProtocols } from '@API/REST.enum';
 import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
@@ -14,7 +15,6 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { AvailableProtocols } from 'API/REST.enum';
 
 import { MetricsLabels } from './Metrics.enum';
 import { Metrics } from './services/services.interfaces';

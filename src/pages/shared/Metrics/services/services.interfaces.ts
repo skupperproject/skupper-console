@@ -1,6 +1,6 @@
+import { AvailableProtocols } from '@API/REST.enum';
 import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { IntervalTimeProp, PrometheusApiResult } from 'API/Prometheus.interfaces';
-import { AvailableProtocols } from 'API/REST.enum';
 
 export enum QueriesMetrics {
   GetMetrics = 'get-processes-metrics-query'

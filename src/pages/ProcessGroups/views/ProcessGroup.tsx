@@ -1,20 +1,14 @@
 import {
-  Card,
-  CardBody,
-  CardTitle,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
+
   Grid,
   GridItem,
-  Title
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
+import { getTestsIds } from '@config/testIds.config';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
@@ -24,7 +18,6 @@ import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
-import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const ProcessGroup = function () {
@@ -58,29 +51,12 @@ const ProcessGroup = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter>
+      <Grid hasGutter data-testid={getTestsIds.componentView(processGroupId)}>
         <SkTitle
           title={name}
           icon="service"
           link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
         />
-
-        {/* Component description*/}
-        <GridItem span={12}>
-          <Card isFullHeight isRounded>
-            <CardTitle>
-              <Title headingLevel="h2">{ProcessGroupsLabels.Details}</Title>
-            </CardTitle>
-            <CardBody>
-              <DescriptionList>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>{ProcessGroupsLabels.Name}</DescriptionListTerm>
-                  <DescriptionListDescription>{name}</DescriptionListDescription>
-                </DescriptionListGroup>
-              </DescriptionList>
-            </CardBody>
-          </Card>
-        </GridItem>
 
         {/* Processes table*/}
         <GridItem span={12}>
