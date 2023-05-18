@@ -78,7 +78,7 @@ export const DEFAULT_NODE_CONFIG = {
     offset: 15,
     style: {
       fill: NODE_COLOR_DEFAULT,
-      fontSize: 10,
+      fontSize: 12,
       background: {
         fill: '#FFFFFF',
         stroke: NODE_COLOR_DEFAULT,
@@ -92,6 +92,19 @@ export const DEFAULT_NODE_CONFIG = {
 
 export const DEFAULT_EDGE_CONFIG = {
   type: 'line-dash',
+  labelCfg: {
+    autoRotate: true,
+    style: {
+      fill: '#808080',
+      fontSize: 12,
+      background: {
+        fill: '#ffffff',
+        stroke: '#808080',
+        padding: [4, 6, 4, 6],
+        radius: 2
+      }
+    }
+  },
   style: {
     lineWidth: 1,
     lineDash: [0, 0, 0, 0],

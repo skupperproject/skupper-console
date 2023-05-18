@@ -78,10 +78,11 @@ export const TopologyController = {
     }, []),
 
   convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[]): GraphEdge[] =>
-    processesPairs.map(({ identity, sourceId, destinationId }) => ({
+    processesPairs.map(({ identity, sourceId, destinationId, protocol }) => ({
       id: identity,
       source: sourceId,
-      target: destinationId
+      target: destinationId,
+      label: protocol
     })),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
