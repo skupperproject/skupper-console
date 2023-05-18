@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -15,7 +16,6 @@ import { FlowPairsLabels } from '@pages/Addresses/Addresses.enum';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { AvailableProtocols } from 'API/REST.enum';
 import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';

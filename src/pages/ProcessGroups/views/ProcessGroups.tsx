@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST';
+import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -33,7 +34,7 @@ const ProcessGroups = function () {
 
   return (
     <TransitionPage>
-      <>
+      <div data-testid={getTestsIds.componentsView()}>
         <SkTitle title={ProcessGroupsLabels.Section} description={ProcessGroupsLabels.Description} />
         <div>
           <SkTable
@@ -49,7 +50,7 @@ const ProcessGroups = function () {
             }}
           />
         </div>
-      </>
+      </div>
     </TransitionPage>
   );
 };

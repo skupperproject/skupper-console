@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
+import { AvailableProtocols } from '@API/REST.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
@@ -26,7 +27,6 @@ import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
-import { AvailableProtocols } from 'API/REST.enum';
 import { ConnectionTCP, RequestHTTP } from 'API/REST.interfaces';
 
 import { FlowLabels } from '../Addresses.enum';
