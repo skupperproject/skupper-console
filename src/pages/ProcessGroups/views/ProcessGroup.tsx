@@ -1,18 +1,16 @@
-import {
-
-  Grid,
-  GridItem,
-} from '@patternfly/react-core';
+import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { getTestsIds } from '@config/testIds.config';
+import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import ProcessesTable from '@pages/Processes/components/ProcessesTable';
+import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
+import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
@@ -60,7 +58,17 @@ const ProcessGroup = function () {
 
         {/* Processes table*/}
         <GridItem span={12}>
-          <ProcessesTable processes={processResults} />
+          <SkTable
+            title={ProcessesLabels.Section}
+            titleDescription={ProcessesLabels.Description}
+            columns={processesTableColumns}
+            rows={processResults}
+            components={{
+              linkCell: ProcessesComponentsTable.linkCell,
+              linkCellSite: ProcessesComponentsTable.linkCellSite,
+              exposedCell: ProcessesComponentsTable.exposedCell
+            }}
+          />
         </GridItem>
 
         {/* Component Metrics*/}

@@ -3,7 +3,9 @@ export enum ProcessGroupsRoutesPaths {
 }
 
 export enum ProcessGroupsTableColumns {
-  Name = 'Name'
+  Name = 'Name',
+  Count = 'Processes',
+  Created = 'Created'
 }
 
 export enum ProcessGroupsLabels {
