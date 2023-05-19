@@ -69,7 +69,7 @@ export const DEFAULT_NODE_CONFIG = {
   size: [NODE_SIZE],
 
   style: {
-    fillOpacity: 0.55,
+    fillOpacity: 0.4,
     stroke: NODE_COLOR_DEFAULT,
     lineWidth: 2
   },
@@ -78,6 +78,7 @@ export const DEFAULT_NODE_CONFIG = {
     offset: 15,
     style: {
       fill: NODE_COLOR_DEFAULT,
+      cursor: 'pointer',
       fontSize: 12,
       background: {
         fill: '#FFFFFF',
@@ -95,13 +96,14 @@ export const DEFAULT_EDGE_CONFIG = {
   labelCfg: {
     autoRotate: true,
     style: {
+      cursor: 'pointer',
       fill: '#808080',
       fontSize: 12,
       background: {
         fill: '#ffffff',
         stroke: '#808080',
-        padding: [4, 6, 4, 6],
-        radius: 2
+        padding: [6, 8, 6, 8],
+        radius: 4
       }
     }
   },
@@ -132,7 +134,7 @@ export const DEFAULT_COMBO_CONFIG = {
   style: {
     cursor: 'pointer',
     lineWidth: 2,
-    fillOpacity: 0.1,
+    fillOpacity: 0.02,
     shadowBlur: 10,
     radius: 8
   },
@@ -143,7 +145,7 @@ export const DEFAULT_COMBO_CONFIG = {
     position: 'top',
     style: {
       fill: COMBO_COLOR_DEFAULT,
-      fontSize: 28
+      fontSize: 24
     }
   }
 };

@@ -1,3 +1,4 @@
+import { AvailableProtocols } from '@API/REST.enum';
 import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
@@ -82,7 +83,16 @@ export const TopologyController = {
       id: identity,
       source: sourceId,
       target: destinationId,
-      label: protocol
+      label: protocol,
+      labelCfg: {
+        style: {
+          fill: protocol === AvailableProtocols.Tcp ? '#ffffff' : '#8A8D90',
+          background: {
+            fill: protocol === AvailableProtocols.Tcp ? '#6753AC' : '#F2F9F9',
+            stroke: '#8A8D90'
+          }
+        }
+      }
     })),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
