@@ -1,6 +1,14 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
-import { Select, SelectOption, SelectOptionObject, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import {
+  Checkbox,
+  Select,
+  SelectOption,
+  SelectOptionObject,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem
+} from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +26,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import { legendData } from '../Topology.constant';
+import { ProcessLegendData } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
 
 const externalProcessesQueryParams = {
@@ -40,6 +48,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const [groups, setGroups] = useState<GraphCombo[]>();
   const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
+  const [showProtocolLinkLabel, setShowProtocolLinkLabel] = useState(false);
 
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
     refetchInterval: UPDATE_INTERVAL
@@ -130,6 +139,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     setIsAddressSelectMenuOpen(false);
   }
 
+  function handleChangeProtocolLinkLabelCheck(checked: boolean) {
+    setShowProtocolLinkLabel(checked);
+  }
+
   const getOptions = useCallback(() => {
     const options = addresses?.map(({ name, identity }, index) => (
       <SelectOption key={index + 1} value={identity}>
@@ -153,14 +166,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       // Check if no address is selected
       if (processesPairs && !addressIdSelected) {
-        const processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs);
+        const processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, showProtocolLinkLabel);
 
         setNodes(processesNodes);
         setLinks(processesLinks);
         setGroups(siteGroups);
       }
     }
-  }, [sites, externalProcesses, processesPairs, addressIdSelected, remoteProcesses]);
+  }, [sites, externalProcesses, processesPairs, addressIdSelected, remoteProcesses, showProtocolLinkLabel]);
 
   // This effect is triggered when one address is currently selected
   useEffect(() => {
@@ -169,7 +182,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
       if (addressIdSelected && flowPairsByAddress) {
-        const processesLinksByAddress = TopologyController.convertFlowPairsToLinks(flowPairsByAddress);
+        const processesLinksByAddress = TopologyController.convertFlowPairsToLinks(
+          flowPairsByAddress,
+          showProtocolLinkLabel
+        );
         const processIdsFromAddress = [
           ...(processesLinksByAddress?.map(({ source }) => source) || []),
           ...(processesLinksByAddress?.map(({ target }) => target) || [])
@@ -187,7 +203,15 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         setGroups(siteGroups);
       }
     }
-  }, [sites, externalProcesses, processesPairs, addressIdSelected, flowPairsByAddress, remoteProcesses]);
+  }, [
+    sites,
+    externalProcesses,
+    processesPairs,
+    addressIdSelected,
+    flowPairsByAddress,
+    remoteProcesses,
+    showProtocolLinkLabel
+  ]);
 
   if (isLoadingExternalProcesses || isLoadingRemoteProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
     return <LoadingPage />;
@@ -210,6 +234,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
               {getOptions()}
             </Select>
           </ToolbarItem>
+          <ToolbarItem>
+            <Checkbox
+              label={Labels.CheckboxShowProtocolsLabel}
+              isChecked={showProtocolLinkLabel}
+              onChange={handleChangeProtocolLinkLabelCheck}
+              id="show-protocols-check"
+            />
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
@@ -221,7 +253,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         onClickNode={handleGetSelectedNode}
         onClickEdge={handleGetSelectedEdge}
         itemSelected={processId}
-        legendData={legendData}
+        legendData={ProcessLegendData}
       />
     </>
   );

@@ -23,6 +23,7 @@ export interface GraphEdge {
   source: string;
   target: string;
   id: string;
+  label?: string;
   style?: Record<string, string | number[]>;
 }
 
