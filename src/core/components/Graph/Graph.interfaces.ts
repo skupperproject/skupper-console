@@ -8,7 +8,6 @@ export interface GraphNode {
     show?: boolean;
     img?: string;
   };
-  type: string;
   style?: Record<string, string>;
   x?: number;
   y?: number;
@@ -17,7 +16,7 @@ export interface GraphNode {
 export interface GraphCombo {
   id: string;
   label: string;
-  style?: Record<string, string>;
+  style?: Record<string, string | number>;
 }
 
 export interface GraphEdge {

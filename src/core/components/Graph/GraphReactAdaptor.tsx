@@ -258,7 +258,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           topologyGraph.render();
         }
       },
-      [nodes, combos, edges, handleOnClickNode, handleOnClickEdge, handleOnClickCombo]
+      [nodes, legendData, combos, edges, handleOnClickNode, handleOnClickEdge, handleOnClickCombo]
     );
 
     // This effect persist the  coordinates for each element of topology after the first simulation.

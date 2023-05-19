@@ -1,10 +1,9 @@
-import { AvailableProtocols } from '@API/REST.enum';
 import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
-import { DEFAULT_NODE_CONFIG } from '@core/components/Graph/config';
-import { nodeColors } from '@core/components/Graph/Graph.constants';
+import { DEFAULT_NODE_CONFIG, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
+import { NODE_COLOR_DEFAULT, nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
 import SitesController from '@pages/Sites/services';
@@ -21,6 +20,12 @@ import {
 import { Labels } from '../Topology.enum';
 import { Entity } from '../Topology.interfaces';
 
+const shape = {
+  bound: 'circle',
+  unbound: 'diamond',
+  remote: 'triangle'
+};
+
 export const TopologyController = {
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
     entities.map(({ identity, name: label }, index) => {
@@ -28,7 +33,14 @@ export const TopologyController = {
       const color = getColor(index);
       const img = siteSVG;
 
-      return convertEntityToNode({ id: identity, label, x, y, color, img });
+      const style = {
+        fillOpacity: 0.1,
+        fill: color,
+        stroke: color,
+        shadowColor: color
+      };
+
+      return convertEntityToNode({ id: identity, label, x, y, img, nodeConfig: { style } });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
@@ -40,7 +52,16 @@ export const TopologyController = {
       const suffix = processCount > 1 ? Labels.Processes : Labels.Process;
       const label = `${name} (${processCount} ${suffix})`;
 
-      return convertEntityToNode({ id: identity, label, x, y, color, img });
+      const style = {
+        fillOpacity: 0.1,
+        fill: color,
+        stroke: color,
+        shadowColor: color
+      };
+
+      const nodeConfig = processGroupRole === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape.bound, style };
+
+      return convertEntityToNode({ id: identity, label, x, y, img, nodeConfig });
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
@@ -49,17 +70,26 @@ export const TopologyController = {
 
       const groupIndex = groups.findIndex(({ id }) => id === comboId);
       const color = processBinding === 'bound' ? getColor(role === 'internal' ? 16 : groupIndex) : 'grey';
-      const type = processBinding === 'bound' ? 'circle' : 'diamond';
-
       const img = role === 'internal' ? skupperProcessSVG : processSVG;
 
-      return convertEntityToNode({ id: identity, comboId, label, x, y, color, img, type });
+      const style = {
+        fillOpacity: 0.1,
+        fill: color,
+        stroke: color,
+        shadowColor: color
+      };
+
+      const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding], style };
+
+      return convertEntityToNode({ id: identity, comboId, label, x, y, img, nodeConfig });
     }),
 
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
     const groups = processes.map(({ comboId }) => comboId);
 
-    return sites.filter((site) => groups.includes(site.id)).map(({ id, style, label }) => ({ id, label, style }));
+    return sites
+      .filter((site) => groups.includes(site.id))
+      .map(({ id, style, label }) => ({ id, label, style: { ...style, fillOpacity: 0.02 } }));
   },
 
   convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[]): GraphEdge[] =>
@@ -79,21 +109,31 @@ export const TopologyController = {
     }, []),
 
   convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[]): GraphEdge[] =>
-    processesPairs.map(({ identity, sourceId, destinationId, protocol }) => ({
-      id: identity,
-      source: sourceId,
-      target: destinationId,
-      label: protocol,
-      labelCfg: {
-        style: {
-          fill: protocol === AvailableProtocols.Tcp ? '#ffffff' : '#8A8D90',
-          background: {
-            fill: protocol === AvailableProtocols.Tcp ? '#6753AC' : '#F2F9F9',
-            stroke: '#8A8D90'
+    processesPairs.map(({ identity, sourceId, destinationId, protocol }) => {
+      const config = {
+        id: identity,
+        source: sourceId,
+        target: destinationId
+      };
+
+      if (protocol) {
+        return {
+          ...config,
+
+          label: protocol,
+          labelCfg: {
+            style: {
+              fill: NODE_COLOR_DEFAULT,
+              background: {
+                fill: '#ffffff'
+              }
+            }
           }
-        }
+        };
       }
-    })),
+
+      return config;
+    }),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
   // The purpose of this property is to display the edges between different sites in the topology.
@@ -119,23 +159,17 @@ function getColor(index: number) {
   return nodeColors[index % nodeColors.length];
 }
 
-function convertEntityToNode({ id, comboId, label, x, y, color, img, type = 'circle' }: Entity): GraphNode {
+function convertEntityToNode({ id, comboId, label, x, y, img, nodeConfig }: Entity): GraphNode {
   return {
     id,
     comboId,
     label,
     x,
     y,
-    ...{ ...DEFAULT_NODE_CONFIG },
-    type,
     icon: {
       show: true,
       img
     },
-    style: {
-      fill: color,
-      stroke: color,
-      shadowColor: color
-    }
+    ...{ ...DEFAULT_NODE_CONFIG, ...nodeConfig }
   };
 }

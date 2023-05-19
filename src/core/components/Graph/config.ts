@@ -1,4 +1,4 @@
-import { LayoutConfig } from '@antv/g6-core';
+import { LayoutConfig, ModelStyle } from '@antv/g6-core';
 
 import {
   COMBO_COLOR_DEFAULT,
@@ -9,6 +9,7 @@ import {
 } from './Graph.constants';
 
 const NODE_SIZE = 50;
+const greyColor = '#808080';
 
 export const DEFAULT_MODE = {
   default: [
@@ -64,14 +65,14 @@ export const DEFAULT_LAYOUT_GFORCE_CONFIG: LayoutConfig = {
   gpuEnabled: true
 };
 
-export const DEFAULT_NODE_CONFIG = {
+export const DEFAULT_NODE_CONFIG: ModelStyle = {
   type: 'circle',
   size: [NODE_SIZE],
 
   style: {
     fillOpacity: 0.4,
     stroke: NODE_COLOR_DEFAULT,
-    lineWidth: 2
+    lineWidth: 1
   },
   labelCfg: {
     position: 'bottom',
@@ -82,6 +83,7 @@ export const DEFAULT_NODE_CONFIG = {
       fontSize: 12,
       background: {
         fill: '#FFFFFF',
+        fillOpacity: 0.8,
         stroke: NODE_COLOR_DEFAULT,
         lineWidth: 1,
         padding: [5, 8, 5, 8],
@@ -91,19 +93,28 @@ export const DEFAULT_NODE_CONFIG = {
   }
 };
 
+export const DEFAULT_REMOTE_NODE_CONFIG: ModelStyle = {
+  ...DEFAULT_NODE_CONFIG,
+  type: 'triangle',
+  size: [30, 30],
+
+  style: {
+    fill: greyColor,
+    stroke: NODE_COLOR_DEFAULT
+  }
+};
+
 export const DEFAULT_EDGE_CONFIG = {
   type: 'line-dash',
   labelCfg: {
     autoRotate: true,
     style: {
       cursor: 'pointer',
-      fill: '#808080',
-      fontSize: 12,
+      fill: 'greyColor',
+      fontSize: 10,
       background: {
-        fill: '#ffffff',
-        stroke: '#808080',
-        padding: [6, 8, 6, 8],
-        radius: 4
+        padding: [4, 6, 4, 6],
+        radius: 2
       }
     }
   },
@@ -155,21 +166,28 @@ export const legendTypeConfigs = {
     type: 'diamond',
     size: 12,
     style: {
-      fill: 'grey'
+      fill: greyColor
     }
   },
   type2: {
     type: 'circle',
     size: 20,
     style: {
-      fill: 'grey'
+      fill: greyColor
     }
   },
   type3: {
     type: 'rect',
     size: [20, 20],
     style: {
-      fill: 'grey'
+      fill: greyColor
+    }
+  },
+  type4: {
+    type: 'triangle',
+    size: [10, 10],
+    style: {
+      fill: greyColor
     }
   }
 };
