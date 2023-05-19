@@ -95,12 +95,16 @@ export const DEFAULT_NODE_CONFIG: ModelStyle = {
 
 export const DEFAULT_REMOTE_NODE_CONFIG: ModelStyle = {
   ...DEFAULT_NODE_CONFIG,
-  type: 'triangle',
-  size: [30, 30],
+  type: 'circle',
+  size: [NODE_SIZE / 2],
 
   style: {
     fill: greyColor,
     stroke: NODE_COLOR_DEFAULT
+  },
+
+  icon: {
+    show: false
   }
 };
 
@@ -108,14 +112,11 @@ export const DEFAULT_EDGE_CONFIG = {
   type: 'line-dash',
   labelCfg: {
     autoRotate: true,
+    refY: -8,
     style: {
       cursor: 'pointer',
-      fill: 'greyColor',
-      fontSize: 10,
-      background: {
-        padding: [4, 6, 4, 6],
-        radius: 2
-      }
+      fill: NODE_COLOR_DEFAULT,
+      fontSize: 10
     }
   },
   style: {
@@ -166,6 +167,7 @@ export const legendTypeConfigs = {
     type: 'diamond',
     size: 12,
     style: {
+      fillOpacity: 0.4,
       fill: greyColor
     }
   },
@@ -173,6 +175,7 @@ export const legendTypeConfigs = {
     type: 'circle',
     size: 20,
     style: {
+      fillOpacity: 0.4,
       fill: greyColor
     }
   },
@@ -180,13 +183,15 @@ export const legendTypeConfigs = {
     type: 'rect',
     size: [20, 20],
     style: {
+      fillOpacity: 0.4,
       fill: greyColor
     }
   },
   type4: {
-    type: 'triangle',
-    size: [10, 10],
+    type: 'circle',
+    size: [10],
     style: {
+      fillOpacity: 0.4,
       fill: greyColor
     }
   }

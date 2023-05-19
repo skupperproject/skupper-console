@@ -3,7 +3,7 @@ import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { DEFAULT_NODE_CONFIG, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
-import { NODE_COLOR_DEFAULT, nodeColors } from '@core/components/Graph/Graph.constants';
+import { nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
 import SitesController from '@pages/Sites/services';
@@ -22,8 +22,7 @@ import { Entity } from '../Topology.interfaces';
 
 const shape = {
   bound: 'circle',
-  unbound: 'diamond',
-  remote: 'triangle'
+  unbound: 'diamond'
 };
 
 export const TopologyController = {
@@ -92,8 +91,8 @@ export const TopologyController = {
       .map(({ id, style, label }) => ({ id, label, style: { ...style, fillOpacity: 0.02 } }));
   },
 
-  convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[]): GraphEdge[] =>
-    flowPairsByAddress.reduce<GraphEdge[]>((acc, { processAggregateId: identity }) => {
+  convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[], showProtocol = false): GraphEdge[] =>
+    flowPairsByAddress.reduce<GraphEdge[]>((acc, { processAggregateId: identity, protocol }) => {
       const [source, target] = identity.split('-to-');
       //To prevent duplication, we handle cases where two processes have multiple flows, and the resulting source and target values are the same.
       const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
@@ -101,39 +100,21 @@ export const TopologyController = {
         acc.push({
           id: identity,
           source,
-          target
+          target,
+          label: (showProtocol && protocol) || ''
         });
       }
 
       return acc;
     }, []),
 
-  convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[]): GraphEdge[] =>
-    processesPairs.map(({ identity, sourceId, destinationId, protocol }) => {
-      const config = {
-        id: identity,
-        source: sourceId,
-        target: destinationId
-      };
-
-      if (protocol) {
-        return {
-          ...config,
-
-          label: protocol,
-          labelCfg: {
-            style: {
-              fill: NODE_COLOR_DEFAULT,
-              background: {
-                fill: '#ffffff'
-              }
-            }
-          }
-        };
-      }
-
-      return config;
-    }),
+  convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[], showProtocol = false): GraphEdge[] =>
+    processesPairs.map(({ identity, sourceId, destinationId, protocol }) => ({
+      id: identity,
+      source: sourceId,
+      target: destinationId,
+      label: (showProtocol && protocol) || ''
+    })),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
   // The purpose of this property is to display the edges between different sites in the topology.

@@ -9,18 +9,18 @@ export const TopologyPaths = {
   name: Labels.Topology
 };
 
-export const legendData: GraphData = {
+export const ProcessLegendData: GraphData = {
   nodes: [
     {
       id: 'type1',
       label: Labels.Process,
-      order: 2,
+      order: 3,
       ...legendTypeConfigs.type1
     },
     {
       id: 'type2',
       label: Labels.ProcessExposed,
-      order: 1,
+      order: 2,
       ...legendTypeConfigs.type2
     },
     {
@@ -32,7 +32,7 @@ export const legendData: GraphData = {
     {
       id: 'type4',
       label: Labels.ServerSite,
-      order: 4,
+      order: 1,
       ...legendTypeConfigs.type4
     }
   ]
