@@ -15,7 +15,10 @@ export enum Labels {
   ShowAll = 'Show all addresses',
   ShowProcessGroups = 'Group by Components',
   Process = 'process',
-  Processes = 'processes'
+  Processes = 'processes',
+  ServerSite = 'server site',
+  ProcessExposed = 'process exposed',
+  Site = 'site'
 }
 
 export enum TopologyURLFilters {

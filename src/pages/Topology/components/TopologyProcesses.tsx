@@ -21,8 +21,12 @@ import { QueriesTopology } from '../services/services.enum';
 import { legendData } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
 
-const processesQueryParams = {
+const externalProcessesQueryParams = {
   processRole: 'external'
+};
+
+const remoteProcessesQueryParams = {
+  processRole: 'remote'
 };
 
 const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined }> = function ({
@@ -41,9 +45,17 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: processes, isLoading: isLoadingProcesses } = useQuery(
-    [QueriesProcesses.GetProcessResult, processesQueryParams],
-    () => RESTApi.fetchProcessesResult(processesQueryParams),
+  const { data: externalProcesses, isLoading: isLoadingExternalProcesses } = useQuery(
+    [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+    () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+    {
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: remoteProcesses, isLoading: isLoadingRemoteProcesses } = useQuery(
+    [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+    () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
     {
       refetchInterval: UPDATE_INTERVAL
     }
@@ -90,13 +102,17 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   const handleGetSelectedEdge = useCallback(
     ({ id: linkId, source }: GraphEdge) => {
-      const sourceProcess = processes?.find(({ identity }) => identity === source) as ProcessResponse;
+      if (externalProcesses && remoteProcesses) {
+        const processes = [...externalProcesses, ...remoteProcesses];
 
-      if (sourceProcess) {
-        navigate(`${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${linkId}`);
+        const sourceProcess = processes?.find(({ identity }) => identity === source) as ProcessResponse;
+
+        if (sourceProcess) {
+          navigate(`${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${linkId}`);
+        }
       }
     },
-    [navigate, processes]
+    [externalProcesses, remoteProcesses, navigate]
   );
 
   function handleToggleAddressDropdownMenu(isSelectAddressOpen: boolean) {
@@ -128,7 +144,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   // This effect is triggered when no address is currently selected
   useEffect(() => {
-    if (sites && processes) {
+    if (sites && externalProcesses && remoteProcesses) {
+      const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
       const siteNodes = TopologyController.convertSitesToNodes(sites);
       const processesNodes = TopologyController.convertProcessesToNodes(processes, siteNodes);
@@ -143,11 +160,13 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         setGroups(siteGroups);
       }
     }
-  }, [sites, processes, processesPairs, addressIdSelected]);
+  }, [sites, externalProcesses, processesPairs, addressIdSelected, remoteProcesses]);
 
   // This effect is triggered when one address is currently selected
   useEffect(() => {
-    if (sites && processes) {
+    if (sites && externalProcesses && remoteProcesses) {
+      const processes = [...externalProcesses, ...remoteProcesses];
+
       // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
       if (addressIdSelected && flowPairsByAddress) {
         const processesLinksByAddress = TopologyController.convertFlowPairsToLinks(flowPairsByAddress);
@@ -168,9 +187,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         setGroups(siteGroups);
       }
     }
-  }, [sites, processes, processesPairs, addressIdSelected, flowPairsByAddress]);
+  }, [sites, externalProcesses, processesPairs, addressIdSelected, flowPairsByAddress, remoteProcesses]);
 
-  if (isLoadingProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
+  if (isLoadingExternalProcesses || isLoadingRemoteProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
     return <LoadingPage />;
   }
 
