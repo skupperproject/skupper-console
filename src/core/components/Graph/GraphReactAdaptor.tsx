@@ -29,6 +29,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   ({ nodes, edges, combos, onClickEdge, onClickNode, onClickCombo, itemSelected, legendData }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
 
+    const isHoverState = useRef<boolean>(false);
     const prevNodesRef = useRef<GraphNode[]>();
     const prevEdgesRef = useRef<GraphEdge[]>();
     const prevCombosRef = useRef<GraphCombo[]>();
@@ -137,6 +138,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           topologyGraph.on('node:mouseenter', ({ item }) => {
+            isHoverState.current = true;
+
+            topologyGraph.getEdges().forEach(function (edge) {
+              edge.hide();
+            });
+
             const node = item as INode | null;
             if (node) {
               // To ensure that only one node is selected at a time, we need to clean up any previously selected nodes.
@@ -153,7 +160,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
               node.getEdges().forEach((edgeConnected) => {
                 topologyGraph.setItemState(edgeConnected, 'hover', true);
+                edgeConnected.show();
               });
+
               node.getNeighbors().forEach((neighbor) => {
                 topologyGraph.setItemState(neighbor, 'hover', true);
               });
@@ -161,6 +170,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           topologyGraph.on('node:mouseleave', ({ item }) => {
+            isHoverState.current = false;
+
+            topologyGraph.getEdges().forEach(function (edge) {
+              edge.show();
+            });
+
             const node = item as INode | null;
 
             if (node) {
@@ -177,9 +192,16 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           topologyGraph.on('edge:mouseenter', ({ item }) => {
+            isHoverState.current = true;
+
+            topologyGraph.getEdges().forEach(function (edge) {
+              edge.hide();
+            });
+
             const edge = item as IEdge | null;
 
             if (edge) {
+              edge.show();
               topologyGraph.setItemState(edge, 'hover', true);
 
               const source = edge.getSource();
@@ -203,6 +225,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           topologyGraph.on('edge:mouseleave', ({ item }) => {
+            isHoverState.current = false;
+
+            topologyGraph.getEdges().forEach(function (edge) {
+              edge.show();
+            });
+
             const edge = item as IEdge | null;
 
             if (edge) {
@@ -246,10 +274,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           }
 
           topologyGraph.on('afterlayout', () => {
-            topologyGraphRef.current = topologyGraph;
-            prevNodesRef.current = nodes;
-            prevEdgesRef.current = edges;
-            setIsGraphLoaded(true);
+            if (!topologyGraphRef.current) {
+              topologyGraphRef.current = topologyGraph;
+              prevNodesRef.current = nodes;
+              prevEdgesRef.current = edges;
+              setIsGraphLoaded(true);
+            }
           });
 
           registerCustomBehaviours();
@@ -292,10 +322,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const graphInstance = topologyGraphRef.current;
 
       if (
+        !isHoverState.current &&
         isGraphLoaded &&
         graphInstance &&
         (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
-          JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges))
+          JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
+          JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
       ) {
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
@@ -317,6 +349,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         const item = graphInstance.findById(itemSelected);
 
         if (item) {
+          graphInstance.getEdges().forEach(function (edge) {
+            edge.hide();
+          });
+
           graphInstance.setItemState(item, 'hover', true);
 
           if (item.get('type') === 'node') {
@@ -324,6 +360,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
             // Update the style of edges connected to this node
             node.getEdges().forEach((edgeConnected) => {
+              edgeConnected.show();
               graphInstance.setItemState(edgeConnected, 'hover', true);
             });
 

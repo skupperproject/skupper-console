@@ -21,7 +21,9 @@ export interface GraphCombo {
 
 export interface GraphEdge {
   source: string;
+  sourceName?: string;
   target: string;
+  targetName?: string;
   id: string;
   label?: string;
   style?: Record<string, string | number[]>;

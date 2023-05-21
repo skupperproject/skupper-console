@@ -62,6 +62,13 @@ export const queries = {
   getByteRateByDirection(paramSource: string, paramDest: string, range: IntervalTimePropValue) {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]) or rate(octets_total{${paramDest}}[${range}]))`;
   },
+  getAllProcessPairsByteRates() {
+    return `sum by(sourceProcess, destProcess) (rate(octets_total{direction="incoming"}[30s]))`;
+  },
+
+  getAllProcessPairslatencies() {
+    return `sum by(sourceProcess, destProcess) (rate(flow_latency_microseconds_sum{direction="incoming"}[30s]))`;
+  },
 
   // counters for addresses
   getTotalFlowsByAddress() {
