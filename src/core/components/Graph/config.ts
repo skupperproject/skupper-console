@@ -2,6 +2,7 @@ import { LayoutConfig, ModelStyle } from '@antv/g6-core';
 
 import {
   COMBO_COLOR_DEFAULT,
+  EDGE_COLOR_ACTIVE_DEFAULT,
   EDGE_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT,
   NODE_COLOR_HOVER_DEFAULT,
@@ -44,8 +45,8 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   type: 'force',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE / 3,
-  linkDistance: 150,
-  nodeStrength: 30,
+  linkDistance: 300,
+  nodeStrength: 60,
   edgeStrength: 1,
   collideStrength: 1,
   preventOverlap: true,
@@ -152,12 +153,13 @@ export const DEFAULT_COMBO_CONFIG = {
   },
 
   labelCfg: {
-    refY: -32,
+    refY: -24,
     offset: 15,
-    position: 'top',
+    position: 'top-center',
     style: {
       fill: COMBO_COLOR_DEFAULT,
-      fontSize: 24
+      stroke: COMBO_COLOR_DEFAULT,
+      fontSize: 16
     }
   }
 };
@@ -193,6 +195,20 @@ export const legendTypeConfigs = {
     style: {
       fillOpacity: 0.4,
       fill: greyColor
+    }
+  },
+  eType1: {
+    type: 'line',
+    style: {
+      width: 25,
+      stroke: EDGE_COLOR_DEFAULT
+    }
+  },
+  eType2: {
+    type: 'line',
+    style: {
+      width: 25,
+      stroke: EDGE_COLOR_ACTIVE_DEFAULT
     }
   }
 };

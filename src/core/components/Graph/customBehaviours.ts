@@ -36,7 +36,7 @@ export function registerCustomBehaviours() {
             );
           } else {
             shape.stopAnimate(0);
-            shape.attr(model?.style);
+            shape.attr({ ...model?.style, opacity: 1 });
           }
         }
       }

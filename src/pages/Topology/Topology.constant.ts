@@ -35,5 +35,17 @@ export const ProcessLegendData: GraphData = {
       order: 1,
       ...legendTypeConfigs.type4
     }
+  ],
+  edges: [
+    {
+      id: 'eType1',
+      label: Labels.Link,
+      ...legendTypeConfigs.eType1
+    },
+    {
+      id: 'eType2',
+      label: Labels.ActiveLink,
+      ...legendTypeConfigs.eType2
+    }
   ]
 };

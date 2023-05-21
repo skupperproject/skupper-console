@@ -51,6 +51,26 @@ export const PrometheusApi = {
     return result;
   },
 
+  fetchAllProcessPairsByteRates: async (): Promise<PrometheusMetricSingleData[]> => {
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: { query: queries.getAllProcessPairsByteRates() }
+    });
+
+    return result;
+  },
+
+  fetchAllProcessPairsLatencies: async (): Promise<PrometheusMetricSingleData[]> => {
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: { query: queries.getAllProcessPairslatencies() }
+    });
+
+    return result;
+  },
+
   fetchLatencyByProcess: async ({
     id,
     range,

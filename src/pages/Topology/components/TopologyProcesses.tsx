@@ -12,9 +12,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { PrometheusApi } from '@API/Prometheus';
 import { RESTApi } from '@API/REST';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
+import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
@@ -42,15 +44,20 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   id: processId
 }) {
   const navigate = useNavigate();
+  const showSiteInitState = localStorage.getItem('showSite');
+  const showLinkLabelInitState = localStorage.getItem('showLinkLabel');
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>();
   const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
-  const [showProtocolLinkLabel, setShowProtocolLinkLabel] = useState(false);
+  const [showSite, setShowSite] = useState<boolean>(showSiteInitState ? showSiteInitState === 'true' : true);
+  const [showLinkLabel, setShowLinkLabel] = useState<boolean>(
+    showLinkLabelInitState ? showLinkLabelInitState === 'true' : false
+  );
 
-  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
+  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -91,6 +98,24 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddressResults(addressIdSelected) : undefined),
     {
       enabled: !!addressIdSelected,
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: byteRateByProcessPairs } = useQuery(
+    [QueriesTopology.GetByteRateByProcessPairs],
+    () => PrometheusApi.fetchAllProcessPairsByteRates(),
+    {
+      enabled: showLinkLabel,
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: latencyByProcessPairs } = useQuery(
+    [QueriesTopology.GetLatencyByProcessPairs],
+    () => PrometheusApi.fetchAllProcessPairsLatencies(),
+    {
+      enabled: showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -139,8 +164,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     setIsAddressSelectMenuOpen(false);
   }
 
+  function handleChangeSiteCheck(checked: boolean) {
+    setShowSite(checked);
+    localStorage.setItem('showSite', `${checked}`);
+  }
+
   function handleChangeProtocolLinkLabelCheck(checked: boolean) {
-    setShowProtocolLinkLabel(checked);
+    setShowLinkLabel(checked);
+    localStorage.setItem('showLinkLabel', `${checked}`);
   }
 
   const getOptions = useCallback(() => {
@@ -157,7 +188,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   // This effect is triggered when no address is currently selected
   useEffect(() => {
-    if (sites && externalProcesses && remoteProcesses) {
+    if (sites && externalProcesses && remoteProcesses && ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel)) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
       const siteNodes = TopologyController.convertSitesToNodes(sites);
@@ -166,14 +197,37 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       // Check if no address is selected
       if (processesPairs && !addressIdSelected) {
-        const processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, showProtocolLinkLabel);
+        let processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, showLinkLabel);
+        processesLinks = processesLinks.map((pair) => ({
+          ...pair,
+          labelCfg: { style: { NODE_COLOR_DEFAULT } },
+          style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
+        }));
+
+        if (showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) {
+          processesLinks = TopologyController.addMetricsToLinks(
+            processesLinks,
+            byteRateByProcessPairs,
+            latencyByProcessPairs
+          );
+        }
 
         setNodes(processesNodes);
         setLinks(processesLinks);
-        setGroups(siteGroups);
+        setGroups(showSite ? siteGroups : []);
       }
     }
-  }, [sites, externalProcesses, processesPairs, addressIdSelected, remoteProcesses, showProtocolLinkLabel]);
+  }, [
+    sites,
+    externalProcesses,
+    processesPairs,
+    addressIdSelected,
+    remoteProcesses,
+    showLinkLabel,
+    showSite,
+    byteRateByProcessPairs,
+    latencyByProcessPairs
+  ]);
 
   // This effect is triggered when one address is currently selected
   useEffect(() => {
@@ -182,10 +236,22 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
       if (addressIdSelected && flowPairsByAddress) {
-        const processesLinksByAddress = TopologyController.convertFlowPairsToLinks(
-          flowPairsByAddress,
-          showProtocolLinkLabel
-        );
+        let processesLinksByAddress = TopologyController.convertFlowPairsToLinks(flowPairsByAddress, showLinkLabel);
+        processesLinksByAddress = processesLinksByAddress.map((pair) => ({
+          ...pair,
+          labelCfg: { style: { NODE_COLOR_DEFAULT } },
+          style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT },
+          cursor: 'pointer'
+        }));
+
+        if (showLinkLabel) {
+          processesLinksByAddress = TopologyController.addMetricsToLinks(
+            processesLinksByAddress,
+            byteRateByProcessPairs,
+            latencyByProcessPairs
+          );
+        }
+
         const processIdsFromAddress = [
           ...(processesLinksByAddress?.map(({ source }) => source) || []),
           ...(processesLinksByAddress?.map(({ target }) => target) || [])
@@ -200,7 +266,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         // Set the nodes, links and groups for the topology
         setNodes(processesNodes);
         setLinks(processesLinksByAddress);
-        setGroups(siteGroups);
+        setGroups(showSite ? siteGroups : []);
       }
     }
   }, [
@@ -210,15 +276,15 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     addressIdSelected,
     flowPairsByAddress,
     remoteProcesses,
-    showProtocolLinkLabel
+    showLinkLabel,
+    showSite,
+    byteRateByProcessPairs,
+    latencyByProcessPairs
   ]);
 
-  if (isLoadingExternalProcesses || isLoadingRemoteProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
+  if (isLoadingSites || isLoadingRemoteProcesses || isLoadingExternalProcesses || isLoadingRemoteProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
     return <LoadingPage />;
   }
-
-  // links in the topology processes view are clickable
-  const linksWithStyles = links.map((link) => ({ ...link, style: { cursor: 'pointer' } }));
 
   return (
     <>
@@ -236,8 +302,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           </ToolbarItem>
           <ToolbarItem>
             <Checkbox
-              label={Labels.CheckboxShowProtocolsLabel}
-              isChecked={showProtocolLinkLabel}
+              label={Labels.CheckboxShowSite}
+              isChecked={showSite}
+              onChange={handleChangeSiteCheck}
+              id="show-site-check"
+            />
+            <Checkbox
+              label={Labels.CheckboxShowLabel}
+              isChecked={showLinkLabel}
               onChange={handleChangeProtocolLinkLabelCheck}
               id="show-protocols-check"
             />
@@ -247,7 +319,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       <GraphReactAdaptor
         nodes={nodes}
-        edges={linksWithStyles}
+        edges={links}
         combos={groups}
         onClickCombo={handleGetSelectedGroup}
         onClickNode={handleGetSelectedNode}

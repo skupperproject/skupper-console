@@ -18,8 +18,11 @@ export enum Labels {
   Processes = 'processes',
   ServerSite = 'server site',
   ProcessExposed = 'process exposed',
+  Link = 'link',
+  ActiveLink = 'Active link (show metrics on)',
   Site = 'site',
-  CheckboxShowProtocolsLabel = 'show protocols'
+  CheckboxShowSite = 'show site',
+  CheckboxShowLabel = 'show metrics'
 }
 
 export enum TopologyURLFilters {

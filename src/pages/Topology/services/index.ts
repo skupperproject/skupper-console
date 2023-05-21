@@ -1,11 +1,19 @@
+import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
 import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/service.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { DEFAULT_NODE_CONFIG, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
-import { nodeColors } from '@core/components/Graph/Graph.constants';
+import {
+  EDGE_COLOR_ACTIVE_DEFAULT,
+  EDGE_COLOR_DEFAULT,
+  NODE_COLOR_DEFAULT,
+  nodeColors
+} from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
+import { formatByteRate } from '@core/utils/formatBytes';
+import { formatLatency } from '@core/utils/formatLatency';
 import SitesController from '@pages/Sites/services';
 import {
   ProcessPairsResponse,
@@ -92,27 +100,42 @@ export const TopologyController = {
   },
 
   convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[], showProtocol = false): GraphEdge[] =>
-    flowPairsByAddress.reduce<GraphEdge[]>((acc, { processAggregateId: identity, protocol }) => {
-      const [source, target] = identity.split('-to-');
-      //To prevent duplication, we handle cases where two processes have multiple flows, and the resulting source and target values are the same.
-      const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
-      if (!exists) {
-        acc.push({
-          id: identity,
-          source,
-          target,
-          label: (showProtocol && protocol) || ''
-        });
-      }
+    flowPairsByAddress.reduce<GraphEdge[]>(
+      (
+        acc,
+        {
+          processAggregateId: identity,
+          protocol,
+          forwardFlow: { processName: sourceName },
+          counterFlow: { processName: targetName }
+        }
+      ) => {
+        const [source, target] = identity.split('-to-');
+        //To prevent duplication, we handle cases where two processes have multiple flows, and the resulting source and target values are the same.
+        const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
+        if (!exists) {
+          acc.push({
+            id: identity,
+            source,
+            target,
+            sourceName,
+            targetName,
+            label: (showProtocol && protocol) || ''
+          });
+        }
 
-      return acc;
-    }, []),
+        return acc;
+      },
+      []
+    ),
 
   convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[], showProtocol = false): GraphEdge[] =>
-    processesPairs.map(({ identity, sourceId, destinationId, protocol }) => ({
+    processesPairs.map(({ identity, sourceId, destinationId, protocol, sourceName, destinationName }) => ({
       id: identity,
       source: sourceId,
       target: destinationId,
+      sourceName,
+      targetName: destinationName,
       label: (showProtocol && protocol) || ''
     })),
 
@@ -133,6 +156,41 @@ export const TopologyController = {
         }
       ])
     );
+  },
+  addMetricsToLinks: (
+    links: GraphEdge[],
+    byteRateByProcessPairs?: PrometheusApiSingleResult[],
+    latencyByProcessPairs?: PrometheusApiSingleResult[]
+  ): GraphEdge[] => {
+    const byteRateByProcessPairsMap = (byteRateByProcessPairs || []).reduce((acc, { metric, value }) => {
+      acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+
+      return acc;
+    }, {} as Record<string, number>);
+
+    const latencyByProcessPairsMap = (latencyByProcessPairs || []).reduce((acc, { metric, value }) => {
+      acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+
+      return acc;
+    }, {} as Record<string, number>);
+
+    return links.map((link) => {
+      const byterate = byteRateByProcessPairsMap[`${link.sourceName}${link.targetName}`];
+      const latency = latencyByProcessPairsMap[`${link.sourceName}${link.targetName}`];
+
+      return {
+        ...link,
+        labelCfg: { style: { fill: byterate ? EDGE_COLOR_ACTIVE_DEFAULT : NODE_COLOR_DEFAULT } },
+        style: { ...link.style, stroke: byterate ? EDGE_COLOR_ACTIVE_DEFAULT : EDGE_COLOR_DEFAULT },
+        label: [
+          link.label,
+          byterate ? formatByteRate(byterate) : undefined,
+          latency ? formatLatency(latency) : undefined
+        ]
+          .filter(Boolean)
+          .join(',  ')
+      };
+    });
   }
 };
 
