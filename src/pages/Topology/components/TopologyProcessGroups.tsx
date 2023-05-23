@@ -18,12 +18,24 @@ const processGroupsQueryParams = {
   processGroupRole: 'external'
 };
 
+const remoteProcessesQueryParams = {
+  processGroupRole: 'remote'
+};
+
 const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupId }) {
   const navigate = useNavigate();
 
   const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
     () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
+    {
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: remoteProcessGroups, isLoading: isLoadingRemoteProcessGroups } = useQuery(
+    [QueriesTopology.GetRemoteProcessGroups, remoteProcessesQueryParams],
+    () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
     {
       refetchInterval: UPDATE_INTERVAL
     }
@@ -44,15 +56,15 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     [navigate]
   );
 
-  if (isLoadingProcessGroups || isLoadingProcessGroupsPairs) {
+  if (isLoadingProcessGroups || isLoadingProcessGroupsPairs || isLoadingRemoteProcessGroups) {
     return <LoadingPage />;
   }
 
-  if (!processGroups || !processGroupsPairs) {
+  if (!processGroups || !processGroupsPairs || !remoteProcessGroups) {
     return null;
   }
 
-  const nodes = TopologyController.convertProcessGroupsToNodes(processGroups);
+  const nodes = TopologyController.convertProcessGroupsToNodes([...processGroups, ...remoteProcessGroups]);
   const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
 
   return (
