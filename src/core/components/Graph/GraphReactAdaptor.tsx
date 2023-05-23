@@ -373,6 +373,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           if (item.get('type') === 'edge') {
             const edge = item as IEdge;
+            edge.show();
 
             const source = edge.getSource();
             const target = edge.getTarget();
