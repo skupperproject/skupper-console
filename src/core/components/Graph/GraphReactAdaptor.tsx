@@ -278,6 +278,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               topologyGraphRef.current = topologyGraph;
               prevNodesRef.current = nodes;
               prevEdgesRef.current = edges;
+              prevCombosRef.current = combos;
               setIsGraphLoaded(true);
             }
           });

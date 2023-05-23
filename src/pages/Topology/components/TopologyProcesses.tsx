@@ -16,6 +16,7 @@ import { PrometheusApi } from '@API/Prometheus';
 import { RESTApi } from '@API/REST';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
+import EmptyData from '@core/components/EmptyData';
 import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
@@ -55,6 +56,24 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const [showSite, setShowSite] = useState<boolean>(showSiteInitState ? showSiteInitState === 'true' : true);
   const [showLinkLabel, setShowLinkLabel] = useState<boolean>(
     showLinkLabelInitState ? showLinkLabelInitState === 'true' : false
+  );
+
+  const { data: byteRateByProcessPairs } = useQuery(
+    [QueriesTopology.GetByteRateByProcessPairs],
+    () => PrometheusApi.fetchAllProcessPairsByteRates(),
+    {
+      enabled: showLinkLabel,
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: latencyByProcessPairs } = useQuery(
+    [QueriesTopology.GetLatencyByProcessPairs],
+    () => PrometheusApi.fetchAllProcessPairsLatencies(),
+    {
+      enabled: showLinkLabel,
+      refetchInterval: UPDATE_INTERVAL
+    }
   );
 
   const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
@@ -98,24 +117,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetProcessesPairs],
     () => RESTApi.fetchProcessesPairs(),
     {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: byteRateByProcessPairs } = useQuery(
-    [QueriesTopology.GetByteRateByProcessPairs],
-    () => PrometheusApi.fetchAllProcessPairsByteRates(),
-    {
-      enabled: showLinkLabel,
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: latencyByProcessPairs } = useQuery(
-    [QueriesTopology.GetLatencyByProcessPairs],
-    () => PrometheusApi.fetchAllProcessPairsLatencies(),
-    {
-      enabled: showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -303,6 +304,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     isLoadingAddresses
   ) {
     return <LoadingPage />;
+  }
+
+  if (!nodes.length) {
+    return <EmptyData />;
   }
 
   return (
