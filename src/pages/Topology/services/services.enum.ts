@@ -1,5 +1,6 @@
 export enum QueriesTopology {
   GetProcessGroups = 'get-topology-process-groups-query',
+  GetRemoteProcessGroups = 'get-topology-remote-process-groups-query',
   GetProcesses = 'get-topology-processes-query',
   GetProcessesPairs = 'get-topology-processes-pairs-query',
   GetFlowPairsByAddressResult = 'get-topology-flow-pairs-by-address-result-query',

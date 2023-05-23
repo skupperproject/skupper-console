@@ -188,7 +188,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   // This effect is triggered when no address is currently selected
   useEffect(() => {
-    if (sites && externalProcesses && remoteProcesses && ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel)) {
+    if (
+      sites &&
+      externalProcesses &&
+      remoteProcesses &&
+      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel)
+    ) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
       const siteNodes = TopologyController.convertSitesToNodes(sites);
@@ -282,7 +287,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     latencyByProcessPairs
   ]);
 
-  if (isLoadingSites || isLoadingRemoteProcesses || isLoadingExternalProcesses || isLoadingRemoteProcesses || isLoadingProcessesPairs || isLoadingAddresses) {
+  if (
+    isLoadingSites ||
+    isLoadingRemoteProcesses ||
+    isLoadingExternalProcesses ||
+    isLoadingRemoteProcesses ||
+    isLoadingProcessesPairs ||
+    isLoadingAddresses
+  ) {
     return <LoadingPage />;
   }
 
