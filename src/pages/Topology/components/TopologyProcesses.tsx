@@ -85,19 +85,19 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     }
   );
 
-  const { data: processesPairs, isLoading: isLoadingProcessesPairs } = useQuery(
-    [QueriesTopology.GetProcessesPairs],
-    () => RESTApi.fetchProcessesPairs(),
+  const { data: serversByAddress } = useQuery(
+    [QueriesAddresses.GetProcessesByAddress, addressIdSelected],
+    () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : undefined),
     {
+      enabled: !!addressIdSelected,
       refetchInterval: UPDATE_INTERVAL
     }
   );
 
-  const { data: flowPairsByAddress } = useQuery(
-    [QueriesTopology.GetFlowPairsByAddressResult, addressIdSelected],
-    () => (addressIdSelected ? RESTApi.fetchFlowPairsByAddressResults(addressIdSelected) : undefined),
+  const { data: processesPairs, isLoading: isLoadingProcessesPairs } = useQuery(
+    [QueriesTopology.GetProcessesPairs],
+    () => RESTApi.fetchProcessesPairs(),
     {
-      enabled: !!addressIdSelected,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -240,8 +240,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       const processes = [...externalProcesses, ...remoteProcesses];
 
       // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
-      if (addressIdSelected && flowPairsByAddress) {
-        let processesLinksByAddress = TopologyController.convertFlowPairsToLinks(flowPairsByAddress, showLinkLabel);
+      if (addressIdSelected && processesPairs && serversByAddress) {
+        const serverIds = serversByAddress.results.map(({ identity }) => identity);
+        const processPairsByAddress = processesPairs.filter((pair) => serverIds?.includes(pair.destinationId));
+
+        let processesLinksByAddress = TopologyController.convertProcessPairsToLinks(
+          processPairsByAddress,
+          showLinkLabel
+        );
         processesLinksByAddress = processesLinksByAddress.map((pair) => ({
           ...pair,
           labelCfg: { style: { NODE_COLOR_DEFAULT } },
@@ -279,12 +285,13 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     externalProcesses,
     processesPairs,
     addressIdSelected,
-    flowPairsByAddress,
     remoteProcesses,
     showLinkLabel,
     showSite,
     byteRateByProcessPairs,
-    latencyByProcessPairs
+    latencyByProcessPairs,
+    serversByAddress?.results,
+    serversByAddress
   ]);
 
   if (
