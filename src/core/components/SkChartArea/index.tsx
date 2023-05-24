@@ -7,7 +7,8 @@ import {
   ChartGroup,
   ChartLegendTooltip,
   ChartThemeColor,
-  ChartArea
+  ChartArea,
+  ChartLine
 } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 
@@ -29,6 +30,7 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   axisYLabel,
   legendLabels = [],
   showLegend = true,
+  isChartLine = false,
   ...props
 }) {
   const observer = useRef<Function>(() => null);
@@ -104,9 +106,13 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
           showGrid
         />
         <ChartGroup>
-          {data.map((row, index: number) => (
-            <ChartArea key={index} data={row} name={legendData[index]?.name} />
-          ))}
+          {data.map((row, index: number) =>
+            isChartLine ? (
+              <ChartLine key={index} data={row} name={legendData[index]?.name} />
+            ) : (
+              <ChartArea key={index} data={row} name={legendData[index]?.name} />
+            )
+          )}
         </ChartGroup>
       </Chart>
     </div>
