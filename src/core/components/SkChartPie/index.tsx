@@ -8,10 +8,10 @@ import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesI
 import { SkChartPieProps } from './ChartPie.interfaces';
 
 const CHART_PADDING = {
-  bottom: 10,
+  bottom: 30,
   left: 0,
-  right: 0,
-  top: 10
+  right: 100,
+  top: 20
 };
 
 const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) => y, ...props }) {

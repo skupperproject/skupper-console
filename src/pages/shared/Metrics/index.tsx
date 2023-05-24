@@ -24,7 +24,7 @@ const Metrics: FC<MetricsProps> = function ({
     processIdSource: selectedFilters.processIdSource,
     protocol: selectedFilters.protocol,
     timeInterval: timeIntervalMap[defaultTimeInterval.key],
-    processIdDest: undefined
+    processIdDest: selectedFilters.processIdDest
   };
 
   const initialFilters = {
