@@ -56,18 +56,18 @@ export const queries = {
   },
 
   // data transfer queries
-  getBytesByDirection(paramSource: string, paramDest: string) {
-    return `sum by(direction)(octets_total{${paramSource}} or octets_total{${paramDest}})`;
+  getBytesByDirection(paramSource: string) {
+    return `sum by(direction)(octets_total{${paramSource}})`;
   },
-  getByteRateByDirection(paramSource: string, paramDest: string, range: IntervalTimePropValue) {
-    return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]) or rate(octets_total{${paramDest}}[${range}]))`;
+  getByteRateByDirection(paramSource: string, range: IntervalTimePropValue) {
+    return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
   },
   getAllProcessPairsByteRates() {
-    return `sum by(sourceProcess, destProcess) (rate(octets_total{direction="incoming"}[30s]))`;
+    return `sum by(destProcess, sourceProcess,direction) (rate(octets_total{direction="incoming"}[1m]))`;
   },
 
-  getAllProcessPairslatencies() {
-    return `sum by(sourceProcess, destProcess) (rate(flow_latency_microseconds_sum{direction="incoming"}[30s]))`;
+  getAllProcessPairsLatencies() {
+    return `sum by(sourceProcess, destProcess) (rate(flow_latency_microseconds_sum{direction="incoming"}[1m]))`;
   },
 
   // counters for addresses

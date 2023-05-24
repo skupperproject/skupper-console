@@ -11,6 +11,9 @@ export const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.locatio
 // Base URL for the Prometheus backend. Set in environment variables.
 export const BASE_PROMETHEUS_URL = process.env.PROMETHEUS_URL;
 
+const API_VERSION = '/api/v1alpha1';
+export const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
+
 // Navigation config
 export const RoutesPropsConfig = [TopologyPaths, AddressesPaths, SitesPaths, ProcessGroupsPaths, ProcessesPaths];
 // Default URL path to redirect to. Set to the path for the first page.

@@ -45,8 +45,8 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
 
     {/* Total Traffic card */}
     <GridItem span={4}>
-      {!metrics.trafficDataSeriesPerSecond && metrics.trafficDataSeries && <EmptyData />}
-      {!!metrics.trafficDataSeriesPerSecond && metrics.trafficDataSeries && (
+      {!metrics.trafficDataSeriesPerSecond && <EmptyData />}
+      {!!metrics.trafficDataSeriesPerSecond && (
         <Card>
           <TableComposable borders={false} variant="compact">
             <Thead noWrap>
@@ -55,7 +55,6 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                 <Th>{MetricsLabels.ByteRateMaxCol}</Th>
                 <Th>{MetricsLabels.ByteRateAvgCol}</Th>
                 <Th>{MetricsLabels.ByteRateCurrentCol}</Th>
-                <Th>{MetricsLabels.ByteRateTotalCol}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -69,7 +68,6 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                 <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficReceived)}</Th>
                 <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficReceived)}</Th>
                 <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.currentTrafficReceived)}</Th>
-                <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.sumDataReceived)}</Th>
               </Tr>
               <Tr>
                 <Td>
@@ -81,7 +79,6 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                 <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.maxTrafficSent)}</Th>
                 <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.avgTrafficSent)}</Th>
                 <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.currentTrafficSent)}</Th>
-                <Th>{formatByteRate(metrics.trafficDataSeriesPerSecond.sumDataSent)}</Th>
               </Tr>
             </Tbody>
           </TableComposable>
