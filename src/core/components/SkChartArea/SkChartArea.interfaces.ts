@@ -10,5 +10,6 @@ export interface SkChartAreaProps {
   axisYLabel?: string;
   legendLabels?: string[];
   themeColor?: string;
+  isChartLine?: boolean;
   showLegend?: boolean;
 }

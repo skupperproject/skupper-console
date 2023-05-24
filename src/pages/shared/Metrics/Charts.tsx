@@ -29,7 +29,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
             <CardTitle>{ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}</CardTitle>
             <CardBody>
               <SkChartArea
-                themeColor={ChartThemeColor.orange}
+                themeColor={ChartThemeColor.multi}
                 formatY={formatByteRate}
                 legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
                 data={[
@@ -61,7 +61,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
               <Tr>
                 <Td>
                   <Icon size="sm">
-                    <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--100, #ec7a08)`} />
+                    <CircleIcon color={`var(--pf-chart-theme--multi-color-ordered--ColorScale--100, #06c)`} />
                   </Icon>{' '}
                   {MetricsLabels.TrafficReceived}
                 </Td>
@@ -72,7 +72,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
               <Tr>
                 <Td>
                   <Icon size="sm">
-                    <CircleIcon color={`var(--pf-chart-theme--orange--ColorScale--200, #f4b678)`} />
+                    <CircleIcon color={`var(--pf-chart-theme--multi-color-ordered--ColorScale--200, #4cb140)`} />
                   </Icon>{' '}
                   {MetricsLabels.TrafficSent}
                 </Td>
@@ -91,7 +91,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
       <Card isFullHeight>
         <SkChartPie
           format={formatBytes}
-          themeColor={ChartThemeColor.orange}
+          themeColor={ChartThemeColor.multi}
           data={[
             {
               x: MetricsLabels.TrafficReceived,
