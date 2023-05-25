@@ -47,6 +47,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const navigate = useNavigate();
   const showSiteInitState = localStorage.getItem('showSite');
   const showLinkLabelInitState = localStorage.getItem('showLinkLabel');
+  const showLinkLabelReverseInitState = localStorage.getItem('showLinkLabelReverse');
+  const showRotateLabel = localStorage.getItem('showRotateLabel');
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
@@ -54,8 +56,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
   const [showSite, setShowSite] = useState<boolean>(showSiteInitState ? showSiteInitState === 'true' : true);
+  const [rotateLabel, setRotateLabel] = useState<boolean>(showRotateLabel ? showRotateLabel === 'true' : true);
   const [showLinkLabel, setShowLinkLabel] = useState<boolean>(
     showLinkLabelInitState ? showLinkLabelInitState === 'true' : false
+  );
+  const [showLinkLabelReverse, setShowLinkLabelReverse] = useState<boolean>(
+    showLinkLabelReverseInitState ? showLinkLabelReverseInitState === 'true' : false
   );
 
   const { data: byteRateByProcessPairs } = useQuery(
@@ -173,6 +179,20 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   function handleChangeProtocolLinkLabelCheck(checked: boolean) {
     setShowLinkLabel(checked);
     localStorage.setItem('showLinkLabel', `${checked}`);
+
+    if (!checked) {
+      handleChangeProtocolLinkLabelCheckReverse(checked);
+    }
+  }
+
+  function handleChangeProtocolLinkLabelCheckReverse(checked: boolean) {
+    setShowLinkLabelReverse(checked);
+    localStorage.setItem('showLinkLabelReverse', `${checked}`);
+  }
+
+  function handleChangeRotateLabelCheck(checked: boolean) {
+    setRotateLabel(checked);
+    localStorage.setItem('showRotateLabel', `${checked}`);
   }
 
   const getOptions = useCallback(() => {
@@ -214,7 +234,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           processesLinks = TopologyController.addMetricsToLinks(
             processesLinks,
             byteRateByProcessPairs,
-            latencyByProcessPairs
+            latencyByProcessPairs,
+            { showLinkLabelReverse, rotateLabel }
           );
         }
 
@@ -232,7 +253,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     showLinkLabel,
     showSite,
     byteRateByProcessPairs,
-    latencyByProcessPairs
+    latencyByProcessPairs,
+    showLinkLabelReverse,
+    rotateLabel
   ]);
 
   // This effect is triggered when one address is currently selected
@@ -260,7 +283,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           processesLinksByAddress = TopologyController.addMetricsToLinks(
             processesLinksByAddress,
             byteRateByProcessPairs,
-            latencyByProcessPairs
+            latencyByProcessPairs,
+            { showLinkLabelReverse, rotateLabel }
           );
         }
 
@@ -292,7 +316,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     byteRateByProcessPairs,
     latencyByProcessPairs,
     serversByAddress?.results,
-    serversByAddress
+    serversByAddress,
+    showLinkLabelReverse,
+    rotateLabel
   ]);
 
   if (
@@ -332,10 +358,26 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
               id="show-site-check"
             />
             <Checkbox
+              isDisabled={!showLinkLabel}
+              label={Labels.RotateLabel}
+              isChecked={rotateLabel}
+              onChange={handleChangeRotateLabelCheck}
+              id="rotate-label-check"
+            />
+          </ToolbarItem>
+          <ToolbarItem>
+            <Checkbox
               label={Labels.CheckboxShowLabel}
               isChecked={showLinkLabel}
               onChange={handleChangeProtocolLinkLabelCheck}
               id="show-protocols-check"
+            />
+            <Checkbox
+              isDisabled={!showLinkLabel}
+              label={Labels.CheckboxShowLabelReverse}
+              isChecked={showLinkLabelReverse}
+              onChange={handleChangeProtocolLinkLabelCheckReverse}
+              id="show-protocols-check-reverse"
             />
           </ToolbarItem>
         </ToolbarContent>
