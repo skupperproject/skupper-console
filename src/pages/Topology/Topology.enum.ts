@@ -22,7 +22,9 @@ export enum Labels {
   ActiveLink = 'Active link (show metrics on)',
   Site = 'site',
   CheckboxShowSite = 'show site',
-  CheckboxShowLabel = 'show metrics'
+  RotateLabel = 'rotate label',
+  CheckboxShowLabel = 'show metrics',
+  CheckboxShowLabelReverse = 'show reverse metrics'
 }
 
 export enum TopologyURLFilters {

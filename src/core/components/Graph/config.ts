@@ -81,10 +81,10 @@ export const DEFAULT_NODE_CONFIG: ModelStyle = {
     style: {
       fill: NODE_COLOR_DEFAULT,
       cursor: 'pointer',
-      fontSize: 12,
+      fontSize: 14,
       background: {
         fill: '#FFFFFF',
-        fillOpacity: 0.8,
+        fillOpacity: 0.9,
         stroke: NODE_COLOR_DEFAULT,
         lineWidth: 1,
         padding: [5, 8, 5, 8],
@@ -113,11 +113,11 @@ export const DEFAULT_EDGE_CONFIG = {
   type: 'line-dash',
   labelCfg: {
     autoRotate: true,
-    refY: -8,
+    refY: -6,
     style: {
       cursor: 'pointer',
-      fill: NODE_COLOR_DEFAULT,
-      fontSize: 10
+      color: NODE_COLOR_DEFAULT,
+      fontSize: 12
     }
   },
   style: {

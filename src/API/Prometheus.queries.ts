@@ -63,11 +63,11 @@ export const queries = {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
   },
   getAllProcessPairsByteRates() {
-    return `sum by(destProcess, sourceProcess,direction) (rate(octets_total{direction="incoming"}[1m]))`;
+    return `sum by(destProcess, sourceProcess,direction) (rate(octets_total[1m]))`;
   },
 
   getAllProcessPairsLatencies() {
-    return `sum by(sourceProcess, destProcess) (rate(flow_latency_microseconds_sum{direction="incoming"}[1m]))`;
+    return `sum by(sourceProcess, destProcess) (rate(flow_latency_microseconds_sum[1m]))`;
   },
 
   // counters for addresses
