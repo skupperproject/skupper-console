@@ -119,13 +119,19 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       <GridItem>
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
-            {serversRowsCount && (
-              <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}>
+            {!!serversRowsCount && (
+              <Tab
+                eventKey={TAB_1_KEY}
+                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
+              >
                 <ServersTable processes={servers} />
               </Tab>
             )}
-            {requestsPaginated && (
-              <Tab eventKey={TAB_2_KEY} title={<TabTitleText>{FlowPairsLabelsHttp.Requests}</TabTitleText>}>
+            {!!requestsPaginated.length && (
+              <Tab
+                eventKey={TAB_2_KEY}
+                title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
+              >
                 <FlowPairsTable
                   columns={RequestsByAddressColumns}
                   connections={requestsPaginated}

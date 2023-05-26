@@ -1,4 +1,4 @@
-import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { FC, MouseEvent as ReactMouseEvent, useMemo, useRef, useState } from 'react';
 
 import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -7,14 +7,14 @@ import { useSearchParams } from 'react-router-dom';
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { UPDATE_INTERVAL } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
+import { FlowPairsResponse } from 'API/REST.interfaces';
 
-import { ConnectionsByAddressColumns } from '../Addresses.constants';
+import { ConnectionsByAddressColumns, ConnectionsByAddressColumnsEnded } from '../Addresses.constants';
 import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import FlowPairsTable from '../components/FlowPairsTable';
@@ -22,12 +22,11 @@ import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
 const TAB_1_KEY = 'servers';
-const TAB_2_KEY = 'connections';
+const TAB_2_KEY = 'liveConnections';
+const TAB_3_KEY = 'connections';
 
-const initConnectionsQueryParamsPaginated = {
-  offset: 0,
-  limit: DEFAULT_TABLE_PAGE_SIZE,
-  endTime: 0 // open connections
+const initServersQueryParams = {
+  endTime: 0 // active servers
 };
 
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {
@@ -38,13 +37,10 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
   const [addressView, setAddressView] = useState<string>(type);
-  const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
-    initConnectionsQueryParamsPaginated
-  );
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
-    [QueriesAddresses.GetFlowPairsByAddress, addressId, connectionsQueryParamsPaginated],
-    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, connectionsQueryParamsPaginated) : undefined),
+    [QueriesAddresses.GetFlowPairsByAddress, addressId],
+    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId) : undefined),
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
@@ -52,22 +48,17 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   );
 
   const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
-    [QueriesAddresses.GetProcessesByAddress, addressId, connectionsQueryParamsPaginated],
-    () => (addressId ? RESTApi.fetchServersByAddress(addressId, connectionsQueryParamsPaginated) : null),
+    [QueriesAddresses.GetProcessesByAddress, addressId, initServersQueryParams],
+    () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
       keepPreviousData: true
     }
   );
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setConnectionsQueryParamsPaginated(connectionsQueryParamsPaginated);
     setAddressView(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
   }
-
-  const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
-    setConnectionsQueryParamsPaginated(params);
-  }, []);
 
   const checkDataChanged = useMemo((): number => {
     activeConnectionsDataRef.current = activeConnectionsData?.results;
@@ -80,7 +71,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   }
 
   const activeConnections = activeConnectionsData?.results.filter(({ endTime }) => !endTime) || [];
-  const activeConnectionsCount = activeConnectionsData?.timeRangeCount;
+  const oldConnections = activeConnectionsData?.results.filter(({ endTime }) => endTime) || [];
 
   const servers = serversByAddressData?.results || [];
   const serversRowsCount = serversByAddressData?.timeRangeCount;
@@ -103,19 +94,30 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       <GridItem>
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
-            {serversRowsCount && (
-              <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}>
+            {!!serversRowsCount && (
+              <Tab
+                eventKey={TAB_1_KEY}
+                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
+              >
                 <ServersTable processes={servers} />
               </Tab>
             )}
-            {activeConnections && (
-              <Tab eventKey={TAB_2_KEY} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
-                <FlowPairsTable
-                  columns={ConnectionsByAddressColumns}
-                  connections={activeConnections}
-                  onGetFilters={handleGetFiltersConnections}
-                  rowsCount={activeConnectionsCount}
-                />
+            {!!activeConnections.length && (
+              <Tab
+                eventKey={TAB_2_KEY}
+                title={
+                  <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
+                }
+              >
+                <FlowPairsTable columns={ConnectionsByAddressColumns} connections={activeConnections} />
+              </Tab>
+            )}
+            {!!oldConnections.length && (
+              <Tab
+                eventKey={TAB_3_KEY}
+                title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
+              >
+                <FlowPairsTable columns={ConnectionsByAddressColumnsEnded} connections={oldConnections} />
               </Tab>
             )}
           </Tabs>

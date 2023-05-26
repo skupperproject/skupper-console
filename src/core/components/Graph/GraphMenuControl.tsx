@@ -7,11 +7,13 @@ import { GraphController } from './services';
 
 type ZoomControlsProps = {
   graphInstance: Graph;
+  onGetZoom?: Function;
+  onFitScreen?: Function;
 };
 
 const ZOOM_DELTA = 0.25;
 
-const GraphMenuControl = function ({ graphInstance }: ZoomControlsProps) {
+const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
   const center = graphInstance.getGraphCenterPoint();
   const navigate = useNavigate();
 
@@ -19,16 +21,36 @@ const GraphMenuControl = function ({ graphInstance }: ZoomControlsProps) {
     const zoom = graphInstance.getZoom();
     const newZoom = zoom + ZOOM_DELTA;
     graphInstance.zoomTo(newZoom, center, true, { duration: 250 });
+
+    if (onGetZoom) {
+      onGetZoom(newZoom);
+    }
+
+    if (onFitScreen) {
+      onFitScreen(0);
+    }
   };
 
   const handleDecreaseZoom = () => {
     const zoom = graphInstance.getZoom();
     const newZoom = zoom - ZOOM_DELTA;
     graphInstance.zoomTo(newZoom, center, true, { duration: 250 });
+
+    if (onGetZoom) {
+      onGetZoom(newZoom);
+    }
+
+    if (onFitScreen) {
+      onFitScreen(0);
+    }
   };
 
   const handleZoomToDefault = () => {
     graphInstance.fitView(5, undefined, true, { duration: 250 });
+
+    if (onFitScreen) {
+      onFitScreen(1);
+    }
   };
 
   const handleReposition = () => {

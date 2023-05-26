@@ -75,8 +75,10 @@ const ProcessPairs = function () {
     return null;
   }
 
-  const TcpFlowPairs = flowPairsPairsData.results.filter(({ protocol }) => isTcp(protocol as AvailableProtocols));
-  const HttpFlowPairs = flowPairsPairsData.results.filter(({ protocol }) => !isTcp(protocol as AvailableProtocols));
+  const TcpFlowPairs = flowPairsPairsData.results.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
+  const HttpFlowPairs = flowPairsPairsData.results.filter(
+    ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
+  );
   const flowPairsPaginatedCount = flowPairsPairsData.timeRangeCount;
 
   return (
@@ -180,7 +182,3 @@ const ProcessPairs = function () {
 };
 
 export default ProcessPairs;
-
-function isTcp(protocolSelected: AvailableProtocols) {
-  return protocolSelected === AvailableProtocols.Tcp;
-}
