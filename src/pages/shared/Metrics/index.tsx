@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +18,8 @@ const Metrics: FC<MetricsProps> = function ({
   startTime,
   sourceProcesses,
   processesConnected,
-  filterOptions
+  filterOptions,
+  forceUpdate
 }) {
   const queryInit = {
     processIdSource: selectedFilters.processIdSource,
@@ -48,6 +49,7 @@ const Metrics: FC<MetricsProps> = function ({
       keepPreviousData: true
     }
   );
+
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
     refetch();
@@ -68,6 +70,12 @@ const Metrics: FC<MetricsProps> = function ({
     },
     [queryInit.processIdSource]
   );
+
+  useEffect(() => {
+    if (forceUpdate) {
+      handleRefetchMetrics();
+    }
+  }, [forceUpdate, handleRefetchMetrics]);
 
   return (
     <>

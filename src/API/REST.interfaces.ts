@@ -111,7 +111,6 @@ export interface ConnectionTCP extends BaseResponse {
   parent: string;
   counterFlow: string;
   octets: number;
-  octetRate: number;
   octetsUnacked: number;
   windowSize: number;
   sourceHost: string;
@@ -126,7 +125,6 @@ export interface RequestHTTP extends BaseResponse {
   counterFlow: string;
   parent: string;
   octets: number;
-  octetRate: number;
   method: string;
   latency: number;
   process: string;

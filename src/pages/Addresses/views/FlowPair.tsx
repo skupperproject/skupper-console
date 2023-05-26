@@ -22,7 +22,7 @@ import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
+import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -171,12 +171,6 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
                 <DescriptionListDescription>{flow.sourceHost}</DescriptionListDescription>
                 <DescriptionListTerm>{isCounterflow ? FlowLabels.DestPort : FlowLabels.Port}</DescriptionListTerm>
                 <DescriptionListDescription>{flow.sourcePort}</DescriptionListDescription>
-                {!!flow.octetRate && (
-                  <>
-                    <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatByteRate(flow.octetRate)}</DescriptionListDescription>
-                  </>
-                )}
                 <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
                 <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>
                 <DescriptionListTerm>{FlowLabels.ByteUnacked}</DescriptionListTerm>
@@ -214,12 +208,6 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
                     </Link>
                   </>
                 </DescriptionListDescription>
-                {!!flow.octetRate && (
-                  <>
-                    <DescriptionListTerm>{FlowLabels.ByteRate}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatByteRate(flow.octetRate)}</DescriptionListDescription>
-                  </>
-                )}
                 <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
                 <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>
                 <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>

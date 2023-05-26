@@ -2,7 +2,9 @@ import DurationCell from '@core/components/DurationCell';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
-import { formatByteRate, formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
+import HighlightValueCell from '@core/HighlightValueCell';
+import { HighlightValueCellProps } from '@core/HighlightValueCell/HighightValueCell.interfaces';
+import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -39,7 +41,9 @@ export const flowPairsComponentsTable = {
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime })
+    DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime }),
+  ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
+    HighlightValueCell({ ...props, format: formatBytes })
 };
 
 export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
@@ -59,23 +63,15 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     component: 'SiteNameLinkCell'
   },
   {
-    name: FlowPairsColumnsNames.TxByteRate,
-    prop: 'forwardFlow.octetRate' as keyof FlowPairsResponse,
-    format: formatByteRate
-  },
-  {
-    name: FlowPairsColumnsNames.RxByteRate,
-    prop: 'counterFlow.octetRate' as keyof FlowPairsResponse,
-    format: formatByteRate
-  },
-  {
     name: FlowPairsColumnsNames.TxBytes,
     prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
+    component: 'ByteFormatCell',
     format: formatBytes
   },
   {
     name: FlowPairsColumnsNames.RxBytes,
     prop: 'counterFlow.octets' as keyof FlowPairsResponse,
+    component: 'ByteFormatCell',
     format: formatBytes
   },
   {

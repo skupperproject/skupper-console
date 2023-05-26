@@ -6,7 +6,6 @@ import { TableComposable, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@
 
 import { SortDirection } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
-import { generateUUID } from '@core/utils/generateUUID';
 import { getNestedProperty } from '@core/utils/getNestedProperties';
 
 import { SKTableProps } from './SkTable.interface';
@@ -111,8 +110,8 @@ const SkTable = function <T>({
       return paramA > paramB ? sortDirectionMultiplier : -sortDirectionMultiplier;
     });
   }
-  let skRows = rowsSorted.map((row) => ({
-    id: generateUUID(),
+  let skRows = rowsSorted.map((row, index) => ({
+    id: index,
     columns: columns.map((column) => {
       const { prop } = column;
       const value = prop ? getNestedProperty(row, (prop as string).split('.') as (keyof T)[]) : '';
@@ -191,15 +190,15 @@ const SkTable = function <T>({
 
               return (
                 <Tr key={row.id} style={isOddRow ? customStyle : {}}>
-                  {row.columns.map(({ data, value, component, callback, format, width }) => {
+                  {row.columns.map(({ data, value, component, callback, format, width }, index) => {
                     const Component = components && component && components[component];
 
                     return Component ? (
-                      <Td width={width} key={generateUUID()}>
+                      <Td width={width} key={index}>
                         <Component data={data} value={value} callback={callback} format={format && format(value)} />
                       </Td>
                     ) : (
-                      <Td width={width} key={generateUUID()}>
+                      <Td width={width} key={index}>
                         <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
                       </Td>
                     );

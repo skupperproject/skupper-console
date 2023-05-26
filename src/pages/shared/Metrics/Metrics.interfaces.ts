@@ -35,4 +35,5 @@ export interface MetricsProps {
   processesConnected?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string }[];
   filterOptions?: FilterOptionProps;
+  forceUpdate?: number;
 }
