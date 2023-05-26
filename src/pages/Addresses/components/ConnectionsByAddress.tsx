@@ -1,17 +1,18 @@
-import { FC, MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
+import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
+import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { RequestOptions } from 'API/REST.interfaces';
+import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { ConnectionsByAddressColumns } from '../Addresses.constants';
 import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
@@ -20,6 +21,9 @@ import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
+const TAB_1_KEY = 'servers';
+const TAB_2_KEY = 'connections';
+
 const initConnectionsQueryParamsPaginated = {
   offset: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE,
@@ -27,7 +31,13 @@ const initConnectionsQueryParamsPaginated = {
 };
 
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {
-  const [addressView, setAddressView] = useState<number>(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const type = searchParams.get('type') || TAB_1_KEY;
+
+  const activeConnectionsDataRef = useRef<FlowPairsResponse[]>();
+  const forceMetricUpdateNonceRef = useRef<number>(0);
+
+  const [addressView, setAddressView] = useState<string>(type);
   const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
     initConnectionsQueryParamsPaginated
   );
@@ -36,6 +46,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     [QueriesAddresses.GetFlowPairsByAddress, addressId, connectionsQueryParamsPaginated],
     () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, connectionsQueryParamsPaginated) : undefined),
     {
+      refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
   );
@@ -50,12 +61,19 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setConnectionsQueryParamsPaginated(connectionsQueryParamsPaginated);
-    setAddressView(tabIndex as number);
+    setAddressView(tabIndex as string);
+    setSearchParams({ type: tabIndex as string });
   }
 
   const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
     setConnectionsQueryParamsPaginated(params);
   }, []);
+
+  const checkDataChanged = useMemo((): number => {
+    activeConnectionsDataRef.current = activeConnectionsData?.results;
+
+    return (forceMetricUpdateNonceRef.current += 1);
+  }, [activeConnectionsData?.results]);
 
   if (isLoadingServersByAddress || isLoadingActiveConnections) {
     return <LoadingPage />;
@@ -86,12 +104,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
             {serversRowsCount && (
-              <Tab eventKey={0} title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}>
+              <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{FlowPairsLabels.Servers}</TabTitleText>}>
                 <ServersTable processes={servers} />
               </Tab>
             )}
             {activeConnections && (
-              <Tab eventKey={1} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
+              <Tab eventKey={TAB_2_KEY} title={<TabTitleText>{FlowPairsLabelsTcp.ActiveConnections}</TabTitleText>}>
                 <FlowPairsTable
                   columns={ConnectionsByAddressColumns}
                   connections={activeConnections}
@@ -108,6 +126,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
+            forceUpdate={checkDataChanged}
             selectedFilters={{ processIdSource: serverNamesIds, protocol: AvailableProtocols.Tcp }}
             startTime={startTime}
             sourceProcesses={serverNames}

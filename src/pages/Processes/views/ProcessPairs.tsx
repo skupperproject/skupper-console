@@ -7,7 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
+import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -25,7 +25,8 @@ import { QueriesProcesses } from '../services/services.enum';
 
 const initAllFlowParisQueryParamsPaginated = {
   offset: 0,
-  limit: DEFAULT_TABLE_PAGE_SIZE
+  limit: DEFAULT_TABLE_PAGE_SIZE,
+  sortBy: 'endTime.desc'
 };
 
 const ProcessPairs = function () {
@@ -57,6 +58,7 @@ const ProcessPairs = function () {
         filter: `processAggregateId.${processPairId}`
       }),
     {
+      refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
   );
