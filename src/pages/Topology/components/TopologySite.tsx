@@ -13,6 +13,9 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 
+const ZOOM_CACHE_KEY = 'site-graphZoom';
+const FIT_SCREEN_CACHE_KEY = 'site-fitScreen';
+
 const TopologySite: FC<{ id?: string | null }> = function () {
   const navigate = useNavigate();
 
@@ -32,6 +35,14 @@ const TopologySite: FC<{ id?: string | null }> = function () {
     refetchInterval: UPDATE_INTERVAL
   });
 
+  const handleSaveZoom = useCallback((zoomValue: number) => {
+    localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
+  }, []);
+
+  const handleFitScreen = useCallback((flag: boolean) => {
+    localStorage.setItem(FIT_SCREEN_CACHE_KEY, `${flag}`);
+  }, []);
+
   const handleGetSelectedNode = useCallback(
     ({ id, label }: GraphNode) => {
       navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
@@ -50,7 +61,19 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   const nodes = TopologyController.convertSitesToNodes(sites);
   const siteLinks = TopologyController.getLinksFromSites(sites, routers, links);
 
-  return <GraphReactAdaptor nodes={nodes} edges={siteLinks} onClickNode={handleGetSelectedNode} />;
+  return (
+    <GraphReactAdaptor
+      nodes={nodes}
+      edges={siteLinks}
+      onClickNode={handleGetSelectedNode}
+      onGetZoom={handleSaveZoom}
+      onFitScreen={handleFitScreen}
+      config={{
+        zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+        fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+      }}
+    />
+  );
 };
 
 export default TopologySite;

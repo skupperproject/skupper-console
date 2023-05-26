@@ -22,6 +22,7 @@ export enum AddressesColumnsNames {
 // FLOWS PAIRS VIEW
 export enum FlowPairsLabelsTcp {
   ActiveConnections = 'Live connections',
+  OldConnections = 'Connections in the last 15 minutes',
   TrafficTx = 'Outbound Traffic ',
   TrafficRx = 'Inbound traffic',
   AvgByteRateRx = 'Avg. Inbound speed',

@@ -24,6 +24,8 @@ import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '..
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
+const PAGINATION_SIZE = Math.ceil(DEFAULT_TABLE_PAGE_SIZE / 2);
+
 const Process = function () {
   const { id } = useParams() as { id: string };
   const { id: processId } = getIdAndNameFromUrlParams(id);
@@ -111,7 +113,7 @@ const Process = function () {
                 title={ProcessesLabels.TCPServers}
                 columns={processesConnectedColumns}
                 rows={TCPServers}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
+                pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
                   viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
@@ -129,7 +131,7 @@ const Process = function () {
                 title={ProcessesLabels.TCPClients}
                 columns={processesConnectedColumns}
                 rows={TCPClients}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
                   viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
@@ -152,7 +154,7 @@ const Process = function () {
                 title={ProcessesLabels.HTTPServers}
                 columns={processesConnectedColumns}
                 rows={HTTPServers}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE / 2}
+                pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
                   viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
@@ -170,7 +172,7 @@ const Process = function () {
                 title={ProcessesLabels.HTTPClients}
                 columns={processesConnectedColumns}
                 rows={HTTPClients}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
                   viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>

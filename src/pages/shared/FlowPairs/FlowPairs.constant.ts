@@ -66,18 +66,21 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.TxBytes,
     prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
     component: 'ByteFormatCell',
-    format: formatBytes
+    format: formatBytes,
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.RxBytes,
     prop: 'counterFlow.octets' as keyof FlowPairsResponse,
     component: 'ByteFormatCell',
-    format: formatBytes
+    format: formatBytes,
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.TTFB,
     columnDescription: 'time elapsed between client and server',
-    component: 'ClientServerLatencyCell'
+    component: 'ClientServerLatencyCell',
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.Server,
@@ -152,7 +155,7 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
 
   {
-    name: FlowPairsColumnsNames.RequestCompleted,
+    name: FlowPairsColumnsNames.Completed,
     prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
     width: 10

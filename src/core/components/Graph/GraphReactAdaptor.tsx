@@ -26,7 +26,19 @@ import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
-  ({ nodes, edges, combos, onClickEdge, onClickNode, onClickCombo, itemSelected, legendData }) => {
+  ({
+    nodes,
+    edges,
+    combos,
+    onClickEdge,
+    onClickNode,
+    onClickCombo,
+    itemSelected,
+    legendData,
+    onGetZoom,
+    onFitScreen,
+    config
+  }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
 
     const isHoverState = useRef<boolean>(false);
@@ -60,6 +72,24 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         }
       },
       [onClickCombo]
+    );
+
+    const handleGetZoom = useCallback(
+      (zoomValue: number) => {
+        if (onGetZoom) {
+          onGetZoom(zoomValue);
+        }
+      },
+      [onGetZoom]
+    );
+
+    const handleFitScreen = useCallback(
+      (flag: boolean) => {
+        if (onFitScreen) {
+          onFitScreen(flag);
+        }
+      },
+      [onFitScreen]
     );
 
     // Creates topology
@@ -273,6 +303,14 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             });
           }
 
+          topologyGraph.on('wheelzoom', () => {
+            const zoomValue = topologyGraph.getZoom();
+
+            if (onGetZoom) {
+              onGetZoom(zoomValue);
+            }
+          });
+
           topologyGraph.on('afterlayout', () => {
             if (!topologyGraphRef.current) {
               topologyGraphRef.current = topologyGraph;
@@ -287,9 +325,29 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           topologyGraph.data(GraphController.getG6Model({ edges, nodes, combos }));
           topologyGraph.render();
+
+          if (config?.zoom) {
+            topologyGraph.zoomTo(Number(config?.zoom), topologyGraph.getGraphCenterPoint(), true, {
+              duration: 0
+            });
+          }
+          if (Number(config?.fitScreen)) {
+            topologyGraph.fitView(5, undefined, true, { duration: 0 });
+          }
         }
       },
-      [nodes, legendData, combos, edges, handleOnClickNode, handleOnClickEdge, handleOnClickCombo]
+      [
+        nodes,
+        legendData,
+        combos,
+        edges,
+        config?.zoom,
+        config?.fitScreen,
+        handleOnClickNode,
+        handleOnClickEdge,
+        handleOnClickCombo,
+        onGetZoom
+      ]
     );
 
     // This effect persist the  coordinates for each element of topology after the first simulation.
@@ -391,7 +449,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
         </TransitionPage>
 
-        {topologyGraphRef.current && <GraphMenuControl graphInstance={topologyGraphRef.current} />}
+        {topologyGraphRef.current && (
+          <GraphMenuControl
+            graphInstance={topologyGraphRef.current}
+            onGetZoom={handleGetZoom}
+            onFitScreen={handleFitScreen}
+          />
+        )}
       </div>
     );
   }

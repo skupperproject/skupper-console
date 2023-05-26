@@ -37,7 +37,13 @@ export interface GraphReactAdaptorProps {
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
+  onGetZoom?: Function;
+  onFitScreen?: Function;
   legendData?: GraphData;
+  config?: {
+    zoom?: string | null;
+    fitScreen?: number | null;
+  };
 }
 
 export interface LocalStorageData {

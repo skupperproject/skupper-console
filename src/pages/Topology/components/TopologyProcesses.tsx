@@ -32,6 +32,13 @@ import { QueriesTopology } from '../services/services.enum';
 import { ProcessLegendData } from '../Topology.constant';
 import { Labels } from '../Topology.enum';
 
+const ZOOM_CACHE_KEY = 'process-graphZoom';
+const SHOW_SITE_KEY = 'showSite';
+const SHOW_LINK_LABEL = 'show-link-label';
+const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
+const ROTATE_LINK_LABEL = 'show-link-label-rotated';
+const FIT_SCREEN_CACHE_KEY = 'process-fitScreen';
+
 const externalProcessesQueryParams = {
   processRole: 'external'
 };
@@ -45,10 +52,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   id: processId
 }) {
   const navigate = useNavigate();
-  const showSiteInitState = localStorage.getItem('showSite');
-  const showLinkLabelInitState = localStorage.getItem('showLinkLabel');
-  const showLinkLabelReverseInitState = localStorage.getItem('showLinkLabelReverse');
-  const showRotateLabel = localStorage.getItem('showRotateLabel');
+  const showSiteInitState = localStorage.getItem(SHOW_SITE_KEY);
+  const showLinkLabelInitState = localStorage.getItem(SHOW_LINK_LABEL);
+  const showLinkLabelReverseInitState = localStorage.getItem(SHOW_LINK_REVERSE_LABEL);
+  const showRotateLabel = localStorage.getItem(ROTATE_LINK_LABEL);
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
@@ -173,12 +180,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   function handleChangeSiteCheck(checked: boolean) {
     setShowSite(checked);
-    localStorage.setItem('showSite', `${checked}`);
+    localStorage.setItem(SHOW_SITE_KEY, `${checked}`);
   }
 
   function handleChangeProtocolLinkLabelCheck(checked: boolean) {
     setShowLinkLabel(checked);
-    localStorage.setItem('showLinkLabel', `${checked}`);
+    localStorage.setItem(SHOW_LINK_LABEL, `${checked}`);
 
     if (!checked) {
       handleChangeProtocolLinkLabelCheckReverse(checked);
@@ -187,13 +194,21 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   function handleChangeProtocolLinkLabelCheckReverse(checked: boolean) {
     setShowLinkLabelReverse(checked);
-    localStorage.setItem('showLinkLabelReverse', `${checked}`);
+    localStorage.setItem(SHOW_LINK_REVERSE_LABEL, `${checked}`);
   }
 
   function handleChangeRotateLabelCheck(checked: boolean) {
     setRotateLabel(checked);
-    localStorage.setItem('showRotateLabel', `${checked}`);
+    localStorage.setItem(ROTATE_LINK_LABEL, `${checked}`);
   }
+
+  const handleSaveZoom = useCallback((zoomValue: number) => {
+    localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
+  }, []);
+
+  const handleFitScreen = useCallback((flag: boolean) => {
+    localStorage.setItem(FIT_SCREEN_CACHE_KEY, `${flag}`);
+  }, []);
 
   const getOptions = useCallback(() => {
     const options = addresses?.map(({ name, identity }, index) => (
@@ -392,6 +407,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         onClickEdge={handleGetSelectedEdge}
         itemSelected={processId}
         legendData={ProcessLegendData}
+        onGetZoom={handleSaveZoom}
+        onFitScreen={handleFitScreen}
+        config={{
+          zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+          fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+        }}
       />
     </>
   );

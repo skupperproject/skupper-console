@@ -14,6 +14,9 @@ import LoadingPage from '@pages/shared/Loading';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 
+const ZOOM_CACHE_KEY = 'component-graphZoom';
+const FIT_SCREEN_CACHE_KEY = 'component-fitScreen';
+
 const processGroupsQueryParams = {
   processGroupRole: 'external'
 };
@@ -49,6 +52,14 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     }
   );
 
+  const handleSaveZoom = useCallback((zoomValue: number) => {
+    localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
+  }, []);
+
+  const handleFitScreen = useCallback((flag: boolean) => {
+    localStorage.setItem(FIT_SCREEN_CACHE_KEY, `${flag}`);
+  }, []);
+
   const handleGetSelectedNode = useCallback(
     ({ id, label }: GraphNode) => {
       navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${label}@${id}`);
@@ -68,7 +79,18 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
   const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
 
   return (
-    <GraphReactAdaptor nodes={nodes} edges={links} onClickNode={handleGetSelectedNode} itemSelected={processGroupId} />
+    <GraphReactAdaptor
+      nodes={nodes}
+      edges={links}
+      onClickNode={handleGetSelectedNode}
+      itemSelected={processGroupId}
+      onGetZoom={handleSaveZoom}
+      onFitScreen={handleFitScreen}
+      config={{
+        zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+        fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+      }}
+    />
   );
 };
 
