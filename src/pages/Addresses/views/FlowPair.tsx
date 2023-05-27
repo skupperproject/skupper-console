@@ -70,7 +70,7 @@ const FlowsPair = function () {
         {flowPair.protocol === AvailableProtocols.Tcp && (
           <>
             <TextContent>
-              <Text component={TextVariants.h2}>Connection {forwardFlow?.endTime ? 'closed' : 'open'}</Text>
+              <Text component={TextVariants.h2}>Connection {flowPair.endTime ? 'closed' : 'open'}</Text>
             </TextContent>
 
             <Card>
@@ -94,7 +94,7 @@ const FlowsPair = function () {
         {flowPair.protocol !== AvailableProtocols.Tcp && (
           <>
             <TextContent>
-              <Text component={TextVariants.h2}>Request {forwardFlow?.endTime ? 'terminated' : 'open'}</Text>
+              <Text component={TextVariants.h2}>Request {flowPair.endTime ? 'terminated' : 'open'}</Text>
             </TextContent>
             <Card>
               <CardBody>

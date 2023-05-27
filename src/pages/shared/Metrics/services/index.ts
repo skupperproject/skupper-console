@@ -1,5 +1,6 @@
 import { PrometheusApi } from '@API/Prometheus';
 import { PrometheusApiResult } from '@API/Prometheus.interfaces';
+import { defaultTimeInterval, timeIntervalMap } from '@API/Prometheus.queries';
 import { AvailableProtocols } from '@API/REST.enum';
 import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
@@ -21,7 +22,7 @@ import { MetricsLabels } from '../Metrics.enum';
 const MetricsController = {
   getMetrics: async ({
     processIdSource,
-    timeInterval,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
     processIdDest,
     protocol
   }: QueryMetricsParams): Promise<Metrics | null> => {

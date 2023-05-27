@@ -17,47 +17,9 @@ import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { gePrometheusStartTime, timeIntervalMap } from '@API/Prometheus.queries';
 import { AvailableProtocols } from '@API/REST.enum';
 
+import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constant';
 import { MetricsLabels } from './Metrics.enum';
 import { MetricFilterProps, FilterProps } from './Metrics.interfaces';
-
-const displayIntervalMap = [
-  {
-    value: 0,
-    label: 'Pause'
-  },
-  {
-    value: 20 * 1000,
-    label: 'every 20s'
-  },
-  {
-    value: 40 * 1000,
-    label: 'every 40s'
-  },
-  {
-    value: 60 * 1000,
-    label: 'every 1m'
-  },
-  {
-    value: 120 * 1000,
-    label: 'every 2m'
-  }
-];
-
-// default values to enable/disable filters
-const filterOptionsDefault = {
-  sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-  destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-  protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
-  timeIntervals: { disabled: false }
-};
-
-const filterToggleDefault = {
-  processIdSource: false,
-  processIdDest: false,
-  protocol: false,
-  timeInterval: false,
-  displayInterval: false
-};
 
 const MetricFilters: FC<MetricFilterProps> = memo(
   ({
@@ -68,10 +30,12 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
     onRefetch,
-    onRefetchInterval,
     onSelectFilters
   }) => {
     const filterOptions = { ...filterOptionsDefault, ...customFilterOptions };
+
+    // filter the display interval items that are less than startTime
+    // ie: if the flow collector restart we don't want start from the beginning
     const timeIntervalMapWindow = useMemo(
       () =>
         Object.values(timeIntervalMap).filter(
@@ -80,7 +44,6 @@ const MetricFilters: FC<MetricFilterProps> = memo(
       [startTime]
     );
 
-    const [displayInterval, setDisplayInterval] = useState(displayIntervalMap[0].label);
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
     const [selectedFilter, setSelectedFilter] = useState<FilterProps>(initialFilters);
 
@@ -158,14 +121,14 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     }
 
     function handleSelectDisplayInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
-      const intervalLabel = selection as string;
-      const interval = displayIntervalMap.find(({ label }) => label === intervalLabel)?.value || 0;
+      const keySelected = selection as string;
+      const displayInterval = displayIntervalMap.find(({ key }) => key === keySelected)?.key;
 
-      setDisplayInterval(intervalLabel);
+      setSelectedFilter({ ...selectedFilter, displayInterval });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: false });
 
-      if (onRefetchInterval) {
-        onRefetchInterval(interval);
+      if (onSelectFilters) {
+        onSelectFilters({ ...selectedFilter, displayInterval });
       }
     }
 
@@ -209,7 +172,12 @@ const MetricFilters: FC<MetricFilterProps> = memo(
 
     // displayInterval select options
     const optionsDisplayIntervalWithDefault = useMemo(
-      () => displayIntervalMap.map(({ label }, index) => <SelectOption key={index} value={label} />),
+      () =>
+        displayIntervalMap.map(({ label, key }, index) => (
+          <SelectOption key={index} value={key}>
+            {label}
+          </SelectOption>
+        )),
       []
     );
 
@@ -285,7 +253,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
 
             <ToolbarItem>
               <Select
-                selections={selectedFilter.timeInterval.label}
+                selections={selectedFilter.timeInterval?.label}
                 isOpen={selectedFilterIsOpen.timeInterval}
                 isDisabled={filterOptions.timeIntervals.disabled}
                 onSelect={handleSelectTimeIntervalMenu}
@@ -298,7 +266,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
 
             <ToolbarItem>
               <Select
-                selections={displayInterval}
+                selections={selectedFilter.displayInterval}
                 isOpen={selectedFilterIsOpen.displayInterval}
                 onSelect={handleSelectDisplayInterval}
                 onToggle={handleToggleDisplayInterval}
@@ -312,7 +280,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                 <Button
                   variant="plain"
                   isLoading={isRefetching}
-                  isDisabled={displayInterval !== displayIntervalMap[0].label}
+                  isDisabled={selectedFilter.displayInterval !== displayIntervalMap[0].key}
                   onClick={handleRefetchMetrics}
                   icon={<SyncIcon />}
                 />

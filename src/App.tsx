@@ -17,11 +17,13 @@ import { routes } from 'routes';
 
 import { BASE_PROMETHEUS_URL, REDIRECT_TO_PATH } from './config/config';
 
+const query = 'app-getPrometheusURL';
+
 const App = function () {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { data } = useQuery(['QueriesAddresses.GetPrometheusURL'], () => RESTApi.getPrometheusConfig(), {
+  const { data } = useQuery([query], () => RESTApi.getPrometheusConfig(), {
     enabled: !isPrometheusActive()
   });
 

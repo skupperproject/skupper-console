@@ -1,12 +1,7 @@
 import { AvailableProtocols } from '@API/REST.enum';
-import { SKColumn, WidthValue } from '@core/components/SkTable/SkTable.interface';
+import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import { FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
-export interface viewDetailsColumnProps {
-  name: '';
-  component: string;
-  width: WidthValue;
-}
 export interface ServerTableProps {
   processes: ProcessResponse[];
   onGetFilters?: Function;

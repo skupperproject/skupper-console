@@ -1,4 +1,5 @@
-export type WidthValue = 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100;
+type WidthValue = 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100;
+
 type NonNullableValue<T> = T extends null | undefined ? never : T;
 
 export interface SKTableProps<T> {
@@ -24,4 +25,5 @@ export interface SKColumn<T> {
   format?: Function;
   width?: WidthValue;
   columnDescription?: string;
+  modifier?: 'breakWord' | 'fitContent' | 'nowrap' | 'truncate' | 'wrap';
 }

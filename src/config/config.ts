@@ -7,7 +7,7 @@ import Logo from '@assets/skupper.svg';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
-export const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
+const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
 // Base URL for the Prometheus backend. Set in environment variables.
 export const BASE_PROMETHEUS_URL = process.env.PROMETHEUS_URL;
 

@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -9,14 +11,18 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
+import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
+import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { QueriesProcessGroups } from '../services/services.enum';
+
+const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'component-display-interval';
 
 const ProcessGroup = function () {
   const { id } = useParams() as { id: string };
@@ -30,6 +36,13 @@ const ProcessGroup = function () {
   const { data: processes, isLoading: isLoadingProcess } = useQuery(
     [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
     () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
+  );
+
+  const handleRefreshMetrics = useCallback(
+    (filters: SelectedFilters) => {
+      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`, filters);
+    },
+    [processGroupId]
   );
 
   if (isLoadingProcessGroup || isLoadingProcess) {
@@ -75,13 +88,17 @@ const ProcessGroup = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
-              selectedFilters={{ processIdSource: serverNames }}
+              selectedFilters={{
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
+                processIdSource: serverNames
+              }}
               startTime={startTime}
               sourceProcesses={serverNameFilters}
               filterOptions={{
                 destinationProcesses: { disabled: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: { placeholder: MetricsLabels.FilterAllSourceProcesses }
               }}
+              onGetMetricFilters={handleRefreshMetrics}
             />
           </GridItem>
         )}

@@ -9,8 +9,10 @@ import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
+import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
+import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
@@ -23,6 +25,7 @@ import { QueriesAddresses } from '../services/services.enum';
 
 const TAB_1_KEY = 'servers';
 const TAB_2_KEY = 'connections';
+const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
 const initAllRequestsQueryParamsPaginated = {
   limit: DEFAULT_TABLE_PAGE_SIZE,
@@ -81,6 +84,13 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     setSearchParams({ type: tabIndex as string });
   }
 
+  const handleRefreshMetrics = useCallback(
+    (interval: string) => {
+      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
+    },
+    [addressId]
+  );
+
   const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
     setRequestsQueryParamsPaginated(params);
   }, []);
@@ -119,27 +129,25 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       <GridItem>
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
-            {!!serversRowsCount && (
-              <Tab
-                eventKey={TAB_1_KEY}
-                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-              >
-                <ServersTable processes={servers} />
-              </Tab>
-            )}
-            {!!requestsPaginated.length && (
-              <Tab
-                eventKey={TAB_2_KEY}
-                title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
-              >
-                <FlowPairsTable
-                  columns={RequestsByAddressColumns}
-                  connections={requestsPaginated}
-                  onGetFilters={handleGetFiltersConnections}
-                  rowsCount={requestsPaginatedCount}
-                />
-              </Tab>
-            )}
+            <Tab
+              eventKey={TAB_1_KEY}
+              title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
+              disabled={!serversRowsCount}
+            >
+              <ServersTable processes={servers} />
+            </Tab>
+            <Tab
+              eventKey={TAB_2_KEY}
+              title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
+              disabled={!requestsPaginatedCount}
+            >
+              <FlowPairsTable
+                columns={RequestsByAddressColumns}
+                connections={requestsPaginated}
+                onGetFilters={handleGetFiltersConnections}
+                rowsCount={requestsPaginatedCount}
+              />
+            </Tab>
           </Tabs>
         </Card>
       </GridItem>
@@ -149,7 +157,11 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         <GridItem>
           <Metrics
             forceUpdate={checkDataChanged}
-            selectedFilters={{ processIdSource: serverNamesId, protocol: AvailableProtocols.AllHttp }}
+            selectedFilters={{
+              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+              processIdSource: serverNamesId,
+              protocol: AvailableProtocols.AllHttp
+            }}
             startTime={startTime}
             sourceProcesses={serverNames}
             filterOptions={{
@@ -157,6 +169,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
               sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
               destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
             }}
+            onGetMetricFilters={handleRefreshMetrics}
           />
         </GridItem>
       )}

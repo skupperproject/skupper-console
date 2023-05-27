@@ -96,7 +96,7 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: '',
     component: 'viewDetailsLinkCell',
-    width: 15
+    modifier: 'fitContent'
   }
 ];
 
@@ -134,13 +134,12 @@ export const TcpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Trace,
     prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites,
-    width: 10
+    format: formatTraceBySites
   },
   {
     name: '',
     component: 'viewDetailsLinkCell',
-    width: 10
+    modifier: 'fitContent'
   }
 ];
 
@@ -181,7 +180,7 @@ export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairsColumnsNames.Completed,
-    prop: 'counterFlow.endTime' as keyof FlowPairsResponse,
+    prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
     width: 10
   },
@@ -194,6 +193,6 @@ export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: '',
     component: 'viewDetailsLinkCell',
-    width: 10
+    modifier: 'fitContent'
   }
 ];

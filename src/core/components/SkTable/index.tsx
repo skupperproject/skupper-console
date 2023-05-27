@@ -190,15 +190,15 @@ const SkTable = function <T>({
 
               return (
                 <Tr key={row.id} style={isOddRow ? customStyle : {}}>
-                  {row.columns.map(({ data, value, component, callback, format, width }, index) => {
+                  {row.columns.map(({ data, value, component, callback, format, width, modifier }, index) => {
                     const Component = components && component && components[component];
 
                     return Component ? (
-                      <Td width={width} key={index}>
+                      <Td width={width} key={index} modifier={modifier}>
                         <Component data={data} value={value} callback={callback} format={format && format(value)} />
                       </Td>
                     ) : (
-                      <Td width={width} key={index}>
+                      <Td width={width} key={index} modifier={modifier}>
                         <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
                       </Td>
                     );

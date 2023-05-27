@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -7,66 +9,68 @@ import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
-import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
+import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
+import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
+import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessPairsResponse } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '../Processes.constant';
-import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
 const PAGINATION_SIZE = Math.ceil(DEFAULT_TABLE_PAGE_SIZE / 2);
+const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
 
 const Process = function () {
   const { id } = useParams() as { id: string };
   const { id: processId } = getIdAndNameFromUrlParams(id);
+
+  const processesPairsTxQueryParams = {
+    sourceId: processId,
+    endTime: 0
+  };
+
+  const processesPairsRxQueryParams = {
+    destinationId: processId,
+    endTime: 0
+  };
 
   const { data: process, isLoading: isLoadingProcess } = useQuery([QueriesProcesses.GetProcess, processId], () =>
     RESTApi.fetchProcess(processId)
   );
 
   const { data: processesPairsTxData, isLoading: isLoadingProcessesPairsTxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsTx, `sourceId.${processId}`],
-    () =>
-      RESTApi.fetchProcessesPairs({
-        sourceId: processId,
-        endTime: 0
-      })
+    [QueriesProcesses.GetProcessPairsTx, processesPairsTxQueryParams],
+    () => RESTApi.fetchProcessesPairs(processesPairsTxQueryParams)
   );
 
   const { data: processesPairsRxData, isLoading: isLoadingProcessesPairsRxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsRx, `destinationId.${processId}`],
-    () =>
-      RESTApi.fetchProcessesPairs({
-        destinationId: processId,
-        endTime: 0
-      })
+    [QueriesProcesses.GetProcessPairsRx, processesPairsRxQueryParams],
+    () => RESTApi.fetchProcessesPairs(processesPairsRxQueryParams)
   );
 
-  const { data: addresses, isLoading: isLoadingAddressesByProcess } = useQuery(
-    [QueriesProcesses.GetAddressesByProcessId, processId],
-    () => RESTApi.fetchAddressesByProcess(processId)
+  const handleRefreshMetrics = useCallback(
+    (filters: SelectedFilters) => {
+      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`, filters);
+    },
+    [processId]
   );
 
-  if (
-    isLoadingProcess ||
-    isLoadingAddressesByProcess ||
-    isLoadingProcessesPairsTxData ||
-    isLoadingProcessesPairsRxData
-  ) {
+  if (isLoadingProcess || isLoadingProcessesPairsTxData || isLoadingProcessesPairsRxData) {
     return <LoadingPage />;
   }
 
-  if (!process || !processesPairsTxData || !processesPairsRxData || !addresses) {
+  if (!process || !processesPairsTxData || !processesPairsRxData) {
     return null;
   }
 
@@ -116,12 +120,11 @@ const Process = function () {
                 pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
-                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-                    LinkCell({
-                      ...props,
-                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${props.data.identity}`,
-                      value: ProcessPairsColumnsNames.ViewDetails
-                    })
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                    <ViewDetailCell
+                      link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
+                    />
+                  )
                 }}
               />
             </GridItem>
@@ -134,12 +137,11 @@ const Process = function () {
                 pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
-                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-                    LinkCell({
-                      ...props,
-                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${props.data.identity}`,
-                      value: ProcessPairsColumnsNames.ViewDetails
-                    })
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                    <ViewDetailCell
+                      link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${data.identity}`}
+                    />
+                  )
                 }}
               />
             </GridItem>
@@ -157,12 +159,11 @@ const Process = function () {
                 pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
-                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-                    LinkCell({
-                      ...props,
-                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${props.data.identity}`,
-                      value: ProcessPairsColumnsNames.ViewDetails
-                    })
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                    <ViewDetailCell
+                      link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
+                    />
+                  )
                 }}
               />
             </GridItem>
@@ -175,12 +176,11 @@ const Process = function () {
                 pageSizeStart={PAGINATION_SIZE}
                 components={{
                   ...ProcessesConnectedComponentsTable,
-                  viewDetailsLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-                    LinkCell({
-                      ...props,
-                      link: `${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${props.data.identity}`,
-                      value: ProcessPairsColumnsNames.ViewDetails
-                    })
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                    <ViewDetailCell
+                      link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${data.identity}`}
+                    />
+                  )
                 }}
               />
             </GridItem>
@@ -191,13 +191,17 @@ const Process = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
-              selectedFilters={{ processIdSource: process.name }}
+              selectedFilters={{
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`),
+                processIdSource: process.name
+              }}
               startTime={process.startTime}
               processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
               filterOptions={{
                 destinationProcesses: { placeholder: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: { disabled: true, placeholder: process.name }
               }}
+              onGetMetricFilters={handleRefreshMetrics}
             />
           </GridItem>
         )}

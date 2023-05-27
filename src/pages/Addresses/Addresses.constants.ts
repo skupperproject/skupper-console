@@ -7,17 +7,16 @@ import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
 import { AddressResponse, FlowPairsResponse } from 'API/REST.interfaces';
 
 import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Addresses.enum';
-import { viewDetailsColumnProps } from './Addresses.interfaces';
 
 export const AddressesPaths = {
   path: AddressesRoutesPaths.Addresses,
   name: AddressesLabels.Section
 };
 
-const viewDetailsColumn: viewDetailsColumnProps = {
+const viewDetailsColumn: SKColumn<FlowPairsResponse> = {
   name: '',
   component: 'viewDetailsLinkCell',
-  width: 10
+  modifier: 'fitContent'
 };
 
 const endTimeColumn: SKColumn<FlowPairsResponse> = {
