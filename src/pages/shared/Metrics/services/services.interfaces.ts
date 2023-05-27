@@ -8,7 +8,7 @@ export enum QueriesMetrics {
 
 export interface QueryMetricsParams {
   processIdSource: string;
-  timeInterval: IntervalTimeProp;
+  timeInterval?: IntervalTimeProp;
   processIdDest?: string;
   protocol?: AvailableProtocols;
 }

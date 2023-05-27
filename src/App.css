@@ -6,13 +6,3 @@ html {
 #app {
   height: 100%;
 }
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.text-ellipsis {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}

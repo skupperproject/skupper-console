@@ -12,7 +12,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
-import { FlowPairsLabels } from '@pages/Addresses/Addresses.enum';
+import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -145,12 +145,11 @@ const ProcessPairs = function () {
               pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
               components={{
                 ...flowPairsComponentsTable,
-                viewDetailsLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-                  LinkCell({
-                    ...props,
-                    link: `${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${props.data.identity}`,
-                    value: FlowPairsLabels.ViewDetails
-                  })
+                viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                  <ViewDetailCell
+                    link={`${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${data.identity}`}
+                  />
+                )
               }}
             />
           </GridItem>
@@ -166,12 +165,11 @@ const ProcessPairs = function () {
               rowsCount={flowPairsPaginatedCount}
               components={{
                 ...flowPairsComponentsTable,
-                viewDetailsLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-                  LinkCell({
-                    ...props,
-                    link: `${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${props.data.identity}`,
-                    value: FlowPairsLabels.ViewDetails
-                  })
+                viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                  <ViewDetailCell
+                    link={`${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${data.identity}`}
+                  />
+                )
               }}
             />
           </GridItem>

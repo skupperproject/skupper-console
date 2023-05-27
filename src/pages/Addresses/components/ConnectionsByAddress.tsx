@@ -1,4 +1,4 @@
-import { FC, MouseEvent as ReactMouseEvent, useMemo, useRef, useState } from 'react';
+import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -9,8 +9,10 @@ import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import SkTitle from '@core/components/SkTitle';
+import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
+import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse } from 'API/REST.interfaces';
 
@@ -24,6 +26,7 @@ import { QueriesAddresses } from '../services/services.enum';
 const TAB_1_KEY = 'servers';
 const TAB_2_KEY = 'liveConnections';
 const TAB_3_KEY = 'connections';
+const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
 const initServersQueryParams = {
   endTime: 0 // active servers
@@ -60,6 +63,13 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     setSearchParams({ type: tabIndex as string });
   }
 
+  const handleSetMetricFilters = useCallback(
+    (interval: string) => {
+      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
+    },
+    [addressId]
+  );
+
   const checkDataChanged = useMemo((): number => {
     activeConnectionsDataRef.current = activeConnectionsData?.results;
 
@@ -94,32 +104,29 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       <GridItem>
         <Card isRounded className="pf-u-pt-md">
           <Tabs activeKey={addressView} onSelect={handleTabClick}>
-            {!!serversRowsCount && (
-              <Tab
-                eventKey={TAB_1_KEY}
-                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-              >
-                <ServersTable processes={servers} />
-              </Tab>
-            )}
-            {!!activeConnections.length && (
-              <Tab
-                eventKey={TAB_2_KEY}
-                title={
-                  <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
-                }
-              >
-                <FlowPairsTable columns={ConnectionsByAddressColumns} connections={activeConnections} />
-              </Tab>
-            )}
-            {!!oldConnections.length && (
-              <Tab
-                eventKey={TAB_3_KEY}
-                title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
-              >
-                <FlowPairsTable columns={ConnectionsByAddressColumnsEnded} connections={oldConnections} />
-              </Tab>
-            )}
+            <Tab
+              eventKey={TAB_1_KEY}
+              title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
+              disabled={!serversRowsCount}
+            >
+              <ServersTable processes={servers} />
+            </Tab>
+            <Tab
+              eventKey={TAB_2_KEY}
+              title={
+                <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
+              }
+              disabled={!activeConnections.length}
+            >
+              <FlowPairsTable columns={ConnectionsByAddressColumns} connections={activeConnections} />
+            </Tab>
+            <Tab
+              eventKey={TAB_3_KEY}
+              title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
+              disabled={!oldConnections.length}
+            >
+              <FlowPairsTable columns={ConnectionsByAddressColumnsEnded} connections={oldConnections} />
+            </Tab>
           </Tabs>
         </Card>
       </GridItem>
@@ -129,7 +136,11 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         <GridItem>
           <Metrics
             forceUpdate={checkDataChanged}
-            selectedFilters={{ processIdSource: serverNamesIds, protocol: AvailableProtocols.Tcp }}
+            selectedFilters={{
+              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+              processIdSource: serverNamesIds,
+              protocol: AvailableProtocols.Tcp
+            }}
             startTime={startTime}
             sourceProcesses={serverNames}
             filterOptions={{
@@ -137,6 +148,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
               destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
             }}
+            onGetMetricFilters={handleSetMetricFilters}
           />
         </GridItem>
       )}
