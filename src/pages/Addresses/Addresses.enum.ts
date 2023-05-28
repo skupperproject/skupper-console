@@ -57,22 +57,3 @@ export enum ServerColumnsNames {
   Port = 'Port',
   Image = 'Image'
 }
-
-export enum FlowLabels {
-  Protocol = 'Protocol',
-  Process = 'Process',
-  Host = 'Source Host',
-  Port = 'Source Port',
-  Method = 'Method',
-  Trace = 'Trace',
-  DestHost = 'Destination Host',
-  DestPort = 'Destination Port',
-  Flow = 'Client',
-  CounterFlow = 'Server',
-  ByteRate = 'Byte rate',
-  BytesTransferred = 'Bytes transferred',
-  ByteUnacked = 'Byte unacked',
-  WindowSize = 'Window Size',
-  Latency = 'Latency',
-  Duration = 'Duration'
-}

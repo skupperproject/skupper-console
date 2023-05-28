@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { Flex, Grid, GridItem, Icon, Title } from '@patternfly/react-core';
+import { Flex, Grid, GridItem, Icon, Modal, ModalVariant, Title } from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
+import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -30,7 +31,7 @@ const initAllFlowParisQueryParamsPaginated = {
 };
 
 const ProcessPairs = function () {
-  const { processPairId, process } = useParams();
+  const { processPairId } = useParams();
 
   const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
@@ -39,6 +40,8 @@ const ProcessPairs = function () {
   const [flowPairsQueryParamsPaginated, setFlowParisQueryParamsPaginated] = useState<RequestOptions>(
     initAllFlowParisQueryParamsPaginated
   );
+
+  const [flowSelected, setFlowSelected] = useState<string>();
 
   const { data: sourceProcess, isLoading: isLoadingSourceProcess } = useQuery([QueriesProcesses.GetProcess], () =>
     sourceId ? RESTApi.fetchProcess(sourceId) : undefined
@@ -67,6 +70,10 @@ const ProcessPairs = function () {
     setFlowParisQueryParamsPaginated(params);
   }, []);
 
+  const handleOnClickDetails = useCallback((id?: string) => {
+    setFlowSelected(id);
+  }, []);
+
   if (isLoadingFlowPairsPairsData || isLoadingDestinationProcess || isLoadingSourceProcess) {
     return <LoadingPage />;
   }
@@ -80,101 +87,109 @@ const ProcessPairs = function () {
     ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
   );
   const flowPairsPaginatedCount = flowPairsPairsData.timeRangeCount;
+  const flow = flowPairsPairsData.results.find((flowPairs) => flowPairs.identity === flowSelected);
 
   return (
     <TransitionPage>
-      <Grid hasGutter>
-        <GridItem>
-          <Flex>
-            <Title headingLevel="h1">{ProcessPairsColumnsNames.Title}</Title>
-            <Link
-              to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
-            >
-              {`(${ProcessesLabels.GoToTopology})`}
-            </Link>
-          </Flex>
-        </GridItem>
-        <GridItem span={5}>
-          <ProcessDescription
-            process={sourceProcess}
-            title={LinkCell<ProcessResponse>({
-              data: sourceProcess,
-              value: sourceProcess.name,
-              link: `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceId}`,
-              type: 'process'
-            })}
-          />
-        </GridItem>
-
-        <GridItem
-          span={2}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
+      <>
+        <Modal
+          aria-label="No header/footer modal"
+          isOpen={!!flowSelected}
+          onClose={() => handleOnClickDetails()}
+          variant={ModalVariant.medium}
         >
-          <Icon status="success" size="xl">
-            <LongArrowAltRightIcon />
-          </Icon>
-          <Icon status="info" size="xl">
-            <LongArrowAltLeftIcon />
-          </Icon>
-        </GridItem>
+          <FlowsPair flowPair={flow} />
+        </Modal>
 
-        <GridItem span={5}>
-          <ProcessDescription
-            process={destinationProcess}
-            title={LinkCell<ProcessResponse>({
-              data: destinationProcess,
-              value: destinationProcess.name,
-              link: `${ProcessesRoutesPaths.Processes}/${destinationProcess.name}@${destinationId}`,
-              type: 'process'
-            })}
-          />
-        </GridItem>
-
-        {!!TcpFlowPairs.length && (
+        <Grid hasGutter>
           <GridItem>
-            <SkTable
-              title={ProcessesLabels.TcpConnection}
-              columns={TcpProcessesFlowPairsColumns}
-              rows={TcpFlowPairs}
-              pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-              components={{
-                ...flowPairsComponentsTable,
-                viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                  <ViewDetailCell
-                    link={`${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${data.identity}`}
-                  />
-                )
-              }}
+            <Flex>
+              <Title headingLevel="h1">{ProcessPairsColumnsNames.Title}</Title>
+              <Link
+                to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
+              >
+                {`(${ProcessesLabels.GoToTopology})`}
+              </Link>
+            </Flex>
+          </GridItem>
+          <GridItem span={5}>
+            <ProcessDescription
+              process={sourceProcess}
+              title={LinkCell<ProcessResponse>({
+                data: sourceProcess,
+                value: sourceProcess.name,
+                link: `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceId}`,
+                type: 'process'
+              })}
             />
           </GridItem>
-        )}
 
-        {!!HttpFlowPairs.length && (
-          <GridItem>
-            <SkTable
-              title={ProcessesLabels.HttpRequests}
-              columns={HttpProcessesFlowPairsColumns}
-              rows={HttpFlowPairs}
-              onGetFilters={handleGetFiltersFlowPairs}
-              rowsCount={flowPairsPaginatedCount}
-              components={{
-                ...flowPairsComponentsTable,
-                viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                  <ViewDetailCell
-                    link={`${ProcessesRoutesPaths.Processes}/${process}/${processPairId}/${data.identity}`}
-                  />
-                )
-              }}
+          <GridItem
+            span={2}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Icon status="success" size="xl">
+              <LongArrowAltRightIcon />
+            </Icon>
+            <Icon status="info" size="xl">
+              <LongArrowAltLeftIcon />
+            </Icon>
+          </GridItem>
+
+          <GridItem span={5}>
+            <ProcessDescription
+              process={destinationProcess}
+              title={LinkCell<ProcessResponse>({
+                data: destinationProcess,
+                value: destinationProcess.name,
+                link: `${ProcessesRoutesPaths.Processes}/${destinationProcess.name}@${destinationId}`,
+                type: 'process'
+              })}
             />
           </GridItem>
-        )}
-      </Grid>
+
+          {!!TcpFlowPairs.length && (
+            <GridItem>
+              <SkTable
+                title={ProcessesLabels.TcpConnection}
+                columns={TcpProcessesFlowPairsColumns}
+                rows={TcpFlowPairs}
+                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                components={{
+                  ...flowPairsComponentsTable,
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                    <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                  )
+                }}
+              />
+            </GridItem>
+          )}
+
+          {!!HttpFlowPairs.length && (
+            <GridItem>
+              <SkTable
+                title={ProcessesLabels.HttpRequests}
+                columns={HttpProcessesFlowPairsColumns}
+                rows={HttpFlowPairs}
+                onGetFilters={handleGetFiltersFlowPairs}
+                rowsCount={flowPairsPaginatedCount}
+                components={{
+                  ...flowPairsComponentsTable,
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                    <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                  )
+                }}
+              />
+            </GridItem>
+          )}
+        </Grid>
+      </>
     </TransitionPage>
   );
 };
