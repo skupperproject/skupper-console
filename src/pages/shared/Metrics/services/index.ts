@@ -217,7 +217,8 @@ function normalizeTrafficData(txData: PrometheusApiResult[], rxData: PrometheusA
   if (!axisValuesTx || !axisValuesRx) {
     return null;
   }
-  const timeSeriesDataReceived = axisValuesRx[0];
+
+  const timeSeriesDataReceived = axisValuesRx[axisValuesRx.length - 1];
   const timeSeriesDataSent = axisValuesTx[0];
 
   const currentTrafficReceived = timeSeriesDataReceived[timeSeriesDataReceived.length - 1].y;
