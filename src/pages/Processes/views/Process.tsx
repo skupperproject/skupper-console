@@ -1,6 +1,6 @@
-import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
-import { Flex, FlexItem, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -28,17 +28,12 @@ import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '..
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const TAB_1_KEY = 'clients';
-const TAB_2_KEY = 'servers';
-
 const PAGINATION_SIZE = Math.ceil(DEFAULT_TABLE_PAGE_SIZE / 2);
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
 
 const Process = function () {
   const { id } = useParams() as { id: string };
   const { id: processId } = getIdAndNameFromUrlParams(id);
-
-  const [processType, setProcessType] = useState(TAB_1_KEY);
 
   const processesPairsTxQueryParams = {
     sourceId: processId,
@@ -70,15 +65,6 @@ const Process = function () {
     },
     [processId]
   );
-
-  function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setProcessType(tabIndex as string);
-  }
-
-  // When we click on a link from the tables client and servers we call the same component with different params => useState is not reset
-  useEffect(() => {
-    setProcessType(TAB_1_KEY);
-  }, [id]);
 
   if (isLoadingProcess || isLoadingProcessesPairsTxData || isLoadingProcessesPairsRxData) {
     return <LoadingPage />;
@@ -124,95 +110,83 @@ const Process = function () {
         </GridItem>
 
         <GridItem>
-          <Tabs activeKey={processType} onSelect={handleTabClick}>
-            {/* TCP clients and server processes*/}
-            <Tab
-              eventKey={TAB_1_KEY}
-              title={
-                <TabTitleText>{`${ProcessesLabels.Clients} (${TCPClients.length + HTTPClients.length})`}</TabTitleText>
-              }
-            >
-              <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
-                <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-                  <SkTable
-                    title={ProcessesLabels.HTTPprotocol}
-                    columns={processesConnectedColumns}
-                    rows={TCPClients}
-                    pageSizeStart={PAGINATION_SIZE}
-                    components={{
-                      ...ProcessesConnectedComponentsTable,
-                      viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                        <ViewDetailCell
-                          link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${data.identity}`}
-                        />
-                      )
-                    }}
-                  />
-                </FlexItem>
+          <Flex direction={{ default: 'column', xl: 'row' }} justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+            {!!TCPClients.length && (
+              <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+                <SkTable
+                  title={ProcessesLabels.TCPClients}
+                  columns={processesConnectedColumns}
+                  rows={TCPClients}
+                  pageSizeStart={PAGINATION_SIZE}
+                  components={{
+                    ...ProcessesConnectedComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                      <ViewDetailCell
+                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${data.identity}`}
+                      />
+                    )
+                  }}
+                />
+              </FlexItem>
+            )}
 
-                <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-                  <SkTable
-                    title={ProcessesLabels.TCPprocol}
-                    columns={processesConnectedColumns}
-                    rows={HTTPClients}
-                    pageSizeStart={PAGINATION_SIZE}
-                    components={{
-                      ...ProcessesConnectedComponentsTable,
-                      viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                        <ViewDetailCell
-                          link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${data.identity}`}
-                        />
-                      )
-                    }}
-                  />
-                </FlexItem>
-              </Flex>
-            </Tab>
+            {!!TCPServers.length && (
+              <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+                <SkTable
+                  title={ProcessesLabels.TCPServers}
+                  columns={processesConnectedColumns}
+                  rows={TCPServers}
+                  pageSizeStart={PAGINATION_SIZE}
+                  components={{
+                    ...ProcessesConnectedComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                      <ViewDetailCell
+                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
+                      />
+                    )
+                  }}
+                />
+              </FlexItem>
+            )}
 
-            {/* HTTP client and server processes*/}
-            <Tab
-              eventKey={TAB_2_KEY}
-              title={
-                <TabTitleText>{`${ProcessesLabels.Servers} (${TCPServers.length + HTTPServers.length})`}</TabTitleText>
-              }
-            >
-              <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
-                <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-                  <SkTable
-                    title={ProcessesLabels.HTTPprotocol}
-                    columns={processesConnectedColumns}
-                    rows={HTTPServers}
-                    pageSizeStart={PAGINATION_SIZE}
-                    components={{
-                      ...ProcessesConnectedComponentsTable,
-                      viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                        <ViewDetailCell
-                          link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
-                        />
-                      )
-                    }}
-                  />
-                </FlexItem>
+            {!!HTTPClients.length && (
+              <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+                <SkTable
+                  title={ProcessesLabels.HTTPClients}
+                  columns={processesConnectedColumns}
+                  rows={HTTPClients}
+                  pageSizeStart={PAGINATION_SIZE}
+                  components={{
+                    ...ProcessesConnectedComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                      <ViewDetailCell
+                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${data.identity}`}
+                      />
+                    )
+                  }}
+                />
+              </FlexItem>
+            )}
 
-                <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-                  <SkTable
-                    title={ProcessesLabels.TCPprocol}
-                    columns={processesConnectedColumns}
-                    rows={TCPServers}
-                    pageSizeStart={PAGINATION_SIZE}
-                    components={{
-                      ...ProcessesConnectedComponentsTable,
-                      viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                        <ViewDetailCell
-                          link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
-                        />
-                      )
-                    }}
-                  />
-                </FlexItem>
-              </Flex>
-            </Tab>
-          </Tabs>
+            {!!HTTPServers.length && (
+              <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+                <SkTable
+                  title={ProcessesLabels.HTTPServers}
+                  columns={processesConnectedColumns}
+                  rows={HTTPServers}
+                  pageSizeStart={PAGINATION_SIZE}
+                  components={{
+                    ...ProcessesConnectedComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                      <ViewDetailCell
+                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
+                      />
+                    )
+                  }}
+                />
+              </FlexItem>
+            )}
+          </Flex>
         </GridItem>
         {/* Process Metrics - key reset the component(state) when we click on a link from the server or client table*/}
         {isPrometheusActive() && (
@@ -224,7 +198,7 @@ const Process = function () {
                 processIdSource: process.name
               }}
               startTime={process.startTime}
-              processesConnected={[...processesPairsTxData, ...processesPairsRxReverse]}
+              processesConnected={[...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients]}
               filterOptions={{
                 destinationProcesses: { placeholder: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: { disabled: true, placeholder: process.name }

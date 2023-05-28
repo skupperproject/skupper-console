@@ -280,7 +280,9 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                 <Button
                   variant="plain"
                   isLoading={isRefetching}
-                  isDisabled={selectedFilter.displayInterval !== displayIntervalMap[0].key}
+                  isDisabled={
+                    !!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key
+                  }
                   onClick={handleRefetchMetrics}
                   icon={<SyncIcon />}
                 />

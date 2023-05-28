@@ -10,6 +10,7 @@ import {
 import { gePrometheusQueryPATH, queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
+  // When direction is incoming, the sourceProcess is the client and the destProcess is the server.
   fetchDataTrafficOut: async ({
     id,
     range,
@@ -28,6 +29,8 @@ export const PrometheusApi = {
     if (protocol) {
       param = [param, `protocol=~"${protocol}"`].join(',');
     }
+
+    param = [param, `direction="incoming"`].join(',');
 
     let query = queries.getBytesByDirection(param);
 
@@ -48,6 +51,7 @@ export const PrometheusApi = {
     // it retrieves 2 arrays of [values, timestamps], 1) received traffic 2) sent traffic
     return result;
   },
+  //When direction is outoing, it is the response from from the server (sourceProcess) to the client (destProcess)
   fetchDataTrafficIn: async ({
     id,
     range,
@@ -66,6 +70,8 @@ export const PrometheusApi = {
     if (protocol) {
       param = [param, `protocol=~"${protocol}"`].join(',');
     }
+
+    param = [param, `direction="outgoing"`].join(',');
 
     let query = queries.getBytesByDirection(param);
 
