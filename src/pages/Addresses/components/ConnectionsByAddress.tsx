@@ -1,15 +1,20 @@
 import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Card, Grid, GridItem, Modal, ModalVariant, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
+import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
+import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
+import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -19,7 +24,6 @@ import { FlowPairsResponse } from 'API/REST.interfaces';
 import { ConnectionsByAddressColumns, ConnectionsByAddressColumnsEnded } from '../Addresses.constants';
 import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
-import FlowPairsTable from '../components/FlowPairsTable';
 import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
@@ -40,6 +44,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
   const [addressView, setAddressView] = useState<string>(type);
+  const [flowSelected, setFlowSelected] = useState<string>();
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
     [QueriesAddresses.GetFlowPairsByAddress, addressId],
@@ -70,6 +75,10 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     [addressId]
   );
 
+  const handleOnClickDetails = useCallback((id?: string) => {
+    setFlowSelected(id);
+  }, []);
+
   const checkDataChanged = useMemo((): number => {
     activeConnectionsDataRef.current = activeConnectionsData?.results;
 
@@ -90,67 +99,106 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const serverNamesIds = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
+  const flowPair = [...activeConnections, ...oldConnections].find((flowPairs) => flowPairs.identity === flowSelected);
+
   return (
-    <Grid hasGutter>
-      <GridItem>
-        <SkTitle
-          title={addressName}
-          icon="address"
-          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+    <>
+      <Modal
+        aria-label="No header/footer modal"
+        isOpen={!!flowSelected}
+        onClose={() => handleOnClickDetails()}
+        variant={ModalVariant.medium}
+      >
+        <FlowsPair
+          flowPair={
+            flowPair && {
+              ...flowPair,
+              counterFlow: { ...flowPair.counterFlow, sourcePort: addressName?.split(':')[1] as string }
+            }
+          }
         />
-      </GridItem>
-
-      {/* connection table*/}
-      <GridItem>
-        <Card isRounded className="pf-u-pt-md">
-          <Tabs activeKey={addressView} onSelect={handleTabClick}>
-            <Tab
-              eventKey={TAB_1_KEY}
-              title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-            >
-              <ServersTable processes={servers} />
-            </Tab>
-            <Tab
-              eventKey={TAB_2_KEY}
-              title={
-                <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
-              }
-            >
-              <FlowPairsTable columns={ConnectionsByAddressColumns} connections={activeConnections} />
-            </Tab>
-            <Tab
-              eventKey={TAB_3_KEY}
-              title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
-            >
-              <FlowPairsTable columns={ConnectionsByAddressColumnsEnded} connections={oldConnections} />
-            </Tab>
-          </Tabs>
-        </Card>
-      </GridItem>
-
-      {/* Process Metrics*/}
-      {isPrometheusActive() && (
+      </Modal>
+      <Grid hasGutter>
         <GridItem>
-          <Metrics
-            key={addressId}
-            forceUpdate={checkDataChanged}
-            selectedFilters={{
-              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
-              processIdSource: serverNamesIds,
-              protocol: AvailableProtocols.Tcp
-            }}
-            startTime={startTime}
-            sourceProcesses={serverNames}
-            filterOptions={{
-              protocols: { disabled: true, placeholder: protocol },
-              sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
-              destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
-            }}
-            onGetMetricFilters={handleSetMetricFilters}
+          <SkTitle
+            title={addressName}
+            icon="address"
+            link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
           />
         </GridItem>
-      )}
-    </Grid>
+
+        {/* connection table*/}
+        <GridItem>
+          <Card isRounded className="pf-u-pt-md">
+            <Tabs activeKey={addressView} onSelect={handleTabClick}>
+              <Tab
+                eventKey={TAB_1_KEY}
+                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
+              >
+                <ServersTable processes={servers} />
+              </Tab>
+              <Tab
+                eventKey={TAB_2_KEY}
+                title={
+                  <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
+                }
+              >
+                <SkTable
+                  columns={ConnectionsByAddressColumns}
+                  rows={activeConnections}
+                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  components={{
+                    ...flowPairsComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                    )
+                  }}
+                />
+              </Tab>
+              <Tab
+                eventKey={TAB_3_KEY}
+                title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
+              >
+                <SkTable
+                  columns={ConnectionsByAddressColumnsEnded}
+                  rows={oldConnections}
+                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  components={{
+                    ...flowPairsComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                    )
+                  }}
+                />
+              </Tab>
+            </Tabs>
+          </Card>
+        </GridItem>
+
+        {/* Process Metrics*/}
+        {isPrometheusActive() && (
+          <GridItem>
+            <Metrics
+              key={addressId}
+              forceUpdate={checkDataChanged}
+              selectedFilters={{
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+                processIdSource: serverNamesIds,
+                protocol: AvailableProtocols.Tcp
+              }}
+              startTime={startTime}
+              sourceProcesses={serverNames}
+              filterOptions={{
+                protocols: { disabled: true, placeholder: protocol },
+                sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
+                destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
+              }}
+              onGetMetricFilters={handleSetMetricFilters}
+            />
+          </GridItem>
+        )}
+      </Grid>
+    </>
   );
 };
 

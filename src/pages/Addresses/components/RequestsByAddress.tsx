@@ -1,6 +1,6 @@
 import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Card, Grid, GridItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Card, Grid, GridItem, Modal, ModalVariant, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
@@ -8,15 +8,19 @@ import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
+import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
+import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import FlowPairsTable from './FlowPairsTable';
 import ServersTable from './ServersTable';
 import { RequestsByAddressColumns } from '../Addresses.constants';
 import { FlowPairsLabelsHttp, FlowPairsLabels, AddressesLabels } from '../Addresses.enum';
@@ -48,6 +52,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
     initAllRequestsQueryParamsPaginated
   );
+  const [flowSelected, setFlowSelected] = useState<string>();
 
   const { data: requestsDataPaginated, isLoading: isLoadingRequestsPaginated } = useQuery(
     [
@@ -95,6 +100,10 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     setRequestsQueryParamsPaginated(params);
   }, []);
 
+  const handleOnClickDetails = useCallback((id?: string) => {
+    setFlowSelected(id);
+  }, []);
+
   const checkDataChanged = useMemo((): number => {
     requestsDataPaginatedPrevRef.current = requestsDataPaginated?.results;
 
@@ -115,64 +124,84 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   const serverNamesId = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
+  const flow = requestsDataPaginated?.results.find((flowPairs) => flowPairs.identity === flowSelected);
+
   return (
-    <Grid hasGutter>
-      <GridItem>
-        <SkTitle
-          title={addressName}
-          icon="address"
-          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
-        />
-      </GridItem>
-
-      {/* requests table*/}
-      <GridItem>
-        <Card isRounded className="pf-u-pt-md">
-          <Tabs activeKey={addressView} onSelect={handleTabClick}>
-            <Tab
-              eventKey={TAB_1_KEY}
-              title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-            >
-              <ServersTable processes={servers} />
-            </Tab>
-            <Tab
-              eventKey={TAB_2_KEY}
-              title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
-            >
-              <FlowPairsTable
-                columns={RequestsByAddressColumns}
-                connections={requestsPaginated}
-                onGetFilters={handleGetFiltersConnections}
-                rowsCount={requestsPaginatedCount}
-              />
-            </Tab>
-          </Tabs>
-        </Card>
-      </GridItem>
-
-      {/* Process Metrics*/}
-      {isPrometheusActive() && (
+    <>
+      <Modal
+        aria-label="No header/footer modal"
+        isOpen={!!flowSelected}
+        onClose={() => handleOnClickDetails()}
+        variant={ModalVariant.medium}
+      >
+        <FlowsPair flowPair={flow} />
+      </Modal>
+      <Grid hasGutter>
         <GridItem>
-          <Metrics
-            key={addressId}
-            forceUpdate={checkDataChanged}
-            selectedFilters={{
-              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
-              processIdSource: serverNamesId,
-              protocol: AvailableProtocols.AllHttp
-            }}
-            startTime={startTime}
-            sourceProcesses={serverNames}
-            filterOptions={{
-              protocols: { disabled: true, placeholder: protocol },
-              sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
-              destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
-            }}
-            onGetMetricFilters={handleRefreshMetrics}
+          <SkTitle
+            title={addressName}
+            icon="address"
+            link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
           />
         </GridItem>
-      )}
-    </Grid>
+
+        {/* requests table*/}
+        <GridItem>
+          <Card isRounded className="pf-u-pt-md">
+            <Tabs activeKey={addressView} onSelect={handleTabClick}>
+              <Tab
+                eventKey={TAB_1_KEY}
+                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
+              >
+                <ServersTable processes={servers} />
+              </Tab>
+              <Tab
+                eventKey={TAB_2_KEY}
+                title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
+              >
+                <SkTable
+                  columns={RequestsByAddressColumns}
+                  rows={requestsPaginated}
+                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  onGetFilters={handleGetFiltersConnections}
+                  rowsCount={requestsPaginatedCount}
+                  components={{
+                    ...flowPairsComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                    )
+                  }}
+                />
+                );
+              </Tab>
+            </Tabs>
+          </Card>
+        </GridItem>
+
+        {/* Process Metrics*/}
+        {isPrometheusActive() && (
+          <GridItem>
+            <Metrics
+              key={addressId}
+              forceUpdate={checkDataChanged}
+              selectedFilters={{
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+                processIdSource: serverNamesId,
+                protocol: AvailableProtocols.AllHttp
+              }}
+              startTime={startTime}
+              sourceProcesses={serverNames}
+              filterOptions={{
+                protocols: { disabled: true, placeholder: protocol },
+                sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
+                destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
+              }}
+              onGetMetricFilters={handleRefreshMetrics}
+            />
+          </GridItem>
+        )}
+      </Grid>
+    </>
   );
 };
 
