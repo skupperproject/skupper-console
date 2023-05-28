@@ -30,8 +30,6 @@ export const PrometheusApi = {
       param = [param, `protocol=~"${protocol}"`].join(',');
     }
 
-    param = [param, `direction="incoming"`].join(',');
-
     let query = queries.getBytesByDirection(param);
 
     if (isRate) {
@@ -70,8 +68,6 @@ export const PrometheusApi = {
     if (protocol) {
       param = [param, `protocol=~"${protocol}"`].join(',');
     }
-
-    param = [param, `direction="outgoing"`].join(',');
 
     let query = queries.getBytesByDirection(param);
 
