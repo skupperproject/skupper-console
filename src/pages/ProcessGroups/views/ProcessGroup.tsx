@@ -88,6 +88,7 @@ const ProcessGroup = function () {
         {isPrometheusActive() && (
           <GridItem>
             <Metrics
+              key={id}
               selectedFilters={{
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
                 processIdSource: serverNames

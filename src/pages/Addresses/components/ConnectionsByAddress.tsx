@@ -107,7 +107,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
             <Tab
               eventKey={TAB_1_KEY}
               title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-              disabled={!serversRowsCount}
             >
               <ServersTable processes={servers} />
             </Tab>
@@ -116,14 +115,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               title={
                 <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
               }
-              disabled={!activeConnections.length}
             >
               <FlowPairsTable columns={ConnectionsByAddressColumns} connections={activeConnections} />
             </Tab>
             <Tab
               eventKey={TAB_3_KEY}
               title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
-              disabled={!oldConnections.length}
             >
               <FlowPairsTable columns={ConnectionsByAddressColumnsEnded} connections={oldConnections} />
             </Tab>
@@ -135,6 +132,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
+            key={addressId}
             forceUpdate={checkDataChanged}
             selectedFilters={{
               ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
