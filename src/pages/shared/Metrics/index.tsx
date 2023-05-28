@@ -27,7 +27,6 @@ const Metrics: FC<MetricsProps> = function ({
   onGetMetricFilters
 }) {
   const { displayInterval, ...queryInit } = selectedFilters;
-
   const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(displayInterval));
   const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>(queryInit);
 
