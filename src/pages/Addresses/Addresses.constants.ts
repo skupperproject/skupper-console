@@ -1,10 +1,9 @@
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
-import { timeAgo } from '@core/utils/timeAgo';
-import { HttpFlowPairsColumns, TcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
-import { AddressResponse, FlowPairsResponse } from 'API/REST.interfaces';
+import { AddressResponse } from 'API/REST.interfaces';
 
 import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Addresses.enum';
 
@@ -13,29 +12,7 @@ export const AddressesPaths = {
   name: AddressesLabels.Section
 };
 
-const viewDetailsColumn: SKColumn<FlowPairsResponse> = {
-  name: '',
-  component: 'viewDetailsLinkCell',
-  modifier: 'fitContent'
-};
-
-const endTimeColumn: SKColumn<FlowPairsResponse> = {
-  name: FlowPairsColumnsNames.Closed,
-  prop: 'endTime' as keyof FlowPairsResponse,
-  format: timeAgo,
-  width: 10
-};
-
-export const ConnectionsByAddressColumns: SKColumn<FlowPairsResponse>[] = [...TcpFlowPairsColumns, viewDetailsColumn];
-export const ConnectionsByAddressColumnsEnded: SKColumn<FlowPairsResponse>[] = [
-  ...TcpFlowPairsColumns,
-  endTimeColumn,
-  viewDetailsColumn
-];
-
-export const RequestsByAddressColumns: SKColumn<FlowPairsResponse>[] = [...HttpFlowPairsColumns, viewDetailsColumn];
-
-export const addressesComponentsTables = {
+export const customAddressCells = {
   AddressNameLinkCell: (props: LinkCellProps<AddressResponse>) =>
     LinkCell({
       ...props,
@@ -79,3 +56,18 @@ export const addressesColumnsWithFlowPairsCounters: SKColumn<AddressResponse>[] 
     width: 15
   }
 ];
+
+const tcpHiddenColumns: Record<string, { show: boolean }> = {
+  [FlowPairsColumnsNames.Closed]: {
+    show: false
+  },
+  [FlowPairsColumnsNames.To]: {
+    show: false
+  }
+};
+
+export const httpColumns = httpFlowPairsColumns;
+export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
+  ...flowPair,
+  show: tcpHiddenColumns[flowPair.name]?.show
+}));

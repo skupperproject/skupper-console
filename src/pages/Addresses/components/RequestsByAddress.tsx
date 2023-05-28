@@ -13,6 +13,7 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
@@ -21,8 +22,7 @@ import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import ServersTable from './ServersTable';
-import { RequestsByAddressColumns } from '../Addresses.constants';
+import { httpColumns } from '../Addresses.constants';
 import { FlowPairsLabelsHttp, FlowPairsLabels, AddressesLabels } from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
@@ -153,14 +153,19 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
               >
-                <ServersTable processes={servers} />
+                <SkTable
+                  columns={processesTableColumns}
+                  rows={servers}
+                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  components={ProcessesComponentsTable}
+                />
               </Tab>
               <Tab
                 eventKey={TAB_2_KEY}
                 title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
               >
                 <SkTable
-                  columns={RequestsByAddressColumns}
+                  columns={httpColumns}
                   rows={requestsPaginated}
                   pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                   onGetFilters={handleGetFiltersConnections}
@@ -172,7 +177,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                     )
                   }}
                 />
-                );
               </Tab>
             </Tabs>
           </Card>

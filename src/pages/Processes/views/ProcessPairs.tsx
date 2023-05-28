@@ -20,7 +20,7 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
-import { HttpProcessesFlowPairsColumns, TcpProcessesFlowPairsColumns } from '../Processes.constant';
+import { httpColumns, tcpColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -158,7 +158,7 @@ const ProcessPairs = function () {
             <GridItem>
               <SkTable
                 title={ProcessesLabels.TcpConnection}
-                columns={TcpProcessesFlowPairsColumns}
+                columns={tcpColumns}
                 rows={TcpFlowPairs}
                 pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                 components={{
@@ -175,7 +175,7 @@ const ProcessPairs = function () {
             <GridItem>
               <SkTable
                 title={ProcessesLabels.HttpRequests}
-                columns={HttpProcessesFlowPairsColumns}
+                columns={httpColumns}
                 rows={HttpFlowPairs}
                 onGetFilters={handleGetFiltersFlowPairs}
                 rowsCount={flowPairsPaginatedCount}

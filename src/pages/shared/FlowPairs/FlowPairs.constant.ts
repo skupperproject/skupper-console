@@ -46,7 +46,7 @@ export const flowPairsComponentsTable = {
     HighlightValueCell({ ...props, format: formatBytes })
 };
 
-export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Client,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
@@ -103,10 +103,21 @@ export const TcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Duration,
     component: 'DurationCell',
     width: 10
+  },
+  {
+    name: FlowPairsColumnsNames.Closed,
+    prop: 'endTime' as keyof FlowPairsResponse,
+    format: timeAgo,
+    width: 10
+  },
+  {
+    name: '',
+    component: 'viewDetailsLinkCell',
+    modifier: 'fitContent'
   }
 ];
 
-export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Method,
     prop: 'forwardFlow.method' as keyof FlowPairsResponse
@@ -159,5 +170,10 @@ export const HttpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
     width: 10
+  },
+  {
+    name: '',
+    component: 'viewDetailsLinkCell',
+    modifier: 'fitContent'
   }
 ];

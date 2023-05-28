@@ -151,26 +151,29 @@ const SkTable = function <T>({
       <TableComposable borders={false} variant="compact" isStickyHeader isStriped {...restProps}>
         <Thead>
           <Tr>
-            {columns.map(({ name, prop, columnDescription }, index) => (
-              <Th
-                colSpan={1}
-                key={name}
-                sort={(prop && shouldSort && getSortParams(index)) || undefined}
-                info={
-                  columnDescription
-                    ? {
-                        tooltip: columnDescription,
-                        className: 'repositories-info-tip',
-                        tooltipProps: {
-                          isContentLeftAligned: true
-                        }
-                      }
-                    : undefined
-                }
-              >
-                {name}
-              </Th>
-            ))}
+            {columns.map(
+              ({ name, prop, columnDescription, show = true }, index) =>
+                show && (
+                  <Th
+                    colSpan={1}
+                    key={name}
+                    sort={(prop && shouldSort && getSortParams(index)) || undefined}
+                    info={
+                      columnDescription
+                        ? {
+                            tooltip: columnDescription,
+                            className: 'repositories-info-tip',
+                            tooltipProps: {
+                              isContentLeftAligned: true
+                            }
+                          }
+                        : undefined
+                    }
+                  >
+                    {name}
+                  </Th>
+                )
+            )}
           </Tr>
         </Thead>
         <Tbody>
@@ -190,19 +193,27 @@ const SkTable = function <T>({
 
               return (
                 <Tr key={row.id} style={isOddRow ? customStyle : {}}>
-                  {row.columns.map(({ data, value, component, callback, format, width, modifier }, index) => {
-                    const Component = components && component && components[component];
+                  {row.columns.map(
+                    ({ data, value, component, callback, format, width, modifier, show = true }, index) => {
+                      if (!show) {
+                        return null;
+                      }
 
-                    return Component ? (
-                      <Td width={width} key={index} modifier={modifier}>
-                        <Component data={data} value={value} callback={callback} format={format && format(value)} />
-                      </Td>
-                    ) : (
-                      <Td width={width} key={index} modifier={modifier}>
-                        <TableText wrapModifier="truncate">{(format && format(value)) || (value as string)}</TableText>
-                      </Td>
-                    );
-                  })}
+                      const Component = components && component && components[component];
+
+                      return Component ? (
+                        <Td width={width} key={index} modifier={modifier}>
+                          <Component data={data} value={value} callback={callback} format={format && format(value)} />
+                        </Td>
+                      ) : (
+                        <Td width={width} key={index} modifier={modifier}>
+                          <TableText wrapModifier="truncate">
+                            {(format && format(value)) || (value as string)}
+                          </TableText>
+                        </Td>
+                      );
+                    }
+                  )}
                 </Tr>
               );
             })}
