@@ -132,14 +132,12 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
             <Tab
               eventKey={TAB_1_KEY}
               title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-              disabled={!serversRowsCount}
             >
               <ServersTable processes={servers} />
             </Tab>
             <Tab
               eventKey={TAB_2_KEY}
               title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
-              disabled={!requestsPaginatedCount}
             >
               <FlowPairsTable
                 columns={RequestsByAddressColumns}
@@ -156,6 +154,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       {isPrometheusActive() && (
         <GridItem>
           <Metrics
+            key={addressId}
             forceUpdate={checkDataChanged}
             selectedFilters={{
               ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
