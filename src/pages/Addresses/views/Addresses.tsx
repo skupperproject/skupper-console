@@ -10,11 +10,7 @@ import TransitionPage from '@core/components/TransitionPages/Slide';
 import LoadingPage from '@pages/shared/Loading';
 import { PrometheusApi } from 'API/Prometheus';
 
-import {
-  addressesColumns,
-  addressesColumnsWithFlowPairsCounters,
-  addressesComponentsTables
-} from '../Addresses.constants';
+import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
 import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
@@ -70,7 +66,7 @@ const Addresses = function () {
                 rows={addressExtended}
                 columns={columnsExtend}
                 pageSizeStart={DEFAULT_TABLE_PAGE_SIZE * 5}
-                components={addressesComponentsTables}
+                components={customAddressCells}
               />
             </Card>
           </GridItem>

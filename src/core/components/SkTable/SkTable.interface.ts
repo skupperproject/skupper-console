@@ -25,5 +25,6 @@ export interface SKColumn<T> {
   format?: Function;
   width?: WidthValue;
   columnDescription?: string;
+  show?: boolean;
   modifier?: 'breakWord' | 'fitContent' | 'nowrap' | 'truncate' | 'wrap';
 }

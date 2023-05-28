@@ -3,10 +3,11 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import HighlightValueCell from '@core/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/HighlightValueCell/HighightValueCell.interfaces';
-import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
@@ -100,99 +101,36 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   }
 ];
 
-export const TcpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
-  {
-    name: FlowPairsColumnsNames.ClientPort,
-    prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
-    width: 10
+const tcpHiddenColumns: Record<string, { show: boolean }> = {
+  [FlowPairsColumnsNames.Client]: {
+    show: false
   },
-  {
-    name: FlowPairsColumnsNames.TxBytes,
-    prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
-    component: 'ByteFormatCell',
-    format: formatBytes,
-    width: 10
+  [FlowPairsColumnsNames.Site]: {
+    show: false
   },
-  {
-    name: FlowPairsColumnsNames.RxBytes,
-    prop: 'counterFlow.octets' as keyof FlowPairsResponse,
-    component: 'ByteFormatCell',
-    format: formatBytes,
-    width: 10
+  [FlowPairsColumnsNames.Server]: {
+    show: false
   },
-  {
-    name: FlowPairsColumnsNames.TTFB,
-    columnDescription: 'time elapsed between client and server',
-    component: 'ClientServerLatencyCell',
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.Duration,
-    component: 'DurationCell',
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites
-  },
-  {
-    name: '',
-    component: 'viewDetailsLinkCell',
-    modifier: 'fitContent'
+  [FlowPairsColumnsNames.ServerSite]: {
+    show: false
   }
-];
+};
 
-export const HttpProcessesFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
-  {
-    name: FlowPairsColumnsNames.Method,
-    prop: 'forwardFlow.method' as keyof FlowPairsResponse,
-    width: 10
+const httpHiddenColumns: Record<string, { show: boolean }> = {
+  [FlowPairsColumnsNames.From]: {
+    show: false
   },
-  {
-    name: FlowPairsColumnsNames.StatusCode,
-    prop: 'counterFlow.result' as keyof FlowPairsResponse,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.TxBytes,
-    prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
-    format: formatBytes,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.RxBytes,
-    prop: 'counterFlow.octets' as keyof FlowPairsResponse,
-    format: formatBytes,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.TxLatency,
-    prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
-    format: formatLatency,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.RxLatency,
-    prop: 'counterFlow.latency' as keyof FlowPairsResponse,
-    format: formatLatency,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.Completed,
-    prop: 'endTime' as keyof FlowPairsResponse,
-    format: timeAgo,
-    width: 10
-  },
-  {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites,
-    width: 10
-  },
-  {
-    name: '',
-    component: 'viewDetailsLinkCell',
-    modifier: 'fitContent'
+  [FlowPairsColumnsNames.To]: {
+    show: false
   }
-];
+};
+
+export const httpColumns = httpFlowPairsColumns.map((flowPair) => ({
+  ...flowPair,
+  show: httpHiddenColumns[flowPair.name]?.show
+}));
+
+export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
+  ...flowPair,
+  show: tcpHiddenColumns[flowPair.name]?.show
+}));

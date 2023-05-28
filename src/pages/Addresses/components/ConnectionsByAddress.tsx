@@ -13,18 +13,18 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
-import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
+import { flowPairsComponentsTable, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse } from 'API/REST.interfaces';
 
-import { ConnectionsByAddressColumns, ConnectionsByAddressColumnsEnded } from '../Addresses.constants';
+import { tcpColumns } from '../Addresses.constants';
 import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
-import ServersTable from '../components/ServersTable';
 import { QueriesAddresses } from '../services/services.enum';
 
 const TAB_1_KEY = 'servers';
@@ -135,7 +135,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
               >
-                <ServersTable processes={servers} />
+                <SkTable
+                  columns={processesTableColumns}
+                  rows={servers}
+                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  components={ProcessesComponentsTable}
+                />
               </Tab>
               <Tab
                 eventKey={TAB_2_KEY}
@@ -144,7 +149,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 }
               >
                 <SkTable
-                  columns={ConnectionsByAddressColumns}
+                  columns={tcpColumns}
                   rows={activeConnections}
                   pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                   components={{
@@ -160,7 +165,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 title={<TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnections.length})`}</TabTitleText>}
               >
                 <SkTable
-                  columns={ConnectionsByAddressColumnsEnded}
+                  columns={tcpFlowPairsColumns}
                   rows={oldConnections}
                   pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                   components={{
