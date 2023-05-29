@@ -139,7 +139,7 @@ Please note that the `services` folder contains utilities for data normalization
 To customize the Skupper logo and the application name on the left side of the Header, we can use the following environment variables:
 
 - **BRAND_APP_LOGO**: The path to a custom logo image file to be used instead of the default Skupper logo.
-- **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is 'Skupper'.
+- **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is empty.
 - **APP_VERSION**: The version of the console. By default this value match with the package.json version.
 
 For example, you can customize the logo and application name by running the following command:
