@@ -219,48 +219,58 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
             </GridItem>
 
             {/* Chart pie distribution data traffic card and total bytes */}
-            {!!metrics.responseRateSeries?.statusCode4xx?.data.length ||
-              (!!metrics.responseRateSeries?.statusCode5xx.data.length && (
-                <>
-                  <GridItem span={4}>
-                    <Card isFullHeight>
-                      <SkChartPie
-                        format={formatBytes}
-                        data={[
-                          {
-                            x: metrics.responseSeries.statusCode4xx.label,
-                            y: metrics.responseSeries.statusCode4xx.total
-                          },
-                          {
-                            x: metrics.responseSeries.statusCode5xx.label,
-                            y: metrics.responseSeries.statusCode5xx.total
-                          }
-                        ]}
+            <>
+              {!!(metrics.responseSeries.statusCode4xx.total + metrics.responseSeries.statusCode5xx.total) && (
+                <GridItem span={4}>
+                  <Card isFullHeight>
+                    <SkChartPie
+                      format={formatBytes}
+                      data={[
+                        {
+                          x: metrics.responseSeries.statusCode4xx.label,
+                          y: metrics.responseSeries.statusCode4xx.total
+                        },
+                        {
+                          x: metrics.responseSeries.statusCode5xx.label,
+                          y: metrics.responseSeries.statusCode5xx.total
+                        }
+                      ]}
+                    />
+                  </Card>
+                </GridItem>
+              )}
+              {!!metrics.responseRateSeries?.statusCode4xx.data && (
+                <GridItem span={4}>
+                  <Card isFullHeight>
+                    <CardTitle>{MetricsLabels.ClientErrorRateSeriesAxisYLabel}</CardTitle>
+                    <CardBody>
+                      <SkChartArea
+                        formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
+                        themeColor={ChartThemeColor.orange}
+                        legendLabels={[metrics.responseRateSeries.statusCode4xx.label]}
+                        data={[metrics.responseRateSeries.statusCode4xx.data]}
                       />
-                    </Card>
-                  </GridItem>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              )}
 
-                  <GridItem span={8}>
-                    <Card isFullHeight>
-                      <CardTitle>{MetricsLabels.ErrorRateSeriesAxisYLabel}</CardTitle>
-                      <CardBody>
-                        <SkChartArea
-                          formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
-                          themeColor={ChartThemeColor.orange}
-                          legendLabels={[
-                            metrics.responseRateSeries.statusCode4xx.label,
-                            metrics.responseRateSeries.statusCode5xx.label
-                          ]}
-                          data={[
-                            metrics.responseRateSeries.statusCode4xx.data,
-                            metrics.responseRateSeries.statusCode5xx.data
-                          ]}
-                        />
-                      </CardBody>
-                    </Card>
-                  </GridItem>
-                </>
-              ))}
+              {!!metrics.responseRateSeries?.statusCode5xx?.data && (
+                <GridItem span={4}>
+                  <Card isFullHeight>
+                    <CardTitle>{MetricsLabels.ServerErrorRateSeriesAxisYLabel}</CardTitle>
+                    <CardBody>
+                      <SkChartArea
+                        formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
+                        themeColor={ChartThemeColor.orange}
+                        legendLabels={[metrics.responseRateSeries.statusCode5xx.label]}
+                        data={[metrics.responseRateSeries.statusCode5xx.data]}
+                      />
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              )}
+            </>
           </>
         )}
       </>

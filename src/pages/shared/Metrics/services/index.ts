@@ -70,7 +70,7 @@ const MetricsController = {
       const byteRateDataTx = await PrometheusApi.fetchDataTrafficOut(params);
       const byteRateDataRx = await PrometheusApi.fetchDataTrafficIn(params);
 
-      return normalizeByteRate(byteRateDataTx, byteRateDataRx);
+      return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
     } catch (e: unknown) {
       throw new Error(e as string);
     }
@@ -111,10 +111,9 @@ const MetricsController = {
         const requestPerSecondSeriesResponse = await PrometheusApi.fetchRequestsByProcess({
           ...params
         });
-        requestPerSecondSeries = normalizeRequestSeries(requestPerSecondSeriesResponse);
+        requestPerSecondSeries = normalizeRequestFromSeries(requestPerSecondSeriesResponse);
 
         const avgRequestRate = await PrometheusApi.fetchAvgRequestRate(params);
-
         avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
 
         const totalRequests = await PrometheusApi.fetchTotalRequests(params);
@@ -126,10 +125,10 @@ const MetricsController = {
           isRate: true,
           onlyErrors: false
         });
-        responseRateSeries = normalizeResponses(responseRateSeriesResponse);
+        responseRateSeries = normalizeResponsesFromSeries(responseRateSeriesResponse);
 
         const responseSeriesResponse = await PrometheusApi.fetchResponsesByProcess(params);
-        responseSeries = normalizeResponses(responseSeriesResponse);
+        responseSeries = normalizeResponsesFromSeries(responseSeriesResponse);
       }
 
       const props = {
@@ -160,7 +159,7 @@ const MetricsController = {
 
 export default MetricsController;
 
-function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null {
+function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
   const prometheusData = getChartValuesAndLabels(data);
 
@@ -169,16 +168,20 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
   }
 
   const { values } = prometheusData;
-
   // Helper function to create a statusCodeMetric object
   const createStatusCodeMetric = (index: number, label: string): ResponseMetrics['statusCode2xx'] => {
-    const responseValues = values[index] ?? [];
+    const responseValues = values[index] || null;
 
     // Calculate the total count of requests with the status code
-    const total =
-      responseValues.length > 1
-        ? responseValues[responseValues.length - 1].y - responseValues[0].y
-        : responseValues[0]?.y ?? 0;
+    let total = 0;
+
+    if (responseValues && responseValues.length === 1) {
+      total = responseValues[0]?.y ?? 0;
+    }
+
+    if (responseValues && responseValues.length > 1) {
+      total = responseValues[responseValues.length - 1].y - responseValues[0].y;
+    }
 
     return { total, label, data: responseValues };
   };
@@ -194,7 +197,7 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
   return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
-function normalizeRequestSeries(data: PrometheusApiResult[]): RequestMetrics[] | null {
+function normalizeRequestFromSeries(data: PrometheusApiResult[]): RequestMetrics[] | null {
   const axisValues = extractPrometheusValues(data);
   const labels = extractPrometheusLabels(data);
 
@@ -241,7 +244,10 @@ function normalizeLatencies({
   return { timeSeriesLatencies: latenciesNormalized };
 }
 
-function normalizeByteRate(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): ByteRateMetrics | null {
+function normalizeByteRateFromSeries(
+  txData: PrometheusApiResult[],
+  rxData: PrometheusApiResult[]
+): ByteRateMetrics | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
   const axisValuesTx = extractPrometheusValues(txData);
   const axisValuesRx = extractPrometheusValues(rxData);
