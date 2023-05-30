@@ -1,6 +1,8 @@
+import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
+
 import { AvailableProtocols } from './REST.enum';
 
-type PrometheusApiResultValue = [number, string | 'NaN'];
+type PrometheusApiResultValue = [number, `${number}` | 'NaN'];
 
 export interface PrometheusResponse<T> {
   data: {
@@ -35,3 +37,8 @@ export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['valu
 export type IntervalTimeMap = {
   [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
 };
+
+export interface MetricData {
+  values: skAxisXY[][];
+  labels: string[];
+}
