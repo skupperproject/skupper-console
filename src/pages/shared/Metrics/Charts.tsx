@@ -21,7 +21,7 @@ import { Metrics } from './services/services.interfaces';
 
 const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ metrics, protocol }) => (
   <Grid hasGutter>
-    {!metrics.byteRate && (
+    {!metrics.byteRateData && (
       <GridItem>
         <Card isFullHeight>
           <CardBody>
@@ -31,7 +31,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
       </GridItem>
     )}
 
-    {!!metrics.byteRate && (
+    {!!metrics.byteRateData && (
       <>
         <GridItem span={8} rowSpan={2}>
           <Card isFullHeight>
@@ -42,7 +42,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                   themeColor={ChartThemeColor.multi}
                   formatY={formatByteRate}
                   legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
-                  data={[metrics.byteRate.rxTimeSerie, metrics.byteRate.txTimeSerie]}
+                  data={[metrics.byteRateData.rxTimeSerie, metrics.byteRateData.txTimeSerie]}
                 />
               </CardBody>
             </>
@@ -51,7 +51,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
 
         {/* Total Traffic card */}
         <GridItem span={4}>
-          {!!metrics.byteRate && (
+          {!!metrics.byteRateData && (
             <Card isFullHeight>
               <CardBody>
                 <TableComposable borders={false} variant="compact">
@@ -71,9 +71,9 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                         </Icon>{' '}
                         {MetricsLabels.TrafficReceived}
                       </Td>
-                      <Th>{formatByteRate(metrics.byteRate.maxRxValue)}</Th>
-                      <Th>{formatByteRate(metrics.byteRate.avgRxValue)}</Th>
-                      <Th>{formatByteRate(metrics.byteRate.currentRxValue)}</Th>
+                      <Th>{formatByteRate(metrics.byteRateData.maxRxValue)}</Th>
+                      <Th>{formatByteRate(metrics.byteRateData.avgRxValue)}</Th>
+                      <Th>{formatByteRate(metrics.byteRateData.currentRxValue)}</Th>
                     </Tr>
                     <Tr>
                       <Td>
@@ -82,9 +82,9 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                         </Icon>{' '}
                         {MetricsLabels.TrafficSent}
                       </Td>
-                      <Th>{formatByteRate(metrics.byteRate.maxTxValue)}</Th>
-                      <Th>{formatByteRate(metrics.byteRate.avgTxValue)}</Th>
-                      <Th>{formatByteRate(metrics.byteRate.currentTxValue)}</Th>
+                      <Th>{formatByteRate(metrics.byteRateData.maxTxValue)}</Th>
+                      <Th>{formatByteRate(metrics.byteRateData.avgTxValue)}</Th>
+                      <Th>{formatByteRate(metrics.byteRateData.currentTxValue)}</Th>
                     </Tr>
                   </Tbody>
                 </TableComposable>
@@ -95,7 +95,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
 
         {/* Chart pie for the distribution of the data traffic */}
         <GridItem span={4}>
-          {!!metrics.bytes && (
+          {!!metrics.bytesData && (
             <Card isFullHeight>
               <SkChartPie
                 format={formatBytes}
@@ -103,11 +103,11 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                 data={[
                   {
                     x: MetricsLabels.TrafficReceived,
-                    y: metrics.bytes.bytesRx
+                    y: metrics.bytesData.bytesRx
                   },
                   {
                     x: MetricsLabels.TrafficSent,
-                    y: metrics.bytes?.bytesTx
+                    y: metrics.bytesData?.bytesTx
                   }
                 ]}
               />
@@ -119,7 +119,7 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
     {/* Chart latencies time series card*/}
     {protocol !== AvailableProtocols.Tcp && (
       <>
-        {!!metrics.latencies && (
+        {!!metrics.latenciesData && (
           <GridItem span={12}>
             <Card isFullHeight>
               <CardTitle>{ProcessesLabels.ChartProcessLatencySeriesAxisYLabel}</CardTitle>
@@ -127,15 +127,15 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                 <SkChartArea
                   formatY={formatLatency}
                   themeColor={ChartThemeColor.multi}
-                  legendLabels={metrics.latencies.timeSeriesLatencies.map(({ label }) => label)}
-                  data={metrics.latencies.timeSeriesLatencies.map(({ data }) => data)}
+                  legendLabels={metrics.latenciesData.map(({ label }) => label)}
+                  data={metrics.latenciesData.map(({ data }) => data)}
                 />
               </CardBody>
             </Card>
           </GridItem>
         )}
         {/* Chart requests time series card*/}
-        {!!metrics.requestPerSecondSeries && (
+        {!!metrics.requestRateData && (
           <>
             <GridItem span={8} rowSpan={2}>
               <Card isFullHeight>
@@ -144,8 +144,8 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                   <SkChartArea
                     formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                     themeColor={ChartThemeColor.purple}
-                    legendLabels={metrics.requestPerSecondSeries.map(({ label }) => label)}
-                    data={metrics.requestPerSecondSeries.map(({ data }) => data)}
+                    legendLabels={metrics.requestRateData.map(({ label }) => label)}
+                    data={metrics.requestRateData.map(({ data }) => data)}
                   />
                 </CardBody>
               </Card>
@@ -175,13 +175,13 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
         )}
 
         {/*  response card*/}
-        {!!metrics.responseSeries && (
+        {!!metrics.responseData && (
           <>
             <GridItem span={3}>
               <SkCounterCard
-                title={metrics.responseSeries.statusCode2xx.label}
+                title={metrics.responseData.statusCode2xx.label}
                 value={
-                  convertToPercentage(metrics.responseSeries.statusCode2xx.total, metrics.responseSeries.total) || ' - '
+                  convertToPercentage(metrics.responseData.statusCode2xx.total, metrics.responseData.total) || ' - '
                 }
                 bgColor={'--pf-global--palette--green-400'}
                 showChart={false}
@@ -189,9 +189,9 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
             </GridItem>
             <GridItem span={3}>
               <SkCounterCard
-                title={metrics.responseSeries.statusCode3xx.label}
+                title={metrics.responseData.statusCode3xx.label}
                 value={
-                  convertToPercentage(metrics.responseSeries.statusCode3xx.total, metrics.responseSeries.total) || ' - '
+                  convertToPercentage(metrics.responseData.statusCode3xx.total, metrics.responseData.total) || ' - '
                 }
                 bgColor={'--pf-global--palette--blue-400'}
                 showChart={false}
@@ -199,9 +199,9 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
             </GridItem>
             <GridItem span={3}>
               <SkCounterCard
-                title={metrics.responseSeries.statusCode4xx.label}
+                title={metrics.responseData.statusCode4xx.label}
                 value={
-                  convertToPercentage(metrics.responseSeries.statusCode4xx.total, metrics.responseSeries.total) || ' - '
+                  convertToPercentage(metrics.responseData.statusCode4xx.total, metrics.responseData.total) || ' - '
                 }
                 bgColor={'--pf-global--palette--orange-100'}
                 showChart={false}
@@ -209,9 +209,9 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
             </GridItem>
             <GridItem span={3}>
               <SkCounterCard
-                title={metrics.responseSeries.statusCode5xx.label}
+                title={metrics.responseData.statusCode5xx.label}
                 value={
-                  convertToPercentage(metrics.responseSeries.statusCode5xx.total, metrics.responseSeries.total) || ' - '
+                  convertToPercentage(metrics.responseData.statusCode5xx.total, metrics.responseData.total) || ' - '
                 }
                 bgColor={'--pf-global--palette--red-100'}
                 showChart={false}
@@ -220,26 +220,26 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
 
             {/* Chart pie distribution data traffic card and total bytes */}
             <>
-              {!!(metrics.responseSeries.statusCode4xx.total + metrics.responseSeries.statusCode5xx.total) && (
+              {!!(metrics.responseData.statusCode4xx.total + metrics.responseData.statusCode5xx.total) && (
                 <GridItem span={4}>
                   <Card isFullHeight>
                     <SkChartPie
                       format={formatBytes}
                       data={[
                         {
-                          x: metrics.responseSeries.statusCode4xx.label,
-                          y: metrics.responseSeries.statusCode4xx.total
+                          x: metrics.responseData.statusCode4xx.label,
+                          y: metrics.responseData.statusCode4xx.total
                         },
                         {
-                          x: metrics.responseSeries.statusCode5xx.label,
-                          y: metrics.responseSeries.statusCode5xx.total
+                          x: metrics.responseData.statusCode5xx.label,
+                          y: metrics.responseData.statusCode5xx.total
                         }
                       ]}
                     />
                   </Card>
                 </GridItem>
               )}
-              {!!metrics.responseRateSeries?.statusCode4xx.data && (
+              {!!metrics.responseRateData?.statusCode4xx.data && (
                 <GridItem span={4}>
                   <Card isFullHeight>
                     <CardTitle>{MetricsLabels.ClientErrorRateSeriesAxisYLabel}</CardTitle>
@@ -247,15 +247,15 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                       <SkChartArea
                         formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                         themeColor={ChartThemeColor.orange}
-                        legendLabels={[metrics.responseRateSeries.statusCode4xx.label]}
-                        data={[metrics.responseRateSeries.statusCode4xx.data]}
+                        legendLabels={[metrics.responseRateData.statusCode4xx.label]}
+                        data={[metrics.responseRateData.statusCode4xx.data]}
                       />
                     </CardBody>
                   </Card>
                 </GridItem>
               )}
 
-              {!!metrics.responseRateSeries?.statusCode5xx?.data && (
+              {!!metrics.responseRateData?.statusCode5xx?.data && (
                 <GridItem span={4}>
                   <Card isFullHeight>
                     <CardTitle>{MetricsLabels.ServerErrorRateSeriesAxisYLabel}</CardTitle>
@@ -263,8 +263,8 @@ const Charts: FC<{ metrics: Metrics; protocol?: AvailableProtocols }> = memo(({ 
                       <SkChartArea
                         formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
                         themeColor={ChartThemeColor.orange}
-                        legendLabels={[metrics.responseRateSeries.statusCode5xx.label]}
-                        data={[metrics.responseRateSeries.statusCode5xx.data]}
+                        legendLabels={[metrics.responseRateData.statusCode5xx.label]}
+                        data={[metrics.responseRateData.statusCode5xx.data]}
                       />
                     </CardBody>
                   </Card>

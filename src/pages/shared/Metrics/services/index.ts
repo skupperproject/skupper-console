@@ -1,8 +1,12 @@
 import { PrometheusApi } from '@API/Prometheus';
 import { PrometheusApiResult } from '@API/Prometheus.interfaces';
 import { defaultTimeInterval, timeIntervalMap } from '@API/Prometheus.queries';
+import {
+  extractPrometheusLabels,
+  extractPrometheusValues,
+  extractPrometheusValuesAndLabels
+} from '@API/Prometheus.utils';
 import { AvailableProtocols } from '@API/REST.enum';
-import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
@@ -11,9 +15,7 @@ import {
   QueryMetricsParams,
   LatencyMetricsProps,
   ByteRateMetrics,
-  LatencyData,
   LatencyMetrics,
-  MetricData,
   RequestMetrics,
   ResponseMetrics,
   BytesMetric
@@ -21,7 +23,7 @@ import {
 import { MetricsLabels } from '../Metrics.enum';
 
 const MetricsController = {
-  getBytes: async ({
+  getBytesData: async ({
     processIdSource,
     timeInterval = timeIntervalMap[defaultTimeInterval.key],
     processIdDest,
@@ -48,6 +50,7 @@ const MetricsController = {
       throw new Error(e as string);
     }
   },
+
   getByteRateData: async ({
     processIdSource,
     timeInterval = timeIntervalMap[defaultTimeInterval.key],
@@ -75,6 +78,55 @@ const MetricsController = {
       throw new Error(e as string);
     }
   },
+
+  getResponseData: async ({
+    processIdSource,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    processIdDest,
+    protocol
+  }: QueryMetricsParams): Promise<ResponseMetrics | null> => {
+    const params = {
+      id: processIdSource,
+      range: timeInterval,
+      processIdDest,
+      protocol
+    };
+
+    try {
+      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess({
+        ...params,
+        isRate: true,
+        onlyErrors: false
+      });
+      
+return normalizeResponsesFromSeries(resposeRateDataSeries);
+    } catch (e: unknown) {
+      throw new Error(e as string);
+    }
+  },
+
+  getResponseRateData: async ({
+    processIdSource,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    processIdDest,
+    protocol
+  }: QueryMetricsParams): Promise<ResponseMetrics | null> => {
+    const params = {
+      id: processIdSource,
+      range: timeInterval,
+      processIdDest,
+      protocol
+    };
+
+    try {
+      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess(params);
+
+      return normalizeResponsesFromSeries(resposeRateDataSeries);
+    } catch (e: unknown) {
+      throw new Error(e as string);
+    }
+  },
+
   getMetrics: async ({
     processIdSource,
     timeInterval = timeIntervalMap[defaultTimeInterval.key],
@@ -88,30 +140,38 @@ const MetricsController = {
       protocol
     };
 
+    // traffic metrics
+    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+
+    // latency metrics
+    let latenciesData = null;
+    let requestRateData = null;
+    let responseData = null;
+    let responseRateData = null;
+    let avgRequestRateInterval = 0;
+    let totalRequestsInterval = 0;
+
+    const props = {
+      processIdSource,
+      timeInterval,
+      processIdDest,
+      protocol
+    };
+
     try {
-      // traffic metrics
-      const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-
-      // latency metrics
-      let latencies = null;
-      let requestPerSecondSeries = null;
-      let avgRequestRateInterval = 0;
-      let totalRequestsInterval = 0;
-      let responseRateSeries = null;
-      let responseSeries = null;
-
       if (protocol !== AvailableProtocols.Tcp) {
+        // latency metrics
         const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end });
         const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end });
         const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end });
 
-        latencies = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
+        latenciesData = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
 
-        // requests metrics
-        const requestPerSecondSeriesResponse = await PrometheusApi.fetchRequestsByProcess({
+        // http requests metrics
+        const requestsByProcess = await PrometheusApi.fetchRequestsByProcess({
           ...params
         });
-        requestPerSecondSeries = normalizeRequestFromSeries(requestPerSecondSeriesResponse);
+        requestRateData = normalizeRequestFromSeries(requestsByProcess);
 
         const avgRequestRate = await PrometheusApi.fetchAvgRequestRate(params);
         avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
@@ -119,37 +179,23 @@ const MetricsController = {
         const totalRequests = await PrometheusApi.fetchTotalRequests(params);
         totalRequestsInterval = formatToDecimalPlacesIfCents(Number(totalRequests[0]?.value[1] || 0), 0);
 
-        // responses metrics
-        const responseRateSeriesResponse = await PrometheusApi.fetchResponsesByProcess({
-          ...params,
-          isRate: true,
-          onlyErrors: false
-        });
-        responseRateSeries = normalizeResponsesFromSeries(responseRateSeriesResponse);
-
-        const responseSeriesResponse = await PrometheusApi.fetchResponsesByProcess(params);
-        responseSeries = normalizeResponsesFromSeries(responseSeriesResponse);
+        // http response metrics
+        responseData = await MetricsController.getResponseData(props);
+        responseRateData = await MetricsController.getResponseRateData(props);
       }
 
-      const props = {
-        processIdSource,
-        timeInterval,
-        processIdDest,
-        protocol
-      };
-
-      const bytes = await MetricsController.getBytes(props);
-      const byteRate = await MetricsController.getByteRateData(props);
+      const bytesData = await MetricsController.getBytesData(props);
+      const byteRateData = await MetricsController.getByteRateData(props);
 
       return {
-        bytes,
-        byteRate,
-        latencies,
+        bytesData,
+        byteRateData,
+        latenciesData,
         avgRequestRateInterval,
         totalRequestsInterval,
-        requestPerSecondSeries,
-        responseSeries,
-        responseRateSeries
+        requestRateData,
+        responseData,
+        responseRateData
       };
     } catch (e: unknown) {
       throw new Error(e as string);
@@ -159,17 +205,18 @@ const MetricsController = {
 
 export default MetricsController;
 
+/* UTILS */
 function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
-  const prometheusData = getChartValuesAndLabels(data);
+  const axisValues = extractPrometheusValuesAndLabels(data);
 
-  if (!prometheusData) {
+  if (!axisValues) {
     return null;
   }
 
-  const { values } = prometheusData;
+  const { values } = axisValues;
   // Helper function to create a statusCodeMetric object
-  const createStatusCodeMetric = (index: number, label: string): ResponseMetrics['statusCode2xx'] => {
+  const createStatusCodeMetric = (index: number, label: string)=> {
     const responseValues = values[index] || null;
 
     // Calculate the total count of requests with the status code
@@ -215,19 +262,19 @@ function normalizeLatencies({
   quantile50latency,
   quantile90latency,
   quantile99latency
-}: LatencyMetricsProps): LatencyMetrics | null {
+}: LatencyMetricsProps): LatencyMetrics[] | null {
   const quantile50latencyNormalized = extractPrometheusValues(quantile50latency);
   const quantile90latencyNormalized = extractPrometheusValues(quantile90latency);
   const quantile99latencyNormalized = extractPrometheusValues(quantile99latency);
 
   if (
-    (!quantile50latencyNormalized || !quantile50latencyNormalized[0]?.filter(({ y }) => y).length) &&
-    (!quantile90latencyNormalized || !quantile90latencyNormalized[0]?.filter(({ y }) => y).length) &&
-    (!quantile99latencyNormalized || !quantile99latencyNormalized[0]?.filter(({ y }) => y).length)
+    (!quantile50latencyNormalized || !quantile50latencyNormalized[0].length) &&
+    (!quantile90latencyNormalized || !quantile90latencyNormalized[0].length) &&
+    (!quantile99latencyNormalized || !quantile99latencyNormalized[0].length)
   ) {
     return null;
   }
-  const latenciesNormalized: LatencyData[] = [];
+  const latenciesNormalized: LatencyMetrics[] = [];
 
   if (quantile50latencyNormalized) {
     latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: MetricsLabels.LatencyMetric50quantile });
@@ -240,8 +287,8 @@ function normalizeLatencies({
   if (quantile99latencyNormalized) {
     latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: MetricsLabels.LatencyMetric99quantile });
   }
-
-  return { timeSeriesLatencies: latenciesNormalized };
+  
+return latenciesNormalized;
 }
 
 function normalizeByteRateFromSeries(
@@ -294,43 +341,4 @@ function normalizeBytesMaxMinValues(txData: PrometheusApiResult[], rxData: Prome
   const bytesTx = txTimeSerie.length === 1 ? txTimeSerie[0].y : currentTrafficSent - txTimeSerie[0].y;
 
   return { bytesRx, bytesTx };
-}
-
-function extractPrometheusValues(data: PrometheusApiResult[]): skAxisXY[][] | null {
-  // Prometheus can retrieve empty arrays wich are not valid data for us
-  if (!data.length) {
-    return null;
-  }
-
-  return data.map(({ values }) =>
-    values.map((value) => ({
-      x: Number(value[0]),
-      // y should be a numeric value, we convert 'NaN' in 0
-      y: isNaN(Number(value[1])) ? 0 : Number(value[1])
-    }))
-  );
-}
-
-/**
- * Converts an array of Prometheus result objects to a two-dimensional array of metric labels.
- */
-function extractPrometheusLabels(data: PrometheusApiResult[]): string[] | null {
-  // Validate the input
-  if (!Array.isArray(data) || data.length === 0) {
-    return null;
-  }
-
-  // Map the input array to an array of label arrays using array destructuring
-  return data.flatMap(({ metric }) => Object.values(metric));
-}
-
-function getChartValuesAndLabels(data: PrometheusApiResult[]): MetricData | null {
-  if (!data.length) {
-    return null;
-  }
-
-  const values = extractPrometheusValues(data) as skAxisXY[][];
-  const labels = extractPrometheusLabels(data) as string[];
-
-  return { values, labels };
 }

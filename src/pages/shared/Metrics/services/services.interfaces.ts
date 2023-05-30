@@ -48,18 +48,9 @@ export interface BytesMetric {
   bytesTx: number;
 }
 
-export interface MetricData {
-  values: skAxisXY[][];
-  labels: string[];
-}
-
-export interface LatencyData {
+export interface LatencyMetrics {
   data: skAxisXY[];
   label: string;
-}
-
-export interface LatencyMetrics {
-  timeSeriesLatencies: LatencyData[];
 }
 
 export interface LatencyMetricsProps {
@@ -69,12 +60,12 @@ export interface LatencyMetricsProps {
 }
 
 export interface Metrics {
-  bytes: BytesMetric | null;
-  byteRate: ByteRateMetrics | null;
-  latencies: LatencyMetrics | null;
-  requestPerSecondSeries: RequestMetrics[] | null;
+  bytesData: BytesMetric | null;
+  byteRateData: ByteRateMetrics | null;
+  latenciesData: LatencyMetrics[] | null;
   avgRequestRateInterval: number;
   totalRequestsInterval: number;
-  responseSeries: ResponseMetrics | null;
-  responseRateSeries: ResponseMetrics | null;
+  requestRateData: RequestMetrics[] | null;
+  responseData: ResponseMetrics | null;
+  responseRateData: ResponseMetrics | null;
 }
