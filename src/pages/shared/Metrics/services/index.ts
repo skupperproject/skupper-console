@@ -2,7 +2,7 @@ import { PrometheusApi } from '@API/Prometheus';
 import { PrometheusApiResult } from '@API/Prometheus.interfaces';
 import { defaultTimeInterval, timeIntervalMap } from '@API/Prometheus.queries';
 import { AvailableProtocols } from '@API/REST.enum';
-import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
+import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
@@ -10,22 +10,77 @@ import {
   Metrics,
   QueryMetricsParams,
   LatencyMetricsProps,
-  TrafficMetrics,
+  ByteRateMetrics,
   LatencyData,
   LatencyMetrics,
   MetricData,
   RequestMetrics,
-  ResponseMetrics
+  ResponseMetrics,
+  BytesMetric
 } from './services.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 
 const MetricsController = {
+  getBytes: async ({
+    processIdSource,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    processIdDest,
+    protocol
+  }: QueryMetricsParams): Promise<BytesMetric | null> => {
+    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+
+    const params = {
+      id: processIdSource,
+      range: timeInterval,
+      processIdDest,
+      protocol,
+      isRate: true,
+      start,
+      end
+    };
+
+    try {
+      const bytesTx = await PrometheusApi.fetchDataTrafficOut({ ...params, start, end });
+      const bytesRx = await PrometheusApi.fetchDataTrafficIn({ ...params, start, end });
+
+      return normalizeBytesMaxMinValues(bytesTx, bytesRx);
+    } catch (e: unknown) {
+      throw new Error(e as string);
+    }
+  },
+  getByteRateData: async ({
+    processIdSource,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    processIdDest,
+    protocol
+  }: QueryMetricsParams): Promise<ByteRateMetrics | null> => {
+    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+
+    const params = {
+      id: processIdSource,
+      range: timeInterval,
+      processIdDest,
+      protocol,
+      isRate: true,
+      start,
+      end
+    };
+
+    try {
+      const byteRateDataTx = await PrometheusApi.fetchDataTrafficOut(params);
+      const byteRateDataRx = await PrometheusApi.fetchDataTrafficIn(params);
+
+      return normalizeByteRate(byteRateDataTx, byteRateDataRx);
+    } catch (e: unknown) {
+      throw new Error(e as string);
+    }
+  },
   getMetrics: async ({
     processIdSource,
     timeInterval = timeIntervalMap[defaultTimeInterval.key],
     processIdDest,
     protocol
-  }: QueryMetricsParams): Promise<Metrics | null> => {
+  }: QueryMetricsParams): Promise<Metrics> => {
     const params = {
       id: processIdSource,
       range: timeInterval,
@@ -37,76 +92,62 @@ const MetricsController = {
       // traffic metrics
       const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
 
-      const trafficDataTxSeriesResponse = await PrometheusApi.fetchDataTrafficOut({ ...params, start, end });
-      const trafficDataRxSeriesResponse = await PrometheusApi.fetchDataTrafficIn({ ...params, start, end });
-
-      const trafficDataTxSeriesPerSecondResponse = await PrometheusApi.fetchDataTrafficOut({
-        ...params,
-        isRate: true,
-        start,
-        end
-      });
-      const trafficDataRxSeriesPerSecondResponse = await PrometheusApi.fetchDataTrafficIn({
-        ...params,
-        isRate: true,
-        start,
-        end
-      });
-
       // latency metrics
       let latencies = null;
+      let requestPerSecondSeries = null;
+      let avgRequestRateInterval = 0;
+      let totalRequestsInterval = 0;
+      let responseRateSeries = null;
+      let responseSeries = null;
+
       if (protocol !== AvailableProtocols.Tcp) {
         const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end });
         const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end });
         const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end });
 
         latencies = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
+
+        // requests metrics
+        const requestPerSecondSeriesResponse = await PrometheusApi.fetchRequestsByProcess({
+          ...params
+        });
+        requestPerSecondSeries = normalizeRequestSeries(requestPerSecondSeriesResponse);
+
+        const avgRequestRate = await PrometheusApi.fetchAvgRequestRate(params);
+
+        avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
+
+        const totalRequests = await PrometheusApi.fetchTotalRequests(params);
+        totalRequestsInterval = formatToDecimalPlacesIfCents(Number(totalRequests[0]?.value[1] || 0), 0);
+
+        // responses metrics
+        const responseRateSeriesResponse = await PrometheusApi.fetchResponsesByProcess({
+          ...params,
+          isRate: true,
+          onlyErrors: false
+        });
+        responseRateSeries = normalizeResponses(responseRateSeriesResponse);
+
+        const responseSeriesResponse = await PrometheusApi.fetchResponsesByProcess(params);
+        responseSeries = normalizeResponses(responseSeriesResponse);
       }
 
-      // requests metrics
-      const requestPerSecondSeriesResponse = await PrometheusApi.fetchRequestsByProcess({
-        ...params,
-        isRate: true
-      });
-      const requestSeriesResponse = await PrometheusApi.fetchRequestsByProcess(params);
+      const props = {
+        processIdSource,
+        timeInterval,
+        processIdDest,
+        protocol
+      };
 
-      // responses metrics
-      const responseSeriesResponse = await PrometheusApi.fetchResponsesByProcess(params);
-      const responseRateSeriesResponse = await PrometheusApi.fetchResponsesByProcess({
-        ...params,
-        isRate: true,
-        onlyErrors: false
-      });
-
-      // data normalization
-      const trafficDataSeries = normalizeTrafficData(trafficDataTxSeriesResponse, trafficDataRxSeriesResponse);
-      const trafficDataSeriesPerSecond = normalizeTrafficData(
-        trafficDataTxSeriesPerSecondResponse,
-        trafficDataRxSeriesPerSecondResponse
-      );
-
-      const requestSeries = normalizeRequests(requestSeriesResponse);
-      const requestPerSecondSeries = normalizeRequests([...requestPerSecondSeriesResponse]);
-
-      const responseSeries = normalizeResponses(responseSeriesResponse);
-      const responseRateSeries = normalizeResponses(responseRateSeriesResponse);
-
-      if (
-        !(
-          (trafficDataSeries && trafficDataSeriesPerSecond) ||
-          latencies ||
-          (requestSeries && requestPerSecondSeries) ||
-          (responseSeries && responseRateSeries)
-        )
-      ) {
-        return null;
-      }
+      const bytes = await MetricsController.getBytes(props);
+      const byteRate = await MetricsController.getByteRateData(props);
 
       return {
-        trafficDataSeries,
-        trafficDataSeriesPerSecond,
+        bytes,
+        byteRate,
         latencies,
-        requestSeries,
+        avgRequestRateInterval,
+        totalRequestsInterval,
         requestPerSecondSeries,
         responseSeries,
         responseRateSeries
@@ -139,7 +180,7 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
         ? responseValues[responseValues.length - 1].y - responseValues[0].y
         : responseValues[0]?.y ?? 0;
 
-    return { total, label, data: responseValues.length ? responseValues : undefined };
+    return { total, label, data: responseValues };
   };
 
   // Create the statusCodeMetric objects for each status code
@@ -153,7 +194,7 @@ function normalizeResponses(data: PrometheusApiResult[]): ResponseMetrics | null
   return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
-function normalizeRequests(data: PrometheusApiResult[]): RequestMetrics[] | null {
+function normalizeRequestSeries(data: PrometheusApiResult[]): RequestMetrics[] | null {
   const axisValues = extractPrometheusValues(data);
   const labels = extractPrometheusLabels(data);
 
@@ -161,18 +202,10 @@ function normalizeRequests(data: PrometheusApiResult[]): RequestMetrics[] | null
     return null;
   }
 
-  return axisValues.flatMap((values, index) => {
-    const totalRequestInterval = values.length === 1 ? values[0].y : values[values.length - 1].y - values[0].y;
-    const sumRequestRateInterval = values.reduce((acc, { y }) => acc + y, 0);
-    const avgRequestRateInterval = formatToDecimalPlacesIfCents(sumRequestRateInterval / values.length, 2);
-
-    return {
-      data: values,
-      label: labels ? labels[index] : '',
-      totalRequestInterval,
-      avgRequestRateInterval
-    };
-  });
+  return axisValues.flatMap((values, index) => ({
+    data: values,
+    label: labels ? labels[index] : ''
+  }));
 }
 
 function normalizeLatencies({
@@ -191,7 +224,6 @@ function normalizeLatencies({
   ) {
     return null;
   }
-
   const latenciesNormalized: LatencyData[] = [];
 
   if (quantile50latencyNormalized) {
@@ -209,7 +241,7 @@ function normalizeLatencies({
   return { timeSeriesLatencies: latenciesNormalized };
 }
 
-function normalizeTrafficData(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): TrafficMetrics | null {
+function normalizeByteRate(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): ByteRateMetrics | null {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
   const axisValuesTx = extractPrometheusValues(txData);
   const axisValuesRx = extractPrometheusValues(rxData);
@@ -218,48 +250,48 @@ function normalizeTrafficData(txData: PrometheusApiResult[], rxData: PrometheusA
     return null;
   }
 
-  const timeSeriesDataReceived = axisValuesRx[axisValuesRx.length - 1];
-  const timeSeriesDataSent = axisValuesTx[0];
-
-  const currentTrafficReceived = timeSeriesDataReceived[timeSeriesDataReceived.length - 1].y;
-  const currentTrafficSent = timeSeriesDataSent[timeSeriesDataSent.length - 1].y;
-
-  const maxTrafficReceived = Math.max(...timeSeriesDataReceived.map(({ y }) => y));
-  const maxTrafficSent = Math.max(...timeSeriesDataSent.map(({ y }) => y));
-
-  // total data for bytes
-  const totalDataReceived =
-    timeSeriesDataReceived.length === 1
-      ? timeSeriesDataReceived[0].y
-      : currentTrafficReceived - timeSeriesDataReceived[0].y;
-
-  const totalDataSent =
-    timeSeriesDataSent.length === 1 ? timeSeriesDataSent[0].y : currentTrafficSent - timeSeriesDataSent[0].y;
+  const rxTimeSerie = axisValuesRx[axisValuesRx.length - 1];
+  const txTimeSerie = axisValuesTx[0];
 
   // total data for byte rate. Used by "per second" time series
-  const sumDataReceived = timeSeriesDataReceived.reduce((acc, { y }) => acc + y, 0);
-  const sumDataSent = timeSeriesDataSent.reduce((acc, { y }) => acc + y, 0);
-
-  const avgTrafficReceived = sumDataReceived / timeSeriesDataReceived.length;
-  const avgTrafficSent = sumDataSent / timeSeriesDataReceived.length;
+  const sumDataReceived = rxTimeSerie.reduce((acc, { y }) => acc + y, 0);
+  const sumDataSent = txTimeSerie.reduce((acc, { y }) => acc + y, 0);
 
   return {
-    timeSeriesDataReceived,
-    timeSeriesDataSent,
-    totalDataReceived,
-    totalDataSent,
-    avgTrafficSent,
-    avgTrafficReceived,
-    maxTrafficSent,
-    maxTrafficReceived,
-    currentTrafficSent,
-    currentTrafficReceived,
-    sumDataSent,
-    sumDataReceived
+    rxTimeSerie,
+    txTimeSerie,
+    avgTxValue: sumDataSent / rxTimeSerie.length,
+    avgRxValue: sumDataReceived / rxTimeSerie.length,
+    maxTxValue: Math.max(...txTimeSerie.map(({ y }) => y)),
+    maxRxValue: Math.max(...rxTimeSerie.map(({ y }) => y)),
+    currentTxValue: txTimeSerie[txTimeSerie.length - 1].y,
+    currentRxValue: rxTimeSerie[rxTimeSerie.length - 1].y
   };
 }
 
-function extractPrometheusValues(data: PrometheusApiResult[]): SkChartAreaData[][] | null {
+function normalizeBytesMaxMinValues(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): BytesMetric | null {
+  // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
+  const axisValuesTx = extractPrometheusValues(txData);
+  const axisValuesRx = extractPrometheusValues(rxData);
+
+  if (!axisValuesTx || !axisValuesRx) {
+    return null;
+  }
+
+  const rxTimeSerie = axisValuesRx[axisValuesRx.length - 1];
+  const txTimeSerie = axisValuesTx[0];
+
+  const currentTrafficReceived = rxTimeSerie[rxTimeSerie.length - 1].y;
+  const currentTrafficSent = txTimeSerie[txTimeSerie.length - 1].y;
+
+  const bytesRx = rxTimeSerie.length === 1 ? rxTimeSerie[0].y : currentTrafficReceived - rxTimeSerie[0].y;
+  const bytesTx = txTimeSerie.length === 1 ? txTimeSerie[0].y : currentTrafficSent - txTimeSerie[0].y;
+
+  return { bytesRx, bytesTx };
+}
+
+function extractPrometheusValues(data: PrometheusApiResult[]): skAxisXY[][] | null {
+  // Prometheus can retrieve empty arrays wich are not valid data for us
   if (!data.length) {
     return null;
   }
@@ -267,6 +299,7 @@ function extractPrometheusValues(data: PrometheusApiResult[]): SkChartAreaData[]
   return data.map(({ values }) =>
     values.map((value) => ({
       x: Number(value[0]),
+      // y should be a numeric value, we convert 'NaN' in 0
       y: isNaN(Number(value[1])) ? 0 : Number(value[1])
     }))
   );
@@ -290,7 +323,7 @@ function getChartValuesAndLabels(data: PrometheusApiResult[]): MetricData | null
     return null;
   }
 
-  const values = extractPrometheusValues(data) as SkChartAreaData[][];
+  const values = extractPrometheusValues(data) as skAxisXY[][];
   const labels = extractPrometheusLabels(data) as string[];
 
   return { values, labels };
