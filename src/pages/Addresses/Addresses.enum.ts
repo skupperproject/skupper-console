@@ -43,17 +43,3 @@ export enum FlowPairsLabels {
   ViewDetails = 'view details',
   GoToTopology = 'Go to the Topology view'
 }
-
-// PROCESSES TABLE
-export enum ServerColumnsNames {
-  Site = 'Site',
-  Process = 'Process',
-  ProcessGroup = 'Component',
-  BytesTx = 'Tx Bytes',
-  BytesRx = 'Rx Bytes',
-  ByteRateTx = 'Tx rate',
-  ByteRateRx = 'Rx rate',
-  Host = 'Host',
-  Port = 'Port',
-  Image = 'Image'
-}

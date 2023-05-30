@@ -16,7 +16,7 @@ export interface QueryMetricsParams {
 interface StatusCodeResponse {
   label: string;
   total: number;
-  data: skAxisXY[];
+  data: skAxisXY[] | null;
 }
 
 export interface ResponseMetrics {
