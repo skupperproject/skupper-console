@@ -14,7 +14,7 @@ import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatChartDate } from '@core/utils/formatChartDate';
 
-import { SkChartAreaProps, SkChartAreaData } from './SkChartArea.interfaces';
+import { SkChartAreaProps, skAxisXY } from './SkChartArea.interfaces';
 
 const CHART_PADDING = {
   bottom: 60,
@@ -55,7 +55,7 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   const legendData = legendLabels.map((name) => ({ childName: name, name }));
 
   const CursorVoronoiContainer = createContainer('voronoi', 'cursor');
-  const startDate = data[0][0].x;
+  const startDate = data[0][0]?.x;
 
   return (
     <div style={{ width: '100%', height: `100%` }} ref={chartContainerRef}>
@@ -70,11 +70,11 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
           <CursorVoronoiContainer
             cursorDimension="x"
             voronoiDimension="x"
-            labels={({ datum }: { datum: SkChartAreaData }) => formatY(datum.y)}
+            labels={({ datum }: { datum: skAxisXY }) => formatY(datum.y)}
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData}
-                title={(datum: SkChartAreaData) => `${formatX(datum.x, startDate)}`}
+                title={(datum: skAxisXY) => `${formatX(datum.x, startDate)}`}
                 cornerRadius={5}
                 flyoutStyle={{
                   fillOpacity: 0.75

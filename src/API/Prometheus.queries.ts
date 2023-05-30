@@ -33,25 +33,32 @@ export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =
 
 // Prometheus queries
 export const queries = {
-  // http request/response queries
-  getTotalRequests(param: string) {
-    return `sum(http_requests_method_total{${param}})`;
+  // http request queries
+  getTotalRequestsTimeInterval(param: string, range: IntervalTimePropValue) {
+    return `sum(increase(http_requests_method_total{${param}}[${range}]))`;
   },
-  getTotalRequestRateByMethod(param: string, range: IntervalTimePropValue) {
-    return `sum by (method)(rate(http_requests_method_total{${param}}[${range}]))`;
+
+  getAvgRequestRateTimeInterval(param: string, range: IntervalTimePropValue) {
+    return `sum(rate(http_requests_method_total{${param}}[${range}]))`;
   },
+
+  getTotalRequestRateByMethodTimeInterval(param: string, range: IntervalTimePropValue) {
+    return `sum by(method)(rate(http_requests_method_total{${param}}[${range}]))`;
+  },
+
+  // http response queries
   getHttpPartialStatus(param: string) {
-    return `sum by (partial_code) (label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
+    return `sum by(partial_code)(label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
   },
-  getHttpPartialStatusRate(param: string, range: IntervalTimePropValue) {
-    return `sum by (partial_code) (label_replace(rate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
+  getHttpPartialStatusRateTimeInterval(param: string, range: IntervalTimePropValue) {
+    return `sum by(partial_code)(label_replace(rate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
   },
 
   // latency queries
-  getQuantile(param: string, range: IntervalTimePropValue, quantile: 0.5 | 0.9 | 0.99) {
+  getQuantileTimeInterval(param: string, range: IntervalTimePropValue, quantile: 0.5 | 0.9 | 0.99) {
     return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
-  getAvgLatency(param: string, range: IntervalTimePropValue) {
+  getAvgLatencyTimeInterval(param: string, range: IntervalTimePropValue) {
     return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
 
@@ -59,15 +66,15 @@ export const queries = {
   getBytesByDirection(paramSource: string) {
     return `sum by(direction)(octets_total{${paramSource}})`;
   },
-  getByteRateByDirection(paramSource: string, range: IntervalTimePropValue) {
+  getByteRateByDirectionTimeInteval(paramSource: string, range: IntervalTimePropValue) {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
   },
   getAllProcessPairsByteRates() {
-    return `sum by(destProcess, sourceProcess,direction) (rate(octets_total[1m]))`;
+    return `sum by(destProcess, sourceProcess,direction)(rate(octets_total[1m]))`;
   },
 
   getAllProcessPairsLatencies() {
-    return `sum by(sourceProcess, destProcess) (rate(flow_latency_microseconds_sum[1m]))`;
+    return `sum by(sourceProcess, destProcess)(rate(flow_latency_microseconds_sum[1m]))`;
   },
 
   // counters for addresses
@@ -75,6 +82,6 @@ export const queries = {
     return `sum by(address)(flows_total)`;
   },
   getActiveFlowsByAddress() {
-    return `sum by (address)(increase(active_flows{protocol=~"http.*"}[30s]) or active_flows{protocol="tcp"})`;
+    return `sum by(address)(increase(active_flows{protocol=~"http.*"}[30s]) or active_flows{protocol="tcp"})`;
   }
 };

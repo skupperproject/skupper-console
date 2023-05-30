@@ -1,10 +1,10 @@
-export interface SkChartAreaData {
+export interface skAxisXY {
   x: number;
   y: number;
 }
 
 export interface SkChartAreaProps {
-  data: SkChartAreaData[][];
+  data: skAxisXY[][];
   formatY?: Function;
   formatX?: Function;
   axisYLabel?: string;

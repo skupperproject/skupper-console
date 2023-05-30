@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from 'react';
 
 import { ChartDonut, ChartThemeColor, ChartTooltip, getResizeObserver } from '@patternfly/react-charts';
 
-import EmptyData from '@core/components/EmptyData';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
 import { SkChartPieProps } from './ChartPie.interfaces';
@@ -46,30 +45,27 @@ const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) =
 
   return (
     <div ref={chartContainerRef} style={{ height: `100%`, width: `100%` }}>
-      {!total && <EmptyData message="Data not available" />}
-      {!!total && (
-        <ChartDonut
-          legendAllowWrap
-          title={format(total)}
-          data={data}
-          labels={labels}
-          labelComponent={
-            <ChartTooltip
-              cornerRadius={5}
-              flyoutStyle={{
-                fillOpacity: 0.75
-              }}
-            />
-          }
-          padding={CHART_PADDING}
-          legendData={legendData}
-          legendOrientation="vertical"
-          legendPosition="right"
-          width={width}
-          themeColor={ChartThemeColor.cyan}
-          {...props}
-        />
-      )}
+      <ChartDonut
+        legendAllowWrap
+        title={format(total)}
+        data={data}
+        labels={labels}
+        labelComponent={
+          <ChartTooltip
+            cornerRadius={5}
+            flyoutStyle={{
+              fillOpacity: 0.75
+            }}
+          />
+        }
+        padding={CHART_PADDING}
+        legendData={legendData}
+        legendOrientation="vertical"
+        legendPosition="right"
+        width={width}
+        themeColor={ChartThemeColor.cyan}
+        {...props}
+      />
     </div>
   );
 };

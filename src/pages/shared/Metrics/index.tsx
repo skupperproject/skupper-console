@@ -1,14 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
+import { Bullseye, Card, Spinner } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-
-import EmptyData from '@core/components/EmptyData';
 
 import Charts from './Charts';
 import MetricFilters from './Filters';
 import { displayIntervalMap } from './Metrics.constant';
-import { MetricsLabels } from './Metrics.enum';
 import { MetricsProps, SelectedFilters } from './Metrics.interfaces';
 import MetricsController from './services';
 import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
@@ -75,51 +72,41 @@ const Metrics: FC<MetricsProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
+  if (isLoadingMetrics) {
+    return (
+      <Card isFullHeight style={{ height: '500px' }}>
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
+      </Card>
+    );
+  }
+
+  if (!metrics) {
+    return null;
+  }
+
   return (
     <>
-      {isLoadingMetrics && (
-        <Card isFullHeight style={{ height: '500px' }}>
-          <Bullseye>
-            <Spinner />
-          </Bullseye>
-        </Card>
-      )}
+      <Card isRounded style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+        <MetricFilters
+          sourceProcesses={sourceProcesses}
+          processesConnected={processesConnected}
+          initialFilters={{
+            ...selectedFilters,
+            // if idSource have more ids set default (undefined)
+            processIdSource:
+              selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
+          }}
+          customFilterOptions={filterOptions}
+          startTime={startTime}
+          isRefetching={isRefetching}
+          onRefetch={handleRefetchMetrics}
+          onSelectFilters={handleFilters}
+        />
+      </Card>
 
-      {!isLoadingMetrics && (
-        <Grid hasGutter>
-          <GridItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-            <Card isRounded>
-              <MetricFilters
-                sourceProcesses={sourceProcesses}
-                processesConnected={processesConnected}
-                initialFilters={{
-                  ...selectedFilters,
-                  // if idSource have more ids set default (undefined)
-                  processIdSource:
-                    selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
-                }}
-                customFilterOptions={filterOptions}
-                startTime={startTime}
-                isRefetching={isRefetching}
-                onRefetch={handleRefetchMetrics}
-                onSelectFilters={handleFilters}
-              />
-            </Card>
-          </GridItem>
-
-          {!metrics && (
-            <GridItem>
-              <Card isFullHeight>
-                <CardBody>
-                  <EmptyData message={MetricsLabels.NoMetricFoundMessage} />
-                </CardBody>
-              </Card>
-            </GridItem>
-          )}
-
-          {!!metrics && <Charts metrics={metrics} protocol={prometheusQueryParams.protocol} />}
-        </Grid>
-      )}
+      {<Charts metrics={metrics} protocol={prometheusQueryParams.protocol} />}
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { AvailableProtocols } from '@API/REST.enum';
-import { SkChartAreaData } from '@core/components/SkChartArea/SkChartArea.interfaces';
+import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { IntervalTimeProp, PrometheusApiResult } from 'API/Prometheus.interfaces';
 
 export enum QueriesMetrics {
@@ -16,7 +16,7 @@ export interface QueryMetricsParams {
 interface StatusCodeResponse {
   label: string;
   total: number;
-  data: SkChartAreaData[] | undefined;
+  data: skAxisXY[];
 }
 
 export interface ResponseMetrics {
@@ -28,34 +28,33 @@ export interface ResponseMetrics {
 }
 
 export interface RequestMetrics {
-  data: SkChartAreaData[];
+  data: skAxisXY[];
   label: string;
-  totalRequestInterval: number;
-  avgRequestRateInterval: number;
 }
 
-export interface TrafficMetrics {
-  timeSeriesDataReceived: SkChartAreaData[];
-  timeSeriesDataSent: SkChartAreaData[];
-  totalDataReceived: number;
-  totalDataSent: number;
-  avgTrafficSent: number;
-  avgTrafficReceived: number;
-  maxTrafficSent: number;
-  maxTrafficReceived: number;
-  currentTrafficSent: number;
-  currentTrafficReceived: number;
-  sumDataSent: number;
-  sumDataReceived: number;
+export interface ByteRateMetrics {
+  rxTimeSerie: skAxisXY[];
+  txTimeSerie: skAxisXY[];
+  avgTxValue: number;
+  avgRxValue: number;
+  maxTxValue: number;
+  maxRxValue: number;
+  currentTxValue: number;
+  currentRxValue: number;
+}
+
+export interface BytesMetric {
+  bytesRx: number;
+  bytesTx: number;
 }
 
 export interface MetricData {
-  values: SkChartAreaData[][];
+  values: skAxisXY[][];
   labels: string[];
 }
 
 export interface LatencyData {
-  data: SkChartAreaData[];
+  data: skAxisXY[];
   label: string;
 }
 
@@ -70,11 +69,12 @@ export interface LatencyMetricsProps {
 }
 
 export interface Metrics {
-  trafficDataSeries: TrafficMetrics | null;
-  trafficDataSeriesPerSecond: TrafficMetrics | null;
+  bytes: BytesMetric | null;
+  byteRate: ByteRateMetrics | null;
   latencies: LatencyMetrics | null;
-  requestSeries: RequestMetrics[] | null;
   requestPerSecondSeries: RequestMetrics[] | null;
+  avgRequestRateInterval: number;
+  totalRequestsInterval: number;
   responseSeries: ResponseMetrics | null;
   responseRateSeries: ResponseMetrics | null;
 }

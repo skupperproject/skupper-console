@@ -1,6 +1,6 @@
 import { AvailableProtocols } from './REST.enum';
 
-type PrometheusApiResultValue = [number, string];
+type PrometheusApiResultValue = [number, string | 'NaN'];
 
 export interface PrometheusResponse<T> {
   data: {
