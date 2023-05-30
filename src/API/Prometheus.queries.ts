@@ -63,8 +63,8 @@ export const queries = {
   },
 
   // data transfer queries
-  getBytesByDirection(paramSource: string) {
-    return `sum by(direction)(octets_total{${paramSource}})`;
+  getBytesByDirection(param: string, range: IntervalTimePropValue) {
+    return `sum by(direction)(increase(octets_total{${param}}[${range}]))`;
   },
   getByteRateByDirectionTimeInteval(paramSource: string, range: IntervalTimePropValue) {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
