@@ -12,7 +12,7 @@ export function extractPrometheusValues(data: PrometheusApiResult[]): skAxisXY[]
     values.map((value) => ({
       x: Number(value[0]),
       // y should be a numeric value, we sanitize 'NaN' in 0
-      y:  isNaN(Number(value[1])) ? 0 : Number(value[1])
+      y: isNaN(Number(value[1])) ? 0 : Number(value[1])
     }))
   );
 }

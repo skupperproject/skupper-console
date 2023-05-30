@@ -36,16 +36,18 @@ const MetricsController = {
       range: timeInterval,
       processIdDest,
       protocol,
-      isRate: true,
       start,
       end
     };
 
     try {
-      const bytesTx = await PrometheusApi.fetchDataTrafficOut({ ...params, start, end });
-      const bytesRx = await PrometheusApi.fetchDataTrafficIn({ ...params, start, end });
+      const bytesTx = await PrometheusApi.fetchBytesOut({ ...params, start, end });
+      const bytesRx = await PrometheusApi.fetchBytesIn({ ...params, start, end });
 
-      return normalizeBytesMaxMinValues(bytesTx, bytesRx);
+      return {
+        bytesTx: formatToDecimalPlacesIfCents(Number(bytesTx[0]?.value[1] || 0)),
+        bytesRx: formatToDecimalPlacesIfCents(Number(bytesRx[0]?.value[1] || 0))
+      };
     } catch (e: unknown) {
       throw new Error(e as string);
     }
@@ -64,14 +66,13 @@ const MetricsController = {
       range: timeInterval,
       processIdDest,
       protocol,
-      isRate: true,
       start,
       end
     };
 
     try {
-      const byteRateDataTx = await PrometheusApi.fetchDataTrafficOut(params);
-      const byteRateDataRx = await PrometheusApi.fetchDataTrafficIn(params);
+      const byteRateDataTx = await PrometheusApi.fetchByteRateSeriesOut(params);
+      const byteRateDataRx = await PrometheusApi.fetchByteRateSeriesIn(params);
 
       return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
     } catch (e: unknown) {
@@ -95,11 +96,10 @@ const MetricsController = {
     try {
       const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess({
         ...params,
-        isRate: true,
         onlyErrors: false
       });
-      
-return normalizeResponsesFromSeries(resposeRateDataSeries);
+
+      return normalizeResponsesFromSeries(resposeRateDataSeries);
     } catch (e: unknown) {
       throw new Error(e as string);
     }
@@ -216,7 +216,7 @@ function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetr
 
   const { values } = axisValues;
   // Helper function to create a statusCodeMetric object
-  const createStatusCodeMetric = (index: number, label: string)=> {
+  const createStatusCodeMetric = (index: number, label: string) => {
     const responseValues = values[index] || null;
 
     // Calculate the total count of requests with the status code
@@ -268,9 +268,9 @@ function normalizeLatencies({
   const quantile99latencyNormalized = extractPrometheusValues(quantile99latency);
 
   if (
-    (!quantile50latencyNormalized || !quantile50latencyNormalized[0].length) &&
-    (!quantile90latencyNormalized || !quantile90latencyNormalized[0].length) &&
-    (!quantile99latencyNormalized || !quantile99latencyNormalized[0].length)
+    (!quantile50latencyNormalized || !quantile50latencyNormalized[0].filter(({y})=>y).length) &&
+    (!quantile90latencyNormalized || !quantile90latencyNormalized[0].filter(({y})=>y).length) &&
+    (!quantile99latencyNormalized || !quantile99latencyNormalized[0].filter(({y})=>y).length)
   ) {
     return null;
   }
@@ -287,8 +287,8 @@ function normalizeLatencies({
   if (quantile99latencyNormalized) {
     latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: MetricsLabels.LatencyMetric99quantile });
   }
-  
-return latenciesNormalized;
+
+  return latenciesNormalized;
 }
 
 function normalizeByteRateFromSeries(
@@ -320,25 +320,4 @@ function normalizeByteRateFromSeries(
     currentTxValue: txTimeSerie[txTimeSerie.length - 1].y,
     currentRxValue: rxTimeSerie[rxTimeSerie.length - 1].y
   };
-}
-
-function normalizeBytesMaxMinValues(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): BytesMetric | null {
-  // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
-  const axisValuesTx = extractPrometheusValues(txData);
-  const axisValuesRx = extractPrometheusValues(rxData);
-
-  if (!axisValuesTx || !axisValuesRx) {
-    return null;
-  }
-
-  const rxTimeSerie = axisValuesRx[axisValuesRx.length - 1];
-  const txTimeSerie = axisValuesTx[0];
-
-  const currentTrafficReceived = rxTimeSerie[rxTimeSerie.length - 1].y;
-  const currentTrafficSent = txTimeSerie[txTimeSerie.length - 1].y;
-
-  const bytesRx = rxTimeSerie.length === 1 ? rxTimeSerie[0].y : currentTrafficReceived - rxTimeSerie[0].y;
-  const bytesTx = txTimeSerie.length === 1 ? txTimeSerie[0].y : currentTrafficSent - txTimeSerie[0].y;
-
-  return { bytesRx, bytesTx };
 }
