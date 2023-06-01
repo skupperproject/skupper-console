@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
-import { AvailableProtocols } from '@API/REST.enum';
+import { AvailableProtocols, SortDirection } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -31,9 +31,10 @@ const TAB_1_KEY = 'servers';
 const TAB_2_KEY = 'connections';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
-const initAllRequestsQueryParamsPaginated = {
+const initAllRequestsQueryParamsPaginated: RequestOptions = {
   limit: DEFAULT_TABLE_PAGE_SIZE,
-  sortBy: 'endTime.desc'
+  sortName: 'endTime',
+  sortDirection: SortDirection.DESC
 };
 
 const initServersQueryParams = {
@@ -84,6 +85,15 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     }
   );
 
+  const { data: flowPairSelected } = useQuery(
+    [QueriesAddresses.GetFlowPair],
+    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      enabled: !!flowSelected
+    }
+  );
+
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setAddressView(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
@@ -124,8 +134,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   const serverNamesId = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
-  const flow = requestsDataPaginated?.results.find((flowPairs) => flowPairs.identity === flowSelected);
-
   return (
     <>
       <Modal
@@ -134,7 +142,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         onClose={() => handleOnClickDetails()}
         variant={ModalVariant.medium}
       >
-        <FlowsPair flowPair={flow} />
+        <FlowsPair flowPair={flowPairSelected} />
       </Modal>
       <Grid hasGutter>
         <GridItem>
@@ -148,7 +156,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         {/* requests table*/}
         <GridItem>
           <Card isRounded className="pf-u-pt-md">
-            <Tabs activeKey={addressView} onSelect={handleTabClick}>
+            <Tabs activeKey={addressView} onSelect={handleTabClick} isBox>
               <Tab
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}

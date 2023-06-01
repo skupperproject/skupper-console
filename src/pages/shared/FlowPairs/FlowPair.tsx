@@ -12,11 +12,13 @@ import {
   FlexItem,
   Grid,
   GridItem,
+  Icon,
   Text,
   TextContent,
   TextVariants,
   Title
 } from '@patternfly/react-core';
+import { LaptopIcon, LongArrowAltDownIcon, LongArrowAltUpIcon, ServerIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
@@ -132,7 +134,14 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
   return (
     <Card isFullHeight isRounded>
       <CardTitle>
-        <Title headingLevel="h2">{title}</Title>
+        <Title headingLevel="h2">
+          {' '}
+          <Icon isInline size="md">
+            {isCounterflow ? <ServerIcon /> : <LaptopIcon />}
+          </Icon>
+          {'  '}
+          {title}
+        </Title>
       </CardTitle>
       <CardBody>
         <DescriptionList>
@@ -151,7 +160,17 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
             <DescriptionListTerm>{isCounterflow ? FlowLabels.DestPort : FlowLabels.Port}</DescriptionListTerm>
             <DescriptionListDescription>{flow.sourcePort}</DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
-            <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>
+            <DescriptionListDescription>
+              {formatBytes(flow.octets)}{' '}
+              <Icon>
+                {' '}
+                {isCounterflow ? (
+                  <LongArrowAltDownIcon color="var(--pf-global--palette--blue-300)" />
+                ) : (
+                  <LongArrowAltUpIcon color="var(--pf-global--palette--green-400)" />
+                )}
+              </Icon>
+            </DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.ByteUnacked}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(flow.octetsUnacked)}</DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.WindowSize}</DescriptionListTerm>
@@ -165,11 +184,18 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
   );
 };
 
-const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
+const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow }) {
   return (
     <Card isFullHeight isRounded>
       <CardTitle>
-        <Title headingLevel="h2">{title}</Title>
+        <Title headingLevel="h2">
+          {' '}
+          <Icon isInline size="md">
+            {isCounterflow ? <ServerIcon /> : <LaptopIcon />}
+          </Icon>
+          {'  '}
+          {title}
+        </Title>
       </CardTitle>
       <CardBody>
         <DescriptionList isAutoFit>
@@ -184,7 +210,17 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow }) {
               </>
             </DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
-            <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>
+            <DescriptionListDescription>
+              {formatBytes(flow.octets)}
+              <Icon>
+                {' '}
+                {isCounterflow ? (
+                  <LongArrowAltDownIcon color="var(--pf-global--palette--blue-300)" />
+                ) : (
+                  <LongArrowAltUpIcon color="var(--pf-global--palette--green-400)" />
+                )}
+              </Icon>
+            </DescriptionListDescription>{' '}
             <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
             <DescriptionListDescription>{formatLatency(flow.latency)}</DescriptionListDescription>
           </DescriptionListGroup>

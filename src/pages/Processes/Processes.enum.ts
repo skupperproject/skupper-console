@@ -41,7 +41,9 @@ export enum ProcessesLabels {
   ByteRateMaxCol = 'max',
   ExposedTitle = 'Exposed',
   Exposed = 'yes',
-  NotExposed = 'no'
+  NotExposed = 'no',
+  ActiveConnections = 'Live connections',
+  OldConnections = 'Connections in the last 15 minutes'
 }
 
 export enum ProcessPairsColumnsNames {

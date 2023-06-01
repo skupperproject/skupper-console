@@ -268,9 +268,9 @@ function normalizeLatencies({
   const quantile99latencyNormalized = extractPrometheusValues(quantile99latency);
 
   if (
-    (!quantile50latencyNormalized || !quantile50latencyNormalized[0].filter(({y})=>y).length) &&
-    (!quantile90latencyNormalized || !quantile90latencyNormalized[0].filter(({y})=>y).length) &&
-    (!quantile99latencyNormalized || !quantile99latencyNormalized[0].filter(({y})=>y).length)
+    (!quantile50latencyNormalized || !quantile50latencyNormalized[0].filter(({ y }) => y).length) &&
+    (!quantile90latencyNormalized || !quantile90latencyNormalized[0].filter(({ y }) => y).length) &&
+    (!quantile99latencyNormalized || !quantile99latencyNormalized[0].filter(({ y }) => y).length)
   ) {
     return null;
   }

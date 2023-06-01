@@ -1,12 +1,23 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
-import { Flex, Grid, GridItem, Icon, Modal, ModalVariant, Title } from '@patternfly/react-core';
+import {
+  Flex,
+  Grid,
+  GridItem,
+  Icon,
+  Modal,
+  ModalVariant,
+  Tab,
+  Tabs,
+  TabTitleText,
+  Title
+} from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
-import { AvailableProtocols } from '@API/REST.enum';
+import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -20,23 +31,41 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
-import { httpColumns, tcpColumns } from '../Processes.constant';
+import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const initAllFlowParisQueryParamsPaginated = {
+const TAB_1_KEY = 'liveConnections';
+const TAB_2_KEY = 'connections';
+
+const initAllFlowParisQueryParamsPaginated: RequestOptions = {
   offset: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE,
-  sortBy: 'endTime.desc'
+  sortName: 'endTime',
+  sortDirection: SortDirection.DESC
+};
+
+const initActiveConnectionsPaginated: RequestOptions = {
+  ...initAllFlowParisQueryParamsPaginated,
+  protocol: AvailableProtocols.Tcp,
+  state: TcpStatus.Active
+};
+
+const initOldConnectionsPaginated: RequestOptions = {
+  ...initActiveConnectionsPaginated,
+  state: TcpStatus.Terminated
 };
 
 const ProcessPairs = function () {
   const { processPairId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const type = searchParams.get('type') || TAB_1_KEY;
   const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
   const destinationId = ids[1];
 
+  const [connectionsView, setConnectionsView] = useState<string>(type);
   const [flowPairsQueryParamsPaginated, setFlowParisQueryParamsPaginated] = useState<RequestOptions>(
     initAllFlowParisQueryParamsPaginated
   );
@@ -66,6 +95,43 @@ const ProcessPairs = function () {
     }
   );
 
+  const { data: activeConnectionsData, isLoading: isLoadingActiveConnectionsData } = useQuery(
+    [QueriesProcesses.GetFlowPairs, { ...initActiveConnectionsPaginated, ...flowPairsQueryParamsPaginated }],
+    () =>
+      RESTApi.fetchFlowPairs({
+        ...initActiveConnectionsPaginated,
+        ...flowPairsQueryParamsPaginated,
+        filter: `processAggregateId.${processPairId}`
+      }),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true
+    }
+  );
+
+  const { data: oldConnectionsData, isLoading: isLoadingOldConnectionsData } = useQuery(
+    [QueriesProcesses.GetFlowPairs, { ...initOldConnectionsPaginated, ...flowPairsQueryParamsPaginated }],
+    () =>
+      RESTApi.fetchFlowPairs({
+        ...initOldConnectionsPaginated,
+        ...flowPairsQueryParamsPaginated,
+        filter: `processAggregateId.${processPairId}`
+      }),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true
+    }
+  );
+
+  const { data: flowPairSelected } = useQuery(
+    [QueriesProcesses.GetFlowPair],
+    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      enabled: !!flowSelected
+    }
+  );
+
   const handleGetFiltersFlowPairs = useCallback((params: RequestOptions) => {
     setFlowParisQueryParamsPaginated(params);
   }, []);
@@ -74,20 +140,32 @@ const ProcessPairs = function () {
     setFlowSelected(id);
   }, []);
 
-  if (isLoadingFlowPairsPairsData || isLoadingDestinationProcess || isLoadingSourceProcess) {
+  function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
+    setConnectionsView(tabIndex as string);
+    setSearchParams({ type: tabIndex as string });
+  }
+
+  if (
+    isLoadingFlowPairsPairsData ||
+    isLoadingDestinationProcess ||
+    isLoadingSourceProcess ||
+    isLoadingOldConnectionsData ||
+    isLoadingActiveConnectionsData
+  ) {
     return <LoadingPage />;
   }
 
-  if (!flowPairsPairsData || !sourceProcess || !destinationProcess) {
+  if (!flowPairsPairsData || !sourceProcess || !destinationProcess || !oldConnectionsData || !activeConnectionsData) {
     return null;
   }
 
-  const TcpFlowPairs = flowPairsPairsData.results.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
-  const HttpFlowPairs = flowPairsPairsData.results.filter(
+  const { results: activeConnections } = activeConnectionsData;
+  const { timeRangeCount: oldConnectionsCount, results: oldConnections } = oldConnectionsData;
+
+  const httpRequests = flowPairsPairsData.results.filter(
     ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
   );
   const flowPairsPaginatedCount = flowPairsPairsData.timeRangeCount;
-  const flow = flowPairsPairsData.results.find((flowPairs) => flowPairs.identity === flowSelected);
 
   return (
     <TransitionPage>
@@ -98,7 +176,7 @@ const ProcessPairs = function () {
           onClose={() => handleOnClickDetails()}
           variant={ModalVariant.medium}
         >
-          <FlowsPair flowPair={flow} />
+          <FlowsPair flowPair={flowPairSelected} />
         </Modal>
 
         <Grid hasGutter>
@@ -154,29 +232,56 @@ const ProcessPairs = function () {
             />
           </GridItem>
 
-          {!!TcpFlowPairs.length && (
+          {!!activeConnections.length && (
             <GridItem>
-              <SkTable
-                title={ProcessesLabels.TcpConnection}
-                columns={tcpColumns}
-                rows={TcpFlowPairs}
-                pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                components={{
-                  ...flowPairsComponentsTable,
-                  viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                    <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                  )
-                }}
-              />
+              <Tabs activeKey={connectionsView} onSelect={handleTabClick} isBox>
+                <Tab
+                  eventKey={TAB_1_KEY}
+                  title={
+                    <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
+                  }
+                >
+                  <SkTable
+                    title={ProcessesLabels.TcpConnection}
+                    columns={activeTcpColumns}
+                    rows={activeConnections}
+                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                    components={{
+                      ...flowPairsComponentsTable,
+                      viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                        <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                      )
+                    }}
+                  />
+                </Tab>
+                <Tab
+                  eventKey={TAB_2_KEY}
+                  title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
+                >
+                  <SkTable
+                    title={ProcessesLabels.TcpConnection}
+                    columns={oldTcpColumns}
+                    rows={oldConnections}
+                    rowsCount={oldConnectionsCount}
+                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                    components={{
+                      ...flowPairsComponentsTable,
+                      viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                        <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                      )
+                    }}
+                  />
+                </Tab>
+              </Tabs>
             </GridItem>
           )}
 
-          {!!HttpFlowPairs.length && (
+          {!!httpRequests.length && (
             <GridItem>
               <SkTable
                 title={ProcessesLabels.HttpRequests}
                 columns={httpColumns}
-                rows={HttpFlowPairs}
+                rows={httpRequests}
                 onGetFilters={handleGetFiltersFlowPairs}
                 rowsCount={flowPairsPaginatedCount}
                 components={{
