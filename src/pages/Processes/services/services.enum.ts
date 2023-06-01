@@ -9,5 +9,6 @@ export enum QueriesProcesses {
   GetProcessPairsTx = 'get-process-pairs-tx',
   GetProcessPairsRx = 'get-process-pairs-rx',
   GetFlowPairs = 'get-process-flow-pairs',
+  GetFlowPair = 'get-process-flow-pair',
   GetAddressesByProcessId = 'get-addresses-by-process-id-query'
 }

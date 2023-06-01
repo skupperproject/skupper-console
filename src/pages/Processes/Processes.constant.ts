@@ -101,7 +101,7 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   }
 ];
 
-const tcpHiddenColumns: Record<string, { show: boolean }> = {
+const oldTcpHiddenColumns: Record<string, { show: boolean }> = {
   [FlowPairsColumnsNames.Client]: {
     show: false
   },
@@ -112,6 +112,13 @@ const tcpHiddenColumns: Record<string, { show: boolean }> = {
     show: false
   },
   [FlowPairsColumnsNames.ServerSite]: {
+    show: false
+  }
+};
+
+const activeTcpHiddenColumns: Record<string, { show: boolean }> = {
+  ...oldTcpHiddenColumns,
+  [FlowPairsColumnsNames.Closed]: {
     show: false
   }
 };
@@ -130,7 +137,12 @@ export const httpColumns = httpFlowPairsColumns.map((flowPair) => ({
   show: httpHiddenColumns[flowPair.name]?.show
 }));
 
-export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
+export const oldTcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
   ...flowPair,
-  show: tcpHiddenColumns[flowPair.name]?.show
+  show: oldTcpHiddenColumns[flowPair.name]?.show
+}));
+
+export const activeTcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
+  ...flowPair,
+  show: activeTcpHiddenColumns[flowPair.name]?.show
 }));

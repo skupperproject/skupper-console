@@ -9,3 +9,8 @@ export enum AvailableProtocols {
   Http2 = 'http2',
   AllHttp = 'http.*'
 }
+
+export enum TcpStatus {
+  Active = 'active',
+  Terminated = 'terminated'
+}
