@@ -41,42 +41,21 @@ const MetricsController = {
     };
 
     try {
-      const bytesTx = await PrometheusApi.fetchBytesOut({ ...params, start, end });
-      const bytesRx = await PrometheusApi.fetchBytesIn({ ...params, start, end });
+      const bytesTx = await PrometheusApi.fetchBytes({ ...params, start, end });
+      const bytesRx = await PrometheusApi.fetchBytes({
+        ...params,
+        id: processIdDest,
+        processIdDest: processIdSource,
+        start,
+        end
+      });
 
-      const sumBytesTx = bytesTx.reduce(
-        (acc, bytes) => {
-          if (bytes.metric.direction === 'incoming') {
-            acc.tx = acc.tx + Number(bytes.value[1] || 0);
-          }
-
-          if (bytes.metric.direction === 'outgoing') {
-            acc.tx = acc.tx + Number(bytes.value[1] || 0);
-          }
-
-          return acc;
-        },
-        { tx: 0, rx: 0 } as Record<string, number>
-      );
-
-      const sumBytesRx = bytesRx.reduce(
-        (acc, bytes) => {
-          if (bytes.metric.direction === 'incoming') {
-            acc.rx = acc.rx + Number(bytes.value[1] || 0);
-          }
-
-          if (bytes.metric.direction === 'outgoing') {
-            acc.rx = acc.rx + Number(bytes.value[1] || 0);
-          }
-
-          return acc;
-        },
-        { tx: 0, rx: 0 } as Record<string, number>
-      );
+      const sumBytesTx = bytesTx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
+      const sumBytesRx = bytesRx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
 
       return {
-        bytesTx: formatToDecimalPlacesIfCents(sumBytesTx.tx + sumBytesRx.tx),
-        bytesRx: formatToDecimalPlacesIfCents(sumBytesTx.rx + sumBytesRx.rx)
+        bytesTx: formatToDecimalPlacesIfCents(sumBytesTx),
+        bytesRx: formatToDecimalPlacesIfCents(sumBytesRx)
       };
     } catch (e: unknown) {
       throw new Error(e as string);

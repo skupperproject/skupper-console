@@ -11,59 +11,30 @@ import { gePrometheusQueryPATH, queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
   // When direction is incoming, the sourceProcess is the client and the destProcess is the server.
-  fetchBytesOut: async ({
+  fetchBytes: async ({
     id,
     range,
     processIdDest,
     protocol
   }: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
-    let param = `sourceProcess=~"${id}"`;
+    let param = '';
+
+    if (id) {
+      param = [param, `sourceProcess=~"${id}"`].filter(Boolean).join(',');
+    }
 
     if (processIdDest) {
-      param = [param, `destProcess=~"${processIdDest}"`].join(',');
+      param = [param, `destProcess=~"${processIdDest}"`].filter(Boolean).join(',');
     }
 
     if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
+      param = [param, `protocol=~"${protocol}"`].filter(Boolean).join(',');
     }
-
-    const query = queries.getBytesByDirection(param, `${range.seconds + 60}s`);
 
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: {
-        query
-      }
-    });
-
-    return result;
-  },
-
-  fetchBytesIn: async ({
-    id,
-    range,
-    processIdDest,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
-    let param = `destProcess=~"${id}"`;
-
-    if (processIdDest) {
-      param = [param, `sourceProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-
-    const query = queries.getBytesByDirection(param, `${range.seconds + 60}s`);
-
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: {
-        query
-      }
+      params: { query: queries.getBytesByDirection(param, `${range.seconds + 60}s`) }
     });
 
     return result;
