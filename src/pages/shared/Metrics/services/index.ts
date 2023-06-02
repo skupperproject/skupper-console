@@ -41,13 +41,11 @@ const MetricsController = {
     };
 
     try {
-      const bytesTx = await PrometheusApi.fetchBytes({ ...params, start, end });
+      const bytesTx = await PrometheusApi.fetchBytes(params);
       const bytesRx = await PrometheusApi.fetchBytes({
         ...params,
         id: processIdDest,
-        processIdDest: processIdSource,
-        start,
-        end
+        processIdDest: processIdSource
       });
 
       const sumBytesTx = bytesTx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
@@ -80,8 +78,12 @@ const MetricsController = {
     };
 
     try {
-      const byteRateDataTx = await PrometheusApi.fetchByteRateSeriesOut(params);
-      const byteRateDataRx = await PrometheusApi.fetchByteRateSeriesIn(params);
+      const byteRateDataTx = await PrometheusApi.fetchByteRateSeries(params);
+      const byteRateDataRx = await PrometheusApi.fetchByteRateSeries({
+        ...params,
+        id: processIdDest,
+        processIdDest: processIdSource
+      });
 
       return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
     } catch (e: unknown) {

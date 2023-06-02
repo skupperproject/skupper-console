@@ -10,7 +10,6 @@ import {
 import { gePrometheusQueryPATH, queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
-  // When direction is incoming, the sourceProcess is the client and the destProcess is the server.
   fetchBytes: async ({
     id,
     range,
@@ -40,7 +39,8 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchByteRateSeriesOut: async ({
+  //When direction is outgoing, it is the response from from the server (sourceProcess) to the client (destProcess)
+  fetchByteRateSeries: async ({
     id,
     range,
     processIdDest,
@@ -48,48 +48,18 @@ export const PrometheusApi = {
     start,
     end
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    let param = `sourceProcess=~"${id}"`;
+    let param = '';
+
+    if (id) {
+      param = [param, `sourceProcess=~"${id}"`].filter(Boolean).join(',');
+    }
 
     if (processIdDest) {
-      param = [param, `destProcess=~"${processIdDest}"`].join(',');
+      param = [param, `destProcess=~"${processIdDest}"`].filter(Boolean).join(',');
     }
 
     if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-
-    const query = queries.getByteRateByDirectionTimeInterval(param, '1m');
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
-      params: {
-        query,
-        start,
-        end,
-        step: range.step
-      }
-    });
-
-    // it retrieves 2 arrays of [values, timestamps], 1) received traffic 2) sent traffic
-    return result;
-  },
-  //When direction is outoing, it is the response from from the server (sourceProcess) to the client (destProcess)
-  fetchByteRateSeriesIn: async ({
-    id,
-    range,
-    processIdDest,
-    protocol,
-    start,
-    end
-  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    let param = `destProcess=~"${id}"`;
-
-    if (processIdDest) {
-      param = [param, `sourceProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
+      param = [param, `protocol=~"${protocol}"`].filter(Boolean).join(',');
     }
 
     const query = queries.getByteRateByDirectionTimeInterval(param, '1m');
