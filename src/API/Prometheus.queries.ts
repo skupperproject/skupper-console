@@ -66,7 +66,7 @@ export const queries = {
   getBytesByDirection(param: string, range: IntervalTimePropValue) {
     return `sum by(direction)(increase(octets_total{${param}}[${range}]))`;
   },
-  getByteRateByDirectionTimeInteval(paramSource: string, range: IntervalTimePropValue) {
+  getByteRateByDirectionTimeInterval(paramSource: string, range: IntervalTimePropValue) {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
   },
   getAllProcessPairsByteRates() {

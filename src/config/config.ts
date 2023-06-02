@@ -28,7 +28,7 @@ export const queryClientConfig = {
         retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 30000)
       },
       refetchOnWindowFocus: false,
-      refetchIntervalInBackground: false,
+      refetchIntervalInBackground: true,
       suspense: false,
       staleTime: 0
     }
