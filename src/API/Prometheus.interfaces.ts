@@ -21,7 +21,7 @@ export type PrometheusApiResult = {
 };
 
 export interface PrometheusQueryParams {
-  id: string;
+  id?: string;
   range: IntervalTimeProp;
   processIdDest?: string;
   isRate?: boolean;
