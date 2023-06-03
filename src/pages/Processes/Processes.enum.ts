@@ -33,6 +33,7 @@ export enum ProcessesLabels {
   HTTPClients = 'HTTP/2 Clients',
   HTTPServers = 'HTTP/2 Servers',
   TcpConnection = 'Live tcp connections',
+  Http2Requests = 'Http2 requests in the last 15 minutes',
   HttpRequests = 'Http requests in the last 15 minutes',
   GoToTopology = 'Go to the Topology view',
   ByteRateAvgCol = 'avg',

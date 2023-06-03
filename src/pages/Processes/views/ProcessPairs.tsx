@@ -45,6 +45,16 @@ const initAllFlowParisQueryParamsPaginated: RequestOptions = {
   sortDirection: SortDirection.DESC
 };
 
+const initHttpRequestsPaginated: RequestOptions = {
+  ...initAllFlowParisQueryParamsPaginated,
+  protocol: AvailableProtocols.Http
+};
+
+const initHttp2RequestsPaginated: RequestOptions = {
+  ...initAllFlowParisQueryParamsPaginated,
+  protocol: AvailableProtocols.Http2
+};
+
 const initActiveConnectionsPaginated: RequestOptions = {
   ...initAllFlowParisQueryParamsPaginated,
   protocol: AvailableProtocols.Tcp,
@@ -52,7 +62,8 @@ const initActiveConnectionsPaginated: RequestOptions = {
 };
 
 const initOldConnectionsPaginated: RequestOptions = {
-  ...initActiveConnectionsPaginated,
+  ...initAllFlowParisQueryParamsPaginated,
+  protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Terminated
 };
 
@@ -81,13 +92,27 @@ const ProcessPairs = function () {
     () => (destinationId ? RESTApi.fetchProcess(destinationId) : undefined)
   );
 
-  const { data: flowPairsPairsData, isLoading: isLoadingFlowPairsPairsData } = useQuery(
+  const { data: http2RequestsData, isLoading: isLoadingHttp2RequestsData } = useQuery(
     [QueriesProcesses.GetFlowPairs, { ...initAllFlowParisQueryParamsPaginated, ...flowPairsQueryParamsPaginated }],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initAllFlowParisQueryParamsPaginated,
+        ...initHttp2RequestsPaginated,
         ...flowPairsQueryParamsPaginated,
-        filter: `processAggregateId.${processPairId}`
+        processAggregateId: processPairId
+      }),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true
+    }
+  );
+
+  const { data: httpRequestsData, isLoading: isLoadingHttoRequestsData } = useQuery(
+    ['QueriesProcesses.GetFlowPairs', { ...initHttpRequestsPaginated, ...flowPairsQueryParamsPaginated }],
+    () =>
+      RESTApi.fetchFlowPairs({
+        ...initHttpRequestsPaginated,
+        ...flowPairsQueryParamsPaginated,
+        processAggregateId: processPairId
       }),
     {
       refetchInterval: UPDATE_INTERVAL,
@@ -101,7 +126,7 @@ const ProcessPairs = function () {
       RESTApi.fetchFlowPairs({
         ...initActiveConnectionsPaginated,
         ...flowPairsQueryParamsPaginated,
-        filter: `processAggregateId.${processPairId}`
+        processAggregateId: processPairId
       }),
     {
       refetchInterval: UPDATE_INTERVAL,
@@ -115,7 +140,7 @@ const ProcessPairs = function () {
       RESTApi.fetchFlowPairs({
         ...initOldConnectionsPaginated,
         ...flowPairsQueryParamsPaginated,
-        filter: `processAggregateId.${processPairId}`
+        processAggregateId: processPairId
       }),
     {
       refetchInterval: UPDATE_INTERVAL,
@@ -146,26 +171,31 @@ const ProcessPairs = function () {
   }
 
   if (
-    isLoadingFlowPairsPairsData ||
+    isLoadingHttoRequestsData ||
     isLoadingDestinationProcess ||
     isLoadingSourceProcess ||
     isLoadingOldConnectionsData ||
-    isLoadingActiveConnectionsData
+    isLoadingActiveConnectionsData ||
+    isLoadingHttp2RequestsData
   ) {
     return <LoadingPage />;
   }
 
-  if (!flowPairsPairsData || !sourceProcess || !destinationProcess || !oldConnectionsData || !activeConnectionsData) {
+  if (
+    !httpRequestsData ||
+    !sourceProcess ||
+    !destinationProcess ||
+    !oldConnectionsData ||
+    !activeConnectionsData ||
+    !http2RequestsData
+  ) {
     return null;
   }
 
-  const { results: activeConnections } = activeConnectionsData;
+  const { timeRangeCount: httpRequestsCount, results: httpRequests } = httpRequestsData;
+  const { timeRangeCount: http2RequestsCount, results: http2Requests } = http2RequestsData;
   const { timeRangeCount: oldConnectionsCount, results: oldConnections } = oldConnectionsData;
-
-  const httpRequests = flowPairsPairsData.results.filter(
-    ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
-  );
-  const flowPairsPaginatedCount = flowPairsPairsData.timeRangeCount;
+  const { results: activeConnections } = activeConnectionsData;
 
   return (
     <TransitionPage>
@@ -232,7 +262,7 @@ const ProcessPairs = function () {
             />
           </GridItem>
 
-          {!!activeConnections.length && (
+          {(!!activeConnections.length || !!oldConnectionsCount) && (
             <GridItem>
               <Tabs activeKey={connectionsView} onSelect={handleTabClick} isBox>
                 <Tab
@@ -276,6 +306,24 @@ const ProcessPairs = function () {
             </GridItem>
           )}
 
+          {!!http2Requests.length && (
+            <GridItem>
+              <SkTable
+                title={ProcessesLabels.Http2Requests}
+                columns={httpColumns}
+                rows={http2Requests}
+                onGetFilters={handleGetFiltersFlowPairs}
+                rowsCount={http2RequestsCount}
+                components={{
+                  ...flowPairsComponentsTable,
+                  viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                    <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+                  )
+                }}
+              />
+            </GridItem>
+          )}
+
           {!!httpRequests.length && (
             <GridItem>
               <SkTable
@@ -283,7 +331,7 @@ const ProcessPairs = function () {
                 columns={httpColumns}
                 rows={httpRequests}
                 onGetFilters={handleGetFiltersFlowPairs}
-                rowsCount={flowPairsPaginatedCount}
+                rowsCount={httpRequestsCount}
                 components={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
