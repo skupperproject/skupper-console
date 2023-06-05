@@ -19,7 +19,6 @@ const Topology = function () {
   const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
 
   function handleChangeTopologyType(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    searchParams.delete('id'); // remove the id from the url when the topology view change
     setTopologyType(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
   }

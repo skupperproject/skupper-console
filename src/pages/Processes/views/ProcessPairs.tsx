@@ -106,7 +106,7 @@ const ProcessPairs = function () {
     }
   );
 
-  const { data: httpRequestsData, isLoading: isLoadingHttoRequestsData } = useQuery(
+  const { data: httpRequestsData, isLoading: isLoadingHttpRequestsData } = useQuery(
     ['QueriesProcesses.GetFlowPairs', { ...initHttpRequestsPaginated, ...flowPairsQueryParamsPaginated }],
     () =>
       RESTApi.fetchFlowPairs({
@@ -171,7 +171,7 @@ const ProcessPairs = function () {
   }
 
   if (
-    isLoadingHttoRequestsData ||
+    isLoadingHttpRequestsData ||
     isLoadingDestinationProcess ||
     isLoadingSourceProcess ||
     isLoadingOldConnectionsData ||
