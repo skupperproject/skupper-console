@@ -12,6 +12,8 @@ type ZoomControlsProps = {
 };
 
 const ZOOM_DELTA = 0.25;
+const FIT_SCREEN_CACHE_KEY_SUFFIX = '-fitScreen';
+const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
 
 const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
   const center = graphInstance.getGraphCenterPoint();
@@ -28,6 +30,7 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
 
     if (onFitScreen) {
       onFitScreen(0);
+      localStorage.removeItem;
     }
   };
 
@@ -55,6 +58,9 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
 
   const handleReposition = () => {
     GraphController.cleanPositionsFromLocalStorage();
+    GraphController.cleanPositionsControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
+    GraphController.cleanPositionsControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
+
     // refresh page
     navigate(0);
   };
