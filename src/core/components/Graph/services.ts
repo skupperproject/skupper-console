@@ -27,6 +27,11 @@ export const GraphController = {
       .forEach((x) => localStorage.removeItem(x));
   },
 
+  cleanPositionsControlsFromLocalStorage(suffix: string) {
+    Object.keys(localStorage)
+      .filter((x) => x.endsWith(suffix))
+      .forEach((x) => localStorage.removeItem(x));
+  },
   // TODO: remove this function when Backend sanitize the old process pairs
   sanitizeEdges: (nodes: GraphNode[], edges: GraphEdge[]) => {
     const availableNodesMap = nodes.reduce((acc, node) => {
