@@ -1,6 +1,6 @@
 # ![alt text](https://user-images.githubusercontent.com/79913332/225248562-80d8f046-dba6-4b1e-94d2-75b4ece046f0.png)
 
-[![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml)  [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Table of Contents
 
@@ -26,7 +26,7 @@ This demo is synchronized with the latest version of the Skupper or a modified v
 
 ## Enable the console from Skupper
 
-To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this  [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
+To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
 
 ## Development
 
@@ -41,7 +41,7 @@ To get started quickly, follow the steps below:
 2. Start the application by running `yarn start`.
 3. Open <http://localhost:3000> in your web browser.
 
-*Note*:
+_Note_:
 
 Running `yarn start` uses the data in the mock folder, which means that no metrics data or charts will be available.
 
@@ -53,7 +53,7 @@ To run the console with demo routes, execute the following command:
 COLLECTOR_URL=https://skupper-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud yarn start
 ```
 
- These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
+These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
 
 ### Run the console with Skupper
 
@@ -66,7 +66,7 @@ COLLECTOR_URL=<skupper url> yarn start
 ```
 
 **Cross-Origin Resource Sharing (CORS) issue**
- For security reasons, browsers forbid requests that come in from cross-domain sources. We need to allow the CORS manually:
+For security reasons, browsers forbid requests that come in from cross-domain sources. We need to allow the CORS manually:
 
 ```bash
 kubectl set env <name of your skupper controller deployed> USE_CORS=yes
@@ -122,9 +122,9 @@ The project has the following directory structure:
   - `core/utils`: Contains generic app functionalities such as date and formatting utilities that are used throughout the application.
   - `layout`: Contains the components that form the foundation of the application's structure, such as the header, footer, and navigation menu.
   - `pages`: Contains the components that are displayed within the container, which represent the different pages or views of the application.
-    - `<page>/components`: Contains the components of a particular view, such as the list and  details.
+    - `<page>/components`: Contains the components of a particular view, such as the list and details.
     - `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
-    - `<page>/views`: Contains a collection of views for a particular page, such as the  list view or details view.
+    - `<page>/views`: Contains a collection of views for a particular page, such as the list view or details view.
   - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
   - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
 
@@ -139,7 +139,7 @@ Please note that the `services` folder contains utilities for data normalization
 To customize the Skupper logo and the application name on the left side of the Header, we can use the following environment variables:
 
 - **BRAND_APP_LOGO**: The path to a custom logo image file to be used instead of the default Skupper logo.
-- **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is empty.
+- **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is no set.
 - **APP_VERSION**: The version of the console. By default this value match with the package.json version.
 
 For example, you can customize the logo and application name by running the following command:
@@ -147,6 +147,3 @@ For example, you can customize the logo and application name by running the foll
 ```bash
 BRAND_APP_LOGO="/local_path/new_logo.png" BRAND_APP_NAME="New name" yarn build
 ```
-
-If you want to skip the branding title and only display the logo, you can set the **BRAND_APP_NAME** environment variable to an empty string ('').
-If you want to use the default branding title  you should unset the **BRAND_APP_NAME** environment variable.
