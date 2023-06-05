@@ -10,7 +10,7 @@ import {
   ToolbarItem
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus';
 import { RESTApi } from '@API/REST';
@@ -52,6 +52,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   id: processId
 }) {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const showSiteInitState = localStorage.getItem(SHOW_SITE_KEY);
   const showLinkLabelInitState = localStorage.getItem(SHOW_LINK_LABEL);
   const showLinkLabelReverseInitState = localStorage.getItem(SHOW_LINK_REVERSE_LABEL);
@@ -174,8 +176,16 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   ) {
     const id = isPlaceholder ? undefined : (selection as string);
 
+    searchParams.delete('addressId');
+    let params = Object.fromEntries([...searchParams]);
+
+    if (id) {
+      params = { ...params, addressId: id };
+    }
+
     setAddressId(id);
     setIsAddressSelectMenuOpen(false);
+    setSearchParams(params);
   }
 
   function handleChangeSiteCheck(checked: boolean) {
