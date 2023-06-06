@@ -21,10 +21,19 @@ export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
 
 let PROMETHEUS_PATH: string | undefined = undefined;
 let PROMETHEUS_START_TIME: number = new Date().getTime();
+let PROMETHEUS_USERNAME = '';
+let PROMETHEUS_PASSWORD = '';
 
 // Override the default prometheus path with the value from the skupper flow collector api
 export const setPrometheusStartTime = (time: number) => (PROMETHEUS_START_TIME = time);
 export const gePrometheusStartTime = () => PROMETHEUS_START_TIME;
+export const setPrometheusCredentials = ({ username, password }: { username: string; password: string }) => {
+  PROMETHEUS_USERNAME = username;
+  PROMETHEUS_PASSWORD = password;
+};
+
+export const getPrometheusCredentials = () =>
+  PROMETHEUS_USERNAME ? { username: PROMETHEUS_USERNAME, password: PROMETHEUS_PASSWORD } : undefined;
 
 export const setPrometheusUrl = (url: string | undefined) => (PROMETHEUS_PATH = url || '');
 export const isPrometheusActive = () => !!PROMETHEUS_PATH;

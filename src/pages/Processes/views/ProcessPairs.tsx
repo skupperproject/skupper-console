@@ -11,6 +11,7 @@ import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
+import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
@@ -23,7 +24,6 @@ import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
-import SkTitle from '@core/components/SkTitle';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';

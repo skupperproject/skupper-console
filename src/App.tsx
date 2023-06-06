@@ -5,7 +5,12 @@ import { useQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { isPrometheusActive, setPrometheusStartTime, setPrometheusUrl } from '@API/Prometheus.queries';
+import {
+  isPrometheusActive,
+  setPrometheusCredentials,
+  setPrometheusStartTime,
+  setPrometheusUrl
+} from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import AppMenu from '@core/components/AppMenu/AppMenu';
 import AppContent from '@layout/AppContent';
@@ -43,6 +48,10 @@ const App = function () {
     // were collected before or after the application's data was received. This helps to avoid confusion and
     // ensure that the metrics accurately reflect the application's performance.
     setPrometheusStartTime(data.startTime / 1000);
+
+    if (data.PrometheusUser) {
+      setPrometheusCredentials({ username: data.PrometheusUser, password: data.PrometheusPassword });
+    }
   }
 
   return (
