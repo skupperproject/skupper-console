@@ -16,7 +16,7 @@ export enum AddressesColumnsNames {
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',
   TotalFLowPairs = 'Total',
-  Servers = 'Servers'
+  Servers = 'Exposed Servers'
 }
 
 // FLOWS PAIRS VIEW
@@ -39,7 +39,7 @@ export enum FlowPairsLabelsHttp {
 }
 
 export enum FlowPairsLabels {
-  Servers = 'Servers',
+  Servers = 'Exposed Servers',
   ViewDetails = 'view details',
   GoToTopology = 'Go to the Topology view'
 }

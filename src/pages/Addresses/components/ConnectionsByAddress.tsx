@@ -4,6 +4,7 @@ import { Card, Grid, GridItem, Modal, ModalVariant, Tab, Tabs, TabTitleText } fr
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
+import { PrometheusApi } from '@API/Prometheus';
 import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
@@ -104,6 +105,15 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     }
   );
 
+  const { data: byteRates } = useQuery(
+    ['QueriesAddresses.GetFlowPair', { addressName }],
+    () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      enabled: isPrometheusActive() && connectionsView === TAB_1_KEY
+    }
+  );
+
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setConnectionsView(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
@@ -140,12 +150,24 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const oldConnections = oldConnectionsData?.results || [];
   const oldConnectionsRowsCount = oldConnectionsData?.timeRangeCount;
 
-  const servers = serversByAddressData?.results || [];
+  let servers = serversByAddressData?.results || [];
   const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
   const serverNamesIds = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
+
+  if (isPrometheusActive() && byteRates) {
+    const byteRatesMap = byteRates.reduce((acc, byteRate) => {
+      acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);
+
+      return acc;
+    }, {} as Record<string, number>);
+    servers = servers.map((conn) => ({
+      ...conn,
+      byteRate: byteRatesMap[`${conn.name}`]
+    }));
+  }
 
   return (
     <>

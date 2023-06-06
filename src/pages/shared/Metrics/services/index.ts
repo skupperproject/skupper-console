@@ -56,7 +56,7 @@ const MetricsController = {
         bytesRx: formatToDecimalPlacesIfCents(sumBytesRx)
       };
     } catch (e: unknown) {
-      throw new Error(e as string);
+      return Promise.reject(e);
     }
   },
 
@@ -87,7 +87,7 @@ const MetricsController = {
 
       return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
     } catch (e: unknown) {
-      throw new Error(e as string);
+      return Promise.reject(e);
     }
   },
 
@@ -112,7 +112,7 @@ const MetricsController = {
 
       return normalizeResponsesFromSeries(resposeRateDataSeries);
     } catch (e: unknown) {
-      throw new Error(e as string);
+      return Promise.reject(e);
     }
   },
 
@@ -134,7 +134,7 @@ const MetricsController = {
 
       return normalizeResponsesFromSeries(resposeRateDataSeries);
     } catch (e: unknown) {
-      throw new Error(e as string);
+      return Promise.reject(e);
     }
   },
 
@@ -209,7 +209,7 @@ const MetricsController = {
         responseRateData
       };
     } catch (e: unknown) {
-      throw new Error(e as string);
+      return Promise.reject(e);
     }
   }
 };
