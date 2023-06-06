@@ -12,6 +12,8 @@ export enum MetricsLabels {
   LatencyMetric50quantile = '50th percentile',
   LatencyMetric90quantile = '90th percentile',
   LatencyMetric99quantile = '99th percentile',
+  RequestTotalTitle = 'Total Requests',
+  RequestRateAvgTitle = 'Avg. Request rate',
   ByteRateAvgCol = 'avg',
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',
