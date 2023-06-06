@@ -1,20 +1,9 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
-import {
-  Flex,
-  Grid,
-  GridItem,
-  Icon,
-  Modal,
-  ModalVariant,
-  Tab,
-  Tabs,
-  TabTitleText,
-  Title
-} from '@patternfly/react-core';
+import { Grid, GridItem, Icon, Modal, ModalVariant, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
@@ -34,6 +23,7 @@ import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
+import SkTitle from '@core/components/SkTitle';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
@@ -211,14 +201,10 @@ const ProcessPairs = function () {
 
         <Grid hasGutter>
           <GridItem>
-            <Flex>
-              <Title headingLevel="h1">{ProcessPairsColumnsNames.Title}</Title>
-              <Link
-                to={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
-              >
-                {`(${ProcessesLabels.GoToTopology})`}
-              </Link>
-            </Flex>
+            <SkTitle
+              title={ProcessPairsColumnsNames.Title}
+              link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
+            />
           </GridItem>
           <GridItem span={5}>
             <ProcessDescription
