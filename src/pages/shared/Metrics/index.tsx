@@ -1,14 +1,21 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Bullseye, Card, Spinner } from '@patternfly/react-core';
+import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
-import Charts from './Charts';
+import { AvailableProtocols } from '@API/REST.enum';
+import EmptyData from '@core/components/EmptyData';
+
 import MetricFilters from './Filters';
+import LatencyCharts from './LatencyCharts';
 import { displayIntervalMap } from './Metrics.constant';
+import { MetricsLabels } from './Metrics.enum';
 import { MetricsProps, SelectedFilters } from './Metrics.interfaces';
+import RequestCharts from './RequestCharts';
+import ResponseCharts from './ResponseCharts';
 import MetricsController from './services';
 import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
+import TrafficCharts from './TrafficCharts';
 
 function getDisplayIntervalValue(value: string | undefined) {
   return displayIntervalMap.find(({ key }) => key === value)?.value || 0;
@@ -86,6 +93,17 @@ const Metrics: FC<MetricsProps> = function ({
     return null;
   }
 
+  const {
+    bytesData,
+    byteRateData,
+    latenciesData,
+    requestRateData,
+    totalRequestsInterval,
+    avgRequestRateInterval,
+    responseData,
+    responseRateData
+  } = metrics;
+
   return (
     <>
       <Card isRounded style={{ position: 'sticky', top: 0, zIndex: 1 }}>
@@ -106,7 +124,43 @@ const Metrics: FC<MetricsProps> = function ({
         />
       </Card>
 
-      {<Charts metrics={metrics} protocol={prometheusQueryParams.protocol} />}
+      <Grid hasGutter>
+        {!metrics.byteRateData && (
+          <GridItem>
+            <Card isFullHeight>
+              <CardBody>
+                <EmptyData message={MetricsLabels.NoMetricFoundMessage} />
+              </CardBody>
+            </Card>
+          </GridItem>
+        )}
+
+        <GridItem>
+          {!!bytesData && !!byteRateData && <TrafficCharts bytesData={bytesData} byteRateData={byteRateData} />}
+        </GridItem>
+
+        <GridItem>
+          {!!latenciesData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+            <LatencyCharts latenciesData={latenciesData} />
+          )}
+        </GridItem>
+
+        <GridItem>
+          {!!requestRateData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+            <RequestCharts
+              requestRateData={requestRateData}
+              totalRequestsInterval={totalRequestsInterval}
+              avgRequestRateInterval={avgRequestRateInterval}
+            />
+          )}
+        </GridItem>
+
+        <GridItem>
+          {!!responseData && responseRateData && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+            <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
+          )}
+        </GridItem>
+      </Grid>
     </>
   );
 };
