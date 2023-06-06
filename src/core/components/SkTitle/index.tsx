@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Card, CardHeader, Flex, Title, Tooltip } from '@patternfly/react-core';
+import { Button, Card, CardHeader, Flex, Title, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const SkTitle: FC<SkTitleProps> = function ({
               <OutlinedQuestionCircleIcon />
             </Tooltip>
           )}
-          {link && <Link to={link}>{`(${linkLabel})`}</Link>}
+          {link && <Button component={(props) => <Link {...props} to={link} />}>{linkLabel}</Button>}
         </Flex>
       </CardHeader>
     </Card>
