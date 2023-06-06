@@ -3,7 +3,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 import HighlightValueCell from '@core/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/HighlightValueCell/HighightValueCell.interfaces';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
@@ -75,11 +75,6 @@ export const processesTableColumns = [
     name: ProcessesTableColumns.Site,
     prop: 'parentName' as keyof ProcessResponse,
     component: 'linkCellSite'
-  },
-  {
-    name: ProcessesTableColumns.ByteRateRx,
-    prop: 'byteRate' as keyof ProcessResponse,
-    format: formatByteRate
   },
   {
     name: ProcessesTableColumns.Created,

@@ -1,9 +1,12 @@
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { formatByteRate } from '@core/utils/formatBytes';
+import { timeAgo } from '@core/utils/timeAgo';
+import { ProcessesTableColumns } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
-import { AddressResponse } from 'API/REST.interfaces';
+import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Addresses.enum';
 
@@ -20,6 +23,34 @@ export const customAddressCells = {
       link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
     })
 };
+
+export const processesTableColumnsAddress = [
+  {
+    name: ProcessesTableColumns.Name,
+    prop: 'name' as keyof ProcessResponse,
+    component: 'linkCell'
+  },
+  {
+    name: ProcessesTableColumns.Component,
+    prop: 'groupName' as keyof ProcessResponse,
+    component: 'linkComponentCell'
+  },
+  {
+    name: ProcessesTableColumns.Site,
+    prop: 'parentName' as keyof ProcessResponse,
+    component: 'linkCellSite'
+  },
+  {
+    name: ProcessesTableColumns.ByteRateRx,
+    prop: 'byteRate' as keyof ProcessResponse,
+    format: formatByteRate
+  },
+  {
+    name: ProcessesTableColumns.Created,
+    prop: 'startTime' as keyof ProcessResponse,
+    format: timeAgo
+  }
+];
 
 export const addressesColumns: SKColumn<AddressResponse>[] = [
   {
