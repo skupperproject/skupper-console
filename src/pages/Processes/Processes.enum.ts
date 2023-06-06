@@ -6,6 +6,7 @@ export enum ProcessesTableColumns {
   Name = 'Name',
   Site = 'Site',
   Component = 'Component',
+  ByteRateRx = 'Rx byte rate',
   Exposed = 'Exposed',
   Created = 'Created'
 }

@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus';
+import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
@@ -77,7 +78,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetByteRateByProcessPairs],
     () => PrometheusApi.fetchAllProcessPairsByteRates(),
     {
-      enabled: showLinkLabel,
+      enabled: isPrometheusActive() && showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -86,7 +87,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetLatencyByProcessPairs],
     () => PrometheusApi.fetchAllProcessPairsLatencies(),
     {
-      enabled: showLinkLabel,
+      enabled: isPrometheusActive() && showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -238,7 +239,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       sites &&
       externalProcesses &&
       remoteProcesses &&
-      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel)
+      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive())
     ) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
@@ -263,7 +264,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
             { showLinkLabelReverse, rotateLabel }
           );
         }
-
         setNodes(processesNodes);
         setLinks(processesLinks);
         setGroups(showSite ? siteGroups : []);
@@ -304,7 +304,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           cursor: 'pointer'
         }));
 
-        if (showLinkLabel) {
+        if (isPrometheusActive() && showLinkLabel) {
           processesLinksByAddress = TopologyController.addMetricsToLinks(
             processesLinksByAddress,
             byteRateByProcessPairs,
@@ -375,36 +375,41 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
               {getOptions()}
             </Select>
           </ToolbarItem>
-          <ToolbarItem>
-            <Checkbox
-              label={Labels.CheckboxShowSite}
-              isChecked={showSite}
-              onChange={handleChangeSiteCheck}
-              id="show-site-check"
-            />
-            <Checkbox
-              isDisabled={!showLinkLabel}
-              label={Labels.RotateLabel}
-              isChecked={rotateLabel}
-              onChange={handleChangeRotateLabelCheck}
-              id="rotate-label-check"
-            />
-          </ToolbarItem>
-          <ToolbarItem>
-            <Checkbox
-              label={Labels.CheckboxShowLabel}
-              isChecked={showLinkLabel}
-              onChange={handleChangeProtocolLinkLabelCheck}
-              id="show-protocols-check"
-            />
-            <Checkbox
-              isDisabled={!showLinkLabel}
-              label={Labels.CheckboxShowLabelReverse}
-              isChecked={showLinkLabelReverse}
-              onChange={handleChangeProtocolLinkLabelCheckReverse}
-              id="show-protocols-check-reverse"
-            />
-          </ToolbarItem>
+          {isPrometheusActive() && (
+            <>
+              <ToolbarItem>
+                <Checkbox
+                  label={Labels.CheckboxShowSite}
+                  isChecked={showSite}
+                  onChange={handleChangeSiteCheck}
+                  id="show-site-check"
+                />
+
+                <Checkbox
+                  isDisabled={!showLinkLabel}
+                  label={Labels.RotateLabel}
+                  isChecked={rotateLabel}
+                  onChange={handleChangeRotateLabelCheck}
+                  id="rotate-label-check"
+                />
+              </ToolbarItem>
+              <ToolbarItem>
+                <Checkbox
+                  label={Labels.CheckboxShowLabel}
+                  isChecked={showLinkLabel}
+                  onChange={handleChangeProtocolLinkLabelCheck}
+                  id="show-protocols-check"
+                />
+                <Checkbox
+                  isDisabled={!showLinkLabel}
+                  label={Labels.CheckboxShowLabelReverse}
+                  isChecked={showLinkLabelReverse}
+                  onChange={handleChangeProtocolLinkLabelCheckReverse}
+                  id="show-protocols-check-reverse"
+                />
+              </ToolbarItem>
+            </>
+          )}
         </ToolbarContent>
       </Toolbar>
 

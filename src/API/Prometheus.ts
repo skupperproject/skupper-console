@@ -273,5 +273,19 @@ export const PrometheusApi = {
     });
 
     return result;
+  },
+
+  fetchTcpByteRateByAddress: async ({
+    addressName
+  }: {
+    addressName: string;
+  }): Promise<PrometheusMetricSingleData[]> => {
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: { query: queries.getTcpByteRateByAddress(addressName) }
+    });
+
+    return result;
   }
 };

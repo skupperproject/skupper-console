@@ -1,4 +1,5 @@
 import { IntervalTimeMap, IntervalTimePropValue } from './Prometheus.interfaces';
+import { AvailableProtocols } from './REST.enum';
 
 export const timeIntervalMap: IntervalTimeMap = {
   oneMinute: { value: '1m', seconds: 60, step: '5s', key: 'oneMinute', label: 'Last min.' },
@@ -81,7 +82,12 @@ export const queries = {
   getTotalFlowsByAddress() {
     return `sum by(address)(flows_total)`;
   },
+
   getActiveFlowsByAddress() {
-    return `sum by(address)(increase(active_flows{protocol=~"http.*"}[30s]) or active_flows{protocol="tcp"})`;
+    return `sum by(address)(increase(active_flows{protocol=~"${AvailableProtocols.AllHttp}"}[30s]) or active_flows{protocol="${AvailableProtocols.Tcp}"})`;
+  },
+
+  getTcpByteRateByAddress(addressName: string) {
+    return `rate(octets_total{protocol="tcp",  address="${addressName}"}[1m])`;
   }
 };
