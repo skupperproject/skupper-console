@@ -3,7 +3,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { getTestsIds } from '@config/testIds.config';
-import { Wrapper } from '@core/Wrapper';
+import { Wrapper } from '@core/components/Wrapper';
 import componentsData from '@mocks/data/PROCESS_GROUPS.json';
 import { MockApiPaths, MockApi, loadMockServer } from '@mocks/server';
 import { ErrorConnectionRoutesPaths } from '@pages/shared/Errors/Connection/Connection.enum';

@@ -1,4 +1,4 @@
-import { timeIntervalMap } from '@API/Prometheus.queries';
+import { timeIntervalMap } from '@config/Prometheus.config';
 
 export function formatChartDate(timestamp: number, start: number) {
   if (start * 1000 <= Date.now() - timeIntervalMap.oneMinute.seconds * 1000) {

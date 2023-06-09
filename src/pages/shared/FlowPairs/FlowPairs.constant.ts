@@ -1,9 +1,9 @@
 import DurationCell from '@core/components/DurationCell';
+import HighlightValueCell from '@core/components/HighlightValueCell';
+import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
-import HighlightValueCell from '@core/HighlightValueCell';
-import { HighlightValueCellProps } from '@core/HighlightValueCell/HighightValueCell.interfaces';
 import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';

@@ -4,7 +4,7 @@ import { Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { isPrometheusActive } from '@API/Prometheus.queries';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';

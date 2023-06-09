@@ -7,7 +7,8 @@ import {
   PrometheusQueryParams,
   PrometheusResponse
 } from './Prometheus.interfaces';
-import { gePrometheusQueryPATH, getPrometheusCredentials, queries } from './Prometheus.queries';
+import { queries } from './Prometheus.queries';
+import { gePrometheusQueryPATH, getPrometheusCredentials } from '../config/Prometheus.config';
 
 export const PrometheusApi = {
   fetchBytes: async ({

@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import { Wrapper } from '@core/Wrapper';
+import { Wrapper } from '@core/components/Wrapper';
 import App from 'App';
 
 import { loadMockServer } from '../mocks/server';
