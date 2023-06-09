@@ -2,9 +2,18 @@ import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState } f
 
 import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
-import { TableComposable, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import {
+  SortByDirection,
+  TableComposable,
+  TableText,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  ThProps,
+  Tr
+} from '@patternfly/react-table';
 
-import { SortDirection } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getNestedProperty } from '@core/utils/getNestedProperties';
 
@@ -26,7 +35,7 @@ const SkTable = function <T>({
   ...props
 }: SKTableProps<T>) {
   const [activeSortIndex, setActiveSortIndex] = useState<number>();
-  const [activeSortDirection, setActiveSortDirection] = useState<SortDirection>();
+  const [activeSortDirection, setActiveSortDirection] = useState<SortByDirection>();
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
   const [pageSize, setPageSize] = useState<number>(pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
 
@@ -36,7 +45,7 @@ const SkTable = function <T>({
         index: activeSortIndex,
         direction: activeSortDirection
       },
-      onSort: (_event: ReactMouseEvent, index: number, direction: 'asc' | 'desc') => {
+      onSort: (_event: ReactMouseEvent, index: number, direction: SortByDirection) => {
         if (onGetFilters) {
           onGetFilters({
             limit: pageSize,
@@ -47,7 +56,7 @@ const SkTable = function <T>({
         }
 
         setActiveSortIndex(index);
-        setActiveSortDirection(direction as SortDirection);
+        setActiveSortDirection(direction);
       },
       columnIndex
     }),
@@ -91,7 +100,7 @@ const SkTable = function <T>({
   if (!onGetFilters) {
     // Get the name of the currently active sort column, if any.
     const columnName = columns[activeSortIndex || 0].prop as string | undefined;
-    const sortDirectionMultiplier = activeSortDirection === 'desc' ? -1 : 1;
+    const sortDirectionMultiplier = activeSortDirection === SortByDirection.desc ? -1 : 1;
 
     // Sort the rows array based on the values of the currently active sort column and direction.
     rowsSorted = rows.sort((a, b) => {

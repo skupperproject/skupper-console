@@ -1,3 +1,4 @@
+import { SortDirection } from './REST.enum';
 import { QueryParams, RequestOptions } from './REST.interfaces';
 
 /**
@@ -26,7 +27,7 @@ export function mapOptionsToQueryParams({
     limit,
     timeRangeEnd,
     timeRangeStart,
-    sortBy: sortName ? `${sortName}.${sortDirection || 'asc'}` : null,
+    sortBy: sortName ? `${sortName}.${sortDirection || SortDirection.ASC}` : null,
     ...queryParams
   };
 }
