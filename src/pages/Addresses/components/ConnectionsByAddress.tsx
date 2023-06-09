@@ -14,7 +14,7 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
+import { ProcessesComponentsTable } from '@pages/Processes/Processes.constant';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
@@ -23,7 +23,7 @@ import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { tcpColumns } from '../Addresses.constants';
+import { processesTableColumnsAddress, tcpColumns } from '../Addresses.constants';
 import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
@@ -204,7 +204,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
               >
                 <SkTable
-                  columns={processesTableColumns}
+                  columns={processesTableColumnsAddress}
                   rows={servers}
                   pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                   components={ProcessesComponentsTable}
