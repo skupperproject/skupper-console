@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';

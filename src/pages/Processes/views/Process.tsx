@@ -4,10 +4,10 @@ import { Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { isPrometheusActive } from '@config/Prometheus.config';
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import { getTestsIds } from '@config/testIds.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';

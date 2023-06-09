@@ -1,4 +1,4 @@
-import { axiosFetch } from './axiosMiddleware';
+import { axiosFetch } from './apiMiddleware';
 import {
   ProcessGroupResponse,
   AddressResponse,

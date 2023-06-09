@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';

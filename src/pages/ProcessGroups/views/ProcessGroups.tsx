@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
