@@ -47,13 +47,11 @@ const initHttp2RequestsPaginated: RequestOptions = {
 
 const initActiveConnectionsPaginated: RequestOptions = {
   ...initAllFlowParisQueryParamsPaginated,
-  protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Active
 };
 
 const initOldConnectionsPaginated: RequestOptions = {
   ...initAllFlowParisQueryParamsPaginated,
-  protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Terminated
 };
 
