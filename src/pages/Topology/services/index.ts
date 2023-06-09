@@ -1,6 +1,6 @@
 import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
 import componentSVG from '@assets/component.svg';
-import processSVG from '@assets/service.svg';
+import processSVG from '@assets/process.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { DEFAULT_NODE_CONFIG, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
