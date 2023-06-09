@@ -4,7 +4,7 @@ import * as router from 'react-router';
 
 import { ProcessResponse, ProcessGroupResponse } from '@API/REST.interfaces';
 import { getTestsIds } from '@config/testIds.config';
-import { Wrapper } from '@core/Wrapper';
+import { Wrapper } from '@core/components/Wrapper';
 import processGroupsData from '@mocks/data/PROCESS_GROUPS.json';
 import processesData from '@mocks/data/PROCESSES.json';
 import { MockApi, MockApiPaths, loadMockServer } from '@mocks/server';

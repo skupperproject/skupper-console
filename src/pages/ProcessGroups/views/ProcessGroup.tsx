@@ -4,7 +4,7 @@ import { Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { isPrometheusActive } from '@API/Prometheus.queries';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import { RESTApi } from '@API/REST';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';

@@ -14,8 +14,8 @@ import {
 import { ClockIcon, ClusterIcon, SyncIcon } from '@patternfly/react-icons';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
-import { gePrometheusStartTime, timeIntervalMap } from '@API/Prometheus.queries';
 import { AvailableProtocols } from '@API/REST.enum';
+import { gePrometheusStartTime, timeIntervalMap } from '@config/Prometheus.config';
 
 import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constant';
 import { MetricsLabels } from './Metrics.enum';

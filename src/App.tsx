@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { RESTApi } from '@API/REST';
 import {
   isPrometheusActive,
   setPrometheusCredentials,
   setPrometheusStartTime,
   setPrometheusUrl
-} from '@API/Prometheus.queries';
-import { RESTApi } from '@API/REST';
+} from '@config/Prometheus.config';
 import AppMenu from '@core/components/AppMenu/AppMenu';
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';

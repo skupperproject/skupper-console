@@ -1,6 +1,6 @@
 import { PrometheusApi } from '@API/Prometheus';
+import { defaultTimeInterval, timeIntervalMap } from '@config/Prometheus.config';
 import { PrometheusApiResult } from '@API/Prometheus.interfaces';
-import { defaultTimeInterval, timeIntervalMap } from '@API/Prometheus.queries';
 import {
   extractPrometheusLabels,
   extractPrometheusValues,

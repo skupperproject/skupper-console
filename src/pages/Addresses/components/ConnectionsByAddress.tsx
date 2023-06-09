@@ -5,10 +5,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus';
-import { isPrometheusActive } from '@API/Prometheus.queries';
 import { RESTApi } from '@API/REST';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';

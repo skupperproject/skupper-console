@@ -13,7 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus';
-import { isPrometheusActive } from '@API/Prometheus.queries';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import { RESTApi } from '@API/REST';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
