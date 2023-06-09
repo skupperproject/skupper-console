@@ -16,7 +16,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
 import { AddressesRoutesPaths } from '@pages/Addresses/Addresses.enum';

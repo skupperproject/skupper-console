@@ -12,11 +12,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { PrometheusApi } from '@API/Prometheus';
-import { isPrometheusActive } from '@config/Prometheus.config';
-import { RESTApi } from '@API/REST';
+import { PrometheusApi } from '@API/Prometheus.api';
+import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import EmptyData from '@core/components/EmptyData';
 import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';

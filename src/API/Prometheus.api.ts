@@ -1,6 +1,6 @@
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
-import { axiosFetch } from './axiosMiddleware';
+import { axiosFetch } from './apiMiddleware';
 import {
   PrometheusApiResult as PrometheusMetricData,
   PrometheusApiSingleResult as PrometheusMetricSingleData,

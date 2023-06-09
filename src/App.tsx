@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import {
   isPrometheusActive,
   setPrometheusCredentials,

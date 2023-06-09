@@ -4,10 +4,10 @@ import { Card, Grid, GridItem, Modal, ModalVariant, Tab, Tabs, TabTitleText } fr
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
-import { isPrometheusActive } from '@config/Prometheus.config';
-import { RESTApi } from '@API/REST';
+import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection } from '@API/REST.enum';
 import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { isPrometheusActive } from '@config/Prometheus.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
