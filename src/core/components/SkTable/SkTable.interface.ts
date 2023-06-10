@@ -5,8 +5,6 @@ type NonNullableValue<T> = T extends null | undefined ? never : T;
 export interface SKTableProps<T> {
   columns: SKColumn<NonNullableValue<T>>[];
   rows?: NonNullableValue<T>[];
-  rowsCount?: number;
-  pageSizeStart?: number;
   title?: string;
   titleDescription?: string;
   components?: Record<string, Function>;
@@ -14,6 +12,9 @@ export interface SKTableProps<T> {
   isStriped?: boolean;
   isPlain?: boolean;
   shouldSort?: boolean;
+  pagination?: boolean;
+  paginationPageSize?: number;
+  paginationTotalRows?: number;
   onGetFilters?: Function;
 }
 

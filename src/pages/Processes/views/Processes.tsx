@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { BIG_PAGINATION_SIZE } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -13,10 +14,8 @@ import { ProcessesComponentsTable, processesTableColumns } from '../Processes.co
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const PAGINATION_SIZE = 50;
-
 const initPaginatedProcessesQueryParams = {
-  limit: PAGINATION_SIZE,
+  limit: BIG_PAGINATION_SIZE,
   offset: 0,
   processRole: 'external',
   endTime: 0
@@ -58,8 +57,10 @@ const Processes = function () {
           <SkTable
             columns={processesTableColumns}
             rows={processes}
-            rowsCount={processesCount}
+            paginationTotalRows={processesCount}
             components={ProcessesComponentsTable}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
             onGetFilters={handleGetFilters}
           />
         </div>

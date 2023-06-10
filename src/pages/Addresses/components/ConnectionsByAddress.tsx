@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { isPrometheusActive } from '@config/Prometheus.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -34,7 +34,7 @@ const TAB_3_KEY = 'connections';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
 const initServersQueryParams = {
-  limit: DEFAULT_TABLE_PAGE_SIZE,
+  limit: DEFAULT_PAGINATION_SIZE,
   endTime: 0 // active servers
 };
 
@@ -44,7 +44,7 @@ const initActiveConnectionsQueryParams: RequestOptions = {
 
 const initPaginatedOldConnectionsQueryParams: RequestOptions = {
   state: TcpStatus.Terminated,
-  limit: DEFAULT_TABLE_PAGE_SIZE,
+  limit: DEFAULT_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
@@ -99,7 +99,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     }
   );
 
-  const { data: flowPairSelected } = useQuery(
+  const { data: connectionSelected } = useQuery(
     [QueriesAddresses.GetFlowPair],
     () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
     {
@@ -182,9 +182,9 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
       >
         <FlowsPair
           flowPair={
-            flowPairSelected && {
-              ...flowPairSelected,
-              counterFlow: { ...flowPairSelected.counterFlow, sourcePort: addressName?.split(':')[1] as string }
+            connectionSelected && {
+              ...connectionSelected,
+              counterFlow: { ...connectionSelected.counterFlow, sourcePort: addressName?.split(':')[1] as string }
             }
           }
         />
@@ -209,7 +209,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 <SkTable
                   columns={serverColumns}
                   rows={servers}
-                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  pagination={true}
+                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
                   components={ProcessesComponentsTable}
                 />
               </Tab>
@@ -222,7 +223,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 <SkTable
                   columns={tcpColumns}
                   rows={activeConnections}
-                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                  pagination={true}
+                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
                   components={{
                     ...flowPairsComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -238,7 +240,9 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 <SkTable
                   columns={tcpFlowPairsColumns}
                   rows={oldConnections}
-                  rowsCount={oldConnectionsRowsCount}
+                  paginationTotalRows={oldConnectionsRowsCount}
+                  pagination={true}
+                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
                   onGetFilters={handleGetFiltersConnections}
                   components={{
                     ...flowPairsComponentsTable,
