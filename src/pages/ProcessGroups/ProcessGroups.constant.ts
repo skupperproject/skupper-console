@@ -12,7 +12,7 @@ export const processGroupsColumns: SKColumn<ProcessGroupResponse>[] = [
   {
     name: ProcessGroupsTableColumns.Name,
     prop: 'name' as keyof ProcessGroupResponse,
-    component: 'linkCell'
+    customCellName: 'linkCell'
   },
   {
     name: ProcessGroupsTableColumns.Count,

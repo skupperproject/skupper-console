@@ -263,7 +263,7 @@ const ProcessPairs = function () {
                     rows={activeConnections}
                     pagination={true}
                     paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                    components={{
+                    customCells={{
                       ...flowPairsComponentsTable,
                       viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                         <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
@@ -282,7 +282,7 @@ const ProcessPairs = function () {
                     paginationTotalRows={oldConnectionsCount}
                     pagination={true}
                     paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                    components={{
+                    customCells={{
                       ...flowPairsComponentsTable,
                       viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                         <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
@@ -304,7 +304,7 @@ const ProcessPairs = function () {
                 pagination={true}
                 paginationPageSize={DEFAULT_PAGINATION_SIZE}
                 onGetFilters={handleGetFiltersFlowPairs}
-                components={{
+                customCells={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                     <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
@@ -324,7 +324,7 @@ const ProcessPairs = function () {
                 pagination={true}
                 paginationPageSize={DEFAULT_PAGINATION_SIZE}
                 onGetFilters={handleGetFiltersFlowPairs}
-                components={{
+                customCells={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                     <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />

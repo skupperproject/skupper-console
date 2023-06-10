@@ -50,7 +50,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Client,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
-    component: 'ProcessNameLinkCell',
+    customCellName: 'ProcessNameLinkCell',
     width: 15
   },
   {
@@ -61,38 +61,38 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Site,
     prop: 'sourceSiteName' as keyof FlowPairsResponse,
-    component: 'SiteNameLinkCell'
+    customCellName: 'SiteNameLinkCell'
   },
   {
     name: FlowPairsColumnsNames.TxBytes,
     prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
-    component: 'ByteFormatCell',
+    customCellName: 'ByteFormatCell',
     format: formatBytes,
     width: 10
   },
   {
     name: FlowPairsColumnsNames.RxBytes,
     prop: 'counterFlow.octets' as keyof FlowPairsResponse,
-    component: 'ByteFormatCell',
+    customCellName: 'ByteFormatCell',
     format: formatBytes,
     width: 10
   },
   {
     name: FlowPairsColumnsNames.TTFB,
     columnDescription: 'time elapsed between client and server',
-    component: 'ClientServerLatencyCell',
+    customCellName: 'ClientServerLatencyCell',
     width: 10
   },
   {
     name: FlowPairsColumnsNames.Server,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
-    component: 'TargetProcessNameLinkCell',
+    customCellName: 'TargetProcessNameLinkCell',
     width: 15
   },
   {
     name: FlowPairsColumnsNames.ServerSite,
     prop: 'destinationSiteName' as keyof FlowPairsResponse,
-    component: 'TargetSiteNameLinkCell'
+    customCellName: 'TargetSiteNameLinkCell'
   },
   {
     name: FlowPairsColumnsNames.Trace,
@@ -102,7 +102,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairsColumnsNames.Duration,
-    component: 'DurationCell',
+    customCellName: 'DurationCell',
     width: 10
   },
   {
@@ -113,7 +113,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: '',
-    component: 'viewDetailsLinkCell',
+    customCellName: 'viewDetailsLinkCell',
     modifier: 'fitContent'
   }
 ];
@@ -130,13 +130,13 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.From,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
-    component: 'ProcessNameLinkCell',
+    customCellName: 'ProcessNameLinkCell',
     width: 15
   },
   {
     name: FlowPairsColumnsNames.To,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
-    component: 'TargetProcessNameLinkCell',
+    customCellName: 'TargetProcessNameLinkCell',
     width: 15
   },
   {
@@ -174,7 +174,7 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: '',
-    component: 'viewDetailsLinkCell',
+    customCellName: 'viewDetailsLinkCell',
     modifier: 'fitContent'
   }
 ];

@@ -67,7 +67,7 @@ const Addresses = function () {
                 columns={columnsExtend}
                 pagination={true}
                 paginationPageSize={BIG_PAGINATION_SIZE}
-                components={customAddressCells}
+                customCells={customAddressCells}
               />
             </Card>
           </GridItem>

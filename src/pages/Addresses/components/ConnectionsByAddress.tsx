@@ -211,7 +211,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                   rows={servers}
                   pagination={true}
                   paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  components={ProcessesComponentsTable}
+                  customCells={ProcessesComponentsTable}
                 />
               </Tab>
               <Tab
@@ -225,7 +225,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                   rows={activeConnections}
                   pagination={true}
                   paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  components={{
+                  customCells={{
                     ...flowPairsComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                       <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
@@ -244,7 +244,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                   pagination={true}
                   paginationPageSize={DEFAULT_PAGINATION_SIZE}
                   onGetFilters={handleGetFiltersConnections}
-                  components={{
+                  customCells={{
                     ...flowPairsComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                       <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
