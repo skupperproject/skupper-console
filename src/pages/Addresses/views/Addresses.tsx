@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
+import { BIG_PAGINATION_SIZE } from '@config/config';
 import { isPrometheusActive } from '@config/Prometheus.config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
@@ -13,8 +14,6 @@ import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressC
 import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
-
-const PAGINATION_SIZE = 50;
 
 const Addresses = function () {
   const { data: addresses, isLoading } = useQuery([QueriesAddresses.GetAddresses], () => RESTApi.fetchAddresses());
@@ -66,7 +65,8 @@ const Addresses = function () {
               <SkTable
                 rows={addressExtended}
                 columns={columnsExtend}
-                pageSizeStart={PAGINATION_SIZE}
+                pagination={true}
+                paginationPageSize={BIG_PAGINATION_SIZE}
                 components={customAddressCells}
               />
             </Card>

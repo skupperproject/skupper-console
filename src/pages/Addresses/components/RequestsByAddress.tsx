@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { isPrometheusActive } from '@config/Prometheus.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -32,13 +32,13 @@ const TAB_2_KEY = 'requests';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
 const initPaginatedRequestsQueryParams: RequestOptions = {
-  limit: DEFAULT_TABLE_PAGE_SIZE,
+  limit: DEFAULT_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
 const initServersQueryParams = {
-  limit: DEFAULT_TABLE_PAGE_SIZE,
+  limit: DEFAULT_PAGINATION_SIZE,
   endTime: 0
 };
 
@@ -170,7 +170,9 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                 <SkTable
                   columns={httpColumns}
                   rows={requestsPaginated}
-                  rowsCount={requestsPaginatedCount}
+                  paginationTotalRows={requestsPaginatedCount}
+                  pagination={true}
+                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
                   onGetFilters={handleGetFiltersConnections}
                   components={{
                     ...flowPairsComponentsTable,

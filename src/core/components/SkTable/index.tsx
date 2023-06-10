@@ -1,4 +1,4 @@
-import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useRef, useState } from 'react';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 
 import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
@@ -14,13 +14,13 @@ import {
   Tr
 } from '@patternfly/react-table';
 
-import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { getNestedProperty } from '@core/utils/getNestedProperties';
 
 import { SKTableProps } from './SkTable.interface';
 import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
+const PAGINATION_PAGE_SIZE = 10;
 const NO_RESULT_FOUND_LABEL = 'No results found';
 
 const SkTable = function <T>({
@@ -29,18 +29,16 @@ const SkTable = function <T>({
   columns,
   rows = [],
   components,
-  rowsCount = rows.length,
-  onGetFilters, // if defined the local pagination/sort is disabled
-  pageSizeStart, // if defined enable local pagination,
+  onGetFilters,
+  pagination = false,
+  paginationPageSize = PAGINATION_PAGE_SIZE,
+  paginationTotalRows = rows.length,
   ...props
 }: SKTableProps<T>) {
   const [activeSortIndex, setActiveSortIndex] = useState<number>();
   const [activeSortDirection, setActiveSortDirection] = useState<SortByDirection>();
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
-  const [pageSize, setPageSize] = useState<number>(
-    onGetFilters ? rows.length : pageSizeStart || DEFAULT_TABLE_PAGE_SIZE
-  );
-  const pageSizeFirstLoadRef = useRef(onGetFilters ? rows.length : pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
+  const [pageSize, setPageSize] = useState<number>(paginationPageSize);
 
   const getSortParams = useCallback(
     (columnIndex: number): ThProps['sort'] => ({
@@ -123,7 +121,7 @@ const SkTable = function <T>({
     });
   }
 
-  if (!!pageSizeStart && !onGetFilters) {
+  if (pagination && !onGetFilters) {
     rowsSorted = rowsSorted.slice((currentPageNumber - 1) * pageSize, (currentPageNumber - 1) * pageSize + pageSize);
   }
 
@@ -232,11 +230,11 @@ const SkTable = function <T>({
             })}
         </Tbody>
       </TableComposable>
-      {(!!pageSizeStart || !!onGetFilters) && rowsCount > pageSizeFirstLoadRef.current && (
+      {pagination && paginationTotalRows > paginationPageSize && (
         <Pagination
           className="pf-u-my-xs"
           perPageComponent="button"
-          itemCount={rowsCount}
+          itemCount={paginationTotalRows}
           perPage={pageSize}
           page={currentPageNumber}
           onSetPage={handleSetPageNumber}

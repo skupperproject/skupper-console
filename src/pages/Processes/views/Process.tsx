@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
+import { SMALL_PAGINATION_SIZE } from '@config/config';
 import { isPrometheusActive } from '@config/Prometheus.config';
 import { getTestsIds } from '@config/testIds.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -27,7 +28,6 @@ import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '..
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const PAGINATION_SIZE = 5;
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
 
 const Process = function () {
@@ -116,7 +116,8 @@ const Process = function () {
                   title={ProcessesLabels.TCPClients}
                   columns={processesConnectedColumns}
                   rows={TCPClients}
-                  pageSizeStart={PAGINATION_SIZE}
+                  pagination={true}
+                  paginationPageSize={SMALL_PAGINATION_SIZE}
                   components={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
@@ -135,7 +136,8 @@ const Process = function () {
                   title={ProcessesLabels.TCPServers}
                   columns={processesConnectedColumns}
                   rows={TCPServers}
-                  pageSizeStart={PAGINATION_SIZE}
+                  pagination={true}
+                  paginationPageSize={SMALL_PAGINATION_SIZE}
                   components={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
@@ -154,7 +156,8 @@ const Process = function () {
                   title={ProcessesLabels.HTTPClients}
                   columns={processesConnectedColumns}
                   rows={HTTPClients}
-                  pageSizeStart={PAGINATION_SIZE}
+                  pagination={true}
+                  paginationPageSize={SMALL_PAGINATION_SIZE}
                   components={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
@@ -173,7 +176,8 @@ const Process = function () {
                   title={ProcessesLabels.HTTPServers}
                   columns={processesConnectedColumns}
                   rows={HTTPServers}
-                  pageSizeStart={PAGINATION_SIZE}
+                  pagination={true}
+                  paginationPageSize={SMALL_PAGINATION_SIZE}
                   components={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (

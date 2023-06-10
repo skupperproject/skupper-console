@@ -7,7 +7,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -30,7 +30,7 @@ const TAB_2_KEY = 'connections';
 
 const initPaginatedFlowPairsQueryParams: RequestOptions = {
   offset: 0,
-  limit: DEFAULT_TABLE_PAGE_SIZE,
+  limit: DEFAULT_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
@@ -47,11 +47,13 @@ const initPaginatedHttp2RequestsQueryParams: RequestOptions = {
 
 const initPaginatedActiveConnectionsQueryParams: RequestOptions = {
   ...initPaginatedFlowPairsQueryParams,
+  protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Active
 };
 
 const initPaginatedOldConnectionsQueryParams: RequestOptions = {
   ...initPaginatedFlowPairsQueryParams,
+  protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Terminated
 };
 
@@ -256,10 +258,11 @@ const ProcessPairs = function () {
                   }
                 >
                   <SkTable
-                    title={ProcessesLabels.TcpConnection}
+                    title={ProcessesLabels.ActiveConnections}
                     columns={activeTcpColumns}
                     rows={activeConnections}
-                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                    pagination={true}
+                    paginationPageSize={DEFAULT_PAGINATION_SIZE}
                     components={{
                       ...flowPairsComponentsTable,
                       viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -273,11 +276,12 @@ const ProcessPairs = function () {
                   title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
                 >
                   <SkTable
-                    title={ProcessesLabels.TcpConnection}
+                    title={ProcessesLabels.OldConnections}
                     columns={oldTcpColumns}
                     rows={oldConnections}
-                    rowsCount={oldConnectionsCount}
-                    pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
+                    paginationTotalRows={oldConnectionsCount}
+                    pagination={true}
+                    paginationPageSize={DEFAULT_PAGINATION_SIZE}
                     components={{
                       ...flowPairsComponentsTable,
                       viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -296,7 +300,9 @@ const ProcessPairs = function () {
                 title={ProcessesLabels.Http2Requests}
                 columns={httpColumns}
                 rows={http2Requests}
-                rowsCount={http2RequestsCount}
+                paginationTotalRows={http2RequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
                 onGetFilters={handleGetFiltersFlowPairs}
                 components={{
                   ...flowPairsComponentsTable,
@@ -314,7 +320,9 @@ const ProcessPairs = function () {
                 title={ProcessesLabels.HttpRequests}
                 columns={httpColumns}
                 rows={httpRequests}
-                rowsCount={httpRequestsCount}
+                paginationTotalRows={httpRequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
                 onGetFilters={handleGetFiltersFlowPairs}
                 components={{
                   ...flowPairsComponentsTable,
