@@ -118,7 +118,7 @@ const Process = function () {
                   rows={TCPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  components={{
+                  customCells={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
                       <ViewDetailCell
@@ -138,7 +138,7 @@ const Process = function () {
                   rows={TCPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  components={{
+                  customCells={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
                       <ViewDetailCell
@@ -158,7 +158,7 @@ const Process = function () {
                   rows={HTTPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  components={{
+                  customCells={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
                       <ViewDetailCell
@@ -178,7 +178,7 @@ const Process = function () {
                   rows={HTTPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  components={{
+                  customCells={{
                     ...ProcessesConnectedComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
                       <ViewDetailCell

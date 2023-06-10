@@ -40,7 +40,7 @@ const ProcessGroups = function () {
           <SkTable
             columns={processGroupsColumns}
             rows={processGroups}
-            components={{
+            customCells={{
               linkCell: (props: LinkCellProps<ProcessGroupResponse>) =>
                 LinkCell({
                   ...props,

@@ -29,7 +29,7 @@ export const addressesColumns: SKColumn<AddressResponse>[] = [
   {
     name: AddressesColumnsNames.Name,
     prop: 'name',
-    component: 'AddressNameLinkCell'
+    customCellName: 'AddressNameLinkCell'
   },
   {
     name: AddressesColumnsNames.Protocol,

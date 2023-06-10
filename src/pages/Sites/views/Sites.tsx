@@ -34,7 +34,7 @@ const Sites = function () {
           columns={siteColumns}
           rows={sites}
           paginationPageSize={BIG_PAGINATION_SIZE}
-          components={{
+          customCells={{
             linkCell: (props: LinkCellProps<SiteResponse>) =>
               LinkCell({
                 ...props,

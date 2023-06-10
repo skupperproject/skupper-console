@@ -161,7 +161,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
               >
-                <SkTable columns={processesTableColumns} rows={servers} components={ProcessesComponentsTable} />
+                <SkTable columns={processesTableColumns} rows={servers} customCells={ProcessesComponentsTable} />
               </Tab>
               <Tab
                 eventKey={TAB_2_KEY}
@@ -174,7 +174,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                   pagination={true}
                   paginationPageSize={DEFAULT_PAGINATION_SIZE}
                   onGetFilters={handleGetFiltersConnections}
-                  components={{
+                  customCells={{
                     ...flowPairsComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
                       <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />

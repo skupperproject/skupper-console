@@ -7,7 +7,7 @@ export interface SKTableProps<T> {
   rows?: NonNullableValue<T>[];
   title?: string;
   titleDescription?: string;
-  components?: Record<string, Function>;
+  customCells?: Record<string, Function>;
   borders?: boolean;
   isStriped?: boolean;
   isPlain?: boolean;
@@ -21,7 +21,7 @@ export interface SKTableProps<T> {
 export interface SKColumn<T> {
   name: string;
   prop?: keyof T; // Prop generally is referred to a item of a data model used to fill the rows. This value can be undefined if the column is not part of the data model. The view details column is an example of column without prop
-  component?: string;
+  customCellName?: string;
   callback?: Function;
   format?: Function;
   width?: WidthValue;

@@ -28,7 +28,7 @@ const SkTable = function <T>({
   titleDescription,
   columns,
   rows = [],
-  components,
+  customCells,
   onGetFilters,
   pagination = false,
   paginationPageSize = PAGINATION_PAGE_SIZE,
@@ -205,12 +205,12 @@ const SkTable = function <T>({
               return (
                 <Tr key={row.id} style={isOddRow ? customStyle : {}}>
                   {row.columns.map(
-                    ({ data, value, component, callback, format, width, modifier, show = true }, index) => {
+                    ({ data, value, customCellName, callback, format, width, modifier, show = true }, index) => {
                       if (!show) {
                         return null;
                       }
 
-                      const Component = components && component && components[component];
+                      const Component = !!customCells && !!customCellName && customCells[customCellName];
 
                       return Component ? (
                         <Td width={width} key={index} modifier={modifier}>

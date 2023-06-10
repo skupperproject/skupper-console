@@ -87,11 +87,11 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessPairsColumnsNames.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
-    component: 'ProcessLinkCell'
+    customCellName: 'ProcessLinkCell'
   },
   {
     name: '',
-    component: 'viewDetailsLinkCell',
+    customCellName: 'viewDetailsLinkCell',
     modifier: 'fitContent'
   }
 ];

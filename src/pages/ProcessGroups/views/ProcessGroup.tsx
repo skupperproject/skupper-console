@@ -76,7 +76,7 @@ const ProcessGroup = function () {
             titleDescription={ProcessesLabels.Description}
             columns={processesTableColumns}
             rows={processResults}
-            components={{
+            customCells={{
               linkCell: ProcessesComponentsTable.linkCell,
               linkCellSite: ProcessesComponentsTable.linkCellSite,
               exposedCell: ProcessesComponentsTable.exposedCell
