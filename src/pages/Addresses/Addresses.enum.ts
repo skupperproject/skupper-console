@@ -2,15 +2,6 @@ export enum AddressesRoutesPaths {
   Addresses = '/addresses'
 }
 
-// ADDRESSES VIEW
-export enum AddressesLabels {
-  Section = 'Addresses',
-  HTTP = ' HTTP/2',
-  TCP = 'TCP',
-  Description = 'Set of processes that are exposed across the Virtual application network',
-  MetricDestinationProcessFilter = 'All servers'
-}
-
 export enum AddressesColumnsNames {
   Name = 'Name',
   Protocol = 'Protocol',
@@ -19,8 +10,16 @@ export enum AddressesColumnsNames {
   Servers = 'Exposed Servers'
 }
 
-// FLOWS PAIRS VIEW
-export enum FlowPairsLabelsTcp {
+// LABELS
+export enum AddressesLabels {
+  Section = 'Addresses',
+  HTTP = ' HTTP/2',
+  TCP = 'TCP',
+  Description = 'Set of processes that are exposed across the Virtual application network',
+  MetricDestinationProcessFilter = 'All servers'
+}
+
+export enum ConnectionLabels {
   ActiveConnections = 'Live connections',
   OldConnections = 'Connections in the last 15 minutes',
   TrafficTx = 'Outbound Traffic ',
@@ -29,7 +28,7 @@ export enum FlowPairsLabelsTcp {
   AvgByteRateTx = 'Avg. Outbound speed'
 }
 
-export enum FlowPairsLabelsHttp {
+export enum RequestLabels {
   Clients = 'Clients',
   Requests = 'Requests in the last 15 minutes',
   TrafficTx = 'Response Traffic ',

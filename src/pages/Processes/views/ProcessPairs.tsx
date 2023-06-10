@@ -28,30 +28,30 @@ import { QueriesProcesses } from '../services/services.enum';
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
 
-const initAllFlowParisQueryParamsPaginated: RequestOptions = {
+const initPaginatedFlowPairsQueryParams: RequestOptions = {
   offset: 0,
   limit: DEFAULT_TABLE_PAGE_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-const initHttpRequestsPaginated: RequestOptions = {
-  ...initAllFlowParisQueryParamsPaginated,
+const initPaginatedHttpRequestsQueryParams: RequestOptions = {
+  ...initPaginatedFlowPairsQueryParams,
   protocol: AvailableProtocols.Http
 };
 
-const initHttp2RequestsPaginated: RequestOptions = {
-  ...initAllFlowParisQueryParamsPaginated,
+const initPaginatedHttp2RequestsQueryParams: RequestOptions = {
+  ...initPaginatedFlowPairsQueryParams,
   protocol: AvailableProtocols.Http2
 };
 
-const initActiveConnectionsPaginated: RequestOptions = {
-  ...initAllFlowParisQueryParamsPaginated,
+const initPaginatedActiveConnectionsQueryParams: RequestOptions = {
+  ...initPaginatedFlowPairsQueryParams,
   state: TcpStatus.Active
 };
 
-const initOldConnectionsPaginated: RequestOptions = {
-  ...initAllFlowParisQueryParamsPaginated,
+const initPaginatedOldConnectionsQueryParams: RequestOptions = {
+  ...initPaginatedFlowPairsQueryParams,
   state: TcpStatus.Terminated
 };
 
@@ -66,7 +66,7 @@ const ProcessPairs = function () {
 
   const [connectionsView, setConnectionsView] = useState<string>(type);
   const [flowPairsQueryParamsPaginated, setFlowParisQueryParamsPaginated] = useState<RequestOptions>(
-    initAllFlowParisQueryParamsPaginated
+    initPaginatedFlowPairsQueryParams
   );
 
   const [flowSelected, setFlowSelected] = useState<string>();
@@ -81,10 +81,10 @@ const ProcessPairs = function () {
   );
 
   const { data: http2RequestsData, isLoading: isLoadingHttp2RequestsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, { ...initAllFlowParisQueryParamsPaginated, ...flowPairsQueryParamsPaginated }],
+    [QueriesProcesses.GetFlowPairs, { ...initPaginatedFlowPairsQueryParams, ...flowPairsQueryParamsPaginated }],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initHttp2RequestsPaginated,
+        ...initPaginatedHttp2RequestsQueryParams,
         ...flowPairsQueryParamsPaginated,
         processAggregateId: processPairId
       }),
@@ -95,10 +95,10 @@ const ProcessPairs = function () {
   );
 
   const { data: httpRequestsData, isLoading: isLoadingHttpRequestsData } = useQuery(
-    ['QueriesProcesses.GetFlowPairs', { ...initHttpRequestsPaginated, ...flowPairsQueryParamsPaginated }],
+    ['QueriesProcesses.GetFlowPairs', { ...initPaginatedHttpRequestsQueryParams, ...flowPairsQueryParamsPaginated }],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initHttpRequestsPaginated,
+        ...initPaginatedHttpRequestsQueryParams,
         ...flowPairsQueryParamsPaginated,
         processAggregateId: processPairId
       }),
@@ -109,10 +109,10 @@ const ProcessPairs = function () {
   );
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnectionsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, { ...initActiveConnectionsPaginated, ...flowPairsQueryParamsPaginated }],
+    [QueriesProcesses.GetFlowPairs, { ...initPaginatedActiveConnectionsQueryParams, ...flowPairsQueryParamsPaginated }],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initActiveConnectionsPaginated,
+        ...initPaginatedActiveConnectionsQueryParams,
         ...flowPairsQueryParamsPaginated,
         processAggregateId: processPairId
       }),
@@ -123,10 +123,10 @@ const ProcessPairs = function () {
   );
 
   const { data: oldConnectionsData, isLoading: isLoadingOldConnectionsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, { ...initOldConnectionsPaginated, ...flowPairsQueryParamsPaginated }],
+    [QueriesProcesses.GetFlowPairs, { ...initPaginatedOldConnectionsQueryParams, ...flowPairsQueryParamsPaginated }],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initOldConnectionsPaginated,
+        ...initPaginatedOldConnectionsQueryParams,
         ...flowPairsQueryParamsPaginated,
         processAggregateId: processPairId
       }),
@@ -296,8 +296,8 @@ const ProcessPairs = function () {
                 title={ProcessesLabels.Http2Requests}
                 columns={httpColumns}
                 rows={http2Requests}
-                onGetFilters={handleGetFiltersFlowPairs}
                 rowsCount={http2RequestsCount}
+                onGetFilters={handleGetFiltersFlowPairs}
                 components={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -314,8 +314,8 @@ const ProcessPairs = function () {
                 title={ProcessesLabels.HttpRequests}
                 columns={httpColumns}
                 rows={httpRequests}
-                onGetFilters={handleGetFiltersFlowPairs}
                 rowsCount={httpRequestsCount}
+                onGetFilters={handleGetFiltersFlowPairs}
                 components={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (

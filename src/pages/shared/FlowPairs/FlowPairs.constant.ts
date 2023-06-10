@@ -55,7 +55,8 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairsColumnsNames.Port,
-    prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse
+    prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.Site,

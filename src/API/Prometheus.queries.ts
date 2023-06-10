@@ -1,7 +1,6 @@
 import { IntervalTimePropValue } from './Prometheus.interfaces';
 import { AvailableProtocols } from './REST.enum';
 
-// Prometheus queries
 export const queries = {
   // http request queries
   getTotalRequestsTimeInterval(param: string, range: IntervalTimePropValue) {

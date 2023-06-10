@@ -23,15 +23,15 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { httpColumns } from '../Addresses.constants';
-import { FlowPairsLabelsHttp, FlowPairsLabels, AddressesLabels } from '../Addresses.enum';
+import { RequestLabels, FlowPairsLabels, AddressesLabels } from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
 
 const TAB_1_KEY = 'servers';
-const TAB_2_KEY = 'connections';
+const TAB_2_KEY = 'requests';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
-const initAllRequestsQueryParamsPaginated: RequestOptions = {
+const initPaginatedRequestsQueryParams: RequestOptions = {
   limit: DEFAULT_TABLE_PAGE_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
@@ -39,7 +39,7 @@ const initAllRequestsQueryParamsPaginated: RequestOptions = {
 
 const initServersQueryParams = {
   limit: DEFAULT_TABLE_PAGE_SIZE,
-  endTime: 0 // active servers
+  endTime: 0
 };
 
 const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol }) {
@@ -50,8 +50,8 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
   const [addressView, setAddressView] = useState<string>(type);
-  const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
-    initAllRequestsQueryParamsPaginated
+  const [paginatedRequestsQueryParams, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedRequestsQueryParams
   );
   const [flowSelected, setFlowSelected] = useState<string>();
 
@@ -60,15 +60,15 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
       QueriesAddresses.GetFlowPairsByAddress,
       addressId,
       {
-        ...initAllRequestsQueryParamsPaginated,
-        ...requestsQueryParamsPaginated
+        ...initPaginatedRequestsQueryParams,
+        ...paginatedRequestsQueryParams
       }
     ],
     () =>
       addressId
         ? RESTApi.fetchFlowPairsByAddress(addressId, {
-            ...initAllRequestsQueryParamsPaginated,
-            ...requestsQueryParamsPaginated
+            ...initPaginatedRequestsQueryParams,
+            ...paginatedRequestsQueryParams
           })
         : null,
     {
@@ -161,23 +161,17 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
               >
-                <SkTable
-                  columns={processesTableColumns}
-                  rows={servers}
-                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                  components={ProcessesComponentsTable}
-                />
+                <SkTable columns={processesTableColumns} rows={servers} components={ProcessesComponentsTable} />
               </Tab>
               <Tab
                 eventKey={TAB_2_KEY}
-                title={<TabTitleText>{`${FlowPairsLabelsHttp.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
+                title={<TabTitleText>{`${RequestLabels.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
               >
                 <SkTable
                   columns={httpColumns}
                   rows={requestsPaginated}
-                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
-                  onGetFilters={handleGetFiltersConnections}
                   rowsCount={requestsPaginatedCount}
+                  onGetFilters={handleGetFiltersConnections}
                   components={{
                     ...flowPairsComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -206,7 +200,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
               filterOptions={{
                 protocols: { disabled: true, placeholder: protocol },
                 sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
-                destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
+                destinationProcesses: { placeholder: RequestLabels.Clients, disabled: true }
               }}
               onGetMetricFilters={handleRefreshMetrics}
             />

@@ -23,8 +23,8 @@ import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { processesTableColumnsAddress, tcpColumns } from '../Addresses.constants';
-import { FlowPairsLabelsTcp, FlowPairsLabels, FlowPairsLabelsHttp, AddressesLabels } from '../Addresses.enum';
+import { serverColumns, tcpColumns } from '../Addresses.constants';
+import { ConnectionLabels, FlowPairsLabels, RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import { QueriesAddresses } from '../services/services.enum';
 
@@ -34,6 +34,7 @@ const TAB_3_KEY = 'connections';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
 
 const initServersQueryParams = {
+  limit: DEFAULT_TABLE_PAGE_SIZE,
   endTime: 0 // active servers
 };
 
@@ -41,12 +42,13 @@ const initActiveConnectionsQueryParams: RequestOptions = {
   state: TcpStatus.Active
 };
 
-const initOldConnectionsQueryParams: RequestOptions = {
+const initPaginatedOldConnectionsQueryParams: RequestOptions = {
   state: TcpStatus.Terminated,
   limit: DEFAULT_TABLE_PAGE_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
+
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const type = searchParams.get('type') || TAB_1_KEY;
@@ -57,8 +59,9 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const [connectionsView, setConnectionsView] = useState<string>(type);
   const [flowSelected, setFlowSelected] = useState<string>();
 
-  const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] =
-    useState<RequestOptions>(initOldConnectionsQueryParams);
+  const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedOldConnectionsQueryParams
+  );
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
     [QueriesAddresses.GetFlowPairsByAddress, addressId, initActiveConnectionsQueryParams],
@@ -73,12 +76,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     [
       QueriesAddresses.GetFlowPairsByAddress,
       addressId,
-      { ...initOldConnectionsQueryParams, ...requestsQueryParamsPaginated }
+      { ...initPaginatedOldConnectionsQueryParams, ...requestsQueryParamsPaginated }
     ],
     () =>
       addressId
         ? RESTApi.fetchFlowPairsByAddress(addressId, {
-            ...initOldConnectionsQueryParams,
+            ...initPaginatedOldConnectionsQueryParams,
             ...requestsQueryParamsPaginated
           })
         : undefined,
@@ -204,7 +207,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
               >
                 <SkTable
-                  columns={processesTableColumnsAddress}
+                  columns={serverColumns}
                   rows={servers}
                   pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                   components={ProcessesComponentsTable}
@@ -213,7 +216,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               <Tab
                 eventKey={TAB_2_KEY}
                 title={
-                  <TabTitleText>{`${FlowPairsLabelsTcp.ActiveConnections} (${activeConnectionsRowsCount})`}</TabTitleText>
+                  <TabTitleText>{`${ConnectionLabels.ActiveConnections} (${activeConnectionsRowsCount})`}</TabTitleText>
                 }
               >
                 <SkTable
@@ -230,14 +233,11 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               </Tab>
               <Tab
                 eventKey={TAB_3_KEY}
-                title={
-                  <TabTitleText>{`${FlowPairsLabelsTcp.OldConnections} (${oldConnectionsRowsCount})`}</TabTitleText>
-                }
+                title={<TabTitleText>{`${ConnectionLabels.OldConnections} (${oldConnectionsRowsCount})`}</TabTitleText>}
               >
                 <SkTable
                   columns={tcpFlowPairsColumns}
                   rows={oldConnections}
-                  pageSizeStart={DEFAULT_TABLE_PAGE_SIZE}
                   rowsCount={oldConnectionsRowsCount}
                   onGetFilters={handleGetFiltersConnections}
                   components={{
@@ -268,7 +268,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               filterOptions={{
                 protocols: { disabled: true, placeholder: protocol },
                 sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
-                destinationProcesses: { placeholder: FlowPairsLabelsHttp.Clients, disabled: true }
+                destinationProcesses: { placeholder: RequestLabels.Clients, disabled: true }
               }}
               onGetMetricFilters={handleSetMetricFilters}
             />

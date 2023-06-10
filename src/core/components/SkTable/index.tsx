@@ -1,4 +1,4 @@
-import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useRef, useState } from 'react';
 
 import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
@@ -28,16 +28,19 @@ const SkTable = function <T>({
   titleDescription,
   columns,
   rows = [],
-  rowsCount = rows.length,
   components,
-  onGetFilters, // if defined the remote pagination/sort is activated
-  pageSizeStart,
+  rowsCount = rows.length,
+  onGetFilters, // if defined the local pagination/sort is disabled
+  pageSizeStart, // if defined enable local pagination,
   ...props
 }: SKTableProps<T>) {
   const [activeSortIndex, setActiveSortIndex] = useState<number>();
   const [activeSortDirection, setActiveSortDirection] = useState<SortByDirection>();
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
-  const [pageSize, setPageSize] = useState<number>(pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
+  const [pageSize, setPageSize] = useState<number>(
+    onGetFilters ? rows.length : pageSizeStart || DEFAULT_TABLE_PAGE_SIZE
+  );
+  const pageSizeFirstLoadRef = useRef(onGetFilters ? rows.length : pageSizeStart || DEFAULT_TABLE_PAGE_SIZE);
 
   const getSortParams = useCallback(
     (columnIndex: number): ThProps['sort'] => ({
@@ -96,7 +99,7 @@ const SkTable = function <T>({
 
   let rowsSorted = rows;
 
-  // enable the local sort in case the onGetFilters (remote pagination) is not defined
+  // enable the local sort in case the onGetFilters is not defined
   if (!onGetFilters) {
     // Get the name of the currently active sort column, if any.
     const columnName = columns[activeSortIndex || 0].prop as string | undefined;
@@ -119,7 +122,12 @@ const SkTable = function <T>({
       return paramA > paramB ? sortDirectionMultiplier : -sortDirectionMultiplier;
     });
   }
-  let skRows = rowsSorted.map((row, index) => ({
+
+  if (!!pageSizeStart && !onGetFilters) {
+    rowsSorted = rowsSorted.slice((currentPageNumber - 1) * pageSize, (currentPageNumber - 1) * pageSize + pageSize);
+  }
+
+  const skRows = rowsSorted.map((row, index) => ({
     id: index,
     columns: columns.map((column) => {
       const { prop } = column;
@@ -132,10 +140,6 @@ const SkTable = function <T>({
       };
     })
   }));
-
-  if (!onGetFilters && pageSizeStart) {
-    skRows = skRows.slice((currentPageNumber - 1) * pageSize, (currentPageNumber - 1) * pageSize + pageSize);
-  }
 
   const { isPlain = false, shouldSort = true, ...restProps } = props;
 
@@ -228,7 +232,7 @@ const SkTable = function <T>({
             })}
         </Tbody>
       </TableComposable>
-      {(pageSizeStart || onGetFilters) && rowsCount > pageSize && (
+      {(!!pageSizeStart || !!onGetFilters) && rowsCount > pageSizeFirstLoadRef.current && (
         <Pagination
           className="pf-u-my-xs"
           perPageComponent="button"

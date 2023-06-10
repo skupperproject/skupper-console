@@ -40,7 +40,7 @@ export const UPDATE_INTERVAL = 7 * 1000; // Time in milliseconds to request upda
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
 
 // Default page size for tables. Set in environment variables, but can be overridden.
-export const DEFAULT_TABLE_PAGE_SIZE = Number(process.env.DEFAULT_TABLE_PAGE_SIZE) || 10; //TODO: env variable used for debugging scope
+export const DEFAULT_TABLE_PAGE_SIZE = 10; //TODO: env variable used for debugging scope
 
 // Brand
 export const brandName = process.env.BRAND_APP_NAME || undefined;
