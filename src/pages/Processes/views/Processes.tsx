@@ -15,7 +15,7 @@ import { QueriesProcesses } from '../services/services.enum';
 
 const PAGINATION_SIZE = 50;
 
-const initProcessesPaginatedQueryParams = {
+const initPaginatedProcessesQueryParams = {
   limit: PAGINATION_SIZE,
   offset: 0,
   processRole: 'external',
@@ -24,7 +24,7 @@ const initProcessesPaginatedQueryParams = {
 
 const Processes = function () {
   const [ProcessesPaginatedQueryParams, setProcessesPaginatedQueryParams] = useState<RequestOptions>(
-    initProcessesPaginatedQueryParams
+    initPaginatedProcessesQueryParams
   );
 
   const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
@@ -36,7 +36,7 @@ const Processes = function () {
   );
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
-    setProcessesPaginatedQueryParams({ ...initProcessesPaginatedQueryParams, ...params });
+    setProcessesPaginatedQueryParams({ ...initPaginatedProcessesQueryParams, ...params });
   }, []);
 
   if (isLoadingProcessesData) {
@@ -48,6 +48,7 @@ const Processes = function () {
   }
 
   const processes = processesData.results || [];
+  const processesCount = processesData.timeRangeCount;
 
   return (
     <TransitionPage>
@@ -55,9 +56,9 @@ const Processes = function () {
         <SkTitle title={ProcessesLabels.Section} description={ProcessesLabels.Description} />
         <div>
           <SkTable
-            pageSizeStart={PAGINATION_SIZE}
             columns={processesTableColumns}
             rows={processes}
+            rowsCount={processesCount}
             components={ProcessesComponentsTable}
             onGetFilters={handleGetFilters}
           />

@@ -40,8 +40,7 @@ module.exports = {
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
       'process.env.APP_VERSION': JSON.stringify(process.env.APP_VERSION) || version,
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
-      'process.env.PROMETHEUS_URL': JSON.stringify(process.env.PROMETHEUS_URL || ''),
-      'process.env.DEFAULT_TABLE_PAGE_SIZE': JSON.stringify(process.env.DEFAULT_TABLE_PAGE_SIZE)
+      'process.env.PROMETHEUS_URL': JSON.stringify(process.env.PROMETHEUS_URL || '')
     }),
     new HtmlWebpackPlugin({
       template: path.join(ROOT, '/public/index.html')

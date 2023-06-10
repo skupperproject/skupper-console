@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { DEFAULT_TABLE_PAGE_SIZE } from '@config/config';
 import { isPrometheusActive } from '@config/Prometheus.config';
 import { getTestsIds } from '@config/testIds.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -28,7 +27,7 @@ import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '..
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const PAGINATION_SIZE = Math.ceil(DEFAULT_TABLE_PAGE_SIZE / 2);
+const PAGINATION_SIZE = 5;
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
 
 const Process = function () {

@@ -15,6 +15,7 @@ export const AddressesPaths = {
   name: AddressesLabels.Section
 };
 
+// Addresses Table
 export const customAddressCells = {
   AddressNameLinkCell: (props: LinkCellProps<AddressResponse>) =>
     LinkCell({
@@ -60,16 +61,8 @@ export const addressesColumnsWithFlowPairsCounters: SKColumn<AddressResponse>[] 
   }
 ];
 
-const tcpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairsColumnsNames.Closed]: {
-    show: false
-  },
-  [FlowPairsColumnsNames.To]: {
-    show: false
-  }
-};
-
-export const processesTableColumnsAddress = [
+// Server Table
+export const serverColumns = [
   {
     name: ProcessesTableColumns.Name,
     prop: 'name' as keyof ProcessResponse,
@@ -97,7 +90,19 @@ export const processesTableColumnsAddress = [
   }
 ];
 
+// Http/2 Table
 export const httpColumns = httpFlowPairsColumns;
+
+// Tcp Table
+const tcpHiddenColumns: Record<string, { show: boolean }> = {
+  [FlowPairsColumnsNames.Closed]: {
+    show: false
+  },
+  [FlowPairsColumnsNames.To]: {
+    show: false
+  }
+};
+
 export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
   ...flowPair,
   show: tcpHiddenColumns[flowPair.name]?.show
