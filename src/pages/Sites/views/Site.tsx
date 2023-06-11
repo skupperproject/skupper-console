@@ -31,7 +31,7 @@ import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
 import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
 
-const processQueryParams = { processRole: 'external', endTime: 0 };
+const processQueryParams = { endTime: 0 };
 
 const Site = function () {
   const { id } = useParams() as { id: string };
@@ -51,7 +51,7 @@ const Site = function () {
     RESTApi.fetchLinksBySite(siteId)
   );
 
-  const { data: processes, isLoading: isLoadingProcesses } = useQuery(
+  const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
     [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
     () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
   );
@@ -60,17 +60,26 @@ const Site = function () {
     RESTApi.fetchRouters()
   );
 
-  if (isLoadingSite || isLoadingHosts || isLoadingLinks || isLoadingProcesses || isLoadingRouters || isLoadingSites) {
+  if (
+    isLoadingSite ||
+    isLoadingHosts ||
+    isLoadingLinks ||
+    isLoadingProcessesData ||
+    isLoadingRouters ||
+    isLoadingSites
+  ) {
     return <LoadingPage />;
   }
 
-  if (!sites || !routers || !site || !hosts || !links || !processes) {
+  if (!sites || !routers || !site || !hosts || !links || !processesData) {
     return null;
   }
 
   const { name, nameSpace } = site;
   const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
   const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
+
+  const processes = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
   return (
     <TransitionPage>
@@ -144,9 +153,9 @@ const Site = function () {
               <Title headingLevel="h2">{SiteLabels.Processes}</Title>
             </CardTitle>
             <CardBody>
-              {(!!processes.results.length && (
+              {(!!processes.length && (
                 <List isPlain>
-                  {processes.results.map(({ identity, name: processName }) => (
+                  {processes.map(({ identity, name: processName }) => (
                     <ListItem key={identity}>
                       <Flex>
                         <ResourceIcon type="process" />

@@ -14,9 +14,7 @@ import { processGroupsColumns } from '../ProcessGroups.constant';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
-const initProcessGroupsQueryParams = {
-  processGroupRole: 'external'
-};
+const initProcessGroupsQueryParams = { endTime: 0 };
 
 const ProcessGroups = function () {
   const { data: processGroups, isLoading } = useQuery(
@@ -32,6 +30,8 @@ const ProcessGroups = function () {
     return null;
   }
 
+  const components = processGroups.filter(({ processGroupRole }) => processGroupRole !== 'internal');
+
   return (
     <TransitionPage>
       <div data-testid={getTestsIds.componentsView()}>
@@ -39,7 +39,7 @@ const ProcessGroups = function () {
         <div>
           <SkTable
             columns={processGroupsColumns}
-            rows={processGroups}
+            rows={components}
             customCells={{
               linkCell: (props: LinkCellProps<ProcessGroupResponse>) =>
                 LinkCell({

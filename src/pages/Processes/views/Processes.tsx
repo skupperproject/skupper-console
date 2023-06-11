@@ -16,8 +16,6 @@ import { QueriesProcesses } from '../services/services.enum';
 
 const initPaginatedProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  offset: 0,
-  processRole: 'external',
   endTime: 0
 };
 
@@ -46,7 +44,7 @@ const Processes = function () {
     return null;
   }
 
-  const processes = processesData.results || [];
+  const processes = processesData.results.filter(({ processRole }) => processRole !== 'internal');
   const processesCount = processesData.timeRangeCount;
 
   return (
