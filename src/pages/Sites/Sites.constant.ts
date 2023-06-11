@@ -11,7 +11,7 @@ export const siteColumns = [
   {
     name: SitesTableColumns.Name,
     prop: 'name' as keyof SiteResponse,
-    component: 'linkCell'
+    customCellName: 'linkCell'
   }
 ];
 

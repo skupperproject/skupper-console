@@ -1,6 +1,6 @@
 type WidthValue = 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100;
 
-type NonNullableValue<T> = T extends null | undefined ? never : T;
+export type NonNullableValue<T> = T extends null | undefined ? never : T;
 
 export interface SKTableProps<T> {
   columns: SKColumn<NonNullableValue<T>>[];

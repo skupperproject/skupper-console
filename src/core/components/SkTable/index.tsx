@@ -14,9 +14,9 @@ import {
   Tr
 } from '@patternfly/react-table';
 
-import { getNestedProperty } from '@core/utils/getNestedProperties';
+import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 
-import { SKTableProps } from './SkTable.interface';
+import { NonNullableValue, SKTableProps } from './SkTable.interface';
 import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
@@ -38,7 +38,9 @@ const SkTable = function <T>({
   const [activeSortIndex, setActiveSortIndex] = useState<number>();
   const [activeSortDirection, setActiveSortDirection] = useState<SortByDirection>();
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(FIRST_PAGE_NUMBER);
-  const [pageSize, setPageSize] = useState<number>(paginationPageSize);
+  const [paginationSize, setPaginationSize] = useState<number>(paginationPageSize);
+
+  const skColumns = columns.filter(({ show }) => show !== false);
 
   const getSortParams = useCallback(
     (columnIndex: number): ThProps['sort'] => ({
@@ -49,9 +51,9 @@ const SkTable = function <T>({
       onSort: (_event: ReactMouseEvent, index: number, direction: SortByDirection) => {
         if (onGetFilters) {
           onGetFilters({
-            limit: pageSize,
-            offset: (currentPageNumber - 1) * pageSize,
-            sortName: index !== undefined && columns[index].prop,
+            limit: paginationSize,
+            offset: (currentPageNumber - 1) * paginationSize,
+            sortName: index !== undefined && skColumns[index].prop,
             sortDirection: direction
           });
         }
@@ -61,75 +63,68 @@ const SkTable = function <T>({
       },
       columnIndex
     }),
-    [activeSortDirection, activeSortIndex, columns, currentPageNumber, pageSize, onGetFilters]
+    [activeSortDirection, activeSortIndex, skColumns, currentPageNumber, paginationSize, onGetFilters]
   );
 
-  function handleSetPageNumber(_: ReactMouseEvent | KeyboardEvent | MouseEvent, pageNumber: number) {
-    setCurrentPageNumber(pageNumber);
+  const handleSetPageNumber = useCallback(
+    (_: ReactMouseEvent | KeyboardEvent | MouseEvent, pageNumber: number) => {
+      setCurrentPageNumber(pageNumber);
 
-    if (onGetFilters) {
-      onGetFilters({
-        limit: pageSize,
-        offset: (pageNumber - 1) * pageSize,
-        sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
-        sortDirection: activeSortDirection
-      });
-    }
-  }
+      if (onGetFilters) {
+        onGetFilters({
+          limit: paginationSize,
+          offset: (pageNumber - 1) * paginationSize,
+          sortName: activeSortIndex !== undefined && skColumns[activeSortIndex].prop,
+          sortDirection: activeSortDirection
+        });
+      }
+    },
+    [activeSortDirection, activeSortIndex, skColumns, onGetFilters, paginationSize]
+  );
 
-  function handleSetPageSize(
-    _: ReactMouseEvent | KeyboardEvent | MouseEvent,
-    pageSizeSelected: number,
-    newPage: number
-  ) {
-    setPageSize(pageSizeSelected);
-    setCurrentPageNumber(FIRST_PAGE_NUMBER);
+  const handleSetPaginationSize = useCallback(
+    (_: ReactMouseEvent | KeyboardEvent | MouseEvent, pageSizeSelected: number, newPage: number) => {
+      setPaginationSize(pageSizeSelected);
+      setCurrentPageNumber(FIRST_PAGE_NUMBER);
 
-    if (onGetFilters) {
-      onGetFilters({
-        limit: pageSizeSelected,
-        offset: (newPage - 1) * pageSizeSelected,
-        sortName: activeSortIndex !== undefined && columns[activeSortIndex].prop,
-        sortDirection: activeSortDirection
-      });
-    }
-  }
+      if (onGetFilters) {
+        onGetFilters({
+          limit: pageSizeSelected,
+          offset: (newPage - 1) * pageSizeSelected,
+          sortName: activeSortIndex !== undefined && skColumns[activeSortIndex].prop,
+          sortDirection: activeSortDirection
+        });
+      }
+    },
+    [activeSortDirection, activeSortIndex, skColumns, onGetFilters]
+  );
 
-  let rowsSorted = rows;
+  let sortedRows = rows;
 
-  // enable the local sort in case the onGetFilters is not defined
+  // enable the local sort and local pagination in case the onGetFilters is not defined
   if (!onGetFilters) {
     // Get the name of the currently active sort column, if any.
-    const columnName = columns[activeSortIndex || 0].prop as string | undefined;
-    const sortDirectionMultiplier = activeSortDirection === SortByDirection.desc ? -1 : 1;
+    const activeSortColumnName = skColumns[activeSortIndex || 0].prop;
 
-    // Sort the rows array based on the values of the currently active sort column and direction.
-    rowsSorted = rows.sort((a, b) => {
-      if (!columnName) {
-        return 0;
-      }
+    if (activeSortColumnName) {
+      // Sort the rows array based on the values of the currently active sort column and direction.
+      const sortDirectionMultiplier = activeSortDirection === SortByDirection.desc ? -1 : 1;
+      sortedRows = sortRowsByColumnName(rows, activeSortColumnName as string, sortDirectionMultiplier);
+    }
 
-      // Get the values of the sort column for the two rows being compared, and handle null values.
-      const paramA = getNestedProperty(a, (columnName as string).split('.') as (keyof T)[]);
-      const paramB = getNestedProperty(b, (columnName as string).split('.') as (keyof T)[]);
-
-      if (paramA == null || paramB == null || paramA === paramB) {
-        return 0;
-      }
-
-      return paramA > paramB ? sortDirectionMultiplier : -sortDirectionMultiplier;
-    });
+    if (pagination) {
+      sortedRows = sortedRows.slice(
+        (currentPageNumber - 1) * paginationSize,
+        (currentPageNumber - 1) * paginationSize + paginationSize
+      );
+    }
   }
 
-  if (pagination && !onGetFilters) {
-    rowsSorted = rowsSorted.slice((currentPageNumber - 1) * pageSize, (currentPageNumber - 1) * pageSize + pageSize);
-  }
-
-  const skRows = rowsSorted.map((row, index) => ({
+  const skRows = sortedRows.map((row, index) => ({
     id: index,
-    columns: columns.map((column) => {
+    columns: skColumns.map((column) => {
       const { prop } = column;
-      const value = prop ? getNestedProperty(row, (prop as string).split('.') as (keyof T)[]) : '';
+      const value = prop ? getValueFromNestedProperty(row, (prop as string).split('.') as (keyof T)[]) : '';
 
       return {
         ...column,
@@ -162,29 +157,26 @@ const SkTable = function <T>({
       <TableComposable borders={false} variant="compact" isStickyHeader isStriped {...restProps}>
         <Thead>
           <Tr>
-            {columns.map(
-              ({ name, prop, columnDescription, show = true }, index) =>
-                show && (
-                  <Th
-                    colSpan={1}
-                    key={name}
-                    sort={(prop && shouldSort && getSortParams(index)) || undefined}
-                    info={
-                      columnDescription
-                        ? {
-                            tooltip: columnDescription,
-                            className: 'repositories-info-tip',
-                            tooltipProps: {
-                              isContentLeftAligned: true
-                            }
-                          }
-                        : undefined
-                    }
-                  >
-                    {name}
-                  </Th>
-                )
-            )}
+            {skColumns.map(({ name, prop, columnDescription }, index) => (
+              <Th
+                colSpan={1}
+                key={name}
+                sort={(prop && shouldSort && getSortParams(index)) || undefined}
+                info={
+                  columnDescription
+                    ? {
+                        tooltip: columnDescription,
+                        className: 'repositories-info-tip',
+                        tooltipProps: {
+                          isContentLeftAligned: true
+                        }
+                      }
+                    : undefined
+                }
+              >
+                {name}
+              </Th>
+            ))}
           </Tr>
         </Thead>
         <Tbody>
@@ -204,27 +196,20 @@ const SkTable = function <T>({
 
               return (
                 <Tr key={row.id} style={isOddRow ? customStyle : {}}>
-                  {row.columns.map(
-                    ({ data, value, customCellName, callback, format, width, modifier, show = true }, index) => {
-                      if (!show) {
-                        return null;
-                      }
+                  {row.columns.map(({ data, value, customCellName, callback, format, width, modifier }, index) => {
+                    const Component = !!customCells && !!customCellName && customCells[customCellName];
 
-                      const Component = !!customCells && !!customCellName && customCells[customCellName];
-
-                      return Component ? (
-                        <Td width={width} key={index} modifier={modifier}>
+                    return (
+                      <Td width={width} key={index} modifier={modifier}>
+                        {Component && (
                           <Component data={data} value={value} callback={callback} format={format && format(value)} />
-                        </Td>
-                      ) : (
-                        <Td width={width} key={index} modifier={modifier}>
-                          <TableText wrapModifier="truncate">
-                            {(format && format(value)) || (value as string)}
-                          </TableText>
-                        </Td>
-                      );
-                    }
-                  )}
+                        )}
+                        {!Component && (
+                          <TableText wrapModifier="truncate">{(format && format(value)) || value}</TableText>
+                        )}
+                      </Td>
+                    );
+                  })}
                 </Tr>
               );
             })}
@@ -235,10 +220,10 @@ const SkTable = function <T>({
           className="pf-u-my-xs"
           perPageComponent="button"
           itemCount={paginationTotalRows}
-          perPage={pageSize}
+          perPage={paginationSize}
           page={currentPageNumber}
           onSetPage={handleSetPageNumber}
-          onPerPageSelect={handleSetPageSize}
+          onPerPageSelect={handleSetPaginationSize}
         />
       )}
     </Card>
@@ -246,3 +231,17 @@ const SkTable = function <T>({
 };
 
 export default SkTable;
+
+function sortRowsByColumnName<T>(rows: NonNullableValue<T>[], columnName: string, direction: number) {
+  return rows.sort((a, b) => {
+    // Get the values of the sort column for the two rows being compared, and handle null values.
+    const paramA = getValueFromNestedProperty(a, columnName.split('.') as (keyof T)[]);
+    const paramB = getValueFromNestedProperty(b, columnName.split('.') as (keyof T)[]);
+
+    if (paramA == null || paramB == null || paramA === paramB) {
+      return 0;
+    }
+
+    return paramA > paramB ? direction : -direction;
+  });
+}
