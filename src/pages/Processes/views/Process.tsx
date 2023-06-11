@@ -92,6 +92,9 @@ const Process = function () {
     ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
   );
 
+  const remoteServers = processesPairsTxData.filter(({ protocol }) => protocol === undefined);
+  const remoteClients = processesPairsRxReverse.filter(({ protocol }) => protocol === undefined);
+
   return (
     <TransitionPage>
       <Grid hasGutter data-testid={getTestsIds.processView(processId)}>
@@ -176,6 +179,46 @@ const Process = function () {
                   title={ProcessesLabels.HTTPServers}
                   columns={processesConnectedColumns}
                   rows={HTTPServers}
+                  pagination={true}
+                  paginationPageSize={SMALL_PAGINATION_SIZE}
+                  customCells={{
+                    ...ProcessesConnectedComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                      <ViewDetailCell
+                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
+                      />
+                    )
+                  }}
+                />
+              </FlexItem>
+            )}
+
+            {!!remoteClients.length && (
+              <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+                <SkTable
+                  title={ProcessesLabels.RemoteClients}
+                  columns={processesConnectedColumns}
+                  rows={remoteClients}
+                  pagination={true}
+                  paginationPageSize={SMALL_PAGINATION_SIZE}
+                  customCells={{
+                    ...ProcessesConnectedComponentsTable,
+                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+                      <ViewDetailCell
+                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${data.identity}`}
+                      />
+                    )
+                  }}
+                />
+              </FlexItem>
+            )}
+
+            {!!remoteServers.length && (
+              <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+                <SkTable
+                  title={ProcessesLabels.RemoteServers}
+                  columns={processesConnectedColumns}
+                  rows={remoteServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
                   customCells={{

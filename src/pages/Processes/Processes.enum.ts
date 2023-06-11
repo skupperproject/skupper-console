@@ -33,6 +33,8 @@ export enum ProcessesLabels {
   TCPServers = 'TCP Servers',
   HTTPClients = 'HTTP/2 Clients',
   HTTPServers = 'HTTP/2 Servers',
+  RemoteClients = 'Remote Clients',
+  RemoteServers = 'Remote Servers',
   Http1Requests = 'Http1 requests in the last 15 minutes',
   Http2Requests = 'Http2 requests in the last 15 minutes',
   HttpRequests = 'Http requests in the last 15 minutes',
