@@ -67,8 +67,20 @@ const ProcessPairs = function () {
   const destinationId = ids[1];
 
   const [connectionsView, setConnectionsView] = useState<string>(type);
-  const [flowPairsQueryParamsPaginated, setFlowParisQueryParamsPaginated] = useState<RequestOptions>(
-    initPaginatedFlowPairsQueryParams
+  const [httpQueryParamsPaginated, setHttpQueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedHttpRequestsQueryParams
+  );
+
+  const [http2QueryParamsPaginated, setHttp2QueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedHttp2RequestsQueryParams
+  );
+
+  const [oldConnectionsQueryParamsPaginated, setOldConnectionsQueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedOldConnectionsQueryParams
+  );
+
+  const [activeConnectionsQueryParamsPaginated, setActiveConnectionsQueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedActiveConnectionsQueryParams
   );
 
   const [flowSelected, setFlowSelected] = useState<string>();
@@ -83,11 +95,10 @@ const ProcessPairs = function () {
   );
 
   const { data: http2RequestsData, isLoading: isLoadingHttp2RequestsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, { ...initPaginatedFlowPairsQueryParams, ...flowPairsQueryParamsPaginated }],
+    [QueriesProcesses.GetFlowPairs, http2QueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initPaginatedHttp2RequestsQueryParams,
-        ...flowPairsQueryParamsPaginated,
+        ...http2QueryParamsPaginated,
         processAggregateId: processPairId
       }),
     {
@@ -97,11 +108,10 @@ const ProcessPairs = function () {
   );
 
   const { data: httpRequestsData, isLoading: isLoadingHttpRequestsData } = useQuery(
-    ['QueriesProcesses.GetFlowPairs', { ...initPaginatedHttpRequestsQueryParams, ...flowPairsQueryParamsPaginated }],
+    ['QueriesProcesses.GetFlowPairs', httpQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initPaginatedHttpRequestsQueryParams,
-        ...flowPairsQueryParamsPaginated,
+        ...httpQueryParamsPaginated,
         processAggregateId: processPairId
       }),
     {
@@ -111,11 +121,10 @@ const ProcessPairs = function () {
   );
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnectionsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, { ...initPaginatedActiveConnectionsQueryParams, ...flowPairsQueryParamsPaginated }],
+    [QueriesProcesses.GetFlowPairs, activeConnectionsQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initPaginatedActiveConnectionsQueryParams,
-        ...flowPairsQueryParamsPaginated,
+        ...activeConnectionsQueryParamsPaginated,
         processAggregateId: processPairId
       }),
     {
@@ -125,11 +134,10 @@ const ProcessPairs = function () {
   );
 
   const { data: oldConnectionsData, isLoading: isLoadingOldConnectionsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, { ...initPaginatedOldConnectionsQueryParams, ...flowPairsQueryParamsPaginated }],
+    [QueriesProcesses.GetFlowPairs, oldConnectionsQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
-        ...initPaginatedOldConnectionsQueryParams,
-        ...flowPairsQueryParamsPaginated,
+        ...oldConnectionsQueryParamsPaginated,
         processAggregateId: processPairId
       }),
     {
@@ -147,8 +155,20 @@ const ProcessPairs = function () {
     }
   );
 
-  const handleGetFiltersFlowPairs = useCallback((params: RequestOptions) => {
-    setFlowParisQueryParamsPaginated(params);
+  const handleGetFiltersHttpRequests = useCallback((params: RequestOptions) => {
+    setHttpQueryParamsPaginated({ ...initPaginatedHttpRequestsQueryParams, ...params });
+  }, []);
+
+  const handleGetFiltersHttp2Requests = useCallback((params: RequestOptions) => {
+    setHttp2QueryParamsPaginated({ ...initPaginatedHttp2RequestsQueryParams, ...params });
+  }, []);
+
+  const handleGetFiltersActiveTcpRequests = useCallback((params: RequestOptions) => {
+    setActiveConnectionsQueryParamsPaginated({ ...initPaginatedActiveConnectionsQueryParams, ...params });
+  }, []);
+
+  const handleGetFiltersOldTcpRequests = useCallback((params: RequestOptions) => {
+    setOldConnectionsQueryParamsPaginated({ ...initPaginatedOldConnectionsQueryParams, ...params });
   }, []);
 
   const handleOnClickDetails = useCallback((id?: string) => {
@@ -185,7 +205,7 @@ const ProcessPairs = function () {
   const { timeRangeCount: httpRequestsCount, results: httpRequests } = httpRequestsData;
   const { timeRangeCount: http2RequestsCount, results: http2Requests } = http2RequestsData;
   const { timeRangeCount: oldConnectionsCount, results: oldConnections } = oldConnectionsData;
-  const { results: activeConnections } = activeConnectionsData;
+  const { timeRangeCount: activeConnectionsCount, results: activeConnections } = activeConnectionsData;
 
   return (
     <TransitionPage>
@@ -254,15 +274,17 @@ const ProcessPairs = function () {
                 <Tab
                   eventKey={TAB_1_KEY}
                   title={
-                    <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnections.length})`}</TabTitleText>
+                    <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>
                   }
                 >
                   <SkTable
                     title={ProcessesLabels.ActiveConnections}
                     columns={activeTcpColumns}
                     rows={activeConnections}
+                    paginationTotalRows={activeConnectionsCount}
                     pagination={true}
                     paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                    onGetFilters={handleGetFiltersActiveTcpRequests}
                     customCells={{
                       ...flowPairsComponentsTable,
                       viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -282,6 +304,7 @@ const ProcessPairs = function () {
                     paginationTotalRows={oldConnectionsCount}
                     pagination={true}
                     paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                    onGetFilters={handleGetFiltersOldTcpRequests}
                     customCells={{
                       ...flowPairsComponentsTable,
                       viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -303,7 +326,7 @@ const ProcessPairs = function () {
                 paginationTotalRows={http2RequestsCount}
                 pagination={true}
                 paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                onGetFilters={handleGetFiltersFlowPairs}
+                onGetFilters={handleGetFiltersHttp2Requests}
                 customCells={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
@@ -323,7 +346,7 @@ const ProcessPairs = function () {
                 paginationTotalRows={httpRequestsCount}
                 pagination={true}
                 paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                onGetFilters={handleGetFiltersFlowPairs}
+                onGetFilters={handleGetFiltersHttpRequests}
                 customCells={{
                   ...flowPairsComponentsTable,
                   viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (

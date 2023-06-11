@@ -64,17 +64,17 @@ export const processesTableColumns = [
   {
     name: ProcessesTableColumns.Name,
     prop: 'name' as keyof ProcessResponse,
-    component: 'linkCell'
+    customCellName: 'linkCell'
   },
   {
     name: ProcessesTableColumns.Component,
     prop: 'groupName' as keyof ProcessResponse,
-    component: 'linkComponentCell'
+    customCellName: 'linkComponentCell'
   },
   {
     name: ProcessesTableColumns.Site,
     prop: 'parentName' as keyof ProcessResponse,
-    component: 'linkCellSite'
+    customCellName: 'linkCellSite'
   },
   {
     name: ProcessesTableColumns.Created,

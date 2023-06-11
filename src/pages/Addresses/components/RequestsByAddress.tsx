@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols, SortDirection } from '@API/REST.enum';
+import { SortDirection } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { isPrometheusActive } from '@config/Prometheus.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -195,7 +195,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
               selectedFilters={{
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
                 processIdSource: serverNamesId,
-                protocol: AvailableProtocols.AllHttp
+                protocol
               }}
               startTime={startTime}
               sourceProcesses={serverNames}

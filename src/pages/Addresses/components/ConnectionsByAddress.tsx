@@ -39,7 +39,10 @@ const initServersQueryParams = {
 };
 
 const initActiveConnectionsQueryParams: RequestOptions = {
-  state: TcpStatus.Active
+  state: TcpStatus.Active,
+  limit: DEFAULT_PAGINATION_SIZE,
+  sortName: 'endTime',
+  sortDirection: SortDirection.DESC
 };
 
 const initPaginatedOldConnectionsQueryParams: RequestOptions = {
@@ -59,13 +62,26 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const [connectionsView, setConnectionsView] = useState<string>(type);
   const [flowSelected, setFlowSelected] = useState<string>();
 
-  const [requestsQueryParamsPaginated, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
+  const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedOldConnectionsQueryParams
+  );
+  const [activeConnectionsQueryParamsPaginated, setActiveConnectionsQueryParamsPaginated] = useState<RequestOptions>(
+    initActiveConnectionsQueryParams
   );
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
-    [QueriesAddresses.GetFlowPairsByAddress, addressId, initActiveConnectionsQueryParams],
-    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, initActiveConnectionsQueryParams) : undefined),
+    [
+      QueriesAddresses.GetFlowPairsByAddress,
+      addressId,
+      { ...initActiveConnectionsQueryParams, ...activeConnectionsQueryParamsPaginated }
+    ],
+    () =>
+      addressId
+        ? RESTApi.fetchFlowPairsByAddress(addressId, {
+            ...initActiveConnectionsQueryParams,
+            ...activeConnectionsQueryParamsPaginated
+          })
+        : undefined,
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
@@ -76,13 +92,13 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     [
       QueriesAddresses.GetFlowPairsByAddress,
       addressId,
-      { ...initPaginatedOldConnectionsQueryParams, ...requestsQueryParamsPaginated }
+      { ...initPaginatedOldConnectionsQueryParams, ...connectionsQueryParamsPaginated }
     ],
     () =>
       addressId
         ? RESTApi.fetchFlowPairsByAddress(addressId, {
             ...initPaginatedOldConnectionsQueryParams,
-            ...requestsQueryParamsPaginated
+            ...connectionsQueryParamsPaginated
           })
         : undefined,
     {
@@ -139,8 +155,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     return (forceMetricUpdateNonceRef.current += 1);
   }, [activeConnectionsData?.results]);
 
+  const handleGetFiltersActiveConnections = useCallback((params: RequestOptions) => {
+    setActiveConnectionsQueryParamsPaginated(params);
+  }, []);
+
   const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
-    setRequestsQueryParamsPaginated(params);
+    setConnectionsQueryParamsPaginated(params);
   }, []);
 
   if (isLoadingServersByAddress || isLoadingActiveConnections || isLoadingOldConnections) {
@@ -168,7 +188,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     }, {} as Record<string, number>);
     servers = servers.map((conn) => ({
       ...conn,
-      byteRate: byteRatesMap[`${conn.name}`]
+      byteRate: byteRatesMap[`${conn.name}`] || 0
     }));
   }
 
@@ -223,8 +243,10 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
                 <SkTable
                   columns={tcpColumns}
                   rows={activeConnections}
+                  paginationTotalRows={activeConnectionsRowsCount}
                   pagination={true}
                   paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                  onGetFilters={handleGetFiltersActiveConnections}
                   customCells={{
                     ...flowPairsComponentsTable,
                     viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
