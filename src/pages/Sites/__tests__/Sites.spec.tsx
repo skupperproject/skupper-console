@@ -98,7 +98,9 @@ describe('Begin testing the Sites component', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer);
+    expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer, {
+      state: { httpStatus: '500' }
+    });
   });
 
   it('Should call the useNavigate function with the path to an error page when a connection error is received from sites', async () => {

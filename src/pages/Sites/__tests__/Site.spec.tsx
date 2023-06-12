@@ -92,6 +92,8 @@ describe('Site component', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer);
+    expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer, {
+      state: { httpStatus: '500' }
+    });
   });
 });
