@@ -28,7 +28,11 @@ const QueryClientContext = function ({
   function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
     const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
 
-    navigate(route);
+    if (httpStatus) {
+      navigate(route, { state: { httpStatus } });
+    } else {
+      navigate(route);
+    }
   }
 
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
