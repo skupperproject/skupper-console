@@ -74,20 +74,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     showLinkLabelReverseInitState ? showLinkLabelReverseInitState === 'true' : false
   );
 
-  const { data: byteRateByProcessPairs } = useQuery(
-    [QueriesTopology.GetByteRateByProcessPairs],
-    () => PrometheusApi.fetchAllProcessPairsByteRates(),
+  const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
+    [QueriesAddresses.GetAddresses],
+    () => RESTApi.fetchAddresses(),
     {
-      enabled: isPrometheusActive() && showLinkLabel,
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: latencyByProcessPairs } = useQuery(
-    [QueriesTopology.GetLatencyByProcessPairs],
-    () => PrometheusApi.fetchAllProcessPairsLatencies(),
-    {
-      enabled: isPrometheusActive() && showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -112,14 +102,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     }
   );
 
-  const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
-    [QueriesAddresses.GetAddresses],
-    () => RESTApi.fetchAddresses(),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
   const { data: serversByAddress } = useQuery(
     [QueriesAddresses.GetProcessesByAddress, addressIdSelected],
     () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : undefined),
@@ -133,6 +115,24 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetProcessesPairs],
     () => RESTApi.fetchProcessesPairs(),
     {
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: byteRateByProcessPairs } = useQuery(
+    [QueriesTopology.GetByteRateByProcessPairs],
+    () => PrometheusApi.fetchAllProcessPairsByteRates(),
+    {
+      enabled: isPrometheusActive() && showLinkLabel,
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  const { data: latencyByProcessPairs } = useQuery(
+    [QueriesTopology.GetLatencyByProcessPairs],
+    () => PrometheusApi.fetchAllProcessPairsLatencies(),
+    {
+      enabled: isPrometheusActive() && showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -285,11 +285,15 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   // This effect is triggered when one address is currently selected
   useEffect(() => {
-    if (sites && externalProcesses && remoteProcesses) {
+    if (
+      sites &&
+      externalProcesses &&
+      remoteProcesses &&
+      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive())
+    ) {
       const processes = [...externalProcesses, ...remoteProcesses];
-
       // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
-      if (addressIdSelected && processesPairs && serversByAddress) {
+      if (addressIdSelected && processesPairs && serversByAddress?.results) {
         const serverIds = serversByAddress.results.map(({ identity }) => identity);
         const processPairsByAddress = processesPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
@@ -340,10 +344,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     showSite,
     byteRateByProcessPairs,
     latencyByProcessPairs,
-    serversByAddress?.results,
-    serversByAddress,
     showLinkLabelReverse,
-    rotateLabel
+    rotateLabel,
+    serversByAddress?.results
   ]);
 
   if (
@@ -355,10 +358,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     isLoadingAddresses
   ) {
     return <LoadingPage />;
-  }
-
-  if (!nodes.length) {
-    return <EmptyData />;
   }
 
   return (
@@ -413,22 +412,25 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         </ToolbarContent>
       </Toolbar>
 
-      <GraphReactAdaptor
-        nodes={nodes}
-        edges={links}
-        combos={groups}
-        onClickCombo={handleGetSelectedGroup}
-        onClickNode={handleGetSelectedNode}
-        onClickEdge={handleGetSelectedEdge}
-        itemSelected={processId}
-        legendData={ProcessLegendData}
-        onGetZoom={handleSaveZoom}
-        onFitScreen={handleFitScreen}
-        config={{
-          zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-          fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-        }}
-      />
+      {!nodes.length && <EmptyData />}
+      {!!nodes.length && (
+        <GraphReactAdaptor
+          nodes={nodes}
+          edges={links}
+          combos={groups}
+          onClickCombo={handleGetSelectedGroup}
+          onClickNode={handleGetSelectedNode}
+          onClickEdge={handleGetSelectedEdge}
+          itemSelected={processId}
+          legendData={ProcessLegendData}
+          onGetZoom={handleSaveZoom}
+          onFitScreen={handleFitScreen}
+          config={{
+            zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+            fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+          }}
+        />
+      )}
     </>
   );
 };
