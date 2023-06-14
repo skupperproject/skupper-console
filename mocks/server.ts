@@ -106,7 +106,7 @@ mockRoutersForPerf.forEach((_, index) => {
 // api functions
 export const MockApi = {
   get500Error: () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }),
-  get503Error: () => new Response(500, { some: 'header' }, { errors: ['Auth Error'] }),
+  get503Error: () => new Response(503, { some: 'header' }, { errors: ['Auth Error'] }),
   get404Error: () => new Response(404, { some: 'header' }, { errors: ['Not Found'] }),
   getConnectionError: () => null,
   getCollectors: () => collectors,
@@ -172,7 +172,6 @@ export function loadMockServer() {
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
-
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)

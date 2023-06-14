@@ -1,5 +1,5 @@
 import { Brand, Grid, GridItem, TextContent, Text, TextVariants, List, ListItem, Button } from '@patternfly/react-core';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { brandImg } from '@config/config';
 
@@ -7,10 +7,13 @@ import { Labels } from './Connection.enum';
 
 const ErrorConnection = function () {
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   const handleRetryConnection = () => {
     navigate(-1);
   };
+
+  console.log(state);
 
   return (
     <Grid className=" pf-u-p-4xl">
