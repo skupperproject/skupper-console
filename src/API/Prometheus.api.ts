@@ -1,3 +1,4 @@
+import { gePrometheusQueryPATH } from '@config/Prometheus.config';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import { axiosFetch } from './apiMiddleware';
@@ -8,7 +9,6 @@ import {
   PrometheusResponse
 } from './Prometheus.interfaces';
 import { queries } from './Prometheus.queries';
-import { gePrometheusQueryPATH, getPrometheusCredentials } from '../config/Prometheus.config';
 
 export const PrometheusApi = {
   fetchBytes: async ({
@@ -34,8 +34,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getBytesByDirection(param, `${range.seconds + 60}s`) },
-      auth: getPrometheusCredentials()
+      params: { query: queries.getBytesByDirection(param, `${range.seconds + 60}s`) }
     });
 
     return result;
@@ -73,8 +72,7 @@ export const PrometheusApi = {
         start,
         end,
         step: range.step
-      },
-      auth: getPrometheusCredentials()
+      }
     });
 
     // it retrieves 2 arrays of [values, timestamps], 1) received traffic 2) sent traffic
@@ -85,8 +83,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllProcessPairsByteRates() },
-      auth: getPrometheusCredentials()
+      params: { query: queries.getAllProcessPairsByteRates() }
     });
 
     return result;
@@ -96,8 +93,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllProcessPairsLatencies() },
-      auth: getPrometheusCredentials()
+      params: { query: queries.getAllProcessPairsLatencies() }
     });
 
     return result;
@@ -131,8 +127,7 @@ export const PrometheusApi = {
         start,
         end,
         step: range.step
-      },
-      auth: getPrometheusCredentials()
+      }
     });
 
     return result;
@@ -163,8 +158,7 @@ export const PrometheusApi = {
         start,
         end,
         step: range.step
-      },
-      auth: getPrometheusCredentials()
+      }
     });
 
     return result;
@@ -191,8 +185,7 @@ export const PrometheusApi = {
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
       params: {
         query: queries.getTotalRequestsTimeInterval(param, `${range.seconds}s`)
-      },
-      auth: getPrometheusCredentials()
+      }
     });
 
     return result;
@@ -219,8 +212,7 @@ export const PrometheusApi = {
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
       params: {
         query: queries.getAvgRequestRateTimeInterval(param, `${range.seconds}s`)
-      },
-      auth: getPrometheusCredentials()
+      }
     });
 
     return result;
@@ -258,8 +250,7 @@ export const PrometheusApi = {
         start,
         end,
         step: isRate ? range.step : range.value
-      },
-      auth: getPrometheusCredentials()
+      }
     });
 
     return result;
@@ -269,8 +260,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTotalFlowsByAddress() },
-      auth: getPrometheusCredentials()
+      params: { query: queries.getTotalFlowsByAddress() }
     });
 
     return result;
@@ -280,8 +270,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getActiveFlowsByAddress() },
-      auth: getPrometheusCredentials()
+      params: { query: queries.getActiveFlowsByAddress() }
     });
 
     return result;
@@ -295,8 +284,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTcpByteRateByAddress(addressName) },
-      auth: getPrometheusCredentials()
+      params: { query: queries.getTcpByteRateByAddress(addressName) }
     });
 
     return result;

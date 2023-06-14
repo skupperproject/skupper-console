@@ -1,26 +1,15 @@
-import { IntervalTimeMap } from '../API/Prometheus.interfaces';
+import { IntervalTimeMap } from '@API/Prometheus.interfaces';
+import { PROMETHEUS_URL } from './config';
 
-let PROMETHEUS_PATH: string | undefined = undefined;
 let PROMETHEUS_START_TIME: number = new Date().getTime();
-let PROMETHEUS_USERNAME = '';
-let PROMETHEUS_PASSWORD = '';
 
+// TODO: not remove yet.
+export const isPrometheusActive = () => true;
 // Override the default prometheus path with the value from the skupper flow collector api
 export const setPrometheusStartTime = (time: number) => (PROMETHEUS_START_TIME = time);
 export const gePrometheusStartTime = () => PROMETHEUS_START_TIME;
-export const setPrometheusCredentials = ({ username, password }: { username: string; password: string }) => {
-  PROMETHEUS_USERNAME = username;
-  PROMETHEUS_PASSWORD = password;
-};
-
-export const getPrometheusCredentials = () =>
-  PROMETHEUS_USERNAME ? { username: PROMETHEUS_USERNAME, password: PROMETHEUS_PASSWORD } : undefined;
-
-export const setPrometheusUrl = (url: string | undefined) => (PROMETHEUS_PATH = url || '');
-export const isPrometheusActive = () => !!PROMETHEUS_PATH;
-
 export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
-  queryType === 'range' ? `${PROMETHEUS_PATH}/query_range` : `${PROMETHEUS_PATH}/query`;
+  queryType === 'range' ? `${PROMETHEUS_URL}/rangequery` : `${PROMETHEUS_URL}/query`;
 
 export const timeIntervalMap: IntervalTimeMap = {
   oneMinute: { value: '1m', seconds: 60, step: '5s', key: 'oneMinute', label: 'Last min.' },
