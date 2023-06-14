@@ -18,6 +18,10 @@ export const errorsRoutes = [
     element: <ErrorServer />
   },
   {
+    path: NotFoundRoutesPaths.ErrClient,
+    element: <NotFound />
+  },
+  {
     path: NotFoundRoutesPaths.NotFound,
     element: <NotFound />
   }

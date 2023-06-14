@@ -25,13 +25,27 @@ const QueryClientContext = function ({
     })
   });
 
-  function handleError({ httpStatus }: { httpStatus?: HttpStatusErrors }) {
-    const route = httpStatus ? ErrorRoutesPaths.error[httpStatus] : ErrorRoutesPaths.ErrConnection;
+  function handleError({
+    httpStatus,
+    message,
+    code
+  }: {
+    httpStatus?: HttpStatusErrors;
+    message?: string;
+    code?: string;
+  }) {
+    const errorStatusType = httpStatus?.charAt(0);
 
-    if (httpStatus) {
-      navigate(route, { state: { httpStatus } });
-    } else {
-      navigate(route);
+    if (errorStatusType === '5') {
+      navigate(ErrorRoutesPaths.error[HttpStatusErrors.Error5xx], { state: { httpStatus } });
+    }
+
+    if (errorStatusType === '4') {
+      navigate(ErrorRoutesPaths.error[HttpStatusErrors.Error4xx], { state: { httpStatus } });
+    }
+
+    if (!errorStatusType) {
+      navigate(ErrorRoutesPaths.ErrConnection, { state: { message, code } });
     }
   }
 

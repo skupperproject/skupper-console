@@ -4,14 +4,16 @@ import { ErrorServerRoutesPaths } from './Server/Server.enum';
 
 export enum HttpStatusErrors {
   NotFound = '404',
-  ServerError = '500',
-  ServiceUnavailable = '503'
+  ServiceUnavailable = '503',
+  Error5xx = 'server-error',
+  Error4xx = 'client-error'
 }
 export const ErrorRoutesPaths = {
   error: {
-    [HttpStatusErrors.ServerError]: ErrorServerRoutesPaths.ErrServer,
+    [HttpStatusErrors.Error5xx]: ErrorServerRoutesPaths.ErrServer,
     [HttpStatusErrors.ServiceUnavailable]: ErrorServerRoutesPaths.ErrServer,
-    [HttpStatusErrors.NotFound]: NotFoundRoutesPaths.NotFound
+    [HttpStatusErrors.NotFound]: NotFoundRoutesPaths.NotFound,
+    [HttpStatusErrors.Error4xx]: NotFoundRoutesPaths.NotFound
   },
   ...ErrorConnectionRoutesPaths
 };
