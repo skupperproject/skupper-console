@@ -8,11 +8,11 @@ import Logo from '@assets/skupper-logo.svg';
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
 const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
-// Base URL for the Prometheus backend. Set in environment variables.
-export const BASE_PROMETHEUS_URL = process.env.PROMETHEUS_URL;
-
 const API_VERSION = '/api/v1alpha1';
+const PROMETHEUS_SUFFIX = '/internal/prom';
+
 export const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
+export const PROMETHEUS_URL = `${API_URL}${PROMETHEUS_SUFFIX}`;
 
 // Navigation config
 export const RoutesPropsConfig = [TopologyPaths, AddressesPaths, SitesPaths, ProcessGroupsPaths, ProcessesPaths];
@@ -48,5 +48,4 @@ export const SMALL_PAGINATION_SIZE = 10;
 export const brandName = process.env.BRAND_APP_NAME || undefined;
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
 export const brandImg = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
-
 export const skupperVersion = process.env.APP_VERSION;
