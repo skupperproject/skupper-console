@@ -9,7 +9,7 @@ const Header = function () {
       headerTools={
         <PageHeaderTools>
           <Title headingLevel="h4" className="pf-u-pl-md">
-            v.{skupperVersion}
+            v {skupperVersion}
           </Title>
         </PageHeaderTools>
       }

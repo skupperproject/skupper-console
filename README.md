@@ -142,8 +142,8 @@ To customize the Skupper logo and the application name on the left side of the H
 - **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is no set.
 - **APP_VERSION**: The version of the console. By default this value match with the package.json version.
 
-For example, you can customize the logo and application name by running the following command:
+For example, you can customize the logo and application version by running the following command:
 
 ```bash
-BRAND_APP_LOGO="/local_path/new_logo.png" BRAND_APP_NAME="New name" yarn build
+BRAND_APP_LOGO="/local_path/new_logo.png" APP_VERSION="X.X" yarn build
 ```
