@@ -5,6 +5,6 @@ context('Error pages', () => {
 
   it('should redirect to the Not found page when url not exists', () => {
     cy.visit('/#/wrong-page');
-    cy.get(`[data-testid=${getTestsIds.notFoundView()}]`).contains('Page not found').should('be.visible');
+    cy.get(`[data-testid=${getTestsIds.notFoundView()}]`).contains('Route not found').should('be.visible');
   });
 });

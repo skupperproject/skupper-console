@@ -1,28 +1,26 @@
-import { Brand, Grid, GridItem, TextContent, Text, TextVariants, List, ListItem, Button } from '@patternfly/react-core';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Brand, Grid, GridItem, List, ListItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { useLocation } from 'react-router-dom';
 
 import { brandImg } from '@config/config';
 
-import { Labels } from './Connection.enum';
 import { ErrorLabels } from '../Errors.enum';
 
-const ErrorConnection = function () {
-  const navigate = useNavigate();
+const ErrorHttp = function () {
   const { state } = useLocation();
-
-  function handleRetryConnection() {
-    navigate(state?.pathname || -1);
-  }
 
   return (
     <Grid className=" pf-u-p-4xl">
       <GridItem span={6} className=" pf-u-p-2xl">
-        <TextContent className="pf-u-text-align-center pf-u-mb-4xl">
-          <Text component={TextVariants.h1}>{Labels.ErrorTitle}</Text>
-          {`${state?.code}:  ${state?.message}`}
+        <TextContent className="pf-u-text-align-center">
+          <Text component={TextVariants.h1}>
+            {state?.httpStatus} {state?.code}
+          </Text>
+        </TextContent>
+        <TextContent className="pf-u-text-align-center pf-u-mb-2xl">
+          <Text component={TextVariants.h4}>{state?.message}</Text>
         </TextContent>
 
-        <TextContent className="pf-u-mb-4xl">
+        <TextContent>
           <Text component={TextVariants.h4}>
             To help us resolve the issue quickly, we recommend following these steps using the DevTool browser
           </Text>
@@ -38,10 +36,6 @@ const ErrorConnection = function () {
             </ListItem>
           </List>
         </TextContent>
-
-        <Button id="sk-try-again" variant="primary" onClick={handleRetryConnection}>
-          Try again
-        </Button>
       </GridItem>
       <GridItem span={6} className=" pf-u-p-2xl">
         <Brand src={brandImg} alt="brand" />
@@ -53,4 +47,4 @@ const ErrorConnection = function () {
   );
 };
 
-export default ErrorConnection;
+export default ErrorHttp;

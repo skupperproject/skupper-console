@@ -105,9 +105,9 @@ mockRoutersForPerf.forEach((_, index) => {
 
 // api functions
 export const MockApi = {
-  get500Error: () => new Response(500, { some: 'header' }, { errors: ['Server Error'] }),
-  get503Error: () => new Response(503, { some: 'header' }, { errors: ['Auth Error'] }),
-  get404Error: () => new Response(404, { some: 'header' }, { errors: ['Not Found'] }),
+  get500Error: () => new Response(500),
+  get503Error: () => new Response(503),
+  get404Error: () => new Response(404),
   getConnectionError: () => null,
   getCollectors: () => collectors,
   getSites: () => {
