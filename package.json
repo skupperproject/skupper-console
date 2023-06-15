@@ -1,6 +1,6 @@
 {
   "name": "skupper-web-console",
-  "version": "1.4.rc4",
+  "version": "1.4-rc4",
   "description": "Skupper Web Console",
   "license": "Apache-2.0",
   "keywords": [
