@@ -7,7 +7,7 @@ function handleStatusError(e: AxiosError) {
   const error: HTTPError = { ...e };
 
   if (!e.response) {
-    error.message = MSG_TIMEOUT_ERROR;
+    error.message = e.message || MSG_TIMEOUT_ERROR;
   }
 
   if (error.response?.status) {

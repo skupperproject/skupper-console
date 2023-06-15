@@ -6,8 +6,7 @@ import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
 import { MockApiPaths, MockApi, loadMockServer } from '@mocks/server';
-import { ErrorConnectionRoutesPaths } from '@pages/shared/Errors/Connection/Connection.enum';
-import { ErrorServerRoutesPaths } from '@pages/shared/Errors/Server/Server.enum';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 
 import Sites from '../views/Sites';
 
@@ -78,6 +77,31 @@ describe('Begin testing the Sites component', () => {
     );
   });
 
+  it('Should call the useNavigate function with the path to an error page when a 404 error is received from sites', async () => {
+    server.get(MockApiPaths.Sites, MockApi.get404Error);
+    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockedNavigator);
+
+    render(
+      <Wrapper
+        config={{
+          defaultOptions: {
+            queries: {
+              retry: false
+            }
+          }
+        }}
+      >
+        <Sites />
+      </Wrapper>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    expect(mockedNavigator).toHaveBeenCalledWith(ErrorRoutesPaths.error.HttpError, {
+      state: { code: 'ERR_BAD_REQUEST', message: '404: Not Found' }
+    });
+  });
+
   it('Should call the useNavigate function with the path to an error page when a 500 error is received from sites', async () => {
     server.get(MockApiPaths.Sites, MockApi.get500Error);
     jest.spyOn(router, 'useNavigate').mockImplementation(() => mockedNavigator);
@@ -98,31 +122,8 @@ describe('Begin testing the Sites component', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer, {
-      state: { httpStatus: '500' }
+    expect(mockedNavigator).toHaveBeenCalledWith(ErrorRoutesPaths.error.HttpError, {
+      state: { code: 'ERR_BAD_RESPONSE', message: '500: Internal Server Error' }
     });
-  });
-
-  it('Should call the useNavigate function with the path to an error page when a connection error is received from sites', async () => {
-    server.get(MockApiPaths.Sites, MockApi.getConnectionError);
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockedNavigator);
-
-    render(
-      <Wrapper
-        config={{
-          defaultOptions: {
-            queries: {
-              retry: false
-            }
-          }
-        }}
-      >
-        <Sites />
-      </Wrapper>
-    );
-
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
-
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorConnectionRoutesPaths.ErrConnection);
   });
 });

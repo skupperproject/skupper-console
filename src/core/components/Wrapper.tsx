@@ -1,10 +1,10 @@
 import { ReactElement } from 'react';
 
 import { QueryCache, QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
-import { HashRouter, useNavigate } from 'react-router-dom';
+import { HashRouter, useLocation, useNavigate } from 'react-router-dom';
 
 import { queryClientConfig } from '@config/config';
-import { ErrorRoutesPaths, HttpStatusErrors } from '@pages/shared/Errors/errors.constants';
+import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 
 const QueryClientContext = function ({
   config = {},
@@ -14,38 +14,25 @@ const QueryClientContext = function ({
   children: ReactElement;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const queryClient = new QueryClient({
     ...queryClientConfig,
     ...config,
     queryCache: new QueryCache({
       onError: (error) => {
-        handleError(error as { httpStatus?: HttpStatusErrors });
+        handleError(error as { httpStatus?: string });
       }
     })
   });
 
-  function handleError({
-    httpStatus,
-    message,
-    code
-  }: {
-    httpStatus?: HttpStatusErrors;
-    message?: string;
-    code?: string;
-  }) {
-    const errorStatusType = httpStatus?.charAt(0);
-
-    if (errorStatusType === '5') {
-      navigate(ErrorRoutesPaths.error[HttpStatusErrors.Error5xx], { state: { httpStatus } });
-    }
-
-    if (errorStatusType === '4') {
-      navigate(ErrorRoutesPaths.error[HttpStatusErrors.Error4xx], { state: { httpStatus } });
-    }
-
-    if (!errorStatusType) {
-      navigate(ErrorRoutesPaths.ErrConnection, { state: { message, code } });
+  function handleError({ httpStatus, message, code }: { httpStatus?: string; message?: string; code?: string }) {
+    if (httpStatus) {
+      navigate(ErrorRoutesPaths.error.HttpError, { state: { message, code } });
+    } else if (!httpStatus) {
+      navigate(ErrorRoutesPaths.error.ErrConnection, {
+        state: { pathname: location.pathname, message, code }
+      });
     }
   }
 

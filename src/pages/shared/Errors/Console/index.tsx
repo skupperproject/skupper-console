@@ -14,6 +14,7 @@ import {
 import { brandImg } from '@config/config';
 
 import { Labels } from './Console.enum';
+import { ErrorLabels } from '../Errors.enum';
 
 interface ConsoleProps {
   error: {
@@ -28,7 +29,7 @@ const Console: FC<ConsoleProps> = function ({ error }) {
     <Grid data-testid="sk-js-error-view" className=" pf-u-p-4xl">
       <GridItem span={6} className=" pf-u-p-2xl">
         <TextContent className="pf-u-text-align-center pf-u-mb-4xl">
-          <Text component={TextVariants.h1}>{Labels.ErrorConsoleTitle}</Text>
+          <Text component={TextVariants.h1}>{Labels.ErrorTitle}</Text>
         </TextContent>
         <TextContent>
           <Text component={TextVariants.h3}>{error.message || ''}</Text>
@@ -40,7 +41,7 @@ const Console: FC<ConsoleProps> = function ({ error }) {
       <GridItem span={6} className=" pf-u-p-2xl">
         <Brand src={brandImg} alt="brand" />
         <TextContent>
-          <Text>{Labels.ErrorBrandMessage}</Text>
+          <Text>{ErrorLabels.Description}</Text>
         </TextContent>
       </GridItem>
     </Grid>

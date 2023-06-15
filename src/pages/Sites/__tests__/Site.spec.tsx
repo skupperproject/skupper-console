@@ -7,8 +7,7 @@ import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import sitesData from '@mocks/data/SITES.json';
-import { MockApi, MockApiPaths, loadMockServer } from '@mocks/server';
-import { ErrorServerRoutesPaths } from '@pages/shared/Errors/Server/Server.enum';
+import { loadMockServer } from '@mocks/server';
 
 import Site from '../views/Site';
 
@@ -17,7 +16,6 @@ const processResults = processesData.results as ProcessResponse[];
 
 describe('Site component', () => {
   let server: Server;
-  const mockedNavigator = jest.fn();
 
   beforeEach(() => {
     server = loadMockServer() as Server;
@@ -70,30 +68,5 @@ describe('Site component', () => {
       'href',
       `#/processes/${processResults[0].name}@${processResults[0].identity}`
     );
-  });
-
-  it('Should call the useNavigate function with the path to an error page when a 500 error is received from the site details', async () => {
-    server.get(MockApiPaths.Site, MockApi.get500Error);
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockedNavigator);
-
-    render(
-      <Wrapper
-        config={{
-          defaultOptions: {
-            queries: {
-              retry: false
-            }
-          }
-        }}
-      >
-        <Site />
-      </Wrapper>
-    );
-
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
-
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorServerRoutesPaths.ErrServer, {
-      state: { httpStatus: '500' }
-    });
   });
 });
