@@ -34,14 +34,13 @@ module.exports = {
   setupFiles: [`./${ENV_FILE}`],
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: {
-    //resolve module imports for the D3.js library and other project dependencies during testing, ensuring that the correct files are loaded without errors.
-    '^d3-(.*)$': `${ROOT_PROJECT}/node_modules/d3-$1/dist/d3-$1`,
     ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
   },
   moduleDirectories: ['node_modules'],
   roots: [SRC_PATH],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
-    '^.+\\.svg$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`
+    '^.+\\.svg$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`,
+    '.+\\.(png)$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`
   }
 };

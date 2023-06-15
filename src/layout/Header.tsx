@@ -1,18 +1,11 @@
-import { Brand, PageHeader, PageHeaderTools, Title } from '@patternfly/react-core';
+import { Brand, PageHeader, Title } from '@patternfly/react-core';
 
-import { brandLogo, brandName, skupperVersion } from '@config/config';
+import { brandLogo, brandName } from '@config/config';
 
 const Header = function () {
   return (
     <PageHeader
       className="sk-header"
-      headerTools={
-        <PageHeaderTools>
-          <Title headingLevel="h4" className="pf-u-pl-md">
-            v {skupperVersion}
-          </Title>
-        </PageHeaderTools>
-      }
       logo={
         <>
           <Brand src={brandLogo} alt="logo" heights={{ default: '70px' }}>
