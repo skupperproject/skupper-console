@@ -5,7 +5,14 @@ import App from 'App';
 
 import { loadMockServer } from '../mocks/server';
 
-import '@patternfly/patternfly/patternfly.min.css';
+import '@patternfly/react-core/dist/styles/base.css';
+import '@patternfly/patternfly/components/Button/button.css';
+import '@patternfly/patternfly/components/Toolbar/toolbar.css';
+import '@patternfly/patternfly/components/Nav/nav.css';
+import '@patternfly/patternfly/components/Page/page.css';
+import '@patternfly/patternfly/components/Tooltip/tooltip.css';
+import '@patternfly/patternfly/components/Table/table.css';
+
 import '@patternfly/patternfly/patternfly-addons.css';
 import './App.css';
 
