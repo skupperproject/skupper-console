@@ -24,7 +24,11 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import { ProcessPairsResponse } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
-import { processesConnectedColumns, ProcessesConnectedComponentsTable } from '../Processes.constant';
+import {
+  processesConnectedColumns,
+  ProcessesConnectedComponentsTable,
+  processesHttpConnectedColumns
+} from '../Processes.constant';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -157,7 +161,7 @@ const Process = function () {
               <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                 <SkTable
                   title={ProcessesLabels.HTTPClients}
-                  columns={processesConnectedColumns}
+                  columns={processesHttpConnectedColumns}
                   rows={HTTPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
@@ -177,7 +181,7 @@ const Process = function () {
               <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                 <SkTable
                   title={ProcessesLabels.HTTPServers}
-                  columns={processesConnectedColumns}
+                  columns={processesHttpConnectedColumns}
                   rows={HTTPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}

@@ -96,6 +96,24 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   }
 ];
 
+export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
+  {
+    name: ProcessPairsColumnsNames.Process,
+    prop: 'destinationName' as keyof ProcessPairsResponse,
+    customCellName: 'ProcessLinkCell'
+  },
+  {
+    name: ProcessPairsColumnsNames.Protocol,
+    prop: 'protocol' as keyof ProcessPairsResponse,
+    width: 10
+  },
+  {
+    name: '',
+    customCellName: 'viewDetailsLinkCell',
+    modifier: 'fitContent'
+  }
+];
+
 const oldTcpHiddenColumns: Record<string, { show: boolean }> = {
   [FlowPairsColumnsNames.Client]: {
     show: false
