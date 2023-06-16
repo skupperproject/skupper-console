@@ -43,7 +43,10 @@ export const flowPairsComponentsTable = {
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
     DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime }),
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatBytes })
+    HighlightValueCell({ ...props, format: formatBytes }),
+  //TODO; BE need to fix it
+  HttpStatusCell: (props: { data?: FlowPairsResponse }) =>
+    props.data?.counterFlow?.result || props.data?.forwardFlow?.result || ''
 };
 
 export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
@@ -125,7 +128,8 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairsColumnsNames.StatusCode,
-    prop: 'counterFlow.result' as keyof FlowPairsResponse
+    prop: 'counterFlow.result' as keyof FlowPairsResponse,
+    customCellName: 'HttpStatusCell'
   },
   {
     name: FlowPairsColumnsNames.From,

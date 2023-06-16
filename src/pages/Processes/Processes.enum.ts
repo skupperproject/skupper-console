@@ -61,5 +61,6 @@ export enum ProcessPairsColumnsNames {
   LatencyAvgRx = 'Avg Rx Latency',
   Flows = 'Flows',
   ViewDetails = 'view details',
-  Title = 'Processes Data transfers'
+  Title = 'Processes Data transfers',
+  Protocol = 'Protocol'
 }
