@@ -7,7 +7,6 @@ const { version } = require(path.join(ROOT, '/package.json'));
 
 module.exports = {
   entry: path.join(ROOT, 'src/index.tsx'),
-  devtool: 'source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     plugins: [new TsConfigPathsPlugin({ configFile: path.join(ROOT, 'tsconfig.json') })]

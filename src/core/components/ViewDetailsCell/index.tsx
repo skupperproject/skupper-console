@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 
-import { Button } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +20,7 @@ const ViewDetailCell = function ({ link, value, onClick }: ViewDetailCellProps) 
     );
   }
 
-  return <Button variant="link" onClick={handleOnClick} icon={<SearchIcon />} />;
+  return <SearchIcon onClick={handleOnClick} style={{ cursor: 'pointer' }} />;
 };
 
 export default ViewDetailCell;
