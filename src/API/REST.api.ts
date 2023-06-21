@@ -48,7 +48,6 @@ export const RESTApi = {
   getPrometheusConfig: async (): Promise<CollectorsResponse> => {
     const data = await axiosFetch<ResponseWrapper<CollectorsResponse[]>>(getCollectorsPATH());
 
-    // we receive an array of info because we suppose to use multiple Prometheus servers in the future, but for now we are using just one
     return getApiResults<CollectorsResponse[]>(data)[0];
   },
 
