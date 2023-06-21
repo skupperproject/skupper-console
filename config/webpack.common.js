@@ -42,7 +42,10 @@ module.exports = {
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || '')
     }),
     new HtmlWebpackPlugin({
-      template: path.join(ROOT, '/public/index.html')
+      template: path.join(ROOT, '/public/index.html'),
+      templateParameters: {
+        title: process.env.BRAND_TITLE || 'Web console'
+      }
     })
   ]
 };

@@ -31,7 +31,10 @@ const prodConfig = {
       reportFilename: path.join(ROOT, '/reports/bundle-size.html')
     }),
     new CopyWebpackPlugin({
-      patterns: [path.resolve(ROOT, 'public', 'manifest.json'), path.resolve(ROOT, 'public', 'favicon.ico')]
+      patterns: [
+        path.resolve(ROOT, 'public', 'manifest.json'),
+        process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.ico')
+      ]
     })
   ]
 };
