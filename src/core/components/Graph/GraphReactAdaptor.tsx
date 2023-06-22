@@ -445,10 +445,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
     return (
       <div style={{ height: '100%', position: 'relative' }}>
-        <TransitionPage>
-          <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
-        </TransitionPage>
-
         {topologyGraphRef.current && (
           <GraphMenuControl
             graphInstance={topologyGraphRef.current}
@@ -456,6 +452,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             onFitScreen={handleFitScreen}
           />
         )}
+
+        <TransitionPage>
+          <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
+        </TransitionPage>
       </div>
     );
   }

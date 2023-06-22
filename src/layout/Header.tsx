@@ -12,11 +12,7 @@ const Header = function () {
             <source srcSet={brandLogo} />
           </Brand>
 
-          {brandName && (
-            <Title headingLevel="h1" className="pf-u-pl-md">
-              {brandName}
-            </Title>
-          )}
+          {brandName && <Title headingLevel="h1">{brandName}</Title>}
         </>
       }
       showNavToggle
