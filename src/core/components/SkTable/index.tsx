@@ -217,7 +217,6 @@ const SkTable = function <T>({
       </TableComposable>
       {pagination && paginationTotalRows > paginationPageSize && (
         <Pagination
-          className="pf-u-my-xs"
           perPageComponent="button"
           itemCount={paginationTotalRows}
           perPage={paginationSize}

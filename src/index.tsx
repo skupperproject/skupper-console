@@ -13,7 +13,6 @@ import '@patternfly/patternfly/components/Page/page.css';
 import '@patternfly/patternfly/components/Tooltip/tooltip.css';
 import '@patternfly/patternfly/components/Table/table.css';
 
-import '@patternfly/patternfly/patternfly-addons.css';
 import './App.css';
 
 const rootElement = document.getElementById('app') as HTMLDivElement;

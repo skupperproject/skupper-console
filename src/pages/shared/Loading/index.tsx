@@ -1,20 +1,16 @@
 import { CSSProperties, FC } from 'react';
 
-// eslint-disable-next-line import/no-unresolved
-import { TextContent, Text, TextVariants, Grid, GridItem, Brand } from '@patternfly/react-core';
+import { Bullseye, Title } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
-import { brandImg } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 
 import { Labels } from './Loading.enum';
 
-import './Loading.css';
-
 const PleaseWait = function () {
   return (
-    <div className="pf-u-text-align-center pf-u-mt-3xl">
+    <div>
       <div className="cog-wrapper">
         <CogIcon className="cog cog-main spinning-clockwise" color="var(--pf-global--palette--black-400)" />
         <CogIcon
@@ -26,14 +22,7 @@ const PleaseWait = function () {
           color="var(--pf-global--palette--black-400)"
         />
       </div>
-      <TextContent>
-        <Text component={TextVariants.h3}>{Labels.LoadingTitle}</Text>
-      </TextContent>
-      <TextContent>
-        <Text className="pf-u-mt-xl" component={TextVariants.p}>
-          {Labels.LoadingMessage}
-        </Text>
-      </TextContent>
+      <Title headingLevel="h2">{Labels.LoadingMessage}</Title>
     </div>
   );
 };
@@ -41,7 +30,6 @@ const PleaseWait = function () {
 const floatLoader: CSSProperties = {
   top: 0,
   position: 'absolute',
-  backgroundColor: 'white',
   right: 0,
   width: '100%',
   height: '100%',
@@ -55,25 +43,13 @@ interface LoadingPageProps {
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = true }) {
   return (
     <TransitionPage delay={0.5}>
-      <Grid
-        span={12}
-        className=" pf-u-p-4xl sk-loading-page floating"
+      <Bullseye
+        className="sk-loading-page"
         style={isFLoating ? floatLoader : undefined}
         data-testid={getTestsIds.loadingView()}
       >
-        <GridItem span={6} className=" pf-u-p-2xl">
-          <TextContent className="pf-u-text-align-center">
-            <Text component={TextVariants.h1}>{Labels.LoadingBrandTitle}</Text>
-          </TextContent>
-          <PleaseWait />
-        </GridItem>
-        <GridItem span={6} className=" pf-u-p-2xl">
-          <Brand src={brandImg} alt="brand" />
-          <TextContent>
-            <Text>{Labels.LoadingBrandMessage}</Text>
-          </TextContent>
-        </GridItem>
-      </Grid>
+        <PleaseWait />
+      </Bullseye>
     </TransitionPage>
   );
 };

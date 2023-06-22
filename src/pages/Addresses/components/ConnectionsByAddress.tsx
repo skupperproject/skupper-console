@@ -220,8 +220,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
         {/* connection table*/}
         <GridItem>
-          <Card isRounded className="pf-u-pt-md">
-            <Tabs activeKey={connectionsView} onSelect={handleTabClick} isBox>
+          <Card isRounded>
+            <Tabs activeKey={connectionsView} onSelect={handleTabClick}>
               <Tab
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}

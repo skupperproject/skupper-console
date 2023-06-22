@@ -1,5 +1,5 @@
 import { Graph } from '@antv/g6-pc';
-import { Button, Tooltip } from '@patternfly/react-core';
+import { Button, Toolbar, ToolbarContent, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ExpandIcon, MapMarkerIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -66,47 +66,33 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   };
 
   return (
-    <span style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
-      <Tooltip content={'zoom in'}>
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={handleIncreaseZoom}
-          icon={<SearchPlusIcon />}
-        />
-      </Tooltip>
+    <Toolbar style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+      <ToolbarContent>
+        <ToolbarItem>
+          <Tooltip content={'zoom in'}>
+            <Button isActive={true} variant="primary" onClick={handleIncreaseZoom} icon={<SearchPlusIcon />} />
+          </Tooltip>
+        </ToolbarItem>
 
-      <Tooltip content={'zoom out'}>
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={handleDecreaseZoom}
-          icon={<SearchMinusIcon />}
-        />
-      </Tooltip>
+        <ToolbarItem>
+          <Tooltip content={'zoom out'}>
+            <Button isActive={true} variant="primary" onClick={handleDecreaseZoom} icon={<SearchMinusIcon />} />
+          </Tooltip>
+        </ToolbarItem>
 
-      <Tooltip content={'fit view'}>
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={handleZoomToDefault}
-          icon={<ExpandIcon />}
-        />
-      </Tooltip>
+        <ToolbarItem>
+          <Tooltip content={'fit view'}>
+            <Button isActive={true} variant="primary" onClick={handleZoomToDefault} icon={<ExpandIcon />} />
+          </Tooltip>
+        </ToolbarItem>
 
-      <Tooltip content={'reposition'}>
-        <Button
-          isActive={true}
-          className="pf-u-m-xs"
-          variant="primary"
-          onClick={handleReposition}
-          icon={<MapMarkerIcon />}
-        />
-      </Tooltip>
-    </span>
+        <ToolbarItem>
+          <Tooltip content={'reposition'}>
+            <Button isActive={true} variant="primary" onClick={handleReposition} icon={<MapMarkerIcon />} />
+          </Tooltip>
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
   );
 };
 

@@ -155,8 +155,8 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
 
         {/* requests table*/}
         <GridItem>
-          <Card isRounded className="pf-u-pt-md">
-            <Tabs activeKey={addressView} onSelect={handleTabClick} isBox>
+          <Card isRounded>
+            <Tabs activeKey={addressView} onSelect={handleTabClick}>
               <Tab
                 eventKey={TAB_1_KEY}
                 title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}

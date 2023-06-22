@@ -4,8 +4,6 @@ import { Tooltip } from '@patternfly/react-core';
 
 import skupperProcessSVG from '@assets/skupper.svg';
 
-import './ResourceIcon.css';
-
 export interface ResourceIconProps {
   type: 'site' | 'service' | 'address' | 'process' | 'skupper';
 }
@@ -21,7 +19,7 @@ const RESOURCE_MAP = {
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {
   return (
     <Tooltip content={`resource type: ${type}`}>
-      <span className="pf-u-m-r-xs">
+      <span>
         <span role={`${type}-resource-icon`} className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
           {RESOURCE_MAP[type].symbol || <img src={skupperProcessSVG} alt={'Skupper Icon'} />}
         </span>
