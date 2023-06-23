@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { isPrometheusActive } from '@config/Prometheus.config';
+import { isPrometheusActive } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
@@ -85,7 +85,7 @@ const ProcessGroup = function () {
         </GridItem>
 
         {/* Component Metrics*/}
-        {isPrometheusActive() && (
+        {isPrometheusActive && (
           <GridItem>
             <Metrics
               key={id}

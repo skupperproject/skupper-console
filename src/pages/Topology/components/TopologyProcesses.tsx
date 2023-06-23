@@ -15,8 +15,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
-import { UPDATE_INTERVAL } from '@config/config';
-import { isPrometheusActive } from '@config/Prometheus.config';
+import { isPrometheusActive, UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
@@ -123,7 +122,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetByteRateByProcessPairs],
     () => PrometheusApi.fetchAllProcessPairsByteRates(),
     {
-      enabled: isPrometheusActive() && showLinkLabel,
+      enabled: isPrometheusActive && showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -132,7 +131,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetLatencyByProcessPairs],
     () => PrometheusApi.fetchAllProcessPairsLatencies(),
     {
-      enabled: isPrometheusActive() && showLinkLabel,
+      enabled: isPrometheusActive && showLinkLabel,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -239,7 +238,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       sites &&
       externalProcesses &&
       remoteProcesses &&
-      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive())
+      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive)
     ) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
@@ -289,7 +288,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       sites &&
       externalProcesses &&
       remoteProcesses &&
-      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive())
+      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive)
     ) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
@@ -308,7 +307,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           cursor: 'pointer'
         }));
 
-        if (isPrometheusActive() && showLinkLabel) {
+        if (isPrometheusActive && showLinkLabel) {
           processesLinksByAddress = TopologyController.addMetricsToLinks(
             processesLinksByAddress,
             byteRateByProcessPairs,
@@ -374,7 +373,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
               {getOptions()}
             </Select>
           </ToolbarItem>
-          {isPrometheusActive() && (
+          {isPrometheusActive && (
             <>
               <ToolbarItem>
                 <Checkbox

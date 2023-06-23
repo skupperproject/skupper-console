@@ -6,8 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { SMALL_PAGINATION_SIZE } from '@config/config';
-import { isPrometheusActive } from '@config/Prometheus.config';
+import { isPrometheusActive, SMALL_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -239,7 +238,7 @@ const Process = function () {
           </Flex>
         </GridItem>
         {/* Process Metrics - key reset the component(state) when we click on a link from the server or client table*/}
-        {isPrometheusActive() && (
+        {isPrometheusActive && (
           <GridItem>
             <Metrics
               key={id}

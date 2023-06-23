@@ -3,8 +3,6 @@ import { PROMETHEUS_URL } from './config';
 
 let PROMETHEUS_START_TIME: number = new Date().getTime();
 
-// TODO: not remove yet.
-export const isPrometheusActive = () => true;
 // Override the default prometheus path with the value from the skupper flow collector api
 export const setPrometheusStartTime = (time: number) => (PROMETHEUS_START_TIME = time);
 export const gePrometheusStartTime = () => PROMETHEUS_START_TIME;

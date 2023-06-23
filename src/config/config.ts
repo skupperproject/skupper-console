@@ -35,6 +35,7 @@ export const queryClientConfig = {
   }
 };
 
+export const isPrometheusActive = process.env.DISABLE_METRICS === 'true' ? false : true;
 /** General config: contains various global settings and constants */
 export const UPDATE_INTERVAL = 7 * 1000; // Time in milliseconds to request updated data from the backend
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out

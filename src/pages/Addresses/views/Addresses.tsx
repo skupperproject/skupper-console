@@ -3,8 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE } from '@config/config';
-import { isPrometheusActive } from '@config/Prometheus.config';
+import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -22,7 +21,7 @@ const Addresses = function () {
     [QueriesAddresses.GetPrometheusActiveFlows],
     () => PrometheusApi.fetchActiveFlowsByAddress(),
     {
-      enabled: isPrometheusActive()
+      enabled: isPrometheusActive
     }
   );
 
@@ -30,11 +29,11 @@ const Addresses = function () {
     [QueriesAddresses.GetPrometheusTotalFlows],
     () => PrometheusApi.fetchFlowsByAddress(),
     {
-      enabled: isPrometheusActive()
+      enabled: isPrometheusActive
     }
   );
 
-  if (isLoading || ((isLoadingTcpActiveFlows || isLoadingHttpTotalFlows) && isPrometheusActive())) {
+  if (isLoading || ((isLoadingTcpActiveFlows || isLoadingHttpTotalFlows) && isPrometheusActive)) {
     return <LoadingPage />;
   }
 

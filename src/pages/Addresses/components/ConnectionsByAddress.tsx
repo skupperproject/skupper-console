@@ -7,8 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { isPrometheusActive } from '@config/Prometheus.config';
+import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
@@ -129,7 +128,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
     {
       refetchInterval: UPDATE_INTERVAL,
-      enabled: isPrometheusActive() && connectionsView === TAB_1_KEY
+      enabled: isPrometheusActive && connectionsView === TAB_1_KEY
     }
   );
 
@@ -180,7 +179,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const serverNamesIds = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.max(acc, process.startTime), 0);
 
-  if (isPrometheusActive() && byteRates) {
+  if (isPrometheusActive && byteRates) {
     const byteRatesMap = byteRates.reduce((acc, byteRate) => {
       acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);
 
@@ -279,7 +278,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         </GridItem>
 
         {/* Process Metrics*/}
-        {isPrometheusActive() && (
+        {isPrometheusActive && (
           <GridItem>
             <Metrics
               key={addressId}
