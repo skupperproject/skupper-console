@@ -38,12 +38,12 @@ make sure you install them with `yarn` and commit the `yarn.lock` file.
 To get started quickly, follow the steps below:
 
 1. Install the required dependencies by running `yarn install`.
-2. Start the application by running `yarn start`.
+2. Start the application by running `DISABLE_METRICS=true yarn start`.
 3. Open <http://localhost:3000> in your web browser.
 
 _Note_:
 
-Running `yarn start` uses the data in the mock folder, which means that no metrics data or charts will be available.
+Running `DISABLE_METRICS=true yarn start` uses the data in the mock folder, which means that no metrics data or charts will be available.
 
 ### Run the console with demo routes
 

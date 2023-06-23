@@ -6,8 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { SortDirection } from '@API/REST.enum';
-import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { isPrometheusActive } from '@config/Prometheus.config';
+import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
@@ -187,7 +186,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         </GridItem>
 
         {/* Process Metrics*/}
-        {isPrometheusActive() && (
+        {isPrometheusActive && (
           <GridItem>
             <Metrics
               key={addressId}
