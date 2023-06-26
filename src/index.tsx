@@ -3,8 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { Wrapper } from '@core/components/Wrapper';
 import App from 'App';
 
-import { loadMockServer } from '../mocks/server';
-
 import '@patternfly/react-core/dist/styles/base.css';
 import '@patternfly/patternfly/components/Button/button.css';
 import '@patternfly/patternfly/components/Toolbar/toolbar.css';
@@ -25,5 +23,7 @@ root.render(
 );
 
 if (!process.env.COLLECTOR_URL && (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)) {
-  loadMockServer();
+  const mockServer = require('../mocks/server');
+
+  mockServer.loadMockServer();
 }

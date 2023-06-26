@@ -36,7 +36,30 @@ const prodConfig = {
         process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.ico')
       ]
     })
-  ]
+  ],
+  optimization: {
+    splitChunks: {
+      name: (module, chunks, cacheGroupKey) => {
+        const allChunksNames = chunks.map((chunk) => chunk.name).join('-');
+        return allChunksNames;
+      },
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          // cacheGroupKey here is `commons` as the key of the cacheGroup
+          name(module, chunks, cacheGroupKey) {
+            const moduleFileName = module
+              .identifier()
+              .split('/')
+              .reduceRight((item) => item);
+            const allChunksNames = chunks.map((item) => item.name).join('~');
+            return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+          },
+          chunks: 'all'
+        }
+      }
+    }
+  }
 };
 
 module.exports = merge(commonConfig, prodConfig);
