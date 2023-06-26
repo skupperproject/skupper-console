@@ -221,7 +221,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   }, []);
 
   const getOptions = useCallback(() => {
-    const options = addresses?.map(({ name, identity }, index) => (
+    if (!addresses?.results) {
+      return [];
+    }
+
+    const options = addresses.results.map(({ name, identity }, index) => (
       <SelectOption key={index + 1} value={identity}>
         {name}
       </SelectOption>
@@ -230,7 +234,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     const optionsWithDefault = [<SelectOption key={0} value={Labels.ShowAll} isPlaceholder />, ...(options || [])];
 
     return optionsWithDefault;
-  }, [addresses]);
+  }, [addresses?.results]);
 
   // This effect is triggered when no address is currently selected
   useEffect(() => {

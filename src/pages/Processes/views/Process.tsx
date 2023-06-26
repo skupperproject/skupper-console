@@ -38,13 +38,11 @@ const Process = function () {
   const { id: processId } = getIdAndNameFromUrlParams(id);
 
   const processesPairsTxQueryParams = {
-    sourceId: processId,
-    endTime: 0
+    sourceId: processId
   };
 
   const processesPairsRxQueryParams = {
-    destinationId: processId,
-    endTime: 0
+    destinationId: processId
   };
 
   const { data: process, isLoading: isLoadingProcess } = useQuery([QueriesProcesses.GetProcess, processId], () =>

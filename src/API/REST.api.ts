@@ -150,12 +150,12 @@ export const RESTApi = {
   },
 
   // PROCESS GROUPS APIs
-  fetchProcessGroups: async (options?: RequestOptions): Promise<ProcessGroupResponse[]> => {
+  fetchProcessGroups: async (options?: RequestOptions): Promise<ResponseWrapper<ProcessGroupResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<ProcessGroupResponse[]>>(getProcessGroupsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getApiResults<ProcessGroupResponse[]>(data);
+    return data;
   },
 
   fetchProcessGroup: async (id: string, options?: RequestOptions): Promise<ProcessGroupResponse> => {
@@ -184,12 +184,12 @@ export const RESTApi = {
   },
 
   // ADDRESSES APIs
-  fetchAddresses: async (options?: RequestOptions): Promise<AddressResponse[]> => {
+  fetchAddresses: async (options?: RequestOptions): Promise<ResponseWrapper<AddressResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<AddressResponse[]>>(getAddressesPath(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getApiResults(data);
+    return data;
   },
 
   fetchFlowPairsByAddress: async (

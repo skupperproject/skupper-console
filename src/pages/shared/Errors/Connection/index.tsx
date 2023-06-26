@@ -16,8 +16,7 @@ const ErrorConnection = function () {
   return (
     <TextContent>
       <Title headingLevel="h1">
-        {Labels.ErrorTitle}
-        {title}
+        {Labels.ErrorTitle}: {title}
       </Title>
 
       <Divider />

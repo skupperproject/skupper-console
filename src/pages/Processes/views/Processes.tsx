@@ -15,18 +15,17 @@ import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
 const initPaginatedProcessesQueryParams = {
-  limit: BIG_PAGINATION_SIZE,
-  endTime: 0
+  limit: BIG_PAGINATION_SIZE
 };
 
 const Processes = function () {
-  const [ProcessesPaginatedQueryParams, setProcessesPaginatedQueryParams] = useState<RequestOptions>(
+  const [processesPaginatedQueryParams, setProcessesPaginatedQueryParams] = useState<RequestOptions>(
     initPaginatedProcessesQueryParams
   );
 
   const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
-    [QueriesProcesses.GetProcessesPaginated, ProcessesPaginatedQueryParams],
-    () => RESTApi.fetchProcesses(ProcessesPaginatedQueryParams),
+    [QueriesProcesses.GetProcessesPaginated, processesPaginatedQueryParams],
+    () => RESTApi.fetchProcesses(processesPaginatedQueryParams),
     {
       keepPreviousData: true
     }
@@ -55,9 +54,9 @@ const Processes = function () {
           <SkTable
             columns={processesTableColumns}
             rows={processes}
-            paginationTotalRows={processesCount}
             customCells={ProcessesComponentsTable}
             pagination={true}
+            paginationTotalRows={processesCount}
             paginationPageSize={BIG_PAGINATION_SIZE}
             onGetFilters={handleGetFilters}
           />
