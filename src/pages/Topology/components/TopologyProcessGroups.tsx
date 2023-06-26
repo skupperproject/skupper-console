@@ -75,7 +75,10 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     return null;
   }
 
-  const nodes = TopologyController.convertProcessGroupsToNodes([...processGroups, ...remoteProcessGroups]);
+  const nodes = TopologyController.convertProcessGroupsToNodes([
+    ...processGroups.results,
+    ...remoteProcessGroups.results
+  ]);
   const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
 
   return (

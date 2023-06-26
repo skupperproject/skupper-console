@@ -1,8 +1,11 @@
+import { useCallback, useState } from 'react';
+
 import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
+import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
@@ -14,8 +17,22 @@ import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesAddresses } from '../services/services.enum';
 
+const initPaginatedOldConnectionsQueryParams: RequestOptions = {
+  limit: BIG_PAGINATION_SIZE
+};
+
 const Addresses = function () {
-  const { data: addresses, isLoading } = useQuery([QueriesAddresses.GetAddresses], () => RESTApi.fetchAddresses());
+  const [addressesQueryParamsPaginated, setAddressesQueryParamsPaginated] = useState<RequestOptions>(
+    initPaginatedOldConnectionsQueryParams
+  );
+
+  const { data: addressesData, isLoading } = useQuery(
+    [QueriesAddresses.GetAddresses, { ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }],
+    () => RESTApi.fetchAddresses({ ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }),
+    {
+      keepPreviousData: true
+    }
+  );
 
   const { data: tcpActiveFlows, isLoading: isLoadingTcpActiveFlows } = useQuery(
     [QueriesAddresses.GetPrometheusActiveFlows],
@@ -33,13 +50,20 @@ const Addresses = function () {
     }
   );
 
+  const handleGetFiltersAddressses = useCallback((params: RequestOptions) => {
+    setAddressesQueryParamsPaginated(params);
+  }, []);
+
   if (isLoading || ((isLoadingTcpActiveFlows || isLoadingHttpTotalFlows) && isPrometheusActive)) {
     return <LoadingPage />;
   }
 
-  if (!addresses) {
+  if (!addressesData) {
     return null;
   }
+
+  const addresses = addressesData?.results || [];
+  const addressesRowsCount = addressesData?.timeRangeCount;
 
   let addressExtended = addresses;
   let columnsExtend = addressesColumns;
@@ -66,6 +90,8 @@ const Addresses = function () {
                 columns={columnsExtend}
                 pagination={true}
                 paginationPageSize={BIG_PAGINATION_SIZE}
+                onGetFilters={handleGetFiltersAddressses}
+                paginationTotalRows={addressesRowsCount}
                 customCells={customAddressCells}
               />
             </Card>
