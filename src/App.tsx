@@ -1,12 +1,12 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 
 import { Page } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { setPrometheusStartTime } from '@config/Prometheus.config';
+import { setCollectorStartTime } from '@config/config';
 import AppMenu from '@core/components/AppMenu/AppMenu';
 import AppContent from '@layout/AppContent';
 import Header from '@layout/Header';
@@ -15,24 +15,13 @@ import Console from '@pages/shared/Errors/Console';
 import { TopologyRoutesPaths } from '@pages/Topology/Topology.enum';
 import { routes } from 'routes';
 
-import { REDIRECT_TO_PATH } from './config/config';
-
-const query = 'app-getPrometheusURL';
-
 const App = function () {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { data } = useQuery([query], () => RESTApi.getPrometheusConfig(), {});
+  const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors());
 
-  useEffect(() => {
-    if (pathname === '/') {
-      navigate(REDIRECT_TO_PATH);
-    }
-  }, [pathname, navigate]);
-
-  if (data) {
-    setPrometheusStartTime(data.startTime / 1000);
+  if (collector) {
+    setCollectorStartTime(collector.startTime / 1000);
   }
 
   return (

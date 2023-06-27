@@ -6,7 +6,7 @@ import {
   extractPrometheusValuesAndLabels
 } from '@API/Prometheus.utils';
 import { AvailableProtocols } from '@API/REST.enum';
-import { defaultTimeInterval, timeIntervalMap } from '@config/Prometheus.config';
+import { defaultTimeInterval, timeIntervalMap } from '@config/prometheus';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 

@@ -15,7 +15,8 @@ import { ClockIcon, ClusterIcon, SyncIcon } from '@patternfly/react-icons';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { AvailableProtocols } from '@API/REST.enum';
-import { gePrometheusStartTime, timeIntervalMap } from '@config/Prometheus.config';
+import { geCollectorStartTime } from '@config/config';
+import { timeIntervalMap } from '@config/prometheus';
 
 import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constant';
 import { MetricsLabels } from './Metrics.enum';
@@ -39,7 +40,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     const timeIntervalMapWindow = useMemo(
       () =>
         Object.values(timeIntervalMap).filter(
-          ({ seconds }) => new Date().getTime() - seconds * 1000 > Math.max(gePrometheusStartTime(), startTime / 1000)
+          ({ seconds }) => new Date().getTime() - seconds * 1000 > Math.max(geCollectorStartTime(), startTime / 1000)
         ),
       [startTime]
     );

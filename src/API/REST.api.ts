@@ -40,13 +40,13 @@ import {
   getProcessGroupPairsPATH,
   getProcessPairsPATH,
   getProcessGroupsPATH,
-  getCollectorsPATH
+  getCollectors
 } from './REST.paths';
 import { mapOptionsToQueryParams, getApiResults } from './REST.utils';
 
 export const RESTApi = {
-  getPrometheusConfig: async (): Promise<CollectorsResponse> => {
-    const data = await axiosFetch<ResponseWrapper<CollectorsResponse[]>>(getCollectorsPATH());
+  fetchCollectors: async (): Promise<CollectorsResponse> => {
+    const data = await axiosFetch<ResponseWrapper<CollectorsResponse[]>>(getCollectors());
 
     return getApiResults<CollectorsResponse[]>(data)[0];
   },

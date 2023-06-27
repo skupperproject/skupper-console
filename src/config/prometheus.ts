@@ -1,13 +1,4 @@
 import { IntervalTimeMap } from '@API/Prometheus.interfaces';
-import { PROMETHEUS_URL } from './config';
-
-let PROMETHEUS_START_TIME: number = new Date().getTime();
-
-// Override the default prometheus path with the value from the skupper flow collector api
-export const setPrometheusStartTime = (time: number) => (PROMETHEUS_START_TIME = time);
-export const gePrometheusStartTime = () => PROMETHEUS_START_TIME;
-export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
-  queryType === 'range' ? `${PROMETHEUS_URL}/rangequery` : `${PROMETHEUS_URL}/query`;
 
 export const timeIntervalMap: IntervalTimeMap = {
   oneMinute: { value: '1m', seconds: 60, step: '5s', key: 'oneMinute', label: 'Last min.' },
