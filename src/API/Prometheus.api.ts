@@ -1,4 +1,4 @@
-import { gePrometheusQueryPATH } from '@config/Prometheus.config';
+import { PROMETHEUS_URL } from '@config/config';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import { axiosFetch } from './apiMiddleware';
@@ -290,3 +290,6 @@ export const PrometheusApi = {
     return result;
   }
 };
+
+export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
+  queryType === 'range' ? `${PROMETHEUS_URL}/rangequery` : `${PROMETHEUS_URL}/query`;

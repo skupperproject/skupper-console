@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { QueryCache, QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter, useLocation, useNavigate } from 'react-router-dom';
 
-import { queryClientConfig } from '@config/config';
+import { queryClientConfig } from '@config/reactQuery';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
 
 const QueryClientContext = function ({
