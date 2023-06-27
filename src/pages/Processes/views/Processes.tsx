@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
+import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
@@ -48,7 +49,7 @@ const Processes = function () {
 
   return (
     <TransitionPage>
-      <>
+      <div data-testid={getTestsIds.processesView()}>
         <SkTitle title={ProcessesLabels.Section} description={ProcessesLabels.Description} />
         <div>
           <SkTable
@@ -61,7 +62,7 @@ const Processes = function () {
             onGetFilters={handleGetFilters}
           />
         </div>
-      </>
+      </div>
     </TransitionPage>
   );
 };
