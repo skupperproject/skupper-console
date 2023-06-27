@@ -10,7 +10,8 @@
       "sourceId": "process-op",
       "sourceName": "process op",
       "destinationId": "process-2-xy",
-      "destinationName": "process 2-xy"
+      "destinationName": "process 2-xy",
+      "protocol": "http2"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -22,7 +23,8 @@
       "sourceId": "process-op",
       "sourceName": "process op",
       "destinationId": "process-2-tr",
-      "destinationName": "process 2-tr"
+      "destinationName": "process 2-tr",
+      "protocol": "http2"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -34,7 +36,8 @@
       "sourceId": "process-za",
       "sourceName": "process za",
       "destinationId": "process-2-tr",
-      "destinationName": "process 2-tr"
+      "destinationName": "process 2-tr",
+      "protocol": "http2"
     }
   ],
   "queryParams": {

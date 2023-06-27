@@ -48,10 +48,6 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
     RESTApi.fetchAddressesByProcess(identity)
   );
 
-  if (!addresses) {
-    return null;
-  }
-
   return (
     <Card isFullHeight isRounded>
       <CardTitle>
@@ -118,7 +114,7 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
               </DescriptionListGroup>
             </GridItem>
 
-            {!!addresses.length && (
+            {!!addresses?.length && (
               <GridItem span={6}>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{ProcessesLabels.Addresses}</DescriptionListTerm>

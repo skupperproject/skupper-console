@@ -214,8 +214,8 @@ export function loadMockServer() {
         }
 
         const results = processPairs.results.filter(
-          ({ sourceId, endTime }: ProcessPairsResponse) =>
-            sourceId === queryParams.sourceId && endTime === Number(queryParams.endTime)
+          ({ sourceId, destinationId }: ProcessPairsResponse) =>
+            sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
         );
 
         return { ...processPairs, results };
