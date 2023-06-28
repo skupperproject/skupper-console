@@ -50,7 +50,7 @@ Running `DISABLE_METRICS=true yarn start` uses the data in the mock folder, whic
 To run the console with demo routes, execute the following command:
 
 ```bash
-COLLECTOR_URL=https://skupper-grpc-private.vabar-vpc-cluster-153f1de160110098c1928a6c05e19444-0000.eu-gb.containers.appdomain.cloud yarn start
+COLLECTOR_URL=https://skupper-valerio-boutique-dallas.skupper-2-153f1de160110098c1928a6c05e19444-0000.us-south.containers.appdomain.cloud yarn start
 ```
 
 These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
