@@ -11,6 +11,18 @@
       "sourceName": "component 1",
       "destinationId": "group-2",
       "destinationName": "component 2"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "group-3-to-group-1",
+      "startTime": 1674202485242354,
+      "endTime": 0,
+      "pairType": "PROCESS_GROUP",
+      "recordCount": 2,
+      "sourceId": "group-3",
+      "sourceName": "component 3",
+      "destinationId": "group-1",
+      "destinationName": "component 1"
     }
   ],
   "queryParams": {
