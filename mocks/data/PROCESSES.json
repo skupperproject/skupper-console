@@ -78,11 +78,11 @@
     {
       "recType": "PROCESS",
       "identity": "process-nb",
-      "parent": "site-5",
+      "parent": "site-3",
       "startTime": 1674048729000000,
       "endTime": 0,
       "name": "process nb",
-      "parentName": "site 5",
+      "parentName": "site 3",
       "imageName": "gcr.io/google-samples/microservices-demo/process-nb:v0.3.0",
       "groupName": "component 3",
       "groupIdentity": "group-3",

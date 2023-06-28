@@ -38,6 +38,45 @@
       "destinationId": "process-2-tr",
       "destinationName": "process 2-tr",
       "protocol": "http2"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "process-za-to-process-op",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "pairType": "PROCESS",
+      "recordCount": 2,
+      "sourceId": "process-za",
+      "sourceName": "process za",
+      "destinationId": "process-op",
+      "destinationName": "process-op",
+      "protocol": "tcp"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "process-2-xy-to-process-za",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "pairType": "PROCESS",
+      "recordCount": 2,
+      "sourceId": "process-2-xy",
+      "sourceName": "process 2-xy",
+      "destinationId": "process-za",
+      "destinationName": "process za",
+      "protocol": "tcp"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "process-nb-to-process-za",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "pairType": "PROCESS",
+      "recordCount": 2,
+      "sourceId": "process-nb",
+      "sourceName": "process nb",
+      "destinationId": "process-za",
+      "destinationName": "process za",
+      "protocol": "http1"
     }
   ],
   "queryParams": {
