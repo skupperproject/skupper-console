@@ -1,3 +1,5 @@
+import { AvailableProtocols } from '@API/REST.enum';
+
 import { QueryMetricsParams } from './services/services.interfaces';
 
 interface FilterOptionProps {
@@ -29,6 +31,7 @@ export interface FilterProps extends Omit<SelectedFilters, 'processIdSource'> {
 export interface MetricFilterProps {
   sourceProcesses?: { destinationName: string }[];
   processesConnected?: { destinationName: string }[];
+  availableProtocols?: AvailableProtocols[];
   customFilterOptions?: FilterOptionProps;
   startTime?: number;
   isRefetching?: boolean;

@@ -26,6 +26,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
   ({
     sourceProcesses,
     processesConnected,
+    availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
     customFilterOptions,
     initialFilters,
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
@@ -153,11 +154,8 @@ const MetricFilters: FC<MetricFilterProps> = memo(
 
     // protocol select options
     const optionsProtocolsWithDefault = useMemo(
-      () =>
-        [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp].map((option, index) => (
-          <SelectOption key={index} value={option} />
-        )),
-      []
+      () => availableProtocols.map((option, index) => <SelectOption key={index} value={option} />),
+      [availableProtocols]
     );
 
     // time interval select options
