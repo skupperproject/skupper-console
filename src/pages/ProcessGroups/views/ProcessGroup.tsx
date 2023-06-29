@@ -58,7 +58,7 @@ const ProcessGroup = function () {
   const processResults = processes.results;
   const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
   const serverNames = processResults.map(({ name: processName }) => processName).join('|');
-  const startTime = processResults.reduce((acc, process) => Math.max(acc, process.startTime), 0);
+  const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   return (
     <TransitionPage>
