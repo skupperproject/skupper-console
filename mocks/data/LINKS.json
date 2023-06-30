@@ -67,18 +67,7 @@
       "direction": "outgoing"
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202313097192,
-    "timeRangeEnd": 1674203213097192,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203213097194,
-  "elapsed": 65,
   "count": 6,
   "timeRangeCount": 6,
   "totalCount": 6

@@ -23,18 +23,7 @@
       "currentFlows": 0
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202292177172,
-    "timeRangeEnd": 1674203192177172,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203192177175,
-  "elapsed": 770,
   "count": 2,
   "timeRangeCount": 2,
   "totalCount": 2

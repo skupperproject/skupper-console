@@ -79,19 +79,8 @@
       "protocol": "http1"
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202548995043,
-    "timeRangeEnd": 1674203448995043,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203448995047,
-  "elapsed": 412,
-  "count": 3,
-  "timeRangeCount": 3,
-  "totalCount": 3
+  "count": 6,
+  "timeRangeCount": 6,
+  "totalCount": 6
 }

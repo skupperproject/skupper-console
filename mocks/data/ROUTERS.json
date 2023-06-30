@@ -40,18 +40,7 @@
       "buildVersion": "UNKNOWN"
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202218894130,
-    "timeRangeEnd": 1674203118894130,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203118894133,
-  "elapsed": 64,
   "count": 3,
   "timeRangeCount": 3,
   "totalCount": 3

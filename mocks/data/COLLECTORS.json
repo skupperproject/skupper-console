@@ -11,18 +11,7 @@
       "PrometheusPassword": ""
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1679519682125413,
-    "timeRangeEnd": 1679520582125413,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1679520582125418,
-  "elapsed": 24,
   "count": 1,
   "timeRangeCount": 1,
   "totalCount": 1
