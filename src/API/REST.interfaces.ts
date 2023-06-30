@@ -30,13 +30,10 @@ export interface HTTPError extends AxiosError {
 
 export type ResponseWrapper<T> = {
   results: T; // Type based on the Response interface
-  totalCount: number;
+  status: string;
   count: number;
   timeRangeCount: number;
-  status: string;
-  timestamp: number;
-  elapsed: number;
-  queryParams: RequestOptions;
+  totalCount: number;
 };
 
 /* Response Interfaces */

@@ -25,18 +25,7 @@
       "processGroupRole": "external"
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202366943924,
-    "timeRangeEnd": 1674203266943924,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203266943928,
-  "elapsed": 511,
   "count": 3,
   "timeRangeCount": 3,
   "totalCount": 3

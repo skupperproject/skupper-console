@@ -31,19 +31,8 @@
       "processRole": "external"
     }
   ],
-  "queryParams": {
-    "offset": 0,
-    "limit": 10,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202685914945,
-    "timeRangeEnd": 1674203585914945,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203585914961,
-  "elapsed": 97,
-  "count": 1,
-  "timeRangeCount": 1,
-  "totalCount": 1
+  "count": 2,
+  "timeRangeCount": 2,
+  "totalCount": 2
 }

@@ -151,18 +151,7 @@
       "processAggregateId": "process-op-to-process-2-xy"
     }
   ],
-  "queryParams": {
-    "offset": -1,
-    "limit": -1,
-    "sortBy": "identity.asc",
-    "filter": "",
-    "timeRangeStart": 1674202689930069,
-    "timeRangeEnd": 1674203589930069,
-    "timeRangeOperation": 0
-  },
   "status": "",
-  "timestamp": 1674203589930073,
-  "elapsed": 149,
   "count": 3,
   "timeRangeCount": 3,
   "totalCount": 3
