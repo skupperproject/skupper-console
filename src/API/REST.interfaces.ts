@@ -49,6 +49,7 @@ interface BaseResponse {
 export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;
+  siteVersion: string;
 }
 
 export interface ProcessGroupResponse extends BaseResponse {

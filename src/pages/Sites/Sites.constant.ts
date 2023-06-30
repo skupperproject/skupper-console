@@ -1,15 +1,16 @@
 import { SiteResponse } from '@API/REST.interfaces';
+import { SKColumn } from '@core/components/SkTable/SkTable.interface';
 
-import { SiteLabels, SitesRoutesPaths, SitesTableColumns } from './Sites.enum';
+import { Labels, SitesRoutesPaths } from './Sites.enum';
 
 export const SitesPaths = {
   path: SitesRoutesPaths.Sites,
-  name: SiteLabels.Section
+  name: Labels.Section
 };
 
-export const siteColumns = [
+export const siteColumns: SKColumn<SiteResponse>[] = [
   {
-    name: SitesTableColumns.Name,
+    name: Labels.Name,
     prop: 'name' as keyof SiteResponse,
     customCellName: 'linkCell'
   }
