@@ -12,6 +12,6 @@ export enum Labels {
   Name = 'Name',
   Namespace = 'Namespace',
   GoToTopology = 'Go to the Topology view',
-  SiteVersion = 'Site version',
+  SiteVersion = 'Version',
   Created = 'Created'
 }

@@ -4,11 +4,7 @@
       "recType": "COLLECTOR",
       "identity": "8fbf901a-28b9-4b9d-a2ba-55affed5ee2c",
       "startTime": 1679429189022217,
-      "endTime": 0,
-      "PrometheusHost": "",
-      "PrometheusAuthMethod": "",
-      "PrometheusUser": "",
-      "PrometheusPassword": ""
+      "endTime": 0
     }
   ],
   "status": "",
