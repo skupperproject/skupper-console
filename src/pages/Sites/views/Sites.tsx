@@ -13,7 +13,7 @@ import { SiteResponse } from 'API/REST.interfaces';
 
 import { QueriesSites } from '../services/services.enum';
 import { siteColumns } from '../Sites.constant';
-import { SiteLabels, SitesRoutesPaths } from '../Sites.enum';
+import { Labels, SitesRoutesPaths } from '../Sites.enum';
 
 const Sites = function () {
   const { data: sites, isLoading } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
@@ -29,7 +29,7 @@ const Sites = function () {
   return (
     <TransitionPage>
       <div data-testid={getTestsIds.sitesView()}>
-        <SkTitle title={SiteLabels.Section} description={SiteLabels.Description} />
+        <SkTitle title={Labels.Section} description={Labels.Description} />
         <SkTable
           columns={siteColumns}
           rows={sites}

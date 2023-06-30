@@ -30,7 +30,7 @@ const shape = {
 
 export const TopologyController = {
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
-    entities.map(({ identity, name: label }, index) => {
+    entities.map(({ identity, name, siteVersion }, index) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const color = getColor(index);
       const img = siteSVG;
@@ -42,7 +42,7 @@ export const TopologyController = {
         shadowColor: color
       };
 
-      return convertEntityToNode({ id: identity, label, x, y, img, nodeConfig: { style } });
+      return convertEntityToNode({ id: identity, label: `${name} (${siteVersion})`, x, y, img, nodeConfig: { style } });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
@@ -152,6 +152,7 @@ export const TopologyController = {
       ])
     );
   },
+
   addMetricsToLinks: (
     links: GraphEdge[],
     byteRateByProcessPairs?: PrometheusApiSingleResult[],

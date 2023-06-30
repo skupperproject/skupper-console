@@ -48,7 +48,8 @@ for (let i = 0; i < ITEMS_TEST; i++) {
     startTime: 1674048705000000,
     endTime: 0,
     name: `site ${i}`,
-    nameSpace: `config-grpc-site-${i}-test`
+    nameSpace: `config-grpc-site-${i}-test`,
+    siteVersion: 'x.x.x'
   });
 }
 

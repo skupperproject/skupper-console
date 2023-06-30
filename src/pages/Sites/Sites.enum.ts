@@ -2,7 +2,7 @@ export enum SitesRoutesPaths {
   Sites = '/sites'
 }
 
-export enum SiteLabels {
+export enum Labels {
   Section = 'Sites',
   Description = 'Set of applications running under the same geographical area',
   Details = 'Details',
@@ -11,13 +11,7 @@ export enum SiteLabels {
   Processes = 'Processes',
   Name = 'Name',
   Namespace = 'Namespace',
-  GoToTopology = 'Go to the Topology view'
-}
-
-export enum SitesTableColumns {
-  Name = 'Name',
-  NameSpace = 'Namespace',
-  NumHosts = 'Hosts',
-  NumProcesses = 'Processes',
-  NumSitesLinked = 'Links'
+  GoToTopology = 'Go to the Topology view',
+  SiteVersion = 'Site version',
+  Created = 'Created'
 }

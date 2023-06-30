@@ -29,7 +29,7 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 
 import SitesController from '../services';
 import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
+import { SitesRoutesPaths, Labels } from '../Sites.enum';
 
 const processQueryParams = { endTime: 0 };
 
@@ -75,7 +75,7 @@ const Site = function () {
     return null;
   }
 
-  const { name, nameSpace } = site;
+  const { name, nameSpace, siteVersion } = site;
   const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
   const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
 
@@ -95,13 +95,15 @@ const Site = function () {
         <GridItem>
           <Card isFullHeight isRounded>
             <CardTitle>
-              <Title headingLevel="h2">{SiteLabels.Details}</Title>
+              <Title headingLevel="h2">{Labels.Details}</Title>
             </CardTitle>
             <CardBody>
               <DescriptionList>
                 <DescriptionListGroup>
-                  <DescriptionListTerm>{SiteLabels.Namespace}</DescriptionListTerm>
+                  <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
                   <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
+                  <DescriptionListTerm>{Labels.SiteVersion}</DescriptionListTerm>
+                  <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
                 </DescriptionListGroup>
               </DescriptionList>
             </CardBody>
@@ -111,7 +113,7 @@ const Site = function () {
         <GridItem span={4}>
           <Card isFullHeight isRounded>
             <CardTitle>
-              <Title headingLevel="h2">{SiteLabels.Links}</Title>
+              <Title headingLevel="h2">{Labels.Links}</Title>
             </CardTitle>
             <CardBody>
               {(!!linkedSites.length && (
@@ -133,7 +135,7 @@ const Site = function () {
         <GridItem span={4}>
           <Card isFullHeight isRounded>
             <CardTitle>
-              <Title headingLevel="h2">{SiteLabels.Hosts}</Title>
+              <Title headingLevel="h2">{Labels.Hosts}</Title>
             </CardTitle>
             <CardBody>
               {(!!hosts.length && (
@@ -150,7 +152,7 @@ const Site = function () {
         <GridItem span={4}>
           <Card isFullHeight isRounded>
             <CardTitle>
-              <Title headingLevel="h2">{SiteLabels.Processes}</Title>
+              <Title headingLevel="h2">{Labels.Processes}</Title>
             </CardTitle>
             <CardBody>
               {(!!processes.length && (
