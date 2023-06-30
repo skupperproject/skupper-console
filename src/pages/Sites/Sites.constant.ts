@@ -1,5 +1,6 @@
 import { SiteResponse } from '@API/REST.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { timeAgo } from '@core/utils/timeAgo';
 
 import { Labels, SitesRoutesPaths } from './Sites.enum';
 
@@ -13,6 +14,21 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
     name: Labels.Name,
     prop: 'name' as keyof SiteResponse,
     customCellName: 'linkCell'
+  },
+  {
+    name: Labels.Namespace,
+    prop: 'nameSpace' as keyof SiteResponse
+  },
+  {
+    name: Labels.SiteVersion,
+    prop: 'siteVersion' as keyof SiteResponse,
+    width: 10
+  },
+  {
+    name: Labels.Created,
+    prop: 'startTime' as keyof SiteResponse,
+    format: timeAgo,
+    width: 10
   }
 ];
 
