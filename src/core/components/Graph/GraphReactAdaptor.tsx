@@ -98,7 +98,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         if ($node && nodes.length && !topologyGraphRef.current) {
           const legend = legendData ? createLegend(legendData) : '';
 
-          const topologyGraph = new G6.Graph({
+          topologyGraphRef.current = new G6.Graph({
             container: $node,
             width: $node.scrollWidth,
             height: $node.scrollHeight,
@@ -136,6 +136,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             defaultEdge: DEFAULT_EDGE_CONFIG,
             nodeStateStyles: DEFAULT_NODE_STATE_CONFIG
           });
+          const topologyGraph = topologyGraphRef.current;
 
           topologyGraph.on('node:click', ({ item }) => {
             if (item) {
@@ -335,13 +336,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           topologyGraph.on('afterlayout', () => {
-            if (!topologyGraphRef.current) {
-              topologyGraphRef.current = topologyGraph;
-              prevNodesRef.current = nodes;
-              prevEdgesRef.current = edges;
-              prevCombosRef.current = combos;
-              setIsGraphLoaded(true);
-            }
+            prevNodesRef.current = nodes;
+            prevEdgesRef.current = edges;
+            prevCombosRef.current = combos;
+            setIsGraphLoaded(true);
           });
 
           registerCustomBehaviours();
