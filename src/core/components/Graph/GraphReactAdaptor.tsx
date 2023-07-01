@@ -1,6 +1,6 @@
 import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 
-import G6, { Graph, ICombo, IEdge, INode, NodeConfig } from '@antv/g6';
+import G6, { Graph, ICombo, IEdge, INode } from '@antv/g6';
 
 import {
   GraphEdge,
@@ -162,8 +162,16 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             if (item) {
               topologyGraph.updateItem(item, { style: { cursor: 'pointer' } });
 
-              const { id, x, y } = item.getModel() as NodeConfig;
-              GraphController.saveDataInLocalStorage([{ id, x, y }]);
+              const updatedNodes = GraphController.fromNodesToLocalStorageData(
+                [item as INode],
+                ({ id, x, y }: LocalStorageData) => ({
+                  id,
+                  x,
+                  y
+                })
+              );
+
+              GraphController.saveDataInLocalStorage(updatedNodes);
             }
           });
 
@@ -293,15 +301,30 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
                 topologyGraph.updateItem(combo, { style: { cursor: 'pointer' } });
 
                 // Retrieve the nodes contained within the combo box and store their positions in memory
-                const { nodes: comboNodes } = topologyGraph.getComboChildren(combo);
+                const updatedNodes = GraphController.fromNodesToLocalStorageData(
+                  combo.getNodes(),
+                  ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+                );
 
-                comboNodes.forEach((comboNode) => {
-                  const { id, x, y } = comboNode.getModel() as NodeConfig;
-                  GraphController.saveDataInLocalStorage([{ id, x, y }]);
-                });
+                GraphController.saveDataInLocalStorage(updatedNodes);
               }
             });
           }
+
+          topologyGraph.on('canvas:dragend', ({ dx, dy }: { dx?: number; dy?: number }) => {
+            if (dx !== undefined && dy !== undefined) {
+              const updatedNodes = GraphController.fromNodesToLocalStorageData(
+                topologyGraph.getNodes(),
+                ({ id, x, y }: LocalStorageData) => ({
+                  id,
+                  x: x + dx,
+                  y: y + dy
+                })
+              );
+
+              GraphController.saveDataInLocalStorage(updatedNodes);
+            }
+          });
 
           topologyGraph.on('wheelzoom', () => {
             const zoomValue = topologyGraph.getZoom();
@@ -355,24 +378,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const graphInstance = topologyGraphRef.current;
 
       if (isGraphLoaded && graphInstance) {
-        const updateNodes = graphInstance
-          .getNodes()
-          .map((node) => {
-            const model = node.getModel();
+        const updatedNodes = GraphController.fromNodesToLocalStorageData(
+          graphInstance.getNodes(),
+          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+        );
 
-            if (model.id) {
-              return {
-                id: model.id,
-                x: model.x,
-                y: model.y
-              };
-            }
-
-            return undefined;
-          })
-          .filter(Boolean) as LocalStorageData[];
-
-        GraphController.saveDataInLocalStorage(updateNodes);
+        GraphController.saveDataInLocalStorage(updatedNodes);
       }
     }, [isGraphLoaded]);
 

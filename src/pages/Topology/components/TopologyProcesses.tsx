@@ -267,6 +267,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
             { showLinkLabelReverse, rotateLabel }
           );
         }
+
         setNodes(processesNodes);
         setLinks(processesLinks);
         setGroups(showSite ? siteGroups : []);
