@@ -1,30 +1,44 @@
-import { GraphCombo, GraphEdge, GraphNode, LocalStorageData } from './Graph.interfaces';
+import { INode, NodeConfig } from '@antv/g6';
+
+import {
+  GraphCombo,
+  GraphEdge,
+  GraphNode,
+  LocalStorageData,
+  LocalStorageDataSaved,
+  LocalStorageDataSavedPayload,
+  LocalStorageDataWithNullXY
+} from './Graph.interfaces';
 
 const prefixLocalStorageItem = 'skupper';
 
 export const GraphController = {
-  saveDataInLocalStorage: (topologyNodes: Partial<LocalStorageData>[]) => {
-    topologyNodes.forEach(({ id, x, y }) => {
-      if (id && x && y) {
-        //save the position of the node to the local storage
-        localStorage.setItem(`${prefixLocalStorageItem}-${id}`, JSON.stringify({ x, y }));
+  saveDataInLocalStorage: (topologyNodes: LocalStorageData[]) => {
+    const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
+
+    const topologyMap = topologyNodes.reduce((acc, { id, x, y }) => {
+      if (id) {
+        acc[id] = { x, y };
       }
-    });
+
+      return acc;
+    }, {} as LocalStorageDataSaved);
+
+    localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...cache, ...topologyMap }));
   },
 
-  getPositionFromLocalStorage(id: string): LocalStorageData {
-    const positions = localStorage.getItem(`${prefixLocalStorageItem}-${id}`);
+  getPositionFromLocalStorage(id: string): LocalStorageDataWithNullXY {
+    const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
+    const positions = cache[id] as LocalStorageDataSavedPayload | undefined;
 
-    const x = positions ? JSON.parse(positions).x : null;
-    const y = positions ? JSON.parse(positions).y : null;
+    const x = positions ? positions.x : null;
+    const y = positions ? positions.y : null;
 
     return { id, x, y };
   },
 
   cleanPositionsFromLocalStorage() {
-    Object.keys(localStorage)
-      .filter((x) => x.startsWith(prefixLocalStorageItem))
-      .forEach((x) => localStorage.removeItem(x));
+    localStorage.removeItem(prefixLocalStorageItem);
   },
 
   cleanPositionsControlsFromLocalStorage(suffix: string) {
@@ -42,6 +56,21 @@ export const GraphController = {
 
     return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
   },
+
+  fromNodesToLocalStorageData(nodes: INode[], setLocalStorageData: Function) {
+    return nodes
+      .map((node) => {
+        const { id, x, y } = node.getModel() as NodeConfig;
+
+        if (id && x !== undefined && y !== undefined) {
+          return setLocalStorageData({ id, x, y });
+        }
+
+        return undefined;
+      })
+      .filter(Boolean) as LocalStorageData[];
+  },
+
   getG6Model: ({ nodes, edges, combos }: { nodes: GraphNode[]; edges: GraphEdge[]; combos?: GraphCombo[] }) => ({
     nodes: JSON.parse(
       JSON.stringify(
@@ -56,6 +85,7 @@ export const GraphController = {
     edges: JSON.parse(JSON.stringify(GraphController.sanitizeEdges(nodes, edges))),
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
   }),
+
   calculateMaxIteration(nodeCount: number) {
     if (nodeCount > 900) {
       return 10;
