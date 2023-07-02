@@ -31,8 +31,8 @@ export const GraphController = {
     const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
     const positions = cache[id] as LocalStorageDataSavedPayload | undefined;
 
-    const x = positions ? positions.x : null;
-    const y = positions ? positions.y : null;
+    const x = positions ? positions.x : undefined;
+    const y = positions ? positions.y : undefined;
 
     return { id, x, y };
   },

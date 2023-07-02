@@ -5,7 +5,7 @@ export interface Entity {
   comboId?: string;
   label: string;
   img: string;
-  x: number | null;
-  y: number | null;
+  x: number | undefined;
+  y: number | undefined;
   nodeConfig?: ModelStyle;
 }

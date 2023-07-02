@@ -1,6 +1,6 @@
 import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 
-import G6, { Graph, ICombo, IEdge, INode } from '@antv/g6';
+import G6, { Graph, GraphOptions, ICombo, IEdge, INode } from '@antv/g6';
 
 import {
   GraphEdge,
@@ -100,22 +100,27 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           const width = $node.scrollWidth;
           const height = $node.scrollHeight;
 
-          topologyGraphRef.current = new G6.Graph({
+          const options: GraphOptions = {
             container: $node,
             width,
             height,
             fitCenter: config?.fitCenter || false,
             plugins: [legend],
             modes: DEFAULT_MODE,
-            layout: {
-              ...layout,
-              center: [Math.floor(width / 2), Math.floor(height / 2)]
-            },
             defaultNode: DEFAULT_NODE_CONFIG,
             defaultCombo: DEFAULT_COMBO_CONFIG,
             defaultEdge: DEFAULT_EDGE_CONFIG,
             nodeStateStyles: DEFAULT_NODE_STATE_CONFIG
-          });
+          };
+
+          if (layout) {
+            options.layout = {
+              ...layout,
+              center: [width / 2, height / 2]
+            };
+          }
+
+          topologyGraphRef.current = new G6.Graph(options);
           const topologyGraph = topologyGraphRef.current;
 
           topologyGraph.on('node:click', ({ item }) => {
@@ -315,10 +320,15 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             }
           });
 
-          topologyGraph.on('afterlayout', () => {
+          topologyGraph.on('afterrender', () => {
             prevNodesRef.current = nodes;
             prevEdgesRef.current = edges;
             prevCombosRef.current = combos;
+
+            if (options.layout) {
+              topologyGraph.destroyLayout();
+            }
+
             setIsGraphLoaded(true);
           });
 

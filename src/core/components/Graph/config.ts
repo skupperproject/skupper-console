@@ -34,33 +34,15 @@ export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
   nodeSpacing: NODE_SIZE / 3,
   preventOverlap: true,
   comboSpacing: 0,
-  linkDistance: 150,
-  nodeStrength: 10,
-  edgeStrength: 1,
-  collideStrength: 0.3,
-  comboCollideStrength: 0.5
+  linkDistance: 150
 };
 
 export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
-  type: 'force',
+  type: 'force2',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
   preventOverlap: true,
-  linkDistance: 150,
-  alphaMin: 0.07,
-  alpha: 0.1
-};
-
-export const DEFAULT_LAYOUT_GFORCE_CONFIG: LayoutConfig = {
-  type: 'gForce',
-  nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE / 3,
-  linkDistance: 150,
-  nodeStrength: 500,
-  edgeStrength: 200,
-  collideStrength: 0.3,
-  preventOverlap: true,
-  gpuEnabled: true
+  linkDistance: 150
 };
 
 export const DEFAULT_NODE_CONFIG: ModelStyle = {
