@@ -1,4 +1,4 @@
-import { GraphData } from '@antv/g6';
+import { GraphData, LayoutConfig } from '@antv/g6';
 
 export interface GraphNode {
   id: string;
@@ -40,9 +40,11 @@ export interface GraphReactAdaptorProps {
   onGetZoom?: Function;
   onFitScreen?: Function;
   legendData?: GraphData;
+  layout?: LayoutConfig;
   config?: {
     zoom?: string | null;
     fitScreen?: number | null;
+    fitCenter?: boolean | null;
   };
 }
 

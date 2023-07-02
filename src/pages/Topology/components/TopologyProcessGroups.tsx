@@ -89,6 +89,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
       itemSelected={processGroupId}
       onGetZoom={handleSaveZoom}
       onFitScreen={handleFitScreen}
+      layout={TopologyController.selectLayoutFromNodes(nodes)}
       config={{
         zoom: localStorage.getItem(ZOOM_CACHE_KEY),
         fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))

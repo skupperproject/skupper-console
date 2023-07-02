@@ -3,7 +3,13 @@ import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/process.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
-import { DEFAULT_NODE_CONFIG, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
+import {
+  DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
+  DEFAULT_LAYOUT_GFORCE_CONFIG,
+  DEFAULT_NODE_CONFIG,
+  DEFAULT_REMOTE_NODE_CONFIG
+} from '@core/components/Graph/config';
 import { EDGE_COLOR_ACTIVE_DEFAULT, NODE_COLOR_DEFAULT, nodeColors } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
@@ -196,6 +202,24 @@ export const TopologyController = {
         label: [link.label, ...metrics].filter(Boolean).join('')
       };
     });
+  },
+  selectLayoutFromNodes: (nodes: GraphNode[], type: 'combo' | 'default' = 'default') => {
+    let layout = {};
+
+    const nodesNotInitializedCount = nodes.filter(({ x, y }) => !!(!x || !y)).length;
+
+    if (nodesNotInitializedCount) {
+      if (type === 'combo') {
+        layout = {
+          ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+          maxIteration: GraphController.calculateMaxIteration(nodes.length)
+        };
+      } else {
+        layout = nodesNotInitializedCount > 250 ? DEFAULT_LAYOUT_GFORCE_CONFIG : DEFAULT_LAYOUT_FORCE_CONFIG;
+      }
+    }
+
+    return layout;
   }
 };
 
