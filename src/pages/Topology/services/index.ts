@@ -6,6 +6,7 @@ import skupperProcessSVG from '@assets/skupper.svg';
 import {
   DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
   DEFAULT_LAYOUT_FORCE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG,
   DEFAULT_NODE_CONFIG,
   DEFAULT_REMOTE_NODE_CONFIG
 } from '@core/components/Graph/config';
@@ -204,14 +205,17 @@ export const TopologyController = {
   },
   selectLayoutFromNodes: (nodes: GraphNode[], type: 'combo' | 'default' = 'default') => {
     let layout = undefined;
+    const nodeCount = nodes.filter((node) => node.x && node.y).length;
 
-    if (type === 'combo') {
-      layout = {
-        ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
-        maxIteration: GraphController.calculateMaxIteration(nodes.length)
-      };
-    } else {
-      layout = DEFAULT_LAYOUT_FORCE_CONFIG;
+    if (nodeCount === 0) {
+      if (type === 'combo') {
+        layout = {
+          ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+          maxIteration: GraphController.calculateMaxIteration(nodes.length)
+        };
+      } else {
+        layout = nodes.length <= 200 ? DEFAULT_LAYOUT_FORCE_CONFIG : DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG;
+      }
     }
 
     return layout;

@@ -45,6 +45,11 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   linkDistance: 150
 };
 
+export const DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG: LayoutConfig = {
+  type: 'gForce',
+  gpuEnabled: true
+};
+
 export const DEFAULT_NODE_CONFIG: ModelStyle = {
   type: 'circle',
   size: [NODE_SIZE],
