@@ -429,6 +429,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           legendData={ProcessLegendData}
           onGetZoom={handleSaveZoom}
           onFitScreen={handleFitScreen}
+          layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
           config={{
             zoom: localStorage.getItem(ZOOM_CACHE_KEY),
             fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))

@@ -14,9 +14,6 @@ import TransitionPage from '@core/components/TransitionPages/Slide';
 import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_EDGE_CONFIG,
-  DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
-  DEFAULT_LAYOUT_FORCE_CONFIG,
-  DEFAULT_LAYOUT_GFORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
@@ -37,6 +34,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     legendData,
     onGetZoom,
     onFitScreen,
+    layout,
     config
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
@@ -96,41 +94,23 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const graphRef = useCallback(
       ($node: HTMLDivElement | null) => {
         if ($node && nodes.length && !topologyGraphRef.current) {
+          const data = GraphController.getG6Model({ edges, nodes, combos });
           const legend = legendData ? createLegend(legendData) : '';
+
+          const width = $node.scrollWidth;
+          const height = $node.scrollHeight;
 
           topologyGraphRef.current = new G6.Graph({
             container: $node,
-            width: $node.scrollWidth,
-            height: $node.scrollHeight,
+            width,
+            height,
+            fitCenter: config?.fitCenter || false,
             plugins: [legend],
             modes: DEFAULT_MODE,
             layout: {
-              pipes: [
-                //  If  nodes already have positions,load the 'force' layout without a simulation to visually arrange them in a graph.
-                {
-                  type: 'force',
-                  alpha: 0,
-                  nodesFilter: ({ x, y }: GraphNode) => !!(x && y)
-                },
-                {
-                  ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
-                  center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
-                  maxIteration: GraphController.calculateMaxIteration(nodes.length),
-                  nodesFilter: ({ x, y, comboId }: GraphNode) => !!(!x || !y) && comboId
-                },
-                {
-                  ...DEFAULT_LAYOUT_FORCE_CONFIG,
-                  center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
-                  nodesFilter: ({ x, y, comboId }: GraphNode) => !!(!x || !y) && !comboId && nodes.length < 250
-                },
-                {
-                  ...DEFAULT_LAYOUT_GFORCE_CONFIG,
-                  center: [$node.scrollWidth / 2, $node.scrollHeight / 2],
-                  nodesFilter: ({ x, y, comboId }: GraphNode) => !!(!x || !y) && !comboId && nodes.length >= 250
-                }
-              ]
+              ...layout,
+              center: [Math.floor(width / 2), Math.floor(height / 2)]
             },
-
             defaultNode: DEFAULT_NODE_CONFIG,
             defaultCombo: DEFAULT_COMBO_CONFIG,
             defaultEdge: DEFAULT_EDGE_CONFIG,
@@ -344,7 +324,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           registerCustomBehaviours();
 
-          topologyGraph.data(GraphController.getG6Model({ edges, nodes, combos }));
+          topologyGraph.data(data);
           topologyGraph.render();
 
           if (config?.zoom) {
@@ -360,10 +340,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       [
         nodes,
         legendData,
+        layout,
         combos,
         edges,
         config?.zoom,
         config?.fitScreen,
+        config?.fitCenter,
         handleOnClickNode,
         handleOnClickEdge,
         handleOnClickCombo,

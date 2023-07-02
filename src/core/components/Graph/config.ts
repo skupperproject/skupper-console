@@ -9,21 +9,22 @@ import {
   NODE_COLOR_HOVER_EDGE_DEFAULT
 } from './Graph.constants';
 
-const NODE_SIZE = 50;
+const NODE_SIZE = 40;
 const greyColor = '#808080';
 
 export const DEFAULT_MODE = {
   default: [
-    { type: 'drag-node', onlyChangeComboSize: true },
+    { type: 'drag-node', onlyChangeComboSize: true, optimize: true },
     {
       type: 'drag-combo',
       enableDelegate: true,
       activeState: 'actived',
       onlyChangeComboSize: true,
-      shouldUpdate: () => true
+      shouldUpdate: () => true,
+      optimize: true
     },
-    'zoom-canvas',
-    'drag-canvas'
+    { type: 'drag-canvas', optimize: true },
+    { type: 'zoom-canvas', optimize: true }
   ]
 };
 
@@ -31,25 +32,21 @@ export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
   type: 'comboForce',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE / 3,
+  preventOverlap: true,
   comboSpacing: 0,
   linkDistance: 150,
   nodeStrength: 10,
   edgeStrength: 1,
   collideStrength: 0.3,
-  preventOverlap: true,
-  preventComboOverlap: true,
   comboCollideStrength: 0.5
 };
 
 export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   type: 'force',
   nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE / 3,
-  linkDistance: 150,
-  nodeStrength: 60,
-  edgeStrength: 1,
-  collideStrength: 0.3,
+  nodeSpacing: NODE_SIZE,
   preventOverlap: true,
+  linkDistance: 150,
   alphaMin: 0.07,
   alpha: 0.1
 };
@@ -81,7 +78,7 @@ export const DEFAULT_NODE_CONFIG: ModelStyle = {
     style: {
       fill: NODE_COLOR_DEFAULT,
       cursor: 'pointer',
-      fontSize: 14,
+      fontSize: 12,
       background: {
         fill: '#FFFFFF',
         fillOpacity: 0.9,
