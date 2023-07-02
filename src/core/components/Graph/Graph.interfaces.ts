@@ -9,8 +9,8 @@ export interface GraphNode {
     img?: string;
   };
   style?: Record<string, string>;
-  x: number | null;
-  y: number | null;
+  x: number | undefined;
+  y: number | undefined;
 }
 
 export interface GraphCombo {
@@ -62,6 +62,6 @@ export interface LocalStorageData extends LocalStorageDataSavedPayload {
 }
 
 export interface LocalStorageDataWithNullXY extends Omit<LocalStorageData, 'x' | 'y'> {
-  x: number | null;
-  y: number | null;
+  x: number | undefined;
+  y: number | undefined;
 }
