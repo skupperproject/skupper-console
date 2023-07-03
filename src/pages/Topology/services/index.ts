@@ -227,7 +227,9 @@ function convertEntityToNode({ id, comboId, label, x, y, img, nodeConfig }: Enti
     y,
     icon: {
       show: true,
-      img
+      img,
+      width: 14,
+      height: 14
     },
     ...{ ...DEFAULT_NODE_CONFIG, ...nodeConfig }
   };
