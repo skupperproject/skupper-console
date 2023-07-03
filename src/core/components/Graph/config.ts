@@ -31,9 +31,10 @@ export const DEFAULT_MODE = {
 export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
   type: 'comboForce',
   nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE / 3,
+  nodeSpacing: NODE_SIZE,
   preventOverlap: true,
-  comboSpacing: 0,
+  comboCollideStrength: 1,
+  comboSpacing: 10,
   linkDistance: 150
 };
 

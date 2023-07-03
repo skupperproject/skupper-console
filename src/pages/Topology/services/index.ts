@@ -205,14 +205,11 @@ export const TopologyController = {
   },
   selectLayoutFromNodes: (nodes: GraphNode[], type: 'combo' | 'default' = 'default') => {
     let layout = undefined;
-    const nodeCount = nodes.filter((node) => node.x && node.y).length;
+    const nodeCount = !!nodes.filter((node) => node.x === undefined && node.y === undefined).length;
 
-    if (nodeCount === 0) {
+    if (nodeCount) {
       if (type === 'combo') {
-        layout = {
-          ...DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
-          maxIteration: GraphController.calculateMaxIteration(nodes.length)
-        };
+        layout = DEFAULT_LAYOUT_COMBO_FORCE_CONFIG;
       } else {
         layout = nodes.length <= 200 ? DEFAULT_LAYOUT_FORCE_CONFIG : DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG;
       }
