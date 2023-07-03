@@ -22,8 +22,8 @@ export const nodeColors = [
 ];
 
 export const NODE_COLOR_DEFAULT = '#6A6E73';
-export const EDGE_COLOR_DEFAULT = '#c7c7c7';
-export const EDGE_COLOR_ACTIVE_DEFAULT = '#1f77b4';
+export const EDGE_COLOR_DEFAULT = '#B8BBBE';
+export const EDGE_COLOR_ACTIVE_DEFAULT = '#0066CC';
 export const COMBO_COLOR_DEFAULT = NODE_COLOR_DEFAULT;
 export const NODE_COLOR_HOVER_DEFAULT = '#BEE1F4';
 export const NODE_COLOR_HOVER_EDGE_DEFAULT = '#0066CC';

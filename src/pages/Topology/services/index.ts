@@ -36,38 +36,22 @@ const shape = {
 
 export const TopologyController = {
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
-    entities.map(({ identity, name, siteVersion }, index) => {
+    entities.map(({ identity, name, siteVersion }) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
-      const color = getColor(index);
       const img = siteSVG;
 
-      const style = {
-        fillOpacity: 0.1,
-        fill: color,
-        stroke: color,
-        shadowColor: color
-      };
-
-      return convertEntityToNode({ id: identity, label: `${name} (${siteVersion})`, x, y, img, nodeConfig: { style } });
+      return convertEntityToNode({ id: identity, label: `${name} (${siteVersion})`, x, y, img });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
-    entities.map(({ identity, name, processGroupRole, processCount }, index) => {
+    entities.map(({ identity, name, processGroupRole, processCount }) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
-      const color = getColor(processGroupRole === 'internal' ? 16 : index);
       const img = processGroupRole === 'internal' ? skupperProcessSVG : componentSVG;
 
       const suffix = processCount > 1 ? Labels.Processes : Labels.Process;
       const label = `${name} (${processCount} ${suffix})`;
 
-      const style = {
-        fillOpacity: 0.1,
-        fill: color,
-        stroke: color,
-        shadowColor: color
-      };
-
-      const nodeConfig = processGroupRole === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape.bound, style };
+      const nodeConfig = processGroupRole === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape.bound };
 
       return convertEntityToNode({ id: identity, label, x, y, img, nodeConfig });
     }),
@@ -97,7 +81,18 @@ export const TopologyController = {
 
     return sites
       .filter((site) => groups.includes(site.id))
-      .map(({ id, style, label }) => ({ id, label, style: { ...style, fillOpacity: 0.02 } }));
+      .map(({ id, label }, index) => {
+        const color = getColor(index);
+
+        const style = {
+          fillOpacity: 0.1,
+          fill: color,
+          stroke: color,
+          shadowColor: color
+        };
+
+        return { id, label, style: { ...style, fillOpacity: 0.02 } };
+      });
   },
 
   convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[], showProtocol = false): GraphEdge[] =>
