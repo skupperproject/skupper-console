@@ -7,6 +7,8 @@ export interface GraphNode {
   icon?: {
     show?: boolean;
     img?: string;
+    width?: number;
+    height?: number;
   };
   style?: Record<string, string>;
   x: number | undefined;

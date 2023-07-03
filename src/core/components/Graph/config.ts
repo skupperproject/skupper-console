@@ -123,6 +123,10 @@ export const DEFAULT_NODE_STATE_CONFIG = {
     shadowBlur: 10,
     shadowColor: NODE_COLOR_HOVER_EDGE_DEFAULT,
     cursor: 'pointer'
+  },
+  hidden: {
+    opacity: 0,
+    fill: 'transparent'
   }
 };
 

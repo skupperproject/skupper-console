@@ -169,12 +169,24 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             });
 
             const node = item as INode | null;
+
             if (node) {
+              const neighbors = node.getNeighbors();
+              const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
+
+              topologyGraph.getNodes().forEach(function (n) {
+                if (node?.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
+                  topologyGraph.setItemState(n, 'hidden', true);
+                  topologyGraph.updateItem(n, {
+                    icon: { show: false },
+                    labelCfg: { offset: -100000 }
+                  });
+                }
+              });
               // To ensure that only one node is selected at a time, we need to clean up any previously selected nodes.
               //This situation can arise when we automatically select an element from another pager through nodeSelect.
               topologyGraph.findAllByState<INode>('node', 'hover').forEach((nodeWithHoverState) => {
                 topologyGraph.setItemState(nodeWithHoverState, 'hover', false);
-
                 nodeWithHoverState.getEdges().forEach((edgeConnectedWithHoverState) => {
                   topologyGraph.setItemState(edgeConnectedWithHoverState, 'hover', false);
                 });
@@ -187,7 +199,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
                 edgeConnected.show();
               });
 
-              node.getNeighbors().forEach((neighbor) => {
+              neighbors.forEach((neighbor) => {
                 topologyGraph.setItemState(neighbor, 'hover', true);
               });
             }
@@ -195,6 +207,14 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           topologyGraph.on('node:mouseleave', ({ item }) => {
             isHoverState.current = false;
+
+            topologyGraph.getNodes().forEach(function (node) {
+              topologyGraph.setItemState(node, 'hidden', false);
+              topologyGraph.updateItem(node, {
+                icon: { show: true },
+                labelCfg: { offset: 15 }
+              });
+            });
 
             topologyGraph.getEdges().forEach(function (edge) {
               edge.show();
