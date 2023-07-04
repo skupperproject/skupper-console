@@ -1,4 +1,4 @@
-import { LayoutConfig, ModelStyle } from '@antv/g6-core';
+import { ILabelConfig, LayoutConfig, ModelStyle } from '@antv/g6-core';
 
 import {
   COMBO_COLOR_DEFAULT_LABEL,
@@ -11,7 +11,7 @@ import {
   NODE_COLOR_HOVER_EDGE_DEFAULT
 } from './Graph.constants';
 
-const NODE_SIZE = 44;
+const NODE_SIZE = 35;
 const greyColor = '#808080';
 
 export const DEFAULT_MODE = {
@@ -59,7 +59,13 @@ export const DEFAULT_NODE_ICON = {
   height: 14
 };
 
-export const DEFAULT_NODE_CONFIG: ModelStyle = {
+export const DEFAULT_NODE_CONFIG: Partial<{
+  type: string;
+  size: number | number[];
+  labelCfg: ILabelConfig;
+  color: string;
+}> &
+  ModelStyle = {
   type: 'circle',
   size: [NODE_SIZE],
 
@@ -74,24 +80,28 @@ export const DEFAULT_NODE_CONFIG: ModelStyle = {
 
   labelCfg: {
     position: 'bottom',
-    offset: 15,
+    offset: 8,
     style: {
       fill: NODE_COLOR_DEFAULT_LABEL,
-      cursor: 'pointer',
       fontSize: 12,
+      fillOpacity: 0.9,
       background: {
-        fillOpacity: 0.9,
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_COLOR_DEFAULT_LABEL,
         lineWidth: 1,
-        padding: [5, 8, 5, 8],
+        padding: [3, 3, 3, 3],
         radius: 2
       }
     }
   }
 };
 
-export const DEFAULT_REMOTE_NODE_CONFIG: ModelStyle = {
+export const DEFAULT_REMOTE_NODE_CONFIG: Partial<{
+  type: string;
+  size: number | number[];
+  color: string;
+}> &
+  ModelStyle = {
   ...DEFAULT_NODE_CONFIG,
   type: 'circle',
   size: [NODE_SIZE / 2],
