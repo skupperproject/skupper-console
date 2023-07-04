@@ -1,4 +1,4 @@
-import { GraphData, LayoutConfig } from '@antv/g6';
+import { GraphData, LayoutConfig, ModelStyle } from '@antv/g6';
 
 export interface GraphNode {
   id: string;
@@ -18,7 +18,7 @@ export interface GraphNode {
 export interface GraphCombo {
   id: string;
   label: string;
-  style?: Record<string, string | number>;
+  style?: ModelStyle;
 }
 
 export interface GraphEdge {

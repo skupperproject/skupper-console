@@ -17,7 +17,7 @@ import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { isPrometheusActive, UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
-import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
+import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT_LABEL } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
@@ -255,7 +255,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         let processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, showLinkLabel);
         processesLinks = processesLinks.map((pair) => ({
           ...pair,
-          labelCfg: { style: { NODE_COLOR_DEFAULT } },
+          labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
           style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
         }));
 
@@ -307,7 +307,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         );
         processesLinksByAddress = processesLinksByAddress.map((pair) => ({
           ...pair,
-          labelCfg: { style: { NODE_COLOR_DEFAULT } },
+          labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
           style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT },
           cursor: 'pointer'
         }));
