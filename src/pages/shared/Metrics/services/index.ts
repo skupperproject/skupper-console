@@ -41,12 +41,14 @@ const MetricsController = {
     };
 
     try {
-      const bytesTx = await PrometheusApi.fetchBytes(params);
-      const bytesRx = await PrometheusApi.fetchBytes({
-        ...params,
-        id: processIdDest,
-        processIdDest: processIdSource
-      });
+      const [bytesTx, bytesRx] = await Promise.all([
+        PrometheusApi.fetchBytes(params),
+        PrometheusApi.fetchBytes({
+          ...params,
+          id: processIdDest,
+          processIdDest: processIdSource
+        })
+      ]);
 
       const sumBytesTx = bytesTx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
       const sumBytesRx = bytesRx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
@@ -78,12 +80,14 @@ const MetricsController = {
     };
 
     try {
-      const byteRateDataTx = await PrometheusApi.fetchByteRateSeries(params);
-      const byteRateDataRx = await PrometheusApi.fetchByteRateSeries({
-        ...params,
-        id: processIdDest,
-        processIdDest: processIdSource
-      });
+      const [byteRateDataTx, byteRateDataRx] = await Promise.all([
+        PrometheusApi.fetchByteRateSeries(params),
+        PrometheusApi.fetchByteRateSeries({
+          ...params,
+          id: processIdDest,
+          processIdDest: processIdSource
+        })
+      ]);
 
       return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
     } catch (e: unknown) {
@@ -170,33 +174,42 @@ const MetricsController = {
     };
 
     try {
+      const bytesData = await MetricsController.getBytesData(props);
+      const byteRateData = await MetricsController.getByteRateData(props);
+
+      responseData = await MetricsController.getResponseData(props);
+      responseRateData = await MetricsController.getResponseRateData(props);
+
       if (protocol !== AvailableProtocols.Tcp) {
-        // latency metrics
-        const quantile50latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end });
-        const quantile90latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end });
-        const quantile99latency = await PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end });
+        const [
+          // http response metrics
+          // latency metrics
+          quantile50latency,
+          quantile90latency,
+          quantile99latency,
+          requestsByProcess,
+          avgRequestRate,
+          totalRequests
+        ] = await Promise.all([
+          PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end }),
+          PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end }),
+          PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end }),
+          PrometheusApi.fetchRequestsByProcess({
+            ...params
+          }),
+          PrometheusApi.fetchAvgRequestRate(params),
+          PrometheusApi.fetchTotalRequests(params)
+        ]);
 
         latenciesData = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
 
         // http requests metrics
-        const requestsByProcess = await PrometheusApi.fetchRequestsByProcess({
-          ...params
-        });
         requestRateData = normalizeRequestFromSeries(requestsByProcess);
 
-        const avgRequestRate = await PrometheusApi.fetchAvgRequestRate(params);
         avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
 
-        const totalRequests = await PrometheusApi.fetchTotalRequests(params);
         totalRequestsInterval = formatToDecimalPlacesIfCents(Number(totalRequests[0]?.value[1] || 0), 0);
-
-        // http response metrics
-        responseData = await MetricsController.getResponseData(props);
-        responseRateData = await MetricsController.getResponseRateData(props);
       }
-
-      const bytesData = await MetricsController.getBytesData(props);
-      const byteRateData = await MetricsController.getByteRateData(props);
 
       return {
         bytesData,
