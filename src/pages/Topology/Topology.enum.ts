@@ -24,7 +24,8 @@ export enum Labels {
   CheckboxShowSite = 'show site',
   RotateLabel = 'rotate label',
   CheckboxShowLabel = 'show metrics',
-  CheckboxShowLabelReverse = 'show reverse metrics'
+  CheckboxShowLabelReverse = 'show reverse metrics',
+  TableView = 'List view'
 }
 
 export enum TopologyURLFilters {

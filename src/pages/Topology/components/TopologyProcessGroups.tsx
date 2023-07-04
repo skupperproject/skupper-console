@@ -1,7 +1,9 @@
 import { FC, useCallback } from 'react';
 
+import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import { ListIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
@@ -13,6 +15,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
+import { Labels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'component-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'component-fitScreen';
@@ -82,19 +85,35 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
   const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
 
   return (
-    <GraphReactAdaptor
-      nodes={nodes}
-      edges={links}
-      onClickNode={handleGetSelectedNode}
-      itemSelected={processGroupId}
-      onGetZoom={handleSaveZoom}
-      onFitScreen={handleFitScreen}
-      layout={TopologyController.selectLayoutFromNodes(nodes)}
-      config={{
-        zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-        fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-      }}
-    />
+    <>
+      <Toolbar>
+        <ToolbarContent>
+          <ToolbarGroup alignment={{ default: 'alignRight' }}>
+            <ToolbarItem>
+              <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
+                <Tooltip content={Labels.TableView}>
+                  <ListIcon />
+                </Tooltip>
+              </Link>
+            </ToolbarItem>
+          </ToolbarGroup>
+        </ToolbarContent>
+      </Toolbar>
+
+      <GraphReactAdaptor
+        nodes={nodes}
+        edges={links}
+        onClickNode={handleGetSelectedNode}
+        itemSelected={processGroupId}
+        onGetZoom={handleSaveZoom}
+        onFitScreen={handleFitScreen}
+        layout={TopologyController.selectLayoutFromNodes(nodes)}
+        config={{
+          zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+          fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+        }}
+      />
+    </>
   );
 };
 

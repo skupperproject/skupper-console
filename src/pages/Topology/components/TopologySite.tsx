@@ -1,7 +1,9 @@
 import { FC, useCallback } from 'react';
 
+import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import { ListIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
@@ -12,6 +14,7 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
+import { Labels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'site-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'site-fitScreen';
@@ -62,18 +65,33 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   const siteLinks = TopologyController.getLinksFromSites(sites, routers, links);
 
   return (
-    <GraphReactAdaptor
-      nodes={nodes}
-      edges={siteLinks}
-      onClickNode={handleGetSelectedNode}
-      onGetZoom={handleSaveZoom}
-      onFitScreen={handleFitScreen}
-      layout={TopologyController.selectLayoutFromNodes(nodes)}
-      config={{
-        zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-        fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-      }}
-    />
+    <>
+      <Toolbar>
+        <ToolbarContent>
+          <ToolbarGroup alignment={{ default: 'alignRight' }}>
+            <ToolbarItem>
+              <Link to={SitesRoutesPaths.Sites}>
+                <Tooltip content={Labels.TableView}>
+                  <ListIcon />
+                </Tooltip>
+              </Link>
+            </ToolbarItem>
+          </ToolbarGroup>
+        </ToolbarContent>
+      </Toolbar>
+      <GraphReactAdaptor
+        nodes={nodes}
+        edges={siteLinks}
+        onClickNode={handleGetSelectedNode}
+        onGetZoom={handleSaveZoom}
+        onFitScreen={handleFitScreen}
+        layout={TopologyController.selectLayoutFromNodes(nodes)}
+        config={{
+          zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+          fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+        }}
+      />
+    </>
   );
 };
 

@@ -66,29 +66,29 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   };
 
   return (
-    <Toolbar style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+    <Toolbar style={{ position: 'absolute', bottom: '8px', right: '5px' }}>
       <ToolbarContent>
-        <ToolbarItem>
+        <ToolbarItem spacer={{ default: 'spacerNone' }}>
           <Tooltip content={'zoom in'}>
-            <Button isActive={true} variant="primary" onClick={handleIncreaseZoom} icon={<SearchPlusIcon />} />
+            <Button isSmall variant="control" onClick={handleIncreaseZoom} icon={<SearchPlusIcon />} />
           </Tooltip>
         </ToolbarItem>
 
-        <ToolbarItem>
+        <ToolbarItem spacer={{ default: 'spacerNone' }}>
           <Tooltip content={'zoom out'}>
-            <Button isActive={true} variant="primary" onClick={handleDecreaseZoom} icon={<SearchMinusIcon />} />
+            <Button isSmall variant="control" onClick={handleDecreaseZoom} icon={<SearchMinusIcon />} />
           </Tooltip>
         </ToolbarItem>
 
-        <ToolbarItem>
+        <ToolbarItem spacer={{ default: 'spacerNone' }}>
           <Tooltip content={'fit view'}>
-            <Button isActive={true} variant="primary" onClick={handleZoomToDefault} icon={<ExpandIcon />} />
+            <Button isSmall variant="control" onClick={handleZoomToDefault} icon={<ExpandIcon />} />
           </Tooltip>
         </ToolbarItem>
 
-        <ToolbarItem>
+        <ToolbarItem spacer={{ default: 'spacerNone' }}>
           <Tooltip content={'reposition'}>
-            <Button isActive={true} variant="primary" onClick={handleReposition} icon={<MapMarkerIcon />} />
+            <Button isSmall variant="control" onClick={handleReposition} icon={<MapMarkerIcon />} />
           </Tooltip>
         </ToolbarItem>
       </ToolbarContent>
