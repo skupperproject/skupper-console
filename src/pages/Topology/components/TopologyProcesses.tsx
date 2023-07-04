@@ -11,7 +11,7 @@ import {
   ToolbarItem,
   Tooltip
 } from '@patternfly/react-core';
-import { TableIcon } from '@patternfly/react-icons';
+import { ListIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -393,7 +393,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                     onChange={handleChangeSiteCheck}
                     id="show-site-check"
                   />
-
                   <Checkbox
                     isDisabled={!showLinkLabel}
                     label={Labels.RotateLabel}
@@ -402,6 +401,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                     id="rotate-label-check"
                   />
                 </ToolbarItem>
+
                 <ToolbarItem>
                   <Checkbox
                     label={Labels.CheckboxShowLabel}
@@ -418,11 +418,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                   />
                 </ToolbarItem>
               </ToolbarGroup>
+
               <ToolbarGroup alignment={{ default: 'alignRight' }}>
                 <ToolbarItem>
                   <Link to={ProcessesRoutesPaths.Processes}>
-                    <Tooltip content="go to the table view">
-                      <TableIcon color="var(--pf-global--palette--black-500)" />
+                    <Tooltip content={Labels.TableView}>
+                      <ListIcon />
                     </Tooltip>
                   </Link>
                 </ToolbarItem>

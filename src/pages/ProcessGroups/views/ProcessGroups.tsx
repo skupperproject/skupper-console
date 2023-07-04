@@ -1,6 +1,9 @@
 import { useCallback, useState } from 'react';
 
+import { Split, SplitItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import { TopologyIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -11,6 +14,8 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Slide';
 import LoadingPage from '@pages/shared/Loading';
+import { Labels } from '@pages/Sites/Sites.enum';
+import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessGroupResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { processGroupsColumns } from '../ProcessGroups.constant';
@@ -55,7 +60,26 @@ const ProcessGroups = function () {
   return (
     <TransitionPage>
       <div data-testid={getTestsIds.componentsView()}>
-        <SkTitle title={ProcessGroupsLabels.Section} description={ProcessGroupsLabels.Description} />
+        <Split>
+          <SplitItem isFilled>
+            <SkTitle title={ProcessGroupsLabels.Section} description={ProcessGroupsLabels.Description} />
+          </SplitItem>
+          <SplitItem>
+            <Toolbar isFullHeight>
+              <ToolbarContent>
+                <ToolbarGroup alignment={{ default: 'alignRight' }}>
+                  <ToolbarItem>
+                    <Link to={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}>
+                      <Tooltip content={Labels.TopologyView}>
+                        <TopologyIcon />
+                      </Tooltip>
+                    </Link>
+                  </ToolbarItem>
+                </ToolbarGroup>
+              </ToolbarContent>
+            </Toolbar>
+          </SplitItem>
+        </Split>
         <div>
           <SkTable
             columns={processGroupsColumns}
