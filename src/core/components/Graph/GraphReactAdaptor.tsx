@@ -16,6 +16,7 @@ import {
   DEFAULT_EDGE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
+  DEFAULT_NODE_ICON,
   DEFAULT_NODE_STATE_CONFIG
 } from './config';
 import { createLegend, registerCustomBehaviours } from './customBehaviours';
@@ -177,8 +178,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               topologyGraph.getNodes().forEach(function (n) {
                 if (node?.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
                   topologyGraph.setItemState(n, 'hidden', true);
+                  n.toBack();
                   topologyGraph.updateItem(n, {
-                    icon: { show: false },
+                    icon: { width: 1, height: 1 },
                     labelCfg: { offset: -100000 }
                   });
                 }
@@ -211,8 +213,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             topologyGraph.getNodes().forEach(function (node) {
               topologyGraph.setItemState(node, 'hidden', false);
               topologyGraph.updateItem(node, {
-                icon: { show: true },
-                labelCfg: { offset: 15 }
+                icon: { width: DEFAULT_NODE_ICON.width, height: DEFAULT_NODE_ICON.height },
+                labelCfg: { offset: DEFAULT_NODE_CONFIG.labelCfg?.offset }
               });
             });
 
