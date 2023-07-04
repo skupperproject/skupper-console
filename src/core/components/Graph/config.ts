@@ -1,15 +1,17 @@
 import { LayoutConfig, ModelStyle } from '@antv/g6-core';
 
 import {
-  COMBO_COLOR_DEFAULT,
+  COMBO_COLOR_DEFAULT_LABEL,
   EDGE_COLOR_ACTIVE_DEFAULT,
   EDGE_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT,
+  NODE_COLOR_DEFAULT_LABEL,
+  NODE_COLOR_DEFAULT_LABEL_BG,
   NODE_COLOR_HOVER_DEFAULT,
   NODE_COLOR_HOVER_EDGE_DEFAULT
 } from './Graph.constants';
 
-const NODE_SIZE = 40;
+const NODE_SIZE = 44;
 const greyColor = '#808080';
 
 export const DEFAULT_MODE = {
@@ -51,26 +53,36 @@ export const DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG: LayoutConfig = {
   gpuEnabled: true
 };
 
+export const DEFAULT_NODE_ICON = {
+  show: true,
+  width: 14,
+  height: 14
+};
+
 export const DEFAULT_NODE_CONFIG: ModelStyle = {
   type: 'circle',
   size: [NODE_SIZE],
 
+  icon: DEFAULT_NODE_ICON,
+
   style: {
-    fillOpacity: 0.4,
+    fillOpacity: 0.15,
+    fill: NODE_COLOR_DEFAULT,
     stroke: NODE_COLOR_DEFAULT,
     lineWidth: 1
   },
+
   labelCfg: {
     position: 'bottom',
     offset: 15,
     style: {
-      fill: NODE_COLOR_DEFAULT,
+      fill: NODE_COLOR_DEFAULT_LABEL,
       cursor: 'pointer',
       fontSize: 12,
       background: {
-        fill: '#FFFFFF',
         fillOpacity: 0.9,
-        stroke: NODE_COLOR_DEFAULT,
+        fill: NODE_COLOR_DEFAULT_LABEL_BG,
+        stroke: NODE_COLOR_DEFAULT_LABEL,
         lineWidth: 1,
         padding: [5, 8, 5, 8],
         radius: 2
@@ -84,13 +96,13 @@ export const DEFAULT_REMOTE_NODE_CONFIG: ModelStyle = {
   type: 'circle',
   size: [NODE_SIZE / 2],
 
+  icon: {
+    show: false
+  },
+
   style: {
     fill: greyColor,
     stroke: NODE_COLOR_DEFAULT
-  },
-
-  icon: {
-    show: false
   }
 };
 
@@ -101,7 +113,7 @@ export const DEFAULT_EDGE_CONFIG = {
     refY: -6,
     style: {
       cursor: 'pointer',
-      color: NODE_COLOR_DEFAULT,
+      color: NODE_COLOR_DEFAULT_LABEL,
       fontSize: 12
     }
   },
@@ -146,8 +158,8 @@ export const DEFAULT_COMBO_CONFIG = {
     offset: 15,
     position: 'top-center',
     style: {
-      fill: COMBO_COLOR_DEFAULT,
-      stroke: COMBO_COLOR_DEFAULT,
+      fill: COMBO_COLOR_DEFAULT_LABEL,
+      stroke: COMBO_COLOR_DEFAULT_LABEL,
       fontSize: 16
     }
   }

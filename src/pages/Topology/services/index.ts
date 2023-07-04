@@ -8,9 +8,14 @@ import {
   DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG,
   DEFAULT_NODE_CONFIG,
+  DEFAULT_NODE_ICON,
   DEFAULT_REMOTE_NODE_CONFIG
 } from '@core/components/Graph/config';
-import { EDGE_COLOR_ACTIVE_DEFAULT, NODE_COLOR_DEFAULT, nodeColors } from '@core/components/Graph/Graph.constants';
+import {
+  EDGE_COLOR_ACTIVE_DEFAULT,
+  NODE_COLOR_DEFAULT_LABEL,
+  nodeColors
+} from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
 import { formatByteRate } from '@core/utils/formatBytes';
@@ -61,11 +66,10 @@ export const TopologyController = {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
 
       const groupIndex = groups.findIndex(({ id }) => id === comboId);
-      const color = processBinding === 'bound' ? getColor(role === 'internal' ? 16 : groupIndex) : 'grey';
+      const color = getColor(role === 'internal' ? 16 : groupIndex);
       const img = role === 'internal' ? skupperProcessSVG : processSVG;
 
       const style = {
-        fillOpacity: 0.1,
         fill: color,
         stroke: color,
         shadowColor: color
@@ -85,13 +89,13 @@ export const TopologyController = {
         const color = getColor(index);
 
         const style = {
-          fillOpacity: 0.1,
+          fillOpacity: 0.02,
           fill: color,
           stroke: color,
           shadowColor: color
         };
 
-        return { id, label, style: { ...style, fillOpacity: 0.02 } };
+        return { id, label, style };
       });
   },
 
@@ -180,7 +184,7 @@ export const TopologyController = {
       const latency = latencyByProcessPairsMap[`${link.sourceName}${link.targetName}`];
       const latencyReverse = latencyByProcessPairsMap[`${link.targetName}${link.sourceName}`];
 
-      const color = byterate ? EDGE_COLOR_ACTIVE_DEFAULT : NODE_COLOR_DEFAULT;
+      const color = byterate ? EDGE_COLOR_ACTIVE_DEFAULT : NODE_COLOR_DEFAULT_LABEL;
 
       const reverseByteRate = options?.showLinkLabelReverse ? `(${formatByteRate(byterateReverse)})` : '';
       const reverseLatency = options?.showLinkLabelReverse ? `(${formatLatency(latencyReverse)})` : '';
@@ -225,12 +229,6 @@ function convertEntityToNode({ id, comboId, label, x, y, img, nodeConfig }: Enti
     label,
     x,
     y,
-    icon: {
-      show: true,
-      img,
-      width: 14,
-      height: 14
-    },
-    ...{ ...DEFAULT_NODE_CONFIG, ...nodeConfig }
+    ...{ ...DEFAULT_NODE_CONFIG, ...nodeConfig, icon: { ...DEFAULT_NODE_ICON, img } }
   };
 }
