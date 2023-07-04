@@ -22,10 +22,10 @@
   "scripts": {
     "start": "webpack serve --config config/webpack.dev.js",
     "build": "webpack --config config/webpack.prod.js",
-    "test": "jest --config config/jest.config.js",
+    "test": "DISABLE_METRICS=true jest --config config/jest.config.js",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "ci": "start-test 3000 cy:run",
+    "ci": "DISABLE_METRICS=true start-test 3000 cy:run",
     "lint": "eslint src --ext .ts,.tsx --cache",
     "lint-fix": "yarn lint --fix",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,json,css}'",
