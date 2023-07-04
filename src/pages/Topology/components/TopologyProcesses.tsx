@@ -7,10 +7,13 @@ import {
   SelectOptionObject,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarGroup,
+  ToolbarItem,
+  Tooltip
 } from '@patternfly/react-core';
+import { TableIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -368,49 +371,62 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     <>
       <Toolbar>
         <ToolbarContent>
-          <ToolbarItem>
-            <Select
-              isOpen={isAddressSelectMenuOpen}
-              onSelect={handleSelectAddress}
-              onToggle={handleToggleAddressDropdownMenu}
-              selections={addressIdSelected}
-            >
-              {getOptions()}
-            </Select>
-          </ToolbarItem>
+          <ToolbarGroup>
+            <ToolbarItem>
+              <Select
+                isOpen={isAddressSelectMenuOpen}
+                onSelect={handleSelectAddress}
+                onToggle={handleToggleAddressDropdownMenu}
+                selections={addressIdSelected}
+              >
+                {getOptions()}
+              </Select>
+            </ToolbarItem>
+          </ToolbarGroup>
           {isPrometheusActive && (
             <>
-              <ToolbarItem>
-                <Checkbox
-                  label={Labels.CheckboxShowSite}
-                  isChecked={showSite}
-                  onChange={handleChangeSiteCheck}
-                  id="show-site-check"
-                />
+              <ToolbarGroup>
+                <ToolbarItem>
+                  <Checkbox
+                    label={Labels.CheckboxShowSite}
+                    isChecked={showSite}
+                    onChange={handleChangeSiteCheck}
+                    id="show-site-check"
+                  />
 
-                <Checkbox
-                  isDisabled={!showLinkLabel}
-                  label={Labels.RotateLabel}
-                  isChecked={rotateLabel}
-                  onChange={handleChangeRotateLabelCheck}
-                  id="rotate-label-check"
-                />
-              </ToolbarItem>
-              <ToolbarItem>
-                <Checkbox
-                  label={Labels.CheckboxShowLabel}
-                  isChecked={showLinkLabel}
-                  onChange={handleChangeProtocolLinkLabelCheck}
-                  id="show-protocols-check"
-                />
-                <Checkbox
-                  isDisabled={!showLinkLabel}
-                  label={Labels.CheckboxShowLabelReverse}
-                  isChecked={showLinkLabelReverse}
-                  onChange={handleChangeProtocolLinkLabelCheckReverse}
-                  id="show-protocols-check-reverse"
-                />
-              </ToolbarItem>
+                  <Checkbox
+                    isDisabled={!showLinkLabel}
+                    label={Labels.RotateLabel}
+                    isChecked={rotateLabel}
+                    onChange={handleChangeRotateLabelCheck}
+                    id="rotate-label-check"
+                  />
+                </ToolbarItem>
+                <ToolbarItem>
+                  <Checkbox
+                    label={Labels.CheckboxShowLabel}
+                    isChecked={showLinkLabel}
+                    onChange={handleChangeProtocolLinkLabelCheck}
+                    id="show-protocols-check"
+                  />
+                  <Checkbox
+                    isDisabled={!showLinkLabel}
+                    label={Labels.CheckboxShowLabelReverse}
+                    isChecked={showLinkLabelReverse}
+                    onChange={handleChangeProtocolLinkLabelCheckReverse}
+                    id="show-protocols-check-reverse"
+                  />
+                </ToolbarItem>
+              </ToolbarGroup>
+              <ToolbarGroup alignment={{ default: 'alignRight' }}>
+                <ToolbarItem>
+                  <Link to={ProcessesRoutesPaths.Processes}>
+                    <Tooltip content="go to the table view">
+                      <TableIcon color="var(--pf-global--palette--black-500)" />
+                    </Tooltip>
+                  </Link>
+                </ToolbarItem>
+              </ToolbarGroup>
             </>
           )}
         </ToolbarContent>
