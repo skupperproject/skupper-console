@@ -1,4 +1,5 @@
 import { GraphData, LayoutConfig, ModelStyle } from '@antv/g6';
+import { EdgeModel, NodeModel } from '@patternfly/react-topology';
 
 export interface GraphNode {
   id: string;
@@ -32,8 +33,8 @@ export interface GraphEdge {
 }
 
 export interface GraphReactAdaptorProps {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
+  nodes: NodeModel[];
+  edges: EdgeModel[];
   combos?: GraphCombo[];
   itemSelected?: string;
   onClickCombo?: Function;

@@ -11,7 +11,7 @@ import {
   NODE_COLOR_HOVER_EDGE_DEFAULT
 } from './Graph.constants';
 
-const NODE_SIZE = 35;
+export const NODE_SIZE = 45;
 const greyColor = '#808080';
 
 export const DEFAULT_MODE = {

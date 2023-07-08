@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import TopologyAdaptor from '@core/components/Graph/TopologyAdaptor';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -79,13 +79,12 @@ const TopologySite: FC<{ id?: string | null }> = function () {
           </ToolbarGroup>
         </ToolbarContent>
       </Toolbar>
-      <GraphReactAdaptor
+      <TopologyAdaptor
         nodes={nodes}
         edges={siteLinks}
         onClickNode={handleGetSelectedNode}
         onGetZoom={handleSaveZoom}
         onFitScreen={handleFitScreen}
-        layout={TopologyController.selectLayoutFromNodes(nodes)}
         config={{
           zoom: localStorage.getItem(ZOOM_CACHE_KEY),
           fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))

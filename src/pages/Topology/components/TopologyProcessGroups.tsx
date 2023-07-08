@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import TopologyAdaptor from '@core/components/Graph/TopologyAdaptor';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import LoadingPage from '@pages/shared/Loading';
@@ -100,14 +100,13 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
         </ToolbarContent>
       </Toolbar>
 
-      <GraphReactAdaptor
+      <TopologyAdaptor
         nodes={nodes}
         edges={links}
-        onClickNode={handleGetSelectedNode}
         itemSelected={processGroupId}
+        onClickNode={handleGetSelectedNode}
         onGetZoom={handleSaveZoom}
         onFitScreen={handleFitScreen}
-        layout={TopologyController.selectLayoutFromNodes(nodes)}
         config={{
           zoom: localStorage.getItem(ZOOM_CACHE_KEY),
           fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
