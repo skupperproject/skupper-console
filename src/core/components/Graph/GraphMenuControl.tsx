@@ -14,6 +14,7 @@ type ZoomControlsProps = {
 const ZOOM_DELTA = 0.25;
 const FIT_SCREEN_CACHE_KEY_SUFFIX = '-fitScreen';
 const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
+const DURATION_ANIMATION_CONTROL_DEFAULT = 250;
 
 const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
   const center = graphInstance.getGraphCenterPoint();
@@ -22,7 +23,7 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   const handleIncreaseZoom = () => {
     const zoom = graphInstance.getZoom();
     const newZoom = zoom + ZOOM_DELTA;
-    graphInstance.zoomTo(newZoom, center, true, { duration: 250 });
+    graphInstance.zoomTo(newZoom, center, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
 
     if (onGetZoom) {
       onGetZoom(newZoom);
@@ -30,14 +31,13 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
 
     if (onFitScreen) {
       onFitScreen(0);
-      localStorage.removeItem;
     }
   };
 
   const handleDecreaseZoom = () => {
     const zoom = graphInstance.getZoom();
     const newZoom = zoom - ZOOM_DELTA;
-    graphInstance.zoomTo(newZoom, center, true, { duration: 250 });
+    graphInstance.zoomTo(newZoom, center, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
 
     if (onGetZoom) {
       onGetZoom(newZoom);
@@ -49,7 +49,7 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   };
 
   const handleZoomToDefault = () => {
-    graphInstance.fitView(5, undefined, true, { duration: 250 });
+    graphInstance.fitView(5, undefined, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
 
     if (onFitScreen) {
       onFitScreen(1);
