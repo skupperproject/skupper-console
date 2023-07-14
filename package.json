@@ -41,7 +41,6 @@
     "@patternfly/react-core": "^4.276.8",
     "@patternfly/react-icons": "^4.93.6",
     "@patternfly/react-table": "^4.113.0",
-    "@patternfly/react-topology": "^4.93.5",
     "@tanstack/react-query": "^4.29.19",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
