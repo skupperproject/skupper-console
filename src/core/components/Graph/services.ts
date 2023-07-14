@@ -48,11 +48,14 @@ export const GraphController = {
   },
   // TODO: remove this function when Backend sanitize the old process pairs
   sanitizeEdges: (nodes: GraphNode[], edges: GraphEdge[]) => {
-    const availableNodesMap = nodes.reduce((acc, node) => {
-      acc[node.id] = node.id;
+    const availableNodesMap = nodes.reduce(
+      (acc, node) => {
+        acc[node.id] = node.id;
 
-      return acc;
-    }, {} as Record<string, string>);
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
     return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
   },

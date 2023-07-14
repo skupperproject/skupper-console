@@ -180,11 +180,14 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const startTime = servers.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   if (isPrometheusActive && byteRates) {
-    const byteRatesMap = byteRates.reduce((acc, byteRate) => {
-      acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);
+    const byteRatesMap = byteRates.reduce(
+      (acc, byteRate) => {
+        acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);
 
-      return acc;
-    }, {} as Record<string, number>);
+        return acc;
+      },
+      {} as Record<string, number>
+    );
     servers = servers.map((conn) => ({
       ...conn,
       byteRate: byteRatesMap[`${conn.name}`] || 0
