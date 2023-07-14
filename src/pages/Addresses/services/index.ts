@@ -11,19 +11,25 @@ export const AddressesController = {
   ) => {
     const tcpActiveFlowsMap =
       tcpActiveFlows.length &&
-      tcpActiveFlows.reduce((acc, flow) => {
-        acc[flow.metric.address] = Number(flow.value[1]) / 2;
+      tcpActiveFlows.reduce(
+        (acc, flow) => {
+          acc[flow.metric.address] = Number(flow.value[1]) / 2;
 
-        return acc;
-      }, {} as Record<string, number>);
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
     const httpTotalFlowsMap =
       httpTotalFlows.length &&
-      httpTotalFlows?.reduce((acc, flow) => {
-        acc[flow.metric.address] = Number(flow.value[1]) / 2;
+      httpTotalFlows?.reduce(
+        (acc, flow) => {
+          acc[flow.metric.address] = Number(flow.value[1]) / 2;
 
-        return acc;
-      }, {} as Record<string, number>);
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
     return addresses.map((address) => ({
       ...address,

@@ -9,11 +9,14 @@ const SitesController = {
   bindLinksWithSiteIds: (sites: SiteResponse[], links: LinkResponse[], routers: RouterResponse[]): SiteWithLinks[] => {
     // Creates a map of router ids to its site identity
     // we use this object as a support to retrieve siteIds from router Ids
-    const routersMap = routers.reduce(function (acc, { identity, parent: siteId }) {
-      acc[identity] = siteId;
+    const routersMap = routers.reduce(
+      function (acc, { identity, parent: siteId }) {
+        acc[identity] = siteId;
 
-      return acc;
-    }, {} as Record<string, string>);
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
     // This function extends each link by adding source and destination site ids connected
     const linksExtended = links
@@ -38,11 +41,14 @@ const SitesController = {
     // Map <source site Id: destination site Id> to assign to each site the sited Ids connected with him (destinations)
     // Only outgoing links are stored.
     // Instead Incoming links id are used to select the site
-    const linksExtendedMap = linksExtended.reduce(function (acc, { sourceSiteId, destinationSiteId }) {
-      (acc[sourceSiteId] = acc[sourceSiteId] || []).push(destinationSiteId);
+    const linksExtendedMap = linksExtended.reduce(
+      function (acc, { sourceSiteId, destinationSiteId }) {
+        (acc[sourceSiteId] = acc[sourceSiteId] || []).push(destinationSiteId);
 
-      return acc;
-    }, {} as Record<string, string[]>);
+        return acc;
+      },
+      {} as Record<string, string[]>
+    );
 
     return sites.map((site) => ({
       ...site,

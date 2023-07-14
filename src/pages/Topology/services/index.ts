@@ -164,19 +164,25 @@ export const TopologyController = {
     latencyByProcessPairs?: PrometheusApiSingleResult[],
     options?: { showLinkLabelReverse?: boolean; rotateLabel?: boolean }
   ): GraphEdge[] => {
-    const byteRateByProcessPairsMap = (byteRateByProcessPairs || []).reduce((acc, { metric, value }) => {
-      {
+    const byteRateByProcessPairsMap = (byteRateByProcessPairs || []).reduce(
+      (acc, { metric, value }) => {
+        {
+          acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+        }
+
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    const latencyByProcessPairsMap = (latencyByProcessPairs || []).reduce(
+      (acc, { metric, value }) => {
         acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
-      }
 
-      return acc;
-    }, {} as Record<string, number>);
-
-    const latencyByProcessPairsMap = (latencyByProcessPairs || []).reduce((acc, { metric, value }) => {
-      acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
-
-      return acc;
-    }, {} as Record<string, number>);
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return links.map((link) => {
       const byterate = byteRateByProcessPairsMap[`${link.sourceName}${link.targetName}`];
