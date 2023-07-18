@@ -9,7 +9,7 @@ import {
   GraphReactAdaptorProps,
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
-import TransitionPage from '@core/components/TransitionPages/Slide';
+import TransitionPage from '@core/components/TransitionPages/Fade';
 
 import {
   DEFAULT_COMBO_CONFIG,

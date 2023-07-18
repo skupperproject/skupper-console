@@ -10,7 +10,7 @@ import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Slide';
+import TransitionPage from '@core/components/TransitionPages/Fade';
 import LoadingPage from '@pages/shared/Loading';
 import { Labels } from '@pages/Sites/Sites.enum';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';

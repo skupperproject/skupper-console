@@ -24,7 +24,7 @@ import { Link } from 'react-router-dom';
 import { AvailableProtocols } from '@API/REST.enum';
 import { ConnectionTCP, FlowPairsResponse, RequestHTTP } from '@API/REST.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
-import TransitionPage from '@core/components/TransitionPages/Slide';
+import TransitionPage from '@core/components/TransitionPages/Fade';
 import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';

@@ -10,7 +10,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Slide';
+import TransitionPage from '@core/components/TransitionPages/Fade';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { SiteResponse } from 'API/REST.interfaces';

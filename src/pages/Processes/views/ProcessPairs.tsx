@@ -12,7 +12,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Slide';
+import TransitionPage from '@core/components/TransitionPages/Fade';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
