@@ -11,7 +11,7 @@ import {
   ToolbarGroup,
   Tooltip
 } from '@patternfly/react-core';
-import { ClockIcon, ClusterIcon, SyncIcon } from '@patternfly/react-icons';
+import { ClusterIcon, OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -200,7 +200,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                     : undefined
                 }
                 onToggle={handleToggleSourceProcessMenu}
-                toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
+                toggleIcon={<ClusterIcon />}
               >
                 {optionsProcessSourcesWithDefault}
               </Select>
@@ -220,7 +220,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                       : undefined
                   }
                   onToggle={handleToggleDestinationProcessMenu}
-                  toggleIcon={<ClusterIcon color="var(--pf-global--palette--black-600)" />}
+                  toggleIcon={<ClusterIcon />}
                 >
                   {optionsProcessConnectedWithDefault}
                 </Select>
@@ -248,8 +248,6 @@ const MetricFilters: FC<MetricFilterProps> = memo(
 
           {/* Display filters */}
           <ToolbarGroup variant={'filter-group'} alignment={{ default: 'alignRight' }}>
-            <ToolbarItem variant="label">{MetricsLabels.MetricDisplayFilters}</ToolbarItem>
-
             <ToolbarItem>
               <Select
                 selections={selectedFilter.timeInterval?.label}
@@ -257,13 +255,13 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                 isDisabled={filterOptions.timeIntervals.disabled}
                 onSelect={handleSelectTimeIntervalMenu}
                 onToggle={handleToggleTimeIntervalMenu}
-                toggleIcon={<ClockIcon color="var(--pf-global--palette--black-600)" />}
+                toggleIcon={<OutlinedClockIcon />}
               >
                 {optionsTimeIntervalWithDefault}
               </Select>
             </ToolbarItem>
 
-            <ToolbarItem>
+            <ToolbarItem spacer={{ default: 'spacerSm' }}>
               <Select
                 selections={selectedFilter.displayInterval}
                 isOpen={selectedFilterIsOpen.displayInterval}
@@ -277,7 +275,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
             <ToolbarItem>
               <Tooltip content={MetricsLabels.RefetchData}>
                 <Button
-                  variant="plain"
+                  variant="primary"
                   isLoading={isRefetching}
                   isDisabled={
                     !!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key

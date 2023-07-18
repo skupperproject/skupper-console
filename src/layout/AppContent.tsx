@@ -2,6 +2,8 @@ import { PageSection } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
 import { useRoutes, RouteObject } from 'react-router-dom';
 
+import AppMenu from '@core/components/AppMenu/AppMenu';
+
 interface AppContentProps {
   children: RouteObject[];
 }
@@ -14,9 +16,12 @@ const AppContent = function ({ children }: AppContentProps) {
   }
 
   return (
-    <PageSection padding={{ default: 'padding' }} style={{ height: '100%' }}>
-      <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
-    </PageSection>
+    <>
+      <AppMenu />
+      <PageSection style={{ height: '100%', overflow: 'hidden' }}>
+        <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
+      </PageSection>
+    </>
   );
 };
 

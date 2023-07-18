@@ -105,63 +105,65 @@ const Metrics: FC<MetricsProps> = function ({
   } = metrics;
 
   return (
-    <>
-      <Card isRounded style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-        <MetricFilters
-          sourceProcesses={sourceProcesses}
-          processesConnected={processesConnected}
-          initialFilters={{
-            ...selectedFilters,
-            // if idSource have more ids set default (undefined)
-            processIdSource:
-              selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
-          }}
-          customFilterOptions={filterOptions}
-          startTime={startTime}
-          isRefetching={isRefetching}
-          onRefetch={handleRefetchMetrics}
-          onSelectFilters={handleFilters}
-        />
-      </Card>
+    <Grid hasGutter>
+      <GridItem>
+        <Card isRounded style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+          <MetricFilters
+            sourceProcesses={sourceProcesses}
+            processesConnected={processesConnected}
+            initialFilters={{
+              ...selectedFilters,
+              // if idSource have more ids set default (undefined)
+              processIdSource:
+                selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
+            }}
+            customFilterOptions={filterOptions}
+            startTime={startTime}
+            isRefetching={isRefetching}
+            onRefetch={handleRefetchMetrics}
+            onSelectFilters={handleFilters}
+          />
+        </Card>
+      </GridItem>
 
-      <Grid hasGutter>
-        {!metrics.byteRateData && (
-          <GridItem>
-            <Card isFullHeight>
-              <CardBody>
-                <EmptyData message={MetricsLabels.NoMetricFoundMessage} />
-              </CardBody>
-            </Card>
-          </GridItem>
-        )}
-
+      {!metrics.byteRateData && (
         <GridItem>
-          {!!bytesData && !!byteRateData && <TrafficCharts bytesData={bytesData} byteRateData={byteRateData} />}
+          <Card isFullHeight>
+            <CardBody>
+              <EmptyData message={MetricsLabels.NoMetricFoundMessage} />
+            </CardBody>
+          </Card>
         </GridItem>
+      )}
 
+      {!!bytesData && !!byteRateData && (
         <GridItem>
-          {!!latenciesData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
-            <LatencyCharts latenciesData={latenciesData} />
-          )}
+          <TrafficCharts bytesData={bytesData} byteRateData={byteRateData} />
         </GridItem>
+      )}
 
+      {!!latenciesData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
         <GridItem>
-          {!!requestRateData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
-            <RequestCharts
-              requestRateData={requestRateData}
-              totalRequestsInterval={totalRequestsInterval}
-              avgRequestRateInterval={avgRequestRateInterval}
-            />
-          )}
+          <LatencyCharts latenciesData={latenciesData} />)
         </GridItem>
+      )}
 
+      {!!requestRateData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
         <GridItem>
-          {!!responseData && responseRateData && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
-            <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
-          )}
+          <RequestCharts
+            requestRateData={requestRateData}
+            totalRequestsInterval={totalRequestsInterval}
+            avgRequestRateInterval={avgRequestRateInterval}
+          />
         </GridItem>
-      </Grid>
-    </>
+      )}
+
+      {!!responseData && responseRateData && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+        <GridItem>
+          <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
+        </GridItem>
+      )}
+    </Grid>
   );
 };
 
