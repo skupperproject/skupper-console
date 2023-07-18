@@ -1,6 +1,18 @@
-import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, FC, useMemo } from 'react';
 
-import { Card, CardTitle, Flex, Pagination, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
+import {
+  Card,
+  CardTitle,
+  Flex,
+  Pagination,
+  Panel,
+  PanelMain,
+  PanelMainBody,
+  Text,
+  TextContent,
+  TextVariants,
+  Tooltip
+} from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import {
   SortByDirection,
@@ -134,6 +146,11 @@ const SkTable = function <T>({
     })
   }));
 
+  const isPaginationEnabled = useMemo(
+    () => pagination && paginationTotalRows > paginationPageSize,
+    [pagination, paginationPageSize, paginationTotalRows]
+  );
+
   const { isPlain = false, shouldSort = true, ...restProps } = props;
 
   return (
@@ -154,7 +171,17 @@ const SkTable = function <T>({
           </Flex>
         </CardTitle>
       )}
-      <TableComposable borders={false} variant="compact" isStickyHeader isStriped {...restProps}>
+      {isPaginationEnabled && (
+        <SkPagination
+          totalRow={paginationTotalRows}
+          paginationSize={paginationSize}
+          currentPageNumber={currentPageNumber}
+          onSetPageNumber={handleSetPageNumber}
+          onSetPaginationSize={handleSetPaginationSize}
+        />
+      )}
+
+      <TableComposable borders={false} variant="compact" isStickyHeader={false} isStriped {...restProps}>
         <Thead>
           <Tr>
             {skColumns.map(({ name, prop, columnDescription }, index) => (
@@ -166,7 +193,6 @@ const SkTable = function <T>({
                   columnDescription
                     ? {
                         tooltip: columnDescription,
-                        className: 'repositories-info-tip',
                         tooltipProps: {
                           isContentLeftAligned: true
                         }
@@ -215,14 +241,13 @@ const SkTable = function <T>({
             })}
         </Tbody>
       </TableComposable>
-      {pagination && paginationTotalRows > paginationPageSize && (
-        <Pagination
-          perPageComponent="button"
-          itemCount={paginationTotalRows}
-          perPage={paginationSize}
-          page={currentPageNumber}
-          onSetPage={handleSetPageNumber}
-          onPerPageSelect={handleSetPaginationSize}
+      {isPaginationEnabled && (
+        <SkPagination
+          totalRow={paginationTotalRows}
+          paginationSize={paginationSize}
+          currentPageNumber={currentPageNumber}
+          onSetPageNumber={handleSetPageNumber}
+          onSetPaginationSize={handleSetPaginationSize}
         />
       )}
     </Card>
@@ -230,6 +255,46 @@ const SkTable = function <T>({
 };
 
 export default SkTable;
+
+interface SkPaginationProps {
+  isCompact?: boolean;
+  totalRow: number;
+  paginationSize: number;
+  currentPageNumber: number;
+  onSetPageNumber?: (event: ReactMouseEvent | KeyboardEvent | MouseEvent, pageNumber: number) => void;
+  onSetPaginationSize?: (
+    _: ReactMouseEvent | KeyboardEvent | MouseEvent,
+    pageSizeSelected: number,
+    newPage: number
+  ) => void;
+}
+
+const SkPagination: FC<SkPaginationProps> = function ({
+  isCompact = true,
+  totalRow,
+  paginationSize,
+  currentPageNumber,
+  onSetPageNumber,
+  onSetPaginationSize
+}) {
+  return (
+    <Panel>
+      <PanelMain>
+        <PanelMainBody>
+          <Pagination
+            isCompact={isCompact}
+            perPageComponent="button"
+            itemCount={totalRow}
+            perPage={paginationSize}
+            page={currentPageNumber}
+            onSetPage={onSetPageNumber}
+            onPerPageSelect={onSetPaginationSize}
+          />
+        </PanelMainBody>
+      </PanelMain>
+    </Panel>
+  );
+};
 
 function sortRowsByColumnName<T>(rows: NonNullableValue<T>[], columnName: string, direction: number) {
   return rows.sort((a, b) => {
