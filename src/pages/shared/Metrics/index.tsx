@@ -144,7 +144,7 @@ const Metrics: FC<MetricsProps> = function ({
 
       {!!latenciesData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
         <GridItem>
-          <LatencyCharts latenciesData={latenciesData} />)
+          <LatencyCharts latenciesData={latenciesData} />
         </GridItem>
       )}
 

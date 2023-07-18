@@ -18,7 +18,7 @@ const AppContent = function ({ children }: AppContentProps) {
   return (
     <>
       <AppMenu />
-      <PageSection style={{ height: '100%', overflow: 'hidden' }}>
+      <PageSection hasOverflowScroll>
         <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
       </PageSection>
     </>

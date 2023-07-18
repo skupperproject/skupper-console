@@ -23,9 +23,7 @@ const App = function () {
     <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
       <ErrorBoundary FallbackComponent={Console}>
         <Suspense fallback={<span />}>
-          <div style={{ minHeight: '100%', overflow: 'auto' }}>
-            <AppContent>{routes}</AppContent>
-          </div>
+          <AppContent>{routes}</AppContent>
         </Suspense>
       </ErrorBoundary>
     </Page>
