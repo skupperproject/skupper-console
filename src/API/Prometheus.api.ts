@@ -291,5 +291,5 @@ export const PrometheusApi = {
   }
 };
 
-export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
+const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
   queryType === 'range' ? `${PROMETHEUS_URL}/rangequery/` : `${PROMETHEUS_URL}/query/`;
