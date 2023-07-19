@@ -9,7 +9,7 @@ html {
 }
 
 .pf-c-page__main-section {
-  background: linear-gradient(to bottom, rgb(202, 215, 228) 0%, var(--pf-global--palette--black-100) 80%);
+  background: linear-gradient(to bottom, rgb(202, 215, 228) 0%, var(--pf-global--palette--black-200) 80%);
 }
 
 .pf-c-page__header {

@@ -48,7 +48,7 @@ describe('Process component', () => {
     );
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByRole('sk-heading')).toHaveTextContent(processResult.name);
+    expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processResult.name);
     expect(screen.getByText(processResult.parentName)).toHaveTextContent('site 1');
     expect(screen.getByText(processResult.groupName)).toHaveTextContent('component 1');
     expect(screen.getByText(processResult.hostName)).toHaveTextContent('10.242.0.5');

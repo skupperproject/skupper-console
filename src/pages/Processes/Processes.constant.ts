@@ -105,7 +105,7 @@ export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessPairsColumnsNames.Protocol,
     prop: 'protocol' as keyof ProcessPairsResponse,
-    width: 10
+    width: 15
   },
   {
     name: '',

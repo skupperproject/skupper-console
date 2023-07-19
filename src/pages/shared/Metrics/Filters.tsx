@@ -261,7 +261,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
               </Select>
             </ToolbarItem>
 
-            <ToolbarItem spacer={{ default: 'spacerSm' }}>
+            <ToolbarItem>
               <Select
                 selections={selectedFilter.displayInterval}
                 isOpen={selectedFilterIsOpen.displayInterval}
