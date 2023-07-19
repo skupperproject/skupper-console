@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 
-import { Card, Grid, GridItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
@@ -82,21 +81,17 @@ const Addresses = function () {
       <>
         <SkTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
         {/* addresses table */}
-        <Grid hasGutter>
-          <GridItem>
-            <Card isFullHeight>
-              <SkTable
-                rows={addressExtended}
-                columns={columnsExtend}
-                pagination={true}
-                paginationPageSize={BIG_PAGINATION_SIZE}
-                onGetFilters={handleGetFiltersAddressses}
-                paginationTotalRows={addressesRowsCount}
-                customCells={customAddressCells}
-              />
-            </Card>
-          </GridItem>
-        </Grid>
+        <div>
+          <SkTable
+            rows={addressExtended}
+            columns={columnsExtend}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFiltersAddressses}
+            paginationTotalRows={addressesRowsCount}
+            customCells={customAddressCells}
+          />
+        </div>
       </>
     </TransitionPage>
   );

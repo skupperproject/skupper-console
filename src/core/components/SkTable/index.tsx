@@ -1,19 +1,7 @@
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, FC, useMemo } from 'react';
 
-import {
-  Card,
-  CardTitle,
-  Flex,
-  Pagination,
-  Panel,
-  PanelMain,
-  PanelMainBody,
-  Text,
-  TextContent,
-  TextVariants,
-  Tooltip
-} from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
+import { Card, Pagination, Panel, PanelMain, PanelMainBody } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import {
   SortByDirection,
   TableComposable,
@@ -30,6 +18,7 @@ import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProper
 
 import { NonNullableValue, SKTableProps } from './SkTable.interface';
 import EmptyData from '../EmptyData';
+import SkTitle from '../SkTitle';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;
@@ -43,6 +32,7 @@ const SkTable = function <T>({
   customCells,
   onGetFilters,
   pagination = false,
+  alwaysShowPagination = true,
   paginationPageSize = PAGINATION_PAGE_SIZE,
   paginationTotalRows = rows.length,
   ...props
@@ -147,30 +137,15 @@ const SkTable = function <T>({
   }));
 
   const isPaginationEnabled = useMemo(
-    () => pagination && paginationTotalRows > paginationPageSize,
-    [pagination, paginationPageSize, paginationTotalRows]
+    () => (pagination && paginationTotalRows > paginationPageSize) || alwaysShowPagination,
+    [alwaysShowPagination, pagination, paginationPageSize, paginationTotalRows]
   );
 
-  const { isPlain = false, shouldSort = true, ...restProps } = props;
+  const { shouldSort = true, borders = true, isStriped = false, ...restProps } = props;
 
   return (
-    <Card isPlain={isPlain} isFullHeight>
-      {title && (
-        <CardTitle>
-          <Flex>
-            {title && (
-              <TextContent>
-                <Text component={TextVariants.h2}>{title}</Text>
-              </TextContent>
-            )}
-            {titleDescription && (
-              <Tooltip position="right" content={titleDescription}>
-                <OutlinedQuestionCircleIcon />
-              </Tooltip>
-            )}
-          </Flex>
-        </CardTitle>
-      )}
+    <Card isFullHeight>
+      {title && <SkTitle title={title} description={titleDescription} />}
       {isPaginationEnabled && (
         <SkPagination
           totalRow={paginationTotalRows}
@@ -180,8 +155,14 @@ const SkTable = function <T>({
           onSetPaginationSize={handleSetPaginationSize}
         />
       )}
-
-      <TableComposable borders={false} variant="compact" isStickyHeader={false} isStriped {...restProps}>
+      <TableComposable
+        style={{ borderTop: `1px solid var(--pf-global--BorderColor--100)` }}
+        borders={borders}
+        variant="compact"
+        isStickyHeader={false}
+        isStriped={isStriped}
+        {...restProps}
+      >
         <Thead>
           <Tr>
             {skColumns.map(({ name, prop, columnDescription }, index) => (
@@ -214,33 +195,27 @@ const SkTable = function <T>({
             </Tr>
           )}
           {!(skRows.length === 0) &&
-            skRows.map((row, rowIndex) => {
-              const isOddRow = (rowIndex + 1) % 2;
-              const customStyle = {
-                backgroundColor: 'var(--pf-global--palette--blue-50)'
-              };
+            skRows.map((row) => (
+              <Tr key={row.id}>
+                {row.columns.map(({ data, value, customCellName, callback, format, width, modifier }, index) => {
+                  const Component = !!customCells && !!customCellName && customCells[customCellName];
 
-              return (
-                <Tr key={row.id} style={isOddRow ? customStyle : {}}>
-                  {row.columns.map(({ data, value, customCellName, callback, format, width, modifier }, index) => {
-                    const Component = !!customCells && !!customCellName && customCells[customCellName];
-
-                    return (
-                      <Td width={width} key={index} modifier={modifier}>
-                        {Component && (
-                          <Component data={data} value={value} callback={callback} format={format && format(value)} />
-                        )}
-                        {!Component && (
-                          <TableText wrapModifier="truncate">{(format && format(value)) || value}</TableText>
-                        )}
-                      </Td>
-                    );
-                  })}
-                </Tr>
-              );
-            })}
+                  return (
+                    <Td width={width} key={index} modifier={modifier}>
+                      {Component && (
+                        <Component data={data} value={value} callback={callback} format={format && format(value)} />
+                      )}
+                      {!Component && (
+                        <TableText wrapModifier="truncate">{(format && format(value)) || value}</TableText>
+                      )}
+                    </Td>
+                  );
+                })}
+              </Tr>
+            ))}
         </Tbody>
       </TableComposable>
+
       {isPaginationEnabled && (
         <SkPagination
           totalRow={paginationTotalRows}

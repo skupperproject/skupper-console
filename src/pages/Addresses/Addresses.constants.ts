@@ -50,14 +50,14 @@ export const addressesColumnsWithFlowPairsCounters: SKColumn<AddressResponse>[] 
     columnDescription: 'Active connection or requests',
 
     prop: 'currentFlows' as keyof AddressResponse,
-    width: 15
+    width: 10
   },
   {
     name: AddressesColumnsNames.TotalFLowPairs,
     columnDescription: 'Total connection or requests',
 
     prop: 'totalFlows' as keyof AddressResponse,
-    width: 15
+    width: 10
   }
 ];
 

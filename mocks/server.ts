@@ -104,6 +104,19 @@ mockRoutersForPerf.forEach((_, index) => {
   );
 });
 
+const mockProcessesForPerf: ProcessResponse[] = [];
+for (let i = 0; i < ITEMS_TEST; i++) {
+  const parent = Math.floor(Math.random() * (4 - 1 + 1) + 1);
+
+  mockProcessesForPerf.push({
+    ...processes[0],
+    identity: `processPerf${i}`,
+    parent: `site-${parent}`,
+    name: `process ${i}`,
+    parentName: `site ${parent}`
+  });
+}
+
 // api functions
 export const MockApi = {
   get500Error: () => new Response(500),
@@ -137,6 +150,12 @@ export const MockApi = {
     const results = processGroups.results.find(({ identity }: ProcessGroupResponse) => identity === id);
 
     return { results };
+  },
+  getProcesses: () => {
+    const processesForPerfTests = PERF_TEST ? mockProcessesForPerf : [];
+    const results = [...processes.results, ...processesForPerfTests];
+
+    return { ...processes, results };
   }
 };
 
@@ -147,6 +166,7 @@ export const MockApiPaths = {
   Site: `${prefix}/sites/:id`,
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
+  Processes: `${prefix}/processes`,
   Routers: `${prefix}/routers`,
   Links: `${prefix}/links`
 };
@@ -173,6 +193,7 @@ export function loadMockServer() {
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
+      this.get(MockApiPaths.Processes, MockApi.getProcesses());
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
@@ -193,8 +214,6 @@ export function loadMockServer() {
       this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => ({
         results: processGroupPairs.results.find(({ identity }: ProcessPairsResponse) => identity === id)
       }));
-
-      this.get(`${prefix}/processes`, () => processes);
 
       this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => ({
         results: processes.results.find(({ identity }: ProcessResponse) => identity === id)

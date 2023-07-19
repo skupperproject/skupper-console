@@ -52,7 +52,7 @@ describe('Component component', () => {
     );
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByRole('sk-heading')).toHaveTextContent(processGroupResults[0].name);
+    expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processGroupResults[0].name);
     expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
   });
 

@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
-import { Button, Card, CardHeader, Flex, Title, Tooltip } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { Button, Card, CardHeader, Flex, TextContent, Text, Title } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
 import { SkTitleLabels } from './SkTitle.enum';
@@ -27,12 +26,12 @@ const SkTitle: FC<SkTitleProps> = function ({
       <CardHeader>
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           {icon && <ResourceIcon type={icon} />}
-          <Title headingLevel="h1">{title}</Title>
-          {description && (
-            <Tooltip position="right" content={description}>
-              <OutlinedQuestionCircleIcon />
-            </Tooltip>
-          )}
+
+          <TextContent>
+            <Title headingLevel="h1">{title}</Title>
+            {description && <Text component="p">{description}</Text>}
+          </TextContent>
+
           {link && <Button component={(props) => <Link {...props} to={link} />}>{linkLabel}</Button>}
         </Flex>
       </CardHeader>

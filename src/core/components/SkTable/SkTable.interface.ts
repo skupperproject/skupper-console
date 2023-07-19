@@ -13,6 +13,7 @@ export interface SKTableProps<T> {
   isPlain?: boolean;
   shouldSort?: boolean;
   pagination?: boolean;
+  alwaysShowPagination?: boolean;
   paginationPageSize?: number;
   paginationTotalRows?: number;
   onGetFilters?: Function;
