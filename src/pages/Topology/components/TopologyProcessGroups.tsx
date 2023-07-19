@@ -15,7 +15,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import { Labels } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'component-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'component-fitScreen';
@@ -91,7 +91,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
           <ToolbarGroup alignment={{ default: 'alignRight' }}>
             <ToolbarItem>
               <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
-                <Tooltip content={Labels.TableView}>
+                <Tooltip content={TopologyLabels.TableView}>
                   <ListIcon />
                 </Tooltip>
               </Link>

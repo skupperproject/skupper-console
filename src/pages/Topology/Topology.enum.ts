@@ -9,7 +9,7 @@ export enum TopologyViews {
   Processes = 'Processes'
 }
 
-export enum Labels {
+export enum TopologyLabels {
   Topology = 'Topology',
   LegendGroupsItems = 'Sites',
   ShowAll = 'Show all addresses',

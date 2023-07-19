@@ -4,7 +4,7 @@ export enum SitesRoutesPaths {
 
 export enum Labels {
   Section = 'Sites',
-  Description = 'Set of applications running under the same geographical area',
+  Description = 'A site is a location where components of your application are running. Sites are linked together to form a network. Sites have different kinds based on platform. These include Kubernetes, Podman, virtual machines, and bare metal hosts.',
   Details = 'Details',
   Links = 'Links created to',
   Hosts = 'Hosts',
@@ -13,6 +13,5 @@ export enum Labels {
   Namespace = 'Namespace',
   GoToTopology = 'Go to the Topology view',
   SiteVersion = 'Version',
-  Created = 'Created',
-  TopologyView = 'TopologyView'
+  Created = 'Created'
 }

@@ -1,6 +1,16 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
+import {
+  Bullseye,
+  Card,
+  CardBody,
+  CardExpandableContent,
+  CardHeader,
+  CardTitle,
+  Grid,
+  GridItem,
+  Spinner
+} from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
@@ -16,6 +26,8 @@ import ResponseCharts from './ResponseCharts';
 import MetricsController from './services';
 import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
 import TrafficCharts from './TrafficCharts';
+
+import './Metrics.css';
 
 function getDisplayIntervalValue(value: string | undefined) {
   return displayIntervalMap.find(({ key }) => key === value)?.value || 0;
@@ -33,6 +45,9 @@ const Metrics: FC<MetricsProps> = function ({
   const { displayInterval, ...queryInit } = selectedFilters;
   const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(displayInterval));
   const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>(queryInit);
+  const [isExpandedLatency, setIsExpandedLatency] = useState(false);
+  const [isExpandedRequests, setIsExpandedRequests] = useState(false);
+  const [isExpandedResponses, setIsExpandedResponses] = useState(false);
 
   const {
     data: metrics,
@@ -47,6 +62,18 @@ const Metrics: FC<MetricsProps> = function ({
       keepPreviousData: true
     }
   );
+
+  const handleExpandLatency = useCallback(() => {
+    setIsExpandedLatency(!isExpandedLatency);
+  }, [isExpandedLatency]);
+
+  const handleExpandRequests = useCallback(() => {
+    setIsExpandedRequests(!isExpandedRequests);
+  }, [isExpandedRequests]);
+
+  const handleExpandResponses = useCallback(() => {
+    setIsExpandedResponses(!isExpandedResponses);
+  }, [isExpandedResponses]);
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
@@ -126,7 +153,7 @@ const Metrics: FC<MetricsProps> = function ({
         </Card>
       </GridItem>
 
-      {!metrics.byteRateData && (
+      {!byteRateData && (
         <GridItem>
           <Card isFullHeight>
             <CardBody>
@@ -136,32 +163,73 @@ const Metrics: FC<MetricsProps> = function ({
         </GridItem>
       )}
 
-      {!!bytesData && !!byteRateData && (
+      {byteRateData && bytesData && (
         <GridItem>
           <TrafficCharts bytesData={bytesData} byteRateData={byteRateData} />
         </GridItem>
       )}
 
-      {!!latenciesData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
-        <GridItem>
-          <LatencyCharts latenciesData={latenciesData} />
-        </GridItem>
-      )}
+      {prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+        <>
+          <GridItem>
+            <Card
+              isExpanded={!!latenciesData?.length && isExpandedLatency}
+              className={!latenciesData?.length ? 'metric-disabled' : undefined}
+            >
+              <CardHeader onExpand={handleExpandLatency}>
+                <CardTitle>{MetricsLabels.LatencyTitle}</CardTitle>
+              </CardHeader>
 
-      {!!requestRateData?.length && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
-        <GridItem>
-          <RequestCharts
-            requestRateData={requestRateData}
-            totalRequestsInterval={totalRequestsInterval}
-            avgRequestRateInterval={avgRequestRateInterval}
-          />
-        </GridItem>
-      )}
+              <CardExpandableContent>
+                {!!latenciesData?.length && (
+                  <CardBody>
+                    <LatencyCharts latenciesData={latenciesData} />
+                  </CardBody>
+                )}
+              </CardExpandableContent>
+            </Card>
+          </GridItem>
 
-      {!!responseData && responseRateData && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
-        <GridItem>
-          <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
-        </GridItem>
+          <GridItem>
+            <Card
+              isExpanded={!!requestRateData?.length && isExpandedRequests}
+              className={!requestRateData?.length ? 'metric-disabled' : undefined}
+            >
+              <CardHeader onExpand={handleExpandRequests}>
+                <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
+              </CardHeader>
+              <CardExpandableContent>
+                {!!requestRateData?.length && (
+                  <CardBody>
+                    <RequestCharts
+                      requestRateData={requestRateData}
+                      totalRequestsInterval={totalRequestsInterval}
+                      avgRequestRateInterval={avgRequestRateInterval}
+                    />
+                  </CardBody>
+                )}
+              </CardExpandableContent>
+            </Card>
+          </GridItem>
+
+          <GridItem>
+            <Card
+              isExpanded={!!responseData && isExpandedResponses}
+              className={!responseData ? 'metric-disabled' : undefined}
+            >
+              <CardHeader onExpand={handleExpandResponses}>
+                <CardTitle>{MetricsLabels.HttpStatus}</CardTitle>
+              </CardHeader>
+              <CardExpandableContent>
+                {!!responseData && responseRateData && (
+                  <CardBody>
+                    <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
+                  </CardBody>
+                )}
+              </CardExpandableContent>
+            </Card>
+          </GridItem>
+        </>
       )}
     </Grid>
   );

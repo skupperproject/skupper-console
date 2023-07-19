@@ -33,7 +33,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { ProcessLegendData } from '../Topology.constant';
-import { Labels } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process-graphZoom';
 const SHOW_SITE_KEY = 'showSite';
@@ -234,7 +234,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       </SelectOption>
     ));
 
-    const optionsWithDefault = [<SelectOption key={0} value={Labels.ShowAll} isPlaceholder />, ...(options || [])];
+    const optionsWithDefault = [
+      <SelectOption key={0} value={TopologyLabels.ShowAll} isPlaceholder />,
+      ...(options || [])
+    ];
 
     return optionsWithDefault;
   }, [addresses?.results]);
@@ -388,14 +391,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
               <ToolbarGroup>
                 <ToolbarItem>
                   <Checkbox
-                    label={Labels.CheckboxShowSite}
+                    label={TopologyLabels.CheckboxShowSite}
                     isChecked={showSite}
                     onChange={handleChangeSiteCheck}
                     id="show-site-check"
                   />
                   <Checkbox
                     isDisabled={!showLinkLabel}
-                    label={Labels.RotateLabel}
+                    label={TopologyLabels.RotateLabel}
                     isChecked={rotateLabel}
                     onChange={handleChangeRotateLabelCheck}
                     id="rotate-label-check"
@@ -404,14 +407,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
                 <ToolbarItem>
                   <Checkbox
-                    label={Labels.CheckboxShowLabel}
+                    label={TopologyLabels.CheckboxShowLabel}
                     isChecked={showLinkLabel}
                     onChange={handleChangeProtocolLinkLabelCheck}
                     id="show-protocols-check"
                   />
                   <Checkbox
                     isDisabled={!showLinkLabel}
-                    label={Labels.CheckboxShowLabelReverse}
+                    label={TopologyLabels.CheckboxShowLabelReverse}
                     isChecked={showLinkLabelReverse}
                     onChange={handleChangeProtocolLinkLabelCheckReverse}
                     id="show-protocols-check-reverse"
@@ -422,7 +425,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
               <ToolbarGroup alignment={{ default: 'alignRight' }}>
                 <ToolbarItem>
                   <Link to={ProcessesRoutesPaths.Processes}>
-                    <Tooltip content={Labels.TableView}>
+                    <Tooltip content={TopologyLabels.TableView}>
                       <ListIcon />
                     </Tooltip>
                   </Link>
