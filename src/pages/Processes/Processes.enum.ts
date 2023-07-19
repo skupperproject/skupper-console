@@ -13,7 +13,7 @@ export enum ProcessesTableColumns {
 
 export enum ProcessesLabels {
   Section = 'Processes',
-  Description = 'A process represents one specific instance that is currently executing. It contains all runtime information related to that instance',
+  Description = 'A process represents running application code. On Kubernetes, a process is a pod. On Docker or Podman, a process is a container. On virtual machines or bare metal hosts',
   Details = 'Details',
   Processes = 'Processes',
   Addresses = 'Addresses',

@@ -16,6 +16,7 @@ const SkCounterCard: FC<MetricCardProps> = function ({
 }) {
   return (
     <Card
+      isPlain
       isRounded
       isFullHeight
       style={{

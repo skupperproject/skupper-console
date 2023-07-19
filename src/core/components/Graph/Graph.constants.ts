@@ -22,7 +22,7 @@ export const nodeColors = [
 ];
 
 export const NODE_COLOR_DEFAULT = '#92c1e9';
-export const NODE_COLOR_DEFAULT_LABEL = '#6A6E73';
+export const NODE_COLOR_DEFAULT_LABEL = '#7f7f7f';
 export const NODE_COLOR_DEFAULT_LABEL_BG = '#FFFFFF';
 export const EDGE_COLOR_DEFAULT = '#B8BBBE';
 export const EDGE_COLOR_ACTIVE_DEFAULT = '#0066CC';

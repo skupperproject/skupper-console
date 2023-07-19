@@ -72,7 +72,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
   icon: DEFAULT_NODE_ICON,
 
   style: {
-    fillOpacity: 0.15,
+    fillOpacity: 0.1,
     fill: NODE_COLOR_DEFAULT,
     stroke: NODE_COLOR_DEFAULT,
     lineWidth: 1
@@ -83,13 +83,13 @@ export const DEFAULT_NODE_CONFIG: Partial<{
     offset: 8,
     style: {
       fill: NODE_COLOR_DEFAULT_LABEL,
-      fontSize: 12,
+      fontSize: 11,
       fillOpacity: 0.9,
       background: {
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_COLOR_DEFAULT_LABEL,
         lineWidth: 1,
-        padding: [3, 3, 3, 3],
+        padding: [4, 5, 4, 5],
         radius: 2
       }
     }
@@ -157,10 +157,10 @@ export const DEFAULT_COMBO_CONFIG = {
 
   style: {
     cursor: 'pointer',
-    lineWidth: 2,
+    lineWidth: 1,
     fillOpacity: 0.02,
-    shadowBlur: 10,
-    radius: 8
+    shadowBlur: 6,
+    radius: 3
   },
 
   labelCfg: {
@@ -170,7 +170,7 @@ export const DEFAULT_COMBO_CONFIG = {
     style: {
       fill: COMBO_COLOR_DEFAULT_LABEL,
       stroke: COMBO_COLOR_DEFAULT_LABEL,
-      fontSize: 16
+      fontSize: 14
     }
   }
 };

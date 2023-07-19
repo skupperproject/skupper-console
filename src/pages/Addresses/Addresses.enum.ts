@@ -15,7 +15,7 @@ export enum AddressesLabels {
   Section = 'Addresses',
   HTTP = ' HTTP/2',
   TCP = 'TCP',
-  Description = 'Set of processes that are exposed across the Virtual application network',
+  Description = 'An address is a string identifier that binds clients and servers. Addresses are the basis for routing service traffic across sites.',
   MetricDestinationProcessFilter = 'All servers'
 }
 

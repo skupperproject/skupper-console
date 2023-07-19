@@ -14,7 +14,7 @@ import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
-import { Labels } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'site-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'site-fitScreen';
@@ -71,7 +71,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
           <ToolbarGroup alignment={{ default: 'alignRight' }}>
             <ToolbarItem>
               <Link to={SitesRoutesPaths.Sites}>
-                <Tooltip content={Labels.TableView}>
+                <Tooltip content={TopologyLabels.TableView}>
                   <ListIcon />
                 </Tooltip>
               </Link>

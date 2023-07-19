@@ -31,7 +31,7 @@ import {
   SiteResponse
 } from 'API/REST.interfaces';
 
-import { Labels } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 import { Entity } from '../Topology.interfaces';
 
 const shape = {
@@ -53,7 +53,7 @@ export const TopologyController = {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const img = processGroupRole === 'internal' ? skupperProcessSVG : componentSVG;
 
-      const suffix = processCount > 1 ? Labels.Processes : Labels.Process;
+      const suffix = processCount > 1 ? TopologyLabels.Processes : TopologyLabels.Process;
       const label = `${name} (${processCount} ${suffix})`;
 
       const nodeConfig = processGroupRole === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape.bound };

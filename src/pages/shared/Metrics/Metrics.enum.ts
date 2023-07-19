@@ -19,5 +19,8 @@ export enum MetricsLabels {
   ByteRateCurrentCol = 'current',
   ByteRateMaxCol = 'max',
   MetricFilters = 'Filters',
-  RefetchData = 'Data update'
+  RefetchData = 'Data update',
+  LatencyTitle = 'Http Latency',
+  RequestsTitle = 'Http Requests',
+  HttpStatus = 'Http Response Status'
 }

@@ -12,8 +12,7 @@ import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Fade';
 import LoadingPage from '@pages/shared/Loading';
-import { Labels } from '@pages/Sites/Sites.enum';
-import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
 import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constant';
@@ -65,7 +64,7 @@ const Processes = function () {
                 <ToolbarGroup alignment={{ default: 'alignRight' }}>
                   <ToolbarItem>
                     <Link to={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}>
-                      <Tooltip content={Labels.TopologyView}>
+                      <Tooltip content={TopologyLabels.Topology}>
                         <TopologyIcon />
                       </Tooltip>
                     </Link>
