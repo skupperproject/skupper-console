@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Card, CardHeader, Flex, Text, Title } from '@patternfly/react-core';
+import { Card, CardHeader, Flex, Text, TextContent } from '@patternfly/react-core';
 
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
@@ -21,8 +21,10 @@ const SkTitle: FC<SkTitleProps> = function ({ title, icon, link, linkLabel = Top
       <CardHeader style={{ justifyContent: 'space-between' }}>
         <Flex>
           {icon && <ResourceIcon type={icon} />}
-          <Title headingLevel="h1">{title}</Title>
-          {description && <Text component="p">{description}</Text>}
+          <TextContent>
+            <Text component="h1">{title}</Text>
+            {description && <Text component="p">{description}</Text>}
+          </TextContent>
         </Flex>
         {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
       </CardHeader>
