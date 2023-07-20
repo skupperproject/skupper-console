@@ -22,7 +22,7 @@ import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT_LABEL } from '@core/components/G
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
+import { QueriesServices } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
 import LoadingPage from '@pages/shared/Loading';
@@ -75,8 +75,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     showLinkLabelReverseInitState ? showLinkLabelReverseInitState === 'true' : false
   );
 
-  const { data: addresses, isLoading: isLoadingAddresses } = useQuery(
-    [QueriesAddresses.GetAddresses],
+  const { data: services, isLoading: isLoadingAddresses } = useQuery(
+    [QueriesServices.GetAddresses],
     () => RESTApi.fetchAddresses(),
     {
       refetchInterval: UPDATE_INTERVAL
@@ -104,7 +104,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   );
 
   const { data: serversByAddress } = useQuery(
-    [QueriesAddresses.GetProcessesByAddress, addressIdSelected],
+    [QueriesServices.GetProcessesByAddress, addressIdSelected],
     () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : undefined),
     {
       enabled: !!addressIdSelected,
@@ -223,11 +223,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   }, []);
 
   const getOptions = useCallback(() => {
-    if (!addresses?.results) {
+    if (!services?.results) {
       return [];
     }
 
-    const options = addresses.results.map(({ name, identity }, index) => (
+    const options = services.results.map(({ name, identity }, index) => (
       <SelectOption key={index + 1} value={identity}>
         {name}
       </SelectOption>
@@ -239,9 +239,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     ];
 
     return optionsWithDefault;
-  }, [addresses?.results]);
+  }, [services?.results]);
 
-  // This effect is triggered when no address is currently selected
+  // This effect is triggered when no services are currently selected
   useEffect(() => {
     if (
       sites &&
@@ -255,7 +255,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       const processesNodes = TopologyController.convertProcessesToNodes(processes, siteNodes);
       const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
 
-      // Check if no address is selected
+      // Check if no services are selected
       if (processesPairs && !addressIdSelected) {
         let processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, showLinkLabel);
         processesLinks = processesLinks.map((pair) => ({
@@ -292,7 +292,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     rotateLabel
   ]);
 
-  // This effect is triggered when one address is currently selected
+  // This effect is triggered when one service is currently selected
   useEffect(() => {
     if (
       sites &&
@@ -301,7 +301,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive)
     ) {
       const processes = [...externalProcesses, ...remoteProcesses];
-      // In order to obtain the process pairs for a selected address, we must derive them from the flow pairs associated with the selected addresses.
+      // In order to obtain the process pairs for a selected service, we must derive them from the flow pairs associated with the selected service.
       if (addressIdSelected && processesPairs && serversByAddress?.results) {
         const serverIds = serversByAddress.results.map(({ identity }) => identity);
         const processPairsByAddress = processesPairs.filter((pair) => serverIds?.includes(pair.destinationId));

@@ -25,12 +25,12 @@ import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 import { serverColumns, tcpColumns } from '../Addresses.constants';
 import { ConnectionLabels, FlowPairsLabels, RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
-import { QueriesAddresses } from '../services/services.enum';
+import { QueriesServices } from '../services/services.enum';
 
 const TAB_1_KEY = 'servers';
 const TAB_2_KEY = 'liveConnections';
 const TAB_3_KEY = 'connections';
-const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
+const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
 const initServersQueryParams = {
   limit: DEFAULT_PAGINATION_SIZE,
@@ -70,7 +70,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
     [
-      QueriesAddresses.GetFlowPairsByAddress,
+      QueriesServices.GetFlowPairsByAddress,
       addressId,
       { ...initActiveConnectionsQueryParams, ...activeConnectionsQueryParamsPaginated }
     ],
@@ -89,7 +89,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
 
   const { data: oldConnectionsData, isLoading: isLoadingOldConnections } = useQuery(
     [
-      QueriesAddresses.GetFlowPairsByAddress,
+      QueriesServices.GetFlowPairsByAddress,
       addressId,
       { ...initPaginatedOldConnectionsQueryParams, ...connectionsQueryParamsPaginated }
     ],
@@ -107,7 +107,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   );
 
   const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
-    [QueriesAddresses.GetProcessesByAddress, addressId, initServersQueryParams],
+    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
       keepPreviousData: true
@@ -115,7 +115,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   );
 
   const { data: connectionSelected } = useQuery(
-    [QueriesAddresses.GetFlowPair],
+    [QueriesServices.GetFlowPair],
     () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
     {
       refetchInterval: UPDATE_INTERVAL,
@@ -215,7 +215,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         <GridItem>
           <SkTitle
             title={addressName}
-            icon="address"
             link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
           />
         </GridItem>

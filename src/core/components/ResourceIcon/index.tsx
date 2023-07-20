@@ -5,13 +5,13 @@ import { Tooltip } from '@patternfly/react-core';
 import skupperProcessSVG from '@assets/skupper.svg';
 
 export interface ResourceIconProps {
-  type: 'site' | 'service' | 'address' | 'process' | 'skupper';
+  type: 'site' | 'component' | 'service' | 'process' | 'skupper';
 }
 
 const RESOURCE_MAP = {
   site: { class: 'sk-resource-site', symbol: 'S' },
-  service: { class: 'sk-resource-process-group', symbol: 'C' },
-  address: { class: 'sk-resource-address', symbol: 'A' },
+  component: { class: 'sk-resource-process-group', symbol: 'C' },
+  service: { class: 'sk-resource-service', symbol: 'R' },
   process: { class: 'sk-resource-process', symbol: 'P' },
   skupper: { class: 'sk-resource-skupper', symbol: '' }
 };

@@ -183,7 +183,7 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  // ADDRESSES APIs
+  // SERVICES APIs
   fetchAddresses: async (options?: RequestOptions): Promise<ResponseWrapper<AddressResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<AddressResponse[]>>(getAddressesPath(), {
       params: options ? mapOptionsToQueryParams(options) : null

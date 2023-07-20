@@ -7,11 +7,11 @@ import ConnectionsByAddress from '../components/ConnectionsByAddress';
 import RequestsByAddress from '../components/RequestsByAddress';
 
 const FlowsPairs = function () {
-  const { address } = useParams();
+  const { service } = useParams();
 
-  const addressName = address?.split('@')[0];
-  const addressId = address?.split('@')[1];
-  const protocol = address?.split('@')[2];
+  const addressName = service?.split('@')[0];
+  const addressId = service?.split('@')[1];
+  const protocol = service?.split('@')[2];
 
   return (
     <TransitionPage>

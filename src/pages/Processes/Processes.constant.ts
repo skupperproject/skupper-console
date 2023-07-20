@@ -49,7 +49,7 @@ export const ProcessesComponentsTable = {
   linkComponentCell: (props: LinkCellProps<ProcessResponse>) =>
     LinkCell({
       ...props,
-      type: 'service',
+      type: 'component',
       link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>

@@ -25,9 +25,9 @@ context('Navigation', () => {
     cy.location('hash').should('include', 'processes');
   });
 
-  it('should navigate to the Addresses', () => {
-    cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Addresses').click({ force: true });
-    cy.location('hash').should('include', 'addresses');
+  it('should navigate to the Services', () => {
+    cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Services').click({ force: true });
+    cy.location('hash').should('include', 'services');
   });
 
   it('should redirect to the Not found page when url not exists', () => {

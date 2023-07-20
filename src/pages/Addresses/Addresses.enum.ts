@@ -1,9 +1,9 @@
 export enum AddressesRoutesPaths {
-  Addresses = '/addresses'
+  Services = '/services'
 }
 
 export enum AddressesColumnsNames {
-  Name = 'Name',
+  Name = 'Routing key',
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',
   TotalFLowPairs = 'Total',
@@ -12,7 +12,7 @@ export enum AddressesColumnsNames {
 
 // LABELS
 export enum AddressesLabels {
-  Section = 'Addresses',
+  Section = 'Services',
   HTTP = ' HTTP/2',
   TCP = 'TCP',
   Description = 'Set of processes that are exposed across the Virtual Application Network.',

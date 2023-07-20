@@ -39,7 +39,7 @@ const PROCESS_GROUPS_PATH = `${COLLECTOR_URL}/processgroups/`;
 export const getProcessGroupsPATH = () => PROCESS_GROUPS_PATH;
 export const getProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}`;
 
-// ADDRESSES
+// SERVICES
 const ADDRESSES_PATH = `${COLLECTOR_URL}/addresses/`;
 export const getAddressesPath = () => ADDRESSES_PATH;
 export const getFlowsPairsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/flowpairs`;

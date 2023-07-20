@@ -65,7 +65,6 @@ const ProcessGroup = function () {
       <Grid hasGutter data-testid={getTestsIds.componentView(processGroupId)}>
         <SkTitle
           title={name}
-          icon="service"
           link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
         />
 

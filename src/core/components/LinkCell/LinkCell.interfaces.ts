@@ -3,5 +3,5 @@ export interface LinkCellProps<T> {
   value: string;
   link: string;
   isDisabled?: boolean;
-  type?: 'process' | 'site' | 'service' | 'address';
+  type?: 'process' | 'site' | 'component' | 'service';
 }

@@ -4,7 +4,7 @@ export enum SitesRoutesPaths {
 
 export enum Labels {
   Section = 'Sites',
-  Description = 'A site is a location where components of your application are running. Sites are linked together to form a network. Sites have different kinds based on platform. These include Kubernetes, Podman, virtual machines, and bare metal hosts.',
+  Description = 'A site is a location where components of your application are running and they are linked together to form a network',
   Details = 'Details',
   Links = 'Links created to',
   Hosts = 'Hosts',

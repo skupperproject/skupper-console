@@ -3,7 +3,7 @@ import { AddressResponse } from 'API/REST.interfaces';
 
 export const AddressesController = {
   extendAddressesWithActiveAndTotalFlowPairs: (
-    addresses: AddressResponse[],
+    services: AddressResponse[],
     {
       httpTotalFlows,
       tcpActiveFlows
@@ -31,12 +31,12 @@ export const AddressesController = {
         {} as Record<string, number>
       );
 
-    return addresses.map((address) => ({
-      ...address,
+    return services.map((service) => ({
+      ...service,
       totalFlows:
-        httpTotalFlowsMap && httpTotalFlowsMap[address.name] ? Math.round(httpTotalFlowsMap[address.name]) : 0,
+        httpTotalFlowsMap && httpTotalFlowsMap[service.name] ? Math.round(httpTotalFlowsMap[service.name]) : 0,
       currentFlows:
-        tcpActiveFlowsMap && tcpActiveFlowsMap[address.name] ? Math.round(tcpActiveFlowsMap[address.name]) : 0
+        tcpActiveFlowsMap && tcpActiveFlowsMap[service.name] ? Math.round(tcpActiveFlowsMap[service.name]) : 0
     }));
   }
 };

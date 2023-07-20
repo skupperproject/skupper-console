@@ -91,7 +91,7 @@ const Configuration = {
     useAI: false,
     aiNumber: 1,
     themeColorCode: '',
-    scopes: ['Site', 'Component', 'Process', 'Address', 'Topology', 'Shared', 'Core', 'Core UI', 'General'],
+    scopes: ['Site', 'Component', 'Process', 'Services', 'Topology', 'Shared', 'Core', 'Core UI', 'General'],
     allowCustomScopes: false,
     allowEmptyScopes: true,
     customScopesAlign: 'bottom',

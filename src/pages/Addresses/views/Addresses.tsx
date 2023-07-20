@@ -14,19 +14,19 @@ import LoadingPage from '@pages/shared/Loading';
 import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
 import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
-import { QueriesAddresses } from '../services/services.enum';
+import { QueriesServices } from '../services/services.enum';
 
 const initPaginatedOldConnectionsQueryParams: RequestOptions = {
   limit: BIG_PAGINATION_SIZE
 };
 
-const Addresses = function () {
+const Services = function () {
   const [addressesQueryParamsPaginated, setAddressesQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedOldConnectionsQueryParams
   );
 
   const { data: addressesData, isLoading } = useQuery(
-    [QueriesAddresses.GetAddresses, { ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }],
+    [QueriesServices.GetAddresses, { ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }],
     () => RESTApi.fetchAddresses({ ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }),
     {
       keepPreviousData: true
@@ -34,7 +34,7 @@ const Addresses = function () {
   );
 
   const { data: tcpActiveFlows, isLoading: isLoadingTcpActiveFlows } = useQuery(
-    [QueriesAddresses.GetPrometheusActiveFlows],
+    [QueriesServices.GetPrometheusActiveFlows],
     () => PrometheusApi.fetchActiveFlowsByAddress(),
     {
       enabled: isPrometheusActive
@@ -42,7 +42,7 @@ const Addresses = function () {
   );
 
   const { data: httpTotalFlows, isLoading: isLoadingHttpTotalFlows } = useQuery(
-    [QueriesAddresses.GetPrometheusTotalFlows],
+    [QueriesServices.GetPrometheusTotalFlows],
     () => PrometheusApi.fetchFlowsByAddress(),
     {
       enabled: isPrometheusActive
@@ -61,14 +61,14 @@ const Addresses = function () {
     return null;
   }
 
-  const addresses = addressesData?.results || [];
+  const services = addressesData?.results || [];
   const addressesRowsCount = addressesData?.timeRangeCount;
 
-  let addressExtended = addresses;
+  let servicesExtended = services;
   let columnsExtend = addressesColumns;
 
   if (httpTotalFlows && tcpActiveFlows) {
-    addressExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(addresses, {
+    servicesExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
       httpTotalFlows,
       tcpActiveFlows
     });
@@ -83,7 +83,7 @@ const Addresses = function () {
         {/* addresses table */}
         <div>
           <SkTable
-            rows={addressExtended}
+            rows={servicesExtended}
             columns={columnsExtend}
             pagination={true}
             paginationPageSize={BIG_PAGINATION_SIZE}
@@ -97,4 +97,4 @@ const Addresses = function () {
   );
 };
 
-export default Addresses;
+export default Services;

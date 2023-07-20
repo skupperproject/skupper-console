@@ -15,9 +15,7 @@ const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Defa
     <Bullseye>
       <EmptyState variant={EmptyStateVariant.small}>
         {icon && <EmptyStateIcon icon={icon} />}
-        <Title headingLevel="h2" color="var(--pf-u-color-400)">
-          {message}
-        </Title>
+        <Title headingLevel="h2">{message}</Title>
         {description && <EmptyStateBody>{description}</EmptyStateBody>}
       </EmptyState>
     </Bullseye>

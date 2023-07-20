@@ -87,7 +87,6 @@ const Site = function () {
         <GridItem>
           <SkTitle
             title={name}
-            icon="site"
             link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
           />
         </GridItem>
