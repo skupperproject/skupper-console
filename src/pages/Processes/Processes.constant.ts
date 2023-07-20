@@ -60,7 +60,7 @@ export const ProcessesComponentsTable = {
     HighlightValueCell({ ...props, format: formatBytes })
 };
 
-export const processesTableColumns = [
+export const processesTableColumns: SKColumn<ProcessResponse>[] = [
   {
     name: ProcessesTableColumns.Name,
     prop: 'name' as keyof ProcessResponse,
@@ -79,7 +79,8 @@ export const processesTableColumns = [
   {
     name: ProcessesTableColumns.Created,
     prop: 'startTime' as keyof ProcessResponse,
-    format: timeAgo
+    format: timeAgo,
+    width: 15
   }
 ];
 

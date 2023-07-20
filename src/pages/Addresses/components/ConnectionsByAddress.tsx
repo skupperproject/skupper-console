@@ -1,13 +1,13 @@
 import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Card, Grid, GridItem, Modal, ModalVariant, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Modal, ModalVariant, PageSection, PageSectionVariants, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
@@ -27,33 +27,34 @@ import { ConnectionLabels, FlowPairsLabels, RequestLabels, AddressesLabels } fro
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import { QueriesServices } from '../services/services.enum';
 
+const TAB_0_KEY = 'overview';
 const TAB_1_KEY = 'servers';
 const TAB_2_KEY = 'liveConnections';
 const TAB_3_KEY = 'connections';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
 const initServersQueryParams = {
-  limit: DEFAULT_PAGINATION_SIZE,
+  limit: BIG_PAGINATION_SIZE,
   endTime: 0 // active servers
 };
 
 const initActiveConnectionsQueryParams: RequestOptions = {
   state: TcpStatus.Active,
-  limit: DEFAULT_PAGINATION_SIZE,
+  limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
 const initPaginatedOldConnectionsQueryParams: RequestOptions = {
   state: TcpStatus.Terminated,
-  limit: DEFAULT_PAGINATION_SIZE,
+  limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const type = searchParams.get('type') || TAB_1_KEY;
+  const type = searchParams.get('type') || TAB_0_KEY;
 
   const activeConnectionsDataRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
@@ -211,100 +212,101 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
           }
         />
       </Modal>
-      <Grid hasGutter>
-        <GridItem>
-          <SkTitle
-            title={addressName}
-            link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+
+      <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light}>
+        <SkTitle
+          isPlain
+          title={addressName}
+          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+        />
+
+        <Tabs activeKey={connectionsView} onSelect={handleTabClick}>
+          <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview} `}</TabTitleText>} />
+          <Tab
+            eventKey={TAB_1_KEY}
+            title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
           />
-        </GridItem>
+          <Tab
+            eventKey={TAB_2_KEY}
+            title={
+              <TabTitleText>{`${ConnectionLabels.ActiveConnections} (${activeConnectionsRowsCount})`}</TabTitleText>
+            }
+          />
+          <Tab
+            eventKey={TAB_3_KEY}
+            title={<TabTitleText>{`${ConnectionLabels.OldConnections} (${oldConnectionsRowsCount})`}</TabTitleText>}
+          />
+        </Tabs>
+      </PageSection>
 
-        {/* connection table*/}
-        <GridItem>
-          <Card isRounded>
-            <Tabs activeKey={connectionsView} onSelect={handleTabClick}>
-              <Tab
-                eventKey={TAB_1_KEY}
-                title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-              >
-                <SkTable
-                  columns={serverColumns}
-                  rows={servers}
-                  pagination={true}
-                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  customCells={ProcessesComponentsTable}
-                />
-              </Tab>
-              <Tab
-                eventKey={TAB_2_KEY}
-                title={
-                  <TabTitleText>{`${ConnectionLabels.ActiveConnections} (${activeConnectionsRowsCount})`}</TabTitleText>
-                }
-              >
-                <SkTable
-                  columns={tcpColumns}
-                  rows={activeConnections}
-                  paginationTotalRows={activeConnectionsRowsCount}
-                  pagination={true}
-                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  onGetFilters={handleGetFiltersActiveConnections}
-                  customCells={{
-                    ...flowPairsComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                    )
-                  }}
-                />
-              </Tab>
-              <Tab
-                eventKey={TAB_3_KEY}
-                title={<TabTitleText>{`${ConnectionLabels.OldConnections} (${oldConnectionsRowsCount})`}</TabTitleText>}
-              >
-                <SkTable
-                  columns={tcpFlowPairsColumns}
-                  rows={oldConnections}
-                  paginationTotalRows={oldConnectionsRowsCount}
-                  pagination={true}
-                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  onGetFilters={handleGetFiltersConnections}
-                  customCells={{
-                    ...flowPairsComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                    )
-                  }}
-                />
-              </Tab>
-            </Tabs>
-          </Card>
-        </GridItem>
-
-        {/* Process Metrics*/}
-        {isPrometheusActive && (
-          <GridItem>
-            <Metrics
-              key={addressId}
-              forceUpdate={checkDataChanged}
-              selectedFilters={{
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
-                processIdSource: serverNamesIds,
-                protocol: AvailableProtocols.Tcp
-              }}
-              startTime={startTime}
-              sourceProcesses={serverNames}
-              filterOptions={{
-                protocols: { disabled: true, placeholder: protocol },
-                sourceProcesses: {
-                  disabled: serverNames.length < 2,
-                  placeholder: AddressesLabels.MetricDestinationProcessFilter
-                },
-                destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
-              }}
-              onGetMetricFilters={handleSetMetricFilters}
-            />
-          </GridItem>
+      <PageSection>
+        {connectionsView === TAB_0_KEY && isPrometheusActive && (
+          <Metrics
+            key={addressId}
+            forceUpdate={checkDataChanged}
+            selectedFilters={{
+              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+              processIdSource: serverNamesIds,
+              protocol: AvailableProtocols.Tcp
+            }}
+            startTime={startTime}
+            sourceProcesses={serverNames}
+            filterOptions={{
+              protocols: { disabled: true, placeholder: protocol },
+              sourceProcesses: {
+                disabled: serverNames.length < 2,
+                placeholder: AddressesLabels.MetricDestinationProcessFilter
+              },
+              destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
+            }}
+            onGetMetricFilters={handleSetMetricFilters}
+          />
         )}
-      </Grid>
+
+        {connectionsView === TAB_1_KEY && (
+          <SkTable
+            columns={serverColumns}
+            rows={servers}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            customCells={ProcessesComponentsTable}
+          />
+        )}
+
+        {connectionsView === TAB_2_KEY && (
+          <SkTable
+            columns={tcpColumns}
+            rows={activeConnections}
+            paginationTotalRows={activeConnectionsRowsCount}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFiltersActiveConnections}
+            customCells={{
+              ...flowPairsComponentsTable,
+              viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+              )
+            }}
+          />
+        )}
+
+        {connectionsView === TAB_3_KEY && (
+          <SkTable
+            columns={tcpFlowPairsColumns}
+            rows={oldConnections}
+            paginationTotalRows={oldConnectionsRowsCount}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFiltersConnections}
+            customCells={{
+              ...flowPairsComponentsTable,
+              viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+                <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+              )
+            }}
+          />
+        )}
+      </PageSection>
     </>
   );
 };

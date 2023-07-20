@@ -11,11 +11,18 @@ interface SkTitleProps {
   link?: string;
   linkLabel?: string;
   description?: string;
+  isPlain?: boolean;
 }
 
-const SkTitle: FC<SkTitleProps> = function ({ title, link, linkLabel = TopologyLabels.Topology, description }) {
+const SkTitle: FC<SkTitleProps> = function ({
+  title,
+  link,
+  linkLabel = TopologyLabels.Topology,
+  description,
+  isPlain = false
+}) {
   return (
-    <Card role="sk-heading">
+    <Card role="sk-heading" isPlain={isPlain}>
       <CardHeader style={{ justifyContent: 'space-between' }}>
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           <TextContent>

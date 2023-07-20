@@ -15,6 +15,7 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
     prop: 'name' as keyof SiteResponse,
     customCellName: 'linkCell'
   },
+
   {
     name: Labels.Namespace,
     prop: 'nameSpace' as keyof SiteResponse
@@ -22,13 +23,13 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
   {
     name: Labels.SiteVersion,
     prop: 'siteVersion' as keyof SiteResponse,
-    width: 10
+    width: 15
   },
   {
     name: Labels.Created,
     prop: 'startTime' as keyof SiteResponse,
     format: timeAgo,
-    width: 10
+    width: 15
   }
 ];
 
