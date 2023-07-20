@@ -232,8 +232,7 @@ const ProcessPairs = function () {
               title={LinkCell<ProcessResponse>({
                 data: sourceProcess,
                 value: sourceProcess.name,
-                link: `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceId}`,
-                type: 'process'
+                link: `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceId}`
               })}
             />
           </GridItem>
@@ -262,8 +261,7 @@ const ProcessPairs = function () {
               title={LinkCell<ProcessResponse>({
                 data: destinationProcess,
                 value: destinationProcess.name,
-                link: `${ProcessesRoutesPaths.Processes}/${destinationProcess.name}@${destinationId}`,
-                type: 'process'
+                link: `${ProcessesRoutesPaths.Processes}/${destinationProcess.name}@${destinationId}`
               })}
             />
           </GridItem>

@@ -24,11 +24,11 @@ import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 import { httpColumns } from '../Addresses.constants';
 import { RequestLabels, FlowPairsLabels, AddressesLabels } from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
-import { QueriesAddresses } from '../services/services.enum';
+import { QueriesServices } from '../services/services.enum';
 
 const TAB_1_KEY = 'servers';
 const TAB_2_KEY = 'requests';
-const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'address-display-interval';
+const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
 const initPaginatedRequestsQueryParams: RequestOptions = {
   limit: DEFAULT_PAGINATION_SIZE,
@@ -56,7 +56,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
 
   const { data: requestsDataPaginated, isLoading: isLoadingRequestsPaginated } = useQuery(
     [
-      QueriesAddresses.GetFlowPairsByAddress,
+      QueriesServices.GetFlowPairsByAddress,
       addressId,
       {
         ...initPaginatedRequestsQueryParams,
@@ -77,7 +77,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   );
 
   const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
-    [QueriesAddresses.GetProcessesByAddress, addressId, initServersQueryParams],
+    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
       keepPreviousData: true
@@ -85,7 +85,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   );
 
   const { data: flowPairSelected } = useQuery(
-    [QueriesAddresses.GetFlowPair],
+    [QueriesServices.GetFlowPair],
     () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
     {
       refetchInterval: UPDATE_INTERVAL,
@@ -147,7 +147,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         <GridItem>
           <SkTitle
             title={addressName}
-            icon="address"
             link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
           />
         </GridItem>

@@ -30,21 +30,21 @@ describe('ResourceIcon', () => {
   });
 
   test('renders component icon', () => {
-    render(<ResourceIcon type="service" />);
+    render(<ResourceIcon type="component" />);
 
-    const el = screen.getByRole('service-resource-icon');
+    const el = screen.getByRole('component-resource-icon');
 
     expect(el).toBeInTheDocument();
     expect(el).toHaveClass('sk-resource-icon', 'sk-resource-process-group');
     expect(el).toHaveTextContent('C');
   });
 
-  test('renders address icon', () => {
-    render(<ResourceIcon type="address" />);
+  test('renders service icon', () => {
+    render(<ResourceIcon type="service" />);
 
-    const el = screen.getByRole('address-resource-icon');
+    const el = screen.getByRole('service-resource-icon');
     expect(el).toBeInTheDocument();
-    expect(el).toHaveClass('sk-resource-icon', 'sk-resource-address');
-    expect(el).toHaveTextContent('A');
+    expect(el).toHaveClass('sk-resource-icon', 'sk-resource-service');
+    expect(el).toHaveTextContent('R');
   });
 });

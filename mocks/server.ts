@@ -27,10 +27,10 @@ const processGroupPairs = require(`${path}/PROCESS_GROUP_PAIRS.json`);
 const processes = require(`${path}/PROCESSES.json`);
 const processPairs = require(`${path}/PROCESS_PAIRS.json`);
 const hosts = require(`${path}/HOSTS.json`);
-const addresses = require(`${path}/ADDRESSES.json`);
-const addressProcesses = require(`${path}/ADDRESS_PROCESSES.json`);
+const services = require(`${path}/SERVICES.json`);
+const addressProcesses = require(`${path}/SERVICE_PROCESSES.json`);
 const flowPairs = require(`${path}/FLOW_PAIRS.json`);
-const addressesFlowPairs = require(`${path}/ADDRESS_FLOW_PAIRS.json`);
+const addressesFlowPairs = require(`${path}/SERVICE_FLOW_PAIRS.json`);
 const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
@@ -224,7 +224,7 @@ export function loadMockServer() {
         const processNamePrefix = process.name.split('-')[0];
 
         return {
-          results: addresses.results.filter(({ name }: AddressResponse) => name.includes(processNamePrefix))
+          results: services.results.filter(({ name }: AddressResponse) => name.includes(processNamePrefix))
         };
       });
 
@@ -253,7 +253,7 @@ export function loadMockServer() {
         results: flowPairs.results.find(({ identity }: AddressResponse) => identity === id)
       }));
 
-      this.get(`${prefix}/addresses`, () => addresses);
+      this.get(`${prefix}/addresses`, () => services);
       this.get(`${prefix}/addresses/:id/flowpairs`, () => addressesFlowPairs);
       this.get(`${prefix}/addresses/:id/processes`, () => addressProcesses);
     }

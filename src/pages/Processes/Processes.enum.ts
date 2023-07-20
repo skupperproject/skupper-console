@@ -16,7 +16,7 @@ export enum ProcessesLabels {
   Description = 'A process represents running application code. On Kubernetes, a process is a pod. On Docker or Podman, a process is a container. On virtual machines or bare metal hosts',
   Details = 'Details',
   Processes = 'Processes',
-  Addresses = 'Addresses',
+  Services = 'Routing keys',
   Process = 'Process',
   Site = 'Site',
   ProcessGroup = 'Component',

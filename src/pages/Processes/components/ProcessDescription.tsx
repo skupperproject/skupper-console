@@ -44,7 +44,7 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
     processBinding
   } = process as ProcessResponse;
 
-  const { data: addresses } = useQuery([QueriesProcesses.GetAddressesByProcessId, identity], () =>
+  const { data: services } = useQuery([QueriesProcesses.GetAddressesByProcessId, identity], () =>
     RESTApi.fetchAddressesByProcess(identity)
   );
 
@@ -69,7 +69,7 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.ProcessGroup}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <ResourceIcon type="service" />
+                  <ResourceIcon type="component" />
                   <Link to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupName}@${groupIdentity}`}>
                     {groupName}
                   </Link>
@@ -114,19 +114,19 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
               </DescriptionListGroup>
             </GridItem>
 
-            {!!addresses?.length && (
+            {!!services?.length && (
               <GridItem span={6}>
                 <DescriptionListGroup>
-                  <DescriptionListTerm>{ProcessesLabels.Addresses}</DescriptionListTerm>
+                  <DescriptionListTerm>{ProcessesLabels.Services}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <Flex>
-                      {addresses.map((address) => (
-                        <div key={address.identity}>
-                          <ResourceIcon type="address" />
+                      {services.map((service) => (
+                        <div key={service.identity}>
+                          <ResourceIcon type="service" />
                           <Link
-                            to={`${AddressesRoutesPaths.Addresses}/${address.name}@${address.identity}@${address.protocol}`}
+                            to={`${AddressesRoutesPaths.Services}/${service.name}@${service.identity}@${service.protocol}`}
                           >
-                            {address.name}
+                            {service.name}
                           </Link>
                         </div>
                       ))}

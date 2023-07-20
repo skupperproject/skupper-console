@@ -103,7 +103,6 @@ const Process = function () {
         <GridItem>
           <SkTitle
             title={process.name}
-            icon="process"
             link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
           />
         </GridItem>

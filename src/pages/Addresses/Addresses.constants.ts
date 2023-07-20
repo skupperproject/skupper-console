@@ -11,17 +11,16 @@ import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Addresses.enum';
 
 export const AddressesPaths = {
-  path: AddressesRoutesPaths.Addresses,
+  path: AddressesRoutesPaths.Services,
   name: AddressesLabels.Section
 };
 
-// Addresses Table
 export const customAddressCells = {
   AddressNameLinkCell: (props: LinkCellProps<AddressResponse>) =>
     LinkCell({
       ...props,
-      type: 'address',
-      link: `${AddressesRoutesPaths.Addresses}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
+      type: 'service',
+      link: `${AddressesRoutesPaths.Services}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
     })
 };
 
@@ -34,12 +33,12 @@ export const addressesColumns: SKColumn<AddressResponse>[] = [
   {
     name: AddressesColumnsNames.Protocol,
     prop: 'protocol',
-    width: 10
+    width: 15
   },
   {
     name: AddressesColumnsNames.Servers,
     prop: 'connectorCount',
-    width: 10
+    width: 15
   }
 ];
 
@@ -47,17 +46,17 @@ export const addressesColumnsWithFlowPairsCounters: SKColumn<AddressResponse>[] 
   ...addressesColumns,
   {
     name: AddressesColumnsNames.CurrentFlowPairs,
-    columnDescription: 'Active connection or requests',
+    columnDescription: 'Live connections or requests',
 
     prop: 'currentFlows' as keyof AddressResponse,
-    width: 10
+    width: 15
   },
   {
     name: AddressesColumnsNames.TotalFLowPairs,
-    columnDescription: 'Total connection or requests',
+    columnDescription: 'Total connections or requests',
 
     prop: 'totalFlows' as keyof AddressResponse,
-    width: 10
+    width: 15
   }
 ];
 

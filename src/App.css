@@ -8,10 +8,6 @@ html {
   z-index: 0 !important;
 }
 
-.pf-c-page__main-section {
-  background: linear-gradient(to bottom, rgb(202, 215, 228) 0%, var(--pf-global--palette--black-200) 80%);
-}
-
 .pf-c-page__header {
   z-index: 1 !important;
   box-shadow: 0 2px 2px var(--pf-global--palette--black-700);
@@ -81,38 +77,34 @@ html {
 /* Resource icon */
 .sk-resource-icon {
   background-color: var(--pf-global--palette--black-500);
-  border-radius: 18px;
-  color: var(--pf-global--palette--white);
+  border-radius: 50%;
+  color: var(--pf-global--palette--black-100);
   display: inline-block;
-  flex-shrink: 0;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 19px;
   margin-right: 4px;
   min-width: 18px;
   text-align: center;
   white-space: nowrap;
 
-  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: inset -4px -4px 5px rgba(0, 0, 0, 0.3);
 }
 
 .sk-resource-site {
-  background-color: var(--pf-global--palette--purple-500);
+  background-color: var(--pf-global--palette--purple-300);
 }
 
 .sk-resource-process-group {
   background-color: var(--pf-global--palette--blue-200);
 }
 
-.sk-resource-deployment {
-  background-color: var(--pf-global--palette--red-100);
-}
-
-.sk-resource-address {
-  background-color: var(--pf-global--palette--green-500);
+.sk-resource-service {
+  background-color: var(--pf-global--palette--green-400);
 }
 
 .sk-resource-process {
-  background-color: var(--pf-global--palette--orange-300);
+  background-color: var(--pf-global--palette--orange-200);
 }
 
 .sk-resource-skupper {
