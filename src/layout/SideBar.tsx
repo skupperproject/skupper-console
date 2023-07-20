@@ -3,7 +3,7 @@ import { PageSidebar } from '@patternfly/react-core';
 import NavBar from '@core/components/NavBar';
 
 const SideBar = function () {
-  return <PageSidebar style={{ width: 120 }} nav={<NavBar />} />;
+  return <PageSidebar nav={<NavBar />} />;
 };
 
 export default SideBar;
