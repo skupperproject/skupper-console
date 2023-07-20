@@ -31,6 +31,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     initialFilters,
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
+    forceDisableRefetchData = false,
     onRefetch,
     onSelectFilters
   }) => {
@@ -278,7 +279,8 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                   variant="primary"
                   isLoading={isRefetching}
                   isDisabled={
-                    !!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key
+                    forceDisableRefetchData ||
+                    (!!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key)
                   }
                   onClick={handleRefetchMetrics}
                   icon={<SyncIcon />}

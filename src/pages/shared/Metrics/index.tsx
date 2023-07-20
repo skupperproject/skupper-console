@@ -11,6 +11,7 @@ import {
   GridItem,
   Spinner
 } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
@@ -131,6 +132,12 @@ const Metrics: FC<MetricsProps> = function ({
     responseRateData
   } = metrics;
 
+  const activeMetrics = {
+    isLatencySectionActive: !!latenciesData?.length,
+    isHttpRequestSectionActive: !!totalRequestsInterval && !!requestRateData?.length,
+    isHttpResponseSectionActive: !!totalRequestsInterval && !!responseData?.total
+  };
+
   return (
     <Grid hasGutter>
       <GridItem>
@@ -147,6 +154,7 @@ const Metrics: FC<MetricsProps> = function ({
             customFilterOptions={filterOptions}
             startTime={startTime}
             isRefetching={isRefetching}
+            forceDisableRefetchData={!byteRateData}
             onRefetch={handleRefetchMetrics}
             onSelectFilters={handleFilters}
           />
@@ -157,26 +165,30 @@ const Metrics: FC<MetricsProps> = function ({
         <GridItem>
           <Card isFullHeight>
             <CardBody>
-              <EmptyData message={MetricsLabels.NoMetricFoundMessage} />
+              <EmptyData
+                message={MetricsLabels.NoMetricFoundTitleMessage}
+                description={MetricsLabels.NoMetricFoundDescriptionMessage}
+                icon={SearchIcon}
+              />
             </CardBody>
           </Card>
         </GridItem>
       )}
 
-      {byteRateData && bytesData && (
+      {!!byteRateData && !!bytesData && (
         <GridItem>
           <TrafficCharts bytesData={bytesData} byteRateData={byteRateData} />
         </GridItem>
       )}
 
-      {prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+      {!!byteRateData && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
         <>
           <GridItem>
             <Card
-              isExpanded={!!latenciesData?.length && isExpandedLatency}
-              className={!latenciesData?.length ? 'metric-disabled' : undefined}
+              isExpanded={activeMetrics.isLatencySectionActive && isExpandedLatency}
+              className={!activeMetrics.isLatencySectionActive ? 'metric-disabled' : undefined}
             >
-              <CardHeader onExpand={handleExpandLatency}>
+              <CardHeader onExpand={activeMetrics.isLatencySectionActive ? handleExpandLatency : () => null}>
                 <CardTitle>{MetricsLabels.LatencyTitle}</CardTitle>
               </CardHeader>
 
@@ -192,10 +204,10 @@ const Metrics: FC<MetricsProps> = function ({
 
           <GridItem>
             <Card
-              isExpanded={!!requestRateData?.length && isExpandedRequests}
-              className={!requestRateData?.length ? 'metric-disabled' : undefined}
+              isExpanded={activeMetrics.isHttpRequestSectionActive && isExpandedRequests}
+              className={!activeMetrics.isHttpRequestSectionActive ? 'metric-disabled' : undefined}
             >
-              <CardHeader onExpand={handleExpandRequests}>
+              <CardHeader onExpand={activeMetrics.isHttpRequestSectionActive ? handleExpandRequests : () => null}>
                 <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
               </CardHeader>
               <CardExpandableContent>
@@ -214,10 +226,10 @@ const Metrics: FC<MetricsProps> = function ({
 
           <GridItem>
             <Card
-              isExpanded={!!responseData && isExpandedResponses}
-              className={!responseData ? 'metric-disabled' : undefined}
+              isExpanded={activeMetrics.isHttpResponseSectionActive && isExpandedResponses}
+              className={!activeMetrics.isHttpResponseSectionActive ? 'metric-disabled' : undefined}
             >
-              <CardHeader onExpand={handleExpandResponses}>
+              <CardHeader onExpand={activeMetrics.isHttpResponseSectionActive ? handleExpandResponses : () => null}>
                 <CardTitle>{MetricsLabels.HttpStatus}</CardTitle>
               </CardHeader>
               <CardExpandableContent>

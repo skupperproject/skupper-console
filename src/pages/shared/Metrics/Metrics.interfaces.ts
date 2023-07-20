@@ -35,6 +35,7 @@ export interface MetricFilterProps {
   customFilterOptions?: FilterOptionProps;
   startTime?: number;
   isRefetching?: boolean;
+  forceDisableRefetchData?: boolean;
   onRefetch?: Function;
   initialFilters: FilterProps;
   onSelectFilters?: Function;

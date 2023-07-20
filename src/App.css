@@ -81,12 +81,12 @@ html {
 /* Resource icon */
 .sk-resource-icon {
   background-color: var(--pf-global--palette--black-500);
-  border-radius: 20px;
+  border-radius: 18px;
   color: var(--pf-global--palette--white);
   display: inline-block;
   flex-shrink: 0;
   font-size: 14px;
-  line-height: 16px;
+  line-height: 18px;
   margin-right: 4px;
   min-width: 18px;
   text-align: center;
