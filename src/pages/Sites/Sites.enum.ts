@@ -11,7 +11,6 @@ export enum Labels {
   Processes = 'Processes',
   Name = 'Name',
   Namespace = 'Namespace',
-  GoToTopology = 'Go to the Topology view',
   SiteVersion = 'Version',
   Created = 'Created'
 }

@@ -39,6 +39,5 @@ export enum RequestLabels {
 
 export enum FlowPairsLabels {
   Servers = 'Exposed Servers',
-  ViewDetails = 'view details',
-  GoToTopology = 'Go to the Topology view'
+  ViewDetails = 'view details'
 }

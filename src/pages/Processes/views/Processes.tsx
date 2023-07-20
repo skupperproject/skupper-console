@@ -1,13 +1,12 @@
 import { useCallback, useState } from 'react';
 
-import { Split, SplitItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { TopologyIcon } from '@patternfly/react-icons';
+import { Split, SplitItem, Toolbar, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
+import NavigationViewLink from '@core/components/NavigationViewLink';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Fade';
@@ -60,17 +59,12 @@ const Processes = function () {
           </SplitItem>
           <SplitItem>
             <Toolbar isFullHeight>
-              <ToolbarContent>
-                <ToolbarGroup alignment={{ default: 'alignRight' }}>
-                  <ToolbarItem>
-                    <Link to={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}>
-                      <Tooltip content={TopologyLabels.Topology}>
-                        <TopologyIcon />
-                      </Tooltip>
-                    </Link>
-                  </ToolbarItem>
-                </ToolbarGroup>
-              </ToolbarContent>
+              <ToolbarItem>
+                <NavigationViewLink
+                  link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
+                  linkLabel={TopologyLabels.Topology}
+                />
+              </ToolbarItem>
             </Toolbar>
           </SplitItem>
         </Split>

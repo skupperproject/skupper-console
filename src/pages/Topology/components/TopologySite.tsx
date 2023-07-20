@@ -1,20 +1,20 @@
 import { FC, useCallback } from 'react';
 
-import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { ListIcon } from '@patternfly/react-icons';
+import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import NavigationViewLink from '@core/components/NavigationViewLink';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
-import { TopologyLabels } from '../Topology.enum';
+import { TopologyViews } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'site-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'site-fitScreen';
@@ -70,11 +70,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
         <ToolbarContent>
           <ToolbarGroup alignment={{ default: 'alignRight' }}>
             <ToolbarItem>
-              <Link to={SitesRoutesPaths.Sites}>
-                <Tooltip content={TopologyLabels.TableView}>
-                  <ListIcon />
-                </Tooltip>
-              </Link>
+              <NavigationViewLink link={SitesRoutesPaths.Sites} linkLabel={TopologyViews.Sites} iconName="listIcon" />
             </ToolbarItem>
           </ToolbarGroup>
         </ToolbarContent>
