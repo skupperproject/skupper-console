@@ -31,7 +31,7 @@ export const displayIntervalMap = [
 // default values to enable/disable filters
 export const filterOptionsDefault = {
   sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-  destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+  destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses, hide: false },
   protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
   timeIntervals: { disabled: false }
 };

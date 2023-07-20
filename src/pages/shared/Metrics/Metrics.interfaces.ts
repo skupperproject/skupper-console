@@ -3,7 +3,7 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { QueryMetricsParams } from './services/services.interfaces';
 
 interface FilterOptionProps {
-  destinationProcesses?: { disabled?: boolean; placeholder?: string };
+  destinationProcesses?: { disabled?: boolean; placeholder?: string; hide?: boolean };
   sourceProcesses?: { disabled?: boolean; placeholder?: string };
   protocols?: { disabled?: boolean; placeholder?: string };
   timeIntervals?: { disabled?: boolean };

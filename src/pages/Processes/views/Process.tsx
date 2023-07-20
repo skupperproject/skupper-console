@@ -95,6 +95,7 @@ const Process = function () {
 
   const remoteServers = processesPairsTxData.filter(({ protocol }) => protocol === undefined);
   const remoteClients = processesPairsRxReverse.filter(({ protocol }) => protocol === undefined);
+  const allDestinationProcesses = [...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients];
 
   return (
     <TransitionPage>
@@ -245,9 +246,16 @@ const Process = function () {
                 processIdSource: process.name
               }}
               startTime={process.startTime}
-              processesConnected={[...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients]}
+              processesConnected={allDestinationProcesses}
               filterOptions={{
-                destinationProcesses: { placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                destinationProcesses: {
+                  placeholder:
+                    allDestinationProcesses.length === 1
+                      ? allDestinationProcesses[0].destinationName
+                      : MetricsLabels.FilterAllDestinationProcesses,
+                  disabled: allDestinationProcesses.length === 1,
+                  hide: allDestinationProcesses.length === 0
+                },
                 sourceProcesses: { disabled: true, placeholder: process.name }
               }}
               onGetMetricFilters={handleRefreshMetrics}
