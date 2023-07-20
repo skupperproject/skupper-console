@@ -3,11 +3,6 @@ html {
   font-size: 16px;
 }
 
-/* Override Patternfly classes */
-.pf-c-page__main {
-  z-index: 0 !important;
-}
-
 /* Layout */
 #app {
   height: 100%;
@@ -53,9 +48,6 @@ html {
 }
 
 /* Loader */
-.sk-loading-page {
-  background: linear-gradient(to bottom, rgb(202, 215, 228) 0%, var(--pf-global--palette--black-100) 80%);
-}
 .sk-loading-page .cog-wrapper {
   position: relative;
   margin: auto;
@@ -101,4 +93,17 @@ html {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.pf-c-nav__link {
+  transition: 0.2s;
+}
+
+.pf-c-page__sidebar.pf-m-collapsed {
+  transition: max-width 0.1s ease-in-out;
+}
+
+.pf-c-page__sidebar.pf-m-expanded {
+  transition: max-width 0.1s ease-in-out;
+  max-width: 100%;
 }
