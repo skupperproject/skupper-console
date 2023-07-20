@@ -17,6 +17,6 @@ export const processGroupsColumns: SKColumn<ProcessGroupResponse>[] = [
   {
     name: ProcessGroupsTableColumns.Count,
     prop: 'processCount' as keyof ProcessGroupResponse,
-    width: 10
+    width: 15
   }
 ];

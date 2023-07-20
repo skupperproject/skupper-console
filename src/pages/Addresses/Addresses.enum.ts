@@ -38,6 +38,7 @@ export enum RequestLabels {
 }
 
 export enum FlowPairsLabels {
+  Overview = 'Overview',
   Servers = 'Exposed Servers',
   ViewDetails = 'view details'
 }

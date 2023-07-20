@@ -7,10 +7,10 @@ import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesI
 import { SkChartPieProps } from './ChartPie.interfaces';
 
 const CHART_PADDING = {
-  bottom: 30,
+  bottom: 70,
   left: 0,
-  right: 100,
-  top: 20
+  right: 0,
+  top: 10
 };
 
 const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) => y, ...props }) {
@@ -60,8 +60,8 @@ const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) =
         }
         padding={CHART_PADDING}
         legendData={legendData}
-        legendOrientation="vertical"
-        legendPosition="right"
+        legendOrientation="horizontal"
+        legendPosition="bottom"
         width={width}
         themeColor={ChartThemeColor.cyan}
         {...props}

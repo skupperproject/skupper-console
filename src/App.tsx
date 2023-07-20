@@ -20,7 +20,7 @@ const App = function () {
   }
 
   return (
-    <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar className="app-main-container">
+    <Page header={<Header />} sidebar={<SideBar />} isManagedSidebar>
       <ErrorBoundary FallbackComponent={Console}>
         <Suspense fallback={<span />}>
           <AppContent>{routes}</AppContent>
