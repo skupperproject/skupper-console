@@ -208,7 +208,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
             </ToolbarItem>
 
             <ToolbarItem>
-              {!filterOptions.destinationProcesses.disabled && (
+              {!filterOptions.destinationProcesses.hide && (
                 <Select
                   selections={selectedFilter.processIdDest}
                   placeholderText={filterOptions.destinationProcesses.placeholder}

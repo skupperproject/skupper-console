@@ -295,8 +295,11 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
               sourceProcesses={serverNames}
               filterOptions={{
                 protocols: { disabled: true, placeholder: protocol },
-                sourceProcesses: { placeholder: AddressesLabels.MetricDestinationProcessFilter },
-                destinationProcesses: { placeholder: RequestLabels.Clients, disabled: true }
+                sourceProcesses: {
+                  disabled: serverNames.length < 2,
+                  placeholder: AddressesLabels.MetricDestinationProcessFilter
+                },
+                destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
               }}
               onGetMetricFilters={handleSetMetricFilters}
             />

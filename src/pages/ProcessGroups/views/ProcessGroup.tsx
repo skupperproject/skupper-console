@@ -96,8 +96,11 @@ const ProcessGroup = function () {
               startTime={startTime}
               sourceProcesses={serverNameFilters}
               filterOptions={{
-                destinationProcesses: { disabled: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-                sourceProcesses: { placeholder: MetricsLabels.FilterAllSourceProcesses }
+                destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                sourceProcesses: {
+                  disabled: serverNameFilters.length < 2,
+                  placeholder: MetricsLabels.FilterAllSourceProcesses
+                }
               }}
               onGetMetricFilters={handleRefreshMetrics}
             />
