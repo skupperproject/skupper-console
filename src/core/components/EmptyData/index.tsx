@@ -6,19 +6,19 @@ import { EmptyDataLabels } from './EmptyData.enum';
 
 interface EmptyDataProps {
   message?: string;
+  description?: string;
   icon?: ComponentType;
 }
 
-const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Default, icon }) {
+const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Default, description, icon }) {
   return (
     <Bullseye>
       <EmptyState variant={EmptyStateVariant.small}>
-        <EmptyStateBody>
-          {icon && <EmptyStateIcon icon={icon} />}
-          <Title headingLevel="h2" color="var(--pf-u-color-400)">
-            {message}
-          </Title>
-        </EmptyStateBody>
+        {icon && <EmptyStateIcon icon={icon} />}
+        <Title headingLevel="h2" color="var(--pf-u-color-400)">
+          {message}
+        </Title>
+        {description && <EmptyStateBody>{description}</EmptyStateBody>}
       </EmptyState>
     </Bullseye>
   );
