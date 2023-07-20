@@ -78,15 +78,6 @@ html {
   height: 100%;
 }
 
-.sk-main {
-  position: absolute;
-  top: 50%;
-  right: 50%;
-  transform: translate(50%, -50%);
-  width: 30%;
-  opacity: 0.04;
-}
-
 /* Resource icon */
 .sk-resource-icon {
   background-color: var(--pf-global--palette--black-500);

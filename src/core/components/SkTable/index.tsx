@@ -146,23 +146,8 @@ const SkTable = function <T>({
   return (
     <Card isFullHeight>
       {title && <SkTitle title={title} description={titleDescription} />}
-      {isPaginationEnabled && (
-        <SkPagination
-          totalRow={paginationTotalRows}
-          paginationSize={paginationSize}
-          currentPageNumber={currentPageNumber}
-          onSetPageNumber={handleSetPageNumber}
-          onSetPaginationSize={handleSetPaginationSize}
-        />
-      )}
-      <TableComposable
-        style={{ borderTop: `1px solid var(--pf-global--BorderColor--100)` }}
-        borders={borders}
-        variant="compact"
-        isStickyHeader={false}
-        isStriped={isStriped}
-        {...restProps}
-      >
+
+      <TableComposable borders={borders} variant="compact" isStickyHeader={false} isStriped={isStriped} {...restProps}>
         <Thead>
           <Tr>
             {skColumns.map(({ name, prop, columnDescription }, index) => (
