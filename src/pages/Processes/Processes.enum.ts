@@ -38,7 +38,6 @@ export enum ProcessesLabels {
   Http1Requests = 'Http1 requests in the last 15 minutes',
   Http2Requests = 'Http2 requests in the last 15 minutes',
   HttpRequests = 'Http requests in the last 15 minutes',
-  GoToTopology = 'Go to the Topology view',
   ByteRateAvgCol = 'avg',
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',

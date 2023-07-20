@@ -1,9 +1,10 @@
 import { FC } from 'react';
 
-import { Button, Card, CardHeader, Flex, TextContent, Text, Title } from '@patternfly/react-core';
-import { Link } from 'react-router-dom';
+import { Card, CardHeader, Flex, Text, Title } from '@patternfly/react-core';
 
-import { SkTitleLabels } from './SkTitle.enum';
+import { TopologyLabels } from '@pages/Topology/Topology.enum';
+
+import NavigationViewLink from '../NavigationViewLink';
 import ResourceIcon, { ResourceIconProps } from '../ResourceIcon';
 
 interface SkTitleProps {
@@ -14,26 +15,16 @@ interface SkTitleProps {
   description?: string;
 }
 
-const SkTitle: FC<SkTitleProps> = function ({
-  title,
-  icon,
-  link,
-  linkLabel = SkTitleLabels.GoToTopology,
-  description
-}) {
+const SkTitle: FC<SkTitleProps> = function ({ title, icon, link, linkLabel = TopologyLabels.Topology, description }) {
   return (
     <Card role="sk-heading">
-      <CardHeader>
-        <Flex alignItems={{ default: 'alignItemsCenter' }}>
+      <CardHeader style={{ justifyContent: 'space-between' }}>
+        <Flex>
           {icon && <ResourceIcon type={icon} />}
-
-          <TextContent>
-            <Title headingLevel="h1">{title}</Title>
-            {description && <Text component="p">{description}</Text>}
-          </TextContent>
-
-          {link && <Button component={(props) => <Link {...props} to={link} />}>{linkLabel}</Button>}
+          <Title headingLevel="h1">{title}</Title>
+          {description && <Text component="p">{description}</Text>}
         </Flex>
+        {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
       </CardHeader>
     </Card>
   );

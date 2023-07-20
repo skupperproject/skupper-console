@@ -1,21 +1,21 @@
 import { FC, useCallback } from 'react';
 
-import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { ListIcon } from '@patternfly/react-icons';
+import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
 import LoadingPage from '@pages/shared/Loading';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import { TopologyLabels } from '../Topology.enum';
+import { TopologyViews } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'component-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'component-fitScreen';
@@ -90,11 +90,11 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
         <ToolbarContent>
           <ToolbarGroup alignment={{ default: 'alignRight' }}>
             <ToolbarItem>
-              <Link to={ProcessGroupsRoutesPaths.ProcessGroups}>
-                <Tooltip content={TopologyLabels.TableView}>
-                  <ListIcon />
-                </Tooltip>
-              </Link>
+              <NavigationViewLink
+                link={ProcessGroupsRoutesPaths.ProcessGroups}
+                linkLabel={TopologyViews.ProcessGroups}
+                iconName="listIcon"
+              />
             </ToolbarItem>
           </ToolbarGroup>
         </ToolbarContent>

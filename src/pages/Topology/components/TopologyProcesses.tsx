@@ -8,12 +8,10 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
-  ToolbarItem,
-  Tooltip
+  ToolbarItem
 } from '@patternfly/react-core';
-import { ListIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -23,6 +21,7 @@ import EmptyData from '@core/components/EmptyData';
 import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT_LABEL } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import NavigationViewLink from '@core/components/NavigationViewLink';
 import { QueriesAddresses } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
@@ -33,7 +32,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { ProcessLegendData } from '../Topology.constant';
-import { TopologyLabels } from '../Topology.enum';
+import { TopologyLabels, TopologyViews } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process-graphZoom';
 const SHOW_SITE_KEY = 'showSite';
@@ -424,11 +423,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
               <ToolbarGroup alignment={{ default: 'alignRight' }}>
                 <ToolbarItem>
-                  <Link to={ProcessesRoutesPaths.Processes}>
-                    <Tooltip content={TopologyLabels.TableView}>
-                      <ListIcon />
-                    </Tooltip>
-                  </Link>
+                  <NavigationViewLink
+                    link={ProcessesRoutesPaths.Processes}
+                    linkLabel={TopologyViews.Processes}
+                    iconName="listIcon"
+                  />
                 </ToolbarItem>
               </ToolbarGroup>
             </>
