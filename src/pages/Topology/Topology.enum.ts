@@ -12,7 +12,7 @@ export enum TopologyViews {
 export enum TopologyLabels {
   Topology = 'Topology',
   LegendGroupsItems = 'Sites',
-  ShowAll = `Filter by routing key`,
+  ShowAll = `Filter by address`,
   ShowProcessGroups = 'Group by Components',
   Process = 'process',
   Processes = 'processes',

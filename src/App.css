@@ -35,15 +35,15 @@ html {
 }
 
 .sk-resource-process-group {
-  background-color: var(--pf-global--palette--blue-200);
+  background-color: var(--pf-global--palette--blue-300);
 }
 
 .sk-resource-service {
-  background-color: var(--pf-global--palette--green-400);
+  background-color: var(--pf-global--palette--green-300);
 }
 
 .sk-resource-process {
-  background-color: var(--pf-global--palette--orange-200);
+  background-color: var(--pf-global--palette--orange-300);
 }
 
 .sk-resource-skupper {

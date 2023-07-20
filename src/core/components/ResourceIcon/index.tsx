@@ -11,7 +11,7 @@ export interface ResourceIconProps {
 const RESOURCE_MAP = {
   site: { class: 'sk-resource-site', symbol: 'S' },
   component: { class: 'sk-resource-process-group', symbol: 'C' },
-  service: { class: 'sk-resource-service', symbol: 'R' },
+  service: { class: 'sk-resource-service', symbol: 'A' },
   process: { class: 'sk-resource-process', symbol: 'P' },
   skupper: { class: 'sk-resource-skupper', symbol: '' }
 };

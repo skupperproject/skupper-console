@@ -3,7 +3,7 @@ export enum AddressesRoutesPaths {
 }
 
 export enum AddressesColumnsNames {
-  Name = 'Routing key',
+  Name = 'Address',
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',
   TotalFLowPairs = 'Total',
