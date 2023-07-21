@@ -1,11 +1,10 @@
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
-import { PageSection, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
+import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Addresses.enum';
@@ -39,27 +38,12 @@ const FlowsPairs = function () {
       : `${RequestLabels.Requests} (${0})`;
 
   return (
-    <TransitionPage>
-      <>
-        <SkTitle
-          isPlain
-          title={addressName || ''}
-          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
-        >
-          <Tabs activeKey={tabSelected} onSelect={handleTabClick}>
-            <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview}`}</TabTitleText>} />
-            <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{`${FlowPairsLabels.Servers} (${0})`}</TabTitleText>} />
-            <Tab eventKey={TAB_2_KEY} title={<TabTitleText>{tabTitle2}</TabTitleText>} />
-            {protocol === AvailableProtocols.Tcp && (
-              <Tab
-                eventKey={TAB_3_KEY}
-                title={<TabTitleText>{`${ConnectionLabels.OldConnections} (${0})`}</TabTitleText>}
-              />
-            )}
-          </Tabs>
-        </SkTitle>
-
-        <PageSection>
+    <SkTitle
+      isPlain
+      title={addressName || ''}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+      secondaryChildren={
+        <>
           {protocol === AvailableProtocols.Tcp && (
             <ConnectionsByAddress
               addressName={addressName || ''}
@@ -76,9 +60,21 @@ const FlowsPairs = function () {
               viewSelected={tabSelected}
             />
           )}
-        </PageSection>
-      </>
-    </TransitionPage>
+        </>
+      }
+    >
+      <Tabs activeKey={tabSelected} onSelect={handleTabClick}>
+        <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview}`}</TabTitleText>} />
+        <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{`${FlowPairsLabels.Servers} (${0})`}</TabTitleText>} />
+        <Tab eventKey={TAB_2_KEY} title={<TabTitleText>{tabTitle2}</TabTitleText>} />
+        {protocol === AvailableProtocols.Tcp && (
+          <Tab
+            eventKey={TAB_3_KEY}
+            title={<TabTitleText>{`${ConnectionLabels.OldConnections} (${0})`}</TabTitleText>}
+          />
+        )}
+      </Tabs>
+    </SkTitle>
   );
 };
 export default FlowsPairs;

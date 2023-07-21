@@ -8,7 +8,6 @@ import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 import LoadingPage from '@pages/shared/Loading';
 
 import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
@@ -77,23 +76,21 @@ const Services = function () {
   }
 
   return (
-    <TransitionPage>
-      <SkTitle
-        title={AddressesLabels.Section}
-        description={AddressesLabels.Description}
-        secondaryChildren={
-          <SkTable
-            rows={servicesExtended}
-            columns={columnsExtend}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            onGetFilters={handleGetFiltersAddressses}
-            paginationTotalRows={addressesRowsCount}
-            customCells={customAddressCells}
-          />
-        }
-      />
-    </TransitionPage>
+    <SkTitle
+      title={AddressesLabels.Section}
+      description={AddressesLabels.Description}
+      secondaryChildren={
+        <SkTable
+          rows={servicesExtended}
+          columns={columnsExtend}
+          pagination={true}
+          paginationPageSize={BIG_PAGINATION_SIZE}
+          onGetFilters={handleGetFiltersAddressses}
+          paginationTotalRows={addressesRowsCount}
+          customCells={customAddressCells}
+        />
+      }
+    />
   );
 };
 
