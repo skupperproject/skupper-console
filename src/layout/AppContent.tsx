@@ -1,8 +1,5 @@
-import { PageSection } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
 import { useRoutes, RouteObject } from 'react-router-dom';
-
-import AppMenu from '@core/components/AppMenu/AppMenu';
 
 interface AppContentProps {
   children: RouteObject[];
@@ -15,12 +12,7 @@ const AppContent = function ({ children }: AppContentProps) {
     return null;
   }
 
-  return (
-    <PageSection hasOverflowScroll padding={{ default: 'noPadding' }}>
-      <AppMenu />
-      <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
-    </PageSection>
-  );
+  return <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>;
 };
 
 export default AppContent;

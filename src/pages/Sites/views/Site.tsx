@@ -86,9 +86,9 @@ const Site = function () {
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
       secondaryChildren={
-        <Grid hasGutter>
-          <GridItem>
-            <Card isFullHeight isRounded>
+        <Grid hasGutter sm={12} xl={6} xl2={4}>
+          <GridItem sm={12}>
+            <Card>
               <CardTitle>
                 <Title headingLevel="h2">{Labels.Details}</Title>
               </CardTitle>
@@ -105,8 +105,8 @@ const Site = function () {
             </Card>
           </GridItem>
 
-          <GridItem span={4}>
-            <Card isFullHeight isRounded>
+          <GridItem>
+            <Card isFullHeight>
               <CardTitle>
                 <Title headingLevel="h2">{Labels.Links}</Title>
               </CardTitle>
@@ -127,8 +127,8 @@ const Site = function () {
             </Card>
           </GridItem>
 
-          <GridItem span={4}>
-            <Card isFullHeight isRounded>
+          <GridItem>
+            <Card isFullHeight>
               <CardTitle>
                 <Title headingLevel="h2">{Labels.Hosts}</Title>
               </CardTitle>
@@ -144,8 +144,8 @@ const Site = function () {
             </Card>
           </GridItem>
 
-          <GridItem span={4}>
-            <Card isFullHeight isRounded>
+          <GridItem sm={12} xl={12} xl2={4}>
+            <Card isFullHeight>
               <CardTitle>
                 <Title headingLevel="h2">{Labels.Processes}</Title>
               </CardTitle>

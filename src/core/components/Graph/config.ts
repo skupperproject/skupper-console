@@ -157,8 +157,8 @@ export const DEFAULT_COMBO_CONFIG = {
 
   style: {
     cursor: 'pointer',
-    lineWidth: 1,
-    fillOpacity: 0.02,
+    lineWidth: 0.7,
+    fillOpacity: 0.015,
     shadowBlur: 6,
     radius: 3
   },

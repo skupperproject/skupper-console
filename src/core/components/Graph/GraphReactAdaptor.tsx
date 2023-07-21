@@ -9,7 +9,6 @@ import {
   GraphReactAdaptorProps,
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 
 import {
   DEFAULT_COMBO_CONFIG,
@@ -467,7 +466,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }, [itemSelected, isGraphLoaded]);
 
     return (
-      <div style={{ height: '100%', position: 'relative' }}>
+      <>
         {topologyGraphRef.current && (
           <GraphMenuControl
             graphInstance={topologyGraphRef.current}
@@ -475,11 +474,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             onFitScreen={handleFitScreen}
           />
         )}
-
-        <TransitionPage>
-          <div ref={graphRef} style={{ width: '100%', height: '100%' }} />
-        </TransitionPage>
-      </div>
+        <div ref={graphRef} style={{ height: '98%' }} />
+      </>
     );
   }
 );

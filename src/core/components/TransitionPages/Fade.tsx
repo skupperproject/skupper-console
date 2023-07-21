@@ -13,9 +13,16 @@ const TransitionPage: FC<{ children: ReactElement; delay?: number }> = function 
   };
 
   return (
-    <motion.span initial="out" animate="in" exit="out" transition={{ delay, duration: 0.175 }} variants={transition}>
+    <motion.div
+      initial="out"
+      animate="in"
+      exit="out"
+      transition={{ delay, duration: 0.125 }}
+      variants={transition}
+      style={{ flex: 1, display: 'grid', height: '100%' }}
+    >
       {children}
-    </motion.span>
+    </motion.div>
   );
 };
 

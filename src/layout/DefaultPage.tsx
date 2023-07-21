@@ -1,6 +1,15 @@
 import { FC, ReactElement } from 'react';
 
-import { Flex, PageSection, PageSectionVariants, Text, TextContent, Title } from '@patternfly/react-core';
+import {
+  Flex,
+  PageGroup,
+  PageNavigation,
+  PageSection,
+  PageSectionVariants,
+  Text,
+  TextContent,
+  Title
+} from '@patternfly/react-core';
 
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
@@ -14,7 +23,7 @@ interface SkDefaultPageProps {
   linkLabel?: string;
   description?: string;
   isPlain?: boolean;
-  children?: ReactElement;
+  navigationComponent?: ReactElement;
   secondaryChildren?: ReactElement;
 }
 
@@ -24,26 +33,29 @@ const SkDefaultPage: FC<SkDefaultPageProps> = function ({
   link,
   linkLabel = TopologyLabels.Topology,
   description,
-  secondaryChildren,
-  children
+  navigationComponent,
+  secondaryChildren
 }) {
   return (
     <TransitionPage>
-      <div data-testid={dataTestId}>
-        <PageSection role="sk-heading" variant={PageSectionVariants.light} style={{ padding: '0 21px' }}>
-          <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }} style={{ padding: '18px 0' }}>
+      <PageGroup data-testid={dataTestId}>
+        <PageSection role="sk-heading" variant={PageSectionVariants.light}>
+          <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
             <TextContent>
               <Title headingLevel="h1">{title}</Title>
               {description && <Text component="p">{description}</Text>}
             </TextContent>
             {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
           </Flex>
-
-          {children}
         </PageSection>
 
-        <PageSection isFilled>{secondaryChildren}</PageSection>
-      </div>
+        {navigationComponent && <PageNavigation>{navigationComponent}</PageNavigation>}
+        {secondaryChildren && (
+          <PageSection padding={{ default: 'noPadding' }} isFilled={true}>
+            {secondaryChildren}
+          </PageSection>
+        )}
+      </PageGroup>
     </TransitionPage>
   );
 };

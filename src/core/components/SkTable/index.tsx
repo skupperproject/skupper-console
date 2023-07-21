@@ -140,10 +140,10 @@ const SkTable = function <T>({
     [alwaysShowPagination, pagination, paginationPageSize, paginationTotalRows]
   );
 
-  const { shouldSort = true, ...restProps } = props;
+  const { shouldSort = true, isFullHeight = false, ...restProps } = props;
 
   return (
-    <Card isFullHeight>
+    <Card isFullHeight={isFullHeight}>
       {title && (
         <CardHeader>
           <Title headingLevel="h3">{title}</Title>

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
+import { Flex, FlexItem, Stack, StackItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -102,11 +102,11 @@ const Process = function () {
       title={process.name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
       secondaryChildren={
-        <Grid hasGutter>
-          <GridItem>
+        <Stack hasGutter>
+          <StackItem>
             <ProcessDescription process={process} title={ProcessesLabels.Details} />
-          </GridItem>
-          <GridItem>
+          </StackItem>
+          <StackItem>
             <Flex
               direction={{ default: 'column', xl: 'row' }}
               justifyContent={{ default: 'justifyContentSpaceBetween' }}
@@ -114,6 +114,7 @@ const Process = function () {
               {!!TCPClients.length && (
                 <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                   <SkTable
+                    isFullHeight
                     title={ProcessesLabels.TCPClients}
                     columns={processesConnectedColumns}
                     rows={TCPClients}
@@ -134,6 +135,7 @@ const Process = function () {
               {!!TCPServers.length && (
                 <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                   <SkTable
+                    isFullHeight
                     title={ProcessesLabels.TCPServers}
                     columns={processesConnectedColumns}
                     rows={TCPServers}
@@ -154,6 +156,7 @@ const Process = function () {
               {!!HTTPClients.length && (
                 <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                   <SkTable
+                    isFullHeight
                     title={ProcessesLabels.HTTPClients}
                     columns={processesHttpConnectedColumns}
                     rows={HTTPClients}
@@ -174,6 +177,7 @@ const Process = function () {
               {!!HTTPServers.length && (
                 <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                   <SkTable
+                    isFullHeight
                     title={ProcessesLabels.HTTPServers}
                     columns={processesHttpConnectedColumns}
                     rows={HTTPServers}
@@ -194,6 +198,7 @@ const Process = function () {
               {!!remoteClients.length && (
                 <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                   <SkTable
+                    isFullHeight
                     title={ProcessesLabels.RemoteClients}
                     columns={processesConnectedColumns}
                     rows={remoteClients}
@@ -214,6 +219,7 @@ const Process = function () {
               {!!remoteServers.length && (
                 <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
                   <SkTable
+                    isFullHeight
                     title={ProcessesLabels.RemoteServers}
                     columns={processesConnectedColumns}
                     rows={remoteServers}
@@ -231,10 +237,10 @@ const Process = function () {
                 </FlexItem>
               )}
             </Flex>
-          </GridItem>
+          </StackItem>
           {/* Process Metrics - key reset the component(state) when we click on a link from the server or client table*/}
           {isPrometheusActive && (
-            <GridItem>
+            <StackItem isFilled>
               <Metrics
                 key={id}
                 selectedFilters={{
@@ -256,9 +262,9 @@ const Process = function () {
                 }}
                 onGetMetricFilters={handleRefreshMetrics}
               />
-            </GridItem>
+            </StackItem>
           )}
-        </Grid>
+        </Stack>
       }
     />
   );
