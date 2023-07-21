@@ -19,15 +19,10 @@ import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { serverColumns, tcpColumns } from '../Addresses.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, serverColumns, tcpColumns } from '../Addresses.constants';
 import { RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import { QueriesServices } from '../services/services.enum';
-
-const TAB_0_KEY = '0';
-const TAB_1_KEY = '1';
-const TAB_2_KEY = '2';
-const TAB_3_KEY = '3';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
@@ -68,6 +63,26 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     initActiveConnectionsQueryParams
   );
 
+  // query Exposed Servers
+  const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
+    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
+    () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
+    {
+      refetchInterval: viewSelected === TAB_1_KEY ? UPDATE_INTERVAL : 0,
+      keepPreviousData: true
+    }
+  );
+
+  const { data: byteRates } = useQuery(
+    ['QueriesAddresses.GetFlowPair', { addressName }],
+    () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
+    {
+      enabled: viewSelected === TAB_1_KEY,
+      refetchInterval: UPDATE_INTERVAL
+    }
+  );
+
+  // query Active tcp connection
   const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
@@ -82,11 +97,13 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
           })
         : undefined,
     {
+      enabled: viewSelected === TAB_2_KEY,
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
   );
 
+  // query Terminated tcp connection
   const { data: oldConnectionsData, isLoading: isLoadingOldConnections } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
@@ -101,34 +118,19 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
           })
         : undefined,
     {
+      enabled: viewSelected === TAB_3_KEY,
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
   );
 
-  const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
-    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
-    () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
-    {
-      keepPreviousData: true
-    }
-  );
-
+  // query a single connection when a connection detail is selected
   const { data: connectionSelected } = useQuery(
     [QueriesServices.GetFlowPair],
     () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
     {
       refetchInterval: UPDATE_INTERVAL,
       enabled: !!flowSelected
-    }
-  );
-
-  const { data: byteRates } = useQuery(
-    ['QueriesAddresses.GetFlowPair', { addressName }],
-    () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      enabled: isPrometheusActive && viewSelected === TAB_1_KEY
     }
   );
 
@@ -157,7 +159,11 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     setConnectionsQueryParamsPaginated(params);
   }, []);
 
-  if (isLoadingServersByAddress || isLoadingActiveConnections || isLoadingOldConnections) {
+  if (
+    isLoadingServersByAddress ||
+    (viewSelected === TAB_2_KEY && isLoadingActiveConnections) ||
+    (viewSelected === TAB_3_KEY && isLoadingOldConnections)
+  ) {
     return <LoadingPage />;
   }
 

@@ -1,13 +1,15 @@
 import { MouseEvent as ReactMouseEvent, useState } from 'react';
 
-import { Card, Tab, Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
+import { Tab, Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
 import { CogIcon, CogsIcon, ProjectDiagramIcon } from '@patternfly/react-icons';
 import { useSearchParams } from 'react-router-dom';
+
+import SkDefaultPage from '@layout/DefaultPage';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
 import TopologySite from '../components/TopologySite';
-import { TopologyURLFilters, TopologyViews } from '../Topology.enum';
+import { TopologyLabels, TopologyURLFilters, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,46 +26,54 @@ const Topology = function () {
   }
 
   return (
-    <Card isFullHeight>
-      <Tabs activeKey={topologyType} style={{ minHeight: '35px' }} isFilled onSelect={handleChangeTopologyType} isBox>
-        <Tab
-          eventKey={TopologyViews.Sites}
-          title={
-            <>
-              <TabTitleIcon>
-                <ProjectDiagramIcon />
-              </TabTitleIcon>{' '}
-              <TabTitleText>{TopologyViews.Sites}</TabTitleText>
-            </>
-          }
-        />
-        <Tab
-          eventKey={TopologyViews.ProcessGroups}
-          title={
-            <>
-              <TabTitleIcon>
-                <CogsIcon />
-              </TabTitleIcon>{' '}
-              <TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>
-            </>
-          }
-        />
-        <Tab
-          eventKey={TopologyViews.Processes}
-          title={
-            <>
-              <TabTitleIcon>
-                <CogIcon />
-              </TabTitleIcon>{' '}
-              <TabTitleText>{TopologyViews.Processes}</TabTitleText>
-            </>
-          }
-        />
-      </Tabs>
-      {topologyType === TopologyViews.Sites && <TopologySite />}
-      {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}
-      {topologyType === TopologyViews.Processes && <TopologyProcesses addressId={addressId} id={id} />}
-    </Card>
+    <SkDefaultPage
+      isPlain
+      title={TopologyLabels.Topology}
+      navigationComponent={
+        <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType}>
+          <Tab
+            eventKey={TopologyViews.Sites}
+            title={
+              <>
+                <TabTitleIcon>
+                  <ProjectDiagramIcon />
+                </TabTitleIcon>{' '}
+                <TabTitleText>{TopologyViews.Sites}</TabTitleText>
+              </>
+            }
+          />
+          <Tab
+            eventKey={TopologyViews.ProcessGroups}
+            title={
+              <>
+                <TabTitleIcon>
+                  <CogsIcon />
+                </TabTitleIcon>{' '}
+                <TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>
+              </>
+            }
+          />
+          <Tab
+            eventKey={TopologyViews.Processes}
+            title={
+              <>
+                <TabTitleIcon>
+                  <CogIcon />
+                </TabTitleIcon>{' '}
+                <TabTitleText>{TopologyViews.Processes}</TabTitleText>
+              </>
+            }
+          />
+        </Tabs>
+      }
+      secondaryChildren={
+        <>
+          {topologyType === TopologyViews.Sites && <TopologySite />}
+          {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}
+          {topologyType === TopologyViews.Processes && <TopologyProcesses addressId={addressId} id={id} />}
+        </>
+      }
+    />
   );
 };
 

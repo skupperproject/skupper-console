@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem, PageBreadcrumb } from '@patternfly/react-core';
+import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem } from '@patternfly/react-core';
 import { Link, useLocation } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds.config';
@@ -16,16 +16,15 @@ const AppMenu = function () {
   }
 
   return (
-    <PageBreadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
-      <Breadcrumb>
-        {pathsNormalized.map((path, index) => (
-          <BreadcrumbItem key={path.name}>
-            <Link to={[...paths].slice(0, index + 1).join('/')}>{path.name}</Link>
-          </BreadcrumbItem>
-        ))}
-        <BreadcrumbHeading>{lastPath?.name}</BreadcrumbHeading>
-      </Breadcrumb>
-    </PageBreadcrumb>
+    <Breadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
+      {pathsNormalized.map((path, index) => (
+        <BreadcrumbItem key={path.name}>
+          <Link to={[...paths].slice(0, index + 1).join('/')}>{path.name}</Link>
+        </BreadcrumbItem>
+      ))}
+
+      <BreadcrumbHeading> &nbsp; {lastPath?.name}</BreadcrumbHeading>
+    </Breadcrumb>
   );
 };
 

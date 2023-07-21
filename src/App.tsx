@@ -6,6 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import { RESTApi } from '@API/REST.api';
 import { setCollectorStartTime } from '@config/config';
+import AppMenu from '@core/components/AppMenu/AppMenu';
 import AppContent from '@layout/AppContent';
 import SkHeader from '@layout/Header';
 import SkSidebar from '@layout/SideBar';
@@ -20,7 +21,7 @@ const App = function () {
   }
 
   return (
-    <Page header={<SkHeader />} sidebar={<SkSidebar />} isManagedSidebar>
+    <Page header={<SkHeader />} sidebar={<SkSidebar />} breadcrumb={<AppMenu />} isManagedSidebar>
       <ErrorBoundary FallbackComponent={Console}>
         <Suspense fallback={<span />}>
           <AppContent>{routes}</AppContent>

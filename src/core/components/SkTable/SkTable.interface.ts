@@ -6,11 +6,11 @@ export interface SKTableProps<T> {
   columns: SKColumn<NonNullableValue<T>>[];
   rows?: NonNullableValue<T>[];
   title?: string;
-  titleDescription?: string;
   customCells?: Record<string, Function>;
   borders?: boolean;
   isStriped?: boolean;
   isPlain?: boolean;
+  isFullHeight?: boolean;
   shouldSort?: boolean;
   pagination?: boolean;
   alwaysShowPagination?: boolean;

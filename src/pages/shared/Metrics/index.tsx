@@ -7,9 +7,9 @@ import {
   CardExpandableContent,
   CardHeader,
   CardTitle,
-  Grid,
-  GridItem,
-  Spinner
+  Spinner,
+  Stack,
+  StackItem
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -139,9 +139,9 @@ const Metrics: FC<MetricsProps> = function ({
   };
 
   return (
-    <Grid hasGutter>
-      <GridItem>
-        <Card isRounded style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+    <Stack hasGutter>
+      <StackItem>
+        <Card style={{ position: 'sticky', top: 0, zIndex: 1 }}>
           <MetricFilters
             sourceProcesses={sourceProcesses}
             processesConnected={processesConnected}
@@ -159,31 +159,17 @@ const Metrics: FC<MetricsProps> = function ({
             onSelectFilters={handleFilters}
           />
         </Card>
-      </GridItem>
-
-      {!byteRateData && (
-        <GridItem>
-          <Card isFullHeight>
-            <CardBody>
-              <EmptyData
-                message={MetricsLabels.NoMetricFoundTitleMessage}
-                description={MetricsLabels.NoMetricFoundDescriptionMessage}
-                icon={SearchIcon}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-      )}
+      </StackItem>
 
       {!!byteRateData && !!bytesData && (
-        <GridItem>
+        <StackItem>
           <TrafficCharts bytesData={bytesData} byteRateData={byteRateData} />
-        </GridItem>
+        </StackItem>
       )}
 
       {!!byteRateData && prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
         <>
-          <GridItem>
+          <StackItem>
             <Card
               isExpanded={activeMetrics.isLatencySectionActive && isExpandedLatency}
               className={!activeMetrics.isLatencySectionActive ? 'metric-disabled' : undefined}
@@ -200,9 +186,9 @@ const Metrics: FC<MetricsProps> = function ({
                 )}
               </CardExpandableContent>
             </Card>
-          </GridItem>
+          </StackItem>
 
-          <GridItem>
+          <StackItem>
             <Card
               isExpanded={activeMetrics.isHttpRequestSectionActive && isExpandedRequests}
               className={!activeMetrics.isHttpRequestSectionActive ? 'metric-disabled' : undefined}
@@ -222,9 +208,9 @@ const Metrics: FC<MetricsProps> = function ({
                 )}
               </CardExpandableContent>
             </Card>
-          </GridItem>
+          </StackItem>
 
-          <GridItem>
+          <StackItem>
             <Card
               isExpanded={activeMetrics.isHttpResponseSectionActive && isExpandedResponses}
               className={!activeMetrics.isHttpResponseSectionActive ? 'metric-disabled' : undefined}
@@ -240,10 +226,24 @@ const Metrics: FC<MetricsProps> = function ({
                 )}
               </CardExpandableContent>
             </Card>
-          </GridItem>
+          </StackItem>
         </>
       )}
-    </Grid>
+
+      {!byteRateData && (
+        <StackItem isFilled>
+          <Card isFullHeight>
+            <CardBody>
+              <EmptyData
+                message={MetricsLabels.NoMetricFoundTitleMessage}
+                description={MetricsLabels.NoMetricFoundDescriptionMessage}
+                icon={SearchIcon}
+              />
+            </CardBody>
+          </Card>
+        </StackItem>
+      )}
+    </Stack>
   );
 };
 

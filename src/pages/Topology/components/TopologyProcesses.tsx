@@ -5,6 +5,8 @@ import {
   Select,
   SelectOption,
   SelectOptionObject,
+  Stack,
+  StackItem,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -370,92 +372,97 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   }
 
   return (
-    <>
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarGroup>
-            <ToolbarItem>
-              <Select
-                isOpen={isAddressSelectMenuOpen}
-                onSelect={handleSelectAddress}
-                onToggle={handleToggleAddressDropdownMenu}
-                selections={addressIdSelected}
-              >
-                {getOptions()}
-              </Select>
-            </ToolbarItem>
-          </ToolbarGroup>
-          {isPrometheusActive && (
-            <>
-              <ToolbarGroup>
-                <ToolbarItem>
-                  <Checkbox
-                    label={TopologyLabels.CheckboxShowSite}
-                    isChecked={showSite}
-                    onChange={handleChangeSiteCheck}
-                    id="show-site-check"
-                  />
-                  <Checkbox
-                    isDisabled={!showLinkLabel}
-                    label={TopologyLabels.RotateLabel}
-                    isChecked={rotateLabel}
-                    onChange={handleChangeRotateLabelCheck}
-                    id="rotate-label-check"
-                  />
-                </ToolbarItem>
+    <Stack>
+      <StackItem>
+        {' '}
+        <Toolbar>
+          <ToolbarContent>
+            <ToolbarGroup>
+              <ToolbarItem>
+                <Select
+                  isOpen={isAddressSelectMenuOpen}
+                  onSelect={handleSelectAddress}
+                  onToggle={handleToggleAddressDropdownMenu}
+                  selections={addressIdSelected}
+                >
+                  {getOptions()}
+                </Select>
+              </ToolbarItem>
+            </ToolbarGroup>
+            {isPrometheusActive && (
+              <>
+                <ToolbarGroup>
+                  <ToolbarItem>
+                    <Checkbox
+                      label={TopologyLabels.CheckboxShowSite}
+                      isChecked={showSite}
+                      onChange={handleChangeSiteCheck}
+                      id="show-site-check"
+                    />
+                    <Checkbox
+                      isDisabled={!showLinkLabel}
+                      label={TopologyLabels.RotateLabel}
+                      isChecked={rotateLabel}
+                      onChange={handleChangeRotateLabelCheck}
+                      id="rotate-label-check"
+                    />
+                  </ToolbarItem>
 
-                <ToolbarItem>
-                  <Checkbox
-                    label={TopologyLabels.CheckboxShowLabel}
-                    isChecked={showLinkLabel}
-                    onChange={handleChangeProtocolLinkLabelCheck}
-                    id="show-protocols-check"
-                  />
-                  <Checkbox
-                    isDisabled={!showLinkLabel}
-                    label={TopologyLabels.CheckboxShowLabelReverse}
-                    isChecked={showLinkLabelReverse}
-                    onChange={handleChangeProtocolLinkLabelCheckReverse}
-                    id="show-protocols-check-reverse"
-                  />
-                </ToolbarItem>
-              </ToolbarGroup>
+                  <ToolbarItem>
+                    <Checkbox
+                      label={TopologyLabels.CheckboxShowLabel}
+                      isChecked={showLinkLabel}
+                      onChange={handleChangeProtocolLinkLabelCheck}
+                      id="show-protocols-check"
+                    />
+                    <Checkbox
+                      isDisabled={!showLinkLabel}
+                      label={TopologyLabels.CheckboxShowLabelReverse}
+                      isChecked={showLinkLabelReverse}
+                      onChange={handleChangeProtocolLinkLabelCheckReverse}
+                      id="show-protocols-check-reverse"
+                    />
+                  </ToolbarItem>
+                </ToolbarGroup>
 
-              <ToolbarGroup alignment={{ default: 'alignRight' }}>
-                <ToolbarItem>
-                  <NavigationViewLink
-                    link={ProcessesRoutesPaths.Processes}
-                    linkLabel={TopologyViews.Processes}
-                    iconName="listIcon"
-                  />
-                </ToolbarItem>
-              </ToolbarGroup>
-            </>
-          )}
-        </ToolbarContent>
-      </Toolbar>
+                <ToolbarGroup alignment={{ default: 'alignRight' }}>
+                  <ToolbarItem>
+                    <NavigationViewLink
+                      link={ProcessesRoutesPaths.Processes}
+                      linkLabel={TopologyViews.Processes}
+                      iconName="listIcon"
+                    />
+                  </ToolbarItem>
+                </ToolbarGroup>
+              </>
+            )}
+          </ToolbarContent>
+        </Toolbar>
+      </StackItem>
 
-      {!nodes.length && <EmptyData />}
-      {!!nodes.length && (
-        <GraphReactAdaptor
-          nodes={nodes}
-          edges={links}
-          combos={groups}
-          onClickCombo={handleGetSelectedGroup}
-          onClickNode={handleGetSelectedNode}
-          onClickEdge={handleGetSelectedEdge}
-          itemSelected={processId}
-          legendData={ProcessLegendData}
-          onGetZoom={handleSaveZoom}
-          onFitScreen={handleFitScreen}
-          layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
-          config={{
-            zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-            fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-          }}
-        />
-      )}
-    </>
+      <StackItem isFilled>
+        {!nodes.length && <EmptyData />}
+        {!!nodes.length && (
+          <GraphReactAdaptor
+            nodes={nodes}
+            edges={links}
+            combos={groups}
+            onClickCombo={handleGetSelectedGroup}
+            onClickNode={handleGetSelectedNode}
+            onClickEdge={handleGetSelectedEdge}
+            itemSelected={processId}
+            legendData={ProcessLegendData}
+            onGetZoom={handleSaveZoom}
+            onFitScreen={handleFitScreen}
+            layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
+            config={{
+              zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+              fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+            }}
+          />
+        )}
+      </StackItem>
+    </Stack>
   );
 };
 

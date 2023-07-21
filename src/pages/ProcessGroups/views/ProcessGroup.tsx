@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Grid, GridItem } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -65,11 +65,10 @@ const ProcessGroup = function () {
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
       secondaryChildren={
-        <Grid hasGutter>
-          <GridItem span={12}>
+        <Stack hasGutter>
+          <StackItem>
             <SkTable
               title={ProcessesLabels.Section}
-              titleDescription={ProcessesLabels.Description}
               columns={processesTableColumns}
               rows={processResults}
               customCells={{
@@ -78,11 +77,11 @@ const ProcessGroup = function () {
                 exposedCell: ProcessesComponentsTable.exposedCell
               }}
             />
-          </GridItem>
+          </StackItem>
 
           {/* Component Metrics*/}
           {isPrometheusActive && (
-            <GridItem>
+            <StackItem isFilled>
               <Metrics
                 key={id}
                 selectedFilters={{
@@ -100,9 +99,9 @@ const ProcessGroup = function () {
                 }}
                 onGetMetricFilters={handleRefreshMetrics}
               />
-            </GridItem>
+            </StackItem>
           )}
-        </Grid>
+        </Stack>
       }
     />
   );

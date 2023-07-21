@@ -18,14 +18,11 @@ import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { httpColumns } from '../Addresses.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, httpColumns } from '../Addresses.constants';
 import { RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesServices } from '../services/services.enum';
 
-const TAB_0_KEY = '0';
-const TAB_1_KEY = '1';
-const TAB_2_KEY = '2';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
 const initPaginatedRequestsQueryParams: RequestOptions = {
@@ -65,7 +62,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
           })
         : null,
     {
-      refetchInterval: UPDATE_INTERVAL,
+      refetchInterval: viewSelected === TAB_2_KEY ? UPDATE_INTERVAL : 0,
       keepPreviousData: true
     }
   );
@@ -74,6 +71,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
     [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
+      refetchInterval: viewSelected === TAB_1_KEY ? UPDATE_INTERVAL : 0,
       keepPreviousData: true
     }
   );

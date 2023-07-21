@@ -89,7 +89,6 @@ export const TopologyController = {
         const color = getColor(index);
 
         const style = {
-          fillOpacity: 0.02,
           fill: color,
           stroke: color,
           shadowColor: color

@@ -106,3 +106,8 @@ export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
   ...flowPair,
   show: tcpHiddenColumns[flowPair.name]?.show
 }));
+
+export const TAB_0_KEY = '0';
+export const TAB_1_KEY = '1';
+export const TAB_2_KEY = '2';
+export const TAB_3_KEY = '3';

@@ -66,7 +66,7 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   };
 
   return (
-    <Toolbar style={{ position: 'absolute', bottom: '8px', right: '5px' }}>
+    <Toolbar style={{ position: 'absolute', bottom: '8px', right: '5px', background: 'transparent' }}>
       <ToolbarContent>
         <ToolbarItem spacer={{ default: 'spacerNone' }}>
           <Tooltip content={'zoom in'}>

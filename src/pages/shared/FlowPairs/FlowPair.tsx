@@ -45,57 +45,59 @@ const FlowsPair: FC<{ flowPair: FlowPairsResponse | undefined }> = function ({ f
 
   return (
     <Grid hasGutter>
-      {flowPair.protocol === AvailableProtocols.Tcp && (
-        <>
-          <TextContent>
-            <Text component={TextVariants.h2}>Connection {flowPair.endTime ? 'closed' : 'open'}</Text>
-          </TextContent>
+      <GridItem>
+        {flowPair.protocol === AvailableProtocols.Tcp && (
+          <>
+            <TextContent>
+              <Text component={TextVariants.h2}>Connection {flowPair.endTime ? 'closed' : 'open'}</Text>
+            </TextContent>
 
-          <Card>
-            <CardBody>
-              <DescriptionList>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
-                  <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
-                  {duration && (
-                    <>
-                      <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
-                      <DescriptionListDescription>{duration}</DescriptionListDescription>
-                    </>
-                  )}
-                </DescriptionListGroup>
-              </DescriptionList>
-            </CardBody>
-          </Card>
-        </>
-      )}
-      {flowPair.protocol !== AvailableProtocols.Tcp && (
-        <>
-          <TextContent>
-            <Text component={TextVariants.h2}>Request {flowPair.endTime ? 'terminated' : 'open'}</Text>
-          </TextContent>
-          <Card>
-            <CardBody>
-              <DescriptionList>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
-                  <DescriptionListDescription>{forwardFlow.protocol}</DescriptionListDescription>
-                  <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
-                  <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
-                  <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
-                  <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
-                  {duration && (
-                    <>
-                      <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
-                      <DescriptionListDescription>{duration}</DescriptionListDescription>
-                    </>
-                  )}
-                </DescriptionListGroup>
-              </DescriptionList>
-            </CardBody>
-          </Card>
-        </>
-      )}
+            <Card isPlain>
+              <CardBody>
+                <DescriptionList>
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                    <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
+                    {duration && (
+                      <>
+                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                        <DescriptionListDescription>{duration}</DescriptionListDescription>
+                      </>
+                    )}
+                  </DescriptionListGroup>
+                </DescriptionList>
+              </CardBody>
+            </Card>
+          </>
+        )}
+        {flowPair.protocol !== AvailableProtocols.Tcp && (
+          <>
+            <TextContent>
+              <Text component={TextVariants.h2}>Request {flowPair.endTime ? 'terminated' : 'open'}</Text>
+            </TextContent>
+            <Card isPlain>
+              <CardBody>
+                <DescriptionList>
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
+                    <DescriptionListDescription>{forwardFlow.protocol}</DescriptionListDescription>
+                    <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
+                    <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
+                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                    <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
+                    {duration && (
+                      <>
+                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                        <DescriptionListDescription>{duration}</DescriptionListDescription>
+                      </>
+                    )}
+                  </DescriptionListGroup>
+                </DescriptionList>
+              </CardBody>
+            </Card>
+          </>
+        )}
+      </GridItem>
 
       <GridItem>
         <Flex direction={{ default: 'column', md: 'row' }} justifyContent={{ default: 'justifyContentSpaceBetween' }}>
@@ -129,7 +131,7 @@ interface DescriptionProps {
 
 const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow = false }) {
   return (
-    <Card isFullHeight isRounded>
+    <Card isFullHeight isPlain>
       <CardTitle>
         <Title headingLevel="h2">
           {' '}
@@ -183,7 +185,7 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
 
 const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow }) {
   return (
-    <Card isFullHeight isRounded>
+    <Card isFullHeight isPlain>
       <CardTitle>
         <Title headingLevel="h2">
           {' '}

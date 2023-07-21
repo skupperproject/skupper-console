@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
+import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -85,35 +85,39 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
   const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
 
   return (
-    <>
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarGroup alignment={{ default: 'alignRight' }}>
-            <ToolbarItem>
-              <NavigationViewLink
-                link={ProcessGroupsRoutesPaths.ProcessGroups}
-                linkLabel={TopologyViews.ProcessGroups}
-                iconName="listIcon"
-              />
-            </ToolbarItem>
-          </ToolbarGroup>
-        </ToolbarContent>
-      </Toolbar>
+    <Stack>
+      <StackItem>
+        <Toolbar>
+          <ToolbarContent>
+            <ToolbarGroup alignment={{ default: 'alignRight' }}>
+              <ToolbarItem>
+                <NavigationViewLink
+                  link={ProcessGroupsRoutesPaths.ProcessGroups}
+                  linkLabel={TopologyViews.ProcessGroups}
+                  iconName="listIcon"
+                />
+              </ToolbarItem>
+            </ToolbarGroup>
+          </ToolbarContent>
+        </Toolbar>
+      </StackItem>
 
-      <GraphReactAdaptor
-        nodes={nodes}
-        edges={links}
-        onClickNode={handleGetSelectedNode}
-        itemSelected={processGroupId}
-        onGetZoom={handleSaveZoom}
-        onFitScreen={handleFitScreen}
-        layout={TopologyController.selectLayoutFromNodes(nodes)}
-        config={{
-          zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-          fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-        }}
-      />
-    </>
+      <StackItem isFilled>
+        <GraphReactAdaptor
+          nodes={nodes}
+          edges={links}
+          onClickNode={handleGetSelectedNode}
+          itemSelected={processGroupId}
+          onGetZoom={handleSaveZoom}
+          onFitScreen={handleFitScreen}
+          layout={TopologyController.selectLayoutFromNodes(nodes)}
+          config={{
+            zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+            fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+          }}
+        />
+      </StackItem>
+    </Stack>
   );
 };
 
