@@ -4,7 +4,7 @@ context('Sites', () => {
   const testId = `${getTestsIds.siteView('site-1')}`;
 
   beforeEach(() => {
-    cy.visit('#/sites/site 1@site-1');
+    cy.visit('#/sites/site%201@site-1');
   });
 
   it('should navigate to the Site section', () => {
