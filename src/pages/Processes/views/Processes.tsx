@@ -6,7 +6,7 @@ import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
+import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
@@ -48,7 +48,7 @@ const Processes = function () {
   const processesCount = processesData.timeRangeCount;
 
   return (
-    <SkTitle
+    <SkDefaultPage
       dataTestId={getTestsIds.processesView()}
       title={ProcessesLabels.Section}
       description={ProcessesLabels.Description}

@@ -2,8 +2,8 @@ import { PageSidebar } from '@patternfly/react-core';
 
 import NavBar from '@core/components/NavBar';
 
-const SideBar = function () {
+const SkSidebar = function () {
   return <PageSidebar nav={<NavBar />} />;
 };
 
-export default SideBar;
+export default SkSidebar;

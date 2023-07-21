@@ -10,10 +10,10 @@ import { isPrometheusActive, SMALL_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
@@ -97,7 +97,7 @@ const Process = function () {
   const allDestinationProcesses = [...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients];
 
   return (
-    <SkTitle
+    <SkDefaultPage
       dataTestId={getTestsIds.processView(processId)}
       title={process.name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}

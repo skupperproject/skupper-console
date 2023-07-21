@@ -11,8 +11,8 @@ import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
+import SkDefaultPage from '@layout/DefaultPage';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
 import LoadingPage from '@pages/shared/Loading';
@@ -217,7 +217,7 @@ const ProcessPairs = function () {
         <FlowsPair flowPair={flowPairSelected} />
       </Modal>
 
-      <SkTitle
+      <SkDefaultPage
         title={ProcessPairsColumnsNames.Title}
         link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
         secondaryChildren={

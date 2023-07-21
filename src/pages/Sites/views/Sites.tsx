@@ -6,7 +6,7 @@ import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
+import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { SiteResponse } from 'API/REST.interfaces';
@@ -27,7 +27,7 @@ const Sites = function () {
   }
 
   return (
-    <SkTitle
+    <SkDefaultPage
       dataTestId={getTestsIds.sitesView()}
       title={Labels.Section}
       description={Labels.Description}

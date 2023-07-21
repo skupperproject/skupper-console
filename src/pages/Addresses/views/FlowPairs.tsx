@@ -4,7 +4,7 @@ import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import SkTitle from '@core/components/SkTitle';
+import SkDefaultPage from '@layout/DefaultPage';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Addresses.enum';
@@ -38,7 +38,7 @@ const FlowsPairs = function () {
       : `${RequestLabels.Requests} (${0})`;
 
   return (
-    <SkTitle
+    <SkDefaultPage
       isPlain
       title={addressName || ''}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
@@ -74,7 +74,7 @@ const FlowsPairs = function () {
           />
         )}
       </Tabs>
-    </SkTitle>
+    </SkDefaultPage>
   );
 };
 export default FlowsPairs;

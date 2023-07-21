@@ -2,7 +2,7 @@ import { Brand, PageHeader, Title } from '@patternfly/react-core';
 
 import { brandLogo, brandName } from '@config/config';
 
-const Header = function () {
+const SkHeader = function () {
   return (
     <PageHeader
       className="sk-header"
@@ -20,4 +20,4 @@ const Header = function () {
   );
 };
 
-export default Header;
+export default SkHeader;
