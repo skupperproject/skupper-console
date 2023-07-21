@@ -24,7 +24,6 @@ import { Link } from 'react-router-dom';
 import { AvailableProtocols } from '@API/REST.enum';
 import { ConnectionTCP, FlowPairsResponse, RequestHTTP } from '@API/REST.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
@@ -45,80 +44,78 @@ const FlowsPair: FC<{ flowPair: FlowPairsResponse | undefined }> = function ({ f
   const duration = formatTimeInterval(flowPair.endTime || Date.now() * 1000, flowPair.startTime);
 
   return (
-    <TransitionPage>
-      <Grid hasGutter>
-        {flowPair.protocol === AvailableProtocols.Tcp && (
-          <>
-            <TextContent>
-              <Text component={TextVariants.h2}>Connection {flowPair.endTime ? 'closed' : 'open'}</Text>
-            </TextContent>
+    <Grid hasGutter>
+      {flowPair.protocol === AvailableProtocols.Tcp && (
+        <>
+          <TextContent>
+            <Text component={TextVariants.h2}>Connection {flowPair.endTime ? 'closed' : 'open'}</Text>
+          </TextContent>
 
-            <Card>
-              <CardBody>
-                <DescriptionList>
-                  <DescriptionListGroup>
-                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
-                    {duration && (
-                      <>
-                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
-                        <DescriptionListDescription>{duration}</DescriptionListDescription>
-                      </>
-                    )}
-                  </DescriptionListGroup>
-                </DescriptionList>
-              </CardBody>
-            </Card>
-          </>
-        )}
-        {flowPair.protocol !== AvailableProtocols.Tcp && (
-          <>
-            <TextContent>
-              <Text component={TextVariants.h2}>Request {flowPair.endTime ? 'terminated' : 'open'}</Text>
-            </TextContent>
-            <Card>
-              <CardBody>
-                <DescriptionList>
-                  <DescriptionListGroup>
-                    <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
-                    <DescriptionListDescription>{forwardFlow.protocol}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
-                    <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
-                    {duration && (
-                      <>
-                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
-                        <DescriptionListDescription>{duration}</DescriptionListDescription>
-                      </>
-                    )}
-                  </DescriptionListGroup>
-                </DescriptionList>
-              </CardBody>
-            </Card>
-          </>
-        )}
+          <Card>
+            <CardBody>
+              <DescriptionList>
+                <DescriptionListGroup>
+                  <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                  <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
+                  {duration && (
+                    <>
+                      <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                      <DescriptionListDescription>{duration}</DescriptionListDescription>
+                    </>
+                  )}
+                </DescriptionListGroup>
+              </DescriptionList>
+            </CardBody>
+          </Card>
+        </>
+      )}
+      {flowPair.protocol !== AvailableProtocols.Tcp && (
+        <>
+          <TextContent>
+            <Text component={TextVariants.h2}>Request {flowPair.endTime ? 'terminated' : 'open'}</Text>
+          </TextContent>
+          <Card>
+            <CardBody>
+              <DescriptionList>
+                <DescriptionListGroup>
+                  <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
+                  <DescriptionListDescription>{forwardFlow.protocol}</DescriptionListDescription>
+                  <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
+                  <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
+                  <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                  <DescriptionListDescription>{formatTraceBySites(flowPair.flowTrace)}</DescriptionListDescription>
+                  {duration && (
+                    <>
+                      <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                      <DescriptionListDescription>{duration}</DescriptionListDescription>
+                    </>
+                  )}
+                </DescriptionListGroup>
+              </DescriptionList>
+            </CardBody>
+          </Card>
+        </>
+      )}
 
-        <GridItem>
-          <Flex direction={{ default: 'column', md: 'row' }} justifyContent={{ default: 'justifyContentSpaceBetween' }}>
-            <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-              {flowPair.protocol === AvailableProtocols.Tcp ? (
-                <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
-              ) : (
-                <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
-              )}
-            </FlexItem>
-            <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-              {flowPair.protocol === AvailableProtocols.Tcp ? (
-                <ConnectionDetail title={FlowLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
-              ) : (
-                <RequestDetail title={FlowLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
-              )}
-            </FlexItem>
-          </Flex>
-        </GridItem>
-      </Grid>
-    </TransitionPage>
+      <GridItem>
+        <Flex direction={{ default: 'column', md: 'row' }} justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+          <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+            {flowPair.protocol === AvailableProtocols.Tcp ? (
+              <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
+            ) : (
+              <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
+            )}
+          </FlexItem>
+          <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+            {flowPair.protocol === AvailableProtocols.Tcp ? (
+              <ConnectionDetail title={FlowLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
+            ) : (
+              <RequestDetail title={FlowLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
+            )}
+          </FlexItem>
+        </Flex>
+      </GridItem>
+    </Grid>
   );
 };
 

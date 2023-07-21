@@ -9,7 +9,6 @@ import { isPrometheusActive } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
@@ -61,53 +60,51 @@ const ProcessGroup = function () {
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   return (
-    <TransitionPage>
-      <SkTitle
-        dataTestId={getTestsIds.componentView(processGroupId)}
-        title={name}
-        link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
-        secondaryChildren={
-          <Grid hasGutter>
-            <GridItem span={12}>
-              <SkTable
-                title={ProcessesLabels.Section}
-                titleDescription={ProcessesLabels.Description}
-                columns={processesTableColumns}
-                rows={processResults}
-                customCells={{
-                  linkCell: ProcessesComponentsTable.linkCell,
-                  linkCellSite: ProcessesComponentsTable.linkCellSite,
-                  exposedCell: ProcessesComponentsTable.exposedCell
+    <SkTitle
+      dataTestId={getTestsIds.componentView(processGroupId)}
+      title={name}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+      secondaryChildren={
+        <Grid hasGutter>
+          <GridItem span={12}>
+            <SkTable
+              title={ProcessesLabels.Section}
+              titleDescription={ProcessesLabels.Description}
+              columns={processesTableColumns}
+              rows={processResults}
+              customCells={{
+                linkCell: ProcessesComponentsTable.linkCell,
+                linkCellSite: ProcessesComponentsTable.linkCellSite,
+                exposedCell: ProcessesComponentsTable.exposedCell
+              }}
+            />
+          </GridItem>
+
+          {/* Component Metrics*/}
+          {isPrometheusActive && (
+            <GridItem>
+              <Metrics
+                key={id}
+                selectedFilters={{
+                  ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
+                  processIdSource: serverNames
                 }}
+                startTime={startTime}
+                sourceProcesses={serverNameFilters}
+                filterOptions={{
+                  destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                  sourceProcesses: {
+                    disabled: serverNameFilters.length < 2,
+                    placeholder: MetricsLabels.FilterAllSourceProcesses
+                  }
+                }}
+                onGetMetricFilters={handleRefreshMetrics}
               />
             </GridItem>
-
-            {/* Component Metrics*/}
-            {isPrometheusActive && (
-              <GridItem>
-                <Metrics
-                  key={id}
-                  selectedFilters={{
-                    ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
-                    processIdSource: serverNames
-                  }}
-                  startTime={startTime}
-                  sourceProcesses={serverNameFilters}
-                  filterOptions={{
-                    destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-                    sourceProcesses: {
-                      disabled: serverNameFilters.length < 2,
-                      placeholder: MetricsLabels.FilterAllSourceProcesses
-                    }
-                  }}
-                  onGetMetricFilters={handleRefreshMetrics}
-                />
-              </GridItem>
-            )}
-          </Grid>
-        }
-      />
-    </TransitionPage>
+          )}
+        </Grid>
+      }
+    />
   );
 };
 

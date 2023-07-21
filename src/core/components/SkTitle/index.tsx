@@ -5,6 +5,7 @@ import { Flex, PageSection, PageSectionVariants, Text, TextContent, Title } from
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
 import NavigationViewLink from '../NavigationViewLink';
+import TransitionPage from '../TransitionPages/Fade';
 
 interface SkTitleProps {
   dataTestId?: string;
@@ -27,26 +28,23 @@ const SkTitle: FC<SkTitleProps> = function ({
   children
 }) {
   return (
-    <>
-      <PageSection
-        role="sk-heading"
-        variant={PageSectionVariants.light}
-        style={{ padding: '0 21px' }}
-        data-testid={dataTestId}
-      >
-        <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }} style={{ padding: '18px 0' }}>
-          <TextContent>
-            <Title headingLevel="h1">{title}</Title>
-            {description && <Text component="p">{description}</Text>}
-          </TextContent>
-          {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
-        </Flex>
+    <TransitionPage>
+      <div data-testid={dataTestId}>
+        <PageSection role="sk-heading" variant={PageSectionVariants.light} style={{ padding: '0 21px' }}>
+          <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }} style={{ padding: '18px 0' }}>
+            <TextContent>
+              <Title headingLevel="h1">{title}</Title>
+              {description && <Text component="p">{description}</Text>}
+            </TextContent>
+            {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
+          </Flex>
 
-        {children}
-      </PageSection>
+          {children}
+        </PageSection>
 
-      <PageSection>{secondaryChildren}</PageSection>
-    </>
+        <PageSection isFilled>{secondaryChildren}</PageSection>
+      </div>
+    </TransitionPage>
   );
 };
 

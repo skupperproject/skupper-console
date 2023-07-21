@@ -21,7 +21,6 @@ import { getTestsIds } from '@config/testIds.config';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
@@ -82,97 +81,93 @@ const Site = function () {
   const processes = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
   return (
-    <TransitionPage>
-      <SkTitle
-        dataTestId={getTestsIds.siteView(siteId)}
-        title={name}
-        link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
-        secondaryChildren={
-          <Grid hasGutter>
-            <GridItem>
-              <Card isFullHeight isRounded>
-                <CardTitle>
-                  <Title headingLevel="h2">{Labels.Details}</Title>
-                </CardTitle>
-                <CardBody>
-                  <DescriptionList>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
-                      <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
-                      <DescriptionListTerm>{Labels.SiteVersion}</DescriptionListTerm>
-                      <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </DescriptionList>
-                </CardBody>
-              </Card>
-            </GridItem>
+    <SkTitle
+      dataTestId={getTestsIds.siteView(siteId)}
+      title={name}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
+      secondaryChildren={
+        <Grid hasGutter>
+          <GridItem>
+            <Card isFullHeight isRounded>
+              <CardTitle>
+                <Title headingLevel="h2">{Labels.Details}</Title>
+              </CardTitle>
+              <CardBody>
+                <DescriptionList>
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
+                    <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
+                    <DescriptionListTerm>{Labels.SiteVersion}</DescriptionListTerm>
+                    <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
+                  </DescriptionListGroup>
+                </DescriptionList>
+              </CardBody>
+            </Card>
+          </GridItem>
 
-            <GridItem span={4}>
-              <Card isFullHeight isRounded>
-                <CardTitle>
-                  <Title headingLevel="h2">{Labels.Links}</Title>
-                </CardTitle>
-                <CardBody>
-                  {(!!linkedSites.length && (
-                    <List isPlain>
-                      {linkedSites.map(({ identity, name: linkedSiteName }) => (
-                        <ListItem key={identity}>
-                          <Flex>
-                            <ResourceIcon type="site" />
-                            <Link to={`${SitesRoutesPaths.Sites}/${linkedSiteName}@${identity}`}>{linkedSiteName}</Link>
-                          </Flex>
-                        </ListItem>
-                      ))}
-                    </List>
-                  )) || <EmptyData />}
-                </CardBody>
-              </Card>
-            </GridItem>
+          <GridItem span={4}>
+            <Card isFullHeight isRounded>
+              <CardTitle>
+                <Title headingLevel="h2">{Labels.Links}</Title>
+              </CardTitle>
+              <CardBody>
+                {(!!linkedSites.length && (
+                  <List isPlain>
+                    {linkedSites.map(({ identity, name: linkedSiteName }) => (
+                      <ListItem key={identity}>
+                        <Flex>
+                          <ResourceIcon type="site" />
+                          <Link to={`${SitesRoutesPaths.Sites}/${linkedSiteName}@${identity}`}>{linkedSiteName}</Link>
+                        </Flex>
+                      </ListItem>
+                    ))}
+                  </List>
+                )) || <EmptyData />}
+              </CardBody>
+            </Card>
+          </GridItem>
 
-            <GridItem span={4}>
-              <Card isFullHeight isRounded>
-                <CardTitle>
-                  <Title headingLevel="h2">{Labels.Hosts}</Title>
-                </CardTitle>
-                <CardBody>
-                  {(!!hosts.length && (
-                    <List isPlain>
-                      {hosts.map(({ identity, provider, name: hostName }) => (
-                        <ListItem key={identity}>{`${provider} (${hostName})`}</ListItem>
-                      ))}
-                    </List>
-                  )) || <EmptyData />}
-                </CardBody>
-              </Card>
-            </GridItem>
+          <GridItem span={4}>
+            <Card isFullHeight isRounded>
+              <CardTitle>
+                <Title headingLevel="h2">{Labels.Hosts}</Title>
+              </CardTitle>
+              <CardBody>
+                {(!!hosts.length && (
+                  <List isPlain>
+                    {hosts.map(({ identity, provider, name: hostName }) => (
+                      <ListItem key={identity}>{`${provider} (${hostName})`}</ListItem>
+                    ))}
+                  </List>
+                )) || <EmptyData />}
+              </CardBody>
+            </Card>
+          </GridItem>
 
-            <GridItem span={4}>
-              <Card isFullHeight isRounded>
-                <CardTitle>
-                  <Title headingLevel="h2">{Labels.Processes}</Title>
-                </CardTitle>
-                <CardBody>
-                  {(!!processes.length && (
-                    <List isPlain>
-                      {processes.map(({ identity, name: processName }) => (
-                        <ListItem key={identity}>
-                          <Flex>
-                            <ResourceIcon type="process" />
-                            <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${identity}`}>
-                              {processName}
-                            </Link>
-                          </Flex>
-                        </ListItem>
-                      ))}
-                    </List>
-                  )) || <EmptyData />}
-                </CardBody>
-              </Card>
-            </GridItem>
-          </Grid>
-        }
-      />
-    </TransitionPage>
+          <GridItem span={4}>
+            <Card isFullHeight isRounded>
+              <CardTitle>
+                <Title headingLevel="h2">{Labels.Processes}</Title>
+              </CardTitle>
+              <CardBody>
+                {(!!processes.length && (
+                  <List isPlain>
+                    {processes.map(({ identity, name: processName }) => (
+                      <ListItem key={identity}>
+                        <Flex>
+                          <ResourceIcon type="process" />
+                          <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${identity}`}>{processName}</Link>
+                        </Flex>
+                      </ListItem>
+                    ))}
+                  </List>
+                )) || <EmptyData />}
+              </CardBody>
+            </Card>
+          </GridItem>
+        </Grid>
+      }
+    />
   );
 };
 

@@ -9,7 +9,6 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
-import TransitionPage from '@core/components/TransitionPages/Fade';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessGroupResponse, RequestOptions } from 'API/REST.interfaces';
@@ -54,33 +53,31 @@ const ProcessGroups = function () {
   const components = processGroups.filter(({ processGroupRole }) => processGroupRole !== 'internal');
 
   return (
-    <TransitionPage>
-      <SkTitle
-        dataTestId={getTestsIds.componentsView()}
-        title={ProcessGroupsLabels.Section}
-        description={ProcessGroupsLabels.Description}
-        link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}
-        linkLabel={TopologyLabels.Topology}
-        secondaryChildren={
-          <SkTable
-            columns={processGroupsColumns}
-            rows={components}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            paginationTotalRows={processGroupsCount}
-            onGetFilters={handleGetFilters}
-            customCells={{
-              linkCell: (props: LinkCellProps<ProcessGroupResponse>) =>
-                LinkCell({
-                  ...props,
-                  type: 'component',
-                  link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}`
-                })
-            }}
-          />
-        }
-      />
-    </TransitionPage>
+    <SkTitle
+      dataTestId={getTestsIds.componentsView()}
+      title={ProcessGroupsLabels.Section}
+      description={ProcessGroupsLabels.Description}
+      link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}
+      linkLabel={TopologyLabels.Topology}
+      secondaryChildren={
+        <SkTable
+          columns={processGroupsColumns}
+          rows={components}
+          pagination={true}
+          paginationPageSize={BIG_PAGINATION_SIZE}
+          paginationTotalRows={processGroupsCount}
+          onGetFilters={handleGetFilters}
+          customCells={{
+            linkCell: (props: LinkCellProps<ProcessGroupResponse>) =>
+              LinkCell({
+                ...props,
+                type: 'component',
+                link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}`
+              })
+          }}
+        />
+      }
+    />
   );
 };
 
