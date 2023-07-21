@@ -59,7 +59,7 @@ const ProcessGroups = function () {
       description={ProcessGroupsLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}
       linkLabel={TopologyLabels.Topology}
-      secondaryChildren={
+      mainContentChildren={
         <SkTable
           columns={processGroupsColumns}
           rows={components}

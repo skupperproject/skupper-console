@@ -220,7 +220,7 @@ const ProcessPairs = function () {
       <SkDefaultPage
         title={ProcessPairsColumnsNames.Title}
         link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
-        secondaryChildren={
+        mainContentChildren={
           <Grid hasGutter>
             <GridItem span={5}>
               <ProcessDescription

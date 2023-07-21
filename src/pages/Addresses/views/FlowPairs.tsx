@@ -142,7 +142,7 @@ const FlowsPairs = function () {
       title={addressName || ''}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
       navigationComponent={<NavigationMenu />}
-      secondaryChildren={
+      mainContentChildren={
         <>
           {protocol === AvailableProtocols.Tcp && (
             <ConnectionsByAddress

@@ -64,7 +64,7 @@ const ProcessGroup = function () {
       dataTestId={getTestsIds.componentView(processGroupId)}
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
-      secondaryChildren={
+      mainContentChildren={
         <Stack hasGutter>
           <StackItem>
             <SkTable

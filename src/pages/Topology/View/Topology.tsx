@@ -28,6 +28,7 @@ const Topology = function () {
   return (
     <SkDefaultPage
       isPlain
+      hasMainContentPadding
       title={TopologyLabels.Topology}
       navigationComponent={
         <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType}>
@@ -66,7 +67,7 @@ const Topology = function () {
           />
         </Tabs>
       }
-      secondaryChildren={
+      mainContentChildren={
         <>
           {topologyType === TopologyViews.Sites && <TopologySite />}
           {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}

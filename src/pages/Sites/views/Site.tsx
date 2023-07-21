@@ -85,7 +85,7 @@ const Site = function () {
       dataTestId={getTestsIds.siteView(siteId)}
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
-      secondaryChildren={
+      mainContentChildren={
         <Grid hasGutter sm={12} xl={6} xl2={4}>
           <GridItem sm={12}>
             <Card>
