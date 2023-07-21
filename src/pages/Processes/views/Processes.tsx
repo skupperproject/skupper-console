@@ -1,12 +1,10 @@
 import { useCallback, useState } from 'react';
 
-import { Split, SplitItem, Toolbar, ToolbarItem } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
-import NavigationViewLink from '@core/components/NavigationViewLink';
 import SkTable from '@core/components/SkTable';
 import SkTitle from '@core/components/SkTitle';
 import TransitionPage from '@core/components/TransitionPages/Fade';
@@ -52,23 +50,13 @@ const Processes = function () {
 
   return (
     <TransitionPage>
-      <div data-testid={getTestsIds.processesView()}>
-        <Split>
-          <SplitItem isFilled>
-            <SkTitle title={ProcessesLabels.Section} description={ProcessesLabels.Description} />
-          </SplitItem>
-          <SplitItem>
-            <Toolbar isFullHeight>
-              <ToolbarItem>
-                <NavigationViewLink
-                  link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
-                  linkLabel={TopologyLabels.Topology}
-                />
-              </ToolbarItem>
-            </Toolbar>
-          </SplitItem>
-        </Split>
-        <div>
+      <SkTitle
+        dataTestId={getTestsIds.processesView()}
+        title={ProcessesLabels.Section}
+        description={ProcessesLabels.Description}
+        link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
+        linkLabel={TopologyLabels.Topology}
+        secondaryChildren={
           <SkTable
             columns={processesTableColumns}
             rows={processes}
@@ -78,8 +66,8 @@ const Processes = function () {
             paginationPageSize={BIG_PAGINATION_SIZE}
             onGetFilters={handleGetFilters}
           />
-        </div>
-      </div>
+        }
+      />
     </TransitionPage>
   );
 };

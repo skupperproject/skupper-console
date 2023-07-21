@@ -1,15 +1,13 @@
-import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Modal, ModalVariant, PageSection, PageSectionVariants, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { SortDirection } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
@@ -18,17 +16,16 @@ import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.cons
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { httpColumns } from '../Addresses.constants';
-import { RequestLabels, FlowPairsLabels, AddressesLabels } from '../Addresses.enum';
+import { RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { QueriesServices } from '../services/services.enum';
 
-const TAB_0_KEY = 'overview';
-const TAB_1_KEY = 'servers';
-const TAB_2_KEY = 'requests';
+const TAB_0_KEY = '0';
+const TAB_1_KEY = '1';
+const TAB_2_KEY = '2';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
 const initPaginatedRequestsQueryParams: RequestOptions = {
@@ -42,14 +39,10 @@ const initServersQueryParams = {
   endTime: 0
 };
 
-const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const type = searchParams.get('type') || TAB_0_KEY;
-
+const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, protocol, viewSelected }) {
   const requestsDataPaginatedPrevRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
-  const [requestView, setAddressView] = useState<string>(type);
   const [paginatedRequestsQueryParams, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedRequestsQueryParams
   );
@@ -94,11 +87,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     }
   );
 
-  function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setAddressView(tabIndex as string);
-    setSearchParams({ type: tabIndex as string });
-  }
-
   const handleRefreshMetrics = useCallback(
     (interval: string) => {
       storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
@@ -125,7 +113,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   }
 
   const servers = serversByAddressData?.results || [];
-  const serversRowsCount = serversByAddressData?.timeRangeCount;
+  // const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const requestsPaginated = requestsDataPaginated?.results || [];
   const requestsPaginatedCount = requestsDataPaginated?.timeRangeCount;
@@ -145,71 +133,49 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
         <FlowsPair flowPair={flowPairSelected} />
       </Modal>
 
-      <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light}>
-        <SkTitle
-          isPlain
-          title={addressName}
-          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+      {viewSelected === TAB_0_KEY && isPrometheusActive && (
+        <Metrics
+          key={addressId}
+          forceUpdate={checkDataChanged}
+          selectedFilters={{
+            ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+            processIdSource: serverNamesId,
+            protocol
+          }}
+          startTime={startTime}
+          sourceProcesses={serverNames}
+          filterOptions={{
+            protocols: { disabled: true, placeholder: protocol },
+            sourceProcesses: {
+              disabled: serverNames.length < 2,
+              placeholder: AddressesLabels.MetricDestinationProcessFilter
+            },
+            destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
+          }}
+          onGetMetricFilters={handleRefreshMetrics}
         />
+      )}
 
-        <Tabs activeKey={requestView} onSelect={handleTabClick}>
-          <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview}`}</TabTitleText>} />
-          <Tab
-            eventKey={TAB_1_KEY}
-            title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-          />
-          <Tab
-            eventKey={TAB_2_KEY}
-            title={<TabTitleText>{`${RequestLabels.Requests} (${requestsPaginatedCount})`}</TabTitleText>}
-          />
-        </Tabs>
-      </PageSection>
+      {viewSelected === TAB_1_KEY && (
+        <SkTable columns={processesTableColumns} rows={servers} customCells={ProcessesComponentsTable} />
+      )}
 
-      <PageSection>
-        {requestView === TAB_0_KEY && isPrometheusActive && (
-          <Metrics
-            key={addressId}
-            forceUpdate={checkDataChanged}
-            selectedFilters={{
-              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
-              processIdSource: serverNamesId,
-              protocol
-            }}
-            startTime={startTime}
-            sourceProcesses={serverNames}
-            filterOptions={{
-              protocols: { disabled: true, placeholder: protocol },
-              sourceProcesses: {
-                disabled: serverNames.length < 2,
-                placeholder: AddressesLabels.MetricDestinationProcessFilter
-              },
-              destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
-            }}
-            onGetMetricFilters={handleRefreshMetrics}
-          />
-        )}
-
-        {requestView === TAB_1_KEY && (
-          <SkTable columns={processesTableColumns} rows={servers} customCells={ProcessesComponentsTable} />
-        )}
-
-        {requestView === TAB_2_KEY && (
-          <SkTable
-            columns={httpColumns}
-            rows={requestsPaginated}
-            paginationTotalRows={requestsPaginatedCount}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            onGetFilters={handleGetFiltersConnections}
-            customCells={{
-              ...flowPairsComponentsTable,
-              viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-              )
-            }}
-          />
-        )}
-      </PageSection>
+      {viewSelected === TAB_2_KEY && (
+        <SkTable
+          columns={httpColumns}
+          rows={requestsPaginated}
+          paginationTotalRows={requestsPaginatedCount}
+          pagination={true}
+          paginationPageSize={BIG_PAGINATION_SIZE}
+          onGetFilters={handleGetFiltersConnections}
+          customCells={{
+            ...flowPairsComponentsTable,
+            viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+              <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+            )
+          }}
+        />
+      )}
     </>
   );
 };

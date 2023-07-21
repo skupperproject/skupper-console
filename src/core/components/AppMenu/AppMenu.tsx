@@ -16,8 +16,8 @@ const AppMenu = function () {
   }
 
   return (
-    <PageBreadcrumb>
-      <Breadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
+    <PageBreadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
+      <Breadcrumb>
         {pathsNormalized.map((path, index) => (
           <BreadcrumbItem key={path.name}>
             <Link to={[...paths].slice(0, index + 1).join('/')}>{path.name}</Link>

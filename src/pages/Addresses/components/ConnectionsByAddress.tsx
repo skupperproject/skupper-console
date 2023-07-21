@@ -1,8 +1,7 @@
-import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Modal, ModalVariant, PageSection, PageSectionVariants, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -10,7 +9,6 @@ import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable } from '@pages/Processes/Processes.constant';
@@ -19,18 +17,18 @@ import { flowPairsComponentsTable, tcpFlowPairsColumns } from '@pages/shared/Flo
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { serverColumns, tcpColumns } from '../Addresses.constants';
-import { ConnectionLabels, FlowPairsLabels, RequestLabels, AddressesLabels } from '../Addresses.enum';
+import { RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import { QueriesServices } from '../services/services.enum';
 
-const TAB_0_KEY = 'overview';
-const TAB_1_KEY = 'servers';
-const TAB_2_KEY = 'liveConnections';
-const TAB_3_KEY = 'connections';
+const TAB_0_KEY = '0';
+const TAB_1_KEY = '1';
+const TAB_2_KEY = '2';
+const TAB_3_KEY = '3';
+
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
 const initServersQueryParams = {
@@ -52,14 +50,15 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
   sortDirection: SortDirection.DESC
 };
 
-const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressId, addressName, protocol }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const type = searchParams.get('type') || TAB_0_KEY;
-
+const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
+  addressId,
+  addressName,
+  protocol,
+  viewSelected
+}) {
   const activeConnectionsDataRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
-  const [connectionsView, setConnectionsView] = useState<string>(type);
   const [flowSelected, setFlowSelected] = useState<string>();
 
   const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
@@ -129,14 +128,9 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
     () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
     {
       refetchInterval: UPDATE_INTERVAL,
-      enabled: isPrometheusActive && connectionsView === TAB_1_KEY
+      enabled: isPrometheusActive && viewSelected === TAB_1_KEY
     }
   );
-
-  function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setConnectionsView(tabIndex as string);
-    setSearchParams({ type: tabIndex as string });
-  }
 
   const handleSetMetricFilters = useCallback(
     (interval: string) => {
@@ -174,7 +168,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
   const oldConnectionsRowsCount = oldConnectionsData?.timeRangeCount;
 
   let servers = serversByAddressData?.results || [];
-  const serversRowsCount = serversByAddressData?.timeRangeCount;
+  //const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
   const serverNamesIds = servers.map(({ name }) => name).join('|');
@@ -213,100 +207,72 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({ addressI
         />
       </Modal>
 
-      <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light}>
-        <SkTitle
-          isPlain
-          title={addressName}
-          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+      {viewSelected === TAB_0_KEY && isPrometheusActive && (
+        <Metrics
+          key={addressId}
+          forceUpdate={checkDataChanged}
+          selectedFilters={{
+            ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+            processIdSource: serverNamesIds,
+            protocol: AvailableProtocols.Tcp
+          }}
+          startTime={startTime}
+          sourceProcesses={serverNames}
+          filterOptions={{
+            protocols: { disabled: true, placeholder: protocol },
+            sourceProcesses: {
+              disabled: serverNames.length < 2,
+              placeholder: AddressesLabels.MetricDestinationProcessFilter
+            },
+            destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
+          }}
+          onGetMetricFilters={handleSetMetricFilters}
         />
+      )}
 
-        <Tabs activeKey={connectionsView} onSelect={handleTabClick}>
-          <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview} `}</TabTitleText>} />
-          <Tab
-            eventKey={TAB_1_KEY}
-            title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serversRowsCount})`}</TabTitleText>}
-          />
-          <Tab
-            eventKey={TAB_2_KEY}
-            title={
-              <TabTitleText>{`${ConnectionLabels.ActiveConnections} (${activeConnectionsRowsCount})`}</TabTitleText>
-            }
-          />
-          <Tab
-            eventKey={TAB_3_KEY}
-            title={<TabTitleText>{`${ConnectionLabels.OldConnections} (${oldConnectionsRowsCount})`}</TabTitleText>}
-          />
-        </Tabs>
-      </PageSection>
+      {viewSelected === TAB_1_KEY && (
+        <SkTable
+          columns={serverColumns}
+          rows={servers}
+          pagination={true}
+          paginationPageSize={BIG_PAGINATION_SIZE}
+          customCells={ProcessesComponentsTable}
+        />
+      )}
 
-      <PageSection>
-        {connectionsView === TAB_0_KEY && isPrometheusActive && (
-          <Metrics
-            key={addressId}
-            forceUpdate={checkDataChanged}
-            selectedFilters={{
-              ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
-              processIdSource: serverNamesIds,
-              protocol: AvailableProtocols.Tcp
-            }}
-            startTime={startTime}
-            sourceProcesses={serverNames}
-            filterOptions={{
-              protocols: { disabled: true, placeholder: protocol },
-              sourceProcesses: {
-                disabled: serverNames.length < 2,
-                placeholder: AddressesLabels.MetricDestinationProcessFilter
-              },
-              destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
-            }}
-            onGetMetricFilters={handleSetMetricFilters}
-          />
-        )}
+      {viewSelected === TAB_2_KEY && (
+        <SkTable
+          columns={tcpColumns}
+          rows={activeConnections}
+          paginationTotalRows={activeConnectionsRowsCount}
+          pagination={true}
+          paginationPageSize={BIG_PAGINATION_SIZE}
+          onGetFilters={handleGetFiltersActiveConnections}
+          customCells={{
+            ...flowPairsComponentsTable,
+            viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+              <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+            )
+          }}
+        />
+      )}
 
-        {connectionsView === TAB_1_KEY && (
-          <SkTable
-            columns={serverColumns}
-            rows={servers}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            customCells={ProcessesComponentsTable}
-          />
-        )}
-
-        {connectionsView === TAB_2_KEY && (
-          <SkTable
-            columns={tcpColumns}
-            rows={activeConnections}
-            paginationTotalRows={activeConnectionsRowsCount}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            onGetFilters={handleGetFiltersActiveConnections}
-            customCells={{
-              ...flowPairsComponentsTable,
-              viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-              )
-            }}
-          />
-        )}
-
-        {connectionsView === TAB_3_KEY && (
-          <SkTable
-            columns={tcpFlowPairsColumns}
-            rows={oldConnections}
-            paginationTotalRows={oldConnectionsRowsCount}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            onGetFilters={handleGetFiltersConnections}
-            customCells={{
-              ...flowPairsComponentsTable,
-              viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-              )
-            }}
-          />
-        )}
-      </PageSection>
+      {viewSelected === TAB_3_KEY && (
+        <SkTable
+          columns={tcpFlowPairsColumns}
+          rows={oldConnections}
+          paginationTotalRows={oldConnectionsRowsCount}
+          pagination={true}
+          paginationPageSize={BIG_PAGINATION_SIZE}
+          onGetFilters={handleGetFiltersConnections}
+          customCells={{
+            ...flowPairsComponentsTable,
+            viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
+              <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+            )
+          }}
+        />
+      )}
     </>
   );
 };

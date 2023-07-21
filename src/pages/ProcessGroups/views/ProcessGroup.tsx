@@ -62,50 +62,51 @@ const ProcessGroup = function () {
 
   return (
     <TransitionPage>
-      <Grid hasGutter data-testid={getTestsIds.componentView(processGroupId)}>
-        <SkTitle
-          title={name}
-          link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
-        />
+      <SkTitle
+        dataTestId={getTestsIds.componentView(processGroupId)}
+        title={name}
+        link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+        secondaryChildren={
+          <Grid hasGutter>
+            <GridItem span={12}>
+              <SkTable
+                title={ProcessesLabels.Section}
+                titleDescription={ProcessesLabels.Description}
+                columns={processesTableColumns}
+                rows={processResults}
+                customCells={{
+                  linkCell: ProcessesComponentsTable.linkCell,
+                  linkCellSite: ProcessesComponentsTable.linkCellSite,
+                  exposedCell: ProcessesComponentsTable.exposedCell
+                }}
+              />
+            </GridItem>
 
-        {/* Processes table*/}
-        <GridItem span={12}>
-          <SkTable
-            title={ProcessesLabels.Section}
-            titleDescription={ProcessesLabels.Description}
-            columns={processesTableColumns}
-            rows={processResults}
-            customCells={{
-              linkCell: ProcessesComponentsTable.linkCell,
-              linkCellSite: ProcessesComponentsTable.linkCellSite,
-              exposedCell: ProcessesComponentsTable.exposedCell
-            }}
-          />
-        </GridItem>
-
-        {/* Component Metrics*/}
-        {isPrometheusActive && (
-          <GridItem>
-            <Metrics
-              key={id}
-              selectedFilters={{
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
-                processIdSource: serverNames
-              }}
-              startTime={startTime}
-              sourceProcesses={serverNameFilters}
-              filterOptions={{
-                destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-                sourceProcesses: {
-                  disabled: serverNameFilters.length < 2,
-                  placeholder: MetricsLabels.FilterAllSourceProcesses
-                }
-              }}
-              onGetMetricFilters={handleRefreshMetrics}
-            />
-          </GridItem>
-        )}
-      </Grid>
+            {/* Component Metrics*/}
+            {isPrometheusActive && (
+              <GridItem>
+                <Metrics
+                  key={id}
+                  selectedFilters={{
+                    ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
+                    processIdSource: serverNames
+                  }}
+                  startTime={startTime}
+                  sourceProcesses={serverNameFilters}
+                  filterOptions={{
+                    destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                    sourceProcesses: {
+                      disabled: serverNameFilters.length < 2,
+                      placeholder: MetricsLabels.FilterAllSourceProcesses
+                    }
+                  }}
+                  onGetMetricFilters={handleRefreshMetrics}
+                />
+              </GridItem>
+            )}
+          </Grid>
+        }
+      />
     </TransitionPage>
   );
 };
