@@ -23,8 +23,9 @@ interface SkDefaultPageProps {
   linkLabel?: string;
   description?: string;
   isPlain?: boolean;
+  hasMainContentPadding?: boolean;
   navigationComponent?: ReactElement;
-  secondaryChildren?: ReactElement;
+  mainContentChildren?: ReactElement;
 }
 
 const SkDefaultPage: FC<SkDefaultPageProps> = function ({
@@ -33,8 +34,9 @@ const SkDefaultPage: FC<SkDefaultPageProps> = function ({
   link,
   linkLabel = TopologyLabels.Topology,
   description,
+  hasMainContentPadding = false,
   navigationComponent,
-  secondaryChildren
+  mainContentChildren
 }) {
   return (
     <TransitionPage>
@@ -50,9 +52,9 @@ const SkDefaultPage: FC<SkDefaultPageProps> = function ({
         </PageSection>
 
         {navigationComponent && <PageNavigation>{navigationComponent}</PageNavigation>}
-        {secondaryChildren && (
-          <PageSection padding={{ default: 'noPadding' }} isFilled={true}>
-            {secondaryChildren}
+        {mainContentChildren && (
+          <PageSection padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }} isFilled={true}>
+            {mainContentChildren}
           </PageSection>
         )}
       </PageGroup>

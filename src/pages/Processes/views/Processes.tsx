@@ -54,7 +54,7 @@ const Processes = function () {
       description={ProcessesLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
       linkLabel={TopologyLabels.Topology}
-      secondaryChildren={
+      mainContentChildren={
         <SkTable
           columns={processesTableColumns}
           rows={processes}

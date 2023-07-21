@@ -79,7 +79,7 @@ const Services = function () {
     <SkDefaultPage
       title={AddressesLabels.Section}
       description={AddressesLabels.Description}
-      secondaryChildren={
+      mainContentChildren={
         <SkTable
           rows={servicesExtended}
           columns={columnsExtend}

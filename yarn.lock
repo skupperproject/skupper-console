@@ -1393,17 +1393,17 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tanstack/query-core@4.29.25":
-  version "4.29.25"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.29.25.tgz#605d357968a740544af6754004eed1dfd4587cb8"
-  integrity sha512-DI4y4VC6Uw4wlTpOocEXDky69xeOScME1ezLKsj+hOk7DguC9fkqXtp6Hn39BVb9y0b5IBrY67q6kIX623Zj4Q==
+"@tanstack/query-core@4.32.0":
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.32.0.tgz#e0f4a830283612430450c13badd353766423f523"
+  integrity sha512-ei4IYwL2kmlKSlCw9WgvV7PpXi0MiswVwfQRxawhJA690zWO3dU49igaQ/UMTl+Jy9jj9dK5IKAYvbX7kUvviQ==
 
-"@tanstack/react-query@^4.29.25":
-  version "4.29.25"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.29.25.tgz#64df3260b65760fbd3c81ffae23b7b3802c71aa6"
-  integrity sha512-c1+Ezu+XboYrdAMdusK2fTdRqXPMgPAnyoTrzHOZQqr8Hqz6PNvV9DSKl8agUo6nXX4np7fdWabIprt+838dLg==
+"@tanstack/react-query@^4.32.0":
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.32.0.tgz#701b45b149cfd4b54a68705f9100973db3ba5d5d"
+  integrity sha512-B8WUMcByYAH9500ENejDCATOmEZhqjtS9wsfiQ3BNa+s+yAynY8SESI8WWHhSqUmjd0pmCSFRP6BOUGSda3QXA==
   dependencies:
-    "@tanstack/query-core" "4.29.25"
+    "@tanstack/query-core" "4.32.0"
     use-sync-external-store "^1.2.0"
 
 "@testing-library/dom@^9.0.0":
@@ -3270,10 +3270,10 @@ csstype@^3.0.2, csstype@^3.0.8:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
 
-cypress@^12.17.1:
-  version "12.17.1"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.17.1.tgz#777fdcceec4ecd642fc90795f5994853b6ea03f8"
-  integrity sha512-eKfBgO6t8waEyhegL4gxD7tcI6uTCGttu+ZU7y9Hq8BlpMztd7iLeIF4AJFAnbZH1xjX+wwgg4cRKFNSvv3VWQ==
+cypress@^12.17.2:
+  version "12.17.2"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.17.2.tgz#040ac55de1e811f6e037d231a2869d5ab8c29c85"
+  integrity sha512-hxWAaWbqQBzzMuadSGSuQg5PDvIGOovm6xm0hIfpCVcORsCAj/gF2p0EvfnJ4f+jK2PCiDgP6D2eeE9/FK4Mjg==
   dependencies:
     "@cypress/request" "^2.88.11"
     "@cypress/xvfb" "^1.2.4"
@@ -4036,10 +4036,10 @@ eslint-plugin-react-hooks@^4.6.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.6.0.tgz#4c3e697ad95b77e93f8646aaa1630c1ba607edd3"
   integrity sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==
 
-eslint-plugin-react@^7.32.2:
-  version "7.32.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.32.2.tgz#e71f21c7c265ebce01bcbc9d0955170c55571f10"
-  integrity sha512-t2fBMa+XzonrrNkyVirzKlvn5RXzzPwRHtMvLAtVZrt8oxgnTQaYbU6SXTOO1mwQgp1y5+toMSKInnzGr0Knqg==
+eslint-plugin-react@^7.33.0:
+  version "7.33.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.33.0.tgz#6c356fb0862fec2cd1b04426c669ea746e9b6eb3"
+  integrity sha512-qewL/8P34WkY8jAqdQxsiL82pDUeT7nhs8IsuXgfgnsEloKCT4miAV9N9kGtx7/KM9NH/NCGUE7Edt9iGxLXFw==
   dependencies:
     array-includes "^3.1.6"
     array.prototype.flatmap "^1.3.1"
@@ -4054,7 +4054,7 @@ eslint-plugin-react@^7.32.2:
     object.values "^1.1.6"
     prop-types "^15.8.1"
     resolve "^2.0.0-next.4"
-    semver "^6.3.0"
+    semver "^6.3.1"
     string.prototype.matchall "^4.0.8"
 
 eslint-scope@5.1.1, eslint-scope@^5.1.1:
@@ -7827,6 +7827,11 @@ semver@^6.0.0, semver@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
+
+semver@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
+  integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
 semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8:
   version "7.3.8"

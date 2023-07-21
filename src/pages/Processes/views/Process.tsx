@@ -101,7 +101,7 @@ const Process = function () {
       dataTestId={getTestsIds.processView(processId)}
       title={process.name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
-      secondaryChildren={
+      mainContentChildren={
         <Stack hasGutter>
           <StackItem>
             <ProcessDescription process={process} title={ProcessesLabels.Details} />

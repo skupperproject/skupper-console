@@ -33,7 +33,7 @@ const Sites = function () {
       description={Labels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Sites}`}
       linkLabel={TopologyLabels.Topology}
-      secondaryChildren={
+      mainContentChildren={
         <SkTable
           columns={siteColumns}
           rows={sites}
