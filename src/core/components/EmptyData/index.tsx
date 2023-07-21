@@ -13,9 +13,11 @@ interface EmptyDataProps {
 const EmptyData: FC<EmptyDataProps> = function ({ message = EmptyDataLabels.Default, description, icon }) {
   return (
     <Bullseye>
-      <EmptyState variant={EmptyStateVariant.small}>
+      <EmptyState variant={EmptyStateVariant.small} isFullHeight>
         {icon && <EmptyStateIcon icon={icon} />}
-        <Title headingLevel="h2">{message}</Title>
+        <Title headingLevel="h2" size="lg">
+          {message}
+        </Title>
         {description && <EmptyStateBody>{description}</EmptyStateBody>}
       </EmptyState>
     </Bullseye>

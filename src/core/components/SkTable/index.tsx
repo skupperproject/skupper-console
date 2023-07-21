@@ -1,6 +1,6 @@
-import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, FC, useMemo } from 'react';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, useMemo } from 'react';
 
-import { Card, Pagination, Panel, PanelMain, PanelMainBody } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import {
   SortByDirection,
@@ -16,9 +16,9 @@ import {
 
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 
+import SkPagination from './SkPagination';
 import { NonNullableValue, SKTableProps } from './SkTable.interface';
 import EmptyData from '../EmptyData';
-import SkTitle from '../SkTitle';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;
@@ -26,7 +26,6 @@ const NO_RESULT_FOUND_LABEL = 'No results found';
 
 const SkTable = function <T>({
   title,
-  titleDescription,
   columns,
   rows = [],
   customCells,
@@ -111,7 +110,7 @@ const SkTable = function <T>({
     if (activeSortColumnName) {
       // Sort the rows array based on the values of the currently active sort column and direction.
       const sortDirectionMultiplier = activeSortDirection === SortByDirection.desc ? -1 : 1;
-      sortedRows = sortRowsByColumnName(rows, activeSortColumnName as string, sortDirectionMultiplier);
+      sortedRows = sortRowsByColumnName<T>(rows, activeSortColumnName as string, sortDirectionMultiplier);
     }
 
     if (pagination) {
@@ -141,120 +140,88 @@ const SkTable = function <T>({
     [alwaysShowPagination, pagination, paginationPageSize, paginationTotalRows]
   );
 
-  const { shouldSort = true, borders = true, isStriped = false, ...restProps } = props;
+  const { shouldSort = true, ...restProps } = props;
 
   return (
     <Card isFullHeight>
-      {title && <SkTitle title={title} description={titleDescription} />}
-
-      <TableComposable borders={borders} variant="compact" isStickyHeader={false} isStriped={isStriped} {...restProps}>
-        <Thead>
-          <Tr>
-            {skColumns.map(({ name, prop, columnDescription }, index) => (
-              <Th
-                colSpan={1}
-                key={name}
-                sort={(prop && shouldSort && getSortParams(index)) || undefined}
-                info={
-                  columnDescription
-                    ? {
-                        tooltip: columnDescription,
-                        tooltipProps: {
-                          isContentLeftAligned: true
-                        }
-                      }
-                    : undefined
-                }
-              >
-                {name}
-              </Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {skRows.length === 0 && (
-            <Tr>
-              <Td colSpan={12}>
-                <EmptyData message={NO_RESULT_FOUND_LABEL} icon={SearchIcon} />
-              </Td>
-            </Tr>
-          )}
-          {!(skRows.length === 0) &&
-            skRows.map((row) => (
-              <Tr key={row.id}>
-                {row.columns.map(({ data, value, customCellName, callback, format, width, modifier }, index) => {
-                  const Component = !!customCells && !!customCellName && customCells[customCellName];
-
-                  return (
-                    <Td width={width} key={index} modifier={modifier}>
-                      {Component && (
-                        <Component data={data} value={value} callback={callback} format={format && format(value)} />
-                      )}
-                      {!Component && (
-                        <TableText wrapModifier="truncate">{(format && format(value)) || value}</TableText>
-                      )}
-                    </Td>
-                  );
-                })}
-              </Tr>
-            ))}
-        </Tbody>
-      </TableComposable>
-
-      {isPaginationEnabled && (
-        <SkPagination
-          totalRow={paginationTotalRows}
-          paginationSize={paginationSize}
-          currentPageNumber={currentPageNumber}
-          onSetPageNumber={handleSetPageNumber}
-          onSetPaginationSize={handleSetPaginationSize}
-        />
+      {title && (
+        <CardHeader>
+          <Title headingLevel="h3">{title}</Title>
+        </CardHeader>
       )}
+
+      <CardBody>
+        <TableComposable variant="compact" {...restProps}>
+          <Thead>
+            <Tr>
+              {skColumns.map(({ name, prop, columnDescription }, index) => (
+                <Th
+                  colSpan={1}
+                  key={name}
+                  sort={(prop && shouldSort && getSortParams(index)) || undefined}
+                  info={
+                    columnDescription
+                      ? {
+                          tooltip: columnDescription,
+                          tooltipProps: {
+                            isContentLeftAligned: true
+                          }
+                        }
+                      : undefined
+                  }
+                >
+                  {name}
+                </Th>
+              ))}
+            </Tr>
+          </Thead>
+
+          <Tbody>
+            {skRows.length === 0 && (
+              <Tr>
+                <Td colSpan={12}>
+                  <EmptyData message={NO_RESULT_FOUND_LABEL} icon={SearchIcon} />
+                </Td>
+              </Tr>
+            )}
+
+            {!(skRows.length === 0) &&
+              skRows.map((row) => (
+                <Tr key={row.id}>
+                  {row.columns.map(({ data, value, customCellName, callback, format, width, modifier }, index) => {
+                    const Component = !!customCells && !!customCellName && customCells[customCellName];
+
+                    return (
+                      <Td width={width} key={index} modifier={modifier}>
+                        {Component && (
+                          <Component data={data} value={value} callback={callback} format={format && format(value)} />
+                        )}
+                        {!Component && (
+                          <TableText wrapModifier="truncate">{(format && format(value)) || value}</TableText>
+                        )}
+                      </Td>
+                    );
+                  })}
+                </Tr>
+              ))}
+          </Tbody>
+        </TableComposable>
+
+        {isPaginationEnabled && (
+          <SkPagination
+            totalRow={paginationTotalRows}
+            paginationSize={paginationSize}
+            currentPageNumber={currentPageNumber}
+            onSetPageNumber={handleSetPageNumber}
+            onSetPaginationSize={handleSetPaginationSize}
+          />
+        )}
+      </CardBody>
     </Card>
   );
 };
 
 export default SkTable;
-
-interface SkPaginationProps {
-  isCompact?: boolean;
-  totalRow: number;
-  paginationSize: number;
-  currentPageNumber: number;
-  onSetPageNumber?: (event: ReactMouseEvent | KeyboardEvent | MouseEvent, pageNumber: number) => void;
-  onSetPaginationSize?: (
-    _: ReactMouseEvent | KeyboardEvent | MouseEvent,
-    pageSizeSelected: number,
-    newPage: number
-  ) => void;
-}
-
-const SkPagination: FC<SkPaginationProps> = function ({
-  isCompact = true,
-  totalRow,
-  paginationSize,
-  currentPageNumber,
-  onSetPageNumber,
-  onSetPaginationSize
-}) {
-  return (
-    <Panel>
-      <PanelMain>
-        <PanelMainBody>
-          <Pagination
-            isCompact={isCompact}
-            perPageComponent="button"
-            itemCount={totalRow}
-            perPage={paginationSize}
-            page={currentPageNumber}
-            onSetPage={onSetPageNumber}
-            onPerPageSelect={onSetPaginationSize}
-          />
-        </PanelMainBody>
-      </PanelMain>
-    </Panel>
-  );
-};
 
 function sortRowsByColumnName<T>(rows: NonNullableValue<T>[], columnName: string, direction: number) {
   return rows.sort((a, b) => {

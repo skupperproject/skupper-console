@@ -78,10 +78,10 @@ const Services = function () {
 
   return (
     <TransitionPage>
-      <>
-        <SkTitle title={AddressesLabels.Section} description={AddressesLabels.Description} />
-        {/* addresses table */}
-        <div>
+      <SkTitle
+        title={AddressesLabels.Section}
+        description={AddressesLabels.Description}
+        secondaryChildren={
           <SkTable
             rows={servicesExtended}
             columns={columnsExtend}
@@ -91,8 +91,8 @@ const Services = function () {
             paginationTotalRows={addressesRowsCount}
             customCells={customAddressCells}
           />
-        </div>
-      </>
+        }
+      />
     </TransitionPage>
   );
 };

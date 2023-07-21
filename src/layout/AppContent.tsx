@@ -16,12 +16,10 @@ const AppContent = function ({ children }: AppContentProps) {
   }
 
   return (
-    <>
+    <PageSection hasOverflowScroll padding={{ default: 'noPadding' }}>
       <AppMenu />
-      <PageSection hasOverflowScroll>
-        <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
-      </PageSection>
-    </>
+      <AnimatePresence mode="wait">{appRoutes}</AnimatePresence>
+    </PageSection>
   );
 };
 
