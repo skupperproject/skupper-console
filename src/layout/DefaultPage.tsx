@@ -4,10 +4,10 @@ import { Flex, PageSection, PageSectionVariants, Text, TextContent, Title } from
 
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
-import NavigationViewLink from '../NavigationViewLink';
-import TransitionPage from '../TransitionPages/Fade';
+import NavigationViewLink from '../core/components/NavigationViewLink';
+import TransitionPage from '../core/components/TransitionPages/Fade';
 
-interface SkTitleProps {
+interface SkDefaultPageProps {
   dataTestId?: string;
   title: string;
   link?: string;
@@ -18,7 +18,7 @@ interface SkTitleProps {
   secondaryChildren?: ReactElement;
 }
 
-const SkTitle: FC<SkTitleProps> = function ({
+const SkDefaultPage: FC<SkDefaultPageProps> = function ({
   dataTestId,
   title,
   link,
@@ -48,4 +48,4 @@ const SkTitle: FC<SkTitleProps> = function ({
   );
 };
 
-export default SkTitle;
+export default SkDefaultPage;

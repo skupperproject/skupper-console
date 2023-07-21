@@ -8,9 +8,9 @@ import { RESTApi } from '@API/REST.api';
 import { isPrometheusActive } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import SkDefaultPage from '@layout/DefaultPage';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
@@ -60,7 +60,7 @@ const ProcessGroup = function () {
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   return (
-    <SkTitle
+    <SkDefaultPage
       dataTestId={getTestsIds.componentView(processGroupId)}
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}

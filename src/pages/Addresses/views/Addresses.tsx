@@ -7,7 +7,7 @@ import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import SkTable from '@core/components/SkTable';
-import SkTitle from '@core/components/SkTitle';
+import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
 
 import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
@@ -76,7 +76,7 @@ const Services = function () {
   }
 
   return (
-    <SkTitle
+    <SkDefaultPage
       title={AddressesLabels.Section}
       description={AddressesLabels.Description}
       secondaryChildren={
