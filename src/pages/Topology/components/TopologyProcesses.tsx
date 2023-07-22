@@ -1,15 +1,14 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
 import {
-  Checkbox,
   Select,
   SelectOption,
   SelectOptionObject,
+  SelectVariant,
   Stack,
   StackItem,
   Toolbar,
   ToolbarContent,
-  ToolbarGroup,
   ToolbarItem
 } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -40,6 +39,9 @@ const ZOOM_CACHE_KEY = 'process-graphZoom';
 const SHOW_SITE_KEY = 'showSite';
 const SHOW_LINK_LABEL = 'show-link-label';
 const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
+const DISPLAY_OPTIONS = 'display-options';
+const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
+
 const ROTATE_LINK_LABEL = 'show-link-label-rotated';
 const FIT_SCREEN_CACHE_KEY = 'process-fitScreen';
 
@@ -58,23 +60,31 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const showSiteInitState = localStorage.getItem(SHOW_SITE_KEY);
-  const showLinkLabelInitState = localStorage.getItem(SHOW_LINK_LABEL);
-  const showLinkLabelReverseInitState = localStorage.getItem(SHOW_LINK_REVERSE_LABEL);
-  const showRotateLabel = localStorage.getItem(ROTATE_LINK_LABEL);
-
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>();
   const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState<boolean>(false);
+  const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState<boolean>(false);
   const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
-  const [showSite, setShowSite] = useState<boolean>(showSiteInitState ? showSiteInitState === 'true' : true);
-  const [rotateLabel, setRotateLabel] = useState<boolean>(showRotateLabel ? showRotateLabel === 'true' : true);
-  const [showLinkLabel, setShowLinkLabel] = useState<boolean>(
-    showLinkLabelInitState ? showLinkLabelInitState === 'true' : false
+  const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
+    localStorage.getItem(DISPLAY_OPTIONS)
+      ? JSON.parse(localStorage.getItem(DISPLAY_OPTIONS) || '')
+      : DEFAULT_DISPLAY_OPTIONS_ENABLED
   );
-  const [showLinkLabelReverse, setShowLinkLabelReverse] = useState<boolean>(
-    showLinkLabelReverseInitState ? showLinkLabelReverseInitState === 'true' : false
+
+  const isDisplayOptionActive = useCallback(
+    (option: string) => displayOptionsSelected.includes(option),
+    [displayOptionsSelected]
+  );
+
+  const addDisplayOptionToSelection = useCallback(
+    (selected: string) => [...displayOptionsSelected, selected],
+    [displayOptionsSelected]
+  );
+
+  const removeDisplayOptionToSelection = useCallback(
+    (selected: string) => displayOptionsSelected.filter((option) => option !== selected),
+    [displayOptionsSelected]
   );
 
   const { data: services, isLoading: isLoadingAddresses } = useQuery(
@@ -126,7 +136,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetByteRateByProcessPairs],
     () => PrometheusApi.fetchAllProcessPairsByteRates(),
     {
-      enabled: isPrometheusActive && showLinkLabel,
+      enabled: isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LABEL),
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -135,7 +145,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [QueriesTopology.GetLatencyByProcessPairs],
     () => PrometheusApi.fetchAllProcessPairsLatencies(),
     {
-      enabled: isPrometheusActive && showLinkLabel,
+      enabled: isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LABEL),
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -169,8 +179,12 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [externalProcesses, remoteProcesses, navigate]
   );
 
-  function handleToggleAddressDropdownMenu(isSelectAddressOpen: boolean) {
-    setIsAddressSelectMenuOpen(isSelectAddressOpen);
+  function handleToggleAddressMenu(openAddressMenu: boolean) {
+    setIsAddressSelectMenuOpen(openAddressMenu);
+  }
+
+  function handleToggleDisplayMenu(openDisplayMenu: boolean) {
+    setIsDisplayMenuOpen(openDisplayMenu);
   }
 
   function handleSelectAddress(
@@ -192,29 +206,20 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     setSearchParams(params);
   }
 
-  function handleChangeSiteCheck(checked: boolean) {
-    setShowSite(checked);
-    localStorage.setItem(SHOW_SITE_KEY, `${checked}`);
-  }
+  const handleSelectDisplay = useCallback(
+    (_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) => {
+      const selected = selection as string;
+      const isSelected = displayOptionsSelected.includes(selected);
 
-  function handleChangeProtocolLinkLabelCheck(checked: boolean) {
-    setShowLinkLabel(checked);
-    localStorage.setItem(SHOW_LINK_LABEL, `${checked}`);
+      const displayOptions = isSelected
+        ? removeDisplayOptionToSelection(selected)
+        : addDisplayOptionToSelection(selected);
 
-    if (!checked) {
-      handleChangeProtocolLinkLabelCheckReverse(checked);
-    }
-  }
-
-  function handleChangeProtocolLinkLabelCheckReverse(checked: boolean) {
-    setShowLinkLabelReverse(checked);
-    localStorage.setItem(SHOW_LINK_REVERSE_LABEL, `${checked}`);
-  }
-
-  function handleChangeRotateLabelCheck(checked: boolean) {
-    setRotateLabel(checked);
-    localStorage.setItem(ROTATE_LINK_LABEL, `${checked}`);
-  }
+      localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(displayOptions));
+      setDisplayOptions(displayOptions);
+    },
+    [addDisplayOptionToSelection, displayOptionsSelected, removeDisplayOptionToSelection]
+  );
 
   const handleSaveZoom = useCallback((zoomValue: number) => {
     localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
@@ -243,13 +248,42 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     return optionsWithDefault;
   }, [services?.results]);
 
+  const getDisplayOptions = () => {
+    if (!isPrometheusActive) {
+      return [<SelectOption key={'show-site'} value={TopologyLabels.CheckboxShowSite} />];
+    }
+
+    const isDisplayMetricsActive = isDisplayOptionActive(SHOW_LINK_LABEL);
+
+    return [
+      <SelectOption key={SHOW_SITE_KEY} value={SHOW_SITE_KEY}>
+        {TopologyLabels.CheckboxShowSite}
+      </SelectOption>,
+      <SelectOption key={SHOW_LINK_LABEL} value={SHOW_LINK_LABEL}>
+        {TopologyLabels.CheckboxShowLabel}
+      </SelectOption>,
+      <SelectOption key={SHOW_LINK_REVERSE_LABEL} isDisabled={!isDisplayMetricsActive} value={SHOW_LINK_REVERSE_LABEL}>
+        {TopologyLabels.CheckboxShowLabelReverse}
+      </SelectOption>,
+      <SelectOption key={ROTATE_LINK_LABEL} isDisabled={!isDisplayMetricsActive} value={ROTATE_LINK_LABEL}>
+        {TopologyLabels.RotateLabel}
+      </SelectOption>
+    ];
+  };
+
   // This effect is triggered when no services are currently selected
   useEffect(() => {
+    const isDisplayMetricsActive = isDisplayOptionActive(SHOW_LINK_LABEL);
+    const showLinkLabelReverse = isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL);
+    const rotateLabel = isDisplayOptionActive(ROTATE_LINK_LABEL);
+
     if (
       sites &&
       externalProcesses &&
       remoteProcesses &&
-      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive)
+      ((isDisplayMetricsActive && byteRateByProcessPairs && latencyByProcessPairs) ||
+        !isDisplayMetricsActive ||
+        !isPrometheusActive)
     ) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
@@ -259,14 +293,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
       // Check if no services are selected
       if (processesPairs && !addressIdSelected) {
-        let processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, showLinkLabel);
+        let processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, isDisplayMetricsActive);
         processesLinks = processesLinks.map((pair) => ({
           ...pair,
           labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
           style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
         }));
 
-        if (showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) {
+        if (isDisplayMetricsActive && byteRateByProcessPairs && latencyByProcessPairs) {
           processesLinks = TopologyController.addMetricsToLinks(
             processesLinks,
             byteRateByProcessPairs,
@@ -277,7 +311,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
         setNodes(processesNodes);
         setLinks(processesLinks);
-        setGroups(showSite ? siteGroups : []);
+        setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
       }
     }
   }, [
@@ -286,21 +320,24 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     processesPairs,
     addressIdSelected,
     remoteProcesses,
-    showLinkLabel,
-    showSite,
     byteRateByProcessPairs,
     latencyByProcessPairs,
-    showLinkLabelReverse,
-    rotateLabel
+    isDisplayOptionActive
   ]);
 
   // This effect is triggered when one service is currently selected
   useEffect(() => {
+    const isDisplayMetricsActive = isDisplayOptionActive(SHOW_LINK_LABEL);
+    const showLinkLabelReverse = isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL);
+    const rotateLabel = isDisplayOptionActive(ROTATE_LINK_LABEL);
+
     if (
       sites &&
       externalProcesses &&
       remoteProcesses &&
-      ((showLinkLabel && byteRateByProcessPairs && latencyByProcessPairs) || !showLinkLabel || !isPrometheusActive)
+      ((isDisplayMetricsActive && byteRateByProcessPairs && latencyByProcessPairs) ||
+        !isDisplayMetricsActive ||
+        !isPrometheusActive)
     ) {
       const processes = [...externalProcesses, ...remoteProcesses];
       // In order to obtain the process pairs for a selected service, we must derive them from the flow pairs associated with the selected service.
@@ -310,7 +347,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
         let processesLinksByAddress = TopologyController.convertProcessPairsToLinks(
           processPairsByAddress,
-          showLinkLabel
+          isDisplayMetricsActive
         );
         processesLinksByAddress = processesLinksByAddress.map((pair) => ({
           ...pair,
@@ -319,7 +356,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
           cursor: 'pointer'
         }));
 
-        if (isPrometheusActive && showLinkLabel) {
+        if (isPrometheusActive && isDisplayMetricsActive) {
           processesLinksByAddress = TopologyController.addMetricsToLinks(
             processesLinksByAddress,
             byteRateByProcessPairs,
@@ -342,7 +379,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         // Set the nodes, links and groups for the topology
         setNodes(processesNodes);
         setLinks(processesLinksByAddress);
-        setGroups(showSite ? siteGroups : []);
+        setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
       }
     }
   }, [
@@ -351,13 +388,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     processesPairs,
     addressIdSelected,
     remoteProcesses,
-    showLinkLabel,
-    showSite,
     byteRateByProcessPairs,
     latencyByProcessPairs,
-    showLinkLabelReverse,
-    rotateLabel,
-    serversByAddress?.results
+    serversByAddress?.results,
+    isDisplayOptionActive
   ]);
 
   if (
@@ -376,65 +410,38 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       <StackItem>
         <Toolbar>
           <ToolbarContent>
-            <ToolbarGroup>
-              <ToolbarItem>
-                <Select
-                  isOpen={isAddressSelectMenuOpen}
-                  onSelect={handleSelectAddress}
-                  onToggle={handleToggleAddressDropdownMenu}
-                  selections={addressIdSelected}
-                >
-                  {getOptions()}
-                </Select>
-              </ToolbarItem>
-            </ToolbarGroup>
-            {isPrometheusActive && (
-              <>
-                <ToolbarGroup>
-                  <ToolbarItem>
-                    <Checkbox
-                      label={TopologyLabels.CheckboxShowSite}
-                      isChecked={showSite}
-                      onChange={handleChangeSiteCheck}
-                      id="show-site-check"
-                    />
-                    <Checkbox
-                      isDisabled={!showLinkLabel}
-                      label={TopologyLabels.RotateLabel}
-                      isChecked={rotateLabel}
-                      onChange={handleChangeRotateLabelCheck}
-                      id="rotate-label-check"
-                    />
-                  </ToolbarItem>
+            <ToolbarItem>
+              <Select
+                isOpen={isAddressSelectMenuOpen}
+                onSelect={handleSelectAddress}
+                onToggle={handleToggleAddressMenu}
+                selections={addressIdSelected}
+              >
+                {getOptions()}
+              </Select>
+            </ToolbarItem>
 
-                  <ToolbarItem>
-                    <Checkbox
-                      label={TopologyLabels.CheckboxShowLabel}
-                      isChecked={showLinkLabel}
-                      onChange={handleChangeProtocolLinkLabelCheck}
-                      id="show-protocols-check"
-                    />
-                    <Checkbox
-                      isDisabled={!showLinkLabel}
-                      label={TopologyLabels.CheckboxShowLabelReverse}
-                      isChecked={showLinkLabelReverse}
-                      onChange={handleChangeProtocolLinkLabelCheckReverse}
-                      id="show-protocols-check-reverse"
-                    />
-                  </ToolbarItem>
-                </ToolbarGroup>
+            <ToolbarItem>
+              <Select
+                variant={SelectVariant.checkbox}
+                isOpen={isDisplayMenuOpen}
+                onSelect={handleSelectDisplay}
+                onToggle={handleToggleDisplayMenu}
+                selections={displayOptionsSelected}
+                placeholderText="Display"
+                isCheckboxSelectionBadgeHidden
+              >
+                {getDisplayOptions()}
+              </Select>
+            </ToolbarItem>
 
-                <ToolbarGroup alignment={{ default: 'alignRight' }}>
-                  <ToolbarItem>
-                    <NavigationViewLink
-                      link={ProcessesRoutesPaths.Processes}
-                      linkLabel={TopologyLabels.ListView}
-                      iconName="listIcon"
-                    />
-                  </ToolbarItem>
-                </ToolbarGroup>
-              </>
-            )}
+            <ToolbarItem alignment={{ default: 'alignRight' }}>
+              <NavigationViewLink
+                link={ProcessesRoutesPaths.Processes}
+                linkLabel={TopologyLabels.ListView}
+                iconName="listIcon"
+              />
+            </ToolbarItem>
           </ToolbarContent>
         </Toolbar>
       </StackItem>

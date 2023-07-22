@@ -29,6 +29,7 @@ const Topology = function () {
       isPlain
       hasMainContentPadding
       title={TopologyLabels.Topology}
+      description={TopologyLabels.Description}
       navigationComponent={
         <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType} component="nav">
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
