@@ -201,7 +201,7 @@ export const TopologyController = {
 
       return {
         ...link,
-        labelCfg: { autoRotate: options?.rotateLabel, style: { fill: color } },
+        labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: color } },
         style: { ...link.style, stroke: color },
         label: [link.label, ...metrics].filter(Boolean).join('')
       };

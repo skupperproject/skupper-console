@@ -11,6 +11,7 @@ export enum TopologyViews {
 
 export enum TopologyLabels {
   Topology = 'Topology',
+  Description = 'The network topology refers to the manner in which the links and nodes of a network are arranged to relate to each other',
   TopologyView = 'Topology View',
   ListView = 'List View',
   LegendGroupsItems = 'Sites',
@@ -23,10 +24,10 @@ export enum TopologyLabels {
   Link = 'link',
   ActiveLink = 'Active link (show metrics on)',
   Site = 'site',
-  CheckboxShowSite = 'show site',
-  RotateLabel = 'rotate label',
-  CheckboxShowLabel = 'show metrics',
-  CheckboxShowLabelReverse = 'show reverse metrics'
+  CheckboxShowSite = 'Sites',
+  RotateLabel = 'Rotate',
+  CheckboxShowLabel = 'Metrics',
+  CheckboxShowLabelReverse = 'Reverse metrics'
 }
 
 export enum TopologyURLFilters {
