@@ -8,7 +8,7 @@ import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
-import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
 import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constant';
@@ -53,7 +53,6 @@ const Processes = function () {
       title={ProcessesLabels.Section}
       description={ProcessesLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
-      linkLabel={TopologyLabels.Topology}
       mainContentChildren={
         <SkTable
           columns={processesTableColumns}

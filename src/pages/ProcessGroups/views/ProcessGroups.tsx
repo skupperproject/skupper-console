@@ -10,7 +10,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
-import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessGroupResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { processGroupsColumns } from '../ProcessGroups.constant';
@@ -58,7 +58,6 @@ const ProcessGroups = function () {
       title={ProcessGroupsLabels.Section}
       description={ProcessGroupsLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}
-      linkLabel={TopologyLabels.Topology}
       mainContentChildren={
         <SkTable
           columns={processGroupsColumns}

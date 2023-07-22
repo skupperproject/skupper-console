@@ -8,7 +8,7 @@ const SkHeader = function () {
       className="sk-header"
       logo={
         <>
-          <Brand src={brandLogo} alt="logo" heights={{ default: '70px' }}>
+          <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }}>
             <source srcSet={brandLogo} />
           </Brand>
 

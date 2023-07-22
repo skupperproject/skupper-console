@@ -264,7 +264,7 @@ const ProcessPairs = function () {
 
             {(!!activeConnections.length || !!oldConnectionsCount) && (
               <GridItem>
-                <Tabs activeKey={connectionsView} onSelect={handleTabClick} isBox>
+                <Tabs activeKey={connectionsView} onSelect={handleTabClick} component="nav">
                   <Tab
                     eventKey={TAB_1_KEY}
                     title={
@@ -288,6 +288,7 @@ const ProcessPairs = function () {
                     />
                   </Tab>
                   <Tab
+                    disabled={oldConnectionsCount === 0}
                     eventKey={TAB_2_KEY}
                     title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
                   >
