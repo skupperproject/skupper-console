@@ -42,7 +42,7 @@ interface LoadingPageProps {
 
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = false }) {
   return (
-    <TransitionPage delay={0.5}>
+    <TransitionPage delay={0.35}>
       <PageSection variant={PageSectionVariants.light}>
         <Bullseye
           className="sk-loading-page"

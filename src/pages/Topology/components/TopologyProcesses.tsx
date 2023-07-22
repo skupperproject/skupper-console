@@ -158,25 +158,31 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   );
 
   const handleGetSelectedNode = useCallback(
-    ({ id, label }: GraphNode) => {
-      navigate(`${ProcessesRoutesPaths.Processes}/${label}@${id}`);
+    ({ id: idSelected }: GraphNode) => {
+      if (externalProcesses && remoteProcesses) {
+        const processes = [...externalProcesses, ...remoteProcesses];
+        const process = processes.find(({ identity }) => identity === idSelected);
+
+        navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${idSelected}`);
+      }
     },
-    [navigate]
+    [navigate, externalProcesses, remoteProcesses]
   );
 
   const handleGetSelectedEdge = useCallback(
-    ({ id: linkId, source }: GraphEdge) => {
+    ({ id: idSelected }: GraphEdge) => {
       if (externalProcesses && remoteProcesses) {
+        const [sourceId] = idSelected.split('-to-');
         const processes = [...externalProcesses, ...remoteProcesses];
 
-        const sourceProcess = processes?.find(({ identity }) => identity === source) as ProcessResponse;
+        const sourceProcess = processes?.find(({ identity }) => identity === sourceId) as ProcessResponse;
 
         if (sourceProcess) {
-          navigate(`${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${linkId}`);
+          navigate(`${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${idSelected}`);
         }
       }
     },
-    [externalProcesses, remoteProcesses, navigate]
+    [navigate, externalProcesses, remoteProcesses]
   );
 
   function handleToggleAddressMenu(openAddressMenu: boolean) {
