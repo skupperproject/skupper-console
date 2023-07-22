@@ -21,13 +21,20 @@ const App = function () {
   }
 
   return (
-    <Page header={<SkHeader />} sidebar={<SkSidebar />} breadcrumb={<AppMenu />} isManagedSidebar>
-      <ErrorBoundary FallbackComponent={Console}>
-        <Suspense fallback={<span />}>
-          <AppContent>{routes}</AppContent>
-        </Suspense>
-      </ErrorBoundary>
-    </Page>
+    <Page
+      header={<SkHeader />}
+      sidebar={<SkSidebar />}
+      breadcrumb={<AppMenu />}
+      isManagedSidebar
+      isBreadcrumbGrouped
+      additionalGroupedContent={
+        <ErrorBoundary FallbackComponent={Console}>
+          <Suspense fallback={<span />}>
+            <AppContent>{routes}</AppContent>
+          </Suspense>
+        </ErrorBoundary>
+      }
+    />
   );
 };
 

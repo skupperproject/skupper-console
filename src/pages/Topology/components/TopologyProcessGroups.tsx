@@ -64,10 +64,14 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
   }, []);
 
   const handleGetSelectedNode = useCallback(
-    ({ id, label }: GraphNode) => {
-      navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${label}@${id}`);
+    ({ id: idSelected }: GraphNode) => {
+      const component = processGroups?.results.find(({ identity }) => identity === idSelected);
+
+      if (component) {
+        navigate(`${ProcessGroupsRoutesPaths.ProcessGroups}/${component.name}@${idSelected}`);
+      }
     },
-    [navigate]
+    [navigate, processGroups?.results]
   );
 
   if (isLoadingProcessGroups || isLoadingProcessGroupsPairs || isLoadingRemoteProcessGroups) {

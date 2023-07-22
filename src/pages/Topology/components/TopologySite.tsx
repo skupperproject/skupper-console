@@ -47,10 +47,12 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   }, []);
 
   const handleGetSelectedNode = useCallback(
-    ({ id, label }: GraphNode) => {
-      navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
+    ({ id: idSelected }: GraphNode) => {
+      const site = sites?.find(({ identity }) => identity === idSelected);
+
+      navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${idSelected}`);
     },
-    [navigate]
+    [sites, navigate]
   );
 
   if (isLoadingSites || isLoadingLinks || isLoadingRouters) {

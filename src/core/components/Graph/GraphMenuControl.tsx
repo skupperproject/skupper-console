@@ -49,8 +49,7 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   };
 
   const handleZoomToDefault = () => {
-    graphInstance.fitView(5, undefined, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
-
+    graphInstance.fitView(50, undefined, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
     if (onFitScreen) {
       onFitScreen(1);
     }
