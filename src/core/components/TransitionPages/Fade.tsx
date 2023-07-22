@@ -17,7 +17,7 @@ const TransitionPage: FC<{ children: ReactElement; delay?: number }> = function 
       initial="out"
       animate="in"
       exit="out"
-      transition={{ delay, duration: 0.125 }}
+      transition={{ delay, duration: 0.2 }}
       variants={transition}
       style={{ flex: 1, display: 'grid', height: '100%' }}
     >

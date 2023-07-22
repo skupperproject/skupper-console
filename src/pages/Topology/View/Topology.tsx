@@ -1,7 +1,6 @@
 import { MouseEvent as ReactMouseEvent, useState } from 'react';
 
-import { Tab, Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
-import { CogIcon, CogsIcon, ProjectDiagramIcon } from '@patternfly/react-icons';
+import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
 import SkDefaultPage from '@layout/DefaultPage';
@@ -31,40 +30,13 @@ const Topology = function () {
       hasMainContentPadding
       title={TopologyLabels.Topology}
       navigationComponent={
-        <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType}>
-          <Tab
-            eventKey={TopologyViews.Sites}
-            title={
-              <>
-                <TabTitleIcon>
-                  <ProjectDiagramIcon />
-                </TabTitleIcon>{' '}
-                <TabTitleText>{TopologyViews.Sites}</TabTitleText>
-              </>
-            }
-          />
+        <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType} component="nav">
+          <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
           <Tab
             eventKey={TopologyViews.ProcessGroups}
-            title={
-              <>
-                <TabTitleIcon>
-                  <CogsIcon />
-                </TabTitleIcon>{' '}
-                <TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>
-              </>
-            }
+            title={<TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>}
           />
-          <Tab
-            eventKey={TopologyViews.Processes}
-            title={
-              <>
-                <TabTitleIcon>
-                  <CogIcon />
-                </TabTitleIcon>{' '}
-                <TabTitleText>{TopologyViews.Processes}</TabTitleText>
-              </>
-            }
-          />
+          <Tab eventKey={TopologyViews.Processes} title={<TabTitleText>{TopologyViews.Processes}</TabTitleText>} />
         </Tabs>
       }
       mainContentChildren={

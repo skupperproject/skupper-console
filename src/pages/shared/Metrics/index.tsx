@@ -1,16 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import {
-  Bullseye,
-  Card,
-  CardBody,
-  CardExpandableContent,
-  CardHeader,
-  CardTitle,
-  Spinner,
-  Stack,
-  StackItem
-} from '@patternfly/react-core';
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Stack, StackItem } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
@@ -27,6 +17,7 @@ import ResponseCharts from './ResponseCharts';
 import MetricsController from './services';
 import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
 import TrafficCharts from './TrafficCharts';
+import LoadingPage from '../Loading';
 
 import './Metrics.css';
 
@@ -108,13 +99,7 @@ const Metrics: FC<MetricsProps> = function ({
   }, [forceUpdate, handleRefetchMetrics]);
 
   if (isLoadingMetrics) {
-    return (
-      <Card isFullHeight style={{ height: '500px' }}>
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      </Card>
-    );
+    return <LoadingPage />;
   }
 
   if (!metrics) {

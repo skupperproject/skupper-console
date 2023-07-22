@@ -1,15 +1,6 @@
 import { FC, ReactElement } from 'react';
 
-import {
-  Flex,
-  PageGroup,
-  PageNavigation,
-  PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
-  Title
-} from '@patternfly/react-core';
+import { Flex, PageGroup, PageSection, PageSectionVariants, Text, TextContent, Title } from '@patternfly/react-core';
 
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
@@ -32,7 +23,7 @@ const SkDefaultPage: FC<SkDefaultPageProps> = function ({
   dataTestId,
   title,
   link,
-  linkLabel = TopologyLabels.Topology,
+  linkLabel = TopologyLabels.TopologyView,
   description,
   hasMainContentPadding = false,
   navigationComponent,
@@ -51,7 +42,11 @@ const SkDefaultPage: FC<SkDefaultPageProps> = function ({
           </Flex>
         </PageSection>
 
-        {navigationComponent && <PageNavigation>{navigationComponent}</PageNavigation>}
+        {navigationComponent && (
+          <PageSection style={{ padding: '0 21px' }} variant={PageSectionVariants.light}>
+            <Flex>{navigationComponent}</Flex>
+          </PageSection>
+        )}
         {mainContentChildren && (
           <PageSection padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }} isFilled={true}>
             {mainContentChildren}

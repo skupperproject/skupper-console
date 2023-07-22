@@ -101,7 +101,7 @@ const FlowsPairs = function () {
 
   const NavigationMenu = function () {
     return (
-      <Tabs activeKey={tabSelected} onSelect={handleTabClick} usePageInsets hasBorderBottom={false}>
+      <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
         <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview}`}</TabTitleText>} />
         <Tab
           isDisabled={!serverCount}

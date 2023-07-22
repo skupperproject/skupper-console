@@ -8,7 +8,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import SkDefaultPage from '@layout/DefaultPage';
 import LoadingPage from '@pages/shared/Loading';
-import { TopologyLabels, TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { SiteResponse } from 'API/REST.interfaces';
 
 import { QueriesSites } from '../services/services.enum';
@@ -32,7 +32,6 @@ const Sites = function () {
       title={Labels.Section}
       description={Labels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Sites}`}
-      linkLabel={TopologyLabels.Topology}
       mainContentChildren={
         <SkTable
           columns={siteColumns}

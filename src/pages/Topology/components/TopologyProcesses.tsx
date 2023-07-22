@@ -34,7 +34,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
 import { ProcessLegendData } from '../Topology.constant';
-import { TopologyLabels, TopologyViews } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process-graphZoom';
 const SHOW_SITE_KEY = 'showSite';
@@ -374,7 +374,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   return (
     <Stack>
       <StackItem>
-        {' '}
         <Toolbar>
           <ToolbarContent>
             <ToolbarGroup>
@@ -429,7 +428,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                   <ToolbarItem>
                     <NavigationViewLink
                       link={ProcessesRoutesPaths.Processes}
-                      linkLabel={TopologyViews.Processes}
+                      linkLabel={TopologyLabels.ListView}
                       iconName="listIcon"
                     />
                   </ToolbarItem>
