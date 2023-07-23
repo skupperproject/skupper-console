@@ -1,4 +1,4 @@
-import G6, { ArrowConfig } from '@antv/g6';
+import { registerEdge, ArrowConfig, GraphData, Legend } from '@antv/g6';
 
 import { EDGE_COLOR_ACTIVE_DEFAULT } from './Graph.constants';
 
@@ -6,7 +6,7 @@ export function registerCustomBehaviours() {
   // Draw a blue line dash when hover an edge
   const edgeName = 'line-dash';
   const lineDash = [4, 2, 1, 2];
-  G6.registerEdge(
+  registerEdge(
     edgeName,
     {
       setState(name, value, item) {
@@ -45,8 +45,8 @@ export function registerCustomBehaviours() {
   );
 }
 
-export function createLegend(legendData: {}) {
-  return new G6.Legend({
+export function createLegend(legendData: GraphData) {
+  return new Legend({
     data: legendData,
     align: 'center',
     layout: 'horizontal', // vertical

@@ -294,7 +294,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
       const processes = [...externalProcesses, ...remoteProcesses];
       // Get nodes from site and process groups
       const siteNodes = TopologyController.convertSitesToNodes(sites);
-      const processesNodes = TopologyController.convertProcessesToNodes(processes, siteNodes);
+      const processesNodes = TopologyController.convertProcessesToNodes(processes);
       const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
 
       // Check if no services are selected
@@ -379,7 +379,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
         const filteredProcesses = processes.filter((node) => processIdsFromAddress.includes(node.identity));
 
         const siteNodes = TopologyController.convertSitesToNodes(sites);
-        const processesNodes = TopologyController.convertProcessesToNodes(filteredProcesses, siteNodes);
+        const processesNodes = TopologyController.convertProcessesToNodes(filteredProcesses);
         const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
 
         // Set the nodes, links and groups for the topology

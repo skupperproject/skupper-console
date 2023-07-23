@@ -21,12 +21,14 @@ export const nodeColors = [
   '#aec7e8'
 ];
 
-export const NODE_COLOR_DEFAULT = '#92c1e9';
-export const NODE_COLOR_DEFAULT_LABEL = '#7f7f7f';
+export const NODE_COLOR_DEFAULT = '#FFFFFF';
+export const NODE_BORDER_COLOR_DEFAULT = '#6A6E73';
+export const NODE_COLOR_DEFAULT_LABEL = '#000000';
 export const NODE_COLOR_DEFAULT_LABEL_BG = '#FFFFFF';
 export const EDGE_COLOR_DEFAULT = '#B8BBBE';
 export const EDGE_COLOR_ACTIVE_DEFAULT = '#0066CC';
-export const COMBO_COLOR_DEFAULT = '#6A6E73';
-export const COMBO_COLOR_DEFAULT_LABEL = '#6A6E73';
+export const COMBO__COLOR_DEFAULT = 'transparent';
+export const COMBO_BORDER_COLOR_DEFAULT = '#FFFFFF';
+export const COMBO_COLOR_DEFAULT_LABEL = '#000000';
 export const NODE_COLOR_HOVER_DEFAULT = '#BEE1F4';
 export const NODE_COLOR_HOVER_EDGE_DEFAULT = '#0066CC';
