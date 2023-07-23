@@ -21,7 +21,7 @@ import { getTestsIds } from '@config/testIds.config';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import SkDefaultPage from '@layout/DefaultPage';
+import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -81,7 +81,7 @@ const Site = function () {
   const processes = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
   return (
-    <SkDefaultPage
+    <MainContainer
       dataTestId={getTestsIds.siteView(siteId)}
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}

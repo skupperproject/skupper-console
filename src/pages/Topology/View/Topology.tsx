@@ -3,7 +3,7 @@ import { MouseEvent as ReactMouseEvent, useState } from 'react';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
-import SkDefaultPage from '@layout/DefaultPage';
+import MainContainer from '@layout/MainContainer';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
@@ -25,7 +25,7 @@ const Topology = function () {
   }
 
   return (
-    <SkDefaultPage
+    <MainContainer
       isPlain
       hasMainContentPadding
       title={TopologyLabels.Topology}

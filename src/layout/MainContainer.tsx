@@ -7,7 +7,7 @@ import { TopologyLabels } from '@pages/Topology/Topology.enum';
 import NavigationViewLink from '../core/components/NavigationViewLink';
 import TransitionPage from '../core/components/TransitionPages/Fade';
 
-interface SkDefaultPageProps {
+interface MainContainerProps {
   dataTestId?: string;
   title: string;
   link?: string;
@@ -19,7 +19,7 @@ interface SkDefaultPageProps {
   mainContentChildren?: ReactElement;
 }
 
-const SkDefaultPage: FC<SkDefaultPageProps> = function ({
+const MainContainer: FC<MainContainerProps> = function ({
   dataTestId,
   title,
   link,
@@ -57,4 +57,4 @@ const SkDefaultPage: FC<SkDefaultPageProps> = function ({
   );
 };
 
-export default SkDefaultPage;
+export default MainContainer;
