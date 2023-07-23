@@ -8,7 +8,7 @@ import { getTestsIds } from '@config/testIds.config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import SkDefaultPage from '@layout/DefaultPage';
+import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessGroupResponse, RequestOptions } from 'API/REST.interfaces';
@@ -53,7 +53,7 @@ const ProcessGroups = function () {
   const components = processGroups.filter(({ processGroupRole }) => processGroupRole !== 'internal');
 
   return (
-    <SkDefaultPage
+    <MainContainer
       dataTestId={getTestsIds.componentsView()}
       title={ProcessGroupsLabels.Section}
       description={ProcessGroupsLabels.Description}

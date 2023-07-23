@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { getTestsIds } from '@config/testIds.config';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 
-const AppMenu = function () {
+const SkBreadcrumb = function () {
   const { pathname } = useLocation();
 
   const paths = pathname.split('/').filter(Boolean);
@@ -28,4 +28,4 @@ const AppMenu = function () {
   );
 };
 
-export default AppMenu;
+export default SkBreadcrumb;

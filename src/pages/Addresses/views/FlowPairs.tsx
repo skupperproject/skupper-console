@@ -7,7 +7,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, TcpStatus } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
-import SkDefaultPage from '@layout/DefaultPage';
+import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
@@ -137,7 +137,7 @@ const FlowsPairs = function () {
   };
 
   return (
-    <SkDefaultPage
+    <MainContainer
       isPlain
       title={addressName || ''}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}

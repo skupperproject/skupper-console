@@ -6,9 +6,9 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import { RESTApi } from '@API/REST.api';
 import { setCollectorStartTime } from '@config/config';
-import AppMenu from '@core/components/AppMenu/AppMenu';
-import AppContent from '@layout/AppContent';
+import SkBreadcrumb from '@core/components/SkBreadcrumb';
 import SkHeader from '@layout/Header';
+import RouteContainer from '@layout/RouteContainer';
 import SkSidebar from '@layout/SideBar';
 import Console from '@pages/shared/Errors/Console';
 import { routes } from 'routes';
@@ -24,13 +24,13 @@ const App = function () {
     <Page
       header={<SkHeader />}
       sidebar={<SkSidebar />}
-      breadcrumb={<AppMenu />}
+      breadcrumb={<SkBreadcrumb />}
       isManagedSidebar
       isBreadcrumbGrouped
       additionalGroupedContent={
         <ErrorBoundary FallbackComponent={Console}>
           <Suspense fallback={<span />}>
-            <AppContent>{routes}</AppContent>
+            <RouteContainer>{routes}</RouteContainer>
           </Suspense>
         </ErrorBoundary>
       }
