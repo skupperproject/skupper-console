@@ -107,7 +107,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           height,
           fitCenter: config?.fitCenter || false,
           plugins: [legend],
-          groupByTypes: false,
           modes: DEFAULT_MODE,
           defaultNode: DEFAULT_NODE_CONFIG,
           defaultCombo: DEFAULT_COMBO_CONFIG,

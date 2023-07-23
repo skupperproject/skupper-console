@@ -1,6 +1,16 @@
 import { FC, ReactElement } from 'react';
 
-import { Flex, PageGroup, PageSection, PageSectionVariants, Text, TextContent, Title } from '@patternfly/react-core';
+import {
+  Divider,
+  Flex,
+  PageGroup,
+  PageNavigation,
+  PageSection,
+  PageSectionVariants,
+  Text,
+  TextContent,
+  Title
+} from '@patternfly/react-core';
 
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
@@ -43,9 +53,12 @@ const MainContainer: FC<MainContainerProps> = function ({
         </PageSection>
 
         {navigationComponent && (
-          <PageSection style={{ padding: '0 21px' }} variant={PageSectionVariants.light}>
-            <Flex>{navigationComponent}</Flex>
-          </PageSection>
+          <>
+            <PageNavigation style={{ padding: '0 21px' }}>
+              <Flex>{navigationComponent}</Flex>
+            </PageNavigation>
+            <Divider />
+          </>
         )}
         {mainContentChildren && (
           <PageSection padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }} isFilled={true}>
