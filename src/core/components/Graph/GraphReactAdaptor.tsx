@@ -13,10 +13,11 @@ import {
 
 import {
   DEFAULT_COMBO_CONFIG,
+  DEFAULT_COMBO_STATE_CONFIG,
   DEFAULT_EDGE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
-  DEFAULT_NODE_ICON,
   DEFAULT_NODE_STATE_CONFIG
 } from './config';
 import { createLegend, registerCustomBehaviours } from './customBehaviours';
@@ -106,11 +107,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           height,
           fitCenter: config?.fitCenter || false,
           plugins: [legend],
+          groupByTypes: false,
           modes: DEFAULT_MODE,
           defaultNode: DEFAULT_NODE_CONFIG,
           defaultCombo: DEFAULT_COMBO_CONFIG,
           defaultEdge: DEFAULT_EDGE_CONFIG,
-          nodeStateStyles: DEFAULT_NODE_STATE_CONFIG
+          nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
+          comboStateStyles: DEFAULT_COMBO_STATE_CONFIG
         };
 
         if (layout) {
@@ -178,30 +181,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               if (node?.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
                 topologyGraph.setItemState(n, 'hidden', true);
                 n.toBack();
-                topologyGraph.updateItem(n, {
-                  icon: { width: 1, height: 1 },
-                  labelCfg: { offset: -100000 }
-                });
               }
             });
-            // To ensure that only one node is selected at a time, we need to clean up any previously selected nodes.
-            //This situation can arise when we automatically select an element from another pager through nodeSelect.
-            topologyGraph.findAllByState<INode>('node', 'hover').forEach((nodeWithHoverState) => {
-              topologyGraph.setItemState(nodeWithHoverState, 'hover', false);
-              nodeWithHoverState.getEdges().forEach((edgeConnectedWithHoverState) => {
-                topologyGraph.setItemState(edgeConnectedWithHoverState, 'hover', false);
-              });
-            });
 
-            topologyGraph.setItemState(node, 'hover', true);
+            topologyGraph.setItemState(node, 'hidden', false);
 
             node.getEdges().forEach((edgeConnected) => {
-              topologyGraph.setItemState(edgeConnected, 'hover', true);
               edgeConnected.show();
-            });
-
-            neighbors.forEach((neighbor) => {
-              topologyGraph.setItemState(neighbor, 'hover', true);
             });
           }
         });
@@ -209,12 +195,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         topologyGraph.on('node:mouseleave', ({ item }) => {
           isHoverState.current = false;
 
-          topologyGraph.getNodes().forEach(function (node) {
+          topologyGraph.findAllByState<INode>('node', 'hidden').forEach(function (node) {
             topologyGraph.setItemState(node, 'hidden', false);
-            topologyGraph.updateItem(node, {
-              icon: { width: DEFAULT_NODE_ICON.width, height: DEFAULT_NODE_ICON.height },
-              labelCfg: { offset: DEFAULT_NODE_CONFIG.labelCfg?.offset }
-            });
           });
 
           topologyGraph.getEdges().forEach(function (edge) {
@@ -225,14 +207,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           if (node) {
             topologyGraph.setItemState(node, 'hover', false);
-
-            node.getEdges().forEach((edgeConnected) => {
-              topologyGraph.setItemState(edgeConnected, 'hover', false);
-            });
-
-            node.getNeighbors().forEach((neighbor) => {
-              topologyGraph.setItemState(neighbor, 'hover', false);
-            });
           }
         });
 
@@ -252,18 +226,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             const source = edge.getSource();
             const target = edge.getTarget();
 
-            topologyGraph.setItemState(source, 'hover', true);
-            topologyGraph.setItemState(target, 'hover', true);
-
-            // To ensure that only one node is selected at a time, we need to clean up any previously selected nodes.
-            //This situation can arise when we automatically select an element from another pager through nodeSelect.
-            topologyGraph.findAllByState<INode>('node', 'hover').forEach((nodeWithHoverState) => {
-              if (nodeWithHoverState !== source && nodeWithHoverState !== target) {
-                topologyGraph.setItemState(nodeWithHoverState, 'hover', false);
-
-                nodeWithHoverState.getEdges().forEach((edgeConnectedWithHoverState) => {
-                  topologyGraph.setItemState(edgeConnectedWithHoverState, 'hover', false);
-                });
+            topologyGraph.getNodes().forEach(function (node) {
+              if (node !== source && node !== target) {
+                topologyGraph.setItemState(node, 'hidden', true);
               }
             });
           }
@@ -276,16 +241,14 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             edge.show();
           });
 
+          topologyGraph.findAllByState<INode>('node', 'hidden').forEach(function (node) {
+            topologyGraph.setItemState(node, 'hidden', false);
+          });
+
           const edge = item as IEdge | null;
 
           if (edge) {
             topologyGraph.setItemState(edge, 'hover', false);
-
-            const source = edge.getSource();
-            const target = edge.getTarget();
-
-            topologyGraph.setItemState(source, 'hover', false);
-            topologyGraph.setItemState(target, 'hover', false);
           }
         });
 
@@ -296,16 +259,21 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             }
           });
 
-          topologyGraph.on('combo:dragstart', ({ item }) => {
-            if (item) {
-              topologyGraph.updateItem(item, { style: { cursor: 'grab' } });
-            }
-          });
+          // topologyGraph.on('combo:mouseenter', ({ item }) => {
+          //   if (item) {
+          //     topologyGraph.setItemState(item, 'hover', true);
+          //   }
+          // });
+
+          // topologyGraph.on('combo:mouseleave', ({ item, ...rest }) => {
+          //   if (item) {
+          //     topologyGraph.setItemState(item, 'hover', false);
+          //   }
+          // });
 
           topologyGraph.on('combo:dragend', ({ item }) => {
             if (item) {
               const combo = item as ICombo;
-              topologyGraph.updateItem(combo, { style: { cursor: 'pointer' } });
 
               // Retrieve the nodes contained within the combo box and store their positions in memory
               const updatedNodes = GraphController.fromNodesToLocalStorageData(
@@ -369,6 +337,51 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }
     }, []);
 
+    const rollbackState = useCallback(() => {
+      const graphInstance = topologyGraphRef.current;
+
+      if (graphInstance && itemSelected) {
+        const item = graphInstance.findById(itemSelected);
+
+        graphInstance.getEdges().forEach(function (edge) {
+          edge.hide();
+        });
+
+        if (item) {
+          if (item.get('type') === 'node') {
+            const node = item as INode;
+
+            const neighbors = node.getNeighbors();
+            const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
+
+            graphInstance.getNodes().forEach(function (n) {
+              if (node?.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
+                graphInstance.setItemState(n, 'hidden', true);
+                n.toBack();
+              }
+            });
+
+            graphInstance.setItemState(node, 'hidden', false);
+
+            node.getEdges().forEach((edgeConnected) => {
+              edgeConnected.show();
+            });
+          }
+
+          if (item.get('type') === 'edge') {
+            const edge = item as IEdge;
+            edge.show();
+
+            const source = edge.getSource();
+            const target = edge.getTarget();
+
+            graphInstance.setItemState(source, 'hidden', false);
+            graphInstance.setItemState(target, 'hidden', false);
+          }
+        }
+      }
+    }, []);
+
     // This effect persist the  coordinates for each element of topology after the first simulation.
     useEffect(() => {
       const graphInstance = topologyGraphRef.current;
@@ -395,6 +408,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
           JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
       ) {
+        graphInstance.updateLayout(DEFAULT_LAYOUT_FORCE_CONFIG);
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
         prevNodesRef.current = nodes;
@@ -403,52 +417,20 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         if (combos) {
           prevCombosRef.current = combos;
         }
+
+        rollbackState();
       }
-    }, [nodes, edges, combos, isGraphLoaded]);
+    }, [nodes, edges, combos, isGraphLoaded, rollbackState, layout]);
 
     // This effect handle the initial  UI status when an element is selected from an other page
     // it can be a node or edge
     useEffect(() => {
       const graphInstance = topologyGraphRef.current;
 
-      if (isGraphLoaded && graphInstance && itemSelected) {
-        const item = graphInstance.findById(itemSelected);
-
-        if (item) {
-          graphInstance.getEdges().forEach(function (edge) {
-            edge.hide();
-          });
-
-          graphInstance.setItemState(item, 'hover', true);
-
-          if (item.get('type') === 'node') {
-            const node = item as INode;
-
-            // Update the style of edges connected to this node
-            node.getEdges().forEach((edgeConnected) => {
-              edgeConnected.show();
-              graphInstance.setItemState(edgeConnected, 'hover', true);
-            });
-
-            // Update the style of neighboring nodes
-            node.getNeighbors().forEach((neighbor) => {
-              graphInstance.setItemState(neighbor, 'hover', true);
-            });
-          }
-
-          if (item.get('type') === 'edge') {
-            const edge = item as IEdge;
-            edge.show();
-
-            const source = edge.getSource();
-            const target = edge.getTarget();
-
-            graphInstance.setItemState(source, 'hover', true);
-            graphInstance.setItemState(target, 'hover', true);
-          }
-        }
+      if (isGraphLoaded && graphInstance) {
+        rollbackState();
       }
-    }, [itemSelected, isGraphLoaded]);
+    }, [isGraphLoaded, rollbackState]);
 
     useEffect(() => {
       const graphInstance = topologyGraphRef.current;

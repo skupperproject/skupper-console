@@ -11,7 +11,7 @@ import {
   DEFAULT_NODE_ICON,
   DEFAULT_REMOTE_NODE_CONFIG
 } from '@core/components/Graph/config';
-import { EDGE_COLOR_ACTIVE_DEFAULT, NODE_COLOR_DEFAULT_LABEL } from '@core/components/Graph/Graph.constants';
+import { EDGE_COLOR_ACTIVE_DEFAULT, EDGE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
 import { formatByteRate } from '@core/utils/formatBytes';
@@ -165,7 +165,7 @@ export const TopologyController = {
       const latency = latencyByProcessPairsMap[`${link.sourceName}${link.targetName}`];
       const latencyReverse = latencyByProcessPairsMap[`${link.targetName}${link.sourceName}`];
 
-      const color = byterate ? EDGE_COLOR_ACTIVE_DEFAULT : NODE_COLOR_DEFAULT_LABEL;
+      const color = byterate ? EDGE_COLOR_ACTIVE_DEFAULT : EDGE_COLOR_DEFAULT;
 
       const reverseByteRate = options?.showLinkLabelReverse ? `(${formatByteRate(byterateReverse)})` : '';
       const reverseLatency = options?.showLinkLabelReverse ? `(${formatLatency(latencyReverse)})` : '';

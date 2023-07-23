@@ -9,12 +9,12 @@ import {
   NODE_BORDER_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT_LABEL,
-  NODE_COLOR_DEFAULT_LABEL_BG,
-  NODE_COLOR_HOVER_DEFAULT,
-  NODE_COLOR_HOVER_EDGE_DEFAULT
+  NODE_COLOR_DEFAULT_LABEL_BG
 } from './Graph.constants';
 
-const NODE_SIZE = 35;
+const NODE_SIZE = 40;
+const INACTIVE_OPACITY_VALUE = 0.5;
+
 const greyColor = '#808080';
 
 export const DEFAULT_MODE: Modes = {
@@ -57,8 +57,8 @@ export const DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG: LayoutConfig = {
 
 export const DEFAULT_NODE_ICON = {
   show: true,
-  width: 14,
-  height: 14
+  width: 16,
+  height: 16
 };
 
 export const DEFAULT_NODE_CONFIG: Partial<{
@@ -76,7 +76,8 @@ export const DEFAULT_NODE_CONFIG: Partial<{
   style: {
     fill: NODE_COLOR_DEFAULT,
     stroke: NODE_BORDER_COLOR_DEFAULT,
-    lineWidth: 1
+    lineWidth: 1,
+    cursor: 'pointer'
   },
 
   labelCfg: {
@@ -85,7 +86,6 @@ export const DEFAULT_NODE_CONFIG: Partial<{
     style: {
       fill: NODE_COLOR_DEFAULT_LABEL,
       fontSize: 11,
-      fillOpacity: 0.9,
       background: {
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_BORDER_COLOR_DEFAULT,
@@ -117,14 +117,18 @@ export const DEFAULT_REMOTE_NODE_CONFIG: Partial<{
   }
 };
 
-export const DEFAULT_EDGE_CONFIG = {
+export const DEFAULT_EDGE_CONFIG: Partial<{
+  type: string;
+  size: number | number[];
+  color: string;
+}> &
+  ModelStyle = {
   type: 'line-dash',
   labelCfg: {
     autoRotate: true,
     refY: -6,
     style: {
       cursor: 'pointer',
-      color: NODE_COLOR_DEFAULT_LABEL,
       fontSize: 12
     }
   },
@@ -139,39 +143,58 @@ export const DEFAULT_EDGE_CONFIG = {
   }
 };
 
-export const DEFAULT_NODE_STATE_CONFIG = {
-  hover: {
-    fill: NODE_COLOR_HOVER_DEFAULT,
-    stroke: NODE_COLOR_HOVER_EDGE_DEFAULT,
-    shadowBlur: 10,
-    shadowColor: NODE_COLOR_HOVER_EDGE_DEFAULT,
-    cursor: 'pointer'
-  },
-  hidden: {
-    opacity: 0,
-    fill: 'transparent'
-  }
-};
-
-export const DEFAULT_COMBO_CONFIG = {
+export const DEFAULT_COMBO_CONFIG: Partial<{
+  type: string;
+  size: number | number[];
+  color: string;
+}> &
+  ModelStyle = {
   type: 'rect',
-
+  padding: [15, 15, 30, 15],
   style: {
     cursor: 'pointer',
     lineWidth: 4,
     fill: COMBO__COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
-    radius: 5
+    radius: 50
   },
 
   labelCfg: {
-    refY: -24,
-    offset: 15,
-    position: 'top-center',
+    refY: 14,
+    position: 'bottom',
     style: {
       fill: COMBO_COLOR_DEFAULT_LABEL,
-      fontSize: 14
+      stoke: 'white',
+      fontSize: 16
     }
+  }
+};
+
+export const DEFAULT_NODE_STATE_CONFIG = {
+  hidden: {
+    opacity: INACTIVE_OPACITY_VALUE,
+
+    'text-shape': {
+      fillOpacity: INACTIVE_OPACITY_VALUE
+    },
+
+    'text-bg-shape': {
+      opacity: INACTIVE_OPACITY_VALUE
+    },
+
+    'circle-icon': {
+      opacity: INACTIVE_OPACITY_VALUE
+    },
+
+    'diamond-icon': {
+      opacity: INACTIVE_OPACITY_VALUE
+    }
+  }
+};
+
+export const DEFAULT_COMBO_STATE_CONFIG = {
+  hover: {
+    stroke: 'black'
   }
 };
 
