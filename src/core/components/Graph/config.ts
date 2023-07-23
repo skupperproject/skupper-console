@@ -1,9 +1,12 @@
-import { ILabelConfig, LayoutConfig, ModelStyle } from '@antv/g6-core';
+import { ILabelConfig, LayoutConfig, ModelStyle, Modes } from '@antv/g6-core';
 
 import {
+  COMBO_BORDER_COLOR_DEFAULT,
   COMBO_COLOR_DEFAULT_LABEL,
+  COMBO__COLOR_DEFAULT,
   EDGE_COLOR_ACTIVE_DEFAULT,
   EDGE_COLOR_DEFAULT,
+  NODE_BORDER_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT_LABEL,
   NODE_COLOR_DEFAULT_LABEL_BG,
@@ -14,19 +17,18 @@ import {
 const NODE_SIZE = 35;
 const greyColor = '#808080';
 
-export const DEFAULT_MODE = {
+export const DEFAULT_MODE: Modes = {
   default: [
-    { type: 'drag-node', onlyChangeComboSize: true, optimize: true },
+    { type: 'drag-node', onlyChangeComboSize: true },
     {
       type: 'drag-combo',
       enableDelegate: true,
       activeState: 'actived',
       onlyChangeComboSize: true,
-      shouldUpdate: () => true,
-      optimize: true
+      shouldUpdate: () => true
     },
-    { type: 'drag-canvas', optimize: true },
-    { type: 'zoom-canvas', optimize: true }
+    { type: 'drag-canvas' },
+    { type: 'zoom-canvas' }
   ]
 };
 
@@ -72,9 +74,8 @@ export const DEFAULT_NODE_CONFIG: Partial<{
   icon: DEFAULT_NODE_ICON,
 
   style: {
-    fillOpacity: 0.1,
     fill: NODE_COLOR_DEFAULT,
-    stroke: NODE_COLOR_DEFAULT,
+    stroke: NODE_BORDER_COLOR_DEFAULT,
     lineWidth: 1
   },
 
@@ -87,9 +88,9 @@ export const DEFAULT_NODE_CONFIG: Partial<{
       fillOpacity: 0.9,
       background: {
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
-        stroke: NODE_COLOR_DEFAULT_LABEL,
+        stroke: NODE_BORDER_COLOR_DEFAULT,
         lineWidth: 1,
-        padding: [4, 5, 4, 5],
+        padding: [5, 7, 4, 7],
         radius: 2
       }
     }
@@ -157,10 +158,10 @@ export const DEFAULT_COMBO_CONFIG = {
 
   style: {
     cursor: 'pointer',
-    lineWidth: 0.7,
-    fillOpacity: 0.015,
-    shadowBlur: 6,
-    radius: 3
+    lineWidth: 4,
+    fill: COMBO__COLOR_DEFAULT,
+    stroke: COMBO_BORDER_COLOR_DEFAULT,
+    radius: 5
   },
 
   labelCfg: {
@@ -169,7 +170,6 @@ export const DEFAULT_COMBO_CONFIG = {
     position: 'top-center',
     style: {
       fill: COMBO_COLOR_DEFAULT_LABEL,
-      stroke: COMBO_COLOR_DEFAULT_LABEL,
       fontSize: 14
     }
   }

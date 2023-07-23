@@ -4,7 +4,7 @@ import { Tooltip } from '@patternfly/react-core';
 
 import skupperProcessSVG from '@assets/skupper.svg';
 
-export interface ResourceIconProps {
+interface ResourceIconProps {
   type: 'site' | 'component' | 'service' | 'process' | 'skupper';
 }
 

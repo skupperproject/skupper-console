@@ -11,11 +11,7 @@ import {
   DEFAULT_NODE_ICON,
   DEFAULT_REMOTE_NODE_CONFIG
 } from '@core/components/Graph/config';
-import {
-  EDGE_COLOR_ACTIVE_DEFAULT,
-  NODE_COLOR_DEFAULT_LABEL,
-  nodeColors
-} from '@core/components/Graph/Graph.constants';
+import { EDGE_COLOR_ACTIVE_DEFAULT, NODE_COLOR_DEFAULT_LABEL } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { GraphController } from '@core/components/Graph/services';
 import { formatByteRate } from '@core/utils/formatBytes';
@@ -61,21 +57,13 @@ export const TopologyController = {
       return convertEntityToNode({ id: identity, label, x, y, img, nodeConfig });
     }),
 
-  convertProcessesToNodes: (processes: ProcessResponse[], groups: GraphNode[]): GraphNode[] =>
+  convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
     processes?.map(({ identity, name: label, parent: comboId, processRole: role, processBinding }) => {
       const { x, y } = GraphController.getPositionFromLocalStorage(identity);
 
-      const groupIndex = groups.findIndex(({ id }) => id === comboId);
-      const color = getColor(role === 'internal' ? 16 : groupIndex);
       const img = role === 'internal' ? skupperProcessSVG : processSVG;
 
-      const style = {
-        fill: color,
-        stroke: color,
-        shadowColor: color
-      };
-
-      const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding], style };
+      const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
 
       return convertEntityToNode({ id: identity, comboId, label, x, y, img, nodeConfig });
     }),
@@ -83,19 +71,7 @@ export const TopologyController = {
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
     const groups = processes.map(({ comboId }) => comboId);
 
-    return sites
-      .filter((site) => groups.includes(site.id))
-      .map(({ id, label }, index) => {
-        const color = getColor(index);
-
-        const style = {
-          fill: color,
-          stroke: color,
-          shadowColor: color
-        };
-
-        return { id, label, style };
-      });
+    return sites.filter((site) => groups.includes(site.id)).map(({ id, label }) => ({ id, label }));
   },
 
   convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[], showProtocol = false): GraphEdge[] =>
@@ -222,10 +198,6 @@ export const TopologyController = {
     return layout;
   }
 };
-
-function getColor(index: number) {
-  return nodeColors[index % nodeColors.length];
-}
 
 function convertEntityToNode({ id, comboId, label, x, y, img, nodeConfig }: Entity): GraphNode {
   return {
