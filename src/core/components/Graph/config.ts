@@ -36,10 +36,7 @@ export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
   type: 'comboForce',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
-  preventOverlap: true,
-  comboCollideStrength: 1,
-  comboSpacing: 10,
-  linkDistance: 150
+  preventOverlap: true
 };
 
 export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
@@ -47,7 +44,8 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
   preventOverlap: true,
-  linkDistance: 150
+  nodeStrength: 1000,
+  edgeStrength: 200
 };
 
 export const DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG: LayoutConfig = {
