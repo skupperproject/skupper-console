@@ -107,3 +107,7 @@ html {
   transition: max-width 0.15s ease-in-out;
   max-width: 100%;
 }
+
+.sk-divider {
+  background-color: var(--pf-global--palette--black-300);
+}
