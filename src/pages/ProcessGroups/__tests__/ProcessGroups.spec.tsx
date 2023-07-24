@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
@@ -5,6 +7,7 @@ import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import componentsData from '@mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '@mocks/server';
+import LoadingPage from '@pages/shared/Loading';
 
 import Components from '../views/ProcessGroups';
 
@@ -16,6 +19,14 @@ describe('Begin testing the Components component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
+
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Components />
+        </Suspense>
+      </Wrapper>
+    );
   });
 
   afterEach(() => {
@@ -24,22 +35,10 @@ describe('Begin testing the Components component', () => {
   });
 
   it('should render a loading page when data is loading', () => {
-    render(
-      <Wrapper>
-        <Components />
-      </Wrapper>
-    );
-
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
   });
 
   it('should render the Components view after the data loading is complete', async () => {
-    render(
-      <Wrapper>
-        <Components />
-      </Wrapper>
-    );
-
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
@@ -48,24 +47,12 @@ describe('Begin testing the Components component', () => {
   });
 
   it('should render a table with the component data after the data has loaded.', async () => {
-    render(
-      <Wrapper>
-        <Components />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(componentResults[0].name)).toBeInTheDocument();
   });
 
   it('Should ensure the Components component renders with correct link href after loading page', async () => {
-    render(
-      <Wrapper>
-        <Components />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: componentResults[0].name })).toHaveAttribute(

@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
@@ -7,6 +9,7 @@ import { Wrapper } from '@core/components/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
 import { MockApiPaths, MockApi, loadMockServer } from '@mocks/server';
 import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
+import LoadingPage from '@pages/shared/Loading';
 
 import Sites from '../views/Sites';
 
@@ -19,6 +22,14 @@ describe('Begin testing the Sites component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
+
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
+      </Wrapper>
+    );
   });
 
   afterEach(() => {
@@ -27,22 +38,10 @@ describe('Begin testing the Sites component', () => {
   });
 
   it('should render a loading page when data is loading', () => {
-    render(
-      <Wrapper>
-        <Sites />
-      </Wrapper>
-    );
-
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
   });
 
   it('should render the sites view after the data loading is complete', async () => {
-    render(
-      <Wrapper>
-        <Sites />
-      </Wrapper>
-    );
-
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
@@ -51,24 +50,12 @@ describe('Begin testing the Sites component', () => {
   });
 
   it('should render a table with the site data after the data has loaded.', async () => {
-    render(
-      <Wrapper>
-        <Sites />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
   });
 
   it('Should ensure the Sites component renders with correct link href after loading page', async () => {
-    render(
-      <Wrapper>
-        <Sites />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: siteResults[0].name })).toHaveAttribute(
@@ -91,7 +78,9 @@ describe('Begin testing the Sites component', () => {
           }
         }}
       >
-        <Sites />
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
       </Wrapper>
     );
 
@@ -116,7 +105,9 @@ describe('Begin testing the Sites component', () => {
           }
         }}
       >
-        <Sites />
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
       </Wrapper>
     );
 

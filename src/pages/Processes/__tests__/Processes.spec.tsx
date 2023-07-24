@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
@@ -5,6 +7,7 @@ import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
+import LoadingPage from '@pages/shared/Loading';
 
 import Processes from '../views/Processes';
 
@@ -16,6 +19,14 @@ describe('Begin testing the Processes component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
+
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Processes />
+        </Suspense>
+      </Wrapper>
+    );
   });
 
   afterEach(() => {
@@ -24,22 +35,10 @@ describe('Begin testing the Processes component', () => {
   });
 
   it('should render a loading page when data is loading', () => {
-    render(
-      <Wrapper>
-        <Processes />
-      </Wrapper>
-    );
-
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
   });
 
   it('should render the Processes view after the data loading is complete', async () => {
-    render(
-      <Wrapper>
-        <Processes />
-      </Wrapper>
-    );
-
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
@@ -47,24 +46,12 @@ describe('Begin testing the Processes component', () => {
   });
 
   it('should render a table with the Processes data after the data has loaded.', async () => {
-    render(
-      <Wrapper>
-        <Processes />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(processesResults[0].name)).toBeInTheDocument();
   });
 
   it('Should ensure the Processes component renders with correct Name link href after loading page', async () => {
-    render(
-      <Wrapper>
-        <Processes />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: processesResults[0].name })).toHaveAttribute(
@@ -74,12 +61,6 @@ describe('Begin testing the Processes component', () => {
   });
 
   it('Should ensure the Processes component renders with correct Component link href after loading page', async () => {
-    render(
-      <Wrapper>
-        <Processes />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getAllByRole('link', { name: processesResults[0].groupName })[0]).toHaveAttribute(
@@ -89,12 +70,6 @@ describe('Begin testing the Processes component', () => {
   });
 
   it('Should ensure the Processes component renders with correct Site link href after loading page', async () => {
-    render(
-      <Wrapper>
-        <Processes />
-      </Wrapper>
-    );
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getAllByRole('link', { name: processesResults[0].parentName })[0]).toHaveAttribute(
