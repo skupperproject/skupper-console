@@ -12,33 +12,33 @@ html {
 .sk-resource-icon {
   background-color: var(--pf-global--palette--black-500);
   border-radius: 50%;
-  color: var(--pf-global--palette--black-100);
+  color: var(--pf-global--palette--white);
   display: inline-block;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 19px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
   margin-right: 4px;
   min-width: 18px;
+  padding: 1px 4px;
   text-align: center;
   white-space: nowrap;
-
-  box-shadow: inset -4px -4px 5px rgba(0, 0, 0, 0.3);
 }
 
 .sk-resource-site {
-  background-color: var(--pf-global--palette--purple-300);
+  background-color: var(--pf-global--palette--green-600);
 }
 
 .sk-resource-process-group {
-  background-color: var(--pf-global--palette--blue-300);
+  background-color: var(--pf-global--palette--light-green-500);
 }
 
 .sk-resource-service {
-  background-color: var(--pf-global--palette--green-300);
+  background-color: var(--pf-global--palette--purple-500);
 }
 
 .sk-resource-process {
-  background-color: var(--pf-global--palette--orange-300);
+  background-color: var(--pf-global--palette--cyan-300);
 }
 
 .sk-resource-skupper {
