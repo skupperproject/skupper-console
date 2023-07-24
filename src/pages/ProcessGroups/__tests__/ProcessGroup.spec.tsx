@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
@@ -8,6 +10,7 @@ import { Wrapper } from '@core/components/Wrapper';
 import processGroupsData from '@mocks/data/PROCESS_GROUPS.json';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
+import LoadingPage from '@pages/shared/Loading';
 
 import ProcessGroup from '../views/ProcessGroup';
 
@@ -23,6 +26,14 @@ describe('Component component', () => {
     jest
       .spyOn(router, 'useParams')
       .mockReturnValue({ id: `${processGroupResults[0].name}@${processGroupResults[0].identity}` });
+
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <ProcessGroup />
+        </Suspense>
+      </Wrapper>
+    );
   });
 
   afterEach(() => {
@@ -31,11 +42,6 @@ describe('Component component', () => {
   });
 
   it('should render the Component view after the data loading is complete', async () => {
-    render(
-      <Wrapper>
-        <ProcessGroup />
-      </Wrapper>
-    );
     // Wait for all queries to resolve
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
@@ -45,11 +51,6 @@ describe('Component component', () => {
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
-    render(
-      <Wrapper>
-        <ProcessGroup />
-      </Wrapper>
-    );
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processGroupResults[0].name);
@@ -57,11 +58,6 @@ describe('Component component', () => {
   });
 
   it('Should ensure the Component details component renders with correct link href after loading page', async () => {
-    render(
-      <Wrapper>
-        <ProcessGroup />
-      </Wrapper>
-    );
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
