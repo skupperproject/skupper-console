@@ -11,7 +11,7 @@ import {
   ToolbarGroup,
   Tooltip
 } from '@patternfly/react-core';
-import { ClusterIcon, OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
+import { OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -184,10 +184,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     return (
       <Toolbar>
         <ToolbarContent>
-          {/* entity filters */}
           <ToolbarGroup>
-            <ToolbarItem variant="label">{MetricsLabels.MetricFilters}</ToolbarItem>
-
             <ToolbarItem>
               <Select
                 selections={selectedFilter.processIdSource}
@@ -201,7 +198,6 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                     : undefined
                 }
                 onToggle={handleToggleSourceProcessMenu}
-                toggleIcon={<ClusterIcon />}
               >
                 {optionsProcessSourcesWithDefault}
               </Select>
@@ -221,7 +217,6 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                       : undefined
                   }
                   onToggle={handleToggleDestinationProcessMenu}
-                  toggleIcon={<ClusterIcon />}
                 >
                   {optionsProcessConnectedWithDefault}
                 </Select>

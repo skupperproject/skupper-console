@@ -1,5 +1,5 @@
 export interface MetricCardProps {
-  title: string;
+  title?: string;
   value: string | number;
   bgColor?: string;
   fontColor?: string;

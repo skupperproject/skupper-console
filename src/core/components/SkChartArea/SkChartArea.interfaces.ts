@@ -6,6 +6,7 @@ export interface skAxisXY {
 export interface SkChartAreaProps {
   data: skAxisXY[][];
   formatY?: Function;
+  formatYTooltip?: Function;
   formatX?: Function;
   axisYLabel?: string;
   legendLabels?: string[];

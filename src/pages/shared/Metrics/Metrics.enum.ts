@@ -1,7 +1,6 @@
 export enum MetricsLabels {
   TrafficSent = 'transmitted',
   TrafficReceived = 'received',
-  RequestsPerSecondsSeriesAxisYLabel = 'Request rate',
   ClientErrorRateSeriesAxisYLabel = 'Client Error rate',
   ServerErrorRateSeriesAxisYLabel = 'Server Error rate',
   FilterAllSourceProcesses = 'All processes',
@@ -19,7 +18,6 @@ export enum MetricsLabels {
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',
   ByteRateMaxCol = 'max',
-  MetricFilters = 'Filters',
   RefetchData = 'Data update',
   LatencyTitle = 'Http Latency',
   RequestsTitle = 'Http Requests',

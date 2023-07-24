@@ -25,7 +25,7 @@ export enum ProcessesLabels {
   SourceIP = 'Source IP',
   Host = 'Host',
   TrafficInOutDistribution = 'Traffic distribution',
-  ChartProcessDataTrafficSeriesAxisYLabel = 'Bytes per second',
+  ChartProcessDataTrafficSeriesAxisYLabel = 'Data Transfer',
   ChartProcessLatencySeriesAxisYLabel = 'Latency',
   RequestsPerSecondsSeriesAxisYLabel = 'Request rate',
   ErrorRateSeriesAxisYLabel = 'Error rate',

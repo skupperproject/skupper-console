@@ -18,8 +18,8 @@ import { SkChartAreaProps, skAxisXY } from './SkChartArea.interfaces';
 
 const CHART_PADDING = {
   bottom: 60,
-  left: 120,
-  right: 50, // Adjusted to accommodate legend
+  left: 70,
+  right: 0,
   top: 20
 };
 
@@ -64,7 +64,7 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
         legendOrientation="horizontal"
         legendPosition="bottom"
         width={width}
-        themeColor={ChartThemeColor.cyan}
+        themeColor={ChartThemeColor.multi}
         padding={CHART_PADDING}
         containerComponent={
           <CursorVoronoiContainer
