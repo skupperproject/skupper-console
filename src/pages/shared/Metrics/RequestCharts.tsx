@@ -25,7 +25,7 @@ const RequestCharts: FC<{
       />
     </FlexItem>
 
-    <Divider orientation={{ default: 'vertical' }} className="sk-divider" />
+    <Divider orientation={{ default: 'vertical' }} />
     {/*  Partial total request card*/}
     <Flex
       flex={{ default: 'flex_1' }}
@@ -39,7 +39,7 @@ const RequestCharts: FC<{
         </Bullseye>
       </FlexItem>
 
-      <Divider className="sk-divider" />
+      <Divider />
 
       {/*  avg request per second card*/}
       <FlexItem flex={{ default: 'flex_1' }}>

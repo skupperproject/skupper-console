@@ -44,6 +44,7 @@ const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
 
 const ROTATE_LINK_LABEL = 'show-link-label-rotated';
 const FIT_SCREEN_CACHE_KEY = 'process-fitScreen';
+const FILTER_BY_ADDRESS_MAX_HEIGHT = 400;
 
 const externalProcessesQueryParams = {
   processRole: 'external'
@@ -210,6 +211,21 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     setAddressId(id);
     setIsAddressSelectMenuOpen(false);
     setSearchParams(params);
+  }
+
+  function handleFilterAddress(_: ChangeEvent<HTMLInputElement> | null, value: string) {
+    const options = getOptions();
+    if (!value) {
+      return options;
+    }
+
+    return options
+      .filter((element) =>
+        element.props.children
+          ? element.props.children.toString().toLowerCase().includes(value.toLowerCase())
+          : undefined
+      )
+      .filter(Boolean);
   }
 
   const handleSelectDisplay = useCallback(
@@ -422,6 +438,10 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                 onSelect={handleSelectAddress}
                 onToggle={handleToggleAddressMenu}
                 selections={addressIdSelected}
+                hasInlineFilter
+                inlineFilterPlaceholderText={TopologyLabels.AddressFilterPlaceholderText}
+                onFilter={handleFilterAddress}
+                maxHeight={FILTER_BY_ADDRESS_MAX_HEIGHT}
               >
                 {getOptions()}
               </Select>
@@ -434,7 +454,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                 onSelect={handleSelectDisplay}
                 onToggle={handleToggleDisplayMenu}
                 selections={displayOptionsSelected}
-                placeholderText="Display"
+                placeholderText={TopologyLabels.DisplayPlaceholderText}
                 isCheckboxSelectionBadgeHidden
               >
                 {getDisplayOptions()}

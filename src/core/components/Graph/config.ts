@@ -157,7 +157,7 @@ export const DEFAULT_COMBO_CONFIG: Partial<{
     lineWidth: 4,
     fill: COMBO__COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
-    radius: 50
+    radius: 30
   },
 
   labelCfg: {

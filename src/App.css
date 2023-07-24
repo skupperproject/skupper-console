@@ -100,14 +100,10 @@ html {
 }
 
 .pf-c-page__sidebar.pf-m-collapsed {
-  transition: max-width 0.15s ease-in-out;
+  transition: max-width 0.2s ease-in-out;
 }
 
 .pf-c-page__sidebar.pf-m-expanded {
-  transition: max-width 0.15s ease-in-out;
+  transition: max-width 0.2s ease-in-out;
   max-width: 100%;
-}
-
-.sk-divider {
-  background-color: var(--pf-global--palette--black-300);
 }

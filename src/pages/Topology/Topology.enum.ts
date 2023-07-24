@@ -27,7 +27,9 @@ export enum TopologyLabels {
   CheckboxShowSite = 'Sites',
   RotateLabel = 'Rotate',
   CheckboxShowLabel = 'Metrics',
-  CheckboxShowLabelReverse = 'Reverse metrics'
+  CheckboxShowLabelReverse = 'Reverse metrics',
+  AddressFilterPlaceholderText = 'Search for Address',
+  DisplayPlaceholderText = 'Display'
 }
 
 export enum TopologyURLFilters {
