@@ -26,7 +26,6 @@ import NavigationViewLink from '@core/components/NavigationViewLink';
 import { QueriesServices } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
-import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -88,19 +87,15 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     [displayOptionsSelected]
   );
 
-  const { data: services, isLoading: isLoadingAddresses } = useQuery(
-    [QueriesServices.GetAddresses],
-    () => RESTApi.fetchAddresses(),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
+  const { data: services } = useQuery([QueriesServices.GetAddresses], () => RESTApi.fetchAddresses(), {
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: externalProcesses, isLoading: isLoadingExternalProcesses } = useQuery(
+  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
+    refetchInterval: UPDATE_INTERVAL
+  });
+
+  const { data: externalProcesses } = useQuery(
     [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
     () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
     {
@@ -108,7 +103,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     }
   );
 
-  const { data: remoteProcesses, isLoading: isLoadingRemoteProcesses } = useQuery(
+  const { data: remoteProcesses } = useQuery(
     [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
     () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
     {
@@ -125,13 +120,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     }
   );
 
-  const { data: processesPairs, isLoading: isLoadingProcessesPairs } = useQuery(
-    [QueriesTopology.GetProcessesPairs],
-    () => RESTApi.fetchProcessesPairs(),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
+  const { data: processesPairs } = useQuery([QueriesTopology.GetProcessesPairs], () => RESTApi.fetchProcessesPairs(), {
+    refetchInterval: UPDATE_INTERVAL
+  });
 
   const { data: byteRateByProcessPairs } = useQuery(
     [QueriesTopology.GetByteRateByProcessPairs],
@@ -415,17 +406,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     serversByAddress?.results,
     isDisplayOptionActive
   ]);
-
-  if (
-    isLoadingSites ||
-    isLoadingRemoteProcesses ||
-    isLoadingExternalProcesses ||
-    isLoadingRemoteProcesses ||
-    isLoadingProcessesPairs ||
-    isLoadingAddresses
-  ) {
-    return <LoadingPage />;
-  }
 
   return (
     <Stack>

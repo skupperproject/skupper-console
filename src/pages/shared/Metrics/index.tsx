@@ -17,7 +17,6 @@ import ResponseCharts from './ResponseCharts';
 import MetricsController from './services';
 import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
 import TrafficCharts from './TrafficCharts';
-import LoadingPage from '../Loading';
 
 import './Metrics.css';
 
@@ -43,7 +42,6 @@ const Metrics: FC<MetricsProps> = function ({
 
   const {
     data: metrics,
-    isLoading: isLoadingMetrics,
     isRefetching,
     refetch
   } = useQuery(
@@ -97,10 +95,6 @@ const Metrics: FC<MetricsProps> = function ({
       handleRefetchMetrics();
     }
   }, [forceUpdate, handleRefetchMetrics]);
-
-  if (isLoadingMetrics) {
-    return <LoadingPage />;
-  }
 
   if (!metrics) {
     return null;

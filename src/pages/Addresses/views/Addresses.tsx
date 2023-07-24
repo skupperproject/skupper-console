@@ -8,7 +8,6 @@ import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 
 import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
 import { AddressesLabels } from '../Addresses.enum';
@@ -24,7 +23,7 @@ const Services = function () {
     initPaginatedOldConnectionsQueryParams
   );
 
-  const { data: addressesData, isLoading } = useQuery(
+  const { data: addressesData } = useQuery(
     [QueriesServices.GetAddresses, { ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }],
     () => RESTApi.fetchAddresses({ ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }),
     {
@@ -32,7 +31,7 @@ const Services = function () {
     }
   );
 
-  const { data: tcpActiveFlows, isLoading: isLoadingTcpActiveFlows } = useQuery(
+  const { data: tcpActiveFlows } = useQuery(
     [QueriesServices.GetPrometheusActiveFlows],
     () => PrometheusApi.fetchActiveFlowsByAddress(),
     {
@@ -40,7 +39,7 @@ const Services = function () {
     }
   );
 
-  const { data: httpTotalFlows, isLoading: isLoadingHttpTotalFlows } = useQuery(
+  const { data: httpTotalFlows } = useQuery(
     [QueriesServices.GetPrometheusTotalFlows],
     () => PrometheusApi.fetchFlowsByAddress(),
     {
@@ -51,10 +50,6 @@ const Services = function () {
   const handleGetFiltersAddressses = useCallback((params: RequestOptions) => {
     setAddressesQueryParamsPaginated(params);
   }, []);
-
-  if (isLoading || ((isLoadingTcpActiveFlows || isLoadingHttpTotalFlows) && isPrometheusActive)) {
-    return <LoadingPage />;
-  }
 
   if (!addressesData) {
     return null;

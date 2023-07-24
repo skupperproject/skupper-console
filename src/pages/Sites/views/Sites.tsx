@@ -7,7 +7,6 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { SiteResponse } from 'API/REST.interfaces';
 
@@ -16,11 +15,7 @@ import { siteColumns } from '../Sites.constant';
 import { Labels, SitesRoutesPaths } from '../Sites.enum';
 
 const Sites = function () {
-  const { data: sites, isLoading } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
-
-  if (isLoading) {
-    return <LoadingPage />;
-  }
+  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
 
   if (!sites) {
     return null;

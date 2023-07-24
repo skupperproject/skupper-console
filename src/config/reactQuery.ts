@@ -8,7 +8,7 @@ export const queryClientConfig = {
       },
       refetchOnWindowFocus: false,
       refetchIntervalInBackground: true,
-      suspense: false,
+      suspense: true,
       staleTime: 0
     }
   }

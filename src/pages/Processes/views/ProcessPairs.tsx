@@ -15,7 +15,6 @@ import ViewDetailCell from '@core/components/ViewDetailsCell';
 import MainContainer from '@layout/MainContainer';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
@@ -84,16 +83,15 @@ const ProcessPairs = function () {
 
   const [flowSelected, setFlowSelected] = useState<string>();
 
-  const { data: sourceProcess, isLoading: isLoadingSourceProcess } = useQuery([QueriesProcesses.GetProcess], () =>
+  const { data: sourceProcess } = useQuery([QueriesProcesses.GetProcess], () =>
     sourceId ? RESTApi.fetchProcess(sourceId) : undefined
   );
 
-  const { data: destinationProcess, isLoading: isLoadingDestinationProcess } = useQuery(
-    [QueriesProcesses.GetDestinationProcess],
-    () => (destinationId ? RESTApi.fetchProcess(destinationId) : undefined)
+  const { data: destinationProcess } = useQuery([QueriesProcesses.GetDestinationProcess], () =>
+    destinationId ? RESTApi.fetchProcess(destinationId) : undefined
   );
 
-  const { data: http2RequestsData, isLoading: isLoadingHttp2RequestsData } = useQuery(
+  const { data: http2RequestsData } = useQuery(
     [QueriesProcesses.GetFlowPairs, http2QueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
@@ -106,7 +104,7 @@ const ProcessPairs = function () {
     }
   );
 
-  const { data: httpRequestsData, isLoading: isLoadingHttpRequestsData } = useQuery(
+  const { data: httpRequestsData } = useQuery(
     ['QueriesProcesses.GetFlowPairs', httpQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
@@ -119,7 +117,7 @@ const ProcessPairs = function () {
     }
   );
 
-  const { data: activeConnectionsData, isLoading: isLoadingActiveConnectionsData } = useQuery(
+  const { data: activeConnectionsData } = useQuery(
     [QueriesProcesses.GetFlowPairs, activeConnectionsQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
@@ -132,7 +130,7 @@ const ProcessPairs = function () {
     }
   );
 
-  const { data: oldConnectionsData, isLoading: isLoadingOldConnectionsData } = useQuery(
+  const { data: oldConnectionsData } = useQuery(
     [QueriesProcesses.GetFlowPairs, oldConnectionsQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
@@ -177,17 +175,6 @@ const ProcessPairs = function () {
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setConnectionsView(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
-  }
-
-  if (
-    isLoadingHttpRequestsData ||
-    isLoadingDestinationProcess ||
-    isLoadingSourceProcess ||
-    isLoadingOldConnectionsData ||
-    isLoadingActiveConnectionsData ||
-    isLoadingHttp2RequestsData
-  ) {
-    return <LoadingPage />;
   }
 
   if (

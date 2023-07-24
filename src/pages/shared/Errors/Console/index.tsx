@@ -5,6 +5,7 @@ import {
   ClipboardCopyVariant,
   Divider,
   PageSection,
+  PageSectionVariants,
   Text,
   TextContent,
   TextVariants,
@@ -23,7 +24,7 @@ interface ConsoleProps {
 
 const Console: FC<ConsoleProps> = function ({ error }) {
   return (
-    <PageSection padding={{ default: 'padding' }} data-testid="sk-js-error-view">
+    <PageSection variant={PageSectionVariants.light} data-testid="sk-js-error-view">
       <TextContent>
         <Title headingLevel="h1">{Labels.ErrorTitle}</Title>
         <Text component={TextVariants.h3}>{error.message || ''}</Text>

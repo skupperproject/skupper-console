@@ -13,7 +13,6 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
-import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
@@ -45,7 +44,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
   );
   const [flowSelected, setFlowSelected] = useState<string>();
 
-  const { data: requestsDataPaginated, isLoading: isLoadingRequestsPaginated } = useQuery(
+  const { data: requestsDataPaginated } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
       addressId,
@@ -67,7 +66,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
     }
   );
 
-  const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
+  const { data: serversByAddressData } = useQuery(
     [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
@@ -105,10 +104,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
 
     return (forceMetricUpdateNonceRef.current += 1);
   }, [requestsDataPaginated?.results]);
-
-  if (isLoadingServersByAddress || isLoadingRequestsPaginated) {
-    return <LoadingPage />;
-  }
 
   const servers = serversByAddressData?.results || [];
   // const serversRowsCount = serversByAddressData?.timeRangeCount;

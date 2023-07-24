@@ -1,4 +1,4 @@
-import { useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
 
 import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -42,7 +42,7 @@ const FlowsPairs = function () {
   const type = searchParams.get('type') || TAB_0_KEY;
   const [tabSelected, setTabSelected] = useState(type);
 
-  const { data: serversData, isLoading: isLoadingServers } = useQuery(
+  const { data: serversData } = useQuery(
     [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => RESTApi.fetchServersByAddress(addressId, initServersQueryParams),
     {
@@ -51,7 +51,7 @@ const FlowsPairs = function () {
     }
   );
 
-  const { data: requestsData, isLoading: isLoadingRequests } = useQuery(
+  const { data: requestsData } = useQuery(
     [QueriesServices.GetFlowPairsByAddress, addressId, initServersQueryParams],
     () => RESTApi.fetchFlowPairsByAddress(addressId, initServersQueryParams),
     {
@@ -61,7 +61,7 @@ const FlowsPairs = function () {
     }
   );
 
-  const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
+  const { data: activeConnectionsData } = useQuery(
     [QueriesServices.GetFlowPairsByAddress, addressId, activeConnectionsQueryParams],
     () => RESTApi.fetchFlowPairsByAddress(addressId, activeConnectionsQueryParams),
     {
@@ -71,7 +71,7 @@ const FlowsPairs = function () {
     }
   );
 
-  const { data: terminatedConnectionsData, isLoading: isLoadingTerminatedConnections } = useQuery(
+  const { data: terminatedConnectionsData } = useQuery(
     [QueriesServices.GetFlowPairsByAddress, addressId, terminatedConnectionsQueryParams],
     () => RESTApi.fetchFlowPairsByAddress(addressId, terminatedConnectionsQueryParams),
     {
@@ -90,14 +90,6 @@ const FlowsPairs = function () {
   const requestsCount = requestsData?.timeRangeCount;
   const tcpActiveConnectionCount = activeConnectionsData?.timeRangeCount;
   const tcpTerminatedConnectionCount = terminatedConnectionsData?.timeRangeCount;
-
-  if (
-    isLoadingServers ||
-    (protocol === AvailableProtocols.Tcp && (isLoadingActiveConnections || isLoadingTerminatedConnections)) ||
-    (protocol !== AvailableProtocols.Tcp && isLoadingRequests)
-  ) {
-    return <LoadingPage />;
-  }
 
   const NavigationMenu = function () {
     return (
@@ -143,7 +135,7 @@ const FlowsPairs = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        <>
+        <Suspense fallback={<LoadingPage />}>
           {protocol === AvailableProtocols.Tcp && (
             <ConnectionsByAddress
               addressName={addressName || ''}
@@ -160,7 +152,7 @@ const FlowsPairs = function () {
               viewSelected={tabSelected}
             />
           )}
-        </>
+        </Suspense>
       }
     />
   );

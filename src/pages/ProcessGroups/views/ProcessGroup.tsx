@@ -13,7 +13,6 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import MainContainer from '@layout/MainContainer';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -27,12 +26,11 @@ const ProcessGroup = function () {
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
 
-  const { data: processGroup, isLoading: isLoadingProcessGroup } = useQuery(
-    [QueriesProcessGroups.GetProcessGroup, processGroupId],
-    () => RESTApi.fetchProcessGroup(processGroupId)
+  const { data: processGroup } = useQuery([QueriesProcessGroups.GetProcessGroup, processGroupId], () =>
+    RESTApi.fetchProcessGroup(processGroupId)
   );
 
-  const { data: processes, isLoading: isLoadingProcess } = useQuery(
+  const { data: processes } = useQuery(
     [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
     () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
   );
@@ -43,10 +41,6 @@ const ProcessGroup = function () {
     },
     [processGroupId]
   );
-
-  if (isLoadingProcessGroup || isLoadingProcess) {
-    return <LoadingPage />;
-  }
 
   if (!processGroup || !processes) {
     return null;

@@ -23,7 +23,6 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import SitesController from '../services';
@@ -36,39 +35,20 @@ const Site = function () {
   const { id } = useParams() as { id: string };
   const { id: siteId } = getIdAndNameFromUrlParams(id);
 
-  const { data: site, isLoading: isLoadingSite } = useQuery([QueriesSites.GetSite, siteId], () =>
-    RESTApi.fetchSite(siteId)
-  );
+  const { data: site } = useQuery([QueriesSites.GetSite, siteId], () => RESTApi.fetchSite(siteId));
 
-  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
+  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
 
-  const { data: hosts, isLoading: isLoadingHosts } = useQuery([QueriesSites.GetHostsBySiteId, siteId], () =>
-    RESTApi.fetchHostsBySite(siteId)
-  );
+  const { data: hosts } = useQuery([QueriesSites.GetHostsBySiteId, siteId], () => RESTApi.fetchHostsBySite(siteId));
 
-  const { data: links, isLoading: isLoadingLinks } = useQuery([QueriesSites.GetLinksBySiteId, siteId], () =>
-    RESTApi.fetchLinksBySite(siteId)
-  );
+  const { data: links } = useQuery([QueriesSites.GetLinksBySiteId, siteId], () => RESTApi.fetchLinksBySite(siteId));
 
-  const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
+  const { data: processesData } = useQuery(
     [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
     () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
   );
 
-  const { data: routers, isLoading: isLoadingRouters } = useQuery([QueriesSites.GetRouters], () =>
-    RESTApi.fetchRouters()
-  );
-
-  if (
-    isLoadingSite ||
-    isLoadingHosts ||
-    isLoadingLinks ||
-    isLoadingProcessesData ||
-    isLoadingRouters ||
-    isLoadingSites
-  ) {
-    return <LoadingPage />;
-  }
+  const { data: routers } = useQuery([QueriesSites.GetRouters], () => RESTApi.fetchRouters());
 
   if (!sites || !routers || !site || !hosts || !links || !processesData) {
     return null;

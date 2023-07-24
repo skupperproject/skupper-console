@@ -9,7 +9,6 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessGroupResponse, RequestOptions } from 'API/REST.interfaces';
 
@@ -26,7 +25,7 @@ const ProcessGroups = function () {
     initPaginatedProcessGroupsQueryParams
   );
 
-  const { data: processGroupsData, isLoading } = useQuery(
+  const { data: processGroupsData } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, processGroupsPaginatedQueryParams],
     () => RESTApi.fetchProcessGroups(processGroupsPaginatedQueryParams),
     {
@@ -37,10 +36,6 @@ const ProcessGroups = function () {
   const handleGetFilters = useCallback((params: RequestOptions) => {
     setProcessGroupsPaginatedQueryParams({ ...initPaginatedProcessGroupsQueryParams, ...params });
   }, []);
-
-  if (isLoading) {
-    return <LoadingPage />;
-  }
 
   if (!processGroupsData) {
     return null;

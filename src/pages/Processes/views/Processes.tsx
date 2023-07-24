@@ -7,7 +7,6 @@ import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
@@ -24,7 +23,7 @@ const Processes = function () {
     initPaginatedProcessesQueryParams
   );
 
-  const { data: processesData, isLoading: isLoadingProcessesData } = useQuery(
+  const { data: processesData } = useQuery(
     [QueriesProcesses.GetProcessesPaginated, processesPaginatedQueryParams],
     () => RESTApi.fetchProcesses(processesPaginatedQueryParams),
     {
@@ -35,10 +34,6 @@ const Processes = function () {
   const handleGetFilters = useCallback((params: RequestOptions) => {
     setProcessesPaginatedQueryParams({ ...initPaginatedProcessesQueryParams, ...params });
   }, []);
-
-  if (isLoadingProcessesData) {
-    return <LoadingPage />;
-  }
 
   if (!processesData) {
     return null;

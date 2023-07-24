@@ -14,7 +14,6 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import { ProcessesComponentsTable } from '@pages/Processes/Processes.constant';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
-import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
@@ -64,7 +63,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   );
 
   // query Exposed Servers
-  const { data: serversByAddressData, isLoading: isLoadingServersByAddress } = useQuery(
+  const { data: serversByAddressData } = useQuery(
     [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
@@ -83,7 +82,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   );
 
   // query Active tcp connection
-  const { data: activeConnectionsData, isLoading: isLoadingActiveConnections } = useQuery(
+  const { data: activeConnectionsData } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
       addressId,
@@ -104,7 +103,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   );
 
   // query Terminated tcp connection
-  const { data: oldConnectionsData, isLoading: isLoadingOldConnections } = useQuery(
+  const { data: oldConnectionsData } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
       addressId,
@@ -158,14 +157,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
     setConnectionsQueryParamsPaginated(params);
   }, []);
-
-  if (
-    isLoadingServersByAddress ||
-    (viewSelected === TAB_2_KEY && isLoadingActiveConnections) ||
-    (viewSelected === TAB_3_KEY && isLoadingOldConnections)
-  ) {
-    return <LoadingPage />;
-  }
 
   const activeConnections = activeConnectionsData?.results || [];
   const activeConnectionsRowsCount = activeConnectionsData?.timeRangeCount;
