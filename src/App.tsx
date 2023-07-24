@@ -11,6 +11,7 @@ import SkHeader from '@layout/Header';
 import RouteContainer from '@layout/RouteContainer';
 import SkSidebar from '@layout/SideBar';
 import Console from '@pages/shared/Errors/Console';
+import LoadingPage from '@pages/shared/Loading';
 import { routes } from 'routes';
 
 const App = function () {
@@ -29,7 +30,7 @@ const App = function () {
       isBreadcrumbGrouped
       additionalGroupedContent={
         <ErrorBoundary FallbackComponent={Console}>
-          <Suspense fallback={<span />}>
+          <Suspense fallback={<LoadingPage />}>
             <RouteContainer>{routes}</RouteContainer>
           </Suspense>
         </ErrorBoundary>

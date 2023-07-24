@@ -9,7 +9,6 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -22,19 +21,15 @@ const FIT_SCREEN_CACHE_KEY = 'site-fitScreen';
 const TopologySite: FC<{ id?: string | null }> = function () {
   const navigate = useNavigate();
 
-  const { data: sites, isLoading: isLoadingSites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
+  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: routers, isLoading: isLoadingRouters } = useQuery(
-    [QueriesSites.GetRouters],
-    () => RESTApi.fetchRouters(),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
+  const { data: routers } = useQuery([QueriesSites.GetRouters], () => RESTApi.fetchRouters(), {
+    refetchInterval: UPDATE_INTERVAL
+  });
 
-  const { data: links, isLoading: isLoadingLinks } = useQuery([QueriesSites.GetLinks], () => RESTApi.fetchLinks(), {
+  const { data: links } = useQuery([QueriesSites.GetLinks], () => RESTApi.fetchLinks(), {
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -54,10 +49,6 @@ const TopologySite: FC<{ id?: string | null }> = function () {
     },
     [sites, navigate]
   );
-
-  if (isLoadingSites || isLoadingLinks || isLoadingRouters) {
-    return <LoadingPage />;
-  }
 
   if (!links || !routers || !sites) {
     return null;

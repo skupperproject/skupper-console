@@ -14,7 +14,6 @@ import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -44,16 +43,14 @@ const Process = function () {
     destinationId: processId
   };
 
-  const { data: process, isLoading: isLoadingProcess } = useQuery([QueriesProcesses.GetProcess, processId], () =>
-    RESTApi.fetchProcess(processId)
-  );
+  const { data: process } = useQuery([QueriesProcesses.GetProcess, processId], () => RESTApi.fetchProcess(processId));
 
-  const { data: processesPairsTxData, isLoading: isLoadingProcessesPairsTxData } = useQuery(
+  const { data: processesPairsTxData } = useQuery(
     [QueriesProcesses.GetProcessPairsTx, processesPairsTxQueryParams],
     () => RESTApi.fetchProcessesPairs(processesPairsTxQueryParams)
   );
 
-  const { data: processesPairsRxData, isLoading: isLoadingProcessesPairsRxData } = useQuery(
+  const { data: processesPairsRxData } = useQuery(
     [QueriesProcesses.GetProcessPairsRx, processesPairsRxQueryParams],
     () => RESTApi.fetchProcessesPairs(processesPairsRxQueryParams)
   );
@@ -64,10 +61,6 @@ const Process = function () {
     },
     [processId]
   );
-
-  if (isLoadingProcess || isLoadingProcessesPairsTxData || isLoadingProcessesPairsRxData) {
-    return <LoadingPage />;
-  }
 
   if (!process || !processesPairsTxData || !processesPairsRxData) {
     return null;

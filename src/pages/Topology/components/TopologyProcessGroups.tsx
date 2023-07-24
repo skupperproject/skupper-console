@@ -11,7 +11,6 @@ import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
-import LoadingPage from '@pages/shared/Loading';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
@@ -31,7 +30,7 @@ const remoteProcessesQueryParams = {
 const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupId }) {
   const navigate = useNavigate();
 
-  const { data: processGroups, isLoading: isLoadingProcessGroups } = useQuery(
+  const { data: processGroups } = useQuery(
     [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
     () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
     {
@@ -39,7 +38,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     }
   );
 
-  const { data: remoteProcessGroups, isLoading: isLoadingRemoteProcessGroups } = useQuery(
+  const { data: remoteProcessGroups } = useQuery(
     [QueriesTopology.GetRemoteProcessGroups, remoteProcessesQueryParams],
     () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
     {
@@ -47,7 +46,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     }
   );
 
-  const { data: processGroupsPairs, isLoading: isLoadingProcessGroupsPairs } = useQuery(
+  const { data: processGroupsPairs } = useQuery(
     [QueriesTopology.GetProcessGroupsLinks],
     () => RESTApi.fetchProcessgroupsPairs(),
     {
@@ -73,10 +72,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     },
     [navigate, processGroups?.results]
   );
-
-  if (isLoadingProcessGroups || isLoadingProcessGroupsPairs || isLoadingRemoteProcessGroups) {
-    return <LoadingPage />;
-  }
 
   if (!processGroups || !processGroupsPairs || !remoteProcessGroups) {
     return null;
