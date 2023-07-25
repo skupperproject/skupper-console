@@ -16,8 +16,8 @@ import { formatChartDate } from '@core/utils/formatChartDate';
 
 import { SkChartAreaProps, skAxisXY } from './SkChartArea.interfaces';
 
-const CHART_PADDING = {
-  bottom: 60,
+const DEFAULT_CHART_PADDING = {
+  bottom: 70,
   left: 70,
   right: 0,
   top: 20
@@ -28,9 +28,12 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   formatY = (y: number) => y,
   formatX = (timestamp: number, start: number) => formatChartDate(timestamp, start),
   axisYLabel,
+  legendOrientation = 'horizontal',
+  legendPosition = 'bottom',
   legendLabels = [],
   showLegend = true,
   isChartLine = false,
+  height = 300,
   ...props
 }) {
   const observer = useRef<Function>(() => null);
@@ -58,14 +61,15 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   const startDate = data[0][0]?.x;
 
   return (
-    <div style={{ width: '100%', height: `100%` }} ref={chartContainerRef}>
+    <div ref={chartContainerRef} style={{ width: '100%', height: `100%` }}>
       <Chart
-        legendData={showLegend ? legendData : []}
-        legendOrientation="horizontal"
-        legendPosition="bottom"
         width={width}
+        height={height}
+        legendData={showLegend ? legendData : []}
+        legendOrientation={legendOrientation}
+        legendPosition={legendPosition}
         themeColor={ChartThemeColor.multi}
-        padding={CHART_PADDING}
+        padding={props.padding || DEFAULT_CHART_PADDING}
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"

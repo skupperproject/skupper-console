@@ -1,9 +1,11 @@
+import { ChartProps } from '@patternfly/react-charts';
+
 export interface skAxisXY {
   x: number;
   y: number;
 }
 
-export interface SkChartAreaProps {
+export interface SkChartAreaProps extends ChartProps {
   data: skAxisXY[][];
   formatY?: Function;
   formatYTooltip?: Function;

@@ -1,8 +1,9 @@
 export enum MetricsLabels {
   TrafficSent = 'transmitted',
   TrafficReceived = 'received',
-  ClientErrorRateSeriesAxisYLabel = 'Client Error rate',
-  ServerErrorRateSeriesAxisYLabel = 'Server Error rate',
+  ClientErrorRDistributionSeriesAxisYLabel = 'Error distribution',
+  ErrorLabel = 'errors',
+  ErrorRateSeriesAxisYLabel = 'error rate',
   FilterAllSourceProcesses = 'All processes',
   FilterAllDestinationProcesses = 'All clients and servers',
   FilterProtocolsDefault = 'All Protocols',

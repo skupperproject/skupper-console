@@ -1,6 +1,6 @@
 import { CSSProperties, FC } from 'react';
 
-import { Bullseye, Card, CardBody, CardHeader, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { Bullseye, Card, CardBody, CardHeader, PageSection } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
 import { getTestsIds } from '@config/testIds.config';
@@ -43,7 +43,7 @@ interface LoadingPageProps {
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = false }) {
   return (
     <TransitionPage delay={0.35}>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection>
         <Bullseye
           className="sk-loading-page"
           style={isFLoating ? floatLoader : undefined}
