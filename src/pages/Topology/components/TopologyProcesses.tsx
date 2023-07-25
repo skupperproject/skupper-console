@@ -116,6 +116,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : undefined),
     {
       enabled: !!addressIdSelected,
+      // We are using suspense mode on and we set this flag true to avoid to call the loading page when we do this operation
+      keepPreviousData: true,
       refetchInterval: UPDATE_INTERVAL
     }
   );

@@ -14,7 +14,7 @@ import Console from '@pages/shared/Errors/Console';
 import LoadingPage from '@pages/shared/Loading';
 import { routes } from 'routes';
 
-const App = function (): any {
+const App = function () {
   const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors());
 
   if (collector) {

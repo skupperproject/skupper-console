@@ -1,5 +1,7 @@
+import { useCallback, useEffect, useRef } from 'react';
+
 import { Graph } from '@antv/g6-pc';
-import { Button, Toolbar, ToolbarContent, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import { Button, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ExpandIcon, MapMarkerIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +19,9 @@ const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
 const DURATION_ANIMATION_CONTROL_DEFAULT = 250;
 
 const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
+  const showLegendRef = useRef(false);
+  const legendBtnRef = useRef<HTMLDivElement>();
+
   const center = graphInstance.getGraphCenterPoint();
   const navigate = useNavigate();
 
@@ -64,32 +69,58 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
     navigate(0);
   };
 
+  const handleShowLegend = useCallback(() => {
+    const $legend = document.querySelector('.g6-legend-container');
+    const displayValue = showLegendRef.current ? 'none' : '';
+
+    $legend?.setAttribute(
+      'style',
+      `position:absolute; display:${displayValue}; left:${(legendBtnRef?.current?.offsetLeft || 0) / 2}px; bottom:${
+        (legendBtnRef?.current?.clientTop || 0) + (legendBtnRef?.current?.clientHeight || 0)
+      }px`
+    );
+    showLegendRef.current = !showLegendRef.current;
+  }, []);
+
+  useEffect(() => {
+    const $legend = document.querySelector('.g6-legend-container');
+    $legend?.setAttribute('style', 'display:none');
+  }, []);
+
   return (
-    <Toolbar style={{ position: 'absolute', bottom: '8px', right: '5px', background: 'transparent' }}>
+    <Toolbar style={{ position: 'absolute', bottom: '0', left: '0', background: 'transparent', padding: 0 }}>
       <ToolbarContent>
-        <ToolbarItem spacer={{ default: 'spacerNone' }}>
-          <Tooltip content={'zoom in'}>
-            <Button isSmall variant="control" onClick={handleIncreaseZoom} icon={<SearchPlusIcon />} />
-          </Tooltip>
-        </ToolbarItem>
+        <ToolbarGroup spaceItems={{ default: 'spaceItemsSm' }} className="pf-u-background-color-100">
+          <ToolbarItem>
+            <Tooltip content={'zoom in'}>
+              <Button isSmall variant="tertiary" onClick={handleIncreaseZoom} icon={<SearchPlusIcon />} />
+            </Tooltip>
+          </ToolbarItem>
 
-        <ToolbarItem spacer={{ default: 'spacerNone' }}>
-          <Tooltip content={'zoom out'}>
-            <Button isSmall variant="control" onClick={handleDecreaseZoom} icon={<SearchMinusIcon />} />
-          </Tooltip>
-        </ToolbarItem>
+          <ToolbarItem>
+            <Tooltip content={'zoom out'}>
+              <Button isSmall variant="tertiary" onClick={handleDecreaseZoom} icon={<SearchMinusIcon />} />
+            </Tooltip>
+          </ToolbarItem>
 
-        <ToolbarItem spacer={{ default: 'spacerNone' }}>
-          <Tooltip content={'fit view'}>
-            <Button isSmall variant="control" onClick={handleZoomToDefault} icon={<ExpandIcon />} />
-          </Tooltip>
-        </ToolbarItem>
+          <ToolbarItem>
+            <Tooltip content={'fit view'}>
+              <Button isSmall variant="tertiary" onClick={handleZoomToDefault} icon={<ExpandIcon />} />
+            </Tooltip>
+          </ToolbarItem>
 
-        <ToolbarItem spacer={{ default: 'spacerNone' }}>
-          <Tooltip content={'reposition'}>
-            <Button isSmall variant="control" onClick={handleReposition} icon={<MapMarkerIcon />} />
-          </Tooltip>
-        </ToolbarItem>
+          <ToolbarItem>
+            <Tooltip content={'reposition'}>
+              <Button isSmall variant="tertiary" onClick={handleReposition} icon={<MapMarkerIcon />} />
+            </Tooltip>
+          </ToolbarItem>
+
+          <ToolbarItem>
+            <Button isSmall variant="tertiary" onClick={handleShowLegend} ref={legendBtnRef}>
+              Legend
+            </Button>
+          </ToolbarItem>
+        </ToolbarGroup>
       </ToolbarContent>
     </Toolbar>
   );
