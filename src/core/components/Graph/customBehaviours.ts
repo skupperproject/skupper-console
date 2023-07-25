@@ -57,13 +57,15 @@ export function createLegend(legendData: GraphData) {
     padding: [4, 16, 8, 16],
     containerStyle: {
       fill: '#FFFFFF',
-      lineWidth: 1
+      fillOpacity: 1,
+      opacity: 1,
+      stroke: 'white'
     },
-    title: 'Legend',
+    title: '.',
     titleConfig: {
       position: 'center',
       offsetX: 0,
-      offsetY: 12
+      offsetY: 10
     }
   });
 }
