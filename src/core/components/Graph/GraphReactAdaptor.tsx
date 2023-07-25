@@ -457,7 +457,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }, []);
 
     return (
-      <>
+      <div ref={graphRef} style={{ height: '98%', position: 'relative' }}>
         {topologyGraphRef.current && (
           <GraphMenuControl
             graphInstance={topologyGraphRef.current}
@@ -465,8 +465,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             onFitScreen={handleFitScreen}
           />
         )}
-        <div ref={graphRef} style={{ height: '98%' }} />
-      </>
+      </div>
     );
   }
 );
