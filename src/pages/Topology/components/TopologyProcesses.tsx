@@ -113,12 +113,11 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
 
   const { data: serversByAddress } = useQuery(
     [QueriesServices.GetProcessesByAddress, addressIdSelected],
-    () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : undefined),
+    () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : null),
     {
-      enabled: !!addressIdSelected,
       // We are using suspense mode on and we set this flag true to avoid to call the loading page when we do this operation
       keepPreviousData: true,
-      refetchInterval: UPDATE_INTERVAL
+      refetchInterval: addressIdSelected ? UPDATE_INTERVAL : 0
     }
   );
 

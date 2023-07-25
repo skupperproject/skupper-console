@@ -14,33 +14,56 @@ import { ProcessesComponentsTable, processesTableColumns } from '../Processes.co
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
-const initPaginatedProcessesQueryParams = {
-  limit: BIG_PAGINATION_SIZE
+//TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
+const initExternalProcessesQueryParams = {
+  limit: BIG_PAGINATION_SIZE,
+  processRole: 'external'
+};
+
+const initRemoteProcessesQueryParams = {
+  limit: BIG_PAGINATION_SIZE,
+  processRole: 'remote'
 };
 
 const Processes = function () {
-  const [processesPaginatedQueryParams, setProcessesPaginatedQueryParams] = useState<RequestOptions>(
-    initPaginatedProcessesQueryParams
+  const [externalProcessesQueryParams, setExternalProcessesdQueryParams] = useState<RequestOptions>(
+    initExternalProcessesQueryParams
+  );
+  const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
+    useState<RequestOptions>(initRemoteProcessesQueryParams);
+
+  const { data: externalProcessData } = useQuery(
+    [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
+    () => RESTApi.fetchProcesses(externalProcessesQueryParams),
+    {
+      keepPreviousData: true
+    }
   );
 
-  const { data: processesData } = useQuery(
-    [QueriesProcesses.GetProcessesPaginated, processesPaginatedQueryParams],
-    () => RESTApi.fetchProcesses(processesPaginatedQueryParams),
+  const { data: remoteProcessData } = useQuery(
+    [QueriesProcesses.GetRemoteProcessesPaginated, remoteProcessesQueryParams],
+    () => RESTApi.fetchProcesses(remoteProcessesQueryParams),
     {
       keepPreviousData: true
     }
   );
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
-    setProcessesPaginatedQueryParams({ ...initPaginatedProcessesQueryParams, ...params });
+    setExternalProcessesdQueryParams({ ...initExternalProcessesQueryParams, ...params });
+    setRemoteProcessesQueryParams({ ...initRemoteProcessesQueryParams, ...params });
   }, []);
 
-  if (!processesData) {
+  if (!externalProcessData || !remoteProcessData) {
     return null;
   }
 
-  const processes = processesData.results.filter(({ processRole }) => processRole !== 'internal');
-  const processesCount = processesData.timeRangeCount;
+  const externalProcesses = externalProcessData.results;
+  const externalProcessesCount = externalProcessData.timeRangeCount;
+  const remotelProcesses = remoteProcessData.results;
+  const remoteProcessesCount = remoteProcessData.timeRangeCount;
+
+  const processes = [...externalProcesses, ...remotelProcesses];
+  const processesCount = externalProcessesCount + remoteProcessesCount;
 
   return (
     <MainContainer

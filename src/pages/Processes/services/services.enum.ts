@@ -1,5 +1,6 @@
 export enum QueriesProcesses {
   GetProcessesPaginated = 'get-processes-paginated-query',
+  GetRemoteProcessesPaginated = 'get-remote-processes-paginated-query',
   GetProcesses = 'get-processes-query',
   GetProcess = 'get-process-query',
   GetProcessResult = 'get-process-result-query',
