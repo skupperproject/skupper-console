@@ -77,14 +77,17 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
       'style',
       `position:absolute; display:${displayValue}; left:${(legendBtnRef?.current?.offsetLeft || 0) / 2}px; bottom:${
         (legendBtnRef?.current?.clientTop || 0) + (legendBtnRef?.current?.clientHeight || 0)
-      }px`
+      }px;`
     );
+    $legend
+      ?.querySelector('canvas')
+      ?.setAttribute('style', 'box-shadow:0 1rem 2rem 0 rgba(3, 3, 3, 0.16), 0 0 0.5rem 0 rgba(3, 3, 3, 0.1)');
     showLegendRef.current = !showLegendRef.current;
   }, []);
 
   useEffect(() => {
     const $legend = document.querySelector('.g6-legend-container');
-    $legend?.setAttribute('style', 'display:none');
+    $legend?.setAttribute('style', 'display:none; box-shadow: 0 0.5rem 0.5rem -0.375rem rgba(3, 3, 3, 0.18)');
   }, []);
 
   return (

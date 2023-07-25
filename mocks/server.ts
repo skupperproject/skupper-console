@@ -38,6 +38,7 @@ const PERF_TEST = false;
 const ITEMS_TEST = 190;
 interface ApiProps {
   params: Record<string, string>;
+  queryParams: Record<string, string>;
 }
 
 const mockSitesForPerf: SiteResponse[] = [];
@@ -151,11 +152,22 @@ export const MockApi = {
 
     return { results };
   },
-  getProcesses: () => {
+  getProcesses: (_: unknown, { queryParams }: ApiProps) => {
     const processesForPerfTests = PERF_TEST ? mockProcessesForPerf : [];
     const results = [...processes.results, ...processesForPerfTests];
 
-    return { ...processes, results };
+    if (queryParams && !Object.keys(queryParams).length) {
+      return { ...processes, results };
+    }
+
+    const resultFIltered = results.filter(
+      (result) =>
+        result.processRole === queryParams.processRole ||
+        result.groupIdentity === queryParams.groupIdentity ||
+        result.parent === queryParams.parent
+    );
+
+    return { ...processes, results: resultFIltered };
   }
 };
 
@@ -193,7 +205,7 @@ export function loadMockServer() {
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
-      this.get(MockApiPaths.Processes, MockApi.getProcesses());
+      this.get(MockApiPaths.Processes, MockApi.getProcesses);
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
