@@ -8,8 +8,6 @@ import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesI
 import { MetricsLabels } from './Metrics.enum';
 import { RequestMetrics } from './services/services.interfaces';
 
-import '../../../App.css';
-
 const RequestCharts: FC<{
   requestRateData: RequestMetrics[];
   totalRequestsInterval: number;

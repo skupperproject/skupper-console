@@ -120,24 +120,22 @@ const Metrics: FC<MetricsProps> = function ({
   return (
     <Stack hasGutter>
       <StackItem>
-        <Card style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-          <MetricFilters
-            sourceProcesses={sourceProcesses}
-            processesConnected={processesConnected}
-            initialFilters={{
-              ...selectedFilters,
-              // if idSource have more ids set default (undefined)
-              processIdSource:
-                selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
-            }}
-            customFilterOptions={filterOptions}
-            startTime={startTime}
-            isRefetching={isRefetching}
-            forceDisableRefetchData={!byteRateData}
-            onRefetch={handleRefetchMetrics}
-            onSelectFilters={handleFilters}
-          />
-        </Card>
+        <MetricFilters
+          sourceProcesses={sourceProcesses}
+          processesConnected={processesConnected}
+          initialFilters={{
+            ...selectedFilters,
+            // if idSource have more ids set default (undefined)
+            processIdSource:
+              selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
+          }}
+          customFilterOptions={filterOptions}
+          startTime={startTime}
+          isRefetching={isRefetching}
+          forceDisableRefetchData={!byteRateData}
+          onRefetch={handleRefetchMetrics}
+          onSelectFilters={handleFilters}
+        />
       </StackItem>
 
       {!!byteRateData && !!bytesData && (

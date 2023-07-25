@@ -16,7 +16,7 @@ import { ByteRateMetrics, BytesMetric } from './services/services.interfaces';
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric }> = memo(
   ({ byteRateData, bytesData }) => (
     <Grid hasGutter md={12}>
-      <GridItem xl={8} rowSpan={2}>
+      <GridItem xl={7} rowSpan={2}>
         <Card isFullHeight>
           <CardTitle>{ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}</CardTitle>
           <CardBody>
@@ -30,7 +30,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
       </GridItem>
 
       {/* Total Traffic card */}
-      <GridItem xl={4} md={6}>
+      <GridItem xl={5} md={6}>
         <Card isFullHeight>
           <CardBody>
             <TableComposable borders={false} variant="compact">
@@ -72,22 +72,24 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
       </GridItem>
 
       {/* Chart pie for the distribution of the data traffic */}
-      <GridItem xl={4} md={6}>
+      <GridItem xl={5} md={6}>
         <Card isFullHeight>
-          <SkChartPie
-            format={formatBytes}
-            themeColor={ChartThemeColor.multi}
-            data={[
-              {
-                x: MetricsLabels.TrafficReceived,
-                y: bytesData.bytesRx
-              },
-              {
-                x: MetricsLabels.TrafficSent,
-                y: bytesData?.bytesTx
-              }
-            ]}
-          />
+          <CardBody>
+            <SkChartPie
+              format={formatBytes}
+              themeColor={ChartThemeColor.multi}
+              data={[
+                {
+                  x: MetricsLabels.TrafficReceived,
+                  y: bytesData.bytesRx
+                },
+                {
+                  x: MetricsLabels.TrafficSent,
+                  y: bytesData?.bytesTx
+                }
+              ]}
+            />
+          </CardBody>
         </Card>
       </GridItem>
     </Grid>

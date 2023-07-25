@@ -1,3 +1,36 @@
+@import '@patternfly/react-core/dist/styles/base.css';
+@import '@patternfly/patternfly/components/Button/button.css';
+@import '@patternfly/patternfly/components/Card/card.css';
+@import '@patternfly/patternfly/components/Divider/divider.css';
+@import '@patternfly/patternfly/components/Form/form.css';
+@import '@patternfly/patternfly/components/FormControl/form-control.css';
+@import '@patternfly/patternfly/components/Nav/nav.css';
+@import '@patternfly/patternfly/components/Page/page.css';
+@import '@patternfly/patternfly/components/Pagination/pagination.css';
+@import '@patternfly/patternfly/components/Panel/panel.css';
+@import '@patternfly/patternfly/components/Select/select.css';
+@import '@patternfly/patternfly/components/SearchInput/search-input.css';
+@import '@patternfly/patternfly/components/Sidebar/sidebar.css';
+@import '@patternfly/patternfly/components/Table/table.css';
+@import '@patternfly/patternfly/components/Tabs/tabs.css';
+@import '@patternfly/patternfly/components/Toolbar/toolbar.css';
+@import '@patternfly/patternfly/components/Tooltip/tooltip.css';
+@import '@patternfly/patternfly/components/Truncate/truncate.css';
+@import '@patternfly/patternfly/patternfly-addons.css';
+
+.pf-c-nav__link {
+  transition: 0.3s;
+}
+
+.pf-c-page__sidebar.pf-m-collapsed {
+  transition: max-width 0.2s ease-in-out;
+}
+
+.pf-c-page__sidebar.pf-m-expanded {
+  transition: max-width 0.2s ease-in-out;
+  max-width: 100%;
+}
+
 body,
 html {
   font-size: 16px;
@@ -93,17 +126,4 @@ html {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.pf-c-nav__link {
-  transition: 0.3s;
-}
-
-.pf-c-page__sidebar.pf-m-collapsed {
-  transition: max-width 0.2s ease-in-out;
-}
-
-.pf-c-page__sidebar.pf-m-expanded {
-  transition: max-width 0.2s ease-in-out;
-  max-width: 100%;
 }

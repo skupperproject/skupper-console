@@ -6,14 +6,21 @@ import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesI
 
 import { SkChartPieProps } from './ChartPie.interfaces';
 
-const CHART_PADDING = {
-  bottom: 70,
+const DEFAULT_CHART_PADDING = {
+  bottom: 65,
   left: 0,
   right: 0,
-  top: 10
+  top: 20
 };
 
-const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) => y, ...props }) {
+const SkChartPie: FC<SkChartPieProps> = function ({
+  data,
+  legendOrientation = 'horizontal',
+  legendPosition = 'bottom',
+  format = (y: number) => y,
+  height = 300,
+  ...props
+}) {
   const observer = useRef<Function>(() => null);
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState<number>(0);
@@ -40,12 +47,14 @@ const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) =
   const total = data.reduce((acc, { y }) => acc + y, 0);
   const labels = data.map(({ x, y }) => `${x}: ${format(y)}`);
   const legendData = data.map(({ x, y }) => ({
-    name: `${x}: ${total ? formatToDecimalPlacesIfCents((y * 100) / total, 1) : 0}%`
+    name: `${x}:  ${total ? formatToDecimalPlacesIfCents((y * 100) / total, 1) : 0}%`
   }));
 
   return (
     <div ref={chartContainerRef} style={{ height: `100%`, width: `100%` }}>
       <ChartDonut
+        width={width}
+        height={height}
         legendAllowWrap
         title={format(total)}
         data={data}
@@ -58,12 +67,11 @@ const SkChartPie: FC<SkChartPieProps> = function ({ data, format = (y: number) =
             }}
           />
         }
-        padding={CHART_PADDING}
+        legendOrientation={legendOrientation}
+        legendPosition={legendPosition}
         legendData={legendData}
-        legendOrientation="horizontal"
-        legendPosition="bottom"
-        width={width}
-        themeColor={ChartThemeColor.cyan}
+        padding={props.padding || DEFAULT_CHART_PADDING}
+        themeColor={ChartThemeColor.multi}
         {...props}
       />
     </div>

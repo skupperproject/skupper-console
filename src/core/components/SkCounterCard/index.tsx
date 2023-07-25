@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { ChartArea, ChartGroup, ChartThemeColor, ChartVoronoiContainer } from '@patternfly/react-charts';
-import { Bullseye, Card, CardBody, CardFooter, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, TextContent, TextVariants, Text, Flex } from '@patternfly/react-core';
 
 import { MetricCardProps } from './SkCounterCart.interfaces';
 
@@ -9,7 +9,7 @@ const SkCounterCard: FC<MetricCardProps> = function ({
   title,
   value,
   bgColor = '--pf-global--palette--black-400',
-  fontColor = 'white',
+  fontColor = '--pf-global--palette--white',
   showChart = true,
   colorChart = ChartThemeColor.blue,
   dataChart
@@ -17,20 +17,21 @@ const SkCounterCard: FC<MetricCardProps> = function ({
   return (
     <Card
       isPlain
-      isRounded
-      isFullHeight
       style={{
-        backgroundColor: `var(${bgColor})`,
-        color: fontColor
+        backgroundColor: `var(${bgColor})`
       }}
     >
       <CardBody>
-        <Title headingLevel="h3">{title}</Title>
-        <Bullseye>
-          <Title style={{ fontSize: '50px' }} headingLevel="h1">
-            {value}
-          </Title>
-        </Bullseye>
+        <Flex alignItems={{ default: 'alignItemsCenter' }} justifyContent={{ default: 'justifyContentCenter' }}>
+          <TextContent style={{ color: `var(${fontColor})` }} className="pf-u-text-align-center">
+            <Text component={TextVariants.p} style={{ margin: 0 }}>
+              {title}
+            </Text>
+            <Text component={TextVariants.h1} style={{ margin: 0 }}>
+              {value}
+            </Text>
+          </TextContent>
+        </Flex>
       </CardBody>
       {showChart && !!dataChart && (
         <CardFooter>

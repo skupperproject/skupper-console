@@ -9,6 +9,7 @@ import {
   PageSectionVariants,
   Text,
   TextContent,
+  TextVariants,
   Title
 } from '@patternfly/react-core';
 
@@ -46,7 +47,7 @@ const MainContainer: FC<MainContainerProps> = function ({
           <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
             <TextContent>
               <Title headingLevel="h1">{title}</Title>
-              {description && <Text component="p">{description}</Text>}
+              {description && <Text component={TextVariants.p}>{description}</Text>}
             </TextContent>
             {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
           </Flex>
@@ -54,7 +55,7 @@ const MainContainer: FC<MainContainerProps> = function ({
 
         {navigationComponent && (
           <>
-            <PageNavigation style={{ padding: '0 21px' }}>
+            <PageNavigation className="pf-u-px-xl">
               <Flex>{navigationComponent}</Flex>
             </PageNavigation>
             <Divider />
