@@ -42,7 +42,9 @@ export enum ProcessesLabels {
   Exposed = 'Yes',
   NotExposed = 'No',
   ActiveConnections = 'Live connections',
-  OldConnections = 'Connections in the last 15 minutes'
+  OldConnections = 'Connections in the last 15 minutes',
+  ProcessPairsEmptyTitle = 'No connections or requests to display',
+  ProcessPairsEmptyMessage = 'As new connections or requests are established, they will be dynamically added to the table for display'
 }
 
 export enum ProcessPairsColumnsNames {

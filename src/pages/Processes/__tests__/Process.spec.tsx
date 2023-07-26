@@ -54,9 +54,6 @@ describe('Process component', () => {
     expect(screen.getByText(processResult.groupName)).toHaveTextContent('component 1');
     expect(screen.getByText(processResult.hostName)).toHaveTextContent('10.242.0.5');
     expect(screen.getByText(processResult.sourceHost)).toHaveTextContent('172.17.63.163');
-    expect(screen.getByText(processResult.imageName)).toHaveTextContent(
-      'gcr.io/google-samples/microservices-demo/process-za:v0.3.0'
-    );
   });
 
   it('Should ensure the Process associated renders with correct link href after loading page', async () => {

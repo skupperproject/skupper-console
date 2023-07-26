@@ -1,13 +1,27 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
-import { Grid, GridItem, Icon, Modal, ModalVariant, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { LongArrowAltLeftIcon, LongArrowAltRightIcon } from '@patternfly/react-icons';
+import {
+  Card,
+  CardBody,
+  Grid,
+  GridItem,
+  Icon,
+  Modal,
+  ModalVariant,
+  Stack,
+  StackItem,
+  Tab,
+  Tabs,
+  TabTitleText
+} from '@patternfly/react-core';
+import { LongArrowAltLeftIcon, LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import EmptyData from '@core/components/EmptyData';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
@@ -64,7 +78,10 @@ const ProcessPairs = function () {
   const sourceId = ids[0];
   const destinationId = ids[1];
 
+  const [flowSelected, setFlowSelected] = useState<string>();
+
   const [connectionsView, setConnectionsView] = useState<string>(type);
+
   const [httpQueryParamsPaginated, setHttpQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedHttpRequestsQueryParams
   );
@@ -81,14 +98,9 @@ const ProcessPairs = function () {
     initPaginatedActiveConnectionsQueryParams
   );
 
-  const [flowSelected, setFlowSelected] = useState<string>();
-
-  const { data: sourceProcess } = useQuery([QueriesProcesses.GetProcess], () =>
-    sourceId ? RESTApi.fetchProcess(sourceId) : null
-  );
-
-  const { data: destinationProcess } = useQuery([QueriesProcesses.GetDestinationProcess], () =>
-    destinationId ? RESTApi.fetchProcess(destinationId) : null
+  const { data: source } = useQuery([QueriesProcesses.GetProcess, sourceId], () => RESTApi.fetchProcess(sourceId));
+  const { data: destination } = useQuery([QueriesProcesses.GetDestination, destinationId], () =>
+    RESTApi.fetchProcess(destinationId)
   );
 
   const { data: http2RequestsData } = useQuery(
@@ -152,6 +164,14 @@ const ProcessPairs = function () {
     }
   );
 
+  const { data: sourceServices } = useQuery([QueriesProcesses.GetAddressesByProcessId, sourceId], () =>
+    RESTApi.fetchAddressesByProcess(sourceId)
+  );
+
+  const { data: destinationServices } = useQuery([QueriesProcesses.GetAddressesByProcessId, destinationId], () =>
+    RESTApi.fetchAddressesByProcess(destinationId)
+  );
+
   const handleGetFiltersHttpRequests = useCallback((params: RequestOptions) => {
     setHttpQueryParamsPaginated({ ...initPaginatedHttpRequestsQueryParams, ...params });
   }, []);
@@ -179,11 +199,13 @@ const ProcessPairs = function () {
 
   if (
     !httpRequestsData ||
-    !sourceProcess ||
-    !destinationProcess ||
+    !source ||
+    !destination ||
     !oldConnectionsData ||
     !activeConnectionsData ||
-    !http2RequestsData
+    !http2RequestsData ||
+    !sourceServices ||
+    !destinationServices
   ) {
     return null;
   }
@@ -208,49 +230,65 @@ const ProcessPairs = function () {
         title={ProcessPairsColumnsNames.Title}
         link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
         mainContentChildren={
-          <Grid hasGutter>
-            <GridItem span={5}>
-              <ProcessDescription
-                process={sourceProcess}
-                title={LinkCell<ProcessResponse>({
-                  data: sourceProcess,
-                  value: sourceProcess.name,
-                  link: `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceId}`
-                })}
-              />
-            </GridItem>
+          <Stack hasGutter>
+            <StackItem>
+              <Grid hasGutter>
+                <GridItem span={5}>
+                  <ProcessDescription
+                    processWithService={{ ...source, services: sourceServices }}
+                    title={LinkCell<ProcessResponse>({
+                      data: source,
+                      value: source.name,
+                      link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
+                    })}
+                  />
+                </GridItem>
+                <GridItem
+                  span={2}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Icon status="success" size="xl">
+                    <LongArrowAltRightIcon />
+                  </Icon>
+                  <Icon status="info" size="xl">
+                    <LongArrowAltLeftIcon />
+                  </Icon>
+                </GridItem>
+                <GridItem span={5}>
+                  <ProcessDescription
+                    processWithService={{ ...destination, services: destinationServices }}
+                    title={LinkCell<ProcessResponse>({
+                      data: destination,
+                      value: destination.name,
+                      link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
+                    })}
+                  />
+                </GridItem>
+              </Grid>
+            </StackItem>
 
-            <GridItem
-              span={2}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Icon status="success" size="xl">
-                <LongArrowAltRightIcon />
-              </Icon>
-              <Icon status="info" size="xl">
-                <LongArrowAltLeftIcon />
-              </Icon>
-            </GridItem>
-
-            <GridItem span={5}>
-              <ProcessDescription
-                process={destinationProcess}
-                title={LinkCell<ProcessResponse>({
-                  data: destinationProcess,
-                  value: destinationProcess.name,
-                  link: `${ProcessesRoutesPaths.Processes}/${destinationProcess.name}@${destinationId}`
-                })}
-              />
-            </GridItem>
+            {!activeConnections.length && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (
+              <StackItem isFilled>
+                <Card isFullHeight>
+                  <CardBody>
+                    <EmptyData
+                      message={ProcessesLabels.ProcessPairsEmptyTitle}
+                      description={ProcessesLabels.ProcessPairsEmptyMessage}
+                      icon={ResourcesEmptyIcon}
+                    />
+                  </CardBody>
+                </Card>
+              </StackItem>
+            )}
 
             {(!!activeConnections.length || !!oldConnectionsCount) && (
-              <GridItem>
+              <StackItem isFilled>
                 <Tabs activeKey={connectionsView} onSelect={handleTabClick} component="nav">
                   <Tab
                     eventKey={TAB_1_KEY}
@@ -296,11 +334,10 @@ const ProcessPairs = function () {
                     />
                   </Tab>
                 </Tabs>
-              </GridItem>
+              </StackItem>
             )}
-
             {!!http2Requests.length && (
-              <GridItem>
+              <StackItem isFilled>
                 <SkTable
                   title={ProcessesLabels.Http2Requests}
                   columns={httpColumns}
@@ -316,11 +353,10 @@ const ProcessPairs = function () {
                     )
                   }}
                 />
-              </GridItem>
+              </StackItem>
             )}
-
             {!!httpRequests.length && (
-              <GridItem>
+              <StackItem isFilled>
                 <SkTable
                   title={ProcessesLabels.HttpRequests}
                   columns={httpColumns}
@@ -336,9 +372,9 @@ const ProcessPairs = function () {
                     )
                   }}
                 />
-              </GridItem>
+              </StackItem>
             )}
-          </Grid>
+          </Stack>
         }
       />
     </>
