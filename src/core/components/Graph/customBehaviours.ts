@@ -1,4 +1,4 @@
-import { registerEdge, ArrowConfig, GraphData, Legend } from '@antv/g6';
+import { registerEdge, ArrowConfig } from '@antv/g6';
 
 import { EDGE_COLOR_ACTIVE_DEFAULT } from './Graph.constants';
 
@@ -43,29 +43,4 @@ export function registerCustomBehaviours() {
     },
     'linear'
   );
-}
-
-export function createLegend(legendData: GraphData) {
-  return new Legend({
-    data: legendData,
-    align: 'center',
-    layout: 'horizontal', // vertical
-    position: 'bottom-left',
-    vertiSep: 12,
-    horiSep: 24,
-    offsetY: -4,
-    padding: [4, 16, 8, 16],
-    containerStyle: {
-      fill: '#FFFFFF',
-      fillOpacity: 1,
-      opacity: 1,
-      stroke: 'white'
-    },
-    title: '.',
-    titleConfig: {
-      position: 'center',
-      offsetX: 0,
-      offsetY: 10
-    }
-  });
 }
