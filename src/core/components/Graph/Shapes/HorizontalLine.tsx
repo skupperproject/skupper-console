@@ -2,27 +2,26 @@ import { EDGE_COLOR_DEFAULT } from '../Graph.constants';
 
 const SvgHorizontalLine = function ({
   color = EDGE_COLOR_DEFAULT,
-  dashed = false
+  dashed = false,
+  withConnector = false
 }: {
   color?: string;
   dashed?: boolean;
+  withConnector?: boolean;
 }) {
-  const lineWidth = 20;
-  const lineHeight = 3;
+  const lineWidth = 30;
+  const lineHeight = 12;
+  const circleRadius = 3;
 
-  const dashArray = dashed ? `${lineHeight * 1} ${lineHeight * 1}` : undefined;
+  const dashArray = dashed ? `${lineHeight * 0.4} ${lineHeight * 0.4}` : undefined;
 
   return (
-    <svg width={lineWidth} height={lineHeight}>
-      <line
-        x1="0"
-        y1={lineHeight / 2}
-        x2={lineWidth}
-        y2={lineHeight / 2}
-        stroke={color}
-        strokeWidth={lineHeight}
-        strokeDasharray={dashArray} // Set the dash pattern if dashed is true
-      />
+    <svg width={lineWidth} height={lineHeight} viewBox={`0 0 ${lineWidth} ${lineHeight * 1.4}`}>
+      <line x1="0" y1={lineHeight} x2={lineWidth} y2={lineHeight} stroke={color} strokeDasharray={dashArray} />
+
+      {withConnector && (
+        <circle cx={lineWidth - circleRadius} cy={lineHeight} r={circleRadius} fill={color} stroke={color} />
+      )}
     </svg>
   );
 };
