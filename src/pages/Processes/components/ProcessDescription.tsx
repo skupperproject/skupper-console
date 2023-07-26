@@ -44,8 +44,12 @@ const ProcessDescription: FC<{ process: ProcessResponse; title: string | JSX.Ele
     processBinding
   } = process as ProcessResponse;
 
-  const { data: services } = useQuery([QueriesProcesses.GetAddressesByProcessId, identity], () =>
-    RESTApi.fetchAddressesByProcess(identity)
+  const { data: services } = useQuery(
+    [QueriesProcesses.GetAddressesByProcessId, identity],
+    () => RESTApi.fetchAddressesByProcess(identity),
+    {
+      keepPreviousData: true
+    }
   );
 
   return (
