@@ -201,7 +201,7 @@ const ProcessPairs = function () {
         onClose={() => handleOnClickDetails()}
         variant={ModalVariant.medium}
       >
-        {flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
+        {!!flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
       </Modal>
 
       <MainContainer
