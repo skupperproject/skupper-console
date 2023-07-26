@@ -77,7 +77,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
 
   const { data: flowPairSelected } = useQuery(
     [QueriesServices.GetFlowPair],
-    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
+    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : null),
     {
       refetchInterval: UPDATE_INTERVAL,
       enabled: !!flowSelected
@@ -123,7 +123,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
         onClose={() => handleOnClickDetails()}
         variant={ModalVariant.medium}
       >
-        <FlowsPair flowPair={flowPairSelected} />
+        {flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
       </Modal>
 
       {viewSelected === TAB_0_KEY && isPrometheusActive && (
