@@ -15,7 +15,7 @@ export enum TopologyLabels {
   TopologyView = 'Topology view',
   ListView = 'List view',
   LegendGroupsItems = 'Sites',
-  ShowAll = `Filter by address`,
+  ShowAll = `Filter by service`,
   ShowProcessGroups = 'Group by components',
   Process = 'Process',
   Processes = 'Processes',
