@@ -4,7 +4,6 @@ import {
   COMBO_BORDER_COLOR_DEFAULT,
   COMBO_COLOR_DEFAULT_LABEL,
   COMBO__COLOR_DEFAULT,
-  EDGE_COLOR_ACTIVE_DEFAULT,
   EDGE_COLOR_DEFAULT,
   NODE_BORDER_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT,
@@ -13,7 +12,7 @@ import {
 } from './Graph.constants';
 
 const NODE_SIZE = 40;
-const INACTIVE_OPACITY_VALUE = 0.5;
+const INACTIVE_OPACITY_VALUE = 0.3;
 
 const greyColor = '#808080';
 
@@ -196,54 +195,5 @@ export const DEFAULT_NODE_STATE_CONFIG = {
 export const DEFAULT_COMBO_STATE_CONFIG = {
   hover: {
     stroke: 'black'
-  }
-};
-
-export const legendTypeConfigs = {
-  type1: {
-    type: 'diamond',
-    size: 12,
-    style: {
-      fillOpacity: 0.4,
-      fill: greyColor
-    }
-  },
-  type2: {
-    type: 'circle',
-    size: 20,
-    style: {
-      fillOpacity: 0.4,
-      fill: greyColor
-    }
-  },
-  type3: {
-    type: 'rect',
-    size: [20, 20],
-    style: {
-      fillOpacity: 0.4,
-      fill: greyColor
-    }
-  },
-  type4: {
-    type: 'circle',
-    size: [10],
-    style: {
-      fillOpacity: 0.4,
-      fill: greyColor
-    }
-  },
-  eType1: {
-    type: 'line',
-    style: {
-      width: 25,
-      stroke: EDGE_COLOR_DEFAULT
-    }
-  },
-  eType2: {
-    type: 'line',
-    style: {
-      width: 25,
-      stroke: EDGE_COLOR_ACTIVE_DEFAULT
-    }
   }
 };

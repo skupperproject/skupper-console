@@ -374,6 +374,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
             graphInstance.setItemState(source, 'hidden', false);
             graphInstance.setItemState(target, 'hidden', false);
+
+            graphInstance.getNodes().forEach(function (n) {
+              if (source?.getID() !== n.getID() && target?.getID() !== n.getID()) {
+                graphInstance.setItemState(n, 'hidden', true);
+                n.toBack();
+              }
+            });
           }
         }
       }
