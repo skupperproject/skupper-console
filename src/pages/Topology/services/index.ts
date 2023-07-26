@@ -125,9 +125,7 @@ export const TopologyController = {
           id: `${sourceId}-to${targetId}`,
           source: sourceId,
           target: targetId,
-          style: {
-            lineDash: [4, 4]
-          }
+          type: 'site-edge'
         }
       ])
     );

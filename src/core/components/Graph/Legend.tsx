@@ -1,4 +1,4 @@
-import { Divider, Flex, FlexItem, Text, TextContent, TextVariants, Title } from '@patternfly/react-core';
+import { Divider, Flex, FlexItem, Title } from '@patternfly/react-core';
 
 import { EDGE_COLOR_ACTIVE_DEFAULT } from './Graph.constants';
 import SvgCircle from './Shapes/Circle';
@@ -15,7 +15,7 @@ enum Labels {
   Remote = 'Server process or component',
   DataLink = 'Data link',
   ActiveDataLink = 'Active data link',
-  SiteLink = 'Site link'
+  SiteLink = 'Site link connected'
 }
 
 const ProcessLegend = function () {
@@ -24,78 +24,58 @@ const ProcessLegend = function () {
       <Title headingLevel="h3" className="pf-u-my-sm ">
         {Labels.EntitiesTitle}
       </Title>
-      <Flex>
-        <Flex className="pf-u-mx-md" direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
-          <FlexItem className="pf-u-mb-0">
+
+      <Flex className="pf-u-mb-md pf-u-mx-md">
+        <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
+          <FlexItem>
             <SvgCircle />
           </FlexItem>
 
-          <FlexItem className="pf-u-mb-0">
+          <FlexItem>
             <SvgDiamond />
           </FlexItem>
 
-          <FlexItem className="pf-u-mb-0">
+          <FlexItem>
             <SvgSquare />
           </FlexItem>
 
-          <FlexItem className="pf-u-mb-0">
+          <FlexItem>
             <SvgCircle dimension={8} />
           </FlexItem>
         </Flex>
-        <Flex className="pf-u-mb-md ">
-          <TextContent>
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.Exposed}</Text>
-            </FlexItem>
 
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.NoExposed}</Text>
-            </FlexItem>
-
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.SiteGroup}</Text>
-            </FlexItem>
-
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.Remote}</Text>
-            </FlexItem>
-          </TextContent>
+        <Flex direction={{ default: 'column' }}>
+          <FlexItem>{Labels.Exposed}</FlexItem>
+          <FlexItem>{Labels.NoExposed}</FlexItem>
+          <FlexItem>{Labels.SiteGroup}</FlexItem>
+          <FlexItem>{Labels.Remote}</FlexItem>
         </Flex>
-
-        <Divider />
-
-        <Title headingLevel="h3" className="pf-u-mt-md ">
-          {Labels.LinksTitle}
-        </Title>
       </Flex>
-      <Flex>
-        <Flex className="pf-u-mx-md" direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
-          <FlexItem className="pf-u-mb-0">
+
+      <Divider />
+      <Title headingLevel="h3" className="pf-u-my-sm ">
+        {Labels.LinksTitle}
+      </Title>
+
+      <Flex className="pf-u-mb-md pf-u-mx-md">
+        <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
+          <FlexItem>
             <SvgHorizontalLine />
           </FlexItem>
 
-          <FlexItem className="pf-u-mb-0">
+          <FlexItem>
             <SvgHorizontalLine color={EDGE_COLOR_ACTIVE_DEFAULT} />
           </FlexItem>
 
-          <FlexItem className="pf-u-mb-0">
-            <SvgHorizontalLine dashed />
+          <FlexItem>
+            <SvgHorizontalLine dashed withConnector />
           </FlexItem>
         </Flex>
-        <Flex>
-          <TextContent>
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.DataLink}</Text>
-            </FlexItem>
 
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.ActiveDataLink}</Text>
-            </FlexItem>
-
-            <FlexItem>
-              <Text component={TextVariants.small}>{Labels.SiteLink}</Text>
-            </FlexItem>
-          </TextContent>
+        <Flex direction={{ default: 'column' }}>
+          <FlexItem>{Labels.DataLink}</FlexItem>
+          <FlexItem>{Labels.ActiveDataLink}</FlexItem>
+          <FlexItem>{Labels.SiteLink}</FlexItem>
         </Flex>
       </Flex>
     </>

@@ -20,7 +20,7 @@ import {
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
 } from './config';
-import { registerCustomEdge } from './customBehaviours';
+import { registerCustomEdgeWithHover as registerDefaultEdgeWithHover, registerSiteEdge } from './customItems';
 import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
@@ -292,6 +292,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           if (onGetZoom) {
             onGetZoom(zoomValue);
           }
+
+          if (onFitScreen) {
+            onFitScreen(0);
+          }
         });
 
         topologyGraph.on('afterrender', () => {
@@ -306,7 +310,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           setIsGraphLoaded(true);
         });
 
-        registerCustomEdge();
+        registerDefaultEdgeWithHover();
+        registerSiteEdge();
 
         topologyGraph.data(data);
         topologyGraph.render();
