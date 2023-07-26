@@ -55,6 +55,10 @@ const Process = function () {
     () => RESTApi.fetchProcessesPairs(processesPairsRxQueryParams)
   );
 
+  const { data: services } = useQuery([QueriesProcesses.GetAddressesByProcessId, processId], () =>
+    RESTApi.fetchAddressesByProcess(processId)
+  );
+
   const handleRefreshMetrics = useCallback(
     (filters: SelectedFilters) => {
       storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`, filters);
@@ -62,7 +66,7 @@ const Process = function () {
     [processId]
   );
 
-  if (!process || !processesPairsTxData || !processesPairsRxData) {
+  if (!process || !processesPairsTxData || !processesPairsRxData || !services) {
     return null;
   }
 
@@ -97,7 +101,7 @@ const Process = function () {
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
-            <ProcessDescription process={process} title={ProcessesLabels.Details} />
+            <ProcessDescription processWithService={{ ...process, services }} title={ProcessesLabels.Details} />
           </StackItem>
           <StackItem>
             <Flex
