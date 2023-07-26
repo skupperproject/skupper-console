@@ -20,7 +20,7 @@ import {
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
 } from './config';
-import { createLegend, registerCustomBehaviours } from './customBehaviours';
+import { registerCustomBehaviours } from './customBehaviours';
 import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
@@ -33,7 +33,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     onClickNode,
     onClickCombo,
     itemSelected,
-    legendData,
     onGetZoom,
     onFitScreen,
     layout,
@@ -96,7 +95,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodes.length && !topologyGraphRef.current) {
         const data = GraphController.getG6Model({ edges, nodes, combos });
-        const legend = legendData ? createLegend(legendData) : '';
 
         const width = $node.scrollWidth;
         const height = $node.scrollHeight;
@@ -106,7 +104,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           width,
           height,
           fitCenter: config?.fitCenter || false,
-          plugins: [legend],
+          plugins: [],
           modes: DEFAULT_MODE,
           defaultNode: DEFAULT_NODE_CONFIG,
           defaultCombo: DEFAULT_COMBO_CONFIG,

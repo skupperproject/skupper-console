@@ -31,7 +31,6 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../services/services.enum';
-import { ProcessLegendData } from '../Topology.constant';
 import { TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process-graphZoom';
@@ -464,7 +463,6 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
             onClickNode={handleGetSelectedNode}
             onClickEdge={handleGetSelectedEdge}
             itemSelected={processId}
-            legendData={ProcessLegendData}
             onGetZoom={handleSaveZoom}
             onFitScreen={handleFitScreen}
             layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
