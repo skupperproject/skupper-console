@@ -7,9 +7,11 @@ import SvgHorizontalLine from './Shapes/HorizontalLine';
 import SvgSquare from './Shapes/Square';
 
 enum Labels {
+  EntitiesTitle = ' Entities',
+  LinksTitle = ' Links',
   Exposed = 'Process, Component or Site exposed',
   NoExposed = 'Process/Component',
-  SiteGroup = 'Site group',
+  SiteGroup = 'Related site grouping',
   Remote = 'Server process or component',
   DataLink = 'Data link',
   ActiveDataLink = 'Active data link',
@@ -20,7 +22,7 @@ const ProcessLegend = function () {
   return (
     <>
       <Title headingLevel="h3" className="pf-u-my-sm ">
-        Processes
+        {Labels.EntitiesTitle}
       </Title>
       <Flex>
         <Flex className="pf-u-mx-md" direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
@@ -63,7 +65,7 @@ const ProcessLegend = function () {
         <Divider />
 
         <Title headingLevel="h3" className="pf-u-mt-md ">
-          Links
+          {Labels.LinksTitle}
         </Title>
       </Flex>
       <Flex>
