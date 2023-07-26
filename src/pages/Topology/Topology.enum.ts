@@ -12,15 +12,15 @@ export enum TopologyViews {
 export enum TopologyLabels {
   Topology = 'Topology',
   Description = 'The network topology refers to the manner in which the links and nodes of a network are arranged to relate to each other',
-  TopologyView = 'Topology View',
-  ListView = 'List View',
+  TopologyView = 'Topology view',
+  ListView = 'List view',
   LegendGroupsItems = 'Sites',
   ShowAll = `Filter by address`,
-  ShowProcessGroups = 'Group by Components',
-  Process = 'process',
-  Processes = 'processes',
-  ServerSite = 'server site',
-  ProcessExposed = 'process exposed',
+  ShowProcessGroups = 'Group by components',
+  Process = 'Process',
+  Processes = 'Processes',
+  ServerSite = 'Server site',
+  ProcessExposed = 'Process exposed',
   Link = 'link',
   ActiveLink = 'Active link (show metrics on)',
   Site = 'site',
@@ -28,7 +28,7 @@ export enum TopologyLabels {
   RotateLabel = 'Rotate',
   CheckboxShowLabel = 'Metrics',
   CheckboxShowLabelReverse = 'Reverse metrics',
-  AddressFilterPlaceholderText = 'Search for Address',
+  AddressFilterPlaceholderText = 'Search for service',
   DisplayPlaceholderText = 'Display'
 }
 
