@@ -20,7 +20,7 @@ import {
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
 } from './config';
-import { registerCustomBehaviours } from './customBehaviours';
+import { registerCustomEdge } from './customBehaviours';
 import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
@@ -318,7 +318,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           setIsGraphLoaded(true);
         });
 
-        registerCustomBehaviours();
+        registerCustomEdge();
 
         topologyGraph.data(data);
         topologyGraph.render();
