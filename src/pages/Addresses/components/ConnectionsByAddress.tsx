@@ -94,7 +94,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
             ...initActiveConnectionsQueryParams,
             ...activeConnectionsQueryParamsPaginated
           })
-        : undefined,
+        : null,
     {
       enabled: viewSelected === TAB_2_KEY,
       refetchInterval: UPDATE_INTERVAL,
@@ -115,7 +115,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
             ...initPaginatedOldConnectionsQueryParams,
             ...connectionsQueryParamsPaginated
           })
-        : undefined,
+        : null,
     {
       enabled: viewSelected === TAB_3_KEY,
       refetchInterval: UPDATE_INTERVAL,
@@ -126,7 +126,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   // query a single connection when a connection detail is selected
   const { data: connectionSelected } = useQuery(
     [QueriesServices.GetFlowPair],
-    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
+    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : null),
     {
       refetchInterval: UPDATE_INTERVAL,
       enabled: !!flowSelected
@@ -194,14 +194,14 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
         onClose={() => handleOnClickDetails()}
         variant={ModalVariant.medium}
       >
-        <FlowsPair
-          flowPair={
-            connectionSelected && {
+        {connectionSelected && (
+          <FlowsPair
+            flowPair={{
               ...connectionSelected,
               counterFlow: { ...connectionSelected.counterFlow, sourcePort: addressName?.split(':')[1] as string }
-            }
-          }
-        />
+            }}
+          />
+        )}
       </Modal>
 
       {viewSelected === TAB_0_KEY && isPrometheusActive && (

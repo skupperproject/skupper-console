@@ -84,11 +84,11 @@ const ProcessPairs = function () {
   const [flowSelected, setFlowSelected] = useState<string>();
 
   const { data: sourceProcess } = useQuery([QueriesProcesses.GetProcess], () =>
-    sourceId ? RESTApi.fetchProcess(sourceId) : undefined
+    sourceId ? RESTApi.fetchProcess(sourceId) : null
   );
 
   const { data: destinationProcess } = useQuery([QueriesProcesses.GetDestinationProcess], () =>
-    destinationId ? RESTApi.fetchProcess(destinationId) : undefined
+    destinationId ? RESTApi.fetchProcess(destinationId) : null
   );
 
   const { data: http2RequestsData } = useQuery(
@@ -105,7 +105,7 @@ const ProcessPairs = function () {
   );
 
   const { data: httpRequestsData } = useQuery(
-    ['QueriesProcesses.GetFlowPairs', httpQueryParamsPaginated],
+    [QueriesProcesses.GetHttp, httpQueryParamsPaginated],
     () =>
       RESTApi.fetchFlowPairs({
         ...httpQueryParamsPaginated,
@@ -145,7 +145,7 @@ const ProcessPairs = function () {
 
   const { data: flowPairSelected } = useQuery(
     [QueriesProcesses.GetFlowPair],
-    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : undefined),
+    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : null),
     {
       refetchInterval: UPDATE_INTERVAL,
       enabled: !!flowSelected
@@ -201,7 +201,7 @@ const ProcessPairs = function () {
         onClose={() => handleOnClickDetails()}
         variant={ModalVariant.medium}
       >
-        <FlowsPair flowPair={flowPairSelected} />
+        {flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
       </Modal>
 
       <MainContainer
