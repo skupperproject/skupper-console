@@ -256,18 +256,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             }
           });
 
-          // topologyGraph.on('combo:mouseenter', ({ item }) => {
-          //   if (item) {
-          //     topologyGraph.setItemState(item, 'hover', true);
-          //   }
-          // });
-
-          // topologyGraph.on('combo:mouseleave', ({ item, ...rest }) => {
-          //   if (item) {
-          //     topologyGraph.setItemState(item, 'hover', false);
-          //   }
-          // });
-
           topologyGraph.on('combo:dragend', ({ item }) => {
             if (item) {
               const combo = item as ICombo;
@@ -368,6 +356,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           if (item.get('type') === 'edge') {
             const edge = item as IEdge;
             edge.show();
+            graphInstance.setItemState(edge, 'hover', true);
 
             const source = edge.getSource();
             const target = edge.getTarget();
