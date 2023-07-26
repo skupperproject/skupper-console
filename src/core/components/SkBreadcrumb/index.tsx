@@ -18,7 +18,7 @@ const SkBreadcrumb = function () {
   return (
     <Breadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
       {pathsNormalized.map((path, index) => (
-        <BreadcrumbItem key={path.name}>
+        <BreadcrumbItem key={path.name} className="sk-capitalize">
           <Link to={[...paths].slice(0, index + 1).join('/')}>{path.name}</Link>
         </BreadcrumbItem>
       ))}

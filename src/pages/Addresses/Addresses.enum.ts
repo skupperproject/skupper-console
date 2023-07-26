@@ -7,7 +7,7 @@ export enum AddressesColumnsNames {
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',
   TotalFLowPairs = 'Total',
-  Servers = 'Exposed Servers'
+  Servers = 'Exposed servers'
 }
 
 // LABELS
@@ -22,10 +22,10 @@ export enum AddressesLabels {
 export enum ConnectionLabels {
   ActiveConnections = 'Live connections',
   OldConnections = 'Connections in the last 15 minutes',
-  TrafficTx = 'Outbound Traffic ',
+  TrafficTx = 'Outbound traffic ',
   TrafficRx = 'Inbound traffic',
-  AvgByteRateRx = 'Avg. Inbound speed',
-  AvgByteRateTx = 'Avg. Outbound speed'
+  AvgByteRateRx = 'Avg. inbound speed',
+  AvgByteRateTx = 'Avg. outbound speed'
 }
 
 export enum RequestLabels {
@@ -33,12 +33,12 @@ export enum RequestLabels {
   Requests = 'Requests in the last 15 minutes',
   TrafficTx = 'Response Traffic ',
   TrafficRx = 'Request traffic',
-  AvgByteRateRx = 'Avg. rate Responses',
-  AvgByteRateTx = 'Avg. rate Requests'
+  AvgByteRateRx = 'Avg. rate responses',
+  AvgByteRateTx = 'Avg. rate requests'
 }
 
 export enum FlowPairsLabels {
   Overview = 'Overview',
-  Servers = 'Exposed Servers',
+  Servers = 'Exposed servers',
   ViewDetails = 'view details'
 }

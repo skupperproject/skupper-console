@@ -98,12 +98,6 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     customCellName: 'TargetSiteNameLinkCell'
   },
   {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites,
-    width: 10
-  },
-  {
     name: FlowPairsColumnsNames.Duration,
     customCellName: 'DurationCell',
     width: 10

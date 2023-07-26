@@ -156,3 +156,7 @@ html {
   background-color: transparent !important;
   padding: 0;
 }
+
+.sk-capitalize {
+  text-transform: capitalize;
+}
