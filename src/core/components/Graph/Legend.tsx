@@ -9,10 +9,10 @@ import SvgSquare from './Shapes/Square';
 enum Labels {
   EntitiesTitle = ' Entities',
   LinksTitle = ' Links',
-  Exposed = 'Process, Component or Site exposed',
+  Exposed = 'Process, component or site exposed',
   NoExposed = 'Process/Component',
   SiteGroup = 'Related site grouping',
-  Remote = 'Server process or component',
+  Remote = 'Server process/component',
   DataLink = 'Data link',
   ActiveDataLink = 'Active data link',
   SiteLink = 'Site link connected'

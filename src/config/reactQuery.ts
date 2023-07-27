@@ -8,8 +8,7 @@ export const queryClientConfig = {
       },
       refetchOnWindowFocus: false,
       refetchIntervalInBackground: true,
-      suspense: true,
-      staleTime: 0
+      suspense: true
     }
   }
 };

@@ -4,7 +4,7 @@ import { HighlightValueCellProps } from '@core/components/HighlightValueCell/Hig
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interface';
-import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
+import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -53,8 +53,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Client,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
-    customCellName: 'ProcessNameLinkCell',
-    width: 15
+    customCellName: 'ProcessNameLinkCell'
   },
   {
     name: FlowPairsColumnsNames.Port,
@@ -89,8 +88,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Server,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
-    customCellName: 'TargetProcessNameLinkCell',
-    width: 15
+    customCellName: 'TargetProcessNameLinkCell'
   },
   {
     name: FlowPairsColumnsNames.ServerSite,
@@ -118,30 +116,24 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
 export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Method,
-    prop: 'forwardFlow.method' as keyof FlowPairsResponse
+    prop: 'forwardFlow.method' as keyof FlowPairsResponse,
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.StatusCode,
     prop: 'counterFlow.result' as keyof FlowPairsResponse,
-    customCellName: 'HttpStatusCell'
+    customCellName: 'HttpStatusCell',
+    width: 10
   },
   {
     name: FlowPairsColumnsNames.From,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
-    customCellName: 'ProcessNameLinkCell',
-    width: 15
+    customCellName: 'ProcessNameLinkCell'
   },
   {
     name: FlowPairsColumnsNames.To,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
-    customCellName: 'TargetProcessNameLinkCell',
-    width: 15
-  },
-  {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites,
-    width: 10
+    customCellName: 'TargetProcessNameLinkCell'
   },
   {
     name: FlowPairsColumnsNames.TxBytes,

@@ -274,6 +274,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                   variant="primary"
                   isLoading={isRefetching}
                   isDisabled={
+                    isRefetching ||
                     forceDisableRefetchData ||
                     (!!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key)
                   }

@@ -129,7 +129,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     () => PrometheusApi.fetchAllProcessPairsByteRates(),
     {
       enabled: isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LABEL),
-      refetchInterval: UPDATE_INTERVAL
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true
     }
   );
 
@@ -138,7 +139,8 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     () => PrometheusApi.fetchAllProcessPairsLatencies(),
     {
       enabled: isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LABEL),
-      refetchInterval: UPDATE_INTERVAL
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true
     }
   );
 
@@ -407,72 +409,82 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
     isDisplayOptionActive
   ]);
 
+  if (!services || !sites || !processesPairs || !remoteProcesses || !externalProcesses) {
+    return null;
+  }
+
   return (
     <Stack>
-      <StackItem>
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarItem>
-              <Select
-                isOpen={isAddressSelectMenuOpen}
-                onSelect={handleSelectAddress}
-                onToggle={handleToggleAddressMenu}
-                selections={addressIdSelected}
-                hasInlineFilter
-                inlineFilterPlaceholderText={TopologyLabels.AddressFilterPlaceholderText}
-                onFilter={handleFilterAddress}
-                maxHeight={FILTER_BY_ADDRESS_MAX_HEIGHT}
-              >
-                {getOptions()}
-              </Select>
-            </ToolbarItem>
+      {!nodes.length && (
+        <StackItem isFilled>
+          <EmptyData />
+        </StackItem>
+      )}
+      {!!nodes.length && (
+        <>
+          <StackItem>
+            <Toolbar>
+              <ToolbarContent>
+                <ToolbarItem>
+                  <Select
+                    isOpen={isAddressSelectMenuOpen}
+                    onSelect={handleSelectAddress}
+                    onToggle={handleToggleAddressMenu}
+                    selections={addressIdSelected}
+                    hasInlineFilter
+                    inlineFilterPlaceholderText={TopologyLabels.AddressFilterPlaceholderText}
+                    onFilter={handleFilterAddress}
+                    maxHeight={FILTER_BY_ADDRESS_MAX_HEIGHT}
+                  >
+                    {getOptions()}
+                  </Select>
+                </ToolbarItem>
 
-            <ToolbarItem>
-              <Select
-                variant={SelectVariant.checkbox}
-                isOpen={isDisplayMenuOpen}
-                onSelect={handleSelectDisplay}
-                onToggle={handleToggleDisplayMenu}
-                selections={displayOptionsSelected}
-                placeholderText={TopologyLabels.DisplayPlaceholderText}
-                isCheckboxSelectionBadgeHidden
-              >
-                {getDisplayOptions()}
-              </Select>
-            </ToolbarItem>
+                <ToolbarItem>
+                  <Select
+                    variant={SelectVariant.checkbox}
+                    isOpen={isDisplayMenuOpen}
+                    onSelect={handleSelectDisplay}
+                    onToggle={handleToggleDisplayMenu}
+                    selections={displayOptionsSelected}
+                    placeholderText={TopologyLabels.DisplayPlaceholderText}
+                    isCheckboxSelectionBadgeHidden
+                  >
+                    {getDisplayOptions()}
+                  </Select>
+                </ToolbarItem>
 
-            <ToolbarItem alignment={{ default: 'alignRight' }}>
-              <NavigationViewLink
-                link={ProcessesRoutesPaths.Processes}
-                linkLabel={TopologyLabels.ListView}
-                iconName="listIcon"
-              />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
-      </StackItem>
+                <ToolbarItem alignment={{ default: 'alignRight' }}>
+                  <NavigationViewLink
+                    link={ProcessesRoutesPaths.Processes}
+                    linkLabel={TopologyLabels.ListView}
+                    iconName="listIcon"
+                  />
+                </ToolbarItem>
+              </ToolbarContent>
+            </Toolbar>
+          </StackItem>
 
-      <StackItem isFilled>
-        {!nodes.length && <EmptyData />}
-        {!!nodes.length && (
-          <GraphReactAdaptor
-            nodes={nodes}
-            edges={links}
-            combos={groups}
-            onClickCombo={handleGetSelectedGroup}
-            onClickNode={handleGetSelectedNode}
-            onClickEdge={handleGetSelectedEdge}
-            itemSelected={processId}
-            onGetZoom={handleSaveZoom}
-            onFitScreen={handleFitScreen}
-            layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
-            config={{
-              zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-              fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-            }}
-          />
-        )}
-      </StackItem>
+          <StackItem isFilled>
+            <GraphReactAdaptor
+              nodes={nodes}
+              edges={links}
+              combos={groups}
+              onClickCombo={handleGetSelectedGroup}
+              onClickNode={handleGetSelectedNode}
+              onClickEdge={handleGetSelectedEdge}
+              itemSelected={processId}
+              onGetZoom={handleSaveZoom}
+              onFitScreen={handleFitScreen}
+              layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
+              config={{
+                zoom: localStorage.getItem(ZOOM_CACHE_KEY),
+                fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
+              }}
+            />
+          </StackItem>
+        </>
+      )}
     </Stack>
   );
 };
