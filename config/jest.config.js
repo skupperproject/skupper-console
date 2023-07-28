@@ -31,13 +31,14 @@ function makeModuleNameMapper(srcPath, tsconfigPath) {
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  setupFiles: [`./${ENV_FILE}`],
+  setupFiles: [ENV_FILE],
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: {
     ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
   },
   moduleDirectories: ['node_modules'],
   roots: [SRC_PATH],
+  rootDir: ROOT_PROJECT,
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
     '^.+\\.svg$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`,
