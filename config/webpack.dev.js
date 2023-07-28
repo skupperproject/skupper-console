@@ -29,7 +29,7 @@ const devConfig = {
       onStart({ compilation }) {
         numCyclesDetected = 0;
       },
-      onDetected({ module: webpackModuleRecord, paths, compilation }) {
+      onDetected({ module: _, paths, compilation }) {
         numCyclesDetected++;
         compilation.warnings.push(new Error(paths.join(' -> ')));
       },

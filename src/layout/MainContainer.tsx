@@ -55,7 +55,7 @@ const MainContainer: FC<MainContainerProps> = function ({
 
         {navigationComponent && (
           <>
-            <PageNavigation className="pf-v5-u-px-xl">
+            <PageNavigation className="pf-v5-u-py-0 pf-v5-u-px-xl">
               <Flex>{navigationComponent}</Flex>
             </PageNavigation>
             <Divider />
