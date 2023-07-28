@@ -8,5 +8,5 @@ module.exports = {
   SVG_TRANSFORM_FILENAME: 'jest.config.svgTransform',
   FILE_MOCK_TRANSFORM_FILENAME: 'jest.config.fileMock',
   STYLE_MOCK_TRANSFORM_FILENAME: 'jest.config.styleMock',
-  ENV_FILE: 'jest.config.setEnvVars'
+  ENV_FILE: `${ROOT}/config/jest.config.setEnvVars`
 };
