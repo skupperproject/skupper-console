@@ -32,7 +32,7 @@ const Topology = function () {
       title={TopologyLabels.Topology}
       description={TopologyLabels.Description}
       navigationComponent={
-        <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType} component="nav">
+        <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType}>
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
           <Tab
             eventKey={TopologyViews.ProcessGroups}
