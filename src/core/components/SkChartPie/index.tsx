@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { ChartDonut, ChartThemeColor, ChartTooltip, getResizeObserver } from '@patternfly/react-charts';
+import { ChartDonut, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
+import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 

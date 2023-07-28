@@ -3,6 +3,7 @@ import { FC, memo } from 'react';
 import { Bullseye, Divider, Flex, FlexItem, Title } from '@patternfly/react-core';
 
 import SkChartArea from '@core/components/SkChartArea';
+import { formatNumber } from '@core/utils/formatNumber';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
 import { MetricsLabels } from './Metrics.enum';
@@ -33,7 +34,9 @@ const RequestCharts: FC<{
     >
       <FlexItem flex={{ default: 'flex_1' }}>
         <Bullseye>
-          <Title headingLevel="h1">{`${MetricsLabels.RequestTotalTitle}: ${totalRequestsInterval}`}</Title>
+          <Title headingLevel="h1">{`${MetricsLabels.RequestTotalTitle}: ${formatNumber(
+            totalRequestsInterval
+          )}`}</Title>
         </Bullseye>
       </FlexItem>
 

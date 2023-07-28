@@ -8,8 +8,8 @@ import { MetricCardProps } from './SkCounterCart.interfaces';
 const SkCounterCard: FC<MetricCardProps> = function ({
   title,
   value,
-  bgColor = '--pf-global--palette--black-400',
-  fontColor = '--pf-global--palette--white',
+  bgColor = '--pf-v5-global--palette--black-400',
+  fontColor = '--pf-v5-global--palette--white',
   showChart = true,
   colorChart = ChartThemeColor.blue,
   dataChart
@@ -23,7 +23,7 @@ const SkCounterCard: FC<MetricCardProps> = function ({
     >
       <CardBody>
         <Flex alignItems={{ default: 'alignItemsCenter' }} justifyContent={{ default: 'justifyContentCenter' }}>
-          <TextContent style={{ color: `var(${fontColor})` }} className="pf-u-text-align-center">
+          <TextContent style={{ color: `var(${fontColor})` }} className="pf-v5-u-text-align-center">
             <Text component={TextVariants.p} style={{ margin: 0 }}>
               {title}
             </Text>

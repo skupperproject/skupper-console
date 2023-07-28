@@ -1,16 +1,7 @@
 import { FC, useCallback, useMemo, useState, MouseEvent, ChangeEvent, memo } from 'react';
 
-import {
-  Button,
-  Select,
-  SelectOption,
-  SelectOptionObject,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-  ToolbarGroup,
-  Tooltip
-} from '@patternfly/react-core';
+import { Button, Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';
+import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
@@ -197,7 +188,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                     ? handleSelectSource
                     : undefined
                 }
-                onToggle={handleToggleSourceProcessMenu}
+                onToggle={(_, isOpen) => handleToggleSourceProcessMenu(isOpen)}
               >
                 {optionsProcessSourcesWithDefault}
               </Select>
@@ -216,7 +207,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                       ? handleSelectDestination
                       : undefined
                   }
-                  onToggle={handleToggleDestinationProcessMenu}
+                  onToggle={(_, isOpen) => handleToggleDestinationProcessMenu(isOpen)}
                 >
                   {optionsProcessConnectedWithDefault}
                 </Select>
@@ -229,13 +220,13 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                 placeholderText={MetricsLabels.FilterProtocolsDefault}
                 isOpen={selectedFilterIsOpen.protocol}
                 isDisabled={filterOptions.protocols.disabled}
-                onToggle={handleToggleProtocol}
                 onSelect={handleSelectProtocol}
                 onClear={
                   optionsProtocolsWithDefault.length > 1 && !filterOptions.protocols.disabled
                     ? handleSelectProtocol
                     : undefined
                 }
+                onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
               >
                 {optionsProtocolsWithDefault}
               </Select>
@@ -243,15 +234,15 @@ const MetricFilters: FC<MetricFilterProps> = memo(
           </ToolbarGroup>
 
           {/* Display filters */}
-          <ToolbarGroup variant={'filter-group'} alignment={{ default: 'alignRight' }}>
+          <ToolbarGroup variant={'filter-group'} align={{ default: 'alignRight' }}>
             <ToolbarItem>
               <Select
                 selections={selectedFilter.timeInterval?.label}
                 isOpen={selectedFilterIsOpen.timeInterval}
                 isDisabled={filterOptions.timeIntervals.disabled}
                 onSelect={handleSelectTimeIntervalMenu}
-                onToggle={handleToggleTimeIntervalMenu}
                 toggleIcon={<OutlinedClockIcon />}
+                onToggle={(_, isOpen) => handleToggleTimeIntervalMenu(isOpen)}
               >
                 {optionsTimeIntervalWithDefault}
               </Select>
@@ -262,7 +253,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                 selections={selectedFilter.displayInterval}
                 isOpen={selectedFilterIsOpen.displayInterval}
                 onSelect={handleSelectDisplayInterval}
-                onToggle={handleToggleDisplayInterval}
+                onToggle={(_, isOpen) => handleToggleDisplayInterval(isOpen)}
               >
                 {optionsDisplayIntervalWithDefault}
               </Select>

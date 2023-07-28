@@ -1,55 +1,17 @@
-@import '@patternfly/react-core/dist/styles/base.css';
-@import '@patternfly/patternfly/components/Button/button.css';
-@import '@patternfly/patternfly/components/Card/card.css';
-@import '@patternfly/patternfly/components/Divider/divider.css';
-@import '@patternfly/patternfly/components/Form/form.css';
-@import '@patternfly/patternfly/components/FormControl/form-control.css';
-@import '@patternfly/patternfly/components/Nav/nav.css';
-@import '@patternfly/patternfly/components/Page/page.css';
-@import '@patternfly/patternfly/components/Pagination/pagination.css';
-@import '@patternfly/patternfly/components/Panel/panel.css';
-@import '@patternfly/patternfly/components/Select/select.css';
-@import '@patternfly/patternfly/components/SearchInput/search-input.css';
-@import '@patternfly/patternfly/components/Sidebar/sidebar.css';
-@import '@patternfly/patternfly/components/Table/table.css';
-@import '@patternfly/patternfly/components/Tabs/tabs.css';
-@import '@patternfly/patternfly/components/Toolbar/toolbar.css';
-@import '@patternfly/patternfly/components/Tooltip/tooltip.css';
-@import '@patternfly/patternfly/components/Truncate/truncate.css';
-@import '@patternfly/patternfly/components/Popover/popover.css';
-@import '@patternfly/patternfly/patternfly.css';
-
+@import '@patternfly/patternfly/patternfly.min.css';
 @import '@patternfly/patternfly/patternfly-addons.css';
 
-.pf-c-nav__link {
+.pf-v5-c-nav__link {
   transition: 0.3s;
 }
 
-.pf-c-page__sidebar.pf-m-collapsed {
+.pf-v5-c-page__sidebar.pf-m-collapsed {
   transition: max-width 0.2s ease-in-out;
 }
 
-.pf-c-page__sidebar.pf-m-expanded {
+.pf-v5-c-page__sidebar.pf-m-expanded {
   transition: max-width 0.2s ease-in-out;
   max-width: 100%;
-}
-
-.sk-topology-control-bar__button {
-  margin-right: var(--pf-global--spacer--xs);
-  margin-top: var(--pf-global--spacer--xs);
-  border: none;
-  border-radius: var(--pf-global--BorderRadius--sm);
-  box-shadow: var(--pf-global--BoxShadow--sm);
-}
-.sk-topology-control-bar__button:not(.pf-m-disabled) {
-  background-color: var(--pf-global--BackgroundColor--100);
-}
-.sk-topology-control-bar__button:after {
-  display: none;
-}
-.sk-topology-control-bar__button:hover {
-  border: none;
-  box-shadow: var(--pf-global--BoxShadow--md);
 }
 
 body,
@@ -64,35 +26,35 @@ html {
 
 /* Resource icon */
 .sk-resource-icon {
-  background-color: var(--pf-global--palette--black-500);
+  background-color: var(--pf-v5-global--palette--black-500);
   border-radius: 50%;
-  color: var(--pf-global--palette--white);
+  color: var(--pf-v5-global--palette--white);
   display: inline-block;
   flex-shrink: 0;
   font-size: 14px;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 20px;
   margin-right: 4px;
-  min-width: 18px;
-  padding: 1px 4px;
+  min-width: 20px;
+  padding: 0 6px;
   text-align: center;
   white-space: nowrap;
 }
 
 .sk-resource-site {
-  background-color: var(--pf-global--palette--green-600);
+  background-color: var(--pf-v5-global--palette--green-600);
 }
 
 .sk-resource-process-group {
-  background-color: var(--pf-global--palette--light-green-500);
+  background-color: var(--pf-v5-global--palette--light-green-500);
 }
 
 .sk-resource-service {
-  background-color: var(--pf-global--palette--purple-500);
+  background-color: var(--pf-v5-global--palette--purple-500);
 }
 
 .sk-resource-process {
-  background-color: var(--pf-global--palette--cyan-300);
+  background-color: var(--pf-v5-global--palette--cyan-300);
 }
 
 .sk-resource-skupper {
@@ -155,6 +117,24 @@ html {
   left: 0;
   background-color: transparent !important;
   padding: 0;
+}
+
+.sk-topology-control-bar__button {
+  margin-right: var(--pf-v5-global--spacer--xs);
+  margin-top: var(--pf-v5-global--spacer--xs);
+  border: none;
+  border-radius: var(--pf-v5-global--BorderRadius--sm);
+  box-shadow: var(--pf-v5-global--BoxShadow--sm);
+}
+.sk-topology-control-bar__button:not(.pf-v5-m-disabled) {
+  background-color: var(--pf-v5-global--BackgroundColor--100);
+}
+.sk-topology-control-bar__button:after {
+  display: none;
+}
+.sk-topology-control-bar__button:hover {
+  border: none;
+  box-shadow: var(--pf-v5-global--BoxShadow--md);
 }
 
 .sk-capitalize {

@@ -29,7 +29,6 @@ const SkPagination: FC<SkPaginationProps> = function ({
         <PanelMainBody>
           <Pagination
             isCompact={isCompact}
-            perPageComponent="button"
             itemCount={totalRow}
             perPage={paginationSize}
             page={currentPageNumber}

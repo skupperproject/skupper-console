@@ -2,17 +2,7 @@ import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, us
 
 import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import {
-  SortByDirection,
-  TableComposable,
-  TableText,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  ThProps,
-  Tr
-} from '@patternfly/react-table';
+import { SortByDirection, Table, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 
@@ -151,7 +141,7 @@ const SkTable = function <T>({
       )}
 
       <CardBody>
-        <TableComposable variant="compact" {...restProps}>
+        <Table variant="compact" {...restProps}>
           <Thead>
             <Tr>
               {skColumns.map(({ name, prop, columnDescription }, index) => (
@@ -205,7 +195,7 @@ const SkTable = function <T>({
                 </Tr>
               ))}
           </Tbody>
-        </TableComposable>
+        </Table>
 
         {isPaginationEnabled && (
           <SkPagination

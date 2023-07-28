@@ -18,13 +18,13 @@ const errorRateChartPadding = { left: 40, bottom: 80, top: 50, right: 40 };
 const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: ResponseMetrics }> = memo(
   ({ responseRateData, responseData }) => (
     <>
-      <Grid hasGutter className="pf-u-m-md">
+      <Grid hasGutter className="pf-v5-u-m-md">
         {/* HTTP stats */}
         <GridItem span={3}>
           <SkCounterCard
             title={responseData.statusCode2xx.label}
             value={convertToPercentage(responseData.statusCode2xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-global--palette--green-400'}
+            bgColor={'--pf-v5-global--palette--green-400'}
             showChart={false}
           />
         </GridItem>
@@ -32,7 +32,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode3xx.label}
             value={convertToPercentage(responseData.statusCode3xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-global--palette--blue-400'}
+            bgColor={'--pf-v5-global--palette--blue-400'}
             showChart={false}
           />
         </GridItem>
@@ -40,7 +40,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode4xx.label}
             value={convertToPercentage(responseData.statusCode4xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-global--palette--orange-200'}
+            bgColor={'--pf-v5-global--palette--orange-200'}
             showChart={false}
           />
         </GridItem>
@@ -48,7 +48,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode5xx.label}
             value={convertToPercentage(responseData.statusCode5xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-global--palette--red-200'}
+            bgColor={'--pf-v5-global--palette--red-200'}
             showChart={false}
           />
         </GridItem>
@@ -57,7 +57,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
       <Flex
         alignItems={{ default: 'alignItemsStretch', md: 'alignItemsStretch' }}
         direction={{ md: 'column', xl: 'row' }}
-        className="pf-u-mt-2xl "
+        className="pf-v5-u-mt-2xl "
       >
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea
