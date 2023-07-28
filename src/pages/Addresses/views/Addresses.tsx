@@ -40,8 +40,16 @@ const Services = function () {
   );
 
   const { data: httpTotalFlows } = useQuery(
-    [QueriesServices.GetPrometheusTotalFlows],
-    () => PrometheusApi.fetchFlowsByAddress(),
+    [QueriesServices.GetPrometheusHttpTotalFlows],
+    () => PrometheusApi.fetchHttpFlowsByAddress(),
+    {
+      enabled: isPrometheusActive
+    }
+  );
+
+  const { data: tcpTotalFlows } = useQuery(
+    [QueriesServices.GetPrometheusTcpTotalFlows],
+    () => PrometheusApi.fetchTcpFlowsByAddress(),
     {
       enabled: isPrometheusActive
     }
@@ -61,9 +69,10 @@ const Services = function () {
   let servicesExtended = services;
   let columnsExtend = addressesColumns;
 
-  if (httpTotalFlows && tcpActiveFlows) {
+  if (httpTotalFlows !== undefined && tcpTotalFlows !== undefined && tcpActiveFlows !== undefined) {
     servicesExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
       httpTotalFlows,
+      tcpTotalFlows,
       tcpActiveFlows
     });
 

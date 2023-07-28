@@ -6,12 +6,28 @@ export const AddressesController = {
     services: AddressResponse[],
     {
       httpTotalFlows,
+      tcpTotalFlows,
       tcpActiveFlows
-    }: { httpTotalFlows: PrometheusApiSingleResult[]; tcpActiveFlows: PrometheusApiSingleResult[] }
+    }: {
+      httpTotalFlows: PrometheusApiSingleResult[];
+      tcpTotalFlows: PrometheusApiSingleResult[];
+      tcpActiveFlows: PrometheusApiSingleResult[];
+    }
   ) => {
     const tcpActiveFlowsMap =
       tcpActiveFlows.length &&
       tcpActiveFlows.reduce(
+        (acc, flow) => {
+          acc[flow.metric.address] = Number(flow.value[1]) / 2;
+
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+
+    const tcpTotalFlowsMap =
+      tcpTotalFlows.length &&
+      tcpTotalFlows?.reduce(
         (acc, flow) => {
           acc[flow.metric.address] = Number(flow.value[1]) / 2;
 
@@ -31,10 +47,11 @@ export const AddressesController = {
         {} as Record<string, number>
       );
 
+    const totalFlowMap = { ...tcpTotalFlowsMap, ...httpTotalFlowsMap };
+
     return services.map((service) => ({
       ...service,
-      totalFlows:
-        httpTotalFlowsMap && httpTotalFlowsMap[service.name] ? Math.round(httpTotalFlowsMap[service.name]) : 0,
+      totalFlows: totalFlowMap && totalFlowMap[service.name] ? Math.round(totalFlowMap[service.name]) : 0,
       currentFlows:
         tcpActiveFlowsMap && tcpActiveFlowsMap[service.name] ? Math.round(tcpActiveFlowsMap[service.name]) : 0
     }));

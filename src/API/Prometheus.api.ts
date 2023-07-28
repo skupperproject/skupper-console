@@ -256,11 +256,21 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchHttpFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTotalFlowsByAddress() }
+      params: { query: queries.getTotalHttpFlowByAddress() }
+    });
+
+    return result;
+  },
+
+  fetchTcpFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: { query: queries.getTotalTcpFlowByAddress() }
     });
 
     return result;
