@@ -4,5 +4,6 @@ export enum QueriesServices {
   GetProcessesByAddress = 'processes-by-service-query',
   GetAddresses = 'services-query',
   GetPrometheusActiveFlows = 'services-get-prometheus-active-flows',
-  GetPrometheusTotalFlows = 'services-get-prometheus-total-flows'
+  GetPrometheusTcpTotalFlows = 'services-get-tcp-prometheus-total-flows',
+  GetPrometheusHttpTotalFlows = 'services-get-http-prometheus-total-flows'
 }

@@ -46,8 +46,12 @@ export const queries = {
     return `sum by(sourceProcess, destProcess)(rate(flow_latency_microseconds_sum[1m]))`;
   },
 
-  getTotalFlowsByAddress() {
-    return `sum by(address)(flows_total)`;
+  getTotalHttpFlowByAddress() {
+    return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.AllHttp}"}/2)`;
+  },
+
+  getTotalTcpFlowByAddress() {
+    return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.Tcp}"})`;
   },
 
   getActiveFlowsByAddress() {
