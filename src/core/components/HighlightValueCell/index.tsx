@@ -25,7 +25,7 @@ const HighlightValueCell = function <T>({ value, format }: HighlightValueCellPro
     <div
       style={{
         fontWeight: 900,
-        color: 'var(--pf-global--palette--green-500)'
+        color: 'var(--pf-v5-global--palette--green-500)'
       }}
     >
       {format(value)}

@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Card, CardBody, CardTitle, Grid, GridItem, Icon } from '@patternfly/react-core';
 import { CircleIcon } from '@patternfly/react-icons';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
@@ -33,7 +33,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
       <GridItem xl={5} md={6}>
         <Card isFullHeight>
           <CardBody>
-            <TableComposable borders={false} variant="compact">
+            <Table borders={false} variant="compact">
               <Thead noWrap>
                 <Tr>
                   <Th />
@@ -46,7 +46,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
                 <Tr>
                   <Td>
                     <Icon size="sm">
-                      <CircleIcon color={`var(--pf-chart-theme--multi-color-ordered--ColorScale--100, #06c)`} />
+                      <CircleIcon color="var(--pf-v5-global--palette--blue-400)" />
                     </Icon>{' '}
                     {MetricsLabels.TrafficReceived}
                   </Td>
@@ -57,7 +57,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
                 <Tr>
                   <Td>
                     <Icon size="sm">
-                      <CircleIcon color={`var(--pf-chart-theme--multi-color-ordered--ColorScale--200, #4cb140)`} />
+                      <CircleIcon color="var(--pf-v5-global--palette--green-500)" />
                     </Icon>{' '}
                     {MetricsLabels.TrafficSent}
                   </Td>
@@ -66,7 +66,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
                   <Th>{formatByteRate(byteRateData.currentTxValue)}</Th>
                 </Tr>
               </Tbody>
-            </TableComposable>
+            </Table>
           </CardBody>
         </Card>
       </GridItem>

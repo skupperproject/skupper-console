@@ -62,7 +62,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
       <StackItem>
         <Toolbar>
           <ToolbarContent>
-            <ToolbarGroup alignment={{ default: 'alignRight' }}>
+            <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
                 <NavigationViewLink
                   link={SitesRoutesPaths.Sites}

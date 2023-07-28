@@ -1,22 +1,34 @@
-import { Brand, PageHeader, Title } from '@patternfly/react-core';
+import {
+  Brand,
+  Masthead,
+  MastheadBrand,
+  MastheadContent,
+  MastheadMain,
+  MastheadToggle,
+  PageToggleButton,
+  Title
+} from '@patternfly/react-core';
+import { BarsIcon } from '@patternfly/react-icons';
 
 import { brandLogo, brandName } from '@config/config';
 
 const SkHeader = function () {
   return (
-    <PageHeader
-      className="sk-header"
-      logo={
-        <>
+    <Masthead className="sk-header">
+      <MastheadToggle>
+        <PageToggleButton variant="plain">
+          <BarsIcon />
+        </PageToggleButton>
+      </MastheadToggle>
+      <MastheadMain>
+        <MastheadBrand href="https://patternfly.org" target="_blank">
           <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }}>
             <source srcSet={brandLogo} />
           </Brand>
-
-          {brandName && <Title headingLevel="h1">{brandName}</Title>}
-        </>
-      }
-      showNavToggle
-    />
+        </MastheadBrand>
+      </MastheadMain>
+      <MastheadContent> {brandName && <Title headingLevel="h1">{brandName}</Title>}</MastheadContent>
+    </Masthead>
   );
 };
 

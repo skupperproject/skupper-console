@@ -77,11 +77,11 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
           <ToolbarItem>
             <Tooltip content={'zoom in'}>
               <Button
-                isSmall
+                size="sm"
                 variant="tertiary"
                 onClick={handleIncreaseZoom}
                 icon={<SearchPlusIcon />}
-                className="pf-u-background-color-100 sk-topology-control-bar__button"
+                className="sk-topology-control-bar__button"
               />
             </Tooltip>
           </ToolbarItem>
@@ -89,11 +89,11 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
           <ToolbarItem>
             <Tooltip content={'zoom out'}>
               <Button
-                isSmall
+                size="sm"
                 variant="tertiary"
                 onClick={handleDecreaseZoom}
                 icon={<SearchMinusIcon />}
-                className="pf-u-background-color-100 sk-topology-control-bar__button"
+                className="sk-topology-control-bar__button"
               />
             </Tooltip>
           </ToolbarItem>
@@ -101,11 +101,11 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
           <ToolbarItem>
             <Tooltip content={'fit view'}>
               <Button
-                isSmall
+                size="sm"
                 variant="tertiary"
                 onClick={handleZoomToDefault}
                 icon={<ExpandArrowsAltIcon />}
-                className="pf-u-background-color-100 sk-topology-control-bar__button"
+                className="sk-topology-control-bar__button"
               />
             </Tooltip>
           </ToolbarItem>
@@ -113,11 +113,11 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
           <ToolbarItem>
             <Tooltip content={'reposition'}>
               <Button
-                isSmall
+                size="sm"
                 variant="tertiary"
                 onClick={handleReposition}
                 icon={<ExpandIcon />}
-                className="pf-u-background-color-100 sk-topology-control-bar__button"
+                className="sk-topology-control-bar__button"
               />
             </Tooltip>
           </ToolbarItem>
@@ -127,14 +127,9 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
               aria-label="Network graph legend"
               hasAutoWidth
               bodyContent={<ProcessLegend />}
-              reference={popoverRef}
+              triggerRef={popoverRef}
             />
-            <Button
-              ref={popoverRef}
-              isSmall
-              variant="tertiary"
-              className="pf-u-background-color-100 sk-topology-control-bar__button"
-            >
+            <Button ref={popoverRef} size="sm" variant="tertiary" className="sk-topology-control-bar__button">
               {LEGEND_LABEL_NAME}
             </Button>
           </ToolbarItem>

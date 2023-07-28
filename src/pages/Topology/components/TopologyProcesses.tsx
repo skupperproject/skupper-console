@@ -1,16 +1,7 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
-import {
-  Select,
-  SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-  Stack,
-  StackItem,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem
-} from '@patternfly/react-core';
+import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Select, SelectOption, SelectVariant, SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -429,7 +420,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                   <Select
                     isOpen={isAddressSelectMenuOpen}
                     onSelect={handleSelectAddress}
-                    onToggle={handleToggleAddressMenu}
+                    onToggle={(_, isOpen) => handleToggleAddressMenu(isOpen)}
                     selections={addressIdSelected}
                     hasInlineFilter
                     inlineFilterPlaceholderText={TopologyLabels.AddressFilterPlaceholderText}
@@ -445,7 +436,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                     variant={SelectVariant.checkbox}
                     isOpen={isDisplayMenuOpen}
                     onSelect={handleSelectDisplay}
-                    onToggle={handleToggleDisplayMenu}
+                    onToggle={(_, isOpen) => handleToggleDisplayMenu(isOpen)}
                     selections={displayOptionsSelected}
                     placeholderText={TopologyLabels.DisplayPlaceholderText}
                     isCheckboxSelectionBadgeHidden
@@ -454,7 +445,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
                   </Select>
                 </ToolbarItem>
 
-                <ToolbarItem alignment={{ default: 'alignRight' }}>
+                <ToolbarItem align={{ default: 'alignRight' }}>
                   <NavigationViewLink
                     link={ProcessesRoutesPaths.Processes}
                     linkLabel={TopologyLabels.ListView}

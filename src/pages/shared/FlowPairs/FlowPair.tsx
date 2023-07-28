@@ -164,9 +164,9 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
               <Icon>
                 {' '}
                 {isCounterflow ? (
-                  <LongArrowAltDownIcon color="var(--pf-global--palette--blue-300)" />
+                  <LongArrowAltDownIcon color="var(--pf-v5-global--palette--blue-300)" />
                 ) : (
-                  <LongArrowAltUpIcon color="var(--pf-global--palette--green-400)" />
+                  <LongArrowAltUpIcon color="var(--pf-v5-global--palette--green-400)" />
                 )}
               </Icon>
             </DescriptionListDescription>
@@ -214,9 +214,9 @@ const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterfl
               <Icon>
                 {' '}
                 {isCounterflow ? (
-                  <LongArrowAltDownIcon color="var(--pf-global--palette--blue-300)" />
+                  <LongArrowAltDownIcon color="var(--pf-v5-global--palette--blue-300)" />
                 ) : (
-                  <LongArrowAltUpIcon color="var(--pf-global--palette--green-400)" />
+                  <LongArrowAltUpIcon color="var(-v5-global--palette--green-400)" />
                 )}
               </Icon>
             </DescriptionListDescription>{' '}

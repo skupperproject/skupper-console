@@ -88,7 +88,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
       <StackItem>
         <Toolbar>
           <ToolbarContent>
-            <ToolbarGroup alignment={{ default: 'alignRight' }}>
+            <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
                 <NavigationViewLink
                   link={ProcessGroupsRoutesPaths.ProcessGroups}
