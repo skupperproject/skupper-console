@@ -45,6 +45,6 @@ describe('ResourceIcon', () => {
     const el = screen.getByRole('service-resource-icon');
     expect(el).toBeInTheDocument();
     expect(el).toHaveClass('sk-resource-icon', 'sk-resource-service');
-    expect(el).toHaveTextContent('A');
+    expect(el).toHaveTextContent('SE');
   });
 });

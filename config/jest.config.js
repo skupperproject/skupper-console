@@ -36,7 +36,7 @@ module.exports = {
   moduleNameMapper: {
     ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
   },
-  moduleDirectories: ['node_modules'],
+  moduleDirectories: [`${ROOT_PROJECT}/node_modules`, `${ROOT_PROJECT}/src`],
   roots: [SRC_PATH],
   rootDir: ROOT_PROJECT,
   transform: {

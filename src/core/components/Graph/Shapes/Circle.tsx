@@ -1,9 +1,6 @@
-import React from 'react';
-
 import { LEGEND_DEFAULT_STROKE_COLOR } from '../Graph.constants';
 
 const SvgCircle = function ({ dimension = 12 }: { dimension?: number }) {
-  // Dimension of the circle (width and height)
   const circleDimension = dimension;
   const circleStroke = LEGEND_DEFAULT_STROKE_COLOR;
 
