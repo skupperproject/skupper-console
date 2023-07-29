@@ -11,6 +11,7 @@ let numCyclesDetected = 0;
 
 const devConfig = {
   mode: 'development',
+  devtool: 'eval-source-map',
   output: {
     publicPath: '/'
   },

@@ -1,9 +1,6 @@
-import React from 'react';
-
 import { LEGEND_DEFAULT_BG_COLOR, LEGEND_DEFAULT_STROKE_COLOR } from '../Graph.constants';
 
 const SvgDiamond = function ({ dimension = 12 }: { dimension?: number }) {
-  // Dimension of the diamond (width and height)
   const diamondDimension = dimension;
   const diamondColor = LEGEND_DEFAULT_BG_COLOR;
   const diamondStroke = LEGEND_DEFAULT_STROKE_COLOR;

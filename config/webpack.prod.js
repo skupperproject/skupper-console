@@ -9,6 +9,7 @@ const commonConfig = require('./webpack.common');
 
 const prodConfig = {
   mode: 'production',
+  devtool: 'source-map',
   output: {
     path: path.join(ROOT, '/build'),
     filename: 'sk-[name].[contenthash].min.js',

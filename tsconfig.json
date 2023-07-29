@@ -6,7 +6,7 @@
     "module": "es2022",
     "moduleResolution": "node",
     "jsx": "react-jsx",
-    "typeRoots": ["node_modules/@types", "@types_app"],
+    "typeRoots": ["node_modules/@types"],
     "baseUrl": "src",
     "sourceMap": true,
     "allowJs": true,
@@ -24,6 +24,6 @@
     "noUnusedParameters": false,
     "strictPropertyInitialization": true
   },
-  "include": ["src", "@types_app/index.d.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "build"]
 }

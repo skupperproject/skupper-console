@@ -3,10 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { Wrapper } from '@core/components/Wrapper';
 import App from 'App';
 
-import '@patternfly/patternfly/patternfly.css';
-import '@patternfly/patternfly/patternfly-addons.css';
-import './App.css';
-
 const rootElement = document.getElementById('app') as HTMLDivElement;
 const root = createRoot(rootElement);
 
