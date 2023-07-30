@@ -18,6 +18,8 @@ import { TopologyLabels } from '@pages/Topology/Topology.enum';
 import NavigationViewLink from '../core/components/NavigationViewLink';
 import TransitionPage from '../core/components/TransitionPages/Fade';
 
+import '@patternfly/patternfly/patternfly-addons.css';
+
 interface MainContainerProps {
   dataTestId?: string;
   title: string;

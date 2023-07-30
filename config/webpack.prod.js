@@ -2,8 +2,10 @@ const { ROOT, path } = require('./webpack.constant');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const TerserJSPlugin = require('terser-webpack-plugin');
 
 const commonConfig = require('./webpack.common');
 
@@ -12,7 +14,8 @@ const prodConfig = {
   devtool: 'source-map',
   output: {
     path: path.join(ROOT, '/build'),
-    filename: 'sk-[name].[contenthash].min.js',
+    filename: '[name].js',
+    chunkFilename: 'js/[name].bundle.js',
     publicPath: '/',
     clean: true
   },
@@ -20,6 +23,7 @@ const prodConfig = {
     maxEntrypointSize: 512000,
     maxAssetSize: 512000
   },
+
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
@@ -36,30 +40,33 @@ const prodConfig = {
         path.resolve(ROOT, 'public', 'manifest.json'),
         process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.ico')
       ]
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: 'css/[name].bundle.css',
+      ignoreOrder: true
     })
   ],
+
   optimization: {
-    splitChunks: {
-      name: (module, chunks, cacheGroupKey) => {
-        const allChunksNames = chunks.map((chunk) => chunk.name).join('-');
-        return allChunksNames;
-      },
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          // cacheGroupKey here is `commons` as the key of the cacheGroup
-          name(module, chunks, cacheGroupKey) {
-            const moduleFileName = module
-              .identifier()
-              .split('/')
-              .reduceRight((item) => item);
-            const allChunksNames = chunks.map((item) => item.name).join('~');
-            return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-          },
-          chunks: 'all'
+    chunkIds: 'named',
+    minimizer: [
+      new TerserJSPlugin({}),
+      new CssMinimizerPlugin({
+        minimizerOptions: {
+          preset: ['default', { mergeLonghand: false }]
         }
+      })
+    ]
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.css/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       }
-    }
+    ]
   }
 };
 
