@@ -14,7 +14,6 @@ import Console from '@pages/shared/Errors/Console';
 import LoadingPage from '@pages/shared/Loading';
 import { routes } from 'routes';
 
-import '@patternfly/patternfly/patternfly-addons.css';
 import '@patternfly/react-core/dist/styles/base.css';
 import './App.css';
 

@@ -11,6 +11,7 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
     plugins: [new TsConfigPathsPlugin({ configFile: path.join(ROOT, 'tsconfig.json') })]
   },
+
   module: {
     rules: [
       {
@@ -21,19 +22,29 @@ module.exports = {
         }
       },
       {
-        test: /\.css/,
-        use: ['style-loader', 'css-loader']
+        test: /\.(svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][ext]'
+        }
       },
       {
-        test: /\.(png|jpg|jpeg|gif|ico|woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource'
+        test: /\.(png)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]'
+        }
       },
       {
-        test: /\.svg/,
-        type: 'asset/inline'
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext]'
+        }
       }
     ]
   },
+
   plugins: [
     new webpack.DefinePlugin({
       'process.env.BRAND_APP_NAME': JSON.stringify(process.env.BRAND_APP_NAME),

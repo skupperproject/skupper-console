@@ -12,14 +12,12 @@ let numCyclesDetected = 0;
 const devConfig = {
   mode: 'development',
   devtool: 'eval-source-map',
-  output: {
-    publicPath: '/'
-  },
   devServer: {
     port: 3000,
-    open: false,
-    historyApiFallback: true
+    historyApiFallback: true,
+    compress: true
   },
+
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
     new CircularDependencyPlugin({
@@ -42,7 +40,16 @@ const devConfig = {
         }
       }
     })
-  ]
+  ],
+
+  module: {
+    rules: [
+      {
+        test: /\.css/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
 };
 
 module.exports = merge(commonConfig, devConfig);
