@@ -30,9 +30,9 @@ html {
   flex-shrink: 0;
   font-size: 12px;
   font-weight: 400;
-  line-height: 18px;
+  line-height: 20px;
   margin-right: 4px;
-  min-width: 18px;
+  min-width: 20px;
   padding: 0 4px;
   text-align: center;
   white-space: nowrap;

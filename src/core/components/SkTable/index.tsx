@@ -2,7 +2,18 @@ import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, us
 
 import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { SortByDirection, Table, TableText, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import {
+  InnerScrollContainer,
+  SortByDirection,
+  Table,
+  TableText,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  ThProps,
+  Tr
+} from '@patternfly/react-table';
 
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 
@@ -141,61 +152,74 @@ const SkTable = function <T>({
       )}
 
       <CardBody>
-        <Table variant="compact" {...restProps}>
-          <Thead>
-            <Tr>
-              {skColumns.map(({ name, prop, columnDescription }, index) => (
-                <Th
-                  colSpan={1}
-                  key={name}
-                  sort={(prop && shouldSort && getSortParams(index)) || undefined}
-                  info={
-                    columnDescription
-                      ? {
-                          tooltip: columnDescription,
-                          tooltipProps: {
-                            isContentLeftAligned: true
-                          }
-                        }
-                      : undefined
-                  }
-                >
-                  {name}
-                </Th>
-              ))}
-            </Tr>
-          </Thead>
-
-          <Tbody>
-            {skRows.length === 0 && (
+        <InnerScrollContainer>
+          <Table variant="compact" {...restProps}>
+            <Thead>
               <Tr>
-                <Td colSpan={12}>
-                  <EmptyData message={NO_RESULT_FOUND_LABEL} icon={SearchIcon} />
-                </Td>
+                {skColumns.map(({ name, prop, columnDescription, isStickyColumn }, index) => (
+                  <Th
+                    colSpan={1}
+                    key={name}
+                    isStickyColumn={isStickyColumn}
+                    sort={(prop && shouldSort && getSortParams(index)) || undefined}
+                    info={
+                      columnDescription
+                        ? {
+                            tooltip: columnDescription,
+                            tooltipProps: {
+                              isContentLeftAligned: true
+                            }
+                          }
+                        : undefined
+                    }
+                  >
+                    {name}
+                  </Th>
+                ))}
               </Tr>
-            )}
+            </Thead>
 
-            {!(skRows.length === 0) &&
-              skRows.map((row) => (
-                <Tr key={row.id}>
-                  {row.columns.map(({ data, value, customCellName, callback, format, width, modifier }, index) => {
-                    const Component = !!customCells && !!customCellName && customCells[customCellName];
-
-                    return (
-                      <Td width={width} key={index} modifier={modifier}>
-                        {Component && (
-                          <Component data={data} value={value} callback={callback} format={format && format(value)} />
-                        )}
-                        {!Component && (
-                          <TableText wrapModifier="truncate">{(format && format(value)) || value}</TableText>
-                        )}
-                      </Td>
-                    );
-                  })}
+            <Tbody>
+              {skRows.length === 0 && (
+                <Tr>
+                  <Td colSpan={12}>
+                    <EmptyData message={NO_RESULT_FOUND_LABEL} icon={SearchIcon} />
+                  </Td>
                 </Tr>
-              ))}
-          </Tbody>
-        </Table>
+              )}
+
+              {!(skRows.length === 0) &&
+                skRows.map((row) => (
+                  <Tr key={row.id}>
+                    {row.columns.map(
+                      ({ data, value, customCellName, callback, format, width, modifier, isStickyColumn }, index) => {
+                        const Component = !!customCells && !!customCellName && customCells[customCellName];
+
+                        return (
+                          <Td width={width} key={index} modifier={modifier} isStickyColumn={isStickyColumn}>
+                            {Component && (
+                              <Component
+                                data={data}
+                                value={value}
+                                callback={callback}
+                                format={format && format(value)}
+                                fitContent={modifier === 'nowrap'}
+                              />
+                            )}
+                            {!Component && (
+                              <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
+                                {(format && format(value)) || value}
+                              </TableText>
+                            )}
+                          </Td>
+                        );
+                      }
+                    )}
+                  </Tr>
+                ))}
+            </Tbody>
+          </Table>
+        </InnerScrollContainer>
 
         {isPaginationEnabled && (
           <SkPagination
