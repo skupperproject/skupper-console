@@ -19,7 +19,9 @@ import '@patternfly/react-core/dist/styles/base.css';
 import './App.css';
 
 const App = function () {
-  const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors());
+  const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors(), {
+    suspense: false
+  });
 
   if (collector) {
     setCollectorStartTime(collector.startTime / 1000);
