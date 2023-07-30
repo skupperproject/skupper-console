@@ -22,7 +22,7 @@ export const isPrometheusActive = process.env.DISABLE_METRICS === 'true' ? false
 
 // Default page size for tables. Set in environment variables, but can be overridden.
 export const DEFAULT_PAGINATION_SIZE = 10;
-export const BIG_PAGINATION_SIZE = 30;
+export const BIG_PAGINATION_SIZE = 20;
 export const SMALL_PAGINATION_SIZE = 10;
 
 // Brand
