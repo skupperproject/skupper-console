@@ -6,6 +6,7 @@ import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
+import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
@@ -81,6 +82,7 @@ const Services = function () {
 
   return (
     <MainContainer
+      dataTestId={getTestsIds.servicesView()}
       title={AddressesLabels.Section}
       description={AddressesLabels.Description}
       mainContentChildren={
