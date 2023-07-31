@@ -1,5 +1,5 @@
 {
-  "extends": "../config/tsconfig.paths.json",
+  "extends": "../tsconfig.paths.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "target": "ES2022",

@@ -1,4 +1,6 @@
-const { ROOT, path } = require('./webpack.constant');
+const path = require('path');
+const ROOT = process.cwd();
+
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');

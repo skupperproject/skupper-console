@@ -20,9 +20,9 @@
   },
   "private": true,
   "scripts": {
-    "start": "webpack serve --config config/webpack.dev.js",
-    "build": "webpack --config config/webpack.prod.js",
-    "test": "DISABLE_METRICS=true jest --config config/jest.config.js",
+    "start": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "test": "ENABLE_MOCK_SERVER=true DISABLE_METRICS=true jest --config jest.config.js",
     "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}'",
     "cy:open": "cypress open",
     "cy:run": "cypress run",

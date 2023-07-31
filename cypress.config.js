@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress';
 const webpack = require('@cypress/webpack-preprocessor');
 
 const options = {
-  webpackOptions: require('./config/webpack.dev.js'),
+  webpackOptions: require('./webpack.dev.js'),
   watchOptions: {}
 };
 
