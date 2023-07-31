@@ -1,9 +1,9 @@
+import Logo from '@assets/skupper-logo.png';
 import { AddressesPaths } from '@pages/Addresses/Addresses.constants';
 import { ProcessesPaths } from '@pages/Processes/Processes.constant';
 import { ProcessGroupsPaths } from '@pages/ProcessGroups/ProcessGroups.constant';
 import { SitesPaths } from '@pages/Sites/Sites.constant';
 import { TopologyPaths } from '@pages/Topology/Topology.constant';
-import Logo from '@assets/skupper-logo.png';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
 const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;

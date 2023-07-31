@@ -1,4 +1,3 @@
-const { ROOT, path } = require('./webpack.constant');
 const { merge } = require('webpack-merge');
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -25,7 +24,7 @@ const devConfig = {
       failOnError: true,
       allowAsyncCycles: false,
       cwd: process.cwd(),
-      onStart({ compilation }) {
+      onStart({ _ }) {
         numCyclesDetected = 0;
       },
       onDetected({ module: _, paths, compilation }) {

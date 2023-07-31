@@ -1,4 +1,6 @@
-const { ROOT, path } = require('./webpack.constant');
+const path = require('path');
+const ROOT = process.cwd();
+
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');

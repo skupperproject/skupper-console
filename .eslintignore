@@ -1,7 +1,5 @@
 node_modules
 public
 build
-config
 cypress
-**/*.config.js
-
+**/*.js

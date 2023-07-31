@@ -1,17 +1,16 @@
-const {
-  SRC_PATH,
-  CONFIG_PATH,
-  TS_CONFIG_PATH,
-  SVG_TRANSFORM_FILENAME,
-  FILE_MOCK_TRANSFORM_FILENAME,
-  STYLE_MOCK_TRANSFORM_FILENAME,
-  ENV_FILE,
-  ROOT_PROJECT
-} = require('./jest.config.var');
+const ROOT = process.cwd();
+
+const ROOT_PROJECT = `${ROOT}`;
+const SRC_PATH = `${ROOT_PROJECT}/src`;
+const MOCKS_PATH = `${ROOT_PROJECT}/mocks`;
+const TS_CONFIG_PATH = './tsconfig.paths.json';
+const SVG_TRANSFORM_FILENAME = 'jest.config.svgTransform';
+const FILE_MOCK_TRANSFORM_FILENAME = 'jest.config.fileMock';
+const STYLE_MOCK_TRANSFORM_FILENAME = 'jest.config.styleMock';
 
 const extensionsAllowed = {
-  '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/': `${CONFIG_PATH}/${FILE_MOCK_TRANSFORM_FILENAME}`,
-  '\\.(css|scss)$': `${CONFIG_PATH}/${STYLE_MOCK_TRANSFORM_FILENAME}`
+  '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/': `${MOCKS_PATH}/${FILE_MOCK_TRANSFORM_FILENAME}`,
+  '\\.(css|scss)$': `${MOCKS_PATH}/${STYLE_MOCK_TRANSFORM_FILENAME}`
 };
 
 function makeModuleNameMapper(srcPath, tsconfigPath) {
@@ -31,7 +30,6 @@ function makeModuleNameMapper(srcPath, tsconfigPath) {
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  setupFiles: [ENV_FILE],
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: {
     ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
@@ -41,7 +39,7 @@ module.exports = {
   rootDir: ROOT_PROJECT,
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
-    '^.+\\.svg$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`,
-    '.+\\.(png)$': `${CONFIG_PATH}/${SVG_TRANSFORM_FILENAME}`
+    '^.+\\.svg$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`,
+    '.+\\.(png)$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`
   }
 };
