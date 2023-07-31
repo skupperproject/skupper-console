@@ -3,6 +3,7 @@ export const getTestsIds = {
   sitesView: () => 'sk-sites-view',
   componentsView: () => 'sk-components-view',
   processesView: () => 'sk-processes-view',
+  servicesView: () => 'sk-services-view',
   notFoundView: () => `sk-not-found-view`,
   siteView: (id: string) => `sk-site-view-${id}`,
   componentView: (id: string) => `sk-component-view-${id}`,
