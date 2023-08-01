@@ -77,6 +77,19 @@
       "destinationId": "process-za",
       "destinationName": "process za",
       "protocol": "http1"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "process-mm-to-process-nb",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "pairType": "PROCESS",
+      "recordCount": 2,
+      "sourceId": "process-mm",
+      "sourceName": "process mm",
+      "destinationId": "process-nb",
+      "destinationName": "process nb",
+      "protocol": "tcp"
     }
   ],
   "status": "",

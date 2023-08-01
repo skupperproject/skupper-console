@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { SortDirection } from '@API/REST.enum';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
@@ -126,7 +126,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
         {flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
       </Modal>
 
-      {viewSelected === TAB_0_KEY && isPrometheusActive && (
+      {viewSelected === TAB_0_KEY && (
         <Metrics
           key={addressId}
           forceUpdate={checkDataChanged}

@@ -5,6 +5,7 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
+import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 
 import MetricFilters from './Filters';
@@ -48,6 +49,7 @@ const Metrics: FC<MetricsProps> = function ({
     [QueriesMetrics.GetMetrics, prometheusQueryParams],
     () => MetricsController.getMetrics(prometheusQueryParams),
     {
+      enabled: isPrometheusActive,
       refetchInterval,
       keepPreviousData: true
     }
@@ -67,7 +69,7 @@ const Metrics: FC<MetricsProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    refetch();
+    isPrometheusActive && refetch();
   }, [refetch]);
 
   // Filters: Set the prometheus query params with the filter values
@@ -97,7 +99,17 @@ const Metrics: FC<MetricsProps> = function ({
   }, [forceUpdate, handleRefetchMetrics]);
 
   if (!metrics) {
-    return null;
+    return (
+      <Card isFullHeight>
+        <CardBody>
+          <EmptyData
+            message={MetricsLabels.NoMetricFoundTitleMessage}
+            description={MetricsLabels.NoMetricFoundDescriptionMessage}
+            icon={SearchIcon}
+          />
+        </CardBody>
+      </Card>
+    );
   }
 
   const {
