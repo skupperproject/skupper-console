@@ -28,7 +28,6 @@ export const SMALL_PAGINATION_SIZE = 10;
 // Brand
 export const brandName = process.env.BRAND_APP_NAME || undefined;
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
-export const skupperVersion = process.env.APP_VERSION;
 
 /** General config: contains various global settings and constants */
 let COLLECTOR_CURRENT_TIME: number = new Date().getTime();
