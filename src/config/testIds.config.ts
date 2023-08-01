@@ -1,5 +1,6 @@
 export const getTestsIds = {
   loadingView: () => 'sk-loading-view',
+  header: () => 'sk-header',
   sitesView: () => 'sk-sites-view',
   componentsView: () => 'sk-components-view',
   processesView: () => 'sk-processes-view',

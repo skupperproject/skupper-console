@@ -1,5 +1,6 @@
 import { timeIntervalMap } from '@config/prometheus';
 
+// timestamp and start are expressed in seconds
 export function formatChartDate(timestamp: number, start: number) {
   if (start * 1000 <= Date.now() - timeIntervalMap.oneMinute.seconds * 1000) {
     return getTimeFromTimestamp(timestamp, true);

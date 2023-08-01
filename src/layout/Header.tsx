@@ -14,7 +14,7 @@ import { brandLogo, brandName } from '@config/config';
 
 const SkHeader = function () {
   return (
-    <Masthead className="sk-header">
+    <Masthead className="sk-header" data-testid="sk-header">
       <MastheadToggle>
         <PageToggleButton variant="plain">
           <BarsIcon />

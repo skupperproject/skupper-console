@@ -9,8 +9,8 @@ interface FormatTimeOptions {
 }
 
 export function formatLatency(time: number, options?: FormatTimeOptions) {
-  const startSize = options?.startSize || 'µs';
-  const decimals = options?.decimals || 2;
+  const startSize = options?.startSize ?? 'µs';
+  const decimals = options?.decimals ?? 2;
 
   if (time === 0) {
     return `0 ${startSize}`;

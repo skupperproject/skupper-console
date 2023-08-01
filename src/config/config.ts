@@ -1,5 +1,5 @@
 import Logo from '@assets/skupper-logo.png';
-import { AddressesPaths } from '@pages/Addresses/Addresses.constants';
+import { AddressesPaths } from '@pages/Addresses/Addresses.constant';
 import { ProcessesPaths } from '@pages/Processes/Processes.constant';
 import { ProcessGroupsPaths } from '@pages/ProcessGroups/ProcessGroups.constant';
 import { SitesPaths } from '@pages/Sites/Sites.constant';

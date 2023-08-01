@@ -10,7 +10,7 @@ import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
-import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
+import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constant';
 import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesServices } from '../services/services.enum';

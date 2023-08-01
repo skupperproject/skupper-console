@@ -11,7 +11,7 @@ import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Addresses.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Addresses.constant';
 import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Addresses.enum';
 import ConnectionsByAddress from '../components/ConnectionsByAddress';
 import RequestsByAddress from '../components/RequestsByAddress';

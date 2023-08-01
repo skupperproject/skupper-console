@@ -41,5 +41,17 @@ module.exports = {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
     '^.+\\.svg$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`,
     '.+\\.(png)$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`
-  }
+  },
+  coveragePathIgnorePatterns: [
+    '^.*\\.enum\\.[t]s?$',
+    '^.*\\.interfaces\\.[t]s?$',
+    '^.*\\.constant\\.[t]s?$',
+    'API',
+    'index.tsx',
+    'routes.tsx',
+    'core/components/Graph',
+    'layout/RouteContainer.tsx',
+    'config',
+    'typings.d.ts'
+  ]
 };
