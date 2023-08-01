@@ -1,12 +1,9 @@
-import { Suspense } from 'react';
-
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';
-import LoadingPage from '@pages/shared/Loading';
 
 import App from '../App';
 
@@ -19,9 +16,7 @@ describe('Begin testing the App component', () => {
 
     render(
       <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <App />
-        </Suspense>
+        <App />
       </Wrapper>
     );
   });
