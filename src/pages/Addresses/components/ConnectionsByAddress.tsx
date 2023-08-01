@@ -76,7 +76,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     ['QueriesAddresses.GetFlowPair', { addressName }],
     () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
     {
-      enabled: viewSelected === TAB_1_KEY,
+      enabled: isPrometheusActive && viewSelected === TAB_1_KEY,
       refetchInterval: UPDATE_INTERVAL
     }
   );
@@ -204,7 +204,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
         )}
       </Modal>
 
-      {viewSelected === TAB_0_KEY && isPrometheusActive && (
+      {viewSelected === TAB_0_KEY && (
         <Metrics
           key={addressId}
           forceUpdate={checkDataChanged}

@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { isPrometheusActive } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
@@ -74,27 +73,26 @@ const ProcessGroup = function () {
           </StackItem>
 
           {/* Component Metrics*/}
-          {isPrometheusActive && (
-            <StackItem isFilled>
-              <Metrics
-                key={id}
-                selectedFilters={{
-                  ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
-                  processIdSource: serverNames
-                }}
-                startTime={startTime}
-                sourceProcesses={serverNameFilters}
-                filterOptions={{
-                  destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-                  sourceProcesses: {
-                    disabled: serverNameFilters.length < 2,
-                    placeholder: MetricsLabels.FilterAllSourceProcesses
-                  }
-                }}
-                onGetMetricFilters={handleRefreshMetrics}
-              />
-            </StackItem>
-          )}
+
+          <StackItem isFilled>
+            <Metrics
+              key={id}
+              selectedFilters={{
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
+                processIdSource: serverNames
+              }}
+              startTime={startTime}
+              sourceProcesses={serverNameFilters}
+              filterOptions={{
+                destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                sourceProcesses: {
+                  disabled: serverNameFilters.length < 2,
+                  placeholder: MetricsLabels.FilterAllSourceProcesses
+                }
+              }}
+              onGetMetricFilters={handleRefreshMetrics}
+            />
+          </StackItem>
         </Stack>
       }
     />

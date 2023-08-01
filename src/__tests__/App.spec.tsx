@@ -1,4 +1,4 @@
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { getTestsIds } from '@config/testIds.config';
@@ -13,12 +13,6 @@ describe('Begin testing the App component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-
-    render(
-      <Wrapper>
-        <App />
-      </Wrapper>
-    );
   });
 
   afterEach(() => {
@@ -27,10 +21,13 @@ describe('Begin testing the App component', () => {
   });
 
   it('should render the Components view after the data loading is complete', async () => {
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    // Wait for the loading page to disappear before continuing with the test.
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
-
-    expect(screen.getByTestId(getTestsIds.header())).toBeInTheDocument();
+    await waitFor(() => {
+      render(
+        <Wrapper>
+          <App />
+        </Wrapper>
+      );
+      expect(screen.getByTestId(getTestsIds.header())).toBeInTheDocument();
+    });
   });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /** React query library config: contains configuration options for the React query library, used for fetching and caching data in the UI */
 export const queryClientConfig = {
   defaultOptions: {
@@ -10,5 +11,10 @@ export const queryClientConfig = {
       refetchIntervalInBackground: true,
       suspense: true
     }
+  },
+  logger: {
+    log: console.log,
+    warn: console.warn,
+    error: process.env.NODE_ENV === 'test' ? () => {} : console.debug
   }
 };

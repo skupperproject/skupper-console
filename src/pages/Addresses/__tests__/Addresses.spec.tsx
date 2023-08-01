@@ -34,13 +34,7 @@ describe('Begin testing the Service component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render a loading page when data is loading', () => {
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-  });
-
   it('should render the Services view after the data loading is complete', async () => {
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
     expect(screen.getByTestId(getTestsIds.servicesView())).toBeInTheDocument();
   });

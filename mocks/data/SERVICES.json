@@ -21,10 +21,21 @@
       "connectorCount": 0,
       "totalFlows": 0,
       "currentFlows": 0
+    },
+    {
+      "recType": "VanAddress",
+      "identity": "process-nb:8000",
+      "startTime": 1674048767157175,
+      "endTime": 0,
+      "name": "process nb:8000",
+      "protocol": "tcp",
+      "connectorCount": 1,
+      "totalFlows": 1,
+      "currentFlows": 1
     }
   ],
   "status": "",
-  "count": 2,
-  "timeRangeCount": 2,
-  "totalCount": 2
+  "count": 3,
+  "timeRangeCount": 3,
+  "totalCount": 3
 }
