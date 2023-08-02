@@ -21,6 +21,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { getTestsIds } from '@config/testIds.config';
 import EmptyData from '@core/components/EmptyData';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -70,7 +71,7 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
 };
 
 const ProcessPairs = function () {
-  const { processPairId } = useParams();
+  const { processPairId } = useParams() as { processPairId: string };
   const [searchParams, setSearchParams] = useSearchParams();
 
   const type = searchParams.get('type') || TAB_1_KEY;
@@ -227,6 +228,7 @@ const ProcessPairs = function () {
       </Modal>
 
       <MainContainer
+        dataTestId={getTestsIds.processPairsView(processPairId)}
         title={ProcessPairsColumnsNames.Title}
         link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
         mainContentChildren={

@@ -1,11 +1,8 @@
 import { Suspense } from 'react';
 
 import { Page } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { RESTApi } from '@API/REST.api';
-import { setCollectorStartTime } from '@config/config';
 import SkBreadcrumb from '@core/components/SkBreadcrumb';
 import SkHeader from '@layout/Header';
 import RouteContainer from '@layout/RouteContainer';
@@ -18,14 +15,6 @@ import '@patternfly/react-core/dist/styles/base.css';
 import './App.css';
 
 const App = function () {
-  const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors(), {
-    suspense: false
-  });
-
-  if (collector) {
-    setCollectorStartTime(collector.startTime / 1000);
-  }
-
   return (
     <Page
       header={<SkHeader />}

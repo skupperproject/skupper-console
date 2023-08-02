@@ -32,11 +32,12 @@ module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: {
+    d3: `${ROOT_PROJECT}/node_modules/d3-interpolate/dist/d3-interpolate.min.js`,
     ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
   },
   moduleDirectories: [`${ROOT_PROJECT}/node_modules`, `${ROOT_PROJECT}/src`],
   roots: [SRC_PATH],
-  rootDir: ROOT_PROJECT,
+
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
     '^.+\\.svg$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`,
@@ -46,6 +47,7 @@ module.exports = {
     '^.*\\.enum\\.[t]s?$',
     '^.*\\.interfaces\\.[t]s?$',
     '^.*\\.constant\\.[t]s?$',
+    '^.*\\.constants\\.[t]s?$',
     'API',
     'index.tsx',
     'routes.tsx',
@@ -53,5 +55,6 @@ module.exports = {
     'layout/RouteContainer.tsx',
     'config',
     'typings.d.ts'
-  ]
+  ],
+  coverageReporters: ['json', 'html']
 };

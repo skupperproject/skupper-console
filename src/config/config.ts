@@ -30,9 +30,5 @@ export const brandName = process.env.BRAND_APP_NAME || undefined;
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
 
 /** General config: contains various global settings and constants */
-let COLLECTOR_CURRENT_TIME: number = new Date().getTime();
-export const setCollectorStartTime = (time: number) => (COLLECTOR_CURRENT_TIME = time);
-export const geCollectorStartTime = () => COLLECTOR_CURRENT_TIME;
-
 export const UPDATE_INTERVAL = 7 * 1000; // Time in milliseconds to request updated data from the backend
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
