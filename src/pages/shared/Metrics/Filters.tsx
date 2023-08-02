@@ -3,10 +3,11 @@ import { FC, useCallback, useMemo, useState, MouseEvent, ChangeEvent, memo } fro
 import { Button, Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
+import { useQuery } from '@tanstack/react-query';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
+import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { geCollectorStartTime } from '@config/config';
 import { timeIntervalMap } from '@config/prometheus';
 
 import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constant';
@@ -28,15 +29,21 @@ const MetricFilters: FC<MetricFilterProps> = memo(
   }) => {
     const filterOptions = { ...filterOptionsDefault, ...customFilterOptions };
 
+    const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors(), {
+      suspense: false
+    });
     // filter the display interval items that are less than startTime
     // ie: if the flow collector restart we don't want start from the beginning
-    const timeIntervalMapWindow = useMemo(
-      () =>
-        Object.values(timeIntervalMap).filter(
-          ({ seconds }) => new Date().getTime() - seconds * 1000 > Math.max(geCollectorStartTime(), startTime / 1000)
-        ),
-      [startTime]
-    );
+    const timeIntervalMapWindow = useMemo(() => {
+      if (collector?.startTime) {
+        return Object.values(timeIntervalMap).filter(
+          ({ seconds }) =>
+            new Date().getTime() - seconds * 1000 > Math.max(collector?.startTime / 1000, startTime / 1000)
+        );
+      }
+
+      return Object.values(timeIntervalMap);
+    }, [collector?.startTime, startTime]);
 
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
     const [selectedFilter, setSelectedFilter] = useState<FilterProps>(initialFilters);

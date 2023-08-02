@@ -23,6 +23,7 @@ import { Link } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { ConnectionTCP, FlowPairsResponse, RequestHTTP } from '@API/REST.interfaces';
+import { getTestsIds } from '@config/testIds.config';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes, formatTraceBySites } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -44,7 +45,7 @@ const FlowsPair: FC<{ flowPair: FlowPairsResponse | undefined }> = function ({ f
   const duration = formatTimeInterval(flowPair.endTime || Date.now() * 1000, flowPair.startTime);
 
   return (
-    <Grid hasGutter>
+    <Grid hasGutter data-testid={getTestsIds.flowPairsView(flowPair.identity)}>
       <GridItem>
         {flowPair.protocol === AvailableProtocols.Tcp && (
           <>

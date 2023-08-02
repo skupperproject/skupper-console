@@ -43,7 +43,7 @@ const remoteProcessesQueryParams = {
   processRole: 'remote'
 };
 
-const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined }> = function ({
+const TopologyProcesses: FC<{ addressId?: string | null; id?: string | undefined }> = function ({
   addressId,
   id: processId
 }) {
@@ -405,7 +405,7 @@ const TopologyProcesses: FC<{ addressId?: string | null; id: string | undefined 
   }
 
   return (
-    <Stack>
+    <Stack data-testid="sk-topology-processes">
       {!nodes.length && (
         <StackItem isFilled>
           <EmptyData />

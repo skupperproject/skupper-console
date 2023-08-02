@@ -3,6 +3,7 @@ import { MouseEvent as ReactMouseEvent, Suspense, useState } from 'react';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
+import { getTestsIds } from '@config/testIds.config';
 import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 
@@ -27,6 +28,7 @@ const Topology = function () {
 
   return (
     <MainContainer
+      dataTestId={getTestsIds.topologyView()}
       isPlain
       hasMainContentPadding
       title={TopologyLabels.Topology}
