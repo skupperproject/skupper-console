@@ -2,22 +2,24 @@ import { timeIntervalMap } from '@config/prometheus';
 
 // timestamp and start are expressed in seconds
 export function formatChartDate(timestamp: number, start: number) {
-  if (start * 1000 <= Date.now() - timeIntervalMap.oneMinute.seconds * 1000) {
-    return getTimeFromTimestamp(timestamp, true);
+  const now = Date.now();
+
+  if (start * 1000 <= now - timeIntervalMap.twoWeeks.seconds * 1000) {
+    return getMonthAndDay(timestamp);
   }
 
-  if (start * 1000 <= Date.now() - timeIntervalMap.twoDay.seconds * 1000) {
+  if (start * 1000 <= now - timeIntervalMap.twoDay.seconds * 1000) {
     return getDayFromTimestamp(timestamp);
   }
 
-  if (start * 1000 <= Date.now() - timeIntervalMap.twoWeeks.seconds * 1000) {
-    return getMonthAndDay(timestamp);
+  if (start * 1000 <= now - timeIntervalMap.oneMinute.seconds * 1000) {
+    return getTimeFromTimestamp(timestamp, true);
   }
 
   return getTimeFromTimestamp(timestamp);
 }
 
-function getTimeFromTimestamp(timestamp: number, withSeconds = false) {
+export function getTimeFromTimestamp(timestamp: number, withSeconds = false) {
   // Convert timestamp to milliseconds
   const milliseconds = timestamp * 1000;
 
@@ -48,7 +50,7 @@ function getTimeFromTimestamp(timestamp: number, withSeconds = false) {
   return `${paddedHours}:${paddedMinutes}`;
 }
 
-function getDayFromTimestamp(timestamp: number) {
+export function getDayFromTimestamp(timestamp: number) {
   const timeString = getTimeFromTimestamp(timestamp);
   // Create a new Date object using the timestamp (in milliseconds)
   const date = new Date(timestamp * 1000);
@@ -67,7 +69,7 @@ function getDayFromTimestamp(timestamp: number) {
   return `${dayOfWeekName} ${day} ${timeString}`;
 }
 
-function getMonthAndDay(timestamp: number) {
+export function getMonthAndDay(timestamp: number) {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const date = new Date(timestamp * 1000); // convert timestamp to milliseconds
   const monthIndex = date.getMonth(); // get the zero-based month index
