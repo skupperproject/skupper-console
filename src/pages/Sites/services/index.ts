@@ -1,6 +1,6 @@
 import { LinkResponse, RouterResponse, SiteResponse } from 'API/REST.interfaces';
 
-import { LINK_DIRECTIONS } from '../Sites.constant';
+import { LINK_DIRECTIONS } from '../Sites.constants';
 import { SiteWithLinks } from '../Sites.interfaces';
 
 const SitesController = {

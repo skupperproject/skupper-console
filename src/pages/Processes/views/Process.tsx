@@ -25,7 +25,7 @@ import {
   processesConnectedColumns,
   ProcessesConnectedComponentsTable,
   processesHttpConnectedColumns
-} from '../Processes.constant';
+} from '../Processes.constants';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 

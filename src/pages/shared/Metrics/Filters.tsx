@@ -10,7 +10,7 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { timeIntervalMap } from '@config/prometheus';
 
-import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constant';
+import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constants';
 import { MetricsLabels } from './Metrics.enum';
 import { MetricFilterProps, FilterProps } from './Metrics.interfaces';
 

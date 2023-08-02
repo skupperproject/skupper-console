@@ -1,5 +1,5 @@
 import { SiteResponse } from '@API/REST.interfaces';
-import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { timeAgo } from '@core/utils/timeAgo';
 
 import { Labels, SitesRoutesPaths } from './Sites.enum';

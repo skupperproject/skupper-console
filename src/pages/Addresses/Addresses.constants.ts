@@ -1,10 +1,10 @@
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesTableColumns } from '@pages/Processes/Processes.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constant';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constants';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 

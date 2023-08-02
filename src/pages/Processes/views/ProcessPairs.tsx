@@ -29,12 +29,12 @@ import SkTable from '@core/components/SkTable';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
 import MainContainer from '@layout/MainContainer';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
-import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constant';
+import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constants';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
-import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constant';
+import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
 import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 

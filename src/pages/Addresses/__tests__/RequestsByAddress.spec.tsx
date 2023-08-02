@@ -12,7 +12,7 @@ import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY } from '../Addresses.constant';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY } from '../Addresses.constants';
 import RequestsByAddress from '../components/RequestsByAddress';
 
 const servicesResults = servicesData.results;

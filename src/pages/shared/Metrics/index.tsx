@@ -10,7 +10,7 @@ import EmptyData from '@core/components/EmptyData';
 
 import MetricFilters from './Filters';
 import LatencyCharts from './LatencyCharts';
-import { displayIntervalMap } from './Metrics.constant';
+import { displayIntervalMap } from './Metrics.constants';
 import { MetricsLabels } from './Metrics.enum';
 import { MetricsProps, SelectedFilters } from './Metrics.interfaces';
 import RequestCharts from './RequestCharts';
