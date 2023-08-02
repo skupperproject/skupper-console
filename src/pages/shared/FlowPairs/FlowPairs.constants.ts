@@ -3,7 +3,7 @@ import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';

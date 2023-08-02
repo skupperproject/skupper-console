@@ -10,7 +10,7 @@ import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
-import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constant';
+import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 

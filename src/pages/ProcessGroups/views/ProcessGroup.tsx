@@ -10,7 +10,7 @@ import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import MainContainer from '@layout/MainContainer';
-import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constant';
+import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';

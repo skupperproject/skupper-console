@@ -11,7 +11,7 @@ import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enu
 import { SiteResponse } from 'API/REST.interfaces';
 
 import { QueriesSites } from '../services/services.enum';
-import { siteColumns } from '../Sites.constant';
+import { siteColumns } from '../Sites.constants';
 import { Labels, SitesRoutesPaths } from '../Sites.enum';
 
 const Sites = function () {

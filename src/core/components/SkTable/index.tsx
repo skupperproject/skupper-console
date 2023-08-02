@@ -18,7 +18,7 @@ import {
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 
 import SkPagination from './SkPagination';
-import { NonNullableValue, SKTableProps } from './SkTable.interface';
+import { NonNullableValue, SKTableProps } from './SkTable.interfaces';
 import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;

@@ -12,7 +12,7 @@ import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessGroupResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { processGroupsColumns } from '../ProcessGroups.constant';
+import { processGroupsColumns } from '../ProcessGroups.constants';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 

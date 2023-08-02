@@ -46,7 +46,6 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '^.*\\.enum\\.[t]s?$',
     '^.*\\.interfaces\\.[t]s?$',
-    '^.*\\.constant\\.[t]s?$',
     '^.*\\.constants\\.[t]s?$',
     'API',
     'index.tsx',
@@ -55,6 +54,5 @@ module.exports = {
     'layout/RouteContainer.tsx',
     'config',
     'typings.d.ts'
-  ],
-  coverageReporters: ['json', 'html']
+  ]
 };

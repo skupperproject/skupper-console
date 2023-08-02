@@ -1,4 +1,4 @@
-import { SKColumn } from '@core/components/SkTable/SkTable.interface';
+import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { ProcessGroupResponse } from 'API/REST.interfaces';
 
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths, ProcessGroupsTableColumns } from './ProcessGroups.enum';
