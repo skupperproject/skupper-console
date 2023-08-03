@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
@@ -11,7 +11,9 @@ import processGroupsData from '@mocks/data/PROCESS_GROUPS.json';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
+import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
+import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import ProcessGroup from '../views/ProcessGroup';
 
 const processGroupResults = processGroupsData.results as ProcessGroupResponse[];
@@ -42,16 +44,21 @@ describe('Component component', () => {
   });
 
   it('should render the Component view after the data loading is complete', async () => {
-    // Wait for all queries to resolve
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByTestId(getTestsIds.componentView(processGroupResults[0].identity))).toBeInTheDocument();
   });
 
+  it('should render the default view and show the message for empty metrics', async () => {
+    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
+  });
+
   it('should render the title, description data and processes associated the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    fireEvent.click(screen.getByText(ProcessGroupsLabels.Processes));
 
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processGroupResults[0].name);
     expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
@@ -59,6 +66,8 @@ describe('Component component', () => {
 
   it('Should ensure the Component details component renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    fireEvent.click(screen.getByText(ProcessGroupsLabels.Processes));
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
       'href',

@@ -11,6 +11,7 @@ import processesData from '@mocks/data/SERVICE_PROCESSES.json';
 import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
+import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Addresses.constants';
 import ConnectionsByAddress from '../components/ConnectionsByAddress';
@@ -47,7 +48,7 @@ describe('Begin testing the Connection component', () => {
     );
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
-    expect(getByText('No metrics found')).toBeInTheDocument();
+    expect(getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
   });
 
   it('should render the Connection view -> Servers after the data loading is complete', async () => {
