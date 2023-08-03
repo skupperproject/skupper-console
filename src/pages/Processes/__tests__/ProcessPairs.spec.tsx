@@ -21,7 +21,7 @@ describe('Begin testing the Processes component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    jest.spyOn(router, 'useParams').mockReturnValue({ processPairId: processPairsResult.identity });
+    jest.spyOn(router, 'useParams').mockReturnValue({ processPair: `${'test'}@${processPairsResult.identity}` });
 
     render(
       <Wrapper>

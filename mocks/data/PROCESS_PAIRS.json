@@ -75,8 +75,7 @@
       "sourceId": "process-nb",
       "sourceName": "process nb",
       "destinationId": "process-za",
-      "destinationName": "process za",
-      "protocol": "http1"
+      "destinationName": "process za"
     },
     {
       "recType": "FLOWAGGREGATE",

@@ -16,7 +16,7 @@ export const processesRoutes = [
     element: <Process />
   },
   {
-    path: `${ProcessesRoutesPaths.Processes}/:process/:processPairId`,
+    path: `${ProcessesRoutesPaths.Processes}/:process/:processPair`,
     element: <ProcessFlowPairs />
   }
 ];
