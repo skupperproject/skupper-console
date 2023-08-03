@@ -9,13 +9,13 @@ export const AddressesController = {
       tcpTotalFlows,
       tcpActiveFlows
     }: {
-      httpTotalFlows: PrometheusApiSingleResult[];
-      tcpTotalFlows: PrometheusApiSingleResult[];
-      tcpActiveFlows: PrometheusApiSingleResult[];
+      httpTotalFlows?: PrometheusApiSingleResult[];
+      tcpTotalFlows?: PrometheusApiSingleResult[];
+      tcpActiveFlows?: PrometheusApiSingleResult[];
     }
   ) => {
     const tcpActiveFlowsMap =
-      tcpActiveFlows.length &&
+      tcpActiveFlows?.length &&
       tcpActiveFlows.reduce(
         (acc, flow) => {
           acc[flow.metric.address] = Number(flow.value[1]) / 2;
@@ -26,7 +26,7 @@ export const AddressesController = {
       );
 
     const tcpTotalFlowsMap =
-      tcpTotalFlows.length &&
+      tcpTotalFlows?.length &&
       tcpTotalFlows?.reduce(
         (acc, flow) => {
           acc[flow.metric.address] = Number(flow.value[1]) / 2;
@@ -37,7 +37,7 @@ export const AddressesController = {
       );
 
     const httpTotalFlowsMap =
-      httpTotalFlows.length &&
+      httpTotalFlows?.length &&
       httpTotalFlows?.reduce(
         (acc, flow) => {
           acc[flow.metric.address] = Number(flow.value[1]) / 2;

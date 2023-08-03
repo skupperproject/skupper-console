@@ -9,8 +9,22 @@ const LinkCell = function <T>({ value, link, type, isDisabled = false, fitConten
   return (
     <div style={{ display: 'flex' }}>
       {type && <ResourceIcon type={type} />}
-      {isDisabled && <Truncate content={value}>{value}</Truncate>}
-      {!isDisabled && <Link to={link}>{fitContent ? value : <Truncate content={value}>{value}</Truncate>}</Link>}
+      {isDisabled && (
+        <Truncate content={value} position={'middle'}>
+          {value}
+        </Truncate>
+      )}
+      {!isDisabled && (
+        <Link to={link}>
+          {fitContent ? (
+            value
+          ) : (
+            <Truncate content={value} position={'middle'}>
+              {value}
+            </Truncate>
+          )}
+        </Link>
+      )}
     </div>
   );
 };

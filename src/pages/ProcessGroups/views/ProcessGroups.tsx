@@ -37,13 +37,9 @@ const ProcessGroups = function () {
     setProcessGroupsPaginatedQueryParams({ ...initPaginatedProcessGroupsQueryParams, ...params });
   }, []);
 
-  if (!processGroupsData) {
-    return null;
-  }
-
   const processGroups =
-    processGroupsData.results.filter(({ processGroupRole }) => processGroupRole !== 'internal') || [];
-  const processGroupsCount = processGroupsData.timeRangeCount;
+    processGroupsData?.results.filter(({ processGroupRole }) => processGroupRole !== 'internal') || [];
+  const processGroupsCount = processGroupsData?.timeRangeCount;
 
   const components = processGroups.filter(({ processGroupRole }) => processGroupRole !== 'internal');
 

@@ -70,15 +70,13 @@ const Services = function () {
   let servicesExtended = services;
   let columnsExtend = addressesColumns;
 
-  if (httpTotalFlows !== undefined && tcpTotalFlows !== undefined && tcpActiveFlows !== undefined) {
-    servicesExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
-      httpTotalFlows,
-      tcpTotalFlows,
-      tcpActiveFlows
-    });
+  servicesExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
+    httpTotalFlows,
+    tcpTotalFlows,
+    tcpActiveFlows
+  });
 
-    columnsExtend = addressesColumnsWithFlowPairsCounters;
-  }
+  columnsExtend = addressesColumnsWithFlowPairsCounters;
 
   return (
     <MainContainer

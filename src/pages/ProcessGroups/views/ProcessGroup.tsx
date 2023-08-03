@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
 
-import { Stack, StackItem } from '@patternfly/react-core';
+import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -12,11 +12,13 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import MainContainer from '@layout/MainContainer';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
+import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
+import { ProcessGroupsLabels } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'component-display-interval';
@@ -24,6 +26,7 @@ const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'component-display-interval';
 const ProcessGroup = function () {
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
+  const [tabSelected, setTabSelected] = useState(ProcessGroupsLabels.Overview);
 
   const { data: processGroup } = useQuery([QueriesProcessGroups.GetProcessGroup, processGroupId], () =>
     RESTApi.fetchProcessGroup(processGroupId)
@@ -45,7 +48,24 @@ const ProcessGroup = function () {
     return null;
   }
 
-  const { name } = processGroup;
+  function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
+    setTabSelected(tabIndex as ProcessGroupsLabels);
+  }
+
+  const NavigationMenu = function () {
+    return (
+      <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
+        <Tab
+          eventKey={ProcessGroupsLabels.Overview}
+          title={<TabTitleText>{ProcessGroupsLabels.Overview}</TabTitleText>}
+        />
+        <Tab
+          eventKey={ProcessGroupsLabels.Processes}
+          title={<TabTitleText>{ProcessGroupsLabels.Processes}</TabTitleText>}
+        />
+      </Tabs>
+    );
+  };
 
   const processResults = processes.results;
   const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
@@ -55,26 +75,12 @@ const ProcessGroup = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.componentView(processGroupId)}
-      title={name}
+      title={processGroup.name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+      navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        <Stack hasGutter>
-          <StackItem>
-            <SkTable
-              title={ProcessesLabels.Section}
-              columns={processesTableColumns}
-              rows={processResults}
-              customCells={{
-                linkCell: ProcessesComponentsTable.linkCell,
-                linkCellSite: ProcessesComponentsTable.linkCellSite,
-                exposedCell: ProcessesComponentsTable.exposedCell
-              }}
-            />
-          </StackItem>
-
-          {/* Component Metrics*/}
-
-          <StackItem isFilled>
+        <Suspense fallback={<LoadingPage />}>
+          {tabSelected === ProcessGroupsLabels.Overview && (
             <Metrics
               key={id}
               selectedFilters={{
@@ -92,8 +98,21 @@ const ProcessGroup = function () {
               }}
               onGetMetricFilters={handleRefreshMetrics}
             />
-          </StackItem>
-        </Stack>
+          )}
+
+          {tabSelected === ProcessGroupsLabels.Processes && (
+            <SkTable
+              title={ProcessesLabels.Section}
+              columns={processesTableColumns}
+              rows={processResults}
+              customCells={{
+                linkCell: ProcessesComponentsTable.linkCell,
+                linkCellSite: ProcessesComponentsTable.linkCellSite,
+                exposedCell: ProcessesComponentsTable.exposedCell
+              }}
+            />
+          )}
+        </Suspense>
       }
     />
   );

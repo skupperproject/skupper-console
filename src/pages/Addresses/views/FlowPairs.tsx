@@ -86,11 +86,6 @@ const FlowsPairs = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
-  const serverCount = serversData?.timeRangeCount;
-  const requestsCount = requestsData?.timeRangeCount;
-  const tcpActiveConnectionCount = activeConnectionsData?.timeRangeCount;
-  const tcpTerminatedConnectionCount = terminatedConnectionsData?.timeRangeCount;
-
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
@@ -127,6 +122,11 @@ const FlowsPairs = function () {
       </Tabs>
     );
   };
+
+  const serverCount = serversData?.timeRangeCount;
+  const requestsCount = requestsData?.timeRangeCount;
+  const tcpActiveConnectionCount = activeConnectionsData?.timeRangeCount;
+  const tcpTerminatedConnectionCount = terminatedConnectionsData?.timeRangeCount;
 
   return (
     <MainContainer
