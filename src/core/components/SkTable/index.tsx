@@ -163,10 +163,11 @@ const SkTable = function <T>({
           <Table variant="compact" {...restProps}>
             <Thead>
               <Tr>
-                {skColumns.map(({ name, prop, columnDescription, isStickyColumn }, index) => (
+                {skColumns.map(({ name, prop, columnDescription, isStickyColumn, modifier }, index) => (
                   <Th
                     colSpan={1}
                     key={name}
+                    modifier={modifier}
                     isStickyColumn={isStickyColumn}
                     sort={(prop && shouldSort && getSortParams(index)) || undefined}
                     info={
