@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
@@ -11,6 +11,7 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
+import { ProcessesLabels } from '../Processes.enum';
 import Process from '../views/Process';
 
 const processResult = processesData.results[0] as ProcessResponse;
@@ -49,6 +50,8 @@ describe('Process component', () => {
   it('should render the title, description data and processes associated the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
+    fireEvent.click(screen.getByText(ProcessesLabels.Details));
+
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processResult.name);
     expect(screen.getByText(processResult.parentName)).toHaveTextContent('site 1');
     expect(screen.getByText(processResult.groupName)).toHaveTextContent('component 1');
@@ -58,6 +61,8 @@ describe('Process component', () => {
 
   it('Should ensure the Process associated renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    fireEvent.click(screen.getByText(ProcessesLabels.ProcessPairs));
 
     expect(screen.getByRole('link', { name: processesData.results[3].name })).toHaveAttribute(
       'href',

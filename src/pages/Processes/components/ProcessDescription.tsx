@@ -45,7 +45,7 @@ const ProcessDescription: FC<{ processWithService: ProcessResponseWithService; t
     } = processWithService;
 
     return (
-      <Card isFullHeight isRounded>
+      <Card>
         <CardTitle>
           <Title headingLevel="h2">{title}</Title>
         </CardTitle>

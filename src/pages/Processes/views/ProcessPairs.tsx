@@ -27,6 +27,7 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
 import ViewDetailCell from '@core/components/ViewDetailsCell';
+import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
 import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constants';
@@ -71,9 +72,10 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
 };
 
 const ProcessPairs = function () {
-  const { processPairId } = useParams() as { processPairId: string };
+  const { processPair } = useParams() as { processPair: string };
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { id: processPairId } = getIdAndNameFromUrlParams(processPair);
   const type = searchParams.get('type') || TAB_1_KEY;
   const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
@@ -255,10 +257,10 @@ const ProcessPairs = function () {
                     justifyContent: 'center'
                   }}
                 >
-                  <Icon status="success" size="xl">
+                  <Icon status="custom" size="xl">
                     <LongArrowAltRightIcon />
                   </Icon>
-                  <Icon status="info" size="xl">
+                  <Icon status="custom" size="xl">
                     <LongArrowAltLeftIcon />
                   </Icon>
                 </GridItem>

@@ -79,7 +79,7 @@ export interface ProcessPairsResponse extends BaseResponse {
   sourceName: string;
   destinationId: string;
   destinationName: string;
-  protocol: AvailableProtocols;
+  protocol?: AvailableProtocols; // undefined = there is a remote process
 }
 
 export type SitePairsResponse = ProcessPairsResponse;

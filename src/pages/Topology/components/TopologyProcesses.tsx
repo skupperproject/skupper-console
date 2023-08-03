@@ -15,7 +15,7 @@ import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.i
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { QueriesServices } from '@pages/Addresses/services/services.enum';
-import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { QueriesProcesses } from '@pages/Processes/services/services.enum';
 import { QueriesSites } from '@pages/Sites/services/services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -163,7 +163,9 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | undefined
         const sourceProcess = processes?.find(({ identity }) => identity === sourceId) as ProcessResponse;
 
         if (sourceProcess) {
-          navigate(`${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${idSelected}`);
+          navigate(
+            `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${ProcessesLabels.ProcessPairs}@${idSelected}`
+          );
         }
       }
     },

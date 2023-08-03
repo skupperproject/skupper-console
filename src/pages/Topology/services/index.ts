@@ -204,6 +204,6 @@ function convertEntityToNode({ id, comboId, label, x, y, img, nodeConfig }: Enti
     label,
     x,
     y,
-    ...{ ...DEFAULT_NODE_CONFIG, ...nodeConfig, icon: { ...DEFAULT_NODE_ICON, img } }
+    ...{ ...DEFAULT_NODE_CONFIG, icon: { ...DEFAULT_NODE_ICON, img }, ...nodeConfig }
   };
 }
