@@ -35,7 +35,10 @@ jobs:
         uses: SimenB/github-actions-cpu-cores@v1
       - name: Unit tests 🔧
         run: |
-          yarn test --max-workers ${{ steps.cpu-cores.outputs.count }} --silent
+          yarn coverage --max-workers ${{ steps.cpu-cores.outputs.count }} --silent
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
 
       - name: Integration tests 🚨
         run: |

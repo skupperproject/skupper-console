@@ -23,7 +23,7 @@
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "test": "ENABLE_MOCK_SERVER=true DISABLE_METRICS=true jest --config jest.config.js",
-    "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}'",
+    "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}' --coverageReporters='{text,cobertura}'",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "ci": "DISABLE_METRICS=true start-test 3000 cy:run",
