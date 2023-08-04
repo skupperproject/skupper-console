@@ -8,9 +8,7 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { SMALL_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import MainContainer from '@layout/MainContainer';
@@ -18,7 +16,6 @@ import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { ProcessPairsResponse } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
 import {
@@ -26,7 +23,7 @@ import {
   ProcessesConnectedComponentsTable,
   processesHttpConnectedColumns
 } from '../Processes.constants';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
+import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
@@ -133,14 +130,7 @@ const Process = function () {
                   rows={TCPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={{
-                    ...ProcessesConnectedComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                      <ViewDetailCell
-                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${ProcessesLabels.ProcessPairs}@${data.identity}`}
-                      />
-                    )
-                  }}
+                  customCells={ProcessesConnectedComponentsTable}
                 />
               )}
 
@@ -152,14 +142,7 @@ const Process = function () {
                   rows={TCPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={{
-                    ...ProcessesConnectedComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                      <ViewDetailCell
-                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${ProcessesLabels.ProcessPairs}@${data.identity}`}
-                      />
-                    )
-                  }}
+                  customCells={ProcessesConnectedComponentsTable}
                 />
               )}
 
@@ -171,14 +154,7 @@ const Process = function () {
                   rows={HTTPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={{
-                    ...ProcessesConnectedComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                      <ViewDetailCell
-                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${ProcessesLabels.ProcessPairs}@${data.identity}`}
-                      />
-                    )
-                  }}
+                  customCells={ProcessesConnectedComponentsTable}
                 />
               )}
 
@@ -190,14 +166,7 @@ const Process = function () {
                   rows={HTTPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={{
-                    ...ProcessesConnectedComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                      <ViewDetailCell
-                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${ProcessesLabels.ProcessPairs}@${data.identity}`}
-                      />
-                    )
-                  }}
+                  customCells={ProcessesConnectedComponentsTable}
                 />
               )}
 
@@ -209,14 +178,7 @@ const Process = function () {
                   rows={remoteClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={{
-                    ...ProcessesConnectedComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                      <ViewDetailCell
-                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${processId}/${ProcessesLabels.ProcessPairs}@${data.identity}`}
-                      />
-                    )
-                  }}
+                  customCells={ProcessesConnectedComponentsTable}
                 />
               )}
 
@@ -228,14 +190,7 @@ const Process = function () {
                   rows={remoteServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={{
-                    ...ProcessesConnectedComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
-                      <ViewDetailCell
-                        link={`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}/${ProcessesLabels.ProcessPairs}@${data.identity}`}
-                      />
-                    )
-                  }}
+                  customCells={ProcessesConnectedComponentsTable}
                 />
               )}
             </Flex>

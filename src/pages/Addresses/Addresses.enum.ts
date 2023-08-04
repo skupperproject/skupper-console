@@ -39,6 +39,5 @@ export enum RequestLabels {
 
 export enum FlowPairsLabels {
   Overview = 'Overview',
-  Servers = 'Exposed servers',
-  ViewDetails = 'view details'
+  Servers = 'Exposed servers'
 }
