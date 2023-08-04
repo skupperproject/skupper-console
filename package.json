@@ -22,7 +22,7 @@
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "test": "ENABLE_MOCK_SERVER=true jest --config jest.config.js",
+    "test": "ENABLE_MOCK_SERVER=true jest --config jest.config.ts",
     "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}'",
     "cy:open": "cypress open",
     "cy:run": "cypress run",

@@ -10,23 +10,21 @@ import { getTestsIds } from '@config/testIds.config';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
-import { addressesColumns, addressesColumnsWithFlowPairsCounters, customAddressCells } from '../Addresses.constants';
+import { ServiceColumns, customServiceCells } from '../Addresses.constants';
 import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
 
-const initPaginatedOldConnectionsQueryParams: RequestOptions = {
+const initOldConnectionsQueryParams: RequestOptions = {
   limit: BIG_PAGINATION_SIZE
 };
 
 const Services = function () {
-  const [addressesQueryParamsPaginated, setAddressesQueryParamsPaginated] = useState<RequestOptions>(
-    initPaginatedOldConnectionsQueryParams
-  );
+  const [servicesQueryParams, setServicesQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
 
-  const { data: addressesData } = useQuery(
-    [QueriesServices.GetAddresses, { ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }],
-    () => RESTApi.fetchAddresses({ ...initPaginatedOldConnectionsQueryParams, ...addressesQueryParamsPaginated }),
+  const { data: servicesData } = useQuery(
+    [QueriesServices.GetAddresses, { ...initOldConnectionsQueryParams, ...servicesQueryParams }],
+    () => RESTApi.fetchAddresses({ ...initOldConnectionsQueryParams, ...servicesQueryParams }),
     {
       keepPreviousData: true
     }
@@ -56,27 +54,18 @@ const Services = function () {
     }
   );
 
-  const handleGetFiltersAddressses = useCallback((params: RequestOptions) => {
-    setAddressesQueryParamsPaginated(params);
+  const handleSetServiceFilters = useCallback((params: RequestOptions) => {
+    setServicesQueryParams(params);
   }, []);
 
-  if (!addressesData) {
-    return null;
-  }
+  const services = servicesData?.results || [];
+  const serviceCount = servicesData?.timeRangeCount || 0;
 
-  const services = addressesData?.results || [];
-  const addressesRowsCount = addressesData?.timeRangeCount;
-
-  let servicesExtended = services;
-  let columnsExtend = addressesColumns;
-
-  servicesExtended = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
+  const serviceRows = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
     httpTotalFlows,
     tcpTotalFlows,
     tcpActiveFlows
   });
-
-  columnsExtend = addressesColumnsWithFlowPairsCounters;
 
   return (
     <MainContainer
@@ -85,13 +74,13 @@ const Services = function () {
       description={AddressesLabels.Description}
       mainContentChildren={
         <SkTable
-          rows={servicesExtended}
-          columns={columnsExtend}
+          rows={serviceRows}
+          columns={ServiceColumns}
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
-          onGetFilters={handleGetFiltersAddressses}
-          paginationTotalRows={addressesRowsCount}
-          customCells={customAddressCells}
+          onGetFilters={handleSetServiceFilters}
+          paginationTotalRows={serviceCount}
+          customCells={customServiceCells}
         />
       }
     />

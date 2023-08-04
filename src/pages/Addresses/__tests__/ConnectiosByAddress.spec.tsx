@@ -20,8 +20,6 @@ const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
 const processResult = processesData.results;
 
-jest.mock('@patternfly/react-charts');
-
 describe('Begin testing the Connection component', () => {
   let server: Server;
 

@@ -21,9 +21,10 @@
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": false,
     "strictPropertyInitialization": true
   },
-  "include": ["src"],
+  "include": ["src", "jest.config.ts", "mocks/*.ts"],
   "exclude": ["node_modules", "build"]
 }

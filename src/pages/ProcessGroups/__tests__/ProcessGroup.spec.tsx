@@ -19,8 +19,6 @@ import ProcessGroup from '../views/ProcessGroup';
 const processGroupResults = processGroupsData.results as ProcessGroupResponse[];
 const processResults = processesData.results as ProcessResponse[];
 
-jest.mock('@patternfly/react-charts');
-
 describe('Component component', () => {
   let server: Server;
   beforeEach(() => {

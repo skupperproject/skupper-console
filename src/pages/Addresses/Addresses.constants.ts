@@ -15,7 +15,7 @@ export const AddressesPaths = {
   name: AddressesLabels.Section
 };
 
-export const customAddressCells = {
+export const customServiceCells = {
   AddressNameLinkCell: (props: LinkCellProps<AddressResponse>) =>
     LinkCell({
       ...props,
@@ -24,7 +24,7 @@ export const customAddressCells = {
     })
 };
 
-export const addressesColumns: SKColumn<AddressResponse>[] = [
+export const ServiceColumns: SKColumn<AddressResponse>[] = [
   {
     name: AddressesColumnsNames.Name,
     prop: 'name',
@@ -39,11 +39,7 @@ export const addressesColumns: SKColumn<AddressResponse>[] = [
     name: AddressesColumnsNames.Servers,
     prop: 'connectorCount',
     width: 15
-  }
-];
-
-export const addressesColumnsWithFlowPairsCounters: SKColumn<AddressResponse>[] = [
-  ...addressesColumns,
+  },
   {
     name: AddressesColumnsNames.CurrentFlowPairs,
     columnDescription: 'Live connections or requests',

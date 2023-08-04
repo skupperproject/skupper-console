@@ -16,8 +16,6 @@ import Process from '../views/Process';
 
 const processResult = processesData.results[0] as ProcessResponse;
 
-jest.mock('@patternfly/react-charts');
-
 describe('Process component', () => {
   let server: Server;
   beforeEach(() => {

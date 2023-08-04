@@ -18,8 +18,6 @@ import Service from '../views/FlowPairs';
 const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
 
-jest.mock('@patternfly/react-charts');
-
 describe('Begin testing the FlowPairs component', () => {
   let server: Server;
 
