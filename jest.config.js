@@ -39,7 +39,7 @@ module.exports = {
   roots: [SRC_PATH],
 
   transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: `${ROOT_PROJECT}/tsconfig.json`, isolatedModules: true }],
+    '^.+\\.(ts|tsx)$': 'ts-jest',
     '^.+\\.svg$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`,
     '.+\\.(png)$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`
   },
@@ -53,6 +53,7 @@ module.exports = {
     'core/components/Graph',
     'layout/RouteContainer.tsx',
     'config',
-    'typings.d.ts'
+    'typings.d.ts',
+    'pages/shared/Metrics/Filters.tsx'
   ]
 };

@@ -20,6 +20,8 @@ const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
 const processResult = processesData.results;
 
+jest.mock('@patternfly/react-charts');
+
 describe('Begin testing the Requests component', () => {
   let server: Server;
 
@@ -48,7 +50,7 @@ describe('Begin testing the Requests component', () => {
     );
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
-    expect(getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
+    expect(getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
   });
 
   it('should render the Requests view -> Servers after the data loading is complete', async () => {

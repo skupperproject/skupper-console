@@ -8,7 +8,6 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 
 import { MetricsLabels } from './Metrics.enum';
 import { ByteRateMetrics, BytesMetric } from './services/services.interfaces';
@@ -18,7 +17,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
     <Grid hasGutter md={12}>
       <GridItem xl={7} rowSpan={2}>
         <Card isFullHeight>
-          <CardTitle>{ProcessesLabels.ChartProcessDataTrafficSeriesAxisYLabel}</CardTitle>
+          <CardTitle>{MetricsLabels.DataTransferTitle}</CardTitle>
           <CardBody>
             <SkChartArea
               formatY={formatByteRate}
