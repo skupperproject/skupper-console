@@ -168,7 +168,31 @@ export const MockApi = {
     );
 
     return { ...processes, results: resultFIltered };
-  }
+  },
+  getPrometheusQuery: () => ({
+    data: {
+      result: [
+        {
+          metric: {},
+          value: [0, 0]
+        }
+      ]
+    }
+  }),
+
+  getPrometheusRangeQuery: () => ({
+    data: {
+      result: [
+        {
+          metric: {},
+          values: [
+            [0, 0],
+            [1, 1]
+          ]
+        }
+      ]
+    }
+  })
 };
 
 // api paths
@@ -180,7 +204,9 @@ export const MockApiPaths = {
   Component: `${prefix}/processgroups/:id`,
   Processes: `${prefix}/processes`,
   Routers: `${prefix}/routers`,
-  Links: `${prefix}/links`
+  Links: `${prefix}/links`,
+  PrometheusQuery: `${prefix}/internal/prom/query/`,
+  PrometheusRangeQuery: `${prefix}/internal/prom/rangequery/`
 };
 
 export function loadMockServer() {
@@ -206,6 +232,8 @@ export function loadMockServer() {
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
+      this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
+      this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
 
       this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)

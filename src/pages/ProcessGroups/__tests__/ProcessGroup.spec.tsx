@@ -19,6 +19,8 @@ import ProcessGroup from '../views/ProcessGroup';
 const processGroupResults = processGroupsData.results as ProcessGroupResponse[];
 const processResults = processesData.results as ProcessResponse[];
 
+jest.mock('@patternfly/react-charts');
+
 describe('Component component', () => {
   let server: Server;
   beforeEach(() => {
@@ -52,7 +54,7 @@ describe('Component component', () => {
   it('should render the default view and show the message for empty metrics', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
