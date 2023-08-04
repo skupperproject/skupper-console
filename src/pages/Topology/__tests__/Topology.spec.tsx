@@ -11,6 +11,8 @@ import LoadingPage from '@pages/shared/Loading';
 import { TopologyViews } from '../Topology.enum';
 import Topology from '../views/Topology';
 
+jest.mock('@antv/g6');
+
 describe('Begin testing the Topology component', () => {
   let server: Server;
   beforeEach(() => {

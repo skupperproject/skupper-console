@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 
 import { Icon, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { ListIcon, TopologyIcon } from '@patternfly/react-icons';

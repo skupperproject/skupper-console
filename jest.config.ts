@@ -4,18 +4,18 @@ const ROOT_PROJECT = `${ROOT}`;
 const SRC_PATH = `${ROOT_PROJECT}/src`;
 const MOCKS_PATH = `${ROOT_PROJECT}/mocks`;
 const TS_CONFIG_PATH = './tsconfig.paths.json';
-const SVG_TRANSFORM_FILENAME = 'jest.config.svgTransform';
-const FILE_MOCK_TRANSFORM_FILENAME = 'jest.config.fileMock';
-const STYLE_MOCK_TRANSFORM_FILENAME = 'jest.config.styleMock';
+const SVG_TRANSFORM_FILENAME = 'jest.config.svgTransform.ts';
+const FILE_MOCK_TRANSFORM_FILENAME = 'jest.config.fileMock.ts';
+const STYLE_MOCK_TRANSFORM_FILENAME = 'jest.config.styleMock.ts';
 
 const extensionsAllowed = {
   '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/': `${MOCKS_PATH}/${FILE_MOCK_TRANSFORM_FILENAME}`,
   '\\.(css|scss)$': `${MOCKS_PATH}/${STYLE_MOCK_TRANSFORM_FILENAME}`
 };
 
-function makeModuleNameMapper(srcPath, tsconfigPath) {
+function makeModuleNameMapper(srcPath: string, tsconfigPath: string) {
   const { paths } = require(tsconfigPath).compilerOptions;
-  const aliases = {};
+  const aliases: { [key: string]: string } = {};
 
   Object.keys(paths).forEach((item) => {
     const key = item.replace('/*', '/(.*)');
@@ -28,18 +28,15 @@ function makeModuleNameMapper(srcPath, tsconfigPath) {
 }
 
 module.exports = {
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
-  moduleNameMapper: {
-    d3: `${ROOT_PROJECT}/node_modules/d3-interpolate/dist/d3-interpolate.min.js`,
-    ...makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH)
-  },
+  moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
   moduleDirectories: [`${ROOT_PROJECT}/node_modules`, `${ROOT_PROJECT}/src`],
   roots: [SRC_PATH],
-
+  transformIgnorePatterns: [`${ROOT_PROJECT}/node_modules/(?!d3|d3-timer)`],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', { isolatedModules: true }],
     '^.+\\.svg$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`,
     '.+\\.(png)$': `${MOCKS_PATH}/${SVG_TRANSFORM_FILENAME}`
   },

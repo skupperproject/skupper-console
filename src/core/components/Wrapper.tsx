@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useMemo } from 'react';
 
 import { QueryCache, QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter, useLocation, useNavigate } from 'react-router-dom';
@@ -16,9 +16,7 @@ const QueryClientContext = function ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [queryClient, setQueryClient] = useState<QueryClient>();
-
-  useEffect(() => {
+  const queryClient = useMemo(() => {
     const handleError = function ({
       httpStatus,
       message,
@@ -37,7 +35,7 @@ const QueryClientContext = function ({
       }
     };
 
-    const queryClientInstance = new QueryClient({
+    return new QueryClient({
       ...queryClientConfig,
       ...config,
       queryCache: new QueryCache({
@@ -46,8 +44,6 @@ const QueryClientContext = function ({
         }
       })
     });
-
-    setQueryClient(queryClientInstance);
   }, []);
 
   return queryClient ? <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> : null;
