@@ -35,7 +35,7 @@ jobs:
         uses: SimenB/github-actions-cpu-cores@v1
       - name: Unit tests 🔧
         run: |
-          yarn test --max-workers ${{ steps.cpu-cores.outputs.count }} --silent
+          yarn test --max-workers ${{ steps.cpu-cores.outputs.count }}
 
       - name: Integration tests 🚨
         run: |
