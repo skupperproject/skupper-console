@@ -17,10 +17,6 @@ import { Labels, SitesRoutesPaths } from '../Sites.enum';
 const Sites = function () {
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
 
-  if (!sites) {
-    return null;
-  }
-
   return (
     <MainContainer
       dataTestId={getTestsIds.sitesView()}

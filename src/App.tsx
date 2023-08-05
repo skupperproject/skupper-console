@@ -1,13 +1,14 @@
 import { Suspense } from 'react';
 
 import { Page } from '@patternfly/react-core';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import SkBreadcrumb from '@core/components/SkBreadcrumb';
 import SkHeader from '@layout/Header';
 import RouteContainer from '@layout/RouteContainer';
 import SkSidebar from '@layout/SideBar';
-import Console from '@pages/shared/Errors/Console';
+import Error from '@pages/shared/Errors/Console';
 import LoadingPage from '@pages/shared/Loading';
 import { routes } from 'routes';
 
@@ -23,11 +24,15 @@ const App = function () {
       isManagedSidebar
       isBreadcrumbGrouped
       additionalGroupedContent={
-        <ErrorBoundary FallbackComponent={Console}>
-          <Suspense fallback={<LoadingPage />}>
-            <RouteContainer>{routes}</RouteContainer>
-          </Suspense>
-        </ErrorBoundary>
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary onReset={reset} FallbackComponent={Error}>
+              <Suspense fallback={<LoadingPage />}>
+                <RouteContainer>{routes}</RouteContainer>
+              </Suspense>
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
       }
     />
   );

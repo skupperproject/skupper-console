@@ -123,7 +123,6 @@ export const MockApi = {
   get500Error: () => new Response(500),
   get503Error: () => new Response(503),
   get404Error: () => new Response(404),
-  getConnectionError: () => null,
   getCollectors: () => collectors,
   getSites: () => {
     const sitesForPerfTests = PERF_TEST ? mockSitesForPerf : [];
@@ -223,7 +222,6 @@ export function loadMockServer() {
       this.pretender.get('*', this.pretender.passthrough);
 
       this.get('', MockApi.get500Error);
-      this.get('', MockApi.getConnectionError);
       this.get(MockApiPaths.Collectors, MockApi.getCollectors);
       this.get(MockApiPaths.Sites, MockApi.getSites);
       this.get(MockApiPaths.Site, MockApi.getSite);

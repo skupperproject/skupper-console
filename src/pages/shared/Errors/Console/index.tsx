@@ -13,21 +13,30 @@ import {
 } from '@patternfly/react-core';
 
 import { Labels } from './Console.enum';
+import ErrorHttp from '../Http';
 
-interface ConsoleProps {
+interface ErrorProps {
   error: {
-    message?: string;
     stack?: string;
+    message?: string;
+    code?: string;
+    httpStatus?: string;
   };
   resetErrorBoundary: (...args: unknown[]) => void;
 }
 
-const Console: FC<ConsoleProps> = function ({ error }) {
+const Error: FC<ErrorProps> = function ({ error, resetErrorBoundary }) {
+  const { code, message, httpStatus } = error;
+
+  if (httpStatus || code === 'ERR_NETWORK') {
+    return <ErrorHttp code={code} message={message} onReset={resetErrorBoundary} />;
+  }
+
   return (
     <PageSection variant={PageSectionVariants.light} data-testid="sk-js-error-view">
       <TextContent>
         <Title headingLevel="h1">{Labels.ErrorTitle}</Title>
-        <Text component={TextVariants.h3}>{error.message || ''}</Text>
+        <Text component={TextVariants.h3}>{message || ''}</Text>
 
         <Divider />
 
@@ -39,4 +48,4 @@ const Console: FC<ConsoleProps> = function ({ error }) {
   );
 };
 
-export default Console;
+export default Error;
