@@ -39,7 +39,7 @@
     "ecmaVersion": 12,
     "extraFileExtensions": [".json"],
     "sourceType": "module",
-    "project": "tsconfig.json",
+    "project": ["tsconfig.json", "cypress.config.ts"],
     "tsconfigRootDir": "./"
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
