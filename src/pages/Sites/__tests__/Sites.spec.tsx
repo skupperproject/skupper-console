@@ -2,13 +2,13 @@ import { Suspense } from 'react';
 
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
 import { MockApiPaths, MockApi, loadMockServer } from '@mocks/server';
-import { ErrorRoutesPaths } from '@pages/shared/Errors/errors.constants';
+import Error from '@pages/shared/Errors/Console';
 import LoadingPage from '@pages/shared/Loading';
 
 import Sites from '../views/Sites';
@@ -17,7 +17,6 @@ const siteResults = sitesData.results;
 
 describe('Begin testing the Sites component', () => {
   let server: Server;
-  const mockedNavigator = jest.fn();
 
   beforeEach(() => {
     server = loadMockServer() as Server;
@@ -43,7 +42,6 @@ describe('Begin testing the Sites component', () => {
 
   it('should render the sites view after the data loading is complete', async () => {
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByTestId(getTestsIds.sitesView())).toBeInTheDocument();
@@ -66,55 +64,58 @@ describe('Begin testing the Sites component', () => {
 
   it('Should call the useNavigate function with the path to an error page when a 404 error is received from sites', async () => {
     server.get(MockApiPaths.Sites, MockApi.get404Error);
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockedNavigator);
+    // removes an expected error boundary console.error from react query
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
       <Wrapper
         config={{
           defaultOptions: {
             queries: {
-              retry: false
+              retry: false,
+              useErrorBoundary: true
             }
           }
         }}
       >
-        <Suspense fallback={<LoadingPage />}>
-          <Sites />
-        </Suspense>
+        <ErrorBoundary FallbackComponent={Error}>
+          <Suspense fallback={<LoadingPage />}>
+            <Sites />
+          </Suspense>
+        </ErrorBoundary>
       </Wrapper>
     );
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
-
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorRoutesPaths.error.HttpError, {
-      state: { code: 'ERR_BAD_REQUEST', message: '404: Not Found' }
-    });
+    expect(screen.getByText('ERR_BAD_REQUEST')).toBeInTheDocument();
   });
 
   it('Should call the useNavigate function with the path to an error page when a 500 error is received from sites', async () => {
     server.get(MockApiPaths.Sites, MockApi.get500Error);
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockedNavigator);
+    // removes an expected error boundary console.error from react query
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
       <Wrapper
         config={{
           defaultOptions: {
             queries: {
-              retry: false
+              retry: false,
+              useErrorBoundary: true
             }
           }
         }}
       >
-        <Suspense fallback={<LoadingPage />}>
-          <Sites />
-        </Suspense>
+        <ErrorBoundary FallbackComponent={Error}>
+          <Suspense fallback={<LoadingPage />}>
+            <Sites />
+          </Suspense>
+        </ErrorBoundary>
       </Wrapper>
     );
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(mockedNavigator).toHaveBeenCalledWith(ErrorRoutesPaths.error.HttpError, {
-      state: { code: 'ERR_BAD_RESPONSE', message: '500: Internal Server Error' }
-    });
+    expect(screen.getByText('ERR_BAD_RESPONSE')).toBeInTheDocument();
   });
 });
