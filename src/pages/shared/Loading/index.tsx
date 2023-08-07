@@ -12,14 +12,14 @@ const PleaseWait = function () {
   return (
     <Card isPlain>
       <CardHeader className="cog-wrapper">
-        <CogIcon className="cog cog-main spinning-clockwise" color="var(--pf-v5-global--palette--black-400)" />
+        <CogIcon className="cog cog-main spinning-clockwise" color="var(--pf-v5-global--palette--black-500)" />
         <CogIcon
           className="cog cog-secondary cog-upper spinning-clockwise--reverse"
-          color="var(--pf-v5-global--palette--black-400)"
+          color="var(--pf-v5-global--palette--black-500)"
         />
         <CogIcon
           className="cog cog-secondary cog-lower spinning-clockwise--reverse"
-          color="var(--pf-v5-global--palette--black-400)"
+          color="var(--pf-v5-global--palette--black-500)"
         />
       </CardHeader>
       <CardBody>{Labels.LoadingMessage}</CardBody>

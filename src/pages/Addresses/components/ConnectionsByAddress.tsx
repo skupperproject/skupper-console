@@ -1,18 +1,14 @@
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Modal, ModalVariant } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable } from '@pages/Processes/Processes.constants';
-import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constants';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -52,8 +48,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
 }) {
   const activeConnectionsDataRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
-
-  const [flowSelected, setFlowSelected] = useState<string>();
 
   const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedOldConnectionsQueryParams
@@ -123,26 +117,12 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }
   );
 
-  // query a single connection when a connection detail is selected
-  const { data: connectionSelected } = useQuery(
-    [QueriesServices.GetFlowPair],
-    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : null),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      enabled: !!flowSelected
-    }
-  );
-
   const handleSetMetricFilters = useCallback(
     (interval: string) => {
       storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
     },
     [addressId]
   );
-
-  const handleOnClickDetails = useCallback((id?: string) => {
-    setFlowSelected(id);
-  }, []);
 
   const checkDataChanged = useMemo((): number => {
     activeConnectionsDataRef.current = activeConnectionsData?.results;
@@ -188,22 +168,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
 
   return (
     <>
-      <Modal
-        aria-label="No header/footer modal"
-        isOpen={!!flowSelected}
-        onClose={() => handleOnClickDetails()}
-        variant={ModalVariant.medium}
-      >
-        {connectionSelected && (
-          <FlowsPair
-            flowPair={{
-              ...connectionSelected,
-              counterFlow: { ...connectionSelected.counterFlow, sourcePort: addressName?.split(':')[1] as string }
-            }}
-          />
-        )}
-      </Modal>
-
       {viewSelected === TAB_0_KEY && (
         <Metrics
           key={addressId}
@@ -245,12 +209,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
           onGetFilters={handleGetFiltersActiveConnections}
-          customCells={{
-            ...flowPairsComponentsTable,
-            viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-              <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-            )
-          }}
+          customCells={flowPairsComponentsTable}
         />
       )}
 
@@ -262,12 +221,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
           onGetFilters={handleGetFiltersConnections}
-          customCells={{
-            ...flowPairsComponentsTable,
-            viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-              <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-            )
-          }}
+          customCells={flowPairsComponentsTable}
         />
       )}
     </>

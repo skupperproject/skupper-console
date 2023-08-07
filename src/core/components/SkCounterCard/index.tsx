@@ -8,7 +8,7 @@ import { MetricCardProps } from './SkCounterCart.interfaces';
 const SkCounterCard: FC<MetricCardProps> = function ({
   title,
   value,
-  bgColor = '--pf-v5-global--palette--black-400',
+  bgColor = '--pf-v5-global--palette--black-500',
   fontColor = '--pf-v5-global--palette--white',
   showChart = true,
   colorChart = ChartThemeColor.blue,
