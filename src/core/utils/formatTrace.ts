@@ -11,5 +11,5 @@ export function formatTraceBySites(trace: string) {
     return traceParts[0]?.split('@')[1] || '';
   }
 
-  return traceParts.map((part) => part.split('@')[1]).join(' - ');
+  return traceParts.map((part) => part.split('@')[1]).join(' -> ');
 }

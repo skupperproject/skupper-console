@@ -6,6 +6,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
+import { formatTraceBySites } from '@core/utils/formatTrace';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -103,12 +104,6 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatLatency,
-    modifier: 'nowrap'
-  },
-  {
     name: FlowPairsColumnsNames.Site,
     prop: 'sourceSiteName' as keyof FlowPairsResponse,
     customCellName: 'SiteNameLinkCell',
@@ -142,6 +137,12 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.RxWindow,
     prop: 'counterFlow.windowSize' as keyof FlowPairsResponse,
     format: formatBytes,
+    modifier: 'nowrap'
+  },
+  {
+    name: FlowPairsColumnsNames.Trace,
+    prop: 'flowTrace' as keyof FlowPairsResponse,
+    format: formatTraceBySites,
     modifier: 'nowrap'
   }
 ];
@@ -195,15 +196,15 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatLatency,
-    modifier: 'nowrap'
-  },
-  {
     name: FlowPairsColumnsNames.Completed,
     prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
+    modifier: 'nowrap'
+  },
+  {
+    name: FlowPairsColumnsNames.Trace,
+    prop: 'flowTrace' as keyof FlowPairsResponse,
+    format: formatTraceBySites,
     modifier: 'nowrap'
   }
 ];

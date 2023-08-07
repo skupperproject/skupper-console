@@ -1,17 +1,13 @@
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 
-import { Modal, ModalVariant } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { SortDirection } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constants';
-import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constants';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -42,7 +38,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
   const [paginatedRequestsQueryParams, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedRequestsQueryParams
   );
-  const [flowSelected, setFlowSelected] = useState<string>();
 
   const { data: requestsDataPaginated } = useQuery(
     [
@@ -75,15 +70,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
     }
   );
 
-  const { data: flowPairSelected } = useQuery(
-    [QueriesServices.GetFlowPair],
-    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : null),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      enabled: !!flowSelected
-    }
-  );
-
   const handleRefreshMetrics = useCallback(
     (interval: string) => {
       storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
@@ -93,10 +79,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
 
   const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
     setRequestsQueryParamsPaginated(params);
-  }, []);
-
-  const handleOnClickDetails = useCallback((id?: string) => {
-    setFlowSelected(id);
   }, []);
 
   const checkDataChanged = useMemo((): number => {
@@ -117,15 +99,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
 
   return (
     <>
-      <Modal
-        aria-label="No header/footer modal"
-        isOpen={!!flowSelected}
-        onClose={() => handleOnClickDetails()}
-        variant={ModalVariant.medium}
-      >
-        {flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
-      </Modal>
-
       {viewSelected === TAB_0_KEY && (
         <Metrics
           key={addressId}
@@ -161,12 +134,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
           onGetFilters={handleGetFiltersConnections}
-          customCells={{
-            ...flowPairsComponentsTable,
-            viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-              <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-            )
-          }}
+          customCells={flowPairsComponentsTable}
         />
       )}
     </>

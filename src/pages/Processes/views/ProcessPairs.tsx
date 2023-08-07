@@ -6,15 +6,13 @@ import {
   Grid,
   GridItem,
   Icon,
-  Modal,
-  ModalVariant,
   Stack,
   StackItem,
   Tab,
   Tabs,
   TabTitleText
 } from '@patternfly/react-core';
-import { LongArrowAltLeftIcon, LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
+import { ArrowsAltHIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -24,15 +22,12 @@ import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import EmptyData from '@core/components/EmptyData';
 import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkTable from '@core/components/SkTable';
-import ViewDetailCell from '@core/components/ViewDetailsCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
-import FlowsPair from '@pages/shared/FlowPairs/FlowPair';
 import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constants';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
-import { FlowPairsResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
+import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
@@ -80,8 +75,6 @@ const ProcessPairs = function () {
   const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
   const destinationId = ids[1];
-
-  const [flowSelected, setFlowSelected] = useState<string>();
 
   const [connectionsView, setConnectionsView] = useState<string>(type);
 
@@ -158,15 +151,6 @@ const ProcessPairs = function () {
     }
   );
 
-  const { data: flowPairSelected } = useQuery(
-    [QueriesProcesses.GetFlowPair],
-    () => (flowSelected ? RESTApi.fetchFlowPair(flowSelected) : null),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      enabled: !!flowSelected
-    }
-  );
-
   const { data: sourceServices } = useQuery([QueriesProcesses.GetAddressesByProcessId, sourceId], () =>
     RESTApi.fetchAddressesByProcess(sourceId)
   );
@@ -189,10 +173,6 @@ const ProcessPairs = function () {
 
   const handleGetFiltersOldTcpRequests = useCallback((params: RequestOptions) => {
     setOldConnectionsQueryParamsPaginated({ ...initPaginatedOldConnectionsQueryParams, ...params });
-  }, []);
-
-  const handleOnClickDetails = useCallback((id?: string) => {
-    setFlowSelected(id);
   }, []);
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
@@ -219,169 +199,135 @@ const ProcessPairs = function () {
   const { timeRangeCount: activeConnectionsCount, results: activeConnections } = activeConnectionsData;
 
   return (
-    <>
-      <Modal
-        aria-label="No header/footer modal"
-        isOpen={!!flowSelected}
-        onClose={() => handleOnClickDetails()}
-        variant={ModalVariant.medium}
-      >
-        {!!flowPairSelected && <FlowsPair flowPair={flowPairSelected} />}
-      </Modal>
+    <MainContainer
+      dataTestId={getTestsIds.processPairsView(processPairId)}
+      title={ProcessPairsColumnsNames.Title}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
+      mainContentChildren={
+        <Stack hasGutter>
+          <StackItem>
+            <Grid hasGutter>
+              <GridItem span={5}>
+                <ProcessDescription
+                  processWithService={{ ...source, services: sourceServices }}
+                  title={LinkCell<ProcessResponse>({
+                    data: source,
+                    value: source.name,
+                    link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
+                  })}
+                />
+              </GridItem>
 
-      <MainContainer
-        dataTestId={getTestsIds.processPairsView(processPairId)}
-        title={ProcessPairsColumnsNames.Title}
-        link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
-        mainContentChildren={
-          <Stack hasGutter>
-            <StackItem>
-              <Grid hasGutter>
-                <GridItem span={5}>
-                  <ProcessDescription
-                    processWithService={{ ...source, services: sourceServices }}
-                    title={LinkCell<ProcessResponse>({
-                      data: source,
-                      value: source.name,
-                      link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
-                    })}
+              <GridItem
+                span={2}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Icon size="xl">
+                  <ArrowsAltHIcon color="var(--pf-v5-global--palette--black-500)" />
+                </Icon>
+              </GridItem>
+
+              <GridItem span={5}>
+                <ProcessDescription
+                  processWithService={{ ...destination, services: destinationServices }}
+                  title={LinkCell<ProcessResponse>({
+                    data: destination,
+                    value: destination.name,
+                    link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
+                  })}
+                />
+              </GridItem>
+            </Grid>
+          </StackItem>
+
+          {!activeConnections.length && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (
+            <StackItem isFilled>
+              <Card isFullHeight>
+                <CardBody>
+                  <EmptyData
+                    message={ProcessesLabels.ProcessPairsEmptyTitle}
+                    description={ProcessesLabels.ProcessPairsEmptyMessage}
+                    icon={ResourcesEmptyIcon}
                   />
-                </GridItem>
-                <GridItem
-                  span={2}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Icon status="custom" size="xl">
-                    <LongArrowAltRightIcon />
-                  </Icon>
-                  <Icon status="custom" size="xl">
-                    <LongArrowAltLeftIcon />
-                  </Icon>
-                </GridItem>
-                <GridItem span={5}>
-                  <ProcessDescription
-                    processWithService={{ ...destination, services: destinationServices }}
-                    title={LinkCell<ProcessResponse>({
-                      data: destination,
-                      value: destination.name,
-                      link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
-                    })}
-                  />
-                </GridItem>
-              </Grid>
+                </CardBody>
+              </Card>
             </StackItem>
+          )}
 
-            {!activeConnections.length && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (
-              <StackItem isFilled>
-                <Card isFullHeight>
-                  <CardBody>
-                    <EmptyData
-                      message={ProcessesLabels.ProcessPairsEmptyTitle}
-                      description={ProcessesLabels.ProcessPairsEmptyMessage}
-                      icon={ResourcesEmptyIcon}
-                    />
-                  </CardBody>
-                </Card>
-              </StackItem>
-            )}
-
-            {(!!activeConnections.length || !!oldConnectionsCount) && (
-              <StackItem isFilled>
-                <Tabs activeKey={connectionsView} onSelect={handleTabClick} component="nav">
-                  <Tab
-                    eventKey={TAB_1_KEY}
-                    title={
-                      <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>
-                    }
-                  >
-                    <SkTable
-                      title={ProcessesLabels.ActiveConnections}
-                      columns={activeTcpColumns}
-                      rows={activeConnections}
-                      paginationTotalRows={activeConnectionsCount}
-                      pagination={true}
-                      paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                      onGetFilters={handleGetFiltersActiveTcpRequests}
-                      customCells={{
-                        ...flowPairsComponentsTable,
-                        viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                          <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                        )
-                      }}
-                    />
-                  </Tab>
-                  <Tab
-                    disabled={oldConnectionsCount === 0}
-                    eventKey={TAB_2_KEY}
-                    title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
-                  >
-                    <SkTable
-                      title={ProcessesLabels.OldConnections}
-                      columns={oldTcpColumns}
-                      rows={oldConnections}
-                      paginationTotalRows={oldConnectionsCount}
-                      pagination={true}
-                      paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                      onGetFilters={handleGetFiltersOldTcpRequests}
-                      customCells={{
-                        ...flowPairsComponentsTable,
-                        viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                          <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                        )
-                      }}
-                    />
-                  </Tab>
-                </Tabs>
-              </StackItem>
-            )}
-            {!!http2Requests.length && (
-              <StackItem isFilled>
-                <SkTable
-                  title={ProcessesLabels.Http2Requests}
-                  columns={httpColumns}
-                  rows={http2Requests}
-                  paginationTotalRows={http2RequestsCount}
-                  pagination={true}
-                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  onGetFilters={handleGetFiltersHttp2Requests}
-                  customCells={{
-                    ...flowPairsComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                    )
-                  }}
-                />
-              </StackItem>
-            )}
-            {!!httpRequests.length && (
-              <StackItem isFilled>
-                <SkTable
-                  title={ProcessesLabels.HttpRequests}
-                  columns={httpColumns}
-                  rows={httpRequests}
-                  paginationTotalRows={httpRequestsCount}
-                  pagination={true}
-                  paginationPageSize={DEFAULT_PAGINATION_SIZE}
-                  onGetFilters={handleGetFiltersHttpRequests}
-                  customCells={{
-                    ...flowPairsComponentsTable,
-                    viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-                      <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
-                    )
-                  }}
-                />
-              </StackItem>
-            )}
-          </Stack>
-        }
-      />
-    </>
+          {(!!activeConnections.length || !!oldConnectionsCount) && (
+            <StackItem isFilled>
+              <Tabs activeKey={connectionsView} onSelect={handleTabClick} component="nav" isBox>
+                <Tab
+                  eventKey={TAB_1_KEY}
+                  title={
+                    <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>
+                  }
+                >
+                  <SkTable
+                    columns={activeTcpColumns}
+                    rows={activeConnections}
+                    paginationTotalRows={activeConnectionsCount}
+                    pagination={true}
+                    paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                    onGetFilters={handleGetFiltersActiveTcpRequests}
+                    customCells={flowPairsComponentsTable}
+                  />
+                </Tab>
+                <Tab
+                  disabled={oldConnectionsCount === 0}
+                  eventKey={TAB_2_KEY}
+                  title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
+                >
+                  <SkTable
+                    columns={oldTcpColumns}
+                    rows={oldConnections}
+                    paginationTotalRows={oldConnectionsCount}
+                    pagination={true}
+                    paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                    onGetFilters={handleGetFiltersOldTcpRequests}
+                    customCells={flowPairsComponentsTable}
+                  />
+                </Tab>
+              </Tabs>
+            </StackItem>
+          )}
+          {!!http2Requests.length && (
+            <StackItem isFilled>
+              <SkTable
+                title={ProcessesLabels.Http2Requests}
+                columns={httpColumns}
+                rows={http2Requests}
+                paginationTotalRows={http2RequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={handleGetFiltersHttp2Requests}
+                customCells={flowPairsComponentsTable}
+              />
+            </StackItem>
+          )}
+          {!!httpRequests.length && (
+            <StackItem isFilled>
+              <SkTable
+                title={ProcessesLabels.HttpRequests}
+                columns={httpColumns}
+                rows={httpRequests}
+                paginationTotalRows={httpRequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={handleGetFiltersHttpRequests}
+                customCells={flowPairsComponentsTable}
+              />
+            </StackItem>
+          )}
+        </Stack>
+      }
+    />
   );
 };
 
