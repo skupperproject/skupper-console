@@ -16,32 +16,30 @@ import { processGroupsColumns } from '../ProcessGroups.constants';
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from '../ProcessGroups.enum';
 import { QueriesProcessGroups } from '../services/services.enum';
 
-const initPaginatedProcessGroupsQueryParams = {
+const initComponentsQueryParams = {
   limit: BIG_PAGINATION_SIZE
 };
 
 const ProcessGroups = function () {
-  const [processGroupsPaginatedQueryParams, setProcessGroupsPaginatedQueryParams] = useState<RequestOptions>(
-    initPaginatedProcessGroupsQueryParams
-  );
+  const [componentsQueryParams, setComponentsQueryParams] = useState<RequestOptions>(initComponentsQueryParams);
 
-  const { data: processGroupsData } = useQuery(
-    [QueriesProcessGroups.GetProcessGroups, processGroupsPaginatedQueryParams],
-    () => RESTApi.fetchProcessGroups(processGroupsPaginatedQueryParams),
+  const { data: componentsData } = useQuery(
+    [QueriesProcessGroups.GetProcessGroups, componentsQueryParams],
+    () => RESTApi.fetchProcessGroups(componentsQueryParams),
     {
       keepPreviousData: true
     }
   );
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
-    setProcessGroupsPaginatedQueryParams({ ...initPaginatedProcessGroupsQueryParams, ...params });
+    setComponentsQueryParams({ ...initComponentsQueryParams, ...params });
   }, []);
 
-  const processGroups =
-    processGroupsData?.results.filter(({ processGroupRole }) => processGroupRole !== 'internal') || [];
-  const processGroupsCount = processGroupsData?.timeRangeCount;
+  const componentsNoFiltered =
+    componentsData?.results.filter(({ processGroupRole }) => processGroupRole !== 'internal') || [];
+  const processGroupsCount = componentsData?.timeRangeCount;
 
-  const components = processGroups.filter(({ processGroupRole }) => processGroupRole !== 'internal');
+  const components = componentsNoFiltered.filter(({ processGroupRole }) => processGroupRole !== 'internal');
 
   return (
     <MainContainer

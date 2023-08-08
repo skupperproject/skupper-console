@@ -53,14 +53,10 @@ const Processes = function () {
     setRemoteProcessesQueryParams({ ...initRemoteProcessesQueryParams, ...params });
   }, []);
 
-  if (!externalProcessData || !remoteProcessData) {
-    return null;
-  }
-
-  const externalProcesses = externalProcessData.results;
-  const externalProcessesCount = externalProcessData.timeRangeCount;
-  const remotelProcesses = remoteProcessData.results;
-  const remoteProcessesCount = remoteProcessData.timeRangeCount;
+  const externalProcesses = externalProcessData?.results || [];
+  const externalProcessesCount = externalProcessData?.timeRangeCount || 0;
+  const remotelProcesses = remoteProcessData?.results || [];
+  const remoteProcessesCount = remoteProcessData?.timeRangeCount || 0;
 
   const processes = [...externalProcesses, ...remotelProcesses];
   const processesCount = externalProcessesCount + remoteProcessesCount;
