@@ -105,7 +105,7 @@ export interface FlowPairsResponse extends BaseResponse {
   processAggregateId: string;
 }
 
-export interface ConnectionTCP extends BaseResponse {
+interface ConnectionTCP extends BaseResponse {
   parent: string;
   counterFlow: string;
   octets: number;
@@ -119,7 +119,7 @@ export interface ConnectionTCP extends BaseResponse {
   protocol: AvailableProtocols;
 }
 
-export interface RequestHTTP extends BaseResponse {
+interface RequestHTTP extends BaseResponse {
   counterFlow: string;
   parent: string;
   octets: number;
