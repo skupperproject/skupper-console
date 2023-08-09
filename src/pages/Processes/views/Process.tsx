@@ -78,6 +78,7 @@ const Process = function () {
         <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
         <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
         <Tab
+          disabled={!processesPairsTxData.length && !processesPairsRxData.length}
           eventKey={ProcessesLabels.ProcessPairs}
           title={<TabTitleText>{ProcessesLabels.ProcessPairs}</TabTitleText>}
         />
