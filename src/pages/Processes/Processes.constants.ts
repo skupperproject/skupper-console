@@ -7,8 +7,8 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constants';
-import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
+import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
