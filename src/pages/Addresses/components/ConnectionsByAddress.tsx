@@ -9,7 +9,8 @@ import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@confi
 import SkTable from '@core/components/SkTable';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable } from '@pages/Processes/Processes.constants';
-import { flowPairsComponentsTable, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constants';
+import { tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
+import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
@@ -202,26 +203,24 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
       )}
 
       {viewSelected === TAB_2_KEY && (
-        <SkTable
+        <FlowPairsTable
           columns={tcpColumns}
           rows={activeConnections}
           paginationTotalRows={activeConnectionsRowsCount}
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
           onGetFilters={handleGetFiltersActiveConnections}
-          customCells={flowPairsComponentsTable}
         />
       )}
 
       {viewSelected === TAB_3_KEY && (
-        <SkTable
+        <FlowPairsTable
           columns={tcpFlowPairsColumns}
           rows={oldConnections}
           paginationTotalRows={oldConnectionsRowsCount}
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
           onGetFilters={handleGetFiltersConnections}
-          customCells={flowPairsComponentsTable}
         />
       )}
     </>

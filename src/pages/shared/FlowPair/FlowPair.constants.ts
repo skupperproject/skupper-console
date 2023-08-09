@@ -6,13 +6,12 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { formatTraceBySites } from '@core/utils/formatTrace';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { FlowPairsResponse } from 'API/REST.interfaces';
 
-import { FlowPairsColumnsNames } from './FlowPairs.enum';
+import { FlowPairsColumnsNames } from './FlowPair.enum';
 
 export const flowPairsComponentsTable = {
   ProcessNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
@@ -45,7 +44,6 @@ export const flowPairsComponentsTable = {
     DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime }),
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes }),
-  //TODO; BE need to fix it
   HttpStatusCell: (props: { data?: FlowPairsResponse }) =>
     props.data?.counterFlow?.result || props.data?.forwardFlow?.result || ''
 };
@@ -116,34 +114,9 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: FlowPairsColumnsNames.TxUnacked,
-    prop: 'forwardFlow.octetsUnacked' as keyof FlowPairsResponse,
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: FlowPairsColumnsNames.RxUnacked,
-    prop: 'counterFlow.octetsUnacked' as keyof FlowPairsResponse,
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: FlowPairsColumnsNames.TxWindow,
-    prop: 'forwardFlow.windowSize' as keyof FlowPairsResponse,
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: FlowPairsColumnsNames.RxWindow,
-    prop: 'counterFlow.windowSize' as keyof FlowPairsResponse,
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites,
-    modifier: 'nowrap'
+    name: '',
+    customCellName: 'viewDetailsLinkCell',
+    modifier: 'fitContent'
   }
 ];
 
@@ -202,9 +175,8 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: FlowPairsColumnsNames.Trace,
-    prop: 'flowTrace' as keyof FlowPairsResponse,
-    format: formatTraceBySites,
-    modifier: 'nowrap'
+    name: '',
+    customCellName: 'viewDetailsLinkCell',
+    modifier: 'fitContent'
   }
 ];

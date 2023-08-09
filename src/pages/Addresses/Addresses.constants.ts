@@ -4,8 +4,8 @@ import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesTableColumns } from '@pages/Processes/Processes.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPairs.constants';
-import { FlowPairsColumnsNames } from '@pages/shared/FlowPairs/FlowPairs.enum';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
+import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Addresses.enum';

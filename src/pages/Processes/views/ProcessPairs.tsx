@@ -23,10 +23,9 @@ import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
 import EmptyData from '@core/components/EmptyData';
 import LinkCell from '@core/components/LinkCell';
-import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
-import { flowPairsComponentsTable } from '@pages/shared/FlowPairs/FlowPairs.constants';
+import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
@@ -275,14 +274,13 @@ const ProcessPairs = function () {
                     <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>
                   }
                 >
-                  <SkTable
+                  <FlowPairsTable
                     columns={activeTcpColumns}
                     rows={activeConnections}
                     paginationTotalRows={activeConnectionsCount}
                     pagination={true}
                     paginationPageSize={DEFAULT_PAGINATION_SIZE}
                     onGetFilters={handleGetFiltersActiveTcpRequests}
-                    customCells={flowPairsComponentsTable}
                   />
                 </Tab>
                 <Tab
@@ -290,14 +288,13 @@ const ProcessPairs = function () {
                   eventKey={TAB_2_KEY}
                   title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
                 >
-                  <SkTable
+                  <FlowPairsTable
                     columns={oldTcpColumns}
                     rows={oldConnections}
                     paginationTotalRows={oldConnectionsCount}
                     pagination={true}
                     paginationPageSize={DEFAULT_PAGINATION_SIZE}
                     onGetFilters={handleGetFiltersOldTcpRequests}
-                    customCells={flowPairsComponentsTable}
                   />
                 </Tab>
               </Tabs>
@@ -305,7 +302,7 @@ const ProcessPairs = function () {
           )}
           {!!http2Requests.length && (
             <StackItem isFilled>
-              <SkTable
+              <FlowPairsTable
                 title={ProcessesLabels.Http2Requests}
                 columns={httpColumns}
                 rows={http2Requests}
@@ -313,13 +310,12 @@ const ProcessPairs = function () {
                 pagination={true}
                 paginationPageSize={DEFAULT_PAGINATION_SIZE}
                 onGetFilters={handleGetFiltersHttp2Requests}
-                customCells={flowPairsComponentsTable}
               />
             </StackItem>
           )}
           {!!httpRequests.length && (
             <StackItem isFilled>
-              <SkTable
+              <FlowPairsTable
                 title={ProcessesLabels.HttpRequests}
                 columns={httpColumns}
                 rows={httpRequests}
@@ -327,7 +323,6 @@ const ProcessPairs = function () {
                 pagination={true}
                 paginationPageSize={DEFAULT_PAGINATION_SIZE}
                 onGetFilters={handleGetFiltersHttpRequests}
-                customCells={flowPairsComponentsTable}
               />
             </StackItem>
           )}
