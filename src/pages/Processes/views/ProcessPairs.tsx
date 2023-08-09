@@ -1,6 +1,7 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import {
+  Bullseye,
   Card,
   CardBody,
   Grid,
@@ -12,7 +13,7 @@ import {
   Tabs,
   TabTitleText
 } from '@patternfly/react-core';
-import { ArrowsAltHIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
+import { LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -198,6 +199,56 @@ const ProcessPairs = function () {
   const { timeRangeCount: oldConnectionsCount, results: oldConnections } = oldConnectionsData;
   const { timeRangeCount: activeConnectionsCount, results: activeConnections } = activeConnectionsData;
 
+  const ClientServerDescription = function () {
+    return (
+      <Grid hasGutter>
+        <GridItem sm={12} md={5}>
+          <ProcessDescription
+            processWithService={{ ...source, services: sourceServices }}
+            title={LinkCell<ProcessResponse>({
+              data: source,
+              value: source.name,
+              link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
+            })}
+          />
+        </GridItem>
+
+        <GridItem sm={12} md={2}>
+          <Bullseye>
+            <Icon size="xl">
+              <LongArrowAltRightIcon color="var(--pf-v5-global--palette--black-500)" />
+            </Icon>
+          </Bullseye>
+        </GridItem>
+
+        <GridItem sm={12} md={5}>
+          <ProcessDescription
+            processWithService={{ ...destination, services: destinationServices }}
+            title={LinkCell<ProcessResponse>({
+              data: destination,
+              value: destination.name,
+              link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
+            })}
+          />
+        </GridItem>
+      </Grid>
+    );
+  };
+
+  const NoDataCard = function () {
+    return (
+      <Card isFullHeight>
+        <CardBody>
+          <EmptyData
+            message={ProcessesLabels.ProcessPairsEmptyTitle}
+            description={ProcessesLabels.ProcessPairsEmptyMessage}
+            icon={ResourcesEmptyIcon}
+          />
+        </CardBody>
+      </Card>
+    );
+  };
+
   return (
     <MainContainer
       dataTestId={getTestsIds.processPairsView(processPairId)}
@@ -206,57 +257,12 @@ const ProcessPairs = function () {
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
-            <Grid hasGutter>
-              <GridItem span={5}>
-                <ProcessDescription
-                  processWithService={{ ...source, services: sourceServices }}
-                  title={LinkCell<ProcessResponse>({
-                    data: source,
-                    value: source.name,
-                    link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
-                  })}
-                />
-              </GridItem>
-
-              <GridItem
-                span={2}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <Icon size="xl">
-                  <ArrowsAltHIcon color="var(--pf-v5-global--palette--black-500)" />
-                </Icon>
-              </GridItem>
-
-              <GridItem span={5}>
-                <ProcessDescription
-                  processWithService={{ ...destination, services: destinationServices }}
-                  title={LinkCell<ProcessResponse>({
-                    data: destination,
-                    value: destination.name,
-                    link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
-                  })}
-                />
-              </GridItem>
-            </Grid>
+            <ClientServerDescription />
           </StackItem>
 
           {!activeConnections.length && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (
             <StackItem isFilled>
-              <Card isFullHeight>
-                <CardBody>
-                  <EmptyData
-                    message={ProcessesLabels.ProcessPairsEmptyTitle}
-                    description={ProcessesLabels.ProcessPairsEmptyMessage}
-                    icon={ResourcesEmptyIcon}
-                  />
-                </CardBody>
-              </Card>
+              <NoDataCard />
             </StackItem>
           )}
 

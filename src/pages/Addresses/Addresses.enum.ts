@@ -21,7 +21,7 @@ export enum AddressesLabels {
 
 export enum ConnectionLabels {
   ActiveConnections = 'Live connections',
-  OldConnections = 'Connections in the last 15 minutes',
+  OldConnections = 'Connection history',
   TrafficTx = 'Outbound traffic ',
   TrafficRx = 'Inbound traffic',
   AvgByteRateRx = 'Avg. inbound speed',
@@ -30,7 +30,7 @@ export enum ConnectionLabels {
 
 export enum RequestLabels {
   Clients = 'Clients',
-  Requests = 'Requests in the last 15 minutes',
+  Requests = 'Requests',
   TrafficTx = 'Response Traffic ',
   TrafficRx = 'Request traffic',
   AvgByteRateRx = 'Avg. rate responses',
