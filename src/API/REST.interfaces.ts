@@ -91,14 +91,14 @@ export interface AddressResponse extends BaseResponse {
   listenerCount: number;
 }
 
-export interface FlowPairsResponse extends BaseResponse {
+export interface FlowPairsResponse<T = RequestHTTP & ConnectionTCP> extends BaseResponse {
   sourceSiteId: string;
   sourceSiteName: string;
   destinationSiteId: string;
   destinationSiteName: string;
   protocol: string;
-  forwardFlow: ConnectionTCP & RequestHTTP;
-  counterFlow: ConnectionTCP & RequestHTTP;
+  forwardFlow: T;
+  counterFlow: T;
   flowTrace: string;
   siteAggregateId: string;
   processGroupAggregateId: string;
@@ -122,12 +122,12 @@ export interface RequestHTTP extends BaseResponse {
   counterFlow: string;
   parent: string;
   octets: number;
-  method: string;
+  method?: string;
   latency: number;
   process: string;
   processName: string;
-  streamIdentity: number;
-  result: number;
+  streamIdentity?: number;
+  result?: number;
   reason?: string;
   place: 1 | 2;
 }

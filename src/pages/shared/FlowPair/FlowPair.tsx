@@ -17,39 +17,21 @@ import {
   Title
 } from '@patternfly/react-core';
 import { LaptopIcon, LongArrowAltDownIcon, LongArrowAltUpIcon, ServerIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { ConnectionTCP, RequestHTTP } from '@API/REST.interfaces';
-import { UPDATE_INTERVAL } from '@config/config';
+import { ConnectionTCP, FlowPairsResponse, RequestHTTP } from '@API/REST.interfaces';
 import { getTestsIds } from '@config/testIds.config';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { formatTraceBySites } from '@core/utils/formatTrace';
-import { QueriesServices } from '@pages/Addresses/services/services.enum';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import { FlowLabels } from './FlowPair.enum';
-import LoadingPage from '../Loading';
 
-const FlowPair: FC<{ flowPairId: string }> = function ({ flowPairId }) {
-  const { data: flowPair } = useQuery(
-    [QueriesServices.GetFlowPair, flowPairId],
-    () => RESTApi.fetchFlowPair(flowPairId),
-    {
-      suspense: false,
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  if (!flowPair) {
-    return <LoadingPage />;
-  }
-
+const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
   const { forwardFlow, counterFlow, protocol, endTime, startTime, identity, flowTrace } = flowPair;
 
   /**
@@ -133,13 +115,13 @@ const FlowPair: FC<{ flowPairId: string }> = function ({ flowPairId }) {
 
 export default FlowPair;
 
-interface DescriptionProps {
+interface DescriptionProps<T> {
   title: string;
-  flow: ConnectionTCP & RequestHTTP;
+  flow: T;
   isCounterflow?: boolean;
 }
 
-const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow = false }) {
+const ConnectionDetail: FC<DescriptionProps<ConnectionTCP>> = function ({ title, flow, isCounterflow = false }) {
   return (
     <Card isFullHeight isPlain>
       <CardTitle>
@@ -193,7 +175,7 @@ const ConnectionDetail: FC<DescriptionProps> = function ({ title, flow, isCounte
   );
 };
 
-const RequestDetail: FC<DescriptionProps> = function ({ title, flow, isCounterflow }) {
+const RequestDetail: FC<DescriptionProps<RequestHTTP>> = function ({ title, flow, isCounterflow }) {
   return (
     <Card isFullHeight isPlain>
       <CardTitle>

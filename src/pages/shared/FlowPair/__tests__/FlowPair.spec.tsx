@@ -1,6 +1,7 @@
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { FlowPairsResponse } from '@API/REST.interfaces';
 import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
 import flowPairsData from '@mocks/data/FLOW_PAIRS.json';
@@ -23,22 +24,20 @@ describe('FlowPairs component', () => {
   it('should render the HTTP/2 FlowPair view after the data loading is complete', async () => {
     render(
       <Wrapper>
-        <FlowPair flowPairId={flowPairsData.results[0].identity} />
+        <FlowPair flowPair={flowPairsData.results[0] as FlowPairsResponse} />
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
     expect(screen.getByTestId(getTestsIds.flowPairsView(flowPairsData.results[0].identity))).toBeInTheDocument();
   });
 
   it('should render the TCP FlowPair view after the data loading is complete', async () => {
     render(
       <Wrapper>
-        <FlowPair flowPairId={flowPairsData.results[3].identity} />
+        <FlowPair flowPair={flowPairsData.results[3] as FlowPairsResponse} />
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
     expect(screen.getByTestId(getTestsIds.flowPairsView(flowPairsData.results[3].identity))).toBeInTheDocument();
   });
 });

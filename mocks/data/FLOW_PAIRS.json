@@ -21,10 +21,9 @@
         "latency": 285825,
         "octets": 5,
         "method": "POST",
-        "streamIdentity": 0,
+        "streamIdentity": 1,
         "process": "process-op",
         "processName": "process op",
-        "protocol": "http2",
         "place": 1
       },
       "counterFlow": {
@@ -41,7 +40,6 @@
         "streamIdentity": 237,
         "process": "process-2-tr",
         "processName": "process 2-tr",
-        "protocol": "http2",
         "place": 2
       },
       "siteAggregateId": "site-1-to-site-2",

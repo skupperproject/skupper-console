@@ -12,10 +12,10 @@ import FlowPair from './FlowPair';
 import { flowPairsComponentsTable } from './FlowPair.constants';
 
 const FlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
-  const [flowPairIdSelected, setFlowPairIdSelected] = useState<string>();
+  const [flowPairSelected, setFlowPairIdSelected] = useState<FlowPairsResponse>();
 
-  const handleOnClickDetails = useCallback((id?: string) => {
-    setFlowPairIdSelected(id);
+  const handleOnClickDetails = useCallback((flowPair?: FlowPairsResponse) => {
+    setFlowPairIdSelected(flowPair);
   }, []);
 
   return (
@@ -25,17 +25,17 @@ const FlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props
         customCells={{
           ...flowPairsComponentsTable,
           viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-            <ViewDetailCell onClick={handleOnClickDetails} value={data.identity} />
+            <ViewDetailCell onClick={handleOnClickDetails} value={data} />
           )
         }}
       />
       <Modal
         title={'Details'}
-        isOpen={!!flowPairIdSelected}
+        isOpen={!!flowPairSelected}
         onClose={() => handleOnClickDetails(undefined)}
         variant={ModalVariant.medium}
       >
-        {flowPairIdSelected ? <FlowPair flowPairId={flowPairIdSelected} /> : <div />}
+        {flowPairSelected ? <FlowPair flowPair={flowPairSelected} /> : null}
       </Modal>
     </>
   );
