@@ -3,13 +3,15 @@ import { FC } from 'react';
 import { ChartArea, ChartGroup, ChartThemeColor, ChartVoronoiContainer } from '@patternfly/react-charts';
 import { Card, CardBody, CardFooter, TextContent, TextVariants, Text, Flex } from '@patternfly/react-core';
 
+import { Colors } from 'colors';
+
 import { MetricCardProps } from './SkCounterCart.interfaces';
 
 const SkCounterCard: FC<MetricCardProps> = function ({
   title,
   value,
-  bgColor = '--pf-v5-global--palette--black-500',
-  fontColor = '--pf-v5-global--palette--white',
+  bgColor = Colors.Black500,
+  fontColor = Colors.White,
   showChart = true,
   colorChart = ChartThemeColor.blue,
   dataChart

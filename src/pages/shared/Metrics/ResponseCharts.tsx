@@ -8,6 +8,7 @@ import SkChartPie from '@core/components/SkChartPie';
 import SkCounterCard from '@core/components/SkCounterCard';
 import { convertToPercentage } from '@core/utils/convertToPercentage';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
+import { Colors } from 'colors';
 
 import { MetricsLabels } from './Metrics.enum';
 import { ResponseMetrics } from './services/services.interfaces';
@@ -24,7 +25,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode2xx.label}
             value={convertToPercentage(responseData.statusCode2xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-v5-global--palette--green-400'}
+            bgColor={Colors.Green500}
             showChart={false}
           />
         </GridItem>
@@ -32,7 +33,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode3xx.label}
             value={convertToPercentage(responseData.statusCode3xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-v5-global--palette--blue-400'}
+            bgColor={Colors.Blue400}
             showChart={false}
           />
         </GridItem>
@@ -40,7 +41,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode4xx.label}
             value={convertToPercentage(responseData.statusCode4xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-v5-global--palette--orange-200'}
+            bgColor={Colors.Orange200}
             showChart={false}
           />
         </GridItem>
@@ -48,7 +49,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkCounterCard
             title={responseData.statusCode5xx.label}
             value={convertToPercentage(responseData.statusCode5xx.total, responseData.total) || ' - '}
-            bgColor={'--pf-v5-global--palette--red-200'}
+            bgColor={Colors.Red200}
             showChart={false}
           />
         </GridItem>

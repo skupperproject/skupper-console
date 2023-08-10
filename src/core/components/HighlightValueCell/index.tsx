@@ -1,5 +1,7 @@
 import { useCallback, useRef } from 'react';
 
+import { VarColors } from 'colors';
+
 import { HighlightValueCellProps } from './HighightValueCell.interfaces';
 
 const HighlightValueCell = function <T>({ value, format }: HighlightValueCellProps<T>) {
@@ -25,7 +27,7 @@ const HighlightValueCell = function <T>({ value, format }: HighlightValueCellPro
     <div
       style={{
         fontWeight: 900,
-        color: 'var(--pf-v5-global--palette--green-500)'
+        color: VarColors.Green500
       }}
     >
       {format(value)}
