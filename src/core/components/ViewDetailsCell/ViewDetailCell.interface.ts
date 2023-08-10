@@ -1,5 +1,5 @@
-export interface ViewDetailCellProps {
+export interface ViewDetailCellProps<T> {
   link?: string;
-  value?: string;
+  value?: T;
   onClick?: Function;
 }

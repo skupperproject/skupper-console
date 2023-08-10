@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { ViewDetailCellProps } from './ViewDetailCell.interface';
 
-const ViewDetailCell = function ({ link, value, onClick }: ViewDetailCellProps) {
+const ViewDetailCell = function <T>({ link, value, onClick }: ViewDetailCellProps<T>) {
   const handleOnClick = useCallback(() => {
     if (onClick) {
       onClick(value);

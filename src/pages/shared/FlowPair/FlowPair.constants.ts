@@ -180,3 +180,59 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'fitContent'
   }
 ];
+
+export const flowPairPlaceholder: FlowPairsResponse = {
+  recType: '',
+  identity: '',
+  startTime: 0,
+  endTime: 0,
+  protocol: '',
+  sourceSiteId: '',
+  sourceSiteName: '',
+  destinationSiteId: '',
+  destinationSiteName: '',
+  flowTrace: '',
+  forwardFlow: {
+    recType: '',
+    identity: '',
+    parent: '',
+    startTime: 0,
+    endTime: 0,
+    counterFlow: '',
+    latency: 285825,
+    octets: 0,
+    method: '',
+    streamIdentity: 0,
+    process: '',
+    processName: '',
+    place: 1,
+    result: 0,
+    octetsUnacked: 0,
+    windowSize: 0,
+    sourceHost: '',
+    sourcePort: ''
+  },
+  counterFlow: {
+    recType: '',
+    identity: '',
+    parent: '',
+    startTime: 0,
+    endTime: 0,
+    counterFlow: '',
+    latency: 285825,
+    octets: 0,
+    method: '',
+    streamIdentity: 0,
+    process: '',
+    processName: '',
+    place: 1,
+    result: 0,
+    octetsUnacked: 0,
+    windowSize: 0,
+    sourceHost: '',
+    sourcePort: ''
+  },
+  siteAggregateId: '',
+  processGroupAggregateId: '',
+  processAggregateId: ''
+};
