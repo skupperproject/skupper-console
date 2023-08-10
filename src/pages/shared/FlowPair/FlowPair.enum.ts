@@ -32,9 +32,10 @@ export enum FlowPairsColumnsNames {
 
 export enum FlowLabels {
   Protocol = 'Protocol',
-  Process = 'Process',
+  Status = 'Status',
   Host = 'Source Host',
   Port = 'Source Port',
+  Process = 'Process',
   Method = 'Method',
   Trace = 'Trace',
   DestHost = 'Destination Host',

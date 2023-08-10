@@ -1,4 +1,0 @@
-.metric-disabled {
-  --pf-c-card--BackgroundColor: var(--pf-v5-global--palette--black-200) !important;
-  color: var(--pf-v5-global--palette--black-500);
-}

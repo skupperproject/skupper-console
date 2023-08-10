@@ -66,6 +66,7 @@ html {
   margin: auto;
   width: 5.5em;
   height: 5em;
+  color: var(--pf-v5-global--palette--black-500);
 }
 
 .sk-loading-page .cog-wrapper .cog {
@@ -136,4 +137,9 @@ html {
 
 .sk-capitalize {
   text-transform: capitalize;
+}
+
+.metric-disabled {
+  --pf-c-card--BackgroundColor: var(--pf-v5-global--palette--black-200) !important;
+  color: var(--pf-v5-global--palette--black-500);
 }

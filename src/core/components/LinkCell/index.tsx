@@ -6,6 +6,10 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { LinkCellProps } from './LinkCell.interfaces';
 
 const LinkCell = function <T>({ value, link, type, isDisabled = false, fitContent }: LinkCellProps<T>) {
+  if (!value) {
+    return '';
+  }
+
   return (
     <div style={{ display: 'flex' }}>
       {type && <ResourceIcon type={type} />}

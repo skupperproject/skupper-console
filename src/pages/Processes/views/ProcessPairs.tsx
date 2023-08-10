@@ -28,6 +28,7 @@ import MainContainer from '@layout/MainContainer';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
+import { VarColors } from 'colors';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
@@ -215,7 +216,7 @@ const ProcessPairs = function () {
         <GridItem sm={12} md={2}>
           <Bullseye>
             <Icon size="xl">
-              <LongArrowAltRightIcon color="var(--pf-v5-global--palette--black-500)" />
+              <LongArrowAltRightIcon color={VarColors.Black500} />
             </Icon>
           </Bullseye>
         </GridItem>

@@ -16,7 +16,7 @@ import {
   TextVariants,
   Title
 } from '@patternfly/react-core';
-import { LaptopIcon, LongArrowAltDownIcon, LongArrowAltUpIcon, ServerIcon } from '@patternfly/react-icons';
+import { LaptopIcon, ServerIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
@@ -79,6 +79,8 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
                     <DescriptionListDescription>{protocol}</DescriptionListDescription>
                     <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
                     <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
+                    <DescriptionListTerm>{FlowLabels.Status}</DescriptionListTerm>
+                    <DescriptionListDescription>{forwardFlow.result || counterFlow.result}</DescriptionListDescription>
                     <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
                     <DescriptionListDescription>{formatTraceBySites(flowTrace)}</DescriptionListDescription>
                     {duration && (
@@ -151,17 +153,7 @@ const ConnectionDetail: FC<DescriptionProps<ConnectionTCP>> = function ({ title,
             <DescriptionListTerm>{isCounterflow ? FlowLabels.DestPort : FlowLabels.Port}</DescriptionListTerm>
             <DescriptionListDescription>{flow.sourcePort}</DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
-            <DescriptionListDescription>
-              {formatBytes(flow.octets)}{' '}
-              <Icon>
-                {' '}
-                {isCounterflow ? (
-                  <LongArrowAltDownIcon color="var(--pf-v5-global--palette--blue-300)" />
-                ) : (
-                  <LongArrowAltUpIcon color="var(--pf-v5-global--palette--green-400)" />
-                )}
-              </Icon>
-            </DescriptionListDescription>
+            <DescriptionListDescription>{formatBytes(flow.octets)} </DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.ByteUnacked}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(flow.octetsUnacked)}</DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.WindowSize}</DescriptionListTerm>
@@ -201,17 +193,7 @@ const RequestDetail: FC<DescriptionProps<RequestHTTP>> = function ({ title, flow
               </>
             </DescriptionListDescription>
             <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
-            <DescriptionListDescription>
-              {formatBytes(flow.octets)}
-              <Icon>
-                {' '}
-                {isCounterflow ? (
-                  <LongArrowAltDownIcon color="var(--pf-v5-global--palette--blue-300)" />
-                ) : (
-                  <LongArrowAltUpIcon color="var(-v5-global--palette--green-400)" />
-                )}
-              </Icon>
-            </DescriptionListDescription>{' '}
+            <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>{' '}
             <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
             <DescriptionListDescription>{formatLatency(flow.latency)}</DescriptionListDescription>
           </DescriptionListGroup>

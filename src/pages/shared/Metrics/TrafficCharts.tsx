@@ -8,6 +8,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { VarColors } from 'colors';
 
 import { MetricsLabels } from './Metrics.enum';
 import { ByteRateMetrics, BytesMetric } from './services/services.interfaces';
@@ -45,7 +46,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
                 <Tr>
                   <Td>
                     <Icon size="sm">
-                      <CircleIcon color="var(--pf-v5-global--palette--blue-400)" />
+                      <CircleIcon color={VarColors.Blue400} />
                     </Icon>{' '}
                     {MetricsLabels.TrafficReceived}
                   </Td>
@@ -56,7 +57,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
                 <Tr>
                   <Td>
                     <Icon size="sm">
-                      <CircleIcon color="var(--pf-v5-global--palette--green-500)" />
+                      <CircleIcon color={VarColors.Green500} />
                     </Icon>{' '}
                     {MetricsLabels.TrafficSent}
                   </Td>

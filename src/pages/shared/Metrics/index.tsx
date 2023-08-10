@@ -19,8 +19,6 @@ import MetricsController from './services';
 import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
 import TrafficCharts from './TrafficCharts';
 
-import './Metrics.css';
-
 function getDisplayIntervalValue(value: string | undefined) {
   return displayIntervalMap.find(({ key }) => key === value)?.value || 0;
 }
