@@ -59,7 +59,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Port,
     prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
 
   {
@@ -74,20 +74,20 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
     format: formatBytes,
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.RxBytes,
     prop: 'counterFlow.octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
     format: formatBytes,
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.TTFB,
     columnDescription: 'time elapsed between client and server',
     customCellName: 'ClientServerLatencyCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.Duration,
@@ -105,13 +105,13 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Site,
     prop: 'sourceSiteName' as keyof FlowPairsResponse,
     customCellName: 'SiteNameLinkCell',
-    modifier: 'nowrap'
+    modifier: 'truncate'
   },
   {
     name: FlowPairsColumnsNames.ServerSite,
     prop: 'destinationSiteName' as keyof FlowPairsResponse,
     customCellName: 'TargetSiteNameLinkCell',
-    modifier: 'nowrap'
+    modifier: 'truncate'
   },
   {
     name: '',

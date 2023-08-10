@@ -25,16 +25,10 @@ export const ProcessesPaths = {
 };
 
 export const ProcessesConnectedComponentsTable = {
-  ProcessLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
+  ProcessConnectedLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}`
-    }),
-  ProcessConnectedDetailsCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-    LinkCell({
-      ...props,
-      value: ProcessesLabels.GoToDetails,
       link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessesLabels.ProcessPairs}@${props.data.identity}`
     })
 };
@@ -94,12 +88,7 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessPairsColumnsNames.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
-    customCellName: 'ProcessLinkCell'
-  },
-  {
-    name: '',
-    customCellName: 'ProcessConnectedDetailsCell',
-    modifier: 'fitContent'
+    customCellName: 'ProcessConnectedLinkCell'
   }
 ];
 
@@ -107,16 +96,11 @@ export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessPairsColumnsNames.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
-    customCellName: 'ProcessLinkCell'
+    customCellName: 'ProcessConnectedLinkCell'
   },
   {
     name: ProcessPairsColumnsNames.Protocol,
     prop: 'protocol' as keyof ProcessPairsResponse,
-    width: 15
-  },
-  {
-    name: '',
-    customCellName: 'ProcessConnectedDetailsCell',
     modifier: 'fitContent'
   }
 ];
