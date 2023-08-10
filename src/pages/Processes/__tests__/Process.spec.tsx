@@ -4,17 +4,19 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessResponse } from '@API/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
+import processesPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { ProcessesLabels } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 import Process from '../views/Process';
 
 const processResult = processesData.results[0] as ProcessResponse;
+const processPairsResult = processesPairsData.results[2] as ProcessPairsResponse;
 
 describe('Process component', () => {
   let server: Server;
@@ -66,7 +68,7 @@ describe('Process component', () => {
 
     expect(screen.getByRole('link', { name: processesData.results[3].name })).toHaveAttribute(
       'href',
-      `#/processes/${processesData.results[3].name}@${processesData.results[3].identity}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}`
     );
   });
 });
