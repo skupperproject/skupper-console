@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
-import { ChartArea, ChartGroup, ChartThemeColor, ChartVoronoiContainer } from '@patternfly/react-charts';
-import { Card, CardBody, CardFooter, TextContent, TextVariants, Text, Flex } from '@patternfly/react-core';
+import { Card, CardBody, TextContent, TextVariants, Text, Flex } from '@patternfly/react-core';
 
 import { Colors } from 'colors';
 
@@ -11,10 +10,7 @@ const SkCounterCard: FC<MetricCardProps> = function ({
   title,
   value,
   bgColor = Colors.Black500,
-  fontColor = Colors.White,
-  showChart = true,
-  colorChart = ChartThemeColor.blue,
-  dataChart
+  fontColor = Colors.White
 }) {
   return (
     <Card
@@ -35,28 +31,7 @@ const SkCounterCard: FC<MetricCardProps> = function ({
           </TextContent>
         </Flex>
       </CardBody>
-      {showChart && !!dataChart && (
-        <CardFooter>
-          <MetricChart color={colorChart} data={dataChart} />
-        </CardFooter>
-      )}
     </Card>
-  );
-};
-
-const MetricChart = function ({ data, color }: { data: { x: number | string; y: number }[]; color: string }) {
-  return (
-    <div style={{ height: '100px', width: '100%' }}>
-      <ChartGroup
-        height={100}
-        padding={0}
-        themeColor={color}
-        domainPadding={{ x: [0, 20], y: [0, 0] }}
-        containerComponent={<ChartVoronoiContainer labels={({ datum }) => datum.y} />}
-      >
-        <ChartArea data={data} interpolation="step" />
-      </ChartGroup>
-    </div>
   );
 };
 

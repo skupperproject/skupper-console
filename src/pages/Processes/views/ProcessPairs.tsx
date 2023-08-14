@@ -70,8 +70,7 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
 const ProcessPairs = function () {
   const { processPair } = useParams() as { processPair: string };
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { id: processPairId } = getIdAndNameFromUrlParams(processPair);
+  const { id: processPairId, protocol } = getIdAndNameFromUrlParams(processPair);
   const type = searchParams.get('type') || TAB_1_KEY;
   const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
@@ -108,6 +107,7 @@ const ProcessPairs = function () {
         processAggregateId: processPairId
       }),
     {
+      enabled: protocol === AvailableProtocols.Http2,
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
@@ -121,6 +121,7 @@ const ProcessPairs = function () {
         processAggregateId: processPairId
       }),
     {
+      enabled: protocol === AvailableProtocols.Http,
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
@@ -134,6 +135,7 @@ const ProcessPairs = function () {
         processAggregateId: processPairId
       }),
     {
+      enabled: protocol === AvailableProtocols.Tcp,
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
@@ -147,6 +149,7 @@ const ProcessPairs = function () {
         processAggregateId: processPairId
       }),
     {
+      enabled: protocol === AvailableProtocols.Tcp,
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
     }
@@ -181,23 +184,20 @@ const ProcessPairs = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
-  if (
-    !httpRequestsData ||
-    !source ||
-    !destination ||
-    !oldConnectionsData ||
-    !activeConnectionsData ||
-    !http2RequestsData ||
-    !sourceServices ||
-    !destinationServices
-  ) {
+  if (!source || !destination || !sourceServices || !destinationServices) {
     return null;
   }
+  const httpRequests = httpRequestsData?.results || [];
+  const httpRequestsCount = httpRequestsData?.timeRangeCount || 0;
 
-  const { timeRangeCount: httpRequestsCount, results: httpRequests } = httpRequestsData;
-  const { timeRangeCount: http2RequestsCount, results: http2Requests } = http2RequestsData;
-  const { timeRangeCount: oldConnectionsCount, results: oldConnections } = oldConnectionsData;
-  const { timeRangeCount: activeConnectionsCount, results: activeConnections } = activeConnectionsData;
+  const http2Requests = http2RequestsData?.results || [];
+  const http2RequestsCount = http2RequestsData?.timeRangeCount || 0;
+
+  const oldConnections = oldConnectionsData?.results || [];
+  const oldConnectionsCount = oldConnectionsData?.timeRangeCount || 0;
+
+  const activeConnections = activeConnectionsData?.results || [];
+  const activeConnectionsCount = activeConnectionsData?.timeRangeCount || 0;
 
   const ClientServerDescription = function () {
     return (

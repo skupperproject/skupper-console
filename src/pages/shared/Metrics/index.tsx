@@ -30,14 +30,15 @@ const Metrics: FC<MetricsProps> = function ({
   processesConnected,
   filterOptions,
   forceUpdate,
+  openSections,
   onGetMetricFilters
 }) {
   const { displayInterval, ...queryInit } = selectedFilters;
   const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(displayInterval));
   const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>(queryInit);
-  const [isExpandedLatency, setIsExpandedLatency] = useState(false);
-  const [isExpandedRequests, setIsExpandedRequests] = useState(false);
-  const [isExpandedResponses, setIsExpandedResponses] = useState(false);
+  const [isExpandedLatency, setIsExpandedLatency] = useState(openSections?.latency || false);
+  const [isExpandedRequests, setIsExpandedRequests] = useState(openSections?.request || false);
+  const [isExpandedResponses, setIsExpandedResponses] = useState(openSections?.response || false);
 
   const {
     data: metrics,

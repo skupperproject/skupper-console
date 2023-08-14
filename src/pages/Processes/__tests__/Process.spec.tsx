@@ -68,7 +68,7 @@ describe('Process component', () => {
 
     expect(screen.getByRole('link', { name: processesData.results[3].name })).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}@${processPairsResult.protocol}`
     );
   });
 });
