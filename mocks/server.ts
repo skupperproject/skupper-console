@@ -173,7 +173,7 @@ export const MockApi = {
       result: [
         {
           metric: {},
-          value: [0, 0]
+          value: [1, 1]
         }
       ]
     }
@@ -185,8 +185,8 @@ export const MockApi = {
         {
           metric: {},
           values: [
-            [0, 0],
-            [1, 1]
+            [1192026035, 0],
+            [1592026935, 1]
           ]
         }
       ]

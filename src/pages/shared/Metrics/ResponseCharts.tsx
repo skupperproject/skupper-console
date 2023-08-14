@@ -26,7 +26,6 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
             title={responseData.statusCode2xx.label}
             value={convertToPercentage(responseData.statusCode2xx.total, responseData.total) || ' - '}
             bgColor={Colors.Green500}
-            showChart={false}
           />
         </GridItem>
         <GridItem span={3}>
@@ -34,7 +33,6 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
             title={responseData.statusCode3xx.label}
             value={convertToPercentage(responseData.statusCode3xx.total, responseData.total) || ' - '}
             bgColor={Colors.Blue400}
-            showChart={false}
           />
         </GridItem>
         <GridItem span={3}>
@@ -42,7 +40,6 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
             title={responseData.statusCode4xx.label}
             value={convertToPercentage(responseData.statusCode4xx.total, responseData.total) || ' - '}
             bgColor={Colors.Orange200}
-            showChart={false}
           />
         </GridItem>
         <GridItem span={3}>
@@ -50,7 +47,6 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
             title={responseData.statusCode5xx.label}
             value={convertToPercentage(responseData.statusCode5xx.total, responseData.total) || ' - '}
             bgColor={Colors.Red200}
-            showChart={false}
           />
         </GridItem>
       </Grid>

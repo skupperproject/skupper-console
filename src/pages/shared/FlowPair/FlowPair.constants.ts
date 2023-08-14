@@ -92,14 +92,14 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Duration,
     customCellName: 'DurationCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
 
   {
     name: FlowPairsColumnsNames.Closed,
     prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.Site,
