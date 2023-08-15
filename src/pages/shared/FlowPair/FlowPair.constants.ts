@@ -91,10 +91,10 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairsColumnsNames.Duration,
+    prop: 'duration' as keyof FlowPairsResponse,
     customCellName: 'DurationCell',
     modifier: 'fitContent'
   },
-
   {
     name: FlowPairsColumnsNames.Closed,
     prop: 'endTime' as keyof FlowPairsResponse,

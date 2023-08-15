@@ -12,12 +12,7 @@ import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import {
-  ProcessesLabels,
-  ProcessesRoutesPaths,
-  ProcessesTableColumns,
-  ProcessPairsColumnsNames
-} from './Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, ProcessesTableColumns, ProcessPairsLabels } from './Processes.enum';
 
 export const ProcessesPaths = {
   path: ProcessesRoutesPaths.Processes,
@@ -29,7 +24,7 @@ export const ProcessesConnectedComponentsTable = {
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessesLabels.ProcessPairs}@${props.data.identity}@${props.data.protocol}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessPairsLabels.Title}@${props.data.identity}@${props.data.protocol}`
     })
 };
 
@@ -86,7 +81,7 @@ export const processesTableColumns: SKColumn<ProcessResponse>[] = [
 
 export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
-    name: ProcessPairsColumnsNames.Process,
+    name: ProcessPairsLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
     customCellName: 'ProcessConnectedLinkCell'
   }
@@ -94,12 +89,12 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
 
 export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
-    name: ProcessPairsColumnsNames.Process,
+    name: ProcessPairsLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
     customCellName: 'ProcessConnectedLinkCell'
   },
   {
-    name: ProcessPairsColumnsNames.Protocol,
+    name: ProcessPairsLabels.Protocol,
     prop: 'protocol' as keyof ProcessPairsResponse,
     modifier: 'fitContent'
   }
@@ -122,6 +117,9 @@ const oldTcpHiddenColumns: Record<string, { show: boolean }> = {
 
 const activeTcpHiddenColumns: Record<string, { show: boolean }> = {
   ...oldTcpHiddenColumns,
+  [FlowPairsColumnsNames.Duration]: {
+    show: false
+  },
   [FlowPairsColumnsNames.Closed]: {
     show: false
   }

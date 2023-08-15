@@ -10,6 +10,7 @@
       "sourceSiteName": "site 1",
       "destinationSiteId": "site-2",
       "destinationSiteName": "site 2",
+      "duration": 1000,
       "flowTrace": "private1-skupper-router-bcd8f5469-6z7k6@private1|public1-skupper-router-7b45b6b8f4-52tjs@public1",
       "forwardFlow": {
         "recType": "FLOW",
@@ -56,6 +57,7 @@
       "sourceSiteName": "site 1",
       "destinationSiteId": "site-2",
       "destinationSiteName": "site-2",
+      "duration": 1000,
       "flowTrace": "private1-skupper-router-bcd8f5469-6z7k6@private1|public1-skupper-router-7b45b6b8f4-52tjs@public1",
       "forwardFlow": {
         "recType": "FLOW",
@@ -106,6 +108,7 @@
       "sourceSiteName": "site 1",
       "destinationSiteId": "site-2",
       "destinationSiteName": "site 2",
+      "duration": 1000,
       "flowTrace": "private1-skupper-router-bcd8f5469-6z7k6@private1|public1-skupper-router-7b45b6b8f4-52tjs@public1",
       "forwardFlow": {
         "recType": "FLOW",
@@ -156,6 +159,7 @@
       "sourceSiteName": "site 2",
       "destinationSiteId": "site-3",
       "destinationSiteName": "site 3",
+      "duration": 0,
       "flowTrace": "private1-skupper-router-bcd8f5469-6z7k6@private1|public1-skupper-router-7b45b6b8f4-52tjs@public1",
       "forwardFlow": {
         "recType": "FLOW",

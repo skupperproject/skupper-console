@@ -12,7 +12,7 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsLabels } from '../Processes.enum';
 import Process from '../views/Process';
 
 const processResult = processesData.results[0] as ProcessResponse;
@@ -68,7 +68,7 @@ describe('Process component', () => {
 
     expect(screen.getByRole('link', { name: processesData.results[3].name })).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}@${processPairsResult.protocol}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessPairsLabels.Title}@${processPairsResult.identity}@${processPairsResult.protocol}`
     );
   });
 });

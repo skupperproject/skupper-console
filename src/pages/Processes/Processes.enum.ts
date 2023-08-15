@@ -49,8 +49,8 @@ export enum ProcessesLabels {
   GoToDetails = 'View details'
 }
 
-export enum ProcessPairsColumnsNames {
+export enum ProcessPairsLabels {
   Process = 'Process',
-  Title = 'Process pairs',
+  Title = 'Process pair details',
   Protocol = 'Protocol'
 }

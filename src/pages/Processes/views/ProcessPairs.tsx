@@ -14,7 +14,7 @@ import {
   TabTitleText
 } from '@patternfly/react-core';
 import { LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -32,7 +32,7 @@ import { VarColors } from 'colors';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
-import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsColumnsNames } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
 const TAB_1_KEY = 'liveConnections';
@@ -94,74 +94,83 @@ const ProcessPairs = function () {
     initPaginatedActiveConnectionsQueryParams
   );
 
-  const { data: source } = useQuery([QueriesProcesses.GetProcess, sourceId], () => RESTApi.fetchProcess(sourceId));
-  const { data: destination } = useQuery([QueriesProcesses.GetDestination, destinationId], () =>
-    RESTApi.fetchProcess(destinationId)
-  );
+  const [
+    { data: source },
+    { data: destination },
+    { data: sourceServices },
+    { data: destinationServices },
+    { data: http2RequestsData },
+    { data: httpRequestsData },
+    { data: activeConnectionsData },
+    { data: oldConnectionsData }
+  ] = useQueries({
+    queries: [
+      { queryKey: [QueriesProcesses.GetProcess, sourceId], queryFn: () => RESTApi.fetchProcess(sourceId) },
 
-  const { data: http2RequestsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, http2QueryParamsPaginated],
-    () =>
-      RESTApi.fetchFlowPairs({
-        ...http2QueryParamsPaginated,
-        processAggregateId: processPairId
-      }),
-    {
-      enabled: protocol === AvailableProtocols.Http2,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+      {
+        queryKey: [QueriesProcesses.GetDestination, destinationId],
+        queryFn: () => RESTApi.fetchProcess(destinationId)
+      },
 
-  const { data: httpRequestsData } = useQuery(
-    [QueriesProcesses.GetHttp, httpQueryParamsPaginated],
-    () =>
-      RESTApi.fetchFlowPairs({
-        ...httpQueryParamsPaginated,
-        processAggregateId: processPairId
-      }),
-    {
-      enabled: protocol === AvailableProtocols.Http,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+      {
+        queryKey: [QueriesProcesses.GetAddressesByProcessId, sourceId],
+        queryFn: () => RESTApi.fetchAddressesByProcess(sourceId)
+      },
 
-  const { data: activeConnectionsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, activeConnectionsQueryParamsPaginated],
-    () =>
-      RESTApi.fetchFlowPairs({
-        ...activeConnectionsQueryParamsPaginated,
-        processAggregateId: processPairId
-      }),
-    {
-      enabled: protocol === AvailableProtocols.Tcp,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+      {
+        queryKey: [QueriesProcesses.GetAddressesByProcessId, destinationId],
+        queryFn: () => RESTApi.fetchAddressesByProcess(destinationId)
+      },
 
-  const { data: oldConnectionsData } = useQuery(
-    [QueriesProcesses.GetFlowPairs, oldConnectionsQueryParamsPaginated],
-    () =>
-      RESTApi.fetchFlowPairs({
-        ...oldConnectionsQueryParamsPaginated,
-        processAggregateId: processPairId
-      }),
-    {
-      enabled: protocol === AvailableProtocols.Tcp,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+      {
+        queryKey: [QueriesProcesses.GetFlowPair, http2QueryParamsPaginated, processPairId],
+        queryFn: () =>
+          RESTApi.fetchFlowPairs({
+            ...http2QueryParamsPaginated,
+            processAggregateId: processPairId
+          }),
+        enabled: protocol === AvailableProtocols.Http2,
+        refetchInterval: UPDATE_INTERVAL,
+        keepPreviousData: true
+      },
 
-  const { data: sourceServices } = useQuery([QueriesProcesses.GetAddressesByProcessId, sourceId], () =>
-    RESTApi.fetchAddressesByProcess(sourceId)
-  );
+      {
+        queryKey: [QueriesProcesses.GetFlowPairs, httpQueryParamsPaginated, processPairId],
+        queryFn: () =>
+          RESTApi.fetchFlowPairs({
+            ...httpQueryParamsPaginated,
+            processAggregateId: processPairId
+          }),
+        enabled: protocol === AvailableProtocols.Http,
+        refetchInterval: UPDATE_INTERVAL,
+        keepPreviousData: true
+      },
 
-  const { data: destinationServices } = useQuery([QueriesProcesses.GetAddressesByProcessId, destinationId], () =>
-    RESTApi.fetchAddressesByProcess(destinationId)
-  );
+      {
+        queryKey: [QueriesProcesses.GetFlowPairs, activeConnectionsQueryParamsPaginated, processPairId],
+        queryFn: () =>
+          RESTApi.fetchFlowPairs({
+            ...activeConnectionsQueryParamsPaginated,
+            processAggregateId: processPairId
+          }),
+        enabled: protocol === AvailableProtocols.Tcp,
+        refetchInterval: UPDATE_INTERVAL,
+        keepPreviousData: true
+      },
+
+      {
+        queryKey: [QueriesProcesses.GetFlowPairs, oldConnectionsQueryParamsPaginated, processPairId],
+        queryFn: () =>
+          RESTApi.fetchFlowPairs({
+            ...oldConnectionsQueryParamsPaginated,
+            processAggregateId: processPairId
+          }),
+        enabled: protocol === AvailableProtocols.Tcp,
+        refetchInterval: UPDATE_INTERVAL,
+        keepPreviousData: true
+      }
+    ]
+  });
 
   const handleGetFiltersHttpRequests = useCallback((params: RequestOptions) => {
     setHttpQueryParamsPaginated({ ...initPaginatedHttpRequestsQueryParams, ...params });
@@ -187,6 +196,19 @@ const ProcessPairs = function () {
   if (!source || !destination || !sourceServices || !destinationServices) {
     return null;
   }
+
+  if (protocol === AvailableProtocols.Http && !httpRequestsData) {
+    return null;
+  }
+
+  if (protocol === AvailableProtocols.Http2 && !http2RequestsData) {
+    return null;
+  }
+
+  if (protocol === AvailableProtocols.Tcp && (!oldConnectionsData || !activeConnectionsData)) {
+    return null;
+  }
+
   const httpRequests = httpRequestsData?.results || [];
   const httpRequestsCount = httpRequestsData?.timeRangeCount || 0;
 
@@ -252,7 +274,7 @@ const ProcessPairs = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.processPairsView(processPairId)}
-      title={ProcessPairsColumnsNames.Title}
+      title={ProcessPairsLabels.Title}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
       mainContentChildren={
         <Stack hasGutter>
@@ -260,13 +282,13 @@ const ProcessPairs = function () {
             <ClientServerDescription />
           </StackItem>
 
-          {!activeConnections.length && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (
+          {!activeConnectionsCount && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (
             <StackItem isFilled>
               <NoDataCard />
             </StackItem>
           )}
 
-          {(!!activeConnections.length || !!oldConnectionsCount) && (
+          {((protocol === AvailableProtocols.Tcp && !!activeConnectionsCount) || !!oldConnectionsCount) && (
             <StackItem isFilled>
               <Tabs activeKey={connectionsView} onSelect={handleTabClick} component="nav" isBox>
                 <Tab
@@ -301,7 +323,7 @@ const ProcessPairs = function () {
               </Tabs>
             </StackItem>
           )}
-          {!!http2Requests.length && (
+          {protocol === AvailableProtocols.Http2 && !!http2Requests.length && (
             <StackItem isFilled>
               <FlowPairsTable
                 title={ProcessesLabels.Http2Requests}
@@ -314,7 +336,7 @@ const ProcessPairs = function () {
               />
             </StackItem>
           )}
-          {!!httpRequests.length && (
+          {protocol === AvailableProtocols.Http && !!httpRequests.length && (
             <StackItem isFilled>
               <FlowPairsTable
                 title={ProcessesLabels.HttpRequests}
