@@ -103,6 +103,7 @@ export interface FlowPairsResponse<T = RequestHTTP & ConnectionTCP> extends Base
   siteAggregateId: string;
   processGroupAggregateId: string;
   processAggregateId: string;
+  duration: number;
 }
 
 export interface ConnectionTCP extends BaseResponse {
