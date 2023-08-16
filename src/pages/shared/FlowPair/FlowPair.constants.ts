@@ -59,7 +59,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairsColumnsNames.Port,
     prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
-    modifier: 'fitContent'
+    modifier: 'nowrap'
   },
 
   {
@@ -74,20 +74,20 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
     format: formatBytes,
-    modifier: 'fitContent'
+    modifier: 'nowrap'
   },
   {
     name: FlowPairsColumnsNames.RxBytes,
     prop: 'counterFlow.octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
     format: formatBytes,
-    modifier: 'fitContent'
+    modifier: 'nowrap'
   },
   {
     name: FlowPairsColumnsNames.TTFB,
     columnDescription: 'time elapsed between client and server',
     customCellName: 'ClientServerLatencyCell',
-    modifier: 'fitContent'
+    modifier: 'nowrap'
   },
   {
     name: FlowPairsColumnsNames.Duration,
