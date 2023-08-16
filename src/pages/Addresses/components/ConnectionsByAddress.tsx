@@ -35,7 +35,7 @@ const initActiveConnectionsQueryParams: RequestOptions = {
   sortDirection: SortDirection.DESC
 };
 
-const initPaginatedOldConnectionsQueryParams: RequestOptions = {
+const initOldConnectionsQueryParams: RequestOptions = {
   state: TcpStatus.Terminated,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
@@ -51,10 +51,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   const activeConnectionsDataRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
-  const [connectionsQueryParamsPaginated, setConnectionsQueryParamsPaginated] = useState<RequestOptions>(
-    initPaginatedOldConnectionsQueryParams
-  );
-  const [activeConnectionsQueryParamsPaginated, setActiveConnectionsQueryParamsPaginated] = useState<RequestOptions>(
+  const [connectionsQueryParams, setConnectionsQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
+  const [activeConnectionsQueryParams, setActiveConnectionsQueryParamsPaginated] = useState<RequestOptions>(
     initActiveConnectionsQueryParams
   );
 
@@ -77,18 +75,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   );
 
   const { data: activeConnectionsData } = useQuery(
-    [
-      QueriesServices.GetFlowPairsByAddress,
-      addressId,
-      { ...initActiveConnectionsQueryParams, ...activeConnectionsQueryParamsPaginated }
-    ],
-    () =>
-      addressId
-        ? RESTApi.fetchFlowPairsByAddress(addressId, {
-            ...initActiveConnectionsQueryParams,
-            ...activeConnectionsQueryParamsPaginated
-          })
-        : null,
+    [QueriesServices.GetFlowPairsByAddress, addressId, activeConnectionsQueryParams],
+    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, activeConnectionsQueryParams) : null),
     {
       enabled: viewSelected === TAB_2_KEY,
       refetchInterval: UPDATE_INTERVAL,
@@ -97,18 +85,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   );
 
   const { data: oldConnectionsData } = useQuery(
-    [
-      QueriesServices.GetFlowPairsByAddress,
-      addressId,
-      { ...initPaginatedOldConnectionsQueryParams, ...connectionsQueryParamsPaginated }
-    ],
-    () =>
-      addressId
-        ? RESTApi.fetchFlowPairsByAddress(addressId, {
-            ...initPaginatedOldConnectionsQueryParams,
-            ...connectionsQueryParamsPaginated
-          })
-        : null,
+    [QueriesServices.GetFlowPairsByAddress, addressId, connectionsQueryParams],
+    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, connectionsQueryParams) : null),
     {
       enabled: viewSelected === TAB_3_KEY,
       refetchInterval: UPDATE_INTERVAL,
@@ -130,13 +108,19 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     return (forceMetricUpdateNonceRef.current += 1);
   }, [activeConnectionsData?.results]);
 
-  const handleGetFiltersActiveConnections = useCallback((params: RequestOptions) => {
-    setActiveConnectionsQueryParamsPaginated(params);
-  }, []);
+  const handleGetFiltersActiveConnections = useCallback(
+    (params: RequestOptions) => {
+      setActiveConnectionsQueryParamsPaginated({ ...activeConnectionsQueryParams, ...params });
+    },
+    [activeConnectionsQueryParams]
+  );
 
-  const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
-    setConnectionsQueryParamsPaginated(params);
-  }, []);
+  const handleGetFiltersConnections = useCallback(
+    (params: RequestOptions) => {
+      setConnectionsQueryParams({ ...connectionsQueryParams, ...params });
+    },
+    [connectionsQueryParams]
+  );
 
   const activeConnections = activeConnectionsData?.results || [];
   const activeConnectionsRowsCount = activeConnectionsData?.timeRangeCount;

@@ -21,7 +21,7 @@ import {
 import { FilterIcon } from '@patternfly/react-icons';
 
 interface FilterValues {
-  [key: string]: string;
+  [key: string]: string | undefined;
 }
 
 const PlaceholderPrefixLabel = 'Search by';
@@ -55,14 +55,16 @@ const SearchFilter: FC<{ onSearch?: Function; selectOptions: { id: string; name:
   };
 
   const handleDeleteFilter = (id: string) => {
-    const newFilterValues = Object.fromEntries(Object.entries(filterValues).filter(([key]) => key !== id));
+    const newFilterValues = { ...filterValues, [id]: undefined };
     setInputValue('');
     setFilterValues(newFilterValues);
   };
 
   const handleDeleteGroup = () => {
+    const resetFilters = Object.entries(filterValues).map(([key]) => ({ [key]: undefined })) as any;
+
     setInputValue('');
-    setFilterValues({});
+    setFilterValues(resetFilters);
   };
 
   const handleToggle = () => {

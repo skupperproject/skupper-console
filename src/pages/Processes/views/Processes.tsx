@@ -49,10 +49,13 @@ const Processes = function () {
     }
   );
 
-  const handleGetFilters = useCallback((params: RequestOptions) => {
-    setExternalProcessesdQueryParams({ ...initExternalProcessesQueryParams, ...params });
-    setRemoteProcessesQueryParams({ ...initRemoteProcessesQueryParams, ...params });
-  }, []);
+  const handleGetFilters = useCallback(
+    (params: RequestOptions) => {
+      setExternalProcessesdQueryParams({ ...externalProcessesQueryParams, ...params });
+      setRemoteProcessesQueryParams({ ...remoteProcessesQueryParams, ...params });
+    },
+    [externalProcessesQueryParams, remoteProcessesQueryParams]
+  );
 
   const externalProcesses = externalProcessData?.results || [];
   const externalProcessesCount = externalProcessData?.timeRangeCount || 0;
