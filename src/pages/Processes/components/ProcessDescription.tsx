@@ -98,8 +98,8 @@ const ProcessDescription: FC<{ processWithService: ProcessResponseWithService; t
                 <DescriptionListGroup>
                   <DescriptionListTerm>{ProcessesLabels.Image}</DescriptionListTerm>
                   <DescriptionListDescription>
-                    <Tooltip content={imageName}>
-                      <Truncate content={imageName} trailingNumChars={10} position={'middle'} />
+                    <Tooltip content={imageName || ''}>
+                      <Truncate content={imageName || ''} trailingNumChars={10} position={'middle'} />
                     </Tooltip>
                   </DescriptionListDescription>
                 </DescriptionListGroup>

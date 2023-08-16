@@ -64,7 +64,7 @@ export interface ProcessResponse extends BaseResponse {
   parentName: string;
   groupIdentity: string;
   groupName: string;
-  imageName: string;
+  imageName?: string;
   sourceHost: string;
   hostName: string;
   processBinding: 'bound' | 'unbound';
