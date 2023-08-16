@@ -131,6 +131,12 @@ const httpHiddenColumns: Record<string, { show: boolean }> = {
   },
   [FlowPairsColumnsNames.To]: {
     show: false
+  },
+  [FlowPairsColumnsNames.Site]: {
+    show: false
+  },
+  [FlowPairsColumnsNames.ServerSite]: {
+    show: false
   }
 };
 

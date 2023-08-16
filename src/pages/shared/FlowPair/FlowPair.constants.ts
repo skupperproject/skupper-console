@@ -54,7 +54,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Client,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
     customCellName: 'ProcessNameLinkCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.Port,
@@ -66,7 +66,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Server,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
     customCellName: 'TargetProcessNameLinkCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
 
   {
@@ -105,13 +105,13 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.Site,
     prop: 'sourceSiteName' as keyof FlowPairsResponse,
     customCellName: 'SiteNameLinkCell',
-    modifier: 'truncate'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.ServerSite,
     prop: 'destinationSiteName' as keyof FlowPairsResponse,
     customCellName: 'TargetSiteNameLinkCell',
-    modifier: 'truncate'
+    modifier: 'fitContent'
   },
   {
     name: '',
@@ -136,13 +136,13 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairsColumnsNames.From,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
     customCellName: 'ProcessNameLinkCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.To,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
     customCellName: 'TargetProcessNameLinkCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairsColumnsNames.TxBytes,
@@ -169,10 +169,22 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
+    name: FlowPairsColumnsNames.Site,
+    prop: 'sourceSiteName' as keyof FlowPairsResponse,
+    customCellName: 'SiteNameLinkCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: FlowPairsColumnsNames.ServerSite,
+    prop: 'destinationSiteName' as keyof FlowPairsResponse,
+    customCellName: 'TargetSiteNameLinkCell',
+    modifier: 'fitContent'
+  },
+  {
     name: FlowPairsColumnsNames.Completed,
     prop: 'endTime' as keyof FlowPairsResponse,
     format: timeAgo,
-    modifier: 'nowrap'
+    modifier: 'truncate'
   },
   {
     name: '',
@@ -180,3 +192,25 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'fitContent'
   }
 ];
+
+export const defaultSelectOptions: { name: string; id: string }[] = [
+  {
+    name: 'Client',
+    id: 'forwardFlow.processName'
+  },
+  {
+    name: 'Server',
+    id: 'counterFlow.processName'
+  },
+  {
+    name: 'Site Client',
+    id: 'sourceSiteName'
+  },
+  {
+    name: 'Site Server',
+    id: 'destinationSiteName'
+  }
+];
+
+export const tcpSelectOptions = defaultSelectOptions;
+export const httpSelectOptions = defaultSelectOptions;
