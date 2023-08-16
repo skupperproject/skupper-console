@@ -8,11 +8,13 @@ import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constants';
+import { httpSelectOptions } from '@pages/shared/FlowPair/FlowPair.constants';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
+import SearchFilter from '../../../core/components/skSearchFilter';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, httpColumns } from '../Addresses.constants';
 import { RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { RequestsByAddressProps } from '../Addresses.interfaces';
@@ -127,14 +129,18 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
       )}
 
       {viewSelected === TAB_2_KEY && (
-        <FlowPairsTable
-          columns={httpColumns}
-          rows={requestsPaginated}
-          paginationTotalRows={requestsPaginatedCount}
-          pagination={true}
-          paginationPageSize={BIG_PAGINATION_SIZE}
-          onGetFilters={handleGetFiltersConnections}
-        />
+        <>
+          <SearchFilter onSearch={handleGetFiltersConnections} selectOptions={httpSelectOptions} />
+
+          <FlowPairsTable
+            columns={httpColumns}
+            rows={requestsPaginated}
+            paginationTotalRows={requestsPaginatedCount}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFiltersConnections}
+          />
+        </>
       )}
     </>
   );

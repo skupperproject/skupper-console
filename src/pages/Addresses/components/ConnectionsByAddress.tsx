@@ -9,12 +9,13 @@ import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@confi
 import SkTable from '@core/components/SkTable';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { ProcessesComponentsTable } from '@pages/Processes/Processes.constants';
-import { tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
+import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPair/FlowPair.constants';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
+import SearchFilter from '../../../core/components/skSearchFilter';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, serverColumns, tcpColumns } from '../Addresses.constants';
 import { RequestLabels, AddressesLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
@@ -57,8 +58,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     initActiveConnectionsQueryParams
   );
 
-  // query Exposed Servers
-  const { data: serversByAddressData } = useQuery(
+  const { data: exposedServersData } = useQuery(
     [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
     () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
     {
@@ -76,7 +76,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }
   );
 
-  // query Active tcp connection
   const { data: activeConnectionsData } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
@@ -97,7 +96,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }
   );
 
-  // query Terminated tcp connection
   const { data: oldConnectionsData } = useQuery(
     [
       QueriesServices.GetFlowPairsByAddress,
@@ -125,7 +123,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     [addressId]
   );
 
-  const checkDataChanged = useMemo((): number => {
+  // Active connections may change live, requiring corresponding metric updates
+  const activeConnectionsUpdated = useMemo((): number => {
     activeConnectionsDataRef.current = activeConnectionsData?.results;
 
     return (forceMetricUpdateNonceRef.current += 1);
@@ -145,7 +144,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   const oldConnections = oldConnectionsData?.results || [];
   const oldConnectionsRowsCount = oldConnectionsData?.timeRangeCount;
 
-  let servers = serversByAddressData?.results || [];
+  let servers = exposedServersData?.results || [];
   //const serversRowsCount = serversByAddressData?.timeRangeCount;
 
   const serverNames = Object.values(servers).map(({ name }) => ({ destinationName: name }));
@@ -172,7 +171,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
       {viewSelected === TAB_0_KEY && (
         <Metrics
           key={addressId}
-          forceUpdate={checkDataChanged}
+          forceUpdate={activeConnectionsUpdated}
           selectedFilters={{
             ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
             processIdSource: serverNamesIds,
@@ -203,25 +202,33 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
       )}
 
       {viewSelected === TAB_2_KEY && (
-        <FlowPairsTable
-          columns={tcpColumns}
-          rows={activeConnections}
-          paginationTotalRows={activeConnectionsRowsCount}
-          pagination={true}
-          paginationPageSize={BIG_PAGINATION_SIZE}
-          onGetFilters={handleGetFiltersActiveConnections}
-        />
+        <>
+          <SearchFilter onSearch={handleGetFiltersActiveConnections} selectOptions={tcpSelectOptions} />
+
+          <FlowPairsTable
+            columns={tcpColumns}
+            rows={activeConnections}
+            paginationTotalRows={activeConnectionsRowsCount}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFiltersActiveConnections}
+          />
+        </>
       )}
 
       {viewSelected === TAB_3_KEY && (
-        <FlowPairsTable
-          columns={tcpFlowPairsColumns}
-          rows={oldConnections}
-          paginationTotalRows={oldConnectionsRowsCount}
-          pagination={true}
-          paginationPageSize={BIG_PAGINATION_SIZE}
-          onGetFilters={handleGetFiltersConnections}
-        />
+        <>
+          <SearchFilter onSearch={handleGetFiltersConnections} selectOptions={tcpSelectOptions} />
+
+          <FlowPairsTable
+            columns={tcpFlowPairsColumns}
+            rows={oldConnections}
+            paginationTotalRows={oldConnectionsRowsCount}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFiltersConnections}
+          />
+        </>
       )}
     </>
   );

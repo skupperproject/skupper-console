@@ -24,6 +24,7 @@ export const customServiceCells = {
     })
 };
 
+// Services Table
 export const ServiceColumns: SKColumn<AddressResponse>[] = [
   {
     name: AddressesColumnsNames.Name,

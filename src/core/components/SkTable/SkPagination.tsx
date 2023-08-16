@@ -16,7 +16,7 @@ interface SkPaginationProps {
 }
 
 const SkPagination: FC<SkPaginationProps> = function ({
-  isCompact = true,
+  isCompact = false,
   totalRow,
   paginationSize,
   currentPageNumber,

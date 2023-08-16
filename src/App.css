@@ -143,3 +143,11 @@ html {
   --pf-c-card--BackgroundColor: var(--pf-v5-global--palette--black-200) !important;
   color: var(--pf-v5-global--palette--black-500);
 }
+
+.sk-search-filter input {
+  padding-left: 8px;
+}
+
+.sk-search-filter .pf-v5-c-text-input-group__icon {
+  display: none;
+}
