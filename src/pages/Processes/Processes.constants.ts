@@ -154,3 +154,18 @@ export const activeTcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
   ...flowPair,
   show: activeTcpHiddenColumns[flowPair.name]?.show
 }));
+
+export const processesSelectOptions: { name: string; id: string }[] = [
+  {
+    name: 'Process',
+    id: 'name'
+  },
+  {
+    name: 'Component',
+    id: 'groupName'
+  },
+  {
+    name: 'Site',
+    id: 'parentName'
+  }
+];

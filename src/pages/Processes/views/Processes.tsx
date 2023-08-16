@@ -5,12 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
+import SearchFilter from '@core/components/skSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
-import { ProcessesComponentsTable, processesTableColumns } from '../Processes.constants';
+import { ProcessesComponentsTable, processesSelectOptions, processesTableColumns } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -68,15 +69,19 @@ const Processes = function () {
       description={ProcessesLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
       mainContentChildren={
-        <SkTable
-          columns={processesTableColumns}
-          rows={processes}
-          customCells={ProcessesComponentsTable}
-          pagination={true}
-          paginationTotalRows={processesCount}
-          paginationPageSize={BIG_PAGINATION_SIZE}
-          onGetFilters={handleGetFilters}
-        />
+        <>
+          <SearchFilter onSearch={handleGetFilters} selectOptions={processesSelectOptions} />
+
+          <SkTable
+            columns={processesTableColumns}
+            rows={processes}
+            customCells={ProcessesComponentsTable}
+            pagination={true}
+            paginationTotalRows={processesCount}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleGetFilters}
+          />
+        </>
       }
     />
   );

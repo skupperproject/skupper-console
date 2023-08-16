@@ -108,3 +108,14 @@ export const TAB_0_KEY = '0';
 export const TAB_1_KEY = '1';
 export const TAB_2_KEY = '2';
 export const TAB_3_KEY = '3';
+
+export const servicesSelectOptions: { name: string; id: string }[] = [
+  {
+    name: 'Address',
+    id: 'name'
+  },
+  {
+    name: 'Protocol',
+    id: 'protocol'
+  }
+];

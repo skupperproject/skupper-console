@@ -7,10 +7,11 @@ import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import { getTestsIds } from '@config/testIds.config';
+import SearchFilter from '@core/components/skSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
-import { ServiceColumns, customServiceCells } from '../Addresses.constants';
+import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Addresses.constants';
 import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
@@ -73,15 +74,19 @@ const Services = function () {
       title={AddressesLabels.Section}
       description={AddressesLabels.Description}
       mainContentChildren={
-        <SkTable
-          rows={serviceRows}
-          columns={ServiceColumns}
-          pagination={true}
-          paginationPageSize={BIG_PAGINATION_SIZE}
-          onGetFilters={handleSetServiceFilters}
-          paginationTotalRows={serviceCount}
-          customCells={customServiceCells}
-        />
+        <>
+          <SearchFilter onSearch={handleSetServiceFilters} selectOptions={servicesSelectOptions} />
+
+          <SkTable
+            rows={serviceRows}
+            columns={ServiceColumns}
+            pagination={true}
+            paginationPageSize={BIG_PAGINATION_SIZE}
+            onGetFilters={handleSetServiceFilters}
+            paginationTotalRows={serviceCount}
+            customCells={customServiceCells}
+          />
+        </>
       }
     />
   );
