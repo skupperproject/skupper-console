@@ -24,8 +24,8 @@ const Services = function () {
   const [servicesQueryParams, setServicesQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
 
   const { data: servicesData } = useQuery(
-    [QueriesServices.GetAddresses, { ...initOldConnectionsQueryParams, ...servicesQueryParams }],
-    () => RESTApi.fetchAddresses({ ...initOldConnectionsQueryParams, ...servicesQueryParams }),
+    [QueriesServices.GetAddresses, servicesQueryParams],
+    () => RESTApi.fetchAddresses(servicesQueryParams),
     {
       keepPreviousData: true
     }
@@ -55,9 +55,12 @@ const Services = function () {
     }
   );
 
-  const handleSetServiceFilters = useCallback((params: RequestOptions) => {
-    setServicesQueryParams(params);
-  }, []);
+  const handleSetServiceFilters = useCallback(
+    (params: RequestOptions) => {
+      setServicesQueryParams({ ...servicesQueryParams, ...params });
+    },
+    [servicesQueryParams]
+  );
 
   const services = servicesData?.results || [];
   const serviceCount = servicesData?.timeRangeCount || 0;
@@ -81,7 +84,7 @@ const Services = function () {
             rows={serviceRows}
             columns={ServiceColumns}
             pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
+            paginationPageSize={initOldConnectionsQueryParams.limit}
             onGetFilters={handleSetServiceFilters}
             paginationTotalRows={serviceCount}
             customCells={customServiceCells}

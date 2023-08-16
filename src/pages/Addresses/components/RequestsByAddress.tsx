@@ -22,7 +22,7 @@ import { QueriesServices } from '../services/services.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
 
-const initPaginatedRequestsQueryParams: RequestOptions = {
+const initRequestsQueryParams: RequestOptions = {
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
@@ -37,26 +37,11 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
   const requestsDataPaginatedPrevRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
-  const [paginatedRequestsQueryParams, setRequestsQueryParamsPaginated] = useState<RequestOptions>(
-    initPaginatedRequestsQueryParams
-  );
+  const [requestsQueryParams, setRequestsQueryParams] = useState<RequestOptions>(initRequestsQueryParams);
 
   const { data: requestsDataPaginated } = useQuery(
-    [
-      QueriesServices.GetFlowPairsByAddress,
-      addressId,
-      {
-        ...initPaginatedRequestsQueryParams,
-        ...paginatedRequestsQueryParams
-      }
-    ],
-    () =>
-      addressId
-        ? RESTApi.fetchFlowPairsByAddress(addressId, {
-            ...initPaginatedRequestsQueryParams,
-            ...paginatedRequestsQueryParams
-          })
-        : null,
+    [QueriesServices.GetFlowPairsByAddress, addressId, requestsQueryParams],
+    () => (addressId ? RESTApi.fetchFlowPairsByAddress(addressId, requestsQueryParams) : null),
     {
       refetchInterval: viewSelected === TAB_2_KEY ? UPDATE_INTERVAL : 0,
       keepPreviousData: true
@@ -79,9 +64,12 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
     [addressId]
   );
 
-  const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
-    setRequestsQueryParamsPaginated(params);
-  }, []);
+  const handleGetFiltersConnections = useCallback(
+    (params: RequestOptions) => {
+      setRequestsQueryParams({ ...requestsQueryParams, ...params });
+    },
+    [requestsQueryParams]
+  );
 
   const checkDataChanged = useMemo((): number => {
     requestsDataPaginatedPrevRef.current = requestsDataPaginated?.results;
