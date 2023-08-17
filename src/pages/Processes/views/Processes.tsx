@@ -27,7 +27,7 @@ const initRemoteProcessesQueryParams = {
 };
 
 const Processes = function () {
-  const [externalProcessesQueryParams, setExternalProcessesdQueryParams] = useState<RequestOptions>(
+  const [externalProcessesQueryParams, setExternalProcessesQueryParams] = useState<RequestOptions>(
     initExternalProcessesQueryParams
   );
   const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
@@ -49,13 +49,10 @@ const Processes = function () {
     }
   );
 
-  const handleGetFilters = useCallback(
-    (params: RequestOptions) => {
-      setExternalProcessesdQueryParams({ ...externalProcessesQueryParams, ...params });
-      setRemoteProcessesQueryParams({ ...remoteProcessesQueryParams, ...params });
-    },
-    [externalProcessesQueryParams, remoteProcessesQueryParams]
-  );
+  const handleGetFilters = useCallback((params: RequestOptions) => {
+    setExternalProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    setRemoteProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+  }, []);
 
   const externalProcesses = externalProcessData?.results || [];
   const externalProcessesCount = externalProcessData?.timeRangeCount || 0;

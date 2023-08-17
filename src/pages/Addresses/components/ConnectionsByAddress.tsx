@@ -52,7 +52,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   const forceMetricUpdateNonceRef = useRef<number>(0);
 
   const [connectionsQueryParams, setConnectionsQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
-  const [activeConnectionsQueryParams, setActiveConnectionsQueryParamsPaginated] = useState<RequestOptions>(
+  const [activeConnectionsQueryParams, setActiveConnectionsQueryParams] = useState<RequestOptions>(
     initActiveConnectionsQueryParams
   );
 
@@ -108,19 +108,19 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     return (forceMetricUpdateNonceRef.current += 1);
   }, [activeConnectionsData?.results]);
 
-  const handleGetFiltersActiveConnections = useCallback(
-    (params: RequestOptions) => {
-      setActiveConnectionsQueryParamsPaginated({ ...activeConnectionsQueryParams, ...params });
-    },
-    [activeConnectionsQueryParams]
-  );
+  const handleGetFiltersActiveConnections = useCallback((params: RequestOptions) => {
+    setActiveConnectionsQueryParams((previousQueryParams) => ({
+      ...previousQueryParams,
+      ...params
+    }));
+  }, []);
 
-  const handleGetFiltersConnections = useCallback(
-    (params: RequestOptions) => {
-      setConnectionsQueryParams({ ...connectionsQueryParams, ...params });
-    },
-    [connectionsQueryParams]
-  );
+  const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
+    setConnectionsQueryParams((previousQueryParams) => ({
+      ...previousQueryParams,
+      ...params
+    }));
+  }, []);
 
   const activeConnections = activeConnectionsData?.results || [];
   const activeConnectionsRowsCount = activeConnectionsData?.timeRangeCount;
