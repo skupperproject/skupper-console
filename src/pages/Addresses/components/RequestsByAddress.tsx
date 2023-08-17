@@ -64,12 +64,9 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
     [addressId]
   );
 
-  const handleGetFiltersConnections = useCallback(
-    (params: RequestOptions) => {
-      setRequestsQueryParams({ ...requestsQueryParams, ...params });
-    },
-    [requestsQueryParams]
-  );
+  const handleGetFiltersConnections = useCallback((params: RequestOptions) => {
+    setRequestsQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+  }, []);
 
   const checkDataChanged = useMemo((): number => {
     requestsDataPaginatedPrevRef.current = requestsDataPaginated?.results;

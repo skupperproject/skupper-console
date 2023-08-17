@@ -55,12 +55,9 @@ const Services = function () {
     }
   );
 
-  const handleSetServiceFilters = useCallback(
-    (params: RequestOptions) => {
-      setServicesQueryParams({ ...servicesQueryParams, ...params });
-    },
-    [servicesQueryParams]
-  );
+  const handleSetServiceFilters = useCallback((params: RequestOptions) => {
+    setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+  }, []);
 
   const services = servicesData?.results || [];
   const serviceCount = servicesData?.timeRangeCount || 0;
