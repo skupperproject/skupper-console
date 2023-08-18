@@ -2,7 +2,7 @@ import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Flex, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -20,7 +20,7 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 import ProcessDescription from '../components/ProcessDescription';
 import {
   processesConnectedColumns,
-  ProcessesConnectedComponentsTable,
+  CustomProcessPairCells,
   processesHttpConnectedColumns
 } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
@@ -29,9 +29,13 @@ import { QueriesProcesses } from '../services/services.enum';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
 
 const Process = function () {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { id } = useParams() as { id: string };
   const { id: processId } = getIdAndNameFromUrlParams(id);
-  const [tabSelected, setTabSelected] = useState(ProcessesLabels.Overview);
+
+  const type = searchParams.get('type') || ProcessesLabels.Overview;
+  const [tabSelected, setTabSelected] = useState(type);
 
   const processesPairsTxQueryParams = {
     sourceId: processId
@@ -70,6 +74,7 @@ const Process = function () {
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessesLabels);
+    setSearchParams({ type: tabIndex as string });
   }
 
   const NavigationMenu = function () {
@@ -131,7 +136,7 @@ const Process = function () {
                   rows={TCPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={ProcessesConnectedComponentsTable}
+                  customCells={CustomProcessPairCells}
                 />
               )}
 
@@ -143,7 +148,7 @@ const Process = function () {
                   rows={TCPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={ProcessesConnectedComponentsTable}
+                  customCells={CustomProcessPairCells}
                 />
               )}
 
@@ -155,7 +160,7 @@ const Process = function () {
                   rows={HTTPClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={ProcessesConnectedComponentsTable}
+                  customCells={CustomProcessPairCells}
                 />
               )}
 
@@ -167,7 +172,7 @@ const Process = function () {
                   rows={HTTPServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={ProcessesConnectedComponentsTable}
+                  customCells={CustomProcessPairCells}
                 />
               )}
 
@@ -179,7 +184,7 @@ const Process = function () {
                   rows={remoteClients}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={ProcessesConnectedComponentsTable}
+                  customCells={CustomProcessPairCells}
                 />
               )}
 
@@ -191,7 +196,7 @@ const Process = function () {
                   rows={remoteServers}
                   pagination={true}
                   paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={ProcessesConnectedComponentsTable}
+                  customCells={CustomProcessPairCells}
                 />
               )}
             </Flex>

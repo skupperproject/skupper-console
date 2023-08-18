@@ -2,7 +2,7 @@ import { useCallback, useState, MouseEvent as ReactMouseEvent, Suspense } from '
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { getTestsIds } from '@config/testIds.config';
@@ -10,7 +10,7 @@ import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import MainContainer from '@layout/MainContainer';
-import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constants';
+import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
@@ -24,9 +24,12 @@ import { QueriesProcessGroups } from '../services/services.enum';
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'component-display-interval';
 
 const ProcessGroup = function () {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const type = searchParams.get('type') || ProcessGroupsLabels.Overview;
+
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
-  const [tabSelected, setTabSelected] = useState(ProcessGroupsLabels.Overview);
+  const [tabSelected, setTabSelected] = useState(type);
 
   const { data: processGroup } = useQuery([QueriesProcessGroups.GetProcessGroup, processGroupId], () =>
     RESTApi.fetchProcessGroup(processGroupId)
@@ -50,6 +53,7 @@ const ProcessGroup = function () {
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessGroupsLabels);
+    setSearchParams({ type: tabIndex as string });
   }
 
   const NavigationMenu = function () {
@@ -106,9 +110,9 @@ const ProcessGroup = function () {
               columns={processesTableColumns}
               rows={processResults}
               customCells={{
-                linkCell: ProcessesComponentsTable.linkCell,
-                linkCellSite: ProcessesComponentsTable.linkCellSite,
-                exposedCell: ProcessesComponentsTable.exposedCell
+                linkCell: CustomProcessCells.linkCell,
+                linkCellSite: CustomProcessCells.linkCellSite,
+                exposedCell: CustomProcessCells.exposedCell
               }}
             />
           )}

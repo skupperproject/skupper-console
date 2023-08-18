@@ -58,7 +58,7 @@ describe('Component component', () => {
   it('should render the title, description data and processes associated the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(ProcessGroupsLabels.Processes));
+    fireEvent.click(screen.getAllByText(ProcessGroupsLabels.Processes)[0]);
 
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processGroupResults[0].name);
     expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('Component component', () => {
   it('Should ensure the Component details component renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(ProcessGroupsLabels.Processes));
+    fireEvent.click(screen.getAllByText(ProcessGroupsLabels.Processes)[0]);
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
       'href',

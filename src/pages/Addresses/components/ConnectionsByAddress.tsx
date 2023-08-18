@@ -8,7 +8,7 @@ import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { ProcessesComponentsTable } from '@pages/Processes/Processes.constants';
+import { CustomProcessCells } from '@pages/Processes/Processes.constants';
 import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPair/FlowPair.constants';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
@@ -181,7 +181,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
           rows={servers}
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
-          customCells={ProcessesComponentsTable}
+          customCells={CustomProcessCells}
         />
       )}
 

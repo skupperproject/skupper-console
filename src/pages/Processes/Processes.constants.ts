@@ -19,7 +19,7 @@ export const ProcessesPaths = {
   name: ProcessesLabels.Section
 };
 
-export const ProcessesConnectedComponentsTable = {
+export const CustomProcessPairCells = {
   ProcessConnectedLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
     LinkCell({
       ...props,
@@ -28,7 +28,7 @@ export const ProcessesConnectedComponentsTable = {
     })
 };
 
-export const ProcessesComponentsTable = {
+export const CustomProcessCells = {
   linkCell: (props: LinkCellProps<ProcessResponse>) =>
     LinkCell({
       ...props,

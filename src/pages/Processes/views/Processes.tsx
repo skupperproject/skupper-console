@@ -11,7 +11,7 @@ import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
 
-import { ProcessesComponentsTable, processesSelectOptions, processesTableColumns } from '../Processes.constants';
+import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
 import { QueriesProcesses } from '../services/services.enum';
 
@@ -75,7 +75,7 @@ const Processes = function () {
           <SkTable
             columns={processesTableColumns}
             rows={processes}
-            customCells={ProcessesComponentsTable}
+            customCells={CustomProcessCells}
             pagination={true}
             paginationTotalRows={processesCount}
             paginationPageSize={BIG_PAGINATION_SIZE}

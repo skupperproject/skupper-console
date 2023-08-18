@@ -33,6 +33,7 @@ interface ProcessResponseWithService extends ProcessResponse {
 const ProcessDescription: FC<{ processWithService: ProcessResponseWithService; title: string | JSX.Element }> =
   function ({ processWithService, title }) {
     const {
+      parent,
       parentName,
       imageName,
       groupName,

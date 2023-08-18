@@ -7,7 +7,7 @@ import { SortDirection } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { ProcessesComponentsTable, processesTableColumns } from '@pages/Processes/Processes.constants';
+import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { httpSelectOptions } from '@pages/shared/FlowPair/FlowPair.constants';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
@@ -110,7 +110,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, pro
       )}
 
       {viewSelected === TAB_1_KEY && (
-        <SkTable columns={processesTableColumns} rows={servers} customCells={ProcessesComponentsTable} />
+        <SkTable columns={processesTableColumns} rows={servers} customCells={CustomProcessCells} />
       )}
 
       {viewSelected === TAB_2_KEY && (
