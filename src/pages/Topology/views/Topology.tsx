@@ -15,7 +15,7 @@ import { TopologyLabels, TopologyURLFilters, TopologyViews } from '../Topology.e
 const Topology = function () {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const addressId = searchParams.get(TopologyURLFilters.AddressId);
+  const addressId = searchParams.get(TopologyURLFilters.AddressId) || undefined;
   const id = searchParams.get(TopologyURLFilters.IdSelected) || undefined;
   const type = searchParams.get(TopologyURLFilters.Type);
 

@@ -126,7 +126,7 @@ export const DEFAULT_EDGE_CONFIG: Partial<{
   type: 'line-dash',
   labelCfg: {
     autoRotate: true,
-    refY: -6,
+    refY: 10,
     style: {
       cursor: 'pointer',
       fontSize: 12

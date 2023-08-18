@@ -1,6 +1,11 @@
 import { INode, NodeConfig } from '@antv/g6';
 
 import {
+  DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG
+} from './config';
+import {
   GraphCombo,
   GraphEdge,
   GraphNode,
@@ -88,6 +93,21 @@ export const GraphController = {
     edges: JSON.parse(JSON.stringify(GraphController.sanitizeEdges(nodes, edges))),
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
   }),
+
+  selectLayoutFromNodes: (nodes: GraphNode[], hasCombo: boolean = false) => {
+    let layout = undefined;
+    const nodeCount = !!nodes.filter((node) => node.x === undefined && node.y === undefined).length;
+
+    if (nodeCount) {
+      if (hasCombo) {
+        layout = DEFAULT_LAYOUT_COMBO_FORCE_CONFIG;
+      } else {
+        layout = nodes.length <= 200 ? DEFAULT_LAYOUT_FORCE_CONFIG : DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG;
+      }
+    }
+
+    return layout;
+  },
 
   calculateMaxIteration(nodeCount: number) {
     if (nodeCount > 900) {

@@ -1,8 +1,8 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
-import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Divider, Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PrometheusApi } from '@API/Prometheus.api';
@@ -10,7 +10,6 @@ import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { isPrometheusActive, UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
-import { EDGE_COLOR_DEFAULT, NODE_COLOR_DEFAULT_LABEL } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
@@ -26,7 +25,10 @@ import { TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process-graphZoom';
 const SHOW_SITE_KEY = 'showSite';
-const SHOW_LINK_LABEL = 'show-link-label';
+const SHOW_LINK_PROTOCOL = 'show-link-protocol';
+const SHOW_LINK_BYTES = 'show-link-bytes';
+const SHOW_LINK_BYTERATE = 'show-link-byterate';
+const SHOW_LINK_LATENCY = 'show-link-latency';
 const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
 const DISPLAY_OPTIONS = 'display-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
@@ -43,19 +45,16 @@ const remoteProcessesQueryParams = {
   processRole: 'remote'
 };
 
-const TopologyProcesses: FC<{ addressId?: string | null; id?: string | undefined }> = function ({
-  addressId,
-  id: processId
-}) {
+const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ addressId, id: processId }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
-  const [groups, setGroups] = useState<GraphCombo[]>();
-  const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState<boolean>(false);
-  const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState<boolean>(false);
-  const [addressIdSelected, setAddressId] = useState<string | undefined>(addressId || undefined);
+  const [groups, setGroups] = useState<GraphCombo[]>([]);
+  const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState(false);
+  const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState(false);
+  const [addressIdSelected, setAddressId] = useState(addressId);
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
     localStorage.getItem(DISPLAY_OPTIONS)
       ? JSON.parse(localStorage.getItem(DISPLAY_OPTIONS) || '')
@@ -77,63 +76,73 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | undefined
     [displayOptionsSelected]
   );
 
-  const { data: services } = useQuery([QueriesServices.GetAddresses], () => RESTApi.fetchAddresses(), {
-    refetchInterval: UPDATE_INTERVAL
+  const [
+    { data: services },
+    { data: sites },
+    { data: externalProcesses },
+    { data: remoteProcesses },
+    { data: processesPairs },
+    { data: serversByAddress },
+    { data: bytesByProcessPairs },
+    { data: byteRateByProcessPairs },
+    { data: latencyByProcessPairs }
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesServices.GetAddresses],
+        queryFn: () => RESTApi.fetchAddresses()
+      },
+      {
+        queryKey: [QueriesSites.GetSites],
+        queryFn: () => RESTApi.fetchSites(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetProcessesPairs],
+        queryFn: () => RESTApi.fetchProcessesPairs(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesServices.GetProcessesByAddress, addressIdSelected],
+        queryFn: () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : null),
+        keepPreviousData: true,
+
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetBytesByProcessPairs],
+        queryFn: () =>
+          isPrometheusActive && isDisplayOptionActive(SHOW_LINK_BYTES) ? PrometheusApi.fetchAllProcessPairsBytes() : [],
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetByteRateByProcessPairs],
+        queryFn: () =>
+          isPrometheusActive && isDisplayOptionActive(SHOW_LINK_BYTERATE)
+            ? PrometheusApi.fetchAllProcessPairsByteRates()
+            : [],
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetLatencyByProcessPairs],
+        queryFn: () =>
+          isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LATENCY)
+            ? PrometheusApi.fetchAllProcessPairsLatencies()
+            : [],
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
   });
-
-  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites(), {
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: externalProcesses } = useQuery(
-    [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-    () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: remoteProcesses } = useQuery(
-    [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-    () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: serversByAddress } = useQuery(
-    [QueriesServices.GetProcessesByAddress, addressIdSelected],
-    () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : null),
-    {
-      // We are using suspense mode on and we set this flag true to avoid to call the loading page when we do this operation
-      keepPreviousData: true,
-      refetchInterval: addressIdSelected ? UPDATE_INTERVAL : 0
-    }
-  );
-
-  const { data: processesPairs } = useQuery([QueriesTopology.GetProcessesPairs], () => RESTApi.fetchProcessesPairs(), {
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: byteRateByProcessPairs } = useQuery(
-    [QueriesTopology.GetByteRateByProcessPairs],
-    () => PrometheusApi.fetchAllProcessPairsByteRates(),
-    {
-      enabled: isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LABEL),
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
-
-  const { data: latencyByProcessPairs } = useQuery(
-    [QueriesTopology.GetLatencyByProcessPairs],
-    () => PrometheusApi.fetchAllProcessPairsLatencies(),
-    {
-      enabled: isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LABEL),
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
 
   const handleGetSelectedGroup = useCallback(
     ({ id, label }: GraphCombo) => {
@@ -261,150 +270,107 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | undefined
       return [<SelectOption key={'show-site'} value={TopologyLabels.CheckboxShowSite} />];
     }
 
-    const isDisplayMetricsActive = isDisplayOptionActive(SHOW_LINK_LABEL);
-
     return [
       <SelectOption key={SHOW_SITE_KEY} value={SHOW_SITE_KEY}>
         {TopologyLabels.CheckboxShowSite}
       </SelectOption>,
-      <SelectOption key={SHOW_LINK_LABEL} value={SHOW_LINK_LABEL}>
-        {TopologyLabels.CheckboxShowLabel}
+      <SelectOption key={SHOW_LINK_PROTOCOL} value={SHOW_LINK_PROTOCOL}>
+        {TopologyLabels.CheckboxShowProtocol}
       </SelectOption>,
-      <SelectOption key={SHOW_LINK_REVERSE_LABEL} isDisabled={!isDisplayMetricsActive} value={SHOW_LINK_REVERSE_LABEL}>
+      <SelectOption key={SHOW_LINK_BYTES} value={SHOW_LINK_BYTES}>
+        {TopologyLabels.CheckboxShowTotalBytes}
+      </SelectOption>,
+      <SelectOption key={SHOW_LINK_BYTERATE} value={SHOW_LINK_BYTERATE}>
+        {TopologyLabels.CheckboxShowCurrentByteRate}
+      </SelectOption>,
+      <SelectOption key={SHOW_LINK_LATENCY} value={SHOW_LINK_LATENCY}>
+        {TopologyLabels.CheckboxShowLatency}
+      </SelectOption>,
+      <SelectOption
+        key={SHOW_LINK_REVERSE_LABEL}
+        isDisabled={
+          !isDisplayOptionActive(SHOW_LINK_BYTES) &&
+          !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
+          !isDisplayOptionActive(SHOW_LINK_LATENCY)
+        }
+        value={SHOW_LINK_REVERSE_LABEL}
+      >
         {TopologyLabels.CheckboxShowLabelReverse}
       </SelectOption>,
-      <SelectOption key={ROTATE_LINK_LABEL} isDisabled={!isDisplayMetricsActive} value={ROTATE_LINK_LABEL}>
+      <Divider key="display-option-divider" />,
+      <SelectOption
+        key={ROTATE_LINK_LABEL}
+        isDisabled={
+          !isDisplayOptionActive(SHOW_LINK_BYTES) &&
+          !isDisplayOptionActive(SHOW_LINK_PROTOCOL) &&
+          !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
+          !isDisplayOptionActive(SHOW_LINK_LATENCY)
+        }
+        value={ROTATE_LINK_LABEL}
+      >
         {TopologyLabels.RotateLabel}
       </SelectOption>
     ];
   };
 
-  // This effect is triggered when no services are currently selected
   useEffect(() => {
-    const isDisplayMetricsActive = isDisplayOptionActive(SHOW_LINK_LABEL);
-    const showLinkLabelReverse = isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL);
-    const rotateLabel = isDisplayOptionActive(ROTATE_LINK_LABEL);
-
-    if (
-      sites &&
-      externalProcesses &&
-      remoteProcesses &&
-      ((isDisplayMetricsActive && byteRateByProcessPairs && latencyByProcessPairs) ||
-        !isDisplayMetricsActive ||
-        !isPrometheusActive)
-    ) {
-      const processes = [...externalProcesses, ...remoteProcesses];
-      // Get nodes from site and process groups
-      const siteNodes = TopologyController.convertSitesToNodes(sites);
-      const processesNodes = TopologyController.convertProcessesToNodes(processes);
-      const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
-
-      // Check if no services are selected
-      if (processesPairs && !addressIdSelected) {
-        let processesLinks = TopologyController.convertProcessPairsToLinks(processesPairs, isDisplayMetricsActive);
-        processesLinks = processesLinks.map((pair) => ({
-          ...pair,
-          labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
-          style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
-        }));
-
-        if (isDisplayMetricsActive && byteRateByProcessPairs && latencyByProcessPairs) {
-          processesLinks = TopologyController.addMetricsToLinks(
-            processesLinks,
-            byteRateByProcessPairs,
-            latencyByProcessPairs,
-            { showLinkLabelReverse, rotateLabel }
-          );
-        }
-
-        setNodes(processesNodes);
-        setLinks(processesLinks);
-        setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
-      }
+    if (!sites || !externalProcesses || !remoteProcesses || !processesPairs) {
+      return;
     }
+
+    if (addressIdSelected && !serversByAddress?.results) {
+      return;
+    }
+
+    function updateLabelLinks(prevLinks: GraphEdge[]) {
+      return TopologyController.addMetricsToLinks(
+        prevLinks,
+        processesPairs,
+        bytesByProcessPairs,
+        byteRateByProcessPairs,
+        latencyByProcessPairs,
+        {
+          showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+          showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
+          showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+          showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+          showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
+          rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
+        }
+      );
+    }
+
+    let pPairs = processesPairs;
+    let processes = [...externalProcesses, ...remoteProcesses];
+
+    if (addressIdSelected && serversByAddress?.results) {
+      const serverIds = serversByAddress.results.map(({ identity }) => identity);
+      pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
+
+      const processIdsFromAddress = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
+      processes = processes.filter((node) => processIdsFromAddress.includes(node.identity));
+    }
+
+    const processesNodes = TopologyController.convertProcessesToNodes(processes);
+    const siteNodes = TopologyController.convertSitesToNodes(sites);
+    const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
+    const processesLinks = TopologyController.convertProcessPairsToLinks(pPairs);
+
+    setNodes(processesNodes);
+    setLinks(updateLabelLinks(processesLinks));
+    setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
   }, [
     sites,
     externalProcesses,
     processesPairs,
-    addressIdSelected,
     remoteProcesses,
-    byteRateByProcessPairs,
-    latencyByProcessPairs,
-    isDisplayOptionActive
-  ]);
-
-  // This effect is triggered when one service is currently selected
-  useEffect(() => {
-    const isDisplayMetricsActive = isDisplayOptionActive(SHOW_LINK_LABEL);
-    const showLinkLabelReverse = isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL);
-    const rotateLabel = isDisplayOptionActive(ROTATE_LINK_LABEL);
-
-    if (
-      sites &&
-      externalProcesses &&
-      remoteProcesses &&
-      ((isDisplayMetricsActive && byteRateByProcessPairs && latencyByProcessPairs) ||
-        !isDisplayMetricsActive ||
-        !isPrometheusActive)
-    ) {
-      const processes = [...externalProcesses, ...remoteProcesses];
-      // In order to obtain the process pairs for a selected service, we must derive them from the flow pairs associated with the selected service.
-      if (addressIdSelected && processesPairs && serversByAddress?.results) {
-        const serverIds = serversByAddress.results.map(({ identity }) => identity);
-        const processPairsByAddress = processesPairs.filter((pair) => serverIds?.includes(pair.destinationId));
-
-        let processesLinksByAddress = TopologyController.convertProcessPairsToLinks(
-          processPairsByAddress,
-          isDisplayMetricsActive
-        );
-        processesLinksByAddress = processesLinksByAddress.map((pair) => ({
-          ...pair,
-          labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
-          style: { ...pair.style, stroke: EDGE_COLOR_DEFAULT },
-          cursor: 'pointer'
-        }));
-
-        if (isPrometheusActive && isDisplayMetricsActive) {
-          processesLinksByAddress = TopologyController.addMetricsToLinks(
-            processesLinksByAddress,
-            byteRateByProcessPairs,
-            latencyByProcessPairs,
-            { showLinkLabelReverse, rotateLabel }
-          );
-        }
-
-        const processIdsFromAddress = [
-          ...(processesLinksByAddress?.map(({ source }) => source) || []),
-          ...(processesLinksByAddress?.map(({ target }) => target) || [])
-        ];
-
-        const filteredProcesses = processes.filter((node) => processIdsFromAddress.includes(node.identity));
-
-        const siteNodes = TopologyController.convertSitesToNodes(sites);
-        const processesNodes = TopologyController.convertProcessesToNodes(filteredProcesses);
-        const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
-
-        // Set the nodes, links and groups for the topology
-        setNodes(processesNodes);
-        setLinks(processesLinksByAddress);
-        setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
-      }
-    }
-  }, [
-    sites,
-    externalProcesses,
-    processesPairs,
-    addressIdSelected,
-    remoteProcesses,
-    byteRateByProcessPairs,
-    latencyByProcessPairs,
+    isDisplayOptionActive,
     serversByAddress?.results,
-    isDisplayOptionActive
+    addressIdSelected,
+    bytesByProcessPairs,
+    byteRateByProcessPairs,
+    latencyByProcessPairs
   ]);
-
-  if (!services || !sites || !processesPairs || !remoteProcesses || !externalProcesses) {
-    return null;
-  }
 
   return (
     <Stack data-testid="sk-topology-processes">
@@ -463,17 +429,14 @@ const TopologyProcesses: FC<{ addressId?: string | null; id?: string | undefined
               nodes={nodes}
               edges={links}
               combos={groups}
+              itemSelected={processId}
+              fitScreen={Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))}
+              zoom={Number(localStorage.getItem(ZOOM_CACHE_KEY))}
               onClickCombo={handleGetSelectedGroup}
               onClickNode={handleGetSelectedNode}
               onClickEdge={handleGetSelectedEdge}
-              itemSelected={processId}
               onGetZoom={handleSaveZoom}
               onFitScreen={handleFitScreen}
-              layout={TopologyController.selectLayoutFromNodes(nodes, 'combo')}
-              config={{
-                zoom: localStorage.getItem(ZOOM_CACHE_KEY),
-                fitScreen: Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))
-              }}
             />
           </StackItem>
         </>

@@ -19,6 +19,7 @@ export const queries = {
   getHttpPartialStatus(param: string) {
     return `sum by(partial_code)(label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
   },
+
   getHttpPartialStatusRateTimeInterval(param: string, range: IntervalTimePropValue) {
     return `sum by(partial_code)(label_replace(rate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
   },
@@ -27,6 +28,7 @@ export const queries = {
   getQuantileTimeInterval(param: string, range: IntervalTimePropValue, quantile: 0.5 | 0.9 | 0.99) {
     return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
+
   getAvgLatencyTimeInterval(param: string, range: IntervalTimePropValue) {
     return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
@@ -35,9 +37,15 @@ export const queries = {
   getBytesByDirection(param: string, range: IntervalTimePropValue) {
     return `sum by(direction)(increase(octets_total{${param}}[${range}]))`;
   },
+
   getByteRateByDirectionTimeInterval(paramSource: string, range: IntervalTimePropValue) {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
   },
+
+  getAllProcessPairsBytes() {
+    return `sum by(destProcess, sourceProcess,direction)(octets_total)`;
+  },
+
   getAllProcessPairsByteRates() {
     return `sum by(destProcess, sourceProcess,direction)(rate(octets_total[1m]))`;
   },

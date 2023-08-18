@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import G6, { Graph, GraphOptions, ICombo, IEdge, INode } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
@@ -26,7 +26,7 @@ import { GraphController } from './services';
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   ({
-    nodes,
+    nodes: nodesWithoutPosition,
     edges,
     combos,
     onClickEdge,
@@ -35,303 +35,30 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     itemSelected,
     onGetZoom,
     onFitScreen,
-    layout,
-    config
+    fitScreen,
+    zoom
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
-
     const isHoverState = useRef<boolean>(false);
     const prevNodesRef = useRef<GraphNode[]>();
     const prevEdgesRef = useRef<GraphEdge[]>();
     const prevCombosRef = useRef<GraphCombo[]>();
+    const itemSelectedRef = useRef(itemSelected);
     const topologyGraphRef = useRef<Graph>();
 
-    const handleOnClickNode = useCallback(
-      (data: GraphNode) => {
-        if (onClickNode) {
-          onClickNode(data);
-        }
-      },
-      [onClickNode]
-    );
+    function insertPositionIntoNodes(nodes: GraphNode[]) {
+      return nodes.map((node) => {
+        const { x, y } = GraphController.getPositionFromLocalStorage(node.id);
 
-    const handleOnClickEdge = useCallback(
-      (data: GraphEdge) => {
-        if (onClickEdge) {
-          onClickEdge(data);
-        }
-      },
-      [onClickEdge]
-    );
+        return { ...node, x, y };
+      });
+    }
 
-    const handleOnClickCombo = useCallback(
-      (data: GraphCombo) => {
-        if (onClickCombo) {
-          onClickCombo(data);
-        }
-      },
-      [onClickCombo]
-    );
-
-    const handleGetZoom = useCallback(
-      (zoomValue: number) => {
-        if (onGetZoom) {
-          onGetZoom(zoomValue);
-        }
-      },
-      [onGetZoom]
-    );
-
-    const handleFitScreen = useCallback(
-      (flag: boolean) => {
-        if (onFitScreen) {
-          onFitScreen(flag);
-        }
-      },
-      [onFitScreen]
-    );
-
-    // Creates network topology
-    const graphRef = useCallback(($node: HTMLDivElement) => {
-      if (nodes.length && !topologyGraphRef.current) {
-        const data = GraphController.getG6Model({ edges, nodes, combos });
-
-        const width = $node.scrollWidth;
-        const height = $node.scrollHeight;
-
-        const options: GraphOptions = {
-          container: $node,
-          width,
-          height,
-          fitCenter: config?.fitCenter || false,
-          plugins: [],
-          modes: DEFAULT_MODE,
-          defaultNode: DEFAULT_NODE_CONFIG,
-          defaultCombo: DEFAULT_COMBO_CONFIG,
-          defaultEdge: DEFAULT_EDGE_CONFIG,
-          nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
-          comboStateStyles: DEFAULT_COMBO_STATE_CONFIG
-        };
-
-        if (layout) {
-          options.layout = {
-            ...layout,
-            center: [width / 2, height / 2]
-          };
-        }
-
-        topologyGraphRef.current = new G6.Graph(options);
-        const topologyGraph = topologyGraphRef.current;
-
-        topologyGraph.on('node:click', ({ item }) => {
-          if (item) {
-            const node = item.getModel() as GraphNode;
-            handleOnClickNode(node);
-          }
-        });
-
-        topologyGraph.on('edge:click', ({ item }) => {
-          if (item) {
-            const edge = item.getModel() as GraphEdge;
-            handleOnClickEdge(edge);
-          }
-        });
-
-        topologyGraph.on('node:dragstart', ({ item }) => {
-          const nodeItem = item;
-          if (nodeItem) {
-            topologyGraph.updateItem(nodeItem, { style: { cursor: 'grab' } });
-          }
-        });
-
-        topologyGraph.on('node:dragend', ({ item }) => {
-          if (item) {
-            topologyGraph.updateItem(item, { style: { cursor: 'pointer' } });
-
-            const updatedNodes = GraphController.fromNodesToLocalStorageData(
-              [item as INode],
-              ({ id, x, y }: LocalStorageData) => ({
-                id,
-                x,
-                y
-              })
-            );
-
-            GraphController.saveDataInLocalStorage(updatedNodes);
-          }
-        });
-
-        topologyGraph.on('node:mouseenter', ({ item }) => {
-          isHoverState.current = true;
-
-          topologyGraph.getEdges().forEach(function (edge) {
-            edge.hide();
-          });
-
-          const node = item as INode | null;
-
-          if (node) {
-            const neighbors = node.getNeighbors();
-            const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
-
-            topologyGraph.getNodes().forEach(function (n) {
-              if (node?.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
-                topologyGraph.setItemState(n, 'hidden', true);
-                n.toBack();
-              }
-            });
-
-            topologyGraph.setItemState(node, 'hidden', false);
-
-            node.getEdges().forEach((edgeConnected) => {
-              edgeConnected.show();
-            });
-          }
-        });
-
-        topologyGraph.on('node:mouseleave', ({ item }) => {
-          isHoverState.current = false;
-
-          topologyGraph.findAllByState<INode>('node', 'hidden').forEach(function (node) {
-            topologyGraph.setItemState(node, 'hidden', false);
-          });
-
-          topologyGraph.getEdges().forEach(function (edge) {
-            edge.show();
-          });
-
-          const node = item as INode | null;
-
-          if (node) {
-            topologyGraph.setItemState(node, 'hover', false);
-          }
-        });
-
-        topologyGraph.on('edge:mouseenter', ({ item }) => {
-          isHoverState.current = true;
-
-          topologyGraph.getEdges().forEach(function (edge) {
-            edge.hide();
-          });
-
-          const edge = item as IEdge | null;
-
-          if (edge) {
-            edge.show();
-            topologyGraph.setItemState(edge, 'hover', true);
-
-            const source = edge.getSource();
-            const target = edge.getTarget();
-
-            topologyGraph.getNodes().forEach(function (node) {
-              if (node !== source && node !== target) {
-                topologyGraph.setItemState(node, 'hidden', true);
-              }
-            });
-          }
-        });
-
-        topologyGraph.on('edge:mouseleave', ({ item }) => {
-          isHoverState.current = false;
-
-          topologyGraph.getEdges().forEach(function (edge) {
-            edge.show();
-          });
-
-          topologyGraph.findAllByState<INode>('node', 'hidden').forEach(function (node) {
-            topologyGraph.setItemState(node, 'hidden', false);
-          });
-
-          const edge = item as IEdge | null;
-
-          if (edge) {
-            topologyGraph.setItemState(edge, 'hover', false);
-          }
-        });
-
-        if (combos?.length) {
-          topologyGraph.on('combo:click', ({ item }) => {
-            if (item) {
-              handleOnClickCombo(item.getModel() as GraphCombo);
-            }
-          });
-
-          topologyGraph.on('combo:dragend', ({ item }) => {
-            if (item) {
-              const combo = item as ICombo;
-
-              // Retrieve the nodes contained within the combo box and store their positions in memory
-              const updatedNodes = GraphController.fromNodesToLocalStorageData(
-                combo.getNodes(),
-                ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-              );
-
-              GraphController.saveDataInLocalStorage(updatedNodes);
-            }
-          });
-        }
-
-        topologyGraph.on('canvas:dragend', ({ dx, dy }: { dx?: number; dy?: number }) => {
-          if (dx !== undefined && dy !== undefined) {
-            const updatedNodes = GraphController.fromNodesToLocalStorageData(
-              topologyGraph.getNodes(),
-              ({ id, x, y }: LocalStorageData) => ({
-                id,
-                x: x + dx,
-                y: y + dy
-              })
-            );
-
-            GraphController.saveDataInLocalStorage(updatedNodes);
-          }
-        });
-
-        topologyGraph.on('wheelzoom', () => {
-          const zoomValue = topologyGraph.getZoom();
-
-          if (onGetZoom) {
-            onGetZoom(zoomValue);
-          }
-
-          if (onFitScreen) {
-            onFitScreen(0);
-          }
-        });
-
-        topologyGraph.on('afterrender', () => {
-          prevNodesRef.current = nodes;
-          prevEdgesRef.current = edges;
-          prevCombosRef.current = combos;
-
-          if (options.layout) {
-            topologyGraph.destroyLayout();
-          }
-
-          setIsGraphLoaded(true);
-        });
-
-        registerDefaultEdgeWithHover();
-        registerSiteEdge();
-
-        topologyGraph.data(data);
-        topologyGraph.render();
-
-        if (config?.zoom) {
-          topologyGraph.zoomTo(Number(config?.zoom), topologyGraph.getGraphCenterPoint(), true, {
-            duration: 0
-          });
-        }
-        if (Number(config?.fitScreen)) {
-          topologyGraph.fitView(50, undefined, true, { duration: 0 });
-        }
-      }
-    }, []);
-
-    const rollbackState = useCallback(() => {
+    function rollbackTopologyStatus() {
       const graphInstance = topologyGraphRef.current;
 
-      if (graphInstance && itemSelected) {
-        const item = graphInstance.findById(itemSelected);
+      if (graphInstance && itemSelectedRef.current) {
+        const item = graphInstance.findById(itemSelectedRef.current);
 
         graphInstance.getEdges().forEach(function (edge) {
           edge.hide();
@@ -378,23 +105,265 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           }
         }
       }
+    }
+
+    // Creates network topology
+    const graphRef = useCallback(($node: HTMLDivElement) => {
+      if (nodesWithoutPosition.length && !topologyGraphRef.current) {
+        const data = GraphController.getG6Model({
+          edges,
+          nodes: insertPositionIntoNodes(nodesWithoutPosition),
+          combos
+        });
+
+        const width = $node.scrollWidth;
+        const height = $node.scrollHeight;
+
+        const options: GraphOptions = {
+          container: $node,
+          width,
+          height,
+          modes: DEFAULT_MODE,
+          defaultNode: DEFAULT_NODE_CONFIG,
+          defaultCombo: DEFAULT_COMBO_CONFIG,
+          defaultEdge: DEFAULT_EDGE_CONFIG,
+          nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
+          comboStateStyles: DEFAULT_COMBO_STATE_CONFIG
+        };
+
+        const layout = GraphController.selectLayoutFromNodes(nodesWithoutPosition, !!combos);
+
+        if (layout) {
+          options.layout = {
+            ...layout,
+            center: [width / 2, height / 2]
+          };
+        }
+
+        topologyGraphRef.current = new G6.Graph(options);
+        const topologyGraph = topologyGraphRef.current;
+
+        /** EVENTS */
+        topologyGraph.on('node:click', ({ item }) => {
+          if (item && onClickNode) {
+            onClickNode(item.getModel());
+          }
+        });
+
+        topologyGraph.on('edge:click', ({ item }) => {
+          if (item && onClickEdge) {
+            onClickEdge(item.getModel());
+          }
+        });
+
+        topologyGraph.on('node:dragstart', ({ item }) => {
+          isHoverState.current = true;
+
+          if (item) {
+            topologyGraph.updateItem(item, { style: { cursor: 'grab' } });
+          }
+        });
+
+        topologyGraph.on('node:dragend', ({ item }) => {
+          if (item) {
+            topologyGraph.updateItem(item, { style: { cursor: 'pointer' } });
+
+            const updatedNodes = GraphController.fromNodesToLocalStorageData(
+              [item as INode],
+              ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+            );
+
+            GraphController.saveDataInLocalStorage(updatedNodes);
+          }
+
+          isHoverState.current = false;
+        });
+
+        topologyGraph.on('node:mouseenter', ({ item }) => {
+          isHoverState.current = true;
+
+          topologyGraph.getEdges().forEach(function (edge) {
+            edge.hide();
+          });
+
+          const node = item as INode | null;
+
+          if (node) {
+            const neighbors = node.getNeighbors();
+            const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
+
+            topologyGraph.getNodes().forEach(function (n) {
+              if (node?.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
+                topologyGraph.setItemState(n, 'hidden', true);
+                n.toBack();
+              }
+            });
+
+            topologyGraph.setItemState(node, 'hidden', false);
+
+            node.getEdges().forEach((edgeConnected) => {
+              edgeConnected.show();
+            });
+          }
+        });
+
+        topologyGraph.on('node:mouseleave', ({ item }) => {
+          isHoverState.current = false;
+
+          topologyGraph.findAllByState<INode>('node', 'hidden').forEach(function (node) {
+            topologyGraph.setItemState(node, 'hidden', false);
+          });
+
+          topologyGraph.getEdges().forEach(function (edge) {
+            edge.show();
+          });
+
+          if (item) {
+            topologyGraph.setItemState(item, 'hover', false);
+          }
+
+          // when we back from an other view and we leave a node we must erase links status
+          itemSelectedRef.current = undefined;
+          topologyGraph.getEdges().forEach(function (edge) {
+            topologyGraph.setItemState(edge, 'hover', false);
+          });
+        });
+
+        topologyGraph.on('edge:mouseenter', ({ item }) => {
+          isHoverState.current = true;
+
+          topologyGraph.getEdges().forEach(function (edge) {
+            edge.hide();
+          });
+
+          const edge = item as IEdge | null;
+
+          if (edge) {
+            edge.show();
+            topologyGraph.setItemState(edge, 'hover', true);
+
+            const source = edge.getSource();
+            const target = edge.getTarget();
+
+            topologyGraph.getNodes().forEach(function (node) {
+              if (node !== source && node !== target) {
+                topologyGraph.setItemState(node, 'hidden', true);
+              }
+            });
+          }
+        });
+
+        topologyGraph.on('edge:mouseleave', ({ item }) => {
+          isHoverState.current = false;
+
+          topologyGraph.getEdges().forEach(function (edge) {
+            edge.show();
+          });
+
+          topologyGraph.findAllByState<INode>('node', 'hidden').forEach(function (node) {
+            topologyGraph.setItemState(node, 'hidden', false);
+          });
+
+          if (item) {
+            topologyGraph.setItemState(item, 'hover', false);
+          }
+        });
+
+        if (combos?.length) {
+          topologyGraph.on('combo:click', ({ item }) => {
+            if (item && onClickCombo) {
+              onClickCombo(item.getModel());
+            }
+          });
+
+          topologyGraph.on('combo:dragstart', () => {
+            isHoverState.current = true;
+          });
+
+          topologyGraph.on('combo:dragend', ({ item }) => {
+            if (item) {
+              const combo = item as ICombo;
+              // Retrieve the nodes contained within the combo box and store their positions in memory
+              const updatedNodes = GraphController.fromNodesToLocalStorageData(
+                combo.getNodes(),
+                ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+              );
+
+              GraphController.saveDataInLocalStorage(updatedNodes);
+            }
+
+            isHoverState.current = false;
+          });
+        }
+
+        topologyGraph.on('canvas:dragstart', () => {
+          isHoverState.current = true;
+        });
+
+        topologyGraph.on('canvas:dragend', ({ dx, dy }: { dx?: number; dy?: number }) => {
+          if (dx !== undefined && dy !== undefined) {
+            const updatedNodes = GraphController.fromNodesToLocalStorageData(
+              topologyGraph.getNodes(),
+              ({ id, x, y }: LocalStorageData) => ({ id, x: x + dx, y: y + dy })
+            );
+
+            GraphController.saveDataInLocalStorage(updatedNodes);
+          }
+
+          isHoverState.current = false;
+        });
+
+        topologyGraph.on('wheelzoom', () => {
+          const zoomValue = topologyGraph.getZoom();
+
+          if (onGetZoom) {
+            onGetZoom(zoomValue);
+          }
+
+          if (onFitScreen) {
+            onFitScreen(0);
+          }
+        });
+
+        // Be carefull: afterender is supposd to be calleed every re-render. In our case that's not happen  because we update the topology usng changeData.
+        // If this behaviour changes we must use a flag to check only the first render
+        topologyGraph.on('afterrender', () => {
+          prevNodesRef.current = nodesWithoutPosition;
+          prevEdgesRef.current = edges;
+          prevCombosRef.current = combos;
+
+          if (options.layout) {
+            topologyGraph.destroyLayout();
+          }
+
+          //save positions
+          const updatedNodes = GraphController.fromNodesToLocalStorageData(
+            topologyGraph.getNodes(),
+            ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+          );
+
+          GraphController.saveDataInLocalStorage(updatedNodes);
+          rollbackTopologyStatus();
+          setIsGraphLoaded(true);
+        });
+
+        registerDefaultEdgeWithHover();
+        registerSiteEdge();
+
+        topologyGraph.data(data);
+        topologyGraph.render();
+
+        if (zoom) {
+          topologyGraph.zoomTo(zoom, topologyGraph.getGraphCenterPoint(), true, { duration: 0 });
+        }
+
+        if (fitScreen) {
+          topologyGraph.fitView(50, undefined, true, { duration: 0 });
+        }
+      }
     }, []);
 
-    // This effect persist the  coordinates for each element of topology after the first simulation.
-    useEffect(() => {
-      const graphInstance = topologyGraphRef.current;
-
-      if (isGraphLoaded && graphInstance) {
-        const updatedNodes = GraphController.fromNodesToLocalStorageData(
-          graphInstance.getNodes(),
-          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-        );
-
-        GraphController.saveDataInLocalStorage(updatedNodes);
-      }
-    }, [isGraphLoaded]);
-
-    // This effect updates the topology graph instance when there are changes to the nodes, edges or groups.
+    // This effect updates the topology when there are changes to the nodes, edges or groups.
     useEffect(() => {
       const graphInstance = topologyGraphRef.current;
 
@@ -402,35 +371,24 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         !isHoverState.current &&
         isGraphLoaded &&
         graphInstance &&
-        (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodes) ||
+        (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition) ||
           JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
           JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
       ) {
         graphInstance.updateLayout(DEFAULT_LAYOUT_FORCE_CONFIG);
-        graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
-
-        prevNodesRef.current = nodes;
+        graphInstance.changeData(
+          GraphController.getG6Model({ edges, nodes: insertPositionIntoNodes(nodesWithoutPosition), combos })
+        );
+        prevNodesRef.current = nodesWithoutPosition;
         prevEdgesRef.current = edges;
+        prevCombosRef.current = combos;
 
-        if (combos) {
-          prevCombosRef.current = combos;
-        }
-
-        rollbackState();
+        rollbackTopologyStatus();
       }
-    }, [nodes, edges, combos, isGraphLoaded, rollbackState, layout]);
+    }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
 
-    // This effect handle the initial  UI status when an element is selected from an other page
-    // it can be a node or edge
-    useEffect(() => {
-      const graphInstance = topologyGraphRef.current;
-
-      if (isGraphLoaded && graphInstance) {
-        rollbackState();
-      }
-    }, [isGraphLoaded, rollbackState]);
-
-    useEffect(() => {
+    // This effect handle the resize of the topology when the browser window changes size.
+    useLayoutEffect(() => {
       const graphInstance = topologyGraphRef.current;
 
       if (!graphInstance || graphInstance.get('destroyed')) {
@@ -458,11 +416,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     return (
       <div ref={graphRef} style={{ height: '98%', position: 'relative' }}>
         {topologyGraphRef.current && (
-          <GraphMenuControl
-            graphInstance={topologyGraphRef.current}
-            onGetZoom={handleGetZoom}
-            onFitScreen={handleFitScreen}
-          />
+          <GraphMenuControl graphInstance={topologyGraphRef.current} onGetZoom={onGetZoom} onFitScreen={onFitScreen} />
         )}
       </div>
     );
