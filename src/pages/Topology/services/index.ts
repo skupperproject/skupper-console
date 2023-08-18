@@ -3,23 +3,18 @@ import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/process.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
+import { DEFAULT_NODE_CONFIG, DEFAULT_NODE_ICON, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
 import {
-  DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
-  DEFAULT_LAYOUT_FORCE_CONFIG,
-  DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG,
-  DEFAULT_NODE_CONFIG,
-  DEFAULT_NODE_ICON,
-  DEFAULT_REMOTE_NODE_CONFIG
-} from '@core/components/Graph/config';
-import { EDGE_COLOR_ACTIVE_DEFAULT, EDGE_COLOR_DEFAULT } from '@core/components/Graph/Graph.constants';
+  EDGE_COLOR_DEFAULT,
+  NODE_COLOR_DEFAULT_LABEL,
+  EDGE_COLOR_ACTIVE_DEFAULT
+} from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
-import { GraphController } from '@core/components/Graph/services';
-import { formatByteRate } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import SitesController from '@pages/Sites/services';
 import {
   ProcessPairsResponse,
-  FlowPairsResponse,
   LinkResponse,
   ProcessGroupResponse,
   ProcessResponse,
@@ -38,15 +33,13 @@ const shape = {
 export const TopologyController = {
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
     entities.map(({ identity, name, siteVersion }) => {
-      const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const img = siteSVG;
 
-      return convertEntityToNode({ id: identity, label: `${name} (${siteVersion})`, x, y, img });
+      return convertEntityToNode({ id: identity, label: `${name} (${siteVersion})`, img });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
     entities.map(({ identity, name, processGroupRole, processCount }) => {
-      const { x, y } = GraphController.getPositionFromLocalStorage(identity);
       const img = processGroupRole === 'internal' ? skupperProcessSVG : componentSVG;
 
       const suffix = processCount > 1 ? TopologyLabels.Processes : TopologyLabels.Process;
@@ -54,18 +47,16 @@ export const TopologyController = {
 
       const nodeConfig = processGroupRole === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape.bound };
 
-      return convertEntityToNode({ id: identity, label, x, y, img, nodeConfig });
+      return convertEntityToNode({ id: identity, label, img, nodeConfig });
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
     processes?.map(({ identity, name: label, parent: comboId, processRole: role, processBinding }) => {
-      const { x, y } = GraphController.getPositionFromLocalStorage(identity);
-
       const img = role === 'internal' ? skupperProcessSVG : processSVG;
 
       const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
 
-      return convertEntityToNode({ id: identity, comboId, label, x, y, img, nodeConfig });
+      return convertEntityToNode({ id: identity, comboId, label, img, nodeConfig });
     }),
 
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
@@ -74,44 +65,15 @@ export const TopologyController = {
     return sites.filter((site) => groups.includes(site.id)).map(({ id, label }) => ({ id, label }));
   },
 
-  convertFlowPairsToLinks: (flowPairsByAddress: FlowPairsResponse[], showProtocol = false): GraphEdge[] =>
-    flowPairsByAddress.reduce<GraphEdge[]>(
-      (
-        acc,
-        {
-          processAggregateId: identity,
-          protocol,
-          forwardFlow: { processName: sourceName },
-          counterFlow: { processName: targetName }
-        }
-      ) => {
-        const [source, target] = identity.split('-to-');
-        //To prevent duplication, we handle cases where two processes have multiple flows, and the resulting source and target values are the same.
-        const exists = acc.some((processLink) => processLink.source === source && processLink.target === target);
-        if (!exists) {
-          acc.push({
-            id: identity,
-            source,
-            target,
-            sourceName,
-            targetName,
-            label: (showProtocol && protocol) || ''
-          });
-        }
-
-        return acc;
-      },
-      []
-    ),
-
-  convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[], showProtocol = false): GraphEdge[] =>
-    processesPairs.map(({ identity, sourceId, destinationId, protocol, sourceName, destinationName }) => ({
+  convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[]): GraphEdge[] =>
+    processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
       id: identity,
       source: sourceId,
       target: destinationId,
       sourceName,
       targetName: destinationName,
-      label: (showProtocol && protocol) || ''
+      labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
+      style: { stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
     })),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
@@ -133,10 +95,30 @@ export const TopologyController = {
 
   addMetricsToLinks: (
     links: GraphEdge[],
+    processesPairs?: ProcessPairsResponse[],
+    bytesByProcessPairs?: PrometheusApiSingleResult[],
     byteRateByProcessPairs?: PrometheusApiSingleResult[],
     latencyByProcessPairs?: PrometheusApiSingleResult[],
-    options?: { showLinkLabelReverse?: boolean; rotateLabel?: boolean }
+    options?: {
+      showLinkProtocol?: boolean;
+      showLinkBytes?: boolean;
+      showLinkByteRate?: boolean;
+      showLinkLatency?: boolean;
+      showLinkLabelReverse?: boolean;
+      rotateLabel?: boolean;
+    }
   ): GraphEdge[] => {
+    const bytesByProcessPairsMap = (bytesByProcessPairs || []).reduce(
+      (acc, { metric, value }) => {
+        {
+          acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+        }
+
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
     const byteRateByProcessPairsMap = (byteRateByProcessPairs || []).reduce(
       (acc, { metric, value }) => {
         {
@@ -157,53 +139,50 @@ export const TopologyController = {
       {} as Record<string, number>
     );
 
+    const processesPairsMap = (processesPairs || []).reduce(
+      (acc, { sourceId, destinationId, protocol }) => {
+        acc[`${sourceId}${destinationId}`] = protocol || '';
+
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
     return links.map((link) => {
+      const protocol = processesPairsMap[`${link.source}${link.target}`];
       const byterate = byteRateByProcessPairsMap[`${link.sourceName}${link.targetName}`];
       const byterateReverse = byteRateByProcessPairsMap[`${link.targetName}${link.sourceName}`];
+      const bytes = bytesByProcessPairsMap[`${link.sourceName}${link.targetName}`];
+      const bytesReverse = bytesByProcessPairsMap[`${link.targetName}${link.sourceName}`];
       const latency = latencyByProcessPairsMap[`${link.sourceName}${link.targetName}`];
       const latencyReverse = latencyByProcessPairsMap[`${link.targetName}${link.sourceName}`];
 
-      const color = byterate ? EDGE_COLOR_ACTIVE_DEFAULT : EDGE_COLOR_DEFAULT;
-
       const reverseByteRate = options?.showLinkLabelReverse ? `(${formatByteRate(byterateReverse)})` : '';
+      const reverseBytes = options?.showLinkLabelReverse ? `(${formatBytes(bytesReverse)})` : '';
       const reverseLatency = options?.showLinkLabelReverse ? `(${formatLatency(latencyReverse)})` : '';
 
-      const metrics = [
-        byterate ? `\n\n${formatByteRate(byterate)} ${reverseByteRate}` : undefined,
-        latency ? `\n${formatLatency(latency)} ${reverseLatency}` : undefined
-      ];
+      const protocolLabel = options?.showLinkProtocol ? protocol : undefined;
+      const byteRateLabel = options?.showLinkByteRate ? `${formatByteRate(byterate)} ${reverseByteRate}` : undefined;
+      const bytesLabel = options?.showLinkBytes ? `${formatBytes(bytes)} ${reverseBytes}` : undefined;
+      const latencyLabel = options?.showLinkLatency ? `${formatLatency(latency)} ${reverseLatency}` : undefined;
+
+      const color = options?.showLinkByteRate && byterate ? EDGE_COLOR_ACTIVE_DEFAULT : EDGE_COLOR_DEFAULT;
 
       return {
         ...link,
         labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: color } },
         style: { ...link.style, stroke: color },
-        label: [link.label, ...metrics].filter(Boolean).join('')
+        label: [protocolLabel, bytesLabel, byteRateLabel, latencyLabel].filter(Boolean).join(',  ')
       };
     });
-  },
-  selectLayoutFromNodes: (nodes: GraphNode[], type: 'combo' | 'default' = 'default') => {
-    let layout = undefined;
-    const nodeCount = !!nodes.filter((node) => node.x === undefined && node.y === undefined).length;
-
-    if (nodeCount) {
-      if (type === 'combo') {
-        layout = DEFAULT_LAYOUT_COMBO_FORCE_CONFIG;
-      } else {
-        layout = nodes.length <= 200 ? DEFAULT_LAYOUT_FORCE_CONFIG : DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG;
-      }
-    }
-
-    return layout;
   }
 };
 
-function convertEntityToNode({ id, comboId, label, x, y, img, nodeConfig }: Entity): GraphNode {
+function convertEntityToNode({ id, comboId, label, img, nodeConfig }: Entity): GraphNode {
   return {
     id,
     comboId,
     label,
-    x,
-    y,
     ...{ ...DEFAULT_NODE_CONFIG, icon: { ...DEFAULT_NODE_ICON, img }, ...nodeConfig }
   };
 }

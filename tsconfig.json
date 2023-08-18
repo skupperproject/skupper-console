@@ -21,7 +21,7 @@
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noUnusedLocals": false,
     "strictPropertyInitialization": true
   },

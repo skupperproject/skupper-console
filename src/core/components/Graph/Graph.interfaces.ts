@@ -1,4 +1,4 @@
-import { GraphData, LayoutConfig, ModelStyle } from '@antv/g6';
+import { GraphData, ModelStyle } from '@antv/g6';
 
 export interface GraphNode {
   id: string;
@@ -11,8 +11,8 @@ export interface GraphNode {
     height?: number;
   };
   style?: Record<string, string>;
-  x: number | undefined;
-  y: number | undefined;
+  x?: number | undefined;
+  y?: number | undefined;
 }
 
 export interface GraphCombo {
@@ -42,12 +42,8 @@ export interface GraphReactAdaptorProps {
   onGetZoom?: Function;
   onFitScreen?: Function;
   legendData?: GraphData;
-  layout?: LayoutConfig;
-  config?: {
-    zoom?: string | null;
-    fitScreen?: number | null;
-    fitCenter?: boolean | null;
-  };
+  fitScreen?: number | null;
+  zoom?: number | null;
 }
 
 export interface LocalStorageDataSavedPayload {
