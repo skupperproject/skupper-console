@@ -15,7 +15,6 @@ import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_COMBO_STATE_CONFIG,
   DEFAULT_EDGE_CONFIG,
-  DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
@@ -110,9 +109,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     // Creates network topology
     const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodesWithoutPosition.length && !topologyGraphRef.current) {
+        const nodes = insertPositionIntoNodes(nodesWithoutPosition);
+        const layout = GraphController.selectLayoutFromNodes(nodes, !!combos);
+
         const data = GraphController.getG6Model({
           edges,
-          nodes: insertPositionIntoNodes(nodesWithoutPosition),
+          nodes,
           combos
         });
 
@@ -130,8 +132,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
           comboStateStyles: DEFAULT_COMBO_STATE_CONFIG
         };
-
-        const layout = GraphController.selectLayoutFromNodes(nodesWithoutPosition, !!combos);
 
         if (layout) {
           options.layout = {
@@ -375,10 +375,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
           JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
       ) {
-        graphInstance.updateLayout(DEFAULT_LAYOUT_FORCE_CONFIG);
-        graphInstance.changeData(
-          GraphController.getG6Model({ edges, nodes: insertPositionIntoNodes(nodesWithoutPosition), combos })
-        );
+        const nodes = insertPositionIntoNodes(nodesWithoutPosition);
+
+        graphInstance.updateLayout(GraphController.selectLayoutFromNodes(nodes, !!combos));
+        graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
+
         prevNodesRef.current = nodesWithoutPosition;
         prevEdgesRef.current = edges;
         prevCombosRef.current = combos;
