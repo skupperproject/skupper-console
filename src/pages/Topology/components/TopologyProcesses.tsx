@@ -5,7 +5,6 @@ import { Select, SelectOption, SelectVariant, SelectOptionObject } from '@patter
 import { useQueries } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { isPrometheusActive, UPDATE_INTERVAL } from '@config/config';
@@ -83,9 +82,7 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     { data: remoteProcesses },
     { data: processesPairs },
     { data: serversByAddress },
-    { data: bytesByProcessPairs },
-    { data: byteRateByProcessPairs },
-    { data: latencyByProcessPairs }
+    { data: metrics }
   ] = useQueries({
     queries: [
       {
@@ -116,29 +113,22 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
         queryKey: [QueriesServices.GetProcessesByAddress, addressIdSelected],
         queryFn: () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : null),
         keepPreviousData: true,
-
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs],
+        queryKey: [
+          QueriesTopology.GetBytesByProcessPairs,
+          isDisplayOptionActive(SHOW_LINK_BYTES),
+          isDisplayOptionActive(SHOW_LINK_BYTERATE),
+          isDisplayOptionActive(SHOW_LINK_LATENCY)
+        ],
         queryFn: () =>
-          isPrometheusActive && isDisplayOptionActive(SHOW_LINK_BYTES) ? PrometheusApi.fetchAllProcessPairsBytes() : [],
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetByteRateByProcessPairs],
-        queryFn: () =>
-          isPrometheusActive && isDisplayOptionActive(SHOW_LINK_BYTERATE)
-            ? PrometheusApi.fetchAllProcessPairsByteRates()
-            : [],
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetLatencyByProcessPairs],
-        queryFn: () =>
-          isPrometheusActive && isDisplayOptionActive(SHOW_LINK_LATENCY)
-            ? PrometheusApi.fetchAllProcessPairsLatencies()
-            : [],
+          TopologyController.getMetrics({
+            showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+            showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY)
+          }),
+        keepPreviousData: true,
         refetchInterval: UPDATE_INTERVAL
       }
     ]
@@ -326,9 +316,9 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
       return TopologyController.addMetricsToLinks(
         prevLinks,
         processesPairs,
-        bytesByProcessPairs,
-        byteRateByProcessPairs,
-        latencyByProcessPairs,
+        metrics?.bytesByProcessPairs,
+        metrics?.byteRateByProcessPairs,
+        metrics?.latencyByProcessPairs,
         {
           showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
           showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
@@ -367,9 +357,9 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     isDisplayOptionActive,
     serversByAddress?.results,
     addressIdSelected,
-    bytesByProcessPairs,
-    byteRateByProcessPairs,
-    latencyByProcessPairs
+    metrics?.bytesByProcessPairs,
+    metrics?.byteRateByProcessPairs,
+    metrics?.latencyByProcessPairs
   ]);
 
   return (

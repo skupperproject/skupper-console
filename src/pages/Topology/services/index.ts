@@ -1,3 +1,4 @@
+import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
 import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/process.svg';
@@ -23,7 +24,7 @@ import {
 } from 'API/REST.interfaces';
 
 import { TopologyLabels } from '../Topology.enum';
-import { Entity } from '../Topology.interfaces';
+import { Entity, TopologyMetrics, TopologyMetricsMetrics } from '../Topology.interfaces';
 
 const shape = {
   bound: 'circle',
@@ -31,6 +32,24 @@ const shape = {
 };
 
 export const TopologyController = {
+  getMetrics: async ({
+    showBytes = false,
+    showByteRate = false,
+    showLatency = false
+  }: TopologyMetricsMetrics): Promise<TopologyMetrics> => {
+    try {
+      const [bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs] = await Promise.all([
+        showBytes ? PrometheusApi.fetchAllProcessPairsBytes() : [],
+        showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates() : [],
+        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies() : []
+      ]);
+
+      return { bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs };
+    } catch (e: unknown) {
+      return Promise.reject(e);
+    }
+  },
+
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
     entities.map(({ identity, name, siteVersion }) => {
       const img = siteSVG;
