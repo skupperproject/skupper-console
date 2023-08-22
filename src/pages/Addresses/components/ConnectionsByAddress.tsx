@@ -1,11 +1,18 @@
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 
+import { Card, CardBody, CardHeader, Stack, StackItem, Title } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
+import SkSankeyChart from '@core/components/SKSanckeyChart';
+import SankeyFilter, {
+  ServiceClientResourceOptions,
+  ServiceServerResourceOptions
+} from '@core/components/SKSanckeyChart/SankeyFilter';
+import SearchFilter from '@core/components/skSearchFilter';
 import SkTable from '@core/components/SkTable';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { CustomProcessCells } from '@pages/Processes/Processes.constants';
@@ -14,10 +21,10 @@ import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
+import { VarColors } from 'colors';
 
-import SearchFilter from '../../../core/components/skSearchFilter';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, serverColumns, tcpColumns } from '../Addresses.constants';
-import { RequestLabels, AddressesLabels } from '../Addresses.enum';
+import { RequestLabels, AddressesLabels, FlowPairsLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
 import { QueriesServices } from '../services/services.enum';
 
@@ -50,6 +57,14 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
 }) {
   const activeConnectionsDataRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
+  const [clientResourceSelected, setClientResourceSelected] = useState<'client' | 'clientSite'>(
+    ServiceClientResourceOptions[0].id
+  );
+  const [serverResourceSelected, setServerResourceSelected] = useState<'server' | 'serverSite'>(
+    ServiceServerResourceOptions[0].id
+  );
+
+  const [servicePairMetricSelected, setServicePairMetricSelected] = useState('none');
 
   const [connectionsQueryParams, setConnectionsQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
   const [activeConnectionsQueryParams, setActiveConnectionsQueryParams] = useState<RequestOptions>(
@@ -94,6 +109,23 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }
   );
 
+  const { data: servicePairs } = useQuery(
+    [QueriesServices.GetResourcePairsByAddress, addressName, clientResourceSelected, serverResourceSelected],
+    () =>
+      addressId
+        ? PrometheusApi.fethServicePairsByAddress({
+            addressName,
+            clientType: clientResourceSelected,
+            serverType: serverResourceSelected
+          })
+        : null,
+    {
+      enabled: viewSelected === TAB_2_KEY,
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true
+    }
+  );
+
   const handleSetMetricFilters = useCallback(
     (interval: string) => {
       storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
@@ -122,6 +154,23 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }));
   }, []);
 
+  const handleGetPairType = useCallback(
+    ({
+      clientType,
+      serverType,
+      visibleMetrics
+    }: {
+      clientType: 'client' | 'clientSite';
+      serverType: 'server' | 'serverSite';
+      visibleMetrics: string;
+    }) => {
+      setClientResourceSelected(clientType);
+      setServerResourceSelected(serverType);
+      setServicePairMetricSelected(visibleMetrics);
+    },
+    []
+  );
+
   const activeConnections = activeConnectionsData?.results || [];
   const activeConnectionsRowsCount = activeConnectionsData?.timeRangeCount;
 
@@ -149,6 +198,27 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
       byteRate: byteRatesMap[`${conn.name}`] || 0
     }));
   }
+
+  const sourceNodes =
+    servicePairs?.map(({ metric }) => ({
+      id: `${metric.sourceProcess || metric.sourceSite.split('@_@')[0]} (client)`,
+      nodeColor: metric.sourceProcess ? VarColors.Blue400 : undefined
+    })) || [];
+  const destNodes =
+    servicePairs?.map(({ metric }) => ({
+      id: metric.destProcess || metric.destSite.split('@_@')[0],
+      nodeColor: metric.destProcess ? VarColors.Blue400 : undefined
+    })) || [];
+
+  const nodes = [...sourceNodes, ...destNodes].filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i);
+
+  const enableMetric = servicePairMetricSelected !== 'none';
+  const links =
+    servicePairs?.map(({ metric, value }) => ({
+      source: `${metric.sourceProcess || metric.sourceSite.split('@_@')[0]} (client)`,
+      target: metric.destProcess || metric.destSite.split('@_@')[0],
+      value: enableMetric ? Number(value[1]) : 0.01
+    })) || [];
 
   return (
     <>
@@ -186,33 +256,67 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
       )}
 
       {viewSelected === TAB_2_KEY && (
-        <>
-          <SearchFilter onSearch={handleGetFiltersActiveConnections} selectOptions={tcpSelectOptions} />
+        <Stack hasGutter>
+          {nodes.length && (
+            <StackItem>
+              <Card>
+                <CardHeader>
+                  <Title headingLevel="h1">{FlowPairsLabels.SankeyChartTitle}</Title>
+                </CardHeader>
+                <CardBody>
+                  <SankeyFilter onSearch={handleGetPairType} />
 
-          <FlowPairsTable
-            columns={tcpColumns}
-            rows={activeConnections}
-            paginationTotalRows={activeConnectionsRowsCount}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            onGetFilters={handleGetFiltersActiveConnections}
-          />
-        </>
+                  <SkSankeyChart data={{ nodes, links }} />
+                </CardBody>
+              </Card>
+            </StackItem>
+          )}
+
+          <StackItem>
+            <SearchFilter onSearch={handleGetFiltersActiveConnections} selectOptions={tcpSelectOptions} />
+
+            <FlowPairsTable
+              columns={tcpColumns}
+              rows={activeConnections}
+              paginationTotalRows={activeConnectionsRowsCount}
+              pagination={true}
+              paginationPageSize={BIG_PAGINATION_SIZE}
+              onGetFilters={handleGetFiltersActiveConnections}
+            />
+          </StackItem>
+        </Stack>
       )}
 
       {viewSelected === TAB_3_KEY && (
-        <>
-          <SearchFilter onSearch={handleGetFiltersConnections} selectOptions={tcpSelectOptions} />
+        <Stack hasGutter>
+          {nodes.length && (
+            <StackItem>
+              <Card>
+                <CardHeader>
+                  <Title headingLevel="h1">{FlowPairsLabels.SankeyChartTitle}</Title>
+                </CardHeader>
+                <CardBody>
+                  <SankeyFilter onSearch={handleGetPairType} />
 
-          <FlowPairsTable
-            columns={tcpFlowPairsColumns}
-            rows={oldConnections}
-            paginationTotalRows={oldConnectionsRowsCount}
-            pagination={true}
-            paginationPageSize={BIG_PAGINATION_SIZE}
-            onGetFilters={handleGetFiltersConnections}
-          />
-        </>
+                  <SkSankeyChart data={{ nodes, links }} />
+                </CardBody>
+              </Card>
+            </StackItem>
+          )}
+
+          <StackItem>
+            <SearchFilter onSearch={handleGetFiltersConnections} selectOptions={tcpSelectOptions} />
+
+            <FlowPairsTable
+              columns={tcpFlowPairsColumns}
+              rows={oldConnections}
+              paginationTotalRows={oldConnectionsRowsCount}
+              pagination={true}
+              paginationPageSize={BIG_PAGINATION_SIZE}
+              onGetFilters={handleGetFiltersConnections}
+            />
+          </StackItem>
+        </Stack>
       )}
     </>
   );

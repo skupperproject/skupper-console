@@ -308,6 +308,24 @@ export const PrometheusApi = {
     });
 
     return result;
+  },
+
+  fethServicePairsByAddress: async ({
+    addressName,
+    clientType,
+    serverType
+  }: {
+    addressName: string;
+    clientType: 'client' | 'clientSite';
+    serverType: 'server' | 'serverSite';
+  }): Promise<PrometheusMetricSingleData[]> => {
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: { query: queries.getResourcePairsByAddress(addressName, clientType, serverType) }
+    });
+
+    return result;
   }
 };
 
