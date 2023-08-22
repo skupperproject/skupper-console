@@ -68,5 +68,16 @@ export const queries = {
 
   getTcpByteRateByAddress(addressName: string) {
     return `rate(octets_total{protocol="tcp",  address="${addressName}"}[1m])`;
+  },
+
+  getResourcePairsByAddress(
+    addressName: string,
+    clientType: 'client' | 'clientSite',
+    serverType: 'server' | 'serverSite'
+  ) {
+    const client = clientType === 'client' ? ' sourceProcess, sourceSite' : 'sourceSite';
+    const server = serverType === 'server' ? 'destProcess,   destSite' : 'destSite';
+
+    return `sum by(${client}, ${server})(rate(octets_total{address="${addressName}", direction="incoming"}[1h]))`;
   }
 };
