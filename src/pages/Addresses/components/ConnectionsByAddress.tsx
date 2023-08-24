@@ -21,11 +21,11 @@ import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
-import { VarColors } from 'colors';
 
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, serverColumns, tcpColumns } from '../Addresses.constants';
 import { RequestLabels, AddressesLabels, FlowPairsLabels } from '../Addresses.enum';
 import { ConnectionsByAddressProps } from '../Addresses.interfaces';
+import { AddressesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
@@ -199,26 +199,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }));
   }
 
-  const sourceNodes =
-    servicePairs?.map(({ metric }) => ({
-      id: `${metric.sourceProcess || metric.sourceSite.split('@_@')[0]} (client)`,
-      nodeColor: metric.sourceProcess ? VarColors.Blue400 : undefined
-    })) || [];
-  const destNodes =
-    servicePairs?.map(({ metric }) => ({
-      id: metric.destProcess || metric.destSite.split('@_@')[0],
-      nodeColor: metric.destProcess ? VarColors.Blue400 : undefined
-    })) || [];
-
-  const nodes = [...sourceNodes, ...destNodes].filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i);
-
   const enableMetric = servicePairMetricSelected !== 'none';
-  const links =
-    servicePairs?.map(({ metric, value }) => ({
-      source: `${metric.sourceProcess || metric.sourceSite.split('@_@')[0]} (client)`,
-      target: metric.destProcess || metric.destSite.split('@_@')[0],
-      value: enableMetric ? Number(value[1]) : 0.01
-    })) || [];
+  const { nodes, links } = AddressesController.getNodesAndLinksResources(servicePairs || [], enableMetric);
 
   return (
     <>
@@ -289,7 +271,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
 
       {viewSelected === TAB_3_KEY && (
         <Stack hasGutter>
-          {nodes.length && (
+          {!!nodes.length && (
             <StackItem>
               <Card>
                 <CardHeader>
