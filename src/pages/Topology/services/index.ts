@@ -5,11 +5,7 @@ import processSVG from '@assets/process.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { DEFAULT_NODE_CONFIG, DEFAULT_NODE_ICON, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
-import {
-  EDGE_COLOR_DEFAULT,
-  NODE_COLOR_DEFAULT_LABEL,
-  EDGE_COLOR_ACTIVE_DEFAULT
-} from '@core/components/Graph/Graph.constants';
+import { EDGE_COLOR_DEFAULT, EDGE_COLOR_ACTIVE_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -91,13 +87,12 @@ export const TopologyController = {
       target: destinationId,
       sourceName,
       targetName: destinationName,
-      labelCfg: { style: { NODE_COLOR_DEFAULT_LABEL } },
       style: { stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
     })),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
   // The purpose of this property is to display the edges between different sites in the topology.
-  getLinksFromSites: (sites: SiteResponse[], routers: RouterResponse[], links: LinkResponse[]): GraphEdge[] => {
+  convertLinksToSiteLinks: (sites: SiteResponse[], routers: RouterResponse[], links: LinkResponse[]): GraphEdge[] => {
     const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links, routers);
 
     return sitesWithLinks.flatMap(({ identity: sourceId, targetIds }) =>

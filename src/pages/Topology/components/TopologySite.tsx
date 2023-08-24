@@ -55,7 +55,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   }
 
   const nodes = TopologyController.convertSitesToNodes(sites);
-  const siteLinks = TopologyController.getLinksFromSites(sites, routers, links);
+  const siteLinks = TopologyController.convertLinksToSiteLinks(sites, routers, links);
 
   return (
     <Stack>
