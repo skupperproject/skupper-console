@@ -35,7 +35,7 @@ const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
 const PERF_TEST = false;
-const ITEMS_TEST = 190;
+const ITEMS_TEST = 100;
 interface ApiProps {
   params: Record<string, string>;
   queryParams: Record<string, string>;
@@ -110,11 +110,26 @@ for (let i = 0; i < ITEMS_TEST; i++) {
   const parent = Math.floor(Math.random() * (4 - 1 + 1) + 1);
 
   mockProcessesForPerf.push({
-    ...processes[0],
+    ...processes.results[0],
     identity: `processPerf${i}`,
     parent: `site-${parent}`,
     name: `process ${i}`,
     parentName: `site ${parent}`
+  });
+}
+
+const mockProcessPairsForPerf: ProcessPairsResponse[] = [];
+for (let i = 0; i < ITEMS_TEST; i++) {
+  const sourceIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
+  const destinationIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
+
+  mockProcessPairsForPerf.push({
+    ...processPairs.results[0],
+    identity: `${mockProcessesForPerf[sourceIndex].identity}-to-${mockProcessesForPerf[destinationIndex].identity}`,
+    sourceId: mockProcessesForPerf[sourceIndex].identity,
+    sourceName: mockProcessesForPerf[sourceIndex].name,
+    destinationId: mockProcessesForPerf[destinationIndex].identity,
+    destinationName: mockProcessesForPerf[destinationIndex].name
   });
 }
 
@@ -168,6 +183,23 @@ export const MockApi = {
 
     return { ...processes, results: resultFIltered };
   },
+
+  getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
+    const processesForPerfTests = PERF_TEST ? mockProcessPairsForPerf : [];
+    const results = [...processPairs.results, ...processesForPerfTests];
+
+    if (queryParams && !Object.keys(queryParams).length) {
+      return { ...processPairs, results };
+    }
+
+    const resultsFiltered = results.filter(
+      ({ sourceId, destinationId }: ProcessPairsResponse) =>
+        sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
+    );
+
+    return { ...processPairs, results: resultsFiltered };
+  },
+
   getPrometheusQuery: () => ({
     data: {
       result: [
@@ -202,6 +234,7 @@ export const MockApiPaths = {
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
   Processes: `${prefix}/processes`,
+  ProcessPairs: `${prefix}/processpairs`,
   Routers: `${prefix}/routers`,
   Links: `${prefix}/links`,
   PrometheusQuery: `${prefix}/internal/prom/query/`,
@@ -230,6 +263,7 @@ export function loadMockServer() {
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
+      this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
 
@@ -264,19 +298,6 @@ export function loadMockServer() {
         return {
           results: services.results.filter(({ name }: AddressResponse) => name.includes(processNamePrefix))
         };
-      });
-
-      this.get(`${prefix}/processpairs`, (_, { queryParams }) => {
-        if (queryParams && !Object.keys(queryParams).length) {
-          return processPairs;
-        }
-
-        const results = processPairs.results.filter(
-          ({ sourceId, destinationId }: ProcessPairsResponse) =>
-            sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
-        );
-
-        return { ...processPairs, results };
       });
 
       this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
