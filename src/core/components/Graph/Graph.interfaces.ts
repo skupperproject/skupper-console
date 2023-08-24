@@ -22,12 +22,14 @@ export interface GraphCombo {
 }
 
 export interface GraphEdge {
-  source: string;
-  sourceName?: string;
-  target: string;
-  targetName?: string;
   id: string;
+  source: string;
+  target: string;
+  sourceName?: string;
+  targetName?: string;
+  type?: string;
   label?: string;
+  labelCfg?: Record<string, unknown>;
   style?: Record<string, string | number[]>;
 }
 

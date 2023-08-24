@@ -128,6 +128,7 @@ export const DEFAULT_EDGE_CONFIG: Partial<{
     autoRotate: true,
     refY: 10,
     style: {
+      fill: EDGE_COLOR_DEFAULT,
       cursor: 'pointer',
       fontSize: 12
     }
