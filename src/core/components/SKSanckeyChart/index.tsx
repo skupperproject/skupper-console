@@ -18,9 +18,12 @@ interface SkSankeyChartProps {
   }[];
 }
 
+export const DEFAULT_SANKEY_CHART_FLOW_VALUE = 0.000001;
+export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
+
 const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
   return (
-    <div style={{ height: '350px' }}>
+    <div style={{ height: DEFAULT_SANKEY_CHART_HEIGHT }}>
       <ResponsiveSankey
         data={data}
         margin={{ top: 10, right: 0, bottom: 10, left: 15 }}
@@ -44,7 +47,7 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
         labelOrientation="horizontal"
         labelPadding={16}
         labelTextColor={'black'}
-        valueFormat={(value) => (value === 0.01 ? '' : formatByteRate(value))}
+        valueFormat={(value) => (value === DEFAULT_SANKEY_CHART_FLOW_VALUE ? '' : formatByteRate(value))}
       />
     </div>
   );

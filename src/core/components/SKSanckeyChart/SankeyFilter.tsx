@@ -17,7 +17,7 @@ interface FilterValues {
   [key: string]: string | undefined;
 }
 
-const metricsOptions = [
+export const sankeyMetricOptions = [
   { id: 'none', name: 'No metric comparison' },
   { id: 'byterate', name: 'Compare avg. byterate (last hour)' }
 ];
@@ -52,7 +52,7 @@ const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   const [clientType, setClientType] = useState(ServiceClientResourceOptions[0].id);
   const [serverType, setServerType] = useState(ServiceServerResourceOptions[0].id);
 
-  const [visibleMetrics, setVisibleMetrics] = useState(metricsOptions[0].id);
+  const [visibleMetrics, setVisibleMetrics] = useState(sankeyMetricOptions[0].id);
 
   const handleSelectClient = (_?: ReactMouseEvent<Element, MouseEvent>, selected?: string | number) => {
     const selection = selected as keyof FilterValues;
@@ -105,7 +105,7 @@ const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
     </SelectOption>
   ));
 
-  const metricMenuItems = metricsOptions.map((option) => (
+  const metricMenuItems = sankeyMetricOptions.map((option) => (
     <SelectOption key={option.id} value={option.id}>
       {option.name}
     </SelectOption>
@@ -113,7 +113,7 @@ const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
 
   const filterClientSelected = ServiceClientResourceOptions.find(({ id }) => id === clientType)?.name;
   const filterServerSelected = ServiceServerResourceOptions.find(({ id }) => id === serverType)?.name;
-  const metricNameSelected = metricsOptions.find(({ id }) => id === visibleMetrics)?.name;
+  const metricNameSelected = sankeyMetricOptions.find(({ id }) => id === visibleMetrics)?.name;
 
   const toggleGroupItems = (
     <>

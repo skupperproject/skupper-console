@@ -9,6 +9,7 @@ import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
 import SankeyFilter, {
+  sankeyMetricOptions,
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
 } from '@core/components/SKSanckeyChart/SankeyFilter';
@@ -49,6 +50,8 @@ const initOldConnectionsQueryParams: RequestOptions = {
   sortDirection: SortDirection.DESC
 };
 
+const defaultMetricOption = sankeyMetricOptions[0].id;
+
 const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   addressId,
   addressName,
@@ -63,9 +66,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   const [serverResourceSelected, setServerResourceSelected] = useState<'server' | 'serverSite'>(
     ServiceServerResourceOptions[0].id
   );
-
-  const [servicePairMetricSelected, setServicePairMetricSelected] = useState('none');
-
+  const [servicePairMetricSelected, setServicePairMetricSelected] = useState(defaultMetricOption);
   const [connectionsQueryParams, setConnectionsQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
   const [activeConnectionsQueryParams, setActiveConnectionsQueryParams] = useState<RequestOptions>(
     initActiveConnectionsQueryParams
@@ -199,8 +200,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
     }));
   }
 
-  const enableMetric = servicePairMetricSelected !== 'none';
-  const { nodes, links } = AddressesController.getNodesAndLinksResources(servicePairs || [], enableMetric);
+  const enableMetric = servicePairMetricSelected !== defaultMetricOption;
+  const { nodes, links } = AddressesController.convertToSankeyChartData(servicePairs || [], enableMetric);
 
   return (
     <>
@@ -247,7 +248,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
                 </CardHeader>
                 <CardBody>
                   <SankeyFilter onSearch={handleGetPairType} />
-
                   <SkSankeyChart data={{ nodes, links }} />
                 </CardBody>
               </Card>
@@ -279,7 +279,6 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
                 </CardHeader>
                 <CardBody>
                   <SankeyFilter onSearch={handleGetPairType} />
-
                   <SkSankeyChart data={{ nodes, links }} />
                 </CardBody>
               </Card>

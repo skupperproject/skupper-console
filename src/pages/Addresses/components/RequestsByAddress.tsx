@@ -9,6 +9,7 @@ import { SortDirection } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
 import SankeyFilter, {
+  sankeyMetricOptions,
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
 } from '@core/components/SKSanckeyChart/SankeyFilter';
@@ -41,6 +42,8 @@ const initServersQueryParams = {
   endTime: 0
 };
 
+const defaultMetricOption = sankeyMetricOptions[0].id;
+
 const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol, viewSelected }) {
   const requestsDataPaginatedPrevRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
@@ -51,7 +54,7 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
     ServiceServerResourceOptions[0].id
   );
 
-  const [servicePairMetricSelected, setServicePairMetricSelected] = useState('none');
+  const [servicePairMetricSelected, setServicePairMetricSelected] = useState(defaultMetricOption);
 
   const [requestsQueryParams, setRequestsQueryParams] = useState<RequestOptions>(initRequestsQueryParams);
 
@@ -133,8 +136,8 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   const serverNamesId = servers.map(({ name }) => name).join('|');
   const startTime = servers.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
-  const enableMetric = servicePairMetricSelected !== 'none';
-  const { nodes, links } = AddressesController.getNodesAndLinksResources(servicePairs || [], enableMetric);
+  const enableMetric = servicePairMetricSelected !== defaultMetricOption;
+  const { nodes, links } = AddressesController.convertToSankeyChartData(servicePairs || [], enableMetric);
 
   return (
     <>
@@ -175,7 +178,6 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
                 </CardHeader>
                 <CardBody>
                   <SankeyFilter onSearch={handleGetPairType} />
-
                   <SkSankeyChart data={{ nodes, links }} />
                 </CardBody>
               </Card>
