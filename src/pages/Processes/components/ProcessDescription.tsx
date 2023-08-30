@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
-import { AddressesRoutesPaths } from '@pages/Addresses/Addresses.enum';
+import { AddressesRoutesPaths } from '@pages/Addresses/Services.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';

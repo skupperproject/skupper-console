@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 
-import { DEFAULT_ROUTE } from '@config/config';
+import { DEFAULT_ROUTE } from '@config/routes';
 
 const DefaultRoute = function () {
   return <Navigate to={DEFAULT_ROUTE} replace={true} />;

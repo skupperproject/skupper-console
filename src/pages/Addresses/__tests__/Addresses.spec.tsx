@@ -9,7 +9,7 @@ import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import Services from '../views/Addresses';
+import Services from '../views/Services';
 
 const servicesResults = servicesData.results;
 

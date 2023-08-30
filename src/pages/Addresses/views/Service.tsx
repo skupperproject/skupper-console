@@ -11,11 +11,11 @@ import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Addresses.constants';
-import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Addresses.enum';
-import ConnectionsByAddress from '../components/ConnectionsByAddress';
-import RequestsByAddress from '../components/RequestsByAddress';
+import HttpService from './HttpService';
+import ConnectionsByAddress from './TcpService';
 import { QueriesServices } from '../services/services.enum';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
+import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Services.enum';
 
 const initServersQueryParams = {
   limit: 0
@@ -31,7 +31,7 @@ const terminatedConnectionsQueryParams = {
   state: TcpStatus.Terminated
 };
 
-const FlowsPairs = function () {
+const Service = function () {
   const { service } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -145,7 +145,7 @@ const FlowsPairs = function () {
             />
           )}
           {(protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2) && (
-            <RequestsByAddress
+            <HttpService
               addressName={addressName || ''}
               addressId={addressId || ''}
               protocol={protocol}
@@ -157,4 +157,4 @@ const FlowsPairs = function () {
     />
   );
 };
-export default FlowsPairs;
+export default Service;

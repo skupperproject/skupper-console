@@ -1,9 +1,9 @@
 import { lazy } from 'react';
 
-import { AddressesRoutesPaths } from './Addresses.enum';
+import { AddressesRoutesPaths } from './Services.enum';
 
-const Services = lazy(() => import(/* webpackChunkName: "services" */ './views/Addresses'));
-const FlowPairs = lazy(() => import(/* webpackChunkName: "services-flow-pairs" */ './views/FlowPairs'));
+const Services = lazy(() => import(/* webpackChunkName: "services" */ './views/Services'));
+const Service = lazy(() => import(/* webpackChunkName: "service" */ './views/Service'));
 
 export const addressesRoutes = [
   {
@@ -12,6 +12,6 @@ export const addressesRoutes = [
   },
   {
     path: `${AddressesRoutesPaths.Services}/:service`,
-    element: <FlowPairs />
+    element: <Service />
   }
 ];
