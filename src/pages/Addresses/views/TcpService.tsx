@@ -25,7 +25,7 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   protocol,
   viewSelected
 }) {
-  const tcpService = {
+  const service = {
     [TAB_2_KEY]: { filters: initActiveConnectionsQueryParams, columns: tcpColumns },
     [TAB_3_KEY]: { filters: initOldConnectionsQueryParams, columns: tcpFlowPairsColumns }
   };
@@ -46,8 +46,8 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
             <FlowPairsServiceTable
               addressId={addressId}
               options={tcpSelectOptions}
-              columns={tcpService[viewSelected].columns}
-              filters={tcpService[viewSelected].filters}
+              columns={service[viewSelected].columns}
+              filters={service[viewSelected].filters}
             />
           </StackItem>
         </Stack>
