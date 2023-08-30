@@ -13,14 +13,14 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
-import ConnectionsByAddress from '../views/TcpService';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY } from '../Services.constants';
+import HttpService from '../views/HttpService';
 
 const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
 const processResult = processesData.results;
 
-describe('Begin testing the Connection component', () => {
+describe('Begin testing the Http service component', () => {
   let server: Server;
 
   beforeEach(() => {
@@ -33,14 +33,14 @@ describe('Begin testing the Connection component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Connection view -> Overview after the data loading is complete', async () => {
+  it('should render the Requests view -> Overview after the data loading is complete', async () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
-            protocol={AvailableProtocols.Tcp}
+          <HttpService
+            addressId={servicesResults[0].identity}
+            addressName={servicesResults[0].name}
+            protocol={AvailableProtocols.Http2}
             viewSelected={TAB_0_KEY}
           />
         </Suspense>
@@ -51,14 +51,14 @@ describe('Begin testing the Connection component', () => {
     expect(getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
   });
 
-  it('should render the Connection view -> Servers after the data loading is complete', async () => {
+  it('should render the Requests view -> Servers after the data loading is complete', async () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
-            protocol={AvailableProtocols.Tcp}
+          <HttpService
+            addressId={servicesResults[0].identity}
+            addressName={servicesResults[0].name}
+            protocol={AvailableProtocols.Http2}
             viewSelected={TAB_1_KEY}
           />
         </Suspense>
@@ -69,14 +69,14 @@ describe('Begin testing the Connection component', () => {
     expect(getByText(processResult[0].name)).toBeInTheDocument();
   });
 
-  it('should render the Connection view -> Live connections after the data loading is complete', async () => {
+  it('should render the Requests view -> Requests after the data loading is complete', async () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
-            protocol={AvailableProtocols.Tcp}
+          <HttpService
+            addressId={servicesResults[0].identity}
+            addressName={servicesResults[0].name}
+            protocol={AvailableProtocols.Http2}
             viewSelected={TAB_2_KEY}
           />
         </Suspense>
@@ -86,25 +86,5 @@ describe('Begin testing the Connection component', () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
-  });
-
-  it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
-    const { getByTestId, getByText, getAllByText } = render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
-            protocol={AvailableProtocols.Tcp}
-            viewSelected={TAB_3_KEY}
-          />
-        </Suspense>
-      </Wrapper>
-    );
-
-    await waitForElementToBeRemoved(() => getByTestId(getTestsIds.loadingView()));
-
-    expect(getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
-    expect(getByText('Closed')).toBeInTheDocument();
   });
 });
