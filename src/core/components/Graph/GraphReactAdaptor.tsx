@@ -15,6 +15,7 @@ import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_COMBO_STATE_CONFIG,
   DEFAULT_EDGE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
@@ -333,7 +334,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           prevCombosRef.current = combos;
 
           if (options.layout) {
-            topologyGraph.destroyLayout();
+            topologyGraph.updateLayout(DEFAULT_LAYOUT_FORCE_CONFIG);
           }
 
           //save positions
@@ -377,7 +378,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       ) {
         const nodes = insertPositionIntoNodes(nodesWithoutPosition);
 
-        graphInstance.updateLayout(GraphController.selectLayoutFromNodes(nodes, !!combos));
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
         prevNodesRef.current = nodesWithoutPosition;
@@ -385,6 +385,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         prevCombosRef.current = combos;
 
         rollbackTopologyStatus();
+
+        const updatedNodes = GraphController.fromNodesToLocalStorageData(
+          graphInstance.getNodes(),
+          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+        );
+        GraphController.saveDataInLocalStorage(updatedNodes);
       }
     }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
 
