@@ -11,10 +11,10 @@ import SearchFilter from '@core/components/skSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
-import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Addresses.constants';
-import { AddressesLabels } from '../Addresses.enum';
 import { AddressesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
+import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
+import { AddressesLabels } from '../Services.enum';
 
 const initOldConnectionsQueryParams: RequestOptions = {
   limit: BIG_PAGINATION_SIZE

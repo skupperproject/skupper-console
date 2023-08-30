@@ -1,9 +1,4 @@
 import Logo from '@assets/skupper-logo.png';
-import { AddressesPaths } from '@pages/Addresses/Addresses.constants';
-import { ProcessesPaths } from '@pages/Processes/Processes.constants';
-import { ProcessGroupsPaths } from '@pages/ProcessGroups/ProcessGroups.constants';
-import { SitesPaths } from '@pages/Sites/Sites.constants';
-import { TopologyPaths } from '@pages/Topology/Topology.constants';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
 const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
@@ -13,10 +8,6 @@ const PROMETHEUS_SUFFIX = '/internal/prom';
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
 export const COLLECTOR_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
 export const PROMETHEUS_URL = `${COLLECTOR_URL}${PROMETHEUS_SUFFIX}`;
-
-// Navigation config
-export const ROUTES = [TopologyPaths, AddressesPaths, SitesPaths, ProcessGroupsPaths, ProcessesPaths];
-export const DEFAULT_ROUTE = ROUTES[0].path;
 
 export const isPrometheusActive = process.env.DISABLE_METRICS === 'true' ? false : true;
 

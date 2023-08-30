@@ -12,8 +12,8 @@ import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Addresses.enum';
-import Service from '../views/FlowPairs';
+import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Services.enum';
+import Service from '../views/Service';
 
 const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;

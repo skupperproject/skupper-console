@@ -1,16 +1,19 @@
+import { SortDirection, TcpStatus } from '@API/REST.enum';
+import { BIG_PAGINATION_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SankeyFilter';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesTableColumns } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
-import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
+import { AddressResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Addresses.enum';
+import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Services.enum';
 
-export const AddressesPaths = {
+export const ServicesPaths = {
   path: AddressesRoutesPaths.Services,
   name: AddressesLabels.Section
 };
@@ -58,7 +61,7 @@ export const ServiceColumns: SKColumn<AddressResponse>[] = [
 ];
 
 // Server Table
-export const serverColumns = [
+export const tcpServerColumns = [
   {
     name: ProcessesTableColumns.Name,
     prop: 'name' as keyof ProcessResponse,
@@ -119,3 +122,33 @@ export const servicesSelectOptions: { name: string; id: string }[] = [
     id: 'protocol'
   }
 ];
+
+// Filters
+export const initServersQueryParams = {
+  limit: BIG_PAGINATION_SIZE,
+  endTime: 0 // active servers
+};
+
+export const initActiveConnectionsQueryParams: RequestOptions = {
+  state: TcpStatus.Active,
+  limit: BIG_PAGINATION_SIZE,
+  sortName: 'endTime',
+  sortDirection: SortDirection.DESC
+};
+
+export const initOldConnectionsQueryParams: RequestOptions = {
+  state: TcpStatus.Terminated,
+  limit: BIG_PAGINATION_SIZE,
+  sortName: 'endTime',
+  sortDirection: SortDirection.DESC
+};
+
+export const initRequestsQueryParams: RequestOptions = {
+  limit: BIG_PAGINATION_SIZE,
+  sortName: 'endTime',
+  sortDirection: SortDirection.DESC
+};
+
+export const defaultMetricOption = sankeyMetricOptions[0].id;
+
+export const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';

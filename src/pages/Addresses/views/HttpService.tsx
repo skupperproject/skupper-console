@@ -5,11 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
-import { SortDirection } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
 import SankeyFilter, {
-  sankeyMetricOptions,
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
 } from '@core/components/SKSanckeyChart/SankeyFilter';
@@ -23,28 +21,22 @@ import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, httpColumns } from '../Addresses.constants';
-import { RequestLabels, AddressesLabels, FlowPairsLabels } from '../Addresses.enum';
-import { RequestsByAddressProps } from '../Addresses.interfaces';
 import { AddressesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
+import {
+  PREFIX_DISPLAY_INTERVAL_CACHE_KEY,
+  TAB_0_KEY,
+  TAB_1_KEY,
+  TAB_2_KEY,
+  defaultMetricOption,
+  httpColumns,
+  initRequestsQueryParams,
+  initServersQueryParams
+} from '../Services.constants';
+import { RequestLabels, AddressesLabels, FlowPairsLabels } from '../Services.enum';
+import { RequestsByAddressProps } from '../Services.interfaces';
 
-const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';
-
-const initRequestsQueryParams: RequestOptions = {
-  limit: BIG_PAGINATION_SIZE,
-  sortName: 'endTime',
-  sortDirection: SortDirection.DESC
-};
-
-const initServersQueryParams = {
-  limit: BIG_PAGINATION_SIZE,
-  endTime: 0
-};
-
-const defaultMetricOption = sankeyMetricOptions[0].id;
-
-const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol, viewSelected }) {
+const HttpService: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol, viewSelected }) {
   const requestsDataPaginatedPrevRef = useRef<FlowPairsResponse[]>();
   const forceMetricUpdateNonceRef = useRef<number>(0);
   const [clientResourceSelected, setClientResourceSelected] = useState<'client' | 'clientSite'>(
@@ -202,4 +194,4 @@ const RequestsByAddress: FC<RequestsByAddressProps> = function ({ addressId, add
   );
 };
 
-export default RequestsByAddress;
+export default HttpService;

@@ -13,8 +13,8 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY } from '../Addresses.constants';
-import RequestsByAddress from '../components/RequestsByAddress';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY } from '../Services.constants';
+import HttpService from '../views/HttpService';
 
 const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
@@ -37,7 +37,7 @@ describe('Begin testing the Requests component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <RequestsByAddress
+          <HttpService
             addressId={servicesResults[0].identity}
             addressName={servicesResults[0].name}
             protocol={AvailableProtocols.Http2}
@@ -55,7 +55,7 @@ describe('Begin testing the Requests component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <RequestsByAddress
+          <HttpService
             addressId={servicesResults[0].identity}
             addressName={servicesResults[0].name}
             protocol={AvailableProtocols.Http2}
@@ -73,7 +73,7 @@ describe('Begin testing the Requests component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <RequestsByAddress
+          <HttpService
             addressId={servicesResults[0].identity}
             addressName={servicesResults[0].name}
             protocol={AvailableProtocols.Http2}

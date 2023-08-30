@@ -13,8 +13,8 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Addresses.constants';
-import ConnectionsByAddress from '../components/ConnectionsByAddress';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
+import ConnectionsByAddress from '../views/TcpService';
 
 const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
