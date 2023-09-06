@@ -172,13 +172,16 @@ export const TopologyController = {
       const latencyReverse = latencyByProcessPairsMap[`${link.targetName}${link.sourceName}`];
 
       const reverseByteRate = options?.showLinkLabelReverse ? `(${formatByteRate(byterateReverse)})` : '';
-      const reverseBytes = options?.showLinkLabelReverse ? `(${formatBytes(bytesReverse)})` : '';
-      const reverseLatency = options?.showLinkLabelReverse ? `(${formatLatency(latencyReverse)})` : '';
+      const reverseBytes = options?.showLinkLabelReverse && bytesReverse ? `(${formatBytes(bytesReverse)})` : '';
+      const reverseLatency =
+        options?.showLinkLabelReverse && latencyReverse ? `(${formatLatency(latencyReverse)})` : '';
 
-      const protocolLabel = options?.showLinkProtocol ? protocol : undefined;
-      const byteRateLabel = options?.showLinkByteRate ? `${formatByteRate(byterate)} ${reverseByteRate}` : undefined;
-      const bytesLabel = options?.showLinkBytes ? `${formatBytes(bytes)} ${reverseBytes}` : undefined;
-      const latencyLabel = options?.showLinkLatency ? `${formatLatency(latency)} ${reverseLatency}` : undefined;
+      const protocolLabel = options?.showLinkProtocol && protocol ? protocol : undefined;
+      const byteRateLabel =
+        options?.showLinkByteRate && byterate ? `${formatByteRate(byterate)} ${reverseByteRate}` : undefined;
+      const bytesLabel = options?.showLinkBytes && bytes ? `${formatBytes(bytes)} ${reverseBytes}` : undefined;
+      const latencyLabel =
+        options?.showLinkLatency && latency ? `${formatLatency(latency)} ${reverseLatency}` : undefined;
 
       const color = options?.showLinkByteRate && byterate ? EDGE_COLOR_ACTIVE_DEFAULT : EDGE_COLOR_DEFAULT;
 

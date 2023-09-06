@@ -15,7 +15,6 @@ import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_COMBO_STATE_CONFIG,
   DEFAULT_EDGE_CONFIG,
-  DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
@@ -332,10 +331,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           prevNodesRef.current = nodesWithoutPosition;
           prevEdgesRef.current = edges;
           prevCombosRef.current = combos;
-
-          if (options.layout) {
-            topologyGraph.updateLayout(DEFAULT_LAYOUT_FORCE_CONFIG);
-          }
 
           //save positions
           const updatedNodes = GraphController.fromNodesToLocalStorageData(
