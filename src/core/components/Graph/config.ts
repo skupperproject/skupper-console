@@ -35,12 +35,12 @@ export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
   type: 'comboForce',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
-  preventNodeOverlap: true,
+  comboSpacing: NODE_SIZE,
+  preventOverlap: true,
   linkDistance: 150,
   nodeStrength: 30,
-  edgeStrength: 0.1,
-  optimizeRangeFactor: 0.5,
-  maxIteration: 50
+  edgeStrength: 0.001,
+  optimizeRangeFactor: 0.5
 };
 
 export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {

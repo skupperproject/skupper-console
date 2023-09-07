@@ -13,7 +13,9 @@ export interface GraphNode {
   style?: Record<string, string>;
   x?: number | undefined;
   y?: number | undefined;
-  key?: string;
+  fx?: number | undefined;
+  fy?: number | undefined;
+  persistPositionKey?: string;
 }
 
 export interface GraphCombo {

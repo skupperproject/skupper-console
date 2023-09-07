@@ -347,7 +347,10 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     const processesLinks = TopologyController.convertProcessPairsToLinks(pPairs);
 
     setNodes(
-      processesNodes.map((node) => ({ ...node, key: addressIdSelected ? `${node.id}-${addressIdSelected}` : node.id }))
+      processesNodes.map((node) => ({
+        ...node,
+        persistPositionKey: addressIdSelected ? `${node.id}-${addressIdSelected}` : node.id
+      }))
     );
     setLinks(updateLabelLinks(processesLinks));
     setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
