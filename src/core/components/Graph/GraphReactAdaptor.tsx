@@ -15,7 +15,6 @@ import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_COMBO_STATE_CONFIG,
   DEFAULT_EDGE_CONFIG,
-  DEFAULT_LAYOUT_COMBO_FORCE_CONFIG,
   DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
@@ -270,8 +269,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         const width = $node.scrollWidth;
         const height = $node.scrollHeight;
 
-        const layout = combos?.length ? DEFAULT_LAYOUT_COMBO_FORCE_CONFIG : DEFAULT_LAYOUT_FORCE_CONFIG;
-
         const options: GraphOptions = {
           container: $node,
           width,
@@ -283,19 +280,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
           comboStateStyles: DEFAULT_COMBO_STATE_CONFIG,
           layout: {
-            pipes: [
-              {
-                type: 'force',
-                nodesFilter: (node: GraphNode) => node.fx !== undefined && node.fy !== undefined,
-                alpha: 0,
-                center: [width / 2, height / 2]
-              },
-              {
-                ...layout,
-                nodesFilter: (node: GraphNode) => node.fx === undefined && node.fy === undefined,
-                center: [width / 2, height / 2]
-              }
-            ]
+            ...DEFAULT_LAYOUT_FORCE_CONFIG,
+            center: [width / 2, height / 2]
           }
         };
 
