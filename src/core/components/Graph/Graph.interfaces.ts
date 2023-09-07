@@ -13,6 +13,7 @@ export interface GraphNode {
   style?: Record<string, string>;
   x?: number | undefined;
   y?: number | undefined;
+  key?: string;
 }
 
 export interface GraphCombo {

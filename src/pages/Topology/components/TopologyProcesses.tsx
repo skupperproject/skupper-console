@@ -338,7 +338,7 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
       const processIdsFromAddress = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      processes = processes.filter((node) => processIdsFromAddress.includes(node.identity));
+      processes = processes.filter(({ identity }) => processIdsFromAddress.includes(identity));
     }
 
     const processesNodes = TopologyController.convertProcessesToNodes(processes);
@@ -346,7 +346,9 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
     const processesLinks = TopologyController.convertProcessPairsToLinks(pPairs);
 
-    setNodes(processesNodes);
+    setNodes(
+      processesNodes.map((node) => ({ ...node, key: addressIdSelected ? `${node.id}-${addressIdSelected}` : node.id }))
+    );
     setLinks(updateLabelLinks(processesLinks));
     setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
   }, [
