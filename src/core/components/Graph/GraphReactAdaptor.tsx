@@ -15,6 +15,7 @@ import {
   DEFAULT_COMBO_CONFIG,
   DEFAULT_COMBO_STATE_CONFIG,
   DEFAULT_EDGE_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
   DEFAULT_MODE,
   DEFAULT_NODE_CONFIG,
   DEFAULT_NODE_STATE_CONFIG
@@ -44,14 +45,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const prevCombosRef = useRef<GraphCombo[]>();
     const itemSelectedRef = useRef(itemSelected);
     const topologyGraphRef = useRef<Graph>();
-
-    function insertPositionIntoNodes(nodes: GraphNode[]) {
-      return nodes.map((node) => {
-        const { x, y } = GraphController.getPositionFromLocalStorage(node.id);
-
-        return { ...node, x, y };
-      });
-    }
 
     function rollbackTopologyStatus() {
       const graphInstance = topologyGraphRef.current;
@@ -106,10 +99,22 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }
     }
 
+    function addPositionsToNodes(nodes: GraphNode[]) {
+      return nodes.map((node) => {
+        const { x, y } = GraphController.getNodePositionFromLocalStorage(node.key || node.id);
+
+        return { ...node, x, y, fx: x, fy: y };
+      });
+    }
+
+    function saveNodePositions(data: LocalStorageData[]) {
+      GraphController.saveNodePositionsToLocalStorage(data);
+    }
+
     // Creates network topology
     const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodesWithoutPosition.length && !topologyGraphRef.current) {
-        const nodes = insertPositionIntoNodes(nodesWithoutPosition);
+        const nodes = addPositionsToNodes(nodesWithoutPosition);
         const layout = GraphController.selectLayoutFromNodes(nodes, !!combos);
 
         const data = GraphController.getG6Model({
@@ -173,7 +178,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               ({ id, x, y }: LocalStorageData) => ({ id, x, y })
             );
 
-            GraphController.saveDataInLocalStorage(updatedNodes);
+            saveNodePositions(updatedNodes);
           }
 
           isHoverState.current = false;
@@ -289,7 +294,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
                 ({ id, x, y }: LocalStorageData) => ({ id, x, y })
               );
 
-              GraphController.saveDataInLocalStorage(updatedNodes);
+              saveNodePositions(updatedNodes);
             }
 
             isHoverState.current = false;
@@ -307,7 +312,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               ({ id, x, y }: LocalStorageData) => ({ id, x: x + dx, y: y + dy })
             );
 
-            GraphController.saveDataInLocalStorage(updatedNodes);
+            saveNodePositions(updatedNodes);
           }
 
           isHoverState.current = false;
@@ -338,9 +343,22 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             ({ id, x, y }: LocalStorageData) => ({ id, x, y })
           );
 
-          GraphController.saveDataInLocalStorage(updatedNodes);
+          saveNodePositions(updatedNodes);
           rollbackTopologyStatus();
           setIsGraphLoaded(true);
+        });
+
+        topologyGraph.on('afterchangedata', () => {
+          if (options.layout) {
+            topologyGraph.updateLayout(DEFAULT_LAYOUT_FORCE_CONFIG);
+          }
+
+          const updatedNodes = GraphController.fromNodesToLocalStorageData(
+            topologyGraph.getNodes(),
+            ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+          );
+
+          saveNodePositions(updatedNodes);
         });
 
         registerDefaultEdgeWithHover();
@@ -371,8 +389,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
           JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
       ) {
-        const nodes = insertPositionIntoNodes(nodesWithoutPosition);
-
+        const nodes = addPositionsToNodes(nodesWithoutPosition);
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
         prevNodesRef.current = nodesWithoutPosition;
@@ -380,12 +397,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         prevCombosRef.current = combos;
 
         rollbackTopologyStatus();
-
-        const updatedNodes = GraphController.fromNodesToLocalStorageData(
-          graphInstance.getNodes(),
-          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-        );
-        GraphController.saveDataInLocalStorage(updatedNodes);
       }
     }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
 

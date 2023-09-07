@@ -63,8 +63,8 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
 
   const handleReposition = () => {
     GraphController.cleanPositionsFromLocalStorage();
-    GraphController.cleanPositionsControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
-    GraphController.cleanPositionsControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
+    GraphController.cleanNodePositionsControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
+    GraphController.cleanNodePositionsControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
 
     // refresh page
     navigate(0);

@@ -18,13 +18,11 @@ import {
 const prefixLocalStorageItem = 'skupper';
 
 export const GraphController = {
-  saveDataInLocalStorage: (topologyNodes: LocalStorageData[]) => {
+  saveNodePositionsToLocalStorage: (topologyNodes: LocalStorageData[]) => {
     const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
 
     const topologyMap = topologyNodes.reduce((acc, { id, x, y }) => {
-      if (id) {
-        acc[id] = { x, y };
-      }
+      acc[id] = { x, y };
 
       return acc;
     }, {} as LocalStorageDataSaved);
@@ -32,7 +30,7 @@ export const GraphController = {
     localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...cache, ...topologyMap }));
   },
 
-  getPositionFromLocalStorage(id: string): LocalStorageDataWithNullXY {
+  getNodePositionFromLocalStorage(id: string): LocalStorageDataWithNullXY {
     const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
     const positions = cache[id] as LocalStorageDataSavedPayload | undefined;
 
@@ -46,7 +44,7 @@ export const GraphController = {
     localStorage.removeItem(prefixLocalStorageItem);
   },
 
-  cleanPositionsControlsFromLocalStorage(suffix: string) {
+  cleanNodePositionsControlsFromLocalStorage(suffix: string) {
     Object.keys(localStorage)
       .filter((x) => x.endsWith(suffix))
       .forEach((x) => localStorage.removeItem(x));
@@ -68,10 +66,10 @@ export const GraphController = {
   fromNodesToLocalStorageData(nodes: INode[], setLocalStorageData: Function) {
     return nodes
       .map((node) => {
-        const { id, x, y } = node.getModel() as NodeConfig;
+        const { id, x, y, key } = node.getModel() as NodeConfig;
 
         if (id && x !== undefined && y !== undefined) {
-          return setLocalStorageData({ id, x, y });
+          return setLocalStorageData({ id: key || id, x, y });
         }
 
         return undefined;
