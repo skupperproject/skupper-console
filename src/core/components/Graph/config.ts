@@ -31,30 +31,17 @@ export const DEFAULT_MODE: Modes = {
   ]
 };
 
-export const DEFAULT_LAYOUT_COMBO_FORCE_CONFIG: LayoutConfig = {
-  type: 'comboForce',
-  nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE,
-  comboSpacing: NODE_SIZE,
-  preventOverlap: true,
-  linkDistance: 150,
-  nodeStrength: 30,
-  edgeStrength: 0.001,
-  optimizeRangeFactor: 0.5
-};
-
 export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   type: 'force2',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
   preventOverlap: true,
-  nodeStrength: 1000,
-  edgeStrength: 200
-};
-
-export const DEFAULT_LAYOUT_FORCE_WITH_GPU_CONFIG: LayoutConfig = {
-  type: 'gForce',
-  gpuEnabled: true
+  clustering: true,
+  leafCluster: false,
+  nodeClusterBy: 'cluster',
+  clusterNodeStrength: 100,
+  gravity: 10,
+  edgeStrength: 1
 };
 
 export const DEFAULT_NODE_ICON = {
