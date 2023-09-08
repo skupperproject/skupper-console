@@ -2,6 +2,7 @@ import { ILabelConfig, LayoutConfig, ModelStyle, Modes } from '@antv/g6-core';
 
 import {
   COMBO_BORDER_COLOR_DEFAULT,
+  COMBO_BORDER_COLOR_HOVER,
   COMBO_COLOR_DEFAULT_LABEL,
   COMBO__COLOR_DEFAULT,
   EDGE_COLOR_DEFAULT,
@@ -184,6 +185,6 @@ export const DEFAULT_NODE_STATE_CONFIG = {
 
 export const DEFAULT_COMBO_STATE_CONFIG = {
   hover: {
-    stroke: 'black'
+    stroke: COMBO_BORDER_COLOR_HOVER
   }
 };

@@ -6,6 +6,7 @@ export const EDGE_COLOR_DEFAULT = '#666666';
 export const EDGE_COLOR_ACTIVE_DEFAULT = '#0066CC';
 export const COMBO__COLOR_DEFAULT = 'transparent';
 export const COMBO_BORDER_COLOR_DEFAULT = '#FFFFFF';
+export const COMBO_BORDER_COLOR_HOVER = '#000000';
 export const COMBO_COLOR_DEFAULT_LABEL = '#000000';
 export const LEGEND_DEFAULT_BG_COLOR = '#FFFFFF';
 export const LEGEND_DEFAULT_STROKE_COLOR = '#000000';
