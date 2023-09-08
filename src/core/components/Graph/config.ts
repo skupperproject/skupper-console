@@ -1,4 +1,4 @@
-import { ILabelConfig, LayoutConfig, ModelStyle, Modes } from '@antv/g6-core';
+import { ILabelConfig, LayoutConfig, ModelStyle, Modes, GraphOptions } from '@antv/g6-core';
 
 import {
   COMBO_BORDER_COLOR_DEFAULT,
@@ -140,7 +140,7 @@ export const DEFAULT_COMBO_CONFIG: Partial<{
   color: string;
 }> &
   ModelStyle = {
-  type: 'rect',
+  type: 'cRect',
   padding: [15, 15, 30, 15],
   style: {
     cursor: 'pointer',
@@ -149,14 +149,12 @@ export const DEFAULT_COMBO_CONFIG: Partial<{
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 30
   },
-
   labelCfg: {
-    refY: 14,
+    refY: 12,
     position: 'bottom',
     style: {
       fill: COMBO_COLOR_DEFAULT_LABEL,
-      stoke: 'white',
-      fontSize: 16
+      fontSize: 12
     }
   }
 };
@@ -187,4 +185,13 @@ export const DEFAULT_COMBO_STATE_CONFIG = {
   hover: {
     stroke: COMBO_BORDER_COLOR_HOVER
   }
+};
+
+export const DEFAULT_GRAPH_CONFIG: Partial<GraphOptions> = {
+  modes: DEFAULT_MODE,
+  defaultNode: DEFAULT_NODE_CONFIG,
+  defaultCombo: DEFAULT_COMBO_CONFIG,
+  defaultEdge: DEFAULT_EDGE_CONFIG,
+  nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
+  comboStateStyles: DEFAULT_COMBO_STATE_CONFIG
 };

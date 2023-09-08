@@ -11,16 +11,12 @@ import {
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
 
+import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG } from './config';
 import {
-  DEFAULT_COMBO_CONFIG,
-  DEFAULT_COMBO_STATE_CONFIG,
-  DEFAULT_EDGE_CONFIG,
-  DEFAULT_LAYOUT_FORCE_CONFIG,
-  DEFAULT_MODE,
-  DEFAULT_NODE_CONFIG,
-  DEFAULT_NODE_STATE_CONFIG
-} from './config';
-import { registerCustomEdgeWithHover as registerDefaultEdgeWithHover, registerSiteEdge } from './customItems';
+  registerCustomEdgeWithHover as registerDefaultEdgeWithHover,
+  registerSiteCombo,
+  registerSiteEdge
+} from './customItems';
 import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
@@ -293,16 +289,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           container: $node,
           width,
           height,
-          modes: DEFAULT_MODE,
-          defaultNode: DEFAULT_NODE_CONFIG,
-          defaultCombo: DEFAULT_COMBO_CONFIG,
-          defaultEdge: DEFAULT_EDGE_CONFIG,
-          nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
-          comboStateStyles: DEFAULT_COMBO_STATE_CONFIG,
           layout: {
             ...DEFAULT_LAYOUT_FORCE_CONFIG,
             center: [width / 2, height / 2]
-          }
+          },
+          ...DEFAULT_GRAPH_CONFIG
         };
 
         topologyGraphRef.current = new G6.Graph(options);
@@ -310,6 +301,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         registerDefaultEdgeWithHover();
         registerSiteEdge();
+        registerSiteCombo();
 
         topologyGraph.data(data);
         topologyGraph.render();
