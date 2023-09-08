@@ -114,18 +114,32 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           topologyEdge.show();
         }
       });
+
+      // keep the parent combo selected if exist
+      const comboId = node.getModel()?.comboId as string | undefined;
+
+      if (comboId) {
+        handleComboMouseEnter({ currentTarget, item: currentTarget.findById(comboId) });
+      }
     }
 
-    function handleNodeMouseLeave({ currentTarget }: G6GraphEvent) {
-      currentTarget.findAllByState('node', 'hidden').forEach((node: INode) => {
+    function handleNodeMouseLeave({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
+      currentTarget.findAllByState('node', 'hidden').forEach((node) => {
         currentTarget.setItemState(node, 'hidden', false);
       });
 
       // when we back from an other view and we leave a node we must erase links status
-      currentTarget.getEdges().forEach((topologyEdge: IEdge) => {
+      currentTarget.getEdges().forEach((topologyEdge) => {
         topologyEdge.show();
         currentTarget.setItemState(topologyEdge, 'hover', false);
       });
+
+      // we need to remove the combo highlight if we leave the node label outside the combo boc
+      const comboId = item.getModel()?.comboId as string | undefined;
+
+      if (comboId) {
+        handleComboMouseLeave({ currentTarget, item: currentTarget.findById(comboId) });
+      }
 
       itemSelectedRef.current = undefined;
       isHoverState.current = false;
@@ -145,13 +159,15 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const source = edge.getSource();
       const target = edge.getTarget();
 
-      currentTarget.getNodes().forEach((node: INode) => {
+      currentTarget.getNodes().forEach((node) => {
         if (node.getID() !== source.getID() && node.getID() !== target.getID()) {
           currentTarget.setItemState(node, 'hidden', true);
+        } else {
+          currentTarget.setItemState(node, 'hidden', false);
         }
       });
 
-      currentTarget.getEdges().forEach((topologyEdge: IEdge) => {
+      currentTarget.getEdges().forEach((topologyEdge) => {
         if (edge.getID() !== topologyEdge.getID()) {
           topologyEdge.hide();
         } else {
@@ -160,12 +176,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       });
 
       currentTarget.setItemState(edge, 'hover', true);
-      currentTarget.setItemState(source, 'hidden', false);
-      currentTarget.setItemState(target, 'hidden', false);
     }
 
-    function handleEdgeMouseLeave(e: G6GraphEvent) {
-      handleNodeMouseLeave(e);
+    function handleEdgeMouseLeave(evt: { currentTarget: Graph; item: Item }) {
+      handleNodeMouseLeave(evt);
     }
 
     // COMBO EVENTS
@@ -176,7 +190,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }
 
     function handleCombDragStart() {
-      isHoverState.current = true;
+      handleNodeDragStart();
     }
 
     function handleComboDragEnd({ item }: G6GraphEvent) {
@@ -191,9 +205,17 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       isHoverState.current = false;
     }
 
+    function handleComboMouseEnter({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
+      currentTarget.setItemState(item, 'hover', true);
+    }
+
+    function handleComboMouseLeave({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
+      currentTarget.setItemState(item, 'hover', false);
+    }
+
     // CANVAS EVENTS
     function handleCanvasDragStart() {
-      isHoverState.current = true;
+      handleNodeDragStart();
     }
 
     function handleCanvasDragEnd({ currentTarget, dx, dy }: G6GraphEvent) {
@@ -238,7 +260,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         );
 
         GraphController.saveNodePositionsToLocalStorage(updatedNodes);
-        updatedNodes;
 
         // Highlight the node and edges connected to the selected item when either a node or an edge is preselected.
         setTopologyStateByNodeSelected(itemSelectedRef.current);
@@ -256,7 +277,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         );
 
         GraphController.saveNodePositionsToLocalStorage(updatedNodes);
-        updatedNodes;
       }
     }
 
@@ -288,6 +308,20 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         topologyGraphRef.current = new G6.Graph(options);
         const topologyGraph = topologyGraphRef.current;
 
+        registerDefaultEdgeWithHover();
+        registerSiteEdge();
+
+        topologyGraph.data(data);
+        topologyGraph.render();
+
+        if (zoom) {
+          topologyGraph.zoomTo(zoom, topologyGraph.getGraphCenterPoint(), true, { duration: 0 });
+        }
+
+        if (fitScreen) {
+          topologyGraph.fitView(50, undefined, true, { duration: 0 });
+        }
+
         /** EVENTS */
         topologyGraph.on('node:click', handleNodeClick);
         topologyGraph.on('node:dragstart', handleNodeDragStart);
@@ -302,30 +336,18 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         topologyGraph.on('combo:click', handleComboClick);
         topologyGraph.on('combo:dragstart', handleCombDragStart);
         topologyGraph.on('combo:dragend', handleComboDragEnd);
+        topologyGraph.on('combo:mouseenter', handleComboMouseEnter);
+        topologyGraph.on('combo:mouseleave', handleComboMouseLeave);
 
         topologyGraph.on('canvas:dragstart', handleCanvasDragStart);
         topologyGraph.on('canvas:dragend', handleCanvasDragEnd);
 
         topologyGraph.on('wheelzoom', handleWheelZoom);
 
-        // Be carefull: afterender is supposd to be calleed every re-render. In our case that's not happen  because we update the topology usng changeData.
+        // Be carefull: afterender is supposd to be calleed every re-render. However, in our case this event is called just one time  because we update the topology usng changeData.
         // If this behaviour changes we must use a flag to check only the first render
         topologyGraph.on('afterrender', handleAfterRender);
         topologyGraph.on('afterchangedata', handleChangeData);
-
-        registerDefaultEdgeWithHover();
-        registerSiteEdge();
-
-        topologyGraph.data(data);
-        topologyGraph.render();
-
-        if (zoom) {
-          topologyGraph.zoomTo(zoom, topologyGraph.getGraphCenterPoint(), true, { duration: 0 });
-        }
-
-        if (fitScreen) {
-          topologyGraph.fitView(50, undefined, true, { duration: 0 });
-        }
       }
     }, []);
 
