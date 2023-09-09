@@ -1,20 +1,21 @@
 import { ILabelConfig, LayoutConfig, ModelStyle, Modes, GraphOptions } from '@antv/g6-core';
 
+import { CUSTOM_ITEMS_NAMES } from './customItems';
 import {
   COMBO_BORDER_COLOR_DEFAULT,
   COMBO_BORDER_COLOR_HOVER,
   COMBO_COLOR_DEFAULT_LABEL,
+  COMBO_COLOR_DEFAULT_LABEL_BG,
   COMBO__COLOR_DEFAULT,
   EDGE_COLOR_DEFAULT,
   NODE_BORDER_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT,
   NODE_COLOR_DEFAULT_LABEL,
-  NODE_COLOR_DEFAULT_LABEL_BG
+  NODE_COLOR_DEFAULT_LABEL_BG,
+  NODE_SIZE
 } from './Graph.constants';
 
-const NODE_SIZE = 40;
 const INACTIVE_OPACITY_VALUE = 0.3;
-
 const greyColor = '#808080';
 
 export const DEFAULT_MODE: Modes = {
@@ -58,7 +59,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
   color: string;
 }> &
   ModelStyle = {
-  type: 'circle',
+  type: CUSTOM_ITEMS_NAMES.nodeWithBadges,
   size: [NODE_SIZE],
 
   icon: DEFAULT_NODE_ICON,
@@ -80,7 +81,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_BORDER_COLOR_DEFAULT,
         lineWidth: 1,
-        padding: [5, 7, 4, 7],
+        padding: [5, 5],
         radius: 2
       }
     }
@@ -113,7 +114,7 @@ export const DEFAULT_EDGE_CONFIG: Partial<{
   color: string;
 }> &
   ModelStyle = {
-  type: 'line-dash',
+  type: CUSTOM_ITEMS_NAMES.animatedDashEdge,
   labelCfg: {
     autoRotate: true,
     refY: 10,
@@ -134,13 +135,14 @@ export const DEFAULT_EDGE_CONFIG: Partial<{
   }
 };
 
-export const DEFAULT_COMBO_CONFIG: Partial<{
-  type: string;
-  size: number | number[];
-  color: string;
-}> &
-  ModelStyle = {
-  type: 'cRect',
+export const DEFAULT_COMBO_CONFIG: ModelStyle & {
+  labelBgCfg: {
+    fill: string;
+    radius: number;
+    padding: number[];
+  };
+} = {
+  type: CUSTOM_ITEMS_NAMES.comboWithCustomLabel,
   padding: [15, 15, 30, 15],
   style: {
     cursor: 'pointer',
@@ -156,6 +158,11 @@ export const DEFAULT_COMBO_CONFIG: Partial<{
       fill: COMBO_COLOR_DEFAULT_LABEL,
       fontSize: 12
     }
+  },
+  labelBgCfg: {
+    fill: COMBO_COLOR_DEFAULT_LABEL_BG,
+    radius: 2,
+    padding: [10, 10]
   }
 };
 
@@ -172,6 +179,14 @@ export const DEFAULT_NODE_STATE_CONFIG = {
     },
 
     'circle-icon': {
+      opacity: INACTIVE_OPACITY_VALUE
+    },
+
+    [`${CUSTOM_ITEMS_NAMES.nodeWithBadges}-icon`]: {
+      opacity: INACTIVE_OPACITY_VALUE
+    },
+
+    [`${CUSTOM_ITEMS_NAMES.nodeWithBadges}-notification-container`]: {
       opacity: INACTIVE_OPACITY_VALUE
     },
 
