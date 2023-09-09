@@ -5,6 +5,7 @@ import processSVG from '@assets/process.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import { DEFAULT_NODE_CONFIG, DEFAULT_NODE_ICON, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
+import { CUSTOM_ITEMS_NAMES } from '@core/components/Graph/customItems';
 import { EDGE_COLOR_DEFAULT, EDGE_COLOR_ACTIVE_DEFAULT } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -19,11 +20,10 @@ import {
   SiteResponse
 } from 'API/REST.interfaces';
 
-import { TopologyLabels } from '../Topology.enum';
 import { Entity, TopologyMetrics, TopologyMetricsMetrics } from '../Topology.interfaces';
 
 const shape = {
-  bound: 'circle',
+  bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
   unbound: 'diamond'
 };
 
@@ -57,12 +57,12 @@ export const TopologyController = {
     entities.map(({ identity, name, processGroupRole, processCount }) => {
       const img = processGroupRole === 'internal' ? skupperProcessSVG : componentSVG;
 
-      const suffix = processCount > 1 ? TopologyLabels.Processes : TopologyLabels.Process;
-      const label = `${name} (${processCount} ${suffix})`;
+      const nodeConfig =
+        processGroupRole === 'remote'
+          ? DEFAULT_REMOTE_NODE_CONFIG
+          : { type: shape.bound, notificationValue: processCount, enableBadge1: true };
 
-      const nodeConfig = processGroupRole === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape.bound };
-
-      return convertEntityToNode({ id: identity, label, img, nodeConfig });
+      return convertEntityToNode({ id: identity, label: name, img, nodeConfig });
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
@@ -101,7 +101,7 @@ export const TopologyController = {
           id: `${sourceId}-to${targetId}`,
           source: sourceId,
           target: targetId,
-          type: 'site-edge'
+          type: CUSTOM_ITEMS_NAMES.siteEdge
         }
       ])
     );

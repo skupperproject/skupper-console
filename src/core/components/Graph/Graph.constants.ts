@@ -11,3 +11,12 @@ export const COMBO_COLOR_DEFAULT_LABEL = '#FFFFFF';
 export const COMBO_COLOR_DEFAULT_LABEL_BG = '#000000';
 export const LEGEND_DEFAULT_BG_COLOR = '#FFFFFF';
 export const LEGEND_DEFAULT_STROKE_COLOR = '#000000';
+
+export const CUSTOM_CIRCLE_NODE_STYLE = {
+  containerBg: '#666666',
+  containerBorderColor: '#FFFFFF',
+  textColor: '#FFFFFF',
+  textFontSize: 12
+};
+
+export const NODE_SIZE = 44;

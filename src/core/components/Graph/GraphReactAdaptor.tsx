@@ -14,7 +14,8 @@ import {
 import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG } from './config';
 import {
   registerCustomEdgeWithHover as registerDefaultEdgeWithHover,
-  registerSiteCombo,
+  registerNodeWithBadges,
+  regusterComboWithCustomLabel,
   registerSiteEdge
 } from './customItems';
 import GraphMenuControl from './GraphMenuControl';
@@ -299,9 +300,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         topologyGraphRef.current = new G6.Graph(options);
         const topologyGraph = topologyGraphRef.current;
 
+        registerNodeWithBadges();
         registerDefaultEdgeWithHover();
         registerSiteEdge();
-        registerSiteCombo();
+        regusterComboWithCustomLabel();
 
         topologyGraph.data(data);
         topologyGraph.render();

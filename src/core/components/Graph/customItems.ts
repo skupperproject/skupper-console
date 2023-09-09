@@ -1,13 +1,20 @@
-import { registerEdge, ArrowConfig, registerCombo, IGroup } from '@antv/g6';
+import { registerEdge, ArrowConfig, registerCombo, IGroup, registerNode } from '@antv/g6';
 
-import { COMBO_COLOR_DEFAULT_LABEL_BG, EDGE_COLOR_ACTIVE_DEFAULT, EDGE_COLOR_DEFAULT } from './Graph.constants';
+import { CUSTOM_CIRCLE_NODE_STYLE, EDGE_COLOR_ACTIVE_DEFAULT, EDGE_COLOR_DEFAULT, NODE_SIZE } from './Graph.constants';
+import { ComboWithCustomLabel, NodeWithBadgesProps } from './Graph.interfaces';
+
+export const CUSTOM_ITEMS_NAMES = {
+  animatedDashEdge: 'line-dash',
+  siteEdge: 'site-edge',
+  nodeWithBadges: 'nCircle',
+  comboWithCustomLabel: 'cRect'
+};
 
 export function registerCustomEdgeWithHover() {
   // Draw a blue line dash when hover an edge
-  const edgeName = 'line-dash';
   const lineDash = [4, 2, 1, 2];
   registerEdge(
-    edgeName,
+    CUSTOM_ITEMS_NAMES.animatedDashEdge,
     {
       setState(name, value, item) {
         if (item) {
@@ -47,10 +54,9 @@ export function registerCustomEdgeWithHover() {
 
 export function registerSiteEdge() {
   // Draw a blue line dash when hover an edge
-  const edgeName = 'site-edge';
   const lineDash = [4, 4];
 
-  registerEdge(edgeName, {
+  registerEdge(CUSTOM_ITEMS_NAMES.siteEdge, {
     draw(cfg, group) {
       const { startPoint, endPoint } = cfg;
       const keyShape = group.addShape('path', {
@@ -86,27 +92,23 @@ export function registerSiteEdge() {
   });
 }
 
-export function registerSiteCombo() {
+export function regusterComboWithCustomLabel() {
   const textContainerKey = 'combo-label-shape';
-  const padding = [10, 8];
 
   registerCombo(
-    'cRect',
+    CUSTOM_ITEMS_NAMES.comboWithCustomLabel,
     {
-      afterDraw(_, group) {
+      afterDraw(cfg: ComboWithCustomLabel | undefined, group) {
         if (group) {
           const { width, height } = group.get('children')[1].getBBox(); // combo label
 
           // creates a background container for the combo label
           const textContainer = group.addShape('rect', {
-            attrs: {
-              fill: COMBO_COLOR_DEFAULT_LABEL_BG,
-              stroke: COMBO_COLOR_DEFAULT_LABEL_BG,
-              radius: 3
-            },
+            attrs: cfg?.labelBgCfg || {},
             name: textContainerKey
           });
 
+          const padding = cfg?.labelBgCfg?.padding || [0, 0];
           textContainer.attr({
             width: width + padding[0],
             height: height + padding[1]
@@ -115,12 +117,13 @@ export function registerSiteCombo() {
           textContainer.toBack();
         }
       },
-      afterUpdate(_, combo) {
+      afterUpdate(cfg: ComboWithCustomLabel | undefined, combo) {
         if (combo) {
           const group = combo.get('group') as IGroup;
           const { x, y } = group.get('children')[2].getBBox(); // combo label
           const textContainer = group.find((element) => element.get('name') === textContainerKey);
 
+          const padding = cfg?.labelBgCfg?.padding || [0, 0];
           textContainer.attr({
             x: x - padding[0] / 2,
             y: y - padding[1] / 2
@@ -129,5 +132,47 @@ export function registerSiteCombo() {
       }
     },
     'rect'
+  );
+}
+
+export function registerNodeWithBadges() {
+  const { containerBg, containerBorderColor, textColor, textFontSize } = CUSTOM_CIRCLE_NODE_STYLE;
+  const r = NODE_SIZE / 4;
+  const angleBadge1 = 180;
+  const x = r * Math.cos(angleBadge1) - r;
+  const y = r * Math.sin(angleBadge1) - r;
+
+  registerNode(
+    CUSTOM_ITEMS_NAMES.nodeWithBadges,
+    {
+      afterDraw(cfg: NodeWithBadgesProps | undefined, group) {
+        if (cfg?.enableBadge1 && group) {
+          group.addShape('circle', {
+            attrs: {
+              x,
+              y,
+              r,
+              stroke: containerBorderColor,
+              fill: containerBg
+            },
+            name: `${CUSTOM_ITEMS_NAMES.nodeWithBadges}-notification-container`
+          });
+
+          group.addShape('text', {
+            attrs: {
+              x,
+              y,
+              textAlign: 'center',
+              textBaseline: 'middle',
+              text: cfg.notificationValue,
+              fill: cfg.notificationColor || textColor,
+
+              fontSize: cfg.notificationFontSize || textFontSize
+            }
+          });
+        }
+      }
+    },
+    'circle'
   );
 }

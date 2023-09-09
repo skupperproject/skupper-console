@@ -1,4 +1,4 @@
-import { GraphData, ModelStyle } from '@antv/g6';
+import { GraphData, ModelConfig, ModelStyle } from '@antv/g6';
 
 export interface GraphNode {
   id: string;
@@ -67,4 +67,17 @@ export interface LocalStorageData extends LocalStorageDataSavedPayload {
 export interface LocalStorageDataWithNullXY extends Omit<LocalStorageData, 'x' | 'y'> {
   x: number | undefined;
   y: number | undefined;
+}
+
+export interface NodeWithBadgesProps extends ModelConfig {
+  notificationValue?: number;
+  notificationColor?: string;
+  notificationFontSize?: number;
+}
+
+export interface ComboWithCustomLabel extends ModelConfig {
+  labelBgCfg?: {
+    fill?: string;
+    padding?: number[];
+  };
 }
