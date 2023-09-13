@@ -15,9 +15,7 @@ const HttpService: FC<RequestsByAddressProps> = function ({ addressId, addressNa
   return (
     <>
       {viewSelected === TAB_0_KEY && <Overview addressId={addressId} protocol={protocol} />}
-
       {viewSelected === TAB_1_KEY && <ExposedServers addressId={addressId} addressName={addressName} />}
-
       {viewSelected === TAB_2_KEY && (
         <Stack hasGutter>
           <StackItem>

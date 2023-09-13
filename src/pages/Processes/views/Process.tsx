@@ -1,6 +1,6 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
-import { Flex, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Badge, Flex, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -77,20 +77,6 @@ const Process = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
-  const NavigationMenu = function () {
-    return (
-      <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
-        <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
-        <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
-        <Tab
-          disabled={!processesPairsTxData.length && !processesPairsRxData.length}
-          eventKey={ProcessesLabels.ProcessPairs}
-          title={<TabTitleText>{ProcessesLabels.ProcessPairs}</TabTitleText>}
-        />
-      </Tabs>
-    );
-  };
-
   const processesPairsRxReverse =
     processesPairsRxData.map((processPairsData) => ({
       ...processPairsData,
@@ -113,6 +99,27 @@ const Process = function () {
   const remoteServers = processesPairsTxData.filter(({ protocol }) => protocol === undefined);
   const remoteClients = processesPairsRxReverse.filter(({ protocol }) => protocol === undefined);
   const allDestinationProcesses = [...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients];
+
+  const NavigationMenu = function () {
+    return (
+      <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
+        <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
+        <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
+        <Tab
+          disabled={!processesPairsTxData.length && !processesPairsRxData.length}
+          eventKey={ProcessesLabels.ProcessPairs}
+          title={
+            <TabTitleText>
+              {ProcessesLabels.ProcessPairs}{' '}
+              <Badge isRead key={1}>
+                {allDestinationProcesses.length}
+              </Badge>
+            </TabTitleText>
+          }
+        />
+      </Tabs>
+    );
+  };
 
   return (
     <MainContainer

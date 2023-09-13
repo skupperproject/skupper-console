@@ -7,7 +7,6 @@ import * as router from 'react-router';
 import { AvailableProtocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds.config';
 import { Wrapper } from '@core/components/Wrapper';
-import flowPairsData from '@mocks/data/SERVICE_FLOW_PAIRS.json';
 import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
@@ -16,7 +15,6 @@ import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Services.en
 import Service from '../views/Service';
 
 const servicesResults = servicesData.results;
-const flowPairsResults = flowPairsData.results;
 
 describe('Begin testing the FlowPairs component', () => {
   let server: Server;
@@ -47,9 +45,9 @@ describe('Begin testing the FlowPairs component', () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(FlowPairsLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${FlowPairsLabels.Servers} (${servicesResults.length})`)).toBeInTheDocument();
-    expect(screen.getByText(`${ConnectionLabels.ActiveConnections} (${4})`)).toBeInTheDocument();
-    expect(screen.getByText(`${ConnectionLabels.OldConnections} (${4})`)).toBeInTheDocument();
+    expect(screen.getByText(`${FlowPairsLabels.Servers}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ConnectionLabels.ActiveConnections}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ConnectionLabels.OldConnections}`)).toBeInTheDocument();
   });
 
   it('should render the HTTP/2 Service view after the data loading is complete', async () => {
@@ -60,17 +58,17 @@ describe('Begin testing the FlowPairs component', () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(FlowPairsLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${FlowPairsLabels.Servers} (${servicesResults.length})`)).toBeInTheDocument();
-    expect(screen.getByText(`${RequestLabels.Requests} (${flowPairsResults.length})`)).toBeInTheDocument();
+    expect(screen.getByText(`${FlowPairsLabels.Servers}`)).toBeInTheDocument();
+    expect(screen.getByText(`${RequestLabels.Requests}`)).toBeInTheDocument();
   });
 
   it('should clicking on a tab will result in the server tab being highlighted', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(`${FlowPairsLabels.Servers} (${servicesResults.length})`));
+    fireEvent.click(screen.getByText(`${FlowPairsLabels.Servers}`));
 
-    expect(
-      screen.getByText(`${FlowPairsLabels.Servers} (${servicesResults.length})`).parentNode?.parentNode
-    ).toHaveClass('pf-v5-c-tabs__item pf-m-current');
+    expect(screen.getByText(`${FlowPairsLabels.Servers}`).parentNode?.parentNode).toHaveClass(
+      'pf-v5-c-tabs__item pf-m-current'
+    );
   });
 });

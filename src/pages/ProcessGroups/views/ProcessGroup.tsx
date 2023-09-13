@@ -1,6 +1,6 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
 
-import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -56,6 +56,11 @@ const ProcessGroup = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
+  const processResults = processes.results;
+  const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
+  const serverNames = processResults.map(({ name: processName }) => processName).join('|');
+  const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
+
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
@@ -65,16 +70,18 @@ const ProcessGroup = function () {
         />
         <Tab
           eventKey={ProcessGroupsLabels.Processes}
-          title={<TabTitleText>{ProcessGroupsLabels.Processes}</TabTitleText>}
+          title={
+            <TabTitleText>
+              {ProcessGroupsLabels.Processes}{' '}
+              <Badge isRead key={1}>
+                {processes.results?.length}
+              </Badge>
+            </TabTitleText>
+          }
         />
       </Tabs>
     );
   };
-
-  const processResults = processes.results;
-  const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
-  const serverNames = processResults.map(({ name: processName }) => processName).join('|');
-  const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   return (
     <MainContainer

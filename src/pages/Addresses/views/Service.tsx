@@ -1,6 +1,6 @@
 import { useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
 
-import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
+import { Badge, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -93,20 +93,27 @@ const Service = function () {
         <Tab
           isDisabled={!serverCount}
           eventKey={TAB_1_KEY}
-          title={<TabTitleText>{`${FlowPairsLabels.Servers} (${serverCount})`}</TabTitleText>}
+          title={
+            <TabTitleText>
+              {`${FlowPairsLabels.Servers} `}
+              <Badge isRead key={1}>
+                {serverCount}
+              </Badge>
+            </TabTitleText>
+          }
         />
         {protocol !== AvailableProtocols.Tcp && (
           <Tab
             isDisabled={!requestsCount}
             eventKey={TAB_2_KEY}
-            title={<TabTitleText>{`${RequestLabels.Requests} (${requestsCount})`}</TabTitleText>}
+            title={<TabTitleText>{RequestLabels.Requests}</TabTitleText>}
           />
         )}
         {protocol === AvailableProtocols.Tcp && (
           <Tab
             isDisabled={!tcpActiveConnectionCount}
             eventKey={TAB_2_KEY}
-            title={<TabTitleText>{`${ConnectionLabels.ActiveConnections} (${tcpActiveConnectionCount})`}</TabTitleText>}
+            title={<TabTitleText>{ConnectionLabels.ActiveConnections}</TabTitleText>}
           />
         )}
 
@@ -114,9 +121,7 @@ const Service = function () {
           <Tab
             isDisabled={!tcpTerminatedConnectionCount}
             eventKey={TAB_3_KEY}
-            title={
-              <TabTitleText>{`${ConnectionLabels.OldConnections} (${tcpTerminatedConnectionCount})`}</TabTitleText>
-            }
+            title={<TabTitleText>{ConnectionLabels.OldConnections}</TabTitleText>}
           />
         )}
       </Tabs>
