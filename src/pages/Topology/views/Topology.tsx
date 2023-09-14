@@ -15,7 +15,7 @@ import { TopologyLabels, TopologyURLFilters, TopologyViews } from '../Topology.e
 const Topology = function () {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const addressId = searchParams.get(TopologyURLFilters.AddressId) || undefined;
+  const serviceId = searchParams.get(TopologyURLFilters.ServiceId) || undefined;
   const id = searchParams.get(TopologyURLFilters.IdSelected) || undefined;
   const type = searchParams.get(TopologyURLFilters.Type);
 
@@ -47,7 +47,7 @@ const Topology = function () {
         <Suspense fallback={<LoadingPage />}>
           {topologyType === TopologyViews.Sites && <TopologySite />}
           {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}
-          {topologyType === TopologyViews.Processes && <TopologyProcesses addressId={addressId} id={id} />}
+          {topologyType === TopologyViews.Processes && <TopologyProcesses serviceId={serviceId} id={id} />}
         </Suspense>
       }
     />

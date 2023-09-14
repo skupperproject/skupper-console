@@ -32,7 +32,7 @@ export const getLinkPATH = (id: string) => `${LINKS_PATH}${id}`;
 const PROCESSES_PATH = `${COLLECTOR_URL}/processes/`;
 export const geProcessesPATH = () => PROCESSES_PATH;
 export const geProcessPATH = (id: string) => `${PROCESSES_PATH}${id}`;
-export const getAddressesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/addresses`;
+export const getServicesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/addresses`;
 
 // PROCESS_GROUPS
 const PROCESS_GROUPS_PATH = `${COLLECTOR_URL}/processgroups/`;
@@ -40,10 +40,10 @@ export const getProcessGroupsPATH = () => PROCESS_GROUPS_PATH;
 export const getProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}`;
 
 // SERVICES
-const ADDRESSES_PATH = `${COLLECTOR_URL}/addresses/`;
-export const getAddressesPath = () => ADDRESSES_PATH;
-export const getFlowsPairsByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/flowpairs`;
-export const getProcessesByAddressPATH = (id: string) => `${ADDRESSES_PATH}${id}/processes`;
+const SERVICE_PATH = `${COLLECTOR_URL}/addresses/`;
+export const getServicesPath = () => SERVICE_PATH;
+export const getFlowsPairsByServicePATH = (id: string) => `${SERVICE_PATH}${id}/flowpairs`;
+export const getProcessesByServicePATH = (id: string) => `${SERVICE_PATH}${id}/processes`;
 
 // CONNECTIONS & RESPONSES
 const FLOW_PAIRS_PATH = `${COLLECTOR_URL}/flowpairs/`;

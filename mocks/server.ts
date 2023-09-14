@@ -1,7 +1,7 @@
 import { createServer, Response } from 'miragejs';
 
 import {
-  AddressResponse,
+  ServiceResponse,
   ProcessPairsResponse,
   HostResponse,
   LinkResponse,
@@ -28,9 +28,9 @@ const processes = require(`${path}/PROCESSES.json`);
 const processPairs = require(`${path}/PROCESS_PAIRS.json`);
 const hosts = require(`${path}/HOSTS.json`);
 const services = require(`${path}/SERVICES.json`);
-const addressProcesses = require(`${path}/SERVICE_PROCESSES.json`);
+const serviceProcesses = require(`${path}/SERVICE_PROCESSES.json`);
 const flowPairs = require(`${path}/FLOW_PAIRS.json`);
-const addressesFlowPairs = require(`${path}/SERVICE_FLOW_PAIRS.json`);
+const serviceFlowPairs = require(`${path}/SERVICE_FLOW_PAIRS.json`);
 const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
@@ -296,7 +296,7 @@ export function loadMockServer() {
         const processNamePrefix = process.name.split('-')[0];
 
         return {
-          results: services.results.filter(({ name }: AddressResponse) => name.includes(processNamePrefix))
+          results: services.results.filter(({ name }: ServiceResponse) => name.includes(processNamePrefix))
         };
       });
 
@@ -309,12 +309,12 @@ export function loadMockServer() {
       });
 
       this.get(`${prefix}/flowpairs/:id`, (_, { params: { id } }) => ({
-        results: flowPairs.results.find(({ identity }: AddressResponse) => identity === id)
+        results: flowPairs.results.find(({ identity }: ServiceResponse) => identity === id)
       }));
 
       this.get(`${prefix}/addresses`, () => services);
-      this.get(`${prefix}/addresses/:id/flowpairs`, () => addressesFlowPairs);
-      this.get(`${prefix}/addresses/:id/processes`, () => addressProcesses);
+      this.get(`${prefix}/addresses/:id/flowpairs`, () => serviceFlowPairs);
+      this.get(`${prefix}/addresses/:id/processes`, () => serviceProcesses);
     }
   });
 }

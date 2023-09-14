@@ -9,22 +9,22 @@ import FlowPairsServiceTable from '../components/FlowPairsServiceTable';
 import Overview from '../components/Overview';
 import ResourceDistrubutionFlowChart from '../components/ResourceDistrubutionFlowChart';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, httpColumns, initRequestsQueryParams } from '../Services.constants';
-import { RequestsByAddressProps } from '../Services.interfaces';
+import { RequestsByServiceProps } from '../Services.interfaces';
 
-const HttpService: FC<RequestsByAddressProps> = function ({ addressId, addressName, protocol, viewSelected }) {
+const HttpService: FC<RequestsByServiceProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
   return (
     <>
-      {viewSelected === TAB_0_KEY && <Overview addressId={addressId} protocol={protocol} />}
-      {viewSelected === TAB_1_KEY && <ExposedServers addressId={addressId} addressName={addressName} />}
+      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} protocol={protocol} />}
+      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
       {viewSelected === TAB_2_KEY && (
         <Stack hasGutter>
           <StackItem>
-            <ResourceDistrubutionFlowChart addressId={addressId} addressName={addressName} />
+            <ResourceDistrubutionFlowChart serviceId={serviceId} serviceName={serviceName} />
           </StackItem>
 
           <StackItem>
             <FlowPairsServiceTable
-              addressId={addressId}
+              serviceId={serviceId}
               options={httpSelectOptions}
               columns={httpColumns}
               filters={initRequestsQueryParams}

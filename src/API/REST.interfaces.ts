@@ -84,7 +84,7 @@ export interface ProcessPairsResponse extends BaseResponse {
 
 export type SitePairsResponse = ProcessPairsResponse;
 
-export interface AddressResponse extends BaseResponse {
+export interface ServiceResponse extends BaseResponse {
   name: string;
   protocol: AvailableProtocols;
   connectorCount: number;

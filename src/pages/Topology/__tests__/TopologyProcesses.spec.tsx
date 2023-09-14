@@ -21,7 +21,7 @@ describe('Begin testing the Topology component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TopologyProcesses addressId={'process-2:3000'} id={'process-2-xy'} />
+          <TopologyProcesses serviceId={'process-2:3000'} id={'process-2-xy'} />
         </Suspense>
       </Wrapper>
     );

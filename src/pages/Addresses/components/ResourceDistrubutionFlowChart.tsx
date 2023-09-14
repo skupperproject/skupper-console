@@ -11,17 +11,17 @@ import SankeyFilter, {
   ServiceServerResourceOptions
 } from '@core/components/SKSanckeyChart/SankeyFilter';
 
-import { AddressesController } from '../services';
+import { ServicesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
 import { FlowPairsLabels } from '../Services.enum';
 
 interface ResourceDistrubutionFlowChartProps {
-  addressId: string;
-  addressName: string;
+  serviceId: string;
+  serviceName: string;
 }
 
-const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = function ({ addressId, addressName }) {
+const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = function ({ serviceId, serviceName }) {
   const [metricSelected, setMetricSelected] = useState(defaultMetric);
   const [clientResourceSelected, setClientResourceSelected] = useState<'client' | 'clientSite'>(
     ServiceClientResourceOptions[0].id
@@ -31,11 +31,11 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   );
 
   const { data: servicePairs } = useQuery(
-    [QueriesServices.GetResourcePairsByAddress, addressName, clientResourceSelected, serverResourceSelected],
+    [QueriesServices.GetResourcePairsByService, serviceName, clientResourceSelected, serverResourceSelected],
     () =>
-      addressId
-        ? PrometheusApi.fethServicePairsByAddress({
-            addressName,
+      serviceId
+        ? PrometheusApi.fethServicePairsByService({
+            serviceName,
             clientType: clientResourceSelected,
             serverType: serverResourceSelected
           })
@@ -63,7 +63,7 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     []
   );
 
-  const { nodes, links } = AddressesController.convertToSankeyChartData(
+  const { nodes, links } = ServicesController.convertToSankeyChartData(
     servicePairs || [],
     metricSelected !== defaultMetric
   );

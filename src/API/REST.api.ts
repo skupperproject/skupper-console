@@ -1,7 +1,7 @@
 import { axiosFetch } from './apiMiddleware';
 import {
   ProcessGroupResponse,
-  AddressResponse,
+  ServiceResponse,
   ProcessResponse,
   FlowPairsResponse,
   SiteResponse,
@@ -15,8 +15,8 @@ import {
   SitePairsResponse
 } from './REST.interfaces';
 import {
-  getFlowsPairsByAddressPATH,
-  getProcessesByAddressPATH,
+  getFlowsPairsByServicePATH,
+  getProcessesByServicePATH,
   getSitePATH,
   getRoutersBySitePATH,
   getLinksBySitePATH,
@@ -28,13 +28,13 @@ import {
   getFlowPairPATH,
   getSitePairPATH,
   getProcessGroupPairPATH,
-  getAddressesByProcessPATH,
+  getServicesByProcessPATH,
   getFlowPairsPATH,
   getRoutersPATH,
   geProcessesPATH,
   getSitesPATH,
   getLinksPATH,
-  getAddressesPath,
+  getServicesPath,
   getSitePairsPATH,
   getHostsPATH,
   getProcessGroupPairsPATH,
@@ -132,8 +132,8 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchAddressesByProcess: async (id: string, options?: RequestOptions): Promise<AddressResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<AddressResponse[]>>(getAddressesByProcessPATH(id), {
+  fetchServicesByProcess: async (id: string, options?: RequestOptions): Promise<ServiceResponse[]> => {
+    const data = await axiosFetch<ResponseWrapper<ServiceResponse[]>>(getServicesByProcessPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
@@ -184,33 +184,33 @@ export const RESTApi = {
   },
 
   // SERVICES APIs
-  fetchAddresses: async (options?: RequestOptions): Promise<ResponseWrapper<AddressResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<AddressResponse[]>>(getAddressesPath(), {
+  fetchServices: async (options?: RequestOptions): Promise<ResponseWrapper<ServiceResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ServiceResponse[]>>(getServicesPath(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchFlowPairsByAddress: async (
+  fetchFlowPairsByService: async (
     id: string,
     options?: RequestOptions
   ): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse[]>>(getFlowsPairsByAddressPATH(id), {
+    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse[]>>(getFlowsPairsByServicePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchFlowPairsByAddressResults: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse[]> => {
-    const data = await RESTApi.fetchFlowPairsByAddress(id, options);
+  fetchFlowPairsByServiceResults: async (id: string, options?: RequestOptions): Promise<FlowPairsResponse[]> => {
+    const data = await RESTApi.fetchFlowPairsByService(id, options);
 
     return getApiResults(data);
   },
 
-  fetchServersByAddress: async (id: string, options?: RequestOptions): Promise<ResponseWrapper<ProcessResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByAddressPATH(id), {
+  fetchServersByService: async (id: string, options?: RequestOptions): Promise<ResponseWrapper<ProcessResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByServicePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 

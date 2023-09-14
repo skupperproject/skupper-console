@@ -34,7 +34,7 @@ const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
 
 const ROTATE_LINK_LABEL = 'show-link-label-rotated';
 const FIT_SCREEN_CACHE_KEY = 'process-fitScreen';
-const FILTER_BY_ADDRESS_MAX_HEIGHT = 400;
+const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 
 const externalProcessesQueryParams = {
   processRole: 'external'
@@ -44,16 +44,16 @@ const remoteProcessesQueryParams = {
   processRole: 'remote'
 };
 
-const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ addressId, id: processId }) {
+const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ serviceId, id: processId }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
-  const [isAddressSelectMenuOpen, setIsAddressSelectMenuOpen] = useState(false);
+  const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
   const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState(false);
-  const [addressIdSelected, setAddressId] = useState(addressId);
+  const [serviceIdSelected, setServiceIdSelected] = useState(serviceId);
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
     localStorage.getItem(DISPLAY_OPTIONS)
       ? JSON.parse(localStorage.getItem(DISPLAY_OPTIONS) || '')
@@ -81,13 +81,13 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     { data: externalProcesses },
     { data: remoteProcesses },
     { data: processesPairs },
-    { data: serversByAddress },
+    { data: serversByService },
     { data: metrics }
   ] = useQueries({
     queries: [
       {
-        queryKey: [QueriesServices.GetAddresses],
-        queryFn: () => RESTApi.fetchAddresses()
+        queryKey: [QueriesServices.GetServices],
+        queryFn: () => RESTApi.fetchServices()
       },
       {
         queryKey: [QueriesSites.GetSites],
@@ -110,8 +110,8 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesServices.GetProcessesByAddress, addressIdSelected],
-        queryFn: () => (addressIdSelected ? RESTApi.fetchServersByAddress(addressIdSelected) : null),
+        queryKey: [QueriesServices.GetProcessesByService, serviceIdSelected],
+        queryFn: () => (serviceIdSelected ? RESTApi.fetchServersByService(serviceIdSelected) : null),
         keepPreviousData: true,
         refetchInterval: UPDATE_INTERVAL
       },
@@ -171,34 +171,34 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     [navigate, externalProcesses, remoteProcesses]
   );
 
-  function handleToggleAddressMenu(openAddressMenu: boolean) {
-    setIsAddressSelectMenuOpen(openAddressMenu);
+  function handleToggleServiceMenu(openServiceMenu: boolean) {
+    setIsServiceSelectMenuOpen(openServiceMenu);
   }
 
   function handleToggleDisplayMenu(openDisplayMenu: boolean) {
     setIsDisplayMenuOpen(openDisplayMenu);
   }
 
-  function handleSelectAddress(
+  function handleSelectService(
     _: MouseEvent | ChangeEvent,
     selection: string | SelectOptionObject,
     isPlaceholder?: boolean
   ) {
     const id = isPlaceholder ? undefined : (selection as string);
 
-    searchParams.delete('addressId');
+    searchParams.delete('serviceId');
     let params = Object.fromEntries([...searchParams]);
 
     if (id) {
-      params = { ...params, addressId: id };
+      params = { ...params, serviceId: id };
     }
 
-    setAddressId(id);
-    setIsAddressSelectMenuOpen(false);
+    setServiceIdSelected(id);
+    setIsServiceSelectMenuOpen(false);
     setSearchParams(params);
   }
 
-  function handleFilterAddress(_: ChangeEvent<HTMLInputElement> | null, value: string) {
+  function handleFilterService(_: ChangeEvent<HTMLInputElement> | null, value: string) {
     const options = getOptions();
     if (!value) {
       return options;
@@ -308,7 +308,7 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
       return;
     }
 
-    if (addressIdSelected && !serversByAddress?.results) {
+    if (serviceIdSelected && !serversByService?.results) {
       return;
     }
 
@@ -333,12 +333,12 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     let pPairs = processesPairs;
     let processes = [...externalProcesses, ...remoteProcesses];
 
-    if (addressIdSelected && serversByAddress?.results) {
-      const serverIds = serversByAddress.results.map(({ identity }) => identity);
+    if (serviceIdSelected && serversByService?.results) {
+      const serverIds = serversByService.results.map(({ identity }) => identity);
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
-      const processIdsFromAddress = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      processes = processes.filter(({ identity }) => processIdsFromAddress.includes(identity));
+      const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
+      processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
     }
 
     const processesNodes = TopologyController.convertProcessesToNodes(processes);
@@ -349,7 +349,7 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     setNodes(
       processesNodes.map((node) => ({
         ...node,
-        persistPositionKey: addressIdSelected ? `${node.id}-${addressIdSelected}` : node.id
+        persistPositionKey: serviceIdSelected ? `${node.id}-${serviceIdSelected}` : node.id
       }))
     );
     setLinks(updateLabelLinks(processesLinks));
@@ -360,8 +360,8 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
     processesPairs,
     remoteProcesses,
     isDisplayOptionActive,
-    serversByAddress?.results,
-    addressIdSelected,
+    serversByService?.results,
+    serviceIdSelected,
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,
     metrics?.latencyByProcessPairs
@@ -381,14 +381,14 @@ const TopologyProcesses: FC<{ addressId?: string; id?: string }> = function ({ a
               <ToolbarContent>
                 <ToolbarItem>
                   <Select
-                    isOpen={isAddressSelectMenuOpen}
-                    onSelect={handleSelectAddress}
-                    onToggle={(_, isOpen) => handleToggleAddressMenu(isOpen)}
-                    selections={addressIdSelected}
+                    isOpen={isServiceSelectMenuOpen}
+                    onSelect={handleSelectService}
+                    onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
+                    selections={serviceIdSelected}
                     hasInlineFilter
-                    inlineFilterPlaceholderText={TopologyLabels.AddressFilterPlaceholderText}
-                    onFilter={handleFilterAddress}
-                    maxHeight={FILTER_BY_ADDRESS_MAX_HEIGHT}
+                    inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
+                    onFilter={handleFilterService}
+                    maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
                   >
                     {getOptions()}
                   </Select>

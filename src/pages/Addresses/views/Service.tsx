@@ -12,7 +12,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import HttpService from './HttpService';
-import ConnectionsByAddress from './TcpService';
+import ConnectionsByService from './TcpService';
 import { QueriesServices } from '../services/services.enum';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
 import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Services.enum';
@@ -35,16 +35,16 @@ const Service = function () {
   const { service } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const addressName = service?.split('@')[0];
-  const addressId = service?.split('@')[1] as string;
+  const serviceName = service?.split('@')[0];
+  const serviceId = service?.split('@')[1] as string;
   const protocol = service?.split('@')[2];
 
   const type = searchParams.get('type') || TAB_0_KEY;
   const [tabSelected, setTabSelected] = useState(type);
 
   const { data: serversData } = useQuery(
-    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
-    () => RESTApi.fetchServersByAddress(addressId, initServersQueryParams),
+    [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
+    () => RESTApi.fetchServersByService(serviceId, initServersQueryParams),
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
@@ -52,8 +52,8 @@ const Service = function () {
   );
 
   const { data: requestsData } = useQuery(
-    [QueriesServices.GetFlowPairsByAddress, addressId, initServersQueryParams],
-    () => RESTApi.fetchFlowPairsByAddress(addressId, initServersQueryParams),
+    [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
+    () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
     {
       enabled: protocol !== AvailableProtocols.Tcp,
       refetchInterval: UPDATE_INTERVAL,
@@ -62,8 +62,8 @@ const Service = function () {
   );
 
   const { data: activeConnectionsData } = useQuery(
-    [QueriesServices.GetFlowPairsByAddress, addressId, activeConnectionsQueryParams],
-    () => RESTApi.fetchFlowPairsByAddress(addressId, activeConnectionsQueryParams),
+    [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
+    () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
     {
       enabled: protocol === AvailableProtocols.Tcp,
       refetchInterval: UPDATE_INTERVAL,
@@ -72,8 +72,8 @@ const Service = function () {
   );
 
   const { data: terminatedConnectionsData } = useQuery(
-    [QueriesServices.GetFlowPairsByAddress, addressId, terminatedConnectionsQueryParams],
-    () => RESTApi.fetchFlowPairsByAddress(addressId, terminatedConnectionsQueryParams),
+    [QueriesServices.GetFlowPairsByService, serviceId, terminatedConnectionsQueryParams],
+    () => RESTApi.fetchFlowPairsByService(serviceId, terminatedConnectionsQueryParams),
     {
       enabled: protocol === AvailableProtocols.Tcp,
       refetchInterval: UPDATE_INTERVAL,
@@ -136,23 +136,23 @@ const Service = function () {
   return (
     <MainContainer
       isPlain
-      title={addressName || ''}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.AddressId}=${addressId}`}
+      title={serviceName || ''}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.ServiceId}=${serviceId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <Suspense fallback={<LoadingPage />}>
           {protocol === AvailableProtocols.Tcp && (
-            <ConnectionsByAddress
-              addressName={addressName || ''}
-              addressId={addressId || ''}
+            <ConnectionsByService
+              serviceName={serviceName || ''}
+              serviceId={serviceId || ''}
               protocol={protocol}
               viewSelected={tabSelected}
             />
           )}
           {(protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2) && (
             <HttpService
-              addressName={addressName || ''}
-              addressId={addressId || ''}
+              serviceName={serviceName || ''}
+              serviceId={serviceId || ''}
               protocol={protocol}
               viewSelected={tabSelected}
             />
@@ -162,4 +162,5 @@ const Service = function () {
     />
   );
 };
+
 export default Service;

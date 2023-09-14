@@ -1,11 +1,11 @@
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart';
 import { PrometheusApiSingleResult } from 'API/Prometheus.interfaces';
-import { AddressResponse } from 'API/REST.interfaces';
+import { ServiceResponse } from 'API/REST.interfaces';
 import { VarColors } from 'colors';
 
-export const AddressesController = {
-  extendAddressesWithActiveAndTotalFlowPairs: (
-    services: AddressResponse[],
+export const ServicesController = {
+  extendServicesWithActiveAndTotalFlowPairs: (
+    services: ServiceResponse[],
     {
       httpTotalFlows,
       tcpTotalFlows,

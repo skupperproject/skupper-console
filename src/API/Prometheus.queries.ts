@@ -54,30 +54,30 @@ export const queries = {
     return `sum by(sourceProcess, destProcess)(rate(flow_latency_microseconds_sum[1m]))`;
   },
 
-  getTotalHttpFlowByAddress() {
+  getTotalHttpFlowByService() {
     return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.AllHttp}"}/2)`;
   },
 
-  getTotalTcpFlowByAddress() {
+  getTotalTcpFlowByService() {
     return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.Tcp}"})`;
   },
 
-  getActiveFlowsByAddress() {
+  getActiveFlowsByService() {
     return `sum by(address)(increase(active_flows{protocol=~"${AvailableProtocols.AllHttp}"}[30s]) or active_flows{protocol="${AvailableProtocols.Tcp}"})`;
   },
 
-  getTcpByteRateByAddress(addressName: string) {
-    return `rate(octets_total{protocol="tcp",  address="${addressName}"}[1m])`;
+  getTcpByteRateByService(serviceName: string) {
+    return `rate(octets_total{protocol="tcp",  address="${serviceName}"}[1m])`;
   },
 
-  getResourcePairsByAddress(
-    addressName: string,
+  getResourcePairsByService(
+    serviceName: string,
     clientType: 'client' | 'clientSite',
     serverType: 'server' | 'serverSite'
   ) {
     const client = clientType === 'client' ? ' sourceProcess, sourceSite' : 'sourceSite';
     const server = serverType === 'server' ? 'destProcess,   destSite' : 'destSite';
 
-    return `sum by(${client}, ${server})(rate(octets_total{address="${addressName}", direction="incoming"}[1h]))`;
+    return `sum by(${client}, ${server})(rate(octets_total{address="${serviceName}", direction="incoming"}[1h]))`;
   }
 };
