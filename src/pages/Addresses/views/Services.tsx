@@ -11,10 +11,10 @@ import SearchFilter from '@core/components/skSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
-import { AddressesController } from '../services';
+import { ServicesController } from '../services';
 import { QueriesServices } from '../services/services.enum';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
-import { AddressesLabels } from '../Services.enum';
+import { ServicesLabels } from '../Services.enum';
 
 const initOldConnectionsQueryParams: RequestOptions = {
   limit: BIG_PAGINATION_SIZE
@@ -24,8 +24,8 @@ const Services = function () {
   const [servicesQueryParams, setServicesQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
 
   const { data: servicesData } = useQuery(
-    [QueriesServices.GetAddresses, servicesQueryParams],
-    () => RESTApi.fetchAddresses(servicesQueryParams),
+    [QueriesServices.GetServices, servicesQueryParams],
+    () => RESTApi.fetchServices(servicesQueryParams),
     {
       keepPreviousData: true
     }
@@ -33,7 +33,7 @@ const Services = function () {
 
   const { data: tcpActiveFlows } = useQuery(
     [QueriesServices.GetPrometheusActiveFlows],
-    () => PrometheusApi.fetchActiveFlowsByAddress(),
+    () => PrometheusApi.fetchActiveFlowsByService(),
     {
       enabled: isPrometheusActive
     }
@@ -41,7 +41,7 @@ const Services = function () {
 
   const { data: httpTotalFlows } = useQuery(
     [QueriesServices.GetPrometheusHttpTotalFlows],
-    () => PrometheusApi.fetchHttpFlowsByAddress(),
+    () => PrometheusApi.fetchHttpFlowsByService(),
     {
       enabled: isPrometheusActive
     }
@@ -49,7 +49,7 @@ const Services = function () {
 
   const { data: tcpTotalFlows } = useQuery(
     [QueriesServices.GetPrometheusTcpTotalFlows],
-    () => PrometheusApi.fetchTcpFlowsByAddress(),
+    () => PrometheusApi.fetchTcpFlowsByService(),
     {
       enabled: isPrometheusActive
     }
@@ -62,7 +62,7 @@ const Services = function () {
   const services = servicesData?.results || [];
   const serviceCount = servicesData?.timeRangeCount || 0;
 
-  const serviceRows = AddressesController.extendAddressesWithActiveAndTotalFlowPairs(services, {
+  const serviceRows = ServicesController.extendServicesWithActiveAndTotalFlowPairs(services, {
     httpTotalFlows,
     tcpTotalFlows,
     tcpActiveFlows
@@ -71,8 +71,8 @@ const Services = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.servicesView()}
-      title={AddressesLabels.Section}
-      description={AddressesLabels.Description}
+      title={ServicesLabels.Section}
+      description={ServicesLabels.Description}
       mainContentChildren={
         <>
           <SearchFilter onSearch={handleSetServiceFilters} selectOptions={servicesSelectOptions} />

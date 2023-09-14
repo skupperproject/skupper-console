@@ -9,53 +9,53 @@ import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesTableColumns } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
 import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
-import { AddressResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
+import { ServiceResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { AddressesRoutesPaths, AddressesLabels, AddressesColumnsNames } from './Services.enum';
+import { ServicesRoutesPaths, ServicesLabels, ServicesColumnsNames } from './Services.enum';
 
 export const ServicesPaths = {
-  path: AddressesRoutesPaths.Services,
-  name: AddressesLabels.Section
+  path: ServicesRoutesPaths.Services,
+  name: ServicesLabels.Section
 };
 
 export const customServiceCells = {
-  AddressNameLinkCell: (props: LinkCellProps<AddressResponse>) =>
+  ServiceNameLinkCell: (props: LinkCellProps<ServiceResponse>) =>
     LinkCell({
       ...props,
       type: 'service',
-      link: `${AddressesRoutesPaths.Services}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
+      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
     })
 };
 
 // Services Table
-export const ServiceColumns: SKColumn<AddressResponse>[] = [
+export const ServiceColumns: SKColumn<ServiceResponse>[] = [
   {
-    name: AddressesColumnsNames.Name,
+    name: ServicesColumnsNames.Name,
     prop: 'name',
-    customCellName: 'AddressNameLinkCell'
+    customCellName: 'ServiceNameLinkCell'
   },
   {
-    name: AddressesColumnsNames.Protocol,
+    name: ServicesColumnsNames.Protocol,
     prop: 'protocol',
     width: 15
   },
   {
-    name: AddressesColumnsNames.Servers,
+    name: ServicesColumnsNames.Servers,
     prop: 'connectorCount',
     width: 15
   },
   {
-    name: AddressesColumnsNames.CurrentFlowPairs,
+    name: ServicesColumnsNames.CurrentFlowPairs,
     columnDescription: 'Live connections or requests',
 
-    prop: 'currentFlows' as keyof AddressResponse,
+    prop: 'currentFlows' as keyof ServiceResponse,
     width: 15
   },
   {
-    name: AddressesColumnsNames.TotalFLowPairs,
+    name: ServicesColumnsNames.TotalFLowPairs,
     columnDescription: 'Total connections or requests',
 
-    prop: 'totalFlows' as keyof AddressResponse,
+    prop: 'totalFlows' as keyof ServiceResponse,
     width: 15
   }
 ];

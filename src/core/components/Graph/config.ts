@@ -18,7 +18,7 @@ import {
 const INACTIVE_OPACITY_VALUE = 0.3;
 const greyColor = '#808080';
 
-export const DEFAULT_MODE: Modes = {
+const DEFAULT_MODE: Modes = {
   default: [
     { type: 'drag-node', onlyChangeComboSize: true },
     {
@@ -108,7 +108,7 @@ export const DEFAULT_REMOTE_NODE_CONFIG: Partial<{
   }
 };
 
-export const DEFAULT_EDGE_CONFIG: Partial<{
+const DEFAULT_EDGE_CONFIG: Partial<{
   type: string;
   size: number | number[];
   color: string;
@@ -135,7 +135,7 @@ export const DEFAULT_EDGE_CONFIG: Partial<{
   }
 };
 
-export const DEFAULT_COMBO_CONFIG: ModelStyle & {
+const DEFAULT_COMBO_CONFIG: ModelStyle & {
   labelBgCfg: {
     fill: string;
     radius: number;
@@ -166,7 +166,7 @@ export const DEFAULT_COMBO_CONFIG: ModelStyle & {
   }
 };
 
-export const DEFAULT_NODE_STATE_CONFIG = {
+const DEFAULT_NODE_STATE_CONFIG = {
   hidden: {
     opacity: INACTIVE_OPACITY_VALUE,
 
@@ -196,7 +196,7 @@ export const DEFAULT_NODE_STATE_CONFIG = {
   }
 };
 
-export const DEFAULT_COMBO_STATE_CONFIG = {
+const DEFAULT_COMBO_STATE_CONFIG = {
   hover: {
     stroke: COMBO_BORDER_COLOR_HOVER
   }

@@ -11,17 +11,17 @@ import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesServices } from '../services/services.enum';
 import { PREFIX_DISPLAY_INTERVAL_CACHE_KEY, initServersQueryParams } from '../Services.constants';
-import { RequestLabels, AddressesLabels } from '../Services.enum';
+import { RequestLabels, ServicesLabels } from '../Services.enum';
 
 interface OverviewProps {
-  addressId: string;
+  serviceId: string;
   protocol: AvailableProtocols;
 }
 
-const Overview: FC<OverviewProps> = function ({ addressId, protocol }) {
+const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
   const { data: exposedServersData } = useQuery(
-    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
-    () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
+    [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
+    () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
@@ -30,9 +30,9 @@ const Overview: FC<OverviewProps> = function ({ addressId, protocol }) {
 
   const handleRefreshMetrics = useCallback(
     (interval: string) => {
-      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`, interval);
+      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${serviceId}`, interval);
     },
-    [addressId]
+    [serviceId]
   );
 
   const servers = exposedServersData?.results || [];
@@ -42,9 +42,9 @@ const Overview: FC<OverviewProps> = function ({ addressId, protocol }) {
 
   return (
     <Metrics
-      key={addressId}
+      key={serviceId}
       selectedFilters={{
-        ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${addressId}`),
+        ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${serviceId}`),
         processIdSource: serverNamesIds,
         protocol
       }}
@@ -54,7 +54,7 @@ const Overview: FC<OverviewProps> = function ({ addressId, protocol }) {
         protocols: { disabled: true, placeholder: protocol },
         sourceProcesses: {
           disabled: serverNames.length < 2,
-          placeholder: AddressesLabels.MetricDestinationProcessFilter
+          placeholder: ServicesLabels.MetricDestinationProcessFilter
         },
         destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
       }}

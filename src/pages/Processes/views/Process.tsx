@@ -57,8 +57,8 @@ const Process = function () {
     () => RESTApi.fetchProcessesPairs(processesPairsRxQueryParams)
   );
 
-  const { data: services } = useQuery([QueriesProcesses.GetAddressesByProcessId, processId], () =>
-    RESTApi.fetchAddressesByProcess(processId)
+  const { data: services } = useQuery([QueriesProcesses.GetServicesByProcessId, processId], () =>
+    RESTApi.fetchServicesByProcess(processId)
   );
 
   const handleRefreshMetrics = useCallback(

@@ -38,8 +38,8 @@ describe('Begin testing the Http service component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <HttpService
-            addressId={servicesResults[0].identity}
-            addressName={servicesResults[0].name}
+            serviceId={servicesResults[0].identity}
+            serviceName={servicesResults[0].name}
             protocol={AvailableProtocols.Http2}
             viewSelected={TAB_0_KEY}
           />
@@ -56,8 +56,8 @@ describe('Begin testing the Http service component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <HttpService
-            addressId={servicesResults[0].identity}
-            addressName={servicesResults[0].name}
+            serviceId={servicesResults[0].identity}
+            serviceName={servicesResults[0].name}
             protocol={AvailableProtocols.Http2}
             viewSelected={TAB_1_KEY}
           />
@@ -74,8 +74,8 @@ describe('Begin testing the Http service component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <HttpService
-            addressId={servicesResults[0].identity}
-            addressName={servicesResults[0].name}
+            serviceId={servicesResults[0].identity}
+            serviceName={servicesResults[0].name}
             protocol={AvailableProtocols.Http2}
             viewSelected={TAB_2_KEY}
           />

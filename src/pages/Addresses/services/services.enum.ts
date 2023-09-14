@@ -1,10 +1,11 @@
 export enum QueriesServices {
   GetFlowPair = 'services-flowpair-query',
-  GetFlowPairsByAddress = 'services-flowpairs-by-service-query',
-  GetProcessesByAddress = 'processes-by-service-query',
-  GetAddresses = 'services-query',
+  GetFlowPairsByService = 'services-flowpairs-by-service-query',
+  GetProcessesByService = 'processes-by-service-query',
+  GetTcpByteRateByService = 'tcp-byterate-by-service-query',
+  GetServices = 'services-query',
   GetPrometheusActiveFlows = 'services-get-prometheus-active-flows',
   GetPrometheusTcpTotalFlows = 'services-get-tcp-prometheus-total-flows',
   GetPrometheusHttpTotalFlows = 'services-get-http-prometheus-total-flows',
-  GetResourcePairsByAddress = 'services-get-resource-pair-by-address'
+  GetResourcePairsByService = 'services-get-resource-pair-by-service'
 }

@@ -14,7 +14,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
-import ConnectionsByAddress from '../views/TcpService';
+import ConnectionsByService from '../views/TcpService';
 
 const servicesResults = servicesData.results;
 const flowPairsResults = flowPairsData.results;
@@ -37,9 +37,9 @@ describe('Begin testing the TCP service component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
+          <ConnectionsByService
+            serviceId={servicesResults[2].identity}
+            serviceName={servicesResults[2].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_0_KEY}
           />
@@ -55,9 +55,9 @@ describe('Begin testing the TCP service component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
+          <ConnectionsByService
+            serviceId={servicesResults[2].identity}
+            serviceName={servicesResults[2].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_1_KEY}
           />
@@ -73,9 +73,9 @@ describe('Begin testing the TCP service component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
+          <ConnectionsByService
+            serviceId={servicesResults[2].identity}
+            serviceName={servicesResults[2].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_2_KEY}
           />
@@ -92,9 +92,9 @@ describe('Begin testing the TCP service component', () => {
     const { getByTestId, getByText, getAllByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ConnectionsByAddress
-            addressId={servicesResults[2].identity}
-            addressName={servicesResults[2].name}
+          <ConnectionsByService
+            serviceId={servicesResults[2].identity}
+            serviceName={servicesResults[2].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_3_KEY}
           />

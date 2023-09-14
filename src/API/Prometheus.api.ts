@@ -266,63 +266,63 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchHttpFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchHttpFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTotalHttpFlowByAddress() }
+      params: { query: queries.getTotalHttpFlowByService() }
     });
 
     return result;
   },
 
-  fetchTcpFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchTcpFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTotalTcpFlowByAddress() }
+      params: { query: queries.getTotalTcpFlowByService() }
     });
 
     return result;
   },
 
-  fetchActiveFlowsByAddress: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchActiveFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getActiveFlowsByAddress() }
+      params: { query: queries.getActiveFlowsByService() }
     });
 
     return result;
   },
 
-  fetchTcpByteRateByAddress: async ({
-    addressName
+  fetchTcpByteRateByService: async ({
+    serviceName
   }: {
-    addressName: string;
+    serviceName: string;
   }): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTcpByteRateByAddress(addressName) }
+      params: { query: queries.getTcpByteRateByService(serviceName) }
     });
 
     return result;
   },
 
-  fethServicePairsByAddress: async ({
-    addressName,
+  fethServicePairsByService: async ({
+    serviceName,
     clientType,
     serverType
   }: {
-    addressName: string;
+    serviceName: string;
     clientType: 'client' | 'clientSite';
     serverType: 'server' | 'serverSite';
   }): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getResourcePairsByAddress(addressName, clientType, serverType) }
+      params: { query: queries.getResourcePairsByService(serviceName, clientType, serverType) }
     });
 
     return result;

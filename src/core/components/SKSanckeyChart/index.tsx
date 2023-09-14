@@ -19,7 +19,7 @@ interface SkSankeyChartProps {
 }
 
 export const DEFAULT_SANKEY_CHART_FLOW_VALUE = 0.000001;
-export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
+const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 
 const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
   return (

@@ -19,15 +19,15 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
-import { AddressesRoutesPaths } from '@pages/Addresses/Services.enum';
+import { ServicesRoutesPaths } from '@pages/Addresses/Services.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { AddressResponse, ProcessResponse } from 'API/REST.interfaces';
+import { ServiceResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels } from '../Processes.enum';
 
 interface ProcessResponseWithService extends ProcessResponse {
-  services: AddressResponse[];
+  services: ServiceResponse[];
 }
 
 const ProcessDescription: FC<{ processWithService: ProcessResponseWithService; title: string | JSX.Element }> =
@@ -125,7 +125,7 @@ const ProcessDescription: FC<{ processWithService: ProcessResponseWithService; t
                           <div key={service.identity}>
                             <ResourceIcon type="service" />
                             <Link
-                              to={`${AddressesRoutesPaths.Services}/${service.name}@${service.identity}@${service.protocol}`}
+                              to={`${ServicesRoutesPaths.Services}/${service.name}@${service.identity}@${service.protocol}`}
                             >
                               {service.name}
                             </Link>

@@ -113,13 +113,13 @@ const ProcessPairs = function () {
       },
 
       {
-        queryKey: [QueriesProcesses.GetAddressesByProcessId, sourceId],
-        queryFn: () => RESTApi.fetchAddressesByProcess(sourceId)
+        queryKey: [QueriesProcesses.GetServicesByProcessId, sourceId],
+        queryFn: () => RESTApi.fetchServicesByProcess(sourceId)
       },
 
       {
-        queryKey: [QueriesProcesses.GetAddressesByProcessId, destinationId],
-        queryFn: () => RESTApi.fetchAddressesByProcess(destinationId)
+        queryKey: [QueriesProcesses.GetServicesByProcessId, destinationId],
+        queryFn: () => RESTApi.fetchServicesByProcess(destinationId)
       },
 
       {

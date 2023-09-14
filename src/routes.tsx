@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
-import { addressesRoutes } from '@pages/Addresses/routes';
+import { servicesRoutes } from '@pages/Addresses/routes';
 import { processesRoutes } from '@pages/Processes/routes';
 import { processGroupsRoutes } from '@pages/ProcessGroups/routes';
 import { errorsRoutes } from '@pages/shared/Errors/routes';
@@ -14,7 +14,7 @@ const DefaultRoute = lazy(() => import(/* webpackChunkName: "default-route" */ '
 export const routes: RouteObject[] = [
   { index: true, element: <DefaultRoute /> },
   ...siteRoutes,
-  ...addressesRoutes,
+  ...servicesRoutes,
   ...processGroupsRoutes,
   ...processesRoutes,
   ...errorsRoutes,

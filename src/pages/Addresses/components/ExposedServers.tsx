@@ -12,19 +12,19 @@ import { QueriesServices } from '../services/services.enum';
 import { initServersQueryParams, tcpServerColumns } from '../Services.constants';
 
 interface ExposedServersProps {
-  addressId: string;
-  addressName: string;
+  serviceId: string;
+  serviceName: string;
   pagination?: number;
 }
 
 const ExposedServers: FC<ExposedServersProps> = function ({
-  addressId,
-  addressName,
+  serviceId,
+  serviceName,
   pagination = BIG_PAGINATION_SIZE
 }) {
   const { data: exposedServersData } = useQuery(
-    [QueriesServices.GetProcessesByAddress, addressId, initServersQueryParams],
-    () => (addressId ? RESTApi.fetchServersByAddress(addressId, initServersQueryParams) : null),
+    [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
+    () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
@@ -32,8 +32,8 @@ const ExposedServers: FC<ExposedServersProps> = function ({
   );
 
   const { data: byteRates } = useQuery(
-    ['QueriesAddresses.fetchTcpByteRateByAddress', { addressName }],
-    () => PrometheusApi.fetchTcpByteRateByAddress({ addressName }),
+    [QueriesServices.GetTcpByteRateByService, { serviceName }],
+    () => PrometheusApi.fetchTcpByteRateByService({ serviceName }),
     {
       refetchInterval: UPDATE_INTERVAL
     }

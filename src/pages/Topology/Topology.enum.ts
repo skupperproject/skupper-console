@@ -31,12 +31,12 @@ export enum TopologyLabels {
   CheckboxShowCurrentByteRate = 'Byterate (live)',
   CheckboxShowLatency = 'Latency (live)',
   CheckboxShowLabelReverse = 'Reverse metrics',
-  AddressFilterPlaceholderText = 'Search for service',
+  ServiceFilterPlaceholderText = 'Search for service',
   DisplayPlaceholderText = 'Display'
 }
 
 export enum TopologyURLFilters {
   Type = 'type',
-  AddressId = 'addressId',
+  ServiceId = 'serviceId',
   IdSelected = 'id'
 }

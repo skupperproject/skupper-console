@@ -1,8 +1,8 @@
-export enum AddressesRoutesPaths {
+export enum ServicesRoutesPaths {
   Services = '/services'
 }
 
-export enum AddressesColumnsNames {
+export enum ServicesColumnsNames {
   Name = 'Address',
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',
@@ -11,7 +11,7 @@ export enum AddressesColumnsNames {
 }
 
 // LABELS
-export enum AddressesLabels {
+export enum ServicesLabels {
   Section = 'Services',
   HTTP = ' HTTP/2',
   TCP = 'TCP',

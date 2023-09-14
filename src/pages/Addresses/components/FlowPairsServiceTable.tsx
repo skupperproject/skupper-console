@@ -12,7 +12,7 @@ import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 import { QueriesServices } from '../services/services.enum';
 
 interface FlowPairsServiceTableProps {
-  addressId: string;
+  serviceId: string;
   columns: SKColumn<FlowPairsResponse>[];
   filters: RequestOptions;
   options: { id: string; name: string }[];
@@ -20,7 +20,7 @@ interface FlowPairsServiceTableProps {
 }
 
 const FlowPairsServiceTable: FC<FlowPairsServiceTableProps> = function ({
-  addressId,
+  serviceId,
   columns,
   filters,
   options,
@@ -29,8 +29,8 @@ const FlowPairsServiceTable: FC<FlowPairsServiceTableProps> = function ({
   const [queryParams, setQueryParams] = useState({});
 
   const { data: flowPairsData } = useQuery(
-    [QueriesServices.GetFlowPairsByAddress, addressId, { ...filters, ...queryParams }],
-    () => RESTApi.fetchFlowPairsByAddress(addressId, { ...filters, ...queryParams }),
+    [QueriesServices.GetFlowPairsByService, serviceId, { ...filters, ...queryParams }],
+    () => RESTApi.fetchFlowPairsByService(serviceId, { ...filters, ...queryParams }),
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true

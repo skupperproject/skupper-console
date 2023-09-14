@@ -17,11 +17,11 @@ import {
   initOldConnectionsQueryParams,
   tcpColumns
 } from '../Services.constants';
-import { ConnectionsByAddressProps } from '../Services.interfaces';
+import { ConnectionsByServiceProps } from '../Services.interfaces';
 
-const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
-  addressId,
-  addressName,
+const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
+  serviceId,
+  serviceName,
   protocol,
   viewSelected
 }) {
@@ -32,19 +32,19 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
 
   return (
     <>
-      {viewSelected === TAB_0_KEY && <Overview addressId={addressId} protocol={protocol} />}
+      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} protocol={protocol} />}
 
-      {viewSelected === TAB_1_KEY && <ExposedServers addressId={addressId} addressName={addressName} />}
+      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
 
       {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
         <Stack hasGutter>
           <StackItem>
-            <ResourceDistrubutionFlowChart addressId={addressId} addressName={addressName} />
+            <ResourceDistrubutionFlowChart serviceId={serviceId} serviceName={serviceName} />
           </StackItem>
 
           <StackItem>
             <FlowPairsServiceTable
-              addressId={addressId}
+              serviceId={serviceId}
               options={tcpSelectOptions}
               columns={service[viewSelected].columns}
               filters={service[viewSelected].filters}
@@ -56,4 +56,4 @@ const ConnectionsByAddress: FC<ConnectionsByAddressProps> = function ({
   );
 };
 
-export default ConnectionsByAddress;
+export default ConnectionsByService;

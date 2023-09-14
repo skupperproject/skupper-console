@@ -193,7 +193,7 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   }
 ];
 
-export const defaultSelectOptions: { name: string; id: string }[] = [
+const defaultSelectOptions: { name: string; id: string }[] = [
   {
     name: 'Client',
     id: 'forwardFlow.processName'
