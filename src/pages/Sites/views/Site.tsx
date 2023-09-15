@@ -26,8 +26,7 @@ import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import SitesController from '../services';
-import { QueriesSites } from '../services/services.enum';
-import { SitesRoutesPaths, Labels } from '../Sites.enum';
+import { SitesRoutesPaths, Labels, QueriesSites } from '../Sites.enum';
 
 const processQueryParams = { endTime: 0 };
 

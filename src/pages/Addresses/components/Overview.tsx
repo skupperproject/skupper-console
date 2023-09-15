@@ -9,9 +9,8 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
-import { QueriesServices } from '../services/services.enum';
 import { PREFIX_DISPLAY_INTERVAL_CACHE_KEY, initServersQueryParams } from '../Services.constants';
-import { RequestLabels, ServicesLabels } from '../Services.enum';
+import { RequestLabels, ServicesLabels, QueriesServices } from '../Services.enum';
 
 interface OverviewProps {
   serviceId: string;

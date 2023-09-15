@@ -8,8 +8,8 @@ import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@confi
 import SkTable from '@core/components/SkTable';
 import { CustomProcessCells } from '@pages/Processes/Processes.constants';
 
-import { QueriesServices } from '../services/services.enum';
 import { initServersQueryParams, tcpServerColumns } from '../Services.constants';
+import { QueriesServices } from '../Services.enum';
 
 interface ExposedServersProps {
   serviceId: string;

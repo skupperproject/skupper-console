@@ -12,8 +12,7 @@ import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enu
 import { RequestOptions } from 'API/REST.interfaces';
 
 import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
-import { ProcessesLabels } from '../Processes.enum';
-import { QueriesProcesses } from '../services/services.enum';
+import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 //TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
 const initExternalProcessesQueryParams = {

@@ -23,8 +23,7 @@ import {
   CustomProcessPairCells,
   processesHttpConnectedColumns
 } from '../Processes.constants';
-import { ProcessesLabels } from '../Processes.enum';
-import { QueriesProcesses } from '../services/services.enum';
+import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
 

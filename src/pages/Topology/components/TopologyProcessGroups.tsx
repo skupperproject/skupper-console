@@ -9,12 +9,10 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { QueriesProcessGroups } from '@pages/ProcessGroups/services/services.enum';
+import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
 
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../services/services.enum';
-import { TopologyLabels } from '../Topology.enum';
+import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'component-graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'component-fitScreen';

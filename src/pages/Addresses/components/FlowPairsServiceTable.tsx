@@ -9,7 +9,7 @@ import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { QueriesServices } from '../services/services.enum';
+import { QueriesServices } from '../Services.enum';
 
 interface FlowPairsServiceTableProps {
   serviceId: string;

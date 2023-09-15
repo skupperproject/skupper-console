@@ -18,8 +18,7 @@ import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 
-import { ProcessGroupsLabels } from '../ProcessGroups.enum';
-import { QueriesProcessGroups } from '../services/services.enum';
+import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'component-display-interval';
 

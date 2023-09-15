@@ -12,9 +12,8 @@ import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
 import { ServicesController } from '../services';
-import { QueriesServices } from '../services/services.enum';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
-import { ServicesLabels } from '../Services.enum';
+import { ServicesLabels, QueriesServices } from '../Services.enum';
 
 const initOldConnectionsQueryParams: RequestOptions = {
   limit: BIG_PAGINATION_SIZE
