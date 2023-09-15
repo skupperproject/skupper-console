@@ -12,15 +12,12 @@ import EmptyData from '@core/components/EmptyData';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { QueriesServices } from '@pages/Addresses/services/services.enum';
-import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { QueriesProcesses } from '@pages/Processes/services/services.enum';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { QueriesServices } from '@pages/Addresses/Services.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
+import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../services/services.enum';
-import { TopologyLabels } from '../Topology.enum';
+import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process-graphZoom';
 const SHOW_SITE_KEY = 'showSite';

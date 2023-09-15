@@ -10,9 +10,8 @@ import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 import { SiteResponse } from 'API/REST.interfaces';
 
-import { QueriesSites } from '../services/services.enum';
 import { siteColumns } from '../Sites.constants';
-import { Labels, SitesRoutesPaths } from '../Sites.enum';
+import { Labels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
 
 const Sites = function () {
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());

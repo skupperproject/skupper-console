@@ -13,9 +13,8 @@ import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/T
 
 import HttpService from './HttpService';
 import ConnectionsByService from './TcpService';
-import { QueriesServices } from '../services/services.enum';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
-import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Services.enum';
+import { ConnectionLabels, FlowPairsLabels, RequestLabels, QueriesServices } from '../Services.enum';
 
 const initServersQueryParams = {
   limit: 0

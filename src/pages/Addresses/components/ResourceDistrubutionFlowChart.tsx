@@ -12,9 +12,8 @@ import SankeyFilter, {
 } from '@core/components/SKSanckeyChart/SankeyFilter';
 
 import { ServicesController } from '../services';
-import { QueriesServices } from '../services/services.enum';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
-import { FlowPairsLabels } from '../Services.enum';
+import { FlowPairsLabels, QueriesServices } from '../Services.enum';
 
 interface ResourceDistrubutionFlowChartProps {
   serviceId: string;

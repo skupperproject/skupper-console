@@ -32,8 +32,7 @@ import { VarColors } from 'colors';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
-import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsLabels } from '../Processes.enum';
-import { QueriesProcesses } from '../services/services.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsLabels, QueriesProcesses } from '../Processes.enum';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';

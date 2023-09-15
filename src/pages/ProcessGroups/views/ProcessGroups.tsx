@@ -11,8 +11,7 @@ import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enu
 import { RequestOptions } from 'API/REST.interfaces';
 
 import { CustomComponentCells, processGroupsColumns } from '../ProcessGroups.constants';
-import { ProcessGroupsLabels } from '../ProcessGroups.enum';
-import { QueriesProcessGroups } from '../services/services.enum';
+import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
 const initComponentsQueryParams = {
   limit: BIG_PAGINATION_SIZE

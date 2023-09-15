@@ -2,6 +2,12 @@ export enum ProcessGroupsRoutesPaths {
   ProcessGroups = '/components'
 }
 
+export enum QueriesProcessGroups {
+  GetProcessGroups = 'get-process-groups-query',
+  GetProcessGroup = 'get-process-groups-query',
+  GetProcessesByProcessGroup = 'get-processes-by-process-group-query'
+}
+
 export enum ProcessGroupsTableColumns {
   Name = 'Name',
   Count = 'Processes',

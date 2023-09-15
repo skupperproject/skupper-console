@@ -8,7 +8,7 @@ import {
   LocalStorageDataSaved,
   LocalStorageDataSavedPayload,
   LocalStorageDataWithNullXY
-} from './Graph.interfaces';
+} from '../Graph.interfaces';
 
 const prefixLocalStorageItem = 'skupper';
 

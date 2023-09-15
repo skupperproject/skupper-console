@@ -9,8 +9,7 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { QueriesSites } from '@pages/Sites/services/services.enum';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { TopologyLabels } from '../Topology.enum';
