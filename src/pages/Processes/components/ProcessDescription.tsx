@@ -19,8 +19,8 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
-import { ServicesRoutesPaths } from '@pages/Addresses/Services.enum';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ServiceResponse, ProcessResponse } from 'API/REST.interfaces';
 

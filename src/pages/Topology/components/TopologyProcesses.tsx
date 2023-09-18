@@ -12,8 +12,8 @@ import EmptyData from '@core/components/EmptyData';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { QueriesServices } from '@pages/Addresses/Services.enum';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
+import { QueriesServices } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
