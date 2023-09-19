@@ -42,14 +42,14 @@ describe('Begin testing the Topology component', () => {
     expect(screen.getByTestId(getTestsIds.topologyView())).toBeInTheDocument();
   });
 
-  it('hould clicking on a tab will result in the Components tab being highlighted', async () => {
+  it('should clicking on a tab will result in the Components tab being highlighted', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
     fireEvent.click(screen.getByText(TopologyViews.ProcessGroups));
 
     expect(screen.getByText(TopologyViews.ProcessGroups).parentNode?.parentNode).toHaveClass('pf-m-current');
   });
 
-  it('hould clicking on a tab will result in the Processes tab being highlighted', async () => {
+  it('should clicking on a tab will result in the Processes tab being highlighted', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
     fireEvent.click(screen.getByText(TopologyViews.Processes));
 

@@ -14,8 +14,7 @@ import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGr
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
-const ZOOM_CACHE_KEY = 'component-graphZoom';
-const FIT_SCREEN_CACHE_KEY = 'component-fitScreen';
+const ZOOM_CACHE_KEY = 'component';
 
 const processGroupsQueryParams = {
   processGroupRole: 'external'
@@ -51,14 +50,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
       refetchInterval: UPDATE_INTERVAL
     }
   );
-
-  const handleSaveZoom = useCallback((zoomValue: number) => {
-    localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
-  }, []);
-
-  const handleFitScreen = useCallback((flag: boolean) => {
-    localStorage.setItem(FIT_SCREEN_CACHE_KEY, `${flag}`);
-  }, []);
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -105,10 +96,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
           edges={links}
           onClickNode={handleGetSelectedNode}
           itemSelected={processGroupId}
-          onGetZoom={handleSaveZoom}
-          onFitScreen={handleFitScreen}
-          zoom={Number(localStorage.getItem(ZOOM_CACHE_KEY))}
-          fitScreen={Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))}
+          saveConfigkey={ZOOM_CACHE_KEY}
         />
       </StackItem>
     </Stack>

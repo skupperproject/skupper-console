@@ -21,6 +21,9 @@ import {
 import GraphMenuControl from './GraphMenuControl';
 import { GraphController } from './services';
 
+const GRAPH_ZOOM_CACHE_KEY = 'graphZoom';
+const FIT_SCREEN_CACHE_KEY = 'fitScreen';
+
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   ({
     nodes: nodesWithoutPosition,
@@ -30,10 +33,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     onClickNode,
     onClickCombo,
     itemSelected,
-    onGetZoom,
-    onFitScreen,
-    fitScreen,
-    zoom
+    saveConfigkey
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
     const isHoverState = useRef<boolean>(false);
@@ -228,6 +228,24 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       isHoverState.current = false;
     }
 
+    const handleSaveZoom = useCallback(
+      (zoomValue: number) => {
+        if (saveConfigkey) {
+          localStorage.setItem(`${saveConfigkey}-${GRAPH_ZOOM_CACHE_KEY}`, `${zoomValue}`);
+        }
+      },
+      [saveConfigkey]
+    );
+
+    const handleFitScreen = useCallback(
+      (flag: boolean) => {
+        if (saveConfigkey) {
+          localStorage.setItem(`${saveConfigkey}-${FIT_SCREEN_CACHE_KEY}`, `${flag}`);
+        }
+      },
+      [saveConfigkey]
+    );
+
     // ZOOM EVENTS
     function handleWheelZoom() {
       const graphInstance = topologyGraphRef.current;
@@ -235,13 +253,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       if (graphInstance) {
         const zoomValue = graphInstance.getZoom();
 
-        if (onGetZoom) {
-          onGetZoom(zoomValue);
-        }
-
-        if (onFitScreen) {
-          onFitScreen(0);
-        }
+        handleSaveZoom(zoomValue);
+        handleFitScreen(false);
       }
     }
 
@@ -308,9 +321,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         topologyGraph.data(data);
         topologyGraph.render();
 
+        const zoom = Number(localStorage.getItem(`${saveConfigkey}-${GRAPH_ZOOM_CACHE_KEY}`));
+
         if (zoom) {
           topologyGraph.zoomTo(zoom, topologyGraph.getGraphCenterPoint(), true, { duration: 0 });
         }
+
+        const fitScreen = Number(localStorage.getItem(`${saveConfigkey}-${FIT_SCREEN_CACHE_KEY}`));
 
         if (fitScreen) {
           topologyGraph.fitView(50, undefined, true, { duration: 0 });
@@ -398,7 +415,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     return (
       <div ref={graphRef} style={{ height: '98%', position: 'relative' }}>
         {topologyGraphRef.current && (
-          <GraphMenuControl graphInstance={topologyGraphRef.current} onGetZoom={onGetZoom} onFitScreen={onFitScreen} />
+          <GraphMenuControl
+            graphInstance={topologyGraphRef.current}
+            onGetZoom={handleSaveZoom}
+            onFitScreen={handleFitScreen}
+          />
         )}
       </div>
     );

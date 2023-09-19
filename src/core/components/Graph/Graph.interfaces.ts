@@ -44,11 +44,10 @@ export interface GraphReactAdaptorProps {
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
+  saveConfigkey?: string;
   onGetZoom?: Function;
   onFitScreen?: Function;
   legendData?: GraphData;
-  fitScreen?: number | null;
-  zoom?: number | null;
 }
 
 export interface LocalStorageDataSavedPayload {

@@ -14,8 +14,7 @@ import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { TopologyController } from '../services';
 import { TopologyLabels } from '../Topology.enum';
 
-const ZOOM_CACHE_KEY = 'site-graphZoom';
-const FIT_SCREEN_CACHE_KEY = 'site-fitScreen';
+const ZOOM_CACHE_KEY = 'site';
 
 const TopologySite: FC<{ id?: string | null }> = function () {
   const navigate = useNavigate();
@@ -31,14 +30,6 @@ const TopologySite: FC<{ id?: string | null }> = function () {
   const { data: links } = useQuery([QueriesSites.GetLinks], () => RESTApi.fetchLinks(), {
     refetchInterval: UPDATE_INTERVAL
   });
-
-  const handleSaveZoom = useCallback((zoomValue: number) => {
-    localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
-  }, []);
-
-  const handleFitScreen = useCallback((flag: boolean) => {
-    localStorage.setItem(FIT_SCREEN_CACHE_KEY, `${flag}`);
-  }, []);
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -79,10 +70,7 @@ const TopologySite: FC<{ id?: string | null }> = function () {
           nodes={nodes}
           edges={siteLinks}
           onClickNode={handleGetSelectedNode}
-          onGetZoom={handleSaveZoom}
-          onFitScreen={handleFitScreen}
-          zoom={Number(localStorage.getItem(ZOOM_CACHE_KEY))}
-          fitScreen={Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))}
+          saveConfigkey={ZOOM_CACHE_KEY}
         />
       </StackItem>
     </Stack>
