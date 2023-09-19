@@ -19,7 +19,7 @@ import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
-const ZOOM_CACHE_KEY = 'process-graphZoom';
+const ZOOM_CACHE_KEY = 'process';
 const SHOW_SITE_KEY = 'showSite';
 const SHOW_LINK_PROTOCOL = 'show-link-protocol';
 const SHOW_LINK_BYTES = 'show-link-bytes';
@@ -30,7 +30,6 @@ const DISPLAY_OPTIONS = 'display-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
 
 const ROTATE_LINK_LABEL = 'show-link-label-rotated';
-const FIT_SCREEN_CACHE_KEY = 'process-fitScreen';
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 
 const externalProcessesQueryParams = {
@@ -225,20 +224,8 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
     [addDisplayOptionToSelection, displayOptionsSelected, removeDisplayOptionToSelection]
   );
 
-  const handleSaveZoom = useCallback((zoomValue: number) => {
-    localStorage.setItem(ZOOM_CACHE_KEY, `${zoomValue}`);
-  }, []);
-
-  const handleFitScreen = useCallback((flag: boolean) => {
-    localStorage.setItem(FIT_SCREEN_CACHE_KEY, `${flag}`);
-  }, []);
-
   const getOptions = useCallback(() => {
-    if (!services?.results) {
-      return [];
-    }
-
-    const options = services.results.map(({ name, identity }, index) => (
+    const options = (services?.results || []).map(({ name, identity }, index) => (
       <SelectOption key={index + 1} value={identity}>
         {name}
       </SelectOption>
@@ -378,6 +365,7 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
               <ToolbarContent>
                 <ToolbarItem>
                   <Select
+                    role="service-select"
                     isOpen={isServiceSelectMenuOpen}
                     onSelect={handleSelectService}
                     onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
@@ -393,6 +381,7 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
 
                 <ToolbarItem>
                   <Select
+                    role="display-select"
                     variant={SelectVariant.checkbox}
                     isOpen={isDisplayMenuOpen}
                     onSelect={handleSelectDisplay}
@@ -422,13 +411,10 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
               edges={links}
               combos={groups}
               itemSelected={processId}
-              fitScreen={Number(localStorage.getItem(FIT_SCREEN_CACHE_KEY))}
-              zoom={Number(localStorage.getItem(ZOOM_CACHE_KEY))}
+              saveConfigkey={ZOOM_CACHE_KEY}
               onClickCombo={handleGetSelectedGroup}
               onClickNode={handleGetSelectedNode}
               onClickEdge={handleGetSelectedEdge}
-              onGetZoom={handleSaveZoom}
-              onFitScreen={handleFitScreen}
             />
           </StackItem>
         </>
