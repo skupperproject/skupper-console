@@ -15,6 +15,7 @@ export enum QueriesSites {
 
 export enum Labels {
   Section = 'Sites',
+  Overview = 'Overview',
   Description = 'A site is a location where components of your application are running and they are linked together to form a network',
   Details = 'Details',
   Links = 'Links created to',
