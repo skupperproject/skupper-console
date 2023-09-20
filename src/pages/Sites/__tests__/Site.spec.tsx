@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
@@ -12,6 +12,7 @@ import sitesData from '@mocks/data/SITES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
+import { Labels } from '../Sites.enum';
 import Site from '../views/Site';
 
 const siteResults = sitesData.results as SiteResponse[];
@@ -36,6 +37,8 @@ describe('Site component', () => {
   });
 
   afterEach(() => {
+    fireEvent.click(screen.getByText(Labels.Overview));
+
     server.shutdown();
     jest.clearAllMocks();
   });
@@ -46,11 +49,15 @@ describe('Site component', () => {
     // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
+    fireEvent.click(screen.getByText(Labels.Details));
+
     expect(screen.getByTestId(getTestsIds.siteView(siteResults[0].identity))).toBeInTheDocument();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    fireEvent.click(screen.getByText(Labels.Details));
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
     expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
@@ -59,6 +66,8 @@ describe('Site component', () => {
 
   it('Should ensure the Site details component renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+
+    fireEvent.click(screen.getByText(Labels.Details));
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
       'href',

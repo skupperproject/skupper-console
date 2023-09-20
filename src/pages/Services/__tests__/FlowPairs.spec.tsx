@@ -65,7 +65,7 @@ describe('Begin testing the FlowPairs component', () => {
   it('should clicking on a tab will result in the server tab being highlighted', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(`${FlowPairsLabels.Servers}`));
+    fireEvent.click(screen.getByText(FlowPairsLabels.Servers));
 
     expect(screen.getByText(`${FlowPairsLabels.Servers}`).parentNode?.parentNode).toHaveClass(
       'pf-v5-c-tabs__item pf-m-current'
