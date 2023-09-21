@@ -86,7 +86,7 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     <Card>
       <CardHeader>
         <Title headingLevel="h1">{FlowPairsLabels.SankeyChartTitle}</Title>
-        <Title headingLevel="h4">{FlowPairsLabels.SankeyChartTitle}</Title>
+        <Title headingLevel="h4">{FlowPairsLabels.SankeyChartDescription}</Title>
       </CardHeader>
       <CardBody>
         <SankeyFilter onSearch={handleGetPairType} />
