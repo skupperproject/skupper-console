@@ -49,10 +49,9 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
       }}
       startTime={startTime}
       sourceProcesses={serverNames}
+      availableProtocols={[protocol]}
       filterOptions={{
-        protocols: { disabled: true, placeholder: protocol },
         sourceProcesses: {
-          disabled: serverNames.length < 2,
           placeholder: ServicesLabels.MetricDestinationProcessFilter
         },
         destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }

@@ -18,6 +18,7 @@ export interface MetricsProps {
   startTime?: number;
   processesConnected?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string }[];
+  availableProtocols?: AvailableProtocols[];
   filterOptions?: FilterOptionProps;
   openSections?: { traffic?: boolean; latency?: boolean; request?: boolean; response?: boolean };
   forceUpdate?: number;
