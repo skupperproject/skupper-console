@@ -18,8 +18,8 @@ interface FilterValues {
 }
 
 export const sankeyMetricOptions = [
-  { id: 'none', name: 'No metric comparison' },
-  { id: 'byterate', name: 'Compare avg. byterate (last hour)' }
+  { id: 'byterate', name: 'Compare avg. byterate (last hour)' },
+  { id: 'none', name: 'Display only relationships' }
 ];
 
 export const ServiceClientResourceOptions: { name: string; id: 'client' | 'clientSite' }[] = [

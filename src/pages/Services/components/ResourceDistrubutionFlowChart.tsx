@@ -75,7 +75,7 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
 
   const { nodes, links } = ServicesController.convertToSankeyChartData(
     servicePairs || [],
-    metricSelected !== defaultMetric
+    metricSelected === defaultMetric
   );
 
   if (!nodes.length) {
@@ -86,6 +86,7 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     <Card>
       <CardHeader>
         <Title headingLevel="h1">{FlowPairsLabels.SankeyChartTitle}</Title>
+        <Title headingLevel="h4">{FlowPairsLabels.SankeyChartTitle}</Title>
       </CardHeader>
       <CardBody>
         <SankeyFilter onSearch={handleGetPairType} />
