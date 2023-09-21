@@ -14,23 +14,24 @@ import { RequestsByServiceProps } from '../Services.interfaces';
 const HttpService: FC<RequestsByServiceProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
   return (
     <>
-      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} protocol={protocol} />}
-      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
-      {viewSelected === TAB_2_KEY && (
+      {viewSelected === TAB_0_KEY && (
         <Stack hasGutter>
           <StackItem>
             <ResourceDistrubutionFlowChart serviceId={serviceId} serviceName={serviceName} />
           </StackItem>
 
-          <StackItem>
-            <FlowPairsServiceTable
-              serviceId={serviceId}
-              options={httpSelectOptions}
-              columns={httpColumns}
-              filters={initRequestsQueryParams}
-            />
-          </StackItem>
+          <StackItem />
+          <Overview serviceId={serviceId} protocol={protocol} />
         </Stack>
+      )}
+      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
+      {viewSelected === TAB_2_KEY && (
+        <FlowPairsServiceTable
+          serviceId={serviceId}
+          options={httpSelectOptions}
+          columns={httpColumns}
+          filters={initRequestsQueryParams}
+        />
       )}
     </>
   );

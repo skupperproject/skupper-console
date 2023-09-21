@@ -60,7 +60,7 @@ export const ServicesController = {
   },
 
   convertToSankeyChartData: (servicePairs: PrometheusApiSingleResult[], withMetric = false) => {
-    const separator = '@_@'; // This is an internal team role to unify asiteId and a siteName in prometheus
+    const separator = '@_@'; // This is an internal team role convention to unify a siteId and a siteName in prometheus
     const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
 
     const clients =

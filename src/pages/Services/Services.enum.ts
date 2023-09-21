@@ -11,7 +11,8 @@ export enum QueriesServices {
   GetPrometheusActiveFlows = 'services-get-prometheus-active-flows',
   GetPrometheusTcpTotalFlows = 'services-get-tcp-prometheus-total-flows',
   GetPrometheusHttpTotalFlows = 'services-get-http-prometheus-total-flows',
-  GetResourcePairsByService = 'services-get-resource-pair-by-service'
+  GetResourcePairsByService = 'services-get-resource-pair-by-service',
+  GetProcessPairsByService = 'services-get-process-pairs-by-service'
 }
 
 export enum ServicesColumnsNames {
@@ -52,5 +53,5 @@ export enum RequestLabels {
 export enum FlowPairsLabels {
   Overview = 'Overview',
   Servers = 'Exposed servers',
-  SankeyChartTitle = 'Resource distribution flow diagram'
+  SankeyChartTitle = 'Distribution of flows'
 }
