@@ -313,16 +313,33 @@ export const PrometheusApi = {
   fethServicePairsByService: async ({
     serviceName,
     clientType,
-    serverType
+    serverType,
+    sourceProcesses,
+    destProcesses
   }: {
     serviceName: string;
     clientType: 'client' | 'clientSite';
     serverType: 'server' | 'serverSite';
+    sourceProcesses?: string;
+    destProcesses?: string;
   }): Promise<PrometheusMetricSingleData[]> => {
+    const client = clientType === 'client' ? ' sourceProcess, sourceSite' : 'sourceSite';
+    const server = serverType === 'server' ? 'destProcess,   destSite' : 'destSite';
+
+    let param = `address="${serviceName}", direction="incoming"`;
+
+    if (sourceProcesses) {
+      param = [param, `sourceProcess=~"${sourceProcesses}"`].join(',');
+    }
+
+    if (destProcesses) {
+      param = [param, `destProcess=~"${destProcesses}"`].join(',');
+    }
+
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getResourcePairsByService(serviceName, clientType, serverType) }
+      params: { query: queries.getResourcePairsByService(param, `${client}, ${server}`, '1h') }
     });
 
     return result;

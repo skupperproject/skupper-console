@@ -40,7 +40,8 @@ import {
   getProcessGroupPairsPATH,
   getProcessPairsPATH,
   getProcessGroupsPATH,
-  getCollectors
+  getCollectors,
+  getProcessPairsByServicePATH
 } from './REST.paths';
 import { mapOptionsToQueryParams, getApiResults } from './REST.utils';
 
@@ -211,6 +212,17 @@ export const RESTApi = {
 
   fetchServersByService: async (id: string, options?: RequestOptions): Promise<ResponseWrapper<ProcessResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByServicePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
+    });
+
+    return data;
+  },
+
+  fetchProcessPairsByService: async (
+    id: string,
+    options?: RequestOptions
+  ): Promise<ResponseWrapper<ProcessPairsResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessPairsByServicePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 

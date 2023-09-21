@@ -4,6 +4,7 @@ import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
+import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
 import SankeyFilter, {
@@ -29,19 +30,29 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     ServiceServerResourceOptions[0].id
   );
 
-  const { data: servicePairs } = useQuery(
-    [QueriesServices.GetResourcePairsByService, serviceName, clientResourceSelected, serverResourceSelected],
-    () =>
-      serviceId
-        ? PrometheusApi.fethServicePairsByService({
-            serviceName,
-            clientType: clientResourceSelected,
-            serverType: serverResourceSelected
-          })
-        : null,
+  const { data: processPairs } = useQuery(
+    [QueriesServices.GetProcessPairsByService, serviceName, clientResourceSelected, serverResourceSelected],
+    () => RESTApi.fetchProcessPairsByService(serviceId),
     {
       refetchInterval: UPDATE_INTERVAL,
       keepPreviousData: true
+    }
+  );
+
+  const { data: servicePairs } = useQuery(
+    [QueriesServices.GetResourcePairsByService, serviceName, clientResourceSelected, serverResourceSelected],
+    () =>
+      PrometheusApi.fethServicePairsByService({
+        serviceName,
+        clientType: clientResourceSelected,
+        serverType: serverResourceSelected,
+        sourceProcesses: processPairs?.results.map(({ sourceName }) => sourceName).join('|'),
+        destProcesses: processPairs?.results.map(({ destinationName }) => destinationName).join('|')
+      }),
+    {
+      refetchInterval: UPDATE_INTERVAL,
+      keepPreviousData: true,
+      enabled: !!processPairs?.results.length
     }
   );
 

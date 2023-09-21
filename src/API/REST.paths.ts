@@ -44,6 +44,7 @@ const SERVICE_PATH = `${COLLECTOR_URL}/addresses/`;
 export const getServicesPath = () => SERVICE_PATH;
 export const getFlowsPairsByServicePATH = (id: string) => `${SERVICE_PATH}${id}/flowpairs`;
 export const getProcessesByServicePATH = (id: string) => `${SERVICE_PATH}${id}/processes`;
+export const getProcessPairsByServicePATH = (id: string) => `${SERVICE_PATH}${id}/processpairs`;
 
 // CONNECTIONS & RESPONSES
 const FLOW_PAIRS_PATH = `${COLLECTOR_URL}/flowpairs/`;

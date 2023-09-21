@@ -315,6 +315,7 @@ export function loadMockServer() {
       this.get(`${prefix}/addresses`, () => services);
       this.get(`${prefix}/addresses/:id/flowpairs`, () => serviceFlowPairs);
       this.get(`${prefix}/addresses/:id/processes`, () => serviceProcesses);
+      this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }
   });
 }

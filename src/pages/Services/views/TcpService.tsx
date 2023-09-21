@@ -32,25 +32,26 @@ const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
 
   return (
     <>
-      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} protocol={protocol} />}
-
-      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
-
-      {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
+      {viewSelected === TAB_0_KEY && (
         <Stack hasGutter>
           <StackItem>
             <ResourceDistrubutionFlowChart serviceId={serviceId} serviceName={serviceName} />
           </StackItem>
-
           <StackItem>
-            <FlowPairsServiceTable
-              serviceId={serviceId}
-              options={tcpSelectOptions}
-              columns={service[viewSelected].columns}
-              filters={service[viewSelected].filters}
-            />
+            <Overview serviceId={serviceId} protocol={protocol} />{' '}
           </StackItem>
         </Stack>
+      )}
+
+      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
+
+      {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
+        <FlowPairsServiceTable
+          serviceId={serviceId}
+          options={tcpSelectOptions}
+          columns={service[viewSelected].columns}
+          filters={service[viewSelected].filters}
+        />
       )}
     </>
   );
