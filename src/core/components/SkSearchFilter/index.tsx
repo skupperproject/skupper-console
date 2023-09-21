@@ -29,7 +29,7 @@ const PLACEHOLDER_PREFIX_LABEL = 'Search by';
 const CLEAR_ALL_LABEL = 'Clear all filters';
 const DEBOUNCE_TIME_MS = 300;
 
-const SearchFilter: FC<{ onSearch?: Function; selectOptions: { id: string; name: string }[] }> = memo(
+const SkSearchFilter: FC<{ onSearch?: Function; selectOptions: { id: string; name: string }[] }> = memo(
   ({ onSearch, selectOptions }) => {
     const [inputValue, setInputValue] = useState('');
     const [isStatusExpanded, setIsStatusExpanded] = useState(false);
@@ -170,4 +170,4 @@ const SearchFilter: FC<{ onSearch?: Function; selectOptions: { id: string; name:
   }
 );
 
-export default SearchFilter;
+export default SkSearchFilter;

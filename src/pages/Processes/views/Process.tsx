@@ -15,7 +15,7 @@ import MainContainer from '@layout/MainContainer';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import ProcessDescription from '../components/ProcessDescription';
 import {
@@ -127,7 +127,7 @@ const Process = function () {
     <MainContainer
       dataTestId={getTestsIds.processView(processId)}
       title={process.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>

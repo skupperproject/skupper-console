@@ -16,7 +16,7 @@ import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
@@ -86,7 +86,7 @@ const ProcessGroup = function () {
     <MainContainer
       dataTestId={getTestsIds.componentView(processGroupId)}
       title={processGroup.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.ProcessGroups}&${TopologyURLFilters.IdSelected}=${processGroupId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.ProcessGroups}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <Suspense fallback={<LoadingPage />}>

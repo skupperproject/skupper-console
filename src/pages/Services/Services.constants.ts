@@ -6,12 +6,12 @@ import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SankeyFilte
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { timeAgo } from '@core/utils/timeAgo';
-import { ProcessesTableColumns } from '@pages/Processes/Processes.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
-import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
+import { ProcessesLabels } from '@pages/Processes/Processes.enum';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
+import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { ServiceResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
-import { ServicesRoutesPaths, ServicesLabels, ServicesColumnsNames } from './Services.enum';
+import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
 
 export const ServicesPaths = {
   path: ServicesRoutesPaths.Services,
@@ -30,29 +30,29 @@ export const customServiceCells = {
 // Services Table
 export const ServiceColumns: SKColumn<ServiceResponse>[] = [
   {
-    name: ServicesColumnsNames.Name,
+    name: ServicesLabels.Name,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell'
   },
   {
-    name: ServicesColumnsNames.Protocol,
+    name: ServicesLabels.Protocol,
     prop: 'protocol',
     width: 15
   },
   {
-    name: ServicesColumnsNames.Servers,
+    name: ServicesLabels.Servers,
     prop: 'connectorCount',
     width: 15
   },
   {
-    name: ServicesColumnsNames.CurrentFlowPairs,
+    name: ServicesLabels.CurrentFlowPairs,
     columnDescription: 'Live connections or requests',
 
     prop: 'currentFlows' as keyof ServiceResponse,
     width: 15
   },
   {
-    name: ServicesColumnsNames.TotalFLowPairs,
+    name: ServicesLabels.TotalFLowPairs,
     columnDescription: 'Total connections or requests',
 
     prop: 'totalFlows' as keyof ServiceResponse,
@@ -63,27 +63,27 @@ export const ServiceColumns: SKColumn<ServiceResponse>[] = [
 // Server Table
 export const tcpServerColumns = [
   {
-    name: ProcessesTableColumns.Name,
+    name: ProcessesLabels.Name,
     prop: 'name' as keyof ProcessResponse,
     customCellName: 'linkCell'
   },
   {
-    name: ProcessesTableColumns.Component,
+    name: ProcessesLabels.Component,
     prop: 'groupName' as keyof ProcessResponse,
     customCellName: 'linkComponentCell'
   },
   {
-    name: ProcessesTableColumns.Site,
+    name: ProcessesLabels.Site,
     prop: 'parentName' as keyof ProcessResponse,
     customCellName: 'linkCellSite'
   },
   {
-    name: ProcessesTableColumns.ByteRateRx,
+    name: ProcessesLabels.ByteRateRx,
     prop: 'byteRate' as keyof ProcessResponse,
     format: formatByteRate
   },
   {
-    name: ProcessesTableColumns.Created,
+    name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
     format: timeAgo
   }
@@ -94,10 +94,10 @@ export const httpColumns = httpFlowPairsColumns;
 
 // Tcp Table
 const tcpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairsColumnsNames.Closed]: {
+  [FlowPairLabels.FlowPairClosed]: {
     show: false
   },
-  [FlowPairsColumnsNames.To]: {
+  [FlowPairLabels.To]: {
     show: false
   }
 };

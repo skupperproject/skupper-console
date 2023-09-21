@@ -12,7 +12,7 @@ import sitesData from '@mocks/data/SITES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { Labels } from '../Sites.enum';
+import { SiteLabels } from '../Sites.enum';
 import Site from '../views/Site';
 
 const siteResults = sitesData.results as SiteResponse[];
@@ -37,7 +37,7 @@ describe('Site component', () => {
   });
 
   afterEach(() => {
-    fireEvent.click(screen.getByText(Labels.Overview));
+    fireEvent.click(screen.getByText(SiteLabels.Overview));
 
     server.shutdown();
     jest.clearAllMocks();
@@ -49,7 +49,7 @@ describe('Site component', () => {
     // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(Labels.Details));
+    fireEvent.click(screen.getByText(SiteLabels.Details));
 
     expect(screen.getByTestId(getTestsIds.siteView(siteResults[0].identity))).toBeInTheDocument();
   });
@@ -57,7 +57,7 @@ describe('Site component', () => {
   it('should render the title, description data and processes associated the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(Labels.Details));
+    fireEvent.click(screen.getByText(SiteLabels.Details));
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
     expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('Site component', () => {
   it('Should ensure the Site details component renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(Labels.Details));
+    fireEvent.click(screen.getByText(SiteLabels.Details));
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
       'href',

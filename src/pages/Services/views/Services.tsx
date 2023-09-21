@@ -7,7 +7,7 @@ import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import SearchFilter from '@core/components/skSearchFilter';
+import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 
@@ -74,7 +74,7 @@ const Services = function () {
       description={ServicesLabels.Description}
       mainContentChildren={
         <>
-          <SearchFilter onSearch={handleSetServiceFilters} selectOptions={servicesSelectOptions} />
+          <SkSearchFilter onSearch={handleSetServiceFilters} selectOptions={servicesSelectOptions} />
 
           <SkTable
             rows={serviceRows}

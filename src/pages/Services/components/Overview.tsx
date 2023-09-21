@@ -10,7 +10,7 @@ import Metrics from '@pages/shared/Metrics';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { PREFIX_DISPLAY_INTERVAL_CACHE_KEY, initServersQueryParams } from '../Services.constants';
-import { RequestLabels, ServicesLabels, QueriesServices } from '../Services.enum';
+import { ServicesLabels, QueriesServices } from '../Services.enum';
 
 interface OverviewProps {
   serviceId: string;
@@ -54,7 +54,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
         sourceProcesses: {
           placeholder: ServicesLabels.MetricDestinationProcessFilter
         },
-        destinationProcesses: { placeholder: RequestLabels.Clients, hide: true }
+        destinationProcesses: { placeholder: ServicesLabels.Clients, hide: true }
       }}
       onGetMetricFilters={handleRefreshMetrics}
     />

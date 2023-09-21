@@ -33,10 +33,10 @@ import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import SitesController from '../services';
-import { SitesRoutesPaths, Labels, QueriesSites } from '../Sites.enum';
+import { SitesRoutesPaths, SiteLabels, QueriesSites } from '../Sites.enum';
 
 const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'site-display-interval';
 
@@ -47,7 +47,7 @@ const Site = function () {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { id: siteId } = getIdAndNameFromUrlParams(id);
-  const type = searchParams.get('type') || Labels.Overview;
+  const type = searchParams.get('type') || SiteLabels.Overview;
 
   const { data: site } = useQuery([QueriesSites.GetSite, siteId], () => RESTApi.fetchSite(siteId));
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
@@ -68,7 +68,7 @@ const Site = function () {
   );
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setTabSelected(tabIndex as Labels);
+    setTabSelected(tabIndex as SiteLabels);
     setSearchParams({ type: tabIndex as string });
   }
 
@@ -90,8 +90,8 @@ const Site = function () {
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
-        <Tab eventKey={Labels.Overview} title={<TabTitleText>{Labels.Overview}</TabTitleText>} />
-        <Tab eventKey={Labels.Details} title={<TabTitleText>{Labels.Details}</TabTitleText>} />
+        <Tab eventKey={SiteLabels.Overview} title={<TabTitleText>{SiteLabels.Overview}</TabTitleText>} />
+        <Tab eventKey={SiteLabels.Details} title={<TabTitleText>{SiteLabels.Details}</TabTitleText>} />
       </Tabs>
     );
   };
@@ -100,11 +100,11 @@ const Site = function () {
     <MainContainer
       dataTestId={getTestsIds.siteView(siteId)}
       title={name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Sites}&${TopologyURLFilters.IdSelected}=${siteId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${siteId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <Suspense fallback={<LoadingPage />}>
-          {tabSelected === Labels.Overview && (
+          {tabSelected === SiteLabels.Overview && (
             <Metrics
               key={siteId}
               selectedFilters={{
@@ -123,19 +123,19 @@ const Site = function () {
               onGetMetricFilters={handleRefreshMetrics}
             />
           )}
-          {tabSelected === Labels.Details && (
+          {tabSelected === SiteLabels.Details && (
             <Grid hasGutter sm={12} xl={6} xl2={4}>
               <GridItem sm={12}>
                 <Card>
                   <CardTitle>
-                    <Title headingLevel="h2">{Labels.Details}</Title>
+                    <Title headingLevel="h2">{SiteLabels.Details}</Title>
                   </CardTitle>
                   <CardBody>
                     <DescriptionList>
                       <DescriptionListGroup>
-                        <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
+                        <DescriptionListTerm>{SiteLabels.Namespace}</DescriptionListTerm>
                         <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
-                        <DescriptionListTerm>{Labels.SiteVersion}</DescriptionListTerm>
+                        <DescriptionListTerm>{SiteLabels.SiteVersion}</DescriptionListTerm>
                         <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
                       </DescriptionListGroup>
                     </DescriptionList>
@@ -146,7 +146,7 @@ const Site = function () {
               <GridItem>
                 <Card isFullHeight>
                   <CardTitle>
-                    <Title headingLevel="h2">{Labels.Links}</Title>
+                    <Title headingLevel="h2">{SiteLabels.Links}</Title>
                   </CardTitle>
                   <CardBody>
                     {(!!linkedSites.length && (
@@ -170,7 +170,7 @@ const Site = function () {
               <GridItem>
                 <Card isFullHeight>
                   <CardTitle>
-                    <Title headingLevel="h2">{Labels.Hosts}</Title>
+                    <Title headingLevel="h2">{SiteLabels.Hosts}</Title>
                   </CardTitle>
                   <CardBody>
                     {(!!hosts.length && (
@@ -187,7 +187,7 @@ const Site = function () {
               <GridItem sm={12} xl={12} xl2={4}>
                 <Card isFullHeight>
                   <CardTitle>
-                    <Title headingLevel="h2">{Labels.Processes}</Title>
+                    <Title headingLevel="h2">{SiteLabels.Processes}</Title>
                   </CardTitle>
                   <CardBody>
                     {(!!processResults.length && (

@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import SearchFilter from '@core/components/skSearchFilter';
+import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -69,7 +69,7 @@ const Processes = function () {
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
       mainContentChildren={
         <>
-          <SearchFilter onSearch={handleGetFilters} selectOptions={processesSelectOptions} />
+          <SkSearchFilter onSearch={handleGetFilters} selectOptions={processesSelectOptions} />
 
           <SkTable
             columns={processesTableColumns}

@@ -2,10 +2,10 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPair/FlowPair.constants';
+import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPairs/FlowPair.constants';
 
 import ExposedServers from '../components/ExposedServers';
-import FlowPairsServiceTable from '../components/FlowPairsServiceTable';
+import FlowPairsService from '../components/FlowPairsService';
 import Overview from '../components/Overview';
 import ResourceDistrubutionFlowChart from '../components/ResourceDistrubutionFlowChart';
 import {
@@ -46,7 +46,7 @@ const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
       {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
 
       {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
-        <FlowPairsServiceTable
+        <FlowPairsService
           serviceId={serviceId}
           options={tcpSelectOptions}
           columns={service[viewSelected].columns}

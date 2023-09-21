@@ -9,12 +9,12 @@ import { AvailableProtocols, TcpStatus } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import HttpService from './HttpService';
 import ConnectionsByService from './TcpService';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
-import { ConnectionLabels, FlowPairsLabels, RequestLabels, QueriesServices } from '../Services.enum';
+import { ServicesLabels, QueriesServices } from '../Services.enum';
 
 const initServersQueryParams = {
   limit: 0
@@ -88,13 +88,13 @@ const Service = function () {
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
-        <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${FlowPairsLabels.Overview}`}</TabTitleText>} />
+        <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${ServicesLabels.Overview}`}</TabTitleText>} />
         <Tab
           isDisabled={!serverCount}
           eventKey={TAB_1_KEY}
           title={
             <TabTitleText>
-              {`${FlowPairsLabels.Servers} `}
+              {`${ServicesLabels.Servers} `}
               <Badge isRead key={1}>
                 {serverCount}
               </Badge>
@@ -105,14 +105,14 @@ const Service = function () {
           <Tab
             isDisabled={!requestsCount}
             eventKey={TAB_2_KEY}
-            title={<TabTitleText>{RequestLabels.Requests}</TabTitleText>}
+            title={<TabTitleText>{ServicesLabels.Requests}</TabTitleText>}
           />
         )}
         {protocol === AvailableProtocols.Tcp && (
           <Tab
             isDisabled={!tcpActiveConnectionCount}
             eventKey={TAB_2_KEY}
-            title={<TabTitleText>{ConnectionLabels.ActiveConnections}</TabTitleText>}
+            title={<TabTitleText>{ServicesLabels.ActiveConnections}</TabTitleText>}
           />
         )}
 
@@ -120,7 +120,7 @@ const Service = function () {
           <Tab
             isDisabled={!tcpTerminatedConnectionCount}
             eventKey={TAB_3_KEY}
-            title={<TabTitleText>{ConnectionLabels.OldConnections}</TabTitleText>}
+            title={<TabTitleText>{ServicesLabels.OldConnections}</TabTitleText>}
           />
         )}
       </Tabs>
@@ -136,7 +136,7 @@ const Service = function () {
     <MainContainer
       isPlain
       title={serviceName || ''}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.ServiceId}=${serviceId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${serviceId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <Suspense fallback={<LoadingPage />}>

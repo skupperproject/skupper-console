@@ -6,7 +6,7 @@ import { CogIcon } from '@patternfly/react-icons';
 import { getTestsIds } from '@config/testIds';
 import TransitionPage from '@core/components/TransitionPages/Fade';
 
-import { Labels } from './Loading.enum';
+import { LoadingLabels } from './Loading.enum';
 
 const PleaseWait = function () {
   return (
@@ -16,7 +16,7 @@ const PleaseWait = function () {
         <CogIcon className="cog cog-secondary cog-upper spinning-clockwise--reverse" />
         <CogIcon className="cog cog-secondary cog-lower spinning-clockwise--reverse" />
       </CardHeader>
-      <CardBody>{Labels.LoadingMessage}</CardBody>
+      <CardBody>{LoadingLabels.LoadingMessage}</CardBody>
     </Card>
   );
 };

@@ -19,15 +19,6 @@ export enum QueriesProcesses {
   GetServicesByProcessId = 'get-services-by-process-id-query'
 }
 
-export enum ProcessesTableColumns {
-  Name = 'Name',
-  Site = 'Site',
-  Component = 'Component',
-  ByteRateRx = 'Rx byte rate',
-  Exposed = 'Exposed',
-  Created = 'Created'
-}
-
 export enum ProcessesLabels {
   Section = 'Processes',
   Overview = 'Overview',
@@ -57,17 +48,17 @@ export enum ProcessesLabels {
   Http2Requests = 'Http2 requests',
   HttpRequests = 'Http requests',
   ExposedTitle = 'Exposed',
-  Exposed = 'Yes',
-  NotExposed = 'No',
+  IsExposed = 'Yes',
+  IsNotExposed = 'No',
   ActiveConnections = 'Live connections',
   OldConnections = 'Connection history',
   ProcessPairsEmptyTitle = 'No connections or requests to display',
   ProcessPairsEmptyMessage = 'As new connections or requests are established, they will be dynamically added to the table for display',
-  GoToDetails = 'View details'
-}
-
-export enum ProcessPairsLabels {
-  Process = 'Process',
+  GoToDetails = 'View details',
   Title = 'Process pair details',
-  Protocol = 'Protocol'
+  Protocol = 'Protocol',
+  Name = 'Name',
+  Component = 'Component',
+  ByteRateRx = 'Rx byte rate',
+  Exposed = 'Exposed'
 }

@@ -23,7 +23,6 @@ import EmptyData from '../EmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;
-const NO_RESULT_FOUND_LABEL = 'No results found';
 
 const SkTable = function <T>({
   title,
@@ -191,7 +190,7 @@ const SkTable = function <T>({
               {skRows.length === 0 && (
                 <Tr>
                   <Td colSpan={12}>
-                    <EmptyData message={NO_RESULT_FOUND_LABEL} icon={SearchIcon} />
+                    <EmptyData icon={SearchIcon} />
                   </Td>
                 </Tr>
               )}

@@ -110,7 +110,7 @@ const ProcessDescription: FC<{ processWithService: ProcessResponseWithService; t
                 <DescriptionListGroup>
                   <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed}
+                    {processBinding === 'bound' ? ProcessesLabels.IsExposed : ProcessesLabels.IsNotExposed}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               </GridItem>

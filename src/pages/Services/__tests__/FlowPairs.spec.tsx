@@ -11,7 +11,7 @@ import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { ConnectionLabels, FlowPairsLabels, RequestLabels } from '../Services.enum';
+import { ServicesLabels } from '../Services.enum';
 import Service from '../views/Service';
 
 const servicesResults = servicesData.results;
@@ -44,10 +44,10 @@ describe('Begin testing the FlowPairs component', () => {
   it('should render the TCP Service view after the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByText(FlowPairsLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${FlowPairsLabels.Servers}`)).toBeInTheDocument();
-    expect(screen.getByText(`${ConnectionLabels.ActiveConnections}`)).toBeInTheDocument();
-    expect(screen.getByText(`${ConnectionLabels.OldConnections}`)).toBeInTheDocument();
+    expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.ActiveConnections}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.OldConnections}`)).toBeInTheDocument();
   });
 
   it('should render the HTTP/2 Service view after the data loading is complete', async () => {
@@ -57,17 +57,17 @@ describe('Begin testing the FlowPairs component', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByText(FlowPairsLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${FlowPairsLabels.Servers}`)).toBeInTheDocument();
-    expect(screen.getByText(`${RequestLabels.Requests}`)).toBeInTheDocument();
+    expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.Requests}`)).toBeInTheDocument();
   });
 
   it('should clicking on a tab will result in the server tab being highlighted', async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    fireEvent.click(screen.getByText(FlowPairsLabels.Servers));
+    fireEvent.click(screen.getByText(ServicesLabels.Servers));
 
-    expect(screen.getByText(`${FlowPairsLabels.Servers}`).parentNode?.parentNode).toHaveClass(
+    expect(screen.getByText(`${ServicesLabels.Servers}`).parentNode?.parentNode).toHaveClass(
       'pf-v5-c-tabs__item pf-m-current'
     );
   });
