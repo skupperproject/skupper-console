@@ -28,6 +28,7 @@ const Metrics: FC<MetricsProps> = function ({
   startTime,
   sourceProcesses,
   processesConnected,
+  availableProtocols,
   filterOptions,
   forceUpdate,
   openSections,
@@ -132,6 +133,7 @@ const Metrics: FC<MetricsProps> = function ({
     <Stack hasGutter>
       <StackItem>
         <MetricFilters
+          availableProtocols={availableProtocols}
           sourceProcesses={sourceProcesses}
           processesConnected={processesConnected}
           initialFilters={{

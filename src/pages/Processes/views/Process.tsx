@@ -98,6 +98,9 @@ const Process = function () {
   const remoteServers = processesPairsTxData.filter(({ protocol }) => protocol === undefined);
   const remoteClients = processesPairsRxReverse.filter(({ protocol }) => protocol === undefined);
   const allDestinationProcesses = [...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients];
+  const availableProtocols = [
+    ...new Set(allDestinationProcesses.map(({ protocol }) => protocol).filter(Boolean))
+  ] as AvailableProtocols[];
 
   const NavigationMenu = function () {
     return (
@@ -214,17 +217,17 @@ const Process = function () {
               key={id}
               selectedFilters={{
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`),
-                processIdSource: process.name
+                protocol: availableProtocols.length === 1 ? availableProtocols[0] : undefined,
+                processIdSource: process.name,
+                processIdDest:
+                  allDestinationProcesses.length === 1 ? allDestinationProcesses[0].destinationName : undefined
               }}
               startTime={process.startTime}
               processesConnected={allDestinationProcesses}
+              availableProtocols={availableProtocols}
               filterOptions={{
                 destinationProcesses: {
-                  placeholder:
-                    allDestinationProcesses.length === 1
-                      ? allDestinationProcesses[0].destinationName
-                      : MetricsLabels.FilterAllDestinationProcesses,
-                  disabled: allDestinationProcesses.length === 1,
+                  placeholder: MetricsLabels.FilterAllDestinationProcesses,
                   hide: allDestinationProcesses.length === 0
                 },
                 sourceProcesses: { disabled: true, placeholder: process.name }
