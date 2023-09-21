@@ -53,5 +53,6 @@ export enum RequestLabels {
 export enum FlowPairsLabels {
   Overview = 'Overview',
   Servers = 'Exposed servers',
-  SankeyChartTitle = 'Distribution of flows'
+  SankeyChartTitle = 'Distribution of flows',
+  SankeyChartDescription = 'Sankey diagram to visualize the relationships between servers and clients and/or sites'
 }
