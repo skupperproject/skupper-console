@@ -11,7 +11,7 @@ import ViewDetailCell from '@core/components/ViewDetailsCell';
 import FlowPair from './FlowPair';
 import { flowPairsComponentsTable } from './FlowPair.constants';
 
-const FlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
+const FlowPairs: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
   const [flowPairSelected, setFlowPairIdSelected] = useState<FlowPairsResponse>();
 
   const handleOnClickDetails = useCallback((flowPair?: FlowPairsResponse) => {
@@ -41,4 +41,4 @@ const FlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props
   );
 };
 
-export default FlowPairsTable;
+export default FlowPairs;

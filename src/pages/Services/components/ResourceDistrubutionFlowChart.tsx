@@ -14,7 +14,7 @@ import SankeyFilter, {
 
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
-import { FlowPairsLabels, QueriesServices } from '../Services.enum';
+import { ServicesLabels, QueriesServices } from '../Services.enum';
 
 interface ResourceDistrubutionFlowChartProps {
   serviceId: string;
@@ -85,8 +85,8 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   return (
     <Card>
       <CardHeader>
-        <Title headingLevel="h1">{FlowPairsLabels.SankeyChartTitle}</Title>
-        <Title headingLevel="h4">{FlowPairsLabels.SankeyChartDescription}</Title>
+        <Title headingLevel="h1">{ServicesLabels.SankeyChartTitle}</Title>
+        <Title headingLevel="h4">{ServicesLabels.SankeyChartDescription}</Title>
       </CardHeader>
       <CardBody>
         <SankeyFilter onSearch={handleGetPairType} />

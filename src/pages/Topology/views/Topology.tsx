@@ -10,14 +10,14 @@ import LoadingPage from '@pages/shared/Loading';
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
 import TopologySite from '../components/TopologySite';
-import { TopologyLabels, TopologyURLFilters, TopologyViews } from '../Topology.enum';
+import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const serviceId = searchParams.get(TopologyURLFilters.ServiceId) || undefined;
-  const id = searchParams.get(TopologyURLFilters.IdSelected) || undefined;
-  const type = searchParams.get(TopologyURLFilters.Type);
+  const serviceId = searchParams.get(TopologyURLQueyParams.ServiceId) || undefined;
+  const id = searchParams.get(TopologyURLQueyParams.IdSelected) || undefined;
+  const type = searchParams.get(TopologyURLQueyParams.Type);
 
   const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
 

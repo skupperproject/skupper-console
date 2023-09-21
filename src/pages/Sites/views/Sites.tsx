@@ -11,7 +11,7 @@ import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enu
 import { SiteResponse } from 'API/REST.interfaces';
 
 import { siteColumns } from '../Sites.constants';
-import { Labels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
+import { SiteLabels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
 
 const Sites = function () {
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
@@ -19,8 +19,8 @@ const Sites = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.sitesView()}
-      title={Labels.Section}
-      description={Labels.Description}
+      title={SiteLabels.Section}
+      description={SiteLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Sites}`}
       mainContentChildren={
         <SkTable

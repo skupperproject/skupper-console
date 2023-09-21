@@ -3,7 +3,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { ProcessGroupResponse } from 'API/REST.interfaces';
 
-import { ProcessGroupsLabels, ProcessGroupsRoutesPaths, ProcessGroupsTableColumns } from './ProcessGroups.enum';
+import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from './ProcessGroups.enum';
 
 export const ProcessGroupsPaths = {
   path: ProcessGroupsRoutesPaths.ProcessGroups,
@@ -27,12 +27,12 @@ export const CustomComponentCells = {
 
 export const processGroupsColumns: SKColumn<ProcessGroupResponse>[] = [
   {
-    name: ProcessGroupsTableColumns.Name,
+    name: ProcessGroupsLabels.Name,
     prop: 'name' as keyof ProcessGroupResponse,
     customCellName: 'ComponentNameLinkCell'
   },
   {
-    name: ProcessGroupsTableColumns.Count,
+    name: ProcessGroupsLabels.Count,
     prop: 'processCount' as keyof ProcessGroupResponse,
     customCellName: 'ComponentProcessCountLinkCell',
     width: 15

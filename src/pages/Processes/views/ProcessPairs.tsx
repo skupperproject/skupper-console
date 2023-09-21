@@ -26,13 +26,13 @@ import EmptyData from '@core/components/EmptyData';
 import LinkCell from '@core/components/LinkCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
-import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
-import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
+import FlowPairs from '@pages/shared/FlowPairs';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
-import { ProcessesLabels, ProcessesRoutesPaths, ProcessPairsLabels, QueriesProcesses } from '../Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
@@ -273,8 +273,8 @@ const ProcessPairs = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.processPairsView(processPairId)}
-      title={ProcessPairsLabels.Title}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLFilters.Type}=${TopologyViews.Processes}&${TopologyURLFilters.IdSelected}=${processPairId}`}
+      title={ProcessesLabels.Title}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processPairId}`}
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
@@ -296,7 +296,7 @@ const ProcessPairs = function () {
                     <TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>
                   }
                 >
-                  <FlowPairsTable
+                  <FlowPairs
                     columns={activeTcpColumns}
                     rows={activeConnections}
                     paginationTotalRows={activeConnectionsCount}
@@ -310,7 +310,7 @@ const ProcessPairs = function () {
                   eventKey={TAB_2_KEY}
                   title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
                 >
-                  <FlowPairsTable
+                  <FlowPairs
                     columns={oldTcpColumns}
                     rows={oldConnections}
                     paginationTotalRows={oldConnectionsCount}
@@ -324,7 +324,7 @@ const ProcessPairs = function () {
           )}
           {protocol === AvailableProtocols.Http2 && !!http2Requests.length && (
             <StackItem isFilled>
-              <FlowPairsTable
+              <FlowPairs
                 title={ProcessesLabels.Http2Requests}
                 columns={httpColumns}
                 rows={http2Requests}
@@ -337,7 +337,7 @@ const ProcessPairs = function () {
           )}
           {protocol === AvailableProtocols.Http && !!httpRequests.length && (
             <StackItem isFilled>
-              <FlowPairsTable
+              <FlowPairs
                 title={ProcessesLabels.HttpRequests}
                 columns={httpColumns}
                 rows={httpRequests}

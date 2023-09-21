@@ -13,7 +13,7 @@ import {
   Title
 } from '@patternfly/react-core';
 
-import { Labels } from './Http.enum';
+import { HttpErrorLabels } from './Http.enum';
 
 const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandler<HTMLButtonElement> }> = function ({
   code,
@@ -23,7 +23,7 @@ const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandl
   return (
     <PageSection variant={PageSectionVariants.light}>
       <TextContent>
-        <Title headingLevel="h1">{message || Labels.ErrorTitle}</Title>
+        <Title headingLevel="h1">{message || HttpErrorLabels.ErrorTitle}</Title>
         <Title headingLevel="h2">{code || ''}</Title>
         <Divider />
 

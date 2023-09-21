@@ -29,15 +29,20 @@ import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { formatTraceBySites } from '@core/utils/formatTrace';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
-import { FlowLabels } from './FlowPair.enum';
+import { FlowPairLabels } from './FlowPair.enum';
 
 const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
-  const { forwardFlow, counterFlow, protocol, endTime, startTime, identity, flowTrace } = flowPair;
+  const {
+    forwardFlow,
+    counterFlow,
+    protocol,
+    endTime: endTimeMicroSeconds,
+    startTime: startTimeMicroSenconds,
+    identity,
+    flowTrace
+  } = flowPair;
 
-  /**
-   *  endTime and startTime are microseconds (because the Apis give us microseconds)
-   */
-  const duration = formatTimeInterval(endTime || Date.now() * 1000, startTime);
+  const duration = formatTimeInterval(endTimeMicroSeconds || Date.now() * 1000, startTimeMicroSenconds);
 
   return (
     <Grid hasGutter data-testid={getTestsIds.flowPairsView(identity)}>
@@ -45,18 +50,20 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
         {protocol === AvailableProtocols.Tcp && (
           <>
             <TextContent>
-              <Text component={TextVariants.h2}>Connection {endTime ? 'closed' : 'open'}</Text>
+              <Text component={TextVariants.h2}>
+                Connection {endTimeMicroSeconds ? FlowPairLabels.FlowPairClosed : FlowPairLabels.FlowPairOpen}
+              </Text>
             </TextContent>
 
             <Card isPlain>
               <CardBody>
                 <DescriptionList>
                   <DescriptionListGroup>
-                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                    <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
                     <DescriptionListDescription>{formatTraceBySites(flowTrace)}</DescriptionListDescription>
                     {duration && (
                       <>
-                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                        <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
                         <DescriptionListDescription>{duration}</DescriptionListDescription>
                       </>
                     )}
@@ -69,23 +76,25 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
         {protocol !== AvailableProtocols.Tcp && (
           <>
             <TextContent>
-              <Text component={TextVariants.h2}>Request {endTime ? 'terminated' : 'open'}</Text>
+              <Text component={TextVariants.h2}>
+                Request {endTimeMicroSeconds ? FlowPairLabels.FlowPairTerminated : FlowPairLabels.FlowPairOpen}
+              </Text>
             </TextContent>
             <Card isPlain>
               <CardBody>
                 <DescriptionList>
                   <DescriptionListGroup>
-                    <DescriptionListTerm>{FlowLabels.Protocol}</DescriptionListTerm>
+                    <DescriptionListTerm>{FlowPairLabels.Protocol}</DescriptionListTerm>
                     <DescriptionListDescription>{protocol}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowLabels.Method}</DescriptionListTerm>
+                    <DescriptionListTerm>{FlowPairLabels.Method}</DescriptionListTerm>
                     <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowLabels.Status}</DescriptionListTerm>
+                    <DescriptionListTerm>{FlowPairLabels.Status}</DescriptionListTerm>
                     <DescriptionListDescription>{forwardFlow.result || counterFlow.result}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowLabels.Trace}</DescriptionListTerm>
+                    <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
                     <DescriptionListDescription>{formatTraceBySites(flowTrace)}</DescriptionListDescription>
                     {duration && (
                       <>
-                        <DescriptionListTerm>{FlowLabels.Duration}</DescriptionListTerm>
+                        <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
                         <DescriptionListDescription>{duration}</DescriptionListDescription>
                       </>
                     )}
@@ -99,16 +108,16 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
 
       <GridItem span={6}>
         {flowPair.protocol === AvailableProtocols.Tcp ? (
-          <ConnectionDetail title={FlowLabels.Flow} flow={forwardFlow} />
+          <ConnectionDetail title={FlowPairLabels.Flow} flow={forwardFlow} />
         ) : (
-          <RequestDetail title={FlowLabels.Flow} flow={forwardFlow} />
+          <RequestDetail title={FlowPairLabels.Flow} flow={forwardFlow} />
         )}
       </GridItem>
       <GridItem span={6}>
         {flowPair.protocol === AvailableProtocols.Tcp ? (
-          <ConnectionDetail title={FlowLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
+          <ConnectionDetail title={FlowPairLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
         ) : (
-          <RequestDetail title={FlowLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
+          <RequestDetail title={FlowPairLabels.CounterFlow} flow={counterFlow} isCounterflow={true} />
         )}
       </GridItem>
     </Grid>
@@ -139,7 +148,7 @@ const ConnectionDetail: FC<DescriptionProps<ConnectionTCP>> = function ({ title,
       <CardBody>
         <DescriptionList>
           <DescriptionListGroup>
-            <DescriptionListTerm>{FlowLabels.Process}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.Process}</DescriptionListTerm>
             <DescriptionListDescription>
               <>
                 {<ResourceIcon type="process" />}
@@ -148,17 +157,17 @@ const ConnectionDetail: FC<DescriptionProps<ConnectionTCP>> = function ({ title,
                 </Link>
               </>
             </DescriptionListDescription>
-            <DescriptionListTerm>{isCounterflow ? FlowLabels.DestHost : FlowLabels.Host}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.Host}</DescriptionListTerm>
             <DescriptionListDescription>{flow.sourceHost}</DescriptionListDescription>
-            <DescriptionListTerm>{isCounterflow ? FlowLabels.DestPort : FlowLabels.Port}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.Port}</DescriptionListTerm>
             <DescriptionListDescription>{flow.sourcePort}</DescriptionListDescription>
-            <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(flow.octets)} </DescriptionListDescription>
-            <DescriptionListTerm>{FlowLabels.ByteUnacked}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.ByteUnacked}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(flow.octetsUnacked)}</DescriptionListDescription>
-            <DescriptionListTerm>{FlowLabels.WindowSize}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.WindowSize}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(flow.windowSize)}</DescriptionListDescription>
-            <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.Latency}</DescriptionListTerm>
             <DescriptionListDescription>{formatLatency(flow.latency)}</DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
@@ -183,7 +192,7 @@ const RequestDetail: FC<DescriptionProps<RequestHTTP>> = function ({ title, flow
       <CardBody>
         <DescriptionList isAutoFit>
           <DescriptionListGroup>
-            <DescriptionListTerm>{FlowLabels.Process}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.Process}</DescriptionListTerm>
             <DescriptionListDescription>
               <>
                 {<ResourceIcon type="process" />}
@@ -192,9 +201,9 @@ const RequestDetail: FC<DescriptionProps<RequestHTTP>> = function ({ title, flow
                 </Link>
               </>
             </DescriptionListDescription>
-            <DescriptionListTerm>{FlowLabels.BytesTransferred}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(flow.octets)}</DescriptionListDescription>{' '}
-            <DescriptionListTerm>{FlowLabels.Latency}</DescriptionListTerm>
+            <DescriptionListTerm>{FlowPairLabels.Latency}</DescriptionListTerm>
             <DescriptionListDescription>{formatLatency(flow.latency)}</DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>

@@ -7,12 +7,12 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPair/FlowPair.constants';
-import { FlowPairsColumnsNames } from '@pages/shared/FlowPair/FlowPair.enum';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
+import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
-import { ProcessesLabels, ProcessesRoutesPaths, ProcessesTableColumns, ProcessPairsLabels } from './Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
 
 export const ProcessesPaths = {
   path: ProcessesRoutesPaths.Processes,
@@ -24,7 +24,7 @@ export const CustomProcessPairCells = {
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessPairsLabels.Title}@${props.data.identity}@${props.data.protocol}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessesLabels.Title}@${props.data.identity}@${props.data.protocol}`
     })
 };
 
@@ -50,29 +50,29 @@ export const CustomProcessCells = {
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   exposedCell: (props: LinkCellProps<ProcessResponse>) =>
-    props.data.processBinding === 'bound' ? ProcessesLabels.Exposed : ProcessesLabels.NotExposed,
+    props.data.processBinding === 'bound' ? ProcessesLabels.IsExposed : ProcessesLabels.IsNotExposed,
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes })
 };
 
 export const processesTableColumns: SKColumn<ProcessResponse>[] = [
   {
-    name: ProcessesTableColumns.Name,
+    name: ProcessesLabels.Name,
     prop: 'name' as keyof ProcessResponse,
     customCellName: 'linkCell'
   },
   {
-    name: ProcessesTableColumns.Component,
+    name: ProcessesLabels.Component,
     prop: 'groupName' as keyof ProcessResponse,
     customCellName: 'linkComponentCell'
   },
   {
-    name: ProcessesTableColumns.Site,
+    name: ProcessesLabels.Site,
     prop: 'parentName' as keyof ProcessResponse,
     customCellName: 'linkCellSite'
   },
   {
-    name: ProcessesTableColumns.Created,
+    name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
     format: timeAgo,
     width: 15
@@ -81,7 +81,7 @@ export const processesTableColumns: SKColumn<ProcessResponse>[] = [
 
 export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
-    name: ProcessPairsLabels.Process,
+    name: ProcessesLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
     customCellName: 'ProcessConnectedLinkCell'
   }
@@ -89,53 +89,53 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
 
 export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
-    name: ProcessPairsLabels.Process,
+    name: ProcessesLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
     customCellName: 'ProcessConnectedLinkCell'
   },
   {
-    name: ProcessPairsLabels.Protocol,
+    name: ProcessesLabels.Protocol,
     prop: 'protocol' as keyof ProcessPairsResponse,
     modifier: 'fitContent'
   }
 ];
 
 const oldTcpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairsColumnsNames.Client]: {
+  [FlowPairLabels.Client]: {
     show: false
   },
-  [FlowPairsColumnsNames.Site]: {
+  [FlowPairLabels.Site]: {
     show: false
   },
-  [FlowPairsColumnsNames.Server]: {
+  [FlowPairLabels.Server]: {
     show: false
   },
-  [FlowPairsColumnsNames.ServerSite]: {
+  [FlowPairLabels.ServerSite]: {
     show: false
   }
 };
 
 const activeTcpHiddenColumns: Record<string, { show: boolean }> = {
   ...oldTcpHiddenColumns,
-  [FlowPairsColumnsNames.Duration]: {
+  [FlowPairLabels.Duration]: {
     show: false
   },
-  [FlowPairsColumnsNames.Closed]: {
+  [FlowPairLabels.FlowPairClosed]: {
     show: false
   }
 };
 
 const httpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairsColumnsNames.From]: {
+  [FlowPairLabels.From]: {
     show: false
   },
-  [FlowPairsColumnsNames.To]: {
+  [FlowPairLabels.To]: {
     show: false
   },
-  [FlowPairsColumnsNames.Site]: {
+  [FlowPairLabels.Site]: {
     show: false
   },
-  [FlowPairsColumnsNames.ServerSite]: {
+  [FlowPairLabels.ServerSite]: {
     show: false
   }
 };

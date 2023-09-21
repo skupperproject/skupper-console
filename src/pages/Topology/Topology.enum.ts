@@ -48,7 +48,7 @@ export enum TopologyLabels {
   DisplayPlaceholderText = 'Display'
 }
 
-export enum TopologyURLFilters {
+export enum TopologyURLQueyParams {
   Type = 'type',
   ServiceId = 'serviceId',
   IdSelected = 'id'

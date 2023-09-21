@@ -4,9 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import SearchFilter from '@core/components/skSearchFilter';
+import SkSearchFilter from '@core/components/SkSearchFilter';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
-import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
+import FlowPairs from '@pages/shared/FlowPairs';
 import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
 
 import { QueriesServices } from '../Services.enum';
@@ -19,7 +19,7 @@ interface FlowPairsServiceTableProps {
   pagination?: number;
 }
 
-const FlowPairsServiceTable: FC<FlowPairsServiceTableProps> = function ({
+const FlowPairsService: FC<FlowPairsServiceTableProps> = function ({
   serviceId,
   columns,
   filters,
@@ -46,9 +46,9 @@ const FlowPairsServiceTable: FC<FlowPairsServiceTableProps> = function ({
 
   return (
     <>
-      <SearchFilter onSearch={handleGetFilters} selectOptions={options} />
+      <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />
 
-      <FlowPairsTable
+      <FlowPairs
         columns={columns}
         rows={flowPairs}
         paginationTotalRows={flowPairsCount}
@@ -60,4 +60,4 @@ const FlowPairsServiceTable: FC<FlowPairsServiceTableProps> = function ({
   );
 };
 
-export default FlowPairsServiceTable;
+export default FlowPairsService;

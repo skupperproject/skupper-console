@@ -12,7 +12,7 @@ import {
   Title
 } from '@patternfly/react-core';
 
-import { Labels } from './Console.enum';
+import { ConsoleErrorLabels } from './Console.enum';
 import ErrorHttp from '../Http';
 
 interface ErrorProps {
@@ -35,7 +35,7 @@ const Error: FC<ErrorProps> = function ({ error, resetErrorBoundary }) {
   return (
     <PageSection variant={PageSectionVariants.light} data-testid="sk-js-error-view">
       <TextContent>
-        <Title headingLevel="h1">{Labels.ErrorTitle}</Title>
+        <Title headingLevel="h1">{ConsoleErrorLabels.ErrorTitle}</Title>
         <Text component={TextVariants.h3}>{message || ''}</Text>
 
         <Divider />
