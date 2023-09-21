@@ -38,12 +38,12 @@ export enum TopologyLabels {
   ActiveLink = 'Active link (show metrics on)',
   Site = 'site',
   CheckboxShowSite = 'Site',
-  RotateLabel = 'Rotate metrics',
+  RotateLabel = 'Rotate labels',
   CheckboxShowProtocol = 'Protocol',
   CheckboxShowTotalBytes = 'Total Traffic',
   CheckboxShowCurrentByteRate = 'Byterate (live)',
   CheckboxShowLatency = 'Latency (live)',
-  CheckboxShowLabelReverse = 'Reverse metrics',
+  CheckboxShowLabelReverse = 'Inbound metrics',
   ServiceFilterPlaceholderText = 'Search for service',
   DisplayPlaceholderText = 'Display'
 }
