@@ -1,4 +1,4 @@
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 
 context('Sites', () => {
   const testId = `${getTestsIds.siteView('site-1')}`;

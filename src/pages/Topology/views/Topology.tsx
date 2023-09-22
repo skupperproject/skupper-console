@@ -3,7 +3,7 @@ import { MouseEvent as ReactMouseEvent, Suspense, useState } from 'react';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 

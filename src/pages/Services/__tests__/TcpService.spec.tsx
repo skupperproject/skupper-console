@@ -4,7 +4,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import flowPairsData from '@mocks/data/SERVICE_FLOW_PAIRS.json';
 import processesData from '@mocks/data/SERVICE_PROCESSES.json';

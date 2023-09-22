@@ -5,10 +5,10 @@ import { Card, CardBody, CardTitle, Grid, GridItem, Icon } from '@patternfly/rea
 import { CircleIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import { VarColors } from '@config/colors';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { VarColors } from 'colors';
 
 import { MetricsLabels } from './Metrics.enum';
 import { ByteRateMetrics, BytesMetric } from './services/services.interfaces';

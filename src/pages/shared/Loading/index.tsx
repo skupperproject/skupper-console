@@ -3,7 +3,7 @@ import { CSSProperties, FC } from 'react';
 import { Bullseye, Card, CardBody, CardHeader, PageSection } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import TransitionPage from '@core/components/TransitionPages/Fade';
 
 import { Labels } from './Loading.enum';

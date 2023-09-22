@@ -1,7 +1,7 @@
+import { VarColors } from '@config/colors';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart';
 import { PrometheusApiSingleResult } from 'API/Prometheus.interfaces';
 import { ServiceResponse } from 'API/REST.interfaces';
-import { VarColors } from 'colors';
 
 export const ServicesController = {
   extendServicesWithActiveAndTotalFlowPairs: (

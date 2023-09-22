@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-import { VarColors } from 'colors';
+import { VarColors } from '@config/colors';
 
 import { HighlightValueCellProps } from './HighightValueCell.interfaces';
 

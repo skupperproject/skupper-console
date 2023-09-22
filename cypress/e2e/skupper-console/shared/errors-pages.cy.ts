@@ -1,4 +1,4 @@
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 
 context('Error pages', () => {
   beforeEach(() => {});

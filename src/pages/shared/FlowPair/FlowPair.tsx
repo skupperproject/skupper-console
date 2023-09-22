@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { ConnectionTCP, FlowPairsResponse, RequestHTTP } from '@API/REST.interfaces';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';

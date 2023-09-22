@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessPairsResponse } from '@API/REST.interfaces';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '@mocks/server';

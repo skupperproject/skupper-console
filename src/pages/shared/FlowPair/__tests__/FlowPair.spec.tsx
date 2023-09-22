@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { FlowPairsResponse } from '@API/REST.interfaces';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import flowPairsData from '@mocks/data/FLOW_PAIRS.json';
 import { loadMockServer } from '@mocks/server';

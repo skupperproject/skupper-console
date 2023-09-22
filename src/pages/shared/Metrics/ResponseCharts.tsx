@@ -3,12 +3,12 @@ import { FC, memo } from 'react';
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 
+import { Colors } from '@config/colors';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
 import SkCounterCard from '@core/components/SkCounterCard';
 import { convertToPercentage } from '@core/utils/convertToPercentage';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-import { Colors } from 'colors';
 
 import { MetricsLabels } from './Metrics.enum';
 import { ResponseMetrics } from './services/services.interfaces';
