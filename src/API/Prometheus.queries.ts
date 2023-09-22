@@ -71,6 +71,6 @@ export const queries = {
   },
 
   getResourcePairsByService(param: string, groupBy: string, time: string) {
-    return `sum by(${groupBy})(rate(octets_total{${param}}[${time}]))`;
+    return `sum by(${groupBy})(rate(octets_total{${param}}[${time}]) > 0)`;
   }
 };

@@ -68,7 +68,7 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
         legendData={showLegend ? legendData : []}
         legendOrientation={legendOrientation}
         legendPosition={legendPosition}
-        themeColor={ChartThemeColor.multi}
+        themeColor={props.themeColor || ChartThemeColor.multi}
         padding={props.padding || DEFAULT_CHART_PADDING}
         containerComponent={
           <CursorVoronoiContainer

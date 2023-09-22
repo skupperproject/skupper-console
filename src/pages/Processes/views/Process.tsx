@@ -113,9 +113,11 @@ const Process = function () {
           title={
             <TabTitleText>
               {ProcessesLabels.ProcessPairs}{' '}
-              <Badge isRead key={1}>
-                {allDestinationProcesses.length}
-              </Badge>
+              {!!allDestinationProcesses.length && (
+                <Badge isRead key={1}>
+                  {allDestinationProcesses.length}
+                </Badge>
+              )}
             </TabTitleText>
           }
         />

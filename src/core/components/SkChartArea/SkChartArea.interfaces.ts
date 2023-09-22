@@ -12,7 +12,6 @@ export interface SkChartAreaProps extends ChartProps {
   formatX?: Function;
   axisYLabel?: string;
   legendLabels?: string[];
-  themeColor?: string;
   isChartLine?: boolean;
   showLegend?: boolean;
 }

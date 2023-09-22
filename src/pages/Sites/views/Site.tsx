@@ -1,4 +1,4 @@
-import { useCallback, useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
+import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import {
   Card,
@@ -29,7 +29,6 @@ import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -103,7 +102,7 @@ const Site = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${siteId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        <Suspense fallback={<LoadingPage />}>
+        <>
           {tabSelected === SiteLabels.Overview && (
             <Metrics
               key={siteId}
@@ -209,7 +208,7 @@ const Site = function () {
               </GridItem>
             </Grid>
           )}
-        </Suspense>
+        </>
       }
     />
   );

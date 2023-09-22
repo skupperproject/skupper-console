@@ -5,13 +5,11 @@ import {
   extractPrometheusValues,
   extractPrometheusValuesAndLabels
 } from '@API/Prometheus.utils';
-import { AvailableProtocols } from '@API/REST.enum';
 import { defaultTimeInterval, timeIntervalMap } from '@config/prometheus';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import {
-  Metrics,
   QueryMetricsParams,
   LatencyMetricsProps,
   ByteRateMetrics,
@@ -109,10 +107,7 @@ const MetricsController = {
     };
 
     try {
-      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess({
-        ...params,
-        onlyErrors: false
-      });
+      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess(params);
 
       return normalizeResponsesFromSeries(resposeRateDataSeries);
     } catch (e: unknown) {
@@ -134,7 +129,11 @@ const MetricsController = {
     };
 
     try {
-      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess(params);
+      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess({
+        ...params,
+        onlyErrors: true,
+        isRate: true
+      });
 
       return normalizeResponsesFromSeries(resposeRateDataSeries);
     } catch (e: unknown) {
@@ -142,30 +141,116 @@ const MetricsController = {
     }
   },
 
-  getMetrics: async ({
+  getLatency: async ({
+    processIdSource,
+    processIdDest,
+    protocol,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key]
+  }: QueryMetricsParams): Promise<LatencyMetrics[] | null> => {
+    const params = {
+      id: processIdSource,
+      processIdDest,
+      protocol,
+      range: timeInterval
+    };
+
+    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+
+    try {
+      const [quantile50latency, quantile90latency, quantile99latency] = await Promise.all([
+        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end }),
+        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end }),
+        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end })
+      ]);
+
+      const latenciesData = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
+
+      return latenciesData;
+    } catch (e: unknown) {
+      return Promise.reject(e);
+    }
+  },
+
+  getRequest: async ({
+    processIdSource,
+    processIdDest,
+    protocol,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key]
+  }: QueryMetricsParams): Promise<{
+    requestRateData: RequestMetrics[] | null;
+    avgRequestRateInterval: number;
+    totalRequestsInterval: number;
+  }> => {
+    const params = {
+      id: processIdSource,
+      processIdDest,
+      protocol,
+      range: timeInterval
+    };
+
+    try {
+      const [requestsByProcess, avgRequestRate, totalRequests] = await Promise.all([
+        PrometheusApi.fetchRequestsByProcess({
+          ...params
+        }),
+        PrometheusApi.fetchAvgRequestRate(params),
+        PrometheusApi.fetchTotalRequests(params)
+      ]);
+
+      const requestRateData = normalizeRequestFromSeries(requestsByProcess);
+      const avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
+      const totalRequestsInterval = formatToDecimalPlacesIfCents(Number(totalRequests[0]?.value[1] || 0), 0);
+
+      return {
+        avgRequestRateInterval,
+        totalRequestsInterval,
+        requestRateData
+      };
+    } catch (e: unknown) {
+      return Promise.reject(e);
+    }
+  },
+
+  getResponse: async ({
     processIdSource,
     timeInterval = timeIntervalMap[defaultTimeInterval.key],
     processIdDest,
     protocol
-  }: QueryMetricsParams): Promise<Metrics> => {
-    const params = {
-      id: processIdSource,
-      range: timeInterval,
+  }: QueryMetricsParams): Promise<{
+    responseData: ResponseMetrics | null;
+    responseRateData: ResponseMetrics | null;
+  }> => {
+    const props = {
+      processIdSource,
+      timeInterval,
       processIdDest,
       protocol
     };
 
-    // traffic metrics
-    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+    try {
+      const [responseData, responseRateData] = await Promise.all([
+        MetricsController.getResponseData(props),
+        MetricsController.getResponseRateData(props)
+      ]);
 
-    // latency metrics
-    let latenciesData = null;
-    let requestRateData = null;
-    let responseData = null;
-    let responseRateData = null;
-    let avgRequestRateInterval = 0;
-    let totalRequestsInterval = 0;
+      return {
+        responseData,
+        responseRateData
+      };
+    } catch (e: unknown) {
+      return Promise.reject(e);
+    }
+  },
 
+  getTraffic: async ({
+    processIdSource,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    processIdDest,
+    protocol
+  }: QueryMetricsParams): Promise<{
+    bytesData: BytesMetric | null;
+    byteRateData: ByteRateMetrics | null;
+  }> => {
     const props = {
       processIdSource,
       timeInterval,
@@ -179,55 +264,9 @@ const MetricsController = {
         MetricsController.getByteRateData(props)
       ]);
 
-      if (protocol !== AvailableProtocols.Tcp) {
-        const [
-          // http response metrics
-          responseDataReq,
-          responseRateDataReq,
-          // latency metrics
-          quantile50latency,
-          quantile90latency,
-          quantile99latency,
-          requestsByProcess,
-          avgRequestRate,
-          totalRequests
-        ] = await Promise.all([
-          MetricsController.getResponseData(props),
-          MetricsController.getResponseRateData(props),
-          PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end }),
-          PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end }),
-          PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end }),
-          PrometheusApi.fetchRequestsByProcess({
-            ...params
-          }),
-          PrometheusApi.fetchAvgRequestRate(params),
-          PrometheusApi.fetchTotalRequests(params)
-        ]);
-
-        latenciesData = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
-
-        // http requests metrics
-
-        requestRateData = normalizeRequestFromSeries(requestsByProcess);
-
-        avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
-
-        totalRequestsInterval = formatToDecimalPlacesIfCents(Number(totalRequests[0]?.value[1] || 0), 0);
-
-        // http response metrics
-        responseData = responseDataReq;
-        responseRateData = responseRateDataReq;
-      }
-
       return {
         bytesData,
-        byteRateData,
-        latenciesData,
-        avgRequestRateInterval,
-        totalRequestsInterval,
-        requestRateData,
-        responseData,
-        responseRateData
+        byteRateData
       };
     } catch (e: unknown) {
       return Promise.reject(e);

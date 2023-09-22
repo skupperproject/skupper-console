@@ -7,7 +7,7 @@ import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPairs/F
 import ExposedServers from '../components/ExposedServers';
 import FlowPairsService from '../components/FlowPairsService';
 import Overview from '../components/Overview';
-import ResourceDistrubutionFlowChart from '../components/ResourceDistrubutionFlowChart';
+import ResourceDistributionFlowChart from '../components/ResourceDistrubutionFlowChart';
 import {
   TAB_0_KEY,
   TAB_1_KEY,
@@ -32,26 +32,24 @@ const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
 
   return (
     <>
-      {viewSelected === TAB_0_KEY && (
-        <Stack hasGutter>
-          <StackItem>
-            <ResourceDistrubutionFlowChart serviceId={serviceId} serviceName={serviceName} />
-          </StackItem>
-          <StackItem>
-            <Overview serviceId={serviceId} protocol={protocol} />{' '}
-          </StackItem>
-        </Stack>
-      )}
+      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} protocol={protocol} />}
 
       {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
 
       {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
-        <FlowPairsService
-          serviceId={serviceId}
-          options={tcpSelectOptions}
-          columns={service[viewSelected].columns}
-          filters={service[viewSelected].filters}
-        />
+        <Stack hasGutter>
+          <StackItem>
+            <ResourceDistributionFlowChart serviceId={serviceId} serviceName={serviceName} />
+          </StackItem>
+          <StackItem>
+            <FlowPairsService
+              serviceId={serviceId}
+              options={tcpSelectOptions}
+              columns={service[viewSelected].columns}
+              filters={service[viewSelected].filters}
+            />
+          </StackItem>
+        </Stack>
       )}
     </>
   );

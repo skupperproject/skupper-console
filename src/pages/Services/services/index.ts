@@ -78,7 +78,7 @@ export const ServicesController = {
     const nodes = [...clients, ...servers].filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i);
 
     const links =
-      servicePairs?.map(({ metric, value }) => ({
+      servicePairs.map(({ metric, value }) => ({
         source: `${metric.sourceProcess || metric.sourceSite?.split(separator)[0]} ${sourceProcessSuffix}`,
         target: metric.destProcess || metric.destSite?.split(separator)[0],
         value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0

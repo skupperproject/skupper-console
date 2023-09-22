@@ -21,7 +21,7 @@ interface ResourceDistrubutionFlowChartProps {
   serviceName: string;
 }
 
-const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = function ({ serviceId, serviceName }) {
+const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = function ({ serviceId, serviceName }) {
   const [metricSelected, setMetricSelected] = useState(defaultMetric);
   const [clientResourceSelected, setClientResourceSelected] = useState<'client' | 'clientSite'>(
     ServiceClientResourceOptions[0].id
@@ -75,12 +75,8 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
 
   const { nodes, links } = ServicesController.convertToSankeyChartData(
     servicePairs || [],
-    metricSelected === defaultMetric
+    metricSelected !== defaultMetric
   );
-
-  if (!nodes.length) {
-    return null;
-  }
 
   return (
     <Card>
@@ -96,4 +92,4 @@ const ResourceDistrubutionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   );
 };
 
-export default ResourceDistrubutionFlowChart;
+export default ResourceDistributionFlowChart;

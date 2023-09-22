@@ -72,9 +72,11 @@ const ProcessGroup = function () {
           title={
             <TabTitleText>
               {ProcessGroupsLabels.Processes}{' '}
-              <Badge isRead key={1}>
-                {processes.results?.length}
-              </Badge>
+              {!!processes.results?.length && (
+                <Badge isRead key={1}>
+                  {processes.results?.length}
+                </Badge>
+              )}
             </TabTitleText>
           }
         />
