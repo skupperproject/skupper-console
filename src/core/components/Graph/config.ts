@@ -167,6 +167,19 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
 };
 
 const DEFAULT_NODE_STATE_CONFIG = {
+  hover: {
+    shadowOffsetX: 0,
+    shadowOffsetY: 0,
+    shadowColor: 'black',
+    shadowBlur: 10,
+
+    [`${CUSTOM_ITEMS_NAMES.nodeWithBadges}-icon`]: {
+      cursor: 'pointer'
+    },
+    'diamond-icon': {
+      cursor: 'pointer'
+    }
+  },
   hidden: {
     opacity: INACTIVE_OPACITY_VALUE,
 

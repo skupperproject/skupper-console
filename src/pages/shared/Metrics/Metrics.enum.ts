@@ -1,6 +1,6 @@
 export enum MetricsLabels {
-  TrafficSent = 'transmitted',
-  TrafficReceived = 'received',
+  TrafficSent = 'Tx',
+  TrafficReceived = 'Rx',
   ClientErrorRDistributionSeriesAxisYLabel = 'Error distribution',
   ErrorLabel = 'errors',
   ErrorRateSeriesAxisYLabel = 'error rate',

@@ -96,6 +96,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
 
       currentTarget.getNodes().forEach((n: INode) => {
+        currentTarget.setItemState(n, 'hover', false);
+
         if (node.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
           currentTarget.setItemState(n, 'hidden', true);
           n.toBack();
@@ -112,6 +114,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         }
       });
 
+      currentTarget.setItemState(node, 'hover', true);
+
       // keep the parent combo selected if exist
       const comboId = node.getModel()?.comboId as string | undefined;
 
@@ -121,6 +125,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }
 
     function handleNodeMouseLeave({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
+      currentTarget.setItemState(item, 'hover', false);
+
       currentTarget.findAllByState('node', 'hidden').forEach((node) => {
         currentTarget.setItemState(node, 'hidden', false);
       });
