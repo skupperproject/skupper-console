@@ -1,4 +1,4 @@
-import { LEGEND_DEFAULT_STROKE_COLOR } from '../Graph.constants';
+import { LEGEND_DEFAULT_STROKE_COLOR } from '../../Graph.constants';
 
 const SvgCircle = function ({ dimension = 12 }: { dimension?: number }) {
   const circleDimension = dimension;

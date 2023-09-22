@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
 

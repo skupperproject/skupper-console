@@ -1,4 +1,4 @@
-import { LEGEND_DEFAULT_BG_COLOR, LEGEND_DEFAULT_STROKE_COLOR } from '../Graph.constants';
+import { LEGEND_DEFAULT_BG_COLOR, LEGEND_DEFAULT_STROKE_COLOR } from '../../Graph.constants';
 
 const SvgDiamond = function ({ dimension = 12 }: { dimension?: number }) {
   const diamondDimension = dimension;
