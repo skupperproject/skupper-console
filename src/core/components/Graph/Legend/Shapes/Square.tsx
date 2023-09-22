@@ -1,4 +1,4 @@
-import { LEGEND_DEFAULT_STROKE_COLOR } from '../Graph.constants';
+import { LEGEND_DEFAULT_STROKE_COLOR } from '../../Graph.constants';
 
 const SvgSquare = function () {
   const squareSize = 12;

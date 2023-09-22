@@ -11,15 +11,15 @@ import {
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
 
-import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG } from './config';
+import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG } from './Graph.constants';
+import MenuControl from './MenuControl';
+import { GraphController } from './services';
 import {
   registerCustomEdgeWithHover as registerDefaultEdgeWithHover,
   registerNodeWithBadges,
   regusterComboWithCustomLabel,
   registerSiteEdge
-} from './customItems';
-import GraphMenuControl from './GraphMenuControl';
-import { GraphController } from './services';
+} from './services/customItems';
 
 const GRAPH_ZOOM_CACHE_KEY = 'graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'fitScreen';
@@ -421,7 +421,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     return (
       <div ref={graphRef} style={{ height: '98%', position: 'relative' }}>
         {topologyGraphRef.current && (
-          <GraphMenuControl
+          <MenuControl
             graphInstance={topologyGraphRef.current}
             onGetZoom={handleSaveZoom}
             onFitScreen={handleFitScreen}

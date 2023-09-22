@@ -1,4 +1,4 @@
-import { EDGE_COLOR_DEFAULT } from '../Graph.constants';
+import { EDGE_COLOR_DEFAULT } from '../../Graph.constants';
 
 const SvgHorizontalLine = function ({
   color = EDGE_COLOR_DEFAULT,

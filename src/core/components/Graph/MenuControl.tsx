@@ -20,7 +20,7 @@ const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
 const DURATION_ANIMATION_CONTROL_DEFAULT = 250;
 const LEGEND_LABEL_NAME = 'Legend';
 
-const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
+const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
 
   const center = graphInstance.getGraphCenterPoint();
@@ -139,4 +139,4 @@ const GraphMenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: Zo
   );
 };
 
-export default GraphMenuControl;
+export default MenuControl;

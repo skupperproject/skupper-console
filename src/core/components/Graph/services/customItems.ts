@@ -1,14 +1,13 @@
 import { registerEdge, ArrowConfig, registerCombo, IGroup, registerNode } from '@antv/g6';
 
-import { CUSTOM_CIRCLE_NODE_STYLE, EDGE_COLOR_ACTIVE_DEFAULT, EDGE_COLOR_DEFAULT, NODE_SIZE } from './Graph.constants';
-import { ComboWithCustomLabel, NodeWithBadgesProps } from './Graph.interfaces';
-
-export const CUSTOM_ITEMS_NAMES = {
-  animatedDashEdge: 'line-dash',
-  siteEdge: 'site-edge',
-  nodeWithBadges: 'nCircle',
-  comboWithCustomLabel: 'cRect'
-};
+import {
+  CUSTOM_CIRCLE_NODE_STYLE,
+  CUSTOM_ITEMS_NAMES,
+  EDGE_COLOR_ACTIVE_DEFAULT,
+  EDGE_COLOR_DEFAULT,
+  NODE_SIZE
+} from '../Graph.constants';
+import { ComboWithCustomLabel, NodeWithBadgesProps } from '../Graph.interfaces';
 
 export function registerCustomEdgeWithHover() {
   // Draw a blue line dash when hover an edge

@@ -1,10 +1,10 @@
 import { Divider, Flex, FlexItem, Title } from '@patternfly/react-core';
 
-import { EDGE_COLOR_ACTIVE_DEFAULT } from './Graph.constants';
 import SvgCircle from './Shapes/Circle';
 import SvgDiamond from './Shapes/Diamond';
 import SvgHorizontalLine from './Shapes/HorizontalLine';
 import SvgSquare from './Shapes/Square';
+import { EDGE_COLOR_ACTIVE_DEFAULT } from '../Graph.constants';
 
 enum Labels {
   EntitiesTitle = ' Entities',

@@ -4,9 +4,14 @@ import componentSVG from '@assets/component.svg';
 import processSVG from '@assets/process.svg';
 import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
-import { DEFAULT_NODE_CONFIG, DEFAULT_NODE_ICON, DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/config';
-import { CUSTOM_ITEMS_NAMES } from '@core/components/Graph/customItems';
-import { EDGE_COLOR_DEFAULT, EDGE_COLOR_ACTIVE_DEFAULT } from '@core/components/Graph/Graph.constants';
+import {
+  EDGE_COLOR_DEFAULT,
+  EDGE_COLOR_ACTIVE_DEFAULT,
+  CUSTOM_ITEMS_NAMES,
+  DEFAULT_REMOTE_NODE_CONFIG,
+  DEFAULT_NODE_ICON,
+  DEFAULT_NODE_CONFIG
+} from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';

@@ -10,7 +10,7 @@ import { ProcessResponse } from '@API/REST.interfaces';
 import { isPrometheusActive, UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/GraphReactAdaptor';
+import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
 import { QueriesServices } from '@pages/Services/Services.enum';
