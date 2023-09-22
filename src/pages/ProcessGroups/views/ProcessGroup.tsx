@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';

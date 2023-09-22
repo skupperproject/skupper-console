@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';

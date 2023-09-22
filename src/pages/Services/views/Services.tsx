@@ -6,7 +6,7 @@ import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import SearchFilter from '@core/components/skSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';

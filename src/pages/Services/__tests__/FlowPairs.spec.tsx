@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import servicesData from '@mocks/data/SERVICES.json';
 import { loadMockServer } from '@mocks/server';

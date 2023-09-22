@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessResponse, SiteResponse } from '@API/REST.interfaces';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import sitesData from '@mocks/data/SITES.json';

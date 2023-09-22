@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';

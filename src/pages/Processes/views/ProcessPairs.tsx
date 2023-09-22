@@ -19,8 +19,9 @@ import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
+import { VarColors } from '@config/colors';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import EmptyData from '@core/components/EmptyData';
 import LinkCell from '@core/components/LinkCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
@@ -28,7 +29,6 @@ import MainContainer from '@layout/MainContainer';
 import FlowPairsTable from '@pages/shared/FlowPair/FlowPairsTable';
 import { TopologyRoutesPaths, TopologyURLFilters, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
-import { VarColors } from 'colors';
 
 import ProcessDescription from '../components/ProcessDescription';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';

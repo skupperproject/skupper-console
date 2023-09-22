@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessResponse, ProcessGroupResponse } from '@API/REST.interfaces';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processGroupsData from '@mocks/data/PROCESS_GROUPS.json';
 import processesData from '@mocks/data/PROCESSES.json';

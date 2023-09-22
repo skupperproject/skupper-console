@@ -22,7 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { getTestsIds } from '@config/testIds.config';
+import { getTestsIds } from '@config/testIds';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';

@@ -2,8 +2,8 @@ import { FC } from 'react';
 
 import { ResponsiveSankey } from '@nivo/sankey';
 
+import { VarColors } from '@config/colors';
 import { formatByteRate } from '@core/utils/formatBytes';
-import { VarColors } from 'colors';
 
 interface SkSankeyChartProps {
   nodes: {
