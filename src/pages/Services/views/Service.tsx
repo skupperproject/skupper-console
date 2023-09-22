@@ -95,9 +95,11 @@ const Service = function () {
           title={
             <TabTitleText>
               {`${ServicesLabels.Servers} `}
-              <Badge isRead key={1}>
-                {serverCount}
-              </Badge>
+              {!!serverCount && (
+                <Badge isRead key={1}>
+                  {serverCount}
+                </Badge>
+              )}
             </TabTitleText>
           }
         />
@@ -139,6 +141,7 @@ const Service = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${serviceId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
+        // avoid that the entire page refresh when you change tab
         <Suspense fallback={<LoadingPage />}>
           {protocol === AvailableProtocols.Tcp && (
             <ConnectionsByService

@@ -113,8 +113,8 @@ export const PrometheusApi = {
     id,
     range,
     processIdDest,
-    quantile,
     protocol,
+    quantile,
     start,
     end
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {

@@ -1,5 +1,6 @@
 import { FC, memo } from 'react';
 
+import { ChartThemeColor } from '@patternfly/react-charts';
 import { Bullseye, Divider, Flex, FlexItem, Title } from '@patternfly/react-core';
 
 import SkChartArea from '@core/components/SkChartArea';
@@ -18,9 +19,10 @@ const RequestCharts: FC<{
     {/* Chart requests time series card*/}
     <FlexItem flex={{ default: 'flex_2' }}>
       <SkChartArea
+        data={requestRateData.map(({ data }) => data)}
         formatY={(y: number) => `${formatToDecimalPlacesIfCents(y, 3)} rps`}
         legendLabels={requestRateData.map(({ label }) => `${label}`)}
-        data={requestRateData.map(({ data }) => data)}
+        themeColor={ChartThemeColor.gold}
       />
     </FlexItem>
 

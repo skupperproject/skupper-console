@@ -4,6 +4,9 @@ import { ResponsiveSankey } from '@nivo/sankey';
 
 import { VarColors } from '@config/colors';
 import { formatByteRate } from '@core/utils/formatBytes';
+import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
+
+import EmptyData from '../EmptyData';
 
 interface SkSankeyChartProps {
   nodes: {
@@ -22,6 +25,15 @@ export const DEFAULT_SANKEY_CHART_FLOW_VALUE = 0.000001;
 const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 
 const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
+  if (!data.links.length) {
+    return (
+      <EmptyData
+        message={MetricsLabels.NoMetricFoundTitleMessage}
+        description={MetricsLabels.NoMetricFoundDescriptionMessage}
+      />
+    );
+  }
+
   return (
     <div style={{ height: DEFAULT_SANKEY_CHART_HEIGHT }}>
       <ResponsiveSankey

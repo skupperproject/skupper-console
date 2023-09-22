@@ -33,7 +33,7 @@ describe('Metrics component', () => {
         <Suspense fallback={<LoadingPage />}>
           <Metrics
             selectedFilters={{ processIdSource: processResult.identity }}
-            openSections={{ latency: true, request: true, response: true }}
+            openSections={{ latency: true, request: false }}
           />
         </Suspense>
       </Wrapper>
@@ -42,8 +42,7 @@ describe('Metrics component', () => {
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.HttpStatus)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
     expect(screen.getByText(MetricsLabels.RequestsTitle)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.HttpStatus)).toBeInTheDocument();
   });
 });

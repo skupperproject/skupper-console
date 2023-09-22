@@ -16,7 +16,7 @@ import { ResponseMetrics } from './services/services.interfaces';
 const errorDistributionPadding = { left: 0, bottom: 65, top: 50, right: 0 };
 const errorRateChartPadding = { left: 40, bottom: 80, top: 50, right: 40 };
 
-const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: ResponseMetrics }> = memo(
+const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseData: ResponseMetrics }> = memo(
   ({ responseRateData, responseData }) => (
     <>
       <Grid hasGutter className="pf-v5-u-m-md">
@@ -60,8 +60,8 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
             themeColor={ChartThemeColor.orange}
-            legendLabels={[`${responseRateData.statusCode4xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
-            data={[responseRateData.statusCode4xx.data || [{ x: 0, y: 0 }]]}
+            legendLabels={[`${responseData.statusCode4xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
+            data={[responseRateData?.statusCode4xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
           />
         </FlexItem>
@@ -72,8 +72,8 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics; responseData: Resp
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
             themeColor={ChartThemeColor.orange}
-            legendLabels={[`${responseRateData.statusCode5xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
-            data={[responseRateData.statusCode5xx.data || [{ x: 0, y: 0 }]]}
+            legendLabels={[`${responseData.statusCode5xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
+            data={[responseRateData?.statusCode5xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
           />
         </FlexItem>

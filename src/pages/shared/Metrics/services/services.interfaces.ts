@@ -3,7 +3,10 @@ import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { IntervalTimeProp, PrometheusApiResult } from 'API/Prometheus.interfaces';
 
 export enum QueriesMetrics {
-  GetMetrics = 'get-processes-metrics-query'
+  GetTraffic = 'get-metric-traffic-query',
+  GetLatency = 'get-metric-latency-query',
+  GetRequest = 'get-metric-request-query',
+  GetResponse = 'get-metric-response-query'
 }
 
 export interface QueryMetricsParams {
@@ -57,15 +60,4 @@ export interface LatencyMetricsProps {
   quantile50latency: PrometheusApiResult[];
   quantile90latency: PrometheusApiResult[];
   quantile99latency: PrometheusApiResult[];
-}
-
-export interface Metrics {
-  bytesData: BytesMetric | null;
-  byteRateData: ByteRateMetrics | null;
-  latenciesData: LatencyMetrics[] | null;
-  avgRequestRateInterval: number;
-  totalRequestsInterval: number;
-  requestRateData: RequestMetrics[] | null;
-  responseData: ResponseMetrics | null;
-  responseRateData: ResponseMetrics | null;
 }

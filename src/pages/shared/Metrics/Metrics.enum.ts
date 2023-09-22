@@ -8,7 +8,7 @@ export enum MetricsLabels {
   FilterAllDestinationProcesses = 'All clients or servers',
   FilterProtocolsDefault = 'All protocols',
   NoMetricFoundTitleMessage = 'No metrics found',
-  NoMetricFoundDescriptionMessage = 'No metrics are currently accessible or meet the filter criteria. Please modify all filters and the time window, then attempt the operation again.',
+  NoMetricFoundDescriptionMessage = 'No metrics are currently accessible or meet the filter criteria. Please modify all filters, then attempt the operation again.',
   LatencyMetricAvg = 'Avg latency',
   LatencyMetric50quantile = '50th percentile',
   LatencyMetric90quantile = '90th percentile',
@@ -21,7 +21,7 @@ export enum MetricsLabels {
   ByteRateMaxCol = 'max',
   RefetchData = 'Data update',
   DataTransferTitle = 'Data transfer',
-  LatencyTitle = 'Http latency',
+  LatencyTitle = 'Http latencies',
   RequestsTitle = 'Http requests',
   HttpStatus = 'Http response status'
 }
