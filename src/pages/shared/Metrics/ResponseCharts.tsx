@@ -59,10 +59,10 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
-            themeColor={ChartThemeColor.orange}
             legendLabels={[`${responseData.statusCode4xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
             data={[responseRateData?.statusCode4xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
+            themeColor={ChartThemeColor.orange}
           />
         </FlexItem>
 
@@ -71,10 +71,10 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
-            themeColor={ChartThemeColor.orange}
             legendLabels={[`${responseData.statusCode5xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
             data={[responseRateData?.statusCode5xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
+            themeColor={ChartThemeColor.gold}
           />
         </FlexItem>
 
@@ -94,6 +94,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
               }
             ]}
             padding={errorDistributionPadding}
+            themeColor={ChartThemeColor.orange}
           />
         </FlexItem>
       </Flex>

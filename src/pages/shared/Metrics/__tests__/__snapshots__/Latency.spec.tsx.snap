@@ -1,0 +1,1381 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Latency component should render the Latency section of the metric 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="pf-v5-c-card pf-m-expanded"
+        data-ouia-component-id="OUIA-Generated-Card-2"
+        data-ouia-component-type="PF5/Card"
+        data-ouia-safe="true"
+        id=""
+      >
+        <div
+          class="pf-v5-c-card__header"
+        >
+          <div
+            class="pf-v5-c-card__header-toggle"
+          >
+            <button
+              aria-disabled="false"
+              class="pf-v5-c-button pf-m-plain"
+              data-ouia-component-id="OUIA-Generated-Button-plain-1"
+              data-ouia-component-type="PF5/Button"
+              data-ouia-safe="true"
+              type="button"
+            >
+              <span
+                class="pf-v5-c-card__header-toggle-icon"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="pf-v5-svg"
+                  fill="currentColor"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 256 512"
+                  width="1em"
+                >
+                  <path
+                    d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div
+            class="pf-v5-c-card__header-main"
+          >
+            <div
+              class="pf-v5-c-card__title"
+            >
+              <div
+                class="pf-v5-c-card__title-text"
+              >
+                Http latencies
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pf-v5-c-card__expandable-content"
+        >
+          <div
+            class="pf-v5-c-card__body"
+          >
+            <div
+              style="width: 100%; height: 100%;"
+            >
+              <div
+                class="pf-v5-c-chart"
+                style="height: 100%; width: 100%; user-select: none; pointer-events: none; position: relative;"
+              >
+                <svg
+                  height="300"
+                  role="img"
+                  style="pointer-events: all; width: 100%; height: 100%;"
+                  viewBox="0 0 0 300"
+                  width="0"
+                >
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--axis--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--axis--Fill, transparent); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="0"
+                      y1="230"
+                      y2="230"
+                    />
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="68.60455926474165"
+                        x2="68.60455926474165"
+                        y1="230"
+                        y2="20"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="68.60455926474165"
+                        x2="68.60455926474165"
+                        y1="230"
+                        y2="235"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-0-ChartLabel-0"
+                        x="68.60455926474165"
+                        y="253.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                          text-anchor="middle"
+                          x="68.60455926474165"
+                        >
+                          Jan 10
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="51.10459863965306"
+                        x2="51.10459863965306"
+                        y1="230"
+                        y2="20"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="51.10459863965306"
+                        x2="51.10459863965306"
+                        y1="230"
+                        y2="235"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-0-ChartLabel-1"
+                        x="51.10459863965306"
+                        y="253.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                          text-anchor="middle"
+                          x="51.10459863965306"
+                        >
+                          Mar 13
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="33.60463801456447"
+                        x2="33.60463801456447"
+                        y1="230"
+                        y2="20"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="33.60463801456447"
+                        x2="33.60463801456447"
+                        y1="230"
+                        y2="235"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-0-ChartLabel-2"
+                        x="33.60463801456447"
+                        y="253.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                          text-anchor="middle"
+                          x="33.60463801456447"
+                        >
+                          May 13
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="16.104677389475878"
+                        x2="16.104677389475878"
+                        y1="230"
+                        y2="20"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="16.104677389475878"
+                        x2="16.104677389475878"
+                        y1="230"
+                        y2="235"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-0-ChartLabel-3"
+                        x="16.104677389475878"
+                        y="253.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                          text-anchor="middle"
+                          x="16.104677389475878"
+                        >
+                          Jul 14
+                        </tspan>
+                      </text>
+                    </g>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--axis--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--axis--Fill, transparent); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="70"
+                      y1="20"
+                      y2="230"
+                    />
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="0"
+                        y1="188"
+                        y2="188"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="65"
+                        y1="188"
+                        y2="188"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-1-ChartLabel-0"
+                        x="55"
+                        y="191.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                          text-anchor="end"
+                          x="55"
+                        >
+                          200 undefined
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="0"
+                        y1="146"
+                        y2="146"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="65"
+                        y1="146"
+                        y2="146"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-1-ChartLabel-1"
+                        x="55"
+                        y="149.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                          text-anchor="end"
+                          x="55"
+                        >
+                          400 undefined
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="0"
+                        y1="104"
+                        y2="104"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="65"
+                        y1="104"
+                        y2="104"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-1-ChartLabel-2"
+                        x="55"
+                        y="107.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                          text-anchor="end"
+                          x="55"
+                        >
+                          600 undefined
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="0"
+                        y1="61.99999999999999"
+                        y2="61.99999999999999"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="65"
+                        y1="61.99999999999999"
+                        y2="61.99999999999999"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-1-ChartLabel-3"
+                        x="55"
+                        y="65.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                          text-anchor="end"
+                          x="55"
+                        >
+                          800 undefined
+                        </tspan>
+                      </text>
+                    </g>
+                    <g
+                      role="presentation"
+                    >
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="0"
+                        y1="20"
+                        y2="20"
+                      />
+                      <line
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                        vector-effect="non-scaling-stroke"
+                        x1="70"
+                        x2="65"
+                        y1="20"
+                        y2="20"
+                      />
+                      <text
+                        direction="inherit"
+                        dx="0"
+                        id="chart-axis-1-ChartLabel-4"
+                        x="55"
+                        y="23.55"
+                      >
+                        <tspan
+                          dx="0"
+                          dy="0"
+                          style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                          text-anchor="end"
+                          x="55"
+                        >
+                          1 µs
+                        </tspan>
+                      </text>
+                    </g>
+                  </g>
+                  <g>
+                    <g
+                      clip-path="url(#victory-clip-4)"
+                      style="height: 100%; width: 100%; user-select: none;"
+                    >
+                      <defs>
+                        <clippath
+                          id="victory-clip-4"
+                        >
+                          <rect
+                            height="210"
+                            vector-effect="non-scaling-stroke"
+                            width="70"
+                            x="0"
+                            y="20"
+                          />
+                        </clippath>
+                      </defs>
+                      <path
+                        d="M70,230L0,20L0,230L70,230Z"
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--100, #06c); width: 6px; fill-opacity: 0.3; stroke-width: 2; stroke: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--100, #06c);"
+                      />
+                    </g>
+                    <g
+                      clip-path="url(#victory-clip-5)"
+                      style="height: 100%; width: 100%; user-select: none;"
+                    >
+                      <defs>
+                        <clippath
+                          id="victory-clip-5"
+                        >
+                          <rect
+                            height="210"
+                            vector-effect="non-scaling-stroke"
+                            width="70"
+                            x="0"
+                            y="20"
+                          />
+                        </clippath>
+                      </defs>
+                      <path
+                        d="M70,230L0,20L0,230L70,230Z"
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--200, #4cb140); width: 6px; fill-opacity: 0.3; stroke-width: 2; stroke: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--200, #4cb140);"
+                      />
+                    </g>
+                    <g
+                      clip-path="url(#victory-clip-6)"
+                      style="height: 100%; width: 100%; user-select: none;"
+                    >
+                      <defs>
+                        <clippath
+                          id="victory-clip-6"
+                        >
+                          <rect
+                            height="210"
+                            vector-effect="non-scaling-stroke"
+                            width="70"
+                            x="0"
+                            y="20"
+                          />
+                        </clippath>
+                      </defs>
+                      <path
+                        d="M70,230L0,20L0,230L70,230Z"
+                        role="presentation"
+                        shape-rendering="auto"
+                        style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--300, #009596); width: 6px; fill-opacity: 0.3; stroke-width: 2; stroke: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--300, #009596);"
+                      />
+                    </g>
+                  </g>
+                  <g>
+                    <rect
+                      height="14"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: none;"
+                      vector-effect="non-scaling-stroke"
+                      width="118.80000000000001"
+                      x="0"
+                      y="262"
+                    />
+                    <path
+                      d="M 9.128, 280.872
+      h9.744
+      v-9.744
+      h-9.744
+      z"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--100, #06c);"
+                    />
+                    <path
+                      d="M 48.728, 280.872
+      h9.744
+      v-9.744
+      h-9.744
+      z"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--200, #4cb140);"
+                    />
+                    <path
+                      d="M 88.328, 280.872
+      h9.744
+      v-9.744
+      h-9.744
+      z"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--300, #009596);"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-legend-3-ChartLabel-0"
+                      x="30.8"
+                      y="280.97"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-family: "RedHatText",helvetica,arial,sans-serif; font-size: 14px; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-global--label--Fill, #151515);"
+                        text-anchor="start"
+                        x="30.8"
+                      >
+                        50th percentile
+                      </tspan>
+                    </text>
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-legend-3-ChartLabel-1"
+                      x="70.39999999999999"
+                      y="280.97"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-family: "RedHatText",helvetica,arial,sans-serif; font-size: 14px; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-global--label--Fill, #151515);"
+                        text-anchor="start"
+                        x="70.39999999999999"
+                      >
+                        90th percentile
+                      </tspan>
+                    </text>
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-legend-3-ChartLabel-2"
+                      x="110"
+                      y="280.97"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-family: "RedHatText",helvetica,arial,sans-serif; font-size: 14px; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-global--label--Fill, #151515);"
+                        text-anchor="start"
+                        x="110"
+                      >
+                        99th percentile
+                      </tspan>
+                    </text>
+                  </g>
+                </svg>
+                <div
+                  style="z-index: 99; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+                >
+                  <svg
+                    height="300"
+                    style="overflow: visible; width: 100%; height: 100%;"
+                    viewBox="0 0 0 300"
+                    width="0"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg
+      height="300"
+      style="position: fixed; top: -9999px; left: -9999px;"
+      viewBox="0 0 300 300"
+      width="300"
+      xlink="http://www.w3.org/1999/xlink"
+    >
+      <text />
+    </svg>
+  </body>,
+  "container": <div>
+    <div
+      class="pf-v5-c-card pf-m-expanded"
+      data-ouia-component-id="OUIA-Generated-Card-2"
+      data-ouia-component-type="PF5/Card"
+      data-ouia-safe="true"
+      id=""
+    >
+      <div
+        class="pf-v5-c-card__header"
+      >
+        <div
+          class="pf-v5-c-card__header-toggle"
+        >
+          <button
+            aria-disabled="false"
+            class="pf-v5-c-button pf-m-plain"
+            data-ouia-component-id="OUIA-Generated-Button-plain-1"
+            data-ouia-component-type="PF5/Button"
+            data-ouia-safe="true"
+            type="button"
+          >
+            <span
+              class="pf-v5-c-card__header-toggle-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="pf-v5-svg"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                viewBox="0 0 256 512"
+                width="1em"
+              >
+                <path
+                  d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div
+          class="pf-v5-c-card__header-main"
+        >
+          <div
+            class="pf-v5-c-card__title"
+          >
+            <div
+              class="pf-v5-c-card__title-text"
+            >
+              Http latencies
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="pf-v5-c-card__expandable-content"
+      >
+        <div
+          class="pf-v5-c-card__body"
+        >
+          <div
+            style="width: 100%; height: 100%;"
+          >
+            <div
+              class="pf-v5-c-chart"
+              style="height: 100%; width: 100%; user-select: none; pointer-events: none; position: relative;"
+            >
+              <svg
+                height="300"
+                role="img"
+                style="pointer-events: all; width: 100%; height: 100%;"
+                viewBox="0 0 0 300"
+                width="0"
+              >
+                <g
+                  role="presentation"
+                >
+                  <line
+                    role="presentation"
+                    shape-rendering="auto"
+                    style="stroke: var(--pf-v5-chart-axis--axis--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--axis--Fill, transparent); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;"
+                    vector-effect="non-scaling-stroke"
+                    x1="70"
+                    x2="0"
+                    y1="230"
+                    y2="230"
+                  />
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="68.60455926474165"
+                      x2="68.60455926474165"
+                      y1="230"
+                      y2="20"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="68.60455926474165"
+                      x2="68.60455926474165"
+                      y1="230"
+                      y2="235"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-0-ChartLabel-0"
+                      x="68.60455926474165"
+                      y="253.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                        text-anchor="middle"
+                        x="68.60455926474165"
+                      >
+                        Jan 10
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="51.10459863965306"
+                      x2="51.10459863965306"
+                      y1="230"
+                      y2="20"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="51.10459863965306"
+                      x2="51.10459863965306"
+                      y1="230"
+                      y2="235"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-0-ChartLabel-1"
+                      x="51.10459863965306"
+                      y="253.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                        text-anchor="middle"
+                        x="51.10459863965306"
+                      >
+                        Mar 13
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="33.60463801456447"
+                      x2="33.60463801456447"
+                      y1="230"
+                      y2="20"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="33.60463801456447"
+                      x2="33.60463801456447"
+                      y1="230"
+                      y2="235"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-0-ChartLabel-2"
+                      x="33.60463801456447"
+                      y="253.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                        text-anchor="middle"
+                        x="33.60463801456447"
+                      >
+                        May 13
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="16.104677389475878"
+                      x2="16.104677389475878"
+                      y1="230"
+                      y2="20"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="16.104677389475878"
+                      x2="16.104677389475878"
+                      y1="230"
+                      y2="235"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-0-ChartLabel-3"
+                      x="16.104677389475878"
+                      y="253.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: middle;"
+                        text-anchor="middle"
+                        x="16.104677389475878"
+                      >
+                        Jul 14
+                      </tspan>
+                    </text>
+                  </g>
+                </g>
+                <g
+                  role="presentation"
+                >
+                  <line
+                    role="presentation"
+                    shape-rendering="auto"
+                    style="stroke: var(--pf-v5-chart-axis--axis--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--axis--Fill, transparent); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;"
+                    vector-effect="non-scaling-stroke"
+                    x1="70"
+                    x2="70"
+                    y1="20"
+                    y2="230"
+                  />
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="0"
+                      y1="188"
+                      y2="188"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="65"
+                      y1="188"
+                      y2="188"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-1-ChartLabel-0"
+                      x="55"
+                      y="191.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                        text-anchor="end"
+                        x="55"
+                      >
+                        200 undefined
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="0"
+                      y1="146"
+                      y2="146"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="65"
+                      y1="146"
+                      y2="146"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-1-ChartLabel-1"
+                      x="55"
+                      y="149.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                        text-anchor="end"
+                        x="55"
+                      >
+                        400 undefined
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="0"
+                      y1="104"
+                      y2="104"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="65"
+                      y1="104"
+                      y2="104"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-1-ChartLabel-2"
+                      x="55"
+                      y="107.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                        text-anchor="end"
+                        x="55"
+                      >
+                        600 undefined
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="0"
+                      y1="61.99999999999999"
+                      y2="61.99999999999999"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="65"
+                      y1="61.99999999999999"
+                      y2="61.99999999999999"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-1-ChartLabel-3"
+                      x="55"
+                      y="65.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                        text-anchor="end"
+                        x="55"
+                      >
+                        800 undefined
+                      </tspan>
+                    </text>
+                  </g>
+                  <g
+                    role="presentation"
+                  >
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--grid--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--grid--Fill, none); pointer-events: painted; stroke-linecap: round; stroke-linejoin: round;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="0"
+                      y1="20"
+                      y2="20"
+                    />
+                    <line
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="stroke: var(--pf-v5-chart-axis--tick--stroke--Color, #d2d2d2); fill: var(--pf-v5-chart-axis--tick--Fill, transparent); size: 5px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1;"
+                      vector-effect="non-scaling-stroke"
+                      x1="70"
+                      x2="65"
+                      y1="20"
+                      y2="20"
+                    />
+                    <text
+                      direction="inherit"
+                      dx="0"
+                      id="chart-axis-1-ChartLabel-4"
+                      x="55"
+                      y="23.55"
+                    >
+                      <tspan
+                        dx="0"
+                        dy="0"
+                        style="font-size: 10px; font-family: "RedHatText",helvetica,arial,sans-serif; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-axis--tick-label--Fill, #4f5255); text-anchor: end;"
+                        text-anchor="end"
+                        x="55"
+                      >
+                        1 µs
+                      </tspan>
+                    </text>
+                  </g>
+                </g>
+                <g>
+                  <g
+                    clip-path="url(#victory-clip-4)"
+                    style="height: 100%; width: 100%; user-select: none;"
+                  >
+                    <defs>
+                      <clippath
+                        id="victory-clip-4"
+                      >
+                        <rect
+                          height="210"
+                          vector-effect="non-scaling-stroke"
+                          width="70"
+                          x="0"
+                          y="20"
+                        />
+                      </clippath>
+                    </defs>
+                    <path
+                      d="M70,230L0,20L0,230L70,230Z"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--100, #06c); width: 6px; fill-opacity: 0.3; stroke-width: 2; stroke: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--100, #06c);"
+                    />
+                  </g>
+                  <g
+                    clip-path="url(#victory-clip-5)"
+                    style="height: 100%; width: 100%; user-select: none;"
+                  >
+                    <defs>
+                      <clippath
+                        id="victory-clip-5"
+                      >
+                        <rect
+                          height="210"
+                          vector-effect="non-scaling-stroke"
+                          width="70"
+                          x="0"
+                          y="20"
+                        />
+                      </clippath>
+                    </defs>
+                    <path
+                      d="M70,230L0,20L0,230L70,230Z"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--200, #4cb140); width: 6px; fill-opacity: 0.3; stroke-width: 2; stroke: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--200, #4cb140);"
+                    />
+                  </g>
+                  <g
+                    clip-path="url(#victory-clip-6)"
+                    style="height: 100%; width: 100%; user-select: none;"
+                  >
+                    <defs>
+                      <clippath
+                        id="victory-clip-6"
+                      >
+                        <rect
+                          height="210"
+                          vector-effect="non-scaling-stroke"
+                          width="70"
+                          x="0"
+                          y="20"
+                        />
+                      </clippath>
+                    </defs>
+                    <path
+                      d="M70,230L0,20L0,230L70,230Z"
+                      role="presentation"
+                      shape-rendering="auto"
+                      style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--300, #009596); width: 6px; fill-opacity: 0.3; stroke-width: 2; stroke: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--300, #009596);"
+                    />
+                  </g>
+                </g>
+                <g>
+                  <rect
+                    height="14"
+                    role="presentation"
+                    shape-rendering="auto"
+                    style="fill: none;"
+                    vector-effect="non-scaling-stroke"
+                    width="118.80000000000001"
+                    x="0"
+                    y="262"
+                  />
+                  <path
+                    d="M 9.128, 280.872
+      h9.744
+      v-9.744
+      h-9.744
+      z"
+                    role="presentation"
+                    shape-rendering="auto"
+                    style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--100, #06c);"
+                  />
+                  <path
+                    d="M 48.728, 280.872
+      h9.744
+      v-9.744
+      h-9.744
+      z"
+                    role="presentation"
+                    shape-rendering="auto"
+                    style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--200, #4cb140);"
+                  />
+                  <path
+                    d="M 88.328, 280.872
+      h9.744
+      v-9.744
+      h-9.744
+      z"
+                    role="presentation"
+                    shape-rendering="auto"
+                    style="fill: var(--pf-v5-chart-theme--multi-color-ordered--ColorScale--300, #009596);"
+                  />
+                  <text
+                    direction="inherit"
+                    dx="0"
+                    id="chart-legend-3-ChartLabel-0"
+                    x="30.8"
+                    y="280.97"
+                  >
+                    <tspan
+                      dx="0"
+                      dy="0"
+                      style="font-family: "RedHatText",helvetica,arial,sans-serif; font-size: 14px; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-global--label--Fill, #151515);"
+                      text-anchor="start"
+                      x="30.8"
+                    >
+                      50th percentile
+                    </tspan>
+                  </text>
+                  <text
+                    direction="inherit"
+                    dx="0"
+                    id="chart-legend-3-ChartLabel-1"
+                    x="70.39999999999999"
+                    y="280.97"
+                  >
+                    <tspan
+                      dx="0"
+                      dy="0"
+                      style="font-family: "RedHatText",helvetica,arial,sans-serif; font-size: 14px; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-global--label--Fill, #151515);"
+                      text-anchor="start"
+                      x="70.39999999999999"
+                    >
+                      90th percentile
+                    </tspan>
+                  </text>
+                  <text
+                    direction="inherit"
+                    dx="0"
+                    id="chart-legend-3-ChartLabel-2"
+                    x="110"
+                    y="280.97"
+                  >
+                    <tspan
+                      dx="0"
+                      dy="0"
+                      style="font-family: "RedHatText",helvetica,arial,sans-serif; font-size: 14px; letter-spacing: normal; padding: 10px; stroke: var(--pf-v5-chart-global--label--stroke, transparent); fill: var(--pf-v5-chart-global--label--Fill, #151515);"
+                      text-anchor="start"
+                      x="110"
+                    >
+                      99th percentile
+                    </tspan>
+                  </text>
+                </g>
+              </svg>
+              <div
+                style="z-index: 99; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+              >
+                <svg
+                  height="300"
+                  style="overflow: visible; width: 100%; height: 100%;"
+                  viewBox="0 0 0 300"
+                  width="0"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

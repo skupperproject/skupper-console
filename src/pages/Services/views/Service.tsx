@@ -86,6 +86,11 @@ const Service = function () {
   }
 
   const NavigationMenu = function () {
+    const serverCount = serversData?.timeRangeCount;
+    const requestsCount = requestsData?.timeRangeCount;
+    const tcpActiveConnectionCount = activeConnectionsData?.timeRangeCount;
+    const tcpTerminatedConnectionCount = terminatedConnectionsData?.timeRangeCount;
+
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
         <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${ServicesLabels.Overview}`}</TabTitleText>} />
@@ -128,11 +133,6 @@ const Service = function () {
       </Tabs>
     );
   };
-
-  const serverCount = serversData?.timeRangeCount;
-  const requestsCount = requestsData?.timeRangeCount;
-  const tcpActiveConnectionCount = activeConnectionsData?.timeRangeCount;
-  const tcpTerminatedConnectionCount = terminatedConnectionsData?.timeRangeCount;
 
   return (
     <MainContainer

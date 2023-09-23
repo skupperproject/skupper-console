@@ -43,13 +43,11 @@ const config = {
     '^.*\\.interfaces\\.[t]s?$',
     '^.*\\.constants\\.[t]s?$',
     'API',
-    'index.tsx',
+    './index.tsx',
     'routes.tsx',
     'core/components/Graph',
     'layout/RouteContainer.tsx',
-    'config',
-    'typings.d.ts',
-    'pages/shared/Metrics/Filters.tsx'
+    'config'
   ]
 };
 

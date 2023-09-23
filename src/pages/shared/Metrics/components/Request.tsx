@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 
@@ -21,25 +21,25 @@ export interface RequestProps {
 
 const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, openSections, refetchInterval }) {
   const [isExpanded, setIsExpanded] = useState(openSections || false);
-  const { data, refetch } = useQuery(
-    [QueriesMetrics.GetRequest, selectedFilters],
-    () => MetricsController.getRequest(selectedFilters),
-    {
-      enabled: isPrometheusActive,
-      refetchInterval,
-      keepPreviousData: true
-    }
-  );
 
-  const { data: response, refetch: refetchResponse } = useQuery(
-    [QueriesMetrics.GetResponse, selectedFilters],
-    () => MetricsController.getResponse(selectedFilters),
-    {
-      enabled: isPrometheusActive,
-      refetchInterval,
-      keepPreviousData: true
-    }
-  );
+  const [{ data: request, refetch: refetchRequest }, { data: response, refetch: refetchResponse }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesMetrics.GetRequest, selectedFilters],
+        queryFn: () => MetricsController.getRequest(selectedFilters),
+        enabled: isPrometheusActive,
+        refetchInterval,
+        keepPreviousData: true
+      },
+      {
+        queryKey: [QueriesMetrics.GetResponse, selectedFilters],
+        queryFn: () => MetricsController.getResponse(selectedFilters),
+        enabled: isPrometheusActive,
+        refetchInterval,
+        keepPreviousData: true
+      }
+    ]
+  });
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
@@ -48,10 +48,10 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
     if (isPrometheusActive) {
-      refetch();
+      refetchRequest();
       refetchResponse();
     }
-  }, [refetch, refetchResponse]);
+  }, [refetchRequest, refetchResponse]);
 
   useEffect(() => {
     if (forceUpdate) {
@@ -59,11 +59,11 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!data?.requestRateData || !response) {
+  if (!request?.requestRateData || !response) {
     return null;
   }
 
-  const { requestRateData, totalRequestsInterval, avgRequestRateInterval } = data;
+  const { requestRateData, totalRequestsInterval, avgRequestRateInterval } = request;
   const isSectionActive = !!requestRateData?.flatMap(({ data: values }) => values.find(({ y }) => y > 0) || []).length;
 
   const { responseData, responseRateData } = response;
