@@ -29,9 +29,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
   }) => {
     const filterOptions = { ...filterOptionsDefault, ...customFilterOptions };
 
-    const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors(), {
-      suspense: false
-    });
+    const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors());
     // filter the display interval items that are less than startTime
     // ie: if the flow collector restart we don't want start from the beginning
     const timeIntervalMapWindow = useMemo(() => {
@@ -75,7 +73,6 @@ const MetricFilters: FC<MetricFilterProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: isOpen });
     }
 
-    // Handler for selecting filters in a Select element
     function handleSelectSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const processIdSource = selection as string | undefined;
 

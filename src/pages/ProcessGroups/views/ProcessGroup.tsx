@@ -1,4 +1,4 @@
-import { useCallback, useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
+import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -12,7 +12,6 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import MainContainer from '@layout/MainContainer';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import LoadingPage from '@pages/shared/Loading';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -91,7 +90,7 @@ const ProcessGroup = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.ProcessGroups}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        <Suspense fallback={<LoadingPage />}>
+        <>
           {tabSelected === ProcessGroupsLabels.Overview && (
             <Metrics
               key={id}
@@ -124,7 +123,7 @@ const ProcessGroup = function () {
               }}
             />
           )}
-        </Suspense>
+        </>
       }
     />
   );

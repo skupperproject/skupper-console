@@ -37,7 +37,7 @@ export enum ServicesLabels {
   Overview = 'Overview',
   Servers = 'Exposed servers',
   SankeyChartTitle = 'Process and site relationships mapped',
-  SankeyChartDescription = 'Visualizing relationships and distribution among processes and sites with a Sankey diagram',
+  SankeyChartDescription = 'Visualizing relationships and the distribution among processes and sites with a Sankey diagram',
   Name = 'Address',
   Protocol = 'Protocol',
   CurrentFlowPairs = 'Active',

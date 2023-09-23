@@ -2,9 +2,11 @@
   "results": [
     {
       "recType": "COLLECTOR",
-      "identity": "8fbf901a-28b9-4b9d-a2ba-55affed5ee2c",
-      "startTime": 1679429189022217,
-      "endTime": 0
+      "identity": "1515de37-422e-4bd0-a98c-cc3e86cce1f8",
+      "parent": "eb0b1e13-981f-43fb-8fce-bb9829e3d1ec",
+      "startTime": 1695433504487723,
+      "endTime": 0,
+      "PrometheusUrl": "http://172.21.158.35:9090/api/v1/"
     }
   ],
   "status": "",

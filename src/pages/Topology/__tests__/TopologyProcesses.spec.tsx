@@ -18,6 +18,7 @@ jest.mock('@antv/g6');
 
 describe('Begin testing the Topology component', () => {
   let server: Server;
+
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;

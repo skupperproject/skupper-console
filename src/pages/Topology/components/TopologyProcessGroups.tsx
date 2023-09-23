@@ -1,7 +1,7 @@
 import { FC, useCallback } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -27,29 +27,25 @@ const remoteProcessesQueryParams = {
 const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupId }) {
   const navigate = useNavigate();
 
-  const { data: processGroups } = useQuery(
-    [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
-    () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: remoteProcessGroups } = useQuery(
-    [QueriesTopology.GetRemoteProcessGroups, remoteProcessesQueryParams],
-    () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
-
-  const { data: processGroupsPairs } = useQuery(
-    [QueriesTopology.GetProcessGroupsLinks],
-    () => RESTApi.fetchProcessgroupsPairs(),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
+  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcessGroups.GetRemoteProcessGroup, remoteProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetProcessGroupsLinks],
+        queryFn: () => RESTApi.fetchProcessgroupsPairs(),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {

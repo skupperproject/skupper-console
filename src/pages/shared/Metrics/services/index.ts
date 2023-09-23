@@ -1,5 +1,5 @@
 import { PrometheusApi } from '@API/Prometheus.api';
-import { PrometheusApiResult } from '@API/Prometheus.interfaces';
+import { PrometheusApiResult, PrometheusQueryParams } from '@API/Prometheus.interfaces';
 import {
   extractPrometheusLabels,
   extractPrometheusValues,
@@ -28,8 +28,7 @@ const MetricsController = {
     protocol
   }: QueryMetricsParams): Promise<BytesMetric | null> => {
     const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-
-    const params = {
+    const params: PrometheusQueryParams = {
       id: processIdSource,
       range: timeInterval,
       processIdDest,
@@ -67,8 +66,7 @@ const MetricsController = {
     protocol
   }: QueryMetricsParams): Promise<ByteRateMetrics | null> => {
     const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-
-    const params = {
+    const params: PrometheusQueryParams = {
       id: processIdSource,
       range: timeInterval,
       processIdDest,
@@ -99,7 +97,7 @@ const MetricsController = {
     processIdDest,
     protocol
   }: QueryMetricsParams): Promise<ResponseMetrics | null> => {
-    const params = {
+    const params: PrometheusQueryParams = {
       id: processIdSource,
       range: timeInterval,
       processIdDest,
@@ -115,52 +113,27 @@ const MetricsController = {
     }
   },
 
-  getResponseRateData: async ({
-    processIdSource,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key],
-    processIdDest,
-    protocol
-  }: QueryMetricsParams): Promise<ResponseMetrics | null> => {
-    const params = {
-      id: processIdSource,
-      range: timeInterval,
-      processIdDest,
-      protocol
-    };
-
-    try {
-      const resposeRateDataSeries = await PrometheusApi.fetchResponsesByProcess({
-        ...params,
-        onlyErrors: true,
-        isRate: true
-      });
-
-      return normalizeResponsesFromSeries(resposeRateDataSeries);
-    } catch (e: unknown) {
-      return Promise.reject(e);
-    }
-  },
-
   getLatency: async ({
     processIdSource,
     processIdDest,
     protocol,
     timeInterval = timeIntervalMap[defaultTimeInterval.key]
   }: QueryMetricsParams): Promise<LatencyMetrics[] | null> => {
-    const params = {
+    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+    const params: PrometheusQueryParams = {
       id: processIdSource,
       processIdDest,
       protocol,
-      range: timeInterval
+      range: timeInterval,
+      start,
+      end
     };
-
-    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
 
     try {
       const [quantile50latency, quantile90latency, quantile99latency] = await Promise.all([
-        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5, start, end }),
-        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9, start, end }),
-        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99, start, end })
+        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5 }),
+        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 }),
+        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 })
       ]);
 
       const latenciesData = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
@@ -181,7 +154,7 @@ const MetricsController = {
     avgRequestRateInterval: number;
     totalRequestsInterval: number;
   }> => {
-    const params = {
+    const params: PrometheusQueryParams = {
       id: processIdSource,
       processIdDest,
       protocol,
@@ -190,9 +163,7 @@ const MetricsController = {
 
     try {
       const [requestsByProcess, avgRequestRate, totalRequests] = await Promise.all([
-        PrometheusApi.fetchRequestsByProcess({
-          ...params
-        }),
+        PrometheusApi.fetchRequestsByProcess(params),
         PrometheusApi.fetchAvgRequestRate(params),
         PrometheusApi.fetchTotalRequests(params)
       ]);
@@ -213,25 +184,28 @@ const MetricsController = {
 
   getResponse: async ({
     processIdSource,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key],
     processIdDest,
-    protocol
+    protocol,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key]
   }: QueryMetricsParams): Promise<{
     responseData: ResponseMetrics | null;
     responseRateData: ResponseMetrics | null;
   }> => {
-    const props = {
-      processIdSource,
-      timeInterval,
-      processIdDest,
-      protocol
-    };
-
     try {
-      const [responseData, responseRateData] = await Promise.all([
-        MetricsController.getResponseData(props),
-        MetricsController.getResponseRateData(props)
+      const params: PrometheusQueryParams = {
+        id: processIdSource,
+        processIdDest,
+        protocol,
+        range: timeInterval
+      };
+
+      const [responsesByProcess, responseRateByProcess] = await Promise.all([
+        PrometheusApi.fetchResponsesByProcess(params),
+        PrometheusApi.fetchResponsesByProcess({ ...params, onlyErrors: true, isRate: true })
       ]);
+
+      const responseData = normalizeResponsesFromSeries(responsesByProcess);
+      const responseRateData = normalizeResponsesFromSeries(responseRateByProcess);
 
       return {
         responseData,
@@ -244,14 +218,14 @@ const MetricsController = {
 
   getTraffic: async ({
     processIdSource,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key],
     processIdDest,
-    protocol
+    protocol,
+    timeInterval = timeIntervalMap[defaultTimeInterval.key]
   }: QueryMetricsParams): Promise<{
     bytesData: BytesMetric | null;
     byteRateData: ByteRateMetrics | null;
   }> => {
-    const props = {
+    const params: QueryMetricsParams = {
       processIdSource,
       timeInterval,
       processIdDest,
@@ -260,8 +234,8 @@ const MetricsController = {
 
     try {
       const [bytesData, byteRateData] = await Promise.all([
-        MetricsController.getBytesData(props),
-        MetricsController.getByteRateData(props)
+        MetricsController.getBytesData(params),
+        MetricsController.getByteRateData(params)
       ]);
 
       return {
