@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState, MouseEvent, ChangeEvent, memo } from 'react';
+import { FC, useMemo, useState, MouseEvent, ChangeEvent, memo } from 'react';
 
 import { Button, Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
+import { CollectorsResponse } from '@API/REST.interfaces';
 import { timeIntervalMap } from '@config/prometheus';
 
 import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constants';
@@ -24,33 +25,27 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
     forceDisableRefetchData = false,
-    onRefetch,
+    onRefetch = () => null,
     onSelectFilters
   }) => {
     const filterOptions = { ...filterOptionsDefault, ...customFilterOptions };
 
-    const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors());
+    const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors()) as {
+      data: CollectorsResponse;
+    };
     // filter the display interval items that are less than startTime
     // ie: if the flow collector restart we don't want start from the beginning
-    const timeIntervalMapWindow = useMemo(() => {
-      if (collector?.startTime) {
-        return Object.values(timeIntervalMap).filter(
+    const timeIntervalMapWindow = useMemo(
+      () =>
+        Object.values(timeIntervalMap).filter(
           ({ seconds }) =>
-            new Date().getTime() - seconds * 1000 > Math.max(collector?.startTime / 1000, startTime / 1000)
-        );
-      }
-
-      return Object.values(timeIntervalMap);
-    }, [collector?.startTime, startTime]);
+            new Date().getTime() - seconds * 1000 > Math.max(collector.startTime / 1000, startTime / 1000)
+        ),
+      [collector.startTime, startTime]
+    );
 
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
     const [selectedFilter, setSelectedFilter] = useState<FilterProps>(initialFilters);
-
-    const handleRefetchMetrics = useCallback(() => {
-      if (onRefetch) {
-        onRefetch();
-      }
-    }, [onRefetch]);
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceProcessMenu(isOpen: boolean) {
@@ -266,6 +261,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
             <ToolbarItem>
               <Tooltip content={MetricsLabels.RefetchData}>
                 <Button
+                  data-testid="metric-refetch"
                   variant="primary"
                   isLoading={isRefetching}
                   isDisabled={
@@ -273,7 +269,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
                     forceDisableRefetchData ||
                     (!!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key)
                   }
-                  onClick={handleRefetchMetrics}
+                  onClick={() => onRefetch()}
                   icon={<SyncIcon />}
                 />
               </Tooltip>

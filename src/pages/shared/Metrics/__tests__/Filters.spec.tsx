@@ -4,7 +4,6 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { ProcessResponse } from '@API/REST.interfaces';
 import { timeIntervalMap } from '@config/prometheus';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
@@ -12,11 +11,9 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import Metrics from '../index';
+import MetricFilters from '../Filters';
 import { displayIntervalMap } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
-
-const processResult = processesData.results[0] as ProcessResponse;
 
 describe('Metrics component', () => {
   let server: Server;
@@ -30,19 +27,34 @@ describe('Metrics component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Metrics with all sections opened', async () => {
+  it('should render the Metric Filter', async () => {
+    const onRefetch = jest.fn();
+
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Metrics
-            selectedFilters={{
-              processIdSource: processResult.name
-            }}
+          <MetricFilters
+            sourceProcesses={[
+              { destinationName: processesData.results[0].name },
+              { destinationName: processesData.results[1].name }
+            ]}
             processesConnected={[
               { destinationName: processesData.results[2].name },
               { destinationName: processesData.results[3].name }
             ]}
-            openSections={{ latency: true, request: true }}
+            availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
+            customFilterOptions={{
+              destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+              sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
+              protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
+              timeIntervals: { disabled: false }
+            }}
+            initialFilters={{ processIdSource: undefined }}
+            startTime={0}
+            isRefetching={false}
+            forceDisableRefetchData={true}
+            onRefetch={onRefetch}
+            onSelectFilters={() => {}}
           />
         </Suspense>
       </Wrapper>
@@ -50,9 +62,8 @@ describe('Metrics component', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
-    expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.RequestsTitle)).toBeInTheDocument();
+    fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
+    fireEvent.click(screen.getByText(processesData.results[0].name));
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
     fireEvent.click(screen.getByText(processesData.results[2].name));
@@ -65,5 +76,7 @@ describe('Metrics component', () => {
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
+
+    fireEvent.click(screen.getByTestId('metric-refetch'));
   });
 });

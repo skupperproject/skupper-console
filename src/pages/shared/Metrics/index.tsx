@@ -34,16 +34,12 @@ const Metrics: FC<MetricsProps> = function ({
 }) {
   const { displayInterval, ...queryInit } = selectedFilters;
   const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(displayInterval));
-  const [prometheusQueryParams, setPrometheusQueryParams] = useState<QueryMetricsParams>(queryInit);
+  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(queryInit);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
 
-  const {
-    data: metrics,
-    isRefetching,
-    refetch
-  } = useQuery(
-    [QueriesMetrics.GetTraffic, prometheusQueryParams],
-    () => MetricsController.getTraffic(prometheusQueryParams),
+  const { data: metrics, isRefetching } = useQuery(
+    [QueriesMetrics.GetTraffic, qeryParams],
+    () => MetricsController.getTraffic(qeryParams),
     {
       enabled: isPrometheusActive,
       refetchInterval,
@@ -52,13 +48,12 @@ const Metrics: FC<MetricsProps> = function ({
   );
 
   //Filters: refetch manually the prometheus API
-  const handleRefetchMetrics = useCallback(() => {
-    isPrometheusActive && refetch();
+  const handleShouldUpdateData = useCallback(() => {
     setShouldUpdateData(new Date().getTime());
-  }, [refetch]);
+  }, []);
 
   // Filters: Set the prometheus query params with the filter values
-  const handleFilters = useCallback(
+  const handleUpdateQueryParams = useCallback(
     (updatedFilters: SelectedFilters) => {
       const { displayInterval: displayIntervalSelected, ...prometheusParams } = updatedFilters;
 
@@ -67,7 +62,7 @@ const Metrics: FC<MetricsProps> = function ({
         processIdSource: updatedFilters.processIdSource || selectedFilters.processIdSource
       };
 
-      setPrometheusQueryParams(filters);
+      setQueryParams(filters);
       setRefetchInterval(getDisplayIntervalValue(displayIntervalSelected));
 
       if (onGetMetricFilters) {
@@ -112,22 +107,18 @@ const Metrics: FC<MetricsProps> = function ({
               customFilterOptions={filterOptions}
               startTime={startTime}
               isRefetching={isRefetching}
-              onRefetch={handleRefetchMetrics}
-              onSelectFilters={handleFilters}
+              onRefetch={handleShouldUpdateData}
+              onSelectFilters={handleUpdateQueryParams}
             />
           </StackItem>
           <StackItem>
-            <Traffic
-              selectedFilters={prometheusQueryParams}
-              forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-            />
+            <Traffic selectedFilters={qeryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
           </StackItem>
-          {prometheusQueryParams.protocol !== AvailableProtocols.Tcp && (
+          {qeryParams.protocol !== AvailableProtocols.Tcp && (
             <>
               <StackItem>
                 <Latency
-                  selectedFilters={prometheusQueryParams}
+                  selectedFilters={qeryParams}
                   openSections={openSections?.latency}
                   forceUpdate={shouldUpdateData}
                   refetchInterval={refetchInterval}
@@ -136,7 +127,7 @@ const Metrics: FC<MetricsProps> = function ({
 
               <StackItem>
                 <Request
-                  selectedFilters={prometheusQueryParams}
+                  selectedFilters={qeryParams}
                   openSections={openSections?.request}
                   forceUpdate={shouldUpdateData}
                   refetchInterval={refetchInterval}
