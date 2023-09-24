@@ -11,6 +11,7 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
 import Latency from '../components/Latency';
+import { MetricsLabels } from '../Metrics.enum';
 
 let component;
 const processResult = processesData.results[0] as ProcessResponse;
@@ -44,6 +45,7 @@ describe('Latency component', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
 
+    expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
     expect(component).toMatchSnapshot();
   });
 });
