@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, ComponentType, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
 import { Divider, Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant, SelectOptionObject } from '@patternfly/react-core/deprecated';
@@ -7,9 +7,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
-import { isPrometheusActive, UPDATE_INTERVAL } from '@config/config';
+import { UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
-import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphCombo, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
@@ -40,7 +40,11 @@ const remoteProcessesQueryParams = {
   processRole: 'remote'
 };
 
-const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ serviceId, id: processId }) {
+const TopologyProcesses: FC<{
+  serviceId?: string;
+  id?: string;
+  GraphComponent?: ComponentType<GraphReactAdaptorProps>;
+}> = function ({ serviceId, id: processId, GraphComponent = GraphReactAdaptor }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -196,6 +200,7 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
 
   function handleFilterService(_: ChangeEvent<HTMLInputElement> | null, value: string) {
     const options = getOptions();
+
     if (!value) {
       return options;
     }
@@ -239,53 +244,47 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
     return optionsWithDefault;
   }, [services?.results]);
 
-  const getDisplayOptions = () => {
-    if (!isPrometheusActive) {
-      return [<SelectOption key={'show-site'} value={TopologyLabels.CheckboxShowSite} />];
-    }
-
-    return [
-      <SelectOption key={SHOW_SITE_KEY} value={SHOW_SITE_KEY}>
-        {TopologyLabels.CheckboxShowSite}
-      </SelectOption>,
-      <SelectOption key={SHOW_LINK_PROTOCOL} value={SHOW_LINK_PROTOCOL}>
-        {TopologyLabels.CheckboxShowProtocol}
-      </SelectOption>,
-      <SelectOption key={SHOW_LINK_BYTES} value={SHOW_LINK_BYTES}>
-        {TopologyLabels.CheckboxShowTotalBytes}
-      </SelectOption>,
-      <SelectOption key={SHOW_LINK_BYTERATE} value={SHOW_LINK_BYTERATE}>
-        {TopologyLabels.CheckboxShowCurrentByteRate}
-      </SelectOption>,
-      <SelectOption key={SHOW_LINK_LATENCY} value={SHOW_LINK_LATENCY}>
-        {TopologyLabels.CheckboxShowLatency}
-      </SelectOption>,
-      <SelectOption
-        key={SHOW_LINK_REVERSE_LABEL}
-        isDisabled={
-          !isDisplayOptionActive(SHOW_LINK_BYTES) &&
-          !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
-          !isDisplayOptionActive(SHOW_LINK_LATENCY)
-        }
-        value={SHOW_LINK_REVERSE_LABEL}
-      >
-        {TopologyLabels.CheckboxShowLabelReverse}
-      </SelectOption>,
-      <Divider key="display-option-divider" />,
-      <SelectOption
-        key={ROTATE_LINK_LABEL}
-        isDisabled={
-          !isDisplayOptionActive(SHOW_LINK_BYTES) &&
-          !isDisplayOptionActive(SHOW_LINK_PROTOCOL) &&
-          !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
-          !isDisplayOptionActive(SHOW_LINK_LATENCY)
-        }
-        value={ROTATE_LINK_LABEL}
-      >
-        {TopologyLabels.RotateLabel}
-      </SelectOption>
-    ];
-  };
+  const getDisplayOptions = () => [
+    <SelectOption key={SHOW_SITE_KEY} value={SHOW_SITE_KEY}>
+      {TopologyLabels.CheckboxShowSite}
+    </SelectOption>,
+    <SelectOption key={SHOW_LINK_PROTOCOL} value={SHOW_LINK_PROTOCOL}>
+      {TopologyLabels.CheckboxShowProtocol}
+    </SelectOption>,
+    <SelectOption key={SHOW_LINK_BYTES} value={SHOW_LINK_BYTES}>
+      {TopologyLabels.CheckboxShowTotalBytes}
+    </SelectOption>,
+    <SelectOption key={SHOW_LINK_BYTERATE} value={SHOW_LINK_BYTERATE}>
+      {TopologyLabels.CheckboxShowCurrentByteRate}
+    </SelectOption>,
+    <SelectOption key={SHOW_LINK_LATENCY} value={SHOW_LINK_LATENCY}>
+      {TopologyLabels.CheckboxShowLatency}
+    </SelectOption>,
+    <SelectOption
+      key={SHOW_LINK_REVERSE_LABEL}
+      isDisabled={
+        !isDisplayOptionActive(SHOW_LINK_BYTES) &&
+        !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
+        !isDisplayOptionActive(SHOW_LINK_LATENCY)
+      }
+      value={SHOW_LINK_REVERSE_LABEL}
+    >
+      {TopologyLabels.CheckboxShowLabelReverse}
+    </SelectOption>,
+    <Divider key="display-option-divider" />,
+    <SelectOption
+      key={ROTATE_LINK_LABEL}
+      isDisabled={
+        !isDisplayOptionActive(SHOW_LINK_BYTES) &&
+        !isDisplayOptionActive(SHOW_LINK_PROTOCOL) &&
+        !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
+        !isDisplayOptionActive(SHOW_LINK_LATENCY)
+      }
+      value={ROTATE_LINK_LABEL}
+    >
+      {TopologyLabels.RotateLabel}
+    </SelectOption>
+  ];
 
   useEffect(() => {
     if (!sites || !externalProcesses || !remoteProcesses || !processesPairs) {
@@ -406,7 +405,7 @@ const TopologyProcesses: FC<{ serviceId?: string; id?: string }> = function ({ s
           </StackItem>
 
           <StackItem isFilled>
-            <GraphReactAdaptor
+            <GraphComponent
               nodes={nodes}
               edges={links}
               combos={groups}
