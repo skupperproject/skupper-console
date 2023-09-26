@@ -11,7 +11,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node.js ⚙️
         uses: actions/setup-node@v3
         with:
           node-version: '16'
@@ -30,12 +30,13 @@ jobs:
         run: |
           yarn build
 
-      - name: Get number of CPU cores
+      - name: Get number of CPU cores 💻
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@v1
+
       - name: Unit tests 🔧
         run: |
-          yarn test --max-workers ${{ steps.cpu-cores.outputs.count }}
+          yarn coverage --max-workers ${{ steps.cpu-cores.outputs.count }}
 
       - name: Integration tests 🚨
         run: |
