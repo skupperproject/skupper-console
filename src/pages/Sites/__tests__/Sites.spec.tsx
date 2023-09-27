@@ -8,7 +8,7 @@ import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
 import { MockApiPaths, MockApi, loadMockServer } from '@mocks/server';
-import Error from '@pages/shared/Errors/Console';
+import ErrorConsole from '@pages/shared/Errors/Console';
 import LoadingPage from '@pages/shared/Loading';
 
 import Sites from '../views/Sites';
@@ -42,19 +42,19 @@ describe('Begin testing the Sites component', () => {
 
   it('should render the sites view after the data loading is complete', async () => {
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByTestId(getTestsIds.sitesView())).toBeInTheDocument();
   });
 
   it('should render a table with the site data after the data has loaded.', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
   });
 
   it('Should ensure the Sites component renders with correct link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByRole('link', { name: siteResults[0].name })).toHaveAttribute(
       'href',
@@ -78,7 +78,7 @@ describe('Begin testing the Sites component', () => {
           }
         }}
       >
-        <ErrorBoundary FallbackComponent={Error}>
+        <ErrorBoundary FallbackComponent={ErrorConsole}>
           <Suspense fallback={<LoadingPage />}>
             <Sites />
           </Suspense>
@@ -86,7 +86,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
     expect(screen.getByText('ERR_BAD_REQUEST')).toBeInTheDocument();
   });
 
@@ -106,7 +106,7 @@ describe('Begin testing the Sites component', () => {
           }
         }}
       >
-        <ErrorBoundary FallbackComponent={Error}>
+        <ErrorBoundary FallbackComponent={ErrorConsole}>
           <Suspense fallback={<LoadingPage />}>
             <Sites />
           </Suspense>
@@ -114,7 +114,7 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText('ERR_BAD_RESPONSE')).toBeInTheDocument();
   });

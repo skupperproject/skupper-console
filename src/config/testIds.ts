@@ -8,6 +8,7 @@ export const getTestsIds = {
   processPairsView: (id: string) => `sk-process-pairs-view-${id}`,
   flowPairsView: (id: string) => `sk-flow-pairs-view-${id}`,
   servicesView: () => 'sk-services-view',
+  serviceView: (id: string) => `sk-service-view-${id}`,
   topologyView: () => 'sk-topology-view',
   notFoundView: () => `sk-not-found-view`,
   siteView: (id: string) => `sk-site-view-${id}`,

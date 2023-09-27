@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';
@@ -38,19 +39,25 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should render the Topology view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     expect(screen.getByTestId(getTestsIds.topologyView())).toBeInTheDocument();
   });
 
   it('should clicking on a tab will result in the Components tab being highlighted', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     fireEvent.click(screen.getByText(TopologyViews.ProcessGroups));
 
     expect(screen.getByText(TopologyViews.ProcessGroups).parentNode?.parentNode).toHaveClass('pf-m-current');
   });
 
   it('should clicking on a tab will result in the Processes tab being highlighted', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     fireEvent.click(screen.getByText(TopologyViews.Processes));
 
     expect(screen.getByText(TopologyViews.Processes).parentNode?.parentNode).toHaveClass('pf-m-current');

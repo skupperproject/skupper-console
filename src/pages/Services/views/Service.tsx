@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, TcpStatus } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
+import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -33,7 +34,6 @@ const terminatedConnectionsQueryParams = {
 const Service = function () {
   const { service } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const serviceName = service?.split('@')[0];
   const serviceId = service?.split('@')[1] as string;
   const protocol = service?.split('@')[2];
@@ -136,6 +136,7 @@ const Service = function () {
 
   return (
     <MainContainer
+      dataTestId={getTestsIds.serviceView(serviceId)}
       isPlain
       title={serviceName || ''}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${serviceId}`}

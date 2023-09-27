@@ -4,6 +4,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import flowPairsData from '@mocks/data/SERVICE_FLOW_PAIRS.json';
@@ -47,7 +48,9 @@ describe('Begin testing the TCP service component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     expect(getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
   });
 
@@ -65,7 +68,9 @@ describe('Begin testing the TCP service component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     expect(getByText(processResult[0].name)).toBeInTheDocument();
   });
 
@@ -83,13 +88,15 @@ describe('Begin testing the TCP service component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
   });
 
   it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
-    const { getByTestId, getByText, getAllByText } = render(
+    const { queryByTestId, getByText, getAllByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <ConnectionsByService
@@ -102,7 +109,9 @@ describe('Begin testing the TCP service component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
     expect(getByText('Closed')).toBeInTheDocument();

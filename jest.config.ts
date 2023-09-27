@@ -38,17 +38,7 @@ const config = {
     '^.+\\.svg$': `${MOCKS_PATH}/${FILE_MOCK}`,
     '.+\\.(png)$': `${MOCKS_PATH}/${FILE_MOCK}`
   },
-  coveragePathIgnorePatterns: [
-    '^.*\\.enum\\.[t]s?$',
-    '^.*\\.interfaces\\.[t]s?$',
-    '^.*\\.constants\\.[t]s?$',
-    'API',
-    './index.tsx',
-    'routes.tsx',
-    'core/components/Graph',
-    'layout/RouteContainer.tsx',
-    'config'
-  ]
+  coveragePathIgnorePatterns: ['API', './src/index.tsx', 'routes.tsx', './src/config', 'core/components/Graph']
 };
 
 export default config;

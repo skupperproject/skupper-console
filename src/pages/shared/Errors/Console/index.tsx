@@ -15,7 +15,7 @@ import {
 import { ConsoleErrorLabels } from './Console.enum';
 import ErrorHttp from '../Http';
 
-interface ErrorProps {
+interface ErrorConsoleProps {
   error: {
     stack?: string;
     message?: string;
@@ -25,18 +25,20 @@ interface ErrorProps {
   resetErrorBoundary: (...args: unknown[]) => void;
 }
 
-const Error: FC<ErrorProps> = function ({ error, resetErrorBoundary }) {
-  const { code, message, httpStatus } = error;
+const ErrorConsole: FC<ErrorConsoleProps> = function ({ error, resetErrorBoundary }) {
+  const { code, message = '', httpStatus } = error;
 
+  // It handles network errors
   if (httpStatus || code === 'ERR_NETWORK') {
     return <ErrorHttp code={code} message={message} onReset={resetErrorBoundary} />;
   }
 
+  // It handles app errors
   return (
     <PageSection variant={PageSectionVariants.light} data-testid="sk-js-error-view">
       <TextContent>
         <Title headingLevel="h1">{ConsoleErrorLabels.ErrorTitle}</Title>
-        <Text component={TextVariants.h3}>{message || ''}</Text>
+        <Text component={TextVariants.h3}>{message}</Text>
 
         <Divider />
 
@@ -48,4 +50,4 @@ const Error: FC<ErrorProps> = function ({ error, resetErrorBoundary }) {
   );
 };
 
-export default Error;
+export default ErrorConsole;

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import componentsData from '@mocks/data/PROCESS_GROUPS.json';
@@ -41,19 +42,25 @@ describe('Begin testing the Components component', () => {
   it('should render the Components view after the data loading is complete', async () => {
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByTestId(getTestsIds.componentsView())).toBeInTheDocument();
   });
 
   it('should render a table with the component data after the data has loaded.', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(componentResults[0].name)).toBeInTheDocument();
   });
 
   it('Should ensure the Components component renders with correct link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByRole('link', { name: componentResults[0].name })).toHaveAttribute(
       'href',

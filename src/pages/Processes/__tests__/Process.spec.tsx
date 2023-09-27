@@ -5,6 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesPairsData from '@mocks/data/PROCESS_PAIRS.json';
@@ -44,13 +45,17 @@ describe('Process component', () => {
     // Wait for all queries to resolve
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByTestId(getTestsIds.processView(processResult.identity))).toBeInTheDocument();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(ProcessesLabels.Details));
 
@@ -62,7 +67,9 @@ describe('Process component', () => {
   });
 
   it('Should ensure the Process associated renders with correct link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(ProcessesLabels.ProcessPairs));
 

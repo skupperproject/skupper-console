@@ -43,7 +43,7 @@ describe('Latency component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
     expect(component).toMatchSnapshot();

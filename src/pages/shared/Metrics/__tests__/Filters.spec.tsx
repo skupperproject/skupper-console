@@ -60,7 +60,7 @@ describe('Metrics component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
     fireEvent.click(screen.getByText(processesData.results[0].name));

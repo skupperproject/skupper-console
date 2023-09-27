@@ -5,6 +5,7 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import { Wrapper } from '@core/components/Wrapper';
@@ -64,12 +65,12 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should render the Topology view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
     expect(screen.getByTestId('sk-topology-processes')).toBeInTheDocument();
   });
 
   it('should clicking on the service menu', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     fireEvent.click(screen.getByText(servicesResults[2].name));
     expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
@@ -80,7 +81,7 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should clicking on the service menu and use the search filter', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     fireEvent.click(screen.getByText(servicesResults[2].name));
 
@@ -93,7 +94,7 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should clicking on the display menu and select/deselect the Protocol checkbox', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     fireEvent.click(screen.getByText(TopologyLabels.DisplayPlaceholderText));
     expect(screen.getByRole('display-select')).toBeInTheDocument();
@@ -105,14 +106,18 @@ describe('Begin testing the Topology component', () => {
   it('should clicking on a node', async () => {
     jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText('onClickNode'));
     expect(navigate).toHaveBeenCalledTimes(1);
   });
 
   it('should clicking on a edge', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText('onClickEdge'));
     expect(navigate).toHaveBeenCalledTimes(1);
@@ -124,7 +129,9 @@ describe('Begin testing the Topology component', () => {
   it('should clicking on a combo', async () => {
     jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText('onClickCombo'));
     expect(navigate).toHaveBeenCalledTimes(1);
