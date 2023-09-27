@@ -1,22 +1,21 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import * as ReactQuery from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { ProcessResponse } from '@API/REST.interfaces';
-import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import Request from '../components/Request';
+import Metrics from '..';
 import { MetricsLabels } from '../Metrics.enum';
 
-let component;
 const processResult = processesData.results[0] as ProcessResponse;
 
-describe('Request component', () => {
+describe('Traffic component', () => {
   let server: Server;
   beforeEach(() => {
     server = loadMockServer() as Server;
@@ -28,24 +27,22 @@ describe('Request component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Request section of the metric', async () => {
-    component = render(
+  it('should render the Traffic section of the metric', async () => {
+    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(jest.fn().mockReturnValue({ data: null }));
+
+    render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Request
+          <Metrics
             selectedFilters={{
               processIdSource: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
           />
         </Suspense>
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
-
-    expect(screen.getByText(MetricsLabels.RequestsTitle)).toBeInTheDocument();
-    expect(component).toMatchSnapshot();
+    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
   });
 });

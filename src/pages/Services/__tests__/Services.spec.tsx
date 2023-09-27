@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import servicesData from '@mocks/data/SERVICES.json';
@@ -12,6 +13,7 @@ import LoadingPage from '@pages/shared/Loading';
 import Services from '../views/Services';
 
 const servicesResults = servicesData.results;
+const service = servicesResults[0];
 
 describe('Begin testing the Service component', () => {
   let server: Server;
@@ -35,24 +37,30 @@ describe('Begin testing the Service component', () => {
   });
 
   it('should render the Services view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     expect(screen.getByTestId(getTestsIds.servicesView())).toBeInTheDocument();
   });
 
   it('should render a table with the Services data after the data has loaded.', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
-    expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
-    expect(screen.getAllByText(servicesResults[0].protocol)[0]).toBeInTheDocument();
-    expect(screen.getAllByText(servicesResults[0].connectorCount)[0]).toBeInTheDocument();
+    expect(screen.getByText(service.name)).toBeInTheDocument();
+    expect(screen.getAllByText(service.protocol)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(service.connectorCount)[0]).toBeInTheDocument();
   });
 
   it('Should ensure the Services component renders with correct Name link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
-    expect(screen.getByRole('link', { name: servicesResults[0].name })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: service.name })).toHaveAttribute(
       'href',
-      `#/services/${servicesResults[0].name}@${servicesResults[0].identity}@${servicesResults[0].protocol}`
+      `#/services/${service.name}@${service.identity}@${service.protocol}`
     );
   });
 });

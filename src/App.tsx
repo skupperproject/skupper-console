@@ -8,7 +8,7 @@ import SkBreadcrumb from '@core/components/SkBreadcrumb';
 import SkHeader from '@layout/Header';
 import RouteContainer from '@layout/RouteContainer';
 import SkSidebar from '@layout/SideBar';
-import Error from '@pages/shared/Errors/Console';
+import ErrorConsole from '@pages/shared/Errors/Console';
 import LoadingPage from '@pages/shared/Loading';
 import { routes } from 'routes';
 
@@ -26,7 +26,7 @@ const App = function () {
       additionalGroupedContent={
         <QueryErrorResetBoundary>
           {({ reset }) => (
-            <ErrorBoundary onReset={reset} FallbackComponent={Error}>
+            <ErrorBoundary onReset={reset} FallbackComponent={ErrorConsole}>
               <Suspense fallback={<LoadingPage />}>
                 <RouteContainer>{routes}</RouteContainer>
               </Suspense>

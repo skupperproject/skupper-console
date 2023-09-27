@@ -43,7 +43,7 @@ describe('Traffic component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
     expect(component).toMatchSnapshot();

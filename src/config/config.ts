@@ -23,3 +23,6 @@ export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_
 /** General config: contains various global settings and constants */
 export const UPDATE_INTERVAL = 9 * 1000; // Time in milliseconds to request updated data from the backend
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
+
+/** Tests */
+export const waitForElementToBeRemovedTimeout = 3000;

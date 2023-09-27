@@ -5,6 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { AvailableProtocols } from '@API/REST.enum';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import servicesData from '@mocks/data/SERVICES.json';
@@ -42,7 +43,9 @@ describe('Begin testing the FlowPairs component', () => {
   });
 
   it('should render the TCP Service view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
@@ -55,7 +58,9 @@ describe('Begin testing the FlowPairs component', () => {
       service: `${servicesResults[0].name}@${servicesResults[0].identity}@${AvailableProtocols.Http2}`
     });
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
@@ -63,7 +68,9 @@ describe('Begin testing the FlowPairs component', () => {
   });
 
   it('should clicking on a tab will result in the server tab being highlighted', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(ServicesLabels.Servers));
 

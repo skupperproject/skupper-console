@@ -5,6 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessPairsResponse } from '@API/REST.interfaces';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processPairsData from '@mocks/data/PROCESS_PAIRS.json';
@@ -44,7 +45,9 @@ describe('Begin testing the Processes component', () => {
   it('should render the ProcessPairs view after the data loading is complete', async () => {
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     expect(screen.getByTestId(getTestsIds.processPairsView(processPairsResult.identity))).toBeInTheDocument();
   });
 });

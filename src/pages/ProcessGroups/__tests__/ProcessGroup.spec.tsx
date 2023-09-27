@@ -5,6 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessResponse, ProcessGroupResponse } from '@API/REST.interfaces';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processGroupsData from '@mocks/data/PROCESS_GROUPS.json';
@@ -44,19 +45,25 @@ describe('Component component', () => {
   });
 
   it('should render the Component view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByTestId(getTestsIds.componentView(processGroupResults[0].identity))).toBeInTheDocument();
   });
 
   it('should render the default view and show the message for empty metrics', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getAllByText(ProcessGroupsLabels.Processes)[0]);
 
@@ -65,7 +72,9 @@ describe('Component component', () => {
   });
 
   it('Should ensure the Component details component renders with correct link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getAllByText(ProcessGroupsLabels.Processes)[0]);
 

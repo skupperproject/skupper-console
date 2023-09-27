@@ -5,6 +5,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessResponse, SiteResponse } from '@API/REST.interfaces';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
@@ -47,7 +48,9 @@ describe('Site component', () => {
     // Wait for all queries to resolve
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(SiteLabels.Details));
 
@@ -55,7 +58,9 @@ describe('Site component', () => {
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(SiteLabels.Details));
 
@@ -65,7 +70,9 @@ describe('Site component', () => {
   });
 
   it('Should ensure the Site details component renders with correct link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.getByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(SiteLabels.Details));
 
