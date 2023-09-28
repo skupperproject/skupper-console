@@ -21,15 +21,22 @@ export type PrometheusApiResult = {
 };
 
 export interface PrometheusQueryParams {
-  id?: string;
-  range: IntervalTimeProp;
+  sourceProcess?: string;
   processIdDest?: string;
+  protocol?: AvailableProtocols;
+  step: string;
   isRate?: boolean;
   onlyErrors?: boolean;
-  protocol?: AvailableProtocols;
   quantile?: 0.5 | 0.9 | 0.99;
   start?: number;
   end?: number;
+}
+
+export interface PrometheusQueryParamsSingleData {
+  sourceProcess?: string;
+  processIdDest?: string;
+  protocol?: AvailableProtocols;
+  seconds: number;
 }
 
 export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];

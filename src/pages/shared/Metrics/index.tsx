@@ -59,7 +59,7 @@ const Metrics: FC<MetricsProps> = function ({
 
       const filters: QueryMetricsParams = {
         ...prometheusParams,
-        processIdSource: updatedFilters.processIdSource || selectedFilters.processIdSource
+        sourceProcess: updatedFilters.sourceProcess || selectedFilters.sourceProcess
       };
 
       setQueryParams(filters);
@@ -69,7 +69,7 @@ const Metrics: FC<MetricsProps> = function ({
         onGetMetricFilters({ ...filters, displayInterval: displayIntervalSelected });
       }
     },
-    [onGetMetricFilters, selectedFilters.processIdSource]
+    [onGetMetricFilters, selectedFilters.sourceProcess]
   );
 
   if (!metrics) {
@@ -101,8 +101,10 @@ const Metrics: FC<MetricsProps> = function ({
               initialFilters={{
                 ...selectedFilters,
                 // if idSource have more ids set default (undefined)
-                processIdSource:
-                  selectedFilters.processIdSource.split('|').length > 1 ? undefined : selectedFilters.processIdSource
+                sourceProcess:
+                  selectedFilters.sourceProcess && selectedFilters.sourceProcess.split('|').length > 1
+                    ? undefined
+                    : selectedFilters.sourceProcess
               }}
               customFilterOptions={filterOptions}
               startTime={startTime}

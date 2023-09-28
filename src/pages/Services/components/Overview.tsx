@@ -44,7 +44,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
       key={serviceId}
       selectedFilters={{
         ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${serviceId}`),
-        processIdSource: serverNamesIds,
+        sourceProcess: serverNamesIds,
         protocol
       }}
       startTime={startTime}

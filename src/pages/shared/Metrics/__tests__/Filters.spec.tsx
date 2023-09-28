@@ -49,7 +49,7 @@ describe('Metrics component', () => {
               protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
               timeIntervals: { disabled: false }
             }}
-            initialFilters={{ processIdSource: undefined }}
+            initialFilters={{ sourceProcess: undefined }}
             startTime={0}
             isRefetching={false}
             forceDisableRefetchData={true}

@@ -34,7 +34,7 @@ describe('Traffic component', () => {
         <Suspense fallback={<LoadingPage />}>
           <Traffic
             selectedFilters={{
-              processIdSource: processResult.name
+              sourceProcess: processResult.name
             }}
             openSections={true}
             forceUpdate={1}

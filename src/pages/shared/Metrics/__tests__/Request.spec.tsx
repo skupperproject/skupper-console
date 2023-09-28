@@ -34,7 +34,7 @@ describe('Request component', () => {
         <Suspense fallback={<LoadingPage />}>
           <Request
             selectedFilters={{
-              processIdSource: processResult.name
+              sourceProcess: processResult.name
             }}
             openSections={true}
             forceUpdate={1}

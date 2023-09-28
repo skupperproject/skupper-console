@@ -83,7 +83,7 @@ const Site = function () {
 
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
   const sourceComponentFilter = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
-  const sourceProcesses = processResults.map(({ name: processName }) => processName).join('|');
+  const sourceProcessNames = processResults.map(({ name: processName }) => processName).join('|');
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   const NavigationMenu = function () {
@@ -108,7 +108,7 @@ const Site = function () {
               key={siteId}
               selectedFilters={{
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${siteId}`),
-                processIdSource: sourceProcesses
+                sourceProcess: sourceProcessNames
               }}
               startTime={startTime}
               sourceProcesses={sourceComponentFilter}

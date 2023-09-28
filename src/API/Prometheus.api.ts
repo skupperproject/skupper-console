@@ -1,26 +1,26 @@
 import { PROMETHEUS_URL } from '@config/config';
-import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import { axiosFetch } from './apiMiddleware';
 import {
   PrometheusApiResult as PrometheusMetricData,
   PrometheusApiSingleResult as PrometheusMetricSingleData,
   PrometheusQueryParams,
+  PrometheusQueryParamsSingleData,
   PrometheusResponse
 } from './Prometheus.interfaces';
 import { queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
   fetchBytes: async ({
-    id,
-    range,
+    sourceProcess,
+    seconds,
     processIdDest,
     protocol
-  }: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
+  }: PrometheusQueryParamsSingleData): Promise<PrometheusMetricSingleData[]> => {
     let param = '';
 
-    if (id) {
-      param = [param, `sourceProcess=~"${id}"`].filter(Boolean).join(',');
+    if (sourceProcess) {
+      param = [param, `sourceProcess=~"${sourceProcess}"`].filter(Boolean).join(',');
     }
 
     if (processIdDest) {
@@ -34,7 +34,7 @@ export const PrometheusApi = {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getBytesByDirection(param, `${range.seconds + 60}s`) }
+      params: { query: queries.getBytesByDirection(param, `${seconds}s`) }
     });
 
     return result;
@@ -42,8 +42,8 @@ export const PrometheusApi = {
 
   //When direction is outgoing, it is the response from from the server (sourceProcess) to the client (destProcess)
   fetchByteRateSeries: async ({
-    id,
-    range,
+    sourceProcess,
+    step,
     processIdDest,
     protocol,
     start,
@@ -51,8 +51,8 @@ export const PrometheusApi = {
   }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     let param = '';
 
-    if (id) {
-      param = [param, `sourceProcess=~"${id}"`].filter(Boolean).join(',');
+    if (sourceProcess) {
+      param = [param, `sourceProcess=~"${sourceProcess}"`].filter(Boolean).join(',');
     }
 
     if (processIdDest) {
@@ -71,11 +71,198 @@ export const PrometheusApi = {
         query,
         start,
         end,
-        step: range.step
+        step
       }
     });
 
     // it retrieves 2 arrays of [values, timestamps], 1) received traffic 2) sent traffic
+    return result;
+  },
+
+  fetchLatencyByProcess: async ({
+    sourceProcess,
+    step,
+    processIdDest,
+    protocol,
+    quantile,
+    start,
+    end
+  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+    let param = `sourceProcess=~"${sourceProcess}"`;
+
+    if (processIdDest) {
+      param = [param, `destProcess=~"${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
+      params: {
+        query: quantile
+          ? queries.getQuantileTimeInterval(param, '1m', quantile)
+          : queries.getAvgLatencyTimeInterval(param, '1m'),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
+  fetchRequestsByProcess: async ({
+    sourceProcess,
+    step,
+    processIdDest,
+    protocol,
+    start,
+    end
+  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+    let param = `sourceProcess=~"${sourceProcess}"`;
+
+    if (processIdDest) {
+      param = [param, `destProcess=~"${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
+      params: {
+        query: queries.getTotalRequestRateByMethodTimeInterval(param, `1m`),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
+  fetchTotalRequests: async ({
+    sourceProcess,
+    seconds,
+    processIdDest,
+    protocol
+  }: PrometheusQueryParamsSingleData): Promise<PrometheusMetricSingleData[]> => {
+    let param = `sourceProcess=~"${sourceProcess}"`;
+
+    if (processIdDest) {
+      param = [param, `destProcess=~"${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: {
+        query: queries.getTotalRequestsTimeInterval(param, `${seconds}s`)
+      }
+    });
+
+    return result;
+  },
+
+  fetchAvgRequestRate: async ({
+    sourceProcess,
+    seconds,
+    processIdDest,
+    protocol
+  }: PrometheusQueryParamsSingleData): Promise<PrometheusMetricSingleData[]> => {
+    let param = `sourceProcess=~"${sourceProcess}"`;
+
+    if (processIdDest) {
+      param = [param, `destProcess=~"${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: {
+        query: queries.getAvgRequestRateTimeInterval(param, `${seconds}s`)
+      }
+    });
+
+    return result;
+  },
+
+  fetchResponseCountsByProcess: async ({
+    sourceProcess,
+    processIdDest,
+    protocol,
+    start,
+    end,
+    step
+  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+    let param = `destProcess=~"${sourceProcess}"`;
+
+    if (processIdDest) {
+      param = [param, `sourceProcess=~"${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
+      params: {
+        query: queries.getHttpPartialStatus(param),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
+  fetchErrorResponsesByProcess: async ({
+    sourceProcess,
+    processIdDest,
+    step,
+    protocol,
+    start,
+    end
+  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+    let param = `destProcess=~"${sourceProcess}"`;
+
+    const code = '"4.*|5.*"';
+    param = [param, `code=~${code}`].join(',');
+
+    if (processIdDest) {
+      param = [param, `sourceProcess=~"${processIdDest}"`].join(',');
+    }
+
+    if (protocol) {
+      param = [param, `protocol=~"${protocol}"`].join(',');
+    }
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
+      params: {
+        query: queries.getHttpPartialStatusRateTimeInterval(param, '5m'),
+        start,
+        end,
+        step
+      }
+    });
+
     return result;
   },
 
@@ -104,163 +291,6 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
       params: { query: queries.getAllProcessPairsLatencies() }
-    });
-
-    return result;
-  },
-
-  fetchLatencyByProcess: async ({
-    id,
-    range,
-    processIdDest,
-    protocol,
-    quantile,
-    start,
-    end
-  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    let param = `sourceProcess=~"${id}"`;
-
-    if (processIdDest) {
-      param = [param, `destProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
-      params: {
-        query: quantile
-          ? queries.getQuantileTimeInterval(param, '1m', quantile)
-          : queries.getAvgLatencyTimeInterval(param, '1m'),
-        start,
-        end,
-        step: range.step
-      }
-    });
-
-    return result;
-  },
-
-  fetchRequestsByProcess: async ({
-    id,
-    range,
-    processIdDest,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    const { start, end } = getCurrentAndPastTimestamps(range.seconds);
-    let param = `sourceProcess=~"${id}"`;
-
-    if (processIdDest) {
-      param = [param, `destProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
-      params: {
-        query: queries.getTotalRequestRateByMethodTimeInterval(param, `1m`),
-        start,
-        end,
-        step: range.step
-      }
-    });
-
-    return result;
-  },
-
-  fetchTotalRequests: async ({
-    id,
-    range,
-    processIdDest,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
-    let param = `sourceProcess=~"${id}"`;
-
-    if (processIdDest) {
-      param = [param, `destProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: {
-        query: queries.getTotalRequestsTimeInterval(param, `${range.seconds}s`)
-      }
-    });
-
-    return result;
-  },
-
-  fetchAvgRequestRate: async ({
-    id,
-    range,
-    processIdDest,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
-    let param = `sourceProcess=~"${id}"`;
-
-    if (processIdDest) {
-      param = [param, `destProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: {
-        query: queries.getAvgRequestRateTimeInterval(param, `${range.seconds}s`)
-      }
-    });
-
-    return result;
-  },
-
-  fetchResponsesByProcess: async ({
-    id,
-    range,
-    processIdDest,
-    isRate = false,
-    onlyErrors = false,
-    protocol
-  }: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    const { start, end } = getCurrentAndPastTimestamps(range.seconds);
-    let param = `destProcess=~"${id}"`;
-
-    if (onlyErrors) {
-      const code = onlyErrors ? '"4.*|5.*"' : '"2.*|3.*|4.*|5.*"';
-      param = [param, `code=~${code}`].join(',');
-    }
-
-    if (processIdDest) {
-      param = [param, `sourceProcess=~"${processIdDest}"`].join(',');
-    }
-
-    if (protocol) {
-      param = [param, `protocol=~"${protocol}"`].join(',');
-    }
-
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
-      params: {
-        query: isRate ? queries.getHttpPartialStatusRateTimeInterval(param, '5m') : queries.getHttpPartialStatus(param),
-        start,
-        end,
-        step: isRate ? range.step : range.value
-      }
     });
 
     return result;

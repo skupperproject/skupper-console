@@ -96,7 +96,7 @@ const ProcessGroup = function () {
               key={id}
               selectedFilters={{
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
-                processIdSource: serverNames
+                sourceProcess: serverNames
               }}
               startTime={startTime}
               sourceProcesses={serverNameFilters}
