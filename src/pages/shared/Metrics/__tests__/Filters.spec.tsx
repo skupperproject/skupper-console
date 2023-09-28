@@ -11,7 +11,7 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import MetricFilters from '../Filters';
+import MetricFilters from '../components/Filters';
 import { displayIntervalMap } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
 

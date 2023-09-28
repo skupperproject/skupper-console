@@ -221,7 +221,7 @@ const Process = function () {
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`),
                 protocol: availableProtocols.length === 1 ? availableProtocols[0] : undefined,
                 sourceProcess: process.name,
-                processIdDest:
+                destProcess:
                   allDestinationProcesses.length === 1 ? allDestinationProcesses[0].destinationName : undefined
               }}
               startTime={process.startTime}

@@ -7,8 +7,8 @@ import SkChartArea from '@core/components/SkChartArea';
 import { formatNumber } from '@core/utils/formatNumber';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
-import { MetricsLabels } from './Metrics.enum';
-import { RequestMetrics } from './services/services.interfaces';
+import { MetricsLabels } from '../Metrics.enum';
+import { RequestMetrics } from '../services/services.interfaces';
 
 const RequestCharts: FC<{
   requestRateData: RequestMetrics[];

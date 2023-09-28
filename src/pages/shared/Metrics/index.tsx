@@ -8,10 +8,10 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 
+import MetricFilters from './components/Filters';
 import Latency from './components/Latency';
 import Request from './components/Request';
 import Traffic from './components/Traffic';
-import MetricFilters from './Filters';
 import { displayIntervalMap } from './Metrics.constants';
 import { MetricsLabels } from './Metrics.enum';
 import { MetricsProps, SelectedFilters } from './Metrics.interfaces';

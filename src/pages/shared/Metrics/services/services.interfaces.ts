@@ -11,7 +11,7 @@ export enum QueriesMetrics {
 
 export interface QueryMetricsParams {
   sourceProcess?: string;
-  processIdDest?: string;
+  destProcess?: string;
   timeInterval?: IntervalTimeProp;
   protocol?: AvailableProtocols;
 }

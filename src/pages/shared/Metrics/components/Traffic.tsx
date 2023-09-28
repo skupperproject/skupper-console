@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 
+import TrafficCharts from './TrafficCharts';
 import { SelectedFilters } from '../Metrics.interfaces';
 import MetricsController from '../services';
 import { QueriesMetrics } from '../services/services.interfaces';
-import TrafficCharts from '../TrafficCharts';
 
 export interface TrafficProps {
   selectedFilters: SelectedFilters;
