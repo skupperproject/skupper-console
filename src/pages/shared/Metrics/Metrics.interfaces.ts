@@ -24,11 +24,6 @@ export interface MetricsProps {
   onGetMetricFilters?: Function;
 }
 
-export interface FilterProps extends Omit<SelectedFilters, 'processIdSource'> {
-  //for multiple id source we set this prop = undefined to get the default value
-  processIdSource: string | undefined;
-}
-
 export interface MetricFilterProps {
   sourceProcesses?: { destinationName: string }[];
   processesConnected?: { destinationName: string }[];
@@ -38,6 +33,6 @@ export interface MetricFilterProps {
   isRefetching?: boolean;
   forceDisableRefetchData?: boolean;
   onRefetch?: Function;
-  initialFilters: FilterProps;
+  initialFilters: SelectedFilters;
   onSelectFilters?: Function;
 }

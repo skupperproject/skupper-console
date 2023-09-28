@@ -13,7 +13,7 @@ import { timeIntervalMap } from '@config/prometheus';
 
 import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constants';
 import { MetricsLabels } from './Metrics.enum';
-import { MetricFilterProps, FilterProps } from './Metrics.interfaces';
+import { MetricFilterProps, SelectedFilters } from './Metrics.interfaces';
 
 const MetricFilters: FC<MetricFilterProps> = memo(
   ({
@@ -45,11 +45,11 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     );
 
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
-    const [selectedFilter, setSelectedFilter] = useState<FilterProps>(initialFilters);
+    const [selectedFilter, setSelectedFilter] = useState<SelectedFilters>(initialFilters);
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceProcessMenu(isOpen: boolean) {
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdSource: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceProcess: isOpen });
     }
 
     function handleToggleDestinationProcessMenu(isOpen: boolean) {
@@ -69,14 +69,14 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     }
 
     function handleSelectSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
-      const processIdSource = selection as string | undefined;
+      const sourceProcess = selection as string | undefined;
 
-      setSelectedFilter({ ...selectedFilter, processIdSource });
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdSource: false });
+      setSelectedFilter({ ...selectedFilter, sourceProcess });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceProcess: false });
 
       if (onSelectFilters) {
         // sourceID is mandatory. if the element selected is a placeholder use  the default value passed to the filter
-        onSelectFilters({ ...selectedFilter, processIdSource: processIdSource || initialFilters.processIdSource });
+        onSelectFilters({ ...selectedFilter, sourceProcess: sourceProcess || initialFilters.sourceProcess });
       }
     }
 
@@ -177,9 +177,9 @@ const MetricFilters: FC<MetricFilterProps> = memo(
           <ToolbarGroup>
             <ToolbarItem>
               <Select
-                selections={selectedFilter.processIdSource}
+                selections={selectedFilter.sourceProcess}
                 placeholderText={filterOptions.sourceProcesses.placeholder}
-                isOpen={selectedFilterIsOpen.processIdSource}
+                isOpen={selectedFilterIsOpen.sourceProcess}
                 isDisabled={filterOptions.sourceProcesses.disabled}
                 onSelect={handleSelectSource}
                 onClear={

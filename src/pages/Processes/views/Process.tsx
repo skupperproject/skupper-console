@@ -220,7 +220,7 @@ const Process = function () {
               selectedFilters={{
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`),
                 protocol: availableProtocols.length === 1 ? availableProtocols[0] : undefined,
-                processIdSource: process.name,
+                sourceProcess: process.name,
                 processIdDest:
                   allDestinationProcesses.length === 1 ? allDestinationProcesses[0].destinationName : undefined
               }}

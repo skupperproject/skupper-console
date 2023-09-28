@@ -34,7 +34,7 @@ describe('Latency component', () => {
         <Suspense fallback={<LoadingPage />}>
           <Latency
             selectedFilters={{
-              processIdSource: processResult.name
+              sourceProcess: processResult.name
             }}
             openSections={true}
             forceUpdate={1}
