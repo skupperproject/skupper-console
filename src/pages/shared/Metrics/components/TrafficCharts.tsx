@@ -10,8 +10,8 @@ import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 
-import { MetricsLabels } from './Metrics.enum';
-import { ByteRateMetrics, BytesMetric } from './services/services.interfaces';
+import { MetricsLabels } from '../Metrics.enum';
+import { ByteRateMetrics, BytesMetric } from '../services/services.interfaces';
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric }> = memo(
   ({ byteRateData, bytesData }) => (

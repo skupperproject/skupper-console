@@ -22,11 +22,9 @@ export type PrometheusApiResult = {
 
 export interface PrometheusQueryParams {
   sourceProcess?: string;
-  processIdDest?: string;
+  destProcess?: string;
   protocol?: AvailableProtocols;
   step: string;
-  isRate?: boolean;
-  onlyErrors?: boolean;
   quantile?: 0.5 | 0.9 | 0.99;
   start?: number;
   end?: number;
@@ -34,7 +32,7 @@ export interface PrometheusQueryParams {
 
 export interface PrometheusQueryParamsSingleData {
   sourceProcess?: string;
-  processIdDest?: string;
+  destProcess?: string;
   protocol?: AvailableProtocols;
   seconds: number;
 }

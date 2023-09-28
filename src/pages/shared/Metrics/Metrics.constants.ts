@@ -38,7 +38,7 @@ export const filterOptionsDefault = {
 
 export const filterToggleDefault = {
   sourceProcess: false,
-  processIdDest: false,
+  destProcess: false,
   protocol: false,
   timeInterval: false,
   displayInterval: false

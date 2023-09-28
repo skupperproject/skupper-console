@@ -5,10 +5,10 @@ import { useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 
+import RequestCharts from './RequestCharts';
+import ResponseCharts from './ResponseCharts';
 import { MetricsLabels } from '../Metrics.enum';
 import { SelectedFilters } from '../Metrics.interfaces';
-import RequestCharts from '../RequestCharts';
-import ResponseCharts from '../ResponseCharts';
 import MetricsController from '../services';
 import { QueriesMetrics } from '../services/services.interfaces';
 

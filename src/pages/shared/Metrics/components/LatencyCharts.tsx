@@ -5,7 +5,7 @@ import { ChartThemeColor } from '@patternfly/react-charts';
 import SkChartArea from '@core/components/SkChartArea';
 import { formatLatency } from '@core/utils/formatLatency';
 
-import { LatencyMetrics } from './services/services.interfaces';
+import { LatencyMetrics } from '../services/services.interfaces';
 
 const LatencyCharts: FC<{ latenciesData: LatencyMetrics[] }> = memo(({ latenciesData }) => (
   <SkChartArea

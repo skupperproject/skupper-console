@@ -10,8 +10,8 @@ import SkCounterCard from '@core/components/SkCounterCard';
 import { convertToPercentage } from '@core/utils/convertToPercentage';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
-import { MetricsLabels } from './Metrics.enum';
-import { ResponseMetrics } from './services/services.interfaces';
+import { MetricsLabels } from '../Metrics.enum';
+import { ResponseMetrics } from '../services/services.interfaces';
 
 const errorDistributionPadding = { left: 0, bottom: 65, top: 50, right: 0 };
 const errorRateChartPadding = { left: 40, bottom: 80, top: 50, right: 40 };

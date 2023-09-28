@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 
-import LatencyCharts from '../LatencyCharts';
+import LatencyCharts from './LatencyCharts';
 import { MetricsLabels } from '../Metrics.enum';
 import { SelectedFilters } from '../Metrics.interfaces';
 import MetricsController from '../services';

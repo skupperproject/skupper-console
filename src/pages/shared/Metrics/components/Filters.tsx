@@ -11,9 +11,9 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { CollectorsResponse } from '@API/REST.interfaces';
 import { timeIntervalMap } from '@config/prometheus';
 
-import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from './Metrics.constants';
-import { MetricsLabels } from './Metrics.enum';
-import { MetricFilterProps, SelectedFilters } from './Metrics.interfaces';
+import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from '../Metrics.constants';
+import { MetricsLabels } from '../Metrics.enum';
+import { MetricFilterProps, SelectedFilters } from '../Metrics.interfaces';
 
 const MetricFilters: FC<MetricFilterProps> = memo(
   ({
@@ -53,7 +53,7 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     }
 
     function handleToggleDestinationProcessMenu(isOpen: boolean) {
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdDest: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destProcess: isOpen });
     }
 
     function handleToggleProtocol(isOpen: boolean) {
@@ -81,13 +81,13 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     }
 
     function handleSelectDestination(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
-      const processIdDest = selection as string | undefined;
+      const destProcess = selection as string | undefined;
 
-      setSelectedFilter({ ...selectedFilter, processIdDest });
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, processIdDest: false });
+      setSelectedFilter({ ...selectedFilter, destProcess });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destProcess: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, processIdDest });
+        onSelectFilters({ ...selectedFilter, destProcess });
       }
     }
 
@@ -196,10 +196,10 @@ const MetricFilters: FC<MetricFilterProps> = memo(
             <ToolbarItem>
               {!filterOptions.destinationProcesses.hide && (
                 <Select
-                  selections={selectedFilter.processIdDest}
+                  selections={selectedFilter.destProcess}
                   placeholderText={filterOptions.destinationProcesses.placeholder}
                   isDisabled={filterOptions.destinationProcesses.disabled}
-                  isOpen={selectedFilterIsOpen.processIdDest}
+                  isOpen={selectedFilterIsOpen.destProcess}
                   onSelect={handleSelectDestination}
                   onClear={
                     optionsProcessConnectedWithDefault.length > 1 && !filterOptions.destinationProcesses.disabled
