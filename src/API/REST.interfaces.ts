@@ -1,8 +1,9 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { AvailableProtocols, SortDirection } from './REST.enum';
+import { AvailableProtocols, FlowDirection, SortDirection } from './REST.enum';
 
 export type FetchWithOptions = AxiosRequestConfig;
+export type FlowDirections = FlowDirection.Outgoing | FlowDirection.Incoming;
 
 export interface RequestOptions extends Record<string, string | number | SortDirection | undefined> {
   filter?: string;
@@ -147,7 +148,7 @@ export interface LinkResponse extends BaseResponse {
   name?: string;
   parent: string;
   mode: string;
-  direction: 'outgoing' | 'incoming';
+  direction: FlowDirections;
   linkCost: number;
 }
 

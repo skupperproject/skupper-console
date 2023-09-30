@@ -5,9 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { isPrometheusActive } from '@config/config';
 
 import TrafficCharts from './TrafficCharts';
-import { SelectedFilters } from '../Metrics.interfaces';
+import { QueriesMetrics, SelectedFilters } from '../Metrics.interfaces';
 import MetricsController from '../services';
-import { QueriesMetrics } from '../services/services.interfaces';
 
 export interface TrafficProps {
   selectedFilters: SelectedFilters;
@@ -38,7 +37,7 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!data?.bytesData || !data?.byteRateData) {
+  if (!data) {
     return null;
   }
 

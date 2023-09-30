@@ -14,9 +14,8 @@ import Request from './components/Request';
 import Traffic from './components/Traffic';
 import { displayIntervalMap } from './Metrics.constants';
 import { MetricsLabels } from './Metrics.enum';
-import { MetricsProps, SelectedFilters } from './Metrics.interfaces';
+import { MetricsProps, SelectedFilters, QueriesMetrics, QueryMetricsParams } from './Metrics.interfaces';
 import MetricsController from './services';
-import { QueriesMetrics, QueryMetricsParams } from './services/services.interfaces';
 
 function getDisplayIntervalValue(value: string | undefined) {
   return displayIntervalMap.find(({ key }) => key === value)?.value || 0;
@@ -25,6 +24,8 @@ function getDisplayIntervalValue(value: string | undefined) {
 const Metrics: FC<MetricsProps> = function ({
   selectedFilters,
   startTime,
+  sourceSites,
+  destSites,
   sourceProcesses,
   processesConnected,
   availableProtocols,
@@ -32,9 +33,9 @@ const Metrics: FC<MetricsProps> = function ({
   openSections,
   onGetMetricFilters
 }) {
-  const { displayInterval, ...queryInit } = selectedFilters;
+  const { displayInterval, ...initialQueryParams } = selectedFilters;
   const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(displayInterval));
-  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(queryInit);
+  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(initialQueryParams);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
 
   const { data: metrics, isRefetching } = useQuery(
@@ -46,7 +47,6 @@ const Metrics: FC<MetricsProps> = function ({
       keepPreviousData: true
     }
   );
-
   //Filters: refetch manually the prometheus API
   const handleShouldUpdateData = useCallback(() => {
     setShouldUpdateData(new Date().getTime());
@@ -55,64 +55,63 @@ const Metrics: FC<MetricsProps> = function ({
   // Filters: Set the prometheus query params with the filter values
   const handleUpdateQueryParams = useCallback(
     (updatedFilters: SelectedFilters) => {
-      const { displayInterval: displayIntervalSelected, ...prometheusParams } = updatedFilters;
-
-      const filters: QueryMetricsParams = {
-        ...prometheusParams,
-        sourceProcess: updatedFilters.sourceProcess || selectedFilters.sourceProcess
+      const queryParams: SelectedFilters = {
+        ...updatedFilters,
+        sourceSite: updatedFilters.sourceSite || sourceSites?.map(({ name }) => name).join('|'),
+        sourceProcess:
+          updatedFilters.sourceProcess || sourceProcesses?.map(({ destinationName }) => destinationName).join('|'),
+        destSite: updatedFilters.destSite || destSites?.map(({ name }) => name).join('|'),
+        destProcess:
+          updatedFilters.destProcess || processesConnected?.map(({ destinationName }) => destinationName).join('|')
       };
+      console.log(updatedFilters);
 
-      setQueryParams(filters);
-      setRefetchInterval(getDisplayIntervalValue(displayIntervalSelected));
+      setQueryParams(queryParams);
+      setRefetchInterval(getDisplayIntervalValue(queryParams.displayInterval));
 
       if (onGetMetricFilters) {
-        onGetMetricFilters({ ...filters, displayInterval: displayIntervalSelected });
+        onGetMetricFilters(queryParams);
       }
     },
-    [onGetMetricFilters, selectedFilters.sourceProcess]
+    [onGetMetricFilters]
   );
 
-  if (!metrics) {
-    return (
-      <Card isFullHeight>
-        <CardBody>
-          <EmptyData
-            message={MetricsLabels.NoMetricFoundTitleMessage}
-            description={MetricsLabels.NoMetricFoundDescriptionMessage}
-            icon={SearchIcon}
-          />
-        </CardBody>
-      </Card>
-    );
-  }
-
-  const { byteRateData } = metrics;
-  const areDataAvailable = !!byteRateData;
+  const areDataAvailable = !!metrics?.byteRateData;
 
   return (
     <Stack hasGutter>
+      <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+        <MetricFilters
+          availableProtocols={availableProtocols}
+          sourceSites={sourceSites}
+          destSites={destSites}
+          sourceProcesses={sourceProcesses}
+          processesConnected={processesConnected}
+          initialFilters={selectedFilters}
+          customFilterOptions={filterOptions}
+          startTime={startTime}
+          isRefetching={isRefetching}
+          onRefetch={handleShouldUpdateData}
+          onSelectFilters={handleUpdateQueryParams}
+        />
+      </StackItem>
+
+      {!areDataAvailable && (
+        <StackItem isFilled>
+          <Card isFullHeight>
+            <CardBody>
+              <EmptyData
+                message={MetricsLabels.NoMetricFoundTitleMessage}
+                description={MetricsLabels.NoMetricFoundDescriptionMessage}
+                icon={SearchIcon}
+              />
+            </CardBody>
+          </Card>
+        </StackItem>
+      )}
+
       {areDataAvailable && (
         <>
-          <StackItem>
-            <MetricFilters
-              availableProtocols={availableProtocols}
-              sourceProcesses={sourceProcesses}
-              processesConnected={processesConnected}
-              initialFilters={{
-                ...selectedFilters,
-                // if idSource have more ids set default (undefined)
-                sourceProcess:
-                  selectedFilters.sourceProcess && selectedFilters.sourceProcess.split('|').length > 1
-                    ? undefined
-                    : selectedFilters.sourceProcess
-              }}
-              customFilterOptions={filterOptions}
-              startTime={startTime}
-              isRefetching={isRefetching}
-              onRefetch={handleShouldUpdateData}
-              onSelectFilters={handleUpdateQueryParams}
-            />
-          </StackItem>
           <StackItem>
             <Traffic selectedFilters={qeryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
           </StackItem>
@@ -138,20 +137,6 @@ const Metrics: FC<MetricsProps> = function ({
             </>
           )}
         </>
-      )}
-
-      {!areDataAvailable && (
-        <StackItem isFilled>
-          <Card isFullHeight>
-            <CardBody>
-              <EmptyData
-                message={MetricsLabels.NoMetricFoundTitleMessage}
-                description={MetricsLabels.NoMetricFoundDescriptionMessage}
-                icon={SearchIcon}
-              />
-            </CardBody>
-          </Card>
-        </StackItem>
       )}
     </Stack>
   );

@@ -9,12 +9,12 @@ import {
   extractPrometheusValues,
   extractPrometheusValuesAndLabels
 } from '@API/Prometheus.utils';
+import { AvailableProtocols, FlowDirection } from '@API/REST.enum';
 import { defaultTimeInterval, timeIntervalMap } from '@config/prometheus';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import {
-  QueryMetricsParams,
   LatencyMetricsProps,
   ByteRateMetrics,
   LatencyMetrics,
@@ -23,98 +23,12 @@ import {
   BytesMetric
 } from './services.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
+import { QueryMetricsParams } from '../Metrics.interfaces';
 
 const MetricsController = {
-  getBytesData: async ({
-    sourceProcess,
-    destProcess,
-    protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
-  }: QueryMetricsParams): Promise<BytesMetric | null> => {
-    const params: PrometheusQueryParamsSingleData = {
-      sourceProcess,
-      destProcess,
-      seconds: timeInterval.seconds + 60,
-      protocol
-    };
-
-    try {
-      const [bytesTx, bytesRx] = await Promise.all([
-        PrometheusApi.fetchBytes(params),
-        PrometheusApi.fetchBytes({
-          ...params,
-          sourceProcess: destProcess,
-          destProcess: sourceProcess
-        })
-      ]);
-
-      const sumBytesTx = bytesTx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
-      const sumBytesRx = bytesRx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
-
-      return {
-        bytesTx: formatToDecimalPlacesIfCents(sumBytesTx),
-        bytesRx: formatToDecimalPlacesIfCents(sumBytesRx)
-      };
-    } catch (e: unknown) {
-      return Promise.reject(e);
-    }
-  },
-
-  getByteRateData: async ({
-    sourceProcess,
-    destProcess,
-    protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
-  }: QueryMetricsParams): Promise<ByteRateMetrics | null> => {
-    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-    const params: PrometheusQueryParams = {
-      sourceProcess,
-      destProcess,
-      step: timeInterval.step,
-      protocol,
-      start,
-      end
-    };
-
-    try {
-      const [byteRateDataTx, byteRateDataRx] = await Promise.all([
-        PrometheusApi.fetchByteRateSeries(params),
-        PrometheusApi.fetchByteRateSeries({
-          ...params,
-          sourceProcess: destProcess,
-          destProcess: sourceProcess
-        })
-      ]);
-
-      return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
-    } catch (e: unknown) {
-      return Promise.reject(e);
-    }
-  },
-
-  getResponseData: async ({
-    sourceProcess,
-    destProcess,
-    protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
-  }: QueryMetricsParams): Promise<ResponseMetrics | null> => {
-    const params: PrometheusQueryParams = {
-      sourceProcess,
-      destProcess,
-      step: timeInterval.step,
-      protocol
-    };
-
-    try {
-      const resposeRateDataSeries = await PrometheusApi.fetchResponseCountsByProcess(params);
-
-      return normalizeResponsesFromSeries(resposeRateDataSeries);
-    } catch (e: unknown) {
-      return Promise.reject(e);
-    }
-  },
-
   getLatency: async ({
+    sourceSite,
+    destSite,
     sourceProcess,
     destProcess,
     protocol,
@@ -122,6 +36,8 @@ const MetricsController = {
   }: QueryMetricsParams): Promise<LatencyMetrics[] | null> => {
     const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
     const params: PrometheusQueryParams = {
+      sourceSite,
+      destSite,
       sourceProcess,
       destProcess,
       protocol,
@@ -146,24 +62,21 @@ const MetricsController = {
   },
 
   getRequest: async ({
+    sourceSite,
+    destSite,
     sourceProcess,
     destProcess,
     protocol,
     timeInterval = timeIntervalMap[defaultTimeInterval.key]
   }: QueryMetricsParams): Promise<{
     requestRateData: RequestMetrics[] | null;
-    avgRequestRateInterval: number;
-    totalRequestsInterval: number;
+    requestPerf: { avg: number; max: number; current: number; label: string }[] | undefined;
   }> => {
     const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-    const singleDataParams: PrometheusQueryParamsSingleData = {
-      sourceProcess,
-      destProcess,
-      protocol,
-      seconds: timeInterval.seconds
-    };
 
     const params: PrometheusQueryParams = {
+      sourceSite,
+      destSite,
       sourceProcess,
       destProcess,
       protocol,
@@ -172,19 +85,19 @@ const MetricsController = {
       step: timeInterval.step
     };
     try {
-      const [requestsByProcess, avgRequestRate, totalRequests] = await Promise.all([
-        PrometheusApi.fetchRequestsByProcess({ ...params }),
-        PrometheusApi.fetchAvgRequestRate({ ...singleDataParams }),
-        PrometheusApi.fetchTotalRequests({ ...singleDataParams })
-      ]);
+      const requestsByProcess = await PrometheusApi.fetchRequestsByProcess({ ...params });
 
       const requestRateData = normalizeRequestFromSeries(requestsByProcess);
-      const avgRequestRateInterval = formatToDecimalPlacesIfCents(Number(avgRequestRate[0]?.value[1] || 0));
-      const totalRequestsInterval = formatToDecimalPlacesIfCents(Number(totalRequests[0]?.value[1] || 0), 0);
+
+      const requestPerf = requestRateData?.map(({ data, label }) => ({
+        label,
+        max: formatToDecimalPlacesIfCents(data.reduce((acc, { y }) => (y > acc ? y : acc), 0)),
+        avg: formatToDecimalPlacesIfCents(data.reduce((acc, { y }) => acc + y, 0) / data.length),
+        current: formatToDecimalPlacesIfCents(data[data.length - 1].y)
+      }));
 
       return {
-        avgRequestRateInterval,
-        totalRequestsInterval,
+        requestPerf,
         requestRateData
       };
     } catch (e: unknown) {
@@ -193,6 +106,8 @@ const MetricsController = {
   },
 
   getResponse: async ({
+    sourceSite,
+    destSite,
     sourceProcess,
     destProcess,
     protocol,
@@ -203,8 +118,9 @@ const MetricsController = {
   }> => {
     try {
       const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-
       const params: PrometheusQueryParams = {
+        sourceSite,
+        destSite,
         sourceProcess,
         destProcess,
         protocol,
@@ -231,15 +147,19 @@ const MetricsController = {
   },
 
   getTraffic: async ({
+    sourceSite,
+    destSite,
     sourceProcess,
     destProcess,
     protocol,
     timeInterval = timeIntervalMap[defaultTimeInterval.key]
   }: QueryMetricsParams): Promise<{
-    bytesData: BytesMetric | null;
-    byteRateData: ByteRateMetrics | null;
+    bytesData: BytesMetric;
+    byteRateData: ByteRateMetrics;
   }> => {
     const params: QueryMetricsParams = {
+      sourceSite,
+      destSite,
       sourceProcess,
       destProcess,
       timeInterval,
@@ -247,10 +167,7 @@ const MetricsController = {
     };
 
     try {
-      const [bytesData, byteRateData] = await Promise.all([
-        MetricsController.getBytesData(params),
-        MetricsController.getByteRateData(params)
-      ]);
+      const [bytesData, byteRateData] = await Promise.all([getBytesData(params), getByteRateData(params)]);
 
       return {
         bytesData,
@@ -264,6 +181,93 @@ const MetricsController = {
 
 export default MetricsController;
 
+async function getBytesData({
+  sourceSite,
+  destSite,
+  sourceProcess,
+  destProcess,
+  protocol,
+  timeInterval = timeIntervalMap[defaultTimeInterval.key]
+}: QueryMetricsParams): Promise<BytesMetric> {
+  const params: PrometheusQueryParamsSingleData = {
+    sourceSite,
+    destSite,
+    sourceProcess,
+    destProcess,
+    seconds: timeInterval.seconds + 60,
+    protocol
+  };
+
+  try {
+    const [bytesTx, bytesRx] = await Promise.all([
+      PrometheusApi.fetchBytes({
+        ...params,
+        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
+      }),
+      PrometheusApi.fetchBytes({
+        ...params,
+        sourceSite: destSite,
+        destSite: sourceSite,
+        sourceProcess: destProcess,
+        destProcess: sourceProcess,
+        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
+      })
+    ]);
+
+    const sumBytesTx = bytesTx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
+    const sumBytesRx = bytesRx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
+
+    return {
+      bytesTx: formatToDecimalPlacesIfCents(sumBytesTx),
+      bytesRx: formatToDecimalPlacesIfCents(sumBytesRx)
+    };
+  } catch (e: unknown) {
+    return Promise.reject(e);
+  }
+}
+
+async function getByteRateData({
+  sourceSite,
+  destSite,
+  sourceProcess,
+  destProcess,
+  protocol,
+  timeInterval = timeIntervalMap[defaultTimeInterval.key]
+}: QueryMetricsParams): Promise<ByteRateMetrics> {
+  const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
+  const params: PrometheusQueryParams = {
+    sourceSite,
+    destSite,
+    sourceProcess,
+    destProcess,
+    step: timeInterval.step,
+    protocol,
+    start,
+    end
+  };
+
+  try {
+    const [byteRateDataTx, byteRateDataRx] = await Promise.all([
+      PrometheusApi.fetchByteRateSeries({
+        ...params,
+        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
+      }),
+      PrometheusApi.fetchByteRateSeries({
+        ...params,
+        sourceSite: destSite,
+        destSite: sourceSite,
+        sourceProcess: destProcess,
+        destProcess: sourceProcess,
+        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
+      })
+    ]);
+
+    return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
+  } catch (e: unknown) {
+    return Promise.reject(e);
+  }
+}
+
 /* UTILS */
 function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
@@ -273,30 +277,34 @@ function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetr
     return null;
   }
 
-  const { values } = axisValues;
+  const { values, labels } = axisValues;
   // Helper function to create a statusCodeMetric object
-  const createStatusCodeMetric = (index: number, label: string) => {
-    const responseValues = values[index] || null;
+  const createStatusCodeMetric = (partialCode: string) => {
+    const codeIndex = labels.findIndex((label) => label === partialCode);
 
-    // Calculate the total count of requests with the status code
-    let total = 0;
-
-    if (responseValues && responseValues.length === 1) {
-      total = responseValues[0]?.y ?? 0;
+    if (codeIndex === -1) {
+      return { total: 0, label: partialCode, data: null };
     }
 
-    if (responseValues && responseValues.length > 1) {
+    let total = 0;
+    const responseValues = values[codeIndex];
+
+    if (responseValues.length === 1) {
+      total = responseValues[0].y;
+    }
+
+    if (responseValues.length > 1) {
       total = responseValues[responseValues.length - 1].y - responseValues[0].y;
     }
 
-    return { total, label, data: responseValues };
+    return { total, label: partialCode, data: responseValues };
   };
 
   // Create the statusCodeMetric objects for each status code
-  const statusCode2xx = createStatusCodeMetric(0, '2xx');
-  const statusCode3xx = createStatusCodeMetric(1, '3xx');
-  const statusCode4xx = createStatusCodeMetric(2, '4xx');
-  const statusCode5xx = createStatusCodeMetric(3, '5xx');
+  const statusCode2xx = createStatusCodeMetric('2');
+  const statusCode3xx = createStatusCodeMetric('3');
+  const statusCode4xx = createStatusCodeMetric('4');
+  const statusCode5xx = createStatusCodeMetric('5');
 
   const total = statusCode2xx.total + statusCode3xx.total + statusCode4xx.total + statusCode5xx.total;
 
@@ -350,33 +358,26 @@ function normalizeLatencies({
   return latenciesNormalized;
 }
 
-function normalizeByteRateFromSeries(
-  txData: PrometheusApiResult[],
-  rxData: PrometheusApiResult[]
-): ByteRateMetrics | null {
+function normalizeByteRateFromSeries(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): ByteRateMetrics {
   // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
   const axisValuesTx = extractPrometheusValues(txData);
   const axisValuesRx = extractPrometheusValues(rxData);
 
-  if (!axisValuesTx || !axisValuesRx) {
-    return null;
-  }
-
-  const rxTimeSerie = axisValuesRx[axisValuesRx.length - 1];
-  const txTimeSerie = axisValuesTx[0];
+  const txTimeSerie = axisValuesTx ? axisValuesTx[0] : undefined;
+  const rxTimeSerie = axisValuesRx ? axisValuesRx[axisValuesRx.length - 1] : undefined;
 
   // total data for byte rate. Used by "per second" time series
-  const sumDataReceived = rxTimeSerie.reduce((acc, { y }) => acc + y, 0);
-  const sumDataSent = txTimeSerie.reduce((acc, { y }) => acc + y, 0);
+  const sumDataReceived = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+  const sumDataSent = txTimeSerie?.reduce((acc, { y }) => acc + y, 0);
 
   return {
-    rxTimeSerie,
-    txTimeSerie,
-    avgTxValue: sumDataSent / rxTimeSerie.length,
-    avgRxValue: sumDataReceived / rxTimeSerie.length,
-    maxTxValue: Math.max(...txTimeSerie.map(({ y }) => y)),
-    maxRxValue: Math.max(...rxTimeSerie.map(({ y }) => y)),
-    currentTxValue: txTimeSerie[txTimeSerie.length - 1].y,
-    currentRxValue: rxTimeSerie[rxTimeSerie.length - 1].y
+    txTimeSerie: txTimeSerie ? { data: txTimeSerie, label: 'Tx' } : undefined,
+    rxTimeSerie: rxTimeSerie ? { data: rxTimeSerie, label: 'Rx' } : undefined,
+    avgTxValue: sumDataSent && rxTimeSerie ? sumDataSent / rxTimeSerie.length : undefined,
+    avgRxValue: sumDataReceived && rxTimeSerie ? sumDataReceived / rxTimeSerie.length : undefined,
+    maxTxValue: txTimeSerie ? Math.max(...txTimeSerie.map(({ y }) => y)) : undefined,
+    maxRxValue: rxTimeSerie ? Math.max(...rxTimeSerie.map(({ y }) => y)) : undefined,
+    currentTxValue: txTimeSerie ? txTimeSerie[txTimeSerie.length - 1].y : undefined,
+    currentRxValue: rxTimeSerie ? rxTimeSerie[rxTimeSerie.length - 1].y : undefined
   };
 }

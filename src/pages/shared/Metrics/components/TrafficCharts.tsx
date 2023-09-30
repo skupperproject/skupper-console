@@ -1,17 +1,42 @@
 import { FC, memo } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
-import { Card, CardBody, CardTitle, Grid, GridItem, Icon } from '@patternfly/react-core';
-import { CircleIcon } from '@patternfly/react-icons';
+import { Card, CardBody, CardTitle, Grid, GridItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import { VarColors } from '@config/colors';
 import SkChartArea from '@core/components/SkChartArea';
+import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 
 import { MetricsLabels } from '../Metrics.enum';
 import { ByteRateMetrics, BytesMetric } from '../services/services.interfaces';
+
+/**
+  If one of the two series is empty, it should be filled with values where y=0 and x equals the timestamp of the other series.
+  This prevents 'skipping' a series and maintains consistency with other metrics related to bytes/rate.
+ */
+function normalizeDataXaxis(rx: skAxisXY[] = [], tx: skAxisXY[] = []) {
+  if (!rx?.length && tx?.length) {
+    const rxNormalized = tx.map(({ x }) => ({
+      y: 0,
+      x
+    }));
+
+    return [rxNormalized, tx];
+  }
+
+  if (!tx?.length && rx?.length) {
+    const txNormalized = rx.map(({ x }) => ({
+      y: 0,
+      x
+    }));
+
+    return [rx, txNormalized];
+  }
+
+  return [rx, tx];
+}
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric }> = memo(
   ({ byteRateData, bytesData }) => (
@@ -23,7 +48,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
             <SkChartArea
               formatY={formatByteRate}
               legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
-              data={[byteRateData.rxTimeSerie, byteRateData.txTimeSerie]}
+              data={normalizeDataXaxis(byteRateData.rxTimeSerie?.data, byteRateData.txTimeSerie?.data)}
             />
           </CardBody>
         </Card>
@@ -44,26 +69,16 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
               </Thead>
               <Tbody>
                 <Tr>
-                  <Td>
-                    <Icon size="sm">
-                      <CircleIcon color={VarColors.Blue400} />
-                    </Icon>{' '}
-                    {MetricsLabels.TrafficReceived}
-                  </Td>
-                  <Th>{formatByteRate(byteRateData.maxRxValue)}</Th>
-                  <Th>{formatByteRate(byteRateData.avgRxValue)}</Th>
-                  <Th>{formatByteRate(byteRateData.currentRxValue)}</Th>
+                  <Td>{MetricsLabels.TrafficReceived}</Td>
+                  <Th>{formatByteRate(byteRateData?.maxRxValue || 0)}</Th>
+                  <Th>{formatByteRate(byteRateData?.avgRxValue || 0)}</Th>
+                  <Th>{formatByteRate(byteRateData?.currentRxValue || 0)}</Th>
                 </Tr>
                 <Tr>
-                  <Td>
-                    <Icon size="sm">
-                      <CircleIcon color={VarColors.Green500} />
-                    </Icon>{' '}
-                    {MetricsLabels.TrafficSent}
-                  </Td>
-                  <Th>{formatByteRate(byteRateData.maxTxValue)}</Th>
-                  <Th>{formatByteRate(byteRateData.avgTxValue)}</Th>
-                  <Th>{formatByteRate(byteRateData.currentTxValue)}</Th>
+                  <Td>{MetricsLabels.TrafficSent}</Td>
+                  <Th>{formatByteRate(byteRateData?.maxTxValue || 0)}</Th>
+                  <Th>{formatByteRate(byteRateData?.avgTxValue || 0)}</Th>
+                  <Th>{formatByteRate(byteRateData?.currentTxValue || 0)}</Th>
                 </Tr>
               </Tbody>
             </Table>
@@ -81,11 +96,11 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; bytesData: BytesMetric 
               data={[
                 {
                   x: MetricsLabels.TrafficReceived,
-                  y: bytesData.bytesRx
+                  y: bytesData?.bytesRx || 0
                 },
                 {
                   x: MetricsLabels.TrafficSent,
-                  y: bytesData?.bytesTx
+                  y: bytesData?.bytesTx || 0
                 }
               ]}
             />

@@ -14,3 +14,8 @@ export enum TcpStatus {
   Active = 'active',
   Terminated = 'terminated'
 }
+
+export enum FlowDirection {
+  Outgoing = 'outgoing',
+  Incoming = 'incoming'
+}

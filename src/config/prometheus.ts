@@ -17,3 +17,4 @@ export const timeIntervalMap: IntervalTimeMap = {
 };
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
+export const siteNameAndIdSeparator = '@_@'; // This is an internal team role convention to unify a siteId and a siteName in prometheus

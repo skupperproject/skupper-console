@@ -66,7 +66,7 @@ exports[`Request component should render the Request section of the metric 1`] =
             class="pf-v5-c-card__body"
           >
             <div
-              class="pf-v5-l-flex pf-m-column-on-sm pf-m-row-on-md"
+              class="pf-v5-l-flex pf-m-row-on-xl pf-m-column-on-md"
             >
               <div
                 class="pf-m-flex-2"
@@ -565,43 +565,92 @@ exports[`Request component should render the Request section of the metric 1`] =
                 class="pf-v5-c-divider pf-m-vertical"
               />
               <div
-                class="pf-v5-l-flex pf-m-flex-1 pf-m-column pf-m-align-items-center pf-m-align-self-stretch"
+                class="pf-v5-l-flex pf-m-flex-1 pf-m-align-self-stretch"
               >
-                <div
-                  class="pf-m-flex-1"
+                <table
+                  class="pf-v5-c-table pf-m-grid-md pf-m-compact pf-m-no-border-rows"
+                  data-ouia-component-id="OUIA-Generated-Table-1"
+                  data-ouia-component-type="PF5/Table"
+                  data-ouia-safe="true"
+                  role="grid"
                 >
-                  <div
-                    class="pf-v5-l-bullseye"
+                  <thead
+                    class="pf-v5-c-table__thead pf-m-nowrap"
                   >
-                    <h1
-                      class="pf-v5-c-title pf-m-2xl"
-                      data-ouia-component-id="OUIA-Generated-Title-1"
-                      data-ouia-component-type="PF5/Title"
+                    <tr
+                      class="pf-v5-c-table__tr"
+                      data-ouia-component-id="OUIA-Generated-TableRow-1"
+                      data-ouia-component-type="PF5/TableRow"
                       data-ouia-safe="true"
                     >
-                      Total requests: 1
-                    </h1>
-                  </div>
-                </div>
-                <hr
-                  class="pf-v5-c-divider"
-                />
-                <div
-                  class="pf-m-flex-1"
-                >
-                  <div
-                    class="pf-v5-l-bullseye"
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        Method
+                      </th>
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        Max rps
+                      </th>
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        Avg. rps
+                      </th>
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        Current rps
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="pf-v5-c-table__tbody"
+                    role="rowgroup"
                   >
-                    <h1
-                      class="pf-v5-c-title pf-m-2xl"
-                      data-ouia-component-id="OUIA-Generated-Title-2"
-                      data-ouia-component-type="PF5/Title"
+                    <tr
+                      class="pf-v5-c-table__tr"
+                      data-ouia-component-id="OUIA-Generated-TableRow-2"
+                      data-ouia-component-type="PF5/TableRow"
                       data-ouia-safe="true"
                     >
-                      Avg. request rate: 1
-                    </h1>
-                  </div>
-                </div>
+                      <td
+                        class="pf-v5-c-table__td"
+                        tabindex="-1"
+                      />
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        1
+                      </th>
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        0.5
+                      </th>
+                      <th
+                        class="pf-v5-c-table__th"
+                        scope="col"
+                        tabindex="-1"
+                      >
+                        1
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -657,7 +706,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                           data-pf-content="true"
                           style="margin: 0px;"
                         >
-                          100%
+                           - 
                         </h1>
                       </div>
                     </div>
@@ -701,7 +750,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                           data-pf-content="true"
                           style="margin: 0px;"
                         >
-                          0%
+                           - 
                         </h1>
                       </div>
                     </div>
@@ -745,7 +794,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                           data-pf-content="true"
                           style="margin: 0px;"
                         >
-                          0%
+                           - 
                         </h1>
                       </div>
                     </div>
@@ -789,7 +838,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                           data-pf-content="true"
                           style="margin: 0px;"
                         >
-                          0%
+                           - 
                         </h1>
                       </div>
                     </div>
@@ -1914,7 +1963,7 @@ exports[`Request component should render the Request section of the metric 1`] =
           class="pf-v5-c-card__body"
         >
           <div
-            class="pf-v5-l-flex pf-m-column-on-sm pf-m-row-on-md"
+            class="pf-v5-l-flex pf-m-row-on-xl pf-m-column-on-md"
           >
             <div
               class="pf-m-flex-2"
@@ -2413,43 +2462,92 @@ exports[`Request component should render the Request section of the metric 1`] =
               class="pf-v5-c-divider pf-m-vertical"
             />
             <div
-              class="pf-v5-l-flex pf-m-flex-1 pf-m-column pf-m-align-items-center pf-m-align-self-stretch"
+              class="pf-v5-l-flex pf-m-flex-1 pf-m-align-self-stretch"
             >
-              <div
-                class="pf-m-flex-1"
+              <table
+                class="pf-v5-c-table pf-m-grid-md pf-m-compact pf-m-no-border-rows"
+                data-ouia-component-id="OUIA-Generated-Table-1"
+                data-ouia-component-type="PF5/Table"
+                data-ouia-safe="true"
+                role="grid"
               >
-                <div
-                  class="pf-v5-l-bullseye"
+                <thead
+                  class="pf-v5-c-table__thead pf-m-nowrap"
                 >
-                  <h1
-                    class="pf-v5-c-title pf-m-2xl"
-                    data-ouia-component-id="OUIA-Generated-Title-1"
-                    data-ouia-component-type="PF5/Title"
+                  <tr
+                    class="pf-v5-c-table__tr"
+                    data-ouia-component-id="OUIA-Generated-TableRow-1"
+                    data-ouia-component-type="PF5/TableRow"
                     data-ouia-safe="true"
                   >
-                    Total requests: 1
-                  </h1>
-                </div>
-              </div>
-              <hr
-                class="pf-v5-c-divider"
-              />
-              <div
-                class="pf-m-flex-1"
-              >
-                <div
-                  class="pf-v5-l-bullseye"
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      Method
+                    </th>
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      Max rps
+                    </th>
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      Avg. rps
+                    </th>
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      Current rps
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="pf-v5-c-table__tbody"
+                  role="rowgroup"
                 >
-                  <h1
-                    class="pf-v5-c-title pf-m-2xl"
-                    data-ouia-component-id="OUIA-Generated-Title-2"
-                    data-ouia-component-type="PF5/Title"
+                  <tr
+                    class="pf-v5-c-table__tr"
+                    data-ouia-component-id="OUIA-Generated-TableRow-2"
+                    data-ouia-component-type="PF5/TableRow"
                     data-ouia-safe="true"
                   >
-                    Avg. request rate: 1
-                  </h1>
-                </div>
-              </div>
+                    <td
+                      class="pf-v5-c-table__td"
+                      tabindex="-1"
+                    />
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      1
+                    </th>
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      0.5
+                    </th>
+                    <th
+                      class="pf-v5-c-table__th"
+                      scope="col"
+                      tabindex="-1"
+                    >
+                      1
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -2505,7 +2603,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                         data-pf-content="true"
                         style="margin: 0px;"
                       >
-                        100%
+                         - 
                       </h1>
                     </div>
                   </div>
@@ -2549,7 +2647,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                         data-pf-content="true"
                         style="margin: 0px;"
                       >
-                        0%
+                         - 
                       </h1>
                     </div>
                   </div>
@@ -2593,7 +2691,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                         data-pf-content="true"
                         style="margin: 0px;"
                       >
-                        0%
+                         - 
                       </h1>
                     </div>
                   </div>
@@ -2637,7 +2735,7 @@ exports[`Request component should render the Request section of the metric 1`] =
                         data-pf-content="true"
                         style="margin: 0px;"
                       >
-                        0%
+                         - 
                       </h1>
                     </div>
                   </div>

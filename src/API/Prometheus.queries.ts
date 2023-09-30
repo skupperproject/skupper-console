@@ -4,7 +4,7 @@ import { AvailableProtocols } from './REST.enum';
 export const queries = {
   // http request queries
   getTotalRequestsTimeInterval(param: string, range: IntervalTimePropValue) {
-    return `sum(increase(http_requests_method_total{${param}}[${range}]))`;
+    return `max(sum(rate(http_requests_method_total{${param}}[${range}])))`;
   },
 
   getAvgRequestRateTimeInterval(param: string, range: IntervalTimePropValue) {

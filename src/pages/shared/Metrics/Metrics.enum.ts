@@ -4,6 +4,8 @@ export enum MetricsLabels {
   ClientErrorRDistributionSeriesAxisYLabel = 'Error distribution',
   ErrorLabel = 'errors',
   ErrorRateSeriesAxisYLabel = 'error rate',
+  FilterAllSourceSites = 'All source sites',
+  FilterAllDestinationSites = 'All destination sites',
   FilterAllSourceProcesses = 'All processes',
   FilterAllDestinationProcesses = 'All clients or servers',
   FilterProtocolsDefault = 'All protocols',
@@ -13,8 +15,9 @@ export enum MetricsLabels {
   LatencyMetric50quantile = '50th percentile',
   LatencyMetric90quantile = '90th percentile',
   LatencyMetric99quantile = '99th percentile',
-  RequestTotalTitle = 'Total requests',
-  RequestRateAvgTitle = 'Avg. request rate',
+  MaxRequestRate = 'Max rps',
+  RequestRateAvgTitle = 'Avg. rps',
+  RequestRateCurrentTitle = 'Current rps',
   ByteRateAvgCol = 'avg',
   ByteRateTotalCol = 'total',
   ByteRateCurrentCol = 'current',
@@ -23,5 +26,6 @@ export enum MetricsLabels {
   DataTransferTitle = 'Data transfer',
   LatencyTitle = 'Http latencies',
   RequestsTitle = 'Http requests',
-  HttpStatus = 'Http response status'
+  HttpStatus = 'Http response status',
+  Method = 'Method'
 }
