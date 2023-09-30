@@ -31,7 +31,7 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   );
 
   const { data: processPairs } = useQuery(
-    [QueriesServices.GetProcessPairsByService, serviceName, clientResourceSelected, serverResourceSelected],
+    [QueriesServices.GetProcessPairsByService, serviceId],
     () => RESTApi.fetchProcessPairsByService(serviceId),
     {
       refetchInterval: UPDATE_INTERVAL,
@@ -39,10 +39,16 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     }
   );
 
-  const { data: servicePairs } = useQuery(
-    [QueriesServices.GetResourcePairsByService, serviceName, clientResourceSelected, serverResourceSelected],
+  const { data: resourcePairs } = useQuery(
+    [
+      QueriesServices.GetResourcePairsByService,
+      serviceName,
+      clientResourceSelected,
+      serverResourceSelected,
+      processPairs
+    ],
     () =>
-      PrometheusApi.fethServicePairsByService({
+      PrometheusApi.fethResourcePairsByService({
         serviceName,
         clientType: clientResourceSelected,
         serverType: serverResourceSelected,
@@ -74,7 +80,7 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   );
 
   const { nodes, links } = ServicesController.convertToSankeyChartData(
-    servicePairs || [],
+    resourcePairs || [],
     metricSelected !== defaultMetric
   );
 

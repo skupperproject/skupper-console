@@ -1,10 +1,10 @@
 import { FC, memo } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
-import { Bullseye, Divider, Flex, FlexItem, Title } from '@patternfly/react-core';
+import { Divider, Flex, FlexItem } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
-import { formatNumber } from '@core/utils/formatNumber';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 
 import { MetricsLabels } from '../Metrics.enum';
@@ -12,11 +12,9 @@ import { RequestMetrics } from '../services/services.interfaces';
 
 const RequestCharts: FC<{
   requestRateData: RequestMetrics[];
-  totalRequestsInterval: number;
-  avgRequestRateInterval: number;
-}> = memo(({ requestRateData, totalRequestsInterval, avgRequestRateInterval }) => (
-  <Flex direction={{ sm: 'column', md: 'row' }}>
-    {/* Chart requests time series card*/}
+  requestPerf: { avg: number; max: number; current: number; label: string }[] | undefined;
+}> = memo(({ requestRateData, requestPerf }) => (
+  <Flex direction={{ xl: 'row', md: 'column' }}>
     <FlexItem flex={{ default: 'flex_2' }}>
       <SkChartArea
         data={requestRateData.map(({ data }) => data)}
@@ -27,29 +25,27 @@ const RequestCharts: FC<{
     </FlexItem>
 
     <Divider orientation={{ default: 'vertical' }} />
-    {/*  Partial total request card*/}
-    <Flex
-      flex={{ default: 'flex_1' }}
-      direction={{ default: 'column' }}
-      alignItems={{ default: 'alignItemsCenter' }}
-      alignSelf={{ default: 'alignSelfStretch' }}
-    >
-      <FlexItem flex={{ default: 'flex_1' }}>
-        <Bullseye>
-          <Title headingLevel="h1">{`${MetricsLabels.RequestTotalTitle}: ${formatNumber(
-            totalRequestsInterval
-          )}`}</Title>
-        </Bullseye>
-      </FlexItem>
-
-      <Divider />
-
-      {/*  avg request per second card*/}
-      <FlexItem flex={{ default: 'flex_1' }}>
-        <Bullseye>
-          <Title headingLevel="h1">{`${MetricsLabels.RequestRateAvgTitle}: ${avgRequestRateInterval}`}</Title>
-        </Bullseye>
-      </FlexItem>
+    <Flex flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+      <Table borders={false} variant="compact">
+        <Thead noWrap>
+          <Tr>
+            <Th>{MetricsLabels.Method}</Th>
+            <Th>{MetricsLabels.MaxRequestRate}</Th>
+            <Th>{MetricsLabels.RequestRateAvgTitle}</Th>
+            <Th>{MetricsLabels.RequestRateCurrentTitle}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {requestPerf?.map((request, index) => (
+            <Tr key={`${request.label}-${index}`}>
+              <Td>{request.label}</Td>
+              <Th>{request.max}</Th>
+              <Th>{request.avg}</Th>
+              <Th>{request.current}</Th>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </Flex>
   </Flex>
 ));

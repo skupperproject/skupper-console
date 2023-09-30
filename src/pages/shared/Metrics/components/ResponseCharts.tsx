@@ -16,6 +16,10 @@ import { ResponseMetrics } from '../services/services.interfaces';
 const errorDistributionPadding = { left: 0, bottom: 65, top: 50, right: 0 };
 const errorRateChartPadding = { left: 40, bottom: 80, top: 50, right: 40 };
 
+function createStatusLabel(label: string) {
+  return `${label}xx`;
+}
+
 const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseData: ResponseMetrics }> = memo(
   ({ responseRateData, responseData }) => (
     <>
@@ -23,28 +27,28 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
         {/* HTTP stats */}
         <GridItem span={3}>
           <SkCounterCard
-            title={responseData.statusCode2xx.label}
+            title={createStatusLabel(responseData.statusCode2xx.label)}
             value={convertToPercentage(responseData.statusCode2xx.total, responseData.total) || ' - '}
             bgColor={Colors.Green500}
           />
         </GridItem>
         <GridItem span={3}>
           <SkCounterCard
-            title={responseData.statusCode3xx.label}
+            title={createStatusLabel(responseData.statusCode3xx.label)}
             value={convertToPercentage(responseData.statusCode3xx.total, responseData.total) || ' - '}
             bgColor={Colors.Blue400}
           />
         </GridItem>
         <GridItem span={3}>
           <SkCounterCard
-            title={responseData.statusCode4xx.label}
+            title={createStatusLabel(responseData.statusCode4xx.label)}
             value={convertToPercentage(responseData.statusCode4xx.total, responseData.total) || ' - '}
             bgColor={Colors.Orange200}
           />
         </GridItem>
         <GridItem span={3}>
           <SkCounterCard
-            title={responseData.statusCode5xx.label}
+            title={createStatusLabel(responseData.statusCode5xx.label)}
             value={convertToPercentage(responseData.statusCode5xx.total, responseData.total) || ' - '}
             bgColor={Colors.Red200}
           />
@@ -59,7 +63,9 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
-            legendLabels={[`${responseData.statusCode4xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
+            legendLabels={[
+              `${createStatusLabel(responseData.statusCode4xx.label)} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`
+            ]}
             data={[responseRateData?.statusCode4xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
             themeColor={ChartThemeColor.orange}
@@ -71,7 +77,9 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
-            legendLabels={[`${responseData.statusCode5xx.label} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`]}
+            legendLabels={[
+              `${createStatusLabel(responseData.statusCode5xx.label)} ${MetricsLabels.ErrorRateSeriesAxisYLabel}`
+            ]}
             data={[responseRateData?.statusCode5xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
             themeColor={ChartThemeColor.gold}
@@ -85,11 +93,11 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
             format={(y: number) => `${y} ${MetricsLabels.ErrorLabel}`}
             data={[
               {
-                x: responseData.statusCode4xx.label,
+                x: createStatusLabel(responseData.statusCode4xx.label),
                 y: responseData.statusCode4xx.total
               },
               {
-                x: responseData.statusCode5xx.label,
+                x: createStatusLabel(responseData.statusCode5xx.label),
                 y: responseData.statusCode5xx.total
               }
             ]}

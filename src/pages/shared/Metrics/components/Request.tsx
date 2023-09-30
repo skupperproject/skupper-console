@@ -8,9 +8,8 @@ import { isPrometheusActive } from '@config/config';
 import RequestCharts from './RequestCharts';
 import ResponseCharts from './ResponseCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import { SelectedFilters } from '../Metrics.interfaces';
+import { SelectedFilters, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
-import { QueriesMetrics } from '../services/services.interfaces';
 
 export interface RequestProps {
   selectedFilters: SelectedFilters;
@@ -63,7 +62,7 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
     return null;
   }
 
-  const { requestRateData, totalRequestsInterval, avgRequestRateInterval } = request;
+  const { requestRateData, requestPerf } = request;
   const isSectionActive = !!requestRateData?.flatMap(({ data: values }) => values.find(({ y }) => y > 0) || []).length;
 
   const { responseData, responseRateData } = response;
@@ -77,11 +76,7 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
         {!!requestRateData?.length && (
           <>
             <CardBody>
-              <RequestCharts
-                requestRateData={requestRateData}
-                totalRequestsInterval={totalRequestsInterval}
-                avgRequestRateInterval={avgRequestRateInterval}
-              />
+              <RequestCharts requestRateData={requestRateData} requestPerf={requestPerf} />
             </CardBody>
 
             {responseData && (

@@ -1,5 +1,6 @@
 import { createServer, Response } from 'miragejs';
 
+import { FlowDirection } from '@API/REST.enum';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -89,7 +90,7 @@ mockRoutersForPerf.forEach((_, index) => {
       mode: 'interior',
       name: router2.name?.split('/')[1],
       linkCost: 1,
-      direction: 'outgoing'
+      direction: FlowDirection.Outgoing
     },
     {
       recType: 'LINK',
@@ -100,7 +101,7 @@ mockRoutersForPerf.forEach((_, index) => {
       mode: 'interior',
       name: router1.name?.split('/')[1],
       linkCost: 1,
-      direction: 'incoming'
+      direction: FlowDirection.Incoming
     }
   );
 });
@@ -146,7 +147,7 @@ export const MockApi = {
     return { ...sites, results };
   },
   getSite: (_: unknown, { params: { id } }: ApiProps) => ({
-    results: sites.results.find(({ identity }) => identity === id)
+    results: sites.results.find(({ identity }) => identity === id) || []
   }),
   getRouters: () => {
     const routersForPerfTests = PERF_TEST ? mockRoutersForPerf : [];

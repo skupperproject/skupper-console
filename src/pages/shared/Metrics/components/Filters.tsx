@@ -1,6 +1,6 @@
 import { FC, useMemo, useState, MouseEvent, ChangeEvent, memo } from 'react';
 
-import { Button, Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';
+import { Button, Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip, Card } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -9,14 +9,16 @@ import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { CollectorsResponse } from '@API/REST.interfaces';
-import { timeIntervalMap } from '@config/prometheus';
+import { siteNameAndIdSeparator, timeIntervalMap } from '@config/prometheus';
 
 import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
-import { MetricFilterProps, SelectedFilters } from '../Metrics.interfaces';
+import { MetricFiltersProps, SelectedFilters } from '../Metrics.interfaces';
 
-const MetricFilters: FC<MetricFilterProps> = memo(
+const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
+    sourceSites,
+    destSites,
     sourceProcesses,
     processesConnected,
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
@@ -39,15 +41,23 @@ const MetricFilters: FC<MetricFilterProps> = memo(
       () =>
         Object.values(timeIntervalMap).filter(
           ({ seconds }) =>
-            new Date().getTime() - seconds * 1000 > Math.max(collector.startTime / 1000, startTime / 1000)
+            new Date().getTime() - seconds * 1000 > Math.max((collector?.startTime || 0) / 1000, startTime / 1000)
         ),
-      [collector.startTime, startTime]
+      [collector?.startTime, startTime]
     );
 
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
     const [selectedFilter, setSelectedFilter] = useState<SelectedFilters>(initialFilters);
 
     // Handler for toggling the open and closed states of a Select element.
+    function handleToggleSourceSiteMenu(isOpen: boolean) {
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceSite: isOpen });
+    }
+
+    function handleToggleDestSiteMenu(isOpen: boolean) {
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destSite: isOpen });
+    }
+
     function handleToggleSourceProcessMenu(isOpen: boolean) {
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceProcess: isOpen });
     }
@@ -68,6 +78,17 @@ const MetricFilters: FC<MetricFilterProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: isOpen });
     }
 
+    function handleSelectSiteSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
+      const sourceSite = selection as string | undefined;
+
+      setSelectedFilter({ ...selectedFilter, sourceSite, sourceProcess: undefined });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceSite: false });
+
+      if (onSelectFilters) {
+        onSelectFilters({ ...selectedFilter, sourceSite });
+      }
+    }
+
     function handleSelectSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const sourceProcess = selection as string | undefined;
 
@@ -75,8 +96,18 @@ const MetricFilters: FC<MetricFilterProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceProcess: false });
 
       if (onSelectFilters) {
-        // sourceID is mandatory. if the element selected is a placeholder use  the default value passed to the filter
-        onSelectFilters({ ...selectedFilter, sourceProcess: sourceProcess || initialFilters.sourceProcess });
+        onSelectFilters({ ...selectedFilter, sourceProcess });
+      }
+    }
+
+    function handleSelectSiteDest(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
+      const destSite = selection as string | undefined;
+
+      setSelectedFilter({ ...selectedFilter, destSite, destProcess: undefined });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destSite: false });
+
+      if (onSelectFilters) {
+        onSelectFilters({ ...selectedFilter, destSite });
       }
     }
 
@@ -125,6 +156,28 @@ const MetricFilters: FC<MetricFilterProps> = memo(
       }
     }
 
+    //  source site select options
+    const optionsSourceSitesWithDefault = useMemo(
+      () =>
+        (sourceSites || []).map(({ name }, index) => (
+          <SelectOption key={index} value={name}>
+            {name.split(siteNameAndIdSeparator)[0]}
+          </SelectOption>
+        )),
+      [sourceSites]
+    );
+
+    // dest sites select options
+    const optionsDestinationSitesWithDefault = useMemo(
+      () =>
+        (destSites || []).map(({ name }, index) => (
+          <SelectOption key={index} value={name}>
+            {name.split(siteNameAndIdSeparator)[0]}
+          </SelectOption>
+        )),
+      [destSites]
+    );
+
     // process sources select options
     const optionsProcessSourcesWithDefault = useMemo(
       () =>
@@ -172,111 +225,167 @@ const MetricFilters: FC<MetricFilterProps> = memo(
     );
 
     return (
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarGroup>
-            <ToolbarItem>
-              <Select
-                selections={selectedFilter.sourceProcess}
-                placeholderText={filterOptions.sourceProcesses.placeholder}
-                isOpen={selectedFilterIsOpen.sourceProcess}
-                isDisabled={filterOptions.sourceProcesses.disabled}
-                onSelect={handleSelectSource}
-                onClear={
-                  optionsProcessSourcesWithDefault.length > 1 && !filterOptions.sourceProcesses.disabled
-                    ? handleSelectSource
-                    : undefined
-                }
-                onToggle={(_, isOpen) => handleToggleSourceProcessMenu(isOpen)}
-              >
-                {optionsProcessSourcesWithDefault}
-              </Select>
-            </ToolbarItem>
+      <Card>
+        <Toolbar>
+          <ToolbarContent>
+            <ToolbarGroup>
+              <ToolbarItem>
+                {!!optionsSourceSitesWithDefault.length && !filterOptions.sourceSites.hide && (
+                  <Select
+                    selections={
+                      selectedFilter.sourceSite && selectedFilter.sourceSite.split('|').length > 1
+                        ? undefined
+                        : selectedFilter.sourceSite
+                    }
+                    placeholderText={filterOptions.sourceSites.placeholder}
+                    isOpen={selectedFilterIsOpen.sourceSite}
+                    isDisabled={filterOptions.sourceSites.disabled}
+                    onSelect={handleSelectSiteSource}
+                    onClear={
+                      optionsSourceSitesWithDefault.length > 1 && !filterOptions.sourceSites.disabled
+                        ? handleSelectSiteSource
+                        : undefined
+                    }
+                    onToggle={(_, isOpen) => handleToggleSourceSiteMenu(isOpen)}
+                  >
+                    {optionsSourceSitesWithDefault}
+                  </Select>
+                )}
 
-            <ToolbarItem>
-              {!filterOptions.destinationProcesses.hide && (
+                {!filterOptions.sourceProcesses.hide && (
+                  <Select
+                    selections={
+                      selectedFilter.sourceProcess && selectedFilter.sourceProcess.split('|').length > 1
+                        ? undefined
+                        : selectedFilter.sourceProcess
+                    }
+                    placeholderText={filterOptions.sourceProcesses.placeholder}
+                    isOpen={selectedFilterIsOpen.sourceProcess}
+                    isDisabled={filterOptions.sourceProcesses.disabled}
+                    onSelect={handleSelectSource}
+                    onClear={
+                      optionsProcessSourcesWithDefault.length > 1 && !filterOptions.sourceProcesses.disabled
+                        ? handleSelectSource
+                        : undefined
+                    }
+                    onToggle={(_, isOpen) => handleToggleSourceProcessMenu(isOpen)}
+                  >
+                    {optionsProcessSourcesWithDefault}
+                  </Select>
+                )}
+              </ToolbarItem>
+
+              <ToolbarItem>
+                {!!optionsDestinationSitesWithDefault.length && !filterOptions.destSites.hide && (
+                  <Select
+                    selections={
+                      selectedFilter.destSite && selectedFilter.destSite.split('|').length > 1
+                        ? undefined
+                        : selectedFilter.destSite
+                    }
+                    placeholderText={filterOptions.destSites.placeholder}
+                    isOpen={selectedFilterIsOpen.destSite}
+                    isDisabled={filterOptions.destSites.disabled}
+                    onSelect={handleSelectSiteDest}
+                    onClear={
+                      optionsDestinationSitesWithDefault.length > 1 && !filterOptions.destSites.disabled
+                        ? handleSelectSiteDest
+                        : undefined
+                    }
+                    onToggle={(_, isOpen) => handleToggleDestSiteMenu(isOpen)}
+                  >
+                    {optionsDestinationSitesWithDefault}
+                  </Select>
+                )}
+
+                {!filterOptions.destinationProcesses.hide && (
+                  <Select
+                    selections={
+                      selectedFilter.destProcess && selectedFilter.destProcess.split('|').length > 1
+                        ? undefined
+                        : selectedFilter.destProcess
+                    }
+                    placeholderText={filterOptions.destinationProcesses.placeholder}
+                    isDisabled={filterOptions.destinationProcesses.disabled}
+                    isOpen={selectedFilterIsOpen.destProcess}
+                    onSelect={handleSelectDestination}
+                    onClear={
+                      optionsProcessConnectedWithDefault.length > 1 && !filterOptions.destinationProcesses.disabled
+                        ? handleSelectDestination
+                        : undefined
+                    }
+                    onToggle={(_, isOpen) => handleToggleDestinationProcessMenu(isOpen)}
+                  >
+                    {optionsProcessConnectedWithDefault}
+                  </Select>
+                )}
+              </ToolbarItem>
+
+              <ToolbarItem>
                 <Select
-                  selections={selectedFilter.destProcess}
-                  placeholderText={filterOptions.destinationProcesses.placeholder}
-                  isDisabled={filterOptions.destinationProcesses.disabled}
-                  isOpen={selectedFilterIsOpen.destProcess}
-                  onSelect={handleSelectDestination}
+                  selections={selectedFilter.protocol}
+                  placeholderText={MetricsLabels.FilterProtocolsDefault}
+                  isOpen={selectedFilterIsOpen.protocol}
+                  isDisabled={filterOptions.protocols.disabled}
+                  onSelect={handleSelectProtocol}
                   onClear={
-                    optionsProcessConnectedWithDefault.length > 1 && !filterOptions.destinationProcesses.disabled
-                      ? handleSelectDestination
+                    optionsProtocolsWithDefault.length > 1 && !filterOptions.protocols.disabled
+                      ? handleSelectProtocol
                       : undefined
                   }
-                  onToggle={(_, isOpen) => handleToggleDestinationProcessMenu(isOpen)}
+                  onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
                 >
-                  {optionsProcessConnectedWithDefault}
+                  {optionsProtocolsWithDefault}
                 </Select>
-              )}
-            </ToolbarItem>
+              </ToolbarItem>
+            </ToolbarGroup>
 
-            <ToolbarItem>
-              <Select
-                selections={selectedFilter.protocol}
-                placeholderText={MetricsLabels.FilterProtocolsDefault}
-                isOpen={selectedFilterIsOpen.protocol}
-                isDisabled={filterOptions.protocols.disabled}
-                onSelect={handleSelectProtocol}
-                onClear={
-                  optionsProtocolsWithDefault.length > 1 && !filterOptions.protocols.disabled
-                    ? handleSelectProtocol
-                    : undefined
-                }
-                onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
-              >
-                {optionsProtocolsWithDefault}
-              </Select>
-            </ToolbarItem>
-          </ToolbarGroup>
+            {/* Display filters */}
+            <ToolbarGroup variant={'filter-group'} align={{ default: 'alignRight' }}>
+              <ToolbarItem>
+                <Select
+                  selections={selectedFilter.timeInterval?.label}
+                  isOpen={selectedFilterIsOpen.timeInterval}
+                  isDisabled={filterOptions.timeIntervals.disabled}
+                  onSelect={handleSelectTimeIntervalMenu}
+                  toggleIcon={<OutlinedClockIcon />}
+                  onToggle={(_, isOpen) => handleToggleTimeIntervalMenu(isOpen)}
+                >
+                  {optionsTimeIntervalWithDefault}
+                </Select>
+              </ToolbarItem>
 
-          {/* Display filters */}
-          <ToolbarGroup variant={'filter-group'} align={{ default: 'alignRight' }}>
-            <ToolbarItem>
-              <Select
-                selections={selectedFilter.timeInterval?.label}
-                isOpen={selectedFilterIsOpen.timeInterval}
-                isDisabled={filterOptions.timeIntervals.disabled}
-                onSelect={handleSelectTimeIntervalMenu}
-                toggleIcon={<OutlinedClockIcon />}
-                onToggle={(_, isOpen) => handleToggleTimeIntervalMenu(isOpen)}
-              >
-                {optionsTimeIntervalWithDefault}
-              </Select>
-            </ToolbarItem>
+              <ToolbarItem>
+                <Select
+                  selections={selectedFilter.displayInterval}
+                  isOpen={selectedFilterIsOpen.displayInterval}
+                  onSelect={handleSelectDisplayInterval}
+                  onToggle={(_, isOpen) => handleToggleDisplayInterval(isOpen)}
+                >
+                  {optionsDisplayIntervalWithDefault}
+                </Select>
+              </ToolbarItem>
 
-            <ToolbarItem>
-              <Select
-                selections={selectedFilter.displayInterval}
-                isOpen={selectedFilterIsOpen.displayInterval}
-                onSelect={handleSelectDisplayInterval}
-                onToggle={(_, isOpen) => handleToggleDisplayInterval(isOpen)}
-              >
-                {optionsDisplayIntervalWithDefault}
-              </Select>
-            </ToolbarItem>
-
-            <ToolbarItem>
-              <Tooltip content={MetricsLabels.RefetchData}>
-                <Button
-                  data-testid="metric-refetch"
-                  variant="primary"
-                  isLoading={isRefetching}
-                  isDisabled={
-                    isRefetching ||
-                    forceDisableRefetchData ||
-                    (!!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key)
-                  }
-                  onClick={() => onRefetch()}
-                  icon={<SyncIcon />}
-                />
-              </Tooltip>
-            </ToolbarItem>
-          </ToolbarGroup>
-        </ToolbarContent>
-      </Toolbar>
+              <ToolbarItem>
+                <Tooltip content={MetricsLabels.RefetchData}>
+                  <Button
+                    data-testid="metric-refetch"
+                    variant="primary"
+                    isLoading={isRefetching}
+                    isDisabled={
+                      isRefetching ||
+                      forceDisableRefetchData ||
+                      (!!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key)
+                    }
+                    onClick={() => onRefetch()}
+                    icon={<SyncIcon />}
+                  />
+                </Tooltip>
+              </ToolbarItem>
+            </ToolbarGroup>
+          </ToolbarContent>
+        </Toolbar>
+      </Card>
     );
   }
 );

@@ -643,29 +643,6 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                       class="pf-v5-c-table__td"
                       tabindex="-1"
                     >
-                      <span
-                        class="pf-v5-c-icon pf-m-sm"
-                      >
-                        <span
-                          class="pf-v5-c-icon__content"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="pf-v5-svg"
-                            color="var(--pf-v5-global--palette--blue-400)"
-                            fill="currentColor"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 512 512"
-                            width="1em"
-                          >
-                            <path
-                              d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
-                            />
-                          </svg>
-                        </span>
-                      </span>
-                       
                       Rx
                     </td>
                     <th
@@ -700,29 +677,6 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                       class="pf-v5-c-table__td"
                       tabindex="-1"
                     >
-                      <span
-                        class="pf-v5-c-icon pf-m-sm"
-                      >
-                        <span
-                          class="pf-v5-c-icon__content"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="pf-v5-svg"
-                            color="var(--pf-v5-global--palette--green-500)"
-                            fill="currentColor"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 512 512"
-                            width="1em"
-                          >
-                            <path
-                              d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
-                            />
-                          </svg>
-                        </span>
-                      </span>
-                       
                       Tx
                     </td>
                     <th
@@ -1544,29 +1498,6 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                     class="pf-v5-c-table__td"
                     tabindex="-1"
                   >
-                    <span
-                      class="pf-v5-c-icon pf-m-sm"
-                    >
-                      <span
-                        class="pf-v5-c-icon__content"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="pf-v5-svg"
-                          color="var(--pf-v5-global--palette--blue-400)"
-                          fill="currentColor"
-                          height="1em"
-                          role="img"
-                          viewBox="0 0 512 512"
-                          width="1em"
-                        >
-                          <path
-                            d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
-                          />
-                        </svg>
-                      </span>
-                    </span>
-                     
                     Rx
                   </td>
                   <th
@@ -1601,29 +1532,6 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                     class="pf-v5-c-table__td"
                     tabindex="-1"
                   >
-                    <span
-                      class="pf-v5-c-icon pf-m-sm"
-                    >
-                      <span
-                        class="pf-v5-c-icon__content"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="pf-v5-svg"
-                          color="var(--pf-v5-global--palette--green-500)"
-                          fill="currentColor"
-                          height="1em"
-                          role="img"
-                          viewBox="0 0 512 512"
-                          width="1em"
-                        >
-                          <path
-                            d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
-                          />
-                        </svg>
-                      </span>
-                    </span>
-                     
                     Tx
                   </td>
                   <th

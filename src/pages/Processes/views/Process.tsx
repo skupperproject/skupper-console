@@ -25,7 +25,7 @@ import {
 } from '../Processes.constants';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
-const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'process-display-interval';
+const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 
 const Process = function () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,9 +60,9 @@ const Process = function () {
     RESTApi.fetchServicesByProcess(processId)
   );
 
-  const handleRefreshMetrics = useCallback(
+  const handleSelectedFilters = useCallback(
     (filters: SelectedFilters) => {
-      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`, filters);
+      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
     },
     [processId]
   );
@@ -94,10 +94,17 @@ const Process = function () {
   const HTTPClients = processesPairsRxReverse.filter(
     ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
   );
-
   const remoteServers = processesPairsTxData.filter(({ protocol }) => protocol === undefined);
   const remoteClients = processesPairsRxReverse.filter(({ protocol }) => protocol === undefined);
-  const allDestinationProcesses = [...HTTPServers, ...HTTPClients, ...TCPServers, ...TCPClients];
+
+  const allDestinationProcesses = [
+    ...HTTPServers,
+    ...HTTPClients,
+    ...TCPServers,
+    ...TCPClients,
+    ...remoteClients,
+    ...remoteServers
+  ];
   const availableProtocols = [
     ...new Set(allDestinationProcesses.map(({ protocol }) => protocol).filter(Boolean))
   ] as AvailableProtocols[];
@@ -218,11 +225,11 @@ const Process = function () {
             <Metrics
               key={id}
               selectedFilters={{
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processId}`),
-                protocol: availableProtocols.length === 1 ? availableProtocols[0] : undefined,
                 sourceProcess: process.name,
                 destProcess:
-                  allDestinationProcesses.length === 1 ? allDestinationProcesses[0].destinationName : undefined
+                  allDestinationProcesses.length === 1 ? allDestinationProcesses[0].destinationName : undefined,
+                protocol: availableProtocols.length === 1 ? availableProtocols[0] : undefined,
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
               }}
               startTime={process.startTime}
               processesConnected={allDestinationProcesses}
@@ -234,7 +241,7 @@ const Process = function () {
                 },
                 sourceProcesses: { disabled: true, placeholder: process.name }
               }}
-              onGetMetricFilters={handleRefreshMetrics}
+              onGetMetricFilters={handleSelectedFilters}
             />
           )}
         </>

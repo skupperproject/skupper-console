@@ -32,8 +32,3 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
     width: 15
   }
 ];
-
-export const LINK_DIRECTIONS = {
-  OUTGOING: 'outgoing',
-  INCOMING: 'incoming'
-};

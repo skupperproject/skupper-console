@@ -1,6 +1,6 @@
+import { FlowDirection } from '@API/REST.enum';
 import { LinkResponse, RouterResponse, SiteResponse } from 'API/REST.interfaces';
 
-import { LINK_DIRECTIONS } from '../Sites.constants';
 import { SiteWithLinks } from '../Sites.interfaces';
 
 const SitesController = {
@@ -32,8 +32,8 @@ const SitesController = {
         const siteIdConnected = routersMap[routerIdConnected];
 
         // Assigns the site ids as source and destination site ids based on the direction of the link
-        const sourceSiteId = link.direction === LINK_DIRECTIONS.INCOMING ? siteIdConnected : siteId;
-        const destinationSiteId = link.direction === LINK_DIRECTIONS.OUTGOING ? siteIdConnected : siteId;
+        const sourceSiteId = link.direction === FlowDirection.Incoming ? siteIdConnected : siteId;
+        const destinationSiteId = link.direction === FlowDirection.Outgoing ? siteIdConnected : siteId;
 
         return { sourceSiteId, destinationSiteId, ...link };
       });

@@ -1,20 +1,5 @@
-import { AvailableProtocols } from '@API/REST.enum';
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
-import { IntervalTimeProp, PrometheusApiResult } from 'API/Prometheus.interfaces';
-
-export enum QueriesMetrics {
-  GetTraffic = 'get-metric-traffic-query',
-  GetLatency = 'get-metric-latency-query',
-  GetRequest = 'get-metric-request-query',
-  GetResponse = 'get-metric-response-query'
-}
-
-export interface QueryMetricsParams {
-  sourceProcess?: string;
-  destProcess?: string;
-  timeInterval?: IntervalTimeProp;
-  protocol?: AvailableProtocols;
-}
+import { PrometheusApiResult } from 'API/Prometheus.interfaces';
 
 interface StatusCodeResponse {
   label: string;
@@ -36,14 +21,14 @@ export interface RequestMetrics {
 }
 
 export interface ByteRateMetrics {
-  rxTimeSerie: skAxisXY[];
-  txTimeSerie: skAxisXY[];
-  avgTxValue: number;
-  avgRxValue: number;
-  maxTxValue: number;
-  maxRxValue: number;
-  currentTxValue: number;
-  currentRxValue: number;
+  rxTimeSerie?: { data: skAxisXY[]; label: 'Rx' };
+  txTimeSerie?: { data: skAxisXY[]; label: 'Tx' };
+  avgTxValue?: number;
+  avgRxValue?: number;
+  maxTxValue?: number;
+  maxRxValue?: number;
+  currentTxValue?: number;
+  currentRxValue?: number;
 }
 
 export interface BytesMetric {

@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
+import { siteNameAndIdSeparator } from '@config/prometheus';
 import { getTestsIds } from '@config/testIds';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -30,14 +31,13 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import SitesController from '../services';
 import { SitesRoutesPaths, SiteLabels, QueriesSites } from '../Sites.enum';
 
-const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'site-display-interval';
+const PREFIX_METRIC_FILTERS_CACHE_KEY = 'site-metric-filter';
 
 const processQueryParams = { endTime: 0 };
 
@@ -52,6 +52,7 @@ const Site = function () {
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
   const { data: hosts } = useQuery([QueriesSites.GetHostsBySiteId, siteId], () => RESTApi.fetchHostsBySite(siteId));
   const { data: links } = useQuery([QueriesSites.GetLinksBySiteId, siteId], () => RESTApi.fetchLinksBySite(siteId));
+  const { data: routers } = useQuery([QueriesSites.GetRouters], () => RESTApi.fetchRouters());
   const { data: processesData } = useQuery(
     [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
     () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
@@ -59,9 +60,9 @@ const Site = function () {
 
   const [tabSelected, setTabSelected] = useState(type);
 
-  const handleRefreshMetrics = useCallback(
+  const handleSelectedFilters = useCallback(
     (filters: SelectedFilters) => {
-      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${siteId}`, filters);
+      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`, filters);
     },
     [siteId]
   );
@@ -71,8 +72,6 @@ const Site = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
-  const { data: routers } = useQuery([QueriesSites.GetRouters], () => RESTApi.fetchRouters());
-
   if (!sites || !routers || !site || !hosts || !links || !processesData) {
     return null;
   }
@@ -80,10 +79,12 @@ const Site = function () {
   const { name, nameSpace, siteVersion } = site;
   const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
   const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
-
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
-  const sourceComponentFilter = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
-  const sourceProcessNames = processResults.map(({ name: processName }) => processName).join('|');
+
+  const destSiteNames = Object.values(linkedSites).map(({ name: siteName, identity }) => ({
+    name: `${siteName}${siteNameAndIdSeparator}${identity}`
+  }));
+
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   const NavigationMenu = function () {
@@ -107,19 +108,21 @@ const Site = function () {
             <Metrics
               key={siteId}
               selectedFilters={{
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${siteId}`),
-                sourceProcess: sourceProcessNames
+                sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
+                destSite: destSiteNames.map(({ name: destSiteName }) => destSiteName).join('|'),
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
               }}
               startTime={startTime}
-              sourceProcesses={sourceComponentFilter}
+              sourceSites={[{ name: `${name}${siteNameAndIdSeparator}${siteId}` }]}
+              destSites={destSiteNames}
               filterOptions={{
+                sourceSites: { disabled: true },
                 destinationProcesses: { hide: true },
                 sourceProcesses: {
-                  disabled: sourceComponentFilter.length < 2,
-                  placeholder: MetricsLabels.FilterAllSourceProcesses
+                  hide: true
                 }
               }}
-              onGetMetricFilters={handleRefreshMetrics}
+              onGetMetricFilters={handleSelectedFilters}
             />
           )}
           {tabSelected === SiteLabels.Details && (

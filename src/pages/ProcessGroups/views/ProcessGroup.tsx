@@ -19,7 +19,7 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
-const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'component-display-interval';
+const PREFIX_METRIC_FILTERS_CACHE_KEY = 'component-metric-filter';
 
 const ProcessGroup = function () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,9 +38,9 @@ const ProcessGroup = function () {
     () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
   );
 
-  const handleRefreshMetrics = useCallback(
+  const handleSelectedFilters = useCallback(
     (filters: SelectedFilters) => {
-      storeDataToSession(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`, filters);
+      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`, filters);
     },
     [processGroupId]
   );
@@ -95,8 +95,8 @@ const ProcessGroup = function () {
             <Metrics
               key={id}
               selectedFilters={{
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_DISPLAY_INTERVAL_CACHE_KEY}-${processGroupId}`),
-                sourceProcess: serverNames
+                sourceProcess: serverNames,
+                ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
               startTime={startTime}
               sourceProcesses={serverNameFilters}
@@ -107,7 +107,7 @@ const ProcessGroup = function () {
                   placeholder: MetricsLabels.FilterAllSourceProcesses
                 }
               }}
-              onGetMetricFilters={handleRefreshMetrics}
+              onGetMetricFilters={handleSelectedFilters}
             />
           )}
 

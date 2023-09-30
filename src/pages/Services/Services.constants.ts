@@ -150,5 +150,3 @@ export const initRequestsQueryParams: RequestOptions = {
 };
 
 export const defaultMetricOption = sankeyMetricOptions[0].id;
-
-export const PREFIX_DISPLAY_INTERVAL_CACHE_KEY = 'service-display-interval';

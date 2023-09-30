@@ -29,25 +29,10 @@
       "hostName": "10.242.0.2",
       "sourceHost": "172.17.13.251",
       "processRole": "external"
-    },
-    {
-      "recType": "PROCESS",
-      "identity": "process-mm",
-      "parent": "site-2",
-      "startTime": 1674048729000000,
-      "endTime": 0,
-      "name": "process mm",
-      "parentName": "site 2",
-      "imageName": "gcr.io/google-samples/microservices-demo/process-mm:v0.3.0",
-      "groupName": "component 2",
-      "groupIdentity": "group-2",
-      "hostName": "10.242.0.7",
-      "sourceHost": "172.17.12.236",
-      "processRole": "external"
     }
   ],
   "status": "",
-  "count": 3,
-  "timeRangeCount": 3,
-  "totalCount": 3
+  "count": 2,
+  "timeRangeCount": 2,
+  "totalCount": 2
 }

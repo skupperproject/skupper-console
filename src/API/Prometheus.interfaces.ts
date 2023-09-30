@@ -1,6 +1,7 @@
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 
 import { AvailableProtocols } from './REST.enum';
+import { FlowDirections } from './REST.interfaces';
 
 type PrometheusApiResultValue = [number, `${number}` | 'NaN'];
 
@@ -21,8 +22,11 @@ export type PrometheusApiResult = {
 };
 
 export interface PrometheusQueryParams {
+  sourceSite?: string;
+  destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  direction?: FlowDirections | '';
   protocol?: AvailableProtocols;
   step: string;
   quantile?: 0.5 | 0.9 | 0.99;
@@ -31,8 +35,11 @@ export interface PrometheusQueryParams {
 }
 
 export interface PrometheusQueryParamsSingleData {
+  sourceSite?: string;
+  destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  direction?: FlowDirections | '';
   protocol?: AvailableProtocols;
   seconds: number;
 }
