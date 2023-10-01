@@ -1,21 +1,23 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessResponse } from '@API/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
+import processesPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { ProcessesLabels } from '../Processes.enum';
-import Process from '../views/Process';
+import ProcessPairs from '../components/ProcessPairs';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 
 const processResult = processesData.results[0] as ProcessResponse;
+const processPairsResult = processesPairsData.results[2] as ProcessPairsResponse;
 
 describe('Process component', () => {
   let server: Server;
@@ -28,7 +30,7 @@ describe('Process component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Process />
+          <ProcessPairs process={processResult} />
         </Suspense>
       </Wrapper>
     );
@@ -39,21 +41,14 @@ describe('Process component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Process view after the data loading is complete', async () => {
-    // Wait for all queries to resolve
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    // Wait for the loading page to disappear before continuing with the test.
+  it('Should ensure the Process associated renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByTestId(getTestsIds.processView(processResult.identity))).toBeInTheDocument();
-    expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processResult.name);
-
-    fireEvent.click(screen.getByText(ProcessesLabels.Details));
-    expect(screen.getByText(ProcessesLabels.Details).closest('li')?.classList.contains('pf-m-current'));
-
-    fireEvent.click(screen.getByText(ProcessesLabels.ProcessPairs));
-    expect(screen.getByText(ProcessesLabels.ProcessPairs).closest('li')?.classList.contains('pf-m-current'));
+    expect(screen.getByRole('link', { name: processesData.results[3].name })).toHaveAttribute(
+      'href',
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.Title}@${processPairsResult.identity}@${processPairsResult.protocol}`
+    );
   });
 });

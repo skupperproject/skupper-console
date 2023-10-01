@@ -12,7 +12,7 @@ import processPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import ProcessPairs from '../views/ProcessPairs';
+import ProcessPairs from '../views/ProcessPair';
 
 const processPairsResult = processPairsData.results[0] as ProcessPairsResponse;
 

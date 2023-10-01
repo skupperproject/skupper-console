@@ -106,7 +106,7 @@ const TopologyProcesses: FC<{
       },
       {
         queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairs(),
+        queryFn: () => RESTApi.fetchProcessesPairsResult(),
         refetchInterval: UPDATE_INTERVAL
       },
       {

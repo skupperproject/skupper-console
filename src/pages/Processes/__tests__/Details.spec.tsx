@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
@@ -12,8 +12,7 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import { ProcessesLabels } from '../Processes.enum';
-import Process from '../views/Process';
+import Details from '../components/Details';
 
 const processResult = processesData.results[0] as ProcessResponse;
 
@@ -28,7 +27,7 @@ describe('Process component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Process />
+          <Details process={processResult} />
         </Suspense>
       </Wrapper>
     );
@@ -39,21 +38,14 @@ describe('Process component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Process view after the data loading is complete', async () => {
-    // Wait for all queries to resolve
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    // Wait for the loading page to disappear before continuing with the test.
+  it('should render the title, description data and processes associated the data loading is complete', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByTestId(getTestsIds.processView(processResult.identity))).toBeInTheDocument();
-    expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processResult.name);
-
-    fireEvent.click(screen.getByText(ProcessesLabels.Details));
-    expect(screen.getByText(ProcessesLabels.Details).closest('li')?.classList.contains('pf-m-current'));
-
-    fireEvent.click(screen.getByText(ProcessesLabels.ProcessPairs));
-    expect(screen.getByText(ProcessesLabels.ProcessPairs).closest('li')?.classList.contains('pf-m-current'));
+    expect(screen.getByText(processResult.parentName)).toHaveTextContent('site 1');
+    expect(screen.getByText(processResult.groupName)).toHaveTextContent('component 1');
+    expect(screen.getByText(processResult.hostName)).toHaveTextContent('10.242.0.5');
+    expect(screen.getByText(processResult.sourceHost)).toHaveTextContent('172.17.63.163');
   });
 });

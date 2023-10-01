@@ -1,31 +1,21 @@
-import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
 
-import { Badge, Flex, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols } from '@API/REST.enum';
-import { SMALL_PAGINATION_SIZE } from '@config/config';
+import { UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import MainContainer from '@layout/MainContainer';
-import Metrics from '@pages/shared/Metrics';
-import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
-import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
-import ProcessDescription from '../components/ProcessDescription';
-import {
-  processesConnectedColumns,
-  CustomProcessPairCells,
-  processesHttpConnectedColumns
-} from '../Processes.constants';
+import Details from '../components/Details';
+import Overview from '../components/Overview';
+import ProcessPairs from '../components/ProcessPairs';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
-
-const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 
 const Process = function () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,78 +26,42 @@ const Process = function () {
   const type = searchParams.get('type') || ProcessesLabels.Overview;
   const [tabSelected, setTabSelected] = useState(type);
 
-  const processesPairsTxQueryParams = {
+  const clientPairsQueryParams = {
+    limit: 0,
     sourceId: processId
   };
 
-  const processesPairsRxQueryParams = {
+  const serverPairsQueryParams = {
+    limit: 0,
     destinationId: processId
   };
 
   const { data: process } = useQuery([QueriesProcesses.GetProcess, processId], () => RESTApi.fetchProcess(processId));
 
-  const { data: processesPairsTxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsTx, processesPairsTxQueryParams],
-    () => RESTApi.fetchProcessesPairs(processesPairsTxQueryParams)
+  const { data: clientPairs } = useQuery(
+    [QueriesProcesses.GetProcessPairs, clientPairsQueryParams],
+    () => RESTApi.fetchProcessesPairs(clientPairsQueryParams),
+    { refetchInterval: UPDATE_INTERVAL }
   );
 
-  const { data: processesPairsRxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsRx, processesPairsRxQueryParams],
-    () => RESTApi.fetchProcessesPairs(processesPairsRxQueryParams)
+  const { data: serverPairs } = useQuery(
+    [QueriesProcesses.GetProcessPairs, serverPairsQueryParams],
+    () => RESTApi.fetchProcessesPairs(serverPairsQueryParams),
+    { refetchInterval: UPDATE_INTERVAL }
   );
 
-  const { data: services } = useQuery([QueriesProcesses.GetServicesByProcessId, processId], () =>
-    RESTApi.fetchServicesByProcess(processId)
-  );
-
-  const handleSelectedFilters = useCallback(
-    (filters: SelectedFilters) => {
-      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
-    },
-    [processId]
-  );
-
-  if (!process || !processesPairsTxData || !processesPairsRxData || !services) {
+  if (!process) {
     return null;
   }
+
+  const clientCount = clientPairs?.timeRangeCount || 0;
+  const serverCount = serverPairs?.timeRangeCount || 0;
+  const processesCount = clientCount + serverCount;
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessesLabels);
     setSearchParams({ type: tabIndex as string });
   }
-
-  const processesPairsRxReverse =
-    processesPairsRxData.map((processPairsData) => ({
-      ...processPairsData,
-      sourceId: processPairsData.destinationId,
-      sourceName: processPairsData.destinationName,
-      destinationName: processPairsData.sourceName,
-      destinationId: processPairsData.sourceId
-    })) || [];
-
-  const TCPServers = processesPairsTxData.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
-  const TCPClients = processesPairsRxReverse.filter(({ protocol }) => protocol === AvailableProtocols.Tcp);
-
-  const HTTPServers = processesPairsTxData.filter(
-    ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
-  );
-  const HTTPClients = processesPairsRxReverse.filter(
-    ({ protocol }) => protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2
-  );
-  const remoteServers = processesPairsTxData.filter(({ protocol }) => protocol === undefined);
-  const remoteClients = processesPairsRxReverse.filter(({ protocol }) => protocol === undefined);
-
-  const allDestinationProcesses = [
-    ...HTTPServers,
-    ...HTTPClients,
-    ...TCPServers,
-    ...TCPClients,
-    ...remoteClients,
-    ...remoteServers
-  ];
-  const availableProtocols = [
-    ...new Set(allDestinationProcesses.map(({ protocol }) => protocol).filter(Boolean))
-  ] as AvailableProtocols[];
 
   const NavigationMenu = function () {
     return (
@@ -115,14 +69,14 @@ const Process = function () {
         <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
         <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
         <Tab
-          disabled={!processesPairsTxData.length && !processesPairsRxData.length}
+          disabled={!clientCount && !serverCount}
           eventKey={ProcessesLabels.ProcessPairs}
           title={
             <TabTitleText>
               {ProcessesLabels.ProcessPairs}{' '}
-              {!!allDestinationProcesses.length && (
+              {!!processesCount && (
                 <Badge isRead key={1}>
-                  {allDestinationProcesses.length}
+                  {processesCount}
                 </Badge>
               )}
             </TabTitleText>
@@ -139,109 +93,12 @@ const Process = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        <>
-          {tabSelected === ProcessesLabels.Details && (
-            <ProcessDescription processWithService={{ ...process, services }} title={ProcessesLabels.Details} />
-          )}
-
-          {tabSelected === ProcessesLabels.ProcessPairs && (
-            <Flex direction={{ default: 'column' }}>
-              {!!TCPClients.length && (
-                <SkTable
-                  alwaysShowPagination={false}
-                  title={ProcessesLabels.TCPClients}
-                  columns={processesConnectedColumns}
-                  rows={TCPClients}
-                  pagination={true}
-                  paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={CustomProcessPairCells}
-                />
-              )}
-
-              {!!TCPServers.length && (
-                <SkTable
-                  alwaysShowPagination={false}
-                  title={ProcessesLabels.TCPServers}
-                  columns={processesConnectedColumns}
-                  rows={TCPServers}
-                  pagination={true}
-                  paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={CustomProcessPairCells}
-                />
-              )}
-
-              {!!HTTPClients.length && (
-                <SkTable
-                  alwaysShowPagination={false}
-                  title={ProcessesLabels.HTTPClients}
-                  columns={processesHttpConnectedColumns}
-                  rows={HTTPClients}
-                  pagination={true}
-                  paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={CustomProcessPairCells}
-                />
-              )}
-
-              {!!HTTPServers.length && (
-                <SkTable
-                  alwaysShowPagination={false}
-                  title={ProcessesLabels.HTTPServers}
-                  columns={processesHttpConnectedColumns}
-                  rows={HTTPServers}
-                  pagination={true}
-                  paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={CustomProcessPairCells}
-                />
-              )}
-
-              {!!remoteClients.length && (
-                <SkTable
-                  alwaysShowPagination={false}
-                  title={ProcessesLabels.RemoteClients}
-                  columns={processesConnectedColumns}
-                  rows={remoteClients}
-                  pagination={true}
-                  paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={CustomProcessPairCells}
-                />
-              )}
-
-              {!!remoteServers.length && (
-                <SkTable
-                  alwaysShowPagination={false}
-                  title={ProcessesLabels.RemoteServers}
-                  columns={processesConnectedColumns}
-                  rows={remoteServers}
-                  pagination={true}
-                  paginationPageSize={SMALL_PAGINATION_SIZE}
-                  customCells={CustomProcessPairCells}
-                />
-              )}
-            </Flex>
-          )}
-          {/* Process Metrics - key reset the component(state) when we click on a link from the server or client table*/}
-
-          {tabSelected === ProcessesLabels.Overview && (
-            <Metrics
-              key={id}
-              selectedFilters={{
-                sourceProcess: process.name,
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
-              }}
-              startTime={process.startTime}
-              processesConnected={allDestinationProcesses}
-              availableProtocols={availableProtocols}
-              filterOptions={{
-                destinationProcesses: {
-                  placeholder: MetricsLabels.FilterAllDestinationProcesses,
-                  hide: allDestinationProcesses.length === 0
-                },
-                sourceProcesses: { disabled: true, placeholder: process.name }
-              }}
-              onGetMetricFilters={handleSelectedFilters}
-            />
-          )}
-        </>
+        // avoid that the entire page refresh when you change tab
+        <Suspense fallback={<LoadingPage />}>
+          {tabSelected === ProcessesLabels.Overview && <Overview process={process} />}
+          {tabSelected === ProcessesLabels.Details && <Details process={process} />}
+          {tabSelected === ProcessesLabels.ProcessPairs && <ProcessPairs process={process} />}
+        </Suspense>
       }
     />
   );

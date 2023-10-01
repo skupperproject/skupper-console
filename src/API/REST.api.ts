@@ -279,10 +279,16 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchProcessesPairs: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
+  fetchProcessesPairs: async (options?: RequestOptions): Promise<ResponseWrapper<ProcessPairsResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessPairsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
+
+    return data;
+  },
+
+  fetchProcessesPairsResult: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
+    const data = await RESTApi.fetchProcessesPairs(options);
 
     return getApiResults(data);
   }
