@@ -72,9 +72,6 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
       availableProtocols={[protocol]}
       selectedFilters={{
         protocol,
-        sourceProcess: sourceProcessIds.length === 1 ? sourceProcessIds[0].destinationName : undefined,
-        destProcess: destProcessIds.length === 1 ? destProcessIds[0].destinationName : undefined,
-        destSite: destSiteIds.length === 1 ? destSiteIds[0].name : undefined,
         ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
       }}
       filterOptions={{

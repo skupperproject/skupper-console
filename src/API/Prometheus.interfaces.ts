@@ -21,26 +21,23 @@ export type PrometheusApiResult = {
   values: PrometheusApiResultValue[];
 };
 
-export interface PrometheusQueryParams {
+export interface PromQueryParams {
   sourceSite?: string;
   destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  code?: string;
   direction?: FlowDirections | '';
   protocol?: AvailableProtocols;
+}
+export interface PrometheusQueryParams extends PromQueryParams {
   step: string;
   quantile?: 0.5 | 0.9 | 0.99;
   start?: number;
   end?: number;
 }
 
-export interface PrometheusQueryParamsSingleData {
-  sourceSite?: string;
-  destSite?: string;
-  sourceProcess?: string;
-  destProcess?: string;
-  direction?: FlowDirections | '';
-  protocol?: AvailableProtocols;
+export interface PrometheusQueryParamsSingleData extends PromQueryParams {
   seconds: number;
 }
 

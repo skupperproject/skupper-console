@@ -9,7 +9,6 @@ import {
   extractPrometheusValues,
   extractPrometheusValuesAndLabels
 } from '@API/Prometheus.utils';
-import { AvailableProtocols, FlowDirection } from '@API/REST.enum';
 import { defaultTimeInterval, timeIntervalMap } from '@config/prometheus';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
@@ -200,17 +199,13 @@ async function getBytesData({
 
   try {
     const [bytesTx, bytesRx] = await Promise.all([
-      PrometheusApi.fetchBytes({
-        ...params,
-        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
-      }),
+      PrometheusApi.fetchBytes(params),
       PrometheusApi.fetchBytes({
         ...params,
         sourceSite: destSite,
         destSite: sourceSite,
         sourceProcess: destProcess,
-        destProcess: sourceProcess,
-        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
+        destProcess: sourceProcess
       })
     ]);
 
@@ -248,17 +243,13 @@ async function getByteRateData({
 
   try {
     const [byteRateDataTx, byteRateDataRx] = await Promise.all([
-      PrometheusApi.fetchByteRateSeries({
-        ...params,
-        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
-      }),
+      PrometheusApi.fetchByteRateSeries(params),
       PrometheusApi.fetchByteRateSeries({
         ...params,
         sourceSite: destSite,
         destSite: sourceSite,
         sourceProcess: destProcess,
-        destProcess: sourceProcess,
-        direction: protocol === AvailableProtocols.Tcp ? '' : FlowDirection.Incoming
+        destProcess: sourceProcess
       })
     ]);
 

@@ -54,6 +54,26 @@ const SitesController = {
       ...site,
       targetIds: [...new Set(linksExtendedMap[site.identity])] // remove duplicates
     }));
+  },
+  getSitePairs: (sites: SiteResponse[], links: LinkResponse[], routers: RouterResponse[]): SiteResponse[] => {
+    const routersMap = routers.reduce(
+      function (acc, { identity, parent: siteId }) {
+        acc[identity] = siteId;
+
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    const siteIdConnected = links
+      .filter(({ name }) => name)
+      .map((link) => {
+        const routerIdConnected = `${link.name?.split('-').at(-1)}:0`;
+
+        return routersMap[routerIdConnected];
+      });
+
+    return sites.filter(({ identity }) => siteIdConnected.includes(identity));
   }
 };
 

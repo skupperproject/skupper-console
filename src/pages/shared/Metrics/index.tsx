@@ -55,19 +55,9 @@ const Metrics: FC<MetricsProps> = function ({
   // Filters: Set the prometheus query params with the filter values
   const handleUpdateQueryParams = useCallback(
     (updatedFilters: SelectedFilters) => {
-      const queryParams: SelectedFilters = {
-        ...updatedFilters,
-        sourceSite: updatedFilters.sourceSite || sourceSites?.map(({ name }) => name).join('|'),
-        sourceProcess:
-          updatedFilters.sourceProcess || sourceProcesses?.map(({ destinationName }) => destinationName).join('|'),
-        destSite: updatedFilters.destSite || destSites?.map(({ name }) => name).join('|'),
-        destProcess:
-          updatedFilters.destProcess || processesConnected?.map(({ destinationName }) => destinationName).join('|')
-      };
-      console.log(updatedFilters);
-
+      const { displayInterval: refetchInteval, ...queryParams } = updatedFilters;
       setQueryParams(queryParams);
-      setRefetchInterval(getDisplayIntervalValue(queryParams.displayInterval));
+      setRefetchInterval(getDisplayIntervalValue(refetchInteval));
 
       if (onGetMetricFilters) {
         onGetMetricFilters(queryParams);
@@ -76,7 +66,7 @@ const Metrics: FC<MetricsProps> = function ({
     [onGetMetricFilters]
   );
 
-  const areDataAvailable = !!metrics?.byteRateData;
+  const areDataAvailable = !!metrics?.byteRateData.txTimeSerie || !!metrics?.byteRateData.rxTimeSerie;
 
   return (
     <Stack hasGutter>
@@ -95,7 +85,6 @@ const Metrics: FC<MetricsProps> = function ({
           onSelectFilters={handleUpdateQueryParams}
         />
       </StackItem>
-
       {!areDataAvailable && (
         <StackItem isFilled>
           <Card isFullHeight>

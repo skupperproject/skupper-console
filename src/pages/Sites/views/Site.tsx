@@ -78,10 +78,11 @@ const Site = function () {
 
   const { name, nameSpace, siteVersion } = site;
   const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
+  const sitePairs = SitesController.getSitePairs(sites, links, routers);
   const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
-  const destSiteNames = Object.values(linkedSites).map(({ name: siteName, identity }) => ({
+  const destSiteNames = Object.values([site, ...sitePairs]).map(({ name: siteName, identity }) => ({
     name: `${siteName}${siteNameAndIdSeparator}${identity}`
   }));
 
@@ -109,7 +110,6 @@ const Site = function () {
               key={siteId}
               selectedFilters={{
                 sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
-                destSite: destSiteNames.map(({ name: destSiteName }) => destSiteName).join('|'),
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
               }}
               startTime={startTime}
