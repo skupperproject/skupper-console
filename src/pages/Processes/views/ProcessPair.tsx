@@ -30,7 +30,7 @@ import FlowPairs from '@pages/shared/FlowPairs';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
 
-import ProcessDescription from '../components/ProcessDescription';
+import Details from '../components/Details';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
 
@@ -96,8 +96,6 @@ const ProcessPairs = function () {
   const [
     { data: source },
     { data: destination },
-    { data: sourceServices },
-    { data: destinationServices },
     { data: http2RequestsData },
     { data: httpRequestsData },
     { data: activeConnectionsData },
@@ -109,16 +107,6 @@ const ProcessPairs = function () {
       {
         queryKey: [QueriesProcesses.GetDestination, destinationId],
         queryFn: () => RESTApi.fetchProcess(destinationId)
-      },
-
-      {
-        queryKey: [QueriesProcesses.GetServicesByProcessId, sourceId],
-        queryFn: () => RESTApi.fetchServicesByProcess(sourceId)
-      },
-
-      {
-        queryKey: [QueriesProcesses.GetServicesByProcessId, destinationId],
-        queryFn: () => RESTApi.fetchServicesByProcess(destinationId)
       },
 
       {
@@ -192,7 +180,7 @@ const ProcessPairs = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
-  if (!source || !destination || !sourceServices || !destinationServices) {
+  if (!source || !destination) {
     return null;
   }
 
@@ -224,8 +212,8 @@ const ProcessPairs = function () {
     return (
       <Grid hasGutter>
         <GridItem sm={12} md={5}>
-          <ProcessDescription
-            processWithService={{ ...source, services: sourceServices }}
+          <Details
+            process={source}
             title={LinkCell<ProcessResponse>({
               data: source,
               value: source.name,
@@ -243,8 +231,8 @@ const ProcessPairs = function () {
         </GridItem>
 
         <GridItem sm={12} md={5}>
-          <ProcessDescription
-            processWithService={{ ...destination, services: destinationServices }}
+          <Details
+            process={destination}
             title={LinkCell<ProcessResponse>({
               data: destination,
               value: destination.name,

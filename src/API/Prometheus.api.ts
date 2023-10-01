@@ -7,7 +7,8 @@ import {
   PrometheusQueryParams,
   PrometheusQueryParamsSingleData,
   PrometheusResponse,
-  PromQueryParams
+  PrometheusLabels,
+  PrometheusQueryParamsLatency
 } from './Prometheus.interfaces';
 import { queries } from './Prometheus.queries';
 
@@ -30,12 +31,11 @@ export const PrometheusApi = {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
-    const query = queries.getByteRateByDirectionTimeInterval(queryFilterString, '1m');
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query,
+        query: queries.getByteRateByDirectionTimeInterval(queryFilterString, '1m'),
         start,
         end,
         step
@@ -45,7 +45,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchLatencyByProcess: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchLatencyByProcess: async (params: PrometheusQueryParamsLatency): Promise<PrometheusMetricData[]> => {
     const { start, end, step, quantile, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -53,9 +53,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: quantile
-          ? queries.getQuantileTimeInterval(queryFilterString, '1m', quantile)
-          : queries.getAvgLatencyTimeInterval(queryFilterString, '1m'),
+        query: queries.getQuantileTimeInterval(queryFilterString, '1m', quantile),
         start,
         end,
         step
@@ -240,11 +238,8 @@ function convertToPrometheusQueryParams({
   protocol,
   direction,
   code
-}: PromQueryParams) {
+}: PrometheusLabels) {
   let queryFilters: string[] = [];
-
-  // queryFilters = [...queryFilters, sourceSite ? `sourceSite=~"${sourceSite}"` : `sourceSite!~"${destSite}"`];
-  // queryFilters = [...queryFilters, destSite ? `destSite=~"${destSite}"` : `destSite!~"${sourceSite}"`];
 
   if (sourceSite) {
     queryFilters = [...queryFilters, `sourceSite=~"${sourceSite}"`];
