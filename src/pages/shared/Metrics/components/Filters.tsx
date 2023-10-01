@@ -241,11 +241,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                     isOpen={selectedFilterIsOpen.sourceSite}
                     isDisabled={filterOptions.sourceSites.disabled}
                     onSelect={handleSelectSiteSource}
-                    onClear={
-                      optionsSourceSitesWithDefault.length > 1 && !filterOptions.sourceSites.disabled
-                        ? handleSelectSiteSource
-                        : undefined
-                    }
+                    onClear={!filterOptions.sourceSites.disabled ? handleSelectSiteSource : undefined}
                     onToggle={(_, isOpen) => handleToggleSourceSiteMenu(isOpen)}
                   >
                     {optionsSourceSitesWithDefault}
@@ -263,11 +259,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                     isOpen={selectedFilterIsOpen.sourceProcess}
                     isDisabled={filterOptions.sourceProcesses.disabled}
                     onSelect={handleSelectSource}
-                    onClear={
-                      optionsProcessSourcesWithDefault.length > 1 && !filterOptions.sourceProcesses.disabled
-                        ? handleSelectSource
-                        : undefined
-                    }
+                    onClear={!filterOptions.sourceProcesses.disabled ? handleSelectSource : undefined}
                     onToggle={(_, isOpen) => handleToggleSourceProcessMenu(isOpen)}
                   >
                     {optionsProcessSourcesWithDefault}
@@ -287,11 +279,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                     isOpen={selectedFilterIsOpen.destSite}
                     isDisabled={filterOptions.destSites.disabled}
                     onSelect={handleSelectSiteDest}
-                    onClear={
-                      optionsDestinationSitesWithDefault.length > 1 && !filterOptions.destSites.disabled
-                        ? handleSelectSiteDest
-                        : undefined
-                    }
+                    onClear={!filterOptions.destSites.disabled ? handleSelectSiteDest : undefined}
                     onToggle={(_, isOpen) => handleToggleDestSiteMenu(isOpen)}
                   >
                     {optionsDestinationSitesWithDefault}
@@ -309,11 +297,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                     isDisabled={filterOptions.destinationProcesses.disabled}
                     isOpen={selectedFilterIsOpen.destProcess}
                     onSelect={handleSelectDestination}
-                    onClear={
-                      optionsProcessConnectedWithDefault.length > 1 && !filterOptions.destinationProcesses.disabled
-                        ? handleSelectDestination
-                        : undefined
-                    }
+                    onClear={!filterOptions.destinationProcesses.disabled ? handleSelectDestination : undefined}
                     onToggle={(_, isOpen) => handleToggleDestinationProcessMenu(isOpen)}
                   >
                     {optionsProcessConnectedWithDefault}

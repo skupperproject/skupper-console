@@ -4,7 +4,6 @@ import SvgCircle from './Shapes/Circle';
 import SvgDiamond from './Shapes/Diamond';
 import SvgHorizontalLine from './Shapes/HorizontalLine';
 import SvgSquare from './Shapes/Square';
-import { EDGE_COLOR_ACTIVE_DEFAULT } from '../Graph.constants';
 
 enum Labels {
   EntitiesTitle = ' Entities',
@@ -13,7 +12,7 @@ enum Labels {
   NoExposed = 'Process/Component',
   SiteGroup = 'Related site grouping',
   Remote = 'Server process/component',
-  DataLink = 'Data link',
+  DataLink = 'Data flow link',
   ActiveDataLink = 'Active data link',
   SiteLink = 'Site link connected'
 }
@@ -64,17 +63,12 @@ const ProcessLegend = function () {
           </FlexItem>
 
           <FlexItem>
-            <SvgHorizontalLine color={EDGE_COLOR_ACTIVE_DEFAULT} />
-          </FlexItem>
-
-          <FlexItem>
             <SvgHorizontalLine dashed withConnector />
           </FlexItem>
         </Flex>
 
         <Flex direction={{ default: 'column' }}>
           <FlexItem>{Labels.DataLink}</FlexItem>
-          <FlexItem>{Labels.ActiveDataLink}</FlexItem>
           <FlexItem>{Labels.SiteLink}</FlexItem>
         </Flex>
       </Flex>

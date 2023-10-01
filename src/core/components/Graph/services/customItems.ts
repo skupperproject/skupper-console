@@ -3,7 +3,7 @@ import { registerEdge, ArrowConfig, registerCombo, IGroup, registerNode } from '
 import {
   CUSTOM_CIRCLE_NODE_STYLE,
   CUSTOM_ITEMS_NAMES,
-  EDGE_COLOR_ACTIVE_DEFAULT,
+  EDGE_COLOR_HOVER_DEFAULT,
   EDGE_COLOR_DEFAULT,
   NODE_SIZE
 } from '../Graph.constants';
@@ -29,10 +29,10 @@ export function registerCustomEdgeWithHover() {
               () => ({
                 lineDash,
                 lineDashOffset: -index++ % 9,
-                stroke: EDGE_COLOR_ACTIVE_DEFAULT,
+                stroke: EDGE_COLOR_HOVER_DEFAULT,
                 endArrow: {
                   ...arrow,
-                  fill: EDGE_COLOR_ACTIVE_DEFAULT
+                  fill: EDGE_COLOR_HOVER_DEFAULT
                 }
               }),
               {

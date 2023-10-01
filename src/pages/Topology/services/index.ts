@@ -6,11 +6,11 @@ import siteSVG from '@assets/site.svg';
 import skupperProcessSVG from '@assets/skupper.svg';
 import {
   EDGE_COLOR_DEFAULT,
-  EDGE_COLOR_ACTIVE_DEFAULT,
   CUSTOM_ITEMS_NAMES,
   DEFAULT_REMOTE_NODE_CONFIG,
   DEFAULT_NODE_ICON,
-  DEFAULT_NODE_CONFIG
+  DEFAULT_NODE_CONFIG,
+  EDGE_COLOR_TEXT_DEFAULT
 } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -188,12 +188,10 @@ export const TopologyController = {
       const latencyLabel =
         options?.showLinkLatency && latency ? `${formatLatency(latency)} ${reverseLatency}` : undefined;
 
-      const color = options?.showLinkByteRate && byterate ? EDGE_COLOR_ACTIVE_DEFAULT : EDGE_COLOR_DEFAULT;
-
       return {
         ...link,
-        labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: color } },
-        style: { ...link.style, stroke: color },
+        labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: EDGE_COLOR_TEXT_DEFAULT } },
+        style: { ...link.style, stroke: EDGE_COLOR_DEFAULT },
         label: [protocolLabel, bytesLabel, byteRateLabel, latencyLabel].filter(Boolean).join(',  ')
       };
     });

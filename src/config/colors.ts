@@ -14,3 +14,7 @@ export enum VarColors {
   Green500 = `var(${Colors.Green500})`,
   Blue400 = `var(${Colors.Blue400})`
 }
+
+export enum HexColors {
+  Blue400 = '#0066CC'
+}

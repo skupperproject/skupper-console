@@ -1,4 +1,4 @@
-import { GraphData, ModelConfig, ModelStyle } from '@antv/g6';
+import { GraphData, ModelConfig, ModelStyle, ShapeStyle } from '@antv/g6';
 
 export interface GraphNode {
   id: string;
@@ -33,7 +33,7 @@ export interface GraphEdge {
   type?: string;
   label?: string;
   labelCfg?: Record<string, unknown>;
-  style?: Record<string, string | number[]>;
+  style?: ShapeStyle;
 }
 
 export interface GraphReactAdaptorProps {

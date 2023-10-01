@@ -226,9 +226,6 @@ const Process = function () {
               key={id}
               selectedFilters={{
                 sourceProcess: process.name,
-                destProcess:
-                  allDestinationProcesses.length === 1 ? allDestinationProcesses[0].destinationName : undefined,
-                protocol: availableProtocols.length === 1 ? availableProtocols[0] : undefined,
                 ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
               }}
               startTime={process.startTime}
