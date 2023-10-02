@@ -2,18 +2,18 @@ import { ILabelConfig, LayoutConfig, ModelStyle, Modes, GraphOptions } from '@an
 
 import { HexColors } from '@config/colors';
 
-export const NODE_COLOR_DEFAULT = '#FFFFFF';
-export const NODE_BORDER_COLOR_DEFAULT = '#6A6E73';
-export const NODE_COLOR_DEFAULT_LABEL = '#000000';
-export const NODE_COLOR_DEFAULT_LABEL_BG = '#FFFFFF';
+const NODE_COLOR_DEFAULT = '#FFFFFF';
+const NODE_BORDER_COLOR_DEFAULT = '#6A6E73';
+const NODE_COLOR_DEFAULT_LABEL = '#000000';
+const NODE_COLOR_DEFAULT_LABEL_BG = '#FFFFFF';
 export const EDGE_COLOR_DEFAULT = '#666666';
 export const EDGE_COLOR_TEXT_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
-export const COMBO__COLOR_DEFAULT = 'transparent';
-export const COMBO_BORDER_COLOR_DEFAULT = '#FFFFFF';
-export const COMBO_BORDER_COLOR_HOVER = '#000000';
-export const COMBO_COLOR_DEFAULT_LABEL = '#FFFFFF';
-export const COMBO_COLOR_DEFAULT_LABEL_BG = '#000000';
+const COMBO__COLOR_DEFAULT = 'transparent';
+const COMBO_BORDER_COLOR_DEFAULT = '#FFFFFF';
+const COMBO_BORDER_COLOR_HOVER = '#000000';
+const COMBO_COLOR_DEFAULT_LABEL = '#FFFFFF';
+const COMBO_COLOR_DEFAULT_LABEL_BG = '#000000';
 export const LEGEND_DEFAULT_BG_COLOR = '#FFFFFF';
 export const LEGEND_DEFAULT_STROKE_COLOR = '#000000';
 

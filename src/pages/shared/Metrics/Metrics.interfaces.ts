@@ -37,10 +37,11 @@ export interface MetricsProps {
   filterOptions?: FilterOptionProps;
   openSections?: { traffic?: boolean; latency?: boolean; request?: boolean; response?: boolean };
   onGetMetricFilters?: Function;
+  refreshDataInterval?: string;
 }
 
 export interface MetricFiltersProps {
-  initialFilters: SelectedFilters;
+  initialFilters: QueryMetricsParams;
   startTime?: number;
   sourceSites?: { name: string }[];
   destSites?: { name: string }[];
@@ -52,8 +53,9 @@ export interface MetricFiltersProps {
   forceDisableRefetchData?: boolean;
   onRefetch?: Function;
   onSelectFilters?: Function;
+  refreshDataInterval?: string;
 }
 
 export interface SelectedFilters extends QueryMetricsParams {
-  displayInterval?: string;
+  refreshDataInterval?: string;
 }
