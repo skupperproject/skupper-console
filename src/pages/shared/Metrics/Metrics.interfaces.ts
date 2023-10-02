@@ -50,7 +50,6 @@ export interface MetricFiltersProps {
   availableProtocols?: AvailableProtocols[];
   customFilterOptions?: FilterOptionProps;
   isRefetching?: boolean;
-  forceDisableRefetchData?: boolean;
   onRefetch?: Function;
   onSelectFilters?: Function;
   refreshDataInterval?: string;

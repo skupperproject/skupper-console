@@ -1,8 +1,8 @@
-import { FC, useMemo, useState, MouseEvent, ChangeEvent, memo } from 'react';
+import { FC, useMemo, useState, MouseEvent, ChangeEvent, memo, useCallback } from 'react';
 
-import { Button, Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip, Card } from '@patternfly/react-core';
+import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Card } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { OutlinedClockIcon, SyncIcon } from '@patternfly/react-icons';
+import { OutlinedClockIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
@@ -11,7 +11,8 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { CollectorsResponse } from '@API/REST.interfaces';
 import { siteNameAndIdSeparator, timeIntervalMap } from '@config/prometheus';
 
-import { displayIntervalMap, filterOptionsDefault, filterToggleDefault } from '../Metrics.constants';
+import UpdateMetricsButton from './UpdateMetricsButton';
+import { filterOptionsDefault, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
 import { MetricFiltersProps, SelectedFilters } from '../Metrics.interfaces';
 
@@ -27,12 +28,10 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     refreshDataInterval,
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
-    forceDisableRefetchData = false,
     onRefetch = () => null,
     onSelectFilters
   }) => {
     const filterOptions = { ...filterOptionsDefault, ...customFilterOptions };
-
     const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors()) as {
       data: CollectorsResponse;
     };
@@ -73,10 +72,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     function handleToggleTimeIntervalMenu(isOpen: boolean) {
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, timeInterval: isOpen });
-    }
-
-    function handleToggleDisplayInterval(isOpen: boolean) {
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, refreshDataInterval: isOpen });
     }
 
     function handleSelectSiteSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
@@ -145,17 +140,14 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       }
     }
 
-    function handleSelectDisplayInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
-      const keySelected = selection as string;
-      const refreshDataIntervalSelected = displayIntervalMap.find(({ key }) => key === keySelected)?.key;
-
-      setSelectedFilter({ ...selectedFilter, refreshDataInterval: refreshDataIntervalSelected });
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, refreshDataInterval: false });
-
-      if (onSelectFilters) {
-        onSelectFilters(selectedFilter, refreshDataIntervalSelected);
-      }
-    }
+    const handleSelectDisplayInterval = useCallback(
+      (selection: string | undefined) => {
+        if (onSelectFilters) {
+          onSelectFilters(selectedFilter, selection);
+        }
+      },
+      [onSelectFilters, selectedFilter]
+    );
 
     //  source site select options
     const optionsSourceSitesWithDefault = useMemo(
@@ -206,23 +198,12 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     // time interval select options
     const optionsTimeIntervalWithDefault = useMemo(
       () =>
-        timeIntervalMapWindow.map((interval, index) => (
-          <SelectOption key={index} value={interval.key}>
-            {interval.label}
-          </SelectOption>
-        )),
-      [timeIntervalMapWindow]
-    );
-
-    // displayInterval select options
-    const optionsDisplayIntervalWithDefault = useMemo(
-      () =>
-        displayIntervalMap.map(({ label, key }, index) => (
+        timeIntervalMapWindow.map(({ key, label }, index) => (
           <SelectOption key={index} value={key}>
             {label}
           </SelectOption>
         )),
-      []
+      [timeIntervalMapWindow]
     );
 
     return (
@@ -326,7 +307,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             </ToolbarGroup>
 
             {/* Display filters */}
-            <ToolbarGroup variant={'filter-group'} align={{ default: 'alignRight' }}>
+            <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
                 <Select
                   selections={selectedFilter.timeInterval?.label}
@@ -339,34 +320,15 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                   {optionsTimeIntervalWithDefault}
                 </Select>
               </ToolbarItem>
+            </ToolbarGroup>
 
+            <ToolbarGroup variant={'filter-group'}>
               <ToolbarItem>
-                <Select
-                  selections={selectedFilter.refreshDataInterval}
-                  isOpen={selectedFilterIsOpen.refreshDataInterval}
-                  onSelect={handleSelectDisplayInterval}
-                  onToggle={(_, isOpen) => handleToggleDisplayInterval(isOpen)}
-                >
-                  {optionsDisplayIntervalWithDefault}
-                </Select>
-              </ToolbarItem>
-
-              <ToolbarItem>
-                <Tooltip content={MetricsLabels.RefetchData}>
-                  <Button
-                    data-testid="metric-refetch"
-                    variant="primary"
-                    isLoading={isRefetching}
-                    isDisabled={
-                      isRefetching ||
-                      forceDisableRefetchData ||
-                      (!!selectedFilter.refreshDataInterval &&
-                        selectedFilter.refreshDataInterval !== displayIntervalMap[0].key)
-                    }
-                    onClick={() => onRefetch()}
-                    icon={<SyncIcon />}
-                  />
-                </Tooltip>
+                <UpdateMetricsButton
+                  isLoading={isRefetching}
+                  onRefreshIntervalSelected={handleSelectDisplayInterval}
+                  onClick={onRefetch}
+                />
               </ToolbarItem>
             </ToolbarGroup>
           </ToolbarContent>

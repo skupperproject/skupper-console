@@ -4,27 +4,27 @@ export const displayIntervalMap = [
   {
     key: 'pause',
     value: 0,
-    label: 'Pause'
+    label: 'Off'
   },
   {
     key: '20s',
     value: 20 * 1000,
-    label: 'every 20s'
+    label: '20s'
   },
   {
     key: '40s',
     value: 40 * 1000,
-    label: 'every 40s'
+    label: '40s'
   },
   {
     key: '60s',
     value: 60 * 1000,
-    label: 'every 1m'
+    label: '1m'
   },
   {
     key: '120s',
     value: 120 * 1000,
-    label: 'every 2m'
+    label: '2m'
   }
 ];
 

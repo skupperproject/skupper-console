@@ -151,3 +151,21 @@ html {
 .sk-search-filter .pf-v5-c-text-input-group__icon {
   display: none;
 }
+
+/* refresh metrics button */
+
+.button-toggle-dropdown-loading button {
+  background-color: var(--pf-v5-global--danger-color--100) !important;
+}
+
+.button-toggle-button-loading {
+  background-color: var(--pf-v5-global--danger-color--100) !important;
+}
+
+.button-toggle-spinner .pf-v5-c-spinner__path {
+  stroke: white;
+}
+
+.button-toggle-spinner-text {
+  margin-left: var(--pf-v5-global--spacer--sm);
+}

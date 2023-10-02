@@ -12,7 +12,6 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
 import MetricFilters from '../components/Filters';
-import { displayIntervalMap } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
 
 describe('Metrics component', () => {
@@ -52,7 +51,6 @@ describe('Metrics component', () => {
             initialFilters={{ sourceProcess: undefined }}
             startTime={0}
             isRefetching={false}
-            forceDisableRefetchData={true}
             onRefetch={onRefetch}
             onSelectFilters={() => {}}
           />
@@ -68,15 +66,10 @@ describe('Metrics component', () => {
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
     fireEvent.click(screen.getByText(processesData.results[2].name));
 
-    fireEvent.click(screen.getByText(displayIntervalMap[0].label));
-    fireEvent.click(screen.getByText(displayIntervalMap[1].label));
-
     fireEvent.click(screen.getByText(timeIntervalMap.oneMinute.label));
     fireEvent.click(screen.getByText(timeIntervalMap.fiveMinutes.label));
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
-
-    fireEvent.click(screen.getByTestId('metric-refetch'));
   });
 });
