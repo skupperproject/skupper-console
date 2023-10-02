@@ -10,7 +10,7 @@ import { MetricsLabels } from '../Metrics.enum';
 import { SelectedFilters, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
-export interface LatencyProps {
+interface LatencyProps {
   selectedFilters: SelectedFilters;
   openSections?: boolean;
   forceUpdate?: number;

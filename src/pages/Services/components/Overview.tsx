@@ -12,7 +12,7 @@ import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { ServicesLabels, QueriesServices } from '../Services.enum';
 
-export const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
+const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
 
 interface OverviewProps {
   serviceId: string;

@@ -24,6 +24,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
     customFilterOptions,
     initialFilters,
+    refreshDataInterval,
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
     forceDisableRefetchData = false,
@@ -47,7 +48,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     );
 
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
-    const [selectedFilter, setSelectedFilter] = useState<SelectedFilters>(initialFilters);
+    const [selectedFilter, setSelectedFilter] = useState<SelectedFilters>({ ...initialFilters, refreshDataInterval });
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceSiteMenu(isOpen: boolean) {
@@ -75,7 +76,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     }
 
     function handleToggleDisplayInterval(isOpen: boolean) {
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: isOpen });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, refreshDataInterval: isOpen });
     }
 
     function handleSelectSiteSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
@@ -146,13 +147,13 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     function handleSelectDisplayInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
       const keySelected = selection as string;
-      const displayInterval = displayIntervalMap.find(({ key }) => key === keySelected)?.key;
+      const refreshDataIntervalSelected = displayIntervalMap.find(({ key }) => key === keySelected)?.key;
 
-      setSelectedFilter({ ...selectedFilter, displayInterval });
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, displayInterval: false });
+      setSelectedFilter({ ...selectedFilter, refreshDataInterval: refreshDataIntervalSelected });
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, refreshDataInterval: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, displayInterval });
+        onSelectFilters(selectedFilter, refreshDataIntervalSelected);
       }
     }
 
@@ -341,8 +342,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
               <ToolbarItem>
                 <Select
-                  selections={selectedFilter.displayInterval}
-                  isOpen={selectedFilterIsOpen.displayInterval}
+                  selections={selectedFilter.refreshDataInterval}
+                  isOpen={selectedFilterIsOpen.refreshDataInterval}
                   onSelect={handleSelectDisplayInterval}
                   onToggle={(_, isOpen) => handleToggleDisplayInterval(isOpen)}
                 >
@@ -359,7 +360,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                     isDisabled={
                       isRefetching ||
                       forceDisableRefetchData ||
-                      (!!selectedFilter.displayInterval && selectedFilter.displayInterval !== displayIntervalMap[0].key)
+                      (!!selectedFilter.refreshDataInterval &&
+                        selectedFilter.refreshDataInterval !== displayIntervalMap[0].key)
                     }
                     onClick={() => onRefetch()}
                     icon={<SyncIcon />}

@@ -14,7 +14,7 @@ import Request from './components/Request';
 import Traffic from './components/Traffic';
 import { displayIntervalMap } from './Metrics.constants';
 import { MetricsLabels } from './Metrics.enum';
-import { MetricsProps, SelectedFilters, QueriesMetrics, QueryMetricsParams } from './Metrics.interfaces';
+import { MetricsProps, QueriesMetrics, QueryMetricsParams } from './Metrics.interfaces';
 import MetricsController from './services';
 
 function getDisplayIntervalValue(value: string | undefined) {
@@ -23,6 +23,7 @@ function getDisplayIntervalValue(value: string | undefined) {
 
 const Metrics: FC<MetricsProps> = function ({
   selectedFilters,
+  refreshDataInterval,
   startTime,
   sourceSites,
   destSites,
@@ -33,9 +34,8 @@ const Metrics: FC<MetricsProps> = function ({
   openSections,
   onGetMetricFilters
 }) {
-  const { displayInterval, ...initialQueryParams } = selectedFilters;
-  const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(displayInterval));
-  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(initialQueryParams);
+  const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(refreshDataInterval));
+  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(selectedFilters);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
 
   const { data: metrics, isRefetching } = useQuery(
@@ -54,13 +54,12 @@ const Metrics: FC<MetricsProps> = function ({
 
   // Filters: Set the prometheus query params with the filter values
   const handleUpdateQueryParams = useCallback(
-    (updatedFilters: SelectedFilters) => {
-      const { displayInterval: refetchInteval, ...queryParams } = updatedFilters;
-      setQueryParams(queryParams);
-      setRefetchInterval(getDisplayIntervalValue(refetchInteval));
+    (updatedFilters: QueryMetricsParams, refreshDataIntervalSelected: string) => {
+      setRefetchInterval(getDisplayIntervalValue(refreshDataIntervalSelected));
+      setQueryParams(updatedFilters);
 
       if (onGetMetricFilters) {
-        onGetMetricFilters(queryParams);
+        onGetMetricFilters({ ...updatedFilters, refreshDataInterval: refreshDataIntervalSelected });
       }
     },
     [onGetMetricFilters]
@@ -78,6 +77,7 @@ const Metrics: FC<MetricsProps> = function ({
           sourceProcesses={sourceProcesses}
           processesConnected={processesConnected}
           initialFilters={selectedFilters}
+          refreshDataInterval={refreshDataInterval}
           customFilterOptions={filterOptions}
           startTime={startTime}
           isRefetching={isRefetching}

@@ -45,5 +45,5 @@ export const filterToggleDefault = {
   destProcess: false,
   protocol: false,
   timeInterval: false,
-  displayInterval: false
+  refreshDataInterval: false
 };

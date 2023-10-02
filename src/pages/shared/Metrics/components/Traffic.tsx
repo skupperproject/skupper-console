@@ -8,7 +8,7 @@ import TrafficCharts from './TrafficCharts';
 import { QueriesMetrics, SelectedFilters } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
-export interface TrafficProps {
+interface TrafficProps {
   selectedFilters: SelectedFilters;
   openSections?: boolean;
   forceUpdate?: number;
