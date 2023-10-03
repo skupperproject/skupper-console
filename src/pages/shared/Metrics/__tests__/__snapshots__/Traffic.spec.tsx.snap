@@ -24,7 +24,7 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
               <div
                 class="pf-v5-c-card__title-text"
               >
-                Data transfer
+                Byte rate
               </div>
             </div>
             <div
@@ -828,7 +828,7 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                         text-anchor="middle"
                         x="0"
                       >
-                        2 B
+                        2 B/s
                       </tspan>
                     </text>
                   </svg>
@@ -879,7 +879,7 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
             <div
               class="pf-v5-c-card__title-text"
             >
-              Data transfer
+              Byte rate
             </div>
           </div>
           <div
@@ -1683,7 +1683,7 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                       text-anchor="middle"
                       x="0"
                     >
-                      2 B
+                      2 B/s
                     </tspan>
                   </text>
                 </svg>

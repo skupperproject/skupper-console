@@ -34,7 +34,7 @@ describe('Traffic component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <Metrics
-            selectedFilters={{
+            defaultMetricFilterValues={{
               sourceProcess: processResult.name
             }}
           />

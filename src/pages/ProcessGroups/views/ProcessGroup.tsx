@@ -14,7 +14,7 @@ import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Proc
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
-import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
@@ -39,7 +39,7 @@ const ProcessGroup = function () {
   );
 
   const handleSelectedFilters = useCallback(
-    (filters: SelectedFilters) => {
+    (filters: SelectedMetricFilters) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`, filters);
     },
     [processGroupId]
@@ -94,13 +94,13 @@ const ProcessGroup = function () {
           {tabSelected === ProcessGroupsLabels.Overview && (
             <Metrics
               key={id}
-              selectedFilters={{
+              defaultMetricFilterValues={{
                 sourceProcess: serverNames,
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
+                ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
               startTime={startTime}
               sourceProcesses={serverNameFilters}
-              filterOptions={{
+              configFilters={{
                 destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
                 sourceProcesses: {
                   disabled: serverNameFilters.length < 2,

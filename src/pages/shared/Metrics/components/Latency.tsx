@@ -7,11 +7,11 @@ import { isPrometheusActive } from '@config/config';
 
 import LatencyCharts from './LatencyCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import { SelectedFilters, QueriesMetrics } from '../Metrics.interfaces';
+import { SelectedMetricFilters, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface LatencyProps {
-  selectedFilters: SelectedFilters;
+  selectedFilters: SelectedMetricFilters;
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;

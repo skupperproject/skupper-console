@@ -21,19 +21,16 @@ export interface RequestMetrics {
 }
 
 export interface ByteRateMetrics {
-  rxTimeSerie?: { data: skAxisXY[]; label: 'Rx' };
-  txTimeSerie?: { data: skAxisXY[]; label: 'Tx' };
-  avgTxValue?: number;
-  avgRxValue?: number;
-  maxTxValue?: number;
-  maxRxValue?: number;
-  currentTxValue?: number;
-  currentRxValue?: number;
-}
-
-export interface BytesMetric {
-  bytesRx: number;
-  bytesTx: number;
+  rxTimeSerie: { data: skAxisXY[]; label: 'Rx' } | undefined;
+  txTimeSerie: { data: skAxisXY[]; label: 'Tx' } | undefined;
+  avgTxValue: number | undefined;
+  avgRxValue: number | undefined;
+  maxTxValue: number | undefined;
+  maxRxValue: number | undefined;
+  currentTxValue: number | undefined;
+  currentRxValue: number | undefined;
+  totalTxValue: number | undefined;
+  totalRxValue: number | undefined;
 }
 
 export interface LatencyMetrics {

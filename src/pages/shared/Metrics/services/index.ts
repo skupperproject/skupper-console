@@ -1,9 +1,5 @@
 import { PrometheusApi } from '@API/Prometheus.api';
-import {
-  PrometheusApiResult,
-  PrometheusQueryParams,
-  PrometheusQueryParamsSingleData
-} from '@API/Prometheus.interfaces';
+import { PrometheusApiResult, PrometheusQueryParams } from '@API/Prometheus.interfaces';
 import {
   extractPrometheusLabels,
   extractPrometheusValues,
@@ -18,8 +14,7 @@ import {
   ByteRateMetrics,
   LatencyMetrics,
   RequestMetrics,
-  ResponseMetrics,
-  BytesMetric
+  ResponseMetrics
 } from './services.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { QueryMetricsParams } from '../Metrics.interfaces';
@@ -31,18 +26,19 @@ const MetricsController = {
     sourceProcess,
     destProcess,
     protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    start = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).start,
+    end = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).end
   }: QueryMetricsParams): Promise<LatencyMetrics[] | null> => {
-    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
       sourceProcess,
       destProcess,
       protocol,
-      step: timeInterval.step,
       start,
-      end
+      end,
+      step: timeInterval.step
     };
 
     try {
@@ -66,13 +62,13 @@ const MetricsController = {
     sourceProcess,
     destProcess,
     protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    start = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).start,
+    end = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).end
   }: QueryMetricsParams): Promise<{
     requestRateData: RequestMetrics[] | null;
     requestPerf: { avg: number; max: number; current: number; label: string }[] | undefined;
   }> => {
-    const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
-
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
@@ -110,13 +106,14 @@ const MetricsController = {
     sourceProcess,
     destProcess,
     protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    start = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).start,
+    end = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).end
   }: QueryMetricsParams): Promise<{
     responseData: ResponseMetrics | null;
     responseRateData: ResponseMetrics | null;
   }> => {
     try {
-      const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
       const params: PrometheusQueryParams = {
         sourceSite,
         destSite,
@@ -151,27 +148,25 @@ const MetricsController = {
     sourceProcess,
     destProcess,
     protocol,
-    timeInterval = timeIntervalMap[defaultTimeInterval.key]
-  }: QueryMetricsParams): Promise<{
-    bytesData: BytesMetric;
-    byteRateData: ByteRateMetrics;
-  }> => {
+    timeInterval = timeIntervalMap[defaultTimeInterval.key],
+    start,
+    end
+  }: QueryMetricsParams): Promise<ByteRateMetrics> => {
     const params: QueryMetricsParams = {
       sourceSite,
       destSite,
       sourceProcess,
       destProcess,
       timeInterval,
-      protocol
+      protocol,
+      start,
+      end
     };
 
     try {
-      const [bytesData, byteRateData] = await Promise.all([getBytesData(params), getByteRateData(params)]);
+      const byteRateData = await getByteRateData(params);
 
-      return {
-        bytesData,
-        byteRateData
-      };
+      return byteRateData;
     } catch (e: unknown) {
       return Promise.reject(e);
     }
@@ -180,65 +175,25 @@ const MetricsController = {
 
 export default MetricsController;
 
-async function getBytesData({
-  sourceSite,
-  destSite,
-  sourceProcess,
-  destProcess,
-  protocol,
-  timeInterval = timeIntervalMap[defaultTimeInterval.key]
-}: QueryMetricsParams): Promise<BytesMetric> {
-  const params: PrometheusQueryParamsSingleData = {
-    sourceSite,
-    destSite,
-    sourceProcess,
-    destProcess,
-    seconds: timeInterval.seconds + 60,
-    protocol
-  };
-
-  try {
-    const [bytesTx, bytesRx] = await Promise.all([
-      PrometheusApi.fetchBytes(params),
-      PrometheusApi.fetchBytes({
-        ...params,
-        sourceSite: destSite,
-        destSite: sourceSite,
-        sourceProcess: destProcess,
-        destProcess: sourceProcess
-      })
-    ]);
-
-    const sumBytesTx = bytesTx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
-    const sumBytesRx = bytesRx.reduce((acc, { value }) => acc + Number(value[1] || 0), 0);
-
-    return {
-      bytesTx: formatToDecimalPlacesIfCents(sumBytesTx),
-      bytesRx: formatToDecimalPlacesIfCents(sumBytesRx)
-    };
-  } catch (e: unknown) {
-    return Promise.reject(e);
-  }
-}
-
 async function getByteRateData({
   sourceSite,
   destSite,
   sourceProcess,
   destProcess,
   protocol,
-  timeInterval = timeIntervalMap[defaultTimeInterval.key]
+  timeInterval = timeIntervalMap[defaultTimeInterval.key],
+  start = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).start,
+  end = getCurrentAndPastTimestamps(timeIntervalMap[defaultTimeInterval.key].seconds).end
 }: QueryMetricsParams): Promise<ByteRateMetrics> {
-  const { start, end } = getCurrentAndPastTimestamps(timeInterval.seconds);
   const params: PrometheusQueryParams = {
     sourceSite,
     destSite,
     sourceProcess,
     destProcess,
-    step: timeInterval.step,
     protocol,
     start,
-    end
+    end,
+    step: timeInterval.step
   };
 
   try {
@@ -350,25 +305,25 @@ function normalizeLatencies({
 }
 
 function normalizeByteRateFromSeries(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): ByteRateMetrics {
-  // If there are not samples collected prometheus can send yoy an empty array and we can consider it invalid
   const axisValuesTx = extractPrometheusValues(txData);
   const axisValuesRx = extractPrometheusValues(rxData);
 
   const txTimeSerie = axisValuesTx ? axisValuesTx[0] : undefined;
   const rxTimeSerie = axisValuesRx ? axisValuesRx[axisValuesRx.length - 1] : undefined;
 
-  // total data for byte rate. Used by "per second" time series
-  const sumDataReceived = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
-  const sumDataSent = txTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+  const totalRxValue = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+  const totalTxValue = txTimeSerie?.reduce((acc, { y }) => acc + y, 0);
 
   return {
     txTimeSerie: txTimeSerie ? { data: txTimeSerie, label: 'Tx' } : undefined,
     rxTimeSerie: rxTimeSerie ? { data: rxTimeSerie, label: 'Rx' } : undefined,
-    avgTxValue: sumDataSent && rxTimeSerie ? sumDataSent / rxTimeSerie.length : undefined,
-    avgRxValue: sumDataReceived && rxTimeSerie ? sumDataReceived / rxTimeSerie.length : undefined,
+    avgTxValue: totalTxValue && rxTimeSerie ? totalTxValue / rxTimeSerie.length : undefined,
+    avgRxValue: totalRxValue && rxTimeSerie ? totalRxValue / rxTimeSerie.length : undefined,
     maxTxValue: txTimeSerie ? Math.max(...txTimeSerie.map(({ y }) => y)) : undefined,
     maxRxValue: rxTimeSerie ? Math.max(...rxTimeSerie.map(({ y }) => y)) : undefined,
     currentTxValue: txTimeSerie ? txTimeSerie[txTimeSerie.length - 1].y : undefined,
-    currentRxValue: rxTimeSerie ? rxTimeSerie[rxTimeSerie.length - 1].y : undefined
+    currentRxValue: rxTimeSerie ? rxTimeSerie[rxTimeSerie.length - 1].y : undefined,
+    totalTxValue,
+    totalRxValue
   };
 }

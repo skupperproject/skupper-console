@@ -9,7 +9,7 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import Metrics from '@pages/shared/Metrics';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
-import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesProcesses } from '../Processes.enum';
 
@@ -41,7 +41,7 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
   );
 
   const handleSelectedFilters = useCallback(
-    (filters: SelectedFilters) => {
+    (filters: SelectedMetricFilters) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
     },
     [processId]
@@ -64,14 +64,14 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
   return (
     <Metrics
       key={processId}
-      selectedFilters={{
+      defaultMetricFilterValues={{
         sourceProcess: name,
-        ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
+        ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       startTime={startTime}
-      processesConnected={destProcesses}
+      destProcesses={destProcesses}
       availableProtocols={availableProtocols}
-      filterOptions={{
+      configFilters={{
         destinationProcesses: {
           placeholder: MetricsLabels.FilterAllDestinationProcesses,
           hide: destProcesses.length === 0

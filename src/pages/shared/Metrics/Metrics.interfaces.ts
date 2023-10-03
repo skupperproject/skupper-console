@@ -1,7 +1,7 @@
 import { IntervalTimeProp } from '@API/Prometheus.interfaces';
 import { AvailableProtocols } from '@API/REST.enum';
 
-interface FilterOptionProps {
+interface ConfigMetricFilters {
   sourceSites?: { disabled?: boolean; placeholder?: string; hide?: boolean };
   destSites?: { disabled?: boolean; placeholder?: string; hide?: boolean };
   destinationProcesses?: { disabled?: boolean; placeholder?: string; hide?: boolean };
@@ -24,37 +24,39 @@ export interface QueryMetricsParams {
   destProcess?: string;
   protocol?: AvailableProtocols;
   timeInterval?: IntervalTimeProp;
+  start?: number;
+  end?: number;
 }
 
 export interface MetricsProps {
-  selectedFilters: SelectedFilters;
+  defaultMetricFilterValues: SelectedMetricFilters;
   startTime?: number;
   sourceSites?: { name: string }[];
   destSites?: { name: string }[];
   sourceProcesses?: { destinationName: string }[];
-  processesConnected?: { destinationName: string }[];
+  destProcesses?: { destinationName: string }[];
   availableProtocols?: AvailableProtocols[];
-  filterOptions?: FilterOptionProps;
+  configFilters?: ConfigMetricFilters;
   openSections?: { traffic?: boolean; latency?: boolean; request?: boolean; response?: boolean };
   onGetMetricFilters?: Function;
   refreshDataInterval?: string;
 }
 
 export interface MetricFiltersProps {
-  initialFilters: QueryMetricsParams;
+  defaultMetricFilterValues: QueryMetricsParams;
   startTime?: number;
   sourceSites?: { name: string }[];
   destSites?: { name: string }[];
   sourceProcesses?: { destinationName: string }[];
-  processesConnected?: { destinationName: string }[];
+  destProcesses?: { destinationName: string }[];
   availableProtocols?: AvailableProtocols[];
-  customFilterOptions?: FilterOptionProps;
+  configFilters?: ConfigMetricFilters;
+  refreshDataInterval?: string;
   isRefetching?: boolean;
   onRefetch?: Function;
-  onSelectFilters?: Function;
-  refreshDataInterval?: string;
+  onSelectFilters?: (params: SelectedMetricFilters, refreshIntervalSelected?: string | undefined) => void;
 }
 
-export interface SelectedFilters extends QueryMetricsParams {
+export interface SelectedMetricFilters extends QueryMetricsParams {
   refreshDataInterval?: string;
 }
