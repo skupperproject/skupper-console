@@ -29,7 +29,7 @@ export const displayIntervalMap = [
 ];
 
 // default values to enable/disable filters
-export const filterOptionsDefault = {
+export const configDefaultFilters = {
   sourceSites: { disabled: false, placeholder: MetricsLabels.FilterAllSourceSites, hide: false },
   destSites: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationSites, hide: false },
   sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses, hide: false },

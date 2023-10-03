@@ -22,23 +22,23 @@ function getDisplayIntervalValue(value: string | undefined) {
 }
 
 const Metrics: FC<MetricsProps> = function ({
-  selectedFilters,
-  refreshDataInterval,
-  startTime,
+  configFilters,
+  defaultMetricFilterValues,
   sourceSites,
   destSites,
   sourceProcesses,
-  processesConnected,
+  destProcesses,
   availableProtocols,
-  filterOptions,
+  refreshDataInterval,
+  startTime,
   openSections,
   onGetMetricFilters
 }) {
   const [refetchInterval, setRefetchInterval] = useState(getDisplayIntervalValue(refreshDataInterval));
-  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(selectedFilters);
+  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(defaultMetricFilterValues);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
 
-  const { data: metrics, isRefetching } = useQuery(
+  const { data: byteRateData, isRefetching } = useQuery(
     [QueriesMetrics.GetTraffic, qeryParams],
     () => MetricsController.getTraffic(qeryParams),
     {
@@ -54,7 +54,7 @@ const Metrics: FC<MetricsProps> = function ({
 
   // Filters: Set the prometheus query params with the filter values
   const handleUpdateQueryParams = useCallback(
-    (updatedFilters: QueryMetricsParams, refreshDataIntervalSelected: string) => {
+    (updatedFilters: QueryMetricsParams, refreshDataIntervalSelected?: string) => {
       setRefetchInterval(getDisplayIntervalValue(refreshDataIntervalSelected));
       setQueryParams(updatedFilters);
 
@@ -65,20 +65,20 @@ const Metrics: FC<MetricsProps> = function ({
     [onGetMetricFilters]
   );
 
-  const areDataAvailable = !!metrics?.byteRateData.txTimeSerie || !!metrics?.byteRateData.rxTimeSerie;
+  const areDataAvailable = !!byteRateData?.txTimeSerie || !!byteRateData?.rxTimeSerie;
 
   return (
     <Stack hasGutter>
       <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
         <MetricFilters
-          availableProtocols={availableProtocols}
+          configFilters={configFilters}
+          defaultMetricFilterValues={defaultMetricFilterValues}
           sourceSites={sourceSites}
           destSites={destSites}
           sourceProcesses={sourceProcesses}
-          processesConnected={processesConnected}
-          initialFilters={selectedFilters}
+          destProcesses={destProcesses}
+          availableProtocols={availableProtocols}
           refreshDataInterval={refreshDataInterval}
-          customFilterOptions={filterOptions}
           startTime={startTime}
           isRefetching={isRefetching}
           onRefetch={handleShouldUpdateData}

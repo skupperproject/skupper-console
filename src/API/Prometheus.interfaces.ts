@@ -32,16 +32,12 @@ export interface PrometheusLabels {
 }
 export interface PrometheusQueryParams extends PrometheusLabels {
   step: string;
-  start?: number;
-  end?: number;
+  start: number;
+  end: number;
 }
 
 export interface PrometheusQueryParamsLatency extends PrometheusQueryParams {
   quantile: 0.5 | 0.9 | 0.99;
-}
-
-export interface PrometheusQueryParamsSingleData extends PrometheusLabels {
-  seconds: number;
 }
 
 export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];

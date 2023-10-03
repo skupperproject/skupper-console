@@ -10,28 +10,29 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { CollectorsResponse } from '@API/REST.interfaces';
 import { siteNameAndIdSeparator, timeIntervalMap } from '@config/prometheus';
+import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
 import UpdateMetricsButton from './UpdateMetricsButton';
-import { filterOptionsDefault, filterToggleDefault } from '../Metrics.constants';
+import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
-import { MetricFiltersProps, SelectedFilters } from '../Metrics.interfaces';
+import { MetricFiltersProps, SelectedMetricFilters } from '../Metrics.interfaces';
 
 const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
+    configFilters,
+    defaultMetricFilterValues,
     sourceSites,
     destSites,
     sourceProcesses,
-    processesConnected,
+    destProcesses,
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
-    customFilterOptions,
-    initialFilters,
     refreshDataInterval,
     startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
     onRefetch = () => null,
     onSelectFilters
   }) => {
-    const filterOptions = { ...filterOptionsDefault, ...customFilterOptions };
+    const config = { ...configDefaultFilters, ...configFilters };
     const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors()) as {
       data: CollectorsResponse;
     };
@@ -47,7 +48,10 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     );
 
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
-    const [selectedFilter, setSelectedFilter] = useState<SelectedFilters>({ ...initialFilters, refreshDataInterval });
+    const [selectedFilter, setSelectedFilter] = useState<SelectedMetricFilters>({
+      ...defaultMetricFilterValues,
+      refreshDataInterval
+    });
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceSiteMenu(isOpen: boolean) {
@@ -129,14 +133,15 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       }
     }
 
-    function handleSelectTimeIntervalMenu(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
+    function handleSelectTimeInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
       const timeIntervalKey = selection as IntervalTimeProp['key'];
+      const { start, end } = getCurrentAndPastTimestamps(timeIntervalMap[timeIntervalKey].seconds);
 
       setSelectedFilter({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey] });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, timeInterval: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey] });
+        onSelectFilters({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey], start, end });
       }
     }
 
@@ -183,10 +188,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     // process connected select options
     const optionsProcessConnectedWithDefault = useMemo(
       () =>
-        (processesConnected || []).map(({ destinationName }, index) => (
-          <SelectOption key={index} value={destinationName} />
-        )),
-      [processesConnected]
+        (destProcesses || []).map(({ destinationName }, index) => <SelectOption key={index} value={destinationName} />),
+      [destProcesses]
     );
 
     // protocol select options
@@ -212,36 +215,36 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
           <ToolbarContent>
             <ToolbarGroup>
               <ToolbarItem>
-                {!!optionsSourceSitesWithDefault.length && !filterOptions.sourceSites.hide && (
+                {!!optionsSourceSitesWithDefault.length && !config.sourceSites.hide && (
                   <Select
                     selections={
                       selectedFilter.sourceSite && selectedFilter.sourceSite.split('|').length > 1
                         ? undefined
                         : selectedFilter.sourceSite
                     }
-                    placeholderText={filterOptions.sourceSites.placeholder}
+                    placeholderText={config.sourceSites.placeholder}
                     isOpen={selectedFilterIsOpen.sourceSite}
-                    isDisabled={filterOptions.sourceSites.disabled}
+                    isDisabled={config.sourceSites.disabled}
                     onSelect={handleSelectSiteSource}
-                    onClear={!filterOptions.sourceSites.disabled ? handleSelectSiteSource : undefined}
+                    onClear={!config.sourceSites.disabled ? handleSelectSiteSource : undefined}
                     onToggle={(_, isOpen) => handleToggleSourceSiteMenu(isOpen)}
                   >
                     {optionsSourceSitesWithDefault}
                   </Select>
                 )}
 
-                {!filterOptions.sourceProcesses.hide && (
+                {!config.sourceProcesses.hide && (
                   <Select
                     selections={
                       selectedFilter.sourceProcess && selectedFilter.sourceProcess.split('|').length > 1
                         ? undefined
                         : selectedFilter.sourceProcess
                     }
-                    placeholderText={filterOptions.sourceProcesses.placeholder}
+                    placeholderText={config.sourceProcesses.placeholder}
                     isOpen={selectedFilterIsOpen.sourceProcess}
-                    isDisabled={filterOptions.sourceProcesses.disabled}
+                    isDisabled={config.sourceProcesses.disabled}
                     onSelect={handleSelectSource}
-                    onClear={!filterOptions.sourceProcesses.disabled ? handleSelectSource : undefined}
+                    onClear={!config.sourceProcesses.disabled ? handleSelectSource : undefined}
                     onToggle={(_, isOpen) => handleToggleSourceProcessMenu(isOpen)}
                   >
                     {optionsProcessSourcesWithDefault}
@@ -250,36 +253,36 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </ToolbarItem>
 
               <ToolbarItem>
-                {!!optionsDestinationSitesWithDefault.length && !filterOptions.destSites.hide && (
+                {!!optionsDestinationSitesWithDefault.length && !config.destSites.hide && (
                   <Select
                     selections={
                       selectedFilter.destSite && selectedFilter.destSite.split('|').length > 1
                         ? undefined
                         : selectedFilter.destSite
                     }
-                    placeholderText={filterOptions.destSites.placeholder}
+                    placeholderText={config.destSites.placeholder}
                     isOpen={selectedFilterIsOpen.destSite}
-                    isDisabled={filterOptions.destSites.disabled}
+                    isDisabled={config.destSites.disabled}
                     onSelect={handleSelectSiteDest}
-                    onClear={!filterOptions.destSites.disabled ? handleSelectSiteDest : undefined}
+                    onClear={!config.destSites.disabled ? handleSelectSiteDest : undefined}
                     onToggle={(_, isOpen) => handleToggleDestSiteMenu(isOpen)}
                   >
                     {optionsDestinationSitesWithDefault}
                   </Select>
                 )}
 
-                {!filterOptions.destinationProcesses.hide && (
+                {!config.destinationProcesses.hide && (
                   <Select
                     selections={
                       selectedFilter.destProcess && selectedFilter.destProcess.split('|').length > 1
                         ? undefined
                         : selectedFilter.destProcess
                     }
-                    placeholderText={filterOptions.destinationProcesses.placeholder}
-                    isDisabled={filterOptions.destinationProcesses.disabled}
+                    placeholderText={config.destinationProcesses.placeholder}
+                    isDisabled={config.destinationProcesses.disabled}
                     isOpen={selectedFilterIsOpen.destProcess}
                     onSelect={handleSelectDestination}
-                    onClear={!filterOptions.destinationProcesses.disabled ? handleSelectDestination : undefined}
+                    onClear={!config.destinationProcesses.disabled ? handleSelectDestination : undefined}
                     onToggle={(_, isOpen) => handleToggleDestinationProcessMenu(isOpen)}
                   >
                     {optionsProcessConnectedWithDefault}
@@ -292,10 +295,10 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                   selections={selectedFilter.protocol}
                   placeholderText={MetricsLabels.FilterProtocolsDefault}
                   isOpen={selectedFilterIsOpen.protocol}
-                  isDisabled={filterOptions.protocols.disabled}
+                  isDisabled={config.protocols.disabled}
                   onSelect={handleSelectProtocol}
                   onClear={
-                    optionsProtocolsWithDefault.length > 1 && !filterOptions.protocols.disabled
+                    optionsProtocolsWithDefault.length > 1 && !config.protocols.disabled
                       ? handleSelectProtocol
                       : undefined
                   }
@@ -312,8 +315,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 <Select
                   selections={selectedFilter.timeInterval?.label}
                   isOpen={selectedFilterIsOpen.timeInterval}
-                  isDisabled={filterOptions.timeIntervals.disabled}
-                  onSelect={handleSelectTimeIntervalMenu}
+                  isDisabled={config.timeIntervals.disabled}
+                  onSelect={handleSelectTimeInterval}
                   toggleIcon={<OutlinedClockIcon />}
                   onToggle={(_, isOpen) => handleToggleTimeIntervalMenu(isOpen)}
                 >

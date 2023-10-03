@@ -37,18 +37,18 @@ describe('Metrics component', () => {
               { destinationName: processesData.results[0].name },
               { destinationName: processesData.results[1].name }
             ]}
-            processesConnected={[
+            destProcesses={[
               { destinationName: processesData.results[2].name },
               { destinationName: processesData.results[3].name }
             ]}
             availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
-            customFilterOptions={{
+            configFilters={{
               destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
               sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
               protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
               timeIntervals: { disabled: false }
             }}
-            initialFilters={{ sourceProcess: undefined }}
+            defaultMetricFilterValues={{ sourceProcess: undefined }}
             startTime={0}
             isRefetching={false}
             onRefetch={onRefetch}

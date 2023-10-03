@@ -5,7 +5,6 @@ import {
   PrometheusApiResult as PrometheusMetricData,
   PrometheusApiSingleResult as PrometheusMetricSingleData,
   PrometheusQueryParams,
-  PrometheusQueryParamsSingleData,
   PrometheusResponse,
   PrometheusLabels,
   PrometheusQueryParamsLatency
@@ -13,19 +12,6 @@ import {
 import { queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
-  fetchBytes: async (params: PrometheusQueryParamsSingleData): Promise<PrometheusMetricSingleData[]> => {
-    const { seconds, ...queryParams } = params;
-    const queryFilterString = convertToPrometheusQueryParams(queryParams);
-
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getBytesByDirection(queryFilterString, `${seconds}s`) }
-    });
-
-    return result;
-  },
-
   //When direction is outgoing, it is the response from from the server (sourceProcess) to the client (destProcess)
   fetchByteRateSeries: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;

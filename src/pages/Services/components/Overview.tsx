@@ -8,7 +8,7 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import Metrics from '@pages/shared/Metrics';
-import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { ServicesLabels, QueriesServices } from '../Services.enum';
 
@@ -49,13 +49,13 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
   const startTime = processPairsResults.reduce((acc, processPair) => Math.min(acc, processPair.startTime), 0);
 
   const clientNames = [...new Set(processPairsResults.map(({ sourceName }) => sourceName))];
-  const sourceProcessIds = clientNames.map((sourceName) => ({ destinationName: sourceName }));
+  const sourceProcesses = clientNames.map((sourceName) => ({ destinationName: sourceName }));
 
   const serverNames = [...new Set(processPairsResults.map(({ destinationName }) => destinationName))];
-  const destProcessIds = serverNames.map((destinationName) => ({ destinationName }));
+  const destProcessws = serverNames.map((destinationName) => ({ destinationName }));
 
   const servers = exposedServersData?.results || [];
-  const destSiteIds = servers
+  const destSites = servers
     .map(({ parentName, parent }) => ({
       // prometheus use a combination of process name and site name as a siteId key
       name: `${parentName}${siteNameAndIdSeparator}${parent}`
@@ -66,20 +66,20 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
   return (
     <Metrics
       key={serviceId}
-      sourceProcesses={sourceProcessIds}
-      processesConnected={destProcessIds}
-      destSites={destSiteIds}
+      sourceProcesses={sourceProcesses}
+      destProcesses={destProcessws}
+      destSites={destSites}
       availableProtocols={[protocol]}
-      selectedFilters={{
+      defaultMetricFilterValues={{
         protocol,
-        ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
+        ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
       }}
-      filterOptions={{
+      configFilters={{
         sourceProcesses: {
-          placeholder: sourceProcessIds.length
+          placeholder: sourceProcesses.length
             ? ServicesLabels.MetricSourceProcessFilter
             : ServicesLabels.NoMetricSourceProcessFilter,
-          disabled: !sourceProcessIds.length
+          disabled: !sourceProcesses.length
         },
         destinationProcesses: {
           placeholder: ServicesLabels.MetricDestinationProcessFilter

@@ -8,11 +8,11 @@ import { isPrometheusActive } from '@config/config';
 import RequestCharts from './RequestCharts';
 import ResponseCharts from './ResponseCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import { SelectedFilters, QueriesMetrics } from '../Metrics.interfaces';
+import { SelectedMetricFilters, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface RequestProps {
-  selectedFilters: SelectedFilters;
+  selectedFilters: SelectedMetricFilters;
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;

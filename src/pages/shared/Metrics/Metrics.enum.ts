@@ -23,7 +23,7 @@ export enum MetricsLabels {
   ByteRateCurrentCol = 'current',
   ByteRateMaxCol = 'max',
   RefetchData = 'Refresh',
-  DataTransferTitle = 'Data transfer',
+  DataTransferTitle = 'Byte rate',
   LatencyTitle = 'Http latencies',
   RequestsTitle = 'Http requests',
   HttpStatus = 'Http response status',

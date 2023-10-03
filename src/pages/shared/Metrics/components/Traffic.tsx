@@ -5,11 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import { isPrometheusActive } from '@config/config';
 
 import TrafficCharts from './TrafficCharts';
-import { QueriesMetrics, SelectedFilters } from '../Metrics.interfaces';
+import { QueriesMetrics, SelectedMetricFilters } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface TrafficProps {
-  selectedFilters: SelectedFilters;
+  selectedFilters: SelectedMetricFilters;
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;
@@ -26,7 +26,6 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
     }
   );
 
-  //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
     isPrometheusActive && refetch();
   }, [refetch]);
@@ -41,7 +40,7 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
     return null;
   }
 
-  return <TrafficCharts bytesData={data.bytesData} byteRateData={data.byteRateData} />;
+  return <TrafficCharts byteRateData={data} />;
 };
 
 export default Traffic;

@@ -31,7 +31,7 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { SelectedFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import SitesController from '../services';
@@ -61,7 +61,7 @@ const Site = function () {
   const [tabSelected, setTabSelected] = useState(type);
 
   const handleSelectedFilters = useCallback(
-    (filters: SelectedFilters) => {
+    (filters: SelectedMetricFilters) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`, filters);
     },
     [siteId]
@@ -108,14 +108,14 @@ const Site = function () {
           {tabSelected === SiteLabels.Overview && (
             <Metrics
               key={siteId}
-              selectedFilters={{
+              defaultMetricFilterValues={{
                 sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
-                ...getDataFromSession<SelectedFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
+                ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
               }}
               startTime={startTime}
               sourceSites={[{ name: `${name}${siteNameAndIdSeparator}${siteId}` }]}
               destSites={destSiteNames}
-              filterOptions={{
+              configFilters={{
                 sourceSites: { disabled: true },
                 destinationProcesses: { hide: true },
                 sourceProcesses: {
