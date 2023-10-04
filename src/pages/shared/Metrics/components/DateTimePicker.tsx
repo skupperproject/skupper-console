@@ -112,7 +112,12 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
   );
 
   const CalendarButton = (
-    <Button variant="control" onClick={handleToggleCalendar} isDisabled={isDisabled}>
+    <Button
+      data-testid="data-picker-calendar-button"
+      variant="control"
+      onClick={handleToggleCalendar}
+      isDisabled={isDisabled}
+    >
       <OutlinedCalendarAltIcon />
     </Button>
   );
