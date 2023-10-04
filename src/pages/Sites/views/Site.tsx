@@ -112,7 +112,7 @@ const Site = function () {
                 sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
               }}
-              startTime={startTime}
+              startTimeLimit={startTime}
               sourceSites={[{ name: `${name}${siteNameAndIdSeparator}${siteId}` }]}
               destSites={destSiteNames}
               configFilters={{

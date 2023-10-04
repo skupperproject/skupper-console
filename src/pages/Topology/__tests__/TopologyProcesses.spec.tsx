@@ -65,12 +65,16 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should render the Topology view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
     expect(screen.getByTestId('sk-topology-processes')).toBeInTheDocument();
   });
 
   it('should clicking on the service menu', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(servicesResults[2].name));
     expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
@@ -81,7 +85,9 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should clicking on the service menu and use the search filter', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(servicesResults[2].name));
 
@@ -94,7 +100,9 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should clicking on the display menu and select/deselect the Protocol checkbox', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(TopologyLabels.DisplayPlaceholderText));
     expect(screen.getByRole('display-select')).toBeInTheDocument();

@@ -1,11 +1,10 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { timeIntervalMap } from '@config/prometheus';
-import { getTestsIds } from '@config/testIds';
+import { defaultTimeInterval } from '@config/prometheus';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
@@ -45,11 +44,10 @@ describe('Metrics component', () => {
             configFilters={{
               destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
               sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-              protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
-              timeIntervals: { disabled: false }
+              protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
             }}
             defaultMetricFilterValues={{ sourceProcess: undefined }}
-            startTime={0}
+            startTimeLimit={0}
             isRefetching={false}
             onRefetch={onRefetch}
             onSelectFilters={() => {}}
@@ -58,17 +56,12 @@ describe('Metrics component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
-
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
     fireEvent.click(screen.getByText(processesData.results[0].name));
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
     fireEvent.click(screen.getByText(processesData.results[2].name));
-
-    fireEvent.click(screen.getByText(timeIntervalMap.oneMinute.label));
-    fireEvent.click(screen.getByText(timeIntervalMap.fiveMinutes.label));
-
+    fireEvent.click(screen.getByDisplayValue(defaultTimeInterval.label));
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
   });

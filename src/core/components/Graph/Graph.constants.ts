@@ -2,20 +2,20 @@ import { ILabelConfig, LayoutConfig, ModelStyle, Modes, GraphOptions } from '@an
 
 import { HexColors } from '@config/colors';
 
-const NODE_COLOR_DEFAULT = '#FFFFFF';
-const NODE_BORDER_COLOR_DEFAULT = '#6A6E73';
-const NODE_COLOR_DEFAULT_LABEL = '#000000';
-const NODE_COLOR_DEFAULT_LABEL_BG = '#FFFFFF';
-export const EDGE_COLOR_DEFAULT = '#666666';
-export const EDGE_COLOR_TEXT_DEFAULT = HexColors.Blue400;
+const NODE_COLOR_DEFAULT = HexColors.White;
+const NODE_BORDER_COLOR_DEFAULT = HexColors.Black600;
+const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
+const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
+export const EDGE_COLOR_DEFAULT = HexColors.Black500;
+export const EDGE_COLOR_TEXT_DEFAULT = HexColors.Black900;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
 const COMBO__COLOR_DEFAULT = 'transparent';
-const COMBO_BORDER_COLOR_DEFAULT = '#FFFFFF';
-const COMBO_BORDER_COLOR_HOVER = '#000000';
-const COMBO_COLOR_DEFAULT_LABEL = '#FFFFFF';
-const COMBO_COLOR_DEFAULT_LABEL_BG = '#000000';
-export const LEGEND_DEFAULT_BG_COLOR = '#FFFFFF';
-export const LEGEND_DEFAULT_STROKE_COLOR = '#000000';
+const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
+const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
+const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
+const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
+export const LEGEND_DEFAULT_BG_COLOR = HexColors.White;
+export const LEGEND_DEFAULT_STROKE_COLOR = HexColors.Black900;
 
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',
@@ -25,16 +25,15 @@ export const CUSTOM_ITEMS_NAMES = {
 };
 
 export const CUSTOM_CIRCLE_NODE_STYLE = {
-  containerBg: '#666666',
-  containerBorderColor: '#FFFFFF',
-  textColor: '#FFFFFF',
+  containerBg: HexColors.Black500,
+  containerBorderColor: HexColors.White,
+  textColor: HexColors.White,
   textFontSize: 12
 };
 
 export const NODE_SIZE = 44;
 
 const INACTIVE_OPACITY_VALUE = 0.3;
-const greyColor = '#808080';
 
 const DEFAULT_MODE: Modes = {
   default: [
@@ -121,7 +120,7 @@ export const DEFAULT_REMOTE_NODE_CONFIG: Partial<{
   },
 
   style: {
-    fill: greyColor,
+    fill: NODE_BORDER_COLOR_DEFAULT,
     stroke: NODE_COLOR_DEFAULT
   }
 };

@@ -18,3 +18,47 @@ export const timeIntervalMap: IntervalTimeMap = {
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
 export const siteNameAndIdSeparator = '@_@'; // This is an internal team role convention to unify a siteId and a siteName in prometheus
+
+export function calculateStep(seconds: number) {
+  if (seconds <= 60) {
+    return '5s';
+  }
+
+  if (seconds <= 3600) {
+    return '15s';
+  }
+
+  if (seconds <= 2 * 3600) {
+    return '30s';
+  }
+
+  if (seconds <= 6 * 3600) {
+    return '1m';
+  }
+
+  if (seconds <= 12 * 3600) {
+    return '2m';
+  }
+
+  if (seconds <= 24 * 3600) {
+    return '4m';
+  }
+
+  if (seconds <= 2 * 24 * 3600) {
+    return '9m';
+  }
+
+  if (seconds <= 3 * 24 * 3600) {
+    return '12m';
+  }
+
+  if (seconds <= 7 * 24 * 3600) {
+    return '12m';
+  }
+
+  if (seconds <= 14 * 24 * 3600) {
+    return '20m';
+  }
+
+  return `${Math.floor(seconds / 1000)}s`;
+}

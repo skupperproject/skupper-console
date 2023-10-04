@@ -98,7 +98,7 @@ const ProcessGroup = function () {
                 sourceProcess: serverNames,
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
-              startTime={startTime}
+              startTimeLimit={startTime}
               sourceProcesses={serverNameFilters}
               configFilters={{
                 destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },

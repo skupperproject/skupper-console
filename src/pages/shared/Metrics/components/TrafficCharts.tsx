@@ -95,11 +95,11 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
             data={[
               {
                 x: MetricsLabels.TrafficReceived,
-                y: byteRateData?.totalTxValue || 0
+                y: byteRateData?.totalRxValue || 0
               },
               {
                 x: MetricsLabels.TrafficSent,
-                y: byteRateData?.totalRxValue || 0
+                y: byteRateData?.totalTxValue || 0
               }
             ]}
           />

@@ -68,7 +68,7 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
         sourceProcess: name,
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
-      startTime={startTime}
+      startTimeLimit={startTime}
       destProcesses={destProcesses}
       availableProtocols={availableProtocols}
       configFilters={{

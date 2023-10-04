@@ -2,20 +2,15 @@ import { FC, useMemo, useState, MouseEvent, ChangeEvent, memo, useCallback } fro
 
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Card } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { OutlinedClockIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
 
-import { IntervalTimeProp } from '@API/Prometheus.interfaces';
-import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { CollectorsResponse } from '@API/REST.interfaces';
-import { siteNameAndIdSeparator, timeIntervalMap } from '@config/prometheus';
-import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
+import { siteNameAndIdSeparator } from '@config/prometheus';
 
+import SelectTimeInterval from './SelectTimeInterval';
 import UpdateMetricsButton from './UpdateMetricsButton';
 import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
-import { MetricFiltersProps, SelectedMetricFilters } from '../Metrics.interfaces';
+import { ConfigMetricFilters, MetricFiltersProps, QueryMetricsParams } from '../Metrics.interfaces';
 
 const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
@@ -26,33 +21,15 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     sourceProcesses,
     destProcesses,
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
+    startTimeLimit = 0, // Use startTimeLimit to set the left temporal limit of the SelectTimeInterval filter
     refreshDataInterval,
-    startTime = 0, // indicates the beginning point for computing the duration of the time interval.
     isRefetching = false,
     onRefetch = () => null,
     onSelectFilters
   }) => {
-    const config = { ...configDefaultFilters, ...configFilters };
-    const { data: collector } = useQuery(['app-getPrometheusURL'], () => RESTApi.fetchCollectors()) as {
-      data: CollectorsResponse;
-    };
-    // filter the display interval items that are less than startTime
-    // ie: if the flow collector restart we don't want start from the beginning
-    const timeIntervalMapWindow = useMemo(
-      () =>
-        Object.values(timeIntervalMap).filter(
-          ({ seconds }) =>
-            new Date().getTime() - seconds * 1000 > Math.max((collector?.startTime || 0) / 1000, startTime / 1000)
-        ),
-      [collector?.startTime, startTime]
-    );
-
+    const config: ConfigMetricFilters = { ...configDefaultFilters, ...configFilters };
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
-    const [selectedFilter, setSelectedFilter] = useState<SelectedMetricFilters>({
-      ...defaultMetricFilterValues,
-      refreshDataInterval
-    });
-
+    const [selectedFilter, setSelectedFilter] = useState<QueryMetricsParams>(defaultMetricFilterValues);
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceSiteMenu(isOpen: boolean) {
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceSite: isOpen });
@@ -72,10 +49,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     function handleToggleProtocol(isOpen: boolean) {
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: isOpen });
-    }
-
-    function handleToggleTimeIntervalMenu(isOpen: boolean) {
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, timeInterval: isOpen });
     }
 
     function handleSelectSiteSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
@@ -133,20 +106,22 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       }
     }
 
-    function handleSelectTimeInterval(_: MouseEvent | ChangeEvent, selection: SelectOptionObject) {
-      const timeIntervalKey = selection as IntervalTimeProp['key'];
-      const { start, end } = getCurrentAndPastTimestamps(timeIntervalMap[timeIntervalKey].seconds);
-
-      setSelectedFilter({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey] });
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, timeInterval: false });
-
+    function handleSelectTimeInterval({
+      start,
+      end,
+      duration
+    }: {
+      start: number | undefined;
+      end: number | undefined;
+      duration: number | undefined;
+    }) {
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, timeInterval: timeIntervalMap[timeIntervalKey], start, end });
+        onSelectFilters({ ...selectedFilter, start, end, duration });
       }
     }
 
-    const handleSelectDisplayInterval = useCallback(
-      (selection: string | undefined) => {
+    const handleSelectRefreshInterval = useCallback(
+      (selection: number | undefined) => {
         if (onSelectFilters) {
           onSelectFilters(selectedFilter, selection);
         }
@@ -198,53 +173,42 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       [availableProtocols]
     );
 
-    // time interval select options
-    const optionsTimeIntervalWithDefault = useMemo(
-      () =>
-        timeIntervalMapWindow.map(({ key, label }, index) => (
-          <SelectOption key={index} value={key}>
-            {label}
-          </SelectOption>
-        )),
-      [timeIntervalMapWindow]
-    );
-
     return (
       <Card>
         <Toolbar>
           <ToolbarContent>
             <ToolbarGroup>
               <ToolbarItem>
-                {!!optionsSourceSitesWithDefault.length && !config.sourceSites.hide && (
+                {!!optionsSourceSitesWithDefault.length && !config.sourceSites?.hide && (
                   <Select
                     selections={
                       selectedFilter.sourceSite && selectedFilter.sourceSite.split('|').length > 1
                         ? undefined
                         : selectedFilter.sourceSite
                     }
-                    placeholderText={config.sourceSites.placeholder}
+                    placeholderText={config.sourceSites?.placeholder}
                     isOpen={selectedFilterIsOpen.sourceSite}
-                    isDisabled={config.sourceSites.disabled}
+                    isDisabled={!!config.sourceSites?.disabled}
                     onSelect={handleSelectSiteSource}
-                    onClear={!config.sourceSites.disabled ? handleSelectSiteSource : undefined}
+                    onClear={!config.sourceSites?.disabled ? handleSelectSiteSource : undefined}
                     onToggle={(_, isOpen) => handleToggleSourceSiteMenu(isOpen)}
                   >
                     {optionsSourceSitesWithDefault}
                   </Select>
                 )}
 
-                {!config.sourceProcesses.hide && (
+                {!config.sourceProcesses?.hide && (
                   <Select
                     selections={
                       selectedFilter.sourceProcess && selectedFilter.sourceProcess.split('|').length > 1
                         ? undefined
                         : selectedFilter.sourceProcess
                     }
-                    placeholderText={config.sourceProcesses.placeholder}
+                    placeholderText={config.sourceProcesses?.placeholder}
                     isOpen={selectedFilterIsOpen.sourceProcess}
-                    isDisabled={config.sourceProcesses.disabled}
+                    isDisabled={!!config.sourceProcesses?.disabled}
                     onSelect={handleSelectSource}
-                    onClear={!config.sourceProcesses.disabled ? handleSelectSource : undefined}
+                    onClear={!config.sourceProcesses?.disabled ? handleSelectSource : undefined}
                     onToggle={(_, isOpen) => handleToggleSourceProcessMenu(isOpen)}
                   >
                     {optionsProcessSourcesWithDefault}
@@ -253,36 +217,36 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </ToolbarItem>
 
               <ToolbarItem>
-                {!!optionsDestinationSitesWithDefault.length && !config.destSites.hide && (
+                {!!optionsDestinationSitesWithDefault.length && !config.destSites?.hide && (
                   <Select
                     selections={
                       selectedFilter.destSite && selectedFilter.destSite.split('|').length > 1
                         ? undefined
                         : selectedFilter.destSite
                     }
-                    placeholderText={config.destSites.placeholder}
+                    placeholderText={config.destSites?.placeholder}
                     isOpen={selectedFilterIsOpen.destSite}
-                    isDisabled={config.destSites.disabled}
+                    isDisabled={!!config.destSites?.disabled}
                     onSelect={handleSelectSiteDest}
-                    onClear={!config.destSites.disabled ? handleSelectSiteDest : undefined}
+                    onClear={!config.destSites?.disabled ? handleSelectSiteDest : undefined}
                     onToggle={(_, isOpen) => handleToggleDestSiteMenu(isOpen)}
                   >
                     {optionsDestinationSitesWithDefault}
                   </Select>
                 )}
 
-                {!config.destinationProcesses.hide && (
+                {!config.destinationProcesses?.hide && (
                   <Select
                     selections={
                       selectedFilter.destProcess && selectedFilter.destProcess.split('|').length > 1
                         ? undefined
                         : selectedFilter.destProcess
                     }
-                    placeholderText={config.destinationProcesses.placeholder}
-                    isDisabled={config.destinationProcesses.disabled}
+                    placeholderText={config.destinationProcesses?.placeholder}
+                    isDisabled={!!config.destinationProcesses?.disabled}
                     isOpen={selectedFilterIsOpen.destProcess}
                     onSelect={handleSelectDestination}
-                    onClear={!config.destinationProcesses.disabled ? handleSelectDestination : undefined}
+                    onClear={!config.destinationProcesses?.disabled ? handleSelectDestination : undefined}
                     onToggle={(_, isOpen) => handleToggleDestinationProcessMenu(isOpen)}
                   >
                     {optionsProcessConnectedWithDefault}
@@ -295,10 +259,10 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                   selections={selectedFilter.protocol}
                   placeholderText={MetricsLabels.FilterProtocolsDefault}
                   isOpen={selectedFilterIsOpen.protocol}
-                  isDisabled={config.protocols.disabled}
+                  isDisabled={!!config.protocols?.disabled}
                   onSelect={handleSelectProtocol}
                   onClear={
-                    optionsProtocolsWithDefault.length > 1 && !config.protocols.disabled
+                    optionsProtocolsWithDefault.length > 1 && !config.protocols?.disabled
                       ? handleSelectProtocol
                       : undefined
                   }
@@ -312,16 +276,13 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             {/* Display filters */}
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
-                <Select
-                  selections={selectedFilter.timeInterval?.label}
-                  isOpen={selectedFilterIsOpen.timeInterval}
-                  isDisabled={config.timeIntervals.disabled}
-                  onSelect={handleSelectTimeInterval}
-                  toggleIcon={<OutlinedClockIcon />}
-                  onToggle={(_, isOpen) => handleToggleTimeIntervalMenu(isOpen)}
-                >
-                  {optionsTimeIntervalWithDefault}
-                </Select>
+                <SelectTimeInterval
+                  startSelected={defaultMetricFilterValues.start}
+                  endSelected={defaultMetricFilterValues.end}
+                  duration={defaultMetricFilterValues.duration}
+                  startTimeLimit={startTimeLimit}
+                  onSelectTimeInterval={handleSelectTimeInterval}
+                />
               </ToolbarItem>
             </ToolbarGroup>
 
@@ -329,7 +290,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               <ToolbarItem>
                 <UpdateMetricsButton
                   isLoading={isRefetching}
-                  onRefreshIntervalSelected={handleSelectDisplayInterval}
+                  refreshIntervalDefault={refreshDataInterval}
+                  onRefreshIntervalSelected={handleSelectRefreshInterval}
                   onClick={onRefetch}
                 />
               </ToolbarItem>
