@@ -86,7 +86,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
         },
         protocols: { disabled: true }
       }}
-      startTime={startTime}
+      startTimeLimit={startTime}
       onGetMetricFilters={handleSelectedFilters}
     />
   );

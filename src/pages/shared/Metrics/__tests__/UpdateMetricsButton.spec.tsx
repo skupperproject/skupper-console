@@ -8,7 +8,7 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
 import UpdateMetricsButton from '../components/UpdateMetricsButton';
-import { displayIntervalMap } from '../Metrics.constants';
+import { refreshDataIntervalMap } from '../Metrics.constants';
 
 describe('Metrics component', () => {
   let server: Server;
@@ -30,7 +30,7 @@ describe('Metrics component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <UpdateMetricsButton
-            refreshIntervalDefault={displayIntervalMap[1].label}
+            refreshIntervalDefault={refreshDataIntervalMap[1].value}
             isLoading={false}
             onClick={onClickMock}
             onRefreshIntervalSelected={onRefreshIntervalSelectedMock}
@@ -43,7 +43,7 @@ describe('Metrics component', () => {
     expect(onClickMock).toBeCalledTimes(1);
 
     fireEvent.click(screen.getByTestId('update-metric-dropdown'));
-    fireEvent.click(screen.getByText(displayIntervalMap[2].label));
+    fireEvent.click(screen.getByText(refreshDataIntervalMap[2].label));
     expect(onRefreshIntervalSelectedMock).toBeCalledTimes(1);
   });
 });

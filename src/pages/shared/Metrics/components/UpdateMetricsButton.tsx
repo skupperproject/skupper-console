@@ -11,14 +11,14 @@ import {
 } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
 
-import { displayIntervalMap } from '../Metrics.constants';
+import { refreshDataIntervalMap } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
 
 interface UpdateMetricsButtonProps {
   isLoading?: boolean;
   onClick: Function;
   onRefreshIntervalSelected: Function;
-  refreshIntervalDefault?: string;
+  refreshIntervalDefault?: number;
 }
 
 const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
@@ -28,11 +28,13 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
   refreshIntervalDefault
 }) {
   const [isSelectOpen, setSelectOpen] = useState(false);
-  const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string | undefined>(refreshIntervalDefault);
+  const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string | undefined>(
+    findRefreshDataIntervalLabelFromValue(refreshIntervalDefault)
+  );
 
   const refreshIntervalOptions = useMemo(
     () =>
-      displayIntervalMap.map(({ label, key }, index) => (
+      refreshDataIntervalMap.map(({ label, key }, index) => (
         <DropdownItem key={index} value={key}>
           {label}
         </DropdownItem>
@@ -48,7 +50,7 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
       setSelectOpen(false);
 
       if (onRefreshIntervalSelected) {
-        onRefreshIntervalSelected(refreshDataIntervalSelected);
+        onRefreshIntervalSelected(findRefreshDataIntervalValueFromLabel(refreshDataIntervalSelected));
       }
     },
     [onRefreshIntervalSelected]
@@ -78,7 +80,7 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
               >
                 {isLoading ? <Spinner isInline className="button-toggle-spinner" /> : <SyncIcon />}
                 <span className="button-toggle-spinner-text">{MetricsLabels.RefetchData}</span>{' '}
-                {!refreshIntervalSelected || refreshIntervalSelected === displayIntervalMap[0].key
+                {!refreshIntervalSelected || refreshIntervalSelected === refreshDataIntervalMap[0].key
                   ? ' '
                   : refreshIntervalSelected}
               </MenuToggleAction>
@@ -94,3 +96,15 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
 };
 
 export default UpdateMetricsButton;
+
+function findRefreshDataIntervalValueFromLabel(value: string | undefined): number {
+  return refreshDataIntervalMap.find(({ key }) => key === value)?.value || 0;
+}
+
+function findRefreshDataIntervalLabelFromValue(valueSelected: number | undefined) {
+  return (
+    // value !== refreshDataIntervalMap[0].value. We don't want to show the label "off" when we select this value from the button
+    refreshDataIntervalMap.find(({ value }) => value === valueSelected && value !== refreshDataIntervalMap[0].value)
+      ?.label || ''
+  );
+}

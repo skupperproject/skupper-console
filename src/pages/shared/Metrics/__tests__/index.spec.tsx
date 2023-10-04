@@ -34,6 +34,7 @@ describe('Traffic component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <Metrics
+            startTimeLimit={1}
             defaultMetricFilterValues={{
               sourceProcess: processResult.name
             }}

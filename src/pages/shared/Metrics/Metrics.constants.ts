@@ -1,6 +1,7 @@
 import { MetricsLabels } from './Metrics.enum';
+import { ConfigMetricFilters } from './Metrics.interfaces';
 
-export const displayIntervalMap = [
+export const refreshDataIntervalMap = [
   {
     key: 'pause',
     value: 0,
@@ -29,13 +30,12 @@ export const displayIntervalMap = [
 ];
 
 // default values to enable/disable filters
-export const configDefaultFilters = {
+export const configDefaultFilters: ConfigMetricFilters = {
   sourceSites: { disabled: false, placeholder: MetricsLabels.FilterAllSourceSites, hide: false },
   destSites: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationSites, hide: false },
   sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses, hide: false },
   destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses, hide: false },
-  protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
-  timeIntervals: { disabled: false }
+  protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
 };
 
 export const filterToggleDefault = {
@@ -44,6 +44,8 @@ export const filterToggleDefault = {
   sourceProcess: false,
   destProcess: false,
   protocol: false,
-  timeInterval: false,
-  refreshDataInterval: false
+  timeInterval: false
 };
+
+export const formatDate = 'yyyy-MM-dd';
+export const formatTime = 'H:mm';

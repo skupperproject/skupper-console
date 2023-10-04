@@ -1,5 +1,3 @@
-import { timeIntervalMap } from '@config/prometheus';
-
 import { formatChartDate, getDayFromTimestamp, getMonthAndDay, getTimeFromTimestamp } from './formatChartDate';
 
 const fixedDate = new Date('2023-08-02T23:00:00');
@@ -7,9 +5,9 @@ jest.spyOn(Date, 'now').mockImplementation(() => fixedDate.getTime());
 
 describe('formatChartDate', () => {
   const now = Date.now(); // Current time in milliseconds
-  const oneMinuteAgo = now - timeIntervalMap.oneMinute.seconds * 1000;
-  const twoDaysAgo = now - timeIntervalMap.twoDay.seconds * 1000;
-  const twoWeeksAgo = now - timeIntervalMap.twoWeeks.seconds * 1000;
+  const oneMinuteAgo = now - 60 * 1000;
+  const twoDaysAgo = now - 2 * 24 * 3600 * 1000;
+  const twoWeeksAgo = now - 14 * 24 * 3600 * 1000;
 
   it('should format date with time (minutes and seconds) if start is more than one minute ago', () => {
     const timestamp = now / 1000; // Current timestamp in seconds
