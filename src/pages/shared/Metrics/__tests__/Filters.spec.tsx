@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
@@ -8,7 +6,6 @@ import { defaultTimeInterval } from '@config/prometheus';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
-import LoadingPage from '@pages/shared/Loading';
 
 import MetricFilters from '../components/Filters';
 import { MetricsLabels } from '../Metrics.enum';
@@ -30,39 +27,36 @@ describe('Metrics component', () => {
 
     render(
       <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <MetricFilters
-            sourceProcesses={[
-              { destinationName: processesData.results[0].name },
-              { destinationName: processesData.results[1].name }
-            ]}
-            destProcesses={[
-              { destinationName: processesData.results[2].name },
-              { destinationName: processesData.results[3].name }
-            ]}
-            availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
-            configFilters={{
-              destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-              sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-              protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
-            }}
-            defaultMetricFilterValues={{ sourceProcess: undefined }}
-            startTimeLimit={0}
-            isRefetching={false}
-            onRefetch={onRefetch}
-            onSelectFilters={() => {}}
-          />
-        </Suspense>
+        <MetricFilters
+          sourceProcesses={[
+            { destinationName: processesData.results[0].name },
+            { destinationName: processesData.results[1].name }
+          ]}
+          destProcesses={[
+            { destinationName: processesData.results[2].name },
+            { destinationName: processesData.results[3].name }
+          ]}
+          availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
+          configFilters={{
+            destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+            sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
+            protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
+          }}
+          defaultMetricFilterValues={{ sourceProcess: undefined }}
+          startTimeLimit={0}
+          isRefetching={false}
+          onRefetch={onRefetch}
+          onSelectFilters={() => {}}
+        />
       </Wrapper>
     );
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
     fireEvent.click(screen.getByText(processesData.results[0].name));
-
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
     fireEvent.click(screen.getByText(processesData.results[2].name));
-    fireEvent.click(screen.getByText(defaultTimeInterval.label));
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
+    fireEvent.click(screen.getByText(defaultTimeInterval.label));
   });
 });

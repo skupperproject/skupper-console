@@ -1,11 +1,8 @@
-import { Suspense } from 'react';
-
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';
-import LoadingPage from '@pages/shared/Loading';
 
 import UpdateMetricsButton from '../components/UpdateMetricsButton';
 import { refreshDataIntervalMap } from '../Metrics.constants';
@@ -28,14 +25,12 @@ describe('Metrics component', () => {
 
     render(
       <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <UpdateMetricsButton
-            refreshIntervalDefault={refreshDataIntervalMap[1].value}
-            isLoading={false}
-            onClick={onClickMock}
-            onRefreshIntervalSelected={onRefreshIntervalSelectedMock}
-          />
-        </Suspense>
+        <UpdateMetricsButton
+          refreshIntervalDefault={refreshDataIntervalMap[1].value}
+          isLoading={false}
+          onClick={onClickMock}
+          onRefreshIntervalSelected={onRefreshIntervalSelectedMock}
+        />
       </Wrapper>
     );
 
@@ -43,6 +38,9 @@ describe('Metrics component', () => {
     expect(onClickMock).toBeCalledTimes(1);
 
     fireEvent.click(screen.getByTestId('update-metric-dropdown'));
+    // use waitFor to avoid this  Warning: An update to Popper inside a test was not wrapped in act(...).
+    await waitFor(() => expect(screen.getByText(refreshDataIntervalMap[2].label)).toBeInTheDocument);
+
     fireEvent.click(screen.getByText(refreshDataIntervalMap[2].label));
     expect(onRefreshIntervalSelectedMock).toBeCalledTimes(1);
   });
