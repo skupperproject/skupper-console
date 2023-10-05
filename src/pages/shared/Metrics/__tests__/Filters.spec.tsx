@@ -61,7 +61,7 @@ describe('Metrics component', () => {
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
     fireEvent.click(screen.getByText(processesData.results[2].name));
-    fireEvent.click(screen.getByDisplayValue(defaultTimeInterval.label));
+    fireEvent.click(screen.getByText(defaultTimeInterval.label));
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
   });
