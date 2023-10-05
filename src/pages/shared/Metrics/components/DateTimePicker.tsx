@@ -81,6 +81,7 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
 
   const Calendar = (
     <CalendarMonth
+      data-testid="date-time-picker-calendar"
       date={new Date(valueDate)}
       onChange={handleSelectCalendar}
       validators={[disablePreEndDates, disablePreStartDates]}
@@ -113,7 +114,7 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
 
   const CalendarButton = (
     <Button
-      data-testid="data-picker-calendar-button"
+      data-testid="date-time-picker-calendar-button"
       variant="control"
       onClick={handleToggleCalendar}
       isDisabled={isDisabled}

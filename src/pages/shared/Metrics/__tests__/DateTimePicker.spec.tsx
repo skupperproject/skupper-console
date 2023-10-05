@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { Wrapper } from '@core/components/Wrapper';
@@ -23,7 +23,7 @@ describe('DateTimePicker component', () => {
   });
 
   it('should render the DateTimePicker Filter', async () => {
-    const onSelect = jest.fn();
+    const onSelectMock = jest.fn();
 
     render(
       <Wrapper>
@@ -33,12 +33,14 @@ describe('DateTimePicker component', () => {
             defaultTime={formatTime}
             isDisabled={false}
             startDate={new Date()}
-            onSelect={onSelect}
+            onSelect={onSelectMock}
           />
         </Suspense>
       </Wrapper>
     );
 
-    fireEvent.click(screen.getByTestId('data-picker-calendar-button'));
+    fireEvent.click(screen.getByTestId('date-time-picker-calendar-button'));
+    // Wait for the popover to appear
+    await waitFor(() => expect(screen.getByTestId('date-time-picker-calendar')).toBeInTheDocument());
   });
 });
