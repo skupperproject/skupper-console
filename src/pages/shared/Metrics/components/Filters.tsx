@@ -6,7 +6,7 @@ import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core
 import { AvailableProtocols } from '@API/REST.enum';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 
-import SelectTimeInterval from './SelectTimeInterval';
+import DateTimeRangeFilter from './DateTimeRangeFilter';
 import UpdateMetricsButton from './UpdateMetricsButton';
 import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
@@ -276,7 +276,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             {/* Display filters */}
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
-                <SelectTimeInterval
+                <DateTimeRangeFilter
                   startSelected={defaultMetricFilterValues.start}
                   endSelected={defaultMetricFilterValues.end}
                   duration={defaultMetricFilterValues.duration}
@@ -286,7 +286,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </ToolbarItem>
             </ToolbarGroup>
 
-            <ToolbarGroup variant={'filter-group'}>
+            <ToolbarGroup>
               <ToolbarItem>
                 <UpdateMetricsButton
                   isLoading={isRefetching}
