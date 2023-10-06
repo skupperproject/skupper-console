@@ -16,19 +16,20 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
     configFilters,
     defaultMetricFilterValues,
+    defaultRefreshDataInterval,
     sourceSites,
     destSites,
     sourceProcesses,
     destProcesses,
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
     startTimeLimit = 0, // Use startTimeLimit to set the left temporal limit of the SelectTimeInterval filter
-    refreshDataInterval,
     isRefetching = false,
     onRefetch = () => null,
     onSelectFilters
   }) => {
     const config: ConfigMetricFilters = { ...configDefaultFilters, ...configFilters };
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
+    const [refreshInterval, setRefreshInterval] = useState(defaultRefreshDataInterval);
     const [selectedFilter, setSelectedFilter] = useState<QueryMetricsParams>(defaultMetricFilterValues);
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceSiteMenu(isOpen: boolean) {
@@ -58,7 +59,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceSite: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, sourceSite });
+        onSelectFilters({ ...selectedFilter, sourceSite }, refreshInterval);
       }
     }
 
@@ -69,7 +70,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceProcess: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, sourceProcess });
+        onSelectFilters({ ...selectedFilter, sourceProcess }, refreshInterval);
       }
     }
 
@@ -80,7 +81,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destSite: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, destSite });
+        onSelectFilters({ ...selectedFilter, destSite }, refreshInterval);
       }
     }
 
@@ -91,7 +92,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destProcess: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, destProcess });
+        onSelectFilters({ ...selectedFilter, destProcess }, refreshInterval);
       }
     }
 
@@ -102,7 +103,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: false });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, protocol });
+        onSelectFilters({ ...selectedFilter, protocol }, refreshInterval);
       }
     }
 
@@ -115,13 +116,17 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       end: number | undefined;
       duration: number | undefined;
     }) {
+      setSelectedFilter({ ...selectedFilter, start, end, duration });
+
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, start, end, duration });
+        onSelectFilters({ ...selectedFilter, start, end, duration }, duration ? refreshInterval : 0);
       }
     }
 
     const handleSelectRefreshInterval = useCallback(
       (selection: number | undefined) => {
+        setRefreshInterval(selection);
+
         if (onSelectFilters) {
           onSelectFilters(selectedFilter, selection);
         }
@@ -277,9 +282,9 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
                 <DateTimeRangeFilter
-                  startSelected={defaultMetricFilterValues.start}
-                  endSelected={defaultMetricFilterValues.end}
-                  duration={defaultMetricFilterValues.duration}
+                  startSelected={selectedFilter.start}
+                  endSelected={selectedFilter.end}
+                  duration={selectedFilter.duration}
                   startTimeLimit={startTimeLimit}
                   onSelectTimeInterval={handleSelectTimeInterval}
                 />
@@ -290,7 +295,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               <ToolbarItem>
                 <UpdateMetricsButton
                   isLoading={isRefetching}
-                  refreshIntervalDefault={refreshDataInterval}
+                  isDisabled={!selectedFilter.duration}
+                  refreshIntervalDefault={refreshInterval}
                   onRefreshIntervalSelected={handleSelectRefreshInterval}
                   onClick={onRefetch}
                 />
