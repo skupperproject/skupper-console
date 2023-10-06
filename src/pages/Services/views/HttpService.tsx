@@ -14,7 +14,7 @@ import { RequestsByServiceProps } from '../Services.interfaces';
 const HttpService: FC<RequestsByServiceProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
   return (
     <>
-      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} protocol={protocol} />}
+      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} serviceName={serviceName} protocol={protocol} />}
       {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
       {viewSelected === TAB_2_KEY && (
         <Stack hasGutter>

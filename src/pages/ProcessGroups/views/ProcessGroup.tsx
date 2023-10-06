@@ -101,7 +101,9 @@ const ProcessGroup = function () {
               startTimeLimit={startTime}
               sourceProcesses={serverNameFilters}
               configFilters={{
-                destinationProcesses: { hide: true, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+                sourceSites: { hide: true },
+                destSites: { hide: true },
+                destinationProcesses: { hide: true },
                 sourceProcesses: {
                   disabled: serverNameFilters.length < 2,
                   placeholder: MetricsLabels.FilterAllSourceProcesses

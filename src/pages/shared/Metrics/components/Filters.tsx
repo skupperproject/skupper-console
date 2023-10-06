@@ -31,6 +31,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
     const [refreshInterval, setRefreshInterval] = useState(defaultRefreshDataInterval);
     const [selectedFilter, setSelectedFilter] = useState<QueryMetricsParams>(defaultMetricFilterValues);
+
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleSourceSiteMenu(isOpen: boolean) {
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceSite: isOpen });
@@ -54,56 +55,61 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     function handleSelectSiteSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const sourceSite = selection as string | undefined;
+      const filters = { ...selectedFilter, sourceSite, sourceProcess: undefined };
 
-      setSelectedFilter({ ...selectedFilter, sourceSite, sourceProcess: undefined });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceSite: false });
+      setSelectedFilter(filters);
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, sourceSite }, refreshInterval);
+        onSelectFilters(filters, refreshInterval);
       }
     }
 
     function handleSelectSource(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const sourceProcess = selection as string | undefined;
+      const filters = { ...selectedFilter, sourceProcess };
 
-      setSelectedFilter({ ...selectedFilter, sourceProcess });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, sourceProcess: false });
+      setSelectedFilter(filters);
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, sourceProcess }, refreshInterval);
+        onSelectFilters(filters, refreshInterval);
       }
     }
 
     function handleSelectSiteDest(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const destSite = selection as string | undefined;
+      const filters = { ...selectedFilter, destSite, destProcess: undefined };
 
-      setSelectedFilter({ ...selectedFilter, destSite, destProcess: undefined });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destSite: false });
+      setSelectedFilter(filters);
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, destSite }, refreshInterval);
+        onSelectFilters(filters, refreshInterval);
       }
     }
 
     function handleSelectDestination(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const destProcess = selection as string | undefined;
+      const filters = { ...selectedFilter, destProcess };
 
-      setSelectedFilter({ ...selectedFilter, destProcess });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, destProcess: false });
+      setSelectedFilter(filters);
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, destProcess }, refreshInterval);
+        onSelectFilters(filters, refreshInterval);
       }
     }
 
     function handleSelectProtocol(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
       const protocol = selection as AvailableProtocols | undefined;
+      const filter = { ...selectedFilter, protocol };
 
-      setSelectedFilter({ ...selectedFilter, protocol });
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: false });
+      setSelectedFilter(filter);
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilter, protocol }, refreshInterval);
+        onSelectFilters(filter, refreshInterval);
       }
     }
 
@@ -159,17 +165,23 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     // process sources select options
     const optionsProcessSourcesWithDefault = useMemo(
       () =>
-        (sourceProcesses || []).map(({ destinationName }, index) => (
-          <SelectOption key={index} value={destinationName} />
-        )),
-      [sourceProcesses]
+        (
+          sourceProcesses?.filter(({ siteName }) =>
+            selectedFilter.sourceSite ? siteName === selectedFilter.sourceSite : true
+          ) || []
+        ).map(({ destinationName }, index) => <SelectOption key={index} value={destinationName} />),
+      [selectedFilter.sourceSite, sourceProcesses]
     );
 
     // process connected select options
     const optionsProcessConnectedWithDefault = useMemo(
       () =>
-        (destProcesses || []).map(({ destinationName }, index) => <SelectOption key={index} value={destinationName} />),
-      [destProcesses]
+        (
+          destProcesses?.filter(({ siteName }) =>
+            selectedFilter.destSite ? siteName === selectedFilter.destSite : true
+          ) || []
+        ).map(({ destinationName }, index) => <SelectOption key={index} value={destinationName} />),
+      [selectedFilter.destSite, destProcesses]
     );
 
     // protocol select options
@@ -184,12 +196,12 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
           <ToolbarContent>
             <ToolbarGroup>
               <ToolbarItem>
-                {!!optionsSourceSitesWithDefault.length && !config.sourceSites?.hide && (
+                {!config.sourceSites?.hide && (
                   <Select
                     selections={
                       selectedFilter.sourceSite && selectedFilter.sourceSite.split('|').length > 1
                         ? undefined
-                        : selectedFilter.sourceSite
+                        : selectedFilter.sourceSite?.split(siteNameAndIdSeparator)[0]
                     }
                     placeholderText={config.sourceSites?.placeholder}
                     isOpen={selectedFilterIsOpen.sourceSite}
@@ -222,12 +234,12 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </ToolbarItem>
 
               <ToolbarItem>
-                {!!optionsDestinationSitesWithDefault.length && !config.destSites?.hide && (
+                {!config.destSites?.hide && (
                   <Select
                     selections={
                       selectedFilter.destSite && selectedFilter.destSite.split('|').length > 1
                         ? undefined
-                        : selectedFilter.destSite
+                        : selectedFilter.destSite?.split(siteNameAndIdSeparator)[0]
                     }
                     placeholderText={config.destSites?.placeholder}
                     isOpen={selectedFilterIsOpen.destSite}
@@ -295,7 +307,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               <ToolbarItem>
                 <UpdateMetricsButton
                   isLoading={isRefetching}
-                  isDisabled={!selectedFilter.duration}
+                  isDisabled={!!selectedFilter.end}
                   refreshIntervalDefault={refreshInterval}
                   onRefreshIntervalSelected={handleSelectRefreshInterval}
                   onClick={onRefetch}
