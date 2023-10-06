@@ -12,7 +12,7 @@ import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicates
 import Metrics from '@pages/shared/Metrics';
 import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
-import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
+import { QueriesProcesses } from '../Processes.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 
@@ -100,8 +100,10 @@ const Overview: FC<OverviewProps> = function ({
       destProcesses={destProcesses}
       availableProtocols={availableProtocols}
       configFilters={{
+        destSites: {
+          hide: destSites.length === 0
+        },
         destinationProcesses: {
-          placeholder: ProcessesLabels.FilterAllDestinationProcesses,
           hide: destProcesses.length === 0
         },
         sourceProcesses: { disabled: true },

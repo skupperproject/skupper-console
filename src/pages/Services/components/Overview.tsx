@@ -11,7 +11,7 @@ import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicates
 import Metrics from '@pages/shared/Metrics';
 import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
-import { ServicesLabels, QueriesServices } from '../Services.enum';
+import { QueriesServices } from '../Services.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
 
@@ -84,14 +84,11 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
       }}
       configFilters={{
-        sourceProcesses: {
-          placeholder: sourceProcesses.length
-            ? ServicesLabels.MetricSourceProcessFilter
-            : ServicesLabels.NoMetricSourceProcessFilter,
-          disabled: !sourceProcesses.length
+        sourceSites: {
+          disabled: !sourceSites.length
         },
-        destinationProcesses: {
-          placeholder: ServicesLabels.MetricDestinationProcessFilter
+        sourceProcesses: {
+          disabled: !sourceProcesses.length
         },
         protocols: { disabled: true }
       }}

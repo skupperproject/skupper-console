@@ -59,6 +59,5 @@ export enum ProcessesLabels {
   Name = 'Name',
   Component = 'Component',
   ByteRateRx = 'Rx byte rate',
-  Exposed = 'Exposed',
-  FilterAllDestinationProcesses = 'All connected processes'
+  Exposed = 'Exposed'
 }
