@@ -26,6 +26,7 @@ export interface PrometheusLabels {
   destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  service?: string;
   code?: string;
   direction?: FlowDirections;
   protocol?: AvailableProtocols;

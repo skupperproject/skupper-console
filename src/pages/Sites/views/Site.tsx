@@ -118,9 +118,7 @@ const Site = function () {
               configFilters={{
                 sourceSites: { disabled: true },
                 destinationProcesses: { hide: true },
-                sourceProcesses: {
-                  hide: true
-                }
+                sourceProcesses: { hide: true }
               }}
               onGetMetricFilters={handleSelectedFilters}
             />

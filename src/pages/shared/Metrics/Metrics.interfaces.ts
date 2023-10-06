@@ -20,6 +20,7 @@ export interface QueryMetricsParams {
   destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  service?: string;
   protocol?: AvailableProtocols;
   start?: number;
   end?: number;
@@ -34,8 +35,8 @@ export interface MetricsProps {
   startTimeLimit: number;
   sourceSites?: { name: string }[];
   destSites?: { name: string }[];
-  sourceProcesses?: { destinationName: string }[];
-  destProcesses?: { destinationName: string }[];
+  sourceProcesses?: { destinationName: string; siteName?: string }[];
+  destProcesses?: { destinationName: string; siteName?: string }[];
   availableProtocols?: AvailableProtocols[];
   configFilters?: ConfigMetricFilters;
   openSections?: { traffic?: boolean; latency?: boolean; request?: boolean; response?: boolean };
@@ -49,8 +50,8 @@ export interface MetricFiltersProps {
   startTimeLimit: number;
   sourceSites?: { name: string }[];
   destSites?: { name: string }[];
-  sourceProcesses?: { destinationName: string }[];
-  destProcesses?: { destinationName: string }[];
+  sourceProcesses?: { destinationName: string; siteName?: string }[];
+  destProcesses?: { destinationName: string; siteName?: string }[];
   availableProtocols?: AvailableProtocols[];
   configFilters?: ConfigMetricFilters;
   isRefetching?: boolean;

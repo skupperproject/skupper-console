@@ -7,6 +7,7 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
 import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
@@ -16,19 +17,11 @@ const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
 
 interface OverviewProps {
   serviceId: string;
+  serviceName: string;
   protocol: AvailableProtocols;
 }
 
-const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
-  const { data: exposedServersData } = useQuery(
-    [QueriesServices.GetProcessesByService, serviceId],
-    () => (serviceId ? RESTApi.fetchServersByService(serviceId) : null),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
-
+const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol }) {
   const { data: processPairs } = useQuery(
     [QueriesServices.GetProcessPairsByService, serviceId],
     () => RESTApi.fetchProcessPairsByService(serviceId),
@@ -48,17 +41,31 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
   const processPairsResults = processPairs?.results || [];
   const startTime = processPairsResults.reduce((acc, processPair) => Math.min(acc, processPair.startTime), 0);
 
-  const clientNames = [...new Set(processPairsResults.map(({ sourceName }) => sourceName))];
-  const sourceProcesses = clientNames.map((sourceName) => ({ destinationName: sourceName }));
-
-  const serverNames = [...new Set(processPairsResults.map(({ destinationName }) => destinationName))];
-  const destProcessws = serverNames.map((destinationName) => ({ destinationName }));
-
-  const servers = exposedServersData?.results || [];
-  const destSites = servers
-    .map(({ parentName, parent }) => ({
+  const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
+    processPairsResults.map(({ sourceName, sourceSiteName, sourceSiteId }) => ({
+      destinationName: sourceName,
       // prometheus use a combination of process name and site name as a siteId key
-      name: `${parentName}${siteNameAndIdSeparator}${parent}`
+      siteName: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
+    }))
+  );
+  const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
+    processPairsResults.map(({ destinationName, destinationSiteName, destinationSiteId }) => ({
+      destinationName,
+      siteName: `${destinationSiteName}${siteNameAndIdSeparator}${destinationSiteId}`
+    }))
+  );
+
+  const destSites = processPairsResults
+    .map(({ destinationSiteId, destinationSiteName }) => ({
+      // prometheus use a combination of process name and site name as a siteId key
+      name: `${destinationSiteName}${siteNameAndIdSeparator}${destinationSiteId}`
+    }))
+    // remove site name duplicated
+    .filter((arr, index, self) => index === self.findIndex((t) => t.name === arr.name));
+
+  const sourceSites = processPairsResults
+    .map(({ sourceSiteId, sourceSiteName }) => ({
+      name: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
     }))
     // remove site name duplicated
     .filter((arr, index, self) => index === self.findIndex((t) => t.name === arr.name));
@@ -67,11 +74,13 @@ const Overview: FC<OverviewProps> = function ({ serviceId, protocol }) {
     <Metrics
       key={serviceId}
       sourceProcesses={sourceProcesses}
-      destProcesses={destProcessws}
+      destProcesses={destProcesses}
+      sourceSites={sourceSites}
       destSites={destSites}
       availableProtocols={[protocol]}
       defaultMetricFilterValues={{
         protocol,
+        service: serviceName,
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
       }}
       configFilters={{

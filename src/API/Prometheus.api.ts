@@ -221,6 +221,7 @@ function convertToPrometheusQueryParams({
   sourceProcess,
   destSite,
   destProcess,
+  service,
   protocol,
   direction,
   code
@@ -241,6 +242,10 @@ function convertToPrometheusQueryParams({
 
   if (destProcess) {
     queryFilters = [...queryFilters, `destProcess=~"${destProcess}"`];
+  }
+
+  if (service) {
+    queryFilters = [...queryFilters, `address=~"${service}"`];
   }
 
   if (protocol) {

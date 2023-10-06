@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { defaultTimeInterval } from '@config/prometheus';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
@@ -51,12 +50,13 @@ describe('Metrics component', () => {
       </Wrapper>
     );
 
+    fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceSites));
+    fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationSites));
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
     fireEvent.click(screen.getByText(processesData.results[0].name));
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
     fireEvent.click(screen.getByText(processesData.results[2].name));
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
-    fireEvent.click(screen.getByText(defaultTimeInterval.label));
   });
 });
