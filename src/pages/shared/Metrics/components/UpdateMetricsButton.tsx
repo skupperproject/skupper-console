@@ -16,13 +16,15 @@ import { MetricsLabels } from '../Metrics.enum';
 
 interface UpdateMetricsButtonProps {
   isLoading?: boolean;
+  isDisabled?: boolean;
   onClick: Function;
   onRefreshIntervalSelected: Function;
   refreshIntervalDefault?: number;
 }
 
 const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
-  isLoading,
+  isLoading = false,
+  isDisabled = false,
   onClick,
   onRefreshIntervalSelected,
   refreshIntervalDefault
@@ -56,12 +58,16 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
     [onRefreshIntervalSelected]
   );
 
+  const isRefreshIntervalSelected =
+    !refreshIntervalSelected || refreshIntervalSelected === refreshDataIntervalMap[0].key;
+
   return (
     <Dropdown
       isOpen={isSelectOpen}
       onSelect={handleSelectRefreshInterval}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
+          isDisabled={isDisabled}
           data-testid="update-metric-dropdown"
           className={isLoading ? 'button-toggle-dropdown-loading' : ''}
           ref={toggleRef}
@@ -72,17 +78,14 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
             variant: 'action',
             items: [
               <MenuToggleAction
-                className={isLoading ? 'button-toggle-button-loading' : ''}
-                id="split-button-action-primary-example-with-toggle-button"
+                className={getDropdownClassName({ isLoading, isDisabled })}
                 key="split-action-primary"
                 data-testid="update-metric-click"
                 onClick={() => onClick()}
               >
                 {isLoading ? <Spinner isInline className="button-toggle-spinner" /> : <SyncIcon />}
                 <span className="button-toggle-spinner-text">{MetricsLabels.RefetchData}</span>{' '}
-                {!refreshIntervalSelected || refreshIntervalSelected === refreshDataIntervalMap[0].key
-                  ? ' '
-                  : refreshIntervalSelected}
+                {isRefreshIntervalSelected ? ' ' : refreshIntervalSelected}
               </MenuToggleAction>
             ]
           }}
@@ -107,4 +110,18 @@ function findRefreshDataIntervalLabelFromValue(valueSelected: number | undefined
     refreshDataIntervalMap.find(({ value }) => value === valueSelected && value !== refreshDataIntervalMap[0].value)
       ?.label || ''
   );
+}
+
+function getDropdownClassName({ isLoading, isDisabled }: { isLoading: boolean; isDisabled: boolean }) {
+  let dropdownClassName = '';
+
+  if (isLoading) {
+    dropdownClassName = 'button-toggle-loading';
+  }
+
+  if (isDisabled) {
+    dropdownClassName = 'button-toggle-off';
+  }
+
+  return dropdownClassName;
 }

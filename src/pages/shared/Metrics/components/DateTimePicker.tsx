@@ -46,8 +46,7 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
 
   const handleSelectCalendar = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>, newValueDate: Date) => {
     const date = format(newValueDate, formatDate);
-    const time = valueTime === formatTime ? '00:00' : valueTime;
-
+    const time = valueTime === formatTime ? '1:00' : valueTime;
     setIsCalendarOpen(!isCalendarOpen);
     setValueDate(date);
     setValueTime(time);
@@ -106,7 +105,7 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
     >
       <DropdownList>
         {Array.from(new Array(24), (_, i) => i).map((time) => (
-          <DropdownItem key={time}>{`${time}:00`}</DropdownItem>
+          <DropdownItem key={time}>{`${time + 1}:00`}</DropdownItem>
         ))}
       </DropdownList>
     </Dropdown>

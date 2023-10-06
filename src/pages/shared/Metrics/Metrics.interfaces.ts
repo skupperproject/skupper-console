@@ -45,6 +45,7 @@ export interface MetricsProps {
 
 export interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
+  defaultRefreshDataInterval?: number;
   startTimeLimit: number;
   sourceSites?: { name: string }[];
   destSites?: { name: string }[];
@@ -52,7 +53,6 @@ export interface MetricFiltersProps {
   destProcesses?: { destinationName: string }[];
   availableProtocols?: AvailableProtocols[];
   configFilters?: ConfigMetricFilters;
-  refreshDataInterval?: number;
   isRefetching?: boolean;
   onRefetch?: Function;
   onSelectFilters?: (params: SelectedMetricFilters, refreshIntervalSelected?: number) => void;

@@ -28,15 +28,15 @@ const Metrics: FC<MetricsProps> = function ({
   openSections,
   onGetMetricFilters
 }) {
-  const { refreshDataInterval, ...queryParams } = defaultMetricFilterValues;
+  const { refreshDataInterval: defaultRefreshDataInterval, ...filters } = defaultMetricFilterValues;
 
-  const [qeryParams, setQueryParams] = useState<QueryMetricsParams>(queryParams);
-  const [refetchInterval, setRefetchInterval] = useState(refreshDataInterval);
+  const [queryParams, setQueryParams] = useState<QueryMetricsParams>(filters);
+  const [refetchInterval, setRefetchInterval] = useState(defaultRefreshDataInterval);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
 
   const { data: byteRateData, isRefetching } = useQuery(
-    [QueriesMetrics.GetTraffic, qeryParams],
-    () => MetricsController.getTraffic(qeryParams),
+    [QueriesMetrics.GetTraffic, queryParams],
+    () => MetricsController.getTraffic(queryParams),
     {
       enabled: isPrometheusActive,
       refetchInterval,
@@ -50,12 +50,11 @@ const Metrics: FC<MetricsProps> = function ({
 
   // Filters: Set the prometheus query params with the filter values
   const handleUpdateQueryParams = useCallback(
-    (updatedFilters: QueryMetricsParams, refetchDataIntervalSelected?: number) => {
-      setRefetchInterval(refetchDataIntervalSelected);
+    (updatedFilters: QueryMetricsParams, refreshDataInterval?: number) => {
+      setRefetchInterval(refreshDataInterval);
       setQueryParams(updatedFilters);
-
       if (onGetMetricFilters) {
-        onGetMetricFilters({ ...updatedFilters, refreshDataInterval: refetchDataIntervalSelected });
+        onGetMetricFilters({ ...updatedFilters, refreshDataInterval });
       }
     },
     [onGetMetricFilters]
@@ -68,14 +67,14 @@ const Metrics: FC<MetricsProps> = function ({
       <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
         <MetricFilters
           configFilters={configFilters}
-          defaultMetricFilterValues={queryParams}
+          defaultMetricFilterValues={defaultMetricFilterValues}
+          defaultRefreshDataInterval={defaultRefreshDataInterval}
           sourceSites={sourceSites}
           destSites={destSites}
           sourceProcesses={sourceProcesses}
           destProcesses={destProcesses}
           availableProtocols={availableProtocols}
           startTimeLimit={startTimeLimit}
-          refreshDataInterval={refreshDataInterval}
           isRefetching={isRefetching}
           onRefetch={handleShouldUpdateData}
           onSelectFilters={handleUpdateQueryParams}
@@ -98,13 +97,13 @@ const Metrics: FC<MetricsProps> = function ({
       {areDataAvailable && (
         <>
           <StackItem>
-            <Traffic selectedFilters={qeryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
+            <Traffic selectedFilters={queryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
           </StackItem>
-          {qeryParams.protocol !== AvailableProtocols.Tcp && (
+          {queryParams.protocol !== AvailableProtocols.Tcp && (
             <>
               <StackItem>
                 <Latency
-                  selectedFilters={qeryParams}
+                  selectedFilters={queryParams}
                   openSections={openSections?.latency}
                   forceUpdate={shouldUpdateData}
                   refetchInterval={refetchInterval}
@@ -113,7 +112,7 @@ const Metrics: FC<MetricsProps> = function ({
 
               <StackItem>
                 <Request
-                  selectedFilters={qeryParams}
+                  selectedFilters={queryParams}
                   openSections={openSections?.request}
                   forceUpdate={shouldUpdateData}
                   refetchInterval={refetchInterval}

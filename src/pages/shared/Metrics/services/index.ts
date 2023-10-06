@@ -80,10 +80,8 @@ const MetricsController = {
       step: calculateStep(end - start)
     };
     try {
-      const requestsByProcess = await PrometheusApi.fetchRequestsByProcess({ ...params });
-
+      const requestsByProcess = await PrometheusApi.fetchRequestsByProcess(params);
       const requestRateData = normalizeRequestFromSeries(requestsByProcess);
-
       const requestPerf = requestRateData?.map(({ data, label }) => ({
         label,
         max: formatToDecimalPlacesIfCents(data.reduce((acc, { y }) => (y > acc ? y : acc), 0)),
@@ -126,7 +124,7 @@ const MetricsController = {
       };
 
       const [responsesByProcess, responseRateByProcess] = await Promise.all([
-        PrometheusApi.fetchResponseCountsByProcess({ ...params, step: `${duration || end - start}s` }),
+        PrometheusApi.fetchResponseCountsByProcess(params),
         PrometheusApi.fetchErrorResponsesByProcess(params)
       ]);
 
