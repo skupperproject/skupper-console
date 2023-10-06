@@ -5,6 +5,7 @@ import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { siteNameAndIdSeparator } from '@config/prometheus';
+import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
 
 import DateTimeRangeFilter from './DateTimeRangeFilter';
 import UpdateMetricsButton from './UpdateMetricsButton';
@@ -14,7 +15,7 @@ import { ConfigMetricFilters, MetricFiltersProps, QueryMetricsParams } from '../
 
 const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
-    configFilters,
+    configFilters = {},
     defaultMetricFilterValues,
     defaultRefreshDataInterval,
     sourceSites,
@@ -27,7 +28,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     onRefetch = () => null,
     onSelectFilters
   }) => {
-    const config: ConfigMetricFilters = { ...configDefaultFilters, ...configFilters };
+    const config: ConfigMetricFilters = deepMergeJSONObjects<ConfigMetricFilters>(configDefaultFilters, configFilters);
+
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState(filterToggleDefault);
     const [refreshInterval, setRefreshInterval] = useState(defaultRefreshDataInterval);
     const [selectedFilter, setSelectedFilter] = useState<QueryMetricsParams>(defaultMetricFilterValues);
@@ -169,7 +171,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
           sourceProcesses?.filter(({ siteName }) =>
             selectedFilter.sourceSite ? siteName === selectedFilter.sourceSite : true
           ) || []
-        ).map(({ destinationName }, index) => <SelectOption key={index} value={destinationName} />),
+        ).map(({ destinationName }) => <SelectOption key={destinationName} value={destinationName} />),
       [selectedFilter.sourceSite, sourceProcesses]
     );
 
@@ -180,7 +182,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
           destProcesses?.filter(({ siteName }) =>
             selectedFilter.destSite ? siteName === selectedFilter.destSite : true
           ) || []
-        ).map(({ destinationName }, index) => <SelectOption key={index} value={destinationName} />),
+        ).map(({ destinationName }) => <SelectOption key={destinationName} value={destinationName} />),
       [selectedFilter.destSite, destProcesses]
     );
 
@@ -199,7 +201,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 {!config.sourceSites?.hide && (
                   <Select
                     selections={
-                      selectedFilter.sourceSite && selectedFilter.sourceSite.split('|').length > 1
+                      !!selectedFilter.sourceSite && selectedFilter.sourceSite.split('|').length > 1
                         ? undefined
                         : selectedFilter.sourceSite?.split(siteNameAndIdSeparator)[0]
                     }
@@ -217,7 +219,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 {!config.sourceProcesses?.hide && (
                   <Select
                     selections={
-                      selectedFilter.sourceProcess && selectedFilter.sourceProcess.split('|').length > 1
+                      !!selectedFilter.sourceProcess && selectedFilter.sourceProcess.split('|').length > 1
                         ? undefined
                         : selectedFilter.sourceProcess
                     }
@@ -237,7 +239,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 {!config.destSites?.hide && (
                   <Select
                     selections={
-                      selectedFilter.destSite && selectedFilter.destSite.split('|').length > 1
+                      !!selectedFilter.destSite && selectedFilter.destSite.split('|').length > 1
                         ? undefined
                         : selectedFilter.destSite?.split(siteNameAndIdSeparator)[0]
                     }
@@ -255,7 +257,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 {!config.destinationProcesses?.hide && (
                   <Select
                     selections={
-                      selectedFilter.destProcess && selectedFilter.destProcess.split('|').length > 1
+                      !!selectedFilter.destProcess && selectedFilter.destProcess?.split('|').length > 1
                         ? undefined
                         : selectedFilter.destProcess
                     }

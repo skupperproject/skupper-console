@@ -13,7 +13,6 @@ import MainContainer from '@layout/MainContainer';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
@@ -105,8 +104,7 @@ const ProcessGroup = function () {
                 destSites: { hide: true },
                 destinationProcesses: { hide: true },
                 sourceProcesses: {
-                  disabled: serverNameFilters.length < 2,
-                  placeholder: MetricsLabels.FilterAllSourceProcesses
+                  disabled: serverNameFilters.length < 2
                 }
               }}
               onGetMetricFilters={handleSelectedFilters}
