@@ -44,39 +44,35 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
   const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
     processPairsResults.map(({ sourceName, sourceSiteName, sourceSiteId }) => ({
       destinationName: sourceName,
-      // prometheus use a combination of process name and site name as a siteId key
-      siteName: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
+      siteName: composePrometheusSiteId({ id: sourceSiteId, name: sourceSiteName })
     }))
   );
   const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
     processPairsResults.map(({ destinationName, destinationSiteName, destinationSiteId }) => ({
       destinationName,
-      siteName: `${destinationSiteName}${siteNameAndIdSeparator}${destinationSiteId}`
+      siteName: composePrometheusSiteId({ id: destinationSiteId, name: destinationSiteName })
     }))
   );
 
-  const destSites = processPairsResults
-    .map(({ destinationSiteId, destinationSiteName }) => ({
-      // prometheus use a combination of process name and site name as a siteId key
-      name: `${destinationSiteName}${siteNameAndIdSeparator}${destinationSiteId}`
+  const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
+    processPairsResults.map(({ destinationSiteId, destinationSiteName }) => ({
+      destinationName: composePrometheusSiteId({ id: destinationSiteId, name: destinationSiteName })
     }))
-    // remove site name duplicated
-    .filter((arr, index, self) => index === self.findIndex((t) => t.name === arr.name));
+  );
 
-  const sourceSites = processPairsResults
-    .map(({ sourceSiteId, sourceSiteName }) => ({
-      name: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
+  const sourceSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
+    processPairsResults.map(({ sourceSiteId, sourceSiteName }) => ({
+      destinationName: composePrometheusSiteId({ id: sourceSiteId, name: sourceSiteName })
     }))
-    // remove site name duplicated
-    .filter((arr, index, self) => index === self.findIndex((t) => t.name === arr.name));
+  );
 
   return (
     <Metrics
       key={serviceId}
-      sourceProcesses={sourceProcesses}
-      destProcesses={destProcesses}
       sourceSites={sourceSites}
       destSites={destSites}
+      sourceProcesses={sourceProcesses}
+      destProcesses={destProcesses}
       availableProtocols={[protocol]}
       defaultMetricFilterValues={{
         protocol,
@@ -99,3 +95,8 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
 };
 
 export default Overview;
+
+// prometheus use a combination of process name and site name as a siteId key
+function composePrometheusSiteId({ id, name }: { id: string; name: string }) {
+  return `${name}${siteNameAndIdSeparator}${id}`;
+}

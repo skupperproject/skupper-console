@@ -33,8 +33,8 @@ export interface SelectedMetricFilters extends QueryMetricsParams {
 export interface MetricsProps {
   defaultMetricFilterValues: SelectedMetricFilters;
   startTimeLimit: number;
-  sourceSites?: { name: string }[];
-  destSites?: { name: string }[];
+  sourceSites?: { destinationName: string }[];
+  destSites?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string; siteName?: string }[];
   destProcesses?: { destinationName: string; siteName?: string }[];
   availableProtocols?: AvailableProtocols[];
@@ -48,8 +48,8 @@ export interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
   defaultRefreshDataInterval?: number;
   startTimeLimit: number;
-  sourceSites?: { name: string }[];
-  destSites?: { name: string }[];
+  sourceSites?: { destinationName: string }[];
+  destSites?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string; siteName?: string }[];
   destProcesses?: { destinationName: string; siteName?: string }[];
   availableProtocols?: AvailableProtocols[];

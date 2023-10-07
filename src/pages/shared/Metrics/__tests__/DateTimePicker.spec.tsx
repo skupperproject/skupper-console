@@ -1,11 +1,7 @@
-import { Suspense } from 'react';
-
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';
-import LoadingPage from '@pages/shared/Loading';
 
 import DateTimePicker from '../components/DateTimePicker';
 import { formatDate, formatTime } from '../Metrics.constants';
@@ -26,17 +22,13 @@ describe('DateTimePicker component', () => {
     const onSelectMock = jest.fn();
 
     render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <DateTimePicker
-            defaultDate={formatDate}
-            defaultTime={formatTime}
-            isDisabled={false}
-            startDate={new Date()}
-            onSelect={onSelectMock}
-          />
-        </Suspense>
-      </Wrapper>
+      <DateTimePicker
+        defaultDate={formatDate}
+        defaultTime={formatTime}
+        isDisabled={false}
+        startDate={new Date()}
+        onSelect={onSelectMock}
+      />
     );
 
     fireEvent.click(screen.getByTestId('date-time-picker-calendar-button'));

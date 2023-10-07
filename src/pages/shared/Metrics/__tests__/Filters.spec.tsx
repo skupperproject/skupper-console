@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 
@@ -25,29 +24,27 @@ describe('Metrics component', () => {
     const onRefetch = jest.fn();
 
     render(
-      <Wrapper>
-        <MetricFilters
-          sourceProcesses={[
-            { destinationName: processesData.results[0].name },
-            { destinationName: processesData.results[1].name }
-          ]}
-          destProcesses={[
-            { destinationName: processesData.results[2].name },
-            { destinationName: processesData.results[3].name }
-          ]}
-          availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
-          configFilters={{
-            destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-            sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-            protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
-          }}
-          defaultMetricFilterValues={{ sourceProcess: undefined }}
-          startTimeLimit={0}
-          isRefetching={false}
-          onRefetch={onRefetch}
-          onSelectFilters={() => {}}
-        />
-      </Wrapper>
+      <MetricFilters
+        sourceProcesses={[
+          { destinationName: processesData.results[0].name },
+          { destinationName: processesData.results[1].name }
+        ]}
+        destProcesses={[
+          { destinationName: processesData.results[2].name },
+          { destinationName: processesData.results[3].name }
+        ]}
+        availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
+        configFilters={{
+          destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
+          sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
+          protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
+        }}
+        defaultMetricFilterValues={{ sourceProcess: undefined }}
+        startTimeLimit={0}
+        isRefetching={false}
+        onRefetch={onRefetch}
+        onSelectFilters={() => {}}
+      />
     );
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceSites));

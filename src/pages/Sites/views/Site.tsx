@@ -82,11 +82,11 @@ const Site = function () {
   const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
-  const destSiteNames = Object.values([site, ...sitePairs]).map(({ name: siteName, identity }) => ({
-    name: `${siteName}${siteNameAndIdSeparator}${identity}`
-  }));
-
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
+  const sourceSites = [{ destinationName: `${name}${siteNameAndIdSeparator}${siteId}` }];
+  const destSites = Object.values([site, ...sitePairs]).map(({ name: siteName, identity }) => ({
+    destinationName: `${siteName}${siteNameAndIdSeparator}${identity}`
+  }));
 
   const NavigationMenu = function () {
     return (
@@ -108,13 +108,13 @@ const Site = function () {
           {tabSelected === SiteLabels.Overview && (
             <Metrics
               key={siteId}
+              sourceSites={sourceSites}
+              destSites={destSites}
               defaultMetricFilterValues={{
                 sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
               }}
               startTimeLimit={startTime}
-              sourceSites={[{ name: `${name}${siteNameAndIdSeparator}${siteId}` }]}
-              destSites={destSiteNames}
               configFilters={{
                 sourceSites: { disabled: true },
                 destinationProcesses: { hide: true },

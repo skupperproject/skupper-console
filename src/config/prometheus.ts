@@ -1,7 +1,7 @@
 import { IntervalTimeMap } from '@API/Prometheus.interfaces';
 
 export const timeIntervalMap: IntervalTimeMap = {
-  oneMinute: { value: '1m', seconds: 60, step: '5s', key: 'oneMinute', label: 'Last min.' },
+  oneMinute: { value: '1m', seconds: 60, step: '5s', key: 'oneMinute', label: 'Last 1 min.' },
   fiveMinutes: { value: '5m', seconds: 5 * 60, step: '15s', key: 'fiveMinutes', label: 'Last 5 min.' },
   fifteenMinutes: { value: '15m', seconds: 15 * 60, step: '15s', key: 'fifteenMinutes', label: 'Last 15 min.' },
   thirtyMinutes: { value: '30m', seconds: 30 * 60, step: '15s', key: 'thirtyMinutes', label: 'Last 30 min.' },
