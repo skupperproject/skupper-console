@@ -1,8 +1,9 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import processesData from '@mocks/data/PROCESSES.json';
+import siteData from '@mocks/data/SITES.json';
 import { loadMockServer } from '@mocks/server';
 
 import MetricFilters from '../components/Filters';
@@ -25,6 +26,8 @@ describe('Metrics component', () => {
 
     render(
       <MetricFilters
+        sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
+        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[3].name }]}
         sourceProcesses={[
           { destinationName: processesData.results[0].name },
           { destinationName: processesData.results[1].name }
@@ -47,13 +50,36 @@ describe('Metrics component', () => {
       />
     );
 
-    fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceSites));
-    fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationSites));
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
+    await waitFor(() => expect(screen.getByText(processesData.results[0].name)).toBeInTheDocument());
+
     fireEvent.click(screen.getByText(processesData.results[0].name));
+    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllSourceProcesses)).not.toBeInTheDocument());
+
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
-    fireEvent.click(screen.getByText(processesData.results[2].name));
+    await waitFor(() => expect(screen.getByText(processesData.results[3].name)).toBeInTheDocument());
+
+    fireEvent.click(screen.getByText(processesData.results[3].name));
+    await waitFor(() =>
+      expect(screen.queryByText(MetricsLabels.FilterAllDestinationProcesses)).not.toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceSites));
+    await waitFor(() => expect(screen.getByText(siteData.results[0].name)).toBeInTheDocument());
+
+    fireEvent.click(screen.getByText(siteData.results[0].name));
+    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllSourceSites)).not.toBeInTheDocument());
+
+    fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationSites));
+    await waitFor(() => expect(screen.getByText(siteData.results[3].name)).toBeInTheDocument());
+
+    fireEvent.click(screen.getByText(siteData.results[3].name));
+    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllDestinationSites)).not.toBeInTheDocument());
+
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
+    await waitFor(() => expect(screen.getByText(AvailableProtocols.Http2)).toBeInTheDocument());
+
     fireEvent.click(screen.getByText(AvailableProtocols.Http2));
+    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterProtocolsDefault)).not.toBeInTheDocument());
   });
 });
