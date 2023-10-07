@@ -20,7 +20,7 @@ export enum ServicesLabels {
   Section = 'Services',
   HTTP = ' HTTP/2',
   TCP = 'TCP',
-  Description = 'Set of processes that are exposed across the Virtual Application Network.',
+  Description = 'Collection of processes (servers) that are exposed across the Application network, along with their respective connections to the processes (clients) they communicate with',
   NoMetricSourceProcessFilter = 'No Clients',
   ActiveConnections = 'Live connections',
   OldConnections = 'Connection history',

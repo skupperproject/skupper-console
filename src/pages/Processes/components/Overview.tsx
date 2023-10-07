@@ -74,13 +74,11 @@ const Overview: FC<OverviewProps> = function ({
   ]);
 
   const destProcesses = [...destProcessesTx, ...destProcessesRx];
-  const destSites = destProcesses
-    .map(({ siteName }) => ({
-      name: siteName
+  const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
+    destProcesses.map(({ siteName }) => ({
+      destinationName: siteName
     }))
-    // remove site name duplicated
-    .filter((arr, index, self) => index === self.findIndex((t) => t.name === arr.name));
-
+  );
   const availableProtocols = [
     ...new Set(
       [...(processesPairsTxData || []), ...processesPairsRxReverse].map(({ protocol }) => protocol).filter(Boolean)
@@ -90,15 +88,15 @@ const Overview: FC<OverviewProps> = function ({
   return (
     <Metrics
       key={processId}
+      destSites={destSites}
+      destProcesses={destProcesses}
+      availableProtocols={availableProtocols}
       defaultMetricFilterValues={{
         sourceProcess: name,
         sourceSite: `${parentName}${siteNameAndIdSeparator}${parent}`,
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       startTimeLimit={startTime}
-      destSites={destSites}
-      destProcesses={destProcesses}
-      availableProtocols={availableProtocols}
       configFilters={{
         destSites: {
           hide: destSites.length === 0
