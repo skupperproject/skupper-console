@@ -75,7 +75,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getHttpPartialStatus(queryFilterString),
+        query: queries.getHttpPartialStatus(queryFilterString, `${end - start}s`),
         start,
         end,
         step

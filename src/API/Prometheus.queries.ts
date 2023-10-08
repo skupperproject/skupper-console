@@ -16,8 +16,8 @@ export const queries = {
   },
 
   // http response queries
-  getHttpPartialStatus(param: string) {
-    return `sum by(partial_code)(label_replace(http_requests_result_total{${param}},"partial_code", "$1", "code","(.*).{2}"))`;
+  getHttpPartialStatus(param: string, range: IntervalTimePropValue) {
+    return `sum by(partial_code)(label_replace(sum_over_time(http_requests_result_total{${param}}[${range}]),"partial_code", "$1", "code","(.*).{2}"))`;
   },
 
   getHttpPartialStatusRateTimeInterval(param: string, range: IntervalTimePropValue) {

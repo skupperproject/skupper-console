@@ -1,20 +1,14 @@
 import { FC, useCallback, useState } from 'react';
 
-import { Card, CardBody, Stack, StackItem } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { Stack, StackItem } from '@patternfly/react-core';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { isPrometheusActive } from '@config/config';
-import EmptyData from '@core/components/EmptyData';
 
 import MetricFilters from './components/Filters';
 import Latency from './components/Latency';
 import Request from './components/Request';
 import Traffic from './components/Traffic';
-import { MetricsLabels } from './Metrics.enum';
-import { MetricsProps, QueriesMetrics, QueryMetricsParams } from './Metrics.interfaces';
-import MetricsController from './services';
+import { MetricsProps, QueryMetricsParams } from './Metrics.interfaces';
 
 const Metrics: FC<MetricsProps> = function ({
   configFilters,
@@ -34,15 +28,6 @@ const Metrics: FC<MetricsProps> = function ({
   const [refetchInterval, setRefetchInterval] = useState(defaultRefreshDataInterval);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
 
-  const { data: byteRateData, isRefetching } = useQuery(
-    [QueriesMetrics.GetTraffic, queryParams],
-    () => MetricsController.getTraffic(queryParams),
-    {
-      enabled: isPrometheusActive,
-      refetchInterval,
-      keepPreviousData: true
-    }
-  );
   //Filters: refetch manually the prometheus API
   const handleShouldUpdateData = useCallback(() => {
     setShouldUpdateData(new Date().getTime());
@@ -60,8 +45,6 @@ const Metrics: FC<MetricsProps> = function ({
     [onGetMetricFilters]
   );
 
-  const areDataAvailable = !!byteRateData?.txTimeSerie || !!byteRateData?.rxTimeSerie;
-
   return (
     <Stack hasGutter>
       <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
@@ -75,51 +58,35 @@ const Metrics: FC<MetricsProps> = function ({
           destProcesses={destProcesses}
           availableProtocols={availableProtocols}
           startTimeLimit={startTimeLimit}
-          isRefetching={isRefetching}
+          isRefetching={false}
           onRefetch={handleShouldUpdateData}
           onSelectFilters={handleUpdateQueryParams}
         />
       </StackItem>
-      {!areDataAvailable && (
-        <StackItem isFilled>
-          <Card isFullHeight>
-            <CardBody>
-              <EmptyData
-                message={MetricsLabels.NoMetricFoundTitleMessage}
-                description={MetricsLabels.NoMetricFoundDescriptionMessage}
-                icon={SearchIcon}
-              />
-            </CardBody>
-          </Card>
-        </StackItem>
-      )}
 
-      {areDataAvailable && (
+      <StackItem>
+        <Traffic selectedFilters={queryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
+      </StackItem>
+
+      {queryParams.protocol !== AvailableProtocols.Tcp && (
         <>
           <StackItem>
-            <Traffic selectedFilters={queryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
+            <Latency
+              selectedFilters={queryParams}
+              openSections={openSections?.latency}
+              forceUpdate={shouldUpdateData}
+              refetchInterval={refetchInterval}
+            />
           </StackItem>
-          {queryParams.protocol !== AvailableProtocols.Tcp && (
-            <>
-              <StackItem>
-                <Latency
-                  selectedFilters={queryParams}
-                  openSections={openSections?.latency}
-                  forceUpdate={shouldUpdateData}
-                  refetchInterval={refetchInterval}
-                />
-              </StackItem>
 
-              <StackItem>
-                <Request
-                  selectedFilters={queryParams}
-                  openSections={openSections?.request}
-                  forceUpdate={shouldUpdateData}
-                  refetchInterval={refetchInterval}
-                />
-              </StackItem>
-            </>
-          )}
+          <StackItem>
+            <Request
+              selectedFilters={queryParams}
+              openSections={openSections?.request}
+              forceUpdate={shouldUpdateData}
+              refetchInterval={refetchInterval}
+            />
+          </StackItem>
         </>
       )}
     </Stack>

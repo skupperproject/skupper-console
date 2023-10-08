@@ -1,9 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
+import EmptyData from '@core/components/EmptyData';
 
 import LatencyCharts from './LatencyCharts';
 import { MetricsLabels } from '../Metrics.enum';
@@ -17,8 +19,9 @@ interface LatencyProps {
   refetchInterval?: number;
 }
 
-const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, openSections, refetchInterval }) {
-  const [isExpanded, setIsExpanded] = useState(openSections || false);
+const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, openSections = false, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(openSections);
+
   const { data, refetch } = useQuery(
     [QueriesMetrics.GetLatency, selectedFilters],
     () => MetricsController.getLatency(selectedFilters),
@@ -44,20 +47,24 @@ const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, open
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  const isSectionActive = !!data?.length;
-
   return (
-    <Card isExpanded={isSectionActive && isExpanded} className={!isSectionActive ? 'metric-disabled' : undefined}>
-      <CardHeader onExpand={isSectionActive ? handleExpand : () => null}>
+    <Card isExpanded={isExpanded}>
+      <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.LatencyTitle}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
-        {!!isSectionActive && (
-          <CardBody>
+        <CardBody>
+          {data?.length ? (
             <LatencyCharts latenciesData={data} />
-          </CardBody>
-        )}
+          ) : (
+            <EmptyData
+              message={MetricsLabels.NoMetricFoundTitleMessage}
+              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              icon={SearchIcon}
+            />
+          )}
+        </CardBody>
       </CardExpandableContent>
     </Card>
   );

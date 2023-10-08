@@ -1,9 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
+import EmptyData from '@core/components/EmptyData';
 
 import RequestCharts from './RequestCharts';
 import ResponseCharts from './ResponseCharts';
@@ -18,8 +20,8 @@ interface RequestProps {
   refetchInterval?: number;
 }
 
-const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, openSections, refetchInterval }) {
-  const [isExpanded, setIsExpanded] = useState(openSections || false);
+const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, openSections = false, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(openSections);
 
   const [{ data: request, refetch: refetchRequest }, { data: response, refetch: refetchResponse }] = useQueries({
     queries: [
@@ -58,35 +60,36 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!request?.requestRateData || !response) {
-    return null;
-  }
-
-  const { requestRateData, requestPerf } = request;
-  const isSectionActive = !!requestRateData?.flatMap(({ data: values }) => values.find(({ y }) => y > 0) || []).length;
-
-  const { responseData, responseRateData } = response;
-
   return (
-    <Card isExpanded={isSectionActive && isExpanded} className={!isSectionActive ? 'metric-disabled' : undefined}>
-      <CardHeader onExpand={isSectionActive ? handleExpand : () => null}>
+    <Card isExpanded={isExpanded}>
+      <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        {!!requestRateData?.length && (
-          <>
-            <CardBody>
-              <RequestCharts requestRateData={requestRateData} requestPerf={requestPerf} />
-            </CardBody>
+        <CardBody>
+          {request?.requestRateData?.length ? (
+            <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
+          ) : (
+            <EmptyData
+              message={MetricsLabels.NoMetricFoundTitleMessage}
+              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              icon={SearchIcon}
+            />
+          )}
+        </CardBody>
 
-            {responseData && (
-              <CardBody>
-                <CardTitle>{MetricsLabels.HttpStatus}</CardTitle>
-                <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
-              </CardBody>
-            )}
-          </>
-        )}
+        <CardBody>
+          <CardTitle>{MetricsLabels.HttpStatus}</CardTitle>
+          {response?.responseData ? (
+            <ResponseCharts responseData={response.responseData} responseRateData={response.responseRateData} />
+          ) : (
+            <EmptyData
+              message={MetricsLabels.NoMetricFoundTitleMessage}
+              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              icon={SearchIcon}
+            />
+          )}
+        </CardBody>
       </CardExpandableContent>
     </Card>
   );
