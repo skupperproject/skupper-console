@@ -45,6 +45,11 @@ const Metrics: FC<MetricsProps> = function ({
     [onGetMetricFilters]
   );
 
+  // case: We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
+  const isOnlyTcp =
+    queryParams.protocol !== AvailableProtocols.Tcp &&
+    !(availableProtocols?.length === 1 && availableProtocols[0] === AvailableProtocols.Tcp);
+
   return (
     <Stack hasGutter>
       <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
@@ -58,7 +63,6 @@ const Metrics: FC<MetricsProps> = function ({
           destProcesses={destProcesses}
           availableProtocols={availableProtocols}
           startTimeLimit={startTimeLimit}
-          isRefetching={false}
           onRefetch={handleShouldUpdateData}
           onSelectFilters={handleUpdateQueryParams}
         />
@@ -68,7 +72,7 @@ const Metrics: FC<MetricsProps> = function ({
         <Traffic selectedFilters={queryParams} forceUpdate={shouldUpdateData} refetchInterval={refetchInterval} />
       </StackItem>
 
-      {queryParams.protocol !== AvailableProtocols.Tcp && (
+      {isOnlyTcp && (
         <>
           <StackItem>
             <Latency
