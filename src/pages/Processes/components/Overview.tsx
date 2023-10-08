@@ -10,11 +10,12 @@ import { siteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesProcesses } from '../Processes.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
+const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `process-open-metric-sections`;
 
 interface OverviewProps {
   process: ProcessResponse;
@@ -45,7 +46,14 @@ const Overview: FC<OverviewProps> = function ({
 
   const handleSelectedFilters = useCallback(
     (filters: SelectedMetricFilters) => {
-      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
+      storeDataToSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
+    },
+    [processId]
+  );
+
+  const handleGetExpandedSectionsConfig = useCallback(
+    (sections: ExpandedMetricSections) => {
+      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processId}`, sections);
     },
     [processId]
   );
@@ -91,6 +99,9 @@ const Overview: FC<OverviewProps> = function ({
       destSites={destSites}
       destProcesses={destProcesses}
       availableProtocols={availableProtocols}
+      defaultOpenSections={{
+        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processId}`)
+      }}
       defaultMetricFilterValues={{
         sourceProcess: name,
         sourceSite: `${parentName}${siteNameAndIdSeparator}${parent}`,
@@ -108,6 +119,7 @@ const Overview: FC<OverviewProps> = function ({
         sourceSites: { disabled: true }
       }}
       onGetMetricFilters={handleSelectedFilters}
+      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />
   );
 };

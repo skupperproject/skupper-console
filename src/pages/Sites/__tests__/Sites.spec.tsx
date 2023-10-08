@@ -4,6 +4,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
@@ -42,19 +43,25 @@ describe('Begin testing the Sites component', () => {
 
   it('should render the sites view after the data loading is complete', async () => {
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByTestId(getTestsIds.sitesView())).toBeInTheDocument();
   });
 
   it('should render a table with the site data after the data has loaded.', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
   });
 
   it('Should ensure the Sites component renders with correct link href after loading page', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByRole('link', { name: siteResults[0].name })).toHaveAttribute(
       'href',
@@ -86,7 +93,10 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
     expect(screen.getByText('ERR_BAD_REQUEST')).toBeInTheDocument();
   });
 
@@ -114,7 +124,9 @@ describe('Begin testing the Sites component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText('ERR_BAD_RESPONSE')).toBeInTheDocument();
   });

@@ -19,9 +19,16 @@ interface RequestProps {
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;
+  onGetIsSectionExpanded?: Function;
 }
 
-const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, openSections = false, refetchInterval }) {
+const Request: FC<RequestProps> = function ({
+  selectedFilters,
+  forceUpdate,
+  openSections = false,
+  refetchInterval,
+  onGetIsSectionExpanded
+}) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
   const [
@@ -48,7 +55,11 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-  }, [isExpanded]);
+
+    if (onGetIsSectionExpanded) {
+      onGetIsSectionExpanded({ request: !isExpanded });
+    }
+  }, [isExpanded, onGetIsSectionExpanded]);
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {

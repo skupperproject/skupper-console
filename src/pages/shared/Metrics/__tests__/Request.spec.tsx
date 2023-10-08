@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 
-import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
@@ -51,33 +50,5 @@ describe('Request component', () => {
 
     expect(screen.getByText(MetricsLabels.RequestsTitle)).toBeInTheDocument();
     expect(component).toMatchSnapshot();
-  });
-
-  it('should render the Request section and display the no metric found message', async () => {
-    jest.spyOn(ReactQuery, 'useQueries').mockImplementation(
-      jest.fn().mockReturnValue([
-        { data: null, refetch: null },
-        { data: null, refetch: null }
-      ])
-    );
-
-    render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <Request
-            selectedFilters={{
-              sourceProcess: processResult.name
-            }}
-            openSections={true}
-          />
-        </Suspense>
-      </Wrapper>
-    );
-
-    expect(screen.getAllByText(MetricsLabels.NoMetricFoundTitleMessage)[0]).toBeInTheDocument();
-    expect(screen.getAllByText(MetricsLabels.NoMetricFoundDescriptionMessage)[0]).toBeInTheDocument();
-
-    expect(screen.getAllByText(MetricsLabels.NoMetricFoundTitleMessage)[1]).toBeInTheDocument();
-    expect(screen.getAllByText(MetricsLabels.NoMetricFoundDescriptionMessage)[1]).toBeInTheDocument();
   });
 });

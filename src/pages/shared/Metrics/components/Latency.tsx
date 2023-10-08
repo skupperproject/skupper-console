@@ -18,9 +18,16 @@ interface LatencyProps {
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;
+  onGetIsSectionExpanded?: Function;
 }
 
-const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, openSections = false, refetchInterval }) {
+const Latency: FC<LatencyProps> = function ({
+  selectedFilters,
+  forceUpdate,
+  openSections = false,
+  refetchInterval,
+  onGetIsSectionExpanded
+}) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
   const { data, refetch, isRefetching } = useQuery(
@@ -35,7 +42,11 @@ const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, open
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-  }, [isExpanded]);
+
+    if (onGetIsSectionExpanded) {
+      onGetIsSectionExpanded({ latency: !isExpanded });
+    }
+  }, [isExpanded, onGetIsSectionExpanded]);
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
