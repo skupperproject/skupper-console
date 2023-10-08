@@ -12,6 +12,7 @@ import {
   Menu,
   MenuContent,
   MenuItem,
+  MenuToggle,
   Popover,
   Title
 } from '@patternfly/react-core';
@@ -92,7 +93,7 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
 
   return (
     <Popover
-      position="bottom"
+      position="left"
       bodyContent={
         <Flex>
           <FlexItem>
@@ -157,9 +158,9 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
       hasAutoWidth
       triggerRef={popoverRef}
     >
-      <Button variant="tertiary" ref={popoverRef} onClick={handleToggle} icon={<OutlinedClockIcon />}>
+      <MenuToggle ref={popoverRef} onClick={handleToggle} icon={<OutlinedClockIcon />}>
         {label}
-      </Button>
+      </MenuToggle>
     </Popover>
   );
 };
