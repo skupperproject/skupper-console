@@ -18,9 +18,16 @@ interface TrafficProps {
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;
+  onGetIsSectionExpanded?: Function;
 }
 
-const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refetchInterval, openSections = true }) {
+const Traffic: FC<TrafficProps> = function ({
+  selectedFilters,
+  forceUpdate,
+  refetchInterval,
+  openSections = true,
+  onGetIsSectionExpanded
+}) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
   const { data, refetch, isRefetching } = useQuery(
@@ -35,7 +42,11 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-  }, [isExpanded]);
+
+    if (onGetIsSectionExpanded) {
+      onGetIsSectionExpanded({ byterate: !isExpanded });
+    }
+  }, [isExpanded, onGetIsSectionExpanded]);
 
   const handleRefetchMetrics = useCallback(() => {
     isPrometheusActive && refetch();

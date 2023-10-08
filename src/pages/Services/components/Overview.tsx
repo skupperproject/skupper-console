@@ -9,11 +9,12 @@ import { siteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
+const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `service-open-metric-sections`;
 
 interface OverviewProps {
   serviceId: string;
@@ -34,6 +35,13 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
   const handleSelectedFilters = useCallback(
     (filters: string) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`, filters);
+    },
+    [serviceId]
+  );
+
+  const handleGetExpandedSectionsConfig = useCallback(
+    (sections: ExpandedMetricSections) => {
+      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`, sections);
     },
     [serviceId]
   );
@@ -74,6 +82,9 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
       sourceProcesses={sourceProcesses}
       destProcesses={destProcesses}
       availableProtocols={[protocol]}
+      defaultOpenSections={{
+        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`)
+      }}
       defaultMetricFilterValues={{
         protocol,
         service: serviceName,
@@ -90,6 +101,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
       }}
       startTimeLimit={startTime}
       onGetMetricFilters={handleSelectedFilters}
+      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />
   );
 };

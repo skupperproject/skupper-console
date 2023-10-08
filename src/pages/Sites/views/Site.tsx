@@ -31,13 +31,14 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import SitesController from '../services';
 import { SitesRoutesPaths, SiteLabels, QueriesSites } from '../Sites.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'site-metric-filter';
+const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `site-open-metric-sections`;
 
 const processQueryParams = { endTime: 0 };
 
@@ -63,6 +64,13 @@ const Site = function () {
   const handleSelectedFilters = useCallback(
     (filters: SelectedMetricFilters) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`, filters);
+    },
+    [siteId]
+  );
+
+  const handleGetExpandedSectionsConfig = useCallback(
+    (sections: ExpandedMetricSections) => {
+      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`, sections);
     },
     [siteId]
   );
@@ -110,6 +118,9 @@ const Site = function () {
               key={siteId}
               sourceSites={sourceSites}
               destSites={destSites}
+              defaultOpenSections={{
+                ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
+              }}
               defaultMetricFilterValues={{
                 sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
@@ -121,6 +132,7 @@ const Site = function () {
                 sourceProcesses: { hide: true }
               }}
               onGetMetricFilters={handleSelectedFilters}
+              onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
             />
           )}
           {tabSelected === SiteLabels.Details && (

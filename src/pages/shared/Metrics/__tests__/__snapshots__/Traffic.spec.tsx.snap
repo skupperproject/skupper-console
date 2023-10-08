@@ -66,6 +66,30 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
             class="pf-v5-c-card__body"
           >
             <div
+              style="position: absolute; width: 100%; height: 100%; background-color: rgba(3, 3, 3, 0.1); left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 1;"
+            >
+              <div
+                class="pf-v5-l-bullseye"
+              >
+                <svg
+                  aria-label="Contents"
+                  aria-valuetext="Loading..."
+                  class="pf-v5-c-spinner pf-m-xl"
+                  role="progressbar"
+                  style="--pf-v5-c-spinner--diameter: 150px;"
+                  viewBox="0 0 100 100"
+                >
+                  <circle
+                    class="pf-v5-c-spinner__path"
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="45"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
               class="pf-v5-l-flex pf-m-row-on-xl pf-m-column-on-md"
             >
               <div
@@ -940,6 +964,30 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
         <div
           class="pf-v5-c-card__body"
         >
+          <div
+            style="position: absolute; width: 100%; height: 100%; background-color: rgba(3, 3, 3, 0.1); left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 1;"
+          >
+            <div
+              class="pf-v5-l-bullseye"
+            >
+              <svg
+                aria-label="Contents"
+                aria-valuetext="Loading..."
+                class="pf-v5-c-spinner pf-m-xl"
+                role="progressbar"
+                style="--pf-v5-c-spinner--diameter: 150px;"
+                viewBox="0 0 100 100"
+              >
+                <circle
+                  class="pf-v5-c-spinner__path"
+                  cx="50"
+                  cy="50"
+                  fill="none"
+                  r="45"
+                />
+              </svg>
+            </div>
+          </div>
           <div
             class="pf-v5-l-flex pf-m-row-on-xl pf-m-column-on-md"
           >

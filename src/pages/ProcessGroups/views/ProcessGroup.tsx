@@ -13,12 +13,13 @@ import MainContainer from '@layout/MainContainer';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'component-metric-filter';
+const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `component-open-metric-sections`;
 
 const ProcessGroup = function () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,6 +41,13 @@ const ProcessGroup = function () {
   const handleSelectedFilters = useCallback(
     (filters: SelectedMetricFilters) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`, filters);
+    },
+    [processGroupId]
+  );
+
+  const handleGetExpandedSectionsConfig = useCallback(
+    (sections: ExpandedMetricSections) => {
+      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processGroupId}`, sections);
     },
     [processGroupId]
   );
@@ -93,6 +101,11 @@ const ProcessGroup = function () {
           {tabSelected === ProcessGroupsLabels.Overview && (
             <Metrics
               key={id}
+              defaultOpenSections={{
+                ...getDataFromSession<ExpandedMetricSections>(
+                  `${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processGroupId}`
+                )
+              }}
               defaultMetricFilterValues={{
                 sourceProcess: serverNames,
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
@@ -108,6 +121,7 @@ const ProcessGroup = function () {
                 }
               }}
               onGetMetricFilters={handleSelectedFilters}
+              onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
             />
           )}
 

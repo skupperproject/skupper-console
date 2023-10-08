@@ -30,8 +30,15 @@ export interface SelectedMetricFilters extends QueryMetricsParams {
   refreshDataInterval?: number;
 }
 
+export interface ExpandedMetricSections {
+  byterate?: boolean;
+  latency?: boolean;
+  request?: boolean;
+}
+
 export interface MetricsProps {
   defaultMetricFilterValues: SelectedMetricFilters;
+  defaultOpenSections?: ExpandedMetricSections;
   startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
   destSites?: { destinationName: string }[];
@@ -39,8 +46,8 @@ export interface MetricsProps {
   destProcesses?: { destinationName: string; siteName?: string }[];
   availableProtocols?: AvailableProtocols[];
   configFilters?: ConfigMetricFilters;
-  openSections?: { traffic?: boolean; latency?: boolean; request?: boolean; response?: boolean };
   onGetMetricFilters?: Function;
+  onGetExpandedSectionsConfig?: Function;
   refreshDataInterval?: number;
 }
 
