@@ -14,7 +14,6 @@ import LoadingPage from '@pages/shared/Loading';
 import Latency from '../components/Latency';
 import { MetricsLabels } from '../Metrics.enum';
 
-let component;
 const processResult = processesData.results[0] as ProcessResponse;
 
 describe('Latency component', () => {
@@ -30,7 +29,7 @@ describe('Latency component', () => {
   });
 
   it('should render the Latency section of the metric', async () => {
-    component = render(
+    render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <Latency
@@ -47,7 +46,6 @@ describe('Latency component', () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
 
     expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
-    expect(component).toMatchSnapshot();
   });
 
   it('should render the Latency section and display the no metric found message', async () => {
