@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
+import SkIsLoading from '@core/components/SkIsLoading';
 
 import TrafficCharts from './TrafficCharts';
 import { MetricsLabels } from '../Metrics.enum';
@@ -22,7 +23,7 @@ interface TrafficProps {
 const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refetchInterval, openSections = true }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const { data, refetch } = useQuery(
+  const { data, refetch, isRefetching } = useQuery(
     [QueriesMetrics.GetTraffic, selectedFilters],
     () => MetricsController.getTraffic(selectedFilters),
     {
@@ -55,7 +56,10 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
       <CardExpandableContent>
         <CardBody>
           {data?.txTimeSerie || data?.rxTimeSerie ? (
-            <TrafficCharts byteRateData={data} />
+            <>
+              {isRefetching && <SkIsLoading />}
+              <TrafficCharts byteRateData={data} />
+            </>
           ) : (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}

@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
+import SkIsLoading from '@core/components/SkIsLoading';
 
 import LatencyCharts from './LatencyCharts';
 import { MetricsLabels } from '../Metrics.enum';
@@ -22,7 +23,7 @@ interface LatencyProps {
 const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, openSections = false, refetchInterval }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const { data, refetch } = useQuery(
+  const { data, refetch, isRefetching } = useQuery(
     [QueriesMetrics.GetLatency, selectedFilters],
     () => MetricsController.getLatency(selectedFilters),
     {
@@ -56,7 +57,10 @@ const Latency: FC<LatencyProps> = function ({ selectedFilters, forceUpdate, open
       <CardExpandableContent>
         <CardBody>
           {data?.length ? (
-            <LatencyCharts latenciesData={data} />
+            <>
+              {isRefetching && <SkIsLoading />}
+              <LatencyCharts latenciesData={data} />
+            </>
           ) : (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}

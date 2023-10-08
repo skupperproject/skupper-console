@@ -6,6 +6,7 @@ import { useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
+import SkIsLoading from '@core/components/SkIsLoading';
 
 import RequestCharts from './RequestCharts';
 import ResponseCharts from './ResponseCharts';
@@ -23,7 +24,10 @@ interface RequestProps {
 const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, openSections = false, refetchInterval }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const [{ data: request, refetch: refetchRequest }, { data: response, refetch: refetchResponse }] = useQueries({
+  const [
+    { data: request, refetch: refetchRequest, isRefetching: isRefetchingRequest },
+    { data: response, refetch: refetchResponse, isRefetching: isRefetchingResponse }
+  ] = useQueries({
     queries: [
       {
         queryKey: [QueriesMetrics.GetRequest, selectedFilters],
@@ -60,6 +64,10 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
+  if (!response?.responseData) {
+    return null;
+  }
+
   return (
     <Card isExpanded={isExpanded}>
       <CardHeader onExpand={handleExpand}>
@@ -68,7 +76,10 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
       <CardExpandableContent>
         <CardBody>
           {request?.requestRateData?.length ? (
-            <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
+            <>
+              {isRefetchingRequest && <SkIsLoading />}
+              <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
+            </>
           ) : (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
@@ -80,15 +91,10 @@ const Request: FC<RequestProps> = function ({ selectedFilters, forceUpdate, open
 
         <CardBody>
           <CardTitle>{MetricsLabels.HttpStatus}</CardTitle>
-          {response?.responseData ? (
+          <>
+            {isRefetchingResponse && <SkIsLoading />}
             <ResponseCharts responseData={response.responseData} responseRateData={response.responseRateData} />
-          ) : (
-            <EmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
-              icon={SearchIcon}
-            />
-          )}
+          </>
         </CardBody>
       </CardExpandableContent>
     </Card>
