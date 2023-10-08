@@ -20,7 +20,7 @@ const Metrics: FC<MetricsProps> = function ({
   destProcesses, // List of destination processes for filtering
   availableProtocols, // List of available protocols for filtering
   startTimeLimit, // Use startTimeLimit to set the left temporal limit of the SelectTimeInterval filter
-  onGetMetricFilters, // Function to retrieve the filter configuration
+  onGetMetricFiltersConfig, // Function to retrieve the filter configuration
   onGetExpandedSectionsConfig // Function to retrieve the open/close status of metric sections
 }) {
   const { refreshDataInterval: defaultRefreshDataInterval, ...filters } = defaultMetricFilterValues;
@@ -41,11 +41,11 @@ const Metrics: FC<MetricsProps> = function ({
     (updatedFilters: QueryMetricsParams, refreshDataInterval?: number) => {
       setRefetchInterval(refreshDataInterval);
       setQueryParams(updatedFilters);
-      if (onGetMetricFilters) {
-        onGetMetricFilters({ ...updatedFilters, refreshDataInterval });
+      if (onGetMetricFiltersConfig) {
+        onGetMetricFiltersConfig({ ...updatedFilters, refreshDataInterval });
       }
     },
-    [onGetMetricFilters]
+    [onGetMetricFiltersConfig]
   );
 
   const handleUpdateExpandedSections = useCallback(

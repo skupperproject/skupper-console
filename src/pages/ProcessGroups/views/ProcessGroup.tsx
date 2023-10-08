@@ -120,7 +120,7 @@ const ProcessGroup = function () {
                   disabled: serverNameFilters.length < 2
                 }
               }}
-              onGetMetricFilters={handleSelectedFilters}
+              onGetMetricFiltersConfig={handleSelectedFilters}
               onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
             />
           )}

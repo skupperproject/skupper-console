@@ -118,7 +118,7 @@ const Overview: FC<OverviewProps> = function ({
         sourceProcesses: { disabled: true },
         sourceSites: { disabled: true }
       }}
-      onGetMetricFilters={handleSelectedFilters}
+      onGetMetricFiltersConfig={handleSelectedFilters}
       onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />
   );
