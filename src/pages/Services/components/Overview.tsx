@@ -100,7 +100,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         protocols: { disabled: true }
       }}
       startTimeLimit={startTime}
-      onGetMetricFilters={handleSelectedFilters}
+      onGetMetricFiltersConfig={handleSelectedFilters}
       onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />
   );

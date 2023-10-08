@@ -131,7 +131,7 @@ const Site = function () {
                 destinationProcesses: { hide: true },
                 sourceProcesses: { hide: true }
               }}
-              onGetMetricFilters={handleSelectedFilters}
+              onGetMetricFiltersConfig={handleSelectedFilters}
               onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
             />
           )}

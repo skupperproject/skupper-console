@@ -46,7 +46,7 @@ export interface MetricsProps {
   destProcesses?: { destinationName: string; siteName?: string }[];
   availableProtocols?: AvailableProtocols[];
   configFilters?: ConfigMetricFilters;
-  onGetMetricFilters?: Function;
+  onGetMetricFiltersConfig?: Function;
   onGetExpandedSectionsConfig?: Function;
   refreshDataInterval?: number;
 }
