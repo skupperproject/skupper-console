@@ -1,9 +1,11 @@
 import { Suspense } from 'react';
 
+import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { ProcessResponse } from '@API/REST.interfaces';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
@@ -43,9 +45,30 @@ describe('Traffic component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
     expect(component).toMatchSnapshot();
+  });
+
+  it('should render the Traffic section and display the no metric found message', async () => {
+    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(jest.fn().mockReturnValue({ data: null }));
+
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Traffic
+            selectedFilters={{
+              sourceProcess: processResult.name
+            }}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
+    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
   });
 });

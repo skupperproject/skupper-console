@@ -299,38 +299,34 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <Card>
         <Toolbar>
           <ToolbarContent>
-            <ToolbarGroup>
-              <ToolbarItem>
-                {!config.sourceSites?.hide && sourceSiteSelect}
-                {!config.sourceProcesses?.hide && sourceProcessSelect}
-              </ToolbarItem>
-
-              <ToolbarItem>
-                {!config.destSites?.hide && destSiteSelect}
-                {!config.destinationProcesses?.hide && destProcessSelect}
-              </ToolbarItem>
-
-              <ToolbarItem>
-                <Select
-                  selections={selectedFilters.protocol}
-                  placeholderText={MetricsLabels.FilterProtocolsDefault}
-                  isOpen={selectedFilterIsOpen.protocol}
-                  isDisabled={!!config.protocols?.disabled}
-                  onSelect={handleSelectProtocol}
-                  onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
-                >
-                  {[
-                    <SelectOption key={MetricsLabels.FilterProtocolsDefault} value={undefined}>
-                      {MetricsLabels.FilterProtocolsDefault}
-                    </SelectOption>,
-                    ...optionsProtocolsWithDefault
-                  ]}
-                </Select>
-              </ToolbarItem>
+            <ToolbarGroup variant="button-group">
+              <ToolbarItem>{!config.sourceSites?.hide && sourceSiteSelect}</ToolbarItem>
+              <ToolbarItem>{!config.sourceProcesses?.hide && sourceProcessSelect}</ToolbarItem>
+            </ToolbarGroup>
+            <ToolbarGroup variant="button-group">
+              <ToolbarItem>{!config.destSites?.hide && destSiteSelect}</ToolbarItem>
+              <ToolbarItem>{!config.destinationProcesses?.hide && destProcessSelect}</ToolbarItem>
             </ToolbarGroup>
 
-            {/* Display filters */}
-            <ToolbarGroup align={{ default: 'alignRight' }}>
+            <ToolbarItem>
+              <Select
+                selections={selectedFilters.protocol}
+                placeholderText={MetricsLabels.FilterProtocolsDefault}
+                isOpen={selectedFilterIsOpen.protocol}
+                isDisabled={!!config.protocols?.disabled}
+                onSelect={handleSelectProtocol}
+                onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
+              >
+                {[
+                  <SelectOption key={MetricsLabels.FilterProtocolsDefault} value={undefined}>
+                    {MetricsLabels.FilterProtocolsDefault}
+                  </SelectOption>,
+                  ...optionsProtocolsWithDefault
+                ]}
+              </Select>
+            </ToolbarItem>
+
+            <ToolbarGroup align={{ default: 'alignRight' }} variant="button-group">
               <ToolbarItem>
                 <DateTimeRangeFilter
                   startSelected={selectedFilters.start}
@@ -340,9 +336,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                   onSelectTimeInterval={handleSelectTimeInterval}
                 />
               </ToolbarItem>
-            </ToolbarGroup>
 
-            <ToolbarGroup>
               <ToolbarItem>
                 <UpdateMetricsButton
                   isLoading={isRefetching}

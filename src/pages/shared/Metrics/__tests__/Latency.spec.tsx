@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
@@ -47,5 +48,25 @@ describe('Latency component', () => {
 
     expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
     expect(component).toMatchSnapshot();
+  });
+
+  it('should render the Latency section and display the no metric found message', async () => {
+    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(jest.fn().mockReturnValue({ data: null }));
+
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Latency
+            selectedFilters={{
+              sourceProcess: processResult.name
+            }}
+            openSections={true}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
+    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
-import { Card, CardBody, CardTitle, Grid, GridItem } from '@patternfly/react-core';
+import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
@@ -39,74 +39,61 @@ function normalizeDataXaxis(rx: skAxisXY[] = [], tx: skAxisXY[] = []) {
 }
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateData }) => (
-  <Grid hasGutter md={12}>
-    <GridItem xl={7} rowSpan={2}>
-      <Card isFullHeight>
-        <CardTitle>{MetricsLabels.DataTransferTitle}</CardTitle>
-        <CardBody>
-          <SkChartArea
-            formatY={formatByteRate}
-            legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
-            data={normalizeDataXaxis(byteRateData.rxTimeSerie?.data, byteRateData.txTimeSerie?.data)}
-          />
-        </CardBody>
-      </Card>
-    </GridItem>
+  <Flex direction={{ xl: 'row', md: 'column' }}>
+    <FlexItem flex={{ default: 'flex_2' }}>
+      <SkChartArea
+        formatY={formatByteRate}
+        legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
+        data={normalizeDataXaxis(byteRateData.rxTimeSerie?.data, byteRateData.txTimeSerie?.data)}
+      />
+    </FlexItem>
 
-    {/* Total Traffic card */}
-    <GridItem xl={5} md={6}>
-      <Card isFullHeight>
-        <CardBody>
-          <Table borders={false} variant="compact">
-            <Thead noWrap>
-              <Tr>
-                <Th />
-                <Th>{MetricsLabels.ByteRateMaxCol}</Th>
-                <Th>{MetricsLabels.ByteRateAvgCol}</Th>
-                <Th>{MetricsLabels.ByteRateCurrentCol}</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>{MetricsLabels.TrafficReceived}</Td>
-                <Th>{formatByteRate(byteRateData?.maxRxValue || 0)}</Th>
-                <Th>{formatByteRate(byteRateData?.avgRxValue || 0)}</Th>
-                <Th>{formatByteRate(byteRateData?.currentRxValue || 0)}</Th>
-              </Tr>
-              <Tr>
-                <Td>{MetricsLabels.TrafficSent}</Td>
-                <Th>{formatByteRate(byteRateData?.maxTxValue || 0)}</Th>
-                <Th>{formatByteRate(byteRateData?.avgTxValue || 0)}</Th>
-                <Th>{formatByteRate(byteRateData?.currentTxValue || 0)}</Th>
-              </Tr>
-            </Tbody>
-          </Table>
-        </CardBody>
-      </Card>
-    </GridItem>
+    <Divider orientation={{ default: 'vertical' }} />
 
-    {/* Chart pie for the distribution of the data traffic */}
-    <GridItem xl={5} md={6}>
-      <Card isFullHeight>
-        <CardBody>
-          <SkChartPie
-            format={formatByteRate}
-            themeColor={ChartThemeColor.multi}
-            data={[
-              {
-                x: MetricsLabels.TrafficReceived,
-                y: byteRateData?.totalRxValue || 0
-              },
-              {
-                x: MetricsLabels.TrafficSent,
-                y: byteRateData?.totalTxValue || 0
-              }
-            ]}
-          />
-        </CardBody>
-      </Card>
-    </GridItem>
-  </Grid>
+    <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfFlexStart' }}>
+      <Table borders={false} variant="compact">
+        <Thead noWrap>
+          <Tr>
+            <Th />
+            <Th>{MetricsLabels.ByteRateMaxCol}</Th>
+            <Th>{MetricsLabels.ByteRateAvgCol}</Th>
+            <Th>{MetricsLabels.ByteRateCurrentCol}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>{MetricsLabels.TrafficReceived}</Td>
+            <Th>{formatByteRate(byteRateData?.maxRxValue || 0)}</Th>
+            <Th>{formatByteRate(byteRateData?.avgRxValue || 0)}</Th>
+            <Th>{formatByteRate(byteRateData?.currentRxValue || 0)}</Th>
+          </Tr>
+          <Tr>
+            <Td>{MetricsLabels.TrafficSent}</Td>
+            <Th>{formatByteRate(byteRateData?.maxTxValue || 0)}</Th>
+            <Th>{formatByteRate(byteRateData?.avgTxValue || 0)}</Th>
+            <Th>{formatByteRate(byteRateData?.currentTxValue || 0)}</Th>
+          </Tr>
+        </Tbody>
+      </Table>
+
+      <Divider orientation={{ default: 'horizontal' }} />
+
+      <SkChartPie
+        format={formatByteRate}
+        themeColor={ChartThemeColor.multi}
+        data={[
+          {
+            x: MetricsLabels.TrafficReceived,
+            y: byteRateData?.totalRxValue || 0
+          },
+          {
+            x: MetricsLabels.TrafficSent,
+            y: byteRateData?.totalTxValue || 0
+          }
+        ]}
+      />
+    </FlexItem>
+  </Flex>
 ));
 
 export default TrafficCharts;

@@ -1,10 +1,14 @@
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
+import EmptyData from '@core/components/EmptyData';
 
 import TrafficCharts from './TrafficCharts';
+import { MetricsLabels } from '../Metrics.enum';
 import { QueriesMetrics, SelectedMetricFilters } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
@@ -15,7 +19,9 @@ interface TrafficProps {
   refetchInterval?: number;
 }
 
-const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refetchInterval }) {
+const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refetchInterval, openSections = true }) {
+  const [isExpanded, setIsExpanded] = useState(openSections);
+
   const { data, refetch } = useQuery(
     [QueriesMetrics.GetTraffic, selectedFilters],
     () => MetricsController.getTraffic(selectedFilters),
@@ -25,6 +31,10 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
       keepPreviousData: true
     }
   );
+
+  const handleExpand = useCallback(() => {
+    setIsExpanded(!isExpanded);
+  }, [isExpanded]);
 
   const handleRefetchMetrics = useCallback(() => {
     isPrometheusActive && refetch();
@@ -36,11 +46,27 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, forceUpdate, refe
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!data) {
-    return null;
-  }
+  return (
+    <Card isExpanded={isExpanded}>
+      <CardHeader onExpand={handleExpand}>
+        <CardTitle>{MetricsLabels.DataTransferTitle}</CardTitle>
+      </CardHeader>
 
-  return <TrafficCharts byteRateData={data} />;
+      <CardExpandableContent>
+        <CardBody>
+          {data?.txTimeSerie || data?.rxTimeSerie ? (
+            <TrafficCharts byteRateData={data} />
+          ) : (
+            <EmptyData
+              message={MetricsLabels.NoMetricFoundTitleMessage}
+              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              icon={SearchIcon}
+            />
+          )}
+        </CardBody>
+      </CardExpandableContent>
+    </Card>
+  );
 };
 
 export default Traffic;
