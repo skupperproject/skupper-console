@@ -299,14 +299,17 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <Card>
         <Toolbar>
           <ToolbarContent>
-            <ToolbarGroup variant="button-group">
+            <ToolbarGroup>
               <ToolbarItem>{!config.sourceSites?.hide && sourceSiteSelect}</ToolbarItem>
               <ToolbarItem>{!config.sourceProcesses?.hide && sourceProcessSelect}</ToolbarItem>
             </ToolbarGroup>
-            <ToolbarGroup variant="button-group">
+
+            <ToolbarGroup>
               <ToolbarItem>{!config.destSites?.hide && destSiteSelect}</ToolbarItem>
               <ToolbarItem>{!config.destinationProcesses?.hide && destProcessSelect}</ToolbarItem>
             </ToolbarGroup>
+
+            <ToolbarItem variant="separator" />
 
             <ToolbarItem>
               <Select
@@ -326,17 +329,17 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </Select>
             </ToolbarItem>
 
-            <ToolbarGroup align={{ default: 'alignRight' }} variant="button-group">
-              <ToolbarItem>
-                <DateTimeRangeFilter
-                  startSelected={selectedFilters.start}
-                  endSelected={selectedFilters.end}
-                  duration={selectedFilters.duration}
-                  startTimeLimit={startTimeLimit}
-                  onSelectTimeInterval={handleSelectTimeInterval}
-                />
-              </ToolbarItem>
+            <ToolbarItem>
+              <DateTimeRangeFilter
+                startSelected={selectedFilters.start}
+                endSelected={selectedFilters.end}
+                duration={selectedFilters.duration}
+                startTimeLimit={startTimeLimit}
+                onSelectTimeInterval={handleSelectTimeInterval}
+              />
+            </ToolbarItem>
 
+            <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
                 <UpdateMetricsButton
                   isLoading={isRefetching}
