@@ -13,7 +13,7 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
   {
     name: SiteLabels.Name,
     prop: 'name' as keyof SiteResponse,
-    customCellName: 'linkCell'
+    customCellName: 'LinkCell'
   },
 
   {

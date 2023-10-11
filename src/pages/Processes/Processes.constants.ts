@@ -49,8 +49,6 @@ export const CustomProcessCells = {
     }),
   ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
-  exposedCell: (props: LinkCellProps<ProcessResponse>) =>
-    props.data.processBinding === 'bound' ? ProcessesLabels.IsExposed : ProcessesLabels.IsNotExposed,
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes })
 };
