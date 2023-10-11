@@ -30,7 +30,7 @@ export const queries = {
   },
 
   getAvgLatencyTimeInterval(param: string, range: IntervalTimePropValue) {
-    return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}])/rate(flow_latency_microseconds_count{${param}}[${range}]))`;
+    return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}]))/sum(rate(flow_latency_microseconds_count{${param}}[${range}]))`;
   },
 
   // data transfer queries

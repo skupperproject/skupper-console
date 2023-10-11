@@ -11,6 +11,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Label,
   Title,
   Tooltip,
   Truncate
@@ -114,7 +115,11 @@ const Details: FC<{ process: ProcessResponse; title?: string | JSX.Element }> = 
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {processBinding === 'bound' ? ProcessesLabels.IsExposed : ProcessesLabels.IsNotExposed}
+                  {processBinding === 'bound' ? (
+                    <Label color="blue">{ProcessesLabels.IsExposed}</Label>
+                  ) : (
+                    <Label color="gold">{ProcessesLabels.IsNotExposed}</Label>
+                  )}
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
