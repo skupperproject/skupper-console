@@ -34,9 +34,23 @@ const Latency: FC<LatencyProps> = function ({
     [QueriesMetrics.GetLatency, selectedFilters],
     () => MetricsController.getLatency(selectedFilters),
     {
-      enabled: isPrometheusActive,
+      enabled: isPrometheusActive && isExpanded,
       refetchInterval,
-      keepPreviousData: true
+      keepPreviousData: false
+    }
+  );
+
+  const {
+    data: bucketsData,
+    refetch: refetchBuckets,
+    isRefetching: isRefetchingBuckets
+  } = useQuery(
+    ['QueriesMetrics.GetLatency', selectedFilters],
+    () => MetricsController.getLatencyBuckets(selectedFilters),
+    {
+      enabled: isPrometheusActive && isExpanded,
+      refetchInterval,
+      keepPreviousData: false
     }
   );
 
@@ -51,7 +65,8 @@ const Latency: FC<LatencyProps> = function ({
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
     isPrometheusActive && refetch();
-  }, [refetch]);
+    isPrometheusActive && refetchBuckets();
+  }, [refetch, refetchBuckets]);
 
   useEffect(() => {
     if (forceUpdate) {
@@ -67,10 +82,10 @@ const Latency: FC<LatencyProps> = function ({
 
       <CardExpandableContent>
         <CardBody>
-          {data?.length ? (
+          {data?.length && bucketsData?.length ? (
             <>
-              {isRefetching && <SkIsLoading />}
-              <LatencyCharts latenciesData={data} />
+              {isRefetching && isRefetchingBuckets && <SkIsLoading />}
+              <LatencyCharts latenciesData={data} bucketsData={bucketsData} />
             </>
           ) : (
             <EmptyData

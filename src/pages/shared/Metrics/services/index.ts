@@ -14,7 +14,8 @@ import {
   ByteRateMetrics,
   LatencyMetrics,
   RequestMetrics,
-  ResponseMetrics
+  ResponseMetrics,
+  LantencyBucketMetrics
 } from './services.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { QueryMetricsParams } from '../Metrics.interfaces';
@@ -44,15 +45,74 @@ const MetricsController = {
     };
 
     try {
-      const [quantile50latency, quantile90latency, quantile99latency] = await Promise.all([
-        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.5 }),
-        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.9 }),
-        PrometheusApi.fetchLatencyByProcess({ ...params, quantile: 0.99 })
+      const [quantile50latency, quantile90latency, quantile95latency, quantile99latency] = await Promise.all([
+        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.5 }),
+        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.9 }),
+        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.95 }),
+        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.99 })
       ]);
 
-      const latenciesData = normalizeLatencies({ quantile50latency, quantile90latency, quantile99latency });
+      const latenciesData = normalizeLatencies({
+        quantile50latency,
+        quantile90latency,
+        quantile95latency,
+        quantile99latency
+      });
 
       return latenciesData;
+    } catch (e: unknown) {
+      return Promise.reject(e);
+    }
+  },
+
+  getLatencyBuckets: async ({
+    sourceSite,
+    destSite,
+    sourceProcess,
+    destProcess,
+    service,
+    protocol,
+    duration = defaultTimeInterval.seconds,
+    start = getCurrentAndPastTimestamps(duration).start,
+    end = getCurrentAndPastTimestamps(duration).end
+  }: QueryMetricsParams): Promise<LantencyBucketMetrics[] | null> => {
+    const params: PrometheusQueryParams = {
+      sourceSite,
+      destSite,
+      sourceProcess,
+      destProcess,
+      service,
+      protocol,
+      start,
+      end,
+      step: calculateStep(end - start)
+    };
+
+    const bucketLabels: Record<string, { le: string; position: number }> = {
+      '+Inf': { le: 'Other', position: 8 },
+      '1e+07': { le: '10 sec', position: 7 },
+      '1e+06': { le: '1 sec', position: 6 },
+      '100000': { le: '100ms', position: 5 },
+      '10000': { le: '10 ms', position: 4 },
+      '5000': { le: '5 ms', position: 3 },
+      '2000': { le: '2 ms', position: 2 },
+      '1000': { le: '1 ms', position: 1 }
+    };
+
+    try {
+      const buckets = (await PrometheusApi.fetchLatencyBuckets(params))
+        .map(({ values, metric }) => ({ values, metric: bucketLabels[metric.le] }))
+        .sort((a, b) => a.metric.position - b.metric.position);
+
+      return buckets?.map(({ metric, values }, index) => ({
+        data: [
+          {
+            x: metric.le,
+            y: Math.ceil(Number(values[1][1]) - Number(buckets[index - 1]?.values[1][1] || 0))
+          }
+        ],
+        label: metric.le
+      }));
     } catch (e: unknown) {
       return Promise.reject(e);
     }
@@ -251,10 +311,12 @@ function normalizeRequestFromSeries(data: PrometheusApiResult[]): RequestMetrics
 function normalizeLatencies({
   quantile50latency,
   quantile90latency,
+  quantile95latency,
   quantile99latency
 }: LatencyMetricsProps): LatencyMetrics[] | null {
   const quantile50latencyNormalized = extractPrometheusValues(quantile50latency);
   const quantile90latencyNormalized = extractPrometheusValues(quantile90latency);
+  const quantile95latencyNormalized = extractPrometheusValues(quantile95latency);
   const quantile99latencyNormalized = extractPrometheusValues(quantile99latency);
 
   if (!quantile50latencyNormalized && !quantile90latencyNormalized && !quantile99latencyNormalized) {
@@ -268,6 +330,10 @@ function normalizeLatencies({
 
   if (quantile90latencyNormalized) {
     latenciesNormalized.push({ data: quantile90latencyNormalized[0], label: MetricsLabels.LatencyMetric90quantile });
+  }
+
+  if (quantile95latencyNormalized) {
+    latenciesNormalized.push({ data: quantile95latencyNormalized[0], label: MetricsLabels.LatencyMetric95quantile });
   }
 
   if (quantile99latencyNormalized) {
