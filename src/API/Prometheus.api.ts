@@ -31,7 +31,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchLatencyByProcess: async (params: PrometheusQueryParamsLatency): Promise<PrometheusMetricData[]> => {
+  fetchPercentilesByProcess: async (params: PrometheusQueryParamsLatency): Promise<PrometheusMetricData[]> => {
     const { start, end, step, quantile, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -40,6 +40,24 @@ export const PrometheusApi = {
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
         query: queries.getQuantileTimeInterval(queryFilterString, '1m', quantile),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
+  fetchLatencyBuckets: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+    const { start, end, step, ...queryParams } = params;
+    const queryFilterString = convertToPrometheusQueryParams(queryParams);
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
+      params: {
+        query: queries.getLatencyBuckets(queryFilterString, `${end - start}s`),
         start,
         end,
         step

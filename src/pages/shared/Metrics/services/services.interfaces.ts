@@ -20,6 +20,11 @@ export interface RequestMetrics {
   label: string;
 }
 
+export type LantencyBucketMetrics = {
+  data: { x: string; y: number }[];
+  label: string;
+};
+
 export interface ByteRateMetrics {
   rxTimeSerie: { data: skAxisXY[]; label: 'Rx' } | undefined;
   txTimeSerie: { data: skAxisXY[]; label: 'Tx' } | undefined;
@@ -41,5 +46,6 @@ export interface LatencyMetrics {
 export interface LatencyMetricsProps {
   quantile50latency: PrometheusApiResult[];
   quantile90latency: PrometheusApiResult[];
+  quantile95latency: PrometheusApiResult[];
   quantile99latency: PrometheusApiResult[];
 }

@@ -166,7 +166,7 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
     lineWidth: 4,
     fill: COMBO__COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
-    radius: 30
+    radius: 10
   },
   labelCfg: {
     refY: 12,

@@ -1,5 +1,5 @@
 import { IntervalTimePropValue } from './Prometheus.interfaces';
-import { AvailableProtocols } from './REST.enum';
+import { AvailableProtocols, Quantiles } from './REST.enum';
 
 export const queries = {
   // http request queries
@@ -25,12 +25,16 @@ export const queries = {
   },
 
   // latency queries
-  getQuantileTimeInterval(param: string, range: IntervalTimePropValue, quantile: 0.5 | 0.9 | 0.99) {
+  getQuantileTimeInterval(param: string, range: IntervalTimePropValue, quantile: Quantiles) {
     return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
 
   getAvgLatencyTimeInterval(param: string, range: IntervalTimePropValue) {
     return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}]))/sum(rate(flow_latency_microseconds_count{${param}}[${range}]))`;
+  },
+
+  getLatencyBuckets(param: string, range: IntervalTimePropValue) {
+    return `sum by(le)(increase(flow_latency_microseconds_bucket{${param}}[${range}]))`;
   },
 
   // data transfer queries

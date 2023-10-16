@@ -19,3 +19,10 @@ export enum FlowDirection {
   Outgoing = 'outgoing',
   Incoming = 'incoming'
 }
+
+export enum Quantiles {
+  Median = 0.5,
+  Ninety = 0.9,
+  NinetyFive = 0.95,
+  NinetyNine = 0.99
+}

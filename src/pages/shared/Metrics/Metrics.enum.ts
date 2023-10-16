@@ -14,6 +14,7 @@ export enum MetricsLabels {
   LatencyMetricAvg = 'Avg latency',
   LatencyMetric50quantile = '50th percentile',
   LatencyMetric90quantile = '90th percentile',
+  LatencyMetric95quantile = '95th percentile',
   LatencyMetric99quantile = '99th percentile',
   MaxRequestRate = 'Max rps',
   RequestRateAvgTitle = 'Avg. rps',

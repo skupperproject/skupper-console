@@ -1,6 +1,6 @@
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 
-import { AvailableProtocols } from './REST.enum';
+import { AvailableProtocols, Quantiles } from './REST.enum';
 import { FlowDirections } from './REST.interfaces';
 
 type PrometheusApiResultValue = [number, `${number}` | 'NaN'];
@@ -38,7 +38,7 @@ export interface PrometheusQueryParams extends PrometheusLabels {
 }
 
 export interface PrometheusQueryParamsLatency extends PrometheusQueryParams {
-  quantile: 0.5 | 0.9 | 0.99;
+  quantile: Quantiles;
 }
 
 export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];

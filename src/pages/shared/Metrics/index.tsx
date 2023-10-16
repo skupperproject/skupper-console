@@ -60,8 +60,8 @@ const Metrics: FC<MetricsProps> = function ({
     [onGetExpandedSectionsConfig]
   );
 
-  // case: We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
-  const isOnlyTcp =
+  // case: hide if We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
+  const isNotTcp =
     queryParams.protocol !== AvailableProtocols.Tcp &&
     !(availableProtocols?.length === 1 && availableProtocols[0] === AvailableProtocols.Tcp);
 
@@ -93,7 +93,7 @@ const Metrics: FC<MetricsProps> = function ({
         />
       </StackItem>
 
-      {isOnlyTcp && (
+      {isNotTcp && (
         <>
           <StackItem>
             <Latency
