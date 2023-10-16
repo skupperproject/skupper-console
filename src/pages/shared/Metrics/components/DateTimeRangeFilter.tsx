@@ -51,8 +51,8 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
     setStartLabel(formatDateTime(seconds));
 
     if (end && seconds > end) {
-      setEnd(seconds);
-      setEndLabel(formatDateTime(seconds));
+      setEnd(seconds + 60 * 30);
+      setEndLabel(formatDateTime(seconds + 60 * 30));
     }
   };
   const handleSetDateTimeEnd = ({ seconds }: { label: string; seconds: number }) => {

@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 
-import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
@@ -87,8 +87,10 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   return (
     <Card>
       <CardHeader>
-        <Title headingLevel="h1">{ServicesLabels.SankeyChartTitle}</Title>
-        <Title headingLevel="h4">{ServicesLabels.SankeyChartDescription}</Title>
+        <TextContent>
+          <Text component={TextVariants.h1}>{ServicesLabels.SankeyChartTitle}</Text>
+          <Text>{ServicesLabels.SankeyChartDescription}</Text>
+        </TextContent>
       </CardHeader>
       <CardBody>
         <SankeyFilter onSearch={handleGetPairType} />

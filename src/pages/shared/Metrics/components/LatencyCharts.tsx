@@ -25,7 +25,7 @@ const LatencyCharts: FC<{ latenciesData: LatencyMetrics[]; bucketsData: Lantency
       <GridItem md={4}>test</GridItem>
 
       <GridItem md={8}>
-        <Title headingLevel="h4">Latency distribution across buckets</Title>
+        <Title headingLevel="h4">Distribution across buckets</Title>
         <SkChartBar
           themeColor={ChartThemeColor.multi}
           legendLabels={bucketsData.map(({ label }) => label)}

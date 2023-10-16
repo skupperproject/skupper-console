@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, Fragment, useEffect, useState } from 'react';
 
 import {
   CalendarMonth,
@@ -105,7 +105,10 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
     >
       <DropdownList>
         {Array.from(new Array(24), (_, i) => i).map((time) => (
-          <DropdownItem key={time}>{`${time + 1}:00`}</DropdownItem>
+          <Fragment key={time}>
+            <DropdownItem>{`${time + 1}:00`}</DropdownItem>
+            <DropdownItem>{`${time + 1}:30`}</DropdownItem>
+          </Fragment>
         ))}
       </DropdownList>
     </Dropdown>
