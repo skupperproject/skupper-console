@@ -100,18 +100,24 @@ const MetricsController = {
     };
 
     try {
-      const buckets = (await PrometheusApi.fetchLatencyBuckets(params))
-        .map(({ values, metric }) => ({ values, metric: bucketLabels[metric.le] }))
+      const distributionBuckets = await PrometheusApi.fetchLatencyBuckets(params);
+
+      if (!distributionBuckets.length) {
+        return null;
+      }
+
+      const buckets = distributionBuckets
+        .map(({ values, metric }) => ({ values, metric: bucketLabels[metric?.le] }))
         .sort((a, b) => a.metric.position - b.metric.position);
 
       const bucketsNormalized = buckets?.map(({ metric, values }, index) => ({
         data: [
           {
-            x: metric.le,
+            x: metric?.le,
             y: Number(values[values.length - 1][1]) - Number(buckets[index - 1]?.values[values.length - 1][1] || 0)
           }
         ],
-        label: metric.le
+        label: metric?.le || ''
       }));
 
       const lastBucket = buckets[buckets.length - 1].values;
@@ -123,7 +129,7 @@ const MetricsController = {
         const greaterThanCount = total - Number(values[values.length - 1][1]) || 0;
         const greaterThanPerc = Math.round((greaterThanCount / (total || 1)) * 100);
 
-        return { bound: metric.le, lessThanCount, lessThanPerc, greaterThanCount, greaterThanPerc };
+        return { bound: metric?.le, lessThanCount, lessThanPerc, greaterThanCount, greaterThanPerc };
       });
 
       return { distribution: bucketsNormalized, summary };

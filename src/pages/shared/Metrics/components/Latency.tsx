@@ -42,7 +42,7 @@ const Latency: FC<LatencyProps> = function ({
         keepPreviousData: true
       },
       {
-        queryKey: ['QueriesMetrics.GetLatencyBuckets', selectedFilters],
+        queryKey: [QueriesMetrics.GetLatencyBuckets, selectedFilters],
         queryFn: () => MetricsController.getLatencyBuckets(selectedFilters),
         refetchInterval,
         keepPreviousData: true
