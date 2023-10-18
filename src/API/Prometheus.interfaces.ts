@@ -41,7 +41,6 @@ export interface PrometheusQueryParamsLatency extends PrometheusQueryParams {
   quantile: Quantiles;
 }
 
-export type IntervalTimeProp = IntervalTimeMap[keyof IntervalTimeMap];
 export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
 export type IntervalTimeMap = {
   [key: string]: { value: string; seconds: number; step: string; key: string; label: string };

@@ -160,15 +160,16 @@ const TopologyProcesses: FC<{
         const processes = [...externalProcesses, ...remoteProcesses];
 
         const sourceProcess = processes?.find(({ identity }) => identity === sourceId) as ProcessResponse;
+        const protocol = processesPairs?.find(({ identity }) => identity === idSelected)?.protocol;
 
         if (sourceProcess) {
           navigate(
-            `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${ProcessesLabels.ProcessPairs}@${idSelected}`
+            `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${ProcessesLabels.ProcessPairs}@${idSelected}@${protocol}`
           );
         }
       }
     },
-    [navigate, externalProcesses, remoteProcesses]
+    [navigate, externalProcesses, remoteProcesses, processesPairs]
   );
 
   function handleToggleServiceMenu(openServiceMenu: boolean) {

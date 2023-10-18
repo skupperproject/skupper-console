@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
@@ -30,27 +30,25 @@ const Latency: FC<LatencyProps> = function ({
 }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const { data, refetch, isRefetching } = useQuery(
-    [QueriesMetrics.GetLatency, selectedFilters],
-    () => MetricsController.getLatency(selectedFilters),
-    {
-      refetchInterval,
-      keepPreviousData: false
-    }
-  );
-
-  const {
-    data: bucketsData,
-    refetch: refetchBuckets,
-    isRefetching: isRefetchingBuckets
-  } = useQuery(
-    ['QueriesMetrics.GetLatency', selectedFilters],
-    () => MetricsController.getLatencyBuckets(selectedFilters),
-    {
-      refetchInterval,
-      keepPreviousData: false
-    }
-  );
+  const [
+    { data, refetch, isRefetching },
+    { data: bucketsData, refetch: refetchBuckets, isRefetching: isRefetchingBuckets }
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesMetrics.GetLatency, selectedFilters],
+        queryFn: () => MetricsController.getLatency(selectedFilters),
+        refetchInterval,
+        keepPreviousData: true
+      },
+      {
+        queryKey: ['QueriesMetrics.GetLatencyBuckets', selectedFilters],
+        queryFn: () => MetricsController.getLatencyBuckets(selectedFilters),
+        refetchInterval,
+        keepPreviousData: true
+      }
+    ]
+  });
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
@@ -80,10 +78,14 @@ const Latency: FC<LatencyProps> = function ({
 
       <CardExpandableContent>
         <CardBody>
-          {data?.length && bucketsData?.length ? (
+          {data?.length && bucketsData ? (
             <>
               {isRefetching && isRefetchingBuckets && <SkIsLoading />}
-              <LatencyCharts latenciesData={data} bucketsData={bucketsData} />
+              <LatencyCharts
+                latenciesData={data}
+                bucketsData={bucketsData.distribution}
+                summary={bucketsData.summary}
+              />
             </>
           ) : (
             <EmptyData

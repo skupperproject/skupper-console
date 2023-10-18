@@ -54,8 +54,9 @@ export const TopologyController = {
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
     entities.map(({ identity, name, siteVersion }) => {
       const img = siteSVG;
+      const label = siteVersion ? `${name} (${siteVersion})` : name;
 
-      return convertEntityToNode({ id: identity, label: `${name} (${siteVersion})`, img });
+      return convertEntityToNode({ id: identity, label, img });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
