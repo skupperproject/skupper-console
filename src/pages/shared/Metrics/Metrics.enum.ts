@@ -12,6 +12,8 @@ export enum MetricsLabels {
   NoMetricFoundTitleMessage = 'No metrics found',
   NoMetricFoundDescriptionMessage = 'No metrics are currently accessible or meet the filter criteria. Please modify all filters, then attempt the operation again.',
   LatencyMetricAvg = 'Avg latency',
+  LatencyPercentileTitle = 'Percentile over time',
+  LatencyBucketsTitle = 'Distribution across buckets',
   LatencyMetric50quantile = '50th percentile',
   LatencyMetric90quantile = '90th percentile',
   LatencyMetric95quantile = '95th percentile',

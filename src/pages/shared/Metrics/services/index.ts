@@ -75,7 +75,7 @@ const MetricsController = {
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
-  }: QueryMetricsParams): Promise<LantencyBucketMetrics[] | null> => {
+  }: QueryMetricsParams): Promise<LantencyBucketMetrics | null> => {
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
@@ -104,15 +104,29 @@ const MetricsController = {
         .map(({ values, metric }) => ({ values, metric: bucketLabels[metric.le] }))
         .sort((a, b) => a.metric.position - b.metric.position);
 
-      return buckets?.map(({ metric, values }, index) => ({
+      const bucketsNormalized = buckets?.map(({ metric, values }, index) => ({
         data: [
           {
             x: metric.le,
-            y: Math.ceil(Number(values[1][1]) - Number(buckets[index - 1]?.values[1][1] || 0))
+            y: Number(values[values.length - 1][1]) - Number(buckets[index - 1]?.values[values.length - 1][1] || 0)
           }
         ],
         label: metric.le
       }));
+
+      const lastBucket = buckets[buckets.length - 1].values;
+      const total = Number(lastBucket[lastBucket.length - 1][1]) || 0;
+
+      const summary = buckets.map(({ metric, values }) => {
+        const lessThanCount = Number(values[values.length - 1][1]);
+        const lessThanPerc = Math.round((lessThanCount / (total || 1)) * 100);
+        const greaterThanCount = total - Number(values[values.length - 1][1]) || 0;
+        const greaterThanPerc = Math.round((greaterThanCount / (total || 1)) * 100);
+
+        return { bound: metric.le, lessThanCount, lessThanPerc, greaterThanCount, greaterThanPerc };
+      });
+
+      return { distribution: bucketsNormalized, summary };
     } catch (e: unknown) {
       return Promise.reject(e);
     }

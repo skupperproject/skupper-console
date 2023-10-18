@@ -2,38 +2,64 @@ import { FC, memo } from 'react';
 
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Grid, GridItem, Title } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartBar from '@core/components/SkChartBar';
 import { formatLatency } from '@core/utils/formatLatency';
 
-import { LantencyBucketMetrics, LatencyMetrics } from '../services/services.interfaces';
+import { MetricsLabels } from '../Metrics.enum';
+import { LatencyBucketDistributionData, LatencyBucketSummary, LatencyMetrics } from '../services/services.interfaces';
 
-const LatencyCharts: FC<{ latenciesData: LatencyMetrics[]; bucketsData: LantencyBucketMetrics[] }> = memo(
-  ({ latenciesData, bucketsData }) => (
-    <Grid hasGutter>
-      <GridItem rowSpan={2} md={8}>
-        <Title headingLevel="h4">Percentiles</Title>
-        <SkChartArea
-          formatY={formatLatency}
-          themeColor={ChartThemeColor.multi}
-          legendLabels={latenciesData.map(({ label }) => label)}
-          data={latenciesData.map(({ data }) => data)}
-        />
-      </GridItem>
+const LatencyCharts: FC<{
+  latenciesData: LatencyMetrics[];
+  bucketsData: LatencyBucketDistributionData[];
+  summary: LatencyBucketSummary[];
+}> = memo(({ latenciesData, bucketsData, summary }) => (
+  <Grid hasGutter>
+    <GridItem md={12} xl={12}>
+      <Title headingLevel="h4">{MetricsLabels.LatencyPercentileTitle}</Title>
+      <SkChartArea
+        formatY={formatLatency}
+        themeColor={ChartThemeColor.multi}
+        legendLabels={latenciesData.map(({ label }) => label)}
+        data={latenciesData.map(({ data }) => data)}
+      />
+    </GridItem>
 
-      <GridItem md={4}>test</GridItem>
+    <GridItem rowSpan={2} md={12} xl={8}>
+      <Title headingLevel="h4">{MetricsLabels.LatencyBucketsTitle}</Title>
+      <SkChartBar
+        themeColor={ChartThemeColor.multi}
+        legendLabels={bucketsData.map(({ label }) => label)}
+        data={bucketsData.map(({ data }) => data)}
+      />
+    </GridItem>
 
-      <GridItem md={8}>
-        <Title headingLevel="h4">Distribution across buckets</Title>
-        <SkChartBar
-          themeColor={ChartThemeColor.multi}
-          legendLabels={bucketsData.map(({ label }) => label)}
-          data={bucketsData.map(({ data }) => data)}
-        />
-      </GridItem>
-    </Grid>
-  )
-);
+    <GridItem md={12} xl={4}>
+      <Table borders={false} variant="compact">
+        <Thead noWrap>
+          <Tr>
+            <Th>Threshold</Th>
+            <Th>Below</Th>
+            <Th>Above</Th>
+          </Tr>
+        </Thead>
+
+        <Tbody>
+          {summary.map((row, index) => (
+            <Tr key={`${row.bound}-${index}`}>
+              <Td>
+                <Title headingLevel="h6">{row.bound}</Title>
+              </Td>
+              <Td>{`${row.lessThanCount} (${row.lessThanPerc}%)`}</Td>
+              <Td modifier="fitContent">{`${row.greaterThanCount}`}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </GridItem>
+  </Grid>
+));
 
 export default LatencyCharts;

@@ -34,7 +34,7 @@ export const queries = {
   },
 
   getLatencyBuckets(param: string, range: IntervalTimePropValue) {
-    return `sum by(le)(increase(flow_latency_microseconds_bucket{${param}}[${range}]))`;
+    return `sum by(le)(floor(increase(flow_latency_microseconds_bucket{${param}}[${range}])))`;
   },
 
   // data transfer queries

@@ -20,10 +20,22 @@ export interface RequestMetrics {
   label: string;
 }
 
-export type LantencyBucketMetrics = {
+export interface LatencyBucketDistributionData {
   data: { x: string; y: number }[];
   label: string;
-};
+}
+export interface LatencyBucketSummary {
+  bound: string;
+  lessThanCount: number;
+  greaterThanCount: number;
+  lessThanPerc: number;
+  greaterThanPerc: number;
+}
+
+export interface LantencyBucketMetrics {
+  distribution: LatencyBucketDistributionData[];
+  summary: LatencyBucketSummary[];
+}
 
 export interface ByteRateMetrics {
   rxTimeSerie: { data: skAxisXY[]; label: 'Rx' } | undefined;

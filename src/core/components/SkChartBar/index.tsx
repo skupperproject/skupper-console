@@ -66,7 +66,7 @@ const SkChartBar: FC<SkChartBarProps> = function ({
         legendData={showLegend ? legendData : []}
         legendOrientation={legendOrientation}
         legendPosition={legendPosition}
-        domainPadding={{ x: [60, 0] }}
+        domainPadding={{ x: [width / 10 - 25, 0] }}
         themeColor={props.themeColor || ChartThemeColor.multi}
         padding={props.padding || DEFAULT_CHART_PADDING}
         containerComponent={
@@ -109,7 +109,7 @@ const SkChartBar: FC<SkChartBarProps> = function ({
         />
         <ChartGroup>
           {data.map((row, index: number) => (
-            <ChartBar key={index} data={row} name={legendData[index]?.name} barWidth={120} />
+            <ChartBar key={index} data={row} name={legendData[index]?.name} barWidth={width / 10} />
           ))}
         </ChartGroup>
       </Chart>
