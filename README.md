@@ -26,7 +26,7 @@ This demo is synchronized with the latest version of the Skupper or a modified v
 
 ## Enable the console from Skupper
 
-To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/flow-console.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
+To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
 
 ## Development
 
