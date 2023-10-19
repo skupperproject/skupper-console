@@ -21,7 +21,7 @@ import { MetricsLabels } from '../Metrics.enum';
 import { QueryMetricsParams } from '../Metrics.interfaces';
 
 const MetricsController = {
-  getLatency: async ({
+  getLatencyPercentiles: async ({
     sourceSite,
     destSite,
     sourceProcess,
@@ -138,7 +138,7 @@ const MetricsController = {
     }
   },
 
-  getRequest: async ({
+  getRequests: async ({
     sourceSite,
     destSite,
     sourceProcess,
@@ -182,7 +182,7 @@ const MetricsController = {
     }
   },
 
-  getResponse: async ({
+  getResponses: async ({
     sourceSite,
     destSite,
     sourceProcess,
@@ -227,7 +227,7 @@ const MetricsController = {
     }
   },
 
-  getTraffic: async ({
+  getDataTraffic: async ({
     sourceSite,
     destSite,
     sourceProcess,

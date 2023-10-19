@@ -32,7 +32,7 @@ const Traffic: FC<TrafficProps> = function ({
 
   const { data, refetch, isRefetching } = useQuery(
     [QueriesMetrics.GetTraffic, selectedFilters],
-    () => MetricsController.getTraffic(selectedFilters),
+    () => MetricsController.getDataTraffic(selectedFilters),
     {
       enabled: isPrometheusActive,
       refetchInterval,
