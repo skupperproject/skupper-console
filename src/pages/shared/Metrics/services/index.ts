@@ -46,10 +46,10 @@ const MetricsController = {
 
     try {
       const [quantile50latency, quantile90latency, quantile95latency, quantile99latency] = await Promise.all([
-        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.5 }),
-        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.9 }),
-        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.95 }),
-        PrometheusApi.fetchPercentilesByProcess({ ...params, quantile: 0.99 })
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.5 }),
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.9 }),
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.95 }),
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.99 })
       ]);
 
       const latenciesData = normalizeLatencies({
@@ -100,7 +100,7 @@ const MetricsController = {
     };
 
     try {
-      const distributionBuckets = await PrometheusApi.fetchLatencyBuckets(params);
+      const distributionBuckets = await PrometheusApi.fetchBucketCountsInTimeRange(params);
 
       if (!distributionBuckets.length) {
         return null;
@@ -164,7 +164,7 @@ const MetricsController = {
       step: calculateStep(end - start)
     };
     try {
-      const requestsByProcess = await PrometheusApi.fetchRequestsByProcess(params);
+      const requestsByProcess = await PrometheusApi.fetchRequestRateByMethodInInTimeRange(params);
       const requestRateData = normalizeRequestFromSeries(requestsByProcess);
       const requestPerf = requestRateData?.map(({ data, label }) => ({
         label,
@@ -211,8 +211,8 @@ const MetricsController = {
       };
 
       const [responsesByProcess, responseRateByProcess] = await Promise.all([
-        PrometheusApi.fetchResponseCountsByProcess(params),
-        PrometheusApi.fetchErrorResponsesByProcess(params)
+        PrometheusApi.fetchResponseCountsByPartialCodeInTimeRange(params),
+        PrometheusApi.fetchHttpErrorRateByPartialCodeInTimeRange(params)
       ]);
 
       const responseData = normalizeResponsesFromSeries(responsesByProcess);
@@ -252,8 +252,8 @@ const MetricsController = {
 
     try {
       const [byteRateDataTx, byteRateDataRx] = await Promise.all([
-        PrometheusApi.fetchByteRateSeries(params),
-        PrometheusApi.fetchByteRateSeries({
+        PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+        PrometheusApi.fetchByteRateByDirectionInTimeRange({
           ...params,
           sourceSite: destSite,
           destSite: sourceSite,

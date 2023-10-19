@@ -13,7 +13,7 @@ import { queries } from './Prometheus.queries';
 
 export const PrometheusApi = {
   //When direction is outgoing, it is the response from from the server (sourceProcess) to the client (destProcess)
-  fetchByteRateSeries: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchByteRateByDirectionInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -21,7 +21,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getByteRateByDirectionTimeInterval(queryFilterString, '1m'),
+        query: queries.getByteRateByDirectionInTimeRange(queryFilterString, '1m'),
         start,
         end,
         step
@@ -31,7 +31,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchPercentilesByProcess: async (params: PrometheusQueryParamsLatency): Promise<PrometheusMetricData[]> => {
+  fetchPercentilesByLeInTimeRange: async (params: PrometheusQueryParamsLatency): Promise<PrometheusMetricData[]> => {
     const { start, end, step, quantile, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -39,7 +39,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getQuantileTimeInterval(queryFilterString, '1m', quantile),
+        query: queries.getPercentilesByLeInTimeRange(queryFilterString, '1m', quantile),
         start,
         end,
         step
@@ -49,7 +49,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchLatencyBuckets: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchBucketCountsInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -57,7 +57,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getLatencyBuckets(queryFilterString, `${end - start}s`),
+        query: queries.getBucketCountsInTimeRange(queryFilterString, `${end - start}s`),
         start,
         end,
         step: `${end - start}s`
@@ -67,7 +67,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchRequestsByProcess: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchRequestRateByMethodInInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -75,7 +75,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getTotalRequestRateByMethodTimeInterval(queryFilterString, `1m`),
+        query: queries.getRequestRateByMethodInInTimeRange(queryFilterString, `1m`),
         start,
         end,
         step
@@ -85,7 +85,9 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchResponseCountsByProcess: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchResponseCountsByPartialCodeInTimeRange: async (
+    params: PrometheusQueryParams
+  ): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams({ ...queryParams, code: '2.*|3.*|4.*|5.*' });
 
@@ -93,7 +95,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getHttpPartialStatus(queryFilterString, `${end - start}s`),
+        query: queries.getResponseCountsByPartialCodeInTimeRange(queryFilterString, `${end - start}s`),
         start,
         end,
         step
@@ -103,7 +105,9 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchErrorResponsesByProcess: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchHttpErrorRateByPartialCodeInTimeRange: async (
+    params: PrometheusQueryParams
+  ): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams({ ...queryParams, code: '4.*|5.*' });
 
@@ -111,7 +115,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getHttpPartialStatusRateTimeInterval(queryFilterString, '5m'),
+        query: queries.getResponseRateByPartialCodeInTimeRange(queryFilterString, '5m'),
         start,
         end,
         step
@@ -151,7 +155,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchHttpFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchTotalHttpFlowByService: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {

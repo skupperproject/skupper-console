@@ -3,46 +3,30 @@ import { AvailableProtocols, Quantiles } from './REST.enum';
 
 export const queries = {
   // http request queries
-  getTotalRequestsTimeInterval(param: string, range: IntervalTimePropValue) {
-    return `max(sum(rate(http_requests_method_total{${param}}[${range}])))`;
-  },
-
-  getAvgRequestRateTimeInterval(param: string, range: IntervalTimePropValue) {
-    return `sum(rate(http_requests_method_total{${param}}[${range}]))`;
-  },
-
-  getTotalRequestRateByMethodTimeInterval(param: string, range: IntervalTimePropValue) {
+  getRequestRateByMethodInInTimeRange(param: string, range: IntervalTimePropValue) {
     return `sum by(method)(rate(http_requests_method_total{${param}}[${range}]))`;
   },
 
   // http response queries
-  getHttpPartialStatus(param: string, range: IntervalTimePropValue) {
+  getResponseCountsByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
     return `sum by(partial_code)(label_replace(sum_over_time(http_requests_result_total{${param}}[${range}]),"partial_code", "$1", "code","(.*).{2}"))`;
   },
 
-  getHttpPartialStatusRateTimeInterval(param: string, range: IntervalTimePropValue) {
+  getResponseRateByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
     return `sum by(partial_code)(label_replace(rate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
   },
 
   // latency queries
-  getQuantileTimeInterval(param: string, range: IntervalTimePropValue, quantile: Quantiles) {
+  getPercentilesByLeInTimeRange(param: string, range: IntervalTimePropValue, quantile: Quantiles) {
     return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
   },
 
-  getAvgLatencyTimeInterval(param: string, range: IntervalTimePropValue) {
-    return `sum(rate(flow_latency_microseconds_sum{${param}}[${range}]))/sum(rate(flow_latency_microseconds_count{${param}}[${range}]))`;
-  },
-
-  getLatencyBuckets(param: string, range: IntervalTimePropValue) {
+  getBucketCountsInTimeRange(param: string, range: IntervalTimePropValue) {
     return `sum by(le)(floor(delta(flow_latency_microseconds_bucket{${param}}[${range}])))`;
   },
 
   // data transfer queries
-  getBytesByDirection(param: string, range: IntervalTimePropValue) {
-    return `sum by(direction)(increase(octets_total{${param}}[${range}]))`;
-  },
-
-  getByteRateByDirectionTimeInterval(paramSource: string, range: IntervalTimePropValue) {
+  getByteRateByDirectionInTimeRange(paramSource: string, range: IntervalTimePropValue) {
     return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
   },
 
