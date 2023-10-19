@@ -141,7 +141,7 @@ To customize the Skupper logo and the application name on the left side of the H
 - **BRAND_APP_LOGO**: The path to a custom logo image file to be used instead of the default Skupper logo.
 - **BRAND_APP_NAME**: The name of the application to be displayed next to the logo. By default this value is no set.
 - **BRAND_TITLE**: The title of the console that appear on the browser tab. By default this value is "Web console".
-- **BRAND_FAVICON_PATH**: The absolute path of the custom favicon without the filename. You must name the filename `favicon.ico`. For example:
+- **BRAND_FAVICON_PATH**: The absolute path of the custom favicon without the filename. You must name the filename `favicon.ico` and exclude the filename from the PATH (see example below).
 - **APP_VERSION**: The version of the console. By default this value match with the package.json version.
 
 For example, you can customize the logo and application name by running the following command:
