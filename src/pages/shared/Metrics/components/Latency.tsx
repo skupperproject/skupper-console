@@ -37,7 +37,7 @@ const Latency: FC<LatencyProps> = function ({
     queries: [
       {
         queryKey: [QueriesMetrics.GetLatency, selectedFilters],
-        queryFn: () => MetricsController.getLatency(selectedFilters),
+        queryFn: () => MetricsController.getLatencyPercentiles(selectedFilters),
         refetchInterval,
         keepPreviousData: true
       },

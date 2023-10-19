@@ -38,14 +38,14 @@ const Request: FC<RequestProps> = function ({
     queries: [
       {
         queryKey: [QueriesMetrics.GetRequest, selectedFilters],
-        queryFn: () => MetricsController.getRequest(selectedFilters),
+        queryFn: () => MetricsController.getRequests(selectedFilters),
         enabled: isPrometheusActive,
         refetchInterval,
         keepPreviousData: true
       },
       {
         queryKey: [QueriesMetrics.GetResponse, selectedFilters],
-        queryFn: () => MetricsController.getResponse(selectedFilters),
+        queryFn: () => MetricsController.getResponses(selectedFilters),
         enabled: isPrometheusActive,
         refetchInterval,
         keepPreviousData: true
