@@ -50,7 +50,7 @@ export const PrometheusApi = {
   },
 
   fetchLatencyBuckets: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
-    const { start, end, step, ...queryParams } = params;
+    const { start, end, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
     const {
@@ -60,7 +60,7 @@ export const PrometheusApi = {
         query: queries.getLatencyBuckets(queryFilterString, `${end - start}s`),
         start,
         end,
-        step
+        step: `${end - start}s`
       }
     });
 
