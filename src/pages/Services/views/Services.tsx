@@ -40,7 +40,7 @@ const Services = function () {
 
   const { data: httpTotalFlows } = useQuery(
     [QueriesServices.GetPrometheusHttpTotalFlows],
-    () => PrometheusApi.fetchHttpFlowsByService(),
+    () => PrometheusApi.fetchTotalHttpFlowByService(),
     {
       enabled: isPrometheusActive
     }
