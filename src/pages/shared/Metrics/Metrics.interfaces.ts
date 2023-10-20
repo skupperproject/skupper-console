@@ -13,7 +13,8 @@ export enum QueriesMetrics {
   GetLatency = 'get-metric-latency-query',
   GetLatencyBuckets = 'get-metric-latency-buckets',
   GetRequest = 'get-metric-request-query',
-  GetResponse = 'get-metric-response-query'
+  GetResponse = 'get-metric-response-query',
+  GetConnection = 'get-metric-connection-query'
 }
 
 export interface QueryMetricsParams {
@@ -35,6 +36,7 @@ export interface ExpandedMetricSections {
   byterate?: boolean;
   latency?: boolean;
   request?: boolean;
+  connection?: boolean;
 }
 
 export interface MetricsProps {

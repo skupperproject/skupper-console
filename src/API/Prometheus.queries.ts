@@ -50,6 +50,18 @@ export const queries = {
     return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.Tcp}"})`;
   },
 
+  getActiveFlows(paramSource: string) {
+    return `sum(active_flows{${paramSource}})`;
+  },
+
+  getActiveFlowsTimeInterval(paramSource: string, range: IntervalTimePropValue) {
+    return `sum(increase(active_flows{${paramSource}}[${range}]))`;
+  },
+
+  getTotalFlows(paramSource: string) {
+    return `sum(flows_total{${paramSource}})`;
+  },
+
   getActiveFlowsByService() {
     return `sum by(address)(increase(active_flows{protocol=~"${AvailableProtocols.AllHttp}"}[30s]) or active_flows{protocol="${AvailableProtocols.Tcp}"})`;
   },

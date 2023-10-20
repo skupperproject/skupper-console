@@ -15,7 +15,8 @@ import {
   LatencyMetrics,
   RequestMetrics,
   ResponseMetrics,
-  LantencyBucketMetrics
+  LantencyBucketMetrics,
+  ConnectionMetrics
 } from './services.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { QueryMetricsParams } from '../Metrics.interfaces';
@@ -263,6 +264,50 @@ const MetricsController = {
       ]);
 
       return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
+    } catch (e: unknown) {
+      return Promise.reject(e);
+    }
+  },
+
+  getConnections: async ({
+    sourceSite,
+    destSite,
+    sourceProcess,
+    destProcess,
+    service,
+    protocol,
+    duration = defaultTimeInterval.seconds,
+    start = getCurrentAndPastTimestamps(duration).start,
+    end = getCurrentAndPastTimestamps(duration).end
+  }: QueryMetricsParams): Promise<ConnectionMetrics | null> => {
+    const params: PrometheusQueryParams = {
+      sourceSite,
+      destSite,
+      sourceProcess,
+      destProcess,
+      service,
+      protocol,
+      start,
+      end,
+      step: calculateStep(end - start)
+    };
+
+    try {
+      const [liveConnections, liveConnectionsInTimeRangeData, totalConnections] = await Promise.all([
+        PrometheusApi.fetchLiveFlows(params),
+        PrometheusApi.fetchLiveFlowsInTimeRange(params),
+        PrometheusApi.fetchtotalFlows(params)
+      ]);
+
+      if (!liveConnections.length && !totalConnections.length && !liveConnectionsInTimeRangeData.length) {
+        return null;
+      }
+
+      const liveConnectionsCount = Number(liveConnections[0].value[1]) || 0;
+      const liveConnectionsSerie = extractPrometheusValues(liveConnectionsInTimeRangeData);
+      const terminatedConnectionsCount = Number(totalConnections[0].value[1]) - Number(liveConnectionsCount);
+
+      return { liveConnectionsCount, liveConnectionsSerie, terminatedConnectionsCount };
     } catch (e: unknown) {
       return Promise.reject(e);
     }

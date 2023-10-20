@@ -7,6 +7,7 @@ import { AvailableProtocols } from '@API/REST.enum';
 import MetricFilters from './components/Filters';
 import Latency from './components/Latency';
 import Request from './components/Request';
+import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
 import { MetricsProps, QueryMetricsParams } from './Metrics.interfaces';
 
@@ -61,9 +62,11 @@ const Metrics: FC<MetricsProps> = function ({
   );
 
   // case: hide if We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
-  const isNotTcp =
+  const showHttp =
     queryParams.protocol !== AvailableProtocols.Tcp &&
     !(availableProtocols?.length === 1 && availableProtocols[0] === AvailableProtocols.Tcp);
+
+  const showTcp = !queryParams.protocol || queryParams.protocol === AvailableProtocols.Tcp;
 
   return (
     <Stack hasGutter>
@@ -93,7 +96,19 @@ const Metrics: FC<MetricsProps> = function ({
         />
       </StackItem>
 
-      {isNotTcp && (
+      {showTcp && (
+        <StackItem>
+          <TcpConnection
+            selectedFilters={queryParams}
+            forceUpdate={shouldUpdateData}
+            refetchInterval={refetchInterval}
+            openSections={defaultOpenSections?.connection}
+            onGetIsSectionExpanded={handleUpdateExpandedSections}
+          />
+        </StackItem>
+      )}
+
+      {showHttp && (
         <>
           <StackItem>
             <Latency

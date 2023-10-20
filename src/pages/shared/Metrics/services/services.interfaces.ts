@@ -61,3 +61,9 @@ export interface LatencyMetricsProps {
   quantile95latency: PrometheusApiResult[];
   quantile99latency: PrometheusApiResult[];
 }
+
+export interface ConnectionMetrics {
+  liveConnectionsCount: number;
+  liveConnectionsSerie: skAxisXY[][] | null;
+  terminatedConnectionsCount: number;
+}

@@ -199,6 +199,60 @@ export const PrometheusApi = {
     return result;
   },
 
+  fetchLiveFlowsInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+    const { start, end, step, ...queryParams } = params;
+    const queryFilterString = convertToPrometheusQueryParams(queryParams);
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
+      params: {
+        query: queries.getActiveFlowsTimeInterval(queryFilterString, '1m'),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
+  fetchLiveFlows: async (params: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
+    const { start, end, step, ...queryParams } = params;
+    const queryFilterString = convertToPrometheusQueryParams(queryParams);
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: {
+        query: queries.getActiveFlows(queryFilterString),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
+  fetchtotalFlows: async (params: PrometheusQueryParams): Promise<PrometheusMetricSingleData[]> => {
+    const { start, end, step, ...queryParams } = params;
+    const queryFilterString = convertToPrometheusQueryParams(queryParams);
+
+    const {
+      data: { result }
+    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
+      params: {
+        query: queries.getTotalFlows(queryFilterString),
+        start,
+        end,
+        step
+      }
+    });
+
+    return result;
+  },
+
   fethResourcePairsByService: async ({
     serviceName,
     clientType,
