@@ -1,15 +1,5 @@
 export function formatNumber(number: number, decimals = 2) {
-  const suffixes = [
-    '',
-    'thousand',
-    'million',
-    'billion',
-    'trillion',
-    'quadrillion',
-    'quintillion',
-    'sextillion',
-    'septillion'
-  ];
+  const suffixes = ['', 'K', 'Mil.', 'Bil.', 'Tril.', 'quadrillion', 'quintillion', 'sextillion', 'septillion'];
 
   if (number < 1000) {
     return number.toString();
