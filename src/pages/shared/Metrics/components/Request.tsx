@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQueries } from '@tanstack/react-query';
 
@@ -75,7 +75,7 @@ const Request: FC<RequestProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!response?.responseData) {
+  if (!response?.responseRateData && !request?.requestRateData?.length) {
     return null;
   }
 
@@ -86,6 +86,7 @@ const Request: FC<RequestProps> = function ({
       </CardHeader>
       <CardExpandableContent>
         <CardBody>
+          <Title headingLevel="h4">{MetricsLabels.RequestRateTitle} </Title>
           {request?.requestRateData?.length ? (
             <>
               {isRefetchingRequest && <SkIsLoading />}
@@ -101,11 +102,19 @@ const Request: FC<RequestProps> = function ({
         </CardBody>
 
         <CardBody>
-          <CardTitle>{MetricsLabels.HttpStatus}</CardTitle>
-          <>
-            {isRefetchingResponse && <SkIsLoading />}
-            <ResponseCharts responseData={response.responseData} responseRateData={response.responseRateData} />
-          </>
+          <Title headingLevel="h4">{MetricsLabels.HttpStatus} </Title>
+          {response?.responseData && response?.responseRateData ? (
+            <>
+              {isRefetchingResponse && <SkIsLoading />}
+              <ResponseCharts responseData={response.responseData} responseRateData={response.responseRateData} />
+            </>
+          ) : (
+            <EmptyData
+              message={MetricsLabels.NoMetricFoundTitleMessage}
+              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              icon={SearchIcon}
+            />
+          )}
         </CardBody>
       </CardExpandableContent>
     </Card>

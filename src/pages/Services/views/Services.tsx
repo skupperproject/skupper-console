@@ -32,23 +32,7 @@ const Services = function () {
 
   const { data: tcpActiveFlows } = useQuery(
     [QueriesServices.GetPrometheusActiveFlows],
-    () => PrometheusApi.fetchActiveFlowsByService(),
-    {
-      enabled: isPrometheusActive
-    }
-  );
-
-  const { data: httpTotalFlows } = useQuery(
-    [QueriesServices.GetPrometheusHttpTotalFlows],
-    () => PrometheusApi.fetchTotalHttpFlowByService(),
-    {
-      enabled: isPrometheusActive
-    }
-  );
-
-  const { data: tcpTotalFlows } = useQuery(
-    [QueriesServices.GetPrometheusTcpTotalFlows],
-    () => PrometheusApi.fetchTcpFlowsByService(),
+    () => PrometheusApi.fetchTcpActiveFlowsByService(),
     {
       enabled: isPrometheusActive
     }
@@ -62,8 +46,6 @@ const Services = function () {
   const serviceCount = servicesData?.timeRangeCount || 0;
 
   const serviceRows = ServicesController.extendServicesWithActiveAndTotalFlowPairs(services, {
-    httpTotalFlows,
-    tcpTotalFlows,
     tcpActiveFlows
   });
 

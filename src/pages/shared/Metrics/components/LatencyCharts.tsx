@@ -7,6 +7,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartBar from '@core/components/SkChartBar';
 import { formatLatency } from '@core/utils/formatLatency';
+import { formatNumber } from '@core/utils/formatNumber';
 
 import { MetricsLabels } from '../Metrics.enum';
 import { LatencyBucketDistributionData, LatencyBucketSummary, LatencyMetrics } from '../services/services.interfaces';
@@ -52,8 +53,8 @@ const LatencyCharts: FC<{
               <Td>
                 <Title headingLevel="h6">{row.bound}</Title>
               </Td>
-              <Td>{`${row.lessThanCount} (${row.lessThanPerc}%)`}</Td>
-              <Td modifier="fitContent">{`${row.greaterThanCount}`}</Td>
+              <Td>{`${formatNumber(row.lessThanCount)} (${row.lessThanPerc}%)`}</Td>
+              <Td modifier="fitContent">{`${formatNumber(row.greaterThanCount)}`}</Td>
             </Tr>
           ))}
         </Tbody>

@@ -155,31 +155,11 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchTotalHttpFlowByService: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchTcpActiveFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTotalHttpFlowByService() }
-    });
-
-    return result;
-  },
-
-  fetchTcpFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTotalTcpFlowByService() }
-    });
-
-    return result;
-  },
-
-  fetchActiveFlowsByService: async (): Promise<PrometheusMetricSingleData[]> => {
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getActiveFlowsByService() }
+      params: { query: queries.getTcpActiveFlowsByService() }
     });
 
     return result;
@@ -199,7 +179,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchLiveFlowsInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchActiveFlowsRateInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -207,7 +187,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getActiveFlowsTimeInterval(queryFilterString, '1m'),
+        query: queries.getActiveFlowsRateInTimeRange(queryFilterString, '1m'),
         start,
         end,
         step

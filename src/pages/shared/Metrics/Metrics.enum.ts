@@ -29,10 +29,11 @@ export enum MetricsLabels {
   DataTransferTitle = 'Byte rate',
   LatencyTitle = 'Http latencies',
   ConnectionTitle = 'Tcp connections',
-  TerminatedConnections = 'Terminated connections',
+  TerminatedConnections = 'Closed connections',
   LiveConnections = 'Live connections',
-  LiveConnectionsChartLabel = 'Last iive connections',
-  RequestsTitle = 'Http requests',
-  HttpStatus = 'Http response status',
+  LiveConnectionsChartLabel = 'Live connections rate',
+  RequestsTitle = 'Http requests and responses',
+  RequestRateTitle = 'Request rate',
+  HttpStatus = 'Http response',
   Method = 'Method'
 }

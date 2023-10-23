@@ -39,6 +39,6 @@ export enum ServicesLabels {
   SankeyChartDescription = 'Visualizing relationships and the distribution among processes and sites',
   Name = 'Address',
   Protocol = 'Protocol',
-  CurrentFlowPairs = 'Active',
+  CurrentFlowPairs = 'Tcp live connections',
   TotalFLowPairs = 'Total'
 }

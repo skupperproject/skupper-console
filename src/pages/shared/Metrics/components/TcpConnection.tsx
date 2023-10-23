@@ -18,6 +18,7 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { isPrometheusActive } from '@config/config';
 import SkChartArea from '@core/components/SkChartArea';
 import SkIsLoading from '@core/components/SkIsLoading';
+import { formatByteRate } from '@core/utils/formatBytes';
 import { formatNumber } from '@core/utils/formatNumber';
 
 import { MetricsLabels } from '../Metrics.enum';
@@ -88,37 +89,34 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
           {isRefetching && <SkIsLoading />}
           <Flex direction={{ xl: 'row', md: 'column' }}>
             <FlexItem flex={{ default: 'flex_2' }}>
-              {connections.liveConnectionsSerie && <SkChartArea data={connections.liveConnectionsSerie} />}
+              {connections.liveConnectionsSerie && (
+                <>
+                  <Title headingLevel="h4">{MetricsLabels.LiveConnectionsChartLabel} </Title>
+                  <SkChartArea
+                    data={connections.liveConnectionsSerie}
+                    legendLabels={['live connections']}
+                    formatY={formatByteRate}
+                  />
+                </>
+              )}
             </FlexItem>
 
             <Divider orientation={{ default: 'vertical' }} />
 
-            <FlexItem flex={{ default: 'flex_1' }}>
-              <Flex
-                flex={{ default: 'flex_1' }}
-                direction={{ default: 'column' }}
-                alignItems={{ default: 'alignItemsCenter' }}
-                alignSelf={{ default: 'alignSelfStretch' }}
-              >
-                <FlexItem flex={{ default: 'flex_1' }}>
-                  <Bullseye>
-                    <Title headingLevel="h1">{`${MetricsLabels.LiveConnections}: ${formatNumber(
-                      connections.liveConnectionsCount
-                    )}`}</Title>
-                  </Bullseye>
-                </FlexItem>
-
-                <Divider orientation={{ default: 'horizontal' }} />
-
-                <FlexItem>
-                  <Bullseye>
-                    <Title headingLevel="h1">{`${MetricsLabels.TerminatedConnections}: ${formatNumber(
-                      connections.terminatedConnectionsCount
-                    )}`}</Title>
-                  </Bullseye>
-                </FlexItem>
-              </Flex>
-            </FlexItem>
+            <Flex
+              flex={{ default: 'flex_1' }}
+              direction={{ default: 'column' }}
+              alignItems={{ default: 'alignItemsCenter' }}
+              alignSelf={{ default: 'alignSelfStretch' }}
+            >
+              <FlexItem flex={{ default: 'flex_1' }}>
+                <Bullseye>
+                  <Title headingLevel="h1">{`${MetricsLabels.LiveConnections}: ${formatNumber(
+                    connections.liveConnectionsCount
+                  )}`}</Title>
+                </Bullseye>
+              </FlexItem>
+            </Flex>
           </Flex>
         </CardBody>
       </CardExpandableContent>

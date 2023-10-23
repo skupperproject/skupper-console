@@ -97,6 +97,12 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         sourceProcesses: {
           disabled: !sourceProcesses.length
         },
+        destSites: {
+          hide: destSites.length === 0
+        },
+        destinationProcesses: {
+          hide: destProcesses.length === 0
+        },
         protocols: { disabled: true }
       }}
       startTimeLimit={startTime}

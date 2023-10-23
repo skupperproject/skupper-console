@@ -311,23 +311,25 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
             <ToolbarItem variant="separator" />
 
-            <ToolbarItem>
-              <Select
-                selections={selectedFilters.protocol}
-                placeholderText={MetricsLabels.FilterProtocolsDefault}
-                isOpen={selectedFilterIsOpen.protocol}
-                isDisabled={!!config.protocols?.disabled}
-                onSelect={handleSelectProtocol}
-                onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
-              >
-                {[
-                  <SelectOption key={MetricsLabels.FilterProtocolsDefault} value={undefined}>
-                    {MetricsLabels.FilterProtocolsDefault}
-                  </SelectOption>,
-                  ...optionsProtocolsWithDefault
-                ]}
-              </Select>
-            </ToolbarItem>
+            {!!optionsProtocolsWithDefault.length && (
+              <ToolbarItem>
+                <Select
+                  selections={selectedFilters.protocol}
+                  placeholderText={MetricsLabels.FilterProtocolsDefault}
+                  isOpen={selectedFilterIsOpen.protocol}
+                  isDisabled={!!config.protocols?.disabled}
+                  onSelect={handleSelectProtocol}
+                  onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
+                >
+                  {[
+                    <SelectOption key={MetricsLabels.FilterProtocolsDefault} value={undefined}>
+                      {MetricsLabels.FilterProtocolsDefault}
+                    </SelectOption>,
+                    ...optionsProtocolsWithDefault
+                  ]}
+                </Select>
+              </ToolbarItem>
+            )}
 
             <ToolbarItem>
               <DateTimeRangeFilter
