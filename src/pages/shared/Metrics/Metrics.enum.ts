@@ -32,8 +32,8 @@ export enum MetricsLabels {
   TerminatedConnections = 'Closed connections',
   LiveConnections = 'Live connections',
   LiveConnectionsChartLabel = 'Live connections rate',
-  RequestsTitle = 'Http requests and responses',
+  RequestsTitle = 'Http requests',
   RequestRateTitle = 'Request rate',
-  HttpStatus = 'Http response',
+  ResposeTitle = 'Http responses',
   Method = 'Method'
 }

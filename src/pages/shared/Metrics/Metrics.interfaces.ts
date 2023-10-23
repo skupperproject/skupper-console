@@ -36,6 +36,7 @@ export interface ExpandedMetricSections {
   byterate?: boolean;
   latency?: boolean;
   request?: boolean;
+  response?: boolean;
   connection?: boolean;
 }
 
