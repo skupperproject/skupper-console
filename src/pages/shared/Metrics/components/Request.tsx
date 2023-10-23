@@ -9,7 +9,6 @@ import EmptyData from '@core/components/EmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
 import RequestCharts from './RequestCharts';
-import ResponseCharts from './ResponseCharts';
 import { MetricsLabels } from '../Metrics.enum';
 import { SelectedMetricFilters, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
@@ -31,21 +30,11 @@ const Request: FC<RequestProps> = function ({
 }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const [
-    { data: request, refetch: refetchRequest, isRefetching: isRefetchingRequest },
-    { data: response, refetch: refetchResponse, isRefetching: isRefetchingResponse }
-  ] = useQueries({
+  const [{ data: request, refetch: refetchRequest, isRefetching: isRefetchingRequest }] = useQueries({
     queries: [
       {
         queryKey: [QueriesMetrics.GetRequest, selectedFilters],
         queryFn: () => MetricsController.getRequests(selectedFilters),
-        enabled: isPrometheusActive,
-        refetchInterval,
-        keepPreviousData: true
-      },
-      {
-        queryKey: [QueriesMetrics.GetResponse, selectedFilters],
-        queryFn: () => MetricsController.getResponses(selectedFilters),
         enabled: isPrometheusActive,
         refetchInterval,
         keepPreviousData: true
@@ -65,9 +54,8 @@ const Request: FC<RequestProps> = function ({
   const handleRefetchMetrics = useCallback(() => {
     if (isPrometheusActive) {
       refetchRequest();
-      refetchResponse();
     }
-  }, [refetchRequest, refetchResponse]);
+  }, [refetchRequest]);
 
   useEffect(() => {
     if (forceUpdate) {
@@ -75,7 +63,7 @@ const Request: FC<RequestProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!response?.responseRateData && !request?.requestRateData?.length) {
+  if (!request?.requestRateData?.length) {
     return null;
   }
 
@@ -91,22 +79,6 @@ const Request: FC<RequestProps> = function ({
             <>
               {isRefetchingRequest && <SkIsLoading />}
               <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
-            </>
-          ) : (
-            <EmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
-              icon={SearchIcon}
-            />
-          )}
-        </CardBody>
-
-        <CardBody>
-          <Title headingLevel="h4">{MetricsLabels.HttpStatus} </Title>
-          {response?.responseData && response?.responseRateData ? (
-            <>
-              {isRefetchingResponse && <SkIsLoading />}
-              <ResponseCharts responseData={response.responseData} responseRateData={response.responseRateData} />
             </>
           ) : (
             <EmptyData

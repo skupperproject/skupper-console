@@ -199,11 +199,11 @@ const MetricsController = {
   }> => {
     try {
       const params: PrometheusQueryParams = {
-        sourceSite: destSite,
-        destSite: sourceSite,
+        sourceSite,
+        destSite,
         // who send a request (sourceProcess) should query the response as a destProcess
-        sourceProcess: destProcess,
-        destProcess: sourceProcess,
+        sourceProcess,
+        destProcess,
         service,
         protocol,
         start,
@@ -212,6 +212,7 @@ const MetricsController = {
       };
 
       const [responsesByProcess, responseRateByProcess] = await Promise.all([
+        PrometheusApi.fetchResponseCountsByPartialCodeInTimeRange(params),
         PrometheusApi.fetchResponseCountsByPartialCodeInTimeRange(params),
         PrometheusApi.fetchHttpErrorRateByPartialCodeInTimeRange(params)
       ]);

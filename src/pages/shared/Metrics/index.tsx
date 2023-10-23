@@ -7,6 +7,7 @@ import { AvailableProtocols } from '@API/REST.enum';
 import MetricFilters from './components/Filters';
 import Latency from './components/Latency';
 import Request from './components/Request';
+import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
 import { MetricsProps, QueryMetricsParams } from './Metrics.interfaces';
@@ -124,6 +125,16 @@ const Metrics: FC<MetricsProps> = function ({
             <Request
               selectedFilters={queryParams}
               openSections={defaultOpenSections?.request}
+              forceUpdate={shouldUpdateData}
+              refetchInterval={refetchInterval}
+              onGetIsSectionExpanded={handleUpdateExpandedSections}
+            />
+          </StackItem>
+
+          <StackItem>
+            <Response
+              selectedFilters={queryParams}
+              openSections={defaultOpenSections?.response}
               forceUpdate={shouldUpdateData}
               refetchInterval={refetchInterval}
               onGetIsSectionExpanded={handleUpdateExpandedSections}
