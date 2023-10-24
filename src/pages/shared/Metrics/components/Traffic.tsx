@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
@@ -69,6 +69,7 @@ const Traffic: FC<TrafficProps> = function ({
           {data?.txTimeSerie || data?.rxTimeSerie ? (
             <>
               {isRefetching && <SkIsLoading />}
+              <Title headingLevel="h4">{MetricsLabels.ByteRateTitle} </Title>
               <TrafficCharts byteRateData={data} />
             </>
           ) : (
