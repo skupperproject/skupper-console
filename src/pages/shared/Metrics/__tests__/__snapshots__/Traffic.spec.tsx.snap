@@ -54,7 +54,7 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
               <div
                 class="pf-v5-c-card__title-text"
               >
-                Byte rate
+                Traffic
               </div>
             </div>
           </div>
@@ -89,6 +89,15 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
                 </svg>
               </div>
             </div>
+            <h4
+              class="pf-v5-c-title pf-m-md"
+              data-ouia-component-id="OUIA-Generated-Title-1"
+              data-ouia-component-type="PF5/Title"
+              data-ouia-safe="true"
+            >
+              Byte rate
+               
+            </h4>
             <div
               class="pf-v5-l-flex pf-m-row-on-xl pf-m-column-on-md"
             >
@@ -953,7 +962,7 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
             <div
               class="pf-v5-c-card__title-text"
             >
-              Byte rate
+              Traffic
             </div>
           </div>
         </div>
@@ -988,6 +997,15 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
               </svg>
             </div>
           </div>
+          <h4
+            class="pf-v5-c-title pf-m-md"
+            data-ouia-component-id="OUIA-Generated-Title-1"
+            data-ouia-component-type="PF5/Title"
+            data-ouia-safe="true"
+          >
+            Byte rate
+             
+          </h4>
           <div
             class="pf-v5-l-flex pf-m-row-on-xl pf-m-column-on-md"
           >
