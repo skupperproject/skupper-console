@@ -419,7 +419,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }, []);
 
     return (
-      <div ref={graphRef} style={{ height: '98%', position: 'relative' }}>
+      <div ref={graphRef} style={{ height: '98%', position: 'relative', background: '#f0f0f0' }}>
         {topologyGraphRef.current && (
           <MenuControl
             graphInstance={topologyGraphRef.current}
