@@ -16,35 +16,19 @@ import {
 } from '@patternfly/react-core';
 import { BarsIcon } from '@patternfly/react-icons';
 
-import { brandLogo } from '@config/config';
-
-const storageKey = 'theme-preference';
-const DARK_THEME_CLASS = 'pf-v5-theme-dark';
+import { DARK_THEME_CLASS, brandLogo } from '@config/config';
+import { getThemePreference, removeThemePreference, setThemePreference } from '@core/utils/isDarkTheme';
 
 const SkHeader = function () {
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleChange = (_event: FormEvent<HTMLInputElement>, checked: boolean) => {
-    const htmlElement = document.querySelector('html') as HTMLElement;
-
-    checked ? htmlElement.classList.add(DARK_THEME_CLASS) : htmlElement.classList.remove(DARK_THEME_CLASS);
-    checked ? localStorage.setItem(storageKey, DARK_THEME_CLASS) : localStorage.removeItem(storageKey);
-
+    checked ? setThemePreference(DARK_THEME_CLASS) : removeThemePreference();
     setIsChecked(checked);
   };
 
   useEffect(() => {
-    const themePreference = localStorage.getItem(storageKey);
-
-    if (themePreference) {
-      const htmlElement = document.querySelector('html') as HTMLElement;
-      htmlElement.classList.add(themePreference);
-      setIsChecked(true);
-
-      return;
-    }
-
-    setIsChecked(false);
+    getThemePreference() ? setIsChecked(true) : setIsChecked(false);
   }, []);
 
   return (
@@ -66,13 +50,7 @@ const SkHeader = function () {
           <ToolbarContent>
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
-                <Switch
-                  label="Dark theme"
-                  labelOff="Dark theme"
-                  isChecked={isChecked}
-                  onChange={handleChange}
-                  ouiaId="BasicSwitch"
-                />
+                <Switch label="Dark theme" labelOff="Dark theme" isChecked={isChecked} onChange={handleChange} />
               </ToolbarItem>
             </ToolbarGroup>
           </ToolbarContent>
