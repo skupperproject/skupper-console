@@ -4,9 +4,22 @@ import { ResponsiveSankey } from '@nivo/sankey';
 
 import { VarColors } from '@config/colors';
 import { formatByteRate } from '@core/utils/formatBytes';
+import { isDarkTheme } from '@core/utils/isDarkTheme';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
 import EmptyData from '../EmptyData';
+
+const themeStyle = isDarkTheme()
+  ? {
+      labelTextColor: VarColors.White,
+      labelTooltipBgColor: VarColors.Black600,
+      padding: '5px 10px'
+    }
+  : {
+      labelTextColor: VarColors.White,
+      labelTooltipBgColor: VarColors.Black600,
+      padding: '5px 10px'
+    };
 
 interface SkSankeyChartProps {
   nodes: {
@@ -38,7 +51,6 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
     <div style={{ height: DEFAULT_SANKEY_CHART_HEIGHT }}>
       <ResponsiveSankey
         data={data}
-        margin={{ top: 10, right: 0, bottom: 10, left: 15 }}
         layout="horizontal"
         align="justify"
         colors={(node) => node?.nodeColor || VarColors.Black500}
@@ -48,8 +60,30 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
         nodeThickness={15}
         nodeSpacing={24}
         nodeBorderWidth={0}
+        nodeTooltip={({ node }) => (
+          <div
+            style={{
+              padding: themeStyle.padding,
+              color: themeStyle.labelTextColor,
+              backgroundColor: themeStyle.labelTooltipBgColor
+            }}
+          >
+            {node.label}
+          </div>
+        )}
+        linkTooltip={({ link }) => (
+          <div
+            style={{
+              padding: themeStyle.padding,
+              color: themeStyle.labelTextColor,
+              backgroundColor: themeStyle.labelTooltipBgColor
+            }}
+          >
+            {`${link.source.label} > ${link.target.label}`}{' '}
+            {link.value !== DEFAULT_SANKEY_CHART_FLOW_VALUE ? `: ${formatByteRate(link.value)}` : ''}
+          </div>
+        )}
         animate={false}
-        nodeBorderRadius={3}
         linkOpacity={0.3}
         linkHoverOpacity={0.6}
         linkHoverOthersOpacity={0.3}
@@ -58,8 +92,12 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
         labelPosition="inside"
         labelOrientation="horizontal"
         labelPadding={16}
-        labelTextColor={'black'}
         valueFormat={(value) => (value === DEFAULT_SANKEY_CHART_FLOW_VALUE ? '' : formatByteRate(value))}
+        theme={{
+          fontSize: 16,
+          fontFamily: 'var(--pf-v5-global--FontFamily--text)',
+          background: VarColors.White
+        }}
       />
     </div>
   );

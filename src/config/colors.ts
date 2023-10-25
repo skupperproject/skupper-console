@@ -1,5 +1,6 @@
 export enum Colors {
   White = '--pf-v5-global--palette--white',
+  Black600 = '--pf-v5-global--palette--black-600',
   Black500 = '--pf-v5-global--palette--black-500',
   Green500 = '--pf-v5-global--palette--green-500',
   Blue400 = '--pf-v5-global--palette--blue-400',
@@ -12,6 +13,7 @@ export enum Colors {
 export enum VarColors {
   White = `var(${Colors.White})`,
   Black500 = `var(${Colors.Black500})`,
+  Black600 = `var(${Colors.Black600})`,
   Green500 = `var(${Colors.Green500})`,
   Blue400 = `var(${Colors.Blue400})`
 }
