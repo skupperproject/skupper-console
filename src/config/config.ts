@@ -25,3 +25,6 @@ export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
 /** Tests */
 export const waitForElementToBeRemovedTimeout = 3000;
+
+export const DARK_THEME_CLASS = 'pf-v5-theme-dark';
+export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
