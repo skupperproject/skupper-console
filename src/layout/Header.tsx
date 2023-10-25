@@ -9,7 +9,6 @@ import {
   MastheadToggle,
   PageToggleButton,
   Switch,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -17,7 +16,7 @@ import {
 } from '@patternfly/react-core';
 import { BarsIcon } from '@patternfly/react-icons';
 
-import { brandLogo, brandName } from '@config/config';
+import { brandLogo } from '@config/config';
 
 const storageKey = 'theme-preference';
 const DARK_THEME_CLASS = 'pf-v5-theme-dark';
@@ -63,7 +62,6 @@ const SkHeader = function () {
         </MastheadBrand>
       </MastheadMain>
       <MastheadContent>
-        {brandName && <Title headingLevel="h1">{'brandName'}</Title>}
         <Toolbar>
           <ToolbarContent>
             <ToolbarGroup align={{ default: 'alignRight' }}>
