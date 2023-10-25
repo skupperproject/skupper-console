@@ -11,14 +11,11 @@ jest.mock('@config/config', () => ({
 
 describe('SkHeader', () => {
   it('renders the header with logo and brand name', () => {
-    const { getByAltText, getByText } = render(<SkHeader />);
+    const { getByAltText } = render(<SkHeader />);
 
     const logo = getByAltText('logo');
     expect(logo).toBeInTheDocument();
     expect(logo.getAttribute('src')).toBe('/path/to/logo.png');
-
-    const brandName = getByText('My Brand');
-    expect(brandName).toBeInTheDocument();
   });
 
   it('renders the header without brand name when brandName is undefined', () => {

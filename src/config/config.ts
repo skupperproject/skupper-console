@@ -17,7 +17,6 @@ export const BIG_PAGINATION_SIZE = 20;
 export const SMALL_PAGINATION_SIZE = 10;
 
 // Brand
-export const brandName = process.env.BRAND_APP_NAME || undefined;
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
 
 /** General config: contains various global settings and constants */
