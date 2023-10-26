@@ -50,7 +50,7 @@ const SkHeader = function () {
           <ToolbarContent>
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
-                <Switch label="Dark theme" labelOff="Dark theme" isChecked={isChecked} onChange={handleChange} />
+                <Switch label="Dark mode" labelOff="Dark mode" isChecked={isChecked} onChange={handleChange} />
               </ToolbarItem>
             </ToolbarGroup>
           </ToolbarContent>

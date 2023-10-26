@@ -1,6 +1,6 @@
-import { LEGEND_DEFAULT_STROKE_COLOR } from '../../Graph.constants';
+import { LEGEND_DEFAULT_STROKE_COLOR } from './Shapes.constants';
 
-const SvgCircle = function ({ dimension = 12 }: { dimension?: number }) {
+const SvgCircle = function ({ dimension = 12, fillOpacity = 0 }: { dimension?: number; fillOpacity?: number }) {
   const circleDimension = dimension;
   const circleStroke = LEGEND_DEFAULT_STROKE_COLOR;
 
@@ -10,8 +10,9 @@ const SvgCircle = function ({ dimension = 12 }: { dimension?: number }) {
         cx={circleDimension / 2}
         cy={circleDimension / 2}
         r={circleDimension / 2.5}
+        fill={circleStroke}
         stroke={circleStroke}
-        fillOpacity={0}
+        fillOpacity={fillOpacity}
       />
     </svg>
   );

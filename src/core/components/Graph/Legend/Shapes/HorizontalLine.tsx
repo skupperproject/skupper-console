@@ -1,7 +1,7 @@
-import { EDGE_COLOR_DEFAULT } from '../../Graph.constants';
+import { LINE_COLOR } from './Shapes.constants';
 
 const SvgHorizontalLine = function ({
-  color = EDGE_COLOR_DEFAULT,
+  color = LINE_COLOR,
   dashed = false,
   withConnector = false
 }: {
