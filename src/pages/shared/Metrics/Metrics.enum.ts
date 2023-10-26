@@ -32,7 +32,7 @@ export enum MetricsLabels {
   ConnectionTitle = 'Tcp connections',
   TerminatedConnections = 'Closed connections',
   LiveConnections = 'Live connections',
-  LiveConnectionsChartLabel = 'Live connections rate',
+  LiveConnectionsChartLabel = 'Connections',
   RequestsTitle = 'Http requests',
   RequestRateTitle = 'Request rate',
   ResposeTitle = 'Http responses',

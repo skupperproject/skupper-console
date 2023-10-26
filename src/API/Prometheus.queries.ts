@@ -54,8 +54,8 @@ export const queries = {
     return `sum(active_flows{${paramSource}})`;
   },
 
-  getActiveFlowsRateInTimeRange(paramSource: string, range: IntervalTimePropValue) {
-    return `sum(rate(active_flows{${paramSource}}[${range}]))`;
+  getFlowsDeltaInTimeRange(paramSource: string, range: IntervalTimePropValue) {
+    return `sum(idelta(flows_total{${paramSource}}[${range}]))`;
   },
 
   getTotalFlows(paramSource: string) {
