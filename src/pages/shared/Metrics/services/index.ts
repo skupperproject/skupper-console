@@ -296,7 +296,7 @@ const MetricsController = {
     try {
       const [liveConnections, liveConnectionsInTimeRangeData, totalConnections] = await Promise.all([
         PrometheusApi.fetchLiveFlows(params),
-        PrometheusApi.fetchActiveFlowsRateInTimeRange(params),
+        PrometheusApi.fetchFlowsDeltaInTimeRange(params),
         PrometheusApi.fetchtotalFlows(params)
       ]);
 

@@ -179,7 +179,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchActiveFlowsRateInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
+  fetchFlowsDeltaInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetricData[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -187,7 +187,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getActiveFlowsRateInTimeRange(queryFilterString, '1m'),
+        query: queries.getFlowsDeltaInTimeRange(queryFilterString, '1m'),
         start,
         end,
         step

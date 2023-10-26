@@ -18,7 +18,6 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { isPrometheusActive } from '@config/config';
 import SkChartArea from '@core/components/SkChartArea';
 import SkIsLoading from '@core/components/SkIsLoading';
-import { formatByteRate } from '@core/utils/formatBytes';
 import { formatNumber } from '@core/utils/formatNumber';
 
 import { MetricsLabels } from '../Metrics.enum';
@@ -92,11 +91,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
               {connections.liveConnectionsSerie && (
                 <>
                   <Title headingLevel="h4">{MetricsLabels.LiveConnectionsChartLabel} </Title>
-                  <SkChartArea
-                    data={connections.liveConnectionsSerie}
-                    legendLabels={['live connections']}
-                    formatY={formatByteRate}
-                  />
+                  <SkChartArea data={connections.liveConnectionsSerie} legendLabels={['live connections']} />
                 </>
               )}
             </FlexItem>
