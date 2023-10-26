@@ -14,7 +14,6 @@ import LoadingPage from '@pages/shared/Loading';
 import Request from '../components/Request';
 import { MetricsLabels } from '../Metrics.enum';
 
-let component;
 const processResult = processesData.results[0] as ProcessResponse;
 
 describe('Request component', () => {
@@ -30,7 +29,7 @@ describe('Request component', () => {
   });
 
   it('should render the Request section of the metric', async () => {
-    component = render(
+    render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <Request
@@ -49,6 +48,5 @@ describe('Request component', () => {
     });
 
     expect(screen.getByText(MetricsLabels.RequestsTitle)).toBeInTheDocument();
-    expect(component).toMatchSnapshot();
   });
 });

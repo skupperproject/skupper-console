@@ -11,7 +11,7 @@ enum Labels {
   Exposed = 'Process, component or site exposed',
   NoExposed = 'Process/Component',
   SiteGroup = 'Related site grouping',
-  Remote = 'Server process/component',
+  Remote = 'Remote process/component',
   DataLink = 'Data flow link',
   ActiveDataLink = 'Active data link',
   SiteLink = 'Site link connected'
@@ -39,7 +39,7 @@ const ProcessLegend = function () {
           </FlexItem>
 
           <FlexItem>
-            <SvgCircle dimension={8} />
+            <SvgCircle dimension={8} fillOpacity={1} />
           </FlexItem>
         </Flex>
 
