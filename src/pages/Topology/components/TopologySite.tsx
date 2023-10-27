@@ -78,32 +78,33 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
           refetchInterval: UPDATE_INTERVAL
         },
         {
-          queryKey: [QueriesTopology.GetSitesPairs],
-          queryFn: () => RESTApi.fetchSitesPairs(),
-          refetchInterval: UPDATE_INTERVAL,
+          queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
+          queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
           keepPreviousData: true,
-          enabled: isDisplayOptionActive(SHOW_DATA_LINKS)
+          refetchInterval: UPDATE_INTERVAL
         },
         {
           queryKey: [
             QueriesTopology.GetBytesByProcessPairs,
             isDisplayOptionActive(SHOW_LINK_BYTES),
             isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            isDisplayOptionActive(SHOW_LINK_LATENCY)
+            isDisplayOptionActive(SHOW_LINK_LATENCY),
+            isDisplayOptionActive(SHOW_DATA_LINKS)
           ],
           queryFn: () =>
-            TopologyController.getMetrics({
-              showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-              showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-              showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-              params: {
-                fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-                fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-                fetchLatency: { groupBy: 'sourceSite, destSite' }
-              }
-            }),
+            isDisplayOptionActive(SHOW_DATA_LINKS)
+              ? TopologyController.getMetrics({
+                  showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+                  showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+                  showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+                  params: {
+                    fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
+                    fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
+                    fetchLatency: { groupBy: 'sourceSite, destSite' }
+                  }
+                })
+              : null,
           keepPreviousData: true,
-          enabled: isDisplayOptionActive(SHOW_DATA_LINKS),
           refetchInterval: UPDATE_INTERVAL
         }
       ]

@@ -31,7 +31,7 @@ describe('SitesController', () => {
   });
 
   it('should handle the case where the link name is undefined', () => {
-    const sites = mockSites.results;
+    const sites = mockSites.results as SiteResponse[];
     const links = mockLinks.results as LinkResponse[];
     const routers = mockRouters.results;
 

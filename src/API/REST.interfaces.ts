@@ -51,6 +51,7 @@ export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;
   siteVersion: string;
+  platform: 'kubernetes' | 'podman' | undefined;
 }
 
 export interface ProcessGroupResponse extends BaseResponse {

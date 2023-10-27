@@ -47,6 +47,7 @@ for (let i = 0; i < ITEMS_TEST; i++) {
   mockSitesForPerf.push({
     recType: 'SITE',
     identity: `sitePerf${i}`,
+    platform: 'kubernetes',
     startTime: 1674048705000000,
     endTime: 0,
     name: `site ${i}`,

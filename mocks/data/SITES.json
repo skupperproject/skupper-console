@@ -7,6 +7,7 @@
       "endTime": 0,
       "name": "site 1",
       "nameSpace": "config-grpc-site-1-test",
+      "platform": "podman",
       "siteVersion": "1.5.0"
     },
     {
@@ -16,6 +17,7 @@
       "endTime": 0,
       "name": "site 2",
       "nameSpace": "config-grpc-site-2-test",
+      "platform": "kubernetes",
       "siteVersion": "1.5.0"
     },
     {
@@ -25,6 +27,7 @@
       "endTime": 0,
       "name": "site 3",
       "nameSpace": "config-grpc-site-3-test",
+      "platform": "podman",
       "siteVersion": "1.5.0"
     },
     {
@@ -34,6 +37,7 @@
       "endTime": 0,
       "name": "site 4",
       "nameSpace": "config-grpc-site-4-test",
+      "platform": "kubernetes",
       "siteVersion": "1.5.0"
     },
     {
@@ -43,6 +47,7 @@
       "endTime": 0,
       "name": "site 5",
       "nameSpace": "config-grpc-site-5-test",
+      "platform": "podman",
       "siteVersion": "1.5.0"
     }
   ],
