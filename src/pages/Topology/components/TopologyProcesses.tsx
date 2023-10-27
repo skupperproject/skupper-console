@@ -6,7 +6,7 @@ import { useQueries } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { ProcessResponse } from '@API/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import { GraphEdge, GraphCombo, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
@@ -126,7 +126,12 @@ const TopologyProcesses: FC<{
           TopologyController.getMetrics({
             showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
             showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY)
+            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+            params: {
+              fetchBytes: { groupBy: 'destProcess, sourceProcess,direction' },
+              fetchByteRate: { groupBy: 'destProcess, sourceProcess,direction' },
+              fetchLatency: { groupBy: 'sourceProcess, destProcess' }
+            }
           }),
         keepPreviousData: true,
         refetchInterval: UPDATE_INTERVAL
@@ -283,7 +288,7 @@ const TopologyProcesses: FC<{
       }
       value={ROTATE_LINK_LABEL}
     >
-      {TopologyLabels.RotateLabel}
+      {TopologyLabels.CheckboxRotateLabel}
     </SelectOption>
   ];
 
@@ -297,9 +302,11 @@ const TopologyProcesses: FC<{
     }
 
     function updateLabelLinks(prevLinks: GraphEdge[]) {
-      return TopologyController.addMetricsToLinks(
+      return TopologyController.addMetricsToEdges(
         prevLinks,
-        processesPairs,
+        processesPairs as ProcessPairsResponse[],
+        'sourceProcess',
+        'destProcess',
         metrics?.bytesByProcessPairs,
         metrics?.byteRateByProcessPairs,
         metrics?.latencyByProcessPairs,
@@ -328,7 +335,7 @@ const TopologyProcesses: FC<{
     const processesNodes = TopologyController.convertProcessesToNodes(processes);
     const siteNodes = TopologyController.convertSitesToNodes(sites);
     const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
-    const processesLinks = TopologyController.convertProcessPairsToLinks(pPairs);
+    const processesLinks = TopologyController.convertPairsToEdges(pPairs);
 
     setNodes(
       processesNodes.map((node) => ({

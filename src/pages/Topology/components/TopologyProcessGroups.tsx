@@ -40,8 +40,8 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetProcessGroupsLinks],
-        queryFn: () => RESTApi.fetchProcessgroupsPairs(),
+        queryKey: [QueriesTopology.GetProcessGroupsPairs],
+        queryFn: () => RESTApi.fetchProcessGroupsPairs(),
         refetchInterval: UPDATE_INTERVAL
       }
     ]
@@ -66,7 +66,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
     ...processGroups.results,
     ...remoteProcessGroups.results
   ]);
-  const links = TopologyController.convertProcessPairsToLinks(processGroupsPairs);
+  const links = TopologyController.convertPairsToEdges(processGroupsPairs);
 
   return (
     <Stack>
