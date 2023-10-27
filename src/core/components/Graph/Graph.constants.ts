@@ -7,7 +7,8 @@ const NODE_BORDER_COLOR_DEFAULT = HexColors.Black600;
 const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
 const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 export const EDGE_COLOR_DEFAULT = HexColors.Black500;
-export const EDGE_COLOR_TEXT_DEFAULT = HexColors.Black900;
+export const EDGE_COLOR_CONNECTION_DEFAULT = HexColors.Blue400;
+export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
 const COMBO__COLOR_DEFAULT = 'transparent';
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
@@ -20,6 +21,7 @@ export const LEGEND_DEFAULT_STROKE_COLOR = HexColors.Black900;
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',
   siteEdge: 'site-edge',
+  loopEdge: 'loop',
   nodeWithBadges: 'nCircle',
   comboWithCustomLabel: 'cRect'
 };
@@ -90,7 +92,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
 
   labelCfg: {
     position: 'bottom',
-    offset: 8,
+    offset: 18,
     style: {
       fill: NODE_COLOR_DEFAULT_LABEL,
       fontSize: 11,

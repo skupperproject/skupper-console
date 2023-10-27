@@ -10,7 +10,7 @@ import {
   DEFAULT_REMOTE_NODE_CONFIG,
   DEFAULT_NODE_ICON,
   DEFAULT_NODE_CONFIG,
-  EDGE_COLOR_TEXT_DEFAULT
+  EDGE_COLOR_DEFAULT_TEXT
 } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -22,7 +22,8 @@ import {
   ProcessGroupResponse,
   ProcessResponse,
   RouterResponse,
-  SiteResponse
+  SiteResponse,
+  SitePairsResponse
 } from 'API/REST.interfaces';
 
 import { Entity, TopologyMetrics, TopologyMetricsMetrics } from '../Topology.interfaces';
@@ -36,13 +37,14 @@ export const TopologyController = {
   getMetrics: async ({
     showBytes = false,
     showByteRate = false,
-    showLatency = false
+    showLatency = false,
+    params
   }: TopologyMetricsMetrics): Promise<TopologyMetrics> => {
     try {
       const [bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs] = await Promise.all([
-        showBytes ? PrometheusApi.fetchAllProcessPairsBytes() : [],
-        showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates() : [],
-        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies() : []
+        showBytes ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy) : [],
+        showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates(params.fetchByteRate.groupBy) : [],
+        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy) : []
       ]);
 
       return { bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs };
@@ -86,7 +88,7 @@ export const TopologyController = {
     return sites.filter((site) => groups.includes(site.id)).map(({ id, label }) => ({ id, label }));
   },
 
-  convertProcessPairsToLinks: (processesPairs: ProcessPairsResponse[]): GraphEdge[] =>
+  convertPairsToEdges: (processesPairs: ProcessPairsResponse[] | SitePairsResponse[]): GraphEdge[] =>
     processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
       id: identity,
       source: sourceId,
@@ -98,7 +100,7 @@ export const TopologyController = {
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
   // The purpose of this property is to display the edges between different sites in the topology.
-  convertLinksToSiteLinks: (sites: SiteResponse[], routers: RouterResponse[], links: LinkResponse[]): GraphEdge[] => {
+  convertRouterLinksToEdges: (sites: SiteResponse[], routers: RouterResponse[], links: LinkResponse[]): GraphEdge[] => {
     const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links, routers);
 
     return sitesWithLinks.flatMap(({ identity: sourceId, targetIds }) =>
@@ -113,12 +115,14 @@ export const TopologyController = {
     );
   },
 
-  addMetricsToLinks: (
+  addMetricsToEdges: (
     links: GraphEdge[],
-    processesPairs?: ProcessPairsResponse[],
-    bytesByProcessPairs?: PrometheusApiSingleResult[],
-    byteRateByProcessPairs?: PrometheusApiSingleResult[],
-    latencyByProcessPairs?: PrometheusApiSingleResult[],
+    pairs: ProcessPairsResponse[] | SitePairsResponse[],
+    sourceKey: string,
+    destKey: string,
+    bytesByPairs?: PrometheusApiSingleResult[],
+    byteRateByPairs?: PrometheusApiSingleResult[],
+    latencyByPairs?: PrometheusApiSingleResult[],
     options?: {
       showLinkProtocol?: boolean;
       showLinkBytes?: boolean;
@@ -128,10 +132,15 @@ export const TopologyController = {
       rotateLabel?: boolean;
     }
   ): GraphEdge[] => {
-    const bytesByProcessPairsMap = (bytesByProcessPairs || []).reduce(
+    const bytesByPairsMap = (bytesByPairs || []).reduce(
       (acc, { metric, value }) => {
         {
-          acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+          if (metric[sourceKey] === metric[destKey]) {
+            acc[`${metric[sourceKey]}${metric[destKey]}`] =
+              (Number(acc[`${metric[sourceKey]}${metric[destKey]}`]) || 0) + Number(value[1]);
+          } else {
+            acc[`${metric[sourceKey]}${metric[destKey]}`] = Number(value[1]);
+          }
         }
 
         return acc;
@@ -139,10 +148,16 @@ export const TopologyController = {
       {} as Record<string, number>
     );
 
-    const byteRateByProcessPairsMap = (byteRateByProcessPairs || []).reduce(
+    const byteRateByPairsMap = (byteRateByPairs || []).reduce(
       (acc, { metric, value }) => {
         {
-          acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+          // case: A site has internal data traffic
+          if (metric[sourceKey] === metric[destKey]) {
+            acc[`${metric[sourceKey]}${metric[destKey]}`] =
+              (Number(acc[`${metric[sourceKey]}${metric[destKey]}`]) || 0) + Number(value[1]);
+          } else {
+            acc[`${metric[sourceKey]}${metric[destKey]}`] = Number(value[1]);
+          }
         }
 
         return acc;
@@ -150,16 +165,21 @@ export const TopologyController = {
       {} as Record<string, number>
     );
 
-    const latencyByProcessPairsMap = (latencyByProcessPairs || []).reduce(
+    const latencyByPairsMap = (latencyByPairs || []).reduce(
       (acc, { metric, value }) => {
-        acc[`${metric.sourceProcess}${metric.destProcess}`] = Number(value[1]);
+        if (metric[sourceKey] === metric[destKey]) {
+          acc[`${metric[sourceKey]}${metric[destKey]}`] =
+            (Number(acc[`${metric[sourceKey]}${metric[destKey]}`]) || 0) + Number(value[1]);
+        } else {
+          acc[`${metric[sourceKey]}${metric[destKey]}`] = Number(value[1]);
+        }
 
         return acc;
       },
       {} as Record<string, number>
     );
 
-    const processesPairsMap = (processesPairs || []).reduce(
+    const pairsMap = (pairs || []).reduce(
       (acc, { sourceId, destinationId, protocol }) => {
         acc[`${sourceId}${destinationId}`] = protocol || '';
 
@@ -169,18 +189,25 @@ export const TopologyController = {
     );
 
     return links.map((link) => {
-      const protocol = processesPairsMap[`${link.source}${link.target}`];
-      const byterate = byteRateByProcessPairsMap[`${link.sourceName}${link.targetName}`];
-      const byterateReverse = byteRateByProcessPairsMap[`${link.targetName}${link.sourceName}`];
-      const bytes = bytesByProcessPairsMap[`${link.sourceName}${link.targetName}`];
-      const bytesReverse = bytesByProcessPairsMap[`${link.targetName}${link.sourceName}`];
-      const latency = latencyByProcessPairsMap[`${link.sourceName}${link.targetName}`];
-      const latencyReverse = latencyByProcessPairsMap[`${link.targetName}${link.sourceName}`];
+      const protocol = pairsMap[`${link.source}${link.target}`];
+      const byterate = byteRateByPairsMap[`${link.sourceName}${link.targetName}`];
 
-      const reverseByteRate = options?.showLinkLabelReverse ? `(${formatByteRate(byterateReverse)})` : '';
-      const reverseBytes = options?.showLinkLabelReverse && bytesReverse ? `(${formatBytes(bytesReverse)})` : '';
+      const byterateReverse = byteRateByPairsMap[`${link.targetName}${link.sourceName}`];
+      const bytes = bytesByPairsMap[`${link.sourceName}${link.targetName}`];
+      const bytesReverse = bytesByPairsMap[`${link.targetName}${link.sourceName}`];
+      const latency = latencyByPairsMap[`${link.sourceName}${link.targetName}`];
+      const latencyReverse = latencyByPairsMap[`${link.targetName}${link.sourceName}`];
+
+      const reverseByteRate =
+        options?.showLinkLabelReverse && link.source !== link.target ? `(${formatByteRate(byterateReverse)})` : '';
+      const reverseBytes =
+        options?.showLinkLabelReverse && bytesReverse && link.source !== link.target
+          ? `(${formatBytes(bytesReverse)})`
+          : '';
       const reverseLatency =
-        options?.showLinkLabelReverse && latencyReverse ? `(${formatLatency(latencyReverse)})` : '';
+        options?.showLinkLabelReverse && latencyReverse && link.source !== link.target
+          ? `(${formatLatency(latencyReverse)})`
+          : '';
 
       const protocolLabel = options?.showLinkProtocol && protocol ? protocol : undefined;
       const byteRateLabel =
@@ -191,7 +218,8 @@ export const TopologyController = {
 
       return {
         ...link,
-        labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: EDGE_COLOR_TEXT_DEFAULT } },
+        type: link.source === link.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
+        labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: EDGE_COLOR_DEFAULT_TEXT } },
         style: { ...link.style, stroke: EDGE_COLOR_DEFAULT },
         label: [protocolLabel, bytesLabel, byteRateLabel, latencyLabel].filter(Boolean).join(',  ')
       };

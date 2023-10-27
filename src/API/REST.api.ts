@@ -12,7 +12,8 @@ import {
   RequestOptions,
   ResponseWrapper,
   CollectorsResponse,
-  SitePairsResponse
+  SitePairsResponse,
+  ProcessGroupPairsResponse
 } from './REST.interfaces';
 import {
   getFlowsPairsByServicePATH,
@@ -263,7 +264,7 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchProcessgroupsPairs: async (options?: RequestOptions): Promise<ProcessPairsResponse[]> => {
+  fetchProcessGroupsPairs: async (options?: RequestOptions): Promise<ProcessGroupPairsResponse[]> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessGroupPairsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
@@ -271,7 +272,7 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchProcessGroupPairs: async (id: string, options?: RequestOptions): Promise<ProcessPairsResponse> => {
+  fetchProcessGroupPairs: async (id: string, options?: RequestOptions): Promise<ProcessGroupPairsResponse> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getProcessGroupPairPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });

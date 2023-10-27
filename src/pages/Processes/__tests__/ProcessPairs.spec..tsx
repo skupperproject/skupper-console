@@ -4,7 +4,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse, SitePairsResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
@@ -17,7 +17,7 @@ import ProcessPairs from '../components/ProcessPairs';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 
 const processResult = processesData.results[0] as ProcessResponse;
-const processPairsResult = processesPairsData.results[2] as ProcessPairsResponse;
+const processPairsResult = processesPairsData.results[2] as ProcessPairsResponse | SitePairsResponse;
 
 describe('Process component', () => {
   let server: Server;

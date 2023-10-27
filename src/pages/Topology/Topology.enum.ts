@@ -4,12 +4,13 @@ export enum TopologyRoutesPaths {
 }
 
 export enum QueriesTopology {
+  GetSitesPairs = 'get-topology-sites-pairs-query',
   GetProcessesPairs = 'get-topology-processes-pairs-query',
+  GetProcessGroupsPairs = 'get-topology-process-groups-pairs-query',
   GetFlowPairsByServiceResult = 'get-topology-flow-pairs-by-service-result-query',
   GetBytesByProcessPairs = 'get-bytes-process-pairs-result-query',
   GetByteRateByProcessPairs = 'get-byte-rate-process-pairs-result-query',
   GetLatencyByProcessPairs = 'get-latency-process-pairs-result-query',
-  GetProcessGroupsLinks = 'get-topology-process-groups-links-query',
   GetProcessGroupMetrics = 'get-topology-process-group-metrics-query'
 }
 
@@ -35,7 +36,9 @@ export enum TopologyLabels {
   ActiveLink = 'Active link (show metrics on)',
   Site = 'site',
   CheckboxShowSite = 'Site',
-  RotateLabel = 'Rotate labels',
+  CheckBoxShowRouterLinks = 'Router links',
+  CheckboxShowDataLinks = 'Data links',
+  CheckboxRotateLabel = 'Rotate labels',
   CheckboxShowProtocol = 'Protocol',
   CheckboxShowTotalBytes = 'Total Traffic',
   CheckboxShowCurrentByteRate = 'Byterate (live)',

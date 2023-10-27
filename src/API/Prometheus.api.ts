@@ -125,31 +125,31 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchAllProcessPairsBytes: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchAllProcessPairsBytes: async (groupBy: string): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllProcessPairsBytes() }
+      params: { query: queries.getAllPairsBytes(groupBy) }
     });
 
     return result;
   },
 
-  fetchAllProcessPairsByteRates: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchAllProcessPairsByteRates: async (groupBy: string): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllProcessPairsByteRates() }
+      params: { query: queries.getAllPairsByteRates(groupBy) }
     });
 
     return result;
   },
 
-  fetchAllProcessPairsLatencies: async (): Promise<PrometheusMetricSingleData[]> => {
+  fetchAllProcessPairsLatencies: async (groupBy: string): Promise<PrometheusMetricSingleData[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllProcessPairsLatencies() }
+      params: { query: queries.getAllPairsLatencies(groupBy) }
     });
 
     return result;

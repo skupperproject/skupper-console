@@ -26,20 +26,21 @@ export const queries = {
   },
 
   // data transfer queries
-  getByteRateByDirectionInTimeRange(paramSource: string, range: IntervalTimePropValue) {
-    return `sum by(direction)(rate(octets_total{${paramSource}}[${range}]))`;
+  getByteRateByDirectionInTimeRange(param: string, range: IntervalTimePropValue) {
+    return `sum by(direction)(rate(octets_total{${param}}[${range}]))`;
   },
 
-  getAllProcessPairsBytes() {
-    return `sum by(destProcess, sourceProcess,direction)(octets_total)`;
+  // topology metrics
+  getAllPairsBytes(groupBy: string) {
+    return `sum by(${groupBy})(octets_total)`;
   },
 
-  getAllProcessPairsByteRates() {
-    return `sum by(destProcess, sourceProcess,direction)(rate(octets_total[1m]))`;
+  getAllPairsByteRates(groupBy: string) {
+    return `sum by(${groupBy})(rate(octets_total[1m]))`;
   },
 
-  getAllProcessPairsLatencies() {
-    return `sum by(sourceProcess, destProcess)(rate(flow_latency_microseconds_sum[1m]))`;
+  getAllPairsLatencies(groupBy: string) {
+    return `sum by(${groupBy})(rate(flow_latency_microseconds_sum[1m]))`;
   },
 
   getTotalHttpFlowByService() {

@@ -20,4 +20,9 @@ export interface TopologyMetricsMetrics {
   showBytes?: boolean;
   showByteRate?: boolean;
   showLatency?: boolean;
+  params: {
+    fetchBytes: { groupBy: string };
+    fetchByteRate: { groupBy: string };
+    fetchLatency: { groupBy: string };
+  };
 }

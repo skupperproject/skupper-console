@@ -4,7 +4,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessPairsResponse } from '@API/REST.interfaces';
+import { ProcessPairsResponse, SitePairsResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
@@ -14,7 +14,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import ProcessPairs from '../views/ProcessPair';
 
-const processPairsResult = processPairsData.results[0] as ProcessPairsResponse;
+const processPairsResult = processPairsData.results[0] as ProcessPairsResponse | SitePairsResponse;
 
 describe('Begin testing the Processes component', () => {
   let server: Server;

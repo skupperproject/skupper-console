@@ -1,4 +1,4 @@
-import { useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +8,7 @@ import { RESTApi } from '@API/REST.api';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
+import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import Details from '../components/Details';
@@ -50,10 +51,10 @@ const Site = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${siteId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        <>
+        <Suspense fallback={<LoadingPage />}>
           {tabSelected === SiteLabels.Overview && <Overview site={site} />}
           {tabSelected === SiteLabels.Details && <Details site={site} />}
-        </>
+        </Suspense>
       }
     />
   );

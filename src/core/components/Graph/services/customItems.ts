@@ -5,7 +5,8 @@ import {
   CUSTOM_ITEMS_NAMES,
   EDGE_COLOR_HOVER_DEFAULT,
   EDGE_COLOR_DEFAULT,
-  NODE_SIZE
+  NODE_SIZE,
+  EDGE_COLOR_CONNECTION_DEFAULT
 } from '../Graph.constants';
 import { ComboWithCustomLabel, NodeWithBadgesProps } from '../Graph.interfaces';
 
@@ -47,7 +48,7 @@ export function registerCustomEdgeWithHover() {
         }
       }
     },
-    'linear'
+    'quadratic'
   );
 }
 
@@ -76,12 +77,12 @@ export function registerSiteEdge() {
     afterDraw(_, group) {
       if (group) {
         const shape = group.get('children')[0];
-        const quatile = shape.getPoint(0.95);
+        const quatile = shape.getPoint(0.97);
 
         group.addShape('circle', {
           attrs: {
             r: 4,
-            fill: EDGE_COLOR_DEFAULT,
+            fill: EDGE_COLOR_CONNECTION_DEFAULT,
             x: quatile.x,
             y: quatile.y
           }
