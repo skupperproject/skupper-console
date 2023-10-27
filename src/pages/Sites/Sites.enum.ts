@@ -24,5 +24,6 @@ export enum SiteLabels {
   Name = 'Name',
   Namespace = 'Namespace',
   SiteVersion = 'Version',
+  Platform = 'Platform',
   Created = 'Created'
 }

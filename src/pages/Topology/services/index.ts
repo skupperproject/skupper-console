@@ -1,9 +1,11 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
-import componentSVG from '@assets/component.svg';
-import processSVG from '@assets/process.svg';
-import siteSVG from '@assets/site.svg';
-import skupperProcessSVG from '@assets/skupper.svg';
+import componentIcon from '@assets/component.svg';
+import kubernetesIcon from '@assets/kubernetes.svg';
+import podmanIcon from '@assets/podman.png';
+import processIcon from '@assets/process.svg';
+import siteIcon from '@assets/site.svg';
+import skupperIcon from '@assets/skupper.svg';
 import {
   EDGE_COLOR_DEFAULT,
   CUSTOM_ITEMS_NAMES,
@@ -33,6 +35,11 @@ const shape = {
   unbound: 'diamond'
 };
 
+const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
+  kubernetes: kubernetesIcon,
+  pdoman: podmanIcon
+};
+
 export const TopologyController = {
   getMetrics: async ({
     showBytes = false,
@@ -54,32 +61,37 @@ export const TopologyController = {
   },
 
   convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
-    entities.map(({ identity, name, siteVersion }) => {
-      const img = siteSVG;
+    entities.map(({ identity, name, siteVersion, platform }) => {
+      const img = platform && platformsMap[platform] ? platformsMap[platform] : siteIcon;
       const label = siteVersion ? `${name} (${siteVersion})` : name;
 
-      return convertEntityToNode({ id: identity, label, img });
+      return convertEntityToNode({
+        id: identity,
+        label,
+        iconFileName: img,
+        iconProps: { show: true, width: 24, height: 24 }
+      });
     }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
     entities.map(({ identity, name, processGroupRole, processCount }) => {
-      const img = processGroupRole === 'internal' ? skupperProcessSVG : componentSVG;
+      const img = processGroupRole === 'internal' ? skupperIcon : componentIcon;
 
       const nodeConfig =
         processGroupRole === 'remote'
           ? DEFAULT_REMOTE_NODE_CONFIG
           : { type: shape.bound, notificationValue: processCount, enableBadge1: true };
 
-      return convertEntityToNode({ id: identity, label: name, img, nodeConfig });
+      return convertEntityToNode({ id: identity, label: name, iconFileName: img, nodeConfig });
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
     processes?.map(({ identity, name: label, parent: comboId, processRole: role, processBinding }) => {
-      const img = role === 'internal' ? skupperProcessSVG : processSVG;
+      const img = role === 'internal' ? skupperIcon : processIcon;
 
       const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
 
-      return convertEntityToNode({ id: identity, comboId, label, img, nodeConfig });
+      return convertEntityToNode({ id: identity, comboId, label, iconFileName: img, nodeConfig });
     }),
 
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
@@ -227,11 +239,18 @@ export const TopologyController = {
   }
 };
 
-function convertEntityToNode({ id, comboId, label, img, nodeConfig }: Entity): GraphNode {
+function convertEntityToNode({
+  id,
+  comboId,
+  label,
+  iconFileName,
+  iconProps = DEFAULT_NODE_ICON,
+  nodeConfig
+}: Entity): GraphNode {
   return {
     id,
     comboId,
     label,
-    ...{ ...DEFAULT_NODE_CONFIG, icon: { ...DEFAULT_NODE_ICON, img }, ...nodeConfig }
+    ...{ ...DEFAULT_NODE_CONFIG, icon: { ...iconProps, img: iconFileName }, ...nodeConfig }
   };
 }

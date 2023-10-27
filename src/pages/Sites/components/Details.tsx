@@ -34,7 +34,7 @@ interface DetailsProps {
 }
 
 const Details: FC<DetailsProps> = function ({ site }) {
-  const { identity: siteId, nameSpace, siteVersion } = site;
+  const { identity: siteId, nameSpace, siteVersion, platform } = site;
 
   const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
   const { data: hosts } = useQuery([QueriesSites.GetHostsBySiteId, siteId], () => RESTApi.fetchHostsBySite(siteId));
@@ -65,6 +65,8 @@ const Details: FC<DetailsProps> = function ({ site }) {
               <DescriptionListGroup>
                 <DescriptionListTerm>{SiteLabels.Namespace}</DescriptionListTerm>
                 <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
+                <DescriptionListTerm>{SiteLabels.Platform}</DescriptionListTerm>
+                <DescriptionListDescription>{platform}</DescriptionListDescription>
                 <DescriptionListTerm>{SiteLabels.SiteVersion}</DescriptionListTerm>
                 <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
               </DescriptionListGroup>

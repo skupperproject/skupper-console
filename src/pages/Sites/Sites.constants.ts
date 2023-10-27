@@ -21,6 +21,10 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
     prop: 'nameSpace' as keyof SiteResponse
   },
   {
+    name: SiteLabels.Platform,
+    prop: 'platform' as keyof SiteResponse
+  },
+  {
     name: SiteLabels.SiteVersion,
     prop: 'siteVersion' as keyof SiteResponse,
     width: 15
