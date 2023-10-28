@@ -27,3 +27,11 @@ export interface TopologyMetricsMetrics {
     fetchLatency: { groupBy: string };
   };
 }
+
+export interface DisplaySelectProps {
+  key: string;
+  value: string;
+  label: string;
+  isDisabled?: Function;
+  addSeparator?: boolean;
+}
