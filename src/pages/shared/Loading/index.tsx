@@ -8,6 +8,8 @@ import TransitionPage from '@core/components/TransitionPages/Fade';
 
 import { LoadingLabels } from './Loading.enum';
 
+import './Loading.css';
+
 const PleaseWait = function () {
   return (
     <Card isPlain>
@@ -36,7 +38,7 @@ interface LoadingPageProps {
 
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = false }) {
   return (
-    <TransitionPage delay={0.35}>
+    <TransitionPage delay={0.75}>
       <PageSection>
         <Bullseye
           className="sk-loading-page"

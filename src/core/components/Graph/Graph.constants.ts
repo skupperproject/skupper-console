@@ -15,8 +15,6 @@ const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
 const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
 const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
-export const LEGEND_DEFAULT_BG_COLOR = HexColors.White;
-export const LEGEND_DEFAULT_STROKE_COLOR = HexColors.Black900;
 
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',
