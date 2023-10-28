@@ -1,0 +1,7 @@
+.sk-search-filter input {
+  padding-left: 8px;
+}
+
+.sk-search-filter .pf-v5-c-text-input-group__icon {
+  display: none;
+}

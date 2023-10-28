@@ -29,10 +29,10 @@ import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core
 import { AvailableProtocols } from '@API/REST.enum';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkUpdateDataButton from '@core/components/SkUpdateDataButton';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
 
 import DateTimeRangeFilter from './DateTimeRangeFilter';
-import UpdateMetricsButton from './UpdateMetricsButton';
 import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
 import { ConfigMetricFilters, MetricFiltersProps, QueryMetricsParams } from '../Metrics.interfaces';
@@ -343,7 +343,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
-                <UpdateMetricsButton
+                <SkUpdateDataButton
                   isLoading={isRefetching}
                   isDisabled={!!selectedFilters.end}
                   refreshIntervalDefault={refreshInterval}

@@ -21,6 +21,8 @@ import {
   registerSiteEdge
 } from './services/customItems';
 
+import './SkGraph.css';
+
 const GRAPH_ZOOM_CACHE_KEY = 'graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'fitScreen';
 

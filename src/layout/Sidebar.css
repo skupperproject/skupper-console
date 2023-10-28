@@ -1,0 +1,12 @@
+.pf-v5-c-nav__link {
+  transition: 0.3s;
+}
+
+.pf-v5-c-page__sidebar.pf-m-collapsed {
+  transition: max-width 0.2s ease-in-out;
+}
+
+.pf-v5-c-page__sidebar.pf-m-expanded {
+  transition: max-width 0.2s ease-in-out;
+  max-width: 100%;
+}

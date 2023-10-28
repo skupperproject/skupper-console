@@ -21,6 +21,8 @@ import { FilterIcon } from '@patternfly/react-icons';
 
 import useDebounce from 'hooks/useDebounce';
 
+import './SkSearchFilter.css';
+
 interface FilterValues {
   [key: string]: string | undefined;
 }

@@ -1,0 +1,19 @@
+.button-toggle-dropdown-loading button {
+  background-color: var(--pf-v5-global--danger-color--100) !important;
+}
+
+.button-toggle-loading {
+  background-color: var(--pf-v5-global--danger-color--100) !important;
+}
+
+.button-toggle-off {
+  background-color: var(--pf-v5-global--palette-black--300) !important;
+}
+
+.button-toggle-spinner .pf-v5-c-spinner__path {
+  stroke: var(--pf-v5-global--palette--white);
+}
+
+.button-toggle-spinner-text {
+  margin-left: var(--pf-v5-global--spacer--sm);
+}

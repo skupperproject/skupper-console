@@ -11,10 +11,9 @@ import {
 } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
 
-import { refreshDataIntervalMap } from '../Metrics.constants';
-import { MetricsLabels } from '../Metrics.enum';
+import './SkUpdateDataButton.css';
 
-interface UpdateMetricsButtonProps {
+interface SkUpdateDataButtonProps {
   isLoading?: boolean;
   isDisabled?: boolean;
   onClick: Function;
@@ -22,7 +21,36 @@ interface UpdateMetricsButtonProps {
   refreshIntervalDefault?: number;
 }
 
-const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
+const REFETCH_DATA_LABEL = 'Refetch';
+export const refreshDataIntervalMap = [
+  {
+    key: 'pause',
+    value: 0,
+    label: 'Off'
+  },
+  {
+    key: '20s',
+    value: 20 * 1000,
+    label: '20s'
+  },
+  {
+    key: '40s',
+    value: 40 * 1000,
+    label: '40s'
+  },
+  {
+    key: '60s',
+    value: 60 * 1000,
+    label: '1m'
+  },
+  {
+    key: '120s',
+    value: 120 * 1000,
+    label: '2m'
+  }
+];
+
+const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   isLoading = false,
   isDisabled = false,
   onClick,
@@ -68,7 +96,7 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
           isDisabled={isDisabled}
-          data-testid="update-metric-dropdown"
+          data-testid="update-data-dropdown"
           className={isLoading ? 'button-toggle-dropdown-loading' : ''}
           ref={toggleRef}
           variant="primary"
@@ -80,11 +108,11 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
               <MenuToggleAction
                 className={getDropdownClassName({ isLoading, isDisabled })}
                 key="split-action-primary"
-                data-testid="update-metric-click"
+                data-testid="update-data-click"
                 onClick={() => onClick()}
               >
                 {isLoading ? <Spinner isInline className="button-toggle-spinner" /> : <SyncIcon />}
-                <span className="button-toggle-spinner-text">{MetricsLabels.RefetchData}</span>{' '}
+                <span className="button-toggle-spinner-text">{REFETCH_DATA_LABEL}</span>{' '}
                 {isRefreshIntervalSelected ? ' ' : refreshIntervalSelected}
               </MenuToggleAction>
             ]
@@ -98,7 +126,7 @@ const UpdateMetricsButton: FC<UpdateMetricsButtonProps> = function ({
   );
 };
 
-export default UpdateMetricsButton;
+export default SkUpdateDataButton;
 
 function findRefreshDataIntervalValueFromLabel(value: string | undefined): number {
   return refreshDataIntervalMap.find(({ key }) => key === value)?.value || 0;

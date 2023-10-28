@@ -1,0 +1,24 @@
+.sk-topology-controls {
+  position: absolute !important;
+  bottom: 0;
+  left: 0;
+  background-color: transparent !important;
+}
+
+.sk-topology-control-bar__button {
+  margin-right: var(--pf-v5-global--spacer--xs);
+  margin-top: var(--pf-v5-global--spacer--xs);
+  border: none;
+  border-radius: var(--pf-v5-global--BorderRadius--sm);
+  box-shadow: var(--pf-v5-global--BoxShadow--sm);
+}
+.sk-topology-control-bar__button:not(.pf-v5-m-disabled) {
+  background-color: var(--pf-v5-global--BackgroundColor--100);
+}
+.sk-topology-control-bar__button:after {
+  display: none;
+}
+.sk-topology-control-bar__button:hover {
+  border: none;
+  box-shadow: var(--pf-v5-global--BoxShadow--md);
+}
