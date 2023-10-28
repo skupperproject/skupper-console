@@ -1,12 +1,10 @@
-import { ChangeEvent, ComponentType, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
 
-import { Divider, Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
-import { Select, SelectOption, SelectVariant, SelectOptionObject } from '@patternfly/react-core/deprecated';
+import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { SitePairsResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import EmptyData from '@core/components/EmptyData';
@@ -15,19 +13,22 @@ import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
+import DisplaySelect from './DisplaySelect';
 import { TopologyController } from '../services';
+import {
+  displayOptionsForSites,
+  ROTATE_LINK_LABEL,
+  SHOW_DATA_LINKS,
+  SHOW_LINK_BYTERATE,
+  SHOW_LINK_BYTES,
+  SHOW_LINK_LATENCY,
+  SHOW_LINK_REVERSE_LABEL,
+  SHOW_ROUTER_LINKS
+} from '../Topology.constants';
 import { QueriesTopology, TopologyLabels } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'site';
 const DISPLAY_OPTIONS = 'display-site-options';
-const SHOW_ROUTER_LINKS = 'show-site-router-links';
-const SHOW_DATA_LINKS = 'show-site-data-links';
-const SHOW_LINK_BYTES = 'show-site-link-bytes';
-const SHOW_LINK_BYTERATE = 'show-site-link-byterate';
-const SHOW_LINK_LATENCY = 'show-site-link-latency';
-const SHOW_LINK_REVERSE_LABEL = 'show-site-reverse-link-label';
-const ROTATE_LINK_LABEL = 'show-site-link-label-rotated';
-
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_ROUTER_LINKS];
 
 const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
@@ -37,7 +38,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [edges, setEdges] = useState<GraphEdge[]>([]);
-  const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState(false);
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
     localStorage.getItem(DISPLAY_OPTIONS)
       ? JSON.parse(localStorage.getItem(DISPLAY_OPTIONS) || '')
@@ -46,16 +46,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
-    [displayOptionsSelected]
-  );
-
-  const addDisplayOptionToSelection = useCallback(
-    (selected: string) => [...displayOptionsSelected, selected],
-    [displayOptionsSelected]
-  );
-
-  const removeDisplayOptionToSelection = useCallback(
-    (selected: string) => displayOptionsSelected.filter((option) => option !== selected),
     [displayOptionsSelected]
   );
 
@@ -119,36 +109,10 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     [sites, navigate]
   );
 
-  function handleToggleDisplayMenu(openDisplayMenu: boolean) {
-    setIsDisplayMenuOpen(openDisplayMenu);
-  }
-
-  const handleSelectDisplay = useCallback(
-    (_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) => {
-      const selected = selection as string;
-      const isSelected = displayOptionsSelected.includes(selected);
-
-      let displayOptions = isSelected
-        ? removeDisplayOptionToSelection(selected)
-        : addDisplayOptionToSelection(selected);
-
-      if (selected === SHOW_DATA_LINKS) {
-        displayOptions = isSelected
-          ? [...displayOptions, SHOW_ROUTER_LINKS]
-          : displayOptions.filter((option) => option !== SHOW_ROUTER_LINKS);
-      }
-
-      if (selected === SHOW_ROUTER_LINKS) {
-        displayOptions = isSelected
-          ? [...displayOptions, SHOW_DATA_LINKS]
-          : displayOptions.filter((option) => option !== SHOW_DATA_LINKS);
-      }
-
-      localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(displayOptions));
-      setDisplayOptions(displayOptions);
-    },
-    [addDisplayOptionToSelection, displayOptionsSelected, removeDisplayOptionToSelection]
-  );
+  const handleDisplaySelect = useCallback((selectedOptions: string[]) => {
+    setDisplayOptions(selectedOptions);
+    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selectedOptions));
+  }, []);
 
   useEffect(() => {
     if (!sites || !routerLinks || !routers) {
@@ -169,20 +133,16 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
       return;
     }
 
-    function updateLabelLinks(prevLinks: GraphEdge[]) {
+    function addLabelsToEdges(prevLinks: GraphEdge[]) {
       return TopologyController.addMetricsToEdges(
         prevLinks.map((link) => ({
           ...link,
-          sourceName: `${link.sourceName}${siteNameAndIdSeparator}${link.source}`,
-          targetName: `${link.targetName}${siteNameAndIdSeparator}${link.target}`
-        })),
-        (sitesPairs as SitePairsResponse[]).map((sitePairs) => ({
-          ...sitePairs,
-          sourceId: `${sitePairs.sourceName}${siteNameAndIdSeparator}${sitePairs.sourceId}`,
-          destinationId: `${sitePairs.destinationName}${siteNameAndIdSeparator}${sitePairs.destinationId}`
+          sourceName: getPrometheusSiteLabel(link.sourceName, link.source),
+          targetName: getPrometheusSiteLabel(link.targetName, link.target)
         })),
         'sourceSite',
         'destSite',
+        undefined, // no need to retrieve protocols
         metrics?.bytesByProcessPairs,
         metrics?.byteRateByProcessPairs,
         metrics?.latencyByProcessPairs,
@@ -197,7 +157,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     }
 
     const siteNodes = TopologyController.convertSitesToNodes(sites);
-    const siteEdges = updateLabelLinks(TopologyController.convertPairsToEdges(sitesPairs));
+    const siteEdges = addLabelsToEdges(TopologyController.convertPairsToEdges(sitesPairs));
 
     setNodes(siteNodes);
     setEdges(siteEdges);
@@ -212,59 +172,38 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     metrics?.latencyByProcessPairs
   ]);
 
-  const getDisplayOptions = () => [
-    <SelectOption key={SHOW_ROUTER_LINKS} value={SHOW_ROUTER_LINKS}>
-      {TopologyLabels.CheckBoxShowRouterLinks}
-    </SelectOption>,
+  const displayOptions = displayOptionsForSites.map((option) => {
+    if (option.key === SHOW_LINK_BYTES || option.key === SHOW_LINK_BYTERATE || option.key === SHOW_LINK_LATENCY) {
+      return {
+        ...option,
+        isDisabled: () => !isDisplayOptionActive(SHOW_DATA_LINKS)
+      };
+    }
 
-    <SelectOption key={SHOW_DATA_LINKS} value={SHOW_DATA_LINKS}>
-      {TopologyLabels.CheckboxShowDataLinks}
-    </SelectOption>,
+    if (option.key === SHOW_LINK_REVERSE_LABEL) {
+      return {
+        ...option,
+        isDisabled: () =>
+          !isDisplayOptionActive(SHOW_DATA_LINKS) ||
+          (!isDisplayOptionActive(SHOW_LINK_BYTES) &&
+            !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
+            !isDisplayOptionActive(SHOW_LINK_LATENCY))
+      };
+    }
 
-    <Divider key="display-option-divider" />,
-    <SelectOption key={SHOW_LINK_BYTES} value={SHOW_LINK_BYTES} isDisabled={!isDisplayOptionActive(SHOW_DATA_LINKS)}>
-      {TopologyLabels.CheckboxShowTotalBytes}
-    </SelectOption>,
-    <SelectOption
-      key={SHOW_LINK_BYTERATE}
-      value={SHOW_LINK_BYTERATE}
-      isDisabled={!isDisplayOptionActive(SHOW_DATA_LINKS)}
-    >
-      {TopologyLabels.CheckboxShowCurrentByteRate}
-    </SelectOption>,
-    <SelectOption
-      key={SHOW_LINK_LATENCY}
-      value={SHOW_LINK_LATENCY}
-      isDisabled={!isDisplayOptionActive(SHOW_DATA_LINKS)}
-    >
-      {TopologyLabels.CheckboxShowLatency}
-    </SelectOption>,
-    <SelectOption
-      key={SHOW_LINK_REVERSE_LABEL}
-      isDisabled={
-        !isDisplayOptionActive(SHOW_DATA_LINKS) ||
-        (!isDisplayOptionActive(SHOW_LINK_BYTES) &&
-          !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
-          !isDisplayOptionActive(SHOW_LINK_LATENCY))
-      }
-      value={SHOW_LINK_REVERSE_LABEL}
-    >
-      {TopologyLabels.CheckboxShowLabelReverse}
-    </SelectOption>,
-    <Divider key="display-data-option-divider" />,
-    <SelectOption
-      key={ROTATE_LINK_LABEL}
-      isDisabled={
-        !isDisplayOptionActive(SHOW_DATA_LINKS) ||
-        (!isDisplayOptionActive(SHOW_LINK_BYTES) &&
-          !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
-          !isDisplayOptionActive(SHOW_LINK_LATENCY))
-      }
-      value={ROTATE_LINK_LABEL}
-    >
-      {TopologyLabels.CheckboxRotateLabel}
-    </SelectOption>
-  ];
+    if (option.key === ROTATE_LINK_LABEL) {
+      return {
+        ...option,
+        isDisabled: () =>
+          !isDisplayOptionActive(SHOW_DATA_LINKS) ||
+          (!isDisplayOptionActive(SHOW_LINK_BYTES) &&
+            !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
+            !isDisplayOptionActive(SHOW_LINK_LATENCY))
+      };
+    }
+
+    return option;
+  });
 
   return (
     <Stack>
@@ -279,18 +218,11 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
             <Toolbar>
               <ToolbarContent>
                 <ToolbarItem>
-                  <Select
-                    role="display-select"
-                    variant={SelectVariant.checkbox}
-                    isOpen={isDisplayMenuOpen}
-                    onSelect={handleSelectDisplay}
-                    onToggle={(_, isOpen) => handleToggleDisplayMenu(isOpen)}
-                    selections={displayOptionsSelected}
-                    placeholderText={TopologyLabels.DisplayPlaceholderText}
-                    isCheckboxSelectionBadgeHidden
-                  >
-                    {getDisplayOptions()}
-                  </Select>
+                  <DisplaySelect
+                    options={displayOptions}
+                    onSelect={handleDisplaySelect}
+                    defaultSelected={displayOptionsSelected}
+                  />
                 </ToolbarItem>
 
                 <ToolbarGroup align={{ default: 'alignRight' }}>
@@ -321,3 +253,19 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 };
 
 export default TopologySite;
+
+function getPrometheusSiteLabel(name?: string, id?: string) {
+  if (!id && !name) {
+    return '';
+  }
+
+  if (!id && name) {
+    return name;
+  }
+
+  if (!name && id) {
+    return id;
+  }
+
+  return `${name}${siteNameAndIdSeparator}${id}`;
+}

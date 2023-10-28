@@ -129,9 +129,9 @@ export const TopologyController = {
 
   addMetricsToEdges: (
     links: GraphEdge[],
-    pairs: ProcessPairsResponse[] | SitePairsResponse[],
-    sourceKey: string,
-    destKey: string,
+    metricSourceLabel: string, // Prometheus metric label to compare with the metricDestLabel
+    metricDestLabel: string,
+    protocolPairsMap?: Record<string, string>,
     bytesByPairs?: PrometheusApiSingleResult[],
     byteRateByPairs?: PrometheusApiSingleResult[],
     latencyByPairs?: PrometheusApiSingleResult[],
@@ -144,96 +144,72 @@ export const TopologyController = {
       rotateLabel?: boolean;
     }
   ): GraphEdge[] => {
-    const bytesByPairsMap = (bytesByPairs || []).reduce(
-      (acc, { metric, value }) => {
-        {
-          if (metric[sourceKey] === metric[destKey]) {
-            acc[`${metric[sourceKey]}${metric[destKey]}`] =
-              (Number(acc[`${metric[sourceKey]}${metric[destKey]}`]) || 0) + Number(value[1]);
-          } else {
-            acc[`${metric[sourceKey]}${metric[destKey]}`] = Number(value[1]);
+    const getPairsMap = (metricPairs: PrometheusApiSingleResult[] | undefined) =>
+      (metricPairs || []).reduce(
+        (acc, { metric, value }) => {
+          {
+            if (metric[metricSourceLabel] === metric[metricDestLabel]) {
+              // When the source and destination are identical, we should avoid displaying the reverse metric. Instead, we should present the cumulative sum of all directions as a single value.
+              acc[`${metric[metricSourceLabel]}${metric[metricDestLabel]}`] =
+                (Number(acc[`${metric[metricSourceLabel]}${metric[metricDestLabel]}`]) || 0) + Number(value[1]);
+            } else {
+              acc[`${metric[metricSourceLabel]}${metric[metricDestLabel]}`] = Number(value[1]);
+            }
           }
-        }
 
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
-    const byteRateByPairsMap = (byteRateByPairs || []).reduce(
-      (acc, { metric, value }) => {
-        {
-          // case: A site has internal data traffic
-          if (metric[sourceKey] === metric[destKey]) {
-            acc[`${metric[sourceKey]}${metric[destKey]}`] =
-              (Number(acc[`${metric[sourceKey]}${metric[destKey]}`]) || 0) + Number(value[1]);
-          } else {
-            acc[`${metric[sourceKey]}${metric[destKey]}`] = Number(value[1]);
-          }
-        }
-
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
-    const latencyByPairsMap = (latencyByPairs || []).reduce(
-      (acc, { metric, value }) => {
-        if (metric[sourceKey] === metric[destKey]) {
-          acc[`${metric[sourceKey]}${metric[destKey]}`] =
-            (Number(acc[`${metric[sourceKey]}${metric[destKey]}`]) || 0) + Number(value[1]);
-        } else {
-          acc[`${metric[sourceKey]}${metric[destKey]}`] = Number(value[1]);
-        }
-
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
-    const pairsMap = (pairs || []).reduce(
-      (acc, { sourceId, destinationId, protocol }) => {
-        acc[`${sourceId}${destinationId}`] = protocol || '';
-
-        return acc;
-      },
-      {} as Record<string, string>
-    );
+    const bytesByPairsMap = getPairsMap(bytesByPairs);
+    const byteRateByPairsMap = getPairsMap(byteRateByPairs);
+    const latencyByPairsMap = getPairsMap(latencyByPairs);
 
     return links.map((link) => {
-      const protocol = pairsMap[`${link.source}${link.target}`];
-      const byterate = byteRateByPairsMap[`${link.sourceName}${link.targetName}`];
+      let byteRateText, byteRateReverseText, bytesText, bytesReverseText, latencyText, latencyReverseText, protocolText;
 
-      const byterateReverse = byteRateByPairsMap[`${link.targetName}${link.sourceName}`];
-      const bytes = bytesByPairsMap[`${link.sourceName}${link.targetName}`];
-      const bytesReverse = bytesByPairsMap[`${link.targetName}${link.sourceName}`];
-      const latency = latencyByPairsMap[`${link.sourceName}${link.targetName}`];
-      const latencyReverse = latencyByPairsMap[`${link.targetName}${link.sourceName}`];
+      const pairKey = `${link.sourceName}${link.targetName}`;
+      const reversePairKey = `${link.targetName}${link.sourceName}`;
 
-      const reverseByteRate =
-        options?.showLinkLabelReverse && link.source !== link.target ? `(${formatByteRate(byterateReverse)})` : '';
-      const reverseBytes =
-        options?.showLinkLabelReverse && bytesReverse && link.source !== link.target
-          ? `(${formatBytes(bytesReverse)})`
-          : '';
-      const reverseLatency =
-        options?.showLinkLabelReverse && latencyReverse && link.source !== link.target
-          ? `(${formatLatency(latencyReverse)})`
-          : '';
+      if (options?.showLinkProtocol && protocolPairsMap) {
+        protocolText = protocolPairsMap[`${link.source}${link.target}`] || undefined;
+      }
 
-      const protocolLabel = options?.showLinkProtocol && protocol ? protocol : undefined;
-      const byteRateLabel =
-        options?.showLinkByteRate && byterate ? `${formatByteRate(byterate)} ${reverseByteRate}` : undefined;
-      const bytesLabel = options?.showLinkBytes && bytes ? `${formatBytes(bytes)} ${reverseBytes}` : undefined;
-      const latencyLabel =
-        options?.showLinkLatency && latency ? `${formatLatency(latency)} ${reverseLatency}` : undefined;
+      if (options?.showLinkByteRate) {
+        byteRateText = `${formatByteRate(byteRateByPairsMap[pairKey] || 0)}`;
+
+        if (options?.showLinkLabelReverse && link.source !== link.target) {
+          byteRateReverseText = `(${formatByteRate(byteRateByPairsMap[reversePairKey] || 0)})`;
+        }
+      }
+
+      if (options?.showLinkBytes) {
+        bytesText = `${formatBytes(bytesByPairsMap[pairKey] || 0)}`;
+
+        if (options?.showLinkLabelReverse && link.source !== link.target) {
+          bytesReverseText = `(${formatBytes(bytesByPairsMap[reversePairKey] || 0)})`;
+        }
+      }
+
+      if (options?.showLinkLatency) {
+        latencyText = `${formatLatency(latencyByPairsMap[pairKey] || 0)}`;
+
+        if (options?.showLinkLabelReverse && link.source !== link.target) {
+          latencyReverseText = `(${formatLatency(latencyByPairsMap[reversePairKey] || 0)})`;
+        }
+      }
+
+      const byteRateLabel = [byteRateText, byteRateReverseText].filter(Boolean).join(' ');
+      const bytesLabel = [bytesText, bytesReverseText].filter(Boolean).join(' ');
+      const latencyLabel = [latencyText, latencyReverseText].filter(Boolean).join(' ');
 
       return {
         ...link,
         type: link.source === link.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
         labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: EDGE_COLOR_DEFAULT_TEXT } },
         style: { ...link.style, stroke: EDGE_COLOR_DEFAULT },
-        label: [protocolLabel, bytesLabel, byteRateLabel, latencyLabel].filter(Boolean).join(',  ')
+        label: [protocolText, bytesLabel, byteRateLabel, latencyLabel].filter(Boolean).join(',  ')
       };
     });
   }
