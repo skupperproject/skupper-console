@@ -24,17 +24,18 @@ module.exports = {
         }
       },
       {
-        test: /\.(svg|jpg|jpeg|gif)$/i,
+        test: /\.(svg|jpg|jpeg|png)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/[name][ext]'
+          filename: 'assets/[name].[contenthash][ext]'
         }
       },
       {
         test: /\.(png)$/i,
         type: 'asset/resource',
+        exclude: /assets/,
         generator: {
-          filename: '[name][ext]'
+          filename: '[name].[contenthash][ext]'
         }
       },
       {

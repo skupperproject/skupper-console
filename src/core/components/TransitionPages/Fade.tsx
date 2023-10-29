@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react';
 
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 
 const TransitionPage: FC<{ children: ReactElement; delay?: number }> = function ({ children, delay = 0 }) {
   const transition = {
@@ -13,16 +13,18 @@ const TransitionPage: FC<{ children: ReactElement; delay?: number }> = function 
   };
 
   return (
-    <motion.div
-      initial="out"
-      animate="in"
-      exit="out"
-      transition={{ delay, duration: 0.3, ease: 'easeInOut' }}
-      variants={transition}
-      style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}
-    >
-      {children}
-    </motion.div>
+    <LazyMotion strict features={domAnimation}>
+      <m.div
+        initial="out"
+        animate="in"
+        exit="out"
+        transition={{ delay, duration: 0.3, ease: 'easeInOut' }}
+        variants={transition}
+        style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
   );
 };
 

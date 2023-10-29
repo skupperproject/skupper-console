@@ -1,4 +1,4 @@
-import { useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
+import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +9,6 @@ import { AvailableProtocols, TcpStatus } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import HttpService from './HttpService';
@@ -142,8 +141,7 @@ const Service = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${serviceId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        // avoid that the entire page refresh when you change tab
-        <Suspense fallback={<LoadingPage />}>
+        <>
           {protocol === AvailableProtocols.Tcp && (
             <ConnectionsByService
               serviceName={serviceName || ''}
@@ -160,7 +158,7 @@ const Service = function () {
               viewSelected={tabSelected}
             />
           )}
-        </Suspense>
+        </>
       }
     />
   );

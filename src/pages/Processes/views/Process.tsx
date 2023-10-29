@@ -1,4 +1,4 @@
-import { useState, MouseEvent as ReactMouseEvent, Suspense } from 'react';
+import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +9,6 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import Details from '../components/Details';
@@ -93,12 +92,11 @@ const Process = function () {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
-        // avoid that the entire page refresh when you change tab
-        <Suspense fallback={<LoadingPage />}>
+        <>
           {tabSelected === ProcessesLabels.Overview && <Overview process={process} />}
           {tabSelected === ProcessesLabels.Details && <Details process={process} />}
           {tabSelected === ProcessesLabels.ProcessPairs && <ProcessPairs process={process} />}
-        </Suspense>
+        </>
       }
     />
   );
