@@ -1,11 +1,10 @@
-import { MouseEvent as ReactMouseEvent, Suspense, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useState } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
-import LoadingPage from '@pages/shared/Loading';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
@@ -44,11 +43,11 @@ const Topology = function () {
         </Tabs>
       }
       mainContentChildren={
-        <Suspense fallback={<LoadingPage />}>
+        <>
           {topologyType === TopologyViews.Sites && <TopologySite />}
           {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}
           {topologyType === TopologyViews.Processes && <TopologyProcesses serviceId={serviceId} id={id} />}
-        </Suspense>
+        </>
       }
     />
   );

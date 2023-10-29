@@ -16,8 +16,8 @@ const prodConfig = {
   devtool: 'source-map',
   output: {
     path: path.join(ROOT, '/build'),
-    filename: '[name].js',
-    chunkFilename: 'js/[name].bundle.js',
+    filename: '[name]-[contenthash].js',
+    chunkFilename: 'js/[name]-[contenthash].bundle.js',
     publicPath: '/',
     clean: true
   },
@@ -40,12 +40,15 @@ const prodConfig = {
     new CopyWebpackPlugin({
       patterns: [
         path.resolve(ROOT, 'public', 'manifest.json'),
-        process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.ico')
+        {
+          from: process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.ico'),
+          to: path.resolve(__dirname, 'build', 'favicon.v.ico')
+        }
       ]
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: 'css/[name].bundle.css',
+      filename: '[name].[contenthash].css',
+      chunkFilename: 'css/[name].[contenthash].bundle.css',
       ignoreOrder: true
     })
   ],

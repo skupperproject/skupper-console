@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, Suspense } from 'react';
 
 import {
   Divider,
@@ -13,6 +13,7 @@ import {
   Title
 } from '@patternfly/react-core';
 
+import LoadingPage from '@pages/shared/Loading';
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
 import NavigationViewLink from '../core/components/NavigationViewLink';
@@ -66,7 +67,7 @@ const MainContainer: FC<MainContainerProps> = function ({
         )}
         {mainContentChildren && (
           <PageSection padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }} isFilled={true}>
-            {mainContentChildren}
+            <Suspense fallback={<LoadingPage />}>{mainContentChildren} </Suspense>
           </PageSection>
         )}
       </PageGroup>

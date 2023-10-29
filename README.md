@@ -138,12 +138,11 @@ Please note that the `services` folder contains utilities for data normalization
 
 To customize the Skupper logo and the application name on the left side of the Header, we can use the following environment variables:
 
-- **BRAND_APP_LOGO**: The path to a custom logo image file to be used instead of the default Skupper logo.
+- **BRAND_APP_LOGO**: The absolute path to a custom logo image file to be used instead of the default Skupper logo.
 - **BRAND_TITLE**: The title of the console that appear on the browser tab. By default this value is "Web console".
-- **BRAND_FAVICON_PATH**: The absolute path of the custom favicon without the filename. You must name the filename `favicon.ico` and exclude the filename from the PATH (see example below).
-
-For example, tou can run the following command:
+- **BRAND_FAVICON_PATH**: The path of the custom favicon without the filename. You must name the filename `*.ico`.
+  For example, tou can run the following command:
 
 ```bash
-BRAND_APP_LOGO="/local_path/new_logo.png" BRAND_FAVICON_PATH="my_path/my_folder/" BRAND_TITLE="title name" yarn build
+BRAND_APP_LOGO=/my_path/new_logo.png BRAND_FAVICON_PATH=/my_path/my-favico.ico BRAND_TITLE="title name" yarn build
 ```
