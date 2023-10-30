@@ -1,7 +1,7 @@
 import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
-import { useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -70,7 +70,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         {
           queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
           queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
-          keepPreviousData: true,
+          placeholderData: keepPreviousData,
           refetchInterval: UPDATE_INTERVAL
         },
         {
@@ -94,7 +94,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
                   }
                 })
               : null,
-          keepPreviousData: true,
+          placeholderData: keepPreviousData,
           refetchInterval: UPDATE_INTERVAL
         }
       ]

@@ -11,12 +11,7 @@ export const queryClientConfig: QueryClientConfig = {
       refetchOnWindowFocus: false,
       refetchIntervalInBackground: true,
       suspense: true,
-      useErrorBoundary: true
+      throwOnError: true
     }
-  },
-  logger: {
-    log: console.log,
-    warn: console.warn,
-    error: process.env.NODE_ENV === 'test' ? () => {} : console.debug
   }
 };

@@ -21,7 +21,10 @@ const Site = function () {
   const { id: siteId } = getIdAndNameFromUrlParams(id);
   const type = searchParams.get('type') || SiteLabels.Overview;
 
-  const { data: site } = useQuery([QueriesSites.GetSite, siteId], () => RESTApi.fetchSite(siteId));
+  const { data: site } = useQuery({
+    queryKey: [QueriesSites.GetSite, siteId],
+    queryFn: () => RESTApi.fetchSite(siteId)
+  });
 
   const [tabSelected, setTabSelected] = useState(type);
 

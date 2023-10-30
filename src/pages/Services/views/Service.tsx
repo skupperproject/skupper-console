@@ -1,7 +1,7 @@
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -40,44 +40,36 @@ const Service = function () {
   const type = searchParams.get('type') || TAB_0_KEY;
   const [tabSelected, setTabSelected] = useState(type);
 
-  const { data: serversData } = useQuery(
-    [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
-    () => RESTApi.fetchServersByService(serviceId, initServersQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: serversData } = useQuery({
+    queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
+    queryFn: () => RESTApi.fetchServersByService(serviceId, initServersQueryParams),
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-  const { data: requestsData } = useQuery(
-    [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
-    () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
-    {
-      enabled: protocol !== AvailableProtocols.Tcp,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: requestsData } = useQuery({
+    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
+    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
+    enabled: protocol !== AvailableProtocols.Tcp,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-  const { data: activeConnectionsData } = useQuery(
-    [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
-    () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
-    {
-      enabled: protocol === AvailableProtocols.Tcp,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: activeConnectionsData } = useQuery({
+    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
+    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
+    enabled: protocol === AvailableProtocols.Tcp,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-  const { data: terminatedConnectionsData } = useQuery(
-    [QueriesServices.GetFlowPairsByService, serviceId, terminatedConnectionsQueryParams],
-    () => RESTApi.fetchFlowPairsByService(serviceId, terminatedConnectionsQueryParams),
-    {
-      enabled: protocol === AvailableProtocols.Tcp,
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: terminatedConnectionsData } = useQuery({
+    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, terminatedConnectionsQueryParams],
+    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, terminatedConnectionsQueryParams),
+    enabled: protocol === AvailableProtocols.Tcp,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as string);

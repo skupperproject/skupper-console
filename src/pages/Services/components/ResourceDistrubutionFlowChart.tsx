@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -30,24 +30,22 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     ServiceServerResourceOptions[0].id
   );
 
-  const { data: processPairs } = useQuery(
-    [QueriesServices.GetProcessPairsByService, serviceId],
-    () => RESTApi.fetchProcessPairsByService(serviceId),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: processPairs } = useQuery({
+    queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
+    queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-  const { data: resourcePairs } = useQuery(
-    [
+  const { data: resourcePairs } = useQuery({
+    queryKey: [
       QueriesServices.GetResourcePairsByService,
       serviceName,
       clientResourceSelected,
       serverResourceSelected,
       processPairs
     ],
-    () =>
+    queryFn: () =>
       PrometheusApi.fethResourcePairsByService({
         serviceName,
         clientType: clientResourceSelected,
@@ -55,12 +53,10 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
         sourceProcesses: processPairs?.results.map(({ sourceName }) => sourceName).join('|'),
         destProcesses: processPairs?.results.map(({ destinationName }) => destinationName).join('|')
       }),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true,
-      enabled: !!processPairs?.results.length
-    }
-  );
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData,
+    enabled: !!processPairs?.results.length
+  });
 
   const handleGetPairType = useCallback(
     ({

@@ -29,21 +29,17 @@ const ProcessPairs: FC<ProcessPairsProps> = function ({ process: { identity: pro
     destinationId: processId
   };
 
-  const { data: processesPairsTxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
-    () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
+  const { data: processesPairsTxData } = useQuery({
+    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
+    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
+    refetchInterval: UPDATE_INTERVAL
+  });
 
-  const { data: processesPairsRxData } = useQuery(
-    [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
-    () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
+  const { data: processesPairsRxData } = useQuery({
+    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
+    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
+    refetchInterval: UPDATE_INTERVAL
+  });
 
   const processesPairsRxReverse =
     (processesPairsRxData || []).map((processPairsData) => ({

@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { startTransition, useCallback, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -32,25 +32,21 @@ const Processes = function () {
   const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
     useState<RequestOptions>(initRemoteProcessesQueryParams);
 
-  const { data: externalProcessData } = useQuery(
-    [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
-    () => RESTApi.fetchProcesses(externalProcessesQueryParams),
-    {
-      keepPreviousData: true
-    }
-  );
+  const { data: externalProcessData } = useSuspenseQuery({
+    queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
+    queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams)
+  });
 
-  const { data: remoteProcessData } = useQuery(
-    [QueriesProcesses.GetRemoteProcessesPaginated, remoteProcessesQueryParams],
-    () => RESTApi.fetchProcesses(remoteProcessesQueryParams),
-    {
-      keepPreviousData: true
-    }
-  );
+  const { data: remoteProcessData } = useSuspenseQuery({
+    queryKey: [QueriesProcesses.GetRemoteProcessesPaginated, remoteProcessesQueryParams],
+    queryFn: () => RESTApi.fetchProcesses(remoteProcessesQueryParams)
+  });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
-    setExternalProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
-    setRemoteProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    startTransition(() => {
+      setExternalProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+      setRemoteProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    });
   }, []);
 
   const externalProcesses = externalProcessData?.results || [];

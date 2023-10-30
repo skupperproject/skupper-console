@@ -12,7 +12,7 @@ import {
   FlexItem,
   Title
 } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { isPrometheusActive } from '@config/config';
@@ -45,14 +45,12 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
     data: connections,
     refetch,
     isRefetching
-  } = useQuery(
-    [QueriesMetrics.GetConnection, selectedFilters],
-    () => MetricsController.getConnections({ ...selectedFilters, protocol: AvailableProtocols.Tcp }),
-    {
-      refetchInterval,
-      keepPreviousData: true
-    }
-  );
+  } = useQuery({
+    queryKey: [QueriesMetrics.GetConnection, selectedFilters],
+    queryFn: () => MetricsController.getConnections({ ...selectedFilters, protocol: AvailableProtocols.Tcp }),
+    refetchInterval,
+    placeholderData: keepPreviousData
+  });
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);

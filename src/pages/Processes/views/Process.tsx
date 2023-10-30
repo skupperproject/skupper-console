@@ -35,19 +35,22 @@ const Process = function () {
     destinationId: processId
   };
 
-  const { data: process } = useQuery([QueriesProcesses.GetProcess, processId], () => RESTApi.fetchProcess(processId));
+  const { data: process } = useQuery({
+    queryKey: [QueriesProcesses.GetProcess, processId],
+    queryFn: () => RESTApi.fetchProcess(processId)
+  });
 
-  const { data: clientPairs } = useQuery(
-    [QueriesProcesses.GetProcessPairs, clientPairsQueryParams],
-    () => RESTApi.fetchProcessesPairs(clientPairsQueryParams),
-    { refetchInterval: UPDATE_INTERVAL }
-  );
+  const { data: clientPairs } = useQuery({
+    queryKey: [QueriesProcesses.GetProcessPairs, clientPairsQueryParams],
+    queryFn: () => RESTApi.fetchProcessesPairs(clientPairsQueryParams),
+    refetchInterval: UPDATE_INTERVAL
+  });
 
-  const { data: serverPairs } = useQuery(
-    [QueriesProcesses.GetProcessPairs, serverPairsQueryParams],
-    () => RESTApi.fetchProcessesPairs(serverPairsQueryParams),
-    { refetchInterval: UPDATE_INTERVAL }
-  );
+  const { data: serverPairs } = useQuery({
+    queryKey: [QueriesProcesses.GetProcessPairs, serverPairsQueryParams],
+    queryFn: () => RESTApi.fetchProcessesPairs(serverPairsQueryParams),
+    refetchInterval: UPDATE_INTERVAL
+  });
 
   if (!process) {
     return null;

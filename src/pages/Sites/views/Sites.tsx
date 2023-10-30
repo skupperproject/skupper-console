@@ -14,7 +14,7 @@ import { siteColumns } from '../Sites.constants';
 import { SiteLabels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
 
 const Sites = function () {
-  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
+  const { data: sites } = useQuery({ queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() });
 
   return (
     <MainContainer

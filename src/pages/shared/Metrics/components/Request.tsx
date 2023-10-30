@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
@@ -30,16 +30,16 @@ const Request: FC<RequestProps> = function ({
 }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const [{ data: request, refetch: refetchRequest, isRefetching: isRefetchingRequest }] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesMetrics.GetRequest, selectedFilters],
-        queryFn: () => MetricsController.getRequests(selectedFilters),
-        enabled: isPrometheusActive,
-        refetchInterval,
-        keepPreviousData: true
-      }
-    ]
+  const {
+    data: request,
+    refetch: refetchRequest,
+    isRefetching: isRefetchingRequest
+  } = useQuery({
+    queryKey: [QueriesMetrics.GetRequest, selectedFilters],
+    queryFn: () => MetricsController.getRequests(selectedFilters),
+    enabled: isPrometheusActive,
+    refetchInterval,
+    placeholderData: keepPreviousData
   });
 
   const handleExpand = useCallback(() => {

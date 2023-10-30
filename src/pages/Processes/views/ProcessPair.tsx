@@ -14,7 +14,7 @@ import {
   TabTitleText
 } from '@patternfly/react-core';
 import { LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
-import { useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQueries } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -118,7 +118,7 @@ const ProcessPairs = function () {
           }),
         enabled: protocol === AvailableProtocols.Http2,
         refetchInterval: UPDATE_INTERVAL,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       },
 
       {
@@ -130,7 +130,7 @@ const ProcessPairs = function () {
           }),
         enabled: protocol === AvailableProtocols.Http,
         refetchInterval: UPDATE_INTERVAL,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       },
 
       {
@@ -142,7 +142,7 @@ const ProcessPairs = function () {
           }),
         enabled: protocol === AvailableProtocols.Tcp,
         refetchInterval: UPDATE_INTERVAL,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       },
 
       {
@@ -154,7 +154,7 @@ const ProcessPairs = function () {
           }),
         enabled: protocol === AvailableProtocols.Tcp,
         refetchInterval: UPDATE_INTERVAL,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       }
     ]
   });

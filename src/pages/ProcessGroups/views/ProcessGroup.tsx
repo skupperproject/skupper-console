@@ -29,14 +29,15 @@ const ProcessGroup = function () {
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
   const [tabSelected, setTabSelected] = useState(type);
 
-  const { data: processGroup } = useQuery([QueriesProcessGroups.GetProcessGroup, processGroupId], () =>
-    RESTApi.fetchProcessGroup(processGroupId)
-  );
+  const { data: processGroup } = useQuery({
+    queryKey: [QueriesProcessGroups.GetProcessGroup, processGroupId],
+    queryFn: () => RESTApi.fetchProcessGroup(processGroupId)
+  });
 
-  const { data: processes } = useQuery(
-    [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
-    () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
-  );
+  const { data: processes } = useQuery({
+    queryKey: [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
+    queryFn: () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
+  });
 
   const handleSelectedFilters = useCallback(
     (filters: SelectedMetricFilters) => {

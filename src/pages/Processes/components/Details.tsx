@@ -46,9 +46,10 @@ const Details: FC<{ process: ProcessResponse; title?: string | JSX.Element }> = 
     processBinding
   } = process;
 
-  const { data: services } = useQuery([QueriesProcesses.GetServicesByProcessId, processId], () =>
-    RESTApi.fetchServicesByProcess(processId)
-  );
+  const { data: services } = useQuery({
+    queryKey: [QueriesProcesses.GetServicesByProcessId, processId],
+    queryFn: () => RESTApi.fetchServicesByProcess(processId)
+  });
 
   return (
     <Card>

@@ -80,7 +80,7 @@ describe('Begin testing the Sites component', () => {
           defaultOptions: {
             queries: {
               retry: false,
-              useErrorBoundary: true
+              throwOnError: true
             }
           }
         }}
@@ -111,7 +111,7 @@ describe('Begin testing the Sites component', () => {
           defaultOptions: {
             queries: {
               retry: false,
-              useErrorBoundary: true
+              throwOnError: true
             }
           }
         }}

@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
@@ -39,13 +39,13 @@ const Latency: FC<LatencyProps> = function ({
         queryKey: [QueriesMetrics.GetLatency, selectedFilters],
         queryFn: () => MetricsController.getLatencyPercentiles(selectedFilters),
         refetchInterval,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       },
       {
         queryKey: [QueriesMetrics.GetLatencyBuckets, selectedFilters],
         queryFn: () => MetricsController.getLatencyBuckets(selectedFilters),
         refetchInterval,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       }
     ]
   });

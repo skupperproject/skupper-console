@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
@@ -28,14 +28,12 @@ const FlowPairsService: FC<FlowPairsServiceTableProps> = function ({
 }) {
   const [queryParams, setQueryParams] = useState({});
 
-  const { data: flowPairsData } = useQuery(
-    [QueriesServices.GetFlowPairsByService, serviceId, { ...filters, ...queryParams }],
-    () => RESTApi.fetchFlowPairsByService(serviceId, { ...filters, ...queryParams }),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: flowPairsData } = useQuery({
+    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, { ...filters, ...queryParams }],
+    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, { ...filters, ...queryParams }),
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
     setQueryParams(params);

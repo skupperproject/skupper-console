@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -23,14 +23,12 @@ interface OverviewProps {
 }
 
 const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol }) {
-  const { data: processPairs } = useQuery(
-    [QueriesServices.GetProcessPairsByService, serviceId],
-    () => RESTApi.fetchProcessPairsByService(serviceId),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: processPairs } = useQuery({
+    queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
+    queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
   const handleSelectedFilters = useCallback(
     (filters: string) => {
