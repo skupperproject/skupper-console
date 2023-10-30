@@ -73,7 +73,6 @@ const TopologyProcesses: FC<{
     { data: externalProcesses },
     { data: remoteProcesses },
     { data: processesPairs },
-    { data: serversByService },
     { data: metrics }
   ] = useQueries({
     queries: [
@@ -99,12 +98,6 @@ const TopologyProcesses: FC<{
       {
         queryKey: [QueriesTopology.GetProcessesPairs],
         queryFn: () => RESTApi.fetchProcessesPairsResult(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesServices.GetProcessesByService, serviceIdSelected],
-        queryFn: () => (serviceIdSelected ? RESTApi.fetchServersByService(serviceIdSelected) : null),
-        keepPreviousData: true,
         refetchInterval: UPDATE_INTERVAL
       },
       {
@@ -197,7 +190,7 @@ const TopologyProcesses: FC<{
     setSearchParams(params);
   }
 
-  function handleFilterService(_: ChangeEvent<HTMLInputElement> | null, value: string) {
+  function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {
     const options = getOptions();
 
     if (!value) {
@@ -233,10 +226,6 @@ const TopologyProcesses: FC<{
       return;
     }
 
-    if (serviceIdSelected && !serversByService?.results) {
-      return;
-    }
-
     function addLabelsToEdges(prevLinks: GraphEdge[]) {
       const protocolPairsMap = (processesPairs || []).reduce(
         (acc, { sourceId, destinationId, protocol }) => {
@@ -269,10 +258,16 @@ const TopologyProcesses: FC<{
     let pPairs = processesPairs;
     let processes = [...externalProcesses, ...remoteProcesses];
 
-    if (serviceIdSelected && serversByService?.results) {
-      const serverIds = serversByService.results.map(({ identity }) => identity);
-      pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
+    if (serviceIdSelected) {
+      const serverIds = processes
+        .map(({ identity, addresses }) => ({
+          identity,
+          addresses: addresses?.map((address) => address.split('@')[1]).filter(Boolean)
+        }))
+        .filter(({ addresses }) => addresses?.includes(serviceIdSelected))
+        .map(({ identity }) => identity);
 
+      pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
       processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
     }
@@ -296,7 +291,6 @@ const TopologyProcesses: FC<{
     processesPairs,
     remoteProcesses,
     isDisplayOptionActive,
-    serversByService?.results,
     serviceIdSelected,
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,
@@ -328,67 +322,68 @@ const TopologyProcesses: FC<{
     return option;
   });
 
+  const TopologyToolbar = function () {
+    return (
+      <Toolbar>
+        <ToolbarContent>
+          <ToolbarItem>
+            <Select
+              role="service-select"
+              isOpen={isServiceSelectMenuOpen}
+              onSelect={handleSelectService}
+              onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
+              selections={serviceIdSelected}
+              hasInlineFilter
+              inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
+              onFilter={handleFindServices}
+              maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
+            >
+              {getOptions()}
+            </Select>
+          </ToolbarItem>
+
+          <ToolbarItem>
+            <DisplaySelect
+              options={displayOptions}
+              onSelect={handleDisplaySelect}
+              defaultSelected={displayOptionsSelected}
+            />
+          </ToolbarItem>
+
+          <ToolbarItem align={{ default: 'alignRight' }}>
+            <NavigationViewLink
+              link={ProcessesRoutesPaths.Processes}
+              linkLabel={TopologyLabels.ListView}
+              iconName="listIcon"
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+    );
+  };
+
   return (
     <Stack data-testid="sk-topology-processes">
-      {!nodes.length && (
-        <StackItem isFilled>
-          <EmptyData />
-        </StackItem>
-      )}
-      {!!nodes.length && (
-        <>
-          <StackItem>
-            <Toolbar>
-              <ToolbarContent>
-                <ToolbarItem>
-                  <Select
-                    role="service-select"
-                    isOpen={isServiceSelectMenuOpen}
-                    onSelect={handleSelectService}
-                    onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
-                    selections={serviceIdSelected}
-                    hasInlineFilter
-                    inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
-                    onFilter={handleFilterService}
-                    maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
-                  >
-                    {getOptions()}
-                  </Select>
-                </ToolbarItem>
+      <StackItem>
+        <TopologyToolbar />
+      </StackItem>
 
-                <ToolbarItem>
-                  <DisplaySelect
-                    options={displayOptions}
-                    onSelect={handleDisplaySelect}
-                    defaultSelected={displayOptionsSelected}
-                  />
-                </ToolbarItem>
+      <StackItem isFilled>
+        {!!nodes.length && (
+          <GraphComponent
+            nodes={nodes}
+            edges={links}
+            combos={groups}
+            itemSelected={processId}
+            saveConfigkey={ZOOM_CACHE_KEY}
+            onClickCombo={handleGetSelectedGroup}
+            onClickNode={handleGetSelectedNode}
+            onClickEdge={handleGetSelectedEdge}
+          />
+        )}
 
-                <ToolbarItem align={{ default: 'alignRight' }}>
-                  <NavigationViewLink
-                    link={ProcessesRoutesPaths.Processes}
-                    linkLabel={TopologyLabels.ListView}
-                    iconName="listIcon"
-                  />
-                </ToolbarItem>
-              </ToolbarContent>
-            </Toolbar>
-          </StackItem>
-
-          <StackItem isFilled>
-            <GraphComponent
-              nodes={nodes}
-              edges={links}
-              combos={groups}
-              itemSelected={processId}
-              saveConfigkey={ZOOM_CACHE_KEY}
-              onClickCombo={handleGetSelectedGroup}
-              onClickNode={handleGetSelectedNode}
-              onClickEdge={handleGetSelectedEdge}
-            />
-          </StackItem>
-        </>
-      )}
+        {!nodes.length && <EmptyData />}
+      </StackItem>
     </Stack>
   );
 };

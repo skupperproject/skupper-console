@@ -207,47 +207,42 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
   return (
     <Stack>
-      {!nodes.length && (
-        <StackItem isFilled>
-          <EmptyData />
-        </StackItem>
-      )}
-      {!!nodes.length && (
-        <>
-          <StackItem>
-            <Toolbar>
-              <ToolbarContent>
-                <ToolbarItem>
-                  <DisplaySelect
-                    options={displayOptions}
-                    onSelect={handleDisplaySelect}
-                    defaultSelected={displayOptionsSelected}
-                  />
-                </ToolbarItem>
+      <StackItem>
+        <Toolbar>
+          <ToolbarContent>
+            <ToolbarItem>
+              <DisplaySelect
+                options={displayOptions}
+                onSelect={handleDisplaySelect}
+                defaultSelected={displayOptionsSelected}
+              />
+            </ToolbarItem>
 
-                <ToolbarGroup align={{ default: 'alignRight' }}>
-                  <ToolbarItem align={{ default: 'alignRight' }}>
-                    <NavigationViewLink
-                      link={SitesRoutesPaths.Sites}
-                      linkLabel={TopologyLabels.ListView}
-                      iconName="listIcon"
-                    />
-                  </ToolbarItem>
-                </ToolbarGroup>
-              </ToolbarContent>
-            </Toolbar>
-          </StackItem>
+            <ToolbarGroup align={{ default: 'alignRight' }}>
+              <ToolbarItem align={{ default: 'alignRight' }}>
+                <NavigationViewLink
+                  link={SitesRoutesPaths.Sites}
+                  linkLabel={TopologyLabels.ListView}
+                  iconName="listIcon"
+                />
+              </ToolbarItem>
+            </ToolbarGroup>
+          </ToolbarContent>
+        </Toolbar>
+      </StackItem>
 
-          <StackItem isFilled>
-            <GraphComponent
-              nodes={nodes}
-              edges={edges}
-              onClickNode={handleGetSelectedNode}
-              saveConfigkey={ZOOM_CACHE_KEY}
-            />
-          </StackItem>
-        </>
-      )}
+      <StackItem isFilled>
+        {!!nodes.length && (
+          <GraphComponent
+            nodes={nodes}
+            edges={edges}
+            onClickNode={handleGetSelectedNode}
+            saveConfigkey={ZOOM_CACHE_KEY}
+          />
+        )}
+
+        {!nodes.length && <EmptyData />}
+      </StackItem>
     </Stack>
   );
 };
