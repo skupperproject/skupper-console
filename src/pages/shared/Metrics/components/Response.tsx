@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQueries } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
@@ -49,14 +49,14 @@ const Response: FC<ResponseProps> = function ({
         queryFn: () => MetricsController.getResponses(selectedFilters),
         enabled: isPrometheusActive,
         refetchInterval,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       },
       {
         queryKey: [QueriesMetrics.GetResponse, selectedFiltersReverse],
         queryFn: () => MetricsController.getResponses(selectedFiltersReverse),
         enabled: isPrometheusActive,
         refetchInterval,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
       }
     ]
   });

@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
@@ -30,15 +30,13 @@ const Traffic: FC<TrafficProps> = function ({
 }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const { data, refetch, isRefetching } = useQuery(
-    [QueriesMetrics.GetTraffic, selectedFilters],
-    () => MetricsController.getDataTraffic(selectedFilters),
-    {
-      enabled: isPrometheusActive,
-      refetchInterval,
-      keepPreviousData: true
-    }
-  );
+  const { data, refetch, isRefetching } = useQuery({
+    queryKey: [QueriesMetrics.GetTraffic, selectedFilters],
+    queryFn: () => MetricsController.getDataTraffic(selectedFilters),
+    enabled: isPrometheusActive,
+    refetchInterval,
+    placeholderData: keepPreviousData
+  });
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);

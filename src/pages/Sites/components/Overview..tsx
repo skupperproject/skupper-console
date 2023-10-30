@@ -24,14 +24,20 @@ interface OverviewProps {
 const Overview: FC<OverviewProps> = function ({ site }) {
   const { identity: siteId, name } = site;
 
-  const { data: sites } = useQuery([QueriesSites.GetSites], () => RESTApi.fetchSites());
-  const { data: hosts } = useQuery([QueriesSites.GetHostsBySiteId, siteId], () => RESTApi.fetchHostsBySite(siteId));
-  const { data: links } = useQuery([QueriesSites.GetLinksBySiteId, siteId], () => RESTApi.fetchLinksBySite(siteId));
-  const { data: routers } = useQuery([QueriesSites.GetRouters], () => RESTApi.fetchRouters());
-  const { data: processesData } = useQuery(
-    [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
-    () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
-  );
+  const { data: sites } = useQuery({ queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() });
+  const { data: hosts } = useQuery({
+    queryKey: [QueriesSites.GetHostsBySiteId, siteId],
+    queryFn: () => RESTApi.fetchHostsBySite(siteId)
+  });
+  const { data: links } = useQuery({
+    queryKey: [QueriesSites.GetLinksBySiteId, siteId],
+    queryFn: () => RESTApi.fetchLinksBySite(siteId)
+  });
+  const { data: routers } = useQuery({ queryKey: [QueriesSites.GetRouters], queryFn: () => RESTApi.fetchRouters() });
+  const { data: processesData } = useQuery({
+    queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
+    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
+  });
 
   const handleSelectedFilters = useCallback(
     (filters: SelectedMetricFilters) => {

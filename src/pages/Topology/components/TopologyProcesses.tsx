@@ -2,7 +2,7 @@ import { ChangeEvent, ComponentType, FC, MouseEvent, useCallback, useEffect, use
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQueries } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -118,7 +118,7 @@ const TopologyProcesses: FC<{
               fetchLatency: { groupBy: 'sourceProcess, destProcess' }
             }
           }),
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         refetchInterval: UPDATE_INTERVAL
       }
     ]

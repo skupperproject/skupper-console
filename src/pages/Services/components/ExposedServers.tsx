@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -22,22 +22,19 @@ const ExposedServers: FC<ExposedServersProps> = function ({
   serviceName,
   pagination = BIG_PAGINATION_SIZE
 }) {
-  const { data: exposedServersData } = useQuery(
-    [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
-    () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
-    {
-      refetchInterval: UPDATE_INTERVAL,
-      keepPreviousData: true
-    }
-  );
+  const { data: exposedServersData } = useQuery({
+    queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
+    queryFn: () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
 
-  const { data: byteRates } = useQuery(
-    [QueriesServices.GetTcpByteRateByService, { serviceName }],
-    () => PrometheusApi.fetchTcpByteRateByService({ serviceName }),
-    {
-      refetchInterval: UPDATE_INTERVAL
-    }
-  );
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
+
+  const { data: byteRates } = useQuery({
+    queryKey: [QueriesServices.GetTcpByteRateByService, { serviceName }],
+    queryFn: () => PrometheusApi.fetchTcpByteRateByService({ serviceName }),
+    refetchInterval: UPDATE_INTERVAL
+  });
 
   let servers = exposedServersData?.results || [];
 

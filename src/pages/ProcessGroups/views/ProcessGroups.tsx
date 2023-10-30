@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -20,13 +20,11 @@ const initComponentsQueryParams = {
 const ProcessGroups = function () {
   const [componentsQueryParams, setComponentsQueryParams] = useState<RequestOptions>(initComponentsQueryParams);
 
-  const { data: componentsData } = useQuery(
-    [QueriesProcessGroups.GetProcessGroups, componentsQueryParams],
-    () => RESTApi.fetchProcessGroups(componentsQueryParams),
-    {
-      keepPreviousData: true
-    }
-  );
+  const { data: componentsData } = useQuery({
+    queryKey: [QueriesProcessGroups.GetProcessGroups, componentsQueryParams],
+    queryFn: () => RESTApi.fetchProcessGroups(componentsQueryParams),
+    placeholderData: keepPreviousData
+  });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
     setComponentsQueryParams({ ...initComponentsQueryParams, ...params });
