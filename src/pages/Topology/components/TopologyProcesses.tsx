@@ -1,4 +1,4 @@
-import { ChangeEvent, ComponentType, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, ComponentType, FC, MouseEvent, startTransition, useCallback, useEffect, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
@@ -163,8 +163,10 @@ const TopologyProcesses: FC<{
   );
 
   const handleDisplaySelect = useCallback((selected: string[]) => {
-    setDisplayOptions(selected);
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selected));
+    startTransition(() => {
+      setDisplayOptions(selected);
+      localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selected));
+    });
   }, []);
 
   function handleToggleServiceMenu(openServiceMenu: boolean) {
@@ -185,9 +187,11 @@ const TopologyProcesses: FC<{
       params = { ...params, serviceId: id };
     }
 
-    setServiceIdSelected(id);
-    setIsServiceSelectMenuOpen(false);
-    setSearchParams(params);
+    startTransition(() => {
+      setServiceIdSelected(id);
+      setIsServiceSelectMenuOpen(false);
+      setSearchParams(params);
+    });
   }
 
   function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {

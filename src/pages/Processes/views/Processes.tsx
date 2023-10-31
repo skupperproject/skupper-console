@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -32,14 +32,17 @@ const Processes = function () {
   const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
     useState<RequestOptions>(initRemoteProcessesQueryParams);
 
-  const { data: externalProcessData } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
-    queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams)
-  });
-
-  const { data: remoteProcessData } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetRemoteProcessesPaginated, remoteProcessesQueryParams],
-    queryFn: () => RESTApi.fetchProcesses(remoteProcessesQueryParams)
+  const [{ data: externalProcessData }, { data: remoteProcessData }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams)
+      },
+      {
+        queryKey: [QueriesProcesses.GetRemoteProcessesPaginated, remoteProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcesses(remoteProcessesQueryParams)
+      }
+    ]
   });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {

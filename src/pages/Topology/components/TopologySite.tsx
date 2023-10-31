@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, startTransition, useCallback, useEffect, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { keepPreviousData, useQueries } from '@tanstack/react-query';
@@ -110,8 +110,10 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   );
 
   const handleDisplaySelect = useCallback((selectedOptions: string[]) => {
-    setDisplayOptions(selectedOptions);
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selectedOptions));
+    startTransition(() => {
+      setDisplayOptions(selectedOptions);
+      localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selectedOptions));
+    });
   }, []);
 
   useEffect(() => {
