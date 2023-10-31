@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef, useState } from 'react';
+import { FC, Suspense, useCallback, useRef, useState } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
@@ -89,57 +89,67 @@ const Metrics: FC<MetricsProps> = function ({
       </StackItem>
 
       <StackItem>
-        <Traffic
-          selectedFilters={queryParams}
-          forceUpdate={shouldUpdateData}
-          refetchInterval={refetchInterval}
-          openSections={defaultOpenSections?.byterate}
-          onGetIsSectionExpanded={handleUpdateExpandedSections}
-        />
+        <Suspense fallback={<div />}>
+          <Traffic
+            selectedFilters={queryParams}
+            forceUpdate={shouldUpdateData}
+            refetchInterval={refetchInterval}
+            openSections={defaultOpenSections?.byterate}
+            onGetIsSectionExpanded={handleUpdateExpandedSections}
+          />
+        </Suspense>
       </StackItem>
 
       {showTcp && (
         <StackItem>
-          <TcpConnection
-            selectedFilters={queryParams}
-            forceUpdate={shouldUpdateData}
-            refetchInterval={refetchInterval}
-            openSections={defaultOpenSections?.connection}
-            onGetIsSectionExpanded={handleUpdateExpandedSections}
-          />
+          <Suspense fallback={<div />}>
+            <TcpConnection
+              selectedFilters={queryParams}
+              forceUpdate={shouldUpdateData}
+              refetchInterval={refetchInterval}
+              openSections={defaultOpenSections?.connection}
+              onGetIsSectionExpanded={handleUpdateExpandedSections}
+            />
+          </Suspense>
         </StackItem>
       )}
 
       {showHttp && (
         <>
           <StackItem>
-            <Latency
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.latency}
-              forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-              onGetIsSectionExpanded={handleUpdateExpandedSections}
-            />
+            <Suspense fallback={<div />}>
+              <Latency
+                selectedFilters={queryParams}
+                openSections={defaultOpenSections?.latency}
+                forceUpdate={shouldUpdateData}
+                refetchInterval={refetchInterval}
+                onGetIsSectionExpanded={handleUpdateExpandedSections}
+              />
+            </Suspense>
           </StackItem>
 
           <StackItem>
-            <Request
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.request}
-              forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-              onGetIsSectionExpanded={handleUpdateExpandedSections}
-            />
+            <Suspense fallback={<div />}>
+              <Request
+                selectedFilters={queryParams}
+                openSections={defaultOpenSections?.request}
+                forceUpdate={shouldUpdateData}
+                refetchInterval={refetchInterval}
+                onGetIsSectionExpanded={handleUpdateExpandedSections}
+              />
+            </Suspense>
           </StackItem>
 
           <StackItem>
-            <Response
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.response}
-              forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-              onGetIsSectionExpanded={handleUpdateExpandedSections}
-            />
+            <Suspense fallback={<div />}>
+              <Response
+                selectedFilters={queryParams}
+                openSections={defaultOpenSections?.response}
+                forceUpdate={shouldUpdateData}
+                refetchInterval={refetchInterval}
+                onGetIsSectionExpanded={handleUpdateExpandedSections}
+              />
+            </Suspense>
           </StackItem>
         </>
       )}

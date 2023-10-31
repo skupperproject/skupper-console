@@ -333,52 +333,47 @@ const TopologyProcesses: FC<{
     return option;
   });
 
-  const TopologyToolbar = function () {
-    return (
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarItem>
-            <Select
-              role="service-select"
-              isOpen={isServiceSelectMenuOpen}
-              onSelect={handleSelectService}
-              onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
-              selections={serviceIdSelected}
-              hasInlineFilter
-              inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
-              onFilter={handleFindServices}
-              maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
-            >
-              {getOptions()}
-            </Select>
-          </ToolbarItem>
+  const TopologyToolbar = (
+    <Toolbar>
+      <ToolbarContent>
+        <ToolbarItem>
+          <Select
+            role="service-select"
+            isOpen={isServiceSelectMenuOpen}
+            onSelect={handleSelectService}
+            onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
+            selections={serviceIdSelected}
+            hasInlineFilter
+            inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
+            onFilter={handleFindServices}
+            maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
+          >
+            {getOptions()}
+          </Select>
+        </ToolbarItem>
 
-          <ToolbarItem>
-            <DisplaySelect
-              options={displayOptions}
-              onSelect={handleDisplaySelect}
-              defaultSelected={displayOptionsSelected}
-            />
-          </ToolbarItem>
+        <ToolbarItem>
+          <DisplaySelect
+            options={displayOptions}
+            onSelect={handleDisplaySelect}
+            defaultSelected={displayOptionsSelected}
+          />
+        </ToolbarItem>
 
-          <ToolbarItem align={{ default: 'alignRight' }}>
-            <NavigationViewLink
-              link={ProcessesRoutesPaths.Processes}
-              linkLabel={TopologyLabels.ListView}
-              iconName="listIcon"
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-    );
-  };
+        <ToolbarItem align={{ default: 'alignRight' }}>
+          <NavigationViewLink
+            link={ProcessesRoutesPaths.Processes}
+            linkLabel={TopologyLabels.ListView}
+            iconName="listIcon"
+          />
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  );
 
   return (
     <Stack data-testid="sk-topology-processes">
-      <StackItem>
-        <TopologyToolbar />
-      </StackItem>
-
+      <StackItem>{TopologyToolbar}</StackItem>
       <StackItem isFilled>
         {!!nodes.length && (
           <GraphComponent

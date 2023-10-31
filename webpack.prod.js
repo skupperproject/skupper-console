@@ -41,7 +41,7 @@ const prodConfig = {
       patterns: [
         path.resolve(ROOT, 'public', 'manifest.json'),
         {
-          from: process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.ico'),
+          from: process.env.BRAND_FAVICON_PATH || path.resolve(ROOT, 'public', 'favicon.v.ico'),
           to: path.resolve(__dirname, 'build', 'favicon.v.ico')
         }
       ]
