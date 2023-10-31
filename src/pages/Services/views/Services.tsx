@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { startTransition, useCallback, useState } from 'react';
 
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -22,20 +22,24 @@ const initOldConnectionsQueryParams: RequestOptions = {
 const Services = function () {
   const [servicesQueryParams, setServicesQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
 
-  const { data: servicesData } = useQuery({
-    queryKey: [QueriesServices.GetServices, servicesQueryParams],
-    queryFn: () => RESTApi.fetchServices(servicesQueryParams),
-    placeholderData: keepPreviousData
-  });
-
-  const { data: tcpActiveFlows } = useQuery({
-    queryKey: [QueriesServices.GetPrometheusActiveFlows],
-    queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService(),
-    enabled: isPrometheusActive
+  const [{ data: servicesData }, { data: tcpActiveFlows }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesServices.GetServices, servicesQueryParams],
+        queryFn: () => RESTApi.fetchServices(servicesQueryParams)
+      },
+      {
+        queryKey: [QueriesServices.GetPrometheusActiveFlows],
+        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService(),
+        enabled: isPrometheusActive
+      }
+    ]
   });
 
   const handleSetServiceFilters = useCallback((params: RequestOptions) => {
-    setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    startTransition(() => {
+      setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    });
   }, []);
 
   const services = servicesData?.results || [];

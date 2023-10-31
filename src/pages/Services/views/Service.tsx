@@ -1,7 +1,7 @@
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -43,32 +43,28 @@ const Service = function () {
   const { data: serversData } = useQuery({
     queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
     queryFn: () => RESTApi.fetchServersByService(serviceId, initServersQueryParams),
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: requestsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
     queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
     enabled: protocol !== AvailableProtocols.Tcp,
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
     queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
     enabled: protocol === AvailableProtocols.Tcp,
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, serviceId, terminatedConnectionsQueryParams],
     queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, terminatedConnectionsQueryParams),
     enabled: protocol === AvailableProtocols.Tcp,
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
