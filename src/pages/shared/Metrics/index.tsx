@@ -1,4 +1,4 @@
-import { FC, startTransition, useCallback, useRef, useState } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
@@ -41,13 +41,12 @@ const Metrics: FC<MetricsProps> = function ({
   // Filters: Set the prometheus query params with the filter values
   const handleUpdateQueryParams = useCallback(
     (updatedFilters: QueryMetricsParams, refreshDataInterval?: number) => {
-      startTransition(() => {
-        setRefetchInterval(refreshDataInterval);
-        setQueryParams(updatedFilters);
-        if (onGetMetricFiltersConfig) {
-          onGetMetricFiltersConfig({ ...updatedFilters, refreshDataInterval });
-        }
-      });
+      setRefetchInterval(refreshDataInterval);
+      setQueryParams(updatedFilters);
+
+      if (onGetMetricFiltersConfig) {
+        onGetMetricFiltersConfig({ ...updatedFilters, refreshDataInterval });
+      }
     },
     [onGetMetricFiltersConfig]
   );

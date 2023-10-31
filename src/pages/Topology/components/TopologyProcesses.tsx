@@ -2,7 +2,7 @@ import { ChangeEvent, ComponentType, FC, MouseEvent, startTransition, useCallbac
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { keepPreviousData, useQueries } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -118,7 +118,6 @@ const TopologyProcesses: FC<{
               fetchLatency: { groupBy: 'sourceProcess, destProcess' }
             }
           }),
-        placeholderData: keepPreviousData,
         refetchInterval: UPDATE_INTERVAL
       }
     ]
@@ -165,8 +164,9 @@ const TopologyProcesses: FC<{
   const handleDisplaySelect = useCallback((selected: string[]) => {
     startTransition(() => {
       setDisplayOptions(selected);
-      localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selected));
     });
+
+    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selected));
   }, []);
 
   function handleToggleServiceMenu(openServiceMenu: boolean) {
@@ -189,9 +189,10 @@ const TopologyProcesses: FC<{
 
     startTransition(() => {
       setServiceIdSelected(id);
-      setIsServiceSelectMenuOpen(false);
-      setSearchParams(params);
     });
+
+    setIsServiceSelectMenuOpen(false);
+    setSearchParams(params);
   }
 
   function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {
