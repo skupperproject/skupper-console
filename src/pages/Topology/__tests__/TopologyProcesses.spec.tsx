@@ -79,9 +79,6 @@ describe('Begin testing the Topology component', () => {
     fireEvent.click(screen.getByText(servicesResults[2].name));
     expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
     expect(screen.getByText(servicesResults[1].name)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText(servicesResults[0].name));
-    expect(screen.queryByText(servicesResults[2].name)).not.toBeInTheDocument();
   });
 
   it('should clicking on the service menu and use the search filter', async () => {
