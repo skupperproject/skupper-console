@@ -1,7 +1,7 @@
 import { ComponentType, FC, startTransition, useCallback, useEffect, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
-import { keepPreviousData, useQueries } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -70,7 +70,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         {
           queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
           queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
-          placeholderData: keepPreviousData,
           refetchInterval: UPDATE_INTERVAL
         },
         {
@@ -94,7 +93,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
                   }
                 })
               : null,
-          placeholderData: keepPreviousData,
           refetchInterval: UPDATE_INTERVAL
         }
       ]
@@ -112,8 +110,9 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   const handleDisplaySelect = useCallback((selectedOptions: string[]) => {
     startTransition(() => {
       setDisplayOptions(selectedOptions);
-      localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selectedOptions));
     });
+
+    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selectedOptions));
   }, []);
 
   useEffect(() => {

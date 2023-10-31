@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { keepPreviousData, useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
@@ -39,26 +39,28 @@ const Response: FC<ResponseProps> = function ({
     destProcess: selectedFilters.sourceProcess
   };
 
-  const [
-    { data: response, refetch: refetchResponse, isRefetching: isRefetchingResponse },
-    { data: responseReverse, refetch: refetchResponseReverse, isRefetching: isRefetchingResponseReverse }
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesMetrics.GetResponse, selectedFilters],
-        queryFn: () => MetricsController.getResponses(selectedFilters),
-        enabled: isPrometheusActive,
-        refetchInterval,
-        placeholderData: keepPreviousData
-      },
-      {
-        queryKey: [QueriesMetrics.GetResponse, selectedFiltersReverse],
-        queryFn: () => MetricsController.getResponses(selectedFiltersReverse),
-        enabled: isPrometheusActive,
-        refetchInterval,
-        placeholderData: keepPreviousData
-      }
-    ]
+  const {
+    data: response,
+    refetch: refetchResponse,
+    isRefetching: isRefetchingResponse
+  } = useQuery({
+    queryKey: [QueriesMetrics.GetResponse, selectedFilters],
+    queryFn: () => MetricsController.getResponses(selectedFilters),
+    enabled: isPrometheusActive,
+    refetchInterval,
+    placeholderData: keepPreviousData
+  });
+
+  const {
+    data: responseReverse,
+    refetch: refetchResponseReverse,
+    isRefetching: isRefetchingResponseReverse
+  } = useQuery({
+    queryKey: [QueriesMetrics.GetResponse, selectedFiltersReverse],
+    queryFn: () => MetricsController.getResponses(selectedFiltersReverse),
+    enabled: isPrometheusActive,
+    refetchInterval,
+    placeholderData: keepPreviousData
   });
 
   const handleExpand = useCallback(() => {
