@@ -206,32 +206,29 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     return option;
   });
 
+  const TopologyToolbar = (
+    <Toolbar>
+      <ToolbarContent>
+        <ToolbarItem>
+          <DisplaySelect
+            options={displayOptions}
+            onSelect={handleDisplaySelect}
+            defaultSelected={displayOptionsSelected}
+          />
+        </ToolbarItem>
+
+        <ToolbarGroup align={{ default: 'alignRight' }}>
+          <ToolbarItem align={{ default: 'alignRight' }}>
+            <NavigationViewLink link={SitesRoutesPaths.Sites} linkLabel={TopologyLabels.ListView} iconName="listIcon" />
+          </ToolbarItem>
+        </ToolbarGroup>
+      </ToolbarContent>
+    </Toolbar>
+  );
+
   return (
     <Stack>
-      <StackItem>
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarItem>
-              <DisplaySelect
-                options={displayOptions}
-                onSelect={handleDisplaySelect}
-                defaultSelected={displayOptionsSelected}
-              />
-            </ToolbarItem>
-
-            <ToolbarGroup align={{ default: 'alignRight' }}>
-              <ToolbarItem align={{ default: 'alignRight' }}>
-                <NavigationViewLink
-                  link={SitesRoutesPaths.Sites}
-                  linkLabel={TopologyLabels.ListView}
-                  iconName="listIcon"
-                />
-              </ToolbarItem>
-            </ToolbarGroup>
-          </ToolbarContent>
-        </Toolbar>
-      </StackItem>
-
+      <StackItem>{TopologyToolbar}</StackItem>
       <StackItem isFilled>
         {!!nodes.length && (
           <GraphComponent
