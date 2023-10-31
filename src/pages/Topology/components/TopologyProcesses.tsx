@@ -103,8 +103,9 @@ const TopologyProcesses: FC<{
       },
       {
         queryKey: [QueriesServices.GetProcessesByService, serviceIdSelected],
-        queryFn: () => (serviceIdSelected ? RESTApi.fetchServersByService(serviceIdSelected) : null),
-        refetchInterval: UPDATE_INTERVAL
+        queryFn: () => RESTApi.fetchServersByService(serviceIdSelected || ''),
+        refetchInterval: UPDATE_INTERVAL,
+        enabled: !!serviceIdSelected
       },
       {
         queryKey: [
@@ -193,12 +194,12 @@ const TopologyProcesses: FC<{
       params = { ...params, serviceId: id };
     }
 
+    setIsServiceSelectMenuOpen(false);
+    setSearchParams(params);
+
     startTransition(() => {
       setServiceIdSelected(id);
     });
-
-    setIsServiceSelectMenuOpen(false);
-    setSearchParams(params);
   }
 
   function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {

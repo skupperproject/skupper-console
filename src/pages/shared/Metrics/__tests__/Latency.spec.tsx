@@ -1,10 +1,11 @@
 import { Suspense } from 'react';
 
-import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import * as PrometheusAPIModule from '@API/Prometheus.api';
 import { ProcessResponse } from '@API/REST.interfaces';
+import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
@@ -43,13 +44,17 @@ describe('Latency component', () => {
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()));
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
   });
 
   it('should render the Latency section and display the no metric found message', async () => {
-    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(jest.fn().mockReturnValue([{ data: null }, { data: null }]));
+    jest
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange')
+      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     render(
       <Wrapper>
@@ -63,6 +68,10 @@ describe('Latency component', () => {
         </Suspense>
       </Wrapper>
     );
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
     expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();

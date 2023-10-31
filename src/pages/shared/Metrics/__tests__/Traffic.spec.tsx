@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 
-import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import * as PrometheusAPIModule from '@API/Prometheus.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
@@ -54,7 +54,9 @@ describe('Traffic component', () => {
   });
 
   it('should render the Traffic section and display the no metric found message', async () => {
-    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(jest.fn().mockReturnValue({ data: null }));
+    jest
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateByDirectionInTimeRange')
+      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     render(
       <Wrapper>
@@ -67,6 +69,10 @@ describe('Traffic component', () => {
         </Suspense>
       </Wrapper>
     );
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
     expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
