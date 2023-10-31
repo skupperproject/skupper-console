@@ -49,9 +49,7 @@ describe('Latency component', () => {
   });
 
   it('should render the Latency section and display the no metric found message', async () => {
-    jest
-      .spyOn(ReactQuery, 'useQueries')
-      .mockImplementation(jest.fn().mockReturnValue([{ data: null }, { data: null }]));
+    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(jest.fn().mockReturnValue([{ data: null }, { data: null }]));
 
     render(
       <Wrapper>

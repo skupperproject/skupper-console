@@ -73,6 +73,7 @@ const TopologyProcesses: FC<{
     { data: externalProcesses },
     { data: remoteProcesses },
     { data: processesPairs },
+    { data: serversByService },
     { data: metrics }
   ] = useQueries({
     queries: [
@@ -98,6 +99,11 @@ const TopologyProcesses: FC<{
       {
         queryKey: [QueriesTopology.GetProcessesPairs],
         queryFn: () => RESTApi.fetchProcessesPairsResult(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesServices.GetProcessesByService, serviceIdSelected],
+        queryFn: () => (serviceIdSelected ? RESTApi.fetchServersByService(serviceIdSelected) : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
@@ -231,6 +237,10 @@ const TopologyProcesses: FC<{
       return;
     }
 
+    if (serviceIdSelected && !serversByService?.results) {
+      return;
+    }
+
     function addLabelsToEdges(prevLinks: GraphEdge[]) {
       const protocolPairsMap = (processesPairs || []).reduce(
         (acc, { sourceId, destinationId, protocol }) => {
@@ -263,16 +273,10 @@ const TopologyProcesses: FC<{
     let pPairs = processesPairs;
     let processes = [...externalProcesses, ...remoteProcesses];
 
-    if (serviceIdSelected) {
-      const serverIds = processes
-        .map(({ identity, addresses }) => ({
-          identity,
-          addresses: addresses?.map((address) => address.split('@')[1]).filter(Boolean)
-        }))
-        .filter(({ addresses }) => addresses?.includes(serviceIdSelected))
-        .map(({ identity }) => identity);
-
+    if (serviceIdSelected && serversByService?.results) {
+      const serverIds = serversByService.results.map(({ identity }) => identity);
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
+
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
       processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
     }
@@ -299,7 +303,8 @@ const TopologyProcesses: FC<{
     serviceIdSelected,
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
+    metrics?.latencyByProcessPairs,
+    serversByService?.results
   ]);
 
   const displayOptions = displayOptionsForProcesses.map((option) => {

@@ -12,9 +12,9 @@ export const PROMETHEUS_URL = `${COLLECTOR_URL}${PROMETHEUS_SUFFIX}`;
 export const isPrometheusActive = process.env.DISABLE_METRICS === 'true' ? false : true;
 
 // Default page size for tables. Set in environment variables, but can be overridden.
-export const DEFAULT_PAGINATION_SIZE = 1;
-export const BIG_PAGINATION_SIZE = 1;
-export const SMALL_PAGINATION_SIZE = 1;
+export const DEFAULT_PAGINATION_SIZE = 10;
+export const BIG_PAGINATION_SIZE = 20;
+export const SMALL_PAGINATION_SIZE = 10;
 
 // Brand
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
