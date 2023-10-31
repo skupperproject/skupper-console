@@ -108,7 +108,6 @@ describe('Begin testing the Topology component', () => {
     expect(screen.getByRole('display-select')).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(TopologyLabels.CheckboxShowProtocol));
-    fireEvent.click(screen.getByText(TopologyLabels.CheckboxShowProtocol));
   });
 
   it('should clicking on a node', async () => {
