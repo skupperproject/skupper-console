@@ -14,7 +14,7 @@ import {
   TabTitleText
 } from '@patternfly/react-core';
 import { LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
-import { keepPreviousData, useQueries } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -93,70 +93,62 @@ const ProcessPairs = function () {
     initPaginatedActiveConnectionsQueryParams
   );
 
-  const [
-    { data: source },
-    { data: destination },
-    { data: http2RequestsData },
-    { data: httpRequestsData },
-    { data: activeConnectionsData },
-    { data: oldConnectionsData }
-  ] = useQueries({
-    queries: [
-      { queryKey: [QueriesProcesses.GetProcess, sourceId], queryFn: () => RESTApi.fetchProcess(sourceId) },
+  const { data: source } = useQuery({
+    queryKey: [QueriesProcesses.GetProcess, sourceId],
+    queryFn: () => RESTApi.fetchProcess(sourceId)
+  });
 
-      {
-        queryKey: [QueriesProcesses.GetDestination, destinationId],
-        queryFn: () => RESTApi.fetchProcess(destinationId)
-      },
+  const { data: destination } = useQuery({
+    queryKey: [QueriesProcesses.GetDestination, destinationId],
+    queryFn: () => RESTApi.fetchProcess(destinationId)
+  });
 
-      {
-        queryKey: [QueriesProcesses.GetFlowPair, http2QueryParamsPaginated, processPairId],
-        queryFn: () =>
-          RESTApi.fetchFlowPairs({
-            ...http2QueryParamsPaginated,
-            processAggregateId: processPairId
-          }),
-        enabled: protocol === AvailableProtocols.Http2,
-        refetchInterval: UPDATE_INTERVAL,
-        placeholderData: keepPreviousData
-      },
+  const { data: http2RequestsData } = useQuery({
+    queryKey: [QueriesProcesses.GetFlowPair, http2QueryParamsPaginated, processPairId],
+    queryFn: () =>
+      RESTApi.fetchFlowPairs({
+        ...http2QueryParamsPaginated,
+        processAggregateId: processPairId
+      }),
+    enabled: protocol === AvailableProtocols.Http2,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-      {
-        queryKey: [QueriesProcesses.GetFlowPairs, httpQueryParamsPaginated, processPairId],
-        queryFn: () =>
-          RESTApi.fetchFlowPairs({
-            ...httpQueryParamsPaginated,
-            processAggregateId: processPairId
-          }),
-        enabled: protocol === AvailableProtocols.Http,
-        refetchInterval: UPDATE_INTERVAL,
-        placeholderData: keepPreviousData
-      },
+  const { data: httpRequestsData } = useQuery({
+    queryKey: [QueriesProcesses.GetFlowPairs, httpQueryParamsPaginated, processPairId],
+    queryFn: () =>
+      RESTApi.fetchFlowPairs({
+        ...httpQueryParamsPaginated,
+        processAggregateId: processPairId
+      }),
+    enabled: protocol === AvailableProtocols.Http,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-      {
-        queryKey: [QueriesProcesses.GetFlowPairs, activeConnectionsQueryParamsPaginated, processPairId],
-        queryFn: () =>
-          RESTApi.fetchFlowPairs({
-            ...activeConnectionsQueryParamsPaginated,
-            processAggregateId: processPairId
-          }),
-        enabled: protocol === AvailableProtocols.Tcp,
-        refetchInterval: UPDATE_INTERVAL,
-        placeholderData: keepPreviousData
-      },
+  const { data: activeConnectionsData } = useQuery({
+    queryKey: [QueriesProcesses.GetFlowPairs, activeConnectionsQueryParamsPaginated, processPairId],
+    queryFn: () =>
+      RESTApi.fetchFlowPairs({
+        ...activeConnectionsQueryParamsPaginated,
+        processAggregateId: processPairId
+      }),
+    enabled: protocol === AvailableProtocols.Tcp,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
+  });
 
-      {
-        queryKey: [QueriesProcesses.GetFlowPairs, oldConnectionsQueryParamsPaginated, processPairId],
-        queryFn: () =>
-          RESTApi.fetchFlowPairs({
-            ...oldConnectionsQueryParamsPaginated,
-            processAggregateId: processPairId
-          }),
-        enabled: protocol === AvailableProtocols.Tcp,
-        refetchInterval: UPDATE_INTERVAL,
-        placeholderData: keepPreviousData
-      }
-    ]
+  const { data: oldConnectionsData } = useQuery({
+    queryKey: [QueriesProcesses.GetFlowPairs, oldConnectionsQueryParamsPaginated, processPairId],
+    queryFn: () =>
+      RESTApi.fetchFlowPairs({
+        ...oldConnectionsQueryParamsPaginated,
+        processAggregateId: processPairId
+      }),
+    enabled: protocol === AvailableProtocols.Tcp,
+    refetchInterval: UPDATE_INTERVAL,
+    placeholderData: keepPreviousData
   });
 
   const handleGetFiltersHttpRequests = useCallback((params: RequestOptions) => {
