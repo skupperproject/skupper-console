@@ -50,25 +50,25 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
-    "react-router-dom": "^6.17.0"
+    "react-router-dom": "^6.18.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.8.0",
-    "@commitlint/config-conventional": "^17.8.0",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
     "@cypress/webpack-preprocessor": "^6.0.0",
     "@testing-library/dom": "^9.3.3",
-    "@types/jest": "^29.5.6",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@types/jest": "^29.5.7",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
     "circular-dependency-plugin": "^5.2.2",
     "commitizen": "^4.3.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "css-minimizer-webpack-plugin": "^5.0.1",
-    "cypress": "^13.3.3",
+    "cypress": "^13.4.0",
     "cz-git": "^1.7.1",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
@@ -77,13 +77,13 @@
     "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "fork-ts-checker-webpack-plugin": "^9.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "html-webpack-plugin": "^5.5.3",
     "husky": "^8.0.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "mini-css-extract-plugin": "^2.7.6",
-    "miragejs": "^0.1.47",
+    "miragejs": "^0.1.48",
     "prettier": "^3.0.3",
     "start-server-and-test": "^2.0.1",
     "style-loader": "^3.3.3",
@@ -101,9 +101,9 @@
     "webpack-merge": "^5.10.0"
   },
   "engines": {
-    "node": ">=16.17.1",
+    "node": ">=16.0.0",
     "npm": ">=6.0.0 ",
-    "yarn": ">= 1.19.1"
+    "yarn": ">= 1.22.10"
   },
   "config": {
     "commitizen": {

@@ -39,7 +39,7 @@ const PERF_TEST = false;
 const ITEMS_TEST = 200;
 interface ApiProps {
   params: Record<string, string>;
-  queryParams: Record<string, string>;
+  queryParams: Record<string, string[] | string | null | undefined>;
 }
 
 const mockSitesForPerf: SiteResponse[] = [];
