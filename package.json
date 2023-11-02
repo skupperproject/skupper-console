@@ -102,7 +102,7 @@
   },
   "engines": {
     "node": ">=18.17.1",
-    "yarn": ">= 1.22.10"
+    "yarn": ">=1.22.10"
   },
   "config": {
     "commitizen": {
