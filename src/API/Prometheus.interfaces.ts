@@ -7,7 +7,7 @@ type PrometheusApiResultValue = [number, `${number}` | 'NaN'];
 
 export interface PrometheusResponse<T> {
   data: {
-    result: T;
+    result: T | [];
   };
 }
 

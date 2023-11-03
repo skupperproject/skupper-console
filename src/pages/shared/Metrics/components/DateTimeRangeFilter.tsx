@@ -23,6 +23,7 @@ import { timeIntervalMap } from '@config/prometheus';
 
 import DateTimePicker from './DateTimePicker';
 import { formatDate, formatTime } from '../Metrics.constants';
+import { MetricsLabels } from '../Metrics.enum';
 import { SelectTimeIntervalProps } from '../Metrics.interfaces';
 
 const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
@@ -30,11 +31,12 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
   onSelectTimeInterval,
   startSelected,
   endSelected,
-  duration
+  duration,
+  isDateTimeRangeFilterOpen = false
 }) {
   const popoverRef = useRef<HTMLInputElement>(null);
 
-  const [isTimeIntervalOpen, setIsTimeIntervalOpen] = useState(false);
+  const [isTimeIntervalOpen, setIsTimeIntervalOpen] = useState(isDateTimeRangeFilterOpen);
   const [startLabel, setStartLabel] = useState<string | undefined>(
     startSelected ? formatDateTime(startSelected) : findDurationLabel(duration)
   );
@@ -99,22 +101,23 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
           <FlexItem>
             <DescriptionList>
               <DescriptionListTerm>
-                <Title headingLevel="h4">Absolute time range</Title>
+                <Title headingLevel="h4">{MetricsLabels.CalendarTitlePicker}</Title>
               </DescriptionListTerm>
               <DescriptionListGroup>
-                <DescriptionListTerm>From</DescriptionListTerm>
+                <DescriptionListTerm>{MetricsLabels.StarDatePicker}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <DateTimePicker
                     onSelect={handleSetDateTimeStart}
                     startDate={startDate}
                     defaultDate={formatDateTime(start, formatDate)}
                     defaultTime={formatDateTime(start, formatTime)}
+                    testId="date-time-picker-calendar-start"
                   />
                 </DescriptionListDescription>
               </DescriptionListGroup>
 
               <DescriptionListGroup>
-                <DescriptionListTerm>To</DescriptionListTerm>
+                <DescriptionListTerm>{MetricsLabels.EndDatePicker}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <DateTimePicker
                     onSelect={handleSetDateTimeEnd}
@@ -122,6 +125,7 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
                     startDate={startDate}
                     defaultDate={formatDateTime(end, formatDate)}
                     defaultTime={formatDateTime(end, formatTime)}
+                    testId="date-time-picker-calendar-end"
                   />
                 </DescriptionListDescription>
               </DescriptionListGroup>
@@ -133,7 +137,7 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
                     onClick={() => handleSelectFromDateTimePicker()}
                     isDisabled={!(start && end)}
                   >
-                    Apply time range
+                    {MetricsLabels.CalendarPickerButton}
                   </Button>
                 </DescriptionListDescription>
               </DescriptionListGroup>

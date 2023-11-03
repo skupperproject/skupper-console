@@ -25,6 +25,7 @@ const HighlightValueCell = function <T>({ value, format }: HighlightValueCellPro
 
   return isValueUpdated() ? (
     <div
+      data-testid="highlighted-value"
       style={{
         fontWeight: 900,
         color: VarColors.Green500

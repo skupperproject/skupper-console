@@ -34,13 +34,13 @@ describe('SkUpdateDataButton component', () => {
     );
 
     fireEvent.click(screen.getByTestId('update-data-click'));
-    expect(onClickMock).toBeCalledTimes(1);
+    expect(onClickMock).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByTestId('update-data-dropdown'));
     // use waitFor to avoid this  Warning: An update to Popper inside a test was not wrapped in act(...).
     await waitFor(() => expect(screen.getByText(refreshDataIntervalMap[2].label)).toBeInTheDocument);
 
     fireEvent.click(screen.getByText(refreshDataIntervalMap[2].label));
-    expect(onRefreshIntervalSelectedMock).toBeCalledTimes(1);
+    expect(onRefreshIntervalSelectedMock).toHaveBeenCalledTimes(1);
   });
 });

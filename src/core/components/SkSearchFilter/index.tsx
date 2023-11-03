@@ -39,12 +39,11 @@ const SkSearchFilter: FC<{ onSearch?: Function; selectOptions: { id: string; nam
     const [filterValues, setFilterValues] = useState<FilterValues>({});
     const filterDebounceValues = useDebounce<FilterValues>(filterValues, DEBOUNCE_TIME_MS);
 
-    const handleInputChange = (_event: FormEvent<HTMLInputElement>, newValue: string) => {
+    const handleInputChange = (_: FormEvent<HTMLInputElement>, newValue: string) => {
       setInputValue(newValue);
 
       if (newValue) {
-        const newFilterValues = { ...filterValues, [statusSelected]: newValue };
-        setFilterValues(newFilterValues);
+        setFilterValues({ ...filterValues, [statusSelected]: newValue });
       } else {
         handleDeleteFilter(statusSelected);
       }

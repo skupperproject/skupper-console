@@ -24,7 +24,8 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
   defaultTime = formatTime,
   isDisabled = false,
   startDate,
-  onSelect
+  onSelect,
+  testId = 'date-time-picker-calendar'
 }) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
@@ -80,11 +81,17 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
 
   const Calendar = (
     <CalendarMonth
-      data-testid="date-time-picker-calendar"
+      data-testid={testId}
       date={new Date(valueDate)}
       onChange={handleSelectCalendar}
       validators={[disablePreEndDates, disablePreStartDates]}
     />
+  );
+
+  const CalendarButton = (
+    <Button data-testid={`${testId}-button`} variant="control" onClick={handleToggleCalendar} isDisabled={isDisabled}>
+      <OutlinedCalendarAltIcon />
+    </Button>
   );
 
   const TimeDropdown = (
@@ -92,9 +99,10 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
       onSelect={handleSelectTime}
       isOpen={isTimeOpen}
       isScrollable
-      onOpenChange={(isOpen: boolean) => setIsTimeOpen(isOpen)}
+      onOpenChange={setIsTimeOpen}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
+          data-testid={`${testId}-dropdown-button`}
           ref={toggleRef}
           onClick={handleToggleTime}
           isExpanded={isTimeOpen}
@@ -112,17 +120,6 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
         ))}
       </DropdownList>
     </Dropdown>
-  );
-
-  const CalendarButton = (
-    <Button
-      data-testid="date-time-picker-calendar-button"
-      variant="control"
-      onClick={handleToggleCalendar}
-      isDisabled={isDisabled}
-    >
-      <OutlinedCalendarAltIcon />
-    </Button>
   );
 
   return (
