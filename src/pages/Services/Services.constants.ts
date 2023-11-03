@@ -2,7 +2,7 @@ import { SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SankeyFilter';
+import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { timeAgo } from '@core/utils/timeAgo';

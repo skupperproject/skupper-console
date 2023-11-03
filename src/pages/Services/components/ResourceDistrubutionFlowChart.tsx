@@ -7,10 +7,11 @@ import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
-import SankeyFilter, {
+import SankeyFilter from '@core/components/SKSanckeyChart/SankeyFilter';
+import {
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
-} from '@core/components/SKSanckeyChart/SankeyFilter';
+} from '@core/components/SKSanckeyChart/SkSankey.constants';
 
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';

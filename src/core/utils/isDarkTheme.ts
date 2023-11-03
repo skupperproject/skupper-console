@@ -3,7 +3,7 @@ import { DARK_THEME_CLASS } from '@config/config';
 export enum ThemePreference {
   Dark = DARK_THEME_CLASS
 }
-const THEME_PREFERENCE_CACHE_KEY = 'theme-preference';
+export const THEME_PREFERENCE_CACHE_KEY = 'theme-preference';
 
 export function setThemePreference(theme: string) {
   localStorage.setItem(THEME_PREFERENCE_CACHE_KEY, theme);
@@ -20,7 +20,6 @@ export function getThemePreference() {
 }
 
 export function reflectThemePreference(themeClassName: string | null) {
-  const htmlElement = document.querySelector('html') as HTMLElement;
-
+  const htmlElement = document.documentElement;
   themeClassName ? htmlElement.classList.toggle(themeClassName) : htmlElement.removeAttribute('class');
 }

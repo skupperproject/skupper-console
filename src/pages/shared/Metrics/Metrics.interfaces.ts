@@ -76,6 +76,7 @@ export interface DateTimePickerProps {
   isDisabled?: boolean;
   startDate?: Date;
   onSelect?: Function;
+  testId?: string;
 }
 
 export interface SelectTimeIntervalProps {
@@ -93,4 +94,5 @@ export interface SelectTimeIntervalProps {
   startSelected?: number;
   endSelected?: number;
   duration?: number;
+  isDateTimeRangeFilterOpen?: boolean;
 }

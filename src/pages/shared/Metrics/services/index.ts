@@ -409,7 +409,10 @@ function normalizeLatencies({
   return latenciesNormalized;
 }
 
-function normalizeByteRateFromSeries(txData: PrometheusApiResult[], rxData: PrometheusApiResult[]): ByteRateMetrics {
+function normalizeByteRateFromSeries(
+  txData: PrometheusApiResult[] | [],
+  rxData: PrometheusApiResult[] | []
+): ByteRateMetrics {
   const axisValuesTx = extractPrometheusValues(txData);
   const axisValuesRx = extractPrometheusValues(rxData);
 

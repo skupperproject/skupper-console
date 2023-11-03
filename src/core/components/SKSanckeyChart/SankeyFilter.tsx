@@ -13,36 +13,8 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-interface FilterValues {
-  [key: string]: string | undefined;
-}
-
-export const sankeyMetricOptions = [
-  { id: 'none', name: 'Display only relationships' },
-  { id: 'byterate', name: 'Compare avg. byterate (last hour)' }
-];
-
-export const ServiceClientResourceOptions: { name: string; id: 'client' | 'clientSite' }[] = [
-  {
-    name: 'Client sites',
-    id: 'clientSite'
-  },
-  {
-    name: 'Client processes',
-    id: 'client'
-  }
-];
-
-export const ServiceServerResourceOptions: { name: string; id: 'server' | 'serverSite' }[] = [
-  {
-    name: 'Server sites',
-    id: 'serverSite'
-  },
-  {
-    name: 'Server processes',
-    id: 'server'
-  }
-];
+import { ServiceClientResourceOptions, ServiceServerResourceOptions, sankeyMetricOptions } from './SkSankey.constants';
+import { SankeyFilterValues } from './SkSankeyChart.interfaces';
 
 const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   const [isClientExpanded, setIsClientExpanded] = useState(false);
@@ -55,21 +27,21 @@ const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   const [visibleMetrics, setVisibleMetrics] = useState(sankeyMetricOptions[0].id);
 
   const handleSelectClient = (_?: ReactMouseEvent<Element, MouseEvent>, selected?: string | number) => {
-    const selection = selected as keyof FilterValues;
+    const selection = selected as keyof SankeyFilterValues;
 
     setClientType(selection as 'client' | 'clientSite');
     setIsClientExpanded(false);
   };
 
   const handleSelectServer = (_?: ReactMouseEvent<Element, MouseEvent>, selected?: string | number) => {
-    const selection = selected as keyof FilterValues;
+    const selection = selected as keyof SankeyFilterValues;
 
     setServerType(selection as 'server' | 'serverSite');
     setIsServerExpanded(false);
   };
 
   const handleMetricSelect = (_?: ReactMouseEvent<Element, MouseEvent>, selected?: string | number) => {
-    const selection = selected as keyof FilterValues;
+    const selection = selected as keyof SankeyFilterValues;
 
     setVisibleMetrics(selection as string);
     setIsMetricExpanded(false);
@@ -185,7 +157,7 @@ const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   );
 
   return (
-    <Toolbar collapseListedFiltersBreakpoint="xl">
+    <Toolbar data-testid="sankey-filter" collapseListedFiltersBreakpoint="xl">
       <ToolbarContent>{toolbarItems}</ToolbarContent>
     </Toolbar>
   );
