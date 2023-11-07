@@ -37,7 +37,7 @@ const shape = {
 
 const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
   kubernetes: kubernetesIcon,
-  pdoman: podmanIcon
+  podman: podmanIcon
 };
 
 export const TopologyController = {

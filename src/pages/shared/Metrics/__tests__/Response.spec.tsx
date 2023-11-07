@@ -12,12 +12,12 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import Request from '../components/Request';
+import Response from '../components/Response';
 import { MetricsLabels } from '../Metrics.enum';
 
 const processResult = processesData.results[0] as ProcessResponse;
 
-describe('Request component', () => {
+describe('Response component', () => {
   let server: Server;
   beforeEach(() => {
     server = loadMockServer() as Server;
@@ -29,11 +29,11 @@ describe('Request component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Request section of the metric', async () => {
+  it('should render the Reponse section of the metric', async () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Request
+          <Response
             selectedFilters={{
               sourceProcess: processResult.name
             }}
@@ -48,18 +48,18 @@ describe('Request component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.RequestsTitle)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.ResposeTitle)).toBeInTheDocument();
   });
 
-  it('should not render the Request section', async () => {
+  it('should not render the Response section', async () => {
     jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodInInTimeRange')
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange')
       .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Request
+          <Response
             selectedFilters={{
               sourceProcess: processResult.name
             }}
@@ -74,6 +74,6 @@ describe('Request component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.queryByText(MetricsLabels.RequestsTitle)).not.toBeInTheDocument();
+    expect(screen.queryByText(MetricsLabels.ResposeTitle)).not.toBeInTheDocument();
   });
 });
