@@ -55,7 +55,7 @@ COLLECTOR_URL=https://skupper-valerio-boutique-dallas.skupper-2-153f1de160110098
 
 These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
 
-### Run the console with Skupper
+### Run the console from Skupper
 
 When running skupper, executing `skupper init --enable-flow-collector` will generate a publicly accessible route to the collector. This route can be secured or unsecured, depending on the desired level of security.
 
@@ -77,6 +77,9 @@ example:
 ```bash
 kubectl set env deployment/skupper-service-controller USE_CORS=yes
 ```
+
+**Run skupper without authentication**
+This standalone mode is intended for development purposes and does not work with a Skupper network that require authorization. However, in the case of Basic Auth, you can use any browser plugin to set the header property "Authorization: Basic < base64 of username:password >". In this last case the logout is does not work because we override the values of this header property every time.
 
 ## Testing
 

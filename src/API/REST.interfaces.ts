@@ -47,6 +47,11 @@ interface BaseResponse {
   endTime: number;
 }
 
+export interface UserResponse {
+  username: string;
+  authType: 'internal' | 'openshift';
+}
+
 export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;

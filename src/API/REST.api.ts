@@ -13,7 +13,8 @@ import {
   ResponseWrapper,
   CollectorsResponse,
   SitePairsResponse,
-  ProcessGroupPairsResponse
+  ProcessGroupPairsResponse,
+  UserResponse
 } from './REST.interfaces';
 import {
   getFlowsPairsByServicePATH,
@@ -42,7 +43,9 @@ import {
   getProcessPairsPATH,
   getProcessGroupsPATH,
   getCollectors,
-  getProcessPairsByServicePATH
+  getProcessPairsByServicePATH,
+  logout,
+  getUser
 } from './REST.paths';
 import { mapOptionsToQueryParams, getApiResults } from './REST.utils';
 
@@ -52,6 +55,11 @@ export const RESTApi = {
 
     return getApiResults<CollectorsResponse[]>(data)[0];
   },
+
+  //for logout with auth basic the response return 401 but using validateStatus: () => true axios will not throw error
+  fetchLogout: async (): Promise<string> => axiosFetch<string>(logout(), { validateStatus: () => true }),
+
+  fetchUser: async (): Promise<UserResponse> => axiosFetch<UserResponse>(getUser()),
 
   // SITES APIs
   fetchSites: async (options?: RequestOptions): Promise<SiteResponse[]> => {
