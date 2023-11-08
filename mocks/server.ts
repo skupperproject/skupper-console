@@ -143,12 +143,21 @@ export const MockApi = {
   get503Error: () => new Response(503),
   get404Error: () => new Response(404),
   getCollectors: () => collectors,
+
+  getUser: () => ({
+    username: 'IAM#Mock-User@user.mock',
+    authType: 'openshift'
+  }),
+
+  logout: () => ({}),
+
   getSites: () => {
     const sitesForPerfTests = ITEM_COUNT ? mockSitesForPerf : [];
     const results = [...sites.results, ...sitesForPerfTests];
 
     return { ...sites, results };
   },
+
   getSite: (_: unknown, { params: { id } }: ApiProps) => ({
     results: sites.results.find(({ identity }) => identity === id) || []
   }),
@@ -315,6 +324,8 @@ export const MockApi = {
 // api paths
 export const MockApiPaths = {
   Collectors: `${prefix}/collectors`,
+  User: `${prefix}/user`,
+  Logout: `${prefix}/logout`,
   Sites: `${prefix}/sites`,
   Site: `${prefix}/sites/:id`,
   Components: `${prefix}/processgroups`,
@@ -341,6 +352,8 @@ export function loadMockServer() {
       this.pretender.get('*', this.pretender.passthrough);
 
       this.get('', MockApi.get500Error);
+      this.get(MockApiPaths.User, MockApi.getUser);
+      this.get(MockApiPaths.Logout, MockApi.logout);
       this.get(MockApiPaths.Collectors, MockApi.getCollectors);
       this.get(MockApiPaths.Sites, MockApi.getSites);
       this.get(MockApiPaths.Site, MockApi.getSite);

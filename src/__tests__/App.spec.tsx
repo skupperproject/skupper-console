@@ -5,8 +5,7 @@ import { Server } from 'miragejs';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';
-
-import App from '../App';
+import App from 'App';
 
 describe('Begin testing the App component', () => {
   let server: Server;
