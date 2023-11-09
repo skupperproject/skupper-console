@@ -1,7 +1,6 @@
-import { ChangeEvent, ComponentType, FC, MouseEvent, startTransition, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, startTransition, useCallback, useEffect, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
-import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { useQueries } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -17,6 +16,7 @@ import { QueriesServices } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
 import DisplaySelect from './DisplaySelect';
+import DisplayServices from './DisplayServices';
 import { TopologyController } from '../services';
 import {
   ROTATE_LINK_LABEL,
@@ -33,7 +33,6 @@ import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 const ZOOM_CACHE_KEY = 'process';
 const DISPLAY_OPTIONS = 'display-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
-const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 
 const externalProcessesQueryParams = {
   processRole: 'external'
@@ -54,7 +53,6 @@ const TopologyProcesses: FC<{
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
-  const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
   const [serviceIdSelected, setServiceIdSelected] = useState(serviceId);
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
     localStorage.getItem(DISPLAY_OPTIONS)
@@ -68,7 +66,6 @@ const TopologyProcesses: FC<{
   );
 
   const [
-    { data: services },
     { data: sites },
     { data: externalProcesses },
     { data: remoteProcesses },
@@ -77,10 +74,6 @@ const TopologyProcesses: FC<{
     { data: metrics }
   ] = useQueries({
     queries: [
-      {
-        queryKey: [QueriesServices.GetServices],
-        queryFn: () => RESTApi.fetchServices()
-      },
       {
         queryKey: [QueriesSites.GetSites],
         queryFn: () => RESTApi.fetchSites(),
@@ -176,62 +169,23 @@ const TopologyProcesses: FC<{
     localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selected));
   }, []);
 
-  function handleToggleServiceMenu(openServiceMenu: boolean) {
-    setIsServiceSelectMenuOpen(openServiceMenu);
-  }
+  const handleSelectService = useCallback(
+    (idSelected: string) => {
+      searchParams.delete('serviceId');
+      let params = Object.fromEntries([...searchParams]);
 
-  function handleSelectService(
-    _: MouseEvent | ChangeEvent,
-    selection: string | SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
-    const id = isPlaceholder ? undefined : (selection as string);
+      if (idSelected) {
+        params = { ...params, serviceId: idSelected };
+      }
 
-    searchParams.delete('serviceId');
-    let params = Object.fromEntries([...searchParams]);
+      setSearchParams(params);
 
-    if (id) {
-      params = { ...params, serviceId: id };
-    }
-
-    setIsServiceSelectMenuOpen(false);
-    setSearchParams(params);
-
-    startTransition(() => {
-      setServiceIdSelected(id);
-    });
-  }
-
-  function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {
-    const options = getOptions();
-
-    if (!value) {
-      return options;
-    }
-
-    return options
-      .filter((element) =>
-        element.props.children
-          ? element.props.children.toString().toLowerCase().includes(value.toLowerCase())
-          : undefined
-      )
-      .filter(Boolean);
-  }
-
-  const getOptions = useCallback(() => {
-    const options = (services?.results || []).map(({ name, identity }, index) => (
-      <SelectOption key={index + 1} value={identity}>
-        {name}
-      </SelectOption>
-    ));
-
-    const optionsWithDefault = [
-      <SelectOption key={0} value={TopologyLabels.ShowAll} isPlaceholder />,
-      ...(options || [])
-    ];
-
-    return optionsWithDefault;
-  }, [services?.results]);
+      startTransition(() => {
+        setServiceIdSelected(idSelected);
+      });
+    },
+    [searchParams, setSearchParams]
+  );
 
   useEffect(() => {
     if (!sites || !externalProcesses || !remoteProcesses || !processesPairs) {
@@ -342,19 +296,7 @@ const TopologyProcesses: FC<{
     <Toolbar>
       <ToolbarContent>
         <ToolbarItem>
-          <Select
-            role="service-select"
-            isOpen={isServiceSelectMenuOpen}
-            onSelect={handleSelectService}
-            onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
-            selections={serviceIdSelected}
-            hasInlineFilter
-            inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
-            onFilter={handleFindServices}
-            maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
-          >
-            {getOptions()}
-          </Select>
+          <DisplayServices serviceId={serviceId} onSelect={handleSelectService} />
         </ToolbarItem>
 
         <ToolbarItem>
