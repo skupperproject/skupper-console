@@ -43,7 +43,8 @@
       "groupIdentity": "group-2",
       "hostName": "10.242.0.4",
       "sourceHost": "172.17.13.250",
-      "processRole": "external"
+      "processRole": "external",
+      "addresses": ["process 2:3000@process 2:300"]
     },
     {
       "recType": "PROCESS",
@@ -58,7 +59,8 @@
       "groupIdentity": "group-2",
       "hostName": "10.242.0.2",
       "sourceHost": "172.17.13.251",
-      "processRole": "external"
+      "processRole": "external",
+      "addresses": ["process 2:3000@process 2:300"]
     },
     {
       "recType": "PROCESS",
@@ -73,7 +75,8 @@
       "groupIdentity": "group-2",
       "hostName": "10.242.0.3",
       "sourceHost": "172.17.13.253",
-      "processRole": "external"
+      "processRole": "external",
+      "addresses": ["process-alone:4900@process-alone:4900"]
     },
     {
       "recType": "PROCESS",
@@ -88,7 +91,8 @@
       "groupIdentity": "group-3",
       "hostName": "10.242.0.3",
       "sourceHost": "172.17.12.233",
-      "processRole": "remote"
+      "processRole": "remote",
+      "addresses": ["process-nb:8000@process-nb:8000"]
     },
     {
       "recType": "PROCESS",

@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useState } from 'react';
 
-import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
+import { Select, SelectOption, SelectOptionObject, SelectVariant } from '@patternfly/react-core/deprecated';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
@@ -12,10 +12,10 @@ import { TopologyLabels } from '../Topology.enum';
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 
 const DisplayServices: FC<{
-  serviceId?: string;
+  serviceId?: string[];
   onSelect: Function;
 }> = function ({ serviceId, onSelect }) {
-  const [serviceIdSelected, setServiceIdSelected] = useState(serviceId);
+  const [serviceIdSelected, setServiceIdSelected] = useState(serviceId ? serviceId : []);
   const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
 
   const { data: services } = useQuery({
@@ -25,22 +25,33 @@ const DisplayServices: FC<{
     placeholderData: keepPreviousData
   });
 
+  const addDisplayOptionToSelection = useCallback(
+    (selected: string) => [...(serviceIdSelected || []), selected],
+    [serviceIdSelected]
+  );
+
+  const removeDisplayOptionToSelection = useCallback(
+    (selected: string) => serviceIdSelected?.filter((option) => option !== selected),
+    [serviceIdSelected]
+  );
+
   function handleToggleServiceMenu(openServiceMenu: boolean) {
     setIsServiceSelectMenuOpen(openServiceMenu);
   }
 
-  function handleSelectService(
-    _: MouseEvent | ChangeEvent,
-    selection: string | SelectOptionObject,
-    isPlaceholder?: boolean
-  ) {
-    const id = isPlaceholder ? undefined : (selection as string);
+  function handleSelectService(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) {
+    const currentSelected = selection as string;
 
-    setServiceIdSelected(id);
-    setIsServiceSelectMenuOpen(false);
+    const isSelected = currentSelected ? serviceIdSelected.includes(currentSelected) : undefined;
+
+    const newSelectedOptions = isSelected
+      ? removeDisplayOptionToSelection(currentSelected)
+      : addDisplayOptionToSelection(currentSelected);
+
+    setServiceIdSelected(newSelectedOptions);
 
     if (onSelect) {
-      onSelect(id);
+      onSelect(newSelectedOptions);
     }
   }
 
@@ -60,25 +71,22 @@ const DisplayServices: FC<{
       .filter(Boolean);
   }
 
-  const getOptions = useCallback(() => {
-    const options = (services?.results || []).map(({ name, identity }, index) => (
-      <SelectOption key={index + 1} value={identity}>
-        {name}
-      </SelectOption>
-    ));
-
-    const optionsWithDefault = [
-      <SelectOption key={0} value={TopologyLabels.ShowAll} isPlaceholder />,
-      ...(options || [])
-    ];
-
-    return optionsWithDefault;
-  }, [services?.results]);
+  const getOptions = useCallback(
+    () =>
+      (services?.results || []).map(({ name, identity }, index) => (
+        <SelectOption key={index + 1} value={identity} checked={serviceIdSelected.includes(identity)}>
+          {name}
+        </SelectOption>
+      )),
+    [serviceIdSelected, services?.results]
+  );
 
   return (
     <Select
       role="service-select"
+      variant={SelectVariant.checkbox}
       isOpen={isServiceSelectMenuOpen}
+      placeholderText={TopologyLabels.ShowAll}
       onSelect={handleSelectService}
       onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
       selections={serviceIdSelected}
@@ -86,6 +94,7 @@ const DisplayServices: FC<{
       inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
       onFilter={handleFindServices}
       maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
+      isCheckboxSelectionBadgeHidden
     >
       {getOptions()}
     </Select>

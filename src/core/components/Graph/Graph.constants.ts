@@ -60,7 +60,9 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   nodeClusterBy: 'cluster',
   clusterNodeStrength: 100,
   gravity: 10,
-  edgeStrength: 1
+  edgeStrength: 1,
+  animate: false,
+  maxIteration: 200
 };
 
 export const DEFAULT_NODE_ICON = {

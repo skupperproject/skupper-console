@@ -1,7 +1,7 @@
 import { ComponentType, FC, startTransition, useCallback, useEffect, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -12,7 +12,6 @@ import { GraphEdge, GraphCombo, GraphNode, GraphReactAdaptorProps } from '@core/
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
-import { QueriesServices } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
 import DisplaySelect from './DisplaySelect';
@@ -32,6 +31,7 @@ import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
 const ZOOM_CACHE_KEY = 'process';
 const DISPLAY_OPTIONS = 'display-options';
+const SERVICE_OPTIONS = 'service-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
 
 const externalProcessesQueryParams = {
@@ -53,7 +53,13 @@ const TopologyProcesses: FC<{
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
-  const [serviceIdSelected, setServiceIdSelected] = useState(serviceId);
+  const [serviceIdSelected, setServiceIdSelected] = useState<string[] | undefined>(
+    serviceId
+      ? [serviceId]
+      : localStorage.getItem(SERVICE_OPTIONS)
+      ? JSON.parse(localStorage.getItem(SERVICE_OPTIONS) || '')
+      : undefined
+  );
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
     localStorage.getItem(DISPLAY_OPTIONS)
       ? JSON.parse(localStorage.getItem(DISPLAY_OPTIONS) || '')
@@ -65,62 +71,51 @@ const TopologyProcesses: FC<{
     [displayOptionsSelected]
   );
 
-  const [
-    { data: sites },
-    { data: externalProcesses },
-    { data: remoteProcesses },
-    { data: processesPairs },
-    { data: serversByService },
-    { data: metrics }
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesSites.GetSites],
-        queryFn: () => RESTApi.fetchSites(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesServices.GetProcessesByService, serviceIdSelected],
-        queryFn: () => RESTApi.fetchServersByService(serviceIdSelected || ''),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !!serviceIdSelected
-      },
-      {
-        queryKey: [
-          QueriesTopology.GetBytesByProcessPairs,
-          isDisplayOptionActive(SHOW_LINK_BYTES),
-          isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          isDisplayOptionActive(SHOW_LINK_LATENCY)
-        ],
-        queryFn: () =>
-          TopologyController.getMetrics({
-            showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-            showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-            params: {
-              fetchBytes: { groupBy: 'destProcess, sourceProcess,direction' },
-              fetchByteRate: { groupBy: 'destProcess, sourceProcess,direction' },
-              fetchLatency: { groupBy: 'sourceProcess, destProcess' }
-            }
-          }),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
+  const [{ data: sites }, { data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] =
+    useQueries({
+      queries: [
+        {
+          queryKey: [QueriesSites.GetSites],
+          queryFn: () => RESTApi.fetchSites(),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+          queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+          queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesTopology.GetProcessesPairs],
+          queryFn: () => RESTApi.fetchProcessesPairsResult(),
+          refetchInterval: UPDATE_INTERVAL
+        }
+      ]
+    });
+
+  const { data: metrics } = useQuery({
+    queryKey: [
+      QueriesTopology.GetBytesByProcessPairs,
+      isDisplayOptionActive(SHOW_LINK_BYTES),
+      isDisplayOptionActive(SHOW_LINK_BYTERATE),
+      isDisplayOptionActive(SHOW_LINK_LATENCY)
+    ],
+    queryFn: () =>
+      TopologyController.getMetrics({
+        showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+        showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+        showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+        params: {
+          fetchBytes: { groupBy: 'destProcess, sourceProcess,direction' },
+          fetchByteRate: { groupBy: 'destProcess, sourceProcess,direction' },
+          fetchLatency: { groupBy: 'sourceProcess, destProcess' }
+        }
+      }),
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const handleGetSelectedGroup = useCallback(
@@ -161,38 +156,32 @@ const TopologyProcesses: FC<{
     [navigate, externalProcesses, remoteProcesses, processesPairs]
   );
 
-  const handleDisplaySelect = useCallback((selected: string[]) => {
+  const handleDisplaySelect = useCallback((idSelected: string[]) => {
     startTransition(() => {
-      setDisplayOptions(selected);
+      setDisplayOptions(idSelected);
     });
 
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selected));
+    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(idSelected));
   }, []);
 
-  const handleSelectService = useCallback(
-    (idSelected: string) => {
+  const handleServiceSelect = useCallback(
+    (idSelected: string[]) => {
       searchParams.delete('serviceId');
       let params = Object.fromEntries([...searchParams]);
 
-      if (idSelected) {
-        params = { ...params, serviceId: idSelected };
+      if (idSelected.length === 1) {
+        params = { ...params, serviceId: idSelected[0] };
       }
 
       setSearchParams(params);
-
-      startTransition(() => {
-        setServiceIdSelected(idSelected);
-      });
+      setServiceIdSelected(idSelected);
+      localStorage.setItem(SERVICE_OPTIONS, JSON.stringify(idSelected));
     },
     [searchParams, setSearchParams]
   );
 
   useEffect(() => {
     if (!sites || !externalProcesses || !remoteProcesses || !processesPairs) {
-      return;
-    }
-
-    if (serviceIdSelected && !serversByService?.results) {
       return;
     }
 
@@ -228,8 +217,14 @@ const TopologyProcesses: FC<{
     let pPairs = processesPairs;
     let processes = [...externalProcesses, ...remoteProcesses];
 
-    if (serviceIdSelected && serversByService?.results) {
-      const serverIds = serversByService.results.map(({ identity }) => identity);
+    if (serviceIdSelected?.length) {
+      const serverIds = processes
+        // the format of one address is  serviceName@seviceId
+        .filter(
+          ({ addresses }) =>
+            addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdSelected?.includes(address))
+        )
+        .map(({ identity }) => identity);
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
@@ -263,8 +258,7 @@ const TopologyProcesses: FC<{
     serviceIdSelected,
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs,
-    serversByService?.results
+    metrics?.latencyByProcessPairs
   ]);
 
   const displayOptions = displayOptionsForProcesses.map((option) => {
@@ -296,7 +290,7 @@ const TopologyProcesses: FC<{
     <Toolbar>
       <ToolbarContent>
         <ToolbarItem>
-          <DisplayServices serviceId={serviceId} onSelect={handleSelectService} />
+          <DisplayServices serviceId={serviceIdSelected} onSelect={handleServiceSelect} />
         </ToolbarItem>
 
         <ToolbarItem>

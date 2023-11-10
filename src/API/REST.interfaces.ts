@@ -71,7 +71,7 @@ export interface ProcessResponse extends BaseResponse {
   hostName: string;
   processBinding: 'bound' | 'unbound';
   processRole: 'external' | 'internal' | 'remote';
-  addresses: string[];
+  addresses?: string[];
 }
 
 export interface ProcessPairsResponse extends BaseResponse {
