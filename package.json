@@ -44,7 +44,7 @@
     "@patternfly/react-icons": "^5.1.1",
     "@patternfly/react-table": "^5.1.1",
     "@tanstack/react-query": "^5.4.3",
-    "axios": "^1.6.0",
+    "axios": "^1.6.1",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.4",
     "react": "^18.2.0",
@@ -113,5 +113,10 @@
     ">10%",
     "last 2 versions",
     "not ie <= 11"
-  ]
+  ],
+  "resolutions": {
+    "d3-interpolate": "3.0.1",
+    "d3-scale-chromatic": "3.0.0",
+    "d3-color": "3.1.0"
+  }
 }
