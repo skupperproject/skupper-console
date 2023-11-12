@@ -53,8 +53,8 @@
     "react-router-dom": "^6.18.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.2.0",
-    "@commitlint/config-conventional": "^18.2.0",
+    "@commitlint/cli": "^18.3.0",
+    "@commitlint/config-conventional": "^18.3.0",
     "@cypress/webpack-preprocessor": "^6.0.0",
     "@testing-library/dom": "^9.3.3",
     "@testing-library/jest-dom": "^6.1.4",
