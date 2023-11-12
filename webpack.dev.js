@@ -1,7 +1,6 @@
 const { merge } = require('webpack-merge');
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const commonConfig = require('./webpack.common');
 
@@ -18,7 +17,6 @@ const devConfig = {
   },
 
   plugins: [
-    new ForkTsCheckerWebpackPlugin(),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
       failOnError: true,

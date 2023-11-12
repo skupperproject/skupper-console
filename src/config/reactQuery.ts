@@ -1,6 +1,8 @@
-/* eslint-disable no-console */
+import { QueryObserverOptions } from '@tanstack/react-query';
 
-import { QueryClientConfig } from '@tanstack/react-query';
+interface QueryClientConfig {
+  defaultOptions: { queries: QueryObserverOptions };
+}
 
 /** React query library config: contains configuration options for the React query library, used for fetching and caching data in the UI */
 export const queryClientConfig: QueryClientConfig = {
