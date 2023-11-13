@@ -45,52 +45,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const itemSelectedRef = useRef(itemSelected);
     const topologyGraphRef = useRef<Graph>();
 
-    /** Simulate a MouseEnter event, regardless of whether a node or edge is preselected */
-    function setTopologyStateByNodeSelected(nodeSelected?: string) {
-      const graphInstance = topologyGraphRef.current;
-
-      if (graphInstance && nodeSelected) {
-        const item = graphInstance.findById(nodeSelected);
-
-        if (item) {
-          if (item.get('type') === 'node') {
-            handleNodeMouseEnter({ currentTarget: graphInstance, item });
-          }
-
-          if (item.get('type') === 'edge') {
-            handleEdgeMouseEnter({ currentTarget: graphInstance, item });
-          }
-        }
-      }
-
-      // handleNodeMouseEnter and handleEdgeMouseEnter set hoverState to true and block any update when we changeData in the useState
-      isHoverState.current = false;
-    }
-
-    /** Topology events */
-
-    // NODE EVENTS
-    function handleNodeClick({ item }: G6GraphEvent) {
-      if (onClickNode) {
-        onClickNode(item.getModel());
-      }
-    }
-
-    function handleNodeDragStart() {
-      isHoverState.current = true;
-    }
-
-    function handleNodeDragEnd({ item }: G6GraphEvent) {
-      const updatedNodes = GraphController.fromNodesToLocalStorageData(
-        [item as INode],
-        ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-      );
-
-      GraphController.saveNodePositionsToLocalStorage(updatedNodes);
-      isHoverState.current = false;
-    }
-
-    function handleNodeMouseEnter({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
+    const handleNodeMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
       isHoverState.current = true;
 
       const node = item as INode;
@@ -124,6 +79,79 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       if (comboId) {
         handleComboMouseEnter({ currentTarget, item: currentTarget.findById(comboId) });
       }
+    }, []);
+
+    const handleEdgeMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
+      isHoverState.current = true;
+
+      const edge = item as IEdge;
+      const source = edge.getSource();
+      const target = edge.getTarget();
+
+      currentTarget.getNodes().forEach((node) => {
+        if (node.getID() !== source.getID() && node.getID() !== target.getID()) {
+          currentTarget.setItemState(node, 'hidden', true);
+        } else {
+          currentTarget.setItemState(node, 'hidden', false);
+        }
+      });
+
+      currentTarget.getEdges().forEach((topologyEdge) => {
+        if (edge.getID() !== topologyEdge.getID()) {
+          topologyEdge.hide();
+        } else {
+          topologyEdge.show();
+        }
+      });
+
+      currentTarget.setItemState(edge, 'hover', true);
+    }, []);
+    /** Simulate a MouseEnter event, regardless of whether a node or edge is preselected */
+    const setTopologyStateByNodeSelected = useCallback(
+      (nodeSelected?: string) => {
+        const graphInstance = topologyGraphRef.current;
+
+        if (graphInstance && nodeSelected) {
+          const item = graphInstance.findById(nodeSelected);
+
+          if (item) {
+            if (item.get('type') === 'node') {
+              handleNodeMouseEnter({ currentTarget: graphInstance, item });
+            }
+
+            if (item.get('type') === 'edge') {
+              handleEdgeMouseEnter({ currentTarget: graphInstance, item });
+            }
+          }
+        }
+
+        // handleNodeMouseEnter and handleEdgeMouseEnter set hoverState to true and block any update when we changeData in the useState
+        isHoverState.current = false;
+      },
+      [handleEdgeMouseEnter, handleNodeMouseEnter]
+    );
+
+    /** Topology events */
+
+    // NODE EVENTS
+    function handleNodeClick({ item }: G6GraphEvent) {
+      if (onClickNode) {
+        onClickNode(item.getModel());
+      }
+    }
+
+    function handleNodeDragStart() {
+      isHoverState.current = true;
+    }
+
+    function handleNodeDragEnd({ item }: G6GraphEvent) {
+      const updatedNodes = GraphController.fromNodesToLocalStorageData(
+        [item as INode],
+        ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+      );
+
+      GraphController.saveNodePositionsToLocalStorage(updatedNodes);
+      isHoverState.current = false;
     }
 
     function handleNodeMouseLeave({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
@@ -155,32 +183,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       if (onClickEdge) {
         onClickEdge(item.getModel());
       }
-    }
-
-    function handleEdgeMouseEnter({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
-      isHoverState.current = true;
-
-      const edge = item as IEdge;
-      const source = edge.getSource();
-      const target = edge.getTarget();
-
-      currentTarget.getNodes().forEach((node) => {
-        if (node.getID() !== source.getID() && node.getID() !== target.getID()) {
-          currentTarget.setItemState(node, 'hidden', true);
-        } else {
-          currentTarget.setItemState(node, 'hidden', false);
-        }
-      });
-
-      currentTarget.getEdges().forEach((topologyEdge) => {
-        if (edge.getID() !== topologyEdge.getID()) {
-          topologyEdge.hide();
-        } else {
-          topologyEdge.show();
-        }
-      });
-
-      currentTarget.setItemState(edge, 'hover', true);
     }
 
     function handleEdgeMouseLeave(evt: { currentTarget: Graph; item: Item }) {
@@ -304,17 +306,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
         const data = GraphController.getG6Model({ edges, nodes, combos });
 
-        const width = $node.scrollWidth;
-        const height = $node.scrollHeight;
-
         const options: GraphOptions = {
           container: $node,
-          width,
-          height,
-          layout: {
-            ...DEFAULT_LAYOUT_FORCE_CONFIG,
-            center: [width / 2, height / 2]
-          },
+          layout: DEFAULT_LAYOUT_FORCE_CONFIG,
           ...DEFAULT_GRAPH_CONFIG
         };
 
@@ -392,7 +386,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         prevEdgesRef.current = edges;
         prevCombosRef.current = combos;
       }
-    }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
+    }, [nodesWithoutPosition, edges, combos, isGraphLoaded, setTopologyStateByNodeSelected]);
 
     // This effect handle the resize of the topology when the browser window changes size.
     useLayoutEffect(() => {
@@ -401,6 +395,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       if (!graphInstance || graphInstance.get('destroyed')) {
         return;
       }
+
       const container = graphInstance?.getContainer();
       if (!container) {
         return;
