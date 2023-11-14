@@ -45,41 +45,48 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const itemSelectedRef = useRef(itemSelected);
     const topologyGraphRef = useRef<Graph>();
 
-    const handleNodeMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
-      isHoverState.current = true;
-
-      const node = item as INode;
-      const neighbors = node.getNeighbors();
-      const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
-
-      currentTarget.getNodes().forEach((n: INode) => {
-        currentTarget.setItemState(n, 'hover', false);
-
-        if (node.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
-          currentTarget.setItemState(n, 'hidden', true);
-          n.toBack();
-        } else {
-          currentTarget.setItemState(n, 'hidden', false);
-        }
-      });
-
-      currentTarget.getEdges().forEach((topologyEdge: IEdge) => {
-        if (node.getID() !== topologyEdge.getSource().getID() && node.getID() !== topologyEdge.getTarget().getID()) {
-          topologyEdge.hide();
-        } else {
-          topologyEdge.show();
-        }
-      });
-
-      currentTarget.setItemState(node, 'hover', true);
-
-      // keep the parent combo selected if exist
-      const comboId = node.getModel()?.comboId as string | undefined;
-
-      if (comboId) {
-        handleComboMouseEnter({ currentTarget, item: currentTarget.findById(comboId) });
-      }
+    const handleComboMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
+      currentTarget.setItemState(item, 'hover', true);
     }, []);
+
+    const handleNodeMouseEnter = useCallback(
+      ({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
+        isHoverState.current = true;
+
+        const node = item as INode;
+        const neighbors = node.getNeighbors();
+        const neighborsIds = neighbors.map((neighbor) => neighbor.getID());
+
+        currentTarget.getNodes().forEach((n: INode) => {
+          currentTarget.setItemState(n, 'hover', false);
+
+          if (node.getID() !== n.getID() && !neighborsIds.includes(n.getID())) {
+            currentTarget.setItemState(n, 'hidden', true);
+            n.toBack();
+          } else {
+            currentTarget.setItemState(n, 'hidden', false);
+          }
+        });
+
+        currentTarget.getEdges().forEach((topologyEdge: IEdge) => {
+          if (node.getID() !== topologyEdge.getSource().getID() && node.getID() !== topologyEdge.getTarget().getID()) {
+            topologyEdge.hide();
+          } else {
+            topologyEdge.show();
+          }
+        });
+
+        currentTarget.setItemState(node, 'hover', true);
+
+        // keep the parent combo selected if exist
+        const comboId = node.getModel()?.comboId as string | undefined;
+
+        if (comboId) {
+          handleComboMouseEnter({ currentTarget, item: currentTarget.findById(comboId) });
+        }
+      },
+      [handleComboMouseEnter]
+    );
 
     const handleEdgeMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
       isHoverState.current = true;
@@ -107,7 +114,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       currentTarget.setItemState(edge, 'hover', true);
     }, []);
     /** Simulate a MouseEnter event, regardless of whether a node or edge is preselected */
-    const setTopologyStateByNodeSelected = useCallback(
+    const handleMouseEnter = useCallback(
       (nodeSelected?: string) => {
         const graphInstance = topologyGraphRef.current;
 
@@ -134,17 +141,20 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     /** Topology events */
 
     // NODE EVENTS
-    function handleNodeClick({ item }: G6GraphEvent) {
-      if (onClickNode) {
-        onClickNode(item.getModel());
-      }
-    }
+    const handleNodeClick = useCallback(
+      ({ item }: G6GraphEvent) => {
+        if (onClickNode) {
+          onClickNode(item.getModel());
+        }
+      },
+      [onClickNode]
+    );
 
-    function handleNodeDragStart() {
+    const handleNodeDragStart = useCallback(() => {
       isHoverState.current = true;
-    }
+    }, []);
 
-    function handleNodeDragEnd({ item }: G6GraphEvent) {
+    const handleNodeDragEnd = useCallback(({ item }: G6GraphEvent) => {
       const updatedNodes = GraphController.fromNodesToLocalStorageData(
         [item as INode],
         ({ id, x, y }: LocalStorageData) => ({ id, x, y })
@@ -152,55 +162,71 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       GraphController.saveNodePositionsToLocalStorage(updatedNodes);
       isHoverState.current = false;
-    }
+    }, []);
 
-    function handleNodeMouseLeave({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
+    const handleComboMouseLeave = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
       currentTarget.setItemState(item, 'hover', false);
+    }, []);
 
-      currentTarget.findAllByState('node', 'hidden').forEach((node) => {
-        currentTarget.setItemState(node, 'hidden', false);
-      });
+    const handleNodeMouseLeave = useCallback(
+      ({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
+        currentTarget.setItemState(item, 'hover', false);
 
-      // when we back from an other view and we leave a node we must erase links status
-      currentTarget.getEdges().forEach((topologyEdge) => {
-        topologyEdge.show();
-        currentTarget.setItemState(topologyEdge, 'hover', false);
-      });
+        currentTarget.findAllByState('node', 'hidden').forEach((node) => {
+          currentTarget.setItemState(node, 'hidden', false);
+        });
 
-      // we need to remove the combo highlight if we leave the node label outside the combo boc
-      const comboId = item.getModel()?.comboId as string | undefined;
+        // when we back from an other view and we leave a node we must erase links status
+        currentTarget.getEdges().forEach((topologyEdge) => {
+          topologyEdge.show();
+          currentTarget.setItemState(topologyEdge, 'hover', false);
+        });
 
-      if (comboId) {
-        handleComboMouseLeave({ currentTarget, item: currentTarget.findById(comboId) });
-      }
+        // we need to remove the combo highlight if we leave the node label outside the combo boc
+        const comboId = item.getModel()?.comboId as string | undefined;
 
-      itemSelectedRef.current = undefined;
-      isHoverState.current = false;
-    }
+        if (comboId) {
+          handleComboMouseLeave({ currentTarget, item: currentTarget.findById(comboId) });
+        }
+
+        itemSelectedRef.current = undefined;
+        isHoverState.current = false;
+      },
+      [handleComboMouseLeave]
+    );
 
     // EDGE EVENTS
-    function handleEdgeClick({ item }: G6GraphEvent) {
-      if (onClickEdge) {
-        onClickEdge(item.getModel());
-      }
-    }
+    const handleEdgeClick = useCallback(
+      ({ item }: G6GraphEvent) => {
+        if (onClickEdge) {
+          onClickEdge(item.getModel());
+        }
+      },
+      [onClickEdge]
+    );
 
-    function handleEdgeMouseLeave(evt: { currentTarget: Graph; item: Item }) {
-      handleNodeMouseLeave(evt);
-    }
+    const handleEdgeMouseLeave = useCallback(
+      (evt: { currentTarget: Graph; item: Item }) => {
+        handleNodeMouseLeave(evt);
+      },
+      [handleNodeMouseLeave]
+    );
 
     // COMBO EVENTS
-    function handleComboClick({ item }: G6GraphEvent) {
-      if (onClickCombo) {
-        onClickCombo(item.getModel());
-      }
-    }
+    const handleComboClick = useCallback(
+      ({ item }: G6GraphEvent) => {
+        if (onClickCombo) {
+          onClickCombo(item.getModel());
+        }
+      },
+      [onClickCombo]
+    );
 
-    function handleCombDragStart() {
+    const handleCombDragStart = useCallback(() => {
       handleNodeDragStart();
-    }
+    }, [handleNodeDragStart]);
 
-    function handleComboDragEnd({ item }: G6GraphEvent) {
+    const handleComboDragEnd = useCallback(({ item }: G6GraphEvent) => {
       const combo = item as ICombo;
       // Retrieve the nodes contained within the combo box and store their positions in memory
       const updatedNodes = GraphController.fromNodesToLocalStorageData(
@@ -210,22 +236,14 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       GraphController.saveNodePositionsToLocalStorage(updatedNodes);
       isHoverState.current = false;
-    }
-
-    function handleComboMouseEnter({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
-      currentTarget.setItemState(item, 'hover', true);
-    }
-
-    function handleComboMouseLeave({ currentTarget, item }: { currentTarget: Graph; item: Item }) {
-      currentTarget.setItemState(item, 'hover', false);
-    }
+    }, []);
 
     // CANVAS EVENTS
-    function handleCanvasDragStart() {
+    const handleCanvasDragStart = useCallback(() => {
       handleNodeDragStart();
-    }
+    }, [handleNodeDragStart]);
 
-    function handleCanvasDragEnd({ currentTarget, dx, dy }: G6GraphEvent) {
+    const handleCanvasDragEnd = useCallback(({ currentTarget, dx, dy }: G6GraphEvent) => {
       if (dx !== undefined && dy !== undefined) {
         const updatedNodes = GraphController.fromNodesToLocalStorageData(
           currentTarget.getNodes(),
@@ -236,7 +254,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }
 
       isHoverState.current = false;
-    }
+    }, []);
 
     const handleSaveZoom = useCallback(
       (zoomValue: number) => {
@@ -257,7 +275,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     );
 
     // ZOOM EVENTS
-    function handleWheelZoom() {
+    const handleWheelZoom = useCallback(() => {
       const graphInstance = topologyGraphRef.current;
 
       if (graphInstance) {
@@ -266,10 +284,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         handleSaveZoom(zoomValue);
         handleFitScreen(false);
       }
-    }
+    }, [handleSaveZoom, handleFitScreen]);
 
     // TIMING EVENTS
-    function handleAfterRender() {
+    const handleAfterRender = useCallback(() => {
       const graphInstance = topologyGraphRef.current;
 
       if (graphInstance) {
@@ -282,12 +300,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         GraphController.saveNodePositionsToLocalStorage(updatedNodes);
 
         // Highlight the node and edges connected to the selected item when either a node or an edge is preselected.
-        setTopologyStateByNodeSelected(itemSelectedRef.current);
+        handleMouseEnter(itemSelectedRef.current);
         setIsGraphLoaded(true);
       }
-    }
+    }, [handleMouseEnter]);
 
-    function handleChangeData() {
+    const handleChangeData = useCallback(() => {
       const graphInstance = topologyGraphRef.current;
 
       if (graphInstance) {
@@ -298,7 +316,55 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         GraphController.saveNodePositionsToLocalStorage(updatedNodes);
       }
-    }
+    }, []);
+
+    const bindEvents = useCallback(() => {
+      /** EVENTS */
+      topologyGraphRef.current?.on('node:click', handleNodeClick);
+      topologyGraphRef.current?.on('node:dragstart', handleNodeDragStart);
+      topologyGraphRef.current?.on('node:dragend', handleNodeDragEnd);
+      topologyGraphRef.current?.on('node:mouseenter', handleNodeMouseEnter);
+      topologyGraphRef.current?.on('node:mouseleave', handleNodeMouseLeave);
+
+      topologyGraphRef.current?.on('edge:click', handleEdgeClick);
+      topologyGraphRef.current?.on('edge:mouseenter', handleEdgeMouseEnter);
+      topologyGraphRef.current?.on('edge:mouseleave', handleEdgeMouseLeave);
+
+      topologyGraphRef.current?.on('combo:click', handleComboClick);
+      topologyGraphRef.current?.on('combo:dragstart', handleCombDragStart);
+      topologyGraphRef.current?.on('combo:dragend', handleComboDragEnd);
+      topologyGraphRef.current?.on('combo:mouseenter', handleComboMouseEnter);
+      topologyGraphRef.current?.on('combo:mouseleave', handleComboMouseLeave);
+
+      topologyGraphRef.current?.on('canvas:dragstart', handleCanvasDragStart);
+      topologyGraphRef.current?.on('canvas:dragend', handleCanvasDragEnd);
+
+      topologyGraphRef.current?.on('wheelzoom', handleWheelZoom);
+
+      // Be carefull: afterender is supposd to be calleed every re-render. However, in our case this event is called just one time  because we update the topology usng changeData.
+      // If this behaviour changes we must use a flag to check only the first render
+      topologyGraphRef.current?.on('afterrender', handleAfterRender);
+      topologyGraphRef.current?.on('afterchangedata', handleChangeData);
+    }, [
+      handleAfterRender,
+      handleChangeData,
+      handleCanvasDragEnd,
+      handleCanvasDragStart,
+      handleComboClick,
+      handleComboDragEnd,
+      handleCombDragStart,
+      handleComboMouseEnter,
+      handleComboMouseLeave,
+      handleEdgeClick,
+      handleEdgeMouseEnter,
+      handleEdgeMouseLeave,
+      handleNodeClick,
+      handleNodeDragEnd,
+      handleNodeDragStart,
+      handleNodeMouseEnter,
+      handleNodeMouseLeave,
+      handleWheelZoom
+    ]);
 
     /** Creates network topology instance */
     const graphRef = useCallback(($node: HTMLDivElement) => {
@@ -335,33 +401,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           topologyGraph.fitView(50, undefined, true, { duration: 0 });
         }
 
-        /** EVENTS */
-        topologyGraph.on('node:click', handleNodeClick);
-        topologyGraph.on('node:dragstart', handleNodeDragStart);
-        topologyGraph.on('node:dragend', handleNodeDragEnd);
-        topologyGraph.on('node:mouseenter', handleNodeMouseEnter);
-        topologyGraph.on('node:mouseleave', handleNodeMouseLeave);
-
-        topologyGraph.on('edge:click', handleEdgeClick);
-        topologyGraph.on('edge:mouseenter', handleEdgeMouseEnter);
-        topologyGraph.on('edge:mouseleave', handleEdgeMouseLeave);
-
-        topologyGraph.on('combo:click', handleComboClick);
-        topologyGraph.on('combo:dragstart', handleCombDragStart);
-        topologyGraph.on('combo:dragend', handleComboDragEnd);
-        topologyGraph.on('combo:mouseenter', handleComboMouseEnter);
-        topologyGraph.on('combo:mouseleave', handleComboMouseLeave);
-
-        topologyGraph.on('canvas:dragstart', handleCanvasDragStart);
-        topologyGraph.on('canvas:dragend', handleCanvasDragEnd);
-
-        topologyGraph.on('wheelzoom', handleWheelZoom);
-
-        // Be carefull: afterender is supposd to be calleed every re-render. However, in our case this event is called just one time  because we update the topology usng changeData.
-        // If this behaviour changes we must use a flag to check only the first render
-        topologyGraph.on('afterrender', handleAfterRender);
-        topologyGraph.on('afterchangedata', handleChangeData);
+        bindEvents();
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // This effect updates the topology when there are changes to the nodes, edges or combos.
@@ -380,13 +422,13 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
         // After calling changeData the data the state of topology is reset. We call this function to recover this state
-        setTopologyStateByNodeSelected(itemSelectedRef.current);
+        handleMouseEnter(itemSelectedRef.current);
 
         prevNodesRef.current = nodesWithoutPosition;
         prevEdgesRef.current = edges;
         prevCombosRef.current = combos;
       }
-    }, [nodesWithoutPosition, edges, combos, isGraphLoaded, setTopologyStateByNodeSelected]);
+    }, [nodesWithoutPosition, edges, combos, isGraphLoaded, handleMouseEnter]);
 
     // This effect handle the resize of the topology when the browser window changes size.
     useLayoutEffect(() => {
@@ -416,7 +458,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }, []);
 
     return (
-      <div ref={graphRef} style={{ height: '98%', position: 'relative', background: '#f0f0f0' }}>
+      <div ref={graphRef} style={{ height: '98%', background: '#f0f0f0' }}>
         {topologyGraphRef.current && (
           <MenuControl
             graphInstance={topologyGraphRef.current}
