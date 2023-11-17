@@ -1,6 +1,6 @@
 import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import G6, { G6GraphEvent, Graph, GraphOptions, ICombo, IEdge, INode, Item } from '@antv/g6';
+import G6, { G6GraphEvent, Graph, GraphOptions, IEdge, INode, Item } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
 import {
@@ -11,7 +11,7 @@ import {
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
 
-import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG } from './Graph.constants';
+import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG, GRAPH_BG_COLOR } from './Graph.constants';
 import MenuControl from './MenuControl';
 import { GraphController } from './services';
 import {
@@ -45,8 +45,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     const itemSelectedRef = useRef(itemSelected);
     const topologyGraphRef = useRef<Graph>();
 
-    const handleComboMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
-      currentTarget.setItemState(item, 'hover', true);
+    const handleComboMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item?: Item }) => {
+      if (item) {
+        currentTarget.setItemState(item, 'hover', true);
+      }
     }, []);
 
     const handleNodeMouseEnter = useCallback(
@@ -150,22 +152,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       [onClickNode]
     );
 
-    const handleNodeDragStart = useCallback(() => {
-      isHoverState.current = true;
-    }, []);
-
-    const handleNodeDragEnd = useCallback(({ item }: G6GraphEvent) => {
-      const updatedNodes = GraphController.fromNodesToLocalStorageData(
-        [item as INode],
-        ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-      );
-
-      GraphController.saveNodePositionsToLocalStorage(updatedNodes);
-      isHoverState.current = false;
-    }, []);
-
-    const handleComboMouseLeave = useCallback(({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
-      currentTarget.setItemState(item, 'hover', false);
+    const handleComboMouseLeave = useCallback(({ currentTarget, item }: { currentTarget: Graph; item?: Item }) => {
+      if (item) {
+        currentTarget.setItemState(item, 'hover', false);
+      }
     }, []);
 
     const handleNodeMouseLeave = useCallback(
@@ -222,37 +212,28 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       [onClickCombo]
     );
 
+    const handleNodeDragStart = useCallback(() => {
+      isHoverState.current = true;
+    }, []);
+
+    const handleNodeDragEnd = useCallback(() => {
+      isHoverState.current = false;
+    }, []);
+
     const handleCombDragStart = useCallback(() => {
-      handleNodeDragStart();
-    }, [handleNodeDragStart]);
+      isHoverState.current = true;
+    }, []);
 
-    const handleComboDragEnd = useCallback(({ item }: G6GraphEvent) => {
-      const combo = item as ICombo;
-      // Retrieve the nodes contained within the combo box and store their positions in memory
-      const updatedNodes = GraphController.fromNodesToLocalStorageData(
-        combo.getNodes(),
-        ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-      );
-
-      GraphController.saveNodePositionsToLocalStorage(updatedNodes);
+    const handleComboDragEnd = useCallback(() => {
       isHoverState.current = false;
     }, []);
 
     // CANVAS EVENTS
     const handleCanvasDragStart = useCallback(() => {
-      handleNodeDragStart();
-    }, [handleNodeDragStart]);
+      isHoverState.current = true;
+    }, []);
 
-    const handleCanvasDragEnd = useCallback(({ currentTarget, dx, dy }: G6GraphEvent) => {
-      if (dx !== undefined && dy !== undefined) {
-        const updatedNodes = GraphController.fromNodesToLocalStorageData(
-          currentTarget.getNodes(),
-          ({ id, x, y }: LocalStorageData) => ({ id, x: x + (dx as number), y: y + (dy as number) })
-        );
-
-        GraphController.saveNodePositionsToLocalStorage(updatedNodes);
-      }
-
+    const handleCanvasDragEnd = useCallback(() => {
       isHoverState.current = false;
     }, []);
 
@@ -288,21 +269,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
     // TIMING EVENTS
     const handleAfterRender = useCallback(() => {
-      const graphInstance = topologyGraphRef.current;
-
-      if (graphInstance) {
-        //save positions
-        const updatedNodes = GraphController.fromNodesToLocalStorageData(
-          graphInstance.getNodes(),
-          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-        );
-
-        GraphController.saveNodePositionsToLocalStorage(updatedNodes);
-
-        // Highlight the node and edges connected to the selected item when either a node or an edge is preselected.
-        handleMouseEnter(itemSelectedRef.current);
-        setIsGraphLoaded(true);
-      }
+      handleMouseEnter(itemSelectedRef.current);
+      setIsGraphLoaded(true);
     }, [handleMouseEnter]);
 
     const handleChangeData = useCallback(() => {
@@ -314,7 +282,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           ({ id, x, y }: LocalStorageData) => ({ id, x, y })
         );
 
-        GraphController.saveNodePositionsToLocalStorage(updatedNodes);
+        GraphController.saveAllNodePositions(updatedNodes);
       }
     }, []);
 
@@ -344,7 +312,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       // Be carefull: afterender is supposd to be calleed every re-render. However, in our case this event is called just one time  because we update the topology usng changeData.
       // If this behaviour changes we must use a flag to check only the first render
       topologyGraphRef.current?.on('afterrender', handleAfterRender);
-      topologyGraphRef.current?.on('afterchangedata', handleChangeData);
+      topologyGraphRef.current?.on('beforechangedata', handleChangeData);
     }, [
       handleAfterRender,
       handleChangeData,
@@ -369,38 +337,23 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     /** Creates network topology instance */
     const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodesWithoutPosition.length && !topologyGraphRef.current) {
-        const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
-        const data = GraphController.getG6Model({ edges, nodes, combos });
-
-        const options: GraphOptions = {
-          container: $node,
-          layout: DEFAULT_LAYOUT_FORCE_CONFIG,
-          ...DEFAULT_GRAPH_CONFIG
-        };
-
-        topologyGraphRef.current = new G6.Graph(options);
-        const topologyGraph = topologyGraphRef.current;
-
         registerNodeWithBadges();
         registerDefaultEdgeWithHover();
         registerSiteEdge();
         regusterComboWithCustomLabel();
 
-        topologyGraph.data(data);
-        topologyGraph.render();
+        const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
+        const data = GraphController.getG6Model({ edges, nodes, combos });
+        const options: GraphOptions = {
+          container: $node,
+          fitView: true,
+          fitViewPadding: 20,
+          layout: { ...DEFAULT_LAYOUT_FORCE_CONFIG, center: [0, 0] },
+          ...DEFAULT_GRAPH_CONFIG
+        };
 
-        const zoom = Number(localStorage.getItem(`${saveConfigkey}-${GRAPH_ZOOM_CACHE_KEY}`));
-
-        if (zoom) {
-          topologyGraph.zoomTo(zoom, topologyGraph.getGraphCenterPoint(), true, { duration: 0 });
-        }
-
-        const fitScreen = Number(localStorage.getItem(`${saveConfigkey}-${FIT_SCREEN_CACHE_KEY}`));
-
-        if (fitScreen) {
-          topologyGraph.fitView(50, undefined, true, { duration: 0 });
-        }
-
+        topologyGraphRef.current = new G6.Graph(options);
+        topologyGraphRef.current.read(data);
         bindEvents();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -418,7 +371,27 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
           JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
       ) {
-        const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
+        // add positions to nodes fom the local storage
+        const nodesWithPositions = GraphController.addPositionsToNodes(nodesWithoutPosition);
+
+        //Map of the most updated nodes from the graph
+        const positionMap = graphInstance.getNodes().reduce(
+          (acc, node) => {
+            const id = (node.getModel().persistPositionKey || node.getID()) as string;
+            acc[id] = { x: node.getModel().x, y: node.getModel().y };
+
+            return acc;
+          },
+          {} as Record<string, { x?: number; y?: number }>
+        );
+
+        // check updated nodes from the graph otherwise rollback to the localstorage position
+        const nodes = nodesWithPositions.map((node) => ({
+          ...node,
+          x: positionMap[node.persistPositionKey || node.id]?.x || node.x,
+          y: positionMap[node.persistPositionKey || node.id]?.y || node.y
+        }));
+
         graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
         // After calling changeData the data the state of topology is reset. We call this function to recover this state
@@ -434,15 +407,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     useLayoutEffect(() => {
       const graphInstance = topologyGraphRef.current;
 
-      if (!graphInstance || graphInstance.get('destroyed')) {
+      if (!graphInstance) {
         return;
       }
 
-      const container = graphInstance?.getContainer();
-      if (!container) {
-        return;
-      }
-
+      const container = graphInstance.getContainer();
       const handleResize = () => {
         try {
           graphInstance.changeSize(container.clientWidth, container.clientHeight);
@@ -451,14 +420,27 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         }
       };
 
+      const handleSaveNodePositions = () => {
+        const nodePositions = graphInstance
+          .getNodes()
+          .map((node) => ({ id: node.getID(), x: node.getModel().x as number, y: node.getModel().y as number }));
+
+        GraphController.saveAllNodePositions(nodePositions);
+      };
+
       const debouncedHandleResize = debounce(handleResize, 200);
       window.addEventListener('resize', debouncedHandleResize);
+      window.addEventListener('beforeunload', handleSaveNodePositions);
 
-      return () => window.removeEventListener('resize', debouncedHandleResize);
+      return () => {
+        handleSaveNodePositions();
+        window.removeEventListener('resize', debouncedHandleResize);
+        window.removeEventListener('beforeunload', handleSaveNodePositions);
+      };
     }, []);
 
     return (
-      <div ref={graphRef} style={{ height: '98%', background: '#f0f0f0' }}>
+      <div ref={graphRef} style={{ height: '98%', background: GRAPH_BG_COLOR, position: 'relative' }}>
         {topologyGraphRef.current && (
           <MenuControl
             graphInstance={topologyGraphRef.current}

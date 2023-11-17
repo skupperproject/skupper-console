@@ -244,7 +244,7 @@ const TopologyProcesses: FC<{
     setNodes(
       processesNodes.map((node) => ({
         ...node,
-        persistPositionKey: serviceIdSelected ? `${node.id}-${serviceIdSelected}` : node.id
+        persistPositionKey: serviceIdSelected?.length ? `${node.id}-${serviceIdSelected}` : node.id
       }))
     );
     setLinks(edges);

@@ -4,6 +4,7 @@ export enum Colors {
   Black600 = '--pf-v5-global--palette--black-600',
   Black500 = '--pf-v5-global--palette--black-500',
   Black400 = '--pf-v5-global--palette--black-400',
+  Black100 = '--pf-v5-global--palette--black-100',
   Green500 = '--pf-v5-global--palette--green-500',
   Blue400 = '--pf-v5-global--palette--blue-400',
   Purple500 = '--pf-v5-global--palette--purple-500',
@@ -14,6 +15,7 @@ export enum Colors {
 
 export enum VarColors {
   White = `var(${Colors.White})`,
+  Black100 = `var(${Colors.Black100})`,
   Black400 = `var(${Colors.Black400})`,
   Black500 = `var(${Colors.Black500})`,
   Black600 = `var(${Colors.Black600})`,
@@ -26,6 +28,7 @@ export enum HexColors {
   White = '#FFFFFF',
   Blue200 = '#73BCF7',
   Blue400 = '#0066CC',
+  Black100 = '#F0F0F0',
   Black400 = '#B8BBBE',
   Black500 = '#8A8D90',
   Black600 = '#6A6E73',

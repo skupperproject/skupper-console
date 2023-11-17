@@ -2,6 +2,7 @@ import { ILabelConfig, LayoutConfig, ModelStyle, Modes, GraphOptions } from '@an
 
 import { HexColors } from '@config/colors';
 
+export const GRAPH_BG_COLOR = HexColors.Black100;
 const NODE_COLOR_DEFAULT = HexColors.White;
 const NODE_BORDER_COLOR_DEFAULT = HexColors.Black600;
 const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
@@ -9,6 +10,7 @@ const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 export const EDGE_COLOR_DEFAULT = HexColors.Black600;
 export const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
+export const EDGE_COLOR_DEFAULT_BORDER_TEXT = HexColors.White;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
 const COMBO__COLOR_DEFAULT = 'transparent';
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
@@ -136,11 +138,11 @@ const DEFAULT_EDGE_CONFIG: Partial<{
   type: CUSTOM_ITEMS_NAMES.animatedDashEdge,
   labelCfg: {
     autoRotate: true,
-    refY: 10,
     style: {
-      fill: EDGE_COLOR_DEFAULT,
-      cursor: 'pointer',
-      fontSize: 12
+      fill: EDGE_COLOR_DEFAULT_TEXT,
+      stroke: GRAPH_BG_COLOR,
+      lineWidth: 5,
+      fontSize: 10
     }
   },
   style: {

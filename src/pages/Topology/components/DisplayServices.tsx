@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 
 import { Select, SelectOption, SelectOptionObject, SelectVariant } from '@patternfly/react-core/deprecated';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -15,7 +15,7 @@ const DisplayServices: FC<{
   serviceId?: string[];
   onSelect: Function;
 }> = function ({ serviceId, onSelect }) {
-  const [serviceIdSelected, setServiceIdSelected] = useState(serviceId ? serviceId : []);
+  const [serviceIdSelected, setServiceIdSelected] = useState<string[]>([]);
   const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
 
   const { data: services } = useQuery({
@@ -74,12 +74,20 @@ const DisplayServices: FC<{
   const getOptions = useCallback(
     () =>
       (services?.results || []).map(({ name, identity }, index) => (
-        <SelectOption key={index + 1} value={identity} checked={serviceIdSelected.includes(identity)}>
+        <SelectOption key={index + 1} value={identity}>
           {name}
         </SelectOption>
       )),
-    [serviceIdSelected, services?.results]
+    [services?.results]
   );
+
+  useEffect(() => {
+    if (serviceId?.length) {
+      setServiceIdSelected(serviceId);
+    } else if (!serviceId?.length) {
+      setServiceIdSelected(services?.results.map(({ identity }) => identity) || []);
+    }
+  }, [serviceId, services?.results]);
 
   return (
     <Select
