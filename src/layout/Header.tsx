@@ -39,10 +39,8 @@ const SkHeader = function () {
         </PageToggleButton>
       </MastheadToggle>
       <MastheadMain>
-        <MastheadBrand href="https://patternfly.org" target="_blank">
-          <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }}>
-            <source srcSet={brandLogo} />
-          </Brand>
+        <MastheadBrand>
+          <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }} />
         </MastheadBrand>
       </MastheadMain>
       <MastheadContent>
