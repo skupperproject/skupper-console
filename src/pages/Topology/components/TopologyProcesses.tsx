@@ -285,7 +285,12 @@ const TopologyProcesses: FC<{
     const processesNodes = TopologyController.convertProcessesToNodes(processes);
     const siteNodes = TopologyController.convertSitesToNodes(sites);
     const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
-    const edges = addLabelsToEdges(TopologyController.convertPairsToEdges(pPairs));
+    const edges = addLabelsToEdges(TopologyController.convertPairsToEdges(pPairs))
+      //notify the user that the edge is clickable
+      .map((edge) => ({
+        ...edge,
+        style: { cursor: 'pointer' }
+      }));
 
     setNodes(
       processesNodes.map((node) => ({

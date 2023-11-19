@@ -6,8 +6,8 @@ const NODE_COLOR_DEFAULT = HexColors.White;
 const NODE_BORDER_COLOR_DEFAULT = HexColors.Black600;
 const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
 const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
-export const EDGE_COLOR_DEFAULT = HexColors.Black500;
-export const EDGE_COLOR_CONNECTION_DEFAULT = HexColors.Blue400;
+export const EDGE_COLOR_DEFAULT = HexColors.Black600;
+export const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
 const COMBO__COLOR_DEFAULT = 'transparent';
@@ -144,6 +144,7 @@ const DEFAULT_EDGE_CONFIG: Partial<{
   style: {
     lineWidth: 1,
     lineDash: [0, 0, 0, 0],
+    lineAppendWidth: 20,
     stroke: EDGE_COLOR_DEFAULT,
     endArrow: {
       path: 'M 0,0 L 8,4 L 8,-4 Z',

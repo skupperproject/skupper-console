@@ -106,8 +106,7 @@ export const TopologyController = {
       source: sourceId,
       target: destinationId,
       sourceName,
-      targetName: destinationName,
-      style: { stroke: EDGE_COLOR_DEFAULT, cursor: 'pointer' }
+      targetName: destinationName
     })),
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
