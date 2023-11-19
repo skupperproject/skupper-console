@@ -1,49 +1,60 @@
-import { registerEdge, ArrowConfig, registerCombo, IGroup, registerNode } from '@antv/g6';
+import { registerEdge, registerCombo, IGroup, registerNode } from '@antv/g6';
 
 import {
   CUSTOM_CIRCLE_NODE_STYLE,
   CUSTOM_ITEMS_NAMES,
-  EDGE_COLOR_HOVER_DEFAULT,
   EDGE_COLOR_DEFAULT,
   NODE_SIZE,
-  EDGE_COLOR_CONNECTION_DEFAULT
+  EDGE_COLOR_HOVER_DEFAULT,
+  EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT
 } from '../Graph.constants';
 import { ComboWithCustomLabel, NodeWithBadgesProps } from '../Graph.interfaces';
 
 export function registerCustomEdgeWithHover() {
-  // Draw a blue line dash when hover an edge
-  const lineDash = [4, 2, 1, 2];
   registerEdge(
     CUSTOM_ITEMS_NAMES.animatedDashEdge,
     {
+      afterDraw(_, group) {
+        if (group) {
+          const shape = group.get('children')[0];
+          const { x, y } = shape.getPoint(0);
+          const circle = group.addShape('circle', {
+            attrs: {
+              x,
+              y,
+              fill: EDGE_COLOR_HOVER_DEFAULT,
+              r: 5
+            },
+            name: 'circle-shape'
+          });
+
+          circle.hide();
+        }
+      },
+
       setState(name, value, item) {
         if (item) {
           const group = item.getContainer();
           const shape = group.get('children')[0];
-          const model = item.getModel();
-          const arrow = model?.style?.endArrow as ArrowConfig;
-
-          let index = 0;
+          const circle = group.get('children')[1];
 
           if ((name === 'hover' || name === 'active') && value) {
-            shape.animate(
-              () => ({
-                lineDash,
-                lineDashOffset: -index++ % 9,
-                stroke: EDGE_COLOR_HOVER_DEFAULT,
-                endArrow: {
-                  ...arrow,
-                  fill: EDGE_COLOR_HOVER_DEFAULT
-                }
-              }),
+            circle.show();
+
+            circle.animate(
+              (ratio: number) => {
+                const tmpPoint = shape.getPoint(ratio);
+
+                return { x: tmpPoint.x, y: tmpPoint.y };
+              },
               {
                 repeat: true,
                 duration: 3000
               }
             );
           } else {
-            shape.stopAnimate(0);
-            shape.attr({ ...model?.style, opacity: 1 });
+            circle.stopAnimate(0);
+            circle.hide();
           }
         }
       }
@@ -82,7 +93,7 @@ export function registerSiteEdge() {
         group.addShape('circle', {
           attrs: {
             r: 4,
-            fill: EDGE_COLOR_CONNECTION_DEFAULT,
+            fill: EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT,
             x: quatile.x,
             y: quatile.y
           }
