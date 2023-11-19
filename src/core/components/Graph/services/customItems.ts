@@ -36,7 +36,7 @@ export function registerCustomEdgeWithHover() {
         if (item) {
           const group = item.getContainer();
           const shape = group.get('children')[0];
-          const circle = group.get('children')[1];
+          const circle = group.find((element) => element.get('name') === 'circle-shape');
 
           if ((name === 'hover' || name === 'active') && value) {
             circle.show();
@@ -53,7 +53,7 @@ export function registerCustomEdgeWithHover() {
               }
             );
           } else {
-            circle.stopAnimate(0);
+            circle.stopAnimate(true);
             circle.hide();
           }
         }
