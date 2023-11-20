@@ -9,14 +9,15 @@ const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
 const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 export const EDGE_COLOR_DEFAULT = HexColors.Black600;
 export const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
-export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
-export const EDGE_COLOR_DEFAULT_BORDER_TEXT = HexColors.White;
+const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
 const COMBO__COLOR_DEFAULT = 'transparent';
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
 const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
 const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
+
+const ICON_SIZE = 14;
 
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',
@@ -69,8 +70,8 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
 
 export const DEFAULT_NODE_ICON = {
   show: true,
-  width: 16,
-  height: 16
+  width: ICON_SIZE,
+  height: ICON_SIZE
 };
 
 export const DEFAULT_NODE_CONFIG: Partial<{

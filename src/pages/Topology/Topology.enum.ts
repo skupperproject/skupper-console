@@ -45,7 +45,13 @@ export enum TopologyLabels {
   CheckboxShowLatency = 'Latency (live)',
   CheckboxShowLabelReverse = 'Inbound metrics',
   ServiceFilterPlaceholderText = 'Search for service',
-  DisplayPlaceholderText = 'Display'
+  DisplayPlaceholderText = 'Display',
+  SelectAll = 'Select all',
+  DeselectAll = 'Deselect all',
+  LoadButton = 'Load',
+  SaveButton = 'Save',
+  ToastSave = 'Topology saved successfully',
+  ToastLoad = 'Topology loaded successfully'
 }
 
 export enum TopologyURLQueyParams {

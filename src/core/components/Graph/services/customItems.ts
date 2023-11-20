@@ -10,7 +10,7 @@ import {
 } from '../Graph.constants';
 import { ComboWithCustomLabel, NodeWithBadgesProps } from '../Graph.interfaces';
 
-export function registerCustomEdgeWithHover() {
+export function registerDataEdge() {
   registerEdge(
     CUSTOM_ITEMS_NAMES.animatedDashEdge,
     {
@@ -63,7 +63,7 @@ export function registerCustomEdgeWithHover() {
   );
 }
 
-export function registerSiteEdge() {
+export function registerSiteLinkEdge() {
   // Draw a blue line dash when hover an edge
   const lineDash = [4, 4];
 
