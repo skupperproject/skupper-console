@@ -53,8 +53,8 @@
     "react-router-dom": "^6.19.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.1",
-    "@commitlint/config-conventional": "^18.4.1",
+    "@commitlint/cli": "^18.4.2",
+    "@commitlint/config-conventional": "^18.4.2",
     "@testing-library/dom": "^9.3.3",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.2",

@@ -44,7 +44,7 @@
       "hostName": "10.242.0.4",
       "sourceHost": "172.17.13.250",
       "processRole": "external",
-      "addresses": ["process 2:3000@process 2:300"]
+      "addresses": ["process 2:3000@process-2:3000"]
     },
     {
       "recType": "PROCESS",
@@ -60,7 +60,7 @@
       "hostName": "10.242.0.2",
       "sourceHost": "172.17.13.251",
       "processRole": "external",
-      "addresses": ["process 2:3000@process 2:300"]
+      "addresses": ["process 2:3000@process-2:3000"]
     },
     {
       "recType": "PROCESS",

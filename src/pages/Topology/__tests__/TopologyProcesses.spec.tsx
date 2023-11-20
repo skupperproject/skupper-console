@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { FC, forwardRef, memo, Suspense, useImperativeHandle } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
@@ -21,23 +21,35 @@ const navigate = jest.fn();
 
 const processesResults = processesData.results;
 const servicesResults = servicesData.results;
-const serviceNameSelected = servicesResults[2].name;
+const serviceNameSelected = servicesResults[2].identity;
 
-const MockGraphComponent: FC<GraphReactAdaptorProps> = function ({ onClickEdge, onClickNode, onClickCombo }) {
-  return (
-    <>
-      <Button onClick={() => onClickNode && onClickNode({ id: processesResults[0].identity })}>onClickNode</Button>
-      <Button
-        onClick={() =>
-          onClickEdge && onClickEdge({ id: `${processesResults[2].identity}-to-${processesResults[1].identity}` })
-        }
-      >
-        onClickEdge
-      </Button>
-      <Button onClick={() => onClickCombo && onClickCombo({ id: 'combo', label: 'combo' })}>onClickCombo</Button>
-    </>
-  );
-};
+const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
+  forwardRef(({ onClickEdge, onClickNode, onClickCombo }, ref) => {
+    useImperativeHandle(ref, () => ({
+      saveNodePositions() {
+        return jest.fn();
+      },
+
+      fitView() {
+        return jest.fn();
+      }
+    }));
+
+    return (
+      <>
+        <Button onClick={() => onClickNode && onClickNode({ id: processesResults[0].identity })}>onClickNode</Button>
+        <Button
+          onClick={() =>
+            onClickEdge && onClickEdge({ id: `${processesResults[2].identity}-to-${processesResults[1].identity}` })
+          }
+        >
+          onClickEdge
+        </Button>
+        <Button onClick={() => onClickCombo && onClickCombo({ id: 'combo', label: 'combo' })}>onClickCombo</Button>
+      </>
+    );
+  })
+);
 
 describe('Begin testing the Topology component', () => {
   let server: Server;
@@ -76,7 +88,7 @@ describe('Begin testing the Topology component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(servicesResults[2].name));
+    fireEvent.click(screen.getByText(TopologyLabels.ShowAll));
     expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
     expect(screen.getByText(servicesResults[1].name)).toBeInTheDocument();
   });
@@ -86,7 +98,7 @@ describe('Begin testing the Topology component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(servicesResults[2].name));
+    fireEvent.click(screen.getByText(TopologyLabels.ShowAll));
 
     fireEvent.change(screen.getByPlaceholderText(TopologyLabels.ServiceFilterPlaceholderText), {
       target: { value: servicesResults[0].name }

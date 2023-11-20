@@ -265,6 +265,7 @@ const TopologyProcesses: FC<{
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
+
       processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
     }
 
