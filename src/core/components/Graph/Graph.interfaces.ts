@@ -1,3 +1,5 @@
+import { MutableRefObject } from 'react';
+
 import { GraphData, ModelConfig, ModelStyle, ShapeStyle } from '@antv/g6';
 
 export interface GraphNode {
@@ -48,6 +50,7 @@ export interface GraphReactAdaptorProps {
   onGetZoom?: Function;
   onFitScreen?: Function;
   legendData?: GraphData;
+  ref: MutableRefObject<{ saveNodePositions: Function; fitView: Function } | undefined>;
 }
 
 export interface LocalStorageDataSavedPayload {

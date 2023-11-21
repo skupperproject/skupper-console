@@ -2,8 +2,7 @@ import { useRef } from 'react';
 
 import { Graph } from '@antv/g6-pc';
 import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { ExpandArrowsAltIcon, ExpandIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
-import { useNavigate } from 'react-router-dom';
+import { ExpandArrowsAltIcon, ExpandIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import ProcessLegend from './Legend';
 import { GraphController } from './services';
@@ -24,7 +23,6 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   const popoverRef = useRef<HTMLButtonElement>(null);
 
   const center = graphInstance.getGraphCenterPoint();
-  const navigate = useNavigate();
 
   const handleIncreaseZoom = () => {
     const zoom = graphInstance.getZoom();
@@ -55,19 +53,31 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   };
 
   const handleZoomToDefault = () => {
-    graphInstance.fitView(50, undefined, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
+    graphInstance.fitView(20, undefined, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
     if (onFitScreen) {
       onFitScreen(1);
     }
   };
 
-  const handleReposition = () => {
-    GraphController.cleanPositionsFromLocalStorage();
-    GraphController.cleanNodePositionsControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
-    GraphController.cleanNodePositionsControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
+  const handleCenter = () => {
+    graphInstance.fitCenter(false);
+  };
 
-    // refresh page
-    navigate(0);
+  const handleCleanGraphAndLocalStorage = () => {
+    GraphController.removeAllNodePositions();
+    GraphController.cleanControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
+    GraphController.cleanControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
+
+    graphInstance.getNodes().forEach((node) => {
+      const nodeModel = node.getModel();
+      nodeModel.x = undefined;
+      nodeModel.y = undefined;
+      nodeModel.fx = undefined;
+      nodeModel.fy = undefined;
+    });
+
+    graphInstance.layout();
+    setTimeout(() => graphInstance.fitView(20), 250);
   };
 
   return (
@@ -111,12 +121,24 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
           </ToolbarItem>
 
           <ToolbarItem>
+            <Tooltip content={'center'}>
+              <Button
+                size="sm"
+                variant="tertiary"
+                onClick={handleCenter}
+                icon={<ExpandIcon />}
+                className="sk-topology-control-bar__button"
+              />
+            </Tooltip>
+          </ToolbarItem>
+
+          <ToolbarItem>
             <Tooltip content={'reposition'}>
               <Button
                 size="sm"
                 variant="tertiary"
-                onClick={handleReposition}
-                icon={<ExpandIcon />}
+                onClick={handleCleanGraphAndLocalStorage}
+                icon={<UndoIcon />}
                 className="sk-topology-control-bar__button"
               />
             </Tooltip>

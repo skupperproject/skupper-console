@@ -11,8 +11,7 @@ import {
   CUSTOM_ITEMS_NAMES,
   DEFAULT_REMOTE_NODE_CONFIG,
   DEFAULT_NODE_ICON,
-  DEFAULT_NODE_CONFIG,
-  EDGE_COLOR_DEFAULT_TEXT
+  DEFAULT_NODE_CONFIG
 } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -199,16 +198,15 @@ export const TopologyController = {
         }
       }
 
-      const byteRateLabel = [byteRateText, byteRateReverseText].filter(Boolean).join(' ');
-      const bytesLabel = [bytesText, bytesReverseText].filter(Boolean).join(' ');
-      const latencyLabel = [latencyText, latencyReverseText].filter(Boolean).join(' ');
+      const metrics = [bytesText, byteRateText, latencyText].filter(Boolean).join(', ');
+      const reverseMetrics = [bytesReverseText, byteRateReverseText, latencyReverseText].filter(Boolean).join(', ');
 
       return {
         ...link,
         type: link.source === link.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
-        labelCfg: { autoRotate: !options?.rotateLabel, style: { fill: EDGE_COLOR_DEFAULT_TEXT } },
+        labelCfg: { autoRotate: !options?.rotateLabel },
         style: { ...link.style, stroke: EDGE_COLOR_DEFAULT },
-        label: [protocolText, bytesLabel, byteRateLabel, latencyLabel].filter(Boolean).join(',  ')
+        label: [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n')
       };
     });
   }

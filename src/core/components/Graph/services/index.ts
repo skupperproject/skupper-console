@@ -13,20 +13,28 @@ import {
 const prefixLocalStorageItem = 'skupper';
 
 export const GraphController = {
-  saveNodePositionsToLocalStorage: (topologyNodes: LocalStorageData[]) => {
-    const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
-
+  saveAllNodePositions: (topologyNodes: LocalStorageData[]) => {
+    const nodePositions = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
     const topologyMap = topologyNodes.reduce((acc, { id, x, y }) => {
       acc[id] = { x, y };
 
       return acc;
     }, {} as LocalStorageDataSaved);
 
-    localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...cache, ...topologyMap }));
+    let result = { ...nodePositions };
+
+    for (const key in topologyNodes) {
+      if (Object.prototype.hasOwnProperty.call(topologyNodes, key)) {
+        result = Object.fromEntries(Object.entries(result).filter(([k]) => k !== key));
+      }
+    }
+
+    localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...result, ...topologyMap }));
   },
 
-  getNodePositionFromLocalStorage(id: string): LocalStorageDataWithNullXY {
+  getNodePosition(id: string): LocalStorageDataWithNullXY {
     const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
+
     const positions = cache[id] as LocalStorageDataSavedPayload | undefined;
 
     const x = positions ? positions.x : undefined;
@@ -35,15 +43,16 @@ export const GraphController = {
     return { id, x, y };
   },
 
-  cleanPositionsFromLocalStorage() {
+  removeAllNodePositions() {
     localStorage.removeItem(prefixLocalStorageItem);
   },
 
-  cleanNodePositionsControlsFromLocalStorage(suffix: string) {
+  cleanControlsFromLocalStorage(suffix: string) {
     Object.keys(localStorage)
       .filter((x) => x.endsWith(suffix))
       .forEach((x) => localStorage.removeItem(x));
   },
+
   // TODO: remove this function when Backend sanitize the old process pairs
   sanitizeEdges: (nodes: GraphNode[], edges: GraphEdge[]) => {
     const availableNodesMap = nodes.reduce(
@@ -74,7 +83,7 @@ export const GraphController = {
 
   addPositionsToNodes(nodes: GraphNode[]) {
     return nodes.map((node) => {
-      const { x, y } = GraphController.getNodePositionFromLocalStorage(node.persistPositionKey || node.id);
+      const { x, y } = GraphController.getNodePosition(node.persistPositionKey || node.id);
 
       return { ...node, x, y };
     });
@@ -93,33 +102,5 @@ export const GraphController = {
     ),
     edges: JSON.parse(JSON.stringify(GraphController.sanitizeEdges(nodes, edges))),
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
-  }),
-
-  calculateMaxIteration(nodeCount: number) {
-    if (nodeCount > 900) {
-      return 10;
-    }
-
-    if (nodeCount > 750) {
-      return 10;
-    }
-
-    if (nodeCount > 600) {
-      return 15;
-    }
-
-    if (nodeCount > 450) {
-      return 20;
-    }
-
-    if (nodeCount > 300) {
-      return 50;
-    }
-
-    if (nodeCount > 150) {
-      return 75;
-    }
-
-    return 100;
-  }
+  })
 };
