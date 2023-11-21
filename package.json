@@ -43,7 +43,7 @@
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-icons": "^5.1.1",
     "@patternfly/react-table": "^5.1.1",
-    "@tanstack/react-query": "^5.8.2",
+    "@tanstack/react-query": "^5.8.4",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.5",
