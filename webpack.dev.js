@@ -24,6 +24,7 @@ const devConfig = {
       cwd: process.cwd(),
       onStart({ _ }) {
         numCyclesDetected = 0;
+        numCyclesDisplayed = 0;
       },
       onDetected({ module: _, paths, compilation }) {
         numCyclesDetected++;
