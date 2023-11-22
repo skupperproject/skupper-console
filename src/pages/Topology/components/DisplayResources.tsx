@@ -36,7 +36,7 @@ const DisplayResource: FC<{
   type?: 'process' | 'site' | 'component';
   placeholder?: string;
 }> = function ({ id, type = 'process', placeholder = TopologyLabels.DisplayProcessesDefaultLabel, onSelect }) {
-  const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
+  const [isSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
 
   const [
     { data: externalProcesses },
@@ -79,11 +79,17 @@ const DisplayResource: FC<{
     ]
   });
 
-  function handleToggleServiceMenu(openServiceMenu: boolean) {
+  function handleToggleMenu(openServiceMenu: boolean) {
     setIsServiceSelectMenuOpen(openServiceMenu);
   }
 
-  function handleSelectService(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) {
+  function handleClear() {
+    if (onSelect) {
+      onSelect(undefined);
+    }
+  }
+
+  function handleSelect(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) {
     const currentSelected = selection as string;
 
     setIsServiceSelectMenuOpen(false);
@@ -93,7 +99,7 @@ const DisplayResource: FC<{
     }
   }
 
-  function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {
+  function handleFind(_: ChangeEvent<HTMLInputElement> | null, value: string) {
     const options = getOptions();
 
     if (!value) {
@@ -133,15 +139,16 @@ const DisplayResource: FC<{
   return (
     <Select
       role="process-select"
-      isOpen={isServiceSelectMenuOpen}
+      isOpen={isSelectMenuOpen}
       placeholderText={placeholder}
-      onSelect={handleSelectService}
-      onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
+      onSelect={handleSelect}
+      onToggle={(_, isOpen) => handleToggleMenu(isOpen)}
       selections={id}
       hasInlineFilter
       inlineFilterPlaceholderText={TopologyLabels.ProcessFilterPlaceholderText}
-      onFilter={handleFindServices}
+      onFilter={handleFind}
       maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
+      onClear={handleClear}
     >
       {getOptions()}
     </Select>
