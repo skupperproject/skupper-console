@@ -38,6 +38,12 @@ export interface GraphEdge {
   style?: ShapeStyle;
 }
 
+export interface GraphReactAdaptorExposedMethods {
+  saveNodePositions: Function;
+  fitView: Function;
+  focusItem: Function;
+}
+
 export interface GraphReactAdaptorProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
@@ -46,11 +52,13 @@ export interface GraphReactAdaptorProps {
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
+  onMouseLeaveNode?: Function;
+  onMouseLeaveEdge?: Function;
   saveConfigkey?: string;
   onGetZoom?: Function;
   onFitScreen?: Function;
   legendData?: GraphData;
-  ref: MutableRefObject<{ saveNodePositions: Function; fitView: Function } | undefined>;
+  ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
 }
 
 export interface LocalStorageDataSavedPayload {

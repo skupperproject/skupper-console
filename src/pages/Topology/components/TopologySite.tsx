@@ -1,4 +1,4 @@
-import { ComponentType, FC, startTransition, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, startTransition, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQueries } from '@tanstack/react-query';
@@ -8,11 +8,17 @@ import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import EmptyData from '@core/components/EmptyData';
-import { GraphEdge, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import {
+  GraphEdge,
+  GraphNode,
+  GraphReactAdaptorExposedMethods,
+  GraphReactAdaptorProps
+} from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
+import DisplayResource from './DisplayResources';
 import DisplaySelect from './DisplaySelect';
 import { TopologyController } from '../services';
 import {
@@ -38,11 +44,12 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [edges, setEdges] = useState<GraphEdge[]>([]);
-  const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(
-    localStorage.getItem(DISPLAY_OPTIONS)
-      ? JSON.parse(localStorage.getItem(DISPLAY_OPTIONS) || '')
-      : DEFAULT_DISPLAY_OPTIONS_ENABLED
-  );
+  const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
+
+  const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
+  const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
+
+  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
@@ -107,12 +114,21 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     [sites, navigate]
   );
 
-  const handleDisplaySelect = useCallback((selectedOptions: string[]) => {
+  const handleDisplaySelect = useCallback((options: string[]) => {
     startTransition(() => {
-      setDisplayOptions(selectedOptions);
+      setDisplayOptions(options);
     });
 
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(selectedOptions));
+    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
+  }, []);
+
+  const handleProcessSelected = useCallback((id?: string) => {
+    setSiteIdSelected(id);
+    graphRef?.current?.focusItem(id);
+  }, []);
+
+  const handleResetSiteSelected = useCallback(() => {
+    setSiteIdSelected(undefined);
   }, []);
 
   useEffect(() => {
@@ -210,6 +226,15 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     <Toolbar>
       <ToolbarContent>
         <ToolbarItem>
+          <ToolbarItem>
+            <DisplayResource
+              type={'site'}
+              id={siteIdSelected}
+              onSelect={handleProcessSelected}
+              placeholder={TopologyLabels.DisplaySitesDefaultLabel}
+            />
+          </ToolbarItem>
+
           <DisplaySelect
             options={displayOptions}
             onSelect={handleDisplaySelect}
@@ -232,10 +257,14 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
       <StackItem isFilled>
         {!!nodes.length && (
           <GraphComponent
+            ref={graphRef}
             nodes={nodes}
             edges={edges}
-            onClickNode={handleGetSelectedNode}
+            itemSelected={siteIdSelected}
             saveConfigkey={ZOOM_CACHE_KEY}
+            onClickNode={handleGetSelectedNode}
+            onMouseLeaveNode={handleResetSiteSelected}
+            onMouseLeaveEdge={handleResetSiteSelected}
           />
         )}
 

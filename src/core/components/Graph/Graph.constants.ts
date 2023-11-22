@@ -17,7 +17,9 @@ const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
 const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
-const ICON_SIZE = 14;
+export const NODE_SIZE = 25;
+const ICON_SIZE = 10;
+const LABEL_FONT_SIZE = 10;
 
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',
@@ -27,14 +29,12 @@ export const CUSTOM_ITEMS_NAMES = {
   comboWithCustomLabel: 'cRect'
 };
 
-export const CUSTOM_CIRCLE_NODE_STYLE = {
+export const BADGE_STYLE = {
   containerBg: HexColors.Black500,
   containerBorderColor: HexColors.White,
   textColor: HexColors.White,
-  textFontSize: 12
+  textFontSize: LABEL_FONT_SIZE - 4
 };
-
-export const NODE_SIZE = 44;
 
 const INACTIVE_OPACITY_VALUE = 0.3;
 
@@ -65,7 +65,8 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   gravity: 10,
   edgeStrength: 1,
   animate: false,
-  maxIteration: 200
+  maxIteration: 200,
+  linkDistance: 100
 };
 
 export const DEFAULT_NODE_ICON = {
@@ -95,15 +96,15 @@ export const DEFAULT_NODE_CONFIG: Partial<{
 
   labelCfg: {
     position: 'bottom',
-    offset: 18,
+    offset: 8,
     style: {
       fill: NODE_COLOR_DEFAULT_LABEL,
-      fontSize: 11,
+      fontSize: LABEL_FONT_SIZE,
       background: {
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_BORDER_COLOR_DEFAULT,
         lineWidth: 1,
-        padding: [5, 5],
+        padding: [2, 3],
         radius: 2
       }
     }
@@ -143,7 +144,7 @@ const DEFAULT_EDGE_CONFIG: Partial<{
       fill: EDGE_COLOR_DEFAULT_TEXT,
       stroke: GRAPH_BG_COLOR,
       lineWidth: 5,
-      fontSize: 10
+      fontSize: LABEL_FONT_SIZE
     }
   },
   style: {
@@ -179,7 +180,7 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
     position: 'bottom',
     style: {
       fill: COMBO_COLOR_DEFAULT_LABEL,
-      fontSize: 12
+      fontSize: LABEL_FONT_SIZE + 2
     }
   },
   labelBgCfg: {

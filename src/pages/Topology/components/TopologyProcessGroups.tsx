@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
 
 import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQueries } from '@tanstack/react-query';
@@ -6,11 +6,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
-import { GraphNode } from '@core/components/Graph/Graph.interfaces';
+import EmptyData from '@core/components/EmptyData';
+import { GraphNode, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
 
+import DisplayResource from './DisplayResources';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
@@ -24,8 +26,11 @@ const remoteProcessesQueryParams = {
   processGroupRole: 'remote'
 };
 
-const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupId }) {
+const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }) {
   const navigate = useNavigate();
+
+  const [componentIdSelected, setComponentIdSelected] = useState<string | undefined>(componentId);
+  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
   const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useQueries({
     queries: [
@@ -46,6 +51,15 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
       }
     ]
   });
+
+  const handleComponentSelected = useCallback((id?: string) => {
+    setComponentIdSelected(id);
+    graphRef?.current?.focusItem(id);
+  }, []);
+
+  const handleResetProcessSelected = useCallback(() => {
+    setComponentIdSelected(undefined);
+  }, []);
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -73,6 +87,15 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
       <StackItem>
         <Toolbar>
           <ToolbarContent>
+            <ToolbarItem>
+              <DisplayResource
+                type={'component'}
+                id={componentIdSelected}
+                onSelect={handleComponentSelected}
+                placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
+              />
+            </ToolbarItem>
+
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
                 <NavigationViewLink
@@ -87,13 +110,20 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: processGroupI
       </StackItem>
 
       <StackItem isFilled>
-        <GraphReactAdaptor
-          nodes={nodes}
-          edges={links}
-          onClickNode={handleGetSelectedNode}
-          itemSelected={processGroupId}
-          saveConfigkey={ZOOM_CACHE_KEY}
-        />
+        {!!nodes.length && (
+          <GraphReactAdaptor
+            ref={graphRef}
+            nodes={nodes}
+            edges={links}
+            onClickNode={handleGetSelectedNode}
+            itemSelected={componentIdSelected}
+            saveConfigkey={ZOOM_CACHE_KEY}
+            onMouseLeaveNode={handleResetProcessSelected}
+            onMouseLeaveEdge={handleResetProcessSelected}
+          />
+        )}
+
+        {!nodes.length && <EmptyData />}
       </StackItem>
     </Stack>
   );

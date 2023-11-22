@@ -35,6 +35,7 @@ import './SkGraph.css';
 
 const GRAPH_ZOOM_CACHE_KEY = 'graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'fitScreen';
+const DEFAULT_NODE_ZOOM = 1;
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   forwardRef(
@@ -46,6 +47,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         onClickEdge,
         onClickNode,
         onClickCombo,
+        onMouseLeaveNode,
+        onMouseLeaveEdge,
         itemSelected,
         saveConfigkey
       },
@@ -61,18 +64,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       useImperativeHandle(ref, () => ({
         saveNodePositions() {
-          const graphInstance = topologyGraphRef.current;
-
-          if (!graphInstance) {
-            return;
-          }
-
-          const updatedNodes = GraphController.fromNodesToLocalStorageData(
-            graphInstance.getNodes(),
-            ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-          );
-
-          GraphController.saveAllNodePositions(updatedNodes);
+          savePositions();
         },
 
         fitView() {
@@ -82,9 +74,39 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             return;
           }
 
-          graphInstance.fitView(20, undefined, true, { duration: 250 });
+          graphInstance.fitView(20, undefined, true, { duration: 100 });
+        },
+
+        focusItem(id: string) {
+          const graphInstance = topologyGraphRef.current;
+
+          if (!graphInstance) {
+            return;
+          }
+          const nodeFound = graphInstance.find('node', (node) => node.getModel().id === id);
+
+          if (nodeFound) {
+            graphInstance.zoomTo(DEFAULT_NODE_ZOOM);
+            graphInstance.focusItem(nodeFound, true, { duration: 100 });
+            handleMouseEnter(id);
+          }
         }
       }));
+
+      const savePositions = useCallback(() => {
+        const graphInstance = topologyGraphRef.current;
+
+        if (!graphInstance?.getNodes()) {
+          return;
+        }
+
+        const updatedNodes = GraphController.fromNodesToLocalStorageData(
+          graphInstance.getNodes(),
+          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+        );
+
+        GraphController.saveAllNodePositions(updatedNodes);
+      }, []);
 
       const handleComboMouseEnter = useCallback(({ currentTarget, item }: { currentTarget: Graph; item?: Item }) => {
         if (item) {
@@ -193,7 +215,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       const handleNodeMouseLeave = useCallback(
         ({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
-          currentTarget.setItemState(item, 'hover', false);
+          currentTarget.findAllByState('node', 'hover').forEach((node) => {
+            currentTarget.setItemState(node, 'hover', false);
+          });
 
           currentTarget.findAllByState('node', 'hidden').forEach((node) => {
             currentTarget.setItemState(node, 'hidden', false);
@@ -214,15 +238,23 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           itemSelectedRef.current = undefined;
           isHoverState.current = false;
+
+          if (onMouseLeaveNode) {
+            onMouseLeaveNode(item.getID());
+          }
         },
-        [handleComboMouseLeave]
+        [handleComboMouseLeave, onMouseLeaveNode]
       );
 
       const handleEdgeMouseLeave = useCallback(
         (evt: { currentTarget: Graph; item: Item }) => {
           handleNodeMouseLeave(evt);
+
+          if (onMouseLeaveEdge) {
+            onMouseLeaveEdge(evt.item.getID());
+          }
         },
-        [handleNodeMouseLeave]
+        [handleNodeMouseLeave, onMouseLeaveEdge]
       );
 
       const handleNodeClick = useCallback(
@@ -446,11 +478,14 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         };
         const debouncedHandleResize = debounce(handleResize, 200);
         window.addEventListener('resize', debouncedHandleResize);
+        window.addEventListener('beforeunload', savePositions);
 
         return () => {
+          savePositions();
           window.removeEventListener('resize', debouncedHandleResize);
+          window.removeEventListener('beforeunload', savePositions);
         };
-      }, []);
+      }, [savePositions]);
 
       return (
         <div ref={graphRef} style={{ height: '98%', background: GRAPH_BG_COLOR, position: 'relative' }}>

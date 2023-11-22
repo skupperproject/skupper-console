@@ -1,7 +1,7 @@
 import { registerEdge, registerCombo, IGroup, registerNode } from '@antv/g6';
 
 import {
-  CUSTOM_CIRCLE_NODE_STYLE,
+  BADGE_STYLE,
   CUSTOM_ITEMS_NAMES,
   EDGE_COLOR_DEFAULT,
   NODE_SIZE,
@@ -147,7 +147,7 @@ export function regusterComboWithCustomLabel() {
 }
 
 export function registerNodeWithBadges() {
-  const { containerBg, containerBorderColor, textColor, textFontSize } = CUSTOM_CIRCLE_NODE_STYLE;
+  const { containerBg, containerBorderColor, textColor, textFontSize } = BADGE_STYLE;
   const r = NODE_SIZE / 4;
   const angleBadge1 = 180;
   const x = r * Math.cos(angleBadge1) - r;

@@ -13,21 +13,30 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
+  Tooltip,
   getUniqueId
 } from '@patternfly/react-core';
+import { QuestionCircleIcon } from '@patternfly/react-icons';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
-import { GraphEdge, GraphCombo, GraphNode, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import {
+  GraphEdge,
+  GraphCombo,
+  GraphNode,
+  GraphReactAdaptorProps,
+  GraphReactAdaptorExposedMethods
+} from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
+import DisplayResource from './DisplayResources';
 import DisplaySelect from './DisplaySelect';
 import DisplayServices from './DisplayServices';
 import { TopologyController } from '../services';
@@ -57,23 +66,23 @@ const remoteProcessesQueryParams = {
 };
 
 const TopologyProcesses: FC<{
-  serviceId?: string;
+  serviceIds?: string[];
   id?: string;
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
-}> = function ({ serviceId, id: processId, GraphComponent = GraphReactAdaptor }) {
-  const serviceIds = serviceId ? [serviceId] : undefined;
-
+}> = function ({ serviceIds, id: processId, GraphComponent = GraphReactAdaptor }) {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
+  const [processIdSelected, setProcessIdSelected] = useState<string | undefined>(processId);
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
-  const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(DEFAULT_DISPLAY_OPTIONS_ENABLED);
+
+  const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
+  const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
 
-  const graphRef = useRef<{ saveNodePositions: Function; fitView: Function }>();
+  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
   const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
     setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
@@ -181,26 +190,34 @@ const TopologyProcesses: FC<{
     startTransition(() => {
       setDisplayOptionsSelected(options);
     });
+
+    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
   }, []);
 
-  const handleServiceSelected = useCallback(
-    (ids: string[]) => {
-      searchParams.delete('serviceId');
-      setServiceIdsSelected(ids);
-      setTimeout(() => graphRef?.current?.fitView(), 100);
-    },
-    [searchParams]
-  );
+  const handleProcessSelected = useCallback((id?: string) => {
+    setProcessIdSelected(id);
+    graphRef?.current?.focusItem(id);
+  }, []);
 
-  const handleSaveServicesSelected = useCallback(() => {
+  const handleResetProcessSelected = useCallback(() => {
+    setProcessIdSelected(undefined);
+  }, []);
+
+  const handleServiceSelected = useCallback((ids: string[]) => {
+    setServiceIdsSelected(ids);
+    setTimeout(() => graphRef?.current?.fitView(), 100);
+  }, []);
+
+  const handleSaveTopology = useCallback(() => {
     localStorage.setItem(SERVICE_OPTIONS, JSON.stringify(serviceIdsSelected));
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(displayOptionsSelected));
     graphRef?.current?.saveNodePositions();
 
     addInfoAlert(TopologyLabels.ToastSave);
-  }, [addInfoAlert, displayOptionsSelected, serviceIdsSelected]);
 
-  const handleLoadServicesSelected = useCallback(() => {
+    setTimeout(() => graphRef?.current?.fitView(), 100);
+  }, [addInfoAlert, serviceIdsSelected]);
+
+  const handleLoadTopology = useCallback(() => {
     const ids = localStorage.getItem(SERVICE_OPTIONS);
     const options = localStorage.getItem(DISPLAY_OPTIONS);
 
@@ -332,6 +349,10 @@ const TopologyProcesses: FC<{
         </ToolbarItem>
 
         <ToolbarItem>
+          <DisplayResource id={processIdSelected} onSelect={handleProcessSelected} />
+        </ToolbarItem>
+
+        <ToolbarItem>
           <DisplaySelect
             options={displayOptions}
             onSelect={handleDisplayOptionSelected}
@@ -347,10 +368,15 @@ const TopologyProcesses: FC<{
               default: 'spacerSm'
             }}
           >
-            <Button onClick={handleSaveServicesSelected}>{TopologyLabels.SaveButton}</Button>
+            <Button onClick={handleSaveTopology}>{TopologyLabels.SaveButton}</Button>
           </ToolbarItem>
           <ToolbarItem>
-            <Button onClick={handleLoadServicesSelected}>{TopologyLabels.LoadButton}</Button>
+            <Button onClick={handleLoadTopology}>{TopologyLabels.LoadButton}</Button>
+            <Tooltip content={TopologyLabels.DescriptionButton}>
+              <Button aria-label="Clipboard" variant="plain">
+                <QuestionCircleIcon />
+              </Button>
+            </Tooltip>
           </ToolbarItem>
         </ToolbarGroup>
 
@@ -375,11 +401,13 @@ const TopologyProcesses: FC<{
             nodes={nodes}
             edges={links}
             combos={groups}
-            itemSelected={processId}
+            itemSelected={processIdSelected}
             saveConfigkey={ZOOM_CACHE_KEY}
             onClickCombo={handleGetSelectedGroup}
             onClickNode={handleGetSelectedNode}
             onClickEdge={handleGetSelectedEdge}
+            onMouseLeaveNode={handleResetProcessSelected}
+            onMouseLeaveEdge={handleResetProcessSelected}
           />
         )}
 

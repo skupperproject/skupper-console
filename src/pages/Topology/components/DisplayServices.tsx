@@ -96,7 +96,7 @@ const DisplayServices: FC<{
       role="service-select"
       variant={SelectVariant.checkbox}
       isOpen={isServiceSelectMenuOpen}
-      placeholderText={TopologyLabels.ShowAll}
+      placeholderText={TopologyLabels.DisplayServicesDefaultLabel}
       onSelect={handleSelectService}
       onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
       selections={serviceIdsSelected}
