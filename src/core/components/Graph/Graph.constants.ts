@@ -19,7 +19,7 @@ const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
 export const NODE_SIZE = 25;
 const ICON_SIZE = 10;
-const LABEL_FONT_SIZE = 10;
+const LABEL_FONT_SIZE = 8;
 
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',

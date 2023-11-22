@@ -77,7 +77,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           graphInstance.fitView(20, undefined, true, { duration: 100 });
         },
 
-        focusItem(id: string) {
+        focusItem(id: string | undefined) {
           const graphInstance = topologyGraphRef.current;
 
           if (!graphInstance) {
@@ -89,7 +89,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             graphInstance.zoomTo(DEFAULT_NODE_ZOOM);
             graphInstance.focusItem(nodeFound, true, { duration: 100 });
             handleMouseEnter(id);
+
+            return;
           }
+          handleNodeMouseLeave({ currentTarget: graphInstance });
+
+          graphInstance.fitView(20, undefined, true, { duration: 100 });
         }
       }));
 
@@ -214,7 +219,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }, []);
 
       const handleNodeMouseLeave = useCallback(
-        ({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
+        ({ currentTarget, item }: { currentTarget: Graph; item?: Item }) => {
           currentTarget.findAllByState('node', 'hover').forEach((node) => {
             currentTarget.setItemState(node, 'hover', false);
           });
@@ -230,7 +235,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           // we need to remove the combo highlight if we leave the node label outside the combo boc
-          const comboId = item.getModel()?.comboId as string | undefined;
+          const comboId = item?.getModel()?.comboId as string | undefined;
 
           if (comboId) {
             handleComboMouseLeave({ currentTarget, item: currentTarget.findById(comboId) });
@@ -239,7 +244,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           itemSelectedRef.current = undefined;
           isHoverState.current = false;
 
-          if (onMouseLeaveNode) {
+          if (onMouseLeaveNode && item) {
             onMouseLeaveNode(item.getID());
           }
         },
