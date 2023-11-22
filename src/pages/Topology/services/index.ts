@@ -67,8 +67,7 @@ export const TopologyController = {
       return convertEntityToNode({
         id: identity,
         label,
-        iconFileName: img,
-        iconProps: { show: true, width: 24, height: 24 }
+        iconFileName: img
       });
     }),
 
@@ -209,6 +208,15 @@ export const TopologyController = {
         label: [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n')
       };
     });
+  },
+
+  loadDisplayOptions(key: string, defaultOptions: string[] = []) {
+    const displayOptions = localStorage.getItem(key);
+    if (displayOptions) {
+      return JSON.parse(displayOptions);
+    }
+
+    return defaultOptions;
   }
 };
 

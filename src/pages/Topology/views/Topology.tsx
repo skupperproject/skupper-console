@@ -1,4 +1,4 @@
-import { MouseEvent as ReactMouseEvent, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
@@ -14,8 +14,8 @@ import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topolog
 const Topology = function () {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const serviceId = searchParams.get(TopologyURLQueyParams.ServiceId) || undefined;
-  const id = searchParams.get(TopologyURLQueyParams.IdSelected) || undefined;
+  const serviceId = useRef(searchParams.get(TopologyURLQueyParams.ServiceId) || undefined);
+  const id = useRef(searchParams.get(TopologyURLQueyParams.IdSelected) || undefined);
   const type = searchParams.get(TopologyURLQueyParams.Type);
 
   const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
@@ -24,6 +24,13 @@ const Topology = function () {
     setTopologyType(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
   }
+
+  useEffect(() => {
+    // reset serviceId and id when they are received from the URL
+    searchParams?.delete(TopologyURLQueyParams.IdSelected);
+    searchParams?.delete(TopologyURLQueyParams.ServiceId);
+    setSearchParams(searchParams);
+  }, [searchParams, setSearchParams]);
 
   return (
     <MainContainer
@@ -45,8 +52,10 @@ const Topology = function () {
       mainContentChildren={
         <>
           {topologyType === TopologyViews.Sites && <TopologySite />}
-          {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id} />}
-          {topologyType === TopologyViews.Processes && <TopologyProcesses serviceId={serviceId} id={id} />}
+          {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id.current} />}
+          {topologyType === TopologyViews.Processes && (
+            <TopologyProcesses serviceIds={serviceId.current ? [serviceId.current] : undefined} id={id.current} />
+          )}
         </>
       }
     />

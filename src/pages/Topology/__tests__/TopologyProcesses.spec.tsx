@@ -32,6 +32,10 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
 
       fitView() {
         return jest.fn();
+      },
+
+      focusItem() {
+        return jest.fn();
       }
     }));
 
@@ -62,7 +66,7 @@ describe('Begin testing the Topology component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TopologyProcesses
-            serviceId={serviceNameSelected}
+            serviceIds={[serviceNameSelected]}
             id={processesResults[2].name}
             GraphComponent={MockGraphComponent}
           />
@@ -88,7 +92,7 @@ describe('Begin testing the Topology component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(TopologyLabels.ShowAll));
+    fireEvent.click(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel));
     expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
     expect(screen.getByText(servicesResults[1].name)).toBeInTheDocument();
   });
@@ -98,7 +102,7 @@ describe('Begin testing the Topology component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(TopologyLabels.ShowAll));
+    fireEvent.click(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel));
 
     fireEvent.change(screen.getByPlaceholderText(TopologyLabels.ServiceFilterPlaceholderText), {
       target: { value: servicesResults[0].name }
