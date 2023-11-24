@@ -127,10 +127,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     graphRef?.current?.focusItem(id);
   }, []);
 
-  const handleResetSiteSelected = useCallback(() => {
-    setSiteIdSelected(undefined);
-  }, []);
-
   useEffect(() => {
     if (!sites || !routerLinks || !routers) {
       return;
@@ -263,8 +259,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
             itemSelected={siteIdSelected}
             saveConfigkey={ZOOM_CACHE_KEY}
             onClickNode={handleGetSelectedNode}
-            onMouseLeaveNode={handleResetSiteSelected}
-            onMouseLeaveEdge={handleResetSiteSelected}
           />
         )}
 

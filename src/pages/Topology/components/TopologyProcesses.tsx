@@ -199,12 +199,9 @@ const TopologyProcesses: FC<{
     graphRef?.current?.focusItem(id);
   }, []);
 
-  const handleResetProcessSelected = useCallback(() => {
-    setProcessIdSelected(undefined);
-  }, []);
-
   const handleServiceSelected = useCallback((ids: string[]) => {
     setServiceIdsSelected(ids);
+    setProcessIdSelected(undefined);
     setTimeout(() => graphRef?.current?.fitView(), 100);
   }, []);
 
@@ -213,8 +210,6 @@ const TopologyProcesses: FC<{
     graphRef?.current?.saveNodePositions();
 
     addInfoAlert(TopologyLabels.ToastSave);
-
-    setTimeout(() => graphRef?.current?.fitView(), 100);
   }, [addInfoAlert, serviceIdsSelected]);
 
   const handleLoadTopology = useCallback(() => {
@@ -349,7 +344,11 @@ const TopologyProcesses: FC<{
         </ToolbarItem>
 
         <ToolbarItem>
-          <DisplayResource id={processIdSelected} onSelect={handleProcessSelected} />
+          <DisplayResource
+            id={processIdSelected}
+            onSelect={handleProcessSelected}
+            data={nodes.map((node) => ({ name: node.label, identity: node.id }))}
+          />
         </ToolbarItem>
 
         <ToolbarItem>
@@ -406,8 +405,6 @@ const TopologyProcesses: FC<{
             onClickCombo={handleGetSelectedGroup}
             onClickNode={handleGetSelectedNode}
             onClickEdge={handleGetSelectedEdge}
-            onMouseLeaveNode={handleResetProcessSelected}
-            onMouseLeaveEdge={handleResetProcessSelected}
           />
         )}
 

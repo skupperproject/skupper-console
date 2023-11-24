@@ -57,10 +57,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
     graphRef?.current?.focusItem(id);
   }, []);
 
-  const handleResetProcessSelected = useCallback(() => {
-    setComponentIdSelected(undefined);
-  }, []);
-
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
       const component = processGroups?.results.find(({ identity }) => identity === idSelected);
@@ -118,8 +114,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
             onClickNode={handleGetSelectedNode}
             itemSelected={componentIdSelected}
             saveConfigkey={ZOOM_CACHE_KEY}
-            onMouseLeaveNode={handleResetProcessSelected}
-            onMouseLeaveEdge={handleResetProcessSelected}
           />
         )}
 

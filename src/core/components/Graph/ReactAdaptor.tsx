@@ -35,7 +35,6 @@ import './SkGraph.css';
 
 const GRAPH_ZOOM_CACHE_KEY = 'graphZoom';
 const FIT_SCREEN_CACHE_KEY = 'fitScreen';
-const DEFAULT_NODE_ZOOM = 1;
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   forwardRef(
@@ -47,8 +46,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         onClickEdge,
         onClickNode,
         onClickCombo,
-        onMouseLeaveNode,
-        onMouseLeaveEdge,
         itemSelected,
         saveConfigkey
       },
@@ -59,7 +56,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const prevNodesRef = useRef<GraphNode[]>(nodesWithoutPosition);
       const prevEdgesRef = useRef<GraphEdge[]>(edges);
       const prevCombosRef = useRef<GraphCombo[] | undefined>(combos);
-      const itemSelectedRef = useRef(itemSelected);
+      const itemSelectedRef = useRef<string | undefined>();
       const topologyGraphRef = useRef<Graph>();
 
       useImperativeHandle(ref, () => ({
@@ -86,15 +83,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           const nodeFound = graphInstance.find('node', (node) => node.getModel().id === id);
 
           if (nodeFound) {
-            graphInstance.zoomTo(DEFAULT_NODE_ZOOM);
             graphInstance.focusItem(nodeFound, true, { duration: 100 });
             handleMouseEnter(id);
 
             return;
           }
           handleNodeMouseLeave({ currentTarget: graphInstance });
-
-          graphInstance.fitView(20, undefined, true, { duration: 100 });
         }
       }));
 
@@ -189,11 +183,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       /** Simulate a MouseEnter event, regardless of whether a node or edge is preselected */
       const handleMouseEnter = useCallback(
-        (nodeSelected?: string) => {
+        (id?: string) => {
           const graphInstance = topologyGraphRef.current;
 
-          if (graphInstance && nodeSelected) {
-            const item = graphInstance.findById(nodeSelected);
+          if (graphInstance && id) {
+            const item = graphInstance.findById(id);
 
             if (item) {
               if (item.get('type') === 'node') {
@@ -229,9 +223,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           });
 
           // when we back from an other view and we leave a node we must erase links status
-          currentTarget.getEdges().forEach((topologyEdge) => {
-            topologyEdge.show();
-            currentTarget.setItemState(topologyEdge, 'hover', false);
+          currentTarget.getEdges().forEach((edge) => {
+            edge.show();
+            currentTarget.setItemState(edge, 'hover', false);
           });
 
           // we need to remove the combo highlight if we leave the node label outside the combo boc
@@ -243,23 +237,15 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           itemSelectedRef.current = undefined;
           isHoverState.current = false;
-
-          if (onMouseLeaveNode && item) {
-            onMouseLeaveNode(item.getID());
-          }
         },
-        [handleComboMouseLeave, onMouseLeaveNode]
+        [handleComboMouseLeave]
       );
 
       const handleEdgeMouseLeave = useCallback(
         (evt: { currentTarget: Graph; item: Item }) => {
           handleNodeMouseLeave(evt);
-
-          if (onMouseLeaveEdge) {
-            onMouseLeaveEdge(evt.item.getID());
-          }
         },
-        [handleNodeMouseLeave, onMouseLeaveEdge]
+        [handleNodeMouseLeave]
       );
 
       const handleNodeClick = useCallback(
@@ -345,55 +331,92 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }, [handleSaveZoom, handleFitScreen]);
 
       // TIMING EVENTS
+      const handleAfterChangeData = useCallback(() => {
+        handleMouseEnter(itemSelectedRef.current);
+      }, [handleMouseEnter]);
+
       const handleAfterRender = useCallback(() => {
         handleMouseEnter(itemSelectedRef.current);
         setIsGraphLoaded(true);
       }, [handleMouseEnter]);
+
+      const handleBeforeDestroy = useCallback(() => {
+        savePositions();
+      }, [savePositions]);
 
       const bindEvents = useCallback(() => {
         /** EVENTS */
         topologyGraphRef.current?.on('node:click', handleNodeClick);
         topologyGraphRef.current?.on('node:dragstart', handleNodeDragStart);
         topologyGraphRef.current?.on('node:dragend', handleNodeDragEnd);
-        topologyGraphRef.current?.on('node:mouseenter', handleNodeMouseEnter);
-        topologyGraphRef.current?.on('node:mouseleave', handleNodeMouseLeave);
+        topologyGraphRef.current?.on(
+          'node:mouseenter',
+          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
+            !itemSelectedRef.current ? handleNodeMouseEnter({ currentTarget, item }) : undefined
+        );
+        topologyGraphRef.current?.on(
+          'node:mouseleave',
+          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
+            !itemSelectedRef.current ? handleNodeMouseLeave({ currentTarget, item }) : undefined
+        );
 
         topologyGraphRef.current?.on('edge:click', handleEdgeClick);
-        topologyGraphRef.current?.on('edge:mouseenter', handleEdgeMouseEnter);
-        topologyGraphRef.current?.on('edge:mouseleave', handleEdgeMouseLeave);
+        topologyGraphRef.current?.on(
+          'edge:mouseenter',
+          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
+            !itemSelectedRef.current ? handleEdgeMouseEnter({ currentTarget, item }) : undefined
+        );
+        topologyGraphRef.current?.on(
+          'edge:mouseleave',
+          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
+            !itemSelectedRef.current ? handleEdgeMouseLeave({ currentTarget, item }) : undefined
+        );
 
         topologyGraphRef.current?.on('combo:click', handleComboClick);
         topologyGraphRef.current?.on('combo:dragstart', handleCombDragStart);
         topologyGraphRef.current?.on('combo:dragend', handleComboDragEnd);
-        topologyGraphRef.current?.on('combo:mouseenter', handleComboMouseEnter);
-        topologyGraphRef.current?.on('combo:mouseleave', handleComboMouseLeave);
+        topologyGraphRef.current?.on(
+          'combo:mouseenter',
+          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
+            !itemSelectedRef.current ? handleComboMouseEnter({ currentTarget, item }) : undefined
+        );
+        topologyGraphRef.current?.on(
+          'combo:mouseleave',
+          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
+            !itemSelectedRef.current ? handleComboMouseLeave({ currentTarget, item }) : undefined
+        );
 
         topologyGraphRef.current?.on('canvas:dragstart', handleCanvasDragStart);
         topologyGraphRef.current?.on('canvas:dragend', handleCanvasDragEnd);
 
         topologyGraphRef.current?.on('wheelzoom', handleWheelZoom);
 
+        topologyGraphRef.current?.on('afterchangedata', handleAfterChangeData);
+
         // Be carefull: afterender is supposd to be calleed every re-render. However, in our case this event is called just one time  because we update the topology usng changeData.
         // If this behaviour changes we must use a flag to check only the first render
         topologyGraphRef.current?.on('afterrender', handleAfterRender);
+        topologyGraphRef.current?.on('beforedestroy', handleBeforeDestroy);
       }, [
-        handleAfterRender,
-        handleCanvasDragEnd,
-        handleCanvasDragStart,
-        handleComboClick,
-        handleComboDragEnd,
-        handleCombDragStart,
-        handleComboMouseEnter,
-        handleComboMouseLeave,
+        handleNodeClick,
+        handleNodeDragStart,
+        handleNodeDragEnd,
+        handleNodeMouseEnter,
+        handleNodeMouseLeave,
         handleEdgeClick,
         handleEdgeMouseEnter,
         handleEdgeMouseLeave,
-        handleNodeClick,
-        handleNodeDragEnd,
-        handleNodeDragStart,
-        handleNodeMouseEnter,
-        handleNodeMouseLeave,
-        handleWheelZoom
+        handleComboClick,
+        handleCombDragStart,
+        handleComboDragEnd,
+        handleComboMouseEnter,
+        handleComboMouseLeave,
+        handleCanvasDragStart,
+        handleCanvasDragEnd,
+        handleWheelZoom,
+        handleAfterChangeData,
+        handleAfterRender,
+        handleBeforeDestroy
       ]);
 
       /** Creates network topology instance */
@@ -420,6 +443,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
+
+      useEffect(() => {
+        itemSelectedRef.current = itemSelected;
+      }, [itemSelected]);
 
       // This effect updates the topology when there are changes to the nodes, edges or combos.
       useEffect(() => {
@@ -456,14 +483,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
-          // After calling changeData the data the state of topology is reset. We call this function to recover this state
-          handleMouseEnter(itemSelectedRef.current);
-
           prevNodesRef.current = nodesWithoutPosition;
           prevEdgesRef.current = edges;
           prevCombosRef.current = combos;
         }
-      }, [nodesWithoutPosition, edges, combos, isGraphLoaded, handleMouseEnter]);
+      }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
 
       // This effect handle the resize of the topology when the browser window changes size.
       useLayoutEffect(() => {
@@ -481,16 +505,18 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             return;
           }
         };
+
+        const destroyGraph = () => graphInstance.destroy();
         const debouncedHandleResize = debounce(handleResize, 200);
         window.addEventListener('resize', debouncedHandleResize);
-        window.addEventListener('beforeunload', savePositions);
+        window.addEventListener('beforeunload', destroyGraph);
 
         return () => {
-          savePositions();
           window.removeEventListener('resize', debouncedHandleResize);
-          window.removeEventListener('beforeunload', savePositions);
+          window.removeEventListener('beforeunload', destroyGraph);
+          graphInstance.destroy();
         };
-      }, [savePositions]);
+      }, []);
 
       return (
         <div ref={graphRef} style={{ height: '98%', background: GRAPH_BG_COLOR, position: 'relative' }}>

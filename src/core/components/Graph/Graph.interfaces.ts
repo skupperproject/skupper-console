@@ -52,8 +52,6 @@ export interface GraphReactAdaptorProps {
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
-  onMouseLeaveNode?: Function;
-  onMouseLeaveEdge?: Function;
   saveConfigkey?: string;
   onGetZoom?: Function;
   onFitScreen?: Function;
