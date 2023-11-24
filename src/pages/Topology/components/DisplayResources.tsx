@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useMemo, useState } from 'react';
 
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { useQueries } from '@tanstack/react-query';
@@ -32,10 +32,11 @@ const remoteComponentQueryParams = {
 
 const DisplayResource: FC<{
   id?: string;
+  data?: { name: string; identity: string }[];
   onSelect: Function;
   type?: 'process' | 'site' | 'component';
   placeholder?: string;
-}> = function ({ id, type = 'process', placeholder = TopologyLabels.DisplayProcessesDefaultLabel, onSelect }) {
+}> = function ({ id, type = 'process', placeholder = TopologyLabels.DisplayProcessesDefaultLabel, onSelect, data }) {
   const [isSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
 
   const [
@@ -100,7 +101,7 @@ const DisplayResource: FC<{
   }
 
   function handleFind(_: ChangeEvent<HTMLInputElement> | null, value: string) {
-    const options = getOptions();
+    const options = getOptions;
 
     if (!value) {
       return options;
@@ -115,18 +116,22 @@ const DisplayResource: FC<{
       .filter(Boolean);
   }
 
-  const getOptions = useCallback(() => {
-    let resources = [] as ProcessResponse[] | SiteResponse[] | ProcessGroupResponse[];
+  const getOptions = useMemo(() => {
+    let resources = [] as
+      | ProcessResponse[]
+      | SiteResponse[]
+      | ProcessGroupResponse[]
+      | { name: string; identity: string }[];
 
     if (type === 'process') {
-      resources = [...(externalProcesses || []), ...(remoteProcesses || [])];
+      resources = data || [...(externalProcesses || []), ...(remoteProcesses || [])];
     }
     if (type === 'site') {
-      resources = sites || [];
+      resources = data || sites || [];
     }
 
     if (type === 'component') {
-      resources = [...(externalComponents?.results || []), ...(remoteComponents?.results || [])];
+      resources = data || [...(externalComponents?.results || []), ...(remoteComponents?.results || [])];
     }
 
     return resources.map(({ name, identity }, index) => (
@@ -134,7 +139,7 @@ const DisplayResource: FC<{
         {name}
       </SelectOption>
     ));
-  }, [externalComponents?.results, remoteComponents?.results, externalProcesses, remoteProcesses, sites, type]);
+  }, [data, type, externalProcesses, remoteProcesses, sites, externalComponents?.results, remoteComponents?.results]);
 
   return (
     <Select
@@ -150,7 +155,7 @@ const DisplayResource: FC<{
       maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
       onClear={handleClear}
     >
-      {getOptions()}
+      {getOptions}
     </Select>
   );
 };
