@@ -22,10 +22,10 @@ context('Sites', () => {
   });
 
   it('should navigate to the correct process page when clicking on a link', () => {
-    const expectedUrl = 'http://localhost:3000/#/processes/process%20za@process-za';
+    const expectedUrl = 'http://localhost:3000/#/processes/process%20payment%201@process-payment-1';
 
-    const link = cy.get(`[data-testid="${testId}"]`).contains('process za');
-    link.should('have.attr', 'href', `#/processes/process za@process-za`);
+    const link = cy.get(`[data-testid="${testId}"]`).contains('process payment 1');
+    link.should('have.attr', 'href', `#/processes/process payment 1@process-payment-1`);
     link.click();
     cy.url().should('eq', expectedUrl);
   });
