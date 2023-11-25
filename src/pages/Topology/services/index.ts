@@ -325,7 +325,10 @@ export function combineEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[
 
       if (edge.metrics) {
         acc[key].metrics = {
-          protocol: [...new Set([acc[key]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean))].join(', '),
+          protocol:
+            edge.metrics.protocol && acc[key]?.metrics?.protocol?.includes(edge.metrics.protocol)
+              ? acc[key]?.metrics?.protocol
+              : [acc[key]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean).join(','),
           bytes: (acc[key]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
           byteRate: (acc[key]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),
           latency: (acc[key]?.metrics?.latency || 0) + (edge.metrics.latency || 0),

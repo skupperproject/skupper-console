@@ -7,6 +7,7 @@ import {
   AlertProps,
   AlertVariant,
   Button,
+  Divider,
   Stack,
   StackItem,
   Toolbar,
@@ -406,7 +407,10 @@ const TopologyProcesses: FC<{
 
   return (
     <Stack data-testid="sk-topology-processes">
-      <StackItem>{TopologyToolbar}</StackItem>
+      <StackItem>
+        {TopologyToolbar}
+        <Divider />
+      </StackItem>
       <StackItem isFilled>
         {!!nodes.length && (
           <GraphComponent

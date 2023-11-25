@@ -24,7 +24,7 @@ import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
 
 interface MainContainerProps {
   dataTestId?: string;
-  title: string;
+  title?: string;
   link?: string;
   linkLabel?: string;
   description?: string;
@@ -47,15 +47,17 @@ const MainContainer: FC<MainContainerProps> = function ({
   return (
     <TransitionPage>
       <PageGroup data-testid={dataTestId}>
-        <PageSection role="sk-heading" variant={PageSectionVariants.light}>
-          <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
-            <TextContent>
-              <Title headingLevel="h1">{title}</Title>
-              {description && <Text component={TextVariants.p}>{description}</Text>}
-            </TextContent>
-            {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
-          </Flex>
-        </PageSection>
+        {title && (
+          <PageSection role="sk-heading" variant={PageSectionVariants.light}>
+            <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+              <TextContent>
+                <Title headingLevel="h1">{title}</Title>
+                {description && <Text component={TextVariants.p}>{description}</Text>}
+              </TextContent>
+              {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
+            </Flex>
+          </PageSection>
+        )}
 
         {navigationComponent && (
           <>

@@ -33,7 +33,7 @@ export const BADGE_STYLE = {
   containerBg: HexColors.Black500,
   containerBorderColor: HexColors.White,
   textColor: HexColors.White,
-  textFontSize: LABEL_FONT_SIZE - 4
+  textFontSize: LABEL_FONT_SIZE - 2
 };
 
 const INACTIVE_OPACITY_VALUE = 0.3;
