@@ -2,31 +2,91 @@
   "results": [
     {
       "recType": "FLOWAGGREGATE",
-      "identity": "group-1-to-group-2",
+      "identity": "group-cart-to-group-payment",
       "startTime": 1674202485242354,
       "endTime": 0,
       "pairType": "PROCESS_GROUP",
       "recordCount": 2,
-      "sourceId": "group-1",
-      "sourceName": "component 1",
-      "destinationId": "group-2",
-      "destinationName": "component 2"
+      "sourceId": "group-cart",
+      "sourceName": "cart",
+      "destinationId": "group-payment",
+      "destinationName": "payment"
     },
     {
       "recType": "FLOWAGGREGATE",
-      "identity": "group-3-to-group-1",
+      "identity": "group-payment-to-group-op",
       "startTime": 1674202485242354,
       "endTime": 0,
       "pairType": "PROCESS_GROUP",
       "recordCount": 2,
-      "sourceId": "group-3",
-      "sourceName": "component 3",
-      "destinationId": "group-1",
-      "destinationName": "component 1"
+      "sourceId": "group-payment",
+      "sourceName": "payment",
+      "destinationId": "group-op",
+      "destinationName": "op"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "group-op-to-group-cart",
+      "startTime": 1674202485242354,
+      "endTime": 0,
+      "pairType": "PROCESS_GROUP",
+      "recordCount": 2,
+      "sourceId": "group-op",
+      "sourceName": "op",
+      "destinationId": "group-cart",
+      "destinationName": "cart"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "group-op-to-group-cahs-desk",
+      "startTime": 1674202485242354,
+      "endTime": 0,
+      "pairType": "PROCESS_GROUP",
+      "recordCount": 2,
+      "sourceId": "group-op",
+      "sourceName": "op",
+      "destinationId": "group-cash-desk",
+      "destinationName": "cash-desk"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "group-database-to-group-payment",
+      "startTime": 1674202485242354,
+      "endTime": 0,
+      "pairType": "PROCESS_GROUP",
+      "recordCount": 2,
+      "sourceId": "group-database",
+      "sourceName": "database",
+      "destinationId": "group-payment",
+      "destinationName": "payment"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "group-payment-to-group-cash-desk",
+      "startTime": 1674202485242354,
+      "endTime": 0,
+      "pairType": "PROCESS_GROUP",
+      "recordCount": 2,
+      "sourceId": "group-payment",
+      "sourceName": "payment",
+      "destinationId": "group-cash-desk",
+      "destinationName": "cash-desk"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "group-mm-to-group-database",
+      "startTime": 1674202485242354,
+      "endTime": 0,
+      "pairType": "PROCESS_GROUP",
+      "recordCount": 2,
+      "sourceId": "group-mm",
+      "sourceName": "mm",
+      "destinationId": "group-database",
+      "destinationName": "database"
     }
   ],
   "status": "",
-  "count": 2,
-  "timeRangeCount": 2,
-  "totalCount": 2
+  "count": 7,
+  "timeRangeCount": 7,
+  "totalCount": 7
 }

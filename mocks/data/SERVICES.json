@@ -2,10 +2,10 @@
   "results": [
     {
       "recType": "VanAddress",
-      "identity": "process-2:3000",
+      "identity": "cart:3000",
       "startTime": 1674048767157175,
       "endTime": 0,
-      "name": "process 2:3000",
+      "name": "cart:3000",
       "protocol": "http2",
       "connectorCount": 2,
       "totalFlows": 3,
@@ -13,10 +13,44 @@
     },
     {
       "recType": "VanAddress",
-      "identity": "process-alone:4900",
+      "identity": "payment:5000",
       "startTime": 1674048767157175,
       "endTime": 0,
-      "name": "process alone:4900",
+      "name": "payment:5000",
+      "protocol": "http2",
+      "connectorCount": 2,
+      "totalFlows": 3,
+      "currentFlows": 0
+    },
+    {
+      "recType": "VanAddress",
+      "identity": "cash-desk-http2:3000",
+      "startTime": 1674048767157175,
+      "endTime": 0,
+      "name": "cash-desk:3000",
+      "protocol": "http2",
+      "connectorCount": 2,
+      "totalFlows": 3,
+      "currentFlows": 0
+    },
+    {
+      "recType": "VanAddress",
+      "identity": "cash-desk-http1:3000",
+      "startTime": 1674048767157175,
+      "endTime": 0,
+      "name": "cash-desk:3000",
+      "protocol": "http1",
+      "connectorCount": 2,
+      "totalFlows": 3,
+      "currentFlows": 0
+    },
+
+    {
+      "recType": "VanAddress",
+      "identity": "op:4900",
+      "startTime": 1674048767157175,
+      "endTime": 0,
+      "name": "op:4900",
       "protocol": "http2",
       "connectorCount": 0,
       "totalFlows": 0,
@@ -24,10 +58,10 @@
     },
     {
       "recType": "VanAddress",
-      "identity": "process-nb:8000",
+      "identity": "database:8000",
       "startTime": 1674048767157175,
       "endTime": 0,
-      "name": "process nb:8000",
+      "name": "database:8000",
       "protocol": "tcp",
       "connectorCount": 1,
       "totalFlows": 1,
@@ -35,7 +69,7 @@
     }
   ],
   "status": "",
-  "count": 3,
-  "timeRangeCount": 3,
-  "totalCount": 3
+  "count": 6,
+  "timeRangeCount": 6,
+  "totalCount": 6
 }

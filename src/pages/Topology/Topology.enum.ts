@@ -42,6 +42,7 @@ export enum TopologyLabels {
   CheckBoxShowRouterLinks = 'Router links',
   CheckboxShowDataLinks = 'Data links',
   CheckboxRotateLabel = 'Rotate labels',
+  GroupNodesByComboAndGroup = 'Group similar processes within sites',
   CheckboxShowProtocol = 'Protocol',
   CheckboxShowTotalBytes = 'Total Traffic',
   CheckboxShowCurrentByteRate = 'Byterate (live)',

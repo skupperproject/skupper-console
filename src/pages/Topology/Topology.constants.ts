@@ -13,6 +13,7 @@ export const SHOW_LINK_BYTERATE = 'show-link-byterate';
 export const SHOW_LINK_LATENCY = 'show-link-latency';
 export const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
 export const ROTATE_LINK_LABEL = 'show-link-label-rotated';
+export const GROUP_NODES_COMBO_GROUP = 'group-nodes-combo-group';
 
 export const displayOptionsForProcesses: DisplaySelectProps[] = [
   {
@@ -45,6 +46,11 @@ export const displayOptionsForProcesses: DisplaySelectProps[] = [
     value: SHOW_LINK_REVERSE_LABEL,
     label: TopologyLabels.CheckboxShowLabelReverse,
     addSeparator: true
+  },
+  {
+    key: GROUP_NODES_COMBO_GROUP,
+    value: GROUP_NODES_COMBO_GROUP,
+    label: TopologyLabels.GroupNodesByComboAndGroup
   },
   {
     key: ROTATE_LINK_LABEL,
