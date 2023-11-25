@@ -1,6 +1,6 @@
 import { FC, useCallback, useRef, useState } from 'react';
 
-import { Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
+import { Divider, Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
 import { useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -103,6 +103,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
             </ToolbarGroup>
           </ToolbarContent>
         </Toolbar>
+        <Divider />
       </StackItem>
 
       <StackItem isFilled>

@@ -9,7 +9,7 @@ import MainContainer from '@layout/MainContainer';
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
 import TopologySite from '../components/TopologySite';
-import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
+import { TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,8 +37,6 @@ const Topology = function () {
       dataTestId={getTestsIds.topologyView()}
       isPlain
       hasMainContentPadding
-      title={TopologyLabels.Topology}
-      description={TopologyLabels.Description}
       navigationComponent={
         <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType}>
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
