@@ -6,6 +6,12 @@ export interface GraphNode {
   id: string;
   label: string;
   comboId?: string;
+  groupId?: string;
+  groupName?: string;
+  groupCount?: number;
+  type?: string;
+  enableBadge1?: boolean;
+  notificationValue?: number;
   icon?: {
     show?: boolean;
     img?: string;
@@ -36,6 +42,15 @@ export interface GraphEdge {
   label?: string;
   labelCfg?: Record<string, unknown>;
   style?: ShapeStyle;
+  metrics?: {
+    protocol: string | undefined;
+    bytes: number | undefined;
+    byteRate: number | undefined;
+    latency: number | undefined;
+    bytesReverse: number | undefined;
+    byteRateReverse: number | undefined;
+    latencyReverse: number | undefined;
+  };
 }
 
 export interface GraphReactAdaptorExposedMethods {

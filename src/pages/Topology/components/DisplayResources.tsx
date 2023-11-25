@@ -51,31 +51,31 @@ const DisplayResource: FC<{
         queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
         queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
         refetchInterval: UPDATE_INTERVAL,
-        enabled: type === 'process'
+        enabled: !data && type === 'process'
       },
       {
         queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
         queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
         refetchInterval: UPDATE_INTERVAL,
-        enabled: type === 'process'
+        enabled: !data && type === 'process'
       },
       {
         queryKey: [QueriesSites.GetSites],
         queryFn: () => RESTApi.fetchSites(),
         refetchInterval: UPDATE_INTERVAL,
-        enabled: type === 'site'
+        enabled: !data && type === 'site'
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, externalComponentQueryParams],
         queryFn: () => RESTApi.fetchProcessGroups(externalComponentQueryParams),
         refetchInterval: UPDATE_INTERVAL,
-        enabled: type === 'component'
+        enabled: !data && type === 'component'
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, remoteComponentQueryParams],
         queryFn: () => RESTApi.fetchProcessGroups(remoteComponentQueryParams),
         refetchInterval: UPDATE_INTERVAL,
-        enabled: type === 'component'
+        enabled: !data && type === 'component'
       }
     ]
   });

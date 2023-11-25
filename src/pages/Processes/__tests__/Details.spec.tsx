@@ -44,7 +44,7 @@ describe('Process component', () => {
     });
 
     expect(screen.getByText(processResult.parentName)).toHaveTextContent('site 1');
-    expect(screen.getByText(processResult.groupName)).toHaveTextContent('component 1');
+    expect(screen.getByText(processResult.groupName)).toHaveTextContent('payment');
     expect(screen.getByText(processResult.hostName)).toHaveTextContent('10.242.0.5');
     expect(screen.getByText(processResult.sourceHost)).toHaveTextContent('172.17.63.163');
   });

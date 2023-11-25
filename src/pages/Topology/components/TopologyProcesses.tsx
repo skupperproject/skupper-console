@@ -39,8 +39,9 @@ import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 import DisplayResource from './DisplayResources';
 import DisplaySelect from './DisplaySelect';
 import DisplayServices from './DisplayServices';
-import { TopologyController } from '../services';
+import { TopologyController, groupNodes, combineEdges } from '../services';
 import {
+  GROUP_NODES_COMBO_GROUP,
   ROTATE_LINK_LABEL,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
@@ -156,7 +157,8 @@ const TopologyProcesses: FC<{
   );
 
   const handleGetSelectedNode = useCallback(
-    ({ id: idSelected }: GraphNode) => {
+    ({ id }: GraphNode) => {
+      const idSelected = id.split('~')[0];
       if (externalProcesses && remoteProcesses) {
         const processes = [...externalProcesses, ...remoteProcesses];
         const process = processes.find(({ identity }) => identity === idSelected);
@@ -234,8 +236,17 @@ const TopologyProcesses: FC<{
       return;
     }
 
-    function addLabelsToEdges(prevLinks: GraphEdge[]) {
-      const protocolPairsMap = (processesPairs || []).reduce(
+    const options = {
+      showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+      showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
+      showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+      showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+      showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
+      rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
+    };
+
+    function addMetricsToEdges(edges: GraphEdge[]) {
+      const protocolByProcessPairsMap = (processesPairs || []).reduce(
         (acc, { sourceId, destinationId, protocol }) => {
           acc[`${sourceId}${destinationId}`] = protocol || '';
 
@@ -245,21 +256,13 @@ const TopologyProcesses: FC<{
       );
 
       return TopologyController.addMetricsToEdges(
-        prevLinks,
+        edges,
         'sourceProcess',
         'destProcess',
-        protocolPairsMap,
+        protocolByProcessPairsMap,
         metrics?.bytesByProcessPairs,
         metrics?.byteRateByProcessPairs,
-        metrics?.latencyByProcessPairs,
-        {
-          showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-          showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
-          showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-          showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
-          rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
-        }
+        metrics?.latencyByProcessPairs
       );
     }
 
@@ -274,31 +277,40 @@ const TopologyProcesses: FC<{
             addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
         )
         .map(({ identity }) => identity);
+
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
 
       processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
     }
-
-    const processesNodes = TopologyController.convertProcessesToNodes(processes);
     const siteNodes = TopologyController.convertSitesToNodes(sites);
-    const siteGroups = TopologyController.convertSitesToGroups(processesNodes, siteNodes);
-    const edges = addLabelsToEdges(TopologyController.convertPairsToEdges(pPairs))
-      //notify the user that the edge is clickable
-      .map((edge) => ({
-        ...edge,
-        style: { cursor: 'pointer' }
-      }));
+    let processNodes = TopologyController.convertProcessesToNodes(processes);
+    let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
+
+    if (isDisplayOptionActive(GROUP_NODES_COMBO_GROUP)) {
+      processNodes = groupNodes(processNodes);
+      processPairEdges = combineEdges(processNodes, processPairEdges);
+    }
+
+    processPairEdges = TopologyController.configureEdges(processPairEdges, options);
+    const nodeGroups = isDisplayOptionActive(SHOW_SITE_KEY)
+      ? TopologyController.convertSitesToGroups(processNodes, siteNodes)
+      : [];
 
     setNodes(
-      processesNodes.map((node) => ({
+      processNodes.map((node) => ({
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
       }))
     );
-    setLinks(edges);
-    setGroups(isDisplayOptionActive(SHOW_SITE_KEY) ? siteGroups : []);
+    setLinks(
+      processPairEdges.map((edge) => ({
+        ...edge,
+        style: { cursor: 'pointer' }
+      }))
+    );
+    setGroups(nodeGroups);
   }, [
     sites,
     externalProcesses,
@@ -336,6 +348,8 @@ const TopologyProcesses: FC<{
     return option;
   });
 
+  const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(processIdSelected || ''))?.id;
+
   const TopologyToolbar = (
     <Toolbar>
       <ToolbarContent>
@@ -345,7 +359,7 @@ const TopologyProcesses: FC<{
 
         <ToolbarItem>
           <DisplayResource
-            id={processIdSelected}
+            id={nodeIdSelected}
             onSelect={handleProcessSelected}
             data={nodes.map((node) => ({ name: node.label, identity: node.id }))}
           />
@@ -400,7 +414,7 @@ const TopologyProcesses: FC<{
             nodes={nodes}
             edges={links}
             combos={groups}
-            itemSelected={processIdSelected}
+            itemSelected={nodeIdSelected}
             saveConfigkey={ZOOM_CACHE_KEY}
             onClickCombo={handleGetSelectedGroup}
             onClickNode={handleGetSelectedNode}

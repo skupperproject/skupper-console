@@ -5,6 +5,8 @@ import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
 export interface Entity {
   id: string;
   comboId?: string;
+  groupId?: string;
+  groupName?: string;
   label: string;
   iconFileName: string;
   iconProps?: { show: boolean; width: number; height: number };
@@ -17,7 +19,7 @@ export interface TopologyMetrics {
   latencyByProcessPairs: PrometheusApiSingleResult[];
 }
 
-export interface TopologyMetricsMetrics {
+export interface TopologyConfigMetrics {
   showBytes?: boolean;
   showByteRate?: boolean;
   showLatency?: boolean;
@@ -34,4 +36,13 @@ export interface DisplaySelectProps {
   label: string;
   isDisabled?: Function;
   addSeparator?: boolean;
+}
+
+export interface DisplayOptions {
+  showLinkProtocol?: boolean;
+  showLinkBytes?: boolean;
+  showLinkByteRate?: boolean;
+  showLinkLatency?: boolean;
+  showLinkLabelReverse?: boolean;
+  rotateLabel?: boolean;
 }

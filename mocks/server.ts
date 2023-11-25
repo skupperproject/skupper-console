@@ -11,7 +11,8 @@ import {
   RouterResponse,
   SiteResponse,
   FlowPairsResponse,
-  ResponseWrapper
+  ResponseWrapper,
+  ProcessGroupPairsResponse
 } from 'API/REST.interfaces';
 
 const DELAY_RESPONSE = 0;
@@ -23,10 +24,10 @@ const prefix = '/api/v1alpha1';
 const path = './data';
 const collectors = require(`${path}/COLLECTORS.json`);
 const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
-const processGroups = require(`${path}/PROCESS_GROUPS.json`);
-const processGroupPairs = require(`${path}/PROCESS_GROUP_PAIRS.json`);
-const processes = require(`${path}/PROCESSES.json`);
-const processPairs = require(`${path}/PROCESS_PAIRS.json`);
+const processGroups: ResponseWrapper<ProcessGroupResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
+const processGroupPairs: ResponseWrapper<ProcessGroupPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
+const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
+const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const hosts = require(`${path}/HOSTS.json`);
 const services = require(`${path}/SERVICES.json`);
 const serviceProcesses = require(`${path}/SERVICE_PROCESSES.json`);
@@ -202,16 +203,60 @@ export const MockApi = {
     return { ...processPairs, results: resultsFiltered };
   },
 
-  getPrometheusQuery: () => ({
-    data: {
-      result: [
-        {
-          metric: {},
-          value: [1, 1]
+  getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
+    if (queryParams.query === 'sum by(destProcess, sourceProcess,direction)(rate(octets_total[1m]))') {
+      return {
+        data: {
+          resultType: 'vector',
+          result: [
+            {
+              metric: {
+                destProcess: 'process cash desk 1',
+                direction: 'outgoing',
+                sourceProcess: 'process payment 1'
+              },
+              value: [1700918004.674, '6000']
+            },
+            {
+              metric: {
+                destProcess: 'process payment 1',
+                direction: 'outgoing',
+                sourceProcess: 'process cash desk 1'
+              },
+              value: [1700918014, '1024']
+            },
+            {
+              metric: {
+                destProcess: 'process cash desk 2',
+                direction: 'outgoing',
+                sourceProcess: 'process payment 3'
+              },
+              value: [1700918024.674, '10000']
+            },
+            {
+              metric: {
+                destProcess: 'process cash desk 1',
+                direction: 'outgoing',
+                sourceProcess: 'process payment 1'
+              },
+              value: [1700918904.674, '20000']
+            }
+          ]
         }
-      ]
+      };
     }
-  }),
+
+    return {
+      data: {
+        result: [
+          {
+            metric: {},
+            value: [1, 1]
+          }
+        ]
+      }
+    };
+  },
 
   getPrometheusRangeQuery: () => ({
     data: {
@@ -293,8 +338,13 @@ export function loadMockServer() {
         results: processes.results.find(({ identity }: ProcessResponse) => identity === id)
       }));
 
-      this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }) => {
+      this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }): { results: ProcessResponse[] } => {
         const process = processes.results.find(({ identity }: ProcessResponse) => identity === id);
+
+        if (!process) {
+          return { results: [] };
+        }
+
         const processNamePrefix = process.name.split('-')[0];
 
         return {

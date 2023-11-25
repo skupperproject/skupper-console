@@ -132,6 +132,14 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
       return;
     }
 
+    const options = {
+      showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+      showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+      showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+      showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
+      rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
+    };
+
     if (!isDisplayOptionActive(SHOW_DATA_LINKS)) {
       const siteNodes = TopologyController.convertSitesToNodes(sites);
       const siteEdges = TopologyController.convertRouterLinksToEdges(sites, routers, routerLinks);
@@ -146,7 +154,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
       return;
     }
 
-    function addLabelsToEdges(prevLinks: GraphEdge[]) {
+    function addMetricsToEdges(prevLinks: GraphEdge[]) {
       return TopologyController.addMetricsToEdges(
         prevLinks.map((link) => ({
           ...link,
@@ -158,22 +166,16 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         undefined, // no need to retrieve protocols
         metrics?.bytesByProcessPairs,
         metrics?.byteRateByProcessPairs,
-        metrics?.latencyByProcessPairs,
-        {
-          showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-          showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-          showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
-          rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
-        }
+        metrics?.latencyByProcessPairs
       );
     }
 
     const siteNodes = TopologyController.convertSitesToNodes(sites);
-    const siteEdges = addLabelsToEdges(TopologyController.convertPairsToEdges(sitesPairs));
+    const siteEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(sitesPairs));
+    const siteEdgesWithLabel = TopologyController.configureEdges(siteEdges, options);
 
     setNodes(siteNodes);
-    setEdges(siteEdges);
+    setEdges(siteEdgesWithLabel);
   }, [
     sites,
     routers,

@@ -13,11 +13,11 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import ProcessPairs from '../components/ProcessPairs';
+import ProcessPairs from '../components/ProcessesPairs';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 
-const processResult = processesData.results[0] as ProcessResponse;
-const processPairsResult = processesPairsData.results[2] as ProcessPairsResponse | SitePairsResponse;
+const processResult = processesData.results[7] as ProcessResponse;
+const processPairsResult = processesPairsData.results[7] as ProcessPairsResponse | SitePairsResponse;
 
 describe('Process component', () => {
   let server: Server;
@@ -46,9 +46,9 @@ describe('Process component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByRole('link', { name: processesData.results[3].name })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: processesData.results[8].name })).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.Title}@${processPairsResult.identity}@${processPairsResult.protocol}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.destinationName}@${processPairsResult.destinationId}/${ProcessesLabels.Title}@${processPairsResult.identity}@${processPairsResult.protocol}`
     );
   });
 });

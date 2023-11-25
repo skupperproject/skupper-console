@@ -13,7 +13,7 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 
 import Details from '../components/Details';
 import Overview from '../components/Overview';
-import ProcessPairs from '../components/ProcessPairs';
+import ProcessPairs from '../components/ProcessesPairs';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const Process = function () {

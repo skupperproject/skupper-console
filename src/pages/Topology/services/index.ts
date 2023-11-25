@@ -27,7 +27,7 @@ import {
   SitePairsResponse
 } from 'API/REST.interfaces';
 
-import { Entity, TopologyMetrics, TopologyMetricsMetrics } from '../Topology.interfaces';
+import { Entity, TopologyMetrics, TopologyConfigMetrics, DisplayOptions } from '../Topology.interfaces';
 
 const shape = {
   bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
@@ -45,7 +45,7 @@ export const TopologyController = {
     showByteRate = false,
     showLatency = false,
     params
-  }: TopologyMetricsMetrics): Promise<TopologyMetrics> => {
+  }: TopologyConfigMetrics): Promise<TopologyMetrics> => {
     try {
       const [bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs] = await Promise.all([
         showBytes ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy) : [],
@@ -84,13 +84,23 @@ export const TopologyController = {
     }),
 
   convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
-    processes?.map(({ identity, name: label, parent: comboId, processRole: role, processBinding }) => {
-      const img = role === 'internal' ? skupperIcon : processIcon;
+    processes?.map(
+      ({ identity, name: label, parent: comboId, groupIdentity, groupName, processRole: role, processBinding }) => {
+        const img = role === 'internal' ? skupperIcon : processIcon;
 
-      const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
+        const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
 
-      return convertEntityToNode({ id: identity, comboId, label, iconFileName: img, nodeConfig });
-    }),
+        return convertEntityToNode({
+          id: identity,
+          comboId,
+          label,
+          iconFileName: img,
+          nodeConfig,
+          groupId: groupIdentity,
+          groupName
+        });
+      }
+    ),
 
   convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
     const groups = processes.map(({ comboId }) => comboId);
@@ -125,21 +135,13 @@ export const TopologyController = {
   },
 
   addMetricsToEdges: (
-    links: GraphEdge[],
+    edges: GraphEdge[],
     metricSourceLabel: string, // Prometheus metric label to compare with the metricDestLabel
     metricDestLabel: string,
     protocolPairsMap?: Record<string, string>,
     bytesByPairs?: PrometheusApiSingleResult[],
     byteRateByPairs?: PrometheusApiSingleResult[],
-    latencyByPairs?: PrometheusApiSingleResult[],
-    options?: {
-      showLinkProtocol?: boolean;
-      showLinkBytes?: boolean;
-      showLinkByteRate?: boolean;
-      showLinkLatency?: boolean;
-      showLinkLabelReverse?: boolean;
-      rotateLabel?: boolean;
-    }
+    latencyByPairs?: PrometheusApiSingleResult[]
   ): GraphEdge[] => {
     const getPairsMap = (metricPairs: PrometheusApiSingleResult[] | undefined) =>
       (metricPairs || []).reduce(
@@ -163,52 +165,59 @@ export const TopologyController = {
     const byteRateByPairsMap = getPairsMap(byteRateByPairs);
     const latencyByPairsMap = getPairsMap(latencyByPairs);
 
-    return links.map((link) => {
-      let byteRateText, byteRateReverseText, bytesText, bytesReverseText, latencyText, latencyReverseText, protocolText;
+    return edges.map((edge) => {
+      const pairKey = `${edge.sourceName}${edge.targetName}`;
+      const reversePairKey = `${edge.targetName}${edge.sourceName}`;
 
-      const pairKey = `${link.sourceName}${link.targetName}`;
-      const reversePairKey = `${link.targetName}${link.sourceName}`;
-
-      if (options?.showLinkProtocol && protocolPairsMap) {
-        protocolText = protocolPairsMap[`${link.source}${link.target}`] || undefined;
-      }
-
-      if (options?.showLinkByteRate) {
-        byteRateText = `${formatByteRate(byteRateByPairsMap[pairKey] || 0)}`;
-
-        if (options?.showLinkLabelReverse && link.source !== link.target) {
-          byteRateReverseText = `(${formatByteRate(byteRateByPairsMap[reversePairKey] || 0)})`;
+      return {
+        ...edge,
+        type: edge.source === edge.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
+        metrics: {
+          protocol: protocolPairsMap && protocolPairsMap[`${edge.source}${edge.target}`],
+          bytes: bytesByPairsMap[pairKey],
+          byteRate: byteRateByPairsMap[pairKey],
+          latency: latencyByPairsMap[pairKey],
+          bytesReverse: bytesByPairsMap[reversePairKey],
+          byteRateReverse: byteRateByPairsMap[reversePairKey],
+          latencyReverse: latencyByPairsMap[reversePairKey]
         }
-      }
+      };
+    });
+  },
 
-      if (options?.showLinkBytes) {
-        bytesText = `${formatBytes(bytesByPairsMap[pairKey] || 0)}`;
+  configureEdges: (edges: GraphEdge[], options?: DisplayOptions): GraphEdge[] =>
+    edges.map((edge) => {
+      const protocolText = options?.showLinkProtocol && edge?.metrics?.protocol;
+      const byteRateText = options?.showLinkByteRate && `${formatByteRate(edge?.metrics?.byteRate || 0)}`;
+      const bytesText = options?.showLinkBytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
+      const latencyText = options?.showLinkLatency && `${formatLatency(edge?.metrics?.latency || 0)}`;
 
-        if (options?.showLinkLabelReverse && link.source !== link.target) {
-          bytesReverseText = `(${formatBytes(bytesByPairsMap[reversePairKey] || 0)})`;
-        }
-      }
-
-      if (options?.showLinkLatency) {
-        latencyText = `${formatLatency(latencyByPairsMap[pairKey] || 0)}`;
-
-        if (options?.showLinkLabelReverse && link.source !== link.target) {
-          latencyReverseText = `(${formatLatency(latencyByPairsMap[reversePairKey] || 0)})`;
-        }
-      }
+      const byteRateReverseText =
+        options?.showLinkByteRate &&
+        options?.showLinkLabelReverse &&
+        edge.source !== edge.target &&
+        `(${formatByteRate(edge?.metrics?.byteRateReverse || 0)})`;
+      const bytesReverseText =
+        options?.showLinkBytes &&
+        options?.showLinkLabelReverse &&
+        edge.source !== edge.target &&
+        `(${formatBytes(edge?.metrics?.bytesReverse || 0)})`;
+      const latencyReverseText =
+        options?.showLinkLatency &&
+        options?.showLinkLabelReverse &&
+        edge.source !== edge.target &&
+        `(${formatLatency(edge?.metrics?.latencyReverse || 0)})`;
 
       const metrics = [bytesText, byteRateText, latencyText].filter(Boolean).join(', ');
       const reverseMetrics = [bytesReverseText, byteRateReverseText, latencyReverseText].filter(Boolean).join(', ');
 
       return {
-        ...link,
-        type: link.source === link.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
+        ...edge,
         labelCfg: { autoRotate: !options?.rotateLabel },
-        style: { ...link.style, stroke: EDGE_COLOR_DEFAULT },
+        style: { ...edge.style, stroke: EDGE_COLOR_DEFAULT },
         label: [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n')
       };
-    });
-  },
+    }),
 
   loadDisplayOptions(key: string, defaultOptions: string[] = []) {
     const displayOptions = localStorage.getItem(key);
@@ -223,6 +232,8 @@ export const TopologyController = {
 function convertEntityToNode({
   id,
   comboId,
+  groupId,
+  groupName,
   label,
   iconFileName,
   iconProps = DEFAULT_NODE_ICON,
@@ -231,7 +242,104 @@ function convertEntityToNode({
   return {
     id,
     comboId,
+    groupId,
+    groupName,
     label,
     ...{ ...DEFAULT_NODE_CONFIG, icon: { ...iconProps, img: iconFileName }, ...nodeConfig }
   };
+}
+
+/**
+ * Groups an array of GraphNode objects based on their comboId and groupId properties.
+ */
+export function groupNodes(data: GraphNode[]): GraphNode[] {
+  const groupedNodes: Record<string, GraphNode> = {};
+
+  data.forEach((item) => {
+    //group nodes by comboId and groupId
+    const group = `${item.comboId}-${item.groupId}`;
+
+    if (!groupedNodes[group]) {
+      groupedNodes[group] = {
+        ...item,
+        id: '', // The 'id' string will be concatenated with the process ID
+        comboId: item.comboId,
+        groupCount: 0
+      };
+    }
+
+    // Concatenate the process ID to the 'id' string
+    //! not null assertion operator  https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
+    if (groupedNodes[group].groupCount! > 0) {
+      groupedNodes[group].id += '~';
+    }
+
+    groupedNodes[group].id += item.id;
+    groupedNodes[group].groupCount! += 1;
+
+    if (groupedNodes[group].groupCount! > 1) {
+      groupedNodes[group].label = item.groupName || '';
+      groupedNodes[group].type = shape.bound;
+      groupedNodes[group].notificationValue = groupedNodes[group].groupCount;
+      groupedNodes[group].enableBadge1 = true;
+    }
+  });
+
+  // Convert groupedNodes object to an array
+  return Object.values(groupedNodes);
+}
+
+/**
+ * Combines the edges of a graph with the corresponding nodes or grouped nodes.
+ */
+export function combineEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] {
+  // Reduce the array of edges to a mapping of combined edges
+  const edgeMap: { [key: string]: GraphEdge } = edges.reduce(
+    (acc, edge) => {
+      // Find matching nodes for source and target in the nodes array
+      const sourceMatch = nodes.find(({ id }) => id.includes(edge.source));
+      const targetMatch = nodes.find(({ id }) => id.includes(edge.target));
+
+      // Update source and target with matched node IDs, if found
+      const newSource = sourceMatch ? sourceMatch.id : edge.source;
+      const newTarget = targetMatch ? targetMatch.id : edge.target;
+
+      // Create a unique key based on the combination of newSource and newTarget
+      const key = `${newSource}-${newTarget}`;
+
+      // If the key already exists, add the metrics, otherwise, add the new edge
+      acc[key] = acc[key] || {
+        ...edge,
+        metrics: {
+          protocol: '',
+          bytes: 0,
+          byteRate: 0,
+          latency: 0,
+          bytesReverse: 0,
+          byteRateReverse: 0,
+          latencyReverse: 0
+        },
+        source: newSource,
+        target: newTarget
+      };
+
+      if (edge.metrics) {
+        acc[key].metrics = {
+          protocol: [...new Set([acc[key]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean))].join(', '),
+          bytes: (acc[key]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
+          byteRate: (acc[key]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),
+          latency: (acc[key]?.metrics?.latency || 0) + (edge.metrics.latency || 0),
+          bytesReverse: (acc[key]?.metrics?.bytesReverse || 0) + (edge.metrics.bytesReverse || 0),
+          byteRateReverse: (acc[key]?.metrics?.byteRateReverse || 0) + (edge.metrics.byteRateReverse || 0),
+          latencyReverse: (acc[key]?.metrics?.latencyReverse || 0) + (edge.metrics.latencyReverse || 0)
+        };
+      }
+
+      return acc;
+    },
+    {} as { [key: string]: GraphEdge }
+  );
+
+  // Convert the mapping to an array of edges
+  return Object.values(edgeMap);
 }
