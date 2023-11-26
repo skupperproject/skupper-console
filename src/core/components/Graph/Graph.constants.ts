@@ -103,7 +103,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
       background: {
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_BORDER_COLOR_DEFAULT,
-        lineWidth: 1,
+        lineWidth: 0.5,
         padding: [2, 3],
         radius: 2
       }
@@ -148,7 +148,8 @@ const DEFAULT_EDGE_CONFIG: Partial<{
     }
   },
   style: {
-    lineWidth: 1,
+    opacity: 1,
+    lineWidth: 0.5,
     lineDash: [0, 0, 0, 0],
     lineAppendWidth: 20,
     stroke: EDGE_COLOR_DEFAULT,
@@ -193,9 +194,9 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
 const DEFAULT_NODE_STATE_CONFIG = {
   hover: {
     shadowOffsetX: 0,
-    shadowOffsetY: 0,
+    shadowOffsetY: 3,
     shadowColor: 'black',
-    shadowBlur: 10,
+    shadowBlur: 8,
 
     [`${CUSTOM_ITEMS_NAMES.nodeWithBadges}-icon`]: {
       cursor: 'pointer'
@@ -204,6 +205,7 @@ const DEFAULT_NODE_STATE_CONFIG = {
       cursor: 'pointer'
     }
   },
+
   hidden: {
     opacity: INACTIVE_OPACITY_VALUE,
 

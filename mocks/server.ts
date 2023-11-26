@@ -110,14 +110,17 @@ mockRoutersForPerf.forEach((_, index) => {
 
 const mockProcessesForPerf: ProcessResponse[] = [];
 for (let i = 0; i < ITEMS_TEST; i++) {
-  const parent = Math.floor(Math.random() * (4 - 1 + 1) + 1);
+  // const parent = Math.floor(Math.random() * (4 - 1 + 1) + 1);
+  const process = processes.results[i % processes.results.length];
 
   mockProcessesForPerf.push({
     ...processes.results[0],
-    identity: `processPerf${i}`,
-    parent: `site-${parent}`,
-    name: `process ${i}`,
-    parentName: `site ${parent}`
+    identity: `${process.identity}-${i}`,
+    name: `${process.name} ${i}`,
+    groupIdentity: process.groupIdentity,
+    groupName: process.groupName,
+    parent: process.parent,
+    parentName: process.parentName
   });
 }
 
@@ -209,14 +212,6 @@ export const MockApi = {
         data: {
           resultType: 'vector',
           result: [
-            {
-              metric: {
-                destProcess: 'process cash desk 1',
-                direction: 'outgoing',
-                sourceProcess: 'process payment 1'
-              },
-              value: [1700918004.674, '6000']
-            },
             {
               metric: {
                 destProcess: 'process payment 1',
@@ -335,7 +330,9 @@ export function loadMockServer() {
       }));
 
       this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => ({
-        results: processes.results.find(({ identity }: ProcessResponse) => identity === id)
+        results: (PERF_TEST ? mockProcessesForPerf : processes.results).find(
+          ({ identity }: ProcessResponse) => identity === id
+        )
       }));
 
       this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }): { results: ProcessResponse[] } => {

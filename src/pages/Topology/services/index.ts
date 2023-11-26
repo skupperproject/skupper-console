@@ -256,7 +256,7 @@ export function groupNodes(data: GraphNode[]): GraphNode[] {
   const groupedNodes: Record<string, GraphNode> = {};
 
   data.forEach((item) => {
-    //group nodes by comboId and groupId
+    // Create a unique key based on the combination of comboId and groupId
     const group = `${item.comboId}-${item.groupId}`;
 
     if (!groupedNodes[group]) {
@@ -292,7 +292,7 @@ export function groupNodes(data: GraphNode[]): GraphNode[] {
 /**
  * Combines the edges of a graph with the corresponding nodes or grouped nodes.
  */
-export function combineEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] {
+export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] {
   // Reduce the array of edges to a mapping of combined edges
   const edgeMap: { [key: string]: GraphEdge } = edges.reduce(
     (acc, edge) => {
@@ -305,11 +305,12 @@ export function combineEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[
       const newTarget = targetMatch ? targetMatch.id : edge.target;
 
       // Create a unique key based on the combination of newSource and newTarget
-      const key = `${newSource}-${newTarget}`;
+      const group = `${newSource}-${newTarget}`;
 
       // If the key already exists, add the metrics, otherwise, add the new edge
-      acc[key] = acc[key] || {
+      acc[group] = acc[group] || {
         ...edge,
+        id: '', // The 'id' string will be concatenated with the process ID
         metrics: {
           protocol: '',
           bytes: 0,
@@ -323,18 +324,24 @@ export function combineEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[
         target: newTarget
       };
 
+      if (acc[group].id !== '') {
+        acc[group].id += '~';
+      }
+
+      acc[group].id += edge.id;
+
       if (edge.metrics) {
-        acc[key].metrics = {
+        acc[group].metrics = {
           protocol:
-            edge.metrics.protocol && acc[key]?.metrics?.protocol?.includes(edge.metrics.protocol)
-              ? acc[key]?.metrics?.protocol
-              : [acc[key]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean).join(','),
-          bytes: (acc[key]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
-          byteRate: (acc[key]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),
-          latency: (acc[key]?.metrics?.latency || 0) + (edge.metrics.latency || 0),
-          bytesReverse: (acc[key]?.metrics?.bytesReverse || 0) + (edge.metrics.bytesReverse || 0),
-          byteRateReverse: (acc[key]?.metrics?.byteRateReverse || 0) + (edge.metrics.byteRateReverse || 0),
-          latencyReverse: (acc[key]?.metrics?.latencyReverse || 0) + (edge.metrics.latencyReverse || 0)
+            edge.metrics.protocol && acc[group]?.metrics?.protocol?.includes(edge.metrics.protocol)
+              ? acc[group]?.metrics?.protocol
+              : [acc[group]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean).join(','),
+          bytes: (acc[group]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
+          byteRate: (acc[group]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),
+          latency: (acc[group]?.metrics?.latency || 0) + (edge.metrics.latency || 0),
+          bytesReverse: (acc[group]?.metrics?.bytesReverse || 0) + (edge.metrics.bytesReverse || 0),
+          byteRateReverse: (acc[group]?.metrics?.byteRateReverse || 0) + (edge.metrics.byteRateReverse || 0),
+          latencyReverse: (acc[group]?.metrics?.latencyReverse || 0) + (edge.metrics.latencyReverse || 0)
         };
       }
 
