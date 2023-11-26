@@ -8,8 +8,16 @@ import {
   AlertVariant,
   Button,
   Divider,
+  List,
+  ListItem,
+  Modal,
+  ModalVariant,
+  Panel,
+  PanelHeader,
+  PanelMainBody,
   Stack,
   StackItem,
+  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -40,7 +48,7 @@ import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 import DisplayResource from './DisplayResources';
 import DisplaySelect from './DisplaySelect';
 import DisplayServices from './DisplayServices';
-import { TopologyController, groupNodes, combineEdges } from '../services';
+import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
 import {
   GROUP_NODES_COMBO_GROUP,
   ROTATE_LINK_LABEL,
@@ -80,28 +88,14 @@ const TopologyProcesses: FC<{
   const [processIdSelected, setProcessIdSelected] = useState<string | undefined>(processId);
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
 
+  const [isProcessModalOpen, setIsModalOpen] = useState(false);
+  const [isProcessPairModalOpen, setIsProcessPairModalOpen] = useState(false);
+
   const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
   const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
-
-  const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
-    setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
-  };
-
-  const removeAlert = (key: Key) => {
-    setAlerts((prevAlerts) => [...prevAlerts.filter((alert) => alert.key !== key)]);
-  };
-
-  const addInfoAlert = useCallback((message: string) => {
-    addAlert(message, 'info', getUniqueId());
-  }, []);
-
-  const isDisplayOptionActive = useCallback(
-    (option: string) => displayOptionsSelected.includes(option),
-    [displayOptionsSelected]
-  );
 
   const [{ data: sites }, { data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] =
     useQueries({
@@ -129,6 +123,10 @@ const TopologyProcesses: FC<{
       ]
     });
 
+  const isDisplayOptionActive = useCallback(
+    (option: string) => displayOptionsSelected.includes(option),
+    [displayOptionsSelected]
+  );
   const { data: metrics } = useQuery({
     queryKey: [
       QueriesTopology.GetBytesByProcessPairs,
@@ -150,6 +148,26 @@ const TopologyProcesses: FC<{
     refetchInterval: UPDATE_INTERVAL
   });
 
+  const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
+    setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
+  };
+
+  const removeAlert = (key: Key) => {
+    setAlerts((prevAlerts) => [...prevAlerts.filter((alert) => alert.key !== key)]);
+  };
+
+  const addInfoAlert = useCallback((message: string) => {
+    addAlert(message, 'info', getUniqueId());
+  }, []);
+
+  const handleProcessModalToggle = useCallback(() => {
+    setIsModalOpen(!isProcessModalOpen);
+  }, [isProcessModalOpen]);
+
+  const handleProcessPairModalToggle = useCallback(() => {
+    setIsProcessPairModalOpen(!isProcessPairModalOpen);
+  }, [isProcessPairModalOpen]);
+
   const handleGetSelectedGroup = useCallback(
     ({ id, label }: GraphCombo) => {
       navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
@@ -158,35 +176,46 @@ const TopologyProcesses: FC<{
   );
 
   const handleGetSelectedNode = useCallback(
-    ({ id }: GraphNode) => {
-      const idSelected = id.split('~')[0];
-      if (externalProcesses && remoteProcesses) {
-        const processes = [...externalProcesses, ...remoteProcesses];
-        const process = processes.find(({ identity }) => identity === idSelected);
+    ({ id }: { id: string }) => {
+      const processes = [...externalProcesses!, ...remoteProcesses!];
 
-        navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${idSelected}`);
+      if (id.split('~').length > 1) {
+        setProcessIdSelected(id);
+        handleProcessModalToggle();
+
+        return;
       }
+
+      const process = processes.find(({ identity }) => identity === id);
+      navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${id}`);
     },
-    [navigate, externalProcesses, remoteProcesses]
+    [externalProcesses, remoteProcesses, navigate, handleProcessModalToggle]
   );
 
   const handleGetSelectedEdge = useCallback(
-    ({ id: idSelected }: GraphEdge) => {
+    ({ id }: { id: string }) => {
+      if (id.split('~').length > 1) {
+        setProcessIdSelected(id);
+        handleProcessPairModalToggle();
+
+        return;
+      }
+
       if (externalProcesses && remoteProcesses) {
-        const [sourceId] = idSelected.split('-to-');
+        const [sourceId] = id.split('-to-');
         const processes = [...externalProcesses, ...remoteProcesses];
 
         const sourceProcess = processes?.find(({ identity }) => identity === sourceId) as ProcessResponse;
-        const protocol = processesPairs?.find(({ identity }) => identity === idSelected)?.protocol;
+        const protocol = processesPairs?.find(({ identity }) => identity === id)?.protocol;
 
         if (sourceProcess) {
           navigate(
-            `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${ProcessesLabels.ProcessPairs}@${idSelected}@${protocol}`
+            `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${ProcessesLabels.ProcessPairs}@${id}@${protocol}`
           );
         }
       }
     },
-    [navigate, externalProcesses, remoteProcesses, processesPairs]
+    [externalProcesses, remoteProcesses, handleProcessPairModalToggle, processesPairs, navigate]
   );
 
   const handleDisplayOptionSelected = useCallback((options: string[]) => {
@@ -291,7 +320,7 @@ const TopologyProcesses: FC<{
 
     if (isDisplayOptionActive(GROUP_NODES_COMBO_GROUP)) {
       processNodes = groupNodes(processNodes);
-      processPairEdges = combineEdges(processNodes, processPairEdges);
+      processPairEdges = groupEdges(processNodes, processPairEdges);
     }
 
     processPairEdges = TopologyController.configureEdges(processPairEdges, options);
@@ -349,7 +378,9 @@ const TopologyProcesses: FC<{
     return option;
   });
 
-  const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(processIdSelected || ''))?.id;
+  const nodeIdSelected = nodes.find(
+    ({ id }) => id.split('~').includes(processIdSelected || '') || processIdSelected === id
+  )?.id;
 
   const TopologyToolbar = (
     <Toolbar>
@@ -406,40 +437,138 @@ const TopologyProcesses: FC<{
   );
 
   return (
-    <Stack data-testid="sk-topology-processes">
-      <StackItem>
-        {TopologyToolbar}
-        <Divider />
-      </StackItem>
-      <StackItem isFilled>
-        {!!nodes.length && (
-          <GraphComponent
-            ref={graphRef}
-            nodes={nodes}
-            edges={links}
-            combos={groups}
-            itemSelected={nodeIdSelected}
-            saveConfigkey={ZOOM_CACHE_KEY}
-            onClickCombo={handleGetSelectedGroup}
-            onClickNode={handleGetSelectedNode}
-            onClickEdge={handleGetSelectedEdge}
-          />
-        )}
-
-        {!nodes.length && <EmptyData />}
-        <AlertGroup isToast>
-          {alerts.map(({ key, title }) => (
-            <Alert
-              key={key}
-              timeout={2000}
-              variant={AlertVariant.info}
-              title={title}
-              actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
+    <>
+      <Stack data-testid="sk-topology-processes">
+        <StackItem>
+          {TopologyToolbar}
+          <Divider />
+        </StackItem>
+        <StackItem isFilled>
+          {!!nodes.length && (
+            <GraphComponent
+              ref={graphRef}
+              nodes={nodes}
+              edges={links}
+              combos={groups}
+              itemSelected={nodeIdSelected}
+              saveConfigkey={ZOOM_CACHE_KEY}
+              onClickCombo={handleGetSelectedGroup}
+              onClickNode={handleGetSelectedNode}
+              onClickEdge={handleGetSelectedEdge}
             />
-          ))}
-        </AlertGroup>
-      </StackItem>
-    </Stack>
+          )}
+
+          {!nodes.length && <EmptyData />}
+          <AlertGroup isToast>
+            {alerts.map(({ key, title }) => (
+              <Alert
+                key={key}
+                timeout={2000}
+                variant={AlertVariant.info}
+                title={title}
+                actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
+              />
+            ))}
+          </AlertGroup>
+        </StackItem>
+      </Stack>
+      <Modal
+        variant={ModalVariant.small}
+        title="Connections"
+        isOpen={isProcessPairModalOpen}
+        onClose={handleProcessPairModalToggle}
+      >
+        {processIdSelected?.split('~').map((id) => {
+          const processPair = processesPairs!.find(({ identity }) => identity === id);
+
+          if (!processPair) {
+            return null;
+          }
+
+          return (
+            <div key={id}>
+              <Button variant="link" onClick={() => handleGetSelectedEdge({ id: processPair.identity })}>
+                from {processPair.sourceName} to {processPair.destinationName}
+              </Button>
+            </div>
+          );
+        })}
+      </Modal>
+
+      <Modal variant={ModalVariant.small} isOpen={isProcessModalOpen} onClose={handleProcessModalToggle}>
+        <List isPlain isBordered>
+          {processIdSelected?.split('~').map((id) => {
+            const processes = [...remoteProcesses!, ...externalProcesses!];
+            const process = processes.find(({ identity }) => identity === id);
+            const clientPairs = processesPairs
+              ?.filter(({ destinationId }) => destinationId === id)
+              .flatMap(({ sourceId }) => [sourceId]);
+
+            const targetPairs = processesPairs
+              ?.filter(({ sourceId }) => sourceId === id)
+              .flatMap(({ destinationId }) => [destinationId]);
+
+            const clients = processes.filter(({ identity }) => clientPairs?.includes(identity));
+            const targets = processes.filter(({ identity }) => targetPairs?.includes(identity));
+
+            if (!process) {
+              return null;
+            }
+
+            return (
+              <ListItem key={id}>
+                <Panel>
+                  <PanelHeader>
+                    <Button variant="link" onClick={() => handleGetSelectedNode({ id: process.identity })}>
+                      <Title headingLevel="h1">{process?.name}</Title>
+                      {process?.sourceHost}/{process.hostName}
+                    </Button>
+                  </PanelHeader>
+                  <PanelMainBody>
+                    {!!clients.length && (
+                      <>
+                        <Title headingLevel="h2">Clients</Title>
+                        <List isPlain>
+                          {clients.map(({ identity, name, sourceHost, hostName }) => (
+                            <ListItem key={identity}>
+                              <Button
+                                key={identity}
+                                variant="link"
+                                onClick={() => handleGetSelectedNode({ id: identity })}
+                              >
+                                {name} [{sourceHost}/{hostName}]
+                              </Button>
+                            </ListItem>
+                          ))}
+                        </List>
+                      </>
+                    )}
+                    {!!targets.length && (
+                      <>
+                        <Title headingLevel="h2">Send data to</Title>
+                        <List isPlain>
+                          {targets.map(({ identity, name, sourceHost, hostName }) => (
+                            <ListItem key={identity}>
+                              <Button
+                                key={identity}
+                                variant="link"
+                                onClick={() => handleGetSelectedNode({ id: identity })}
+                              >
+                                {name} [{sourceHost}/{hostName}]
+                              </Button>
+                            </ListItem>
+                          ))}
+                        </List>
+                      </>
+                    )}
+                  </PanelMainBody>
+                </Panel>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Modal>
+    </>
   );
 };
 
