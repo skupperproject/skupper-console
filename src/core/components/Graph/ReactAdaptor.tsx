@@ -80,14 +80,14 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           if (!graphInstance) {
             return;
           }
-          const nodeFound = graphInstance.find('node', (node) => node.getModel().id === id);
 
-          if (nodeFound) {
-            graphInstance.focusItem(nodeFound, true, { duration: 100 });
+          if (id) {
             handleMouseEnter(id);
+            graphInstance.focusItem(id, true, { duration: 100 });
 
             return;
           }
+
           handleNodeMouseLeave({ currentTarget: graphInstance });
         }
       }));
@@ -184,6 +184,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       /** Simulate a MouseEnter event, regardless of whether a node or edge is preselected */
       const handleMouseEnter = useCallback(
         (id?: string) => {
+          isHoverState.current = true;
+
           const graphInstance = topologyGraphRef.current;
 
           if (graphInstance && id) {
@@ -337,6 +339,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       const handleAfterRender = useCallback(() => {
         handleMouseEnter(itemSelectedRef.current);
+
+        if (itemSelectedRef.current) {
+          topologyGraphRef.current?.focusItem(itemSelectedRef.current);
+        }
+
         setIsGraphLoaded(true);
       }, [handleMouseEnter]);
 

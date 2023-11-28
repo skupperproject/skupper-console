@@ -18,8 +18,8 @@ import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
+import DisplayOptions from './DisplayOptions';
 import DisplayResource from './DisplayResources';
-import DisplaySelect from './DisplaySelect';
 import { TopologyController } from '../services';
 import {
   displayOptionsForSites,
@@ -233,7 +233,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
             />
           </ToolbarItem>
 
-          <DisplaySelect
+          <DisplayOptions
             options={displayOptions}
             onSelect={handleDisplaySelect}
             defaultSelected={displayOptionsSelected}

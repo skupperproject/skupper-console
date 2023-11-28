@@ -1,6 +1,7 @@
 import { ModelStyle } from '@antv/g6';
 
-import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
+import { PrometheusApiSingleResult, PrometheusLabels } from '@API/Prometheus.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 
 export interface Entity {
   id: string;
@@ -27,6 +28,7 @@ export interface TopologyConfigMetrics {
     fetchBytes: { groupBy: string };
     fetchByteRate: { groupBy: string };
     fetchLatency: { groupBy: string };
+    filterBy?: PrometheusLabels;
   };
 }
 
@@ -45,4 +47,18 @@ export interface DisplayOptions {
   showLinkLatency?: boolean;
   showLinkLabelReverse?: boolean;
   rotateLabel?: boolean;
+}
+
+export interface TopologyModalProps {
+  ids: string;
+  items: ProcessResponse[] | ProcessPairsResponse[];
+  modalType: 'process' | 'processPair' | undefined;
+  onClose?: Function;
+}
+
+export interface ProcessPairsWithMetrics {
+  processesPairs?: ProcessPairsResponse[];
+  metrics?: TopologyMetrics;
+  prometheusKey: 'sourceProcess' | 'destProcess';
+  processPairsKey: 'sourceName' | 'destinationName';
 }

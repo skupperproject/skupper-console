@@ -1,38 +1,24 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
-import {
-  Bullseye,
-  Card,
-  CardBody,
-  Grid,
-  GridItem,
-  Icon,
-  Stack,
-  StackItem,
-  Tab,
-  Tabs,
-  TabTitleText
-} from '@patternfly/react-core';
-import { LongArrowAltRightIcon, ResourcesEmptyIcon } from '@patternfly/react-icons';
+import { Card, CardBody, Stack, StackItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { ResourcesEmptyIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { VarColors } from '@config/colors';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import EmptyData from '@core/components/EmptyData';
-import LinkCell from '@core/components/LinkCell';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
 import FlowPairs from '@pages/shared/FlowPairs';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
-import { ProcessResponse, RequestOptions } from 'API/REST.interfaces';
+import { RequestOptions } from 'API/REST.interfaces';
 
-import Details from '../components/Details';
+import ProcessPairDetails from '../components/ProcessPairDetails';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
-import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
+import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
@@ -69,6 +55,7 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
 const ProcessPairs = function () {
   const { processPair } = useParams() as { processPair: string };
   const [searchParams, setSearchParams] = useSearchParams();
+
   const { id: processPairId, protocol } = getIdAndNameFromUrlParams(processPair);
   const type = searchParams.get('type') || TAB_1_KEY;
   const ids = processPairId?.split('-to-') || [];
@@ -92,16 +79,6 @@ const ProcessPairs = function () {
   const [activeConnectionsQueryParamsPaginated, setActiveConnectionsQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedActiveConnectionsQueryParams
   );
-
-  const { data: source } = useQuery({
-    queryKey: [QueriesProcesses.GetProcess, sourceId],
-    queryFn: () => RESTApi.fetchProcess(sourceId)
-  });
-
-  const { data: destination } = useQuery({
-    queryKey: [QueriesProcesses.GetDestination, destinationId],
-    queryFn: () => RESTApi.fetchProcess(destinationId)
-  });
 
   const { data: http2RequestsData } = useQuery({
     queryKey: [QueriesProcesses.GetFlowPair, http2QueryParamsPaginated, processPairId],
@@ -172,10 +149,6 @@ const ProcessPairs = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
-  if (!source || !destination) {
-    return null;
-  }
-
   if (protocol === AvailableProtocols.Http && !httpRequestsData) {
     return null;
   }
@@ -200,42 +173,6 @@ const ProcessPairs = function () {
   const activeConnections = activeConnectionsData?.results || [];
   const activeConnectionsCount = activeConnectionsData?.timeRangeCount || 0;
 
-  const ClientServerDescription = function () {
-    return (
-      <Grid hasGutter>
-        <GridItem sm={12} md={5}>
-          <Details
-            process={source}
-            title={LinkCell<ProcessResponse>({
-              data: source,
-              value: source.name,
-              link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
-            })}
-          />
-        </GridItem>
-
-        <GridItem sm={12} md={2}>
-          <Bullseye>
-            <Icon size="xl">
-              <LongArrowAltRightIcon color={VarColors.Black500} />
-            </Icon>
-          </Bullseye>
-        </GridItem>
-
-        <GridItem sm={12} md={5}>
-          <Details
-            process={destination}
-            title={LinkCell<ProcessResponse>({
-              data: destination,
-              value: destination.name,
-              link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
-            })}
-          />
-        </GridItem>
-      </Grid>
-    );
-  };
-
   const NoDataCard = function () {
     return (
       <Card isFullHeight>
@@ -258,7 +195,7 @@ const ProcessPairs = function () {
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
-            <ClientServerDescription />
+            <ProcessPairDetails sourceId={sourceId} destinationId={destinationId} />
           </StackItem>
 
           {!activeConnectionsCount && !oldConnectionsCount && !http2Requests.length && !httpRequests.length && (

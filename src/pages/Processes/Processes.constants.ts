@@ -3,7 +3,7 @@ import { HighlightValueCellProps } from '@core/components/HighlightValueCell/Hig
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
-import { formatBytes } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
@@ -24,8 +24,14 @@ export const CustomProcessPairCells = {
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessesLabels.Title}@${props.data.identity}@${props.data.protocol}`
-    })
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}?type=${ProcessesLabels.ProcessPairs}`
+    }),
+  ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
+    HighlightValueCell({ ...props, format: formatBytes }),
+  ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
+    HighlightValueCell({ ...props, format: formatByteRate }),
+  LatencyFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
+    HighlightValueCell({ ...props, format: formatLatency })
 };
 
 export const CustomProcessCells = {
@@ -47,10 +53,10 @@ export const CustomProcessCells = {
       type: 'component',
       link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
-  ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatBytes })
+    HighlightValueCell({ ...props, format: formatBytes }),
+  ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
+    HighlightValueCell({ ...props, format: formatByteRate })
 };
 
 export const processesTableColumns: SKColumn<ProcessResponse>[] = [
@@ -82,6 +88,29 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
     name: ProcessesLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
     customCellName: 'ProcessConnectedLinkCell'
+  },
+  {
+    name: ProcessesLabels.Bytes,
+    prop: 'bytes' as keyof ProcessPairsResponse,
+    customCellName: 'ByteFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.ByteRate,
+    prop: 'byteRate' as keyof ProcessPairsResponse,
+    customCellName: 'ByteRateFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.Latency,
+    prop: 'latency' as keyof ProcessPairsResponse,
+    customCellName: 'LatencyFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: '',
+    customCellName: 'viewDetailsLinkCell',
+    modifier: 'fitContent'
   }
 ];
 
@@ -94,6 +123,29 @@ export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessesLabels.Protocol,
     prop: 'protocol' as keyof ProcessPairsResponse,
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.Bytes,
+    prop: 'bytes' as keyof ProcessPairsResponse,
+    customCellName: 'ByteFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.ByteRate,
+    prop: 'byteRate' as keyof ProcessPairsResponse,
+    customCellName: 'ByteRateFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.Latency,
+    prop: 'latency' as keyof ProcessPairsResponse,
+    customCellName: 'LatencyFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: '',
+    customCellName: 'viewDetailsLinkCell',
     modifier: 'fitContent'
   }
 ];

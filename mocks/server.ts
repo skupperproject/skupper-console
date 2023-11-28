@@ -15,7 +15,8 @@ import {
   ProcessGroupPairsResponse
 } from 'API/REST.interfaces';
 
-const DELAY_RESPONSE = 0;
+const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
+const ITEM_COUNT = Number(process.env.MOCK_ITEM_COUNT) || 0;
 
 // api prefix
 const prefix = '/api/v1alpha1';
@@ -36,15 +37,13 @@ const serviceFlowPairs = require(`${path}/SERVICE_FLOW_PAIRS.json`);
 const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
-const PERF_TEST = false;
-const ITEMS_TEST = 200;
 interface ApiProps {
   params: Record<string, string>;
-  queryParams: Record<string, string[] | string | null | undefined>;
+  queryParams: Record<string, string[] | string | null | number | undefined>;
 }
 
 const mockSitesForPerf: SiteResponse[] = [];
-for (let i = 0; i < ITEMS_TEST; i++) {
+for (let i = 0; i < ITEM_COUNT; i++) {
   mockSitesForPerf.push({
     recType: 'SITE',
     identity: `sitePerf${i}`,
@@ -76,8 +75,8 @@ mockSitesForPerf.forEach((site, index) => {
 
 const mockLinksForPerf: LinkResponse[] = [];
 mockRoutersForPerf.forEach((_, index) => {
-  const idx1 = Math.floor(Math.random() * ITEMS_TEST);
-  const idx2 = Math.floor(Math.random() * ITEMS_TEST);
+  const idx1 = Math.floor(Math.random() * ITEM_COUNT);
+  const idx2 = Math.floor(Math.random() * ITEM_COUNT);
 
   const router1 = mockRoutersForPerf[idx1];
   const router2 = mockRoutersForPerf[idx2];
@@ -109,7 +108,7 @@ mockRoutersForPerf.forEach((_, index) => {
 });
 
 const mockProcessesForPerf: ProcessResponse[] = [];
-for (let i = 0; i < ITEMS_TEST; i++) {
+for (let i = 0; i < ITEM_COUNT; i++) {
   // const parent = Math.floor(Math.random() * (4 - 1 + 1) + 1);
   const process = processes.results[i % processes.results.length];
 
@@ -125,7 +124,7 @@ for (let i = 0; i < ITEMS_TEST; i++) {
 }
 
 const mockProcessPairsForPerf: ProcessPairsResponse[] = [];
-for (let i = 0; i < ITEMS_TEST; i++) {
+for (let i = 0; i < ITEM_COUNT; i++) {
   const sourceIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
   const destinationIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
 
@@ -146,7 +145,7 @@ export const MockApi = {
   get404Error: () => new Response(404),
   getCollectors: () => collectors,
   getSites: () => {
-    const sitesForPerfTests = PERF_TEST ? mockSitesForPerf : [];
+    const sitesForPerfTests = ITEM_COUNT ? mockSitesForPerf : [];
     const results = [...sites.results, ...sitesForPerfTests];
 
     return { ...sites, results };
@@ -155,13 +154,13 @@ export const MockApi = {
     results: sites.results.find(({ identity }) => identity === id) || []
   }),
   getRouters: () => {
-    const routersForPerfTests = PERF_TEST ? mockRoutersForPerf : [];
+    const routersForPerfTests = ITEM_COUNT ? mockRoutersForPerf : [];
     const results = [...routers.results, ...routersForPerfTests];
 
     return { ...routers, results };
   },
   getLinks: () => {
-    const linksForPerfTests = PERF_TEST ? mockLinksForPerf : [];
+    const linksForPerfTests = ITEM_COUNT ? mockLinksForPerf : [];
     const results = [...links.results, ...linksForPerfTests];
 
     return { ...links, results };
@@ -173,25 +172,42 @@ export const MockApi = {
     return { results };
   },
   getProcesses: (_: unknown, { queryParams }: ApiProps) => {
-    const processesForPerfTests = PERF_TEST ? mockProcessesForPerf : [];
+    const processesForPerfTests = ITEM_COUNT ? mockProcessesForPerf : [];
     const results = [...processes.results, ...processesForPerfTests];
 
     if (queryParams && !Object.keys(queryParams).length) {
-      return { ...processes, results };
+      return {
+        ...processes,
+        results,
+        count: results.length,
+        totalCount: results.length,
+        timeRangeCount: results.length
+      };
     }
 
-    const resultFIltered = results.filter(
+    const filteredResults = results.filter(
       (result) =>
         result.processRole === queryParams.processRole ||
         result.groupIdentity === queryParams.groupIdentity ||
         result.parent === queryParams.parent
     );
 
-    return { ...processes, results: resultFIltered };
+    const paginatedResults = filteredResults.slice(
+      Number(queryParams.offset || 0),
+      Number(queryParams.offset || 0) + Number(queryParams.limit || filteredResults.length - 1)
+    );
+
+    return {
+      ...processes,
+      results: paginatedResults,
+      count: filteredResults.length,
+      totalCount: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
 
   getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
-    const processesForPerfTests = PERF_TEST ? mockProcessPairsForPerf : [];
+    const processesForPerfTests = ITEM_COUNT ? mockProcessPairsForPerf : [];
     const results = [...processPairs.results, ...processesForPerfTests];
 
     if (queryParams && !Object.keys(queryParams).length) {
@@ -207,7 +223,7 @@ export const MockApi = {
   },
 
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
-    if (queryParams.query === 'sum by(destProcess, sourceProcess,direction)(rate(octets_total[1m]))') {
+    if ((queryParams.query as string)?.includes('sum by(destProcess, sourceProcess, direction)(rate(octets_total')) {
       return {
         data: {
           resultType: 'vector',
@@ -330,7 +346,7 @@ export function loadMockServer() {
       }));
 
       this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => ({
-        results: (PERF_TEST ? mockProcessesForPerf : processes.results).find(
+        results: MockApi.getProcesses(null, { params: {}, queryParams: {} }).results.find(
           ({ identity }: ProcessResponse) => identity === id
         )
       }));

@@ -38,7 +38,7 @@ export const flowPairsComponentsTable = {
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
-  ClientServerLatencyCell: (props: LinkCellProps<FlowPairsResponse>) =>
+  TcpTTFB: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
     DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime }),
@@ -73,20 +73,18 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     name: FlowPairLabels.TxBytes,
     prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
-    format: formatBytes,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.RxBytes,
     prop: 'counterFlow.octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
-    format: formatBytes,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.TTFB,
     columnDescription: 'time elapsed between client and server',
-    customCellName: 'ClientServerLatencyCell',
+    customCellName: 'TcpTTFB',
     modifier: 'nowrap'
   },
   {

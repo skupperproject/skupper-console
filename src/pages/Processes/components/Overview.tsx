@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
@@ -13,13 +12,10 @@ import Metrics from '@pages/shared/Metrics';
 import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesProcesses } from '../Processes.enum';
+import { OverviewProps } from '../Processes.interfaces';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `process-open-metric-sections`;
-
-interface OverviewProps {
-  process: ProcessResponse;
-}
 
 const Overview: FC<OverviewProps> = function ({
   process: { identity: processId, name, startTime, parent, parentName }

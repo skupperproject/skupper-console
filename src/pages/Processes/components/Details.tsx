@@ -25,14 +25,11 @@ import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
+import { DetailsProps } from '../Processes.interfaces';
 
-const Details: FC<{ process: ProcessResponse; title?: string | JSX.Element }> = function ({
-  process,
-  title = ProcessesLabels.Details
-}) {
+const Details: FC<DetailsProps> = function ({ process, title = ProcessesLabels.Details }) {
   const {
     identity: processId,
     parent,

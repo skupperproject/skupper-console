@@ -7,7 +7,7 @@ import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
-const DisplaySelect: FC<{
+const DisplayOptions: FC<{
   options: DisplaySelectProps[];
   defaultSelected?: string[];
   onSelect: Function;
@@ -84,4 +84,4 @@ const DisplaySelect: FC<{
   );
 };
 
-export default DisplaySelect;
+export default DisplayOptions;

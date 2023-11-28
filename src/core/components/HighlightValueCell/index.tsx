@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { VarColors } from '@config/colors';
 
@@ -7,23 +7,23 @@ import { HighlightValueCellProps } from './HighightValueCell.interfaces';
 const HighlightValueCell = function <T>({ value, format }: HighlightValueCellProps<T>) {
   const prevValueRef = useRef<number>();
 
-  const isValueUpdated = useCallback(() => {
+  const isValueUpdated = useMemo(() => {
     if (!prevValueRef.current) {
       prevValueRef.current = value;
 
       return false;
     }
 
-    if (value !== prevValueRef.current) {
+    if (format(value) !== format(prevValueRef.current)) {
       prevValueRef.current = value;
 
       return true;
     }
 
     return false;
-  }, [value]);
+  }, [format, value]);
 
-  return isValueUpdated() ? (
+  return isValueUpdated ? (
     <div
       data-testid="highlighted-value"
       style={{

@@ -1,11 +1,12 @@
 import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem } from '@patternfly/react-core';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 
 const SkBreadcrumb = function () {
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
 
   const paths = pathname.split('/').filter(Boolean);
   const pathsNormalized = paths.map((path) => getIdAndNameFromUrlParams(path.replace(/%20/g, ' '))); //sanitize %20 url space
@@ -15,11 +16,13 @@ const SkBreadcrumb = function () {
     return null;
   }
 
+  const queryParams = searchParams.size > 0 ? `?${searchParams.toString()}` : '';
+
   return (
     <Breadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
       {pathsNormalized.map((path, index) => (
         <BreadcrumbItem key={path.name} className="sk-capitalize">
-          <Link to={[...paths].slice(0, index + 1).join('/')}>{path.name}</Link>
+          <Link to={`${[...paths].slice(0, index + 1).join('/')}${queryParams}`}>{path.name}</Link>
         </BreadcrumbItem>
       ))}
 
