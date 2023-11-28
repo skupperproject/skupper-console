@@ -102,5 +102,18 @@ export const GraphController = {
     ),
     edges: JSON.parse(JSON.stringify(GraphController.sanitizeEdges(nodes, edges))),
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
-  })
+  }),
+  calculateMaxIteration: (nodes: GraphNode[]) => {
+    const nodesLength = nodes.length;
+
+    if (nodesLength > 800) {
+      return 200;
+    }
+
+    if (nodesLength > 500) {
+      return 700;
+    }
+
+    return 1000;
+  }
 };
