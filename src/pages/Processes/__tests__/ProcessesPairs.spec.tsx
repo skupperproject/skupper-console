@@ -46,9 +46,9 @@ describe('Process component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByRole('link', { name: processesData.results[8].name })).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: 'view pairs' })[0]).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.destinationName}@${processPairsResult.destinationId}/${ProcessesLabels.Title}@${processPairsResult.identity}@${processPairsResult.protocol}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.destinationName}@${processPairsResult.destinationId}/${ProcessesLabels.ProcessPairs}@${processesPairsData.results[6].identity}@${processesPairsData.results[6].protocol}?type=${ProcessesLabels.ProcessPairs}`
     );
   });
 });

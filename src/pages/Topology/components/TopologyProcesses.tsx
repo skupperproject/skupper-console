@@ -8,16 +8,8 @@ import {
   AlertVariant,
   Button,
   Divider,
-  List,
-  ListItem,
-  Modal,
-  ModalVariant,
-  Panel,
-  PanelHeader,
-  PanelMainBody,
   Stack,
   StackItem,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -30,7 +22,6 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { ProcessResponse } from '@API/REST.interfaces';
 import { UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import {
@@ -42,12 +33,13 @@ import {
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
+import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
+import DisplayOptions from './DisplayOptions';
 import DisplayResource from './DisplayResources';
-import DisplaySelect from './DisplaySelect';
 import DisplayServices from './DisplayServices';
+import TopologyModal from './TopologyModal';
 import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
 import {
   GROUP_NODES_COMBO_GROUP,
@@ -61,6 +53,7 @@ import {
   displayOptionsForProcesses
 } from '../Topology.constants';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
+import { TopologyModalProps } from '../Topology.interfaces';
 
 const ZOOM_CACHE_KEY = 'process';
 const DISPLAY_OPTIONS = 'display-options';
@@ -75,25 +68,31 @@ const remoteProcessesQueryParams = {
   processRole: 'remote'
 };
 
+const metricQueryParams = {
+  fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
+  fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
+  fetchLatency: { groupBy: 'sourceProcess, destProcess' }
+};
+
 const TopologyProcesses: FC<{
   serviceIds?: string[];
   id?: string;
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
-}> = function ({ serviceIds, id: processId, GraphComponent = GraphReactAdaptor }) {
+  ModalComponent?: ComponentType<TopologyModalProps>;
+}> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = TopologyModal }) {
   const navigate = useNavigate();
+  const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
 
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
-  const [processIdSelected, setProcessIdSelected] = useState<string | undefined>(processId);
+  const [itemIdSelected, setItemIdSelected] = useState<string | undefined>(itemId); //process or link id
+
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
 
-  const [isProcessModalOpen, setIsModalOpen] = useState(false);
-  const [isProcessPairModalOpen, setIsProcessPairModalOpen] = useState(false);
-
-  const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
   const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
+  const [modalType, setModalType] = useState<'process' | 'processPair' | undefined>();
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
@@ -139,11 +138,7 @@ const TopologyProcesses: FC<{
         showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
         showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
         showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-        params: {
-          fetchBytes: { groupBy: 'destProcess, sourceProcess,direction' },
-          fetchByteRate: { groupBy: 'destProcess, sourceProcess,direction' },
-          fetchLatency: { groupBy: 'sourceProcess, destProcess' }
-        }
+        params: metricQueryParams
       }),
     refetchInterval: UPDATE_INTERVAL
   });
@@ -160,62 +155,32 @@ const TopologyProcesses: FC<{
     addAlert(message, 'info', getUniqueId());
   }, []);
 
-  const handleProcessModalToggle = useCallback(() => {
-    setIsModalOpen(!isProcessModalOpen);
-  }, [isProcessModalOpen]);
-
-  const handleProcessPairModalToggle = useCallback(() => {
-    setIsProcessPairModalOpen(!isProcessPairModalOpen);
-  }, [isProcessPairModalOpen]);
-
-  const handleGetSelectedGroup = useCallback(
+  const handleGetSelectedSite = useCallback(
     ({ id, label }: GraphCombo) => {
       navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
     },
     [navigate]
   );
 
-  const handleGetSelectedNode = useCallback(
-    ({ id }: { id: string }) => {
-      const processes = [...externalProcesses!, ...remoteProcesses!];
-
-      if (id.split('~').length > 1) {
-        setProcessIdSelected(id);
-        handleProcessModalToggle();
-
-        return;
-      }
-
-      const process = processes.find(({ identity }) => identity === id);
-      navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${id}`);
-    },
-    [externalProcesses, remoteProcesses, navigate, handleProcessModalToggle]
-  );
+  const handleResourceSelected = useCallback((id?: string) => {
+    setItemIdSelected(id);
+    graphRef?.current?.focusItem(id);
+  }, []);
 
   const handleGetSelectedEdge = useCallback(
     ({ id }: { id: string }) => {
-      if (id.split('~').length > 1) {
-        setProcessIdSelected(id);
-        handleProcessPairModalToggle();
-
-        return;
-      }
-
-      if (externalProcesses && remoteProcesses) {
-        const [sourceId] = id.split('-to-');
-        const processes = [...externalProcesses, ...remoteProcesses];
-
-        const sourceProcess = processes?.find(({ identity }) => identity === sourceId) as ProcessResponse;
-        const protocol = processesPairs?.find(({ identity }) => identity === id)?.protocol;
-
-        if (sourceProcess) {
-          navigate(
-            `${ProcessesRoutesPaths.Processes}/${sourceProcess.name}@${sourceProcess.identity}/${ProcessesLabels.ProcessPairs}@${id}@${protocol}`
-          );
-        }
-      }
+      handleResourceSelected(id);
+      setModalType('processPair');
     },
-    [externalProcesses, remoteProcesses, handleProcessPairModalToggle, processesPairs, navigate]
+    [handleResourceSelected]
+  );
+
+  const handleGetSelectedNode = useCallback(
+    ({ id }: { id: string }) => {
+      handleResourceSelected(id);
+      setModalType('process');
+    },
+    [handleResourceSelected]
   );
 
   const handleDisplayOptionSelected = useCallback((options: string[]) => {
@@ -226,16 +191,19 @@ const TopologyProcesses: FC<{
     localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
   }, []);
 
-  const handleProcessSelected = useCallback((id?: string) => {
-    setProcessIdSelected(id);
-    graphRef?.current?.focusItem(id);
-  }, []);
+  const handleCloseModal = useCallback(() => {
+    handleResourceSelected(undefined);
+    setModalType(undefined);
+  }, [handleResourceSelected]);
 
-  const handleServiceSelected = useCallback((ids: string[]) => {
-    setServiceIdsSelected(ids);
-    setProcessIdSelected(undefined);
-    setTimeout(() => graphRef?.current?.fitView(), 100);
-  }, []);
+  const handleServiceSelected = useCallback(
+    (ids: string[]) => {
+      setServiceIdsSelected(ids);
+      handleResourceSelected(undefined);
+      setTimeout(() => graphRef?.current?.fitView(), 100);
+    },
+    [handleResourceSelected]
+  );
 
   const handleSaveTopology = useCallback(() => {
     localStorage.setItem(SERVICE_OPTIONS, JSON.stringify(serviceIdsSelected));
@@ -378,9 +346,8 @@ const TopologyProcesses: FC<{
     return option;
   });
 
-  const nodeIdSelected = nodes.find(
-    ({ id }) => id.split('~').includes(processIdSelected || '') || processIdSelected === id
-  )?.id;
+  const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(itemIdSelected || '') || itemIdSelected === id)
+    ?.id;
 
   const TopologyToolbar = (
     <Toolbar>
@@ -392,13 +359,13 @@ const TopologyProcesses: FC<{
         <ToolbarItem>
           <DisplayResource
             id={nodeIdSelected}
-            onSelect={handleProcessSelected}
+            onSelect={handleResourceSelected}
             data={nodes.map((node) => ({ name: node.label, identity: node.id }))}
           />
         </ToolbarItem>
 
         <ToolbarItem>
-          <DisplaySelect
+          <DisplayOptions
             options={displayOptions}
             onSelect={handleDisplayOptionSelected}
             defaultSelected={displayOptionsSelected}
@@ -452,122 +419,34 @@ const TopologyProcesses: FC<{
               combos={groups}
               itemSelected={nodeIdSelected}
               saveConfigkey={ZOOM_CACHE_KEY}
-              onClickCombo={handleGetSelectedGroup}
+              onClickCombo={handleGetSelectedSite}
               onClickNode={handleGetSelectedNode}
               onClickEdge={handleGetSelectedEdge}
             />
           )}
 
           {!nodes.length && <EmptyData />}
-          <AlertGroup isToast>
-            {alerts.map(({ key, title }) => (
-              <Alert
-                key={key}
-                timeout={2000}
-                variant={AlertVariant.info}
-                title={title}
-                actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
-              />
-            ))}
-          </AlertGroup>
         </StackItem>
       </Stack>
-      <Modal
-        variant={ModalVariant.small}
-        title="Connections"
-        isOpen={isProcessPairModalOpen}
-        onClose={handleProcessPairModalToggle}
-      >
-        {processIdSelected?.split('~').map((id) => {
-          const processPair = processesPairs!.find(({ identity }) => identity === id);
-
-          if (!processPair) {
-            return null;
-          }
-
-          return (
-            <div key={id}>
-              <Button variant="link" onClick={() => handleGetSelectedEdge({ id: processPair.identity })}>
-                from {processPair.sourceName} to {processPair.destinationName}
-              </Button>
-            </div>
-          );
-        })}
-      </Modal>
-
-      <Modal variant={ModalVariant.small} isOpen={isProcessModalOpen} onClose={handleProcessModalToggle}>
-        <List isPlain isBordered>
-          {processIdSelected?.split('~').map((id) => {
-            const processes = [...remoteProcesses!, ...externalProcesses!];
-            const process = processes.find(({ identity }) => identity === id);
-            const clientPairs = processesPairs
-              ?.filter(({ destinationId }) => destinationId === id)
-              .flatMap(({ sourceId }) => [sourceId]);
-
-            const targetPairs = processesPairs
-              ?.filter(({ sourceId }) => sourceId === id)
-              .flatMap(({ destinationId }) => [destinationId]);
-
-            const clients = processes.filter(({ identity }) => clientPairs?.includes(identity));
-            const targets = processes.filter(({ identity }) => targetPairs?.includes(identity));
-
-            if (!process) {
-              return null;
-            }
-
-            return (
-              <ListItem key={id}>
-                <Panel>
-                  <PanelHeader>
-                    <Button variant="link" onClick={() => handleGetSelectedNode({ id: process.identity })}>
-                      <Title headingLevel="h1">{process?.name}</Title>
-                      {process?.sourceHost}/{process.hostName}
-                    </Button>
-                  </PanelHeader>
-                  <PanelMainBody>
-                    {!!clients.length && (
-                      <>
-                        <Title headingLevel="h2">Clients</Title>
-                        <List isPlain>
-                          {clients.map(({ identity, name, sourceHost, hostName }) => (
-                            <ListItem key={identity}>
-                              <Button
-                                key={identity}
-                                variant="link"
-                                onClick={() => handleGetSelectedNode({ id: identity })}
-                              >
-                                {name} [{sourceHost}/{hostName}]
-                              </Button>
-                            </ListItem>
-                          ))}
-                        </List>
-                      </>
-                    )}
-                    {!!targets.length && (
-                      <>
-                        <Title headingLevel="h2">Send data to</Title>
-                        <List isPlain>
-                          {targets.map(({ identity, name, sourceHost, hostName }) => (
-                            <ListItem key={identity}>
-                              <Button
-                                key={identity}
-                                variant="link"
-                                onClick={() => handleGetSelectedNode({ id: identity })}
-                              >
-                                {name} [{sourceHost}/{hostName}]
-                              </Button>
-                            </ListItem>
-                          ))}
-                        </List>
-                      </>
-                    )}
-                  </PanelMainBody>
-                </Panel>
-              </ListItem>
-            );
-          })}
-        </List>
-      </Modal>
+      <AlertGroup isToast>
+        {alerts.map(({ key, title }) => (
+          <Alert
+            key={key}
+            timeout={2000}
+            variant={AlertVariant.info}
+            title={title}
+            actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
+          />
+        ))}
+      </AlertGroup>
+      <ModalComponent
+        ids={itemIdSelected!}
+        items={
+          modalType === 'process' ? [...(remoteProcesses || []), ...(externalProcesses || [])] : processesPairs || []
+        }
+        modalType={modalType}
+        onClose={handleCloseModal}
+      />
     </>
   );
 };

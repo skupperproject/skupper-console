@@ -4,7 +4,6 @@ import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
-import { formatByteRate } from '@core/utils/formatBytes';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
@@ -73,7 +72,7 @@ export const tcpServerColumns = [
   {
     name: ProcessesLabels.ByteRateRx,
     prop: 'byteRate' as keyof ProcessResponse,
-    format: formatByteRate
+    customCellName: 'ByteRateFormatCell'
   },
   {
     name: ProcessesLabels.Created,

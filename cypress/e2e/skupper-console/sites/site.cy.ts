@@ -29,13 +29,4 @@ context('Sites', () => {
     link.click();
     cy.url().should('eq', expectedUrl);
   });
-
-  it('should navigate to the correct process page when clicking on a link', () => {
-    const expectedUrl = 'http://localhost:3000/#/sites';
-
-    const link = cy.get(`[data-testid="${getTestsIds.breadcrumbComponent()}"]`).contains('sites');
-    link.should('have.attr', 'href', `#/sites`);
-    link.click();
-    cy.url().should('eq', expectedUrl);
-  });
 });

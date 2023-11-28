@@ -27,7 +27,13 @@ import {
   SitePairsResponse
 } from 'API/REST.interfaces';
 
-import { Entity, TopologyMetrics, TopologyConfigMetrics, DisplayOptions } from '../Topology.interfaces';
+import {
+  Entity,
+  TopologyMetrics,
+  TopologyConfigMetrics,
+  DisplayOptions,
+  ProcessPairsWithMetrics
+} from '../Topology.interfaces';
 
 const shape = {
   bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
@@ -48,9 +54,9 @@ export const TopologyController = {
   }: TopologyConfigMetrics): Promise<TopologyMetrics> => {
     try {
       const [bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs] = await Promise.all([
-        showBytes ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy) : [],
-        showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates(params.fetchByteRate.groupBy) : [],
-        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy) : []
+        showBytes ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy, params.filterBy) : [],
+        showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates(params.fetchByteRate.groupBy, params.filterBy) : [],
+        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy, params.filterBy) : []
       ]);
 
       return { bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs };
@@ -132,6 +138,36 @@ export const TopologyController = {
         }
       ])
     );
+  },
+
+  addMetricsToProcessPairs: ({ processesPairs, metrics, prometheusKey, processPairsKey }: ProcessPairsWithMetrics) => {
+    const getPairsMap = (metricPairs: PrometheusApiSingleResult[] | undefined, key: string) =>
+      (metricPairs || []).reduce(
+        (acc, { metric, value }) => {
+          {
+            if (metric.sourceProcess === metric.destProcess) {
+              // When the source and destination are identical, we should avoid displaying the reverse metric. Instead, we should present the cumulative sum of all directions as a single value.
+              acc[`${metric[key]}`] = (Number(acc[`${metric[key]}`]) || 0) + Number(value[1]);
+            } else {
+              acc[`${metric[key]}`] = Number(value[1]);
+            }
+          }
+
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+
+    const txBytesByPairsMap = getPairsMap(metrics?.bytesByProcessPairs, prometheusKey);
+    const txByteRateByPairsMap = getPairsMap(metrics?.byteRateByProcessPairs, prometheusKey);
+    const txLatencyByPairsMap = getPairsMap(metrics?.latencyByProcessPairs, prometheusKey);
+
+    return processesPairs?.map((processPairsData) => ({
+      ...processPairsData,
+      bytes: txBytesByPairsMap[processPairsData[processPairsKey]] || 0,
+      byteRate: txByteRateByPairsMap[processPairsData[processPairsKey]] || 0,
+      latency: txLatencyByPairsMap[processPairsData[processPairsKey]] || 0
+    }));
   },
 
   addMetricsToEdges: (

@@ -1,7 +1,7 @@
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -20,7 +20,7 @@ const Process = function () {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { id } = useParams() as { id: string };
-  const { id: processId } = getIdAndNameFromUrlParams(id);
+  const { id: processId, name: processName } = getIdAndNameFromUrlParams(id);
 
   const type = searchParams.get('type') || ProcessesLabels.Overview;
   const [tabSelected, setTabSelected] = useState(type);
@@ -37,18 +37,21 @@ const Process = function () {
 
   const { data: process } = useQuery({
     queryKey: [QueriesProcesses.GetProcess, processId],
-    queryFn: () => RESTApi.fetchProcess(processId)
+    queryFn: () => RESTApi.fetchProcess(processId),
+    placeholderData: keepPreviousData
   });
 
   const { data: clientPairs } = useQuery({
     queryKey: [QueriesProcesses.GetProcessPairs, clientPairsQueryParams],
     queryFn: () => RESTApi.fetchProcessesPairs(clientPairsQueryParams),
+    placeholderData: keepPreviousData,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: serverPairs } = useQuery({
     queryKey: [QueriesProcesses.GetProcessPairs, serverPairsQueryParams],
     queryFn: () => RESTApi.fetchProcessesPairs(serverPairsQueryParams),
+    placeholderData: keepPreviousData,
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -91,7 +94,7 @@ const Process = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.processView(processId)}
-      title={process.name}
+      title={processName}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={

@@ -16,6 +16,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import { TopologyLabels } from '../Topology.enum';
+import { TopologyModalProps } from '../Topology.interfaces';
 
 const navigate = jest.fn();
 
@@ -55,6 +56,22 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
   })
 );
 
+const MockTopologyModalComponent: FC<TopologyModalProps> = function ({ ids, items, onClose, modalType }) {
+  return (
+    <>
+      {!!modalType && (
+        <div>
+          <div>Modal is open</div>
+          <div>{`Modal type: ${modalType}`}</div>
+          <div>{`Selected ids: ${ids}`}</div>
+          <div>{`Selected items: ${items}`}</div>
+        </div>
+      )}
+      <Button onClick={onClose && onClose()}>Close</Button>
+    </>
+  );
+};
+
 describe('Begin testing the Topology component', () => {
   let server: Server;
 
@@ -69,6 +86,7 @@ describe('Begin testing the Topology component', () => {
             serviceIds={[serviceNameSelected]}
             id={processesResults[2].name}
             GraphComponent={MockGraphComponent}
+            ModalComponent={MockTopologyModalComponent}
           />
         </Suspense>
       </Wrapper>
@@ -124,14 +142,11 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should clicking on a node', async () => {
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
-
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
     fireEvent.click(screen.getByText('onClickNode'));
-    expect(navigate).toHaveBeenCalledTimes(1);
   });
 
   it('should clicking on a edge', async () => {
@@ -140,10 +155,6 @@ describe('Begin testing the Topology component', () => {
     });
 
     fireEvent.click(screen.getByText('onClickEdge'));
-    expect(navigate).toHaveBeenCalledTimes(1);
-
-    fireEvent.click(screen.getByText('onClickCombo'));
-    expect(navigate).toHaveBeenCalledTimes(2);
   });
 
   it('should clicking on a combo', async () => {

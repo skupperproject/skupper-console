@@ -53,7 +53,9 @@ module.exports = {
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
       'process.env.APP_VERSION': JSON.stringify(process.env.APP_VERSION) || JSON.stringify(version),
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
-      'process.env.DISABLE_METRICS': JSON.stringify(process.env.DISABLE_METRICS)
+      'process.env.DISABLE_METRICS': JSON.stringify(process.env.DISABLE_METRICS),
+      'process.env.MOCK_ITEM_COUNT': JSON.stringify(process.env.MOCK_ITEM_COUNT),
+      'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE)
     }),
     new HtmlWebpackPlugin({
       template: path.join(ROOT, '/public/index.html'),

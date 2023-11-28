@@ -125,31 +125,46 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchAllProcessPairsBytes: async (groupBy: string): Promise<PrometheusMetricSingleData[]> => {
+  fetchAllProcessPairsBytes: async (
+    groupBy: string,
+    filters?: PrometheusLabels
+  ): Promise<PrometheusMetricSingleData[]> => {
+    const queryFilterString = filters ? convertToPrometheusQueryParams(filters) : undefined;
+
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllPairsBytes(groupBy) }
+      params: { query: queries.getAllPairsBytes(groupBy, queryFilterString) }
     });
 
     return result;
   },
 
-  fetchAllProcessPairsByteRates: async (groupBy: string): Promise<PrometheusMetricSingleData[]> => {
+  fetchAllProcessPairsByteRates: async (
+    groupBy: string,
+    filters?: PrometheusLabels
+  ): Promise<PrometheusMetricSingleData[]> => {
+    const queryFilterString = filters ? convertToPrometheusQueryParams(filters) : undefined;
+
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllPairsByteRates(groupBy) }
+      params: { query: queries.getAllPairsByteRates(groupBy, queryFilterString) }
     });
 
     return result;
   },
 
-  fetchAllProcessPairsLatencies: async (groupBy: string): Promise<PrometheusMetricSingleData[]> => {
+  fetchAllProcessPairsLatencies: async (
+    groupBy: string,
+    filters?: PrometheusLabels
+  ): Promise<PrometheusMetricSingleData[]> => {
+    const queryFilterString = filters ? convertToPrometheusQueryParams(filters) : undefined;
+
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricSingleData[]>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllPairsLatencies(groupBy) }
+      params: { query: queries.getAllPairsLatencies(groupBy, queryFilterString) }
     });
 
     return result;

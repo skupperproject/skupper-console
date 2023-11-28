@@ -31,15 +31,27 @@ export const queries = {
   },
 
   // topology metrics
-  getAllPairsBytes(groupBy: string) {
+  getAllPairsBytes(groupBy: string, params?: string) {
+    if (params) {
+      return `sum by(${groupBy})(octets_total{${params}})`;
+    }
+
     return `sum by(${groupBy})(octets_total)`;
   },
 
-  getAllPairsByteRates(groupBy: string) {
+  getAllPairsByteRates(groupBy: string, params?: string) {
+    if (params) {
+      return `sum by(${groupBy})(rate(octets_total{${params}}[1m]))`;
+    }
+
     return `sum by(${groupBy})(rate(octets_total[1m]))`;
   },
 
-  getAllPairsLatencies(groupBy: string) {
+  getAllPairsLatencies(groupBy: string, params?: string) {
+    if (params) {
+      return `sum by(${groupBy})(rate(flow_latency_microseconds_sum{${params}}[1m]))`;
+    }
+
     return `sum by(${groupBy})(rate(flow_latency_microseconds_sum[1m]))`;
   },
 
