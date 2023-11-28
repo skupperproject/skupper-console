@@ -172,8 +172,8 @@ export const TopologyController = {
 
   addMetricsToEdges: (
     edges: GraphEdge[],
-    metricSourceLabel: string, // Prometheus metric label to compare with the metricDestLabel
-    metricDestLabel: string,
+    metricSourceLabel: 'sourceProcess' | 'sourceSite', // Prometheus metric label to compare with the metricDestLabel
+    metricDestLabel: 'destProcess' | 'destSite',
     protocolPairsMap?: Record<string, string>,
     bytesByPairs?: PrometheusApiSingleResult[],
     byteRateByPairs?: PrometheusApiSingleResult[],
@@ -249,6 +249,7 @@ export const TopologyController = {
 
       return {
         ...edge,
+        type: edge.source === edge.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
         labelCfg: { autoRotate: !options?.rotateLabel },
         style: { ...edge.style, stroke: EDGE_COLOR_DEFAULT },
         label: [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n')
