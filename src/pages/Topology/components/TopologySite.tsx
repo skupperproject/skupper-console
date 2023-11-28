@@ -16,6 +16,7 @@ import {
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
+import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import DisplayOptions from './DisplayOptions';
@@ -56,54 +57,59 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     [displayOptionsSelected]
   );
 
-  const [{ data: sites }, { data: routers }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] =
-    useQueries({
-      queries: [
-        {
-          queryKey: [QueriesSites.GetSites],
-          queryFn: () => RESTApi.fetchSites(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesSites.GetRouters],
-          queryFn: () => RESTApi.fetchRouters(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesSites.GetLinks],
-          queryFn: () => RESTApi.fetchLinks(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
-          queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [
-            QueriesTopology.GetBytesByProcessPairs,
-            isDisplayOptionActive(SHOW_LINK_BYTES),
-            isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            isDisplayOptionActive(SHOW_LINK_LATENCY),
-            isDisplayOptionActive(SHOW_DATA_LINKS)
-          ],
-          queryFn: () =>
-            isDisplayOptionActive(SHOW_DATA_LINKS)
-              ? TopologyController.getMetrics({
-                  showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-                  showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-                  showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-                  params: {
-                    fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-                    fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-                    fetchLatency: { groupBy: 'sourceSite, destSite' }
-                  }
-                })
-              : null,
-          refetchInterval: UPDATE_INTERVAL
-        }
-      ]
-    });
+  const [
+    { data: sites, isFetchedAfterMount },
+    { data: routers },
+    { data: routerLinks },
+    { data: sitesPairs },
+    { data: metrics }
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesSites.GetSites],
+        queryFn: () => RESTApi.fetchSites(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesSites.GetRouters],
+        queryFn: () => RESTApi.fetchRouters(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesSites.GetLinks],
+        queryFn: () => RESTApi.fetchLinks(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
+        queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [
+          QueriesTopology.GetBytesByProcessPairs,
+          isDisplayOptionActive(SHOW_LINK_BYTES),
+          isDisplayOptionActive(SHOW_LINK_BYTERATE),
+          isDisplayOptionActive(SHOW_LINK_LATENCY),
+          isDisplayOptionActive(SHOW_DATA_LINKS)
+        ],
+        queryFn: () =>
+          isDisplayOptionActive(SHOW_DATA_LINKS)
+            ? TopologyController.getMetrics({
+                showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+                showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+                showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+                params: {
+                  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
+                  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
+                  fetchLatency: { groupBy: 'sourceSite, destSite' }
+                }
+              })
+            : null,
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -248,6 +254,10 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
       </ToolbarContent>
     </Toolbar>
   );
+
+  if (!nodes?.length && !isFetchedAfterMount) {
+    return <LoadingPage />;
+  }
 
   return (
     <Stack>

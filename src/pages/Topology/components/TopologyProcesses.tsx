@@ -34,6 +34,7 @@ import {
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
+import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
 
 import DisplayOptions from './DisplayOptions';
@@ -96,31 +97,35 @@ const TopologyProcesses: FC<{
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [{ data: sites }, { data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] =
-    useQueries({
-      queries: [
-        {
-          queryKey: [QueriesSites.GetSites],
-          queryFn: () => RESTApi.fetchSites(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesTopology.GetProcessesPairs],
-          queryFn: () => RESTApi.fetchProcessesPairsResult(),
-          refetchInterval: UPDATE_INTERVAL
-        }
-      ]
-    });
+  const [
+    { data: sites },
+    { data: externalProcesses },
+    { data: remoteProcesses },
+    { data: processesPairs, isFetchedAfterMount }
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesSites.GetSites],
+        queryFn: () => RESTApi.fetchSites(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetProcessesPairs],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
@@ -402,6 +407,10 @@ const TopologyProcesses: FC<{
       </ToolbarContent>
     </Toolbar>
   );
+
+  if (!nodes?.length && !isFetchedAfterMount) {
+    return <LoadingPage />;
+  }
 
   return (
     <>

@@ -61,7 +61,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       useImperativeHandle(ref, () => ({
         saveNodePositions() {
-          savePositions();
+          Promise.resolve(savePositions());
         },
 
         fitView() {
@@ -348,7 +348,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }, [handleMouseEnter]);
 
       const handleBeforeDestroy = useCallback(() => {
-        savePositions();
+        Promise.resolve(savePositions());
       }, [savePositions]);
 
       const bindEvents = useCallback(() => {
@@ -440,7 +440,11 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             container: $node,
             fitView: true,
             fitViewPadding: 20,
-            layout: { ...DEFAULT_LAYOUT_FORCE_CONFIG, center: [0, 0] },
+            layout: {
+              ...DEFAULT_LAYOUT_FORCE_CONFIG,
+              center: [0, 0],
+              maxIteration: GraphController.calculateMaxIteration(nodes)
+            },
             ...DEFAULT_GRAPH_CONFIG
           };
 
