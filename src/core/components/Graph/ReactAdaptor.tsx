@@ -21,7 +21,12 @@ import {
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
 
-import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG, GRAPH_BG_COLOR } from './Graph.constants';
+import {
+  CRITICAL_NODE_COUNT_THRESHOLD,
+  DEFAULT_GRAPH_CONFIG,
+  DEFAULT_LAYOUT_FORCE_CONFIG,
+  GRAPH_BG_COLOR
+} from './Graph.constants';
 import MenuControl from './MenuControl';
 import { GraphController } from './services';
 import {
@@ -334,7 +339,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       // TIMING EVENTS
       const handleAfterChangeData = useCallback(() => {
-        handleMouseEnter(itemSelectedRef.current);
+        if (itemSelectedRef.current) {
+          handleMouseEnter(itemSelectedRef.current);
+        }
       }, [handleMouseEnter]);
 
       const handleAfterRender = useCallback(() => {
@@ -453,6 +460,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           };
 
           topologyGraphRef.current = new G6.Graph(options);
+          topologyGraphRef.current.setMode(
+            GraphController.getMode(nodesWithoutPosition.length, CRITICAL_NODE_COUNT_THRESHOLD)
+          );
+
           topologyGraphRef.current.read(data);
           bindEvents();
         }
@@ -496,6 +507,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             y: positionMap[node.persistPositionKey || node.id]?.y || node.y
           }));
 
+          graphInstance.setMode(GraphController.getMode(nodesWithoutPosition.length, CRITICAL_NODE_COUNT_THRESHOLD));
           graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
           prevNodesRef.current = nodesWithoutPosition;

@@ -160,17 +160,17 @@ const TopologyProcesses: FC<{
     addAlert(message, 'info', getUniqueId());
   }, []);
 
+  const handleResourceSelected = useCallback((id?: string) => {
+    setItemIdSelected(id);
+    graphRef?.current?.focusItem(id);
+  }, []);
+
   const handleGetSelectedSite = useCallback(
     ({ id, label }: GraphCombo) => {
       navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
     },
     [navigate]
   );
-
-  const handleResourceSelected = useCallback((id?: string) => {
-    setItemIdSelected(id);
-    graphRef?.current?.focusItem(id);
-  }, []);
 
   const handleGetSelectedEdge = useCallback(({ id }: { id: string }) => {
     setItemIdSelected(id);
@@ -186,7 +186,6 @@ const TopologyProcesses: FC<{
     startTransition(() => {
       setDisplayOptionsSelected(options);
     });
-    //setTimeout(() => graphRef?.current?.fitView(), 500);
 
     localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
   }, []);
@@ -199,8 +198,6 @@ const TopologyProcesses: FC<{
   const handleServiceSelected = useCallback((ids: string[]) => {
     setItemIdSelected(undefined);
     setServiceIdsSelected(ids);
-
-    //setTimeout(() => graphRef?.current?.fitView(), 500);
   }, []);
 
   const handleSaveTopology = useCallback(() => {
@@ -319,11 +316,6 @@ const TopologyProcesses: FC<{
     metrics?.latencyByProcessPairs
   ]);
 
-  useEffect(() => {
-    if (displayOptionsSelected.includes(GROUP_NODES_COMBO_GROUP)) {
-      setTimeout(() => graphRef?.current?.fitView(), 500);
-    }
-  }, [displayOptionsSelected]);
   const displayOptions = displayOptionsForProcesses.map((option) => {
     if (option.key === SHOW_LINK_REVERSE_LABEL) {
       return {

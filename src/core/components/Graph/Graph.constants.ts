@@ -17,6 +17,13 @@ const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
 const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
+export enum TopologyModeNames {
+  Default = 'default',
+  Performance = 'performance'
+}
+
+export const CRITICAL_NODE_COUNT_THRESHOLD = 800;
+
 export const NODE_SIZE = 25;
 const ICON_SIZE = 10;
 const LABEL_FONT_SIZE = 8;
@@ -39,7 +46,7 @@ export const BADGE_STYLE = {
 const INACTIVE_OPACITY_VALUE = 0.3;
 
 const DEFAULT_MODE: Modes = {
-  default: [
+  [TopologyModeNames.Default]: [
     { type: 'drag-node', onlyChangeComboSize: true },
     {
       type: 'drag-combo',
@@ -50,6 +57,19 @@ const DEFAULT_MODE: Modes = {
     },
     { type: 'drag-canvas' },
     { type: 'zoom-canvas' }
+  ],
+  [TopologyModeNames.Performance]: [
+    { type: 'drag-node', onlyChangeComboSize: true, enableOptimize: true },
+    {
+      type: 'drag-combo',
+      enableDelegate: true,
+      activeState: 'actived',
+      onlyChangeComboSize: true,
+      shouldUpdate: () => true,
+      enableOptimize: true
+    },
+    { type: 'drag-canvas', enableOptimize: true },
+    { type: 'zoom-canvas', enableOptimize: true, optimizeZoom: 0.1 }
   ]
 };
 

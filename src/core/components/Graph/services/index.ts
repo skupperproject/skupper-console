@@ -1,5 +1,6 @@
 import { INode, NodeConfig } from '@antv/g6';
 
+import { TopologyModeNames } from '../Graph.constants';
 import {
   GraphCombo,
   GraphEdge,
@@ -83,6 +84,10 @@ export const GraphController = {
 
       return { ...node, x, y };
     });
+  },
+
+  getMode(nodeCount: number, threshold: number) {
+    return nodeCount < threshold ? TopologyModeNames.Default : TopologyModeNames.Performance;
   },
 
   getG6Model: ({ nodes, edges, combos }: { nodes: GraphNode[]; edges: GraphEdge[]; combos?: GraphCombo[] }) => ({
