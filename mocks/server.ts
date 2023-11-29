@@ -109,7 +109,6 @@ mockRoutersForPerf.forEach((_, index) => {
 
 const mockProcessesForPerf: ProcessResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
-  // const parent = Math.floor(Math.random() * (4 - 1 + 1) + 1);
   const process = processes.results[i % processes.results.length];
 
   mockProcessesForPerf.push({
@@ -165,7 +164,34 @@ export const MockApi = {
 
     return { ...links, results };
   },
-  getComponents: () => processGroups,
+  getComponents: (_: unknown, { queryParams }: ApiProps) => {
+    const results = [...processGroups.results];
+    if (queryParams && !Object.keys(queryParams).length) {
+      return {
+        ...processGroups,
+        results,
+        count: results.length,
+        totalCount: results.length,
+        timeRangeCount: results.length
+      };
+    }
+
+    const filteredResults = results.filter((result) => result.processGroupRole === queryParams.processGroupRole);
+
+    const paginatedResults = filteredResults.slice(
+      Number(queryParams.offset || 0),
+      Number(queryParams.offset || 0) + Number(queryParams.limit || filteredResults.length)
+    );
+
+    return {
+      ...processGroups,
+      results: paginatedResults,
+      count: filteredResults.length,
+      totalCount: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
+  },
+
   getComponent: (_: unknown, { params: { id } }: ApiProps) => {
     const results = processGroups.results.find(({ identity }: ProcessGroupResponse) => identity === id);
 

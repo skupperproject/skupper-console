@@ -10,7 +10,8 @@
       "sourceId": "group-cart",
       "sourceName": "cart",
       "destinationId": "group-payment",
-      "destinationName": "payment"
+      "destinationName": "payment",
+      "processGroupRole": "external"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -22,7 +23,8 @@
       "sourceId": "group-payment",
       "sourceName": "payment",
       "destinationId": "group-op",
-      "destinationName": "op"
+      "destinationName": "op",
+      "processGroupRole": "external"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -34,11 +36,12 @@
       "sourceId": "group-op",
       "sourceName": "op",
       "destinationId": "group-cart",
-      "destinationName": "cart"
+      "destinationName": "cart",
+      "processGroupRole": "external"
     },
     {
       "recType": "FLOWAGGREGATE",
-      "identity": "group-op-to-group-cahs-desk",
+      "identity": "group-op-to-group-cash-desk",
       "startTime": 1674202485242354,
       "endTime": 0,
       "pairType": "PROCESS_GROUP",
@@ -46,7 +49,8 @@
       "sourceId": "group-op",
       "sourceName": "op",
       "destinationId": "group-cash-desk",
-      "destinationName": "cash-desk"
+      "destinationName": "cash-desk",
+      "processGroupRole": "external"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -58,7 +62,8 @@
       "sourceId": "group-database",
       "sourceName": "database",
       "destinationId": "group-payment",
-      "destinationName": "payment"
+      "destinationName": "payment",
+      "processGroupRole": "external"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -70,7 +75,8 @@
       "sourceId": "group-payment",
       "sourceName": "payment",
       "destinationId": "group-cash-desk",
-      "destinationName": "cash-desk"
+      "destinationName": "cash-desk",
+      "processGroupRole": "external"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -82,7 +88,8 @@
       "sourceId": "group-mm",
       "sourceName": "mm",
       "destinationId": "group-database",
-      "destinationName": "database"
+      "destinationName": "database",
+      "processGroupRole": "external"
     }
   ],
   "status": "",

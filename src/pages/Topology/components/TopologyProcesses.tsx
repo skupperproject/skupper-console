@@ -172,43 +172,36 @@ const TopologyProcesses: FC<{
     graphRef?.current?.focusItem(id);
   }, []);
 
-  const handleGetSelectedEdge = useCallback(
-    ({ id }: { id: string }) => {
-      handleResourceSelected(id);
-      setModalType('processPair');
-    },
-    [handleResourceSelected]
-  );
+  const handleGetSelectedEdge = useCallback(({ id }: { id: string }) => {
+    setItemIdSelected(id);
+    setModalType('processPair');
+  }, []);
 
-  const handleGetSelectedNode = useCallback(
-    ({ id }: { id: string }) => {
-      handleResourceSelected(id);
-      setModalType('process');
-    },
-    [handleResourceSelected]
-  );
+  const handleGetSelectedNode = useCallback(({ id }: { id: string }) => {
+    setItemIdSelected(id);
+    setModalType('process');
+  }, []);
 
   const handleDisplayOptionSelected = useCallback((options: string[]) => {
     startTransition(() => {
       setDisplayOptionsSelected(options);
     });
+    //setTimeout(() => graphRef?.current?.fitView(), 500);
 
     localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
   }, []);
 
   const handleCloseModal = useCallback(() => {
-    handleResourceSelected(undefined);
+    setItemIdSelected(undefined);
     setModalType(undefined);
-  }, [handleResourceSelected]);
+  }, []);
 
-  const handleServiceSelected = useCallback(
-    (ids: string[]) => {
-      setServiceIdsSelected(ids);
-      handleResourceSelected(undefined);
-      setTimeout(() => graphRef?.current?.fitView(), 100);
-    },
-    [handleResourceSelected]
-  );
+  const handleServiceSelected = useCallback((ids: string[]) => {
+    setItemIdSelected(undefined);
+    setServiceIdsSelected(ids);
+
+    //setTimeout(() => graphRef?.current?.fitView(), 500);
+  }, []);
 
   const handleSaveTopology = useCallback(() => {
     localStorage.setItem(SERVICE_OPTIONS, JSON.stringify(serviceIdsSelected));
@@ -326,6 +319,11 @@ const TopologyProcesses: FC<{
     metrics?.latencyByProcessPairs
   ]);
 
+  useEffect(() => {
+    if (displayOptionsSelected.includes(GROUP_NODES_COMBO_GROUP)) {
+      setTimeout(() => graphRef?.current?.fitView(), 500);
+    }
+  }, [displayOptionsSelected]);
   const displayOptions = displayOptionsForProcesses.map((option) => {
     if (option.key === SHOW_LINK_REVERSE_LABEL) {
       return {

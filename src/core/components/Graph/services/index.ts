@@ -6,41 +6,32 @@ import {
   GraphNode,
   LocalStorageData,
   LocalStorageDataSaved,
-  LocalStorageDataSavedPayload,
-  LocalStorageDataWithNullXY
+  LocalStorageDataSavedPayload
 } from '../Graph.interfaces';
 
 const prefixLocalStorageItem = 'skupper';
 
 export const GraphController = {
-  saveAllNodePositions: (topologyNodes: LocalStorageData[]) => {
-    const nodePositions = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
-    const topologyMap = topologyNodes.reduce((acc, { id, x, y }) => {
+  saveAllNodePositions: (nodes: LocalStorageData[]) => {
+    const savedNodePositionsMap = JSON.parse(
+      localStorage.getItem(prefixLocalStorageItem) || '{}'
+    ) as LocalStorageDataSaved;
+
+    const nodePositionsMap = nodes.reduce((acc, { id, x, y }) => {
       acc[id] = { x, y };
 
       return acc;
     }, {} as LocalStorageDataSaved);
 
-    let result = { ...nodePositions };
+    const result = { ...savedNodePositionsMap };
 
-    for (const key in topologyNodes) {
-      if (Object.prototype.hasOwnProperty.call(topologyNodes, key)) {
-        result = Object.fromEntries(Object.entries(result).filter(([k]) => k !== key));
+    for (const key in nodePositionsMap) {
+      if (key in result) {
+        delete result[key];
       }
     }
 
-    localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...result, ...topologyMap }));
-  },
-
-  getNodePosition(id: string): LocalStorageDataWithNullXY {
-    const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
-
-    const positions = cache[id] as LocalStorageDataSavedPayload | undefined;
-
-    const x = positions ? positions.x : undefined;
-    const y = positions ? positions.y : undefined;
-
-    return { id, x, y };
+    Promise.resolve(localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...result, ...nodePositionsMap })));
   },
 
   removeAllNodePositions() {
@@ -82,8 +73,13 @@ export const GraphController = {
   },
 
   addPositionsToNodes(nodes: GraphNode[]) {
+    const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
+
     return nodes.map((node) => {
-      const { x, y } = GraphController.getNodePosition(node.persistPositionKey || node.id);
+      const positions = cache[node.persistPositionKey || node.id] as LocalStorageDataSavedPayload | undefined;
+
+      const x = positions ? positions.x : undefined;
+      const y = positions ? positions.y : undefined;
 
       return { ...node, x, y };
     });

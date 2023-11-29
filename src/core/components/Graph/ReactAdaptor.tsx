@@ -61,7 +61,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       useImperativeHandle(ref, () => ({
         saveNodePositions() {
-          Promise.resolve(savePositions());
+          savePositions();
         },
 
         fitView() {
@@ -348,7 +348,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }, [handleMouseEnter]);
 
       const handleBeforeDestroy = useCallback(() => {
-        Promise.resolve(savePositions());
+        savePositions();
       }, [savePositions]);
 
       const bindEvents = useCallback(() => {
@@ -436,13 +436,17 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
           const data = GraphController.getG6Model({ edges, nodes, combos });
+          const [width, height] = [$node.clientWidth, $node.clientHeight];
+
           const options: GraphOptions = {
             container: $node,
             fitView: true,
             fitViewPadding: 20,
+            width,
+            height,
             layout: {
               ...DEFAULT_LAYOUT_FORCE_CONFIG,
-              center: [0, 0],
+              center: [width / 2, height / 2],
               maxIteration: GraphController.calculateMaxIteration(nodes)
             },
             ...DEFAULT_GRAPH_CONFIG
@@ -530,7 +534,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }, []);
 
       return (
-        <div ref={graphRef} style={{ height: '98%', background: GRAPH_BG_COLOR, position: 'relative' }}>
+        <div ref={graphRef} style={{ height: '99%', background: GRAPH_BG_COLOR, position: 'relative' }}>
           {topologyGraphRef.current && (
             <MenuControl
               graphInstance={topologyGraphRef.current}
