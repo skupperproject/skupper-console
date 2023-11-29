@@ -13,11 +13,12 @@ type ZoomControlsProps = {
   onFitScreen?: Function;
 };
 
-const ZOOM_DELTA = 0.25;
+const ZOOM_DELTA = 0.2;
 const FIT_SCREEN_CACHE_KEY_SUFFIX = '-fitScreen';
 const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
-const DURATION_ANIMATION_CONTROL_DEFAULT = 250;
+const DURATION_ANIMATION_CONTROL_DEFAULT = 300;
 const LEGEND_LABEL_NAME = 'Legend';
+const ANIMATION_ZOOM_NODE_LIMIT = 800;
 
 const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
@@ -25,9 +26,14 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   const center = graphInstance.getGraphCenterPoint();
 
   const handleIncreaseZoom = () => {
+    const nodeCount = graphInstance.getNodes().length;
     const zoom = graphInstance.getZoom();
     const newZoom = zoom + ZOOM_DELTA;
-    graphInstance.zoomTo(newZoom, center, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
+
+    graphInstance;
+    graphInstance.zoomTo(newZoom, center, nodeCount < ANIMATION_ZOOM_NODE_LIMIT, {
+      duration: DURATION_ANIMATION_CONTROL_DEFAULT
+    });
 
     if (onGetZoom) {
       onGetZoom(newZoom);
@@ -39,9 +45,13 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   };
 
   const handleDecreaseZoom = () => {
+    const nodeCount = graphInstance.getNodes().length;
     const zoom = graphInstance.getZoom();
     const newZoom = zoom - ZOOM_DELTA;
-    graphInstance.zoomTo(newZoom, center, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
+
+    graphInstance.zoomTo(newZoom, center, nodeCount < ANIMATION_ZOOM_NODE_LIMIT, {
+      duration: DURATION_ANIMATION_CONTROL_DEFAULT
+    });
 
     if (onGetZoom) {
       onGetZoom(newZoom);

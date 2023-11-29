@@ -57,16 +57,18 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   type: 'force2',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
+  nodeStrength: 10000,
   preventOverlap: true,
   clustering: true,
-  leafCluster: false,
   nodeClusterBy: 'cluster',
-  clusterNodeStrength: 100,
-  gravity: 10,
-  edgeStrength: 1,
+  distanceThresholdMode: 'max',
+  clusterNodeStrength: 5000,
+  leafCluster: false,
+  gravity: 1000,
+  maxSpeed: 200,
   animate: false,
   maxIteration: 200,
-  linkDistance: 100
+  gpuEnabled: false
 };
 
 export const DEFAULT_NODE_ICON = {

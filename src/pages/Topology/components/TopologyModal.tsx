@@ -4,6 +4,7 @@ import { Bullseye, Button, Flex, Modal, Spinner, Text, Title } from '@patternfly
 import { Link } from 'react-router-dom';
 
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import TransitionSlide from '@core/components/TransitionPages/Slide';
 import Details from '@pages/Processes/components/Details';
 import ProcessPairs from '@pages/Processes/components/ProcessesPairs';
 import ProcessPairDetails from '@pages/Processes/components/ProcessPairDetails';
@@ -101,7 +102,7 @@ const TopologyModal: FC<TopologyModalProps> = function ({ ids, items, modalType,
         </Flex>
       }
     >
-      {Body}
+      <TransitionSlide page={index}>{Body || <div />}</TransitionSlide>
     </Modal>
   );
 };
