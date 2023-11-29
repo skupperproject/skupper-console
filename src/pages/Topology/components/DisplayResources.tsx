@@ -13,6 +13,7 @@ import { QueriesSites } from '@pages/Sites/Sites.enum';
 import { TopologyLabels } from '../Topology.enum';
 
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
+const FILTER_BY_SERVICE_MIN_WIDTH = 150;
 
 const externalProcessesQueryParams = {
   processRole: 'external'
@@ -152,7 +153,11 @@ const DisplayResource: FC<{
       hasInlineFilter
       inlineFilterPlaceholderText={TopologyLabels.ProcessFilterPlaceholderText}
       onFilter={handleFind}
-      maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
+      style={{
+        minWidth: `${FILTER_BY_SERVICE_MIN_WIDTH}px`,
+        maxHeight: `${FILTER_BY_SERVICE_MAX_HEIGHT}px`,
+        overflow: 'auto'
+      }}
       onClear={handleClear}
     >
       {getOptions}

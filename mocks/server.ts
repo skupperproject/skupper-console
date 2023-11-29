@@ -176,7 +176,9 @@ export const MockApi = {
       };
     }
 
-    const filteredResults = results.filter((result) => result.processGroupRole === queryParams.processGroupRole);
+    const filteredResults = results.filter(
+      (result) => (queryParams.processGroupRole && result.processGroupRole === queryParams.processGroupRole) || true
+    );
 
     const paginatedResults = filteredResults.slice(
       Number(queryParams.offset || 0),
