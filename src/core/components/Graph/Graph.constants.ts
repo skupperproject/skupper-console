@@ -22,8 +22,6 @@ export enum TopologyModeNames {
   Performance = 'performance'
 }
 
-export const CRITICAL_NODE_COUNT_THRESHOLD = 800;
-
 export const NODE_SIZE = 25;
 const ICON_SIZE = 10;
 const LABEL_FONT_SIZE = 8;
@@ -269,5 +267,7 @@ export const DEFAULT_GRAPH_CONFIG: Partial<GraphOptions> = {
   defaultCombo: DEFAULT_COMBO_CONFIG,
   defaultEdge: DEFAULT_EDGE_CONFIG,
   nodeStateStyles: DEFAULT_NODE_STATE_CONFIG,
-  comboStateStyles: DEFAULT_COMBO_STATE_CONFIG
+  comboStateStyles: DEFAULT_COMBO_STATE_CONFIG,
+  fitView: true,
+  fitViewPadding: 20
 };

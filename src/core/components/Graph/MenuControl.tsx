@@ -4,6 +4,8 @@ import { Graph } from '@antv/g6-pc';
 import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ExpandArrowsAltIcon, ExpandIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
+import { CRITICAL_NODE_COUNT_THRESHOLD } from '@config/config';
+
 import ProcessLegend from './Legend';
 import { GraphController } from './services';
 
@@ -13,30 +15,25 @@ type ZoomControlsProps = {
   onFitScreen?: Function;
 };
 
-const ZOOM_DELTA = 0.2;
 const FIT_SCREEN_CACHE_KEY_SUFFIX = '-fitScreen';
 const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
-const DURATION_ANIMATION_CONTROL_DEFAULT = 300;
 const LEGEND_LABEL_NAME = 'Legend';
-const ANIMATION_ZOOM_NODE_LIMIT = 800;
+export const ZOOM_CONFIG = {
+  duration: 200,
+  easing: 'easeCubic'
+};
 
 const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
 
-  const center = graphInstance.getGraphCenterPoint();
-
   const handleIncreaseZoom = () => {
     const nodeCount = graphInstance.getNodes().length;
-    const zoom = graphInstance.getZoom();
-    const newZoom = zoom + ZOOM_DELTA;
 
     graphInstance;
-    graphInstance.zoomTo(newZoom, center, nodeCount < ANIMATION_ZOOM_NODE_LIMIT, {
-      duration: DURATION_ANIMATION_CONTROL_DEFAULT
-    });
+    graphInstance.zoom(1.2, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG);
 
     if (onGetZoom) {
-      onGetZoom(newZoom);
+      onGetZoom(1.2);
     }
 
     if (onFitScreen) {
@@ -46,15 +43,11 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
 
   const handleDecreaseZoom = () => {
     const nodeCount = graphInstance.getNodes().length;
-    const zoom = graphInstance.getZoom();
-    const newZoom = zoom - ZOOM_DELTA;
 
-    graphInstance.zoomTo(newZoom, center, nodeCount < ANIMATION_ZOOM_NODE_LIMIT, {
-      duration: DURATION_ANIMATION_CONTROL_DEFAULT
-    });
+    graphInstance.zoom(0.8, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG);
 
     if (onGetZoom) {
-      onGetZoom(newZoom);
+      onGetZoom(0.8);
     }
 
     if (onFitScreen) {
@@ -63,7 +56,10 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   };
 
   const handleZoomToDefault = () => {
-    graphInstance.fitView(20, undefined, true, { duration: DURATION_ANIMATION_CONTROL_DEFAULT });
+    const nodeCount = graphInstance.getNodes().length;
+
+    graphInstance.fitView(20, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG);
+
     if (onFitScreen) {
       onFitScreen(1);
     }
@@ -74,6 +70,8 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   };
 
   const handleCleanGraphAndLocalStorage = () => {
+    const nodeCount = graphInstance.getNodes().length;
+
     GraphController.removeAllNodePositions();
     GraphController.cleanControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
     GraphController.cleanControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
@@ -87,7 +85,7 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
     });
 
     graphInstance.layout();
-    setTimeout(() => graphInstance.fitView(20), 250);
+    setTimeout(() => graphInstance.fitView(20, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG), 250);
   };
 
   return (

@@ -6,7 +6,7 @@ import { COLLECTOR_URL } from '@config/config';
 const COLLECTORS_PATH = `${COLLECTOR_URL}/collectors/`;
 export const getCollectors = () => COLLECTORS_PATH;
 
-export const getUser = () => `${COLLECTOR_URL}/user`;
+export const getUser = () => `${COLLECTOR_URL}/user/`;
 
 export const logout = () => `${COLLECTOR_URL}/logout?nonce=${Date.now()}`;
 

@@ -13,6 +13,7 @@ import {
 import G6, { G6GraphEvent, Graph, GraphOptions, IEdge, INode, Item } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
+import { CRITICAL_NODE_COUNT_THRESHOLD } from '@config/config';
 import {
   GraphEdge,
   GraphCombo,
@@ -21,12 +22,7 @@ import {
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
 
-import {
-  CRITICAL_NODE_COUNT_THRESHOLD,
-  DEFAULT_GRAPH_CONFIG,
-  DEFAULT_LAYOUT_FORCE_CONFIG,
-  GRAPH_BG_COLOR
-} from './Graph.constants';
+import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG, GRAPH_BG_COLOR } from './Graph.constants';
 import MenuControl from './MenuControl';
 import { GraphController } from './services';
 import {
@@ -67,33 +63,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       useImperativeHandle(ref, () => ({
         saveNodePositions() {
           savePositions();
-        },
-
-        fitView() {
-          const graphInstance = topologyGraphRef.current;
-
-          if (!graphInstance) {
-            return;
-          }
-
-          graphInstance.fitView(20, undefined, true, { duration: 100 });
-        },
-
-        focusItem(id: string | undefined) {
-          const graphInstance = topologyGraphRef.current;
-
-          if (!graphInstance) {
-            return;
-          }
-
-          if (id) {
-            handleMouseEnter(id);
-            graphInstance.focusItem(id, true, { duration: 100 });
-
-            return;
-          }
-
-          handleNodeMouseLeave({ currentTarget: graphInstance });
         }
       }));
 
@@ -447,8 +416,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           const options: GraphOptions = {
             container: $node,
-            fitView: true,
-            fitViewPadding: 20,
             width,
             height,
             layout: {
@@ -470,10 +437,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
-      useEffect(() => {
-        itemSelectedRef.current = itemSelected;
-      }, [itemSelected]);
-
       // This effect updates the topology when there are changes to the nodes, edges or combos.
       useEffect(() => {
         const graphInstance = topologyGraphRef.current;
@@ -486,7 +449,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
             JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
         ) {
+          const isNodeCountChanged = JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition);
           // add positions to nodes fom the local storage
+          isNodeCountChanged;
           const nodesWithPositions = GraphController.addPositionsToNodes(nodesWithoutPosition);
 
           //Map of the most updated nodes from the graph
@@ -510,11 +475,44 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           graphInstance.setMode(GraphController.getMode(nodesWithoutPosition.length, CRITICAL_NODE_COUNT_THRESHOLD));
           graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
+          if (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition)) {
+            graphInstance.getNodes().forEach((node) => {
+              const nodeModel = node.getModel();
+              nodeModel.x = undefined;
+              nodeModel.y = undefined;
+              nodeModel.fx = undefined;
+              nodeModel.fy = undefined;
+            });
+
+            setTimeout(() => graphInstance.fitView(20), 0);
+          }
+
           prevNodesRef.current = nodesWithoutPosition;
           prevEdgesRef.current = edges;
           prevCombosRef.current = combos;
         }
       }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
+
+      useEffect(() => {
+        const graphInstance = topologyGraphRef.current;
+        itemSelectedRef.current = itemSelected;
+
+        if (graphInstance && isGraphLoaded) {
+          if (itemSelected) {
+            handleMouseEnter(itemSelected);
+            graphInstance.focusItem(itemSelected, true, { duration: 100 });
+
+            const item = graphInstance.findById(itemSelected);
+
+            if (item) {
+              graphInstance.zoom(1, { x: item.getModel().x, y: item.getModel().y } as { x: number; y: number });
+            }
+
+            return;
+          }
+          handleNodeMouseLeave({ currentTarget: graphInstance });
+        }
+      }, [handleMouseEnter, handleNodeMouseLeave, isGraphLoaded, itemSelected]);
 
       // This effect handle the resize of the topology when the browser window changes size.
       useLayoutEffect(() => {

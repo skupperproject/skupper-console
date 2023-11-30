@@ -22,7 +22,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
+import { CRITICAL_NODE_COUNT_THRESHOLD, UPDATE_INTERVAL } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import {
   GraphEdge,
@@ -162,7 +162,6 @@ const TopologyProcesses: FC<{
 
   const handleResourceSelected = useCallback((id?: string) => {
     setItemIdSelected(id);
-    graphRef?.current?.focusItem(id);
   }, []);
 
   const handleGetSelectedSite = useCallback(
@@ -218,8 +217,6 @@ const TopologyProcesses: FC<{
     if (options) {
       setDisplayOptionsSelected(options !== 'undefined' ? JSON.parse(options) : undefined);
     }
-
-    setTimeout(() => graphRef?.current?.fitView(), 100);
 
     addInfoAlert(TopologyLabels.ToastLoad);
   }, [addInfoAlert]);
@@ -281,7 +278,7 @@ const TopologyProcesses: FC<{
     let processNodes = TopologyController.convertProcessesToNodes(processes);
     let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
 
-    if (isDisplayOptionActive(GROUP_NODES_COMBO_GROUP)) {
+    if (processNodes.length > CRITICAL_NODE_COUNT_THRESHOLD || isDisplayOptionActive(GROUP_NODES_COMBO_GROUP)) {
       processNodes = groupNodes(processNodes);
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
