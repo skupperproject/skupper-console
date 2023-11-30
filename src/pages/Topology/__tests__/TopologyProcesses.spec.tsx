@@ -29,14 +29,6 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
     useImperativeHandle(ref, () => ({
       saveNodePositions() {
         return jest.fn();
-      },
-
-      fitView() {
-        return jest.fn();
-      },
-
-      focusItem() {
-        return jest.fn();
       }
     }));
 

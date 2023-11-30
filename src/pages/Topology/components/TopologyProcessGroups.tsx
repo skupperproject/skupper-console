@@ -56,7 +56,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
 
   const handleComponentSelected = useCallback((id?: string) => {
     setComponentIdSelected(id);
-    graphRef?.current?.focusItem(id);
   }, []);
 
   const handleGetSelectedNode = useCallback(

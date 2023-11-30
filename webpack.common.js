@@ -55,7 +55,8 @@ module.exports = {
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.DISABLE_METRICS': JSON.stringify(process.env.DISABLE_METRICS),
       'process.env.MOCK_ITEM_COUNT': JSON.stringify(process.env.MOCK_ITEM_COUNT),
-      'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE)
+      'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE),
+      'process.env.MAX_NODE_COUNT_WITHOUT_AGGREGATION': JSON.stringify(process.env.MAX_NODE_COUNT_WITHOUT_AGGREGATION)
     }),
     new HtmlWebpackPlugin({
       template: path.join(ROOT, '/public/index.html'),

@@ -55,8 +55,6 @@ export interface GraphEdge {
 
 export interface GraphReactAdaptorExposedMethods {
   saveNodePositions: Function;
-  fitView: Function;
-  focusItem: Function;
 }
 
 export interface GraphReactAdaptorProps {

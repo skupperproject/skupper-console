@@ -130,7 +130,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
   const handleProcessSelected = useCallback((id?: string) => {
     setSiteIdSelected(id);
-    graphRef?.current?.focusItem(id);
   }, []);
 
   useEffect(() => {
