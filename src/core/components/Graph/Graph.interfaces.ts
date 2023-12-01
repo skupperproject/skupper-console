@@ -6,6 +6,7 @@ export interface GraphNode {
   id: string;
   label: string;
   comboId?: string;
+  comboName?: string;
   groupId?: string;
   groupName?: string;
   groupCount?: number;

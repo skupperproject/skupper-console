@@ -6,6 +6,7 @@ import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 export interface Entity {
   id: string;
   comboId?: string;
+  comboName?: string;
   groupId?: string;
   groupName?: string;
   label: string;
