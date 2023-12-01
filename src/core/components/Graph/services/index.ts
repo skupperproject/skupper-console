@@ -120,6 +120,10 @@ export const GraphController = {
       return 500;
     }
 
+    if (nodesLength > 300) {
+      return 700;
+    }
+
     return 1000;
   }
 };

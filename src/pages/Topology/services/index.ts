@@ -91,7 +91,16 @@ export const TopologyController = {
 
   convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
     processes?.map(
-      ({ identity, name: label, parent: comboId, groupIdentity, groupName, processRole: role, processBinding }) => {
+      ({
+        identity,
+        name: label,
+        parent: comboId,
+        parentName: comboName,
+        groupIdentity,
+        groupName,
+        processRole: role,
+        processBinding
+      }) => {
         const img = role === 'internal' ? skupperIcon : processIcon;
 
         const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
@@ -99,6 +108,7 @@ export const TopologyController = {
         return convertEntityToNode({
           id: identity,
           comboId,
+          comboName,
           label,
           iconFileName: img,
           nodeConfig,
@@ -269,6 +279,7 @@ export const TopologyController = {
 function convertEntityToNode({
   id,
   comboId,
+  comboName,
   groupId,
   groupName,
   label,
@@ -279,6 +290,7 @@ function convertEntityToNode({
   return {
     id,
     comboId,
+    comboName,
     groupId,
     groupName,
     label,
@@ -315,7 +327,7 @@ export function groupNodes(data: GraphNode[]): GraphNode[] {
     groupedNodes[group].groupCount! += 1;
 
     if (groupedNodes[group].groupCount! > 1) {
-      groupedNodes[group].label = item.groupName || '';
+      groupedNodes[group].label = `${item.groupName}-${item.comboName}` || '';
       groupedNodes[group].type = shape.bound;
       groupedNodes[group].notificationValue = groupedNodes[group].groupCount;
       groupedNodes[group].enableBadge1 = true;

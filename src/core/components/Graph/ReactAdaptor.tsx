@@ -23,7 +23,7 @@ import {
 import LoadingPage from '@pages/shared/Loading';
 
 import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG, GRAPH_BG_COLOR } from './Graph.constants';
-import MenuControl from './MenuControl';
+import MenuControl, { ZOOM_CONFIG } from './MenuControl';
 import { GraphController } from './services';
 import {
   registerDataEdge as registerDefaultEdgeWithHover,
@@ -472,7 +472,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
           graphInstance.setMode(GraphController.getMode(nodesWithoutPosition.length));
           graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
-
           if (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition)) {
             graphInstance.getNodes().forEach((node) => {
               const nodeModel = node.getModel();
@@ -482,7 +481,16 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               nodeModel.fy = undefined;
             });
 
-            setTimeout(() => graphInstance.fitView(20), 0);
+            setTimeout(
+              () =>
+                graphInstance.fitView(
+                  20,
+                  undefined,
+                  !GraphController.isPerformanceThresholdExceeded(nodes.length),
+                  ZOOM_CONFIG
+                ),
+              100
+            );
           }
 
           prevNodesRef.current = nodesWithoutPosition;
