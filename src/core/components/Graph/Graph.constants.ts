@@ -25,6 +25,8 @@ export enum TopologyModeNames {
 export const NODE_SIZE = 25;
 const ICON_SIZE = 10;
 const LABEL_FONT_SIZE = 8;
+// number of nodes to start showing less topology details for events like zooming in/out and dragging
+export const NODE_COUNT_PERFORMANCE_THRESHOLD = 150;
 
 export const CUSTOM_ITEMS_NAMES = {
   animatedDashEdge: 'line-dash',
@@ -75,18 +77,18 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   type: 'force2',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
-  nodeStrength: 10000,
+  nodeStrength: 200000,
   preventOverlap: true,
   clustering: true,
   nodeClusterBy: 'cluster',
   distanceThresholdMode: 'max',
-  clusterNodeStrength: 5000,
+  clusterNodeStrength: 50000,
   leafCluster: false,
-  gravity: 1000,
-  maxSpeed: 200,
+  gravity: 5000,
+  maxSpeed: 1000,
   animate: false,
-  maxIteration: 200,
-  gpuEnabled: false
+  maxIteration: 1,
+  gpuEnabled: true
 };
 
 export const DEFAULT_NODE_ICON = {

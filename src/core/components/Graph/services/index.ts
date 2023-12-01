@@ -1,6 +1,6 @@
 import { INode, NodeConfig } from '@antv/g6';
 
-import { TopologyModeNames } from '../Graph.constants';
+import { NODE_COUNT_PERFORMANCE_THRESHOLD, TopologyModeNames } from '../Graph.constants';
 import {
   GraphCombo,
   GraphEdge,
@@ -86,8 +86,12 @@ export const GraphController = {
     });
   },
 
-  getMode(nodeCount: number, threshold: number) {
-    return nodeCount < threshold ? TopologyModeNames.Default : TopologyModeNames.Performance;
+  isPerformanceThresholdExceeded: (nodesCount: number) => nodesCount >= NODE_COUNT_PERFORMANCE_THRESHOLD,
+
+  getMode(nodeCount: number) {
+    return GraphController.isPerformanceThresholdExceeded(nodeCount)
+      ? TopologyModeNames.Performance
+      : TopologyModeNames.Default;
   },
 
   getG6Model: ({ nodes, edges, combos }: { nodes: GraphNode[]; edges: GraphEdge[]; combos?: GraphCombo[] }) => ({
@@ -104,6 +108,7 @@ export const GraphController = {
     edges: JSON.parse(JSON.stringify(GraphController.sanitizeEdges(nodes, edges))),
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
   }),
+
   calculateMaxIteration: (nodes: GraphNode[]) => {
     const nodesLength = nodes.length;
 
@@ -112,9 +117,9 @@ export const GraphController = {
     }
 
     if (nodesLength > 500) {
-      return 200;
+      return 500;
     }
 
-    return 200;
+    return 1000;
   }
 };

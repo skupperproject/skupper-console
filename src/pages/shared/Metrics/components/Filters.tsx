@@ -37,6 +37,7 @@ import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants'
 import { MetricsLabels } from '../Metrics.enum';
 import { ConfigMetricFilters, MetricFiltersProps, QueryMetricsParams } from '../Metrics.interfaces';
 
+const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
     configFilters = {},
@@ -147,7 +148,15 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       onSelect: (event?: ReactMouseEvent, itemId?: string | number) => void
     ) {
       return (
-        <Menu ref={menuRef} onSelect={onSelect} selected={selected}>
+        <Menu
+          ref={menuRef}
+          onSelect={onSelect}
+          selected={selected}
+          style={{
+            maxHeight: `${FILTER_BY_SERVICE_MAX_HEIGHT}px`,
+            overflow: 'auto'
+          }}
+        >
           <MenuContent>
             <MenuList>
               <MenuItem key={`site-${defaultlabel}`} itemId={undefined}>

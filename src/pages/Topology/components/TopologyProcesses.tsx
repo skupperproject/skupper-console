@@ -22,8 +22,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { CRITICAL_NODE_COUNT_THRESHOLD, UPDATE_INTERVAL } from '@config/config';
-import EmptyData from '@core/components/EmptyData';
+import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, UPDATE_INTERVAL } from '@config/config';
 import {
   GraphEdge,
   GraphCombo,
@@ -43,7 +42,6 @@ import DisplayServices from './DisplayServices';
 import TopologyModal from './TopologyModal';
 import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
 import {
-  GROUP_NODES_COMBO_GROUP,
   ROTATE_LINK_LABEL,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
@@ -84,7 +82,7 @@ const TopologyProcesses: FC<{
   const navigate = useNavigate();
   const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
 
-  const [nodes, setNodes] = useState<GraphNode[]>([]);
+  const [nodes, setNodes] = useState<GraphNode[] | undefined>();
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
   const [itemIdSelected, setItemIdSelected] = useState<string | undefined>(itemId); //process or link id
@@ -97,35 +95,31 @@ const TopologyProcesses: FC<{
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [
-    { data: sites },
-    { data: externalProcesses },
-    { data: remoteProcesses },
-    { data: processesPairs, isFetchedAfterMount }
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesSites.GetSites],
-        queryFn: () => RESTApi.fetchSites(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
-  });
+  const [{ data: sites }, { data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] =
+    useQueries({
+      queries: [
+        {
+          queryKey: [QueriesSites.GetSites],
+          queryFn: () => RESTApi.fetchSites(),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+          queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+          queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesTopology.GetProcessesPairs],
+          queryFn: () => RESTApi.fetchProcessesPairsResult(),
+          refetchInterval: UPDATE_INTERVAL
+        }
+      ]
+    });
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
@@ -278,7 +272,7 @@ const TopologyProcesses: FC<{
     let processNodes = TopologyController.convertProcessesToNodes(processes);
     let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
 
-    if (processNodes.length > CRITICAL_NODE_COUNT_THRESHOLD || isDisplayOptionActive(GROUP_NODES_COMBO_GROUP)) {
+    if (processNodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION) {
       processNodes = groupNodes(processNodes);
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
@@ -312,6 +306,10 @@ const TopologyProcesses: FC<{
     metrics?.byteRateByProcessPairs,
     metrics?.latencyByProcessPairs
   ]);
+
+  if (!nodes) {
+    return <LoadingPage />;
+  }
 
   const displayOptions = displayOptionsForProcesses.map((option) => {
     if (option.key === SHOW_LINK_REVERSE_LABEL) {
@@ -395,10 +393,6 @@ const TopologyProcesses: FC<{
     </Toolbar>
   );
 
-  if (!nodes?.length && !isFetchedAfterMount) {
-    return <LoadingPage />;
-  }
-
   return (
     <>
       <Stack data-testid="sk-topology-processes">
@@ -407,21 +401,17 @@ const TopologyProcesses: FC<{
           <Divider />
         </StackItem>
         <StackItem isFilled>
-          {!!nodes.length && (
-            <GraphComponent
-              ref={graphRef}
-              nodes={nodes}
-              edges={links}
-              combos={groups}
-              itemSelected={nodeIdSelected}
-              saveConfigkey={ZOOM_CACHE_KEY}
-              onClickCombo={handleGetSelectedSite}
-              onClickNode={handleGetSelectedNode}
-              onClickEdge={handleGetSelectedEdge}
-            />
-          )}
-
-          {!nodes.length && <EmptyData />}
+          <GraphComponent
+            ref={graphRef}
+            nodes={nodes}
+            edges={links}
+            combos={groups}
+            itemSelected={nodeIdSelected}
+            saveConfigkey={ZOOM_CACHE_KEY}
+            onClickCombo={handleGetSelectedSite}
+            onClickNode={handleGetSelectedNode}
+            onClickEdge={handleGetSelectedEdge}
+          />
         </StackItem>
       </Stack>
       <AlertGroup isToast>

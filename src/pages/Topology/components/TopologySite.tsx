@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
-import EmptyData from '@core/components/EmptyData';
 import {
   GraphEdge,
   GraphNode,
@@ -43,7 +42,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 }) {
   const navigate = useNavigate();
 
-  const [nodes, setNodes] = useState<GraphNode[]>([]);
+  const [nodes, setNodes] = useState<GraphNode[] | undefined>();
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
 
@@ -57,59 +56,54 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     [displayOptionsSelected]
   );
 
-  const [
-    { data: sites, isFetchedAfterMount },
-    { data: routers },
-    { data: routerLinks },
-    { data: sitesPairs },
-    { data: metrics }
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesSites.GetSites],
-        queryFn: () => RESTApi.fetchSites(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesSites.GetRouters],
-        queryFn: () => RESTApi.fetchRouters(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesSites.GetLinks],
-        queryFn: () => RESTApi.fetchLinks(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
-        queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [
-          QueriesTopology.GetBytesByProcessPairs,
-          isDisplayOptionActive(SHOW_LINK_BYTES),
-          isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          isDisplayOptionActive(SHOW_LINK_LATENCY),
-          isDisplayOptionActive(SHOW_DATA_LINKS)
-        ],
-        queryFn: () =>
-          isDisplayOptionActive(SHOW_DATA_LINKS)
-            ? TopologyController.getMetrics({
-                showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-                showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-                showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-                params: {
-                  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-                  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-                  fetchLatency: { groupBy: 'sourceSite, destSite' }
-                }
-              })
-            : null,
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
-  });
+  const [{ data: sites }, { data: routers }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] =
+    useQueries({
+      queries: [
+        {
+          queryKey: [QueriesSites.GetSites],
+          queryFn: () => RESTApi.fetchSites(),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesSites.GetRouters],
+          queryFn: () => RESTApi.fetchRouters(),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesSites.GetLinks],
+          queryFn: () => RESTApi.fetchLinks(),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
+          queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [
+            QueriesTopology.GetBytesByProcessPairs,
+            isDisplayOptionActive(SHOW_LINK_BYTES),
+            isDisplayOptionActive(SHOW_LINK_BYTERATE),
+            isDisplayOptionActive(SHOW_LINK_LATENCY),
+            isDisplayOptionActive(SHOW_DATA_LINKS)
+          ],
+          queryFn: () =>
+            isDisplayOptionActive(SHOW_DATA_LINKS)
+              ? TopologyController.getMetrics({
+                  showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+                  showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+                  showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+                  params: {
+                    fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
+                    fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
+                    fetchLatency: { groupBy: 'sourceSite, destSite' }
+                  }
+                })
+              : null,
+          refetchInterval: UPDATE_INTERVAL
+        }
+      ]
+    });
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -192,6 +186,10 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     metrics?.latencyByProcessPairs
   ]);
 
+  if (!nodes) {
+    return <LoadingPage />;
+  }
+
   const displayOptions = displayOptionsForSites.map((option) => {
     if (option.key === SHOW_LINK_BYTES || option.key === SHOW_LINK_BYTERATE || option.key === SHOW_LINK_LATENCY) {
       return {
@@ -254,28 +252,20 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     </Toolbar>
   );
 
-  if (!nodes?.length && !isFetchedAfterMount) {
-    return <LoadingPage />;
-  }
-
   return (
     <Stack>
       <StackItem>
         {TopologyToolbar} <Divider />
       </StackItem>
       <StackItem isFilled>
-        {!!nodes.length && (
-          <GraphComponent
-            ref={graphRef}
-            nodes={nodes}
-            edges={edges}
-            itemSelected={siteIdSelected}
-            saveConfigkey={ZOOM_CACHE_KEY}
-            onClickNode={handleGetSelectedNode}
-          />
-        )}
-
-        {!nodes.length && <EmptyData />}
+        <GraphComponent
+          ref={graphRef}
+          nodes={nodes}
+          edges={edges}
+          itemSelected={siteIdSelected}
+          saveConfigkey={ZOOM_CACHE_KEY}
+          onClickNode={handleGetSelectedNode}
+        />
       </StackItem>
     </Stack>
   );

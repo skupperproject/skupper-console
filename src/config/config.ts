@@ -30,4 +30,4 @@ export const DARK_THEME_CLASS = 'pf-v5-theme-dark';
 export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
 
 // number of nodes to start showing the aggregate nodes in the topology
-export const CRITICAL_NODE_COUNT_THRESHOLD = Number(process.env.MAX_NODE_COUNT_WITHOUT_AGGREGATION) || 800;
+export const MAX_NODE_COUNT_WITHOUT_AGGREGATION = Number(process.env.MAX_NODE_COUNT_WITHOUT_AGGREGATION) || 50;

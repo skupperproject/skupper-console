@@ -13,7 +13,6 @@ import {
 import G6, { G6GraphEvent, Graph, GraphOptions, IEdge, INode, Item } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
-import { CRITICAL_NODE_COUNT_THRESHOLD } from '@config/config';
 import {
   GraphEdge,
   GraphCombo,
@@ -21,6 +20,7 @@ import {
   GraphReactAdaptorProps,
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
+import LoadingPage from '@pages/shared/Loading';
 
 import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG, GRAPH_BG_COLOR } from './Graph.constants';
 import MenuControl from './MenuControl';
@@ -404,7 +404,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       /** Creates network topology instance */
       const graphRef = useCallback(($node: HTMLDivElement) => {
-        if (nodesWithoutPosition.length && !topologyGraphRef.current) {
+        if (nodesWithoutPosition && !topologyGraphRef.current) {
           registerNodeWithBadges();
           registerDefaultEdgeWithHover();
           registerSiteLinkEdge();
@@ -427,9 +427,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           };
 
           topologyGraphRef.current = new G6.Graph(options);
-          topologyGraphRef.current.setMode(
-            GraphController.getMode(nodesWithoutPosition.length, CRITICAL_NODE_COUNT_THRESHOLD)
-          );
+          topologyGraphRef.current.setMode(GraphController.getMode(nodesWithoutPosition.length));
 
           topologyGraphRef.current.read(data);
           bindEvents();
@@ -472,7 +470,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             y: positionMap[node.persistPositionKey || node.id]?.y || node.y
           }));
 
-          graphInstance.setMode(GraphController.getMode(nodesWithoutPosition.length, CRITICAL_NODE_COUNT_THRESHOLD));
+          graphInstance.setMode(GraphController.getMode(nodesWithoutPosition.length));
           graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
           if (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition)) {
@@ -493,6 +491,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         }
       }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
 
+      // This effect handles the selection of a node or edge when the user clicks on a node or edge in the topology or when the user interacts with filters.
       useEffect(() => {
         const graphInstance = topologyGraphRef.current;
         itemSelectedRef.current = itemSelected;
@@ -533,6 +532,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         const destroyGraph = () => graphInstance.destroy();
         const debouncedHandleResize = debounce(handleResize, 200);
+
         window.addEventListener('resize', debouncedHandleResize);
         window.addEventListener('beforeunload', destroyGraph);
 
@@ -552,6 +552,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
               onFitScreen={handleFitScreen}
             />
           )}
+          {!isGraphLoaded && <LoadingPage isFLoating={true} />}
         </div>
       );
     }
