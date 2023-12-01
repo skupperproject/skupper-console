@@ -38,13 +38,9 @@ interface LoadingPageProps {
 
 const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = false }) {
   return (
-    <TransitionPage delay={0.75}>
+    <TransitionPage delay={0.75} style={isFLoating ? floatLoader : undefined}>
       <PageSection>
-        <Bullseye
-          className="sk-loading-page"
-          style={isFLoating ? floatLoader : undefined}
-          data-testid={getTestsIds.loadingView()}
-        >
+        <Bullseye className="sk-loading-page" data-testid={getTestsIds.loadingView()}>
           <PleaseWait />
         </Bullseye>
       </PageSection>

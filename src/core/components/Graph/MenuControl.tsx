@@ -4,8 +4,6 @@ import { Graph } from '@antv/g6-pc';
 import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ExpandArrowsAltIcon, ExpandIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
-import { CRITICAL_NODE_COUNT_THRESHOLD } from '@config/config';
-
 import ProcessLegend from './Legend';
 import { GraphController } from './services';
 
@@ -14,6 +12,9 @@ type ZoomControlsProps = {
   onGetZoom?: Function;
   onFitScreen?: Function;
 };
+
+const ZOOM_RATIO_OUT = 1.2;
+const ZOOM_RATIO_IN = 0.8;
 
 const FIT_SCREEN_CACHE_KEY_SUFFIX = '-fitScreen';
 const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
@@ -30,10 +31,15 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
     const nodeCount = graphInstance.getNodes().length;
 
     graphInstance;
-    graphInstance.zoom(1.2, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG);
+    graphInstance.zoom(
+      ZOOM_RATIO_OUT,
+      undefined,
+      !GraphController.isPerformanceThresholdExceeded(nodeCount),
+      ZOOM_CONFIG
+    );
 
     if (onGetZoom) {
-      onGetZoom(1.2);
+      onGetZoom(ZOOM_RATIO_OUT);
     }
 
     if (onFitScreen) {
@@ -44,10 +50,15 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   const handleDecreaseZoom = () => {
     const nodeCount = graphInstance.getNodes().length;
 
-    graphInstance.zoom(0.8, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG);
+    graphInstance.zoom(
+      ZOOM_RATIO_IN,
+      undefined,
+      !GraphController.isPerformanceThresholdExceeded(nodeCount),
+      ZOOM_CONFIG
+    );
 
     if (onGetZoom) {
-      onGetZoom(0.8);
+      onGetZoom(ZOOM_RATIO_IN);
     }
 
     if (onFitScreen) {
@@ -58,7 +69,7 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   const handleZoomToDefault = () => {
     const nodeCount = graphInstance.getNodes().length;
 
-    graphInstance.fitView(20, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG);
+    graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
 
     if (onFitScreen) {
       onFitScreen(1);
@@ -85,7 +96,11 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
     });
 
     graphInstance.layout();
-    setTimeout(() => graphInstance.fitView(20, undefined, nodeCount < CRITICAL_NODE_COUNT_THRESHOLD, ZOOM_CONFIG), 250);
+    setTimeout(
+      () =>
+        graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG),
+      250
+    );
   };
 
   return (

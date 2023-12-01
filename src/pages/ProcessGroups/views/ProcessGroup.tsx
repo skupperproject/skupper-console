@@ -64,7 +64,6 @@ const ProcessGroup = function () {
 
   const processResults = processes.results;
   const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
-  const serverNames = processResults.map(({ name: processName }) => processName).join('|');
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   const NavigationMenu = function () {
@@ -108,7 +107,6 @@ const ProcessGroup = function () {
                 )
               }}
               defaultMetricFilterValues={{
-                sourceProcess: serverNames,
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
               startTimeLimit={startTime}

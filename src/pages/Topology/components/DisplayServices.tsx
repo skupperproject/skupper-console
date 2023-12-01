@@ -18,6 +18,7 @@ const DisplayServices: FC<{
 }> = function ({ serviceIds, onSelect }) {
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[]>([]);
   const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
+
   const { data: services } = useQuery({
     queryKey: [QueriesServices.GetServices],
     queryFn: () => RESTApi.fetchServices(),
@@ -50,10 +51,11 @@ const DisplayServices: FC<{
       : // add display option
         [...(serviceIdsSelected || []), currentSelected];
 
-    setServiceIdsSelected(newSelectedOptions);
+    const areAllServicesSelected = newSelectedOptions.length === services?.results.length;
+    setServiceIdsSelected(areAllServicesSelected ? [] : newSelectedOptions);
 
     if (onSelect) {
-      onSelect(newSelectedOptions);
+      onSelect(areAllServicesSelected ? undefined : newSelectedOptions);
     }
   }
 
@@ -86,7 +88,11 @@ const DisplayServices: FC<{
   useEffect(() => {
     if (serviceIds) {
       setServiceIdsSelected(serviceIds);
-    } else if (!serviceIdsSelected.length && services?.results) {
+
+      return;
+    }
+
+    if (!serviceIdsSelected.length && services?.results) {
       setServiceIdsSelected(services?.results.map(({ identity }) => identity) || []);
     }
   }, [serviceIds, serviceIdsSelected, services?.results]);

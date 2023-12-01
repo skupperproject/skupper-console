@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
-import EmptyData from '@core/components/EmptyData';
 import { GraphNode, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
@@ -33,26 +32,25 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
   const [componentIdSelected, setComponentIdSelected] = useState<string | undefined>(componentId);
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs, isFetchedAfterMount }] =
-    useQueries({
-      queries: [
-        {
-          queryKey: [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
-          queryFn: () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesProcessGroups.GetRemoteProcessGroup, remoteProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesTopology.GetProcessGroupsPairs],
-          queryFn: () => RESTApi.fetchProcessGroupsPairs(),
-          refetchInterval: UPDATE_INTERVAL
-        }
-      ]
-    });
+  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcessGroups.GetRemoteProcessGroup, remoteProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetProcessGroupsPairs],
+        queryFn: () => RESTApi.fetchProcessGroupsPairs(),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const handleComponentSelected = useCallback((id?: string) => {
     setComponentIdSelected(id);
@@ -70,7 +68,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
   );
 
   if (!processGroups || !processGroupsPairs || !remoteProcessGroups) {
-    return null;
+    return <LoadingPage />;
   }
 
   const nodes = TopologyController.convertProcessGroupsToNodes([
@@ -78,10 +76,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
     ...remoteProcessGroups.results
   ]);
   const links = TopologyController.convertPairsToEdges(processGroupsPairs);
-
-  if (!nodes?.length && !isFetchedAfterMount) {
-    return <LoadingPage />;
-  }
 
   return (
     <Stack>
@@ -112,18 +106,14 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
       </StackItem>
 
       <StackItem isFilled>
-        {!!nodes.length && (
-          <GraphReactAdaptor
-            ref={graphRef}
-            nodes={nodes}
-            edges={links}
-            onClickNode={handleGetSelectedNode}
-            itemSelected={componentIdSelected}
-            saveConfigkey={ZOOM_CACHE_KEY}
-          />
-        )}
-
-        {!nodes.length && <EmptyData />}
+        <GraphReactAdaptor
+          ref={graphRef}
+          nodes={nodes}
+          edges={links}
+          onClickNode={handleGetSelectedNode}
+          itemSelected={componentIdSelected}
+          saveConfigkey={ZOOM_CACHE_KEY}
+        />
       </StackItem>
     </Stack>
   );
