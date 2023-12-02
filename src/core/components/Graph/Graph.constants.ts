@@ -76,18 +76,18 @@ const DEFAULT_MODE: Modes = {
 export const LAYOUT_TOPOLOGY_DEFAULT: LayoutConfig = {
   type: 'force2',
   nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE * 2,
+  nodeSpacing: NODE_SIZE,
   preventOverlap: true,
   clustering: true,
   nodeClusterBy: 'cluster',
   distanceThresholdMode: 'max',
   clusterNodeStrength: 500000,
-  nodeStrength: 2900,
+  nodeStrength: 3000,
   leafCluster: true,
   gravity: 13000,
   maxSpeed: 1000,
   animate: false,
-  factor: 600
+  factor: 800
 };
 
 export const LAYOUT_TOPOLOGY_SINGLE_NODE = {

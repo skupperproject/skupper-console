@@ -46,7 +46,8 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
 
-  const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
+  const configuration =
+    TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();

@@ -34,7 +34,7 @@ import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
-import { SitesRoutesPaths, QueriesSites } from '@pages/Sites/Sites.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import DisplayOptions from './DisplayOptions';
 import DisplayResource from './DisplayResources';
@@ -80,46 +80,41 @@ const TopologyProcesses: FC<{
   ModalComponent?: ComponentType<TopologyModalProps>;
 }> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = TopologyModal }) {
   const navigate = useNavigate();
-  const configuration = TopologyController.loadDisplayOptions(DISPLAY_OPTIONS, DEFAULT_DISPLAY_OPTIONS_ENABLED);
+  const configuration =
+    TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
 
   const [nodes, setNodes] = useState<GraphNode[] | undefined>();
   const [links, setLinks] = useState<GraphEdge[]>([]);
   const [groups, setGroups] = useState<GraphCombo[]>([]);
+
   const [itemIdSelected, setItemIdSelected] = useState<string | undefined>(itemId); //process or link id
-
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
-
   const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
+
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
   const [modalType, setModalType] = useState<'process' | 'processPair' | undefined>();
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [{ data: sites }, { data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] =
-    useQueries({
-      queries: [
-        {
-          queryKey: [QueriesSites.GetSites],
-          queryFn: () => RESTApi.fetchSites(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesTopology.GetProcessesPairs],
-          queryFn: () => RESTApi.fetchProcessesPairsResult(),
-          refetchInterval: UPDATE_INTERVAL
-        }
-      ]
-    });
+  const [{ data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetProcessesPairs],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
@@ -215,7 +210,7 @@ const TopologyProcesses: FC<{
   }, [addInfoAlert]);
 
   useEffect(() => {
-    if (!sites || !externalProcesses || !remoteProcesses || !processesPairs) {
+    if (!externalProcesses || !remoteProcesses || !processesPairs) {
       return;
     }
 
@@ -264,10 +259,8 @@ const TopologyProcesses: FC<{
       pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
 
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-
       processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
     }
-    const siteNodes = TopologyController.convertSitesToNodes(sites);
     let processNodes = TopologyController.convertProcessesToNodes(processes);
     let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
 
@@ -275,11 +268,10 @@ const TopologyProcesses: FC<{
       processNodes = groupNodes(processNodes);
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
-
-    processPairEdges = TopologyController.configureEdges(processPairEdges, options);
     const nodeGroups = isDisplayOptionActive(SHOW_SITE_KEY)
-      ? TopologyController.convertSitesToGroups(processNodes, siteNodes)
+      ? TopologyController.getNodeGroupsFromNodes(processNodes)
       : [];
+    processPairEdges = TopologyController.configureEdges(processPairEdges, options);
 
     setNodes(
       processNodes.map((node) => ({
@@ -295,7 +287,6 @@ const TopologyProcesses: FC<{
     );
     setGroups(nodeGroups);
   }, [
-    sites,
     externalProcesses,
     processesPairs,
     remoteProcesses,

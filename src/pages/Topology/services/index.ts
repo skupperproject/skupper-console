@@ -16,6 +16,7 @@ import {
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
+import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import SitesController from '@pages/Sites/services';
 import {
   ProcessPairsResponse,
@@ -118,10 +119,10 @@ export const TopologyController = {
       }
     ),
 
-  convertSitesToGroups: (processes: GraphNode[], sites: GraphNode[]): GraphCombo[] => {
-    const groups = processes.map(({ comboId }) => comboId);
+  getNodeGroupsFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
+    const groups = nodes.map(({ comboId, comboName }) => ({ id: comboId || '', label: comboName || '' }));
 
-    return sites.filter((site) => groups.includes(site.id)).map(({ id, label }) => ({ id, label }));
+    return removeDuplicatesFromArrayOfObjects(groups);
   },
 
   convertPairsToEdges: (processesPairs: ProcessPairsResponse[] | SitePairsResponse[]): GraphEdge[] =>
@@ -266,13 +267,13 @@ export const TopologyController = {
       };
     }),
 
-  loadDisplayOptions(key: string, defaultOptions: string[] = []) {
+  loadDisplayOptionsFromLocalStorage(key: string) {
     const displayOptions = localStorage.getItem(key);
     if (displayOptions) {
       return JSON.parse(displayOptions);
     }
 
-    return defaultOptions;
+    return null;
   }
 };
 
