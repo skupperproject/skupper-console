@@ -184,7 +184,6 @@ const TopologyProcesses: FC<{
   }, []);
 
   const handleCloseModal = useCallback(() => {
-    setItemIdSelected(undefined);
     setModalType(undefined);
   }, []);
 
