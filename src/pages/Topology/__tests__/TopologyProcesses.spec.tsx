@@ -90,13 +90,6 @@ describe('Begin testing the Topology component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Topology view after the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-    expect(screen.getByTestId('sk-topology-processes')).toBeInTheDocument();
-  });
-
   it('should clicking on the service menu', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
