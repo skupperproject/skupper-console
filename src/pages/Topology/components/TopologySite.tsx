@@ -33,7 +33,6 @@ import {
 } from '../Topology.constants';
 import { QueriesTopology, TopologyLabels } from '../Topology.enum';
 
-const ZOOM_CACHE_KEY = 'site';
 const DISPLAY_OPTIONS = 'display-site-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_ROUTER_LINKS];
 
@@ -264,7 +263,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
           nodes={nodes}
           edges={edges}
           itemSelected={siteIdSelected}
-          saveConfigkey={ZOOM_CACHE_KEY}
           onClickNode={handleGetSelectedNode}
         />
       </StackItem>

@@ -9,22 +9,18 @@ import { GraphController } from './services';
 
 type ZoomControlsProps = {
   graphInstance: Graph;
-  onGetZoom?: Function;
-  onFitScreen?: Function;
 };
 
 const ZOOM_RATIO_OUT = 1.2;
 const ZOOM_RATIO_IN = 0.8;
 
-const FIT_SCREEN_CACHE_KEY_SUFFIX = '-fitScreen';
-const ZOOM_CACHE_KEY_SUFFIX = '-graphZoom';
 const LEGEND_LABEL_NAME = 'Legend';
 export const ZOOM_CONFIG = {
   duration: 200,
   easing: 'easeCubic'
 };
 
-const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomControlsProps) {
+const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
 
   const handleIncreaseZoom = () => {
@@ -40,24 +36,12 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
     const centerPoint = graphInstance.getGraphCenterPoint();
 
     graphInstance.zoom(zoom, centerPoint, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
-
-    if (onGetZoom) {
-      onGetZoom(zoom);
-    }
-
-    if (onFitScreen) {
-      onFitScreen(0);
-    }
   };
 
   const handleFitView = () => {
     const nodeCount = graphInstance.getNodes().length;
 
     graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
-
-    if (onFitScreen) {
-      onFitScreen(1);
-    }
   };
 
   const handleCenter = () => {
@@ -65,9 +49,7 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   };
 
   const handleCleanAllGraphConfigurations = () => {
-    GraphController.cleanControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
-    GraphController.cleanControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
-    GraphController.removeAllNodePositions();
+    GraphController.removeAllNodePositionsFromLocalStorage();
     GraphController.cleanAllLocalNodePositions(graphInstance.getNodes());
 
     graphInstance.layout();

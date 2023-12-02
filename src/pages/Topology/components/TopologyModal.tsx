@@ -21,7 +21,7 @@ const TopologyModal: FC<TopologyModalProps> = function ({ ids, items, modalType,
   }, [onClose]);
 
   const idsArray = ids?.split('~');
-  const hasMoreElements = idsArray?.length > 1;
+  const hasMoreElements = !!idsArray?.length && idsArray.length > 1;
 
   let Header = null;
   let Body = null;
@@ -81,9 +81,8 @@ const TopologyModal: FC<TopologyModalProps> = function ({ ids, items, modalType,
       isOpen={!!modalType}
       onClose={handleClose}
       tabIndex={0}
-      width={'80%'}
-      maxWidth={1200}
-      style={{ height: hasMoreElements ? '80vh' : 'auto', minHeight: '350px' }}
+      width={'100%'}
+      style={{ height: '100vh' }}
       header={
         <Flex>
           {hasMoreElements && (

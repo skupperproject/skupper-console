@@ -16,8 +16,6 @@ import DisplayResource from './DisplayResources';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
-const ZOOM_CACHE_KEY = 'component';
-
 const processGroupsQueryParams = {
   processGroupRole: 'external'
 };
@@ -112,7 +110,6 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
           edges={links}
           onClickNode={handleGetSelectedNode}
           itemSelected={componentIdSelected}
-          saveConfigkey={ZOOM_CACHE_KEY}
         />
       </StackItem>
     </Stack>

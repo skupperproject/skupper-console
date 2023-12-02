@@ -51,7 +51,7 @@ export interface DisplayOptions {
 }
 
 export interface TopologyModalProps {
-  ids: string;
+  ids?: string;
   items: ProcessResponse[] | ProcessPairsResponse[];
   modalType: 'process' | 'processPair' | undefined;
   onClose?: Function;

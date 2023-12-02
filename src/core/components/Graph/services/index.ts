@@ -35,7 +35,7 @@ export const GraphController = {
     Promise.resolve(localStorage.setItem(prefixLocalStorageItem, JSON.stringify({ ...result, ...nodePositionsMap })));
   },
 
-  removeAllNodePositions() {
+  removeAllNodePositionsFromLocalStorage() {
     localStorage.removeItem(prefixLocalStorageItem);
   },
 
@@ -119,8 +119,6 @@ export const GraphController = {
       const nodeModel = node.getModel();
       nodeModel.x = undefined;
       nodeModel.y = undefined;
-      nodeModel.fx = undefined;
-      nodeModel.fy = undefined;
     });
   },
 
@@ -139,14 +137,12 @@ export const GraphController = {
     combos: combos ? JSON.parse(JSON.stringify(combos)) : undefined
   }),
 
-  calculateMaxIteration: (nodes: GraphNode[]) => {
-    const nodesLength = nodes.length;
-
-    if (nodesLength >= 400) {
+  calculateMaxIteration: (nodeCount: number) => {
+    if (nodeCount >= 400) {
       return 100;
     }
 
-    if (nodesLength > 100) {
+    if (nodeCount > 100) {
       return 500;
     }
 
