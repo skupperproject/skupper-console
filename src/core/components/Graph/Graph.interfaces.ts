@@ -66,9 +66,6 @@ export interface GraphReactAdaptorProps {
   onClickCombo?: Function;
   onClickNode?: Function;
   onClickEdge?: Function;
-  saveConfigkey?: string;
-  onGetZoom?: Function;
-  onFitScreen?: Function;
   legendData?: GraphData;
   ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
 }

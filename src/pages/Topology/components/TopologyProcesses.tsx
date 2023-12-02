@@ -54,7 +54,6 @@ import {
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 import { TopologyModalProps } from '../Topology.interfaces';
 
-const ZOOM_CACHE_KEY = 'process';
 const DISPLAY_OPTIONS = 'display-options';
 const SERVICE_OPTIONS = 'service-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
@@ -92,7 +91,7 @@ const TopologyProcesses: FC<{
   const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
 
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
-  const [modalType, setModalType] = useState<'process' | 'processPair' | undefined>();
+  const [modalType, setModalType] = useState<{ type: 'process' | 'processPair'; id: string } | undefined>();
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
@@ -161,13 +160,11 @@ const TopologyProcesses: FC<{
   );
 
   const handleGetSelectedEdge = useCallback(({ id }: { id: string }) => {
-    setItemIdSelected(id);
-    setModalType('processPair');
+    setModalType({ type: 'processPair', id });
   }, []);
 
   const handleGetSelectedNode = useCallback(({ id }: { id: string }) => {
-    setItemIdSelected(id);
-    setModalType('process');
+    setModalType({ type: 'process', id });
   }, []);
 
   const handleDisplayOptionSelected = useCallback((options: string[]) => {
@@ -360,12 +357,16 @@ const TopologyProcesses: FC<{
               default: 'spacerSm'
             }}
           >
-            <Button onClick={handleSaveTopology}>{TopologyLabels.SaveButton}</Button>
+            <Button isDisabled={!!itemIdSelected} onClick={handleSaveTopology}>
+              {TopologyLabels.SaveButton}
+            </Button>
           </ToolbarItem>
           <ToolbarItem>
-            <Button onClick={handleLoadTopology}>{TopologyLabels.LoadButton}</Button>
+            <Button isDisabled={!!itemIdSelected} onClick={handleLoadTopology}>
+              {TopologyLabels.LoadButton}
+            </Button>
             <Tooltip content={TopologyLabels.DescriptionButton}>
-              <Button aria-label="Clipboard" variant="plain">
+              <Button variant="plain">
                 <QuestionCircleIcon />
               </Button>
             </Tooltip>
@@ -397,7 +398,6 @@ const TopologyProcesses: FC<{
             edges={links}
             combos={groups}
             itemSelected={nodeIdSelected}
-            saveConfigkey={ZOOM_CACHE_KEY}
             onClickCombo={handleGetSelectedSite}
             onClickNode={handleGetSelectedNode}
             onClickEdge={handleGetSelectedEdge}
@@ -416,11 +416,13 @@ const TopologyProcesses: FC<{
         ))}
       </AlertGroup>
       <ModalComponent
-        ids={itemIdSelected!}
+        ids={modalType?.id}
         items={
-          modalType === 'process' ? [...(remoteProcesses || []), ...(externalProcesses || [])] : processesPairs || []
+          modalType?.type === 'process'
+            ? [...(remoteProcesses || []), ...(externalProcesses || [])]
+            : processesPairs || []
         }
-        modalType={modalType}
+        modalType={modalType?.type}
         onClose={handleCloseModal}
       />
     </>

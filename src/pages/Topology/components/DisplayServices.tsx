@@ -32,7 +32,9 @@ const DisplayServices: FC<{
 
   function handleSelectAllServices() {
     const areAllServicesSelected = serviceIdsSelected.length === services?.results.length;
-    const newSelectedOptions = areAllServicesSelected ? [] : (services?.results || []).map(({ identity }) => identity);
+    const newSelectedOptions = areAllServicesSelected
+      ? []
+      : (services?.results || []).map(({ identity }) => identity).sort();
 
     setServiceIdsSelected(newSelectedOptions);
 
@@ -47,9 +49,9 @@ const DisplayServices: FC<{
     const isSelected = currentSelected ? serviceIdsSelected.includes(currentSelected) : undefined;
     const newSelectedOptions = isSelected
       ? // remove display option
-        serviceIdsSelected?.filter((option) => option !== currentSelected)
+        serviceIdsSelected?.filter((option) => option !== currentSelected).sort()
       : // add display option
-        [...(serviceIdsSelected || []), currentSelected];
+        [...(serviceIdsSelected || []), currentSelected].sort();
 
     const areAllServicesSelected = newSelectedOptions.length === services?.results.length;
     setServiceIdsSelected(areAllServicesSelected ? [] : newSelectedOptions);
