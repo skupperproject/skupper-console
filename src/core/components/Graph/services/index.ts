@@ -73,10 +73,10 @@ export const GraphController = {
       .filter(Boolean) as LocalStorageData[];
   },
 
-  addPositionsToNodes(nodes: GraphNode[]) {
+  addPositionsToNodes(nodesWithoutPosition: GraphNode[], nodesWithPositions: INode[] = []) {
     const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
 
-    return nodes.map((node) => {
+    const nodesWithCachedPosition = nodesWithoutPosition.map((node) => {
       const positions = cache[node.persistPositionKey || node.id] as LocalStorageDataSavedPayload | undefined;
 
       const x = positions ? positions.x : undefined;
@@ -84,14 +84,44 @@ export const GraphController = {
 
       return { ...node, x, y };
     });
+
+    //Map of the most updated nodes from the graph
+    const positionMap = nodesWithPositions?.reduce(
+      (acc, node) => {
+        const id = (node.getModel().persistPositionKey || node.getID()) as string;
+        acc[id] = { x: node.getModel().x, y: node.getModel().y };
+
+        return acc;
+      },
+      {} as Record<string, { x?: number; y?: number }>
+    );
+
+    // check updated nodes from the graph otherwise rollback to the localstorage position
+    const nodes = nodesWithCachedPosition.map((node) => ({
+      ...node,
+      x: positionMap[node.persistPositionKey || node.id]?.x || node.x,
+      y: positionMap[node.persistPositionKey || node.id]?.y || node.y
+    }));
+
+    return nodes;
   },
 
   isPerformanceThresholdExceeded: (nodesCount: number) => nodesCount >= NODE_COUNT_PERFORMANCE_THRESHOLD,
 
-  getMode(nodeCount: number) {
+  getModeBasedOnPerformanceThreshold(nodeCount: number) {
     return GraphController.isPerformanceThresholdExceeded(nodeCount)
       ? TopologyModeNames.Performance
       : TopologyModeNames.Default;
+  },
+
+  cleanAllLocalNodePositions(nodes: INode[]) {
+    nodes.forEach((node) => {
+      const nodeModel = node.getModel();
+      nodeModel.x = undefined;
+      nodeModel.y = undefined;
+      nodeModel.fx = undefined;
+      nodeModel.fy = undefined;
+    });
   },
 
   getG6Model: ({ nodes, edges, combos }: { nodes: GraphNode[]; edges: GraphEdge[]; combos?: GraphCombo[] }) => ({
@@ -112,16 +142,12 @@ export const GraphController = {
   calculateMaxIteration: (nodes: GraphNode[]) => {
     const nodesLength = nodes.length;
 
-    if (nodesLength > 800) {
-      return 200;
+    if (nodesLength >= 400) {
+      return 100;
     }
 
-    if (nodesLength > 500) {
+    if (nodesLength > 100) {
       return 500;
-    }
-
-    if (nodesLength > 300) {
-      return 700;
     }
 
     return 1000;

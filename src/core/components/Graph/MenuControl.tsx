@@ -28,37 +28,21 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
   const popoverRef = useRef<HTMLButtonElement>(null);
 
   const handleIncreaseZoom = () => {
-    const nodeCount = graphInstance.getNodes().length;
-
-    graphInstance;
-    graphInstance.zoom(
-      ZOOM_RATIO_OUT,
-      undefined,
-      !GraphController.isPerformanceThresholdExceeded(nodeCount),
-      ZOOM_CONFIG
-    );
-
-    if (onGetZoom) {
-      onGetZoom(ZOOM_RATIO_OUT);
-    }
-
-    if (onFitScreen) {
-      onFitScreen(0);
-    }
+    handleZoom(ZOOM_RATIO_OUT);
   };
 
   const handleDecreaseZoom = () => {
-    const nodeCount = graphInstance.getNodes().length;
+    handleZoom(ZOOM_RATIO_IN);
+  };
 
-    graphInstance.zoom(
-      ZOOM_RATIO_IN,
-      undefined,
-      !GraphController.isPerformanceThresholdExceeded(nodeCount),
-      ZOOM_CONFIG
-    );
+  const handleZoom = (zoom: number) => {
+    const nodeCount = graphInstance.getNodes().length;
+    const centerPoint = graphInstance.getGraphCenterPoint();
+
+    graphInstance.zoom(zoom, centerPoint, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
 
     if (onGetZoom) {
-      onGetZoom(ZOOM_RATIO_IN);
+      onGetZoom(zoom);
     }
 
     if (onFitScreen) {
@@ -66,7 +50,7 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
     }
   };
 
-  const handleZoomToDefault = () => {
+  const handleFitView = () => {
     const nodeCount = graphInstance.getNodes().length;
 
     graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
@@ -80,27 +64,14 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
     graphInstance.fitCenter(false);
   };
 
-  const handleCleanGraphAndLocalStorage = () => {
-    const nodeCount = graphInstance.getNodes().length;
-
-    GraphController.removeAllNodePositions();
+  const handleCleanAllGraphConfigurations = () => {
     GraphController.cleanControlsFromLocalStorage(FIT_SCREEN_CACHE_KEY_SUFFIX);
     GraphController.cleanControlsFromLocalStorage(ZOOM_CACHE_KEY_SUFFIX);
-
-    graphInstance.getNodes().forEach((node) => {
-      const nodeModel = node.getModel();
-      nodeModel.x = undefined;
-      nodeModel.y = undefined;
-      nodeModel.fx = undefined;
-      nodeModel.fy = undefined;
-    });
+    GraphController.removeAllNodePositions();
+    GraphController.cleanAllLocalNodePositions(graphInstance.getNodes());
 
     graphInstance.layout();
-    setTimeout(
-      () =>
-        graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG),
-      250
-    );
+    setTimeout(handleFitView, 250);
   };
 
   return (
@@ -136,7 +107,7 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
               <Button
                 size="sm"
                 variant="tertiary"
-                onClick={handleZoomToDefault}
+                onClick={handleFitView}
                 icon={<ExpandArrowsAltIcon />}
                 className="sk-topology-control-bar__button"
               />
@@ -160,7 +131,7 @@ const MenuControl = function ({ graphInstance, onGetZoom, onFitScreen }: ZoomCon
               <Button
                 size="sm"
                 variant="tertiary"
-                onClick={handleCleanGraphAndLocalStorage}
+                onClick={handleCleanAllGraphConfigurations}
                 icon={<UndoIcon />}
                 className="sk-topology-control-bar__button"
               />

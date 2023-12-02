@@ -73,7 +73,7 @@ const DEFAULT_MODE: Modes = {
   ]
 };
 
-export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
+export const LAYOUT_TOPOLOGY_DEFAULT: LayoutConfig = {
   type: 'force2',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE * 2,
@@ -88,6 +88,11 @@ export const DEFAULT_LAYOUT_FORCE_CONFIG: LayoutConfig = {
   maxSpeed: 1000,
   animate: false,
   factor: 600
+};
+
+export const LAYOUT_TOPOLOGY_SINGLE_NODE = {
+  type: 'dagre',
+  rankdir: 'BT'
 };
 
 export const DEFAULT_NODE_ICON = {

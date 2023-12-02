@@ -22,7 +22,12 @@ import {
 } from '@core/components/Graph/Graph.interfaces';
 import LoadingPage from '@pages/shared/Loading';
 
-import { DEFAULT_GRAPH_CONFIG, DEFAULT_LAYOUT_FORCE_CONFIG, GRAPH_BG_COLOR } from './Graph.constants';
+import {
+  DEFAULT_GRAPH_CONFIG,
+  LAYOUT_TOPOLOGY_DEFAULT,
+  GRAPH_BG_COLOR,
+  LAYOUT_TOPOLOGY_SINGLE_NODE
+} from './Graph.constants';
 import MenuControl, { ZOOM_CONFIG } from './MenuControl';
 import { GraphController } from './services';
 import {
@@ -419,7 +424,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             width,
             height,
             layout: {
-              ...DEFAULT_LAYOUT_FORCE_CONFIG,
+              ...LAYOUT_TOPOLOGY_DEFAULT,
               center: [width / 2, height / 2],
               maxIteration: GraphController.calculateMaxIteration(nodes)
             },
@@ -427,7 +432,9 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           };
 
           topologyGraphRef.current = new G6.Graph(options);
-          topologyGraphRef.current.setMode(GraphController.getMode(nodesWithoutPosition.length));
+          topologyGraphRef.current.setMode(
+            GraphController.getModeBasedOnPerformanceThreshold(nodesWithoutPosition.length)
+          );
 
           topologyGraphRef.current.read(data);
           bindEvents();
@@ -436,50 +443,34 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       }, []);
 
       // This effect updates the topology when there are changes to the nodes, edges or combos.
+      // Disabled if itemSelected is true, because it means that the user has selected a node or edge.
       useEffect(() => {
         const graphInstance = topologyGraphRef.current;
 
+        if (!graphInstance || isHoverState.current || !isGraphLoaded || itemSelected) {
+          return;
+        }
+
         if (
-          !isHoverState.current &&
-          isGraphLoaded &&
-          graphInstance &&
-          (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition) ||
-            JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
-            JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos))
+          JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition) ||
+          JSON.stringify(prevEdgesRef.current) !== JSON.stringify(edges) ||
+          JSON.stringify(prevCombosRef.current) !== JSON.stringify(combos)
         ) {
-          const isNodeCountChanged = JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition);
           // add positions to nodes fom the local storage
-          isNodeCountChanged;
-          const nodesWithPositions = GraphController.addPositionsToNodes(nodesWithoutPosition);
+          const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
+          // Rollback to the default layout in case it was changed before when an item was selected
+          const layout = {
+            ...LAYOUT_TOPOLOGY_DEFAULT,
+            maxIteration: GraphController.calculateMaxIteration(nodes)
+          };
 
-          //Map of the most updated nodes from the graph
-          const positionMap = graphInstance.getNodes().reduce(
-            (acc, node) => {
-              const id = (node.getModel().persistPositionKey || node.getID()) as string;
-              acc[id] = { x: node.getModel().x, y: node.getModel().y };
-
-              return acc;
-            },
-            {} as Record<string, { x?: number; y?: number }>
-          );
-
-          // check updated nodes from the graph otherwise rollback to the localstorage position
-          const nodes = nodesWithPositions.map((node) => ({
-            ...node,
-            x: positionMap[node.persistPositionKey || node.id]?.x || node.x,
-            y: positionMap[node.persistPositionKey || node.id]?.y || node.y
-          }));
-
-          graphInstance.setMode(GraphController.getMode(nodesWithoutPosition.length));
+          graphInstance.updateLayout(layout);
           graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
+
+          // after updating the graph with new nodes, we need to fit the view
           if (JSON.stringify(prevNodesRef.current) !== JSON.stringify(nodesWithoutPosition)) {
-            graphInstance.getNodes().forEach((node) => {
-              const nodeModel = node.getModel();
-              nodeModel.x = undefined;
-              nodeModel.y = undefined;
-              nodeModel.fx = undefined;
-              nodeModel.fy = undefined;
-            });
+            graphInstance.layout();
+            graphInstance.setMode(GraphController.getModeBasedOnPerformanceThreshold(nodes.length));
 
             setTimeout(
               () =>
@@ -493,33 +484,61 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
             );
           }
 
+          // updated the prev values with the new ones
           prevNodesRef.current = nodesWithoutPosition;
           prevEdgesRef.current = edges;
           prevCombosRef.current = combos;
         }
-      }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
+      }, [nodesWithoutPosition, edges, combos, isGraphLoaded, itemSelected]);
 
       // This effect handles the selection of a node or edge when the user clicks on a node or edge in the topology or when the user interacts with filters.
+      // Enabled only if itemSelected is true, because it means that the user has selected a node or edge.
       useEffect(() => {
         const graphInstance = topologyGraphRef.current;
         itemSelectedRef.current = itemSelected;
 
-        if (graphInstance && isGraphLoaded) {
-          if (itemSelected) {
-            handleMouseEnter(itemSelected);
-            graphInstance.focusItem(itemSelected, true, { duration: 100 });
-
-            const item = graphInstance.findById(itemSelected);
-
-            if (item) {
-              graphInstance.zoom(1, { x: item.getModel().x, y: item.getModel().y } as { x: number; y: number });
-            }
-
-            return;
-          }
-          handleNodeMouseLeave({ currentTarget: graphInstance });
+        if (!graphInstance) {
+          return;
         }
-      }, [handleMouseEnter, handleNodeMouseLeave, isGraphLoaded, itemSelected]);
+
+        if (!itemSelected) {
+          handleNodeMouseLeave({ currentTarget: graphInstance });
+
+          return;
+        }
+
+        const filteredEdges = edges.filter((edge) => edge.source === itemSelected || edge.target === itemSelected);
+        const processIdsFromService = filteredEdges.flatMap(({ source, target }) => [source, target]);
+        const filteredNodes = nodesWithoutPosition.filter(({ id }) => processIdsFromService.includes(id));
+
+        const layout = {
+          ...LAYOUT_TOPOLOGY_SINGLE_NODE,
+          maxIteration: GraphController.calculateMaxIteration(filteredNodes)
+        };
+        graphInstance.updateLayout(layout);
+        // when an item is selected we don't want to show the combo
+        graphInstance.changeData(GraphController.getG6Model({ edges: filteredEdges, nodes: filteredNodes }));
+        graphInstance.layout();
+        graphInstance.setMode(GraphController.getModeBasedOnPerformanceThreshold(filteredNodes.length));
+
+        setTimeout(
+          () =>
+            graphInstance.fitView(
+              20,
+              undefined,
+              !GraphController.isPerformanceThresholdExceeded(filteredNodes.length),
+              ZOOM_CONFIG
+            ),
+          0
+        );
+
+        handleMouseEnter(itemSelected);
+
+        // updated the prev values with filtered ones
+        prevNodesRef.current = filteredNodes;
+        prevEdgesRef.current = filteredEdges;
+        prevCombosRef.current = combos;
+      }, [combos, edges, handleMouseEnter, handleNodeMouseLeave, isGraphLoaded, itemSelected, nodesWithoutPosition]);
 
       // This effect handle the resize of the topology when the browser window changes size.
       useLayoutEffect(() => {
