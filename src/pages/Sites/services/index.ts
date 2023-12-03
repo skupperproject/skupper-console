@@ -42,17 +42,20 @@ const SitesController = {
     // Only outgoing links are stored.
     // Instead Incoming links id are used to select the site
     const linksExtendedMap = linksExtended.reduce(
-      function (acc, { sourceSiteId, destinationSiteId }) {
-        (acc[sourceSiteId] = acc[sourceSiteId] || []).push(destinationSiteId);
+      function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
+        (acc[sourceSiteId] = acc[sourceSiteId] || []).push({ targetId: destinationSiteId, linkCost });
 
         return acc;
       },
-      {} as Record<string, string[]>
+      {} as Record<string, { targetId: string; linkCost: number }[]>
     );
 
     return sites.map((site) => ({
       ...site,
-      targetIds: [...new Set(linksExtendedMap[site.identity])] // remove duplicates
+      // Filters the target ids to remove duplicates
+      targetIds: (linksExtendedMap[site.identity] || [])
+        ?.filter((obj, index, self) => index === self.findIndex((o) => o.targetId === obj.targetId))
+        .filter(Boolean)
     }));
   },
   getSitePairs: (sites: SiteResponse[], links: LinkResponse[], routers: RouterResponse[]): SiteResponse[] => {

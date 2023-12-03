@@ -28,6 +28,7 @@ import {
   SitePairsResponse
 } from 'API/REST.interfaces';
 
+import { TopologyLabels } from '../Topology.enum';
 import {
   Entity,
   TopologyMetrics,
@@ -140,11 +141,12 @@ export const TopologyController = {
     const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links, routers);
 
     return sitesWithLinks.flatMap(({ identity: sourceId, targetIds }) =>
-      targetIds.flatMap((targetId) => [
+      targetIds.flatMap(({ targetId, linkCost }) => [
         {
           id: `${sourceId}-to${targetId}`,
           source: sourceId,
           target: targetId,
+          label: `${TopologyLabels.SiteLinkText} ${linkCost}`,
           type: CUSTOM_ITEMS_NAMES.siteEdge
         }
       ])

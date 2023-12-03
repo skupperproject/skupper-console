@@ -10,7 +10,7 @@ const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 export const EDGE_COLOR_DEFAULT = HexColors.Black600;
 export const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
-const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
+export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
 const COMBO__COLOR_DEFAULT = HexColors.Black100;
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
 const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
@@ -157,10 +157,11 @@ export const DEFAULT_REMOTE_NODE_CONFIG: Partial<{
   }
 };
 
-const DEFAULT_EDGE_CONFIG: Partial<{
+export const DEFAULT_EDGE_CONFIG: Partial<{
   type: string;
   size: number | number[];
   color: string;
+  labelCfg: ILabelConfig;
 }> &
   ModelStyle = {
   type: CUSTOM_ITEMS_NAMES.animatedDashEdge,
