@@ -4,9 +4,11 @@ import {
   BADGE_STYLE,
   CUSTOM_ITEMS_NAMES,
   EDGE_COLOR_DEFAULT,
+  EDGE_COLOR_DEFAULT_TEXT,
   NODE_SIZE,
   EDGE_COLOR_HOVER_DEFAULT,
-  EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT
+  EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT,
+  DEFAULT_EDGE_CONFIG
 } from '../Graph.constants';
 import { ComboWithCustomLabel, NodeWithBadgesProps } from '../Graph.interfaces';
 
@@ -82,6 +84,22 @@ export function registerSiteLinkEdge() {
         },
         name: 'path-shape'
       });
+
+      if (cfg.label) {
+        group.addShape('text', {
+          attrs: {
+            text: cfg.label,
+            fill: EDGE_COLOR_DEFAULT_TEXT,
+            textAlign: 'center',
+            textBaseline: 'middle',
+            x: (startPoint?.x || 2) / 2 + (endPoint?.x || 2) / 2,
+            y: (startPoint?.y || 2) / 2 + (endPoint?.y || 2) / 2,
+            ...DEFAULT_EDGE_CONFIG.labelCfg?.style,
+            ...cfg.labelCfg?.style
+          },
+          name: 'center-text-shape'
+        });
+      }
 
       return keyShape;
     },

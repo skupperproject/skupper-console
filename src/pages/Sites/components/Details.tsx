@@ -56,7 +56,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
   }
 
   const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
-  const linkedSites = sites.filter(({ identity }) => targetIds.includes(identity));
+  const linkedSites = sites.filter(({ identity }) => targetIds.map((id) => id.targetId).includes(identity));
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
   return (
