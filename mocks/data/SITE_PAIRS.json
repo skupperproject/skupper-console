@@ -1,0 +1,30 @@
+{
+  "results": [
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "site-1-to-site-2",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "pairType": "SITE",
+      "sourceId": "site-1",
+      "sourceName": "site 1",
+      "destinationId": "site-2",
+      "destinationName": "site-2"
+    },
+    {
+      "recType": "FLOWAGGREGATE",
+      "identity": "site-2-to-site-3",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "pairType": "PROCESS",
+      "sourceId": "site-2",
+      "sourceName": "site 2",
+      "destinationId": "site-3",
+      "destinationName": "site 3"
+    }
+  ],
+  "status": "",
+  "count": 2,
+  "timeRangeCount": 2,
+  "totalCount": 2
+}
