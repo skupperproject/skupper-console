@@ -12,7 +12,8 @@ import {
   SiteResponse,
   FlowPairsResponse,
   ResponseWrapper,
-  ProcessGroupPairsResponse
+  ProcessGroupPairsResponse,
+  SitePairsResponse
 } from 'API/REST.interfaces';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
@@ -28,6 +29,7 @@ const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
 const processGroups: ResponseWrapper<ProcessGroupResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
 const processGroupPairs: ResponseWrapper<ProcessGroupPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
+const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const hosts = require(`${path}/HOSTS.json`);
 const services = require(`${path}/SERVICES.json`);
@@ -119,6 +121,21 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     groupName: process.groupName,
     parent: process.parent,
     parentName: process.parentName
+  });
+}
+
+const mockSitePairsForPerf: SitePairsResponse[] = [];
+for (let i = 0; i < ITEM_COUNT; i++) {
+  const sourceIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
+  const destinationIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
+
+  mockSitePairsForPerf.push({
+    ...sitePairs.results[0],
+    identity: `${mockSitesForPerf[sourceIndex].identity}-to-${mockSitesForPerf[destinationIndex].identity}`,
+    sourceId: mockSitesForPerf[sourceIndex].identity,
+    sourceName: mockSitesForPerf[sourceIndex].name,
+    destinationId: mockSitesForPerf[destinationIndex].identity,
+    destinationName: mockSitesForPerf[destinationIndex].name
   });
 }
 
@@ -243,6 +260,22 @@ export const MockApi = {
     };
   },
 
+  getSitePairs: (_: unknown, { queryParams }: ApiProps) => {
+    const sitesForPerfTests = ITEM_COUNT ? mockSitePairsForPerf : [];
+    const results = [...sitePairs.results, ...sitesForPerfTests];
+
+    if (queryParams && !Object.keys(queryParams).length) {
+      return { ...sitePairs, results };
+    }
+
+    const resultsFiltered = results.filter(
+      ({ sourceId, destinationId }: SitePairsResponse) =>
+        sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
+    );
+
+    return { ...processPairs, results: resultsFiltered };
+  },
+
   getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
     const processesForPerfTests = ITEM_COUNT ? mockProcessPairsForPerf : [];
     const results = [...processPairs.results, ...processesForPerfTests];
@@ -328,6 +361,7 @@ export const MockApiPaths = {
   Logout: `${prefix}/logout`,
   Sites: `${prefix}/sites`,
   Site: `${prefix}/sites/:id`,
+  SitePairs: `${prefix}/sitepairs`,
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
   Processes: `${prefix}/processes`,
@@ -362,6 +396,7 @@ export function loadMockServer() {
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
+      this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
