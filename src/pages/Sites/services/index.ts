@@ -39,16 +39,17 @@ const SitesController = {
       });
 
     // Map <source site Id: destination site Id> to assign to each site the sited Ids connected with him (destinations)
-    // Only outgoing links are stored.
-    // Instead Incoming links id are used to select the site
-    const linksExtendedMap = linksExtended.reduce(
-      function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
-        (acc[sourceSiteId] = acc[sourceSiteId] || []).push({ targetId: destinationSiteId, linkCost });
+    const linksExtendedMap = linksExtended
+      .filter(({ linkCost }) => linkCost !== undefined)
+      .reduce(
+        function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
+          (acc[sourceSiteId] = acc[sourceSiteId] || []).push({ targetId: destinationSiteId, linkCost });
 
-        return acc;
-      },
-      {} as Record<string, { targetId: string; linkCost: number }[]>
-    );
+          return acc;
+        },
+        {} as Record<string, { targetId: string; linkCost: number }[]>
+      );
+    console.log('linkCost', linksExtended);
 
     return sites.map((site) => ({
       ...site,

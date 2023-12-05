@@ -146,7 +146,7 @@ export const TopologyController = {
           id: `${sourceId}-to${targetId}`,
           source: sourceId,
           target: targetId,
-          label: `${TopologyLabels.SiteLinkText} ${linkCost}`,
+          label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : '',
           type: CUSTOM_ITEMS_NAMES.siteEdge
         }
       ])
