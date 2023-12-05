@@ -38,18 +38,27 @@ const SitesController = {
         return { sourceSiteId, destinationSiteId, ...link };
       });
 
-    // Map <source site Id: destination site Id> to assign to each site the sited Ids connected with him (destinations)
-    const linksExtendedMap = linksExtended
-      .filter(({ linkCost }) => linkCost !== undefined)
-      .reduce(
-        function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
-          (acc[sourceSiteId] = acc[sourceSiteId] || []).push({ targetId: destinationSiteId, linkCost });
+    // Map <source site Id: destination site Id> to assign to each site the sited Ids linked with him (destinations)
+    // the source is the site who created the link
+    // we track and keep only the link with the cost != undefined
+    const linksExtendedMap = linksExtended.reduce(
+      function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
+        const existingLink = (acc[sourceSiteId] || []).find((link) => link.targetId === destinationSiteId);
 
-          return acc;
-        },
-        {} as Record<string, { targetId: string; linkCost: number }[]>
-      );
-    console.log('linkCost', linksExtended);
+        if (
+          !existingLink ||
+          (existingLink.linkCost !== undefined && linkCost !== undefined && linkCost > existingLink.linkCost)
+        ) {
+          acc[sourceSiteId] = acc[sourceSiteId] || [];
+          acc[sourceSiteId].push({ targetId: destinationSiteId, linkCost });
+        } else if (existingLink && existingLink.linkCost === undefined) {
+          existingLink.linkCost = linkCost;
+        }
+
+        return acc;
+      },
+      {} as Record<string, { targetId: string; linkCost: number }[]>
+    );
 
     return sites.map((site) => ({
       ...site,
