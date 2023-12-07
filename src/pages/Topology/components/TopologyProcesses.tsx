@@ -330,7 +330,11 @@ const TopologyProcesses: FC<{
     <Toolbar>
       <ToolbarContent>
         <ToolbarItem>
-          <DisplayServices serviceIds={serviceIdsSelected} onSelect={handleServiceSelected} />
+          <DisplayOptions
+            options={displayOptions}
+            onSelect={handleDisplayOptionSelected}
+            defaultSelected={displayOptionsSelected}
+          />
         </ToolbarItem>
 
         <ToolbarItem>
@@ -341,28 +345,24 @@ const TopologyProcesses: FC<{
           />
         </ToolbarItem>
 
-        <ToolbarItem>
-          <DisplayOptions
-            options={displayOptions}
-            onSelect={handleDisplayOptionSelected}
-            defaultSelected={displayOptionsSelected}
-          />
-        </ToolbarItem>
-
         <ToolbarItem variant="separator" />
 
         <ToolbarGroup>
+          <ToolbarItem>
+            <DisplayServices serviceIds={serviceIdsSelected} onSelect={handleServiceSelected} />
+          </ToolbarItem>
+
           <ToolbarItem
             spacer={{
               default: 'spacerSm'
             }}
           >
-            <Button isDisabled={!!itemIdSelected} onClick={handleSaveTopology}>
+            <Button isDisabled={!!itemIdSelected} onClick={handleSaveTopology} variant="secondary">
               {TopologyLabels.SaveButton}
             </Button>
           </ToolbarItem>
           <ToolbarItem>
-            <Button isDisabled={!!itemIdSelected} onClick={handleLoadTopology}>
+            <Button isDisabled={!!itemIdSelected} onClick={handleLoadTopology} variant="secondary">
               {TopologyLabels.LoadButton}
             </Button>
             <Tooltip content={TopologyLabels.DescriptionButton}>
