@@ -23,6 +23,7 @@ const Topology = function () {
   function handleChangeTopologyType(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTopologyType(tabIndex as string);
     setSearchParams({ type: tabIndex as string });
+    id.current = undefined;
   }
 
   useEffect(() => {

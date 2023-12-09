@@ -32,7 +32,7 @@ import {
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
-import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -159,13 +159,43 @@ const TopologyProcesses: FC<{
     [navigate]
   );
 
-  const handleGetSelectedEdge = useCallback(({ id }: { id: string }) => {
-    setModalType({ type: 'processPair', id });
-  }, []);
+  const handleGetSelectedEdge = useCallback(
+    ({
+      id,
+      sourceName,
+      sourceId,
+      metrics: { protocol }
+    }: {
+      id: string;
+      sourceName: string;
+      sourceId: string;
+      metrics: { protocol: string };
+    }) => {
+      if (id.split('~').length > 1) {
+        setModalType({ type: 'processPair', id });
 
-  const handleGetSelectedNode = useCallback(({ id }: { id: string }) => {
-    setModalType({ type: 'process', id });
-  }, []);
+        return;
+      }
+
+      navigate(
+        `${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${ProcessesLabels.ProcessPairs}@${id}@${protocol}`
+      );
+    },
+    [navigate]
+  );
+
+  const handleGetSelectedNode = useCallback(
+    ({ id, label }: { id: string; label: string }) => {
+      if (id.split('~').length > 1) {
+        setModalType({ type: 'process', id });
+
+        return;
+      }
+
+      navigate(`${ProcessesRoutesPaths.Processes}/${label}@${id}`);
+    },
+    [navigate]
+  );
 
   const handleDisplayOptionSelected = useCallback((options: string[]) => {
     startTransition(() => {
@@ -357,12 +387,20 @@ const TopologyProcesses: FC<{
               default: 'spacerSm'
             }}
           >
-            <Button isDisabled={!!itemIdSelected} onClick={handleSaveTopology} variant="secondary">
+            <Button
+              isDisabled={!!itemIdSelected && modalType?.type === 'process'}
+              onClick={handleSaveTopology}
+              variant="secondary"
+            >
               {TopologyLabels.SaveButton}
             </Button>
           </ToolbarItem>
           <ToolbarItem>
-            <Button isDisabled={!!itemIdSelected} onClick={handleLoadTopology} variant="secondary">
+            <Button
+              isDisabled={!!itemIdSelected && modalType?.type === 'process'}
+              onClick={handleLoadTopology}
+              variant="secondary"
+            >
               {TopologyLabels.LoadButton}
             </Button>
             <Tooltip content={TopologyLabels.DescriptionButton}>
