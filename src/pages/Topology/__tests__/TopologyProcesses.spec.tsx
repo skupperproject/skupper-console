@@ -37,7 +37,11 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
         <Button onClick={() => onClickNode && onClickNode({ id: processesResults[0].identity })}>onClickNode</Button>
         <Button
           onClick={() =>
-            onClickEdge && onClickEdge({ id: `${processesResults[2].identity}-to-${processesResults[1].identity}` })
+            onClickEdge &&
+            onClickEdge({
+              id: `${processesResults[2].identity}-to-${processesResults[1].identity}`,
+              metrics: { protocol: 'http2' }
+            })
           }
         >
           onClickEdge

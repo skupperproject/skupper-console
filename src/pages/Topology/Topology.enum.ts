@@ -58,7 +58,11 @@ export enum TopologyLabels {
   DescriptionButton = 'Load a configuration that includes previously saved settings for filtered services',
   ToastSave = 'Topology saved successfully',
   ToastLoad = 'Topology loaded successfully',
-  SiteLinkText = 'Cost'
+  SiteLinkText = 'Cost',
+  TopologyModalTitle = 'Summary',
+  TopologyModalAction1 = 'Show details',
+  TopologyModalAction2 = 'Show pairs',
+  TopologyModalAction3 = 'Show chars'
 }
 
 export enum TopologyURLQueyParams {
