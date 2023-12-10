@@ -25,7 +25,7 @@ export function registerDataEdge() {
               x,
               y,
               fill: EDGE_COLOR_HOVER_DEFAULT,
-              r: 5
+              r: 4
             },
             name: 'circle-shape'
           });

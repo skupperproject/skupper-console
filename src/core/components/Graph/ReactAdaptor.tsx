@@ -126,21 +126,23 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         const source = edge.getSource();
         const target = edge.getTarget();
 
-        currentTarget.getNodes().forEach((node) => {
-          if (node.getID() !== source.getID() && node.getID() !== target.getID()) {
-            currentTarget.setItemState(node, 'hidden', true);
-          } else {
-            currentTarget.setItemState(node, 'hidden', false);
-          }
-        });
+        if (!itemSelectedRef.current) {
+          currentTarget.getNodes().forEach((node) => {
+            if (node.getID() !== source.getID() && node.getID() !== target.getID()) {
+              currentTarget.setItemState(node, 'hidden', true);
+            } else {
+              currentTarget.setItemState(node, 'hidden', false);
+            }
+          });
 
-        currentTarget.getEdges().forEach((topologyEdge) => {
-          if (edge.getID() !== topologyEdge.getID()) {
-            topologyEdge.hide();
-          } else {
-            topologyEdge.show();
-          }
-        });
+          currentTarget.getEdges().forEach((topologyEdge) => {
+            if (edge.getID() !== topologyEdge.getID()) {
+              topologyEdge.hide();
+            } else {
+              topologyEdge.show();
+            }
+          });
+        }
 
         currentTarget.setItemState(edge, 'hover', true);
       }, []);
@@ -180,27 +182,30 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       const handleNodeMouseLeave = useCallback(
         ({ currentTarget, item }: { currentTarget: Graph; item?: Item }) => {
-          currentTarget.findAllByState('node', 'hover').forEach((node) => {
-            currentTarget.setItemState(node, 'hover', false);
-          });
-
-          currentTarget.findAllByState('node', 'hidden').forEach((node) => {
-            currentTarget.setItemState(node, 'hidden', false);
-          });
-
           // when we back from an other view and we leave a node we must erase links status
           currentTarget.getEdges().forEach((edge) => {
             edge.show();
             currentTarget.setItemState(edge, 'hover', false);
           });
 
-          // we need to remove the combo highlight if we leave the node label outside the combo boc
-          const comboId = item?.getModel()?.comboId as string | undefined;
-          if (comboId) {
-            handleComboMouseLeave({ currentTarget, item: currentTarget.findById(comboId) });
+          if (!itemSelectedRef.current) {
+            currentTarget.findAllByState('node', 'hover').forEach((node) => {
+              currentTarget.setItemState(node, 'hover', false);
+            });
+
+            currentTarget.findAllByState('node', 'hidden').forEach((node) => {
+              currentTarget.setItemState(node, 'hidden', false);
+            });
+
+            // we need to remove the combo highlight if we leave the node label outside the combo boc
+            const comboId = item?.getModel()?.comboId as string | undefined;
+            if (comboId) {
+              handleComboMouseLeave({ currentTarget, item: currentTarget.findById(comboId) });
+            }
+
+            itemSelectedRef.current = undefined;
           }
 
-          itemSelectedRef.current = undefined;
           isHoverState.current = false;
         },
         [handleComboMouseLeave]
@@ -295,16 +300,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         );
 
         topologyGraphRef.current?.on('edge:click', handleEdgeClick);
-        topologyGraphRef.current?.on(
-          'edge:mouseenter',
-          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
-            !itemSelectedRef.current ? handleEdgeMouseEnter({ currentTarget, item }) : undefined
-        );
-        topologyGraphRef.current?.on(
-          'edge:mouseleave',
-          ({ currentTarget, item }: { currentTarget: Graph; item: Item }) =>
-            !itemSelectedRef.current ? handleEdgeMouseLeave({ currentTarget, item }) : undefined
-        );
+        topologyGraphRef.current?.on('edge:mouseenter', handleEdgeMouseEnter);
+        topologyGraphRef.current?.on('edge:mouseleave', handleEdgeMouseLeave);
 
         topologyGraphRef.current?.on('combo:click', handleComboClick);
         topologyGraphRef.current?.on('combo:dragstart', handleCombDragStart);
@@ -414,8 +411,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           if (itemSelected) {
             filteredEdges = edges.filter((edge) => edge.source === itemSelected || edge.target === itemSelected);
 
-            const processIdsFromService = filteredEdges.flatMap(({ source, target }) => [source, target]);
-            filteredNodes = filteredNodes.filter(({ id }) => processIdsFromService.includes(id));
+            const idsFromService = filteredEdges.flatMap(({ source, target }) => [source, target]);
+            filteredNodes = filteredNodes.filter(({ id }) => idsFromService.includes(id));
             filteredCombos = [];
 
             layoutSelected = LAYOUT_TOPOLOGY_SINGLE_NODE;

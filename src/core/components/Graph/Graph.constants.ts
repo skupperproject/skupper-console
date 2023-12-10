@@ -4,7 +4,7 @@ import { HexColors } from '@config/colors';
 
 export const GRAPH_BG_COLOR = HexColors.White;
 const NODE_COLOR_DEFAULT = HexColors.White;
-const NODE_BORDER_COLOR_DEFAULT = HexColors.Black600;
+const NODE_BORDER_COLOR_DEFAULT = HexColors.Black300;
 const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
 const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 export const EDGE_COLOR_DEFAULT = HexColors.Black600;
@@ -22,8 +22,8 @@ export enum TopologyModeNames {
   Performance = 'performance'
 }
 
-export const NODE_SIZE = 25;
-const ICON_SIZE = 10;
+export const NODE_SIZE = 36;
+const ICON_SIZE = 15;
 const LABEL_FONT_SIZE = 8;
 // number of nodes to start showing less topology details for events like zooming in/out and dragging
 export const NODE_COUNT_PERFORMANCE_THRESHOLD = 150;
@@ -40,7 +40,7 @@ export const BADGE_STYLE = {
   containerBg: HexColors.Black500,
   containerBorderColor: HexColors.White,
   textColor: HexColors.White,
-  textFontSize: LABEL_FONT_SIZE - 2
+  textFontSize: LABEL_FONT_SIZE - 1
 };
 
 const INACTIVE_OPACITY_VALUE = 0.3;
@@ -81,13 +81,13 @@ export const LAYOUT_TOPOLOGY_DEFAULT: LayoutConfig = {
   clustering: true,
   nodeClusterBy: 'cluster',
   distanceThresholdMode: 'max',
-  clusterNodeStrength: 500000,
-  nodeStrength: 3000,
+  clusterNodeStrength: 1000000,
+  nodeStrength: 5000,
   leafCluster: true,
-  gravity: 13000,
+  gravity: 10000,
   maxSpeed: 1000,
   animate: false,
-  factor: 800
+  factor: 1000
 };
 
 export const LAYOUT_TOPOLOGY_SINGLE_NODE = {
@@ -116,7 +116,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
   style: {
     fill: NODE_COLOR_DEFAULT,
     stroke: NODE_BORDER_COLOR_DEFAULT,
-    lineWidth: 1,
+    lineWidth: 0.8,
     cursor: 'pointer'
   },
 
@@ -130,7 +130,7 @@ export const DEFAULT_NODE_CONFIG: Partial<{
         fill: NODE_COLOR_DEFAULT_LABEL_BG,
         stroke: NODE_BORDER_COLOR_DEFAULT,
         lineWidth: 0.5,
-        padding: [2, 3],
+        padding: [3, 4],
         radius: 2
       }
     }
@@ -214,16 +214,16 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
   labelBgCfg: {
     fill: COMBO_COLOR_DEFAULT_LABEL_BG,
     radius: 2,
-    padding: [10, 10]
+    padding: [12, 10]
   }
 };
 
 const DEFAULT_NODE_STATE_CONFIG = {
   hover: {
     shadowOffsetX: 0,
-    shadowOffsetY: 3,
-    shadowColor: 'black',
-    shadowBlur: 8,
+    shadowOffsetY: 6,
+    shadowColor: HexColors.Black600,
+    shadowBlur: 14,
 
     [`${CUSTOM_ITEMS_NAMES.nodeWithBadges}-icon`]: {
       cursor: 'pointer'

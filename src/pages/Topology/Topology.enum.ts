@@ -53,16 +53,16 @@ export enum TopologyLabels {
   DisplayPlaceholderText = 'Display',
   SelectAll = 'Select all',
   DeselectAll = 'Deselect all',
-  LoadButton = 'Load Services',
-  SaveButton = 'Save Services',
+  LoadButton = 'Load',
+  SaveButton = 'Save',
   DescriptionButton = 'Load a configuration that includes previously saved settings for filtered services',
   ToastSave = 'Topology saved successfully',
   ToastLoad = 'Topology loaded successfully',
   SiteLinkText = 'Cost',
   TopologyModalTitle = 'Summary',
-  TopologyModalAction1 = 'Show details',
-  TopologyModalAction2 = 'Show pairs',
-  TopologyModalAction3 = 'Show chars'
+  TopologyModalAction1 = 'View details',
+  TopologyModalAction2 = 'View pairs',
+  TopologyModalAction3 = 'View charts'
 }
 
 export enum TopologyURLQueyParams {

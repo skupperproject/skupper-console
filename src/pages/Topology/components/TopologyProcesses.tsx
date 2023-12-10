@@ -8,8 +8,17 @@ import {
   AlertVariant,
   Button,
   Divider,
+  Drawer,
+  DrawerActions,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerContentBody,
+  DrawerHead,
+  DrawerPanelBody,
+  DrawerPanelContent,
   Stack,
   StackItem,
+  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -22,7 +31,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, UPDATE_INTERVAL } from '@config/config';
+import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
 import {
   GraphEdge,
   GraphCombo,
@@ -39,7 +48,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import DisplayOptions from './DisplayOptions';
 import DisplayResource from './DisplayResources';
 import DisplayServices from './DisplayServices';
-import TopologyModal from './TopologyModal';
+import NodeOrEdgeList from './NodeOrEdgeList';
 import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
 import {
   ROTATE_LINK_LABEL,
@@ -52,7 +61,7 @@ import {
   displayOptionsForProcesses
 } from '../Topology.constants';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
-import { TopologyModalProps } from '../Topology.interfaces';
+import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const DISPLAY_OPTIONS = 'display-options';
 const SERVICE_OPTIONS = 'service-options';
@@ -76,8 +85,8 @@ const TopologyProcesses: FC<{
   serviceIds?: string[];
   id?: string;
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
-  ModalComponent?: ComponentType<TopologyModalProps>;
-}> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = TopologyModal }) {
+  ModalComponent?: ComponentType<NodeOrEdgeListProps>;
+}> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
   const configuration =
     TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
@@ -92,6 +101,8 @@ const TopologyProcesses: FC<{
 
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
   const [modalType, setModalType] = useState<{ type: 'process' | 'processPair'; id: string } | undefined>();
+
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
@@ -150,6 +161,7 @@ const TopologyProcesses: FC<{
 
   const handleResourceSelected = useCallback((id?: string) => {
     setItemIdSelected(id);
+    setModalType(undefined);
   }, []);
 
   const handleGetSelectedSite = useCallback(
@@ -211,6 +223,7 @@ const TopologyProcesses: FC<{
 
   const handleServiceSelected = useCallback((ids: string[]) => {
     setItemIdSelected(undefined);
+    setModalType(undefined);
     setServiceIdsSelected(ids);
   }, []);
 
@@ -387,20 +400,12 @@ const TopologyProcesses: FC<{
               default: 'spacerSm'
             }}
           >
-            <Button
-              isDisabled={!!itemIdSelected && modalType?.type === 'process'}
-              onClick={handleSaveTopology}
-              variant="secondary"
-            >
+            <Button isDisabled={!!nodeIdSelected} onClick={handleSaveTopology} variant="secondary">
               {TopologyLabels.SaveButton}
             </Button>
           </ToolbarItem>
           <ToolbarItem>
-            <Button
-              isDisabled={!!itemIdSelected && modalType?.type === 'process'}
-              onClick={handleLoadTopology}
-              variant="secondary"
-            >
+            <Button isDisabled={!!nodeIdSelected} onClick={handleLoadTopology} variant="secondary">
               {TopologyLabels.LoadButton}
             </Button>
             <Tooltip content={TopologyLabels.DescriptionButton}>
@@ -422,6 +427,37 @@ const TopologyProcesses: FC<{
     </Toolbar>
   );
 
+  const onExpand = () => {
+    drawerRef.current && drawerRef.current.focus();
+  };
+
+  const onCloseClick = () => {
+    setModalType(undefined);
+  };
+
+  const panelContent = (
+    <DrawerPanelContent isResizable minSize="35%">
+      <DrawerHead>
+        <Title headingLevel="h1">{TopologyLabels.TopologyModalTitle}</Title>
+        <DrawerActions>
+          <DrawerCloseButton onClick={onCloseClick} />
+        </DrawerActions>
+      </DrawerHead>
+      <DrawerPanelBody style={{ overflow: 'auto' }}>
+        <ModalComponent
+          ids={modalType?.id}
+          items={
+            modalType?.type === 'process'
+              ? [...(remoteProcesses || []), ...(externalProcesses || [])]
+              : processesPairs || []
+          }
+          modalType={modalType?.type}
+          onClose={handleCloseModal}
+        />
+      </DrawerPanelBody>
+    </DrawerPanelContent>
+  );
+
   return (
     <>
       <Stack data-testid="sk-topology-processes">
@@ -430,39 +466,35 @@ const TopologyProcesses: FC<{
           <Divider />
         </StackItem>
         <StackItem isFilled>
-          <GraphComponent
-            ref={graphRef}
-            nodes={nodes}
-            edges={links}
-            combos={groups}
-            itemSelected={nodeIdSelected}
-            onClickCombo={handleGetSelectedSite}
-            onClickNode={handleGetSelectedNode}
-            onClickEdge={handleGetSelectedEdge}
-          />
+          <Drawer isExpanded={!!modalType?.id} onExpand={onExpand}>
+            <DrawerContent panelContent={panelContent}>
+              <DrawerContentBody>
+                <GraphComponent
+                  ref={graphRef}
+                  nodes={nodes}
+                  edges={links}
+                  combos={groups}
+                  itemSelected={nodeIdSelected}
+                  onClickCombo={handleGetSelectedSite}
+                  onClickNode={handleGetSelectedNode}
+                  onClickEdge={handleGetSelectedEdge}
+                />
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
         </StackItem>
       </Stack>
       <AlertGroup isToast>
         {alerts.map(({ key, title }) => (
           <Alert
             key={key}
-            timeout={2000}
+            timeout={TOAST_VISIBILITY_TIMEOUT}
             variant={AlertVariant.info}
             title={title}
             actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
           />
         ))}
       </AlertGroup>
-      <ModalComponent
-        ids={modalType?.id}
-        items={
-          modalType?.type === 'process'
-            ? [...(remoteProcesses || []), ...(externalProcesses || [])]
-            : processesPairs || []
-        }
-        modalType={modalType?.type}
-        onClose={handleCloseModal}
-      />
     </>
   );
 };
