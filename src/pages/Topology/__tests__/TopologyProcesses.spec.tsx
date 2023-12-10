@@ -16,7 +16,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import { TopologyLabels } from '../Topology.enum';
-import { TopologyModalProps } from '../Topology.interfaces';
+import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const navigate = jest.fn();
 
@@ -52,7 +52,7 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
   })
 );
 
-const MockTopologyModalComponent: FC<TopologyModalProps> = function ({ ids, items, onClose, modalType }) {
+const MockTopologyModalComponent: FC<NodeOrEdgeListProps> = function ({ ids, items, onClose, modalType }) {
   return (
     <>
       {!!modalType && (

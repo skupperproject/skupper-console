@@ -120,7 +120,8 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     groupIdentity: process.groupIdentity,
     groupName: process.groupName,
     parent: process.parent,
-    parentName: process.parentName
+    parentName: process.parentName,
+    addresses: process.addresses
   });
 }
 

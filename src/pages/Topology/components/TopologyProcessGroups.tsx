@@ -1,11 +1,26 @@
-import { FC, useCallback, useRef, useState } from 'react';
+import { FC, Key, useCallback, useRef, useState } from 'react';
 
-import { Divider, Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
+  AlertProps,
+  AlertVariant,
+  Button,
+  Divider,
+  Stack,
+  StackItem,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem,
+  getUniqueId
+} from '@patternfly/react-core';
 import { useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
+import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
 import { GraphNode, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
@@ -28,6 +43,8 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
   const navigate = useNavigate();
 
   const [componentIdSelected, setComponentIdSelected] = useState<string | undefined>(componentId);
+  const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
+
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
   const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useQueries({
@@ -49,6 +66,23 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
       }
     ]
   });
+
+  const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
+    setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
+  };
+
+  const removeAlert = (key: Key) => {
+    setAlerts((prevAlerts) => [...prevAlerts.filter((alert) => alert.key !== key)]);
+  };
+
+  const addInfoAlert = useCallback((message: string) => {
+    addAlert(message, 'info', getUniqueId());
+  }, []);
+
+  const handleSaveTopology = useCallback(() => {
+    graphRef?.current?.saveNodePositions();
+    addInfoAlert(TopologyLabels.ToastSave);
+  }, [addInfoAlert]);
 
   const handleComponentSelected = useCallback((id?: string) => {
     setComponentIdSelected(id);
@@ -76,43 +110,68 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
   const links = TopologyController.convertPairsToEdges(processGroupsPairs);
 
   return (
-    <Stack>
-      <StackItem>
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarItem>
-              <DisplayResource
-                type={'component'}
-                id={componentIdSelected}
-                onSelect={handleComponentSelected}
-                placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
-              />
-            </ToolbarItem>
-
-            <ToolbarGroup align={{ default: 'alignRight' }}>
+    <>
+      <Stack>
+        <StackItem>
+          <Toolbar>
+            <ToolbarContent>
               <ToolbarItem>
-                <NavigationViewLink
-                  link={ProcessGroupsRoutesPaths.ProcessGroups}
-                  linkLabel={TopologyLabels.ListView}
-                  iconName="listIcon"
+                <DisplayResource
+                  type={'component'}
+                  id={componentIdSelected}
+                  onSelect={handleComponentSelected}
+                  placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
                 />
               </ToolbarItem>
-            </ToolbarGroup>
-          </ToolbarContent>
-        </Toolbar>
-        <Divider />
-      </StackItem>
 
-      <StackItem isFilled>
-        <GraphReactAdaptor
-          ref={graphRef}
-          nodes={nodes}
-          edges={links}
-          onClickNode={handleGetSelectedNode}
-          itemSelected={componentIdSelected}
-        />
-      </StackItem>
-    </Stack>
+              <ToolbarItem variant="separator" />
+
+              <ToolbarItem
+                spacer={{
+                  default: 'spacerSm'
+                }}
+              >
+                <Button onClick={handleSaveTopology} variant="secondary">
+                  {TopologyLabels.SaveButton}
+                </Button>
+              </ToolbarItem>
+
+              <ToolbarGroup align={{ default: 'alignRight' }}>
+                <ToolbarItem>
+                  <NavigationViewLink
+                    link={ProcessGroupsRoutesPaths.ProcessGroups}
+                    linkLabel={TopologyLabels.ListView}
+                    iconName="listIcon"
+                  />
+                </ToolbarItem>
+              </ToolbarGroup>
+            </ToolbarContent>
+          </Toolbar>
+          <Divider />
+        </StackItem>
+
+        <StackItem isFilled>
+          <GraphReactAdaptor
+            ref={graphRef}
+            nodes={nodes}
+            edges={links}
+            onClickNode={handleGetSelectedNode}
+            itemSelected={componentIdSelected}
+          />
+        </StackItem>
+      </Stack>
+      <AlertGroup isToast>
+        {alerts.map(({ key, title }) => (
+          <Alert
+            key={key}
+            timeout={TOAST_VISIBILITY_TIMEOUT}
+            variant={AlertVariant.info}
+            title={title}
+            actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
+          />
+        ))}
+      </AlertGroup>
+    </>
   );
 };
 

@@ -50,7 +50,7 @@ export interface DisplayOptions {
   rotateLabel?: boolean;
 }
 
-export interface TopologyModalProps {
+export interface NodeOrEdgeListProps {
   ids?: string;
   items: ProcessResponse[] | ProcessPairsResponse[];
   modalType: 'process' | 'processPair' | undefined;

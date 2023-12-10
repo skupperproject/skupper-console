@@ -1,11 +1,26 @@
-import { ComponentType, FC, startTransition, useCallback, useEffect, useRef, useState } from 'react';
+import { ComponentType, FC, Key, startTransition, useCallback, useEffect, useRef, useState } from 'react';
 
-import { Divider, Stack, StackItem, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
+  AlertProps,
+  AlertVariant,
+  Button,
+  Divider,
+  getUniqueId,
+  Stack,
+  StackItem,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem
+} from '@patternfly/react-core';
 import { useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
+import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
 import {
   GraphEdge,
@@ -44,6 +59,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   const [nodes, setNodes] = useState<GraphNode[] | undefined>();
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
+  const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
 
   const configuration =
     TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
@@ -104,6 +120,23 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         }
       ]
     });
+
+  const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
+    setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
+  };
+
+  const removeAlert = (key: Key) => {
+    setAlerts((prevAlerts) => [...prevAlerts.filter((alert) => alert.key !== key)]);
+  };
+
+  const addInfoAlert = useCallback((message: string) => {
+    addAlert(message, 'info', getUniqueId());
+  }, []);
+
+  const handleSaveTopology = useCallback(() => {
+    graphRef?.current?.saveNodePositions();
+    addInfoAlert(TopologyLabels.ToastSave);
+  }, [addInfoAlert]);
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -228,19 +261,31 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
       <ToolbarContent>
         <ToolbarItem>
           <ToolbarItem>
-            <DisplayResource
-              type={'site'}
-              id={siteIdSelected}
-              onSelect={handleProcessSelected}
-              placeholder={TopologyLabels.DisplaySitesDefaultLabel}
+            <DisplayOptions
+              options={displayOptions}
+              onSelect={handleDisplaySelect}
+              defaultSelected={displayOptionsSelected}
             />
           </ToolbarItem>
 
-          <DisplayOptions
-            options={displayOptions}
-            onSelect={handleDisplaySelect}
-            defaultSelected={displayOptionsSelected}
+          <DisplayResource
+            type={'site'}
+            id={siteIdSelected}
+            onSelect={handleProcessSelected}
+            placeholder={TopologyLabels.DisplaySitesDefaultLabel}
           />
+        </ToolbarItem>
+
+        <ToolbarItem variant="separator" />
+
+        <ToolbarItem
+          spacer={{
+            default: 'spacerSm'
+          }}
+        >
+          <Button onClick={handleSaveTopology} variant="secondary">
+            {TopologyLabels.SaveButton}
+          </Button>
         </ToolbarItem>
 
         <ToolbarGroup align={{ default: 'alignRight' }}>
@@ -253,20 +298,33 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   );
 
   return (
-    <Stack>
-      <StackItem>
-        {TopologyToolbar} <Divider />
-      </StackItem>
-      <StackItem isFilled>
-        <GraphComponent
-          ref={graphRef}
-          nodes={nodes}
-          edges={edges}
-          itemSelected={siteIdSelected}
-          onClickNode={handleGetSelectedNode}
-        />
-      </StackItem>
-    </Stack>
+    <>
+      <Stack>
+        <StackItem>
+          {TopologyToolbar} <Divider />
+        </StackItem>
+        <StackItem isFilled>
+          <GraphComponent
+            ref={graphRef}
+            nodes={nodes}
+            edges={edges}
+            itemSelected={siteIdSelected}
+            onClickNode={handleGetSelectedNode}
+          />
+        </StackItem>
+      </Stack>
+      <AlertGroup isToast>
+        {alerts.map(({ key, title }) => (
+          <Alert
+            key={key}
+            timeout={TOAST_VISIBILITY_TIMEOUT}
+            variant={AlertVariant.info}
+            title={title}
+            actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
+          />
+        ))}
+      </AlertGroup>
+    </>
   );
 };
 

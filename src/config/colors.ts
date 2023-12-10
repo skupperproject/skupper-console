@@ -30,6 +30,7 @@ export enum HexColors {
   Blue400 = '#0066CC',
   Black100 = '#F0F0F0',
   Black400 = '#B8BBBE',
+  Black300 = '#D2D2d2',
   Black500 = '#8A8D90',
   Black600 = '#6A6E73',
   Black800 = '#3C3F42',
