@@ -7,6 +7,7 @@ import {
   AlertProps,
   AlertVariant,
   Button,
+  Checkbox,
   Divider,
   getUniqueId,
   Stack,
@@ -60,6 +61,9 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
+
+  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
+  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
 
   const configuration =
     TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
@@ -159,6 +163,18 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     setSiteIdSelected(id);
   }, []);
 
+  const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
+    if (checked) {
+      graphRef?.current?.saveNodePositions();
+    }
+
+    setShowOnlyNeighbours(checked);
+  }, []);
+
+  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
+    setMoveToNodeSelected(checked);
+  }, []);
+
   useEffect(() => {
     if (!sites || !routerLinks || !routers) {
       return;
@@ -256,25 +272,62 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     return option;
   });
 
+  let filteredLinks = edges;
+  let filteredNodes = nodes;
+
+  if (showOnlyNeighbours && siteIdSelected) {
+    filteredLinks = edges.filter((edge) => edge.source === siteIdSelected || edge.target === siteIdSelected);
+    const idsFromService = filteredLinks.flatMap(({ source, target }) => [source, target]);
+    filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
+  }
+
   const TopologyToolbar = (
     <Toolbar>
       <ToolbarContent>
         <ToolbarItem>
+          <DisplayOptions
+            options={displayOptions}
+            onSelect={handleDisplaySelect}
+            defaultSelected={displayOptionsSelected}
+          />
+        </ToolbarItem>
+
+        <ToolbarItem variant="separator" />
+
+        <ToolbarGroup>
           <ToolbarItem>
-            <DisplayOptions
-              options={displayOptions}
-              onSelect={handleDisplaySelect}
-              defaultSelected={displayOptionsSelected}
+            <DisplayResource
+              type={'site'}
+              id={siteIdSelected}
+              onSelect={handleProcessSelected}
+              placeholder={TopologyLabels.DisplaySitesDefaultLabel}
             />
           </ToolbarItem>
 
-          <DisplayResource
-            type={'site'}
-            id={siteIdSelected}
-            onSelect={handleProcessSelected}
-            placeholder={TopologyLabels.DisplaySitesDefaultLabel}
-          />
-        </ToolbarItem>
+          <ToolbarItem>
+            <Checkbox
+              label={TopologyLabels.CheckboxShowOnlyNeghbours}
+              isDisabled={!siteIdSelected}
+              isChecked={showOnlyNeighbours}
+              onChange={(_, checked) => {
+                handleShowOnlyNeighboursChecked(checked);
+              }}
+              id="showOnlyNeighboursCheckbox"
+            />
+          </ToolbarItem>
+
+          <ToolbarItem>
+            <Checkbox
+              label={TopologyLabels.CheckboxMoveToNodeSelected}
+              isDisabled={!siteIdSelected}
+              isChecked={moveToNodeSelected}
+              onChange={(_, checked) => {
+                handleMoveToNodeSelectedChecked(checked);
+              }}
+              id="moveToNodeSelectedCheckbox"
+            />
+          </ToolbarItem>
+        </ToolbarGroup>
 
         <ToolbarItem variant="separator" />
 
@@ -306,10 +359,11 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         <StackItem isFilled>
           <GraphComponent
             ref={graphRef}
-            nodes={nodes}
-            edges={edges}
+            nodes={filteredNodes}
+            edges={filteredLinks}
             itemSelected={siteIdSelected}
             onClickNode={handleGetSelectedNode}
+            moveToSelectedNode={!!moveToNodeSelected && !!siteIdSelected}
           />
         </StackItem>
       </Stack>

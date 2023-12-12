@@ -7,6 +7,7 @@ import {
   AlertProps,
   AlertVariant,
   Button,
+  Checkbox,
   Divider,
   Drawer,
   DrawerActions,
@@ -97,6 +98,9 @@ const TopologyProcesses: FC<{
 
   const [itemIdSelected, setItemIdSelected] = useState<string | undefined>(itemId); //process or link id
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
+  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
+  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
+
   const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
 
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
@@ -164,6 +168,18 @@ const TopologyProcesses: FC<{
     setModalType(undefined);
   }, []);
 
+  const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
+    if (checked) {
+      graphRef?.current?.saveNodePositions();
+    }
+
+    setShowOnlyNeighbours(checked);
+  }, []);
+
+  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
+    setMoveToNodeSelected(checked);
+  }, []);
+
   const handleGetSelectedSite = useCallback(
     ({ id, label }: GraphCombo) => {
       navigate(`${SitesRoutesPaths.Sites}/${label}@${id}`);
@@ -199,6 +215,7 @@ const TopologyProcesses: FC<{
   const handleGetSelectedNode = useCallback(
     ({ id, label }: { id: string; label: string }) => {
       if (id.split('~').length > 1) {
+        setItemIdSelected(id);
         setModalType({ type: 'process', id });
 
         return;
@@ -209,22 +226,18 @@ const TopologyProcesses: FC<{
     [navigate]
   );
 
+  const handleServiceSelected = useCallback((ids: string[]) => {
+    setItemIdSelected(undefined);
+    setModalType(undefined);
+    setServiceIdsSelected(ids);
+  }, []);
+
   const handleDisplayOptionSelected = useCallback((options: string[]) => {
     startTransition(() => {
       setDisplayOptionsSelected(options);
     });
 
     localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setModalType(undefined);
-  }, []);
-
-  const handleServiceSelected = useCallback((ids: string[]) => {
-    setItemIdSelected(undefined);
-    setModalType(undefined);
-    setServiceIdsSelected(ids);
   }, []);
 
   const handleSaveTopology = useCallback(() => {
@@ -248,6 +261,11 @@ const TopologyProcesses: FC<{
 
     addInfoAlert(TopologyLabels.ToastLoad);
   }, [addInfoAlert]);
+
+  const handleCloseClick = () => {
+    setItemIdSelected(undefined);
+    setModalType(undefined);
+  };
 
   useEffect(() => {
     if (!externalProcesses || !remoteProcesses || !processesPairs) {
@@ -334,7 +352,9 @@ const TopologyProcesses: FC<{
     serviceIdsSelected,
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
+    metrics?.latencyByProcessPairs,
+    showOnlyNeighbours,
+    itemIdSelected
   ]);
 
   if (!nodes) {
@@ -369,6 +389,19 @@ const TopologyProcesses: FC<{
   const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(itemIdSelected || '') || itemIdSelected === id)
     ?.id;
 
+  let filteredLinks = links;
+  let filteredNodes = nodes;
+  let filteredCombos = groups;
+
+  if (showOnlyNeighbours && itemIdSelected) {
+    filteredLinks = links.filter((edge) => edge.source === itemIdSelected || edge.target === itemIdSelected);
+    const idsFromService = filteredLinks.flatMap(({ source, target }) => [source, target]);
+    filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
+
+    const comboIdsFromNodes = filteredNodes.flatMap(({ comboId }) => comboId || []);
+    filteredCombos = groups.filter(({ id }) => comboIdsFromNodes.includes(id));
+  }
+
   const TopologyToolbar = (
     <Toolbar>
       <ToolbarContent>
@@ -380,13 +413,41 @@ const TopologyProcesses: FC<{
           />
         </ToolbarItem>
 
-        <ToolbarItem>
-          <DisplayResource
-            id={nodeIdSelected}
-            onSelect={handleResourceSelected}
-            data={nodes.map((node) => ({ name: node.label, identity: node.id }))}
-          />
-        </ToolbarItem>
+        <ToolbarItem variant="separator" />
+
+        <ToolbarGroup>
+          <ToolbarItem>
+            <DisplayResource
+              id={nodeIdSelected}
+              onSelect={handleResourceSelected}
+              data={nodes.map((node) => ({ name: node.label, identity: node.id }))}
+            />
+          </ToolbarItem>
+
+          <ToolbarItem>
+            <Checkbox
+              label={TopologyLabels.CheckboxShowOnlyNeghbours}
+              isDisabled={!nodeIdSelected}
+              isChecked={showOnlyNeighbours}
+              onChange={(_, checked) => {
+                handleShowOnlyNeighboursChecked(checked);
+              }}
+              id="showOnlyNeighboursCheckbox"
+            />
+          </ToolbarItem>
+
+          <ToolbarItem>
+            <Checkbox
+              label={TopologyLabels.CheckboxMoveToNodeSelected}
+              isDisabled={!nodeIdSelected}
+              isChecked={moveToNodeSelected}
+              onChange={(_, checked) => {
+                handleMoveToNodeSelectedChecked(checked);
+              }}
+              id="moveToNodeSelectedCheckbox"
+            />
+          </ToolbarItem>
+        </ToolbarGroup>
 
         <ToolbarItem variant="separator" />
 
@@ -431,16 +492,12 @@ const TopologyProcesses: FC<{
     drawerRef.current && drawerRef.current.focus();
   };
 
-  const onCloseClick = () => {
-    setModalType(undefined);
-  };
-
   const panelContent = (
     <DrawerPanelContent isResizable minSize="35%">
       <DrawerHead>
         <Title headingLevel="h1">{TopologyLabels.TopologyModalTitle}</Title>
         <DrawerActions>
-          <DrawerCloseButton onClick={onCloseClick} />
+          <DrawerCloseButton onClick={handleCloseClick} />
         </DrawerActions>
       </DrawerHead>
       <DrawerPanelBody style={{ overflow: 'auto' }}>
@@ -452,7 +509,6 @@ const TopologyProcesses: FC<{
               : processesPairs || []
           }
           modalType={modalType?.type}
-          onClose={handleCloseModal}
         />
       </DrawerPanelBody>
     </DrawerPanelContent>
@@ -471,10 +527,11 @@ const TopologyProcesses: FC<{
               <DrawerContentBody>
                 <GraphComponent
                   ref={graphRef}
-                  nodes={nodes}
-                  edges={links}
-                  combos={groups}
+                  nodes={filteredNodes}
+                  edges={filteredLinks}
+                  combos={filteredCombos}
                   itemSelected={nodeIdSelected}
+                  moveToSelectedNode={!!moveToNodeSelected && !!itemIdSelected}
                   onClickCombo={handleGetSelectedSite}
                   onClickNode={handleGetSelectedNode}
                   onClickEdge={handleGetSelectedEdge}

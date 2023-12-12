@@ -81,13 +81,13 @@ export const LAYOUT_TOPOLOGY_DEFAULT: LayoutConfig = {
   clustering: true,
   nodeClusterBy: 'cluster',
   distanceThresholdMode: 'max',
-  clusterNodeStrength: 1000000,
+  clusterNodeStrength: 500000,
   nodeStrength: 5000,
   leafCluster: true,
   gravity: 10000,
   maxSpeed: 1000,
   animate: false,
-  factor: 1000
+  factor: 800
 };
 
 export const LAYOUT_TOPOLOGY_SINGLE_NODE = {
@@ -230,6 +230,20 @@ const DEFAULT_NODE_STATE_CONFIG = {
     },
     'diamond-icon': {
       cursor: 'pointer'
+    }
+  },
+
+  'selected-default': {
+    stroke: HexColors.Blue400,
+    strokeWidth: 1,
+
+    'text-shape': {
+      fill: HexColors.White
+    },
+
+    'text-bg-shape': {
+      fill: HexColors.Blue400,
+      stroke: HexColors.Blue400
     }
   },
 

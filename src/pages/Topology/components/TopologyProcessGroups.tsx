@@ -7,6 +7,7 @@ import {
   AlertProps,
   AlertVariant,
   Button,
+  Checkbox,
   Divider,
   Stack,
   StackItem,
@@ -44,6 +45,9 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
 
   const [componentIdSelected, setComponentIdSelected] = useState<string | undefined>(componentId);
   const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
+
+  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
+  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
@@ -99,6 +103,18 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
     [navigate, processGroups?.results]
   );
 
+  const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
+    if (checked) {
+      graphRef?.current?.saveNodePositions();
+    }
+
+    setShowOnlyNeighbours(checked);
+  }, []);
+
+  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
+    setMoveToNodeSelected(checked);
+  }, []);
+
   if (!processGroups || !processGroupsPairs || !remoteProcessGroups) {
     return <LoadingPage />;
   }
@@ -109,20 +125,55 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
   ]);
   const links = TopologyController.convertPairsToEdges(processGroupsPairs);
 
+  let filteredLinks = links;
+  let filteredNodes = nodes;
+
+  if (showOnlyNeighbours && componentIdSelected) {
+    filteredLinks = links.filter((edge) => edge.source === componentIdSelected || edge.target === componentIdSelected);
+    const idsFromService = filteredLinks.flatMap(({ source, target }) => [source, target]);
+    filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
+  }
+
   return (
     <>
       <Stack>
         <StackItem>
           <Toolbar>
             <ToolbarContent>
-              <ToolbarItem>
-                <DisplayResource
-                  type={'component'}
-                  id={componentIdSelected}
-                  onSelect={handleComponentSelected}
-                  placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
-                />
-              </ToolbarItem>
+              <ToolbarGroup>
+                <ToolbarItem>
+                  <DisplayResource
+                    type={'component'}
+                    id={componentIdSelected}
+                    onSelect={handleComponentSelected}
+                    placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
+                  />
+                </ToolbarItem>
+
+                <ToolbarItem>
+                  <Checkbox
+                    label={TopologyLabels.CheckboxShowOnlyNeghbours}
+                    isDisabled={!componentIdSelected}
+                    isChecked={showOnlyNeighbours}
+                    onChange={(_, checked) => {
+                      handleShowOnlyNeighboursChecked(checked);
+                    }}
+                    id="showOnlyNeighboursCheckbox"
+                  />
+                </ToolbarItem>
+
+                <ToolbarItem>
+                  <Checkbox
+                    label={TopologyLabels.CheckboxMoveToNodeSelected}
+                    isDisabled={!componentIdSelected}
+                    isChecked={moveToNodeSelected}
+                    onChange={(_, checked) => {
+                      handleMoveToNodeSelectedChecked(checked);
+                    }}
+                    id="moveToNodeSelectedCheckbox"
+                  />
+                </ToolbarItem>
+              </ToolbarGroup>
 
               <ToolbarItem variant="separator" />
 
@@ -153,10 +204,11 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
         <StackItem isFilled>
           <GraphReactAdaptor
             ref={graphRef}
-            nodes={nodes}
-            edges={links}
+            nodes={filteredNodes}
+            edges={filteredLinks}
             onClickNode={handleGetSelectedNode}
             itemSelected={componentIdSelected}
+            moveToSelectedNode={!!moveToNodeSelected && !!componentIdSelected}
           />
         </StackItem>
       </Stack>

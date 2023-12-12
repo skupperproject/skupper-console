@@ -52,19 +52,14 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
   })
 );
 
-const MockTopologyModalComponent: FC<NodeOrEdgeListProps> = function ({ ids, items, onClose, modalType }) {
+const MockTopologyModalComponent: FC<NodeOrEdgeListProps> = function ({ ids, items, modalType }) {
   return (
-    <>
-      {!!modalType && (
-        <div>
-          <div>Modal is open</div>
-          <div>{`Modal type: ${modalType}`}</div>
-          <div>{`Selected ids: ${ids}`}</div>
-          <div>{`Selected items: ${items}`}</div>
-        </div>
-      )}
-      <Button onClick={onClose && onClose()}>Close</Button>
-    </>
+    <div>
+      <div>Modal is open</div>
+      <div>{`Modal type: ${modalType}`}</div>
+      <div>{`Selected ids: ${ids}`}</div>
+      <div>{`Selected items: ${items}`}</div>
+    </div>
   );
 };
 
