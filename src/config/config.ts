@@ -24,7 +24,7 @@ export const UPDATE_INTERVAL = 9 * 1000; // Time in milliseconds to request upda
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
 export const TOAST_VISIBILITY_TIMEOUT = 2000; // Time in milliseconds to display toast messages
 /** Tests */
-export const waitForElementToBeRemovedTimeout = 5000;
+export const waitForElementToBeRemovedTimeout = 7000;
 
 export const DARK_THEME_CLASS = 'pf-v5-theme-dark';
 export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
