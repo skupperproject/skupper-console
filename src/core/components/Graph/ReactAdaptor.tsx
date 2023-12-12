@@ -480,7 +480,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         const node = graphInstance.findById(itemSelected);
         if (node) {
-          graphInstance.zoomTo(1);
           graphInstance.focusItem(node);
         }
       }, [itemSelected, moveToSelectedNode, isGraphLoaded]);
