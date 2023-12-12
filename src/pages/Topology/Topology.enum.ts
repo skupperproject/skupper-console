@@ -48,6 +48,8 @@ export enum TopologyLabels {
   CheckboxShowCurrentByteRate = 'Byterate (live)',
   CheckboxShowLatency = 'Latency (live)',
   CheckboxShowLabelReverse = 'Inbound metrics',
+  CheckboxShowOnlyNeghbours = 'Show only neighbours',
+  CheckboxMoveToNodeSelected = 'Move to the selected node',
   ServiceFilterPlaceholderText = 'Search',
   ProcessFilterPlaceholderText = 'Search',
   DisplayPlaceholderText = 'Display',

@@ -15,7 +15,7 @@ const ZOOM_RATIO_OUT = 1.2;
 const ZOOM_RATIO_IN = 0.8;
 
 const LEGEND_LABEL_NAME = 'Legend';
-export const ZOOM_CONFIG = {
+const ZOOM_CONFIG = {
   duration: 200,
   easing: 'easeCubic'
 };

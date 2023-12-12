@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react';
 
-import { GraphData, ModelConfig, ModelStyle, ShapeStyle } from '@antv/g6';
+import { GraphData, LayoutConfig, ModelConfig, ModelStyle, ShapeStyle } from '@antv/g6';
 
 export interface GraphNode {
   id: string;
@@ -68,6 +68,8 @@ export interface GraphReactAdaptorProps {
   onClickEdge?: Function;
   legendData?: GraphData;
   ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
+  layout?: LayoutConfig;
+  moveToSelectedNode?: boolean;
 }
 
 export interface LocalStorageDataSavedPayload {

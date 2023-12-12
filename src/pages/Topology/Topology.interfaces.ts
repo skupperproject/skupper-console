@@ -54,7 +54,6 @@ export interface NodeOrEdgeListProps {
   ids?: string;
   items: ProcessResponse[] | ProcessPairsResponse[];
   modalType: 'process' | 'processPair' | undefined;
-  onClose?: Function;
 }
 
 export interface ProcessPairsWithMetrics {
