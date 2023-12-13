@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
+import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import { GraphNode, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
@@ -165,7 +166,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
                 <ToolbarItem>
                   <Checkbox
                     label={TopologyLabels.CheckboxMoveToNodeSelected}
-                    isDisabled={!componentIdSelected}
+                    isDisabled={!componentIdSelected || showOnlyNeighbours}
                     isChecked={moveToNodeSelected}
                     onChange={(_, checked) => {
                       handleMoveToNodeSelectedChecked(checked);
@@ -208,7 +209,8 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
             edges={filteredLinks}
             onClickNode={handleGetSelectedNode}
             itemSelected={componentIdSelected}
-            moveToSelectedNode={!!moveToNodeSelected && !!componentIdSelected}
+            layout={showOnlyNeighbours && componentIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+            moveToSelectedNode={moveToNodeSelected && !!componentIdSelected && !showOnlyNeighbours}
           />
         </StackItem>
       </Stack>

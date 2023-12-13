@@ -33,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
+import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
   GraphEdge,
   GraphCombo,
@@ -439,7 +440,7 @@ const TopologyProcesses: FC<{
           <ToolbarItem>
             <Checkbox
               label={TopologyLabels.CheckboxMoveToNodeSelected}
-              isDisabled={!nodeIdSelected}
+              isDisabled={!nodeIdSelected || showOnlyNeighbours}
               isChecked={moveToNodeSelected}
               onChange={(_, checked) => {
                 handleMoveToNodeSelectedChecked(checked);
@@ -456,17 +457,8 @@ const TopologyProcesses: FC<{
             <DisplayServices serviceIds={serviceIdsSelected} onSelect={handleServiceSelected} />
           </ToolbarItem>
 
-          <ToolbarItem
-            spacer={{
-              default: 'spacerSm'
-            }}
-          >
-            <Button isDisabled={!!nodeIdSelected} onClick={handleSaveTopology} variant="secondary">
-              {TopologyLabels.SaveButton}
-            </Button>
-          </ToolbarItem>
           <ToolbarItem>
-            <Button isDisabled={!!nodeIdSelected} onClick={handleLoadTopology} variant="secondary">
+            <Button onClick={handleLoadTopology} variant="secondary">
               {TopologyLabels.LoadButton}
             </Button>
             <Tooltip content={TopologyLabels.DescriptionButton}>
@@ -476,6 +468,14 @@ const TopologyProcesses: FC<{
             </Tooltip>
           </ToolbarItem>
         </ToolbarGroup>
+
+        <ToolbarItem variant="separator" />
+
+        <ToolbarItem>
+          <Button onClick={handleSaveTopology} variant="secondary">
+            {TopologyLabels.SaveButton}
+          </Button>
+        </ToolbarItem>
 
         <ToolbarItem align={{ default: 'alignRight' }}>
           <NavigationViewLink
@@ -531,7 +531,8 @@ const TopologyProcesses: FC<{
                   edges={filteredLinks}
                   combos={filteredCombos}
                   itemSelected={nodeIdSelected}
-                  moveToSelectedNode={!!moveToNodeSelected && !!itemIdSelected}
+                  layout={showOnlyNeighbours && nodeIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+                  moveToSelectedNode={moveToNodeSelected && !!nodeIdSelected && !showOnlyNeighbours}
                   onClickCombo={handleGetSelectedSite}
                   onClickNode={handleGetSelectedNode}
                   onClickEdge={handleGetSelectedEdge}

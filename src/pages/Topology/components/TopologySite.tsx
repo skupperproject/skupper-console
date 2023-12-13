@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
 import { siteNameAndIdSeparator } from '@config/prometheus';
+import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
   GraphEdge,
   GraphNode,
@@ -319,7 +320,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
           <ToolbarItem>
             <Checkbox
               label={TopologyLabels.CheckboxMoveToNodeSelected}
-              isDisabled={!siteIdSelected}
+              isDisabled={!siteIdSelected || showOnlyNeighbours}
               isChecked={moveToNodeSelected}
               onChange={(_, checked) => {
                 handleMoveToNodeSelectedChecked(checked);
@@ -363,7 +364,8 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
             edges={filteredLinks}
             itemSelected={siteIdSelected}
             onClickNode={handleGetSelectedNode}
-            moveToSelectedNode={!!moveToNodeSelected && !!siteIdSelected}
+            layout={showOnlyNeighbours && siteIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+            moveToSelectedNode={moveToNodeSelected && !!siteIdSelected && !showOnlyNeighbours}
           />
         </StackItem>
       </Stack>

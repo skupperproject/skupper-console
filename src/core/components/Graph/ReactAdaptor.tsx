@@ -436,8 +436,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
-      // This effect updates the topology when there are changes to the nodes, edges or combos.
-      // Disabled if itemSelected is true, because it means that the user has selected a node or edge.
+      // This effect updates the topology when there are changes to the nodes, edges.
       useEffect(() => {
         const graphInstance = topologyGraphRef.current;
 
@@ -452,26 +451,50 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           return;
         }
 
-        const newNodes = GraphController.addPositionsToNodes(nodesWithoutPosition, graphInstance.getNodes());
+        // if the layout has changed, then we don't want to use the previous positions from the current graph
+        // but we want to use the positions saved from the local storage
+        // This avoids the nodes to be repositioned in the graph based on a different layout (ie from dagree to force)
+        const nodes = GraphController.addPositionsToNodes(
+          nodesWithoutPosition,
+          graphInstance.get('layout').type !== layout.type ? undefined : graphInstance.getNodes()
+        );
 
         // the performance mode contains optimizations for large graphs
-        graphInstance.setMode(GraphController.getModeBasedOnPerformanceThreshold(newNodes.length));
-        graphInstance.changeData(GraphController.getG6Model({ edges, nodes: newNodes, combos }));
+        graphInstance.setMode(GraphController.getModeBasedOnPerformanceThreshold(nodes.length));
+        graphInstance.changeData(GraphController.getG6Model({ edges, nodes, combos }));
 
         // if the topology changes nodes, then reposition them
-        const newNodesIds = newNodes.map((node) => node.id).join(',');
+        const newNodesIds = nodes.map((node) => node.id).join(',');
         const prevNodeIds = prevNodesRef.current.map((node) => node.id).join(',');
         if (newNodesIds !== prevNodeIds) {
-          GraphController.cleanAllLocalNodePositions(graphInstance.getNodes());
           graphInstance.render();
         }
 
         // updated the prev values with the new ones
-        prevNodesRef.current = newNodes;
+        prevNodesRef.current = nodesWithoutPosition;
         prevEdgesRef.current = edges;
         prevCombosRef.current = combos;
-      }, [nodesWithoutPosition, edges, combos, isGraphLoaded]);
+      }, [nodesWithoutPosition, edges, combos, isGraphLoaded, layout]);
 
+      // This effect updates the layout when the layout configuration changes or when the number of nodes changes.
+      // In the second case, the number of cycles for the new simulation is recalculated based on the number of nodes. (Performance optimization)
+      useEffect(() => {
+        const graphInstance = topologyGraphRef.current;
+        const { type, ...layoutConf } = layout;
+        const isLayoutChanged = graphInstance?.get('layout').type !== type;
+        const newLayout = isLayoutChanged ? layout : layoutConf;
+
+        graphInstance?.updateLayout({
+          ...newLayout,
+          maxIteration: GraphController.calculateMaxIteration(graphInstance.getNodes().length)
+        });
+
+        if (isLayoutChanged) {
+          graphInstance?.render();
+        }
+      }, [layout]);
+
+      // This effect updates center the node selected
       useEffect(() => {
         const graphInstance = topologyGraphRef.current;
         if (!graphInstance || !isGraphLoaded || !itemSelected || !moveToSelectedNode) {
@@ -480,7 +503,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         const node = graphInstance.findById(itemSelected);
         if (node) {
-          graphInstance.focusItem(node);
+          setTimeout(() => graphInstance.focusItem(node), 0);
         }
       }, [itemSelected, moveToSelectedNode, isGraphLoaded]);
 

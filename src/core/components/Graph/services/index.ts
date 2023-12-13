@@ -114,11 +114,16 @@ export const GraphController = {
       : TopologyModeNames.Default;
   },
 
-  cleanAllLocalNodePositions(nodes: INode[]) {
+  cleanAllLocalNodePositions(nodes: INode[], shouldRemoveFixedPosition: boolean = false) {
     nodes.forEach((node) => {
       const nodeModel = node.getModel();
       nodeModel.x = undefined;
       nodeModel.y = undefined;
+
+      if (shouldRemoveFixedPosition) {
+        nodeModel.fx = undefined;
+        nodeModel.fy = undefined;
+      }
     });
   },
 
