@@ -49,8 +49,8 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   };
 
   const handleCleanAllGraphConfigurations = () => {
+    GraphController.cleanAllLocalNodePositions(graphInstance.getNodes(), true);
     GraphController.removeAllNodePositionsFromLocalStorage();
-    GraphController.cleanAllLocalNodePositions(graphInstance.getNodes());
 
     graphInstance.layout();
     setTimeout(handleFitView, 250);
