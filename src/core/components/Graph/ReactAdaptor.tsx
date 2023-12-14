@@ -210,6 +210,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           activateNodeRelations({ currentTarget, item, state: 'hover' });
 
           currentTarget.setItemState(item, 'hover', true);
+          item.toFront();
 
           // keep the selected state when we hover a node
           const nodeSelected = currentTarget.findAllByState('node', 'selected-default')[0] as INode;
@@ -290,15 +291,17 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       );
 
       // DRAG EVENTS
-      const handleNodeDragStart = useCallback(() => {
+      const handleNodeDragStart = useCallback(({ item }: G6GraphEvent) => {
         isItemHighlightedRef.current = true;
+        item.toFront();
       }, []);
 
       const handleNodeDragEnd = useCallback(() => {
         isItemHighlightedRef.current = false;
       }, []);
 
-      const handleCombDragStart = useCallback(() => {
+      const handleCombDragStart = useCallback(({ item }: G6GraphEvent) => {
+        item.toFront();
         isItemHighlightedRef.current = true;
       }, []);
 
