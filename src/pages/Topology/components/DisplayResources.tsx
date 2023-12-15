@@ -50,30 +50,33 @@ const DisplayResource: FC<{
     queries: [
       {
         queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-        queryFn: () =>
-          !data && type === 'process' ? RESTApi.fetchProcessesResult(externalProcessesQueryParams) : null,
-        refetchInterval: UPDATE_INTERVAL
+        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL,
+        enabled: !data && type === 'process'
       },
       {
         queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-        queryFn: () => (!data && type === 'process' ? RESTApi.fetchProcessesResult(remoteProcessesQueryParams) : null),
-        refetchInterval: UPDATE_INTERVAL
+        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+        refetchInterval: UPDATE_INTERVAL,
+        enabled: !data && type === 'process'
       },
       {
         queryKey: [QueriesSites.GetSites],
-        queryFn: () => (!data && type === 'site' ? RESTApi.fetchSites() : null),
-        refetchInterval: UPDATE_INTERVAL
+        queryFn: () => RESTApi.fetchSites(),
+        refetchInterval: UPDATE_INTERVAL,
+        enabled: !data && type === 'site'
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, externalComponentQueryParams],
-        queryFn: () =>
-          !data && type === 'component' ? RESTApi.fetchProcessGroups(externalComponentQueryParams) : null,
-        refetchInterval: UPDATE_INTERVAL
+        queryFn: () => RESTApi.fetchProcessGroups(externalComponentQueryParams),
+        refetchInterval: UPDATE_INTERVAL,
+        enabled: !data && type === 'component'
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, remoteComponentQueryParams],
-        queryFn: () => (!data && type === 'component' ? RESTApi.fetchProcessGroups(remoteComponentQueryParams) : null),
-        refetchInterval: UPDATE_INTERVAL
+        queryFn: () => RESTApi.fetchProcessGroups(remoteComponentQueryParams),
+        refetchInterval: UPDATE_INTERVAL,
+        enabled: !data && type === 'component'
       }
     ]
   });
