@@ -2,7 +2,7 @@ import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'r
 
 import { Button } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject, SelectVariant } from '@patternfly/react-core/deprecated';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
@@ -22,8 +22,7 @@ const DisplayServices: FC<{
   const { data: services } = useQuery({
     queryKey: [QueriesServices.GetServices],
     queryFn: () => RESTApi.fetchServices(),
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
   function handleToggleServiceMenu(openServiceMenu: boolean) {

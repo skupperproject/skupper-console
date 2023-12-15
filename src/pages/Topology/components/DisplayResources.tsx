@@ -50,33 +50,30 @@ const DisplayResource: FC<{
     queries: [
       {
         queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'process'
+        queryFn: () =>
+          !data && type === 'process' ? RESTApi.fetchProcessesResult(externalProcessesQueryParams) : null,
+        refetchInterval: UPDATE_INTERVAL
       },
       {
         queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'process'
+        queryFn: () => (!data && type === 'process' ? RESTApi.fetchProcessesResult(remoteProcessesQueryParams) : null),
+        refetchInterval: UPDATE_INTERVAL
       },
       {
         queryKey: [QueriesSites.GetSites],
-        queryFn: () => RESTApi.fetchSites(),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'site'
+        queryFn: () => (!data && type === 'site' ? RESTApi.fetchSites() : null),
+        refetchInterval: UPDATE_INTERVAL
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, externalComponentQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(externalComponentQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'component'
+        queryFn: () =>
+          !data && type === 'component' ? RESTApi.fetchProcessGroups(externalComponentQueryParams) : null,
+        refetchInterval: UPDATE_INTERVAL
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, remoteComponentQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(remoteComponentQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'component'
+        queryFn: () => (!data && type === 'component' ? RESTApi.fetchProcessGroups(remoteComponentQueryParams) : null),
+        refetchInterval: UPDATE_INTERVAL
       }
     ]
   });
