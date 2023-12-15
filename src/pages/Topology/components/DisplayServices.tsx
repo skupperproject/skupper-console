@@ -94,7 +94,7 @@ const DisplayServices: FC<{
       return;
     }
 
-    if (!serviceIdsSelected.length && services?.results) {
+    if (!serviceIdsSelected.length && services?.results.length) {
       setServiceIdsSelected(services?.results.map(({ identity }) => identity) || []);
     }
   }, [serviceIds, serviceIdsSelected, services?.results]);
