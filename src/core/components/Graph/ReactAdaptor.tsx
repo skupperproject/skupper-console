@@ -469,7 +469,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         // if the topology changes nodes, then reposition them
         const newNodesIds = nodes.map((node) => node.id).join(',');
         const prevNodeIds = prevNodesRef.current.map((node) => node.id).join(',');
-        if (newNodesIds !== prevNodeIds) {
+        if (JSON.stringify(newNodesIds) !== JSON.stringify(prevNodeIds)) {
           graphInstance.render();
         }
 
