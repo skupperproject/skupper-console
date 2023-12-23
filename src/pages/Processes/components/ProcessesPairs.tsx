@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { Flex } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQueries, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -36,16 +36,19 @@ const ProcessPairs: FC<ProcessPairsProps> = function ({ process: { identity: pro
     destinationId: processId
   };
 
-  const { data: processesPairsTxData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: processesPairsRxData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
-    refetchInterval: UPDATE_INTERVAL
+  const [{ data: processesPairsRxData }, { data: processesPairsTxData }] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
   });
 
   const { data: metricsTx } = useQuery({

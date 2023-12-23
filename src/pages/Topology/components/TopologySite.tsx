@@ -17,7 +17,7 @@ import {
   ToolbarGroup,
   ToolbarItem
 } from '@patternfly/react-core';
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -78,7 +78,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   );
 
   const [{ data: sites }, { data: routers }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] =
-    useQueries({
+    useSuspenseQueries({
       queries: [
         {
           queryKey: [QueriesSites.GetSites],

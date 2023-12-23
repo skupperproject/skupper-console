@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
@@ -52,8 +52,6 @@ describe('Site component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(SiteLabels.Details));
-
     expect(screen.getByTestId(getTestsIds.siteView(siteResults[0].identity))).toBeInTheDocument();
   });
 
@@ -64,9 +62,11 @@ describe('Site component', () => {
 
     fireEvent.click(screen.getByText(SiteLabels.Details));
 
-    expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
-    expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
-    expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
+      expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
+      expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
+    });
   });
 
   it('Should ensure the Site details component renders with correct link href after loading page', async () => {
@@ -76,9 +76,11 @@ describe('Site component', () => {
 
     fireEvent.click(screen.getByText(SiteLabels.Details));
 
-    expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
-      'href',
-      `#/processes/${processResults[0].name}@${processResults[0].identity}`
-    );
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
+        'href',
+        `#/processes/${processResults[0].name}@${processResults[0].identity}`
+      );
+    });
   });
 });

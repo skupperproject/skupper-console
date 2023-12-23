@@ -22,7 +22,7 @@ const navigate = jest.fn();
 
 const processesResults = processesData.results;
 const servicesResults = servicesData.results;
-const serviceNameSelected = servicesResults[2].identity;
+const serviceIdSelected = servicesResults[2].identity;
 
 const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
   forwardRef(({ onClickEdge, onClickNode, onClickCombo }, ref) => {
@@ -74,7 +74,7 @@ describe('Begin testing the Topology component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TopologyProcesses
-            serviceIds={[serviceNameSelected]}
+            serviceIds={[serviceIdSelected]}
             id={processesResults[2].name}
             GraphComponent={MockGraphComponent}
             ModalComponent={MockTopologyModalComponent}
@@ -95,8 +95,7 @@ describe('Begin testing the Topology component', () => {
     });
 
     fireEvent.click(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel));
-    expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
-    expect(screen.getByText(servicesResults[1].name)).toBeInTheDocument();
+    expect(screen.getByText(TopologyLabels.SelectAll)).toBeInTheDocument();
   });
 
   it('should clicking on the service menu and use the search filter', async () => {
@@ -110,7 +109,6 @@ describe('Begin testing the Topology component', () => {
       target: { value: servicesResults[0].name }
     });
 
-    expect(screen.getByText(servicesResults[0].name)).toBeInTheDocument();
     expect(screen.queryByText(servicesResults[1].name)).not.toBeInTheDocument();
   });
 

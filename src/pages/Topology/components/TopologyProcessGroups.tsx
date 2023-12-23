@@ -17,7 +17,7 @@ import {
   ToolbarItem,
   getUniqueId
 } from '@patternfly/react-core';
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -52,7 +52,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useQueries({
+  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],

@@ -1,6 +1,6 @@
 import { CSSProperties, FC } from 'react';
 
-import { Bullseye, Card, CardBody, CardHeader, PageSection } from '@patternfly/react-core';
+import { Bullseye, Card, CardBody, CardHeader, PageSection, Text, TextContent } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
 import { getTestsIds } from '@config/testIds';
@@ -18,7 +18,11 @@ const PleaseWait = function () {
         <CogIcon className="cog cog-secondary cog-upper spinning-clockwise--reverse" />
         <CogIcon className="cog cog-secondary cog-lower spinning-clockwise--reverse" />
       </CardHeader>
-      <CardBody>{LoadingLabels.LoadingMessage}</CardBody>
+      <CardBody>
+        <TextContent>
+          <Text>{LoadingLabels.LoadingMessage}</Text>
+        </TextContent>
+      </CardBody>
     </Card>
   );
 };

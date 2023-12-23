@@ -11,7 +11,7 @@ export interface ConfigMetricFilters {
 export enum QueriesMetrics {
   GetTraffic = 'get-metric-traffic-query',
   GetLatency = 'get-metric-latency-query',
-  GetLatencyBuckets = 'get-metric-latency-buckets',
+  GetLatencyBuckets = 'get-metric-latency-buckets-query',
   GetRequest = 'get-metric-request-query',
   GetResponse = 'get-metric-response-query',
   GetConnection = 'get-metric-connection-query'

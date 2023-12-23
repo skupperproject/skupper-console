@@ -19,7 +19,10 @@ interface ResponseProps {
   forceUpdate?: number;
   refetchInterval?: number;
   onGetIsSectionExpanded?: Function;
+  onIsLoaded?: Function;
 }
+
+const minChartHeight = 450;
 
 const Response: FC<ResponseProps> = function ({
   selectedFilters,
@@ -42,25 +45,27 @@ const Response: FC<ResponseProps> = function ({
   const {
     data: response,
     refetch: refetchResponse,
-    isRefetching: isRefetchingResponse
+    isRefetching: isRefetchingResponse,
+    isLoading
   } = useQuery({
     queryKey: [QueriesMetrics.GetResponse, selectedFilters],
     queryFn: () => MetricsController.getResponses(selectedFilters),
-    enabled: isPrometheusActive,
+    placeholderData: keepPreviousData,
     refetchInterval,
-    placeholderData: keepPreviousData
+    enabled: isExpanded
   });
 
   const {
     data: responseReverse,
     refetch: refetchResponseReverse,
-    isRefetching: isRefetchingResponseReverse
+    isRefetching: isRefetchingResponseReverse,
+    isLoading: isLoadingReverse
   } = useQuery({
     queryKey: [QueriesMetrics.GetResponse, selectedFiltersReverse],
     queryFn: () => MetricsController.getResponses(selectedFiltersReverse),
-    enabled: isPrometheusActive,
+    placeholderData: keepPreviousData,
     refetchInterval,
-    placeholderData: keepPreviousData
+    enabled: isExpanded
   });
 
   const handleExpand = useCallback(() => {
@@ -85,10 +90,6 @@ const Response: FC<ResponseProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!response?.responseData && !responseReverse?.responseData) {
-    return null;
-  }
-
   const responseData = responseReverse?.responseData
     ? { ...response?.responseData, ...responseReverse.responseData }
     : response?.responseData || null;
@@ -103,12 +104,17 @@ const Response: FC<ResponseProps> = function ({
         <CardTitle>{MetricsLabels.ResposeTitle}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody>
-          {(isRefetchingResponse || isRefetchingResponseReverse) && <SkIsLoading />}
+        <CardBody style={{ minHeight: minChartHeight }}>
+          {(isLoading || isLoadingReverse) && <SkIsLoading />}
 
-          {responseData && <ResponseCharts responseData={responseData} responseRateData={responseRateData} />}
+          {!isLoading && !isLoadingReverse && responseData && (
+            <>
+              {(isRefetchingResponse || isRefetchingResponseReverse) && <SkIsLoading />}
+              <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
+            </>
+          )}
 
-          {!responseData && !(isRefetchingResponse || isRefetchingResponseReverse) && (
+          {!isLoading && !isLoadingReverse && !responseData && (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}

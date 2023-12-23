@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -14,7 +14,10 @@ import { siteColumns } from '../Sites.constants';
 import { SiteLabels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
 
 const Sites = function () {
-  const { data: sites } = useQuery({ queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() });
+  const { data: sites } = useSuspenseQuery({
+    queryKey: [QueriesSites.GetSites],
+    queryFn: () => RESTApi.fetchSites()
+  });
 
   return (
     <MainContainer

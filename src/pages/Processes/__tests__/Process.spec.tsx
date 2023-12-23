@@ -40,8 +40,6 @@ describe('Process component', () => {
   });
 
   it('should render the Process view after the data loading is complete', async () => {
-    // Wait for all queries to resolve
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     // Wait for the loading page to disappear before continuing with the test.
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout

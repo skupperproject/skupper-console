@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -28,16 +28,19 @@ const Overview: FC<OverviewProps> = function ({
     destinationId: processId
   };
 
-  const { data: processesPairsTxData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: processesPairsRxData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
-    refetchInterval: UPDATE_INTERVAL
+  const [{ data: processesPairsTxData }, { data: processesPairsRxData }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
   });
 
   const handleSelectedFilters = useCallback(
@@ -54,15 +57,6 @@ const Overview: FC<OverviewProps> = function ({
     [processId]
   );
 
-  const processesPairsRxReverse =
-    (processesPairsRxData || []).map((processPairsData) => ({
-      ...processPairsData,
-      sourceId: processPairsData.destinationId,
-      sourceName: processPairsData.destinationName,
-      destinationName: processPairsData.sourceName,
-      destinationId: processPairsData.sourceId
-    })) || [];
-
   const destProcessesRx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
     ...(processesPairsTxData || []).map(({ destinationName, destinationSiteId, destinationSiteName }) => ({
       destinationName,
@@ -71,8 +65,8 @@ const Overview: FC<OverviewProps> = function ({
   ]);
 
   const destProcessesTx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
-    ...processesPairsRxReverse.map(({ destinationName, sourceSiteId, sourceSiteName }) => ({
-      destinationName,
+    ...(processesPairsRxData || []).map(({ sourceName, sourceSiteId, sourceSiteName }) => ({
+      destinationName: sourceName,
       siteName: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
     }))
   ]);
@@ -85,7 +79,7 @@ const Overview: FC<OverviewProps> = function ({
   );
   const availableProtocols = [
     ...new Set(
-      [...(processesPairsTxData || []), ...processesPairsRxReverse].map(({ protocol }) => protocol).filter(Boolean)
+      [...(processesPairsTxData || []), ...(processesPairsRxData || [])].map(({ protocol }) => protocol).filter(Boolean)
     )
   ] as AvailableProtocols[];
 

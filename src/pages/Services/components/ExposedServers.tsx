@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
@@ -22,15 +22,14 @@ const ExposedServers: FC<ExposedServersProps> = function ({
   serviceName,
   pagination = BIG_PAGINATION_SIZE
 }) {
-  const { data: exposedServersData } = useQuery({
+  const { data: exposedServersData } = useSuspenseQuery({
     queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
     queryFn: () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
 
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: byteRates } = useQuery({
+  const { data: byteRates } = useSuspenseQuery({
     queryKey: [QueriesServices.GetTcpByteRateByService, { serviceName }],
     queryFn: () => PrometheusApi.fetchTcpByteRateByService({ serviceName }),
     refetchInterval: UPDATE_INTERVAL

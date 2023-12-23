@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Bullseye, Grid, GridItem, Icon } from '@patternfly/react-core';
 import { LongArrowAltRightIcon } from '@patternfly/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
@@ -14,19 +14,15 @@ import { ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
 import { ProcessPairProcessesProps } from '../Processes.interfaces';
 
 const ProcessPairDetails: FC<ProcessPairProcessesProps> = function ({ sourceId, destinationId }) {
-  const { data: source } = useQuery({
+  const { data: source } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetProcess, sourceId],
     queryFn: () => RESTApi.fetchProcess(sourceId)
   });
 
-  const { data: destination } = useQuery({
+  const { data: destination } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetDestination, destinationId],
     queryFn: () => RESTApi.fetchProcess(destinationId)
   });
-
-  if (!source || !destination) {
-    return null;
-  }
 
   return (
     <Grid hasGutter>

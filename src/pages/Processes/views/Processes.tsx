@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useState } from 'react';
 
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -32,7 +32,7 @@ const Processes = function () {
   const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
     useState<RequestOptions>(initRemoteProcessesQueryParams);
 
-  const [{ data: externalProcessData }, { data: remoteProcessData }] = useQueries({
+  const [{ data: externalProcessData }, { data: remoteProcessData }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],

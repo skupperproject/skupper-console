@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { SiteResponse } from '@API/REST.interfaces';
@@ -24,19 +24,22 @@ interface OverviewProps {
 const Overview: FC<OverviewProps> = function ({ site }) {
   const { identity: siteId, name } = site;
 
-  const { data: sites } = useQuery({ queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() });
-  const { data: hosts } = useQuery({
-    queryKey: [QueriesSites.GetHostsBySiteId, siteId],
-    queryFn: () => RESTApi.fetchHostsBySite(siteId)
-  });
-  const { data: links } = useQuery({
-    queryKey: [QueriesSites.GetLinksBySiteId, siteId],
-    queryFn: () => RESTApi.fetchLinksBySite(siteId)
-  });
-  const { data: routers } = useQuery({ queryKey: [QueriesSites.GetRouters], queryFn: () => RESTApi.fetchRouters() });
-  const { data: processesData } = useQuery({
-    queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
-    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
+  const [{ data: sites }, { data: links }, { data: routers }, { data: processesData }] = useSuspenseQueries({
+    queries: [
+      { queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() },
+      {
+        queryKey: [QueriesSites.GetLinksBySiteId, siteId],
+        queryFn: () => RESTApi.fetchLinksBySite(siteId)
+      },
+      {
+        queryKey: [QueriesSites.GetRouters],
+        queryFn: () => RESTApi.fetchRouters()
+      },
+      {
+        queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
+        queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
+      }
+    ]
   });
 
   const handleSelectedFilters = useCallback(
@@ -52,10 +55,6 @@ const Overview: FC<OverviewProps> = function ({ site }) {
     },
     [siteId]
   );
-
-  if (!sites || !routers || !hosts || !links || !processesData) {
-    return null;
-  }
 
   const sitePairs = SitesController.getSitePairs(sites, links, routers);
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');

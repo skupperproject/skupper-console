@@ -28,7 +28,7 @@ import {
   getUniqueId
 } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -108,49 +108,49 @@ const TopologyProcesses: FC<{
   const [modalType, setModalType] = useState<{ type: 'process' | 'processPair'; id: string } | undefined>();
 
   const drawerRef = useRef<HTMLDivElement>(null);
-
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
-
-  const [{ data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
-  });
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
     [displayOptionsSelected]
   );
-  const { data: metrics } = useQuery({
-    queryKey: [
-      QueriesTopology.GetBytesByProcessPairs,
-      isDisplayOptionActive(SHOW_LINK_BYTES),
-      isDisplayOptionActive(SHOW_LINK_BYTERATE),
-      isDisplayOptionActive(SHOW_LINK_LATENCY)
-    ],
-    queryFn: () =>
-      TopologyController.getMetrics({
-        showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-        showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-        showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-        params: metricQueryParams
-      }),
-    refetchInterval: UPDATE_INTERVAL
-  });
+
+  const [{ data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }, { data: metrics }] =
+    useSuspenseQueries({
+      queries: [
+        {
+          queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
+          queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
+          queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [QueriesTopology.GetProcessesPairs],
+          queryFn: () => RESTApi.fetchProcessesPairsResult(),
+          refetchInterval: UPDATE_INTERVAL
+        },
+        {
+          queryKey: [
+            QueriesTopology.GetBytesByProcessPairs,
+            isDisplayOptionActive(SHOW_LINK_BYTES),
+            isDisplayOptionActive(SHOW_LINK_BYTERATE),
+            isDisplayOptionActive(SHOW_LINK_LATENCY)
+          ],
+          queryFn: () =>
+            TopologyController.getMetrics({
+              showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+              showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+              showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+              params: metricQueryParams
+            }),
+          refetchInterval: UPDATE_INTERVAL
+        }
+      ]
+    });
 
   const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
     setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
@@ -269,10 +269,6 @@ const TopologyProcesses: FC<{
   };
 
   useEffect(() => {
-    if (!externalProcesses || !remoteProcesses || !processesPairs) {
-      return;
-    }
-
     const options = {
       showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
       showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
@@ -315,7 +311,7 @@ const TopologyProcesses: FC<{
         )
         .map(({ identity }) => identity);
 
-      pPairs = pPairs.filter((pair) => serverIds?.includes(pair.destinationId));
+      pPairs = pPairs.filter((pair) => serverIds.includes(pair.destinationId));
 
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
       processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));

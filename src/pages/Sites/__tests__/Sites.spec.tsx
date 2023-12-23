@@ -22,14 +22,6 @@ describe('Begin testing the Sites component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-
-    render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <Sites />
-        </Suspense>
-      </Wrapper>
-    );
   });
 
   afterEach(() => {
@@ -38,10 +30,26 @@ describe('Begin testing the Sites component', () => {
   });
 
   it('should render a loading page when data is loading', () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
+      </Wrapper>
+    );
+
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
   });
 
   it('should render the sites view after the data loading is complete', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
+      </Wrapper>
+    );
+
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
@@ -51,6 +59,14 @@ describe('Begin testing the Sites component', () => {
   });
 
   it('should render a table with the site data after the data has loaded.', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
+      </Wrapper>
+    );
+
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
@@ -59,6 +75,14 @@ describe('Begin testing the Sites component', () => {
   });
 
   it('Should ensure the Sites component renders with correct link href after loading page', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <Sites />
+        </Suspense>
+      </Wrapper>
+    );
+
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });

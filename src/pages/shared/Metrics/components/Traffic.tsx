@@ -4,7 +4,6 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
@@ -21,6 +20,8 @@ interface TrafficProps {
   onGetIsSectionExpanded?: Function;
 }
 
+const minChartHeight = 450;
+
 const Traffic: FC<TrafficProps> = function ({
   selectedFilters,
   forceUpdate,
@@ -30,12 +31,12 @@ const Traffic: FC<TrafficProps> = function ({
 }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const { data, refetch, isRefetching } = useQuery({
+  const { data, refetch, isRefetching, isLoading } = useQuery({
     queryKey: [QueriesMetrics.GetTraffic, selectedFilters],
     queryFn: () => MetricsController.getDataTraffic(selectedFilters),
-    enabled: isPrometheusActive,
     refetchInterval,
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    enabled: isExpanded
   });
 
   const handleExpand = useCallback(() => {
@@ -47,7 +48,7 @@ const Traffic: FC<TrafficProps> = function ({
   }, [isExpanded, onGetIsSectionExpanded]);
 
   const handleRefetchMetrics = useCallback(() => {
-    isPrometheusActive && refetch();
+    refetch();
   }, [refetch]);
 
   useEffect(() => {
@@ -63,14 +64,18 @@ const Traffic: FC<TrafficProps> = function ({
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody>
-          {data?.txTimeSerie || data?.rxTimeSerie ? (
+        <CardBody style={{ minHeight: minChartHeight }}>
+          {isLoading && <SkIsLoading />}
+
+          {(data?.txTimeSerie || data?.rxTimeSerie) && (
             <>
-              {isRefetching && <SkIsLoading />}
+              {!isLoading && isRefetching && <SkIsLoading />}
               <Title headingLevel="h4">{MetricsLabels.ByteRateTitle} </Title>
               <TrafficCharts byteRateData={data} />
             </>
-          ) : (
+          )}
+
+          {!isLoading && !data?.txTimeSerie && !data?.rxTimeSerie && (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}

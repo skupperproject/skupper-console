@@ -1,11 +1,11 @@
 import { startTransition, useCallback, useState } from 'react';
 
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
-import { BIG_PAGINATION_SIZE, isPrometheusActive } from '@config/config';
+import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
@@ -22,7 +22,7 @@ const initOldConnectionsQueryParams: RequestOptions = {
 const Services = function () {
   const [servicesQueryParams, setServicesQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
 
-  const [{ data: servicesData }, { data: tcpActiveFlows }] = useQueries({
+  const [{ data: servicesData }, { data: tcpActiveFlows }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesServices.GetServices, servicesQueryParams],
@@ -30,8 +30,7 @@ const Services = function () {
       },
       {
         queryKey: [QueriesServices.GetPrometheusActiveFlows],
-        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService(),
-        enabled: isPrometheusActive
+        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService()
       }
     ]
   });
