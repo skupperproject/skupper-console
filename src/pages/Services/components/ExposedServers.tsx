@@ -4,7 +4,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import { CustomProcessCells } from '@pages/Processes/Processes.constants';
 
@@ -37,7 +37,7 @@ const ExposedServers: FC<ExposedServersProps> = function ({
 
   let servers = exposedServersData?.results || [];
 
-  if (isPrometheusActive && byteRates) {
+  if (byteRates) {
     const byteRatesMap = byteRates.reduce(
       (acc, byteRate) => {
         acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);

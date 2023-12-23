@@ -4,7 +4,6 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@p
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
@@ -78,10 +77,8 @@ const Response: FC<ResponseProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    if (isPrometheusActive) {
-      refetchResponse();
-      refetchResponseReverse();
-    }
+    refetchResponse();
+    refetchResponseReverse();
   }, [refetchResponse, refetchResponseReverse]);
 
   useEffect(() => {

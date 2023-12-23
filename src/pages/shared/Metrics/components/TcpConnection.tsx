@@ -16,7 +16,6 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
 import SkIsLoading from '@core/components/SkIsLoading';
@@ -67,7 +66,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    isPrometheusActive && refetch();
+    refetch();
   }, [refetch]);
 
   useEffect(() => {
