@@ -5,6 +5,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
+import { prometheusProcessNameseparator } from '@config/prometheus';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
@@ -33,7 +34,7 @@ const ProcessGroup = function () {
     queries: [
       {
         queryKey: [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
-        queryFn: () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
+        queryFn: () => RESTApi.fetchProcesses({ endTime: 0, groupIdentity: processGroupId })
       },
       {
         queryKey: [QueriesProcessGroups.GetProcessGroup, processGroupId],
@@ -106,6 +107,9 @@ const ProcessGroup = function () {
                 )
               }}
               defaultMetricFilterValues={{
+                sourceProcess: serverNameFilters
+                  .map(({ destinationName }) => destinationName)
+                  .join(prometheusProcessNameseparator),
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
               startTimeLimit={startTime}

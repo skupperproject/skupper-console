@@ -65,5 +65,4 @@ export interface LatencyMetricsProps {
 export interface ConnectionMetrics {
   liveConnectionsCount: number;
   liveConnectionsSerie: skAxisXY[][] | null;
-  terminatedConnectionsCount: number;
 }

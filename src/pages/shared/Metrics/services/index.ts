@@ -295,21 +295,19 @@ const MetricsController = {
     };
 
     try {
-      const [liveConnections, liveConnectionsInTimeRangeData, totalConnections] = await Promise.all([
+      const [liveConnections, liveConnectionsInTimeRangeData] = await Promise.all([
         PrometheusApi.fetchLiveFlows(params),
-        PrometheusApi.fetchFlowsDeltaInTimeRange(params),
-        PrometheusApi.fetchtotalFlows(params)
+        PrometheusApi.fetchFlowsDeltaInTimeRange(params)
       ]);
 
-      if (!liveConnections.length && !totalConnections.length && !liveConnectionsInTimeRangeData.length) {
+      if (!liveConnections.length && !liveConnectionsInTimeRangeData.length) {
         return null;
       }
 
-      const liveConnectionsCount = Number(liveConnections[0].value[1]) || 0;
+      const liveConnectionsCount = Number(liveConnections[0]?.value[1]) || 0;
       const liveConnectionsSerie = extractPrometheusValues(liveConnectionsInTimeRangeData);
-      const terminatedConnectionsCount = Number(totalConnections[0].value[1]) - Number(liveConnectionsCount);
 
-      return { liveConnectionsCount, liveConnectionsSerie, terminatedConnectionsCount };
+      return { liveConnectionsCount, liveConnectionsSerie };
     } catch (e: unknown) {
       return Promise.reject(e);
     }

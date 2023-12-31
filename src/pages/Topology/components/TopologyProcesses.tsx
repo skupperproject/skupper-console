@@ -70,11 +70,13 @@ const SERVICE_OPTIONS = 'service-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
 
 const externalProcessesQueryParams = {
-  processRole: 'external'
+  processRole: 'external',
+  endTime: 0
 };
 
 const remoteProcessesQueryParams = {
-  processRole: 'remote'
+  processRole: 'remote',
+  endTime: 0
 };
 
 const metricQueryParams = {

@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
   GraphEdge,
@@ -399,5 +399,5 @@ function getPrometheusSiteLabel(name?: string, id?: string) {
     return id;
   }
 
-  return `${name}${siteNameAndIdSeparator}${id}`;
+  return `${name}${prometheusSiteNameAndIdSeparator}${id}`;
 }

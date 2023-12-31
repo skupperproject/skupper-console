@@ -12,7 +12,7 @@ export enum AvailableProtocols {
 
 export enum TcpStatus {
   Active = 'active',
-  Terminated = 'closed'
+  Terminated = 'terminated'
 }
 
 export enum FlowDirection {

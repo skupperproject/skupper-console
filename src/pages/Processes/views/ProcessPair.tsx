@@ -54,15 +54,14 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
 
 const ProcessPairs = function () {
   const { processPair } = useParams() as { processPair: string };
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const { id: processPairId, protocol } = getIdAndNameFromUrlParams(processPair);
-  const type = searchParams.get('type') || TAB_1_KEY;
   const ids = processPairId?.split('-to-') || [];
   const sourceId = ids[0];
   const destinationId = ids[1];
 
-  const [connectionsView, setConnectionsView] = useState<string>(type);
+  const [connectionsView, setConnectionsView] = useState<string>();
 
   const [httpQueryParamsPaginated, setHttpQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedHttpRequestsQueryParams
@@ -149,6 +148,21 @@ const ProcessPairs = function () {
     setSearchParams({ type: tabIndex as string });
   }
 
+  function setDefaultTcpActiveTab() {
+    if (connectionsView) {
+      return connectionsView;
+    }
+    if (activeConnectionsCount) {
+      return TAB_1_KEY;
+    }
+
+    if (oldConnectionsCount) {
+      return TAB_2_KEY;
+    }
+
+    return '';
+  }
+
   if (protocol === AvailableProtocols.Http && !httpRequestsData) {
     return null;
   }
@@ -206,7 +220,7 @@ const ProcessPairs = function () {
 
           {((protocol === AvailableProtocols.Tcp && !!activeConnectionsCount) || !!oldConnectionsCount) && (
             <StackItem isFilled>
-              <Tabs activeKey={connectionsView} onSelect={handleTabClick} component="nav" isBox>
+              <Tabs activeKey={setDefaultTcpActiveTab()} onSelect={handleTabClick} component="nav" isBox>
                 <Tab
                   eventKey={TAB_1_KEY}
                   title={

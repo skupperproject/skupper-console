@@ -6,6 +6,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
+import { prometheusProcessNameseparator } from '@config/prometheus';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
 import SankeyFilter from '@core/components/SKSanckeyChart/SankeyFilter';
 import {
@@ -51,8 +52,12 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
             serviceName,
             clientType: clientResourceSelected,
             serverType: serverResourceSelected,
-            sourceProcesses: processPairs?.results.map(({ sourceName }) => sourceName).join('|'),
-            destProcesses: processPairs?.results.map(({ destinationName }) => destinationName).join('|')
+            sourceProcesses: processPairs?.results
+              .map(({ sourceName }) => sourceName)
+              .join(prometheusProcessNameseparator),
+            destProcesses: processPairs?.results
+              .map(({ destinationName }) => destinationName)
+              .join(prometheusProcessNameseparator)
           })
         : null,
     refetchInterval: UPDATE_INTERVAL

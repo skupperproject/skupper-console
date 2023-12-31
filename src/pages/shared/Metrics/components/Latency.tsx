@@ -48,7 +48,8 @@ const Latency: FC<LatencyProps> = function ({
     queryKey: [QueriesMetrics.GetLatencyBuckets, selectedFilters],
     queryFn: () => MetricsController.getLatencyBuckets(selectedFilters),
     refetchInterval,
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    enabled: isExpanded
   });
 
   const handleExpand = useCallback(() => {

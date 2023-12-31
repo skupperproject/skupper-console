@@ -5,7 +5,7 @@ import { useQueries } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
@@ -60,14 +60,14 @@ const Overview: FC<OverviewProps> = function ({
   const destProcessesRx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
     ...(processesPairsTxData || []).map(({ destinationName, destinationSiteId, destinationSiteName }) => ({
       destinationName,
-      siteName: `${destinationSiteName}${siteNameAndIdSeparator}${destinationSiteId}`
+      siteName: `${destinationSiteName}${prometheusSiteNameAndIdSeparator}${destinationSiteId}`
     }))
   ]);
 
   const destProcessesTx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
     ...(processesPairsRxData || []).map(({ sourceName, sourceSiteId, sourceSiteName }) => ({
       destinationName: sourceName,
-      siteName: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
+      siteName: `${sourceSiteName}${prometheusSiteNameAndIdSeparator}${sourceSiteId}`
     }))
   ]);
 
@@ -94,7 +94,7 @@ const Overview: FC<OverviewProps> = function ({
       }}
       defaultMetricFilterValues={{
         sourceProcess: name,
-        sourceSite: `${parentName}${siteNameAndIdSeparator}${parent}`,
+        sourceSite: `${parentName}${prometheusSiteNameAndIdSeparator}${parent}`,
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       startTimeLimit={startTime}

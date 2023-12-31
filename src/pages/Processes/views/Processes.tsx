@@ -17,12 +17,14 @@ import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 //TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
 const initExternalProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: 'external'
+  processRole: 'external',
+  endTime: 0
 };
 
 const initRemoteProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: 'remote'
+  processRole: 'remote',
+  endTime: 0
 };
 
 const Processes = function () {
