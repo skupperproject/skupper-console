@@ -6,6 +6,7 @@ import {
   extractPrometheusValuesAndLabels
 } from '@API/Prometheus.utils';
 import { calculateStep, defaultTimeInterval } from '@config/prometheus';
+import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
 
@@ -294,21 +295,19 @@ const MetricsController = {
     };
 
     try {
-      const [liveConnections, liveConnectionsInTimeRangeData, totalConnections] = await Promise.all([
+      const [liveConnections, liveConnectionsInTimeRangeData] = await Promise.all([
         PrometheusApi.fetchLiveFlows(params),
-        PrometheusApi.fetchFlowsDeltaInTimeRange(params),
-        PrometheusApi.fetchtotalFlows(params)
+        PrometheusApi.fetchFlowsDeltaInTimeRange(params)
       ]);
 
-      if (!liveConnections.length && !totalConnections.length && !liveConnectionsInTimeRangeData.length) {
+      if (!liveConnections.length && !liveConnectionsInTimeRangeData.length) {
         return null;
       }
 
-      const liveConnectionsCount = Number(liveConnections[0].value[1]) || 0;
+      const liveConnectionsCount = Number(liveConnections[0]?.value[1]) || 0;
       const liveConnectionsSerie = extractPrometheusValues(liveConnectionsInTimeRangeData);
-      const terminatedConnectionsCount = Number(totalConnections[0].value[1]) - Number(liveConnectionsCount);
 
-      return { liveConnectionsCount, liveConnectionsSerie, terminatedConnectionsCount };
+      return { liveConnectionsCount, liveConnectionsSerie };
     } catch (e: unknown) {
       return Promise.reject(e);
     }
@@ -434,4 +433,30 @@ function normalizeByteRateFromSeries(
     totalTxValue,
     totalRxValue
   };
+}
+
+/**
+  If one of the two series is empty, it should be filled with values where y=0 and x equals the timestamp of the other series.
+  This prevents 'skipping' a series and maintains consistency with other metrics related to bytes/rate.
+ */
+export function normalizeDataXaxis(rx: skAxisXY[] = [], tx: skAxisXY[] = []) {
+  if (!rx?.length && tx?.length) {
+    const rxNormalized = tx.map(({ x }) => ({
+      y: 0,
+      x
+    }));
+
+    return [rxNormalized, tx];
+  }
+
+  if (!tx?.length && rx?.length) {
+    const txNormalized = rx.map(({ x }) => ({
+      y: 0,
+      x
+    }));
+
+    return [rx, txNormalized];
+  }
+
+  return [rx, tx];
 }

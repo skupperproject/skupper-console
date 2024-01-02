@@ -16,19 +16,23 @@ const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 const FILTER_BY_SERVICE_MIN_WIDTH = 150;
 
 const externalProcessesQueryParams = {
-  processRole: 'external'
+  processRole: 'external',
+  endTime: 0
 };
 
 const remoteProcessesQueryParams = {
-  processRole: 'remote'
+  processRole: 'remote',
+  endTime: 0
 };
 
 const externalComponentQueryParams = {
-  processGroupRole: 'external'
+  processGroupRole: 'external',
+  endTime: 0
 };
 
 const remoteComponentQueryParams = {
-  processGroupRole: 'remote'
+  processGroupRole: 'remote',
+  endTime: 0
 };
 
 const DisplayResource: FC<{

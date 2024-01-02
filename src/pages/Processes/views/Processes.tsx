@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useState } from 'react';
 
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -17,12 +17,14 @@ import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 //TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
 const initExternalProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: 'external'
+  processRole: 'external',
+  endTime: 0
 };
 
 const initRemoteProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: 'remote'
+  processRole: 'remote',
+  endTime: 0
 };
 
 const Processes = function () {
@@ -32,7 +34,7 @@ const Processes = function () {
   const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
     useState<RequestOptions>(initRemoteProcessesQueryParams);
 
-  const [{ data: externalProcessData }, { data: remoteProcessData }] = useQueries({
+  const [{ data: externalProcessData }, { data: remoteProcessData }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],

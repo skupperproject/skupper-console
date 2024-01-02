@@ -4,7 +4,6 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
@@ -19,7 +18,10 @@ interface RequestProps {
   forceUpdate?: number;
   refetchInterval?: number;
   onGetIsSectionExpanded?: Function;
+  onIsLoaded?: Function;
 }
+
+const minChartHeight = 350;
 
 const Request: FC<RequestProps> = function ({
   selectedFilters,
@@ -33,13 +35,14 @@ const Request: FC<RequestProps> = function ({
   const {
     data: request,
     refetch: refetchRequest,
-    isRefetching: isRefetchingRequest
+    isRefetching,
+    isLoading
   } = useQuery({
     queryKey: [QueriesMetrics.GetRequest, selectedFilters],
     queryFn: () => MetricsController.getRequests(selectedFilters),
-    enabled: isPrometheusActive,
     refetchInterval,
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    enabled: isExpanded
   });
 
   const handleExpand = useCallback(() => {
@@ -52,9 +55,7 @@ const Request: FC<RequestProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    if (isPrometheusActive) {
-      refetchRequest();
-    }
+    refetchRequest();
   }, [refetchRequest]);
 
   useEffect(() => {
@@ -63,24 +64,24 @@ const Request: FC<RequestProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!request?.requestRateData?.length) {
-    return null;
-  }
-
   return (
     <Card isExpanded={isExpanded}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody>
-          <Title headingLevel="h4">{MetricsLabels.RequestRateTitle} </Title>
-          {request?.requestRateData?.length ? (
+        <CardBody style={{ minHeight: minChartHeight }}>
+          {isLoading && <SkIsLoading />}
+
+          {!isLoading && request?.requestRateData?.length && (
             <>
-              {isRefetchingRequest && <SkIsLoading />}
+              {isRefetching && <SkIsLoading />}
+              <Title headingLevel="h4">{MetricsLabels.RequestRateTitle} </Title>
               <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
             </>
-          ) : (
+          )}
+
+          {!isLoading && !request?.requestRateData?.length && (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}

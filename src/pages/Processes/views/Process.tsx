@@ -1,7 +1,7 @@
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -35,38 +35,29 @@ const Process = function () {
     destinationId: processId
   };
 
-  const { data: process } = useQuery({
+  const { data: process } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetProcess, processId],
-    queryFn: () => RESTApi.fetchProcess(processId),
-    placeholderData: keepPreviousData
+    queryFn: () => RESTApi.fetchProcess(processId)
   });
 
   const { data: clientPairs } = useQuery({
     queryKey: [QueriesProcesses.GetProcessPairs, clientPairsQueryParams],
     queryFn: () => RESTApi.fetchProcessesPairs(clientPairsQueryParams),
-    placeholderData: keepPreviousData,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: serverPairs } = useQuery({
     queryKey: [QueriesProcesses.GetProcessPairs, serverPairsQueryParams],
     queryFn: () => RESTApi.fetchProcessesPairs(serverPairsQueryParams),
-    placeholderData: keepPreviousData,
     refetchInterval: UPDATE_INTERVAL
   });
-
-  if (!process) {
-    return null;
-  }
-
-  const clientCount = clientPairs?.timeRangeCount || 0;
-  const serverCount = serverPairs?.timeRangeCount || 0;
-  const processesCount = clientCount + serverCount;
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessesLabels);
     setSearchParams({ type: tabIndex as string });
   }
+
+  const processesCount = (clientPairs?.timeRangeCount || 0) + (serverPairs?.timeRangeCount || 0);
 
   const NavigationMenu = function () {
     return (
@@ -74,7 +65,7 @@ const Process = function () {
         <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
         <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
         <Tab
-          disabled={!clientCount && !serverCount}
+          disabled={!processesCount}
           eventKey={ProcessesLabels.ProcessPairs}
           title={
             <TabTitleText>

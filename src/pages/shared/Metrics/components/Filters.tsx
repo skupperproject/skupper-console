@@ -27,7 +27,7 @@ import {
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusProcessNameseparator, prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkUpdateDataButton from '@core/components/SkUpdateDataButton';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
@@ -164,7 +164,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </MenuItem>
               {(list || []).map(({ destinationName }) => (
                 <MenuItem key={`site-${destinationName}`} itemId={destinationName}>
-                  {destinationName.split(siteNameAndIdSeparator)[0]}
+                  {destinationName.split(prometheusSiteNameAndIdSeparator)[0]}
                 </MenuItem>
               ))}
             </MenuList>
@@ -196,7 +196,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={sourceSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.sourceSite?.split(siteNameAndIdSeparator)[0] || config.sourceSites?.placeholder,
+            selectedFilters.sourceSite?.split(prometheusSiteNameAndIdSeparator)[0] || config.sourceSites?.placeholder,
             sourceSitesToggleRef,
             selectedFilterIsOpen.sourceSite,
             !!config.sourceSites?.disabled,
@@ -223,7 +223,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={destSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.destSite?.split(siteNameAndIdSeparator)[0] || config.destSites?.placeholder,
+            selectedFilters.destSite?.split(prometheusSiteNameAndIdSeparator)[0] || config.destSites?.placeholder,
             destSitesToggleRef,
             selectedFilterIsOpen.destSite,
             !!config.destSites?.disabled,
@@ -250,7 +250,9 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={sourceProcessesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.sourceProcess?.split(siteNameAndIdSeparator)[0] || config.sourceProcesses?.placeholder,
+            selectedFilters.sourceProcess?.split(prometheusProcessNameseparator)?.length === 1
+              ? selectedFilters.sourceProcess?.split(prometheusProcessNameseparator)[0]
+              : config.sourceProcesses?.placeholder,
             sourceProcessesToggleRef,
             selectedFilterIsOpen.sourceProcess,
             !!config.sourceProcesses?.disabled,
@@ -279,7 +281,9 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={destProcessesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.destProcess?.split(siteNameAndIdSeparator)[0] || config.destinationProcesses?.placeholder,
+            selectedFilters.destProcess?.split(prometheusProcessNameseparator)?.length === 1
+              ? selectedFilters.destProcess?.split(prometheusProcessNameseparator)[0]
+              : config.destinationProcesses?.placeholder,
             destProcessesToggleRef,
             selectedFilterIsOpen.destProcess,
             !!config.destinationProcesses?.disabled,

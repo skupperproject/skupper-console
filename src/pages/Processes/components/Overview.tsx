@@ -1,11 +1,11 @@
 import { FC, useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
@@ -28,16 +28,19 @@ const Overview: FC<OverviewProps> = function ({
     destinationId: processId
   };
 
-  const { data: processesPairsTxData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: processesPairsRxData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
-    refetchInterval: UPDATE_INTERVAL
+  const [{ data: processesPairsTxData }, { data: processesPairsRxData }] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
   });
 
   const handleSelectedFilters = useCallback(
@@ -54,26 +57,17 @@ const Overview: FC<OverviewProps> = function ({
     [processId]
   );
 
-  const processesPairsRxReverse =
-    (processesPairsRxData || []).map((processPairsData) => ({
-      ...processPairsData,
-      sourceId: processPairsData.destinationId,
-      sourceName: processPairsData.destinationName,
-      destinationName: processPairsData.sourceName,
-      destinationId: processPairsData.sourceId
-    })) || [];
-
   const destProcessesRx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
     ...(processesPairsTxData || []).map(({ destinationName, destinationSiteId, destinationSiteName }) => ({
       destinationName,
-      siteName: `${destinationSiteName}${siteNameAndIdSeparator}${destinationSiteId}`
+      siteName: `${destinationSiteName}${prometheusSiteNameAndIdSeparator}${destinationSiteId}`
     }))
   ]);
 
   const destProcessesTx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
-    ...processesPairsRxReverse.map(({ destinationName, sourceSiteId, sourceSiteName }) => ({
-      destinationName,
-      siteName: `${sourceSiteName}${siteNameAndIdSeparator}${sourceSiteId}`
+    ...(processesPairsRxData || []).map(({ sourceName, sourceSiteId, sourceSiteName }) => ({
+      destinationName: sourceName,
+      siteName: `${sourceSiteName}${prometheusSiteNameAndIdSeparator}${sourceSiteId}`
     }))
   ]);
 
@@ -85,7 +79,7 @@ const Overview: FC<OverviewProps> = function ({
   );
   const availableProtocols = [
     ...new Set(
-      [...(processesPairsTxData || []), ...processesPairsRxReverse].map(({ protocol }) => protocol).filter(Boolean)
+      [...(processesPairsTxData || []), ...(processesPairsRxData || [])].map(({ protocol }) => protocol).filter(Boolean)
     )
   ] as AvailableProtocols[];
 
@@ -100,7 +94,7 @@ const Overview: FC<OverviewProps> = function ({
       }}
       defaultMetricFilterValues={{
         sourceProcess: name,
-        sourceSite: `${parentName}${siteNameAndIdSeparator}${parent}`,
+        sourceSite: `${parentName}${prometheusSiteNameAndIdSeparator}${parent}`,
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       startTimeLimit={startTime}

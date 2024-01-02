@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL, isPrometheusActive } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkTable from '@core/components/SkTable';
 import { CustomProcessCells } from '@pages/Processes/Processes.constants';
 
@@ -22,15 +22,14 @@ const ExposedServers: FC<ExposedServersProps> = function ({
   serviceName,
   pagination = BIG_PAGINATION_SIZE
 }) {
-  const { data: exposedServersData } = useQuery({
+  const { data: exposedServersData } = useSuspenseQuery({
     queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
     queryFn: () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
 
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: byteRates } = useQuery({
+  const { data: byteRates } = useSuspenseQuery({
     queryKey: [QueriesServices.GetTcpByteRateByService, { serviceName }],
     queryFn: () => PrometheusApi.fetchTcpByteRateByService({ serviceName }),
     refetchInterval: UPDATE_INTERVAL
@@ -38,7 +37,7 @@ const ExposedServers: FC<ExposedServersProps> = function ({
 
   let servers = exposedServersData?.results || [];
 
-  if (isPrometheusActive && byteRates) {
+  if (byteRates) {
     const byteRatesMap = byteRates.reduce(
       (acc, byteRate) => {
         acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);

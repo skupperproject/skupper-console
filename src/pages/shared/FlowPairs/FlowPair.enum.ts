@@ -37,5 +37,5 @@ export enum FlowPairLabels {
   StatusCode = 'Status',
   FlowPairOpen = 'Open', // Tcp & Http
   FlowPairClosed = 'Closed', // Tcp
-  FlowPairTerminated = 'terminated' // Http
+  FlowPairTerminated = 'Terminated' // Http
 }

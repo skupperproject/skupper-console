@@ -17,12 +17,12 @@ import {
   ToolbarGroup,
   ToolbarItem
 } from '@patternfly/react-core';
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
   GraphEdge,
@@ -78,7 +78,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   );
 
   const [{ data: sites }, { data: routers }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] =
-    useQueries({
+    useSuspenseQueries({
       queries: [
         {
           queryKey: [QueriesSites.GetSites],
@@ -399,5 +399,5 @@ function getPrometheusSiteLabel(name?: string, id?: string) {
     return id;
   }
 
-  return `${name}${siteNameAndIdSeparator}${id}`;
+  return `${name}${prometheusSiteNameAndIdSeparator}${id}`;
 }

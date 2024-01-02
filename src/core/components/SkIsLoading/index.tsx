@@ -1,5 +1,7 @@
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
+import { getTestsIds } from '@config/testIds';
+
 const SkIsLoading = function ({ customSize = '150px' }) {
   return (
     <div
@@ -15,7 +17,7 @@ const SkIsLoading = function ({ customSize = '150px' }) {
         zIndex: 1
       }}
     >
-      <Bullseye>
+      <Bullseye data-testid={getTestsIds.loadingView()}>
         <Spinner diameter={customSize} />
       </Bullseye>
     </div>

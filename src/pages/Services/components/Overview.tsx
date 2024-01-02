@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
@@ -113,5 +113,5 @@ export default Overview;
 
 // prometheus use a combination of process name and site name as a siteId key
 function composePrometheusSiteId({ id, name }: { id: string; name: string }) {
-  return `${name}${siteNameAndIdSeparator}${id}`;
+  return `${name}${prometheusSiteNameAndIdSeparator}${id}`;
 }

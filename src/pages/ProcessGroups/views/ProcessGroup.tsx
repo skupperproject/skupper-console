@@ -1,10 +1,11 @@
 import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
+import { prometheusProcessNameseparator } from '@config/prometheus';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
@@ -29,14 +30,17 @@ const ProcessGroup = function () {
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
   const [tabSelected, setTabSelected] = useState(type);
 
-  const { data: processGroup } = useQuery({
-    queryKey: [QueriesProcessGroups.GetProcessGroup, processGroupId],
-    queryFn: () => RESTApi.fetchProcessGroup(processGroupId)
-  });
-
-  const { data: processes } = useQuery({
-    queryKey: [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
-    queryFn: () => RESTApi.fetchProcesses({ groupIdentity: processGroupId })
+  const [{ data: processes }, { data: processGroup }] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
+        queryFn: () => RESTApi.fetchProcesses({ endTime: 0, groupIdentity: processGroupId })
+      },
+      {
+        queryKey: [QueriesProcessGroups.GetProcessGroup, processGroupId],
+        queryFn: () => RESTApi.fetchProcessGroup(processGroupId)
+      }
+    ]
   });
 
   const handleSelectedFilters = useCallback(
@@ -52,10 +56,6 @@ const ProcessGroup = function () {
     },
     [processGroupId]
   );
-
-  if (!processGroup || !processes) {
-    return null;
-  }
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessGroupsLabels);
@@ -78,9 +78,9 @@ const ProcessGroup = function () {
           title={
             <TabTitleText>
               {ProcessGroupsLabels.Processes}{' '}
-              {!!processes.results?.length && (
+              {!!processGroup.processCount && (
                 <Badge isRead key={1}>
-                  {processes.results?.length}
+                  {processGroup.processCount}
                 </Badge>
               )}
             </TabTitleText>
@@ -107,6 +107,9 @@ const ProcessGroup = function () {
                 )
               }}
               defaultMetricFilterValues={{
+                sourceProcess: serverNameFilters
+                  .map(({ destinationName }) => destinationName)
+                  .join(prometheusProcessNameseparator),
                 ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
               startTimeLimit={startTime}

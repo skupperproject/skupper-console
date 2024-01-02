@@ -4,7 +4,6 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@p
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isPrometheusActive } from '@config/config';
 import EmptyData from '@core/components/EmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
@@ -19,7 +18,10 @@ interface ResponseProps {
   forceUpdate?: number;
   refetchInterval?: number;
   onGetIsSectionExpanded?: Function;
+  onIsLoaded?: Function;
 }
+
+const minChartHeight = 450;
 
 const Response: FC<ResponseProps> = function ({
   selectedFilters,
@@ -42,25 +44,27 @@ const Response: FC<ResponseProps> = function ({
   const {
     data: response,
     refetch: refetchResponse,
-    isRefetching: isRefetchingResponse
+    isRefetching: isRefetchingResponse,
+    isLoading
   } = useQuery({
     queryKey: [QueriesMetrics.GetResponse, selectedFilters],
     queryFn: () => MetricsController.getResponses(selectedFilters),
-    enabled: isPrometheusActive,
+    placeholderData: keepPreviousData,
     refetchInterval,
-    placeholderData: keepPreviousData
+    enabled: isExpanded
   });
 
   const {
     data: responseReverse,
     refetch: refetchResponseReverse,
-    isRefetching: isRefetchingResponseReverse
+    isRefetching: isRefetchingResponseReverse,
+    isLoading: isLoadingReverse
   } = useQuery({
     queryKey: [QueriesMetrics.GetResponse, selectedFiltersReverse],
     queryFn: () => MetricsController.getResponses(selectedFiltersReverse),
-    enabled: isPrometheusActive,
+    placeholderData: keepPreviousData,
     refetchInterval,
-    placeholderData: keepPreviousData
+    enabled: isExpanded
   });
 
   const handleExpand = useCallback(() => {
@@ -73,10 +77,8 @@ const Response: FC<ResponseProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    if (isPrometheusActive) {
-      refetchResponse();
-      refetchResponseReverse();
-    }
+    refetchResponse();
+    refetchResponseReverse();
   }, [refetchResponse, refetchResponseReverse]);
 
   useEffect(() => {
@@ -84,10 +86,6 @@ const Response: FC<ResponseProps> = function ({
       handleRefetchMetrics();
     }
   }, [forceUpdate, handleRefetchMetrics]);
-
-  if (!response?.responseData && !responseReverse?.responseData) {
-    return null;
-  }
 
   const responseData = responseReverse?.responseData
     ? { ...response?.responseData, ...responseReverse.responseData }
@@ -103,12 +101,17 @@ const Response: FC<ResponseProps> = function ({
         <CardTitle>{MetricsLabels.ResposeTitle}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody>
-          {(isRefetchingResponse || isRefetchingResponseReverse) && <SkIsLoading />}
+        <CardBody style={{ minHeight: minChartHeight }}>
+          {(isLoading || isLoadingReverse) && <SkIsLoading />}
 
-          {responseData && <ResponseCharts responseData={responseData} responseRateData={responseRateData} />}
+          {!isLoading && !isLoadingReverse && responseData && (
+            <>
+              {(isRefetchingResponse || isRefetchingResponseReverse) && <SkIsLoading />}
+              <ResponseCharts responseData={responseData} responseRateData={responseRateData} />
+            </>
+          )}
 
-          {!responseData && !(isRefetchingResponse || isRefetchingResponseReverse) && (
+          {!isLoading && !isLoadingReverse && !responseData && (
             <EmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}

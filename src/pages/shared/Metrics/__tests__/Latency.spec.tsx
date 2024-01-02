@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import * as PrometheusAPIModule from '@API/Prometheus.api';
@@ -30,6 +30,8 @@ describe('Latency component', () => {
   });
 
   it('should render the Latency section of the metric', async () => {
+    const handleGetisSectionExpanded = jest.fn();
+
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
@@ -39,6 +41,7 @@ describe('Latency component', () => {
             }}
             openSections={true}
             forceUpdate={1}
+            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Wrapper>
@@ -49,6 +52,9 @@ describe('Latency component', () => {
     });
 
     expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
+
+    fireEvent.click(document.querySelector('.pf-v5-c-card__header-toggle')?.querySelector('button')!);
+    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
   it('should render the Latency section and display the no metric found message', async () => {

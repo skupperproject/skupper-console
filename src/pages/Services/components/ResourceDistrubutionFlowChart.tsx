@@ -1,11 +1,12 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState, startTransition } from 'react';
 
 import { Card, CardBody, CardHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
+import { prometheusProcessNameseparator } from '@config/prometheus';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
 import SankeyFilter from '@core/components/SKSanckeyChart/SankeyFilter';
 import {
@@ -31,14 +32,13 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
     ServiceServerResourceOptions[0].id
   );
 
-  const { data: processPairs } = useQuery({
+  const { data: processPairs } = useSuspenseQuery({
     queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
     queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData
+    refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: resourcePairs } = useQuery({
+  const { data: resourcePairs } = useSuspenseQuery({
     queryKey: [
       QueriesServices.GetResourcePairsByService,
       serviceName,
@@ -47,16 +47,20 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
       processPairs
     ],
     queryFn: () =>
-      PrometheusApi.fethResourcePairsByService({
-        serviceName,
-        clientType: clientResourceSelected,
-        serverType: serverResourceSelected,
-        sourceProcesses: processPairs?.results.map(({ sourceName }) => sourceName).join('|'),
-        destProcesses: processPairs?.results.map(({ destinationName }) => destinationName).join('|')
-      }),
-    refetchInterval: UPDATE_INTERVAL,
-    placeholderData: keepPreviousData,
-    enabled: !!processPairs?.results.length
+      processPairs?.results.length
+        ? PrometheusApi.fethResourcePairsByService({
+            serviceName,
+            clientType: clientResourceSelected,
+            serverType: serverResourceSelected,
+            sourceProcesses: processPairs?.results
+              .map(({ sourceName }) => sourceName)
+              .join(prometheusProcessNameseparator),
+            destProcesses: processPairs?.results
+              .map(({ destinationName }) => destinationName)
+              .join(prometheusProcessNameseparator)
+          })
+        : null,
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const handleGetPairType = useCallback(
@@ -69,9 +73,11 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
       serverType: 'server' | 'serverSite';
       visibleMetrics: string;
     }) => {
-      setClientResourceSelected(clientType);
-      setServerResourceSelected(serverType);
-      setMetricSelected(visibleMetrics);
+      startTransition(() => {
+        setClientResourceSelected(clientType);
+        setServerResourceSelected(serverType);
+        setMetricSelected(visibleMetrics);
+      });
     },
     []
   );

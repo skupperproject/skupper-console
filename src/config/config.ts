@@ -9,8 +9,6 @@ const PROMETHEUS_SUFFIX = '/internal/prom';
 export const COLLECTOR_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
 export const PROMETHEUS_URL = `${COLLECTOR_URL}${PROMETHEUS_SUFFIX}`;
 
-export const isPrometheusActive = process.env.DISABLE_METRICS === 'true' ? false : true;
-
 // Default page size for tables. Set in environment variables, but can be overridden.
 export const DEFAULT_PAGINATION_SIZE = 10;
 export const BIG_PAGINATION_SIZE = 20;

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import * as PrometheusAPIModule from '@API/Prometheus.api';
@@ -31,6 +31,8 @@ describe('Traffic component', () => {
   });
 
   it('should render the Traffic section of the metric', async () => {
+    const handleGetisSectionExpanded = jest.fn();
+
     component = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
@@ -40,6 +42,7 @@ describe('Traffic component', () => {
             }}
             openSections={true}
             forceUpdate={1}
+            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Wrapper>
@@ -50,6 +53,10 @@ describe('Traffic component', () => {
     });
 
     expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
+
+    fireEvent.click(document.querySelector('.pf-v5-c-card__header-toggle')?.querySelector('button')!);
+    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
+
     expect(component).toMatchSnapshot();
   });
 

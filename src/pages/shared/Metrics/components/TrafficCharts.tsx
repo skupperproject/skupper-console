@@ -5,38 +5,12 @@ import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
-import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate } from '@core/utils/formatBytes';
 
 import { MetricsLabels } from '../Metrics.enum';
+import { normalizeDataXaxis } from '../services';
 import { ByteRateMetrics } from '../services/services.interfaces';
-
-/**
-  If one of the two series is empty, it should be filled with values where y=0 and x equals the timestamp of the other series.
-  This prevents 'skipping' a series and maintains consistency with other metrics related to bytes/rate.
- */
-function normalizeDataXaxis(rx: skAxisXY[] = [], tx: skAxisXY[] = []) {
-  if (!rx?.length && tx?.length) {
-    const rxNormalized = tx.map(({ x }) => ({
-      y: 0,
-      x
-    }));
-
-    return [rxNormalized, tx];
-  }
-
-  if (!tx?.length && rx?.length) {
-    const txNormalized = rx.map(({ x }) => ({
-      y: 0,
-      x
-    }));
-
-    return [rx, txNormalized];
-  }
-
-  return [rx, tx];
-}
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateData }) => (
   <Flex direction={{ xl: 'row', md: 'column' }}>

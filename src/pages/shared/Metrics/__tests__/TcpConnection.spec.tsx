@@ -12,12 +12,12 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import Response from '../components/Response';
+import TcpConnection from '../components/TcpConnection';
 import { MetricsLabels } from '../Metrics.enum';
 
 const processResult = processesData.results[0] as ProcessResponse;
 
-describe('Response component', () => {
+describe('Tcp component', () => {
   let server: Server;
   beforeEach(() => {
     server = loadMockServer() as Server;
@@ -29,13 +29,13 @@ describe('Response component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Reponse section of the metric', async () => {
+  it('should render the Tcp section of the metric', async () => {
     const handleGetisSectionExpanded = jest.fn();
 
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Response
+          <TcpConnection
             selectedFilters={{
               sourceProcess: processResult.name
             }}
@@ -51,21 +51,29 @@ describe('Response component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.ResposeTitle)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.ConnectionTitle)).toBeInTheDocument();
 
     fireEvent.click(document.querySelector('.pf-v5-c-card__header-toggle')?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
-  it('should not render the Response section', async () => {
+  it('should not render the Tcp section', async () => {
     jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange')
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchLiveFlows')
+      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+
+    jest
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchFlowsDeltaInTimeRange')
+      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+
+    jest
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchtotalFlows')
       .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <Response
+          <TcpConnection
             selectedFilters={{
               sourceProcess: processResult.name
             }}

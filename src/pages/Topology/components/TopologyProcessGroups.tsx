@@ -17,7 +17,7 @@ import {
   ToolbarItem,
   getUniqueId
 } from '@patternfly/react-core';
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -33,12 +33,14 @@ import DisplayResource from './DisplayResources';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
-const processGroupsQueryParams = {
-  processGroupRole: 'external'
+const externalProcessGroupsQueryParams = {
+  processGroupRole: 'external',
+  endTime: 0
 };
 
-const remoteProcessesQueryParams = {
-  processGroupRole: 'remote'
+const remoteProcessGroupsQueryParams = {
+  processGroupRole: 'remote',
+  endTime: 0
 };
 
 const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }) {
@@ -52,16 +54,16 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useQueries({
+  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
+        queryKey: [QueriesProcessGroups.GetProcessGroups, externalProcessGroupsQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(externalProcessGroupsQueryParams),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesProcessGroups.GetRemoteProcessGroup, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(remoteProcessesQueryParams),
+        queryKey: [QueriesProcessGroups.GetRemoteProcessGroup, remoteProcessGroupsQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(remoteProcessGroupsQueryParams),
         refetchInterval: UPDATE_INTERVAL
       },
       {

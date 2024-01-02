@@ -1,7 +1,7 @@
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -21,7 +21,7 @@ const Site = function () {
   const { id: siteId } = getIdAndNameFromUrlParams(id);
   const type = searchParams.get('type') || SiteLabels.Overview;
 
-  const { data: site } = useQuery({
+  const { data: site } = useSuspenseQuery({
     queryKey: [QueriesSites.GetSite, siteId],
     queryFn: () => RESTApi.fetchSite(siteId)
   });
@@ -31,10 +31,6 @@ const Site = function () {
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as SiteLabels);
     setSearchParams({ type: tabIndex as string });
-  }
-
-  if (!site) {
-    return null;
   }
 
   const NavigationMenu = function () {

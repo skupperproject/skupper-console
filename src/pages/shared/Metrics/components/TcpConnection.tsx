@@ -12,10 +12,11 @@ import {
   FlexItem,
   Title
 } from '@patternfly/react-core';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { SearchIcon } from '@patternfly/react-icons';
+import { useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { isPrometheusActive } from '@config/config';
+import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
 import SkIsLoading from '@core/components/SkIsLoading';
 import { formatNumber } from '@core/utils/formatNumber';
@@ -32,6 +33,8 @@ interface TcpConnectionProps {
   onGetIsSectionExpanded?: Function;
 }
 
+const minChartHeight = 340;
+
 const TcpConnection: FC<TcpConnectionProps> = function ({
   selectedFilters,
   forceUpdate,
@@ -44,12 +47,13 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
   const {
     data: connections,
     refetch,
-    isRefetching
+    isRefetching,
+    isLoading
   } = useQuery({
     queryKey: [QueriesMetrics.GetConnection, selectedFilters],
     queryFn: () => MetricsController.getConnections({ ...selectedFilters, protocol: AvailableProtocols.Tcp }),
     refetchInterval,
-    placeholderData: keepPreviousData
+    enabled: isExpanded
   });
 
   const handleExpand = useCallback(() => {
@@ -62,7 +66,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    isPrometheusActive && refetch();
+    refetch();
   }, [refetch]);
 
   useEffect(() => {
@@ -71,10 +75,6 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics]);
 
-  if (!connections) {
-    return null;
-  }
-
   return (
     <Card isExpanded={isExpanded}>
       <CardHeader onExpand={handleExpand}>
@@ -82,35 +82,49 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody>
-          {isRefetching && <SkIsLoading />}
-          <Flex direction={{ xl: 'row', md: 'column' }}>
-            <FlexItem flex={{ default: 'flex_2' }}>
-              {connections.liveConnectionsSerie && (
-                <>
-                  <Title headingLevel="h4">{MetricsLabels.LiveConnectionsChartLabel} </Title>
-                  <SkChartArea data={connections.liveConnectionsSerie} legendLabels={['live connections']} />
-                </>
-              )}
-            </FlexItem>
+        <CardBody style={{ minHeight: minChartHeight }}>
+          {isLoading && <SkIsLoading />}
 
-            <Divider orientation={{ default: 'vertical' }} />
+          {!isLoading && connections && (
+            <>
+              {isRefetching && <SkIsLoading />}
+              <Flex direction={{ xl: 'row', md: 'column' }}>
+                <FlexItem flex={{ default: 'flex_2' }}>
+                  {connections.liveConnectionsSerie && (
+                    <>
+                      <Title headingLevel="h4">{MetricsLabels.LiveConnectionsChartLabel} </Title>
+                      <SkChartArea data={connections.liveConnectionsSerie} legendLabels={['live connections']} />
+                    </>
+                  )}
+                </FlexItem>
 
-            <Flex
-              flex={{ default: 'flex_1' }}
-              direction={{ default: 'column' }}
-              alignItems={{ default: 'alignItemsCenter' }}
-              alignSelf={{ default: 'alignSelfStretch' }}
-            >
-              <FlexItem flex={{ default: 'flex_1' }}>
-                <Bullseye>
-                  <Title headingLevel="h1">{`${MetricsLabels.LiveConnections}: ${formatNumber(
-                    connections.liveConnectionsCount
-                  )}`}</Title>
-                </Bullseye>
-              </FlexItem>
-            </Flex>
-          </Flex>
+                <Divider orientation={{ default: 'vertical' }} />
+
+                <Flex
+                  flex={{ default: 'flex_1' }}
+                  direction={{ default: 'column' }}
+                  alignItems={{ default: 'alignItemsCenter' }}
+                  alignSelf={{ default: 'alignSelfStretch' }}
+                >
+                  <FlexItem flex={{ default: 'flex_1' }}>
+                    <Bullseye>
+                      <Title headingLevel="h1">{`${MetricsLabels.LiveConnections}: ${formatNumber(
+                        connections.liveConnectionsCount
+                      )}`}</Title>
+                    </Bullseye>
+                  </FlexItem>
+                </Flex>
+              </Flex>
+            </>
+          )}
+
+          {!isLoading && !connections && (
+            <EmptyData
+              message={MetricsLabels.NoMetricFoundTitleMessage}
+              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              icon={SearchIcon}
+            />
+          )}
         </CardBody>
       </CardExpandableContent>
     </Card>

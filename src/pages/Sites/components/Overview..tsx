@@ -1,10 +1,10 @@
 import { FC, useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { SiteResponse } from '@API/REST.interfaces';
-import { siteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import Metrics from '@pages/shared/Metrics';
 import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
@@ -24,19 +24,22 @@ interface OverviewProps {
 const Overview: FC<OverviewProps> = function ({ site }) {
   const { identity: siteId, name } = site;
 
-  const { data: sites } = useQuery({ queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() });
-  const { data: hosts } = useQuery({
-    queryKey: [QueriesSites.GetHostsBySiteId, siteId],
-    queryFn: () => RESTApi.fetchHostsBySite(siteId)
-  });
-  const { data: links } = useQuery({
-    queryKey: [QueriesSites.GetLinksBySiteId, siteId],
-    queryFn: () => RESTApi.fetchLinksBySite(siteId)
-  });
-  const { data: routers } = useQuery({ queryKey: [QueriesSites.GetRouters], queryFn: () => RESTApi.fetchRouters() });
-  const { data: processesData } = useQuery({
-    queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
-    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
+  const [{ data: sites }, { data: links }, { data: routers }, { data: processesData }] = useSuspenseQueries({
+    queries: [
+      { queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() },
+      {
+        queryKey: [QueriesSites.GetLinksBySiteId, siteId],
+        queryFn: () => RESTApi.fetchLinksBySite(siteId)
+      },
+      {
+        queryKey: [QueriesSites.GetRouters],
+        queryFn: () => RESTApi.fetchRouters()
+      },
+      {
+        queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
+        queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
+      }
+    ]
   });
 
   const handleSelectedFilters = useCallback(
@@ -53,17 +56,13 @@ const Overview: FC<OverviewProps> = function ({ site }) {
     [siteId]
   );
 
-  if (!sites || !routers || !hosts || !links || !processesData) {
-    return null;
-  }
-
   const sitePairs = SitesController.getSitePairs(sites, links, routers);
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 
   const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
-  const sourceSites = [{ destinationName: `${name}${siteNameAndIdSeparator}${siteId}` }];
+  const sourceSites = [{ destinationName: `${name}${prometheusSiteNameAndIdSeparator}${siteId}` }];
   const destSites = Object.values([site, ...sitePairs]).map(({ name: siteName, identity }) => ({
-    destinationName: `${siteName}${siteNameAndIdSeparator}${identity}`
+    destinationName: `${siteName}${prometheusSiteNameAndIdSeparator}${identity}`
   }));
 
   return (
@@ -75,7 +74,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
         ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
       }}
       defaultMetricFilterValues={{
-        sourceSite: `${name}${siteNameAndIdSeparator}${siteId}`,
+        sourceSite: `${name}${prometheusSiteNameAndIdSeparator}${siteId}`,
         ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
       }}
       startTimeLimit={startTime}

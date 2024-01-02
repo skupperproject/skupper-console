@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, startTransition } from 'react';
 
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -20,14 +20,15 @@ const initComponentsQueryParams = {
 const ProcessGroups = function () {
   const [componentsQueryParams, setComponentsQueryParams] = useState<RequestOptions>(initComponentsQueryParams);
 
-  const { data: componentsData } = useQuery({
+  const { data: componentsData } = useSuspenseQuery({
     queryKey: [QueriesProcessGroups.GetProcessGroups, componentsQueryParams],
-    queryFn: () => RESTApi.fetchProcessGroups(componentsQueryParams),
-    placeholderData: keepPreviousData
+    queryFn: () => RESTApi.fetchProcessGroups(componentsQueryParams)
   });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
-    setComponentsQueryParams({ ...initComponentsQueryParams, ...params });
+    startTransition(() => {
+      setComponentsQueryParams({ ...initComponentsQueryParams, ...params });
+    });
   }, []);
 
   const componentsNoFiltered =
