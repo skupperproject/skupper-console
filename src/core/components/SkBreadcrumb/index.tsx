@@ -18,8 +18,6 @@ const SkBreadcrumb = function () {
 
   const queryParams = searchParams.size > 0 ? `?${searchParams.toString()}` : '';
 
-  console.log(searchParams.size);
-
   return (
     <Breadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
       {pathsNormalized.map((path, index) => (

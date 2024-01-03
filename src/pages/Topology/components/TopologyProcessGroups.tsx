@@ -1,4 +1,4 @@
-import { FC, Key, useCallback, useRef, useState } from 'react';
+import { FC, Key, useCallback, useRef, useState, ComponentType } from 'react';
 
 import {
   Alert,
@@ -23,7 +23,11 @@ import { useNavigate } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import { GraphNode, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
+import {
+  GraphNode,
+  GraphReactAdaptorExposedMethods,
+  GraphReactAdaptorProps
+} from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
@@ -43,7 +47,10 @@ const remoteProcessGroupsQueryParams = {
   endTime: 0
 };
 
-const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }) {
+const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+  id: componentId,
+  GraphComponent = GraphReactAdaptor
+}) {
   const navigate = useNavigate();
 
   const [componentIdSelected, setComponentIdSelected] = useState<string | undefined>(componentId);
@@ -205,7 +212,7 @@ const TopologyProcessGroups: FC<{ id?: string }> = function ({ id: componentId }
         </StackItem>
 
         <StackItem isFilled>
-          <GraphReactAdaptor
+          <GraphComponent
             ref={graphRef}
             nodes={filteredNodes}
             edges={filteredLinks}
