@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -37,31 +35,5 @@ describe('SkBreadcrumb component', () => {
     const breadcrumbHeading = screen.getByRole('heading', { level: 1, name: 'path2' });
 
     expect(breadcrumbHeading).toBeInTheDocument();
-  });
-
-  it('should do something', () => {
-    let mockSearchParam = 'pid=123';
-
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useSearchParams: () => {
-        const [params, setParams] = useState(new URLSearchParams(mockSearchParam));
-
-        return [
-          params,
-          (newParams: string) => {
-            mockSearchParam = newParams;
-            setParams(new URLSearchParams(newParams));
-          }
-        ];
-      }
-    }));
-
-    render(
-      <MemoryRouter initialEntries={['/path1/path2?pid=123']}>
-        <SkBreadcrumb />
-      </MemoryRouter>
-    );
-    expect(mockSearchParam).toContain('pid=123');
   });
 });
