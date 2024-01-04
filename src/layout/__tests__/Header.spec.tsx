@@ -66,8 +66,11 @@ describe('SkHeader', () => {
       </Wrapper>
     );
 
-    await waitFor(() => fireEvent.click(screen.getByTestId(HeaderLabels.UserDropdownTestId)));
+    await waitFor(() => expect(screen.getByText('IAM#Mock-User@user.mock')).toBeInTheDocument());
+
+    fireEvent.click(screen.getByTestId(HeaderLabels.UserDropdownTestId));
     fireEvent.click(screen.getByText(HeaderLabels.Logout));
-    expect(navigate).toHaveBeenCalledTimes(1);
+
+    await waitFor(() => expect(navigate).toHaveBeenCalledTimes(1));
   });
 });
