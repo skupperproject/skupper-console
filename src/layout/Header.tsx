@@ -1,4 +1,4 @@
-import { FormEvent, Ref, Suspense, startTransition, useEffect, useState } from 'react';
+import { FormEvent, Ref, Suspense, useEffect, useState } from 'react';
 
 import {
   Brand,
@@ -108,19 +108,11 @@ export const UserDropdown = function () {
     queryFn: () => RESTApi.fetchUser()
   });
 
-  const { refetch } = useQuery({
+  const { refetch: refetchLogout, isSuccess: isLogoutSuccess } = useQuery({
     queryKey: ['QueryLogout'],
     queryFn: () => RESTApi.fetchLogout(),
     enabled: false
   });
-
-  function refetchLogout() {
-    refetch();
-
-    if (user?.authType === HeaderLabels.OpenShiftAuth) {
-      navigate(0);
-    }
-  }
 
   function onToggleClick() {
     setIsOpen(!isOpen);
@@ -128,11 +120,14 @@ export const UserDropdown = function () {
 
   function handleLogout() {
     refetchLogout();
-
-    startTransition(() => {
-      setIsOpen(false);
-    });
+    setIsOpen(false);
   }
+
+  useEffect(() => {
+    if (isLogoutSuccess) {
+      navigate(0);
+    }
+  }, [isLogoutSuccess, navigate]);
 
   if (!user?.username || user?.authType !== HeaderLabels.OpenShiftAuth) {
     return null;
