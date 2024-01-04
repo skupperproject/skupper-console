@@ -38,6 +38,11 @@ jobs:
         run: |
           yarn coverage --max-workers ${{ steps.cpu-cores.outputs.count }}
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Integration tests 🚨
         run: |
           yarn ci
