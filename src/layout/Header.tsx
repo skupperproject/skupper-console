@@ -27,23 +27,15 @@ import { RESTApi } from '@API/REST.api';
 import { DARK_THEME_CLASS, brandLogo } from '@config/config';
 import { getThemePreference, removeThemePreference, setThemePreference } from '@core/utils/isDarkTheme';
 
-enum HeaderLabels {
+export enum HeaderLabels {
   Logout = 'Logout',
-  DarkMode = ' Dark mode'
+  DarkMode = ' Dark mode',
+  DarkModeTestId = 'dark-mode-testId',
+  UserDropdownTestId = 'user-dropdown-testId',
+  OpenShiftAuth = 'openshift'
 }
 
 const SkHeader = function () {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
-  const handleChange = (_event: FormEvent<HTMLInputElement>, checked: boolean) => {
-    checked ? setThemePreference(DARK_THEME_CLASS) : removeThemePreference();
-    setIsChecked(checked);
-  };
-
-  useEffect(() => {
-    getThemePreference() ? setIsChecked(true) : setIsChecked(false);
-  }, []);
-
   return (
     <Masthead className="sk-header" data-testid="sk-header">
       <MastheadToggle>
@@ -63,7 +55,7 @@ const SkHeader = function () {
           <ToolbarContent>
             <ToolbarGroup align={{ default: 'alignRight' }} spacer={{ default: 'spacerMd' }}>
               <ToolbarItem>
-                <DarkModeSwitch isChecked={isChecked} onChange={handleChange} />
+                <DarkModeSwitch />
               </ToolbarItem>
 
               <ToolbarItem>
@@ -81,19 +73,32 @@ const SkHeader = function () {
 
 export default SkHeader;
 
-const DarkModeSwitch = function ({
-  isChecked,
-  onChange
-}: {
-  isChecked: boolean;
-  onChange: (event: FormEvent<HTMLInputElement>, checked: boolean) => void;
-}) {
+export const DarkModeSwitch = function () {
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const handleChange = (_event: FormEvent<HTMLInputElement>, checked: boolean) => {
+    setIsChecked(checked);
+
+    checked ? setThemePreference(DARK_THEME_CLASS) : removeThemePreference();
+  };
+
+  useEffect(() => {
+    const isDarkTheme = getThemePreference() ? true : false;
+    setIsChecked(isDarkTheme);
+  }, []);
+
   return (
-    <Switch label={HeaderLabels.DarkMode} labelOff={HeaderLabels.DarkMode} isChecked={isChecked} onChange={onChange} />
+    <Switch
+      label={HeaderLabels.DarkMode}
+      labelOff={HeaderLabels.DarkMode}
+      isChecked={isChecked}
+      onChange={handleChange}
+      data-testid={HeaderLabels.DarkModeTestId}
+    />
   );
 };
 
-const UserDropdown = function () {
+export const UserDropdown = function () {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -103,20 +108,19 @@ const UserDropdown = function () {
     queryFn: () => RESTApi.fetchUser()
   });
 
-  //TOD: use useQuery after refactoring and disabling the global prop suspense: true
-  // Currently  the logout query ignore the prop enabled: false  creating a infinite loop
-  const refetchLogout = async () => {
-    try {
-      await RESTApi.fetchLogout();
+  const { refetch } = useQuery({
+    queryKey: ['QueryLogout'],
+    queryFn: () => RESTApi.fetchLogout(),
+    enabled: false
+  });
 
-      if (user?.authType === 'openshift') {
-        navigate(0);
-      }
-    } catch (error: unknown) {
-      // eslint-disable-next-line no-console
-      console.error(error);
+  function refetchLogout() {
+    refetch();
+
+    if (user?.authType === HeaderLabels.OpenShiftAuth) {
+      navigate(0);
     }
-  };
+  }
 
   function onToggleClick() {
     setIsOpen(!isOpen);
@@ -130,7 +134,7 @@ const UserDropdown = function () {
     });
   }
 
-  if (!user?.username || user?.authType !== 'openshift') {
+  if (!user?.username || user?.authType !== HeaderLabels.OpenShiftAuth) {
     return null;
   }
 
@@ -140,7 +144,13 @@ const UserDropdown = function () {
       onSelect={handleLogout}
       onOpenChange={setIsOpen}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullHeight>
+        <MenuToggle
+          ref={toggleRef}
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+          isFullHeight
+          data-testid={HeaderLabels.UserDropdownTestId}
+        >
           {user?.username}
         </MenuToggle>
       )}
