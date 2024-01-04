@@ -27,6 +27,7 @@ export enum TopologyLabels {
   ListView = 'List view',
   LegendGroupsItems = 'Sites',
   DisplayServicesDefaultLabel = `Filter by service`,
+  DisplayResourcesDefaultLabel = `Find a resource`,
   DisplayProcessesDefaultLabel = `Find a process`,
   DisplaySitesDefaultLabel = `Find a site`,
   DisplayComponentsDefaultLabel = `Find a component`,

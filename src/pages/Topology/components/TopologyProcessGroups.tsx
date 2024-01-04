@@ -33,7 +33,7 @@ import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
 import LoadingPage from '@pages/shared/Loading';
 
-import DisplayResource from './DisplayResources';
+import DisplayResources from './DisplayResources';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
@@ -152,11 +152,11 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
             <ToolbarContent>
               <ToolbarGroup>
                 <ToolbarItem>
-                  <DisplayResource
-                    type={'component'}
+                  <DisplayResources
                     id={componentIdSelected}
                     onSelect={handleComponentSelected}
                     placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
+                    options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
                   />
                 </ToolbarItem>
 

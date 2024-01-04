@@ -1,89 +1,26 @@
-import { ChangeEvent, FC, MouseEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useCallback, useMemo, useState } from 'react';
 
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { useQueries } from '@tanstack/react-query';
-
-import { RESTApi } from '@API/REST.api';
-import { ProcessGroupResponse, ProcessResponse, SiteResponse } from '@API/REST.interfaces';
-import { UPDATE_INTERVAL } from '@config/config';
-import { QueriesProcesses } from '@pages/Processes/Processes.enum';
-import { QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyLabels } from '../Topology.enum';
+
+interface DisplayResourcesProps {
+  id?: string;
+  options: { name: string; identity: string }[];
+  onSelect: Function;
+  placeholder?: string;
+}
 
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 const FILTER_BY_SERVICE_MIN_WIDTH = 150;
 
-const externalProcessesQueryParams = {
-  processRole: 'external',
-  endTime: 0
-};
-
-const remoteProcessesQueryParams = {
-  processRole: 'remote',
-  endTime: 0
-};
-
-const externalComponentQueryParams = {
-  processGroupRole: 'external',
-  endTime: 0
-};
-
-const remoteComponentQueryParams = {
-  processGroupRole: 'remote',
-  endTime: 0
-};
-
-const DisplayResource: FC<{
-  id?: string;
-  data?: { name: string; identity: string }[];
-  onSelect: Function;
-  type?: 'process' | 'site' | 'component';
-  placeholder?: string;
-}> = function ({ id, type = 'process', placeholder = TopologyLabels.DisplayProcessesDefaultLabel, onSelect, data }) {
+const DisplayResources: FC<DisplayResourcesProps> = function ({
+  id,
+  placeholder = TopologyLabels.DisplayResourcesDefaultLabel,
+  onSelect,
+  options
+}) {
   const [isSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
-
-  const [
-    { data: externalProcesses },
-    { data: remoteProcesses },
-    { data: sites },
-    { data: externalComponents },
-    { data: remoteComponents }
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'process'
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'process'
-      },
-      {
-        queryKey: [QueriesSites.GetSites],
-        queryFn: () => RESTApi.fetchSites(),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'site'
-      },
-      {
-        queryKey: [QueriesProcessGroups.GetProcessGroups, externalComponentQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(externalComponentQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'component'
-      },
-      {
-        queryKey: [QueriesProcessGroups.GetProcessGroups, remoteComponentQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(remoteComponentQueryParams),
-        refetchInterval: UPDATE_INTERVAL,
-        enabled: !data && type === 'component'
-      }
-    ]
-  });
 
   function handleToggleMenu(openServiceMenu: boolean) {
     setIsServiceSelectMenuOpen(openServiceMenu);
@@ -105,50 +42,27 @@ const DisplayResource: FC<{
     }
   }
 
-  function handleFind(_: ChangeEvent<HTMLInputElement> | null, value: string) {
-    const options = getOptions;
+  const getOptions = useMemo(
+    () =>
+      (options || []).map(({ name, identity }, index) => (
+        <SelectOption key={index + 1} value={identity}>
+          {name}
+        </SelectOption>
+      )),
+    [options]
+  );
 
-    if (!value) {
-      return options;
-    }
-
-    return options
-      .filter((element) =>
-        element.props.children
-          ? element.props.children.toString().toLowerCase().includes(value.toLowerCase())
-          : undefined
-      )
-      .filter(Boolean);
-  }
-
-  const getOptions = useMemo(() => {
-    let resources = [] as
-      | ProcessResponse[]
-      | SiteResponse[]
-      | ProcessGroupResponse[]
-      | { name: string; identity: string }[];
-
-    if (type === 'process') {
-      resources = data || [...(externalProcesses || []), ...(remoteProcesses || [])];
-    }
-    if (type === 'site') {
-      resources = data || sites || [];
-    }
-
-    if (type === 'component') {
-      resources = data || [...(externalComponents?.results || []), ...(remoteComponents?.results || [])];
-    }
-
-    return resources.map(({ name, identity }, index) => (
-      <SelectOption key={index + 1} value={identity}>
-        {name}
-      </SelectOption>
-    ));
-  }, [data, type, externalProcesses, remoteProcesses, sites, externalComponents?.results, remoteComponents?.results]);
+  const handleFind = useCallback(
+    (_: ChangeEvent<HTMLInputElement> | null, value: string) =>
+      getOptions
+        .filter((element) => !value || element.props.children.toString().toLowerCase().includes(value.toLowerCase()))
+        .filter(Boolean),
+    [getOptions]
+  );
 
   return (
     <Select
-      role="process-select"
+      role="resource-select"
       isOpen={isSelectMenuOpen}
       placeholderText={placeholder}
       onSelect={handleSelect}
@@ -169,4 +83,4 @@ const DisplayResource: FC<{
   );
 };
 
-export default DisplayResource;
+export default DisplayResources;

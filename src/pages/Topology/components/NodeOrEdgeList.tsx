@@ -27,14 +27,14 @@ import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const NodeOrEdgeList: FC<NodeOrEdgeListProps> = function ({ ids, items, modalType }) {
   const idsArray = ids?.split('~');
-  const itemsSelected = items.filter(({ identity }) => idsArray?.includes(identity));
+  const filteredItems = items.filter(({ identity }) => idsArray?.includes(identity));
 
   return (
     <div style={{ height: 0 }}>
       {modalType === 'process' ? (
-        <ProcessesGrouped data={itemsSelected as ProcessResponse[]} />
+        <ProcessesGrouped data={filteredItems as ProcessResponse[]} />
       ) : (
-        <ProcessesPairsGrouped data={itemsSelected as ProcessPairsResponse[]} />
+        <ProcessesPairsGrouped data={filteredItems as ProcessPairsResponse[]} />
       )}
     </div>
   );
