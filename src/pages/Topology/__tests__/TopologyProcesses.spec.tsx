@@ -63,7 +63,7 @@ const MockTopologyModalComponent: FC<NodeOrEdgeListProps> = function ({ ids, ite
   );
 };
 
-describe('Begin testing the Topology component', () => {
+describe('Topology Process', () => {
   let server: Server;
 
   beforeEach(() => {

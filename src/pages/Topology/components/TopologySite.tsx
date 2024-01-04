@@ -36,7 +36,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import DisplayOptions from './DisplayOptions';
-import DisplayResource from './DisplayResources';
+import DisplayResources from './DisplayResources';
 import { TopologyController } from '../services';
 import {
   displayOptionsForSites,
@@ -297,11 +297,11 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
         <ToolbarGroup>
           <ToolbarItem>
-            <DisplayResource
-              type={'site'}
+            <DisplayResources
               id={siteIdSelected}
               onSelect={handleProcessSelected}
               placeholder={TopologyLabels.DisplaySitesDefaultLabel}
+              options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             />
           </ToolbarItem>
 

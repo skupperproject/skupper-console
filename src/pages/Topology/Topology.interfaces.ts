@@ -53,7 +53,7 @@ export interface DisplayOptions {
 export interface NodeOrEdgeListProps {
   ids?: string;
   items: ProcessResponse[] | ProcessPairsResponse[];
-  modalType: 'process' | 'processPair' | undefined;
+  modalType: 'process' | 'processPair';
 }
 
 export interface ProcessPairsWithMetrics {

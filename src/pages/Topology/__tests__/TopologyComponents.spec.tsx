@@ -44,7 +44,8 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
     );
   })
 );
-describe('TopologySite', () => {
+
+describe('Topology Components', () => {
   let server: Server;
 
   beforeEach(() => {

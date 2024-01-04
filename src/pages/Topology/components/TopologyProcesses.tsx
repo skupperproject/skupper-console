@@ -48,7 +48,7 @@ import LoadingPage from '@pages/shared/Loading';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import DisplayOptions from './DisplayOptions';
-import DisplayResource from './DisplayResources';
+import DisplayResources from './DisplayResources';
 import DisplayServices from './DisplayServices';
 import NodeOrEdgeList from './NodeOrEdgeList';
 import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
@@ -416,10 +416,11 @@ const TopologyProcesses: FC<{
 
         <ToolbarGroup>
           <ToolbarItem>
-            <DisplayResource
+            <DisplayResources
               id={nodeIdSelected}
               onSelect={handleResourceSelected}
-              data={nodes.map((node) => ({ name: node.label, identity: node.id }))}
+              placeholder={TopologyLabels.DisplayProcessesDefaultLabel}
+              options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             />
           </ToolbarItem>
 
@@ -499,15 +500,17 @@ const TopologyProcesses: FC<{
         </DrawerActions>
       </DrawerHead>
       <DrawerPanelBody style={{ overflow: 'auto' }}>
-        <ModalComponent
-          ids={modalType?.id}
-          items={
-            modalType?.type === 'process'
-              ? [...(remoteProcesses || []), ...(externalProcesses || [])]
-              : processesPairs || []
-          }
-          modalType={modalType?.type}
-        />
+        {modalType?.type && (
+          <ModalComponent
+            ids={modalType?.id}
+            items={
+              modalType?.type === 'process'
+                ? [...(remoteProcesses || []), ...(externalProcesses || [])]
+                : processesPairs || []
+            }
+            modalType={modalType.type}
+          />
+        )}
       </DrawerPanelBody>
     </DrawerPanelContent>
   );
