@@ -113,18 +113,18 @@ const Metrics: FC<MetricsProps> = function ({
         </StackItem>
       )}
 
+      <StackItem>
+        <Latency
+          selectedFilters={queryParams}
+          openSections={defaultOpenSections?.latency}
+          forceUpdate={shouldUpdateData}
+          refetchInterval={refetchInterval}
+          onGetIsSectionExpanded={handleUpdateExpandedSections}
+        />
+      </StackItem>
+
       {showHttp && (
         <>
-          <StackItem>
-            <Latency
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.latency}
-              forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-              onGetIsSectionExpanded={handleUpdateExpandedSections}
-            />
-          </StackItem>
-
           <StackItem>
             <Request
               selectedFilters={queryParams}
