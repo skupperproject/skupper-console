@@ -82,10 +82,10 @@ const Response: FC<ResponseProps> = function ({
   }, [refetchResponse, refetchResponseReverse]);
 
   useEffect(() => {
-    if (forceUpdate) {
+    if (forceUpdate && isExpanded) {
       handleRefetchMetrics();
     }
-  }, [forceUpdate, handleRefetchMetrics]);
+  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   const responseData = responseReverse?.responseData
     ? { ...response?.responseData, ...responseReverse.responseData }

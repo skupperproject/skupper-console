@@ -52,10 +52,10 @@ const Traffic: FC<TrafficProps> = function ({
   }, [refetch]);
 
   useEffect(() => {
-    if (forceUpdate) {
+    if (forceUpdate && isExpanded) {
       handleRefetchMetrics();
     }
-  }, [forceUpdate, handleRefetchMetrics]);
+  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
     <Card isExpanded={isExpanded}>

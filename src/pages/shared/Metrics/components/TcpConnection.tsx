@@ -70,10 +70,10 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
   }, [refetch]);
 
   useEffect(() => {
-    if (forceUpdate) {
+    if (forceUpdate && isExpanded) {
       handleRefetchMetrics();
     }
-  }, [forceUpdate, handleRefetchMetrics]);
+  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
     <Card isExpanded={isExpanded}>

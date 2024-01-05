@@ -67,10 +67,10 @@ const Latency: FC<LatencyProps> = function ({
   }, [refetch, refetchBuckets]);
 
   useEffect(() => {
-    if (forceUpdate) {
+    if (forceUpdate && isExpanded) {
       handleRefetchMetrics();
     }
-  }, [forceUpdate, handleRefetchMetrics]);
+  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
     <Card isExpanded={isExpanded}>

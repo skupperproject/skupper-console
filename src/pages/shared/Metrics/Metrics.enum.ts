@@ -27,7 +27,7 @@ export enum MetricsLabels {
   ByteRateMaxCol = 'max',
   DataTransferTitle = 'Traffic',
   ByteRateTitle = 'Byte rate',
-  LatencyTitle = 'Http latencies',
+  LatencyTitle = 'Latencies',
   ConnectionTitle = 'Tcp connections',
   TerminatedConnections = 'Closed connections',
   LiveConnections = 'Live connections',
