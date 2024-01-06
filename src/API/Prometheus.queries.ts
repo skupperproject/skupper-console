@@ -64,11 +64,19 @@ export const queries = {
   },
 
   getActiveFlows(paramSource: string) {
-    return `sum(active_flows{${paramSource}})`;
+    const hasProcessParam = paramSource.includes('sourceProcess') || paramSource.includes('destProcess');
+    const divider = hasProcessParam ? '' : '/2';
+
+    return `sum(active_flows{${paramSource}})${divider}`;
   },
 
-  getFlowsDeltaInTimeRange(paramSource: string, range: IntervalTimePropValue) {
-    return `abs(sum(idelta(active_flows{${paramSource}}[${range}])))`;
+  getActiveFlowsInTimeRange(paramSource: string) {
+    //TODO: acvitve flows are supposed to be in and out. In case we don't have processes as filters these values are used for both in and out (duplicated)
+    // this is a temporary solution
+    const hasProcessParam = paramSource.includes('sourceProcess') || paramSource.includes('destProcess');
+    const divider = hasProcessParam ? '' : '/2';
+
+    return `sum(active_flows{${paramSource}})${divider}`;
   },
 
   getTotalFlows(paramSource: string) {

@@ -202,7 +202,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<PrometheusMetricData[]>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getFlowsDeltaInTimeRange(queryFilterString, '1m'),
+        query: queries.getActiveFlowsInTimeRange(queryFilterString),
         start,
         end,
         step

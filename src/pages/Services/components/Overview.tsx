@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -23,7 +23,7 @@ interface OverviewProps {
 }
 
 const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol }) {
-  const { data: processPairs } = useQuery({
+  const { data: processPairs } = useSuspenseQuery({
     queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
     queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
     refetchInterval: UPDATE_INTERVAL
