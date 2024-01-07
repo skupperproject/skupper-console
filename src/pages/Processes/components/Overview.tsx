@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -28,7 +28,7 @@ const Overview: FC<OverviewProps> = function ({
     destinationId: processId
   };
 
-  const [{ data: processesPairsTxData }, { data: processesPairsRxData }] = useQueries({
+  const [{ data: processesPairsTxData }, { data: processesPairsRxData }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
