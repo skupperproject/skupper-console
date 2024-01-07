@@ -16,7 +16,7 @@ import {
   Tooltip,
   Truncate
 } from '@patternfly/react-core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
@@ -43,7 +43,7 @@ const Details: FC<DetailsProps> = function ({ process, title = ProcessesLabels.D
     processBinding
   } = process;
 
-  const { data: services } = useSuspenseQuery({
+  const { data: services } = useQuery({
     queryKey: [QueriesProcesses.GetServicesByProcessId, processId],
     queryFn: () => RESTApi.fetchServicesByProcess(processId)
   });
