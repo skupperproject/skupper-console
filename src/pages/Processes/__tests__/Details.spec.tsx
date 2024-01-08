@@ -1,12 +1,10 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { ProcessResponse } from '@API/REST.interfaces';
-import { waitForElementToBeRemovedTimeout } from '@config/config';
-import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
@@ -39,10 +37,6 @@ describe('Process component', () => {
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
     expect(screen.getByText(processResult.parentName)).toHaveTextContent('site 1');
     expect(screen.getByText(processResult.groupName)).toHaveTextContent('payment');
     expect(screen.getByText(processResult.hostName)).toHaveTextContent('10.242.0.5');
