@@ -62,7 +62,6 @@ exports[`Traffic component should render the Traffic section of the metric 1`] =
       </div>
     </div>
     <svg
-      aria-hidden="true"
       height="300"
       style="position: fixed; top: -9999px; left: -9999px;"
       viewBox="0 0 300 300"

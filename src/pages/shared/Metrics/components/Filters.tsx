@@ -6,7 +6,6 @@ import {
   MouseEvent,
   ChangeEvent,
   memo,
-  useCallback,
   MouseEvent as ReactMouseEvent,
   RefObject
 } from 'react';
@@ -29,7 +28,6 @@ import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core
 import { AvailableProtocols } from '@API/REST.enum';
 import { prometheusProcessNameseparator, prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
-import SkUpdateDataButton from '@core/components/SkUpdateDataButton';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
 
 import DateTimeRangeFilter from './DateTimeRangeFilter';
@@ -49,8 +47,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     destProcesses,
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
     startTimeLimit = 0, // Use startTimeLimit to set the left temporal limit of the SelectTimeInterval filter
-    isRefetching = false,
-    onRefetch = () => null,
     onSelectFilters
   }) => {
     const config: ConfigMetricFilters = deepMergeJSONObjects<ConfigMetricFilters>(configDefaultFilters, configFilters);
@@ -73,7 +69,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     const [selectedFilters, setSelectedFilters] = useState<QueryMetricsParams>(defaultMetricFilterValues);
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState<Record<string, boolean>>(filterToggleDefault);
-    const [refreshInterval, setRefreshInterval] = useState(defaultRefreshDataInterval);
+    const [refreshInterval] = useState(defaultRefreshDataInterval);
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleMenu(ev: ReactMouseEvent, openFilter: Record<string, boolean>) {
@@ -122,17 +118,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
         onSelectFilters({ ...selectedFilters, start, end, duration }, duration ? refreshInterval : 0);
       }
     }
-
-    const handleSelectRefreshInterval = useCallback(
-      (selection: number | undefined) => {
-        setRefreshInterval(selection);
-
-        if (onSelectFilters) {
-          onSelectFilters(selectedFilters, selection);
-        }
-      },
-      [onSelectFilters, selectedFilters]
-    );
 
     // protocol select options
     const optionsProtocolsWithDefault = useMemo(
@@ -353,18 +338,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 onSelectTimeInterval={handleSelectTimeInterval}
               />
             </ToolbarItem>
-
-            <ToolbarGroup align={{ default: 'alignRight' }}>
-              <ToolbarItem>
-                <SkUpdateDataButton
-                  isLoading={isRefetching}
-                  isDisabled={!!selectedFilters.end}
-                  refreshIntervalDefault={refreshInterval}
-                  onRefreshIntervalSelected={handleSelectRefreshInterval}
-                  onClick={onRefetch}
-                />
-              </ToolbarItem>
-            </ToolbarGroup>
           </ToolbarContent>
         </Toolbar>
       </Card>
