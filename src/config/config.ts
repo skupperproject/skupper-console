@@ -18,7 +18,7 @@ export const SMALL_PAGINATION_SIZE = 10;
 export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
 
 /** General config: contains various global settings and constants */
-export const UPDATE_INTERVAL = 10 * 1000; // Time in milliseconds to request updated data from the backend
+export const UPDATE_INTERVAL = 0 * 1000; // Time in milliseconds to request updated data from the backend
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.'; // Error message to display when request times out
 export const TOAST_VISIBILITY_TIMEOUT = 2000; // Time in milliseconds to display toast messages
 /** Tests */
