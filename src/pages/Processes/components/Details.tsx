@@ -29,7 +29,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 import { DetailsProps } from '../Processes.interfaces';
 
-const Details: FC<DetailsProps> = function ({ process, title = ProcessesLabels.Details }) {
+const Details: FC<DetailsProps> = function ({ process, title }) {
   const {
     identity: processId,
     parent,
@@ -50,9 +50,11 @@ const Details: FC<DetailsProps> = function ({ process, title = ProcessesLabels.D
 
   return (
     <Card>
-      <CardTitle>
-        <Title headingLevel="h2">{title}</Title>
-      </CardTitle>
+      {title && (
+        <CardTitle>
+          <Title headingLevel="h2">{title}</Title>
+        </CardTitle>
+      )}
       <CardBody>
         <DescriptionList>
           <Grid hasGutter>
