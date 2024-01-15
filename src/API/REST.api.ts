@@ -30,7 +30,6 @@ import {
   getFlowPairPATH,
   getSitePairPATH,
   getProcessGroupPairPATH,
-  getServicesByProcessPATH,
   getFlowPairsPATH,
   getRoutersPATH,
   geProcessesPATH,
@@ -136,14 +135,6 @@ export const RESTApi = {
 
   fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
     const data = await axiosFetch<ResponseWrapper<ProcessResponse>>(geProcessPATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
-  },
-
-  fetchServicesByProcess: async (id: string, options?: RequestOptions): Promise<ServiceResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<ServiceResponse[]>>(getServicesByProcessPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
