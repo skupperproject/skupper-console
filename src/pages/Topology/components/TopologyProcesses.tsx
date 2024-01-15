@@ -306,10 +306,9 @@ const TopologyProcesses: FC<{
 
     if (serviceIdsSelected) {
       const serverIds = processes
-        // the format of one address is  serviceName@seviceId
-        .filter(
-          ({ addresses }) =>
-            addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
+        // the format of one address is  serviceName@seviceId@protocol
+        .filter(({ addresses }) =>
+          addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
         )
         .map(({ identity }) => identity);
 
@@ -385,8 +384,9 @@ const TopologyProcesses: FC<{
     return option;
   });
 
-  const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(itemIdSelected || '') || itemIdSelected === id)
-    ?.id;
+  const nodeIdSelected = nodes.find(
+    ({ id }) => id.split('~').includes(itemIdSelected || '') || itemIdSelected === id
+  )?.id;
 
   let filteredLinks = links;
   let filteredNodes = nodes;
