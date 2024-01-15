@@ -16,22 +16,19 @@ import {
   Tooltip,
   Truncate
 } from '@patternfly/react-core';
-import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
+import { ProcessesLabels } from '../Processes.enum';
 import { DetailsProps } from '../Processes.interfaces';
 
 const Details: FC<DetailsProps> = function ({ process, title }) {
   const {
-    identity: processId,
     parent,
     parentName,
     imageName,
@@ -40,13 +37,9 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
     sourceHost,
     hostName,
     startTime,
-    processBinding
+    processBinding,
+    addresses
   } = process;
-
-  const { data: services } = useQuery({
-    queryKey: [QueriesProcesses.GetServicesByProcessId, processId],
-    queryFn: () => RESTApi.fetchServicesByProcess(processId)
-  });
 
   return (
     <Card>
@@ -124,20 +117,16 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
               </DescriptionListGroup>
             </GridItem>
 
-            {!!services?.length && (
+            {!!addresses?.length && (
               <GridItem span={6}>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{ProcessesLabels.Services}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <Flex>
-                      {services.map((service) => (
-                        <div key={service.identity}>
+                      {addresses.map((service) => (
+                        <div key={service}>
                           <ResourceIcon type="service" />
-                          <Link
-                            to={`${ServicesRoutesPaths.Services}/${service.name}@${service.identity}@${service.protocol}`}
-                          >
-                            {service.name}
-                          </Link>
+                          <Link to={`${ServicesRoutesPaths.Services}/${service}}`}>{service.split('@')[0]}</Link>
                         </div>
                       ))}
                     </Flex>

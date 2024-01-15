@@ -36,7 +36,6 @@ export const getLinkPATH = (id: string) => `${LINKS_PATH}${id}`;
 const PROCESSES_PATH = `${COLLECTOR_URL}/processes/`;
 export const geProcessesPATH = () => PROCESSES_PATH;
 export const geProcessPATH = (id: string) => `${PROCESSES_PATH}${id}`;
-export const getServicesByProcessPATH = (id: string) => `${PROCESSES_PATH}${id}/addresses`;
 
 // PROCESS_GROUPS
 const PROCESS_GROUPS_PATH = `${COLLECTOR_URL}/processgroups/`;
