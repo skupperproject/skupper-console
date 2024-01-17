@@ -126,7 +126,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                       {addresses.map((service) => (
                         <div key={service}>
                           <ResourceIcon type="service" />
-                          <Link to={`${ServicesRoutesPaths.Services}/${service}}`}>{service.split('@')[0]}</Link>
+                          <Link to={`${ServicesRoutesPaths.Services}/${service}`}>{service.split('@')[0]}</Link>
                         </div>
                       ))}
                     </Flex>
