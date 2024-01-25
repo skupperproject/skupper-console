@@ -25,7 +25,10 @@ function handleStatusError(e: AxiosError) {
 
 export async function axiosFetch<T = unknown>(url: string, options: FetchWithOptions = {}): Promise<T> {
   const response = await axios(url, {
-    ...options
+    ...options,
+    paramsSerializer: {
+      indexes: null // serialize arrays as &samekey=value1&samekey=value2
+    }
   });
 
   return response.data;
