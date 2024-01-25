@@ -449,7 +449,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         if (
           JSON.stringify(prevNodesRef.current) === JSON.stringify(nodesWithoutPosition) &&
-          JSON.stringify(prevEdgesRef.current) === JSON.stringify(edges)
+          JSON.stringify(prevEdgesRef.current) === JSON.stringify(edges) &&
+          JSON.stringify(prevCombosRef.current) === JSON.stringify(combos)
         ) {
           return;
         }
