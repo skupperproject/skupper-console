@@ -32,7 +32,7 @@
     "format": "prettier --write 'src/**/*.{ts,tsx,json,css}'",
     "bundle-report": "STATS=server yarn build",
     "find-deadcode": "ts-prune",
-    "prepare": "husky install",
+    "prepare": "husky",
     "commit": "git-cz"
   },
   "dependencies": {
