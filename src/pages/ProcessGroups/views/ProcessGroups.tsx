@@ -14,7 +14,9 @@ import { CustomComponentCells, processGroupsColumns } from '../ProcessGroups.con
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
 const initComponentsQueryParams = {
-  limit: BIG_PAGINATION_SIZE
+  limit: BIG_PAGINATION_SIZE,
+  processGroupRole: ['remote', 'external'],
+  endTime: 0
 };
 
 const ProcessGroups = function () {
@@ -31,11 +33,8 @@ const ProcessGroups = function () {
     });
   }, []);
 
-  const componentsNoFiltered =
-    componentsData?.results.filter(({ processGroupRole }) => processGroupRole !== 'internal') || [];
-  const processGroupsCount = componentsData?.timeRangeCount;
-
-  const components = componentsNoFiltered.filter(({ processGroupRole }) => processGroupRole !== 'internal');
+  const components = componentsData?.results;
+  const componentsCount = componentsData?.timeRangeCount;
 
   return (
     <MainContainer
@@ -49,7 +48,7 @@ const ProcessGroups = function () {
           rows={components}
           pagination={true}
           paginationPageSize={BIG_PAGINATION_SIZE}
-          paginationTotalRows={processGroupsCount}
+          paginationTotalRows={componentsCount}
           onGetFilters={handleGetFilters}
           customCells={CustomComponentCells}
         />

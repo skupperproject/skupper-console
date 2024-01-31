@@ -31,19 +31,13 @@ import {
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
-import LoadingPage from '@pages/shared/Loading';
 
 import DisplayResources from './DisplayResources';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
-const externalProcessGroupsQueryParams = {
-  processGroupRole: 'external',
-  endTime: 0
-};
-
-const remoteProcessGroupsQueryParams = {
-  processGroupRole: 'remote',
+const processGroupsQueryParams = {
+  processGroupRole: ['remote', 'external'],
   endTime: 0
 };
 
@@ -61,18 +55,14 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
 
-  const [{ data: processGroups }, { data: remoteProcessGroups }, { data: processGroupsPairs }] = useSuspenseQueries({
+  const [{ data: processGroups }, { data: processGroupsPairs }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcessGroups.GetProcessGroups, externalProcessGroupsQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(externalProcessGroupsQueryParams),
+        queryKey: [QueriesProcessGroups.GetProcessGroups, processGroupsQueryParams],
+        queryFn: () => RESTApi.fetchProcessGroups(processGroupsQueryParams),
         refetchInterval: UPDATE_INTERVAL
       },
-      {
-        queryKey: [QueriesProcessGroups.GetRemoteProcessGroup, remoteProcessGroupsQueryParams],
-        queryFn: () => RESTApi.fetchProcessGroups(remoteProcessGroupsQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
+
       {
         queryKey: [QueriesTopology.GetProcessGroupsPairs],
         queryFn: () => RESTApi.fetchProcessGroupsPairs(),
@@ -125,14 +115,7 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
     setMoveToNodeSelected(checked);
   }, []);
 
-  if (!processGroups || !processGroupsPairs || !remoteProcessGroups) {
-    return <LoadingPage />;
-  }
-
-  const nodes = TopologyController.convertProcessGroupsToNodes([
-    ...processGroups.results,
-    ...remoteProcessGroups.results
-  ]);
+  const nodes = TopologyController.convertProcessGroupsToNodes([...processGroups.results]);
   const links = TopologyController.convertPairsToEdges(processGroupsPairs);
 
   let filteredLinks = links;
