@@ -5,7 +5,7 @@ import { AvailableProtocols, FlowDirection, SortDirection } from './REST.enum';
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = FlowDirection.Outgoing | FlowDirection.Incoming;
 
-export interface RequestOptions extends Record<string, string | number | SortDirection | undefined> {
+export interface RequestOptions extends Record<string, string | string[] | number | SortDirection | undefined> {
   filter?: string;
   offset?: number;
   limit?: number;

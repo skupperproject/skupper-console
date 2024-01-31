@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useState } from 'react';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE } from '@config/config';
@@ -17,13 +17,7 @@ import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 //TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
 const initExternalProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: 'external',
-  endTime: 0
-};
-
-const initRemoteProcessesQueryParams = {
-  limit: BIG_PAGINATION_SIZE,
-  processRole: 'remote',
+  processRole: ['remote', 'external'],
   endTime: 0
 };
 
@@ -31,36 +25,20 @@ const Processes = function () {
   const [externalProcessesQueryParams, setExternalProcessesQueryParams] = useState<RequestOptions>(
     initExternalProcessesQueryParams
   );
-  const [remoteProcessesQueryParams, setRemoteProcessesQueryParams] =
-    useState<RequestOptions>(initRemoteProcessesQueryParams);
 
-  const [{ data: externalProcessData }, { data: remoteProcessData }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams)
-      },
-      {
-        queryKey: [QueriesProcesses.GetRemoteProcessesPaginated, remoteProcessesQueryParams],
-        queryFn: () => RESTApi.fetchProcesses(remoteProcessesQueryParams)
-      }
-    ]
+  const { data: externalProcessData } = useSuspenseQuery({
+    queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
+    queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams)
   });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
     startTransition(() => {
       setExternalProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
-      setRemoteProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
     });
   }, []);
 
-  const externalProcesses = externalProcessData?.results || [];
-  const externalProcessesCount = externalProcessData?.timeRangeCount || 0;
-  const remotelProcesses = remoteProcessData?.results || [];
-  const remoteProcessesCount = remoteProcessData?.timeRangeCount || 0;
-
-  const processes = [...externalProcesses, ...remotelProcesses];
-  const processesCount = externalProcessesCount + remoteProcessesCount;
+  const processes = externalProcessData?.results || [];
+  const processesCount = externalProcessData?.timeRangeCount || 0;
 
   return (
     <MainContainer

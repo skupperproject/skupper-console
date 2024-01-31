@@ -69,13 +69,8 @@ const DISPLAY_OPTIONS = 'display-options';
 const SERVICE_OPTIONS = 'service-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
 
-const externalProcessesQueryParams = {
-  processRole: 'external',
-  endTime: 0
-};
-
-const remoteProcessesQueryParams = {
-  processRole: 'remote',
+const processesQueryParams = {
+  processRole: ['remote', 'external'],
   endTime: 0
 };
 
@@ -117,42 +112,37 @@ const TopologyProcesses: FC<{
     [displayOptionsSelected]
   );
 
-  const [{ data: externalProcesses }, { data: remoteProcesses }, { data: processesPairs }, { data: metrics }] =
-    useSuspenseQueries({
-      queries: [
-        {
-          queryKey: [QueriesProcesses.GetProcessResult, externalProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessesResult(externalProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesProcesses.GetProcessResult, remoteProcessesQueryParams],
-          queryFn: () => RESTApi.fetchProcessesResult(remoteProcessesQueryParams),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesTopology.GetProcessesPairs],
-          queryFn: () => RESTApi.fetchProcessesPairsResult(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [
-            QueriesTopology.GetBytesByProcessPairs,
-            isDisplayOptionActive(SHOW_LINK_BYTES),
-            isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            isDisplayOptionActive(SHOW_LINK_LATENCY)
-          ],
-          queryFn: () =>
-            TopologyController.getMetrics({
-              showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-              showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-              showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-              params: metricQueryParams
-            }),
-          refetchInterval: UPDATE_INTERVAL
-        }
-      ]
-    });
+  const [{ data: processes }, { data: processesPairs }, { data: metrics }] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessResult, processesQueryParams],
+        queryFn: () => RESTApi.fetchProcessesResult(processesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+
+      {
+        queryKey: [QueriesTopology.GetProcessesPairs],
+        queryFn: () => RESTApi.fetchProcessesPairsResult(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [
+          QueriesTopology.GetBytesByProcessPairs,
+          isDisplayOptionActive(SHOW_LINK_BYTES),
+          isDisplayOptionActive(SHOW_LINK_BYTERATE),
+          isDisplayOptionActive(SHOW_LINK_LATENCY)
+        ],
+        queryFn: () =>
+          TopologyController.getMetrics({
+            showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+            showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+            params: metricQueryParams
+          }),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
     setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
@@ -302,10 +292,10 @@ const TopologyProcesses: FC<{
     }
 
     let pPairs = processesPairs;
-    let processes = [...externalProcesses, ...remoteProcesses];
+    let p = processes;
 
     if (serviceIdsSelected) {
-      const serverIds = processes
+      const serverIds = p
         // the format of one address is  serviceName@seviceId@protocol
         .filter(({ addresses }) =>
           addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
@@ -315,9 +305,9 @@ const TopologyProcesses: FC<{
       pPairs = pPairs.filter((pair) => serverIds.includes(pair.destinationId));
 
       const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      processes = processes.filter(({ identity }) => processIdsFromService.includes(identity));
+      p = p.filter(({ identity }) => processIdsFromService.includes(identity));
     }
-    let processNodes = TopologyController.convertProcessesToNodes(processes);
+    let processNodes = TopologyController.convertProcessesToNodes(p);
     let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
 
     if (processNodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION) {
@@ -343,9 +333,8 @@ const TopologyProcesses: FC<{
     );
     setGroups(nodeGroups);
   }, [
-    externalProcesses,
+    processes,
     processesPairs,
-    remoteProcesses,
     isDisplayOptionActive,
     serviceIdsSelected,
     metrics?.bytesByProcessPairs,
@@ -503,11 +492,7 @@ const TopologyProcesses: FC<{
         {modalType?.type && (
           <ModalComponent
             ids={modalType?.id}
-            items={
-              modalType?.type === 'process'
-                ? [...(remoteProcesses || []), ...(externalProcesses || [])]
-                : processesPairs || []
-            }
+            items={modalType?.type === 'process' ? processes : processesPairs}
             modalType={modalType.type}
           />
         )}
