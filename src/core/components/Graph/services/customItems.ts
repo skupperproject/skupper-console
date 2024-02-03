@@ -128,7 +128,7 @@ export function regusterComboWithCustomLabel() {
     CUSTOM_ITEMS_NAMES.comboWithCustomLabel,
     {
       afterDraw(cfg: ComboWithCustomLabel | undefined, group) {
-        if (group) {
+        if (group?.get('children')[1]) {
           const { width, height } = group.get('children')[1].getBBox(); // combo label
 
           // creates a background container for the combo label
@@ -147,7 +147,7 @@ export function regusterComboWithCustomLabel() {
         }
       },
       afterUpdate(cfg: ComboWithCustomLabel | undefined, combo) {
-        if (combo) {
+        if (combo?.get('group')?.get('children')[2]) {
           const group = combo.get('group') as IGroup;
           const { x, y } = group.get('children')[2].getBBox(); // combo label
           const textContainer = group.find((element) => element.get('name') === textContainerKey);
