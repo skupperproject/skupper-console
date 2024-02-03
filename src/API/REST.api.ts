@@ -124,13 +124,24 @@ export const RESTApi = {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return data;
+    // TODO: An edge case like the gateway process does not have a parentName
+    const patchedResult = getApiResults(data).map((process) => ({
+      ...process,
+      parentName: process.parentName || process.hostName || process.sourceHost
+    }));
+
+    return { ...data, results: patchedResult };
   },
 
   fetchProcessesResult: async (options?: RequestOptions): Promise<ProcessResponse[]> => {
     const data = await RESTApi.fetchProcesses(options);
 
-    return getApiResults(data);
+    const patchedResult = getApiResults(data).map((process) => ({
+      ...process,
+      parentName: process.parentName || process.hostName || process.sourceHost
+    }));
+
+    return patchedResult;
   },
 
   fetchProcess: async (id: string, options?: RequestOptions): Promise<ProcessResponse> => {
@@ -138,7 +149,12 @@ export const RESTApi = {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getApiResults(data);
+    const patchedData = getApiResults(data);
+
+    return {
+      ...patchedData,
+      parentName: patchedData.parentName || patchedData.hostName || patchedData.sourceHost
+    };
   },
 
   // HOST APIs
