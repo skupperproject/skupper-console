@@ -43,7 +43,7 @@ const ErrorConsole: FC<ErrorConsoleProps> = function ({ error, resetErrorBoundar
         <Divider />
 
         <ClipboardCopy isExpanded hoverTip="Copy" clickTip="Copied" variant={ClipboardCopyVariant.expansion}>
-          {error.stack}
+          {error.stack || ''}
         </ClipboardCopy>
       </TextContent>
     </PageSection>

@@ -105,7 +105,8 @@ export const UserDropdown = function () {
 
   const { data: user } = useQuery({
     queryKey: ['QueriesGetUser'],
-    queryFn: () => RESTApi.fetchUser()
+    queryFn: () => RESTApi.fetchUser(),
+    throwOnError: false
   });
 
   const { refetch: refetchLogout, isSuccess: isLogoutSuccess } = useQuery({
