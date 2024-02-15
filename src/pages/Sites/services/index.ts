@@ -7,11 +7,20 @@ const SitesController = {
   //Binds the links with the site ids, given the links and routers.
   // The output is an object that assigns to each source site id the ids of the connected
   bindLinksWithSiteIds: (sites: SiteResponse[], links: LinkResponse[], routers: RouterResponse[]): SiteWithLinks[] => {
-    // Creates a map of router ids to its site identity
-    // we use this object as a support to retrieve siteIds from router Ids
+    //source routers map
     const routersMap = routers.reduce(
       function (acc, { identity, parent: siteId }) {
         acc[identity] = siteId;
+
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    // destination routers map
+    const routersMapName = routers.reduce(
+      function (acc, { name, parent: siteId }) {
+        acc[name] = siteId;
 
         return acc;
       },
@@ -25,11 +34,11 @@ const SitesController = {
         // TODO : Backend bug.  the name property of a link can sometimes be undefined even if the link itself exists.
         //The solution is to include the optional chaining operator ? until the bug is fixed.
         // To bind router and link we have to use part of the link name
-        const routerIdConnected = `${link.name?.split('-').at(-1)}:0`;
+        const routerIdConnected = `0/${link.name}`;
 
         // Retrieves the site ids of the source and destination routers
         const siteId = routersMap[link.parent];
-        const siteIdConnected = routersMap[routerIdConnected];
+        const siteIdConnected = routersMapName[routerIdConnected] || '';
 
         // Assigns the site ids as source and destination site ids based on the direction of the link
         const sourceSiteId = link.direction === FlowDirection.Incoming ? siteIdConnected : siteId;
