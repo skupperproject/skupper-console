@@ -173,7 +173,7 @@ export interface LinkResponse extends BaseResponse {
 export interface HostResponse extends BaseResponse {
   name: string;
   parent: string;
-  provider: string;
+  provider?: string;
 }
 
 // The collector is not part of the data model. It retrieves setup information such as prometheus properties
