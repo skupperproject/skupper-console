@@ -116,7 +116,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
             {(!!hosts.length && (
               <List isPlain>
                 {hosts.map(({ identity, provider, name: hostName }) => (
-                  <ListItem key={identity}>{`${provider} (${hostName})`}</ListItem>
+                  <ListItem key={identity}>{provider ? `${provider} (${hostName})` : hostName}</ListItem>
                 ))}
               </List>
             )) || <EmptyData />}

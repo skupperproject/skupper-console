@@ -7,9 +7,20 @@
       "startTime": 1674048706622878,
       "endTime": 0,
       "mode": "interior",
-      "name": "public2-skupper-router-site-3-hth7l",
+      "name": "site 3",
       "linkCost": 1,
       "direction": "outgoing"
+    },
+    {
+      "recType": "LINK",
+      "identity": "hth7l:12",
+      "parent": "hth7l:0",
+      "startTime": 1674048706622878,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "site 1",
+      "linkCost": 1,
+      "direction": "incoming"
     },
     {
       "recType": "LINK",
@@ -24,34 +35,12 @@
     },
     {
       "recType": "LINK",
-      "identity": "6z7k6:1701",
-      "parent": "6z7k6:0",
-      "startTime": 1674149422366200,
-      "endTime": 0,
-      "mode": "interior",
-      "name": "public2-skupper-router-site-3-hth7l",
-      "linkCost": 1,
-      "direction": "incoming"
-    },
-    {
-      "recType": "LINK",
       "identity": "6z7k6:2",
       "parent": "6z7k6:0",
       "startTime": 1674048729859049,
       "endTime": 0,
       "mode": "interior",
-      "name": "public1-skupper-router-site-1-52tjs",
-      "linkCost": 1,
-      "direction": "incoming"
-    },
-    {
-      "recType": "LINK",
-      "identity": "hth7l:1",
-      "parent": "hth7l:0",
-      "startTime": 1674048705833609,
-      "endTime": 0,
-      "mode": "interior",
-      "name": "public1-skupper-router-site-1-52tjs",
+      "name": "site 1",
       "linkCost": 1,
       "direction": "incoming"
     },
@@ -65,6 +54,39 @@
       "name": "private1-skupper-router-site-2-6z7k6",
       "linkCost": 1,
       "direction": "outgoing"
+    },
+    {
+      "recType": "LINK",
+      "identity": "6z7k6:1701",
+      "parent": "6z7k6:0",
+      "startTime": 1674149422366200,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "site 3",
+      "linkCost": 1,
+      "direction": "incoming"
+    },
+    {
+      "recType": "LINK",
+      "identity": "hth7l:31",
+      "parent": "hth7l:0",
+      "startTime": 1674151543581947,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "private1-skupper-router-site-2-6z7k7",
+      "linkCost": 1,
+      "direction": "outgoing"
+    },
+    {
+      "recType": "LINK",
+      "identity": "6z7k7:231",
+      "parent": "6z7k7:0",
+      "startTime": 1674151543581947,
+      "endTime": 0,
+      "mode": "interior",
+      "name": "site 3",
+      "linkCost": 1,
+      "direction": "incoming"
     }
   ],
   "status": "",
