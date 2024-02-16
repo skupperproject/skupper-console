@@ -8,7 +8,7 @@ const SitesController = {
   // The output is an object that assigns to each source site id the ids of the connected
   bindLinksWithSiteIds: (sites: SiteResponse[], links: LinkResponse[], routers: RouterResponse[]): SiteWithLinks[] => {
     //source routers map
-    const routersMap = routers.reduce(
+    const routerIdSiteIdMap = routers.reduce(
       function (acc, { identity, parent: siteId }) {
         acc[identity] = siteId;
 
@@ -18,9 +18,14 @@ const SitesController = {
     );
 
     // destination routers map
-    const routersMapName = routers.reduce(
+    const routerNameSiteIdMap = routers.reduce(
       function (acc, { name, parent: siteId }) {
-        acc[name] = siteId;
+        // by default the name of the router is in the format "0/routerName"
+        const normalizedName = name?.split('/')[1];
+
+        if (normalizedName) {
+          acc[normalizedName] = siteId;
+        }
 
         return acc;
       },
@@ -31,14 +36,9 @@ const SitesController = {
     const linksExtended = links
       .filter(({ name }) => name)
       .map((link) => {
-        // TODO : Backend bug.  the name property of a link can sometimes be undefined even if the link itself exists.
-        //The solution is to include the optional chaining operator ? until the bug is fixed.
-        // To bind router and link we have to use part of the link name
-        const routerIdConnected = `0/${link.name}`;
-
-        // Retrieves the site ids of the source and destination routers
-        const siteId = routersMap[link.parent];
-        const siteIdConnected = routersMapName[routerIdConnected] || '';
+        const siteId = routerIdSiteIdMap[link.parent];
+        // the name of the link contains the destiantion router name
+        const siteIdConnected = link.name ? routerNameSiteIdMap[link.name] : '';
 
         // Assigns the site ids as source and destination site ids based on the direction of the link
         const sourceSiteId = link.direction === FlowDirection.Incoming ? siteIdConnected : siteId;
