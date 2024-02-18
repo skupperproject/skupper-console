@@ -5,7 +5,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { RequestOptions } from '@API/REST.interfaces';
-import { BIG_PAGINATION_SIZE } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
@@ -26,11 +26,13 @@ const Services = function () {
     queries: [
       {
         queryKey: [QueriesServices.GetServices, servicesQueryParams],
-        queryFn: () => RESTApi.fetchServices(servicesQueryParams)
+        queryFn: () => RESTApi.fetchServices(servicesQueryParams),
+        refetchInterval: UPDATE_INTERVAL
       },
       {
         queryKey: [QueriesServices.GetPrometheusActiveFlows],
-        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService()
+        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService(),
+        refetchInterval: UPDATE_INTERVAL
       }
     ]
   });

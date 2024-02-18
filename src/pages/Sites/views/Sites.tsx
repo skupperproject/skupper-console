@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -16,7 +16,8 @@ import { SiteLabels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
 const Sites = function () {
   const { data: sites } = useSuspenseQuery({
     queryKey: [QueriesSites.GetSites],
-    queryFn: () => RESTApi.fetchSites()
+    queryFn: () => RESTApi.fetchSites(),
+    refetchInterval: UPDATE_INTERVAL
   });
 
   return (

@@ -3,7 +3,7 @@ import { useCallback, useState, startTransition } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
@@ -24,7 +24,8 @@ const ProcessGroups = function () {
 
   const { data: componentsData } = useSuspenseQuery({
     queryKey: [QueriesProcessGroups.GetProcessGroups, componentsQueryParams],
-    queryFn: () => RESTApi.fetchProcessGroups(componentsQueryParams)
+    queryFn: () => RESTApi.fetchProcessGroups(componentsQueryParams),
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
