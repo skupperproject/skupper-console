@@ -307,8 +307,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               <ToolbarItem>{!config.destinationProcesses?.hide && destProcessSelect}</ToolbarItem>
             </ToolbarGroup>
 
-            <ToolbarItem variant="separator" />
-
             {!!optionsProtocolsWithDefault.length && (
               <ToolbarItem>
                 <Select
@@ -329,15 +327,17 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </ToolbarItem>
             )}
 
-            <ToolbarItem>
-              <DateTimeRangeFilter
-                startSelected={selectedFilters.start}
-                endSelected={selectedFilters.end}
-                duration={selectedFilters.duration}
-                startTimeLimit={startTimeLimit}
-                onSelectTimeInterval={handleSelectTimeInterval}
-              />
-            </ToolbarItem>
+            <ToolbarGroup align={{ default: 'alignRight' }}>
+              <ToolbarItem>
+                <DateTimeRangeFilter
+                  startSelected={selectedFilters.start}
+                  endSelected={selectedFilters.end}
+                  duration={selectedFilters.duration}
+                  startTimeLimit={startTimeLimit}
+                  onSelectTimeInterval={handleSelectTimeInterval}
+                />
+              </ToolbarItem>
+            </ToolbarGroup>
           </ToolbarContent>
         </Toolbar>
       </Card>
