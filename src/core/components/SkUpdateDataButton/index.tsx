@@ -21,7 +21,7 @@ interface SkUpdateDataButtonProps {
   refreshIntervalDefault?: number;
 }
 
-const REFETCH_DATA_LABEL = 'Refetch';
+const REFETCH_DATA_LABEL = 'Refresh';
 export const refreshDataIntervalMap = [
   {
     key: 'pause',
