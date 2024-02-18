@@ -3,7 +3,7 @@ import { startTransition, useCallback, useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE } from '@config/config';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
@@ -15,20 +15,20 @@ import { CustomProcessCells, processesSelectOptions, processesTableColumns } fro
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 //TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
-const initExternalProcessesQueryParams = {
+const initProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
   processRole: ['remote', 'external'],
   endTime: 0
 };
 
 const Processes = function () {
-  const [externalProcessesQueryParams, setExternalProcessesQueryParams] = useState<RequestOptions>(
-    initExternalProcessesQueryParams
-  );
+  const [externalProcessesQueryParams, setExternalProcessesQueryParams] =
+    useState<RequestOptions>(initProcessesQueryParams);
 
-  const { data: externalProcessData } = useSuspenseQuery({
+  const { data: processData } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
-    queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams)
+    queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams),
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const handleGetFilters = useCallback((params: RequestOptions) => {
@@ -37,8 +37,8 @@ const Processes = function () {
     });
   }, []);
 
-  const processes = externalProcessData?.results || [];
-  const processesCount = externalProcessData?.timeRangeCount || 0;
+  const processes = processData?.results || [];
+  const processesCount = processData?.timeRangeCount || 0;
 
   return (
     <MainContainer
