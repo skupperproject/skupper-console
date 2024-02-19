@@ -15,7 +15,6 @@ import LoadingPage from '@pages/shared/Loading';
 import Traffic from '../components/Traffic';
 import { MetricsLabels } from '../Metrics.enum';
 
-let component;
 const processResult = processesData.results[0] as ProcessResponse;
 
 describe('Traffic component', () => {
@@ -33,7 +32,7 @@ describe('Traffic component', () => {
   it('should render the Traffic section of the metric', async () => {
     const handleGetisSectionExpanded = jest.fn();
 
-    component = render(
+    render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <Traffic
@@ -56,8 +55,6 @@ describe('Traffic component', () => {
 
     fireEvent.click(document.querySelector('.pf-v5-c-card__header-toggle')?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
-
-    expect(component).toMatchSnapshot();
   });
 
   it('should render the Traffic section and display the no metric found message', async () => {

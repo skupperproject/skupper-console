@@ -3,6 +3,7 @@ import { FC, ReactElement, Suspense } from 'react';
 import {
   Divider,
   Flex,
+  FlexItem,
   PageGroup,
   PageNavigation,
   PageSection,
@@ -54,7 +55,9 @@ const MainContainer: FC<MainContainerProps> = function ({
                 <Title headingLevel="h1">{title}</Title>
                 {description && <Text component={TextVariants.p}>{description}</Text>}
               </TextContent>
-              {link && <NavigationViewLink link={link} linkLabel={linkLabel} />}
+              <Flex>
+                <FlexItem>{link && <NavigationViewLink link={link} linkLabel={linkLabel} />}</FlexItem>
+              </Flex>
             </Flex>
           </PageSection>
         )}

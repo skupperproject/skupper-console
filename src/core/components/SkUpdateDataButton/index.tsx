@@ -1,128 +1,135 @@
-import { FC, useMemo, MouseEvent as ReactMouseEvent, useState, useCallback, Ref } from 'react';
+import { FC, useMemo, MouseEvent as ReactMouseEvent, useState, useCallback, Ref, useRef } from 'react';
 
 import {
-  Dropdown,
-  DropdownItem,
-  DropdownList,
+  Button,
   MenuToggle,
-  MenuToggleAction,
   MenuToggleElement,
-  Spinner
+  Select,
+  SelectList,
+  SelectOption,
+  debounce
 } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
-
-import './SkUpdateDataButton.css';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 
 interface SkUpdateDataButtonProps {
   isLoading?: boolean;
-  isDisabled?: boolean;
-  onClick: Function;
-  onRefreshIntervalSelected: Function;
+  onClick?: Function;
+  onRefreshIntervalSelected?: Function;
   refreshIntervalDefault?: number;
 }
 
-const REFETCH_DATA_LABEL = 'Refresh';
 export const refreshDataIntervalMap = [
   {
-    key: 'pause',
-    value: 0,
-    label: 'Off'
+    key: 'Refresh off',
+    value: 0
   },
   {
-    key: '20s',
-    value: 20 * 1000,
-    label: '20s'
+    key: '15s',
+    value: 15 * 1000
   },
   {
-    key: '40s',
-    value: 40 * 1000,
-    label: '40s'
+    key: '30s',
+    value: 30 * 1000
   },
   {
     key: '60s',
-    value: 60 * 1000,
-    label: '1m'
+    value: 60 * 1000
   },
   {
     key: '120s',
-    value: 120 * 1000,
-    label: '2m'
+    value: 120 * 1000
   }
 ];
 
 const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
-  isLoading = false,
-  isDisabled = false,
   onClick,
   onRefreshIntervalSelected,
   refreshIntervalDefault
 }) {
+  const queryClient = useQueryClient();
+  const fetchNumber = useIsFetching();
+
   const [isSelectOpen, setSelectOpen] = useState(false);
   const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string | undefined>(
     findRefreshDataIntervalLabelFromValue(refreshIntervalDefault)
   );
+  const refreshIntervalId = useRef<number>();
 
   const refreshIntervalOptions = useMemo(
     () =>
-      refreshDataIntervalMap.map(({ label, key }, index) => (
-        <DropdownItem key={index} value={key}>
-          {label}
-        </DropdownItem>
+      refreshDataIntervalMap.map(({ key }, index) => (
+        <SelectOption key={index} value={key}>
+          {key}
+        </SelectOption>
       )),
     []
   );
 
+  const revalidateLiveQueries = useCallback(() => {
+    queryClient.invalidateQueries({
+      refetchType: 'active',
+      predicate: (query) => query.queryKey[0] !== 'QueriesGetUser' && query.queryKey[0] !== 'QueryLogout'
+    });
+
+    if (onClick) {
+      onClick();
+    }
+  }, [onClick, queryClient]);
+
   const handleSelectRefreshInterval = useCallback(
-    (_event: ReactMouseEvent<Element, MouseEvent> | undefined, selection: string | number | undefined) => {
+    (_: ReactMouseEvent<Element, MouseEvent> | undefined, selection: string | number | undefined) => {
       const refreshDataIntervalSelected = selection as string;
 
       setSelectIntervalSelected(refreshDataIntervalSelected);
       setSelectOpen(false);
 
+      const refreshInterval = findRefreshDataIntervalValueFromLabel(refreshDataIntervalSelected);
+      clearInterval(refreshIntervalId.current);
+
+      if (refreshInterval) {
+        refreshIntervalId.current = window.setInterval(() => {
+          revalidateLiveQueries();
+        }, refreshInterval);
+      }
+
       if (onRefreshIntervalSelected) {
         onRefreshIntervalSelected(findRefreshDataIntervalValueFromLabel(refreshDataIntervalSelected));
       }
     },
-    [onRefreshIntervalSelected]
+    [onRefreshIntervalSelected, revalidateLiveQueries]
   );
 
-  const isRefreshIntervalSelected =
-    !refreshIntervalSelected || refreshIntervalSelected === refreshDataIntervalMap[0].key;
-
   return (
-    <Dropdown
-      isOpen={isSelectOpen}
-      onSelect={handleSelectRefreshInterval}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle
-          isDisabled={isDisabled}
-          data-testid="update-data-dropdown"
-          className={isLoading ? 'button-toggle-dropdown-loading' : ''}
-          ref={toggleRef}
-          variant="primary"
-          onClick={() => setSelectOpen(!isSelectOpen)}
-          isExpanded={isSelectOpen}
-          splitButtonOptions={{
-            variant: 'action',
-            items: [
-              <MenuToggleAction
-                className={getDropdownClassName({ isLoading, isDisabled })}
-                key="split-action-primary"
-                data-testid="update-data-click"
-                onClick={() => onClick()}
-              >
-                {isLoading ? <Spinner isInline className="button-toggle-spinner" /> : <SyncIcon />}
-                <span className="button-toggle-spinner-text">{REFETCH_DATA_LABEL}</span>{' '}
-                {isRefreshIntervalSelected ? ' ' : refreshIntervalSelected}
-              </MenuToggleAction>
-            ]
-          }}
-        />
-      )}
-      shouldFocusToggleOnSelect
-    >
-      <DropdownList>{refreshIntervalOptions}</DropdownList>
-    </Dropdown>
+    <>
+      <Select
+        isOpen={isSelectOpen}
+        onSelect={handleSelectRefreshInterval}
+        toggle={(toggleRef: Ref<MenuToggleElement>) => (
+          <MenuToggle
+            data-testid="update-data-dropdown"
+            ref={toggleRef}
+            onClick={() => setSelectOpen(!isSelectOpen)}
+            isExpanded={isSelectOpen}
+          >
+            {refreshIntervalSelected || refreshDataIntervalMap[0].key}
+          </MenuToggle>
+        )}
+        shouldFocusToggleOnSelect
+      >
+        <SelectList>{refreshIntervalOptions}</SelectList>
+      </Select>
+
+      <Button
+        key="split-action-primary"
+        data-testid="update-data-click"
+        onClick={debounce(revalidateLiveQueries, 750)}
+        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+        isLoading={fetchNumber > 0}
+      >
+        <SyncIcon />
+      </Button>
+    </>
   );
 };
 
@@ -136,20 +143,6 @@ function findRefreshDataIntervalLabelFromValue(valueSelected: number | undefined
   return (
     // value !== refreshDataIntervalMap[0].value. We don't want to show the label "off" when we select this value from the button
     refreshDataIntervalMap.find(({ value }) => value === valueSelected && value !== refreshDataIntervalMap[0].value)
-      ?.label || ''
+      ?.key || ''
   );
-}
-
-function getDropdownClassName({ isLoading, isDisabled }: { isLoading: boolean; isDisabled: boolean }) {
-  let dropdownClassName = '';
-
-  if (isLoading) {
-    dropdownClassName = 'button-toggle-loading';
-  }
-
-  if (isDisabled) {
-    dropdownClassName = 'button-toggle-off';
-  }
-
-  return dropdownClassName;
 }
