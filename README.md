@@ -20,7 +20,7 @@ Skupper Console is a web-based graphical user interface (GUI) designed for easy 
 
 ## Status
 
-Skupper Console is currently in Tech Preview. Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
+Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
 
 This demo is synchronized with the latest version of the Skupper or a modified version of it, using the current main branch.
 
@@ -50,7 +50,7 @@ The running application uses the data in the mock folder.
 To run the console with demo routes, execute the following command:
 
 ```bash
-COLLECTOR_URL=https://skupper-vb-boutique-a.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
+COLLECTOR_URL=https://skupper-vb-boutique-a-demo.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
 ```
 
 These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
