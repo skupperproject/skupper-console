@@ -50,7 +50,7 @@ The running application uses the data in the mock folder.
 To run the console with demo routes, execute the following command:
 
 ```bash
-COLLECTOR_URL=https://skupper-vb-boutique-a.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
+COLLECTOR_URL=https://skupper-vb-boutique-a-demo.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
 ```
 
 These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
