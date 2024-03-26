@@ -32,7 +32,7 @@ const config = {
   moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
   moduleDirectories: [`${ROOT_PROJECT}/node_modules`, `${ROOT_PROJECT}/src`],
   roots: [SRC_PATH],
-  transformIgnorePatterns: [`${ROOT_PROJECT}/node_modules/(?!d3|d3-timer)`],
+  transformIgnorePatterns: [`${ROOT_PROJECT}/node_modules/(?!d3|internmap)`],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { isolatedModules: true }],
     '^.+\\.svg$': `${MOCKS_PATH}/${FILE_MOCK}`,
