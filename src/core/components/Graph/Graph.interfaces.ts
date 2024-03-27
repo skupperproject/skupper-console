@@ -33,6 +33,16 @@ export interface GraphCombo {
   style?: ModelStyle;
 }
 
+export interface GraphEdgeMetrics {
+  protocol: string;
+  bytes: number | undefined;
+  byteRate: number | undefined;
+  latency: number | undefined;
+  bytesReverse: number | undefined;
+  byteRateReverse: number | undefined;
+  latencyReverse: number | undefined;
+}
+
 export interface GraphEdge {
   id: string;
   source: string;
@@ -43,15 +53,7 @@ export interface GraphEdge {
   label?: string;
   labelCfg?: Record<string, unknown>;
   style?: ShapeStyle;
-  metrics?: {
-    protocol: string | undefined;
-    bytes: number | undefined;
-    byteRate: number | undefined;
-    latency: number | undefined;
-    bytesReverse: number | undefined;
-    byteRateReverse: number | undefined;
-    latencyReverse: number | undefined;
-  };
+  metrics?: GraphEdgeMetrics;
 }
 
 export interface GraphReactAdaptorExposedMethods {

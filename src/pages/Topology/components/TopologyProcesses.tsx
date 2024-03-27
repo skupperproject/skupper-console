@@ -39,7 +39,8 @@ import {
   GraphCombo,
   GraphNode,
   GraphReactAdaptorProps,
-  GraphReactAdaptorExposedMethods
+  GraphReactAdaptorExposedMethods,
+  GraphEdgeMetrics
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import NavigationViewLink from '@core/components/NavigationViewLink';
@@ -181,22 +182,14 @@ const TopologyProcesses: FC<{
   );
 
   const handleGetSelectedEdge = useCallback(
-    ({
-      id,
-      sourceName,
-      sourceId,
-      metrics: { protocol }
-    }: {
-      id: string;
-      sourceName: string;
-      sourceId: string;
-      metrics: { protocol: string };
-    }) => {
+    ({ id, sourceName, source: sourceId, metrics: edgeMetrics }: GraphEdge) => {
       if (id.split('~').length > 1) {
         setModalType({ type: 'processPair', id });
 
         return;
       }
+
+      const protocol = (edgeMetrics as GraphEdgeMetrics).protocol;
 
       navigate(
         `${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${ProcessesLabels.ProcessPairs}@${id}@${protocol}`
