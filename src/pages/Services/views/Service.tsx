@@ -10,6 +10,7 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
+import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import HttpService from './HttpService';
 import ConnectionsByService from './TcpService';
@@ -32,13 +33,15 @@ const terminatedConnectionsQueryParams = {
 
 const Service = function () {
   const { service } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const serviceName = service?.split('@')[0];
   const serviceId = service?.split('@')[1] as string;
   const protocol = service?.split('@')[2];
 
   const type = searchParams.get('type') || TAB_0_KEY;
   const [tabSelected, setTabSelected] = useState(type);
+
+  useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   const { data: serversData } = useQuery({
     queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
@@ -69,7 +72,6 @@ const Service = function () {
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as string);
-    setSearchParams({ type: tabIndex as string });
   }
 
   const NavigationMenu = function () {

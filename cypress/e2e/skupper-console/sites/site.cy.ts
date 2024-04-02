@@ -13,7 +13,7 @@ context('Sites', () => {
   });
 
   it('should navigate to the correct site page when clicking on a link', () => {
-    const expectedUrl = 'http://localhost:3000/#/sites/site%202@site-2';
+    const expectedUrl = 'http://localhost:3000/#/sites/site%202@site-2?type=Overview';
 
     const link = cy.get(`[data-testid="${testId}"]`).contains('site 2');
     link.should('have.attr', 'href', `#/sites/site 2@site-2`);

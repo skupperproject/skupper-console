@@ -1,10 +1,11 @@
-import { MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useRef, useState } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
+import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologyProcessGroups from '../components/TopologyProcessGroups';
@@ -12,26 +13,20 @@ import TopologySite from '../components/TopologySite';
 import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  const serviceId = useRef(searchParams.get(TopologyURLQueyParams.ServiceId) || undefined);
+  const serviceId = searchParams.get(TopologyURLQueyParams.ServiceId) || undefined;
   const id = useRef(searchParams.get(TopologyURLQueyParams.IdSelected) || undefined);
   const type = searchParams.get(TopologyURLQueyParams.Type);
 
-  const [topologyType, setTopologyType] = useState<string>(type || TopologyViews.Sites);
+  const [tabSelected, setTabSelected] = useState<string>(type || TopologyViews.Sites);
+
+  useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   function handleChangeTopologyType(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setTopologyType(tabIndex as string);
-    setSearchParams({ type: tabIndex as string });
+    setTabSelected(tabIndex as string);
     id.current = undefined;
   }
-
-  useEffect(() => {
-    // reset serviceId and id when they are received from the URL
-    searchParams?.delete(TopologyURLQueyParams.IdSelected);
-    searchParams?.delete(TopologyURLQueyParams.ServiceId);
-    setSearchParams(searchParams);
-  }, [searchParams, setSearchParams]);
 
   return (
     <MainContainer
@@ -41,7 +36,7 @@ const Topology = function () {
       description={TopologyLabels.Description}
       hasMainContentPadding
       navigationComponent={
-        <Tabs activeKey={topologyType} onSelect={handleChangeTopologyType}>
+        <Tabs activeKey={tabSelected} onSelect={handleChangeTopologyType}>
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
           <Tab
             eventKey={TopologyViews.ProcessGroups}
@@ -52,10 +47,10 @@ const Topology = function () {
       }
       mainContentChildren={
         <>
-          {topologyType === TopologyViews.Sites && <TopologySite />}
-          {topologyType === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id.current} />}
-          {topologyType === TopologyViews.Processes && (
-            <TopologyProcesses serviceIds={serviceId.current ? [serviceId.current] : undefined} id={id.current} />
+          {tabSelected === TopologyViews.Sites && <TopologySite />}
+          {tabSelected === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id.current} />}
+          {tabSelected === TopologyViews.Processes && (
+            <TopologyProcesses serviceIds={serviceId ? [serviceId] : undefined} id={id.current} />
           )}
         </>
       }

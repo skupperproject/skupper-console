@@ -3,7 +3,7 @@ import { useCallback, useState, MouseEvent as ReactMouseEvent } from 'react';
 import { Card, CardBody, Stack, StackItem, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { ResourcesEmptyIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
@@ -15,6 +15,7 @@ import MainContainer from '@layout/MainContainer';
 import FlowPairs from '@pages/shared/FlowPairs';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 import { RequestOptions } from 'API/REST.interfaces';
+import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import ProcessPairDetails from '../components/ProcessPairDetails';
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
@@ -54,7 +55,6 @@ const initPaginatedOldConnectionsQueryParams: RequestOptions = {
 
 const ProcessPairs = function () {
   const { processPair } = useParams() as { processPair: string };
-  const [, setSearchParams] = useSearchParams();
 
   const { id: processPairId, protocol } = getIdAndNameFromUrlParams(processPair);
   const ids = processPairId?.split('-to-') || [];
@@ -62,6 +62,8 @@ const ProcessPairs = function () {
   const destinationId = ids[1];
 
   const [connectionsView, setConnectionsView] = useState<string>();
+
+  useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, connectionsView || '', true);
 
   const [httpQueryParamsPaginated, setHttpQueryParamsPaginated] = useState<RequestOptions>(
     initPaginatedHttpRequestsQueryParams
@@ -145,7 +147,6 @@ const ProcessPairs = function () {
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setConnectionsView(tabIndex as string);
-    setSearchParams({ type: tabIndex as string });
   }
 
   function setDefaultTcpActiveTab() {

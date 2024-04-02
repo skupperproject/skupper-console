@@ -10,6 +10,7 @@ import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
+import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import Details from '../components/Details';
 import Overview from '../components/Overview';
@@ -17,13 +18,15 @@ import ProcessPairs from '../components/ProcessesPairs';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const Process = function () {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const { id } = useParams() as { id: string };
   const { id: processId, name: processName } = getIdAndNameFromUrlParams(id);
 
   const type = searchParams.get('type') || ProcessesLabels.Overview;
   const [tabSelected, setTabSelected] = useState(type);
+
+  useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   const clientPairsQueryParams = {
     limit: 0,
@@ -54,7 +57,6 @@ const Process = function () {
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessesLabels);
-    setSearchParams({ type: tabIndex as string });
   }
 
   const processesCount = (clientPairs?.timeRangeCount || 0) + (serverPairs?.timeRangeCount || 0);

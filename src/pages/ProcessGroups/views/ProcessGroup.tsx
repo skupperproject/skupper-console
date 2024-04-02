@@ -16,6 +16,7 @@ import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
 import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
+import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
 
@@ -23,12 +24,14 @@ const PREFIX_METRIC_FILTERS_CACHE_KEY = 'component-metric-filter';
 const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `component-open-metric-sections`;
 
 const ProcessGroup = function () {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const type = searchParams.get('type') || ProcessGroupsLabels.Overview;
 
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
   const [tabSelected, setTabSelected] = useState(type);
+
+  useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   const [{ data: processes }, { data: processGroup }] = useSuspenseQueries({
     queries: [
@@ -59,7 +62,6 @@ const ProcessGroup = function () {
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessGroupsLabels);
-    setSearchParams({ type: tabIndex as string });
   }
 
   const processResults = processes.results;
