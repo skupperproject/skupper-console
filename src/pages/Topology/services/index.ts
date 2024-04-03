@@ -134,13 +134,11 @@ export const TopologyController = {
       targetName: destinationName
     })),
 
-  // Each site should have a 'targetIds' property that lists the sites it is connected to.
-  // The purpose of this property is to display the edges between different sites in the topology.
   convertRouterLinksToEdges: (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {
     const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links);
 
-    return sitesWithLinks.flatMap(({ identity: sourceId, targetIds }) =>
-      targetIds.flatMap(({ targetId, linkCost }) => [
+    return sitesWithLinks.flatMap(({ identity: sourceId, linkSiteIds }) =>
+      linkSiteIds.flatMap(({ targetId, linkCost }) => [
         {
           id: `${sourceId}-to${targetId}`,
           source: sourceId,

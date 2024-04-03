@@ -26,7 +26,7 @@ const SitesController = {
     return sites.map((site) => ({
       ...site,
       // Filters the target ids to remove duplicates
-      targetIds: (linksExtendedMap[site.identity] || [])
+      linkSiteIds: (linksExtendedMap[site.identity] || [])
         ?.filter((obj, index, self) => index === self.findIndex((o) => o.targetId === obj.targetId))
         .filter(Boolean)
     }));
