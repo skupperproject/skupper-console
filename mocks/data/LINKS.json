@@ -3,57 +3,67 @@
     {
       "recType": "LINK",
       "identity": "52tjs:1",
-      "parent": "52tjs:0",
+      "parent": "",
       "startTime": 1674048706622878,
       "endTime": 0,
       "mode": "interior",
-      "name": "site 3",
+      "name": "",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "outgoing",
+      "sourceSiteId": "site-1",
+      "destinationSiteId": "site-3"
     },
     {
       "recType": "LINK",
       "identity": "hth7l:12",
-      "parent": "hth7l:0",
+      "parent": "",
       "startTime": 1674048706622878,
       "endTime": 0,
       "mode": "interior",
-      "name": "site 1",
+      "name": "",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "incoming",
+      "sourceSiteId": "site-1",
+      "destinationSiteId": "site-3"
     },
     {
       "recType": "LINK",
       "identity": "52tjs:1402",
-      "parent": "52tjs:0",
+      "parent": "",
       "startTime": 1674151543561656,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-site-2-6z7k6",
+      "name": "",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "outgoing",
+      "sourceSiteId": "site-1",
+      "destinationSiteId": "site-2"
     },
     {
       "recType": "LINK",
       "identity": "6z7k6:2",
-      "parent": "6z7k6:0",
+      "parent": "",
       "startTime": 1674048729859049,
       "endTime": 0,
       "mode": "interior",
-      "name": "site 1",
+      "name": "",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "incoming",
+      "sourceSiteId": "site-1",
+      "destinationSiteId": "site-2"
     },
     {
       "recType": "LINK",
       "identity": "hth7l:31",
-      "parent": "hth7l:0",
+      "parent": "",
       "startTime": 1674151543581947,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-site-2-6z7k6",
+      "name": "",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "outgoing",
+      "sourceSiteId": "site-3",
+      "destinationSiteId": "site-2"
     },
     {
       "recType": "LINK",
@@ -64,18 +74,22 @@
       "mode": "interior",
       "name": "site 3",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "incoming",
+      "sourceSiteId": "site-3",
+      "destinationSiteId": "site-2"
     },
     {
       "recType": "LINK",
       "identity": "hth7l:31",
-      "parent": "hth7l:0",
+      "parent": "",
       "startTime": 1674151543581947,
       "endTime": 0,
       "mode": "interior",
-      "name": "private1-skupper-router-site-2-6z7k7",
+      "name": "",
       "linkCost": 1,
-      "direction": "outgoing"
+      "direction": "outgoing",
+      "sourceSiteId": "site-3",
+      "destinationSiteId": "site-2"
     },
     {
       "recType": "LINK",
@@ -86,7 +100,9 @@
       "mode": "interior",
       "name": "site 3",
       "linkCost": 1,
-      "direction": "incoming"
+      "direction": "incoming",
+      "sourceSiteId": "site-3",
+      "destinationSiteId": "site-1"
     }
   ],
   "status": "",

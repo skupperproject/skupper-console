@@ -6,7 +6,6 @@ import {
   FlowPairsResponse,
   SiteResponse,
   LinkResponse,
-  RouterResponse,
   HostResponse,
   ProcessPairsResponse,
   RemoteFilterOptions,
@@ -20,18 +19,15 @@ import {
   getFlowsPairsByServicePATH,
   getProcessesByServicePATH,
   getSitePATH,
-  getRoutersBySitePATH,
   getLinksBySitePATH,
   getHostsBySitePATH,
   getProcessGroupPATH,
   geProcessPATH,
   getLinkPATH,
-  getRouterPATH,
   getFlowPairPATH,
   getSitePairPATH,
   getProcessGroupPairPATH,
   getFlowPairsPATH,
-  getRoutersPATH,
   geProcessesPATH,
   getSitesPATH,
   getLinksPATH,
@@ -77,14 +73,6 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchRoutersBySite: async (id: string, options?: RemoteFilterOptions): Promise<RouterResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<RouterResponse[]>>(getRoutersBySitePATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
-  },
-
   fetchLinksBySite: async (id: string, options?: RemoteFilterOptions): Promise<LinkResponse[]> => {
     const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksBySitePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
@@ -95,23 +83,6 @@ export const RESTApi = {
 
   fetchHostsBySite: async (id: string, options?: RemoteFilterOptions): Promise<HostResponse[]> => {
     const data = await axiosFetch<ResponseWrapper<HostResponse[]>>(getHostsBySitePATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
-  },
-
-  // ROUTER APIs
-  fetchRouters: async (options?: RemoteFilterOptions): Promise<RouterResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<RouterResponse[]>>(getRoutersPATH(), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
-  },
-
-  fetchRouter: async (id: string, options?: RemoteFilterOptions): Promise<RouterResponse> => {
-    const data = await axiosFetch<ResponseWrapper<RouterResponse>>(getRouterPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 

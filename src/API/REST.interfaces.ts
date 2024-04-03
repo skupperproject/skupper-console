@@ -168,6 +168,8 @@ export interface LinkResponse extends BaseResponse {
   mode: string;
   direction: FlowDirections;
   linkCost: number;
+  sourceSiteId: string;
+  destinationSiteId: string;
 }
 
 export interface HostResponse extends BaseResponse {

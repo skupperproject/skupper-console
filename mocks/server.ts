@@ -36,7 +36,6 @@ const services = require(`${path}/SERVICES.json`);
 const serviceProcesses = require(`${path}/SERVICE_PROCESSES.json`);
 const flowPairs = require(`${path}/FLOW_PAIRS.json`);
 const serviceFlowPairs = require(`${path}/SERVICE_FLOW_PAIRS.json`);
-const routers: ResponseWrapper<RouterResponse[]> = require(`${path}/ROUTERS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
 interface ApiProps {
@@ -75,40 +74,6 @@ mockSitesForPerf.forEach((site, index) => {
   });
 });
 
-const mockLinksForPerf: LinkResponse[] = [];
-mockRoutersForPerf.forEach((_, index) => {
-  const idx1 = Math.floor(Math.random() * ITEM_COUNT);
-  const idx2 = Math.floor(Math.random() * ITEM_COUNT);
-
-  const router1 = mockRoutersForPerf[idx1];
-  const router2 = mockRoutersForPerf[idx2];
-
-  mockLinksForPerf.push(
-    {
-      recType: 'LINK',
-      identity: `link-out-${index}`,
-      parent: router1.identity,
-      startTime: 1674048706622878,
-      endTime: 0,
-      mode: 'interior',
-      name: router2.name?.split('/')[1],
-      linkCost: 1,
-      direction: FlowDirection.Outgoing
-    },
-    {
-      recType: 'LINK',
-      identity: `link-in-${index}`,
-      parent: router2.identity,
-      startTime: 1674151543561656,
-      endTime: 0,
-      mode: 'interior',
-      name: router1.name?.split('/')[1],
-      linkCost: 1,
-      direction: FlowDirection.Incoming
-    }
-  );
-});
-
 const mockProcessesForPerf: ProcessResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
   const process = processes.results[i % processes.results.length];
@@ -139,6 +104,44 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     destinationName: mockSitesForPerf[destinationIndex].name
   });
 }
+
+const mockLinksForPerf: LinkResponse[] = [];
+mockSitePairsForPerf.forEach((_, index) => {
+  const idx1 = Math.floor(Math.random() * ITEM_COUNT);
+  const idx2 = Math.floor(Math.random() * ITEM_COUNT);
+
+  const site1 = mockSitePairsForPerf[idx1];
+  const site2 = mockSitePairsForPerf[idx2];
+
+  mockLinksForPerf.push(
+    {
+      recType: 'LINK',
+      identity: `link-out-${index}`,
+      parent: '',
+      startTime: 1674048706622878,
+      endTime: 0,
+      mode: 'interior',
+      name: '',
+      linkCost: 1,
+      direction: FlowDirection.Outgoing,
+      sourceSiteId: site1.identity,
+      destinationSiteId: site2.identity
+    },
+    {
+      recType: 'LINK',
+      identity: `link-in-${index}`,
+      parent: '',
+      startTime: 1674151543561656,
+      endTime: 0,
+      mode: 'interior',
+      name: '',
+      linkCost: 1,
+      direction: FlowDirection.Incoming,
+      sourceSiteId: site2.identity,
+      destinationSiteId: site1.identity
+    }
+  );
+});
 
 const mockProcessPairsForPerf: ProcessPairsResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
@@ -179,12 +182,7 @@ export const MockApi = {
   getSite: (_: unknown, { params: { id } }: ApiProps) => ({
     results: sites.results.find(({ identity }) => identity === id) || []
   }),
-  getRouters: () => {
-    const routersForPerfTests = ITEM_COUNT ? mockRoutersForPerf : [];
-    const results = [...routers.results, ...routersForPerfTests];
 
-    return { ...routers, results };
-  },
   getLinks: () => {
     const linksForPerfTests = ITEM_COUNT ? mockLinksForPerf : [];
     const results = [...links.results, ...linksForPerfTests];
@@ -392,7 +390,6 @@ export function loadMockServer() {
       this.get(MockApiPaths.Collectors, MockApi.getCollectors);
       this.get(MockApiPaths.Sites, MockApi.getSites);
       this.get(MockApiPaths.Site, MockApi.getSite);
-      this.get(MockApiPaths.Routers, MockApi.getRouters);
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
@@ -406,14 +403,8 @@ export function loadMockServer() {
         results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
       }));
 
-      this.get(`${prefix}/sites/:id/routers`, (_, { params: { id } }) => ({
-        results: routers.results.filter(({ parent }) => parent === id)
-      }));
-
       this.get(`${prefix}/sites/:id/links`, (_, { params: { id } }) => ({
-        results: links.results.filter((link) =>
-          routers.results.find((router) => router.parent === id && router.identity === link.parent)
-        )
+        results: links.results.filter(() => sites.results.find((site) => site.identity === id))
       }));
 
       this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);

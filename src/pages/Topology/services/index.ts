@@ -23,7 +23,6 @@ import {
   LinkResponse,
   ProcessGroupResponse,
   ProcessResponse,
-  RouterResponse,
   SiteResponse,
   SitePairsResponse
 } from 'API/REST.interfaces';
@@ -137,8 +136,8 @@ export const TopologyController = {
 
   // Each site should have a 'targetIds' property that lists the sites it is connected to.
   // The purpose of this property is to display the edges between different sites in the topology.
-  convertRouterLinksToEdges: (sites: SiteResponse[], routers: RouterResponse[], links: LinkResponse[]): GraphEdge[] => {
-    const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links, routers);
+  convertRouterLinksToEdges: (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {
+    const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links);
 
     return sitesWithLinks.flatMap(({ identity: sourceId, targetIds }) =>
       targetIds.flatMap(({ targetId, linkCost }) => [

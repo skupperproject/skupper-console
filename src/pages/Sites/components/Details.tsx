@@ -19,6 +19,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
+import { FlowDirection } from '@API/REST.enum';
 import { SiteResponse } from '@API/REST.interfaces';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -28,6 +29,7 @@ import SitesController from '../services';
 import { SitesRoutesPaths, SiteLabels, QueriesSites } from '../Sites.enum';
 
 const processQueryParams = { endTime: 0 };
+const linkQueryParams = { direction: FlowDirection.Outgoing };
 
 interface DetailsProps {
   site: SiteResponse;
@@ -36,30 +38,25 @@ interface DetailsProps {
 const Details: FC<DetailsProps> = function ({ site }) {
   const { identity: siteId, nameSpace, siteVersion, platform } = site;
 
-  const [{ data: sites }, { data: hosts }, { data: links }, { data: routers }, { data: processesData }] =
-    useSuspenseQueries({
-      queries: [
-        { queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() },
-        {
-          queryKey: [QueriesSites.GetHostsBySiteId, siteId],
-          queryFn: () => RESTApi.fetchHostsBySite(siteId)
-        },
-        {
-          queryKey: [QueriesSites.GetLinksBySiteId, siteId],
-          queryFn: () => RESTApi.fetchLinksBySite(siteId)
-        },
-        {
-          queryKey: [QueriesSites.GetRouters],
-          queryFn: () => RESTApi.fetchRouters()
-        },
-        {
-          queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
-          queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
-        }
-      ]
-    });
+  const [{ data: sites }, { data: hosts }, { data: links }, { data: processesData }] = useSuspenseQueries({
+    queries: [
+      { queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() },
+      {
+        queryKey: [QueriesSites.GetHostsBySiteId, siteId],
+        queryFn: () => RESTApi.fetchHostsBySite(siteId)
+      },
+      {
+        queryKey: [QueriesSites.GetLinksBySiteId, siteId],
+        queryFn: () => RESTApi.fetchLinksBySite(siteId, linkQueryParams)
+      },
+      {
+        queryKey: [QueriesSites.GetProcessesBySiteId, { ...processQueryParams, parent: siteId }],
+        queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: siteId })
+      }
+    ]
+  });
 
-  const { targetIds } = SitesController.bindLinksWithSiteIds([site], links, routers)[0];
+  const { targetIds } = SitesController.bindLinksWithSiteIds([site], links)[0];
   const linkedSites = sites.filter(({ identity }) => targetIds.map((id) => id.targetId).includes(identity));
   const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
 

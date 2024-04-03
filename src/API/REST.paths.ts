@@ -14,18 +14,12 @@ export const logout = () => `${COLLECTOR_URL}/logout?nonce=${Date.now()}`;
 const SITES_PATH = `${COLLECTOR_URL}/sites/`;
 export const getSitesPATH = () => SITES_PATH;
 export const getSitePATH = (id: string) => `${SITES_PATH}${id}`;
-export const getRoutersBySitePATH = (id: string) => `${SITES_PATH}${id}/routers`;
 export const getLinksBySitePATH = (id: string) => `${SITES_PATH}${id}/links`;
 export const getHostsBySitePATH = (id: string) => `${SITES_PATH}${id}/hosts`;
 
 // HOSTS
 const HOSTS_PATH = `${COLLECTOR_URL}/hosts/`;
 export const getHostsPATH = () => HOSTS_PATH;
-
-// ROUTERS
-const ROUTERS_PATH = `${COLLECTOR_URL}/routers/`;
-export const getRoutersPATH = () => ROUTERS_PATH;
-export const getRouterPATH = (id: string) => `${ROUTERS_PATH}${id}`;
 
 // LINKS
 const LINKS_PATH = `${COLLECTOR_URL}/links/`;
