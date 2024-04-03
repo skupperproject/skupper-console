@@ -91,6 +91,8 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
         refreshIntervalId.current = window.setInterval(() => {
           revalidateLiveQueries();
         }, refreshInterval);
+
+        revalidateLiveQueries();
       }
 
       if (onRefreshIntervalSelected) {
