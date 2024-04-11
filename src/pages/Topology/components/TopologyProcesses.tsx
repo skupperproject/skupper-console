@@ -212,7 +212,7 @@ const TopologyProcesses: FC<{
     [navigate]
   );
 
-  const handleServiceSelected = useCallback((ids: string[]) => {
+  const handleServiceSelected = useCallback((ids: string[] | undefined) => {
     setItemIdSelected(undefined);
     setModalType(undefined);
     setServiceIdsSelected(ids);
@@ -389,7 +389,7 @@ const TopologyProcesses: FC<{
         <ToolbarItem>
           <DisplayOptions
             options={displayOptions}
-            onSelect={handleDisplayOptionSelected}
+            onSelected={handleDisplayOptionSelected}
             defaultSelected={displayOptionsSelected}
           />
         </ToolbarItem>
@@ -435,7 +435,7 @@ const TopologyProcesses: FC<{
 
         <ToolbarGroup>
           <ToolbarItem>
-            <DisplayServices serviceIds={serviceIdsSelected} onSelect={handleServiceSelected} />
+            <DisplayServices initialIdsSelected={serviceIdsSelected} onSelected={handleServiceSelected} />
           </ToolbarItem>
 
           <ToolbarItem>

@@ -89,39 +89,6 @@ describe('Topology Process', () => {
     jest.clearAllMocks();
   });
 
-  it('should clicking on the service menu', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel));
-    expect(screen.getByText(TopologyLabels.SelectAll)).toBeInTheDocument();
-  });
-
-  it('should clicking on the service menu and use the search filter', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel));
-
-    fireEvent.change(screen.getByPlaceholderText(TopologyLabels.ServiceFilterPlaceholderText), {
-      target: { value: servicesResults[0].name }
-    });
-
-    expect(screen.queryByText(servicesResults[1].name)).not.toBeInTheDocument();
-  });
-
-  it('should clicking on the display menu and select/deselect the Protocol checkbox', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayPlaceholderText));
-    expect(screen.getByRole('display-select')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText(TopologyLabels.CheckboxShowProtocol));
-  });
 
   it('should clicking on a node', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

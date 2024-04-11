@@ -1,83 +1,74 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { Divider } from '@patternfly/react-core';
-import { Select, SelectOption, SelectVariant, SelectOptionObject } from '@patternfly/react-core/deprecated';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
-const DisplayOptions: FC<{
-  options: DisplaySelectProps[];
+interface DisplayUseOptionsProps {
   defaultSelected?: string[];
-  onSelect: Function;
-}> = function ({ options, defaultSelected = [], onSelect }) {
+  onSelected: (items: string[], item: string) => void;
+}
+
+interface DisplayOptionsProps extends DisplayUseOptionsProps {
+  options: DisplaySelectProps[];
+}
+
+export const useDisplayOptions = ({ defaultSelected = [], onSelected }: DisplayUseOptionsProps) => {
+  const [displayOptionsSelected, setDisplayOptions] = useState(defaultSelected);
+
+  const selectDisplayOptions = useCallback(
+    (selectedOption: string) => {
+      const isOptionSelected = displayOptionsSelected.includes(selectedOption);
+
+      let updatedDisplayOptions = isOptionSelected
+        ? displayOptionsSelected.filter((option) => option !== selectedOption)
+        : [...displayOptionsSelected, selectedOption];
+
+      if (selectedOption === SHOW_DATA_LINKS || selectedOption === SHOW_ROUTER_LINKS) {
+        const otherOption = selectedOption === SHOW_DATA_LINKS ? SHOW_ROUTER_LINKS : SHOW_DATA_LINKS;
+
+        updatedDisplayOptions = isOptionSelected
+          ? [...updatedDisplayOptions, otherOption]
+          : updatedDisplayOptions.filter((option) => option !== otherOption);
+      }
+
+      setDisplayOptions(updatedDisplayOptions);
+      onSelected(updatedDisplayOptions, selectedOption);
+    },
+    [displayOptionsSelected, onSelected]
+  );
+
+  return { displayOptionsSelected, selectDisplayOptions };
+};
+
+const DisplayOptions: FC<DisplayOptionsProps> = function ({ defaultSelected = [], options, onSelected }) {
   const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState(false);
-  const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(defaultSelected);
+  const { displayOptionsSelected, selectDisplayOptions } = useDisplayOptions({
+    defaultSelected,
+    onSelected
+  });
 
-  const addDisplayOptionToSelection = useCallback(
-    (selected: string) => [...displayOptionsSelected, selected],
-    [displayOptionsSelected]
-  );
-
-  const removeDisplayOptionToSelection = useCallback(
-    (selected: string) => displayOptionsSelected.filter((option) => option !== selected),
-    [displayOptionsSelected]
-  );
-
-  function handleToggleDisplayMenu(openDisplayMenu: boolean) {
+  function toggleDisplayMenu(openDisplayMenu: boolean) {
     setIsDisplayMenuOpen(openDisplayMenu);
   }
 
-  const handleSelectDisplay = useCallback(
-    (_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) => {
-      const currentSelected = selection as string;
-      const isSelected = displayOptionsSelected.includes(currentSelected);
-
-      let newSelectedOptions = isSelected
-        ? removeDisplayOptionToSelection(currentSelected)
-        : addDisplayOptionToSelection(currentSelected);
-
-      if (currentSelected === SHOW_DATA_LINKS) {
-        newSelectedOptions = isSelected
-          ? [...newSelectedOptions, SHOW_ROUTER_LINKS]
-          : newSelectedOptions.filter((option) => option !== SHOW_ROUTER_LINKS);
-      }
-
-      if (currentSelected === SHOW_ROUTER_LINKS) {
-        newSelectedOptions = isSelected
-          ? [...newSelectedOptions, SHOW_DATA_LINKS]
-          : newSelectedOptions.filter((option) => option !== SHOW_DATA_LINKS);
-      }
-
-      setDisplayOptions(newSelectedOptions);
-
-      if (onSelect) {
-        onSelect(newSelectedOptions, currentSelected);
-      }
-    },
-    [addDisplayOptionToSelection, displayOptionsSelected, onSelect, removeDisplayOptionToSelection]
-  );
-
   return (
     <Select
-      role="display-select"
       variant={SelectVariant.checkbox}
       isOpen={isDisplayMenuOpen}
-      onSelect={handleSelectDisplay}
-      onToggle={(_, isOpen) => handleToggleDisplayMenu(isOpen)}
+      onSelect={(_, selection) => selectDisplayOptions(selection.toString())}
+      onToggle={(_, isOpen) => toggleDisplayMenu(isOpen)}
       selections={displayOptionsSelected}
       placeholderText={TopologyLabels.DisplayPlaceholderText}
       isCheckboxSelectionBadgeHidden
     >
-      {options.map((option) => (
-        <SelectOption
-          key={option.key}
-          value={option.value}
-          isDisabled={option?.isDisabled ? option.isDisabled() : false}
-        >
-          {option.label}
-          {option.addSeparator && <Divider />}
+      {options.map(({ key, value, label, isDisabled, addSeparator }) => (
+        <SelectOption key={key} value={value} isDisabled={isDisabled ? isDisabled() : false}>
+          {label}
+          {addSeparator && <Divider />}
         </SelectOption>
       ))}
     </Select>

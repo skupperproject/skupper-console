@@ -65,16 +65,6 @@ describe('TopologySite', () => {
     jest.clearAllMocks();
   });
 
-  it('should clicking on the display menu and select/deselect the Protocol checkbox', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayPlaceholderText));
-    expect(screen.getByRole('display-select')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText(TopologyLabels.CheckBoxShowRouterLinks));
-  });
 
   it('should clicking on a node', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

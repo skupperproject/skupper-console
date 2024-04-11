@@ -288,7 +288,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         <ToolbarItem>
           <DisplayOptions
             options={displayOptions}
-            onSelect={handleDisplaySelect}
+            onSelected={handleDisplaySelect}
             defaultSelected={displayOptionsSelected}
           />
         </ToolbarItem>
