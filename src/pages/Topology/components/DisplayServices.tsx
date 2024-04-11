@@ -1,7 +1,7 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { Button } from '@patternfly/react-core';
-import { Select, SelectOption, SelectOptionObject, SelectVariant } from '@patternfly/react-core/deprecated';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
@@ -10,119 +10,150 @@ import { QueriesServices } from '@pages/Services/Services.enum';
 
 import { TopologyLabels } from '../Topology.enum';
 
+interface ServiceOption {
+  key: string;
+  value: string;
+  label: string;
+}
+
+interface DisplayServicesProps {
+  initialIdsSelected?: string[];
+  onSelected: (items: string[] | undefined) => void;
+}
+
+interface DisplayServicesContentProps {
+  initialIdsSelected: string[];
+  options: ServiceOption[];
+  onSelected: (items: string[] | undefined) => void;
+}
+
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 
-const DisplayServices: FC<{
-  serviceIds?: string[];
-  onSelect: Function;
-}> = function ({ serviceIds, onSelect }) {
-  const [serviceIdsSelected, setServiceIdsSelected] = useState<string[]>([]);
+export const useServiceSelection = ({ initialIdsSelected, options, onSelected }: DisplayServicesContentProps) => {
+  const [serviceIdsSelected, setServiceIdsSelected] = useState(initialIdsSelected);
   const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
 
+  const toggleServiceMenu = (isOpen: boolean) => {
+    setIsServiceSelectMenuOpen(isOpen);
+  };
+
+  const selectService = useCallback(
+    (selection: string) => {
+      // Determine the new set of selected service IDs:
+      // - If the service is already selected, remove it
+      // - If not, add it to the selection
+      const newSelected = serviceIdsSelected.includes(selection)
+        ? serviceIdsSelected.filter((id) => id !== selection)
+        : [...serviceIdsSelected, selection];
+
+      setServiceIdsSelected(newSelected);
+      onSelected(newSelected);
+    },
+    [serviceIdsSelected, onSelected]
+  );
+
+  const selectAllServices = useCallback(() => {
+    const allServicesSelected = serviceIdsSelected.length === options.length;
+
+    // Set the new selected services to either:
+    // - An empty array if all were previously selected (deselecting everything)
+    // - A sorted array of all service IDs if not all were selected (selecting everything)
+    const updatedSelecteServices =
+      serviceIdsSelected.length === options.length ? [] : options.map(({ value }) => value).sort() ?? [];
+
+    setServiceIdsSelected(updatedSelecteServices);
+    onSelected(allServicesSelected ? [] : undefined);
+  }, [serviceIdsSelected.length, options, onSelected]);
+
+  const findServices = (partialServiceName: string) =>
+    !partialServiceName
+      ? options
+      : //filter the service options to those containing the partialServiceName (case-insensitive)
+        options.filter((option) => option.label.toLowerCase().includes(partialServiceName.toLowerCase()));
+
+  return {
+    serviceIdsSelected,
+    isServiceSelectMenuOpen,
+    toggleServiceMenu,
+    selectAllServices,
+    selectService,
+    findServices
+  };
+};
+
+export const DisplayServicesContent: FC<DisplayServicesContentProps> = function ({
+  initialIdsSelected,
+  options,
+  onSelected
+}) {
+  const {
+    serviceIdsSelected,
+    isServiceSelectMenuOpen,
+    toggleServiceMenu,
+    selectAllServices,
+    selectService,
+    findServices
+  } = useServiceSelection({ initialIdsSelected, options, onSelected });
+
+  return (
+    <Select
+      variant={SelectVariant.checkbox}
+      isOpen={isServiceSelectMenuOpen}
+      placeholderText={TopologyLabels.DisplayServicesDefaultLabel}
+      onSelect={(_, selection) => selectService(selection.toString())}
+      onToggle={(_, isOpen) => toggleServiceMenu(isOpen)}
+      selections={serviceIdsSelected}
+      hasInlineFilter
+      inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
+      onFilter={(_, filterValue) =>
+        findServices(filterValue).map((service) => (
+          <SelectOption key={service.value} value={service.value}>
+            {service.label}
+          </SelectOption>
+        ))
+      }
+      maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
+      isCheckboxSelectionBadgeHidden
+      footer={
+        <Button variant="link" isInline onClick={selectAllServices}>
+          {serviceIdsSelected.length === options.length ? TopologyLabels.DeselectAll : TopologyLabels.SelectAll}
+        </Button>
+      }
+    >
+      {options.map((option) => (
+        <SelectOption key={option.key} value={option.value}>
+          {option.label}
+        </SelectOption>
+      ))}
+    </Select>
+  );
+};
+
+const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected, onSelected: onSelect }) {
   const { data: services } = useQuery({
     queryKey: [QueriesServices.GetServices],
     queryFn: () => RESTApi.fetchServices(),
     refetchInterval: UPDATE_INTERVAL
   });
 
-  function handleToggleServiceMenu(openServiceMenu: boolean) {
-    setIsServiceSelectMenuOpen(openServiceMenu);
+  // Extract service options from fetched data (if available)
+  const options = services?.results?.map(({ name, identity }) => ({
+    key: identity,
+    value: identity,
+    label: name
+  }));
+
+  // If services options are not yet available, render a disabled placeholder
+  if (!options) {
+    return (
+      <Select onToggle={() => null} isDisabled={true} placeholderText={TopologyLabels.DisplayServicesDefaultLabel} />
+    );
   }
 
-  function handleSelectAllServices() {
-    const areAllServicesSelected = serviceIdsSelected.length === services?.results.length;
-    const newSelectedOptions = areAllServicesSelected
-      ? []
-      : (services?.results || []).map(({ identity }) => identity).sort();
+  // Determine initial selected service IDs (from props or all options)
+  const ids = initialIdsSelected || options.map(({ value }) => value);
 
-    setServiceIdsSelected(newSelectedOptions);
-
-    if (onSelect) {
-      onSelect(areAllServicesSelected ? [] : undefined);
-    }
-  }
-
-  function handleSelectService(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) {
-    const currentSelected = selection as string;
-
-    const isSelected = currentSelected ? serviceIdsSelected.includes(currentSelected) : undefined;
-    const newSelectedOptions = isSelected
-      ? // remove display option
-        serviceIdsSelected?.filter((option) => option !== currentSelected).sort()
-      : // add display option
-        [...(serviceIdsSelected || []), currentSelected].sort();
-
-    const areAllServicesSelected = newSelectedOptions.length === services?.results.length;
-    setServiceIdsSelected(areAllServicesSelected ? [] : newSelectedOptions);
-
-    if (onSelect) {
-      onSelect(areAllServicesSelected ? undefined : newSelectedOptions);
-    }
-  }
-
-  function handleFindServices(_: ChangeEvent<HTMLInputElement> | null, value: string) {
-    const options = getOptions();
-
-    if (!value) {
-      return options;
-    }
-
-    return options
-      .filter((element) =>
-        element.props.children
-          ? element.props.children.toString().toLowerCase().includes(value.toLowerCase())
-          : undefined
-      )
-      .filter(Boolean);
-  }
-
-  const getOptions = useCallback(
-    () =>
-      (services?.results || []).map(({ name, identity }, index) => (
-        <SelectOption key={index + 1} value={identity}>
-          {name}
-        </SelectOption>
-      )),
-    [services?.results]
-  );
-
-  useEffect(() => {
-    if (serviceIds) {
-      setServiceIdsSelected(serviceIds);
-
-      return;
-    }
-
-    if (!serviceIdsSelected.length && services?.results.length) {
-      setServiceIdsSelected(services?.results.map(({ identity }) => identity) || []);
-    }
-  }, [serviceIds, serviceIdsSelected, services?.results]);
-
-  return (
-    <Select
-      role="service-select"
-      variant={SelectVariant.checkbox}
-      isOpen={isServiceSelectMenuOpen}
-      placeholderText={TopologyLabels.DisplayServicesDefaultLabel}
-      onSelect={handleSelectService}
-      onToggle={(_, isOpen) => handleToggleServiceMenu(isOpen)}
-      selections={serviceIdsSelected}
-      hasInlineFilter
-      inlineFilterPlaceholderText={TopologyLabels.ServiceFilterPlaceholderText}
-      onFilter={handleFindServices}
-      maxHeight={FILTER_BY_SERVICE_MAX_HEIGHT}
-      isCheckboxSelectionBadgeHidden
-      footer={
-        <Button variant="link" isInline onClick={handleSelectAllServices}>
-          {serviceIdsSelected.length === services?.results.length
-            ? TopologyLabels.DeselectAll
-            : TopologyLabels.SelectAll}
-        </Button>
-      }
-    >
-      {getOptions()}
-    </Select>
-  );
+  return <DisplayServicesContent options={options} initialIdsSelected={ids} onSelected={onSelect} />;
 };
 
 export default DisplayServices;
