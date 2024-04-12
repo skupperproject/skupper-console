@@ -28,9 +28,6 @@ export interface QueryMetricsParams {
   end?: number;
   duration?: number;
 }
-export interface SelectedMetricFilters extends QueryMetricsParams {
-  refreshDataInterval?: number;
-}
 
 export interface ExpandedMetricSections {
   byterate?: boolean;
@@ -41,7 +38,7 @@ export interface ExpandedMetricSections {
 }
 
 export interface MetricsProps {
-  defaultMetricFilterValues: SelectedMetricFilters;
+  defaultMetricFilterValues: QueryMetricsParams;
   defaultOpenSections?: ExpandedMetricSections;
   startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
@@ -52,12 +49,10 @@ export interface MetricsProps {
   configFilters?: ConfigMetricFilters;
   onGetMetricFiltersConfig?: Function;
   onGetExpandedSectionsConfig?: Function;
-  refreshDataInterval?: number;
 }
 
 export interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
-  defaultRefreshDataInterval?: number;
   startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
   destSites?: { destinationName: string }[];
@@ -67,7 +62,7 @@ export interface MetricFiltersProps {
   configFilters?: ConfigMetricFilters;
   isRefetching?: boolean;
   onRefetch?: Function;
-  onSelectFilters?: (params: SelectedMetricFilters, refreshIntervalSelected?: number) => void;
+  onSelectFilters?: (params: QueryMetricsParams) => void;
 }
 
 export interface DateTimePickerProps {

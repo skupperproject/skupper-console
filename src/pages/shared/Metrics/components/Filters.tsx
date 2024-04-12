@@ -40,7 +40,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
   ({
     configFilters = {},
     defaultMetricFilterValues,
-    defaultRefreshDataInterval,
     sourceSites,
     destSites,
     sourceProcesses,
@@ -69,7 +68,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     const [selectedFilters, setSelectedFilters] = useState<QueryMetricsParams>(defaultMetricFilterValues);
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState<Record<string, boolean>>(filterToggleDefault);
-    const [refreshInterval] = useState(defaultRefreshDataInterval);
 
     // Handler for toggling the open and closed states of a Select element.
     function handleToggleMenu(ev: ReactMouseEvent, openFilter: Record<string, boolean>) {
@@ -87,7 +85,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilters(filters);
 
       if (onSelectFilters) {
-        onSelectFilters(filters, refreshInterval);
+        onSelectFilters(filters);
       }
     }
 
@@ -99,7 +97,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilters(filter);
 
       if (onSelectFilters) {
-        onSelectFilters(filter, refreshInterval);
+        onSelectFilters(filter);
       }
     }
 
@@ -115,7 +113,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilters({ ...selectedFilters, start, end, duration });
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilters, start, end, duration }, duration ? refreshInterval : 0);
+        onSelectFilters({ ...selectedFilters, start, end, duration });
       }
     }
 

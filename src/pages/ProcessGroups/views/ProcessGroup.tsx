@@ -14,7 +14,7 @@ import MainContainer from '@layout/MainContainer';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
@@ -47,7 +47,7 @@ const ProcessGroup = function () {
   });
 
   const handleSelectedFilters = useCallback(
-    (filters: SelectedMetricFilters) => {
+    (filters: QueryMetricsParams) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`, filters);
     },
     [processGroupId]
@@ -112,7 +112,7 @@ const ProcessGroup = function () {
                 sourceProcess: serverNameFilters
                   .map(({ destinationName }) => destinationName)
                   .join(prometheusProcessNameseparator),
-                ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
+                ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
               startTimeLimit={startTime}
               sourceProcesses={serverNameFilters}

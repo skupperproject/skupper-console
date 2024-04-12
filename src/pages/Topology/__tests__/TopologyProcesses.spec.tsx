@@ -89,7 +89,6 @@ describe('Topology Process', () => {
     jest.clearAllMocks();
   });
 
-
   it('should clicking on a node', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout

@@ -9,7 +9,7 @@ import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesProcesses } from '../Processes.enum';
 import { OverviewProps } from '../Processes.interfaces';
@@ -44,8 +44,8 @@ const Overview: FC<OverviewProps> = function ({
   });
 
   const handleSelectedFilters = useCallback(
-    (filters: SelectedMetricFilters) => {
-      storeDataToSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
+    (filters: QueryMetricsParams) => {
+      storeDataToSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
     },
     [processId]
   );
@@ -95,7 +95,7 @@ const Overview: FC<OverviewProps> = function ({
       defaultMetricFilterValues={{
         sourceProcess: name,
         sourceSite: `${parentName}${prometheusSiteNameAndIdSeparator}${parent}`,
-        ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
+        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       startTimeLimit={startTime}
       configFilters={{

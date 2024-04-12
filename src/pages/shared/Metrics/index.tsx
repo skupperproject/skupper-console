@@ -10,55 +10,47 @@ import Request from './components/Request';
 import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
-import { MetricsProps, QueryMetricsParams } from './Metrics.interfaces';
+import { ExpandedMetricSections, MetricsProps, QueryMetricsParams } from './Metrics.interfaces';
 
-const Metrics: FC<MetricsProps> = function ({
-  configFilters, // General configuration for filters (e.g., hide/show, enable/disable)
-  defaultMetricFilterValues, // Initial values when the component mounts for filters
-  defaultOpenSections, // Initial values when the component mounts for opened/closed metric sections
-  sourceSites, // List of source sites used to populate the filter options
-  destSites, // List of destination sites used in the filter
-  sourceProcesses, // List of source processes for filtering
-  destProcesses, // List of destination processes for filtering
-  availableProtocols, // List of available protocols for filtering
-  startTimeLimit, // Use startTimeLimit to set the left temporal limit of the SelectTimeInterval filter
-  onGetMetricFiltersConfig, // Function to retrieve the filter configuration
-  onGetExpandedSectionsConfig // Function to retrieve the open/close status of metric sections
-}) {
-  const { refreshDataInterval: defaultRefreshDataInterval, ...filters } = defaultMetricFilterValues;
+interface UseMetricsProps {
+  defaultMetricFilterValues: QueryMetricsParams;
+  defaultOpenSections?: ExpandedMetricSections;
+  onGetMetricFiltersConfig?: Function;
+  onGetExpandedSectionsConfig?: Function;
+}
 
+export const useMetrics = ({
+  defaultMetricFilterValues,
+  defaultOpenSections,
+  onGetMetricFiltersConfig,
+  onGetExpandedSectionsConfig
+}: UseMetricsProps) => {
+  const { ...filters } = defaultMetricFilterValues;
   const [queryParams, setQueryParams] = useState<QueryMetricsParams>(filters);
-  const [refetchInterval, setRefetchInterval] = useState(defaultRefreshDataInterval);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
-  // keep track of the the open/close status sections
   const expandedSectionsConfigRef = useRef(defaultOpenSections);
 
-  //Filters: refetch manually the prometheus API
-  const handleShouldUpdateData = useCallback(() => {
+  const triggerMetricUpdate = () => {
     setShouldUpdateData(new Date().getTime());
-  }, []);
+  };
 
-  // Filters: Set the prometheus query params with the filter values
-  const handleUpdateQueryParams = useCallback(
-    (updatedFilters: QueryMetricsParams, refreshDataInterval?: number) => {
-      setRefetchInterval(refreshDataInterval);
-
+  const handleFilterChange = useCallback(
+    (updatedFilters: QueryMetricsParams) => {
       startTransition(() => {
         setQueryParams(updatedFilters);
       });
 
       if (onGetMetricFiltersConfig) {
-        onGetMetricFiltersConfig({ ...updatedFilters, refreshDataInterval });
+        onGetMetricFiltersConfig({ ...updatedFilters });
       }
     },
     [onGetMetricFiltersConfig]
   );
 
-  const handleUpdateExpandedSections = useCallback(
+  const handleSectionToggle = useCallback(
     (section: Record<string, boolean>) => {
       if (onGetExpandedSectionsConfig) {
         const config = { ...expandedSectionsConfigRef.current, ...section };
-
         onGetExpandedSectionsConfig(config);
         expandedSectionsConfigRef.current = config;
       }
@@ -66,11 +58,40 @@ const Metrics: FC<MetricsProps> = function ({
     [onGetExpandedSectionsConfig]
   );
 
+  return {
+    queryParams,
+    shouldUpdateData,
+    triggerMetricUpdate,
+    handleFilterChange,
+    handleSectionToggle
+  };
+};
+
+const Metrics: FC<MetricsProps> = function (props) {
+  const {
+    configFilters,
+    defaultMetricFilterValues,
+    defaultOpenSections,
+    sourceSites,
+    destSites,
+    sourceProcesses,
+    destProcesses,
+    availableProtocols,
+    startTimeLimit,
+    onGetMetricFiltersConfig,
+    onGetExpandedSectionsConfig
+  } = props;
+
+  const { queryParams, shouldUpdateData, triggerMetricUpdate, handleFilterChange, handleSectionToggle } = useMetrics({
+    defaultMetricFilterValues,
+    defaultOpenSections,
+    onGetMetricFiltersConfig,
+    onGetExpandedSectionsConfig
+  });
   // case: hide if We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
   const showHttp =
     queryParams.protocol !== AvailableProtocols.Tcp &&
     !(availableProtocols?.length === 1 && availableProtocols[0] === AvailableProtocols.Tcp);
-
   const showTcp = !queryParams.protocol || queryParams.protocol === AvailableProtocols.Tcp;
 
   return (
@@ -79,50 +100,42 @@ const Metrics: FC<MetricsProps> = function ({
         <MetricFilters
           configFilters={configFilters}
           defaultMetricFilterValues={defaultMetricFilterValues}
-          defaultRefreshDataInterval={defaultRefreshDataInterval}
           sourceSites={sourceSites}
           destSites={destSites}
           sourceProcesses={sourceProcesses}
           destProcesses={destProcesses}
           availableProtocols={availableProtocols}
           startTimeLimit={startTimeLimit}
-          onRefetch={handleShouldUpdateData}
-          onSelectFilters={handleUpdateQueryParams}
+          onRefetch={triggerMetricUpdate}
+          onSelectFilters={handleFilterChange}
         />
       </StackItem>
-
       <StackItem>
         <Traffic
           selectedFilters={queryParams}
           forceUpdate={shouldUpdateData}
-          refetchInterval={refetchInterval}
           openSections={defaultOpenSections?.byterate}
-          onGetIsSectionExpanded={handleUpdateExpandedSections}
+          onGetIsSectionExpanded={handleSectionToggle}
         />
       </StackItem>
-
       {showTcp && (
         <StackItem>
           <TcpConnection
             selectedFilters={queryParams}
             forceUpdate={shouldUpdateData}
-            refetchInterval={refetchInterval}
             openSections={defaultOpenSections?.connection}
-            onGetIsSectionExpanded={handleUpdateExpandedSections}
+            onGetIsSectionExpanded={handleSectionToggle}
           />
         </StackItem>
       )}
-
       <StackItem>
         <Latency
           selectedFilters={queryParams}
           openSections={defaultOpenSections?.latency}
           forceUpdate={shouldUpdateData}
-          refetchInterval={refetchInterval}
-          onGetIsSectionExpanded={handleUpdateExpandedSections}
+          onGetIsSectionExpanded={handleSectionToggle}
         />
       </StackItem>
-
       {showHttp && (
         <>
           <StackItem>
@@ -130,18 +143,15 @@ const Metrics: FC<MetricsProps> = function ({
               selectedFilters={queryParams}
               openSections={defaultOpenSections?.request}
               forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-              onGetIsSectionExpanded={handleUpdateExpandedSections}
+              onGetIsSectionExpanded={handleSectionToggle}
             />
           </StackItem>
-
           <StackItem>
             <Response
               selectedFilters={queryParams}
               openSections={defaultOpenSections?.response}
               forceUpdate={shouldUpdateData}
-              refetchInterval={refetchInterval}
-              onGetIsSectionExpanded={handleUpdateExpandedSections}
+              onGetIsSectionExpanded={handleSectionToggle}
             />
           </StackItem>
         </>

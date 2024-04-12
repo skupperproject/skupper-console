@@ -133,6 +133,7 @@ const DateTimeRangeFilter: FC<SelectTimeIntervalProps> = function ({
               <DescriptionListGroup>
                 <DescriptionListDescription>
                   <Button
+                    data-testId="date-time-picker-calendar-button"
                     variant="primary"
                     onClick={() => handleSelectFromDateTimePicker()}
                     isDisabled={!(start && end)}
