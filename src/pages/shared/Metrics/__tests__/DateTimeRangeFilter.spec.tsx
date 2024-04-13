@@ -2,19 +2,23 @@ import { render, fireEvent, screen } from '@testing-library/react';
 
 import { timeIntervalMap } from '@config/prometheus';
 
-import DateTimeRangeFilter from '../components/DateTimeRangeFilter';
+import { DateTimeRangeFilterContent } from '../components/DateTimeRangeFilter';
 import { MetricsLabels } from '../Metrics.enum';
 
-describe('DateTimeRangeFilter Component', () => {
+describe('DateTimeRangeFilter component', () => {
   const onSelectTimeIntervalMock = jest.fn();
-  it('renders the component with default values', () => {
+  const onChangeLabelMock = jest.fn();
+  const onShowTimeIntervalMock = jest.fn();
+
+  it('should render the component with default labels', () => {
     render(
-      <DateTimeRangeFilter
+      <DateTimeRangeFilterContent
         startTimeLimit={1695433450000000}
         startSelected={1699236000}
         endSelected={1699237800}
+        showTimeInterval={onShowTimeIntervalMock}
         onSelectTimeInterval={onSelectTimeIntervalMock}
-        isDateTimeRangeFilterOpen={true}
+        onChangeLabel={onChangeLabelMock}
       />
     );
 
@@ -24,14 +28,15 @@ describe('DateTimeRangeFilter Component', () => {
     expect(screen.getByText(MetricsLabels.CalendarPickerButton)).toBeInTheDocument();
   });
 
-  it('selects a time interval from the dropdown', () => {
+  it('should select a time interval from the dropdown and call the callback function', () => {
     render(
-      <DateTimeRangeFilter
+      <DateTimeRangeFilterContent
         startTimeLimit={1695433450000000}
         startSelected={1699236000}
         endSelected={1699237800}
+        showTimeInterval={onShowTimeIntervalMock}
         onSelectTimeInterval={onSelectTimeIntervalMock}
-        isDateTimeRangeFilterOpen={true}
+        onChangeLabel={onChangeLabelMock}
       />
     );
     const dropdownButton = screen.getByText(MetricsLabels.CalendarTitlePicker);

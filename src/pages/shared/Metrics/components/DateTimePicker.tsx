@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useState } from 'react';
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react';
 
 import {
   CalendarMonth,
@@ -17,7 +17,28 @@ import { OutlinedCalendarAltIcon, OutlinedClockIcon } from '@patternfly/react-ic
 import { format } from 'date-fns';
 
 import { formatDate, formatTime } from '../Metrics.constants';
-import { DateTimePickerProps } from '../Metrics.interfaces';
+import { CalendarProps, DateTimePickerProps } from '../Metrics.interfaces';
+
+export const Calendar: FC<CalendarProps> = function ({ date, onChangeDate, startDate }) {
+  const disablePreEndDates = (currentDate: Date) => currentDate <= new Date();
+  const disablePreStartDates = (currentDate: Date) => (startDate ? currentDate >= startDate : true);
+
+  const handleChangeDate = useCallback(
+    (_: React.MouseEvent<HTMLButtonElement, MouseEvent>, newDate: Date) => {
+      onChangeDate(newDate);
+    },
+    [onChangeDate]
+  );
+
+  return (
+    <CalendarMonth
+      data-testid="calendar"
+      date={new Date(date)}
+      onChange={handleChangeDate}
+      validators={[disablePreEndDates, disablePreStartDates]}
+    />
+  );
+};
 
 const DateTimePicker: FC<DateTimePickerProps> = function ({
   defaultDate = formatDate,
@@ -25,15 +46,14 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
   isDisabled = false,
   startDate,
   onSelect,
-  testId = 'date-time-picker-calendar'
+  testid = 'date-time-picker-calendar',
+  CalendarComponent = Calendar,
+  isTimePickerOpen = false
 }) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [isTimeOpen, setIsTimeOpen] = useState(false);
+  const [isTimeOpen, setIsTimeOpen] = useState(isTimePickerOpen);
   const [valueDate, setValueDate] = useState(defaultDate);
   const [valueTime, setValueTime] = useState(defaultTime);
-
-  const disablePreEndDates = (date: Date) => date <= new Date();
-  const disablePreStartDates = (date: Date) => (startDate ? date >= startDate : true);
 
   const handleToggleCalendar = () => {
     setIsCalendarOpen(!isCalendarOpen);
@@ -45,33 +65,36 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
     setIsCalendarOpen(false);
   };
 
-  const handleSelectCalendar = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>, newValueDate: Date) => {
-    const date = format(newValueDate, formatDate);
-    const time = valueTime === formatTime ? '1:00' : valueTime;
-    setIsCalendarOpen(!isCalendarOpen);
-    setValueDate(date);
-    setValueTime(time);
+  const handleSelectCalendar = useCallback(
+    (date: Date) => {
+      const dateFormatted = format(date, formatDate);
+      const timeFormatted = valueTime === formatTime ? '1:00' : valueTime;
+      setIsCalendarOpen(false);
+      setValueDate(dateFormatted);
+      setValueTime(timeFormatted);
 
-    if (onSelect) {
-      onSelect({
-        seconds: new Date(Date.parse(`${date} ${time}`)).getTime() / 1000
-      });
-    }
-  };
+      if (onSelect) {
+        onSelect({
+          seconds: new Date(Date.parse(`${dateFormatted} ${timeFormatted}`)).getTime() / 1000
+        });
+      }
+    },
+    [onSelect, valueTime]
+  );
 
   const handleSelectTime = (ev: React.MouseEvent<Element, MouseEvent> | undefined) => {
     const date = valueDate === formatDate ? format(new Date(), formatDate) : valueDate;
     const time = ev?.currentTarget?.textContent as string;
 
-    setIsTimeOpen(!isTimeOpen);
-    setValueDate(date);
-    setValueTime(time);
-
     if (onSelect) {
       onSelect({
         seconds: new Date(Date.parse(`${date} ${time}`)).getTime() / 1000
       });
     }
+
+    setValueDate(date);
+    setValueTime(time);
+    setIsTimeOpen(false);
   };
 
   useEffect(() => {
@@ -79,17 +102,8 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
     setValueTime(defaultTime);
   }, [defaultDate, defaultTime]);
 
-  const Calendar = (
-    <CalendarMonth
-      data-testid={testId}
-      date={new Date(valueDate)}
-      onChange={handleSelectCalendar}
-      validators={[disablePreEndDates, disablePreStartDates]}
-    />
-  );
-
   const CalendarButton = (
-    <Button data-testid={`${testId}-button`} variant="control" onClick={handleToggleCalendar} isDisabled={isDisabled}>
+    <Button data-testid={`${testid}-button`} variant="control" onClick={handleToggleCalendar} isDisabled={isDisabled}>
       <OutlinedCalendarAltIcon />
     </Button>
   );
@@ -102,7 +116,7 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
       onOpenChange={setIsTimeOpen}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
-          data-testid={`${testId}-dropdown-button`}
+          data-testid={`${testid}-dropdown-button`}
           ref={toggleRef}
           onClick={handleToggleTime}
           isExpanded={isTimeOpen}
@@ -125,7 +139,9 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
   return (
     <Popover
       position="bottom"
-      bodyContent={Calendar}
+      bodyContent={
+        <CalendarComponent onChangeDate={handleSelectCalendar} date={new Date(valueDate)} startDate={startDate} />
+      }
       showClose={false}
       isVisible={isCalendarOpen}
       hasNoPadding
