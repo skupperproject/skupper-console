@@ -13,13 +13,13 @@ import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import ProcessPairs from '../components/ProcessesPairs';
+import ProcessPairsList from '../components/ProcessPairsList';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 
 const processResult = processesData.results[7] as ProcessResponse;
 const processPairsResult = processesPairsData.results[7] as ProcessPairsResponse | SitePairsResponse;
 
-describe('Process component', () => {
+describe('Processes Pairs component', () => {
   let server: Server;
   beforeEach(() => {
     server = loadMockServer() as Server;
@@ -30,7 +30,7 @@ describe('Process component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairs process={processResult} />
+          <ProcessPairsList process={processResult} />
         </Suspense>
       </Wrapper>
     );

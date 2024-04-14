@@ -8,7 +8,7 @@ import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
-import { ServiceResponse, ProcessResponse, RequestOptions } from 'API/REST.interfaces';
+import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from 'API/REST.interfaces';
 
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
 
@@ -121,21 +121,21 @@ export const initServersQueryParams = {
   endTime: 0 // active servers
 };
 
-export const initActiveConnectionsQueryParams: RequestOptions = {
+export const initActiveConnectionsQueryParams: RemoteFilterOptions = {
   state: TcpStatus.Active,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-export const initOldConnectionsQueryParams: RequestOptions = {
+export const initOldConnectionsQueryParams: RemoteFilterOptions = {
   state: TcpStatus.Terminated,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-export const initRequestsQueryParams: RequestOptions = {
+export const initRequestsQueryParams: RemoteFilterOptions = {
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC

@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Bullseye, Grid, GridItem, Icon } from '@patternfly/react-core';
 import { LongArrowAltRightIcon } from '@patternfly/react-icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
@@ -11,18 +11,10 @@ import LinkCell from '@core/components/LinkCell';
 
 import Details from './Details';
 import { ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
-import { ProcessPairProcessesProps } from '../Processes.interfaces';
+import { ProcessPairsDetailsDataProps, ProcessPairsDetailsProps } from '../Processes.interfaces';
 
-const ProcessPairDetails: FC<ProcessPairProcessesProps> = function ({ sourceId, destinationId }) {
-  const { data: source } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcess, sourceId],
-    queryFn: () => RESTApi.fetchProcess(sourceId)
-  });
-
-  const { data: destination } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetDestination, destinationId],
-    queryFn: () => RESTApi.fetchProcess(destinationId)
-  });
+const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, destinationId }) {
+  const { source, destination } = useFetchProcessPairDetails({ sourceId, destinationId });
 
   return (
     <Grid hasGutter>
@@ -32,7 +24,7 @@ const ProcessPairDetails: FC<ProcessPairProcessesProps> = function ({ sourceId, 
           title={LinkCell<ProcessResponse>({
             data: source,
             value: source.name,
-            link: `${ProcessesRoutesPaths.Processes}/${source.name}@${sourceId}`
+            link: `${ProcessesRoutesPaths.Processes}/${source.name}@${source.identity}`
           })}
         />
       </GridItem>
@@ -51,7 +43,7 @@ const ProcessPairDetails: FC<ProcessPairProcessesProps> = function ({ sourceId, 
           title={LinkCell<ProcessResponse>({
             data: destination,
             value: destination.name,
-            link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destinationId}`
+            link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destination.identity}`
           })}
         />
       </GridItem>
@@ -59,4 +51,24 @@ const ProcessPairDetails: FC<ProcessPairProcessesProps> = function ({ sourceId, 
   );
 };
 
-export default ProcessPairDetails;
+export default ProcessPairsDetails;
+
+const useFetchProcessPairDetails = ({
+  sourceId,
+  destinationId
+}: ProcessPairsDetailsProps): ProcessPairsDetailsDataProps => {
+  const [{ data: source }, { data: destination }] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcess, sourceId],
+        queryFn: () => RESTApi.fetchProcess(sourceId)
+      },
+      {
+        queryKey: [QueriesProcesses.GetDestination, destinationId],
+        queryFn: () => RESTApi.fetchProcess(destinationId)
+      }
+    ]
+  });
+
+  return { source, destination };
+};

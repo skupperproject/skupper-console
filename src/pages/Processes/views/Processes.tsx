@@ -9,7 +9,7 @@ import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
-import { RequestOptions } from 'API/REST.interfaces';
+import { RemoteFilterOptions } from 'API/REST.interfaces';
 
 import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
@@ -23,7 +23,7 @@ const initProcessesQueryParams = {
 
 const Processes = function () {
   const [externalProcessesQueryParams, setExternalProcessesQueryParams] =
-    useState<RequestOptions>(initProcessesQueryParams);
+    useState<RemoteFilterOptions>(initProcessesQueryParams);
 
   const { data: processData } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
@@ -31,7 +31,7 @@ const Processes = function () {
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const handleGetFilters = useCallback((params: RequestOptions) => {
+  const handleGetFilters = useCallback((params: RemoteFilterOptions) => {
     startTransition(() => {
       setExternalProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
     });

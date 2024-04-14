@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { fireEvent, render, renderHook } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { act } from 'react-dom/test-utils';
@@ -166,16 +165,6 @@ describe('DisplayServicesContent', () => {
     expect(queryByText('Service 3')).not.toBeInTheDocument();
   });
 });
-
-export function useCustomHook() {
-  return useQuery({ queryKey: ['customHook'], queryFn: () => mockServices });
-}
-const mockServices = {
-  results: [
-    { name: 'Service 1', identity: '1' },
-    { name: 'Service 2', identity: '2' }
-  ]
-};
 
 describe('DisplayServices', () => {
   let server: Server;

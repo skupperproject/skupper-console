@@ -19,7 +19,7 @@ import {
   processesHttpConnectedColumns
 } from '../Processes.constants';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
-import { ProcessPairsProps } from '../Processes.interfaces';
+import { ProcessesPairsListProps } from '../Processes.interfaces';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
@@ -27,7 +27,9 @@ const metricQueryParams = {
   fetchLatency: { groupBy: 'sourceProcess, destProcess' }
 };
 
-const ProcessPairs: FC<ProcessPairsProps> = function ({ process: { identity: processId, name: processName } }) {
+const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
+  process: { identity: processId, name: processName }
+}) {
   const processesPairsTxQueryParams = {
     sourceId: processId
   };
@@ -204,4 +206,4 @@ const ProcessPairs: FC<ProcessPairsProps> = function ({ process: { identity: pro
   );
 };
 
-export default ProcessPairs;
+export default ProcessPairsList;

@@ -7,14 +7,14 @@ import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkSearchFilter from '@core/components/SkSearchFilter';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import FlowPairs from '@pages/shared/FlowPairs';
-import { FlowPairsResponse, RequestOptions } from 'API/REST.interfaces';
+import { FlowPairsResponse, RemoteFilterOptions } from 'API/REST.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 
 interface FlowPairsServiceTableProps {
   serviceId: string;
   columns: SKColumn<FlowPairsResponse>[];
-  filters: RequestOptions;
+  filters: RemoteFilterOptions;
   options: { id: string; name: string }[];
   pagination?: number;
 }
@@ -34,7 +34,7 @@ const FlowPairsService: FC<FlowPairsServiceTableProps> = function ({
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const handleGetFilters = useCallback((params: RequestOptions) => {
+  const handleGetFilters = useCallback((params: RemoteFilterOptions) => {
     startTransition(() => {
       setQueryParams(params);
     });
