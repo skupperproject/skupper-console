@@ -4,8 +4,8 @@ import { Wrapper } from '@core/components/Wrapper';
 
 import SkUpdateDataButton, { refreshDataIntervalMap } from '..';
 
-describe('SkUpdateDataButton', () => {
-  it('renders the component', () => {
+describe('SkUpdateDataButton component', () => {
+  it('should renders the component with "Refresh off" text', () => {
     render(
       <Wrapper>
         <SkUpdateDataButton />
@@ -15,7 +15,7 @@ describe('SkUpdateDataButton', () => {
     expect(screen.getByText('Refresh off')).toBeInTheDocument();
   });
 
-  it('Open the refresh interval select', () => {
+  it('should opens the refresh interval dropdown on button click', async () => {
     const onClickMock = jest.fn();
     render(
       <Wrapper>
@@ -23,11 +23,13 @@ describe('SkUpdateDataButton', () => {
       </Wrapper>
     );
 
-    fireEvent.click(screen.getByText('Refresh off'));
-    expect(screen.getByText(refreshDataIntervalMap[1].key)).toBeInTheDocument();
+    await waitFor(() => {
+      fireEvent.click(screen.getByText('Refresh off'));
+      expect(screen.getByText(refreshDataIntervalMap[1].key)).toBeInTheDocument();
+    });
   });
 
-  it('calls onRefreshIntervalSelected and revalidateLiveQueries when a new interval is selected', () => {
+  it('calls onRefreshIntervalSelected and revalidateLiveQueries when a new interval is selected', async () => {
     const onRefreshIntervalSelectedMock = jest.fn();
     const revalidateLiveQueriesMock = jest.fn();
 
@@ -43,11 +45,14 @@ describe('SkUpdateDataButton', () => {
 
     fireEvent.click(screen.getByText(refreshDataIntervalMap[1].key));
     fireEvent.click(screen.getByText(refreshDataIntervalMap[2].key));
-    expect(revalidateLiveQueriesMock).toHaveBeenCalledTimes(1);
-    expect(onRefreshIntervalSelectedMock).toHaveBeenCalledWith(refreshDataIntervalMap[2].value);
+
+    await waitFor(() => {
+      expect(revalidateLiveQueriesMock).toHaveBeenCalledTimes(1);
+      expect(onRefreshIntervalSelectedMock).toHaveBeenCalledWith(refreshDataIntervalMap[2].value);
+    });
   });
 
-  it('calls revalidateLiveQueries when the interval is updated', async () => {
+  it('should calls functions on refresh interval selection', async () => {
     const revalidateLiveQueriesMock = jest.fn();
     render(
       <Wrapper>

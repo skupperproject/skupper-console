@@ -9,11 +9,11 @@ import SkIsLoading from '@core/components/SkIsLoading';
 
 import TrafficCharts from './TrafficCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import { QueriesMetrics, SelectedMetricFilters } from '../Metrics.interfaces';
+import { QueriesMetrics, QueryMetricsParams } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface TrafficProps {
-  selectedFilters: SelectedMetricFilters;
+  selectedFilters: QueryMetricsParams;
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;

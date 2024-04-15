@@ -1,3 +1,5 @@
+import { ComponentType } from 'react';
+
 import { AvailableProtocols } from '@API/REST.enum';
 
 export interface ConfigMetricFilters {
@@ -28,9 +30,6 @@ export interface QueryMetricsParams {
   end?: number;
   duration?: number;
 }
-export interface SelectedMetricFilters extends QueryMetricsParams {
-  refreshDataInterval?: number;
-}
 
 export interface ExpandedMetricSections {
   byterate?: boolean;
@@ -41,7 +40,7 @@ export interface ExpandedMetricSections {
 }
 
 export interface MetricsProps {
-  defaultMetricFilterValues: SelectedMetricFilters;
+  defaultMetricFilterValues: QueryMetricsParams;
   defaultOpenSections?: ExpandedMetricSections;
   startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
@@ -52,12 +51,10 @@ export interface MetricsProps {
   configFilters?: ConfigMetricFilters;
   onGetMetricFiltersConfig?: Function;
   onGetExpandedSectionsConfig?: Function;
-  refreshDataInterval?: number;
 }
 
 export interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
-  defaultRefreshDataInterval?: number;
   startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
   destSites?: { destinationName: string }[];
@@ -67,7 +64,13 @@ export interface MetricFiltersProps {
   configFilters?: ConfigMetricFilters;
   isRefetching?: boolean;
   onRefetch?: Function;
-  onSelectFilters?: (params: SelectedMetricFilters, refreshIntervalSelected?: number) => void;
+  onSelectFilters?: (params: QueryMetricsParams) => void;
+}
+
+export interface CalendarProps {
+  date: Date;
+  onChangeDate: (date: Date) => void;
+  startDate?: Date;
 }
 
 export interface DateTimePickerProps {
@@ -76,7 +79,9 @@ export interface DateTimePickerProps {
   isDisabled?: boolean;
   startDate?: Date;
   onSelect?: Function;
-  testId?: string;
+  testid?: string;
+  isTimePickerOpen?: boolean;
+  CalendarComponent?: ComponentType<CalendarProps>;
 }
 
 export interface SelectTimeIntervalProps {

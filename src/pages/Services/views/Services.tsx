@@ -4,7 +4,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
-import { RequestOptions } from '@API/REST.interfaces';
+import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkSearchFilter from '@core/components/SkSearchFilter';
@@ -15,12 +15,12 @@ import { ServicesController } from '../services';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
 import { ServicesLabels, QueriesServices } from '../Services.enum';
 
-const initOldConnectionsQueryParams: RequestOptions = {
+const initOldConnectionsQueryParams: RemoteFilterOptions = {
   limit: BIG_PAGINATION_SIZE
 };
 
 const Services = function () {
-  const [servicesQueryParams, setServicesQueryParams] = useState<RequestOptions>(initOldConnectionsQueryParams);
+  const [servicesQueryParams, setServicesQueryParams] = useState<RemoteFilterOptions>(initOldConnectionsQueryParams);
 
   const [{ data: servicesData }, { data: tcpActiveFlows }] = useSuspenseQueries({
     queries: [
@@ -37,7 +37,7 @@ const Services = function () {
     ]
   });
 
-  const handleSetServiceFilters = useCallback((params: RequestOptions) => {
+  const handleSetServiceFilters = useCallback((params: RemoteFilterOptions) => {
     startTransition(() => {
       setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
     });

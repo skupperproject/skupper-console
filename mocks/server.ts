@@ -1,6 +1,6 @@
 import { createServer, Response } from 'miragejs';
 
-import { FlowDirection } from '@API/REST.enum';
+import { AvailableProtocols, FlowDirection } from '@API/REST.enum';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -443,11 +443,23 @@ export function loadMockServer() {
       });
 
       this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
-        const results = flowPairs.results.filter(
-          ({ processAggregateId }: FlowPairsResponse) => processAggregateId === queryParams.processAggregateId
-        );
+        let results = [];
 
-        return { ...processPairs, results };
+        if (queryParams.protocol === AvailableProtocols.Tcp) {
+          results = flowPairs.results.filter(
+            ({ processAggregateId, protocol, endTime }: FlowPairsResponse) =>
+              processAggregateId === queryParams.processAggregateId &&
+              protocol === queryParams.protocol &&
+              (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
+          );
+        } else {
+          results = flowPairs.results.filter(
+            ({ processAggregateId, protocol }: FlowPairsResponse) =>
+              processAggregateId === queryParams.processAggregateId && protocol === queryParams.protocol
+          );
+        }
+
+        return { ...processPairs, results, timeRangeCount: results.length };
       });
 
       this.get(`${prefix}/flowpairs/:id`, (_, { params: { id } }) => ({

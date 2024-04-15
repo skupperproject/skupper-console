@@ -1,5 +1,5 @@
 import { SortDirection } from './REST.enum';
-import { QueryParams, RequestOptions } from './REST.interfaces';
+import { QueryParams, RemoteFilterOptions } from './REST.interfaces';
 
 /**
  * Extracts the "results" property from an Axios HTTP response data object with a "results" property.
@@ -20,7 +20,7 @@ export function mapOptionsToQueryParams({
   timeRangeEnd,
   timeRangeStart,
   ...queryParams
-}: RequestOptions): QueryParams {
+}: RemoteFilterOptions): QueryParams {
   return {
     filter,
     offset,

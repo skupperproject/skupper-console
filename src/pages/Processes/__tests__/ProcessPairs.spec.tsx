@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
+import { AvailableProtocols } from '@API/REST.enum';
 import { ProcessPairsResponse, SitePairsResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
@@ -12,9 +13,11 @@ import processPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import ProcessPairs from '../views/ProcessPair';
+import ProcessPairs, { ProcessPairsContent } from '../views/ProcessPairs';
 
-const processPairsResult = processPairsData.results[0] as ProcessPairsResponse | SitePairsResponse;
+const processPairsResultOpToCart = processPairsData.results[0] as ProcessPairsResponse | SitePairsResponse; // HTTP2 flow
+const processPairsResultDatabaseToPayment = processPairsData.results[6] as ProcessPairsResponse | SitePairsResponse; // old TCP flow and active TCP flow
+const processPairsResultPayment2ToOp = processPairsData.results[4] as ProcessPairsResponse | SitePairsResponse; // old TCP flow
 
 describe('Begin testing the Processes component', () => {
   let server: Server;
@@ -22,15 +25,9 @@ describe('Begin testing the Processes component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    jest.spyOn(router, 'useParams').mockReturnValue({ processPair: `${'test'}@${processPairsResult.identity}` });
-
-    render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <ProcessPairs />
-        </Suspense>
-      </Wrapper>
-    );
+    jest
+      .spyOn(router, 'useParams')
+      .mockReturnValue({ processPair: `${'test'}@${processPairsResultOpToCart.identity}` });
   });
 
   afterEach(() => {
@@ -39,15 +36,126 @@ describe('Begin testing the Processes component', () => {
   });
 
   it('should render a loading page when data is loading', () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <ProcessPairs />
+        </Suspense>
+      </Wrapper>
+    );
+
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
   });
 
   it('should render the ProcessPairs view after the data loading is complete', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <ProcessPairs />
+        </Suspense>
+      </Wrapper>
+    );
+
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
-    expect(screen.getByTestId(getTestsIds.processPairsView(processPairsResult.identity))).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.processPairsView(processPairsResultOpToCart.identity))).toBeInTheDocument();
   });
+
+  it('should render render the HTTP2 Process Pairs Content Component', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <ProcessPairsContent
+            processPairId={processPairsResultOpToCart.identity}
+            sourceId={processPairsResultOpToCart.sourceId}
+            destinationId={processPairsResultOpToCart.destinationId}
+            protocol={AvailableProtocols.Http2}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    expect(screen.getByTestId('http2-table')).toBeInTheDocument();
+  });
+
+  it('should render render the TCP Process Pairs Content Component and the tab Live connection is active', async () => {
+    const { queryByTestId, getByText, getByTestId } = render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <ProcessPairsContent
+            processPairId={processPairsResultDatabaseToPayment.identity}
+            sourceId={processPairsResultDatabaseToPayment.sourceId}
+            destinationId={processPairsResultDatabaseToPayment.destinationId}
+            protocol={AvailableProtocols.Tcp}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
+    await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    expect(getByTestId('tcp-active-connections-table')).toBeInTheDocument();
+    expect(getByText('Connection history (0)').closest('button')).toBeDisabled();
+  });
+
+  it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
+    const { queryByTestId, getByText, getByTestId } = render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <ProcessPairsContent
+            processPairId={processPairsResultPayment2ToOp.identity}
+            sourceId={processPairsResultPayment2ToOp.sourceId}
+            destinationId={processPairsResultPayment2ToOp.destinationId}
+            protocol={AvailableProtocols.Tcp}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
+    await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    fireEvent.click(getByText('Connection history (1)'));
+
+    expect(getByTestId('tcp-old-connections-table')).toBeInTheDocument();
+  });
+
+  // it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
+  //   const { handleGetFilters } = renderHook(() =>
+  //     useProcessPairsContent({
+  //       protocol: AvailableProtocols.Tcp
+  //     })
+  //   );
+
+  //   const { queryByTestId, getByText } = render(
+  //     <Wrapper>
+  //       <Suspense fallback={<LoadingPage />}>
+  //         <ProcessPairsContent
+  //           processPairId={processPairsResultPayment2ToOp.identity}
+  //           sourceId={processPairsResultPayment2ToOp.sourceId}
+  //           destinationId={processPairsResultPayment2ToOp.destinationId}
+  //           protocol={AvailableProtocols.Tcp}
+  //         />
+  //       </Suspense>
+  //     </Wrapper>
+  //   );
+
+  //   await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
+  //     timeout: waitForElementToBeRemovedTimeout
+  //   });
+
+  //   fireEvent.click(getByText('Duration'));
+
+  //   expect(handleGetFilters).toHaveBeenCalledTimes(1);
+  // });
 });

@@ -9,11 +9,11 @@ import SkIsLoading from '@core/components/SkIsLoading';
 
 import ResponseCharts from './ResponseCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import { SelectedMetricFilters, QueriesMetrics } from '../Metrics.interfaces';
+import { QueryMetricsParams, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface ResponseProps {
-  selectedFilters: SelectedMetricFilters;
+  selectedFilters: QueryMetricsParams;
   openSections?: boolean;
   forceUpdate?: number;
   refetchInterval?: number;

@@ -9,7 +9,7 @@ import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 
@@ -85,7 +85,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
       defaultMetricFilterValues={{
         protocol,
         service: serviceName,
-        ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
+        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
       }}
       configFilters={{
         sourceSites: {

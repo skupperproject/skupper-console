@@ -8,7 +8,7 @@ import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, SelectedMetricFilters } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
 
@@ -44,7 +44,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
   });
 
   const handleSelectedFilters = useCallback(
-    (filters: SelectedMetricFilters) => {
+    (filters: QueryMetricsParams) => {
       storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`, filters);
     },
     [siteId]
@@ -89,7 +89,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
       }}
       defaultMetricFilterValues={{
         sourceSite: `${name}${prometheusSiteNameAndIdSeparator}${siteId}`,
-        ...getDataFromSession<SelectedMetricFilters>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
+        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
       }}
       startTimeLimit={startTime}
       configFilters={{

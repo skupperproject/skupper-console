@@ -1,75 +1,96 @@
+import { FC } from 'react';
+
+import { Button } from '@patternfly/react-core';
 import { render, screen, fireEvent } from '@testing-library/react';
 
-import DateTimePicker from '../components/DateTimePicker';
+import DateTimePicker, { Calendar } from '../components/DateTimePicker';
+import { CalendarProps } from '../Metrics.interfaces';
 
-describe('DateTimePicker', () => {
-  it('should render with default values', () => {
+const CalendarComponentMock: FC<CalendarProps> = function ({ onChangeDate }) {
+  return (
+    <Button
+      data-testid="date-time-picker-calendar-panel"
+      onClick={() => {
+        onChangeDate(new Date());
+      }}
+    >
+      Calendar Text
+    </Button>
+  );
+};
+
+describe('Calendar component', () => {
+  const onChangeDateMock = jest.fn();
+
+  it('should render the Calendar component with date', () => {
+    const { getByTestId, getAllByText } = render(<Calendar date={new Date()} onChangeDate={onChangeDateMock} />);
+
+    expect(getByTestId('calendar')).toBeInTheDocument();
+    expect(getAllByText('1')[0]).toBeInTheDocument();
+
+    fireEvent.click(getAllByText('1')[0]);
+    expect(onChangeDateMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('DateTimePicker component', () => {
+  const onSelectMock = jest.fn();
+
+  it('should render with the provided initial date', () => {
     render(<DateTimePicker startDate={new Date('2022-08-11')} />);
     const dateTimePickerInput = screen.getByTestId('date-time-picker-calendar-button');
     expect(dateTimePickerInput).toBeInTheDocument();
   });
 
-  it('should open the calendar when clicking the calendar button', () => {
-    render(<DateTimePicker startDate={new Date('2022-08-11')} />);
-
-    const calendarButton = screen.getByTestId('date-time-picker-calendar-button');
-    fireEvent.click(calendarButton);
-
-    const calendar = screen.getByTestId('date-time-picker-calendar');
-    expect(calendar).toBeInTheDocument();
-  });
-
-  it('should select a date and time from the calendar and time dropdown', () => {
-    const onSelectMock = jest.fn();
-    render(<DateTimePicker onSelect={onSelectMock} startDate={new Date('2022-08-11')} />);
-    const calendarButton = screen.getByTestId('date-time-picker-calendar-button');
-    fireEvent.click(calendarButton);
-
-    const calendar = screen.getByTestId('date-time-picker-calendar');
-    fireEvent.change(calendar);
-
-    const timeDropdownToggle = screen.getByTestId('date-time-picker-calendar-dropdown-button');
-    fireEvent.click(timeDropdownToggle);
-
-    const timeDropdownItem = screen.getByText('12:00');
-    fireEvent.click(timeDropdownItem);
-
-    // Make sure onSelect is called with the expected date and time
-    expect(onSelectMock).toHaveBeenCalledWith({ seconds: expect.any(Number) });
-  });
-
-  it('should disable the component when isDisabled is true', () => {
+  it('should disable the calendar button when the isDisabled prop is true', () => {
     render(<DateTimePicker isDisabled={true} startDate={new Date('2022-08-11')} />);
+
     const dateTimePickerInput = screen.getByTestId('date-time-picker-calendar-button');
     expect(dateTimePickerInput).toBeDisabled();
   });
 
-  it('should toggle the calendar when clicking the calendar button', () => {
-    const onSelectMock = jest.fn();
-    render(<DateTimePicker onSelect={onSelectMock} startDate={new Date('2022-08-11')} />);
+  it('should open the calendar panel when the calendar button is clicked', () => {
+    const { getByTestId } = render(
+      <DateTimePicker
+        startDate={new Date('2022-08-11')}
+        onSelect={onSelectMock}
+        CalendarComponent={CalendarComponentMock}
+      />
+    );
+
+    fireEvent.click(getByTestId('date-time-picker-calendar-button'));
+
+    const calendarBox = getByTestId('date-time-picker-calendar-panel');
+    expect(calendarBox).toBeInTheDocument();
+
+    fireEvent.click(calendarBox);
+
+    expect(onSelectMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should open the time dropdown and allow selecting a time', () => {
+    const { getByTestId, getByText } = render(<DateTimePicker onSelect={onSelectMock} />);
+
+    fireEvent.click(getByTestId('date-time-picker-calendar-dropdown-button'));
+
+    const timeItem = getByText('1:00');
+    expect(timeItem).toBeInTheDocument(); // Time dropdown should be open
+
+    fireEvent.click(timeItem);
+
+    expect(onSelectMock).toHaveBeenCalledWith({ seconds: expect.any(Number) });
+  });
+
+  it('should toggle the calendar panel on clicking the calendar button', () => {
+    render(<DateTimePicker CalendarComponent={CalendarComponentMock} />);
 
     const calendarButton = screen.getByTestId('date-time-picker-calendar-button');
     fireEvent.click(calendarButton);
 
-    const calendar = screen.queryByTestId('date-time-picker-calendar');
-    expect(calendar).toBeInTheDocument(); // Calendar should be open
+    const calendarBox = screen.getByTestId('date-time-picker-calendar-panel');
+    expect(calendarBox).toBeInTheDocument();
 
-    const cell = calendar?.querySelector('td button') as HTMLTableCellElement;
-    fireEvent.click(cell);
-
-    expect(onSelectMock).toHaveBeenCalledWith({ seconds: expect.any(Number) });
-    expect(calendar).not.toBeInTheDocument(); // Calendar should be closed
-  });
-
-  it('should toggle the time dropdown when clicking the time dropdown button', () => {
-    render(<DateTimePicker startDate={new Date('2022-08-11')} />);
-    const timeDropdownToggle = screen.getByTestId('date-time-picker-calendar-dropdown-button');
-    fireEvent.click(timeDropdownToggle);
-
-    const timeDropdown = screen.queryByRole('menu');
-    expect(timeDropdown).toBeInTheDocument(); // Time dropdown should be open
-
-    fireEvent.click(timeDropdownToggle);
-    expect(timeDropdown).not.toBeInTheDocument(); // Time dropdown should be closed
+    fireEvent.click(calendarButton);
+    expect(calendarBox).not.toBeInTheDocument();
   });
 });

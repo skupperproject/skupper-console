@@ -14,7 +14,7 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 
 import Details from '../components/Details';
 import Overview from '../components/Overview';
-import ProcessPairs from '../components/ProcessesPairs';
+import ProcessPairsList from '../components/ProcessPairsList';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const Process = function () {
@@ -94,7 +94,7 @@ const Process = function () {
         <>
           {tabSelected === ProcessesLabels.Overview && <Overview process={process} />}
           {tabSelected === ProcessesLabels.Details && <Details process={process} />}
-          {tabSelected === ProcessesLabels.ProcessPairs && <ProcessPairs process={process} />}
+          {tabSelected === ProcessesLabels.ProcessPairs && <ProcessPairsList process={process} />}
         </>
       }
     />
