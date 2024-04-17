@@ -1,5 +1,5 @@
 import { RESTApi } from '@API/REST.api';
-import { RequestOptions } from '@API/REST.interfaces';
+import { RemoteFilterOptions } from '@API/REST.interfaces';
 
 import { QueriesSites } from './Sites.enum';
 
@@ -10,12 +10,12 @@ const fetchHostsBySiteId = (siteId: string) => ({
   queryFn: () => RESTApi.fetchHostsBySite(siteId)
 });
 
-const fetchLinksBySiteId = (siteId: string, queryParams: RequestOptions) => ({
+const fetchLinksBySiteId = (siteId: string, queryParams: RemoteFilterOptions) => ({
   queryKey: [QueriesSites.GetLinksBySiteId, siteId],
   queryFn: () => RESTApi.fetchLinksBySite(siteId, queryParams)
 });
 
-const fetchProcessesBySiteId = (siteId: string, queryParams: RequestOptions) => ({
+const fetchProcessesBySiteId = (siteId: string, queryParams: RemoteFilterOptions) => ({
   queryKey: [QueriesSites.GetProcessesBySiteId, { ...queryParams, parent: siteId }],
   queryFn: () => RESTApi.fetchProcesses({ ...queryParams, parent: siteId })
 });
