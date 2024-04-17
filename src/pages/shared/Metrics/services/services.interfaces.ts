@@ -1,5 +1,5 @@
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
-import { PrometheusApiResult } from 'API/Prometheus.interfaces';
+import { PrometheusMetric } from 'API/Prometheus.interfaces';
 
 interface StatusCodeResponse {
   label: string;
@@ -56,10 +56,10 @@ export interface LatencyMetrics {
 }
 
 export interface LatencyMetricsProps {
-  quantile50latency: PrometheusApiResult[];
-  quantile90latency: PrometheusApiResult[];
-  quantile95latency: PrometheusApiResult[];
-  quantile99latency: PrometheusApiResult[];
+  quantile50latency: PrometheusMetric<'matrix'>[];
+  quantile90latency: PrometheusMetric<'matrix'>[];
+  quantile95latency: PrometheusMetric<'matrix'>[];
+  quantile99latency: PrometheusMetric<'matrix'>[];
 }
 
 export interface ConnectionMetrics {

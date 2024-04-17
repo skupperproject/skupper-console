@@ -1,9 +1,9 @@
 import { PrometheusApi } from '@API/Prometheus.api';
-import { PrometheusApiResult, PrometheusQueryParams } from '@API/Prometheus.interfaces';
+import { PrometheusMetric, PrometheusQueryParams } from '@API/Prometheus.interfaces';
 import {
-  extractPrometheusLabels,
-  extractPrometheusValues,
-  extractPrometheusValuesAndLabels
+  getTimeSeriesLabelsFromPrometheusData,
+  getTimeSeriesValuesFromPrometheusData,
+  getTimeSeriesFromPrometheusData
 } from '@API/Prometheus.utils';
 import { calculateStep, defaultTimeInterval } from '@config/prometheus';
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
@@ -305,21 +305,40 @@ const MetricsController = {
       }
 
       const liveConnectionsCount = Number(liveConnections[0]?.value[1]) || 0;
-      const liveConnectionsSerie = extractPrometheusValues(liveConnectionsInTimeRangeData);
+      const liveConnectionsSerie = getTimeSeriesValuesFromPrometheusData(liveConnectionsInTimeRangeData);
 
       return { liveConnectionsCount, liveConnectionsSerie };
     } catch (e: unknown) {
       return Promise.reject(e);
     }
+  },
+  /**
+   * Ensure that both the "Tx" and "Rx" data series have the same number of data points, even if one of the series has fewer data points than the other
+   * If one of the two series is empty, it is filled with values where y=0 and x equals the timestamp of the other series.
+   */
+  fillMissingDataWithZeros(rxSeries: skAxisXY[] = [], txSeries: skAxisXY[] = []) {
+    if (rxSeries.length === 0 && txSeries.length > 0) {
+      const filledRxSeries = txSeries.map(({ x }) => ({ y: 0, x }));
+
+      return [filledRxSeries, txSeries];
+    }
+
+    if (txSeries.length === 0 && rxSeries.length > 0) {
+      const filledTxSeries = rxSeries.map(({ x }) => ({ y: 0, x }));
+
+      return [rxSeries, filledTxSeries];
+    }
+
+    return [rxSeries, txSeries];
   }
 };
 
 export default MetricsController;
 
 /* UTILS */
-function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetrics | null {
+export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
-  const axisValues = extractPrometheusValuesAndLabels(data);
+  const axisValues = getTimeSeriesFromPrometheusData(data);
 
   if (!axisValues) {
     return null;
@@ -359,9 +378,9 @@ function normalizeResponsesFromSeries(data: PrometheusApiResult[]): ResponseMetr
   return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
-function normalizeRequestFromSeries(data: PrometheusApiResult[]): RequestMetrics[] | null {
-  const axisValues = extractPrometheusValues(data);
-  const labels = extractPrometheusLabels(data);
+export function normalizeRequestFromSeries(data: PrometheusMetric<'matrix'>[]): RequestMetrics[] | null {
+  const axisValues = getTimeSeriesValuesFromPrometheusData(data);
+  const labels = getTimeSeriesLabelsFromPrometheusData(data);
 
   if (!axisValues) {
     return null;
@@ -373,16 +392,16 @@ function normalizeRequestFromSeries(data: PrometheusApiResult[]): RequestMetrics
   }));
 }
 
-function normalizeLatencies({
+export function normalizeLatencies({
   quantile50latency,
   quantile90latency,
   quantile95latency,
   quantile99latency
 }: LatencyMetricsProps): LatencyMetrics[] | null {
-  const quantile50latencyNormalized = extractPrometheusValues(quantile50latency);
-  const quantile90latencyNormalized = extractPrometheusValues(quantile90latency);
-  const quantile95latencyNormalized = extractPrometheusValues(quantile95latency);
-  const quantile99latencyNormalized = extractPrometheusValues(quantile99latency);
+  const quantile50latencyNormalized = getTimeSeriesValuesFromPrometheusData(quantile50latency);
+  const quantile90latencyNormalized = getTimeSeriesValuesFromPrometheusData(quantile90latency);
+  const quantile95latencyNormalized = getTimeSeriesValuesFromPrometheusData(quantile95latency);
+  const quantile99latencyNormalized = getTimeSeriesValuesFromPrometheusData(quantile99latency);
 
   if (!quantile50latencyNormalized && !quantile90latencyNormalized && !quantile99latencyNormalized) {
     return null;
@@ -408,55 +427,45 @@ function normalizeLatencies({
   return latenciesNormalized;
 }
 
-function normalizeByteRateFromSeries(
-  txData: PrometheusApiResult[] | [],
-  rxData: PrometheusApiResult[] | []
+export function normalizeByteRateFromSeries(
+  txData: PrometheusMetric<'matrix'>[] | [],
+  rxData: PrometheusMetric<'matrix'>[] | []
 ): ByteRateMetrics {
-  const axisValuesTx = extractPrometheusValues(txData);
-  const axisValuesRx = extractPrometheusValues(rxData);
+  const txTimeSerie = getTimeSeriesValuesFromPrometheusData(txData)?.[0];
+  const rxTimeSerie = getTimeSeriesValuesFromPrometheusData(rxData)?.[rxData.length - 1];
 
-  const txTimeSerie = axisValuesTx ? axisValuesTx[0] : undefined;
-  const rxTimeSerie = axisValuesRx ? axisValuesRx[axisValuesRx.length - 1] : undefined;
-
-  const totalRxValue = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
   const totalTxValue = txTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+  const totalRxValue = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+
+  const calculateAverage = (timeSerie: skAxisXY[] | undefined, totalValue: number | undefined): number | undefined => {
+    if (!timeSerie || !totalValue) {
+      return undefined;
+    }
+
+    return totalValue / timeSerie.length;
+  };
+
+  const calculateMaxValue = (timeSerie: skAxisXY[] | undefined): number | undefined => {
+    if (!timeSerie) {
+      return undefined;
+    }
+
+    return Math.max(...timeSerie.map(({ y }) => y));
+  };
+
+  const currentTxValue = txTimeSerie?.[txTimeSerie.length - 1]?.y;
+  const currentRxValue = rxTimeSerie?.[rxTimeSerie.length - 1]?.y;
 
   return {
     txTimeSerie: txTimeSerie ? { data: txTimeSerie, label: 'Tx' } : undefined,
     rxTimeSerie: rxTimeSerie ? { data: rxTimeSerie, label: 'Rx' } : undefined,
-    avgTxValue: totalTxValue && rxTimeSerie ? totalTxValue / rxTimeSerie.length : undefined,
-    avgRxValue: totalRxValue && rxTimeSerie ? totalRxValue / rxTimeSerie.length : undefined,
-    maxTxValue: txTimeSerie ? Math.max(...txTimeSerie.map(({ y }) => y)) : undefined,
-    maxRxValue: rxTimeSerie ? Math.max(...rxTimeSerie.map(({ y }) => y)) : undefined,
-    currentTxValue: txTimeSerie ? txTimeSerie[txTimeSerie.length - 1].y : undefined,
-    currentRxValue: rxTimeSerie ? rxTimeSerie[rxTimeSerie.length - 1].y : undefined,
+    avgTxValue: calculateAverage(txTimeSerie, totalTxValue),
+    avgRxValue: calculateAverage(rxTimeSerie, totalRxValue),
+    maxTxValue: calculateMaxValue(txTimeSerie),
+    maxRxValue: calculateMaxValue(rxTimeSerie),
+    currentTxValue,
+    currentRxValue,
     totalTxValue,
     totalRxValue
   };
-}
-
-/**
-  If one of the two series is empty, it should be filled with values where y=0 and x equals the timestamp of the other series.
-  This prevents 'skipping' a series and maintains consistency with other metrics related to bytes/rate.
- */
-export function normalizeDataXaxis(rx: skAxisXY[] = [], tx: skAxisXY[] = []) {
-  if (!rx?.length && tx?.length) {
-    const rxNormalized = tx.map(({ x }) => ({
-      y: 0,
-      x
-    }));
-
-    return [rxNormalized, tx];
-  }
-
-  if (!tx?.length && rx?.length) {
-    const txNormalized = rx.map(({ x }) => ({
-      y: 0,
-      x
-    }));
-
-    return [rx, txNormalized];
-  }
-
-  return [rx, tx];
 }

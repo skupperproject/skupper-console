@@ -1,8 +1,8 @@
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 
-import { MetricData as MetricValuesAndLabels, PrometheusApiResult } from './Prometheus.interfaces';
+import { MetricData as MetricValuesAndLabels, PrometheusMetric } from './Prometheus.interfaces';
 
-export function extractPrometheusValues(data: PrometheusApiResult[]): skAxisXY[][] | null {
+export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {
   // Prometheus can retrieve empty arrays wich are not valid data for us
   if (!data.length) {
     return null;
@@ -20,7 +20,7 @@ export function extractPrometheusValues(data: PrometheusApiResult[]): skAxisXY[]
 /**
  * Converts an array of Prometheus result objects to a two-dimensional array of metric labels.
  */
-export function extractPrometheusLabels(data: PrometheusApiResult[]): string[] | null {
+export function getTimeSeriesLabelsFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): string[] | null {
   // Validate the input
   if (!Array.isArray(data) || data.length === 0) {
     return null;
@@ -30,13 +30,13 @@ export function extractPrometheusLabels(data: PrometheusApiResult[]): string[] |
   return data.flatMap(({ metric }) => Object.values(metric));
 }
 
-export function extractPrometheusValuesAndLabels(data: PrometheusApiResult[]): MetricValuesAndLabels | null {
+export function getTimeSeriesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): MetricValuesAndLabels | null {
   if (!data.length) {
     return null;
   }
 
-  const values = extractPrometheusValues(data) as skAxisXY[][];
-  const labels = extractPrometheusLabels(data) as string[];
+  const values = getTimeSeriesValuesFromPrometheusData(data) as skAxisXY[][];
+  const labels = getTimeSeriesLabelsFromPrometheusData(data) as string[];
 
   return { values, labels };
 }

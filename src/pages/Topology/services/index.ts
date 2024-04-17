@@ -1,5 +1,5 @@
 import { PrometheusApi } from '@API/Prometheus.api';
-import { PrometheusApiSingleResult } from '@API/Prometheus.interfaces';
+import { PrometheusMetric } from '@API/Prometheus.interfaces';
 import componentIcon from '@assets/component.svg';
 import kubernetesIcon from '@assets/kubernetes.svg';
 import podmanIcon from '@assets/podman.png';
@@ -154,7 +154,7 @@ export const TopologyController = {
   },
 
   addMetricsToProcessPairs: ({ processesPairs, metrics, prometheusKey, processPairsKey }: ProcessPairsWithMetrics) => {
-    const getPairsMap = (metricPairs: PrometheusApiSingleResult[] | undefined, key: string) =>
+    const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined, key: string) =>
       (metricPairs || []).reduce(
         (acc, { metric, value }) => {
           {
@@ -188,11 +188,11 @@ export const TopologyController = {
     metricSourceLabel: 'sourceProcess' | 'sourceSite', // Prometheus metric label to compare with the metricDestLabel
     metricDestLabel: 'destProcess' | 'destSite',
     protocolPairsMap?: Record<string, string>,
-    bytesByPairs?: PrometheusApiSingleResult[],
-    byteRateByPairs?: PrometheusApiSingleResult[],
-    latencyByPairs?: PrometheusApiSingleResult[]
+    bytesByPairs?: PrometheusMetric<'vector'>[],
+    byteRateByPairs?: PrometheusMetric<'vector'>[],
+    latencyByPairs?: PrometheusMetric<'vector'>[]
   ): GraphEdge[] => {
-    const getPairsMap = (metricPairs: PrometheusApiSingleResult[] | undefined) =>
+    const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined) =>
       (metricPairs || []).reduce(
         (acc, { metric, value }) => {
           {
@@ -222,7 +222,7 @@ export const TopologyController = {
         ...edge,
         type: edge.source === edge.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
         metrics: {
-          protocol: protocolPairsMap && protocolPairsMap[`${edge.source}${edge.target}`],
+          protocol: protocolPairsMap ? protocolPairsMap[`${edge.source}${edge.target}`] : '',
           bytes: bytesByPairsMap[pairKey],
           byteRate: byteRateByPairsMap[pairKey],
           latency: latencyByPairsMap[pairKey],
@@ -386,7 +386,7 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
         acc[group].metrics = {
           protocol:
             edge.metrics.protocol && acc[group]?.metrics?.protocol?.includes(edge.metrics.protocol)
-              ? acc[group]?.metrics?.protocol
+              ? acc[group]?.metrics?.protocol || ''
               : [acc[group]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean).join(','),
           bytes: (acc[group]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
           byteRate: (acc[group]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),

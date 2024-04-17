@@ -9,7 +9,7 @@ import SkChartPie from '@core/components/SkChartPie';
 import { formatByteRate } from '@core/utils/formatBytes';
 
 import { MetricsLabels } from '../Metrics.enum';
-import { normalizeDataXaxis } from '../services';
+import MetricsController from '../services';
 import { ByteRateMetrics } from '../services/services.interfaces';
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateData }) => (
@@ -18,7 +18,10 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
       <SkChartArea
         formatY={formatByteRate}
         legendLabels={[MetricsLabels.TrafficReceived, MetricsLabels.TrafficSent]}
-        data={normalizeDataXaxis(byteRateData.rxTimeSerie?.data, byteRateData.txTimeSerie?.data)}
+        data={MetricsController.fillMissingDataWithZeros(
+          byteRateData.rxTimeSerie?.data,
+          byteRateData.txTimeSerie?.data
+        )}
       />
     </FlexItem>
 

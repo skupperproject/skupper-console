@@ -112,8 +112,10 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
         labelOrientation="horizontal"
         labelPadding={16}
         theme={{
-          fontSize: theme?.fontSize,
-          fontFamily: theme?.fontFamily,
+          text: {
+            fontSize: theme?.fontSize,
+            fontFamily: theme?.fontFamily
+          },
           tooltip: theme?.tooltip
         }}
         labelTextColor={theme?.labelTextColor}
