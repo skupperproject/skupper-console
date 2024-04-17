@@ -13,7 +13,8 @@ export const queryClientConfig: QueryClientConfig = {
       refetchOnWindowFocus: false,
       refetchIntervalInBackground: true,
       suspense: false,
-      throwOnError: true
+      throwOnError: true,
+      queryKey: []
     }
   }
 };

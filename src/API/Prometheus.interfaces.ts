@@ -2,24 +2,34 @@ import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 
 import { AvailableProtocols, Quantiles } from './REST.enum';
 import { FlowDirections } from './REST.interfaces';
+// Common base type for result types
+type PrometheusResultType = 'matrix' | 'vector' | 'scalar' | 'string';
 
-type PrometheusApiResultValue = [number, `${number}` | 'NaN'];
-
-export interface PrometheusResponse<T> {
+// Interface for the overall Prometheus response
+export interface PrometheusResponse<T extends PrometheusResultType> {
+  status: string; // Response status (e.g., "success")
   data: {
-    result: T | [];
+    resultType: T; // Type of the result
+    result: PrometheusResult<T> | [];
   };
 }
 
-export type PrometheusApiSingleResult = {
-  metric: Record<string, string>;
-  value: PrometheusApiResultValue;
-};
+// Union type representing different result data structures
+export type PrometheusResult<T extends PrometheusResultType> = T extends 'matrix'
+  ? PrometheusMetric<'matrix'>[]
+  : T extends 'vector'
+    ? PrometheusMetric<'vector'>[]
+    : T extends 'scalar'
+      ? number
+      : T extends 'string'
+        ? string
+        : never; // Enforces valid result types
 
-export type PrometheusApiResult = {
-  metric: Record<string, string>;
-  values: PrometheusApiResultValue[];
-};
+export interface PrometheusMetric<T extends PrometheusResultType> {
+  metric: { [key: string]: string }; // Object containing metric labels
+  values: T extends 'matrix' ? [number, number | typeof NaN][] : never; // Array of samples for matrix results
+  value: T extends 'vector' ? [number, number | typeof NaN] : never; // Single sample with timestamp and value for vector results
+}
 
 export interface PrometheusLabels {
   sourceSite?: string;

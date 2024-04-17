@@ -1,6 +1,6 @@
 import { ModelStyle } from '@antv/g6';
 
-import { PrometheusApiSingleResult, PrometheusLabels } from '@API/Prometheus.interfaces';
+import { PrometheusMetric, PrometheusLabels } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 
 export interface Entity {
@@ -16,9 +16,9 @@ export interface Entity {
 }
 
 export interface TopologyMetrics {
-  bytesByProcessPairs: PrometheusApiSingleResult[];
-  byteRateByProcessPairs: PrometheusApiSingleResult[];
-  latencyByProcessPairs: PrometheusApiSingleResult[];
+  bytesByProcessPairs: PrometheusMetric<'vector'>[];
+  byteRateByProcessPairs: PrometheusMetric<'vector'>[];
+  latencyByProcessPairs: PrometheusMetric<'vector'>[];
 }
 
 export interface TopologyConfigMetrics {

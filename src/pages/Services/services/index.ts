@@ -1,7 +1,7 @@
 import { VarColors } from '@config/colors';
 import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { PrometheusApiSingleResult } from 'API/Prometheus.interfaces';
+import { PrometheusMetric } from 'API/Prometheus.interfaces';
 import { ServiceResponse } from 'API/REST.interfaces';
 
 export const ServicesController = {
@@ -10,7 +10,7 @@ export const ServicesController = {
     {
       tcpActiveFlows
     }: {
-      tcpActiveFlows?: PrometheusApiSingleResult[];
+      tcpActiveFlows?: PrometheusMetric<'vector'>[];
     }
   ) => {
     const tcpActiveFlowsMap =
@@ -31,7 +31,7 @@ export const ServicesController = {
     }));
   },
 
-  convertToSankeyChartData: (servicePairs: PrometheusApiSingleResult[], withMetric = false) => {
+  convertToSankeyChartData: (servicePairs: PrometheusMetric<'vector'>[], withMetric = false) => {
     const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
 
     const clients =
