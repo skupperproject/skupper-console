@@ -3,12 +3,12 @@ import { useCallback, useState, startTransition } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
-import { RemoteFilterOptions } from 'API/REST.interfaces';
 
 import { CustomComponentCells, processGroupsColumns } from '../ProcessGroups.constants';
 import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';

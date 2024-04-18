@@ -1,7 +1,7 @@
+import { ProcessGroupResponse } from '@API/REST.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
-import { ProcessGroupResponse } from 'API/REST.interfaces';
 
 import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from './ProcessGroups.enum';
 

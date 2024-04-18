@@ -1,4 +1,4 @@
-import { LinkResponse, SiteResponse } from 'API/REST.interfaces';
+import { LinkResponse, SiteResponse } from '@API/REST.interfaces';
 
 import { SiteWithLinks } from '../Sites.interfaces';
 

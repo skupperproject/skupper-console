@@ -1,3 +1,4 @@
+import { FlowPairsResponse } from '@API/REST.interfaces';
 import DurationCell from '@core/components/DurationCell';
 import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
@@ -9,7 +10,6 @@ import { formatLatency } from '@core/utils/formatLatency';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { FlowPairsResponse } from 'API/REST.interfaces';
 
 import { FlowPairLabels } from './FlowPair.enum';
 

@@ -1,8 +1,8 @@
+import { PrometheusMetric } from '@API/Prometheus.interfaces';
+import { ServiceResponse } from '@API/REST.interfaces';
 import { VarColors } from '@config/colors';
 import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { PrometheusMetric } from 'API/Prometheus.interfaces';
-import { ServiceResponse } from 'API/REST.interfaces';
 
 export const ServicesController = {
   extendServicesWithActiveAndTotalFlowPairs: (

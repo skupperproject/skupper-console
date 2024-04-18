@@ -3,11 +3,11 @@ import { FC, useCallback, useState, startTransition } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { FlowPairsResponse, RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkSearchFilter from '@core/components/SkSearchFilter';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import FlowPairs from '@pages/shared/FlowPairs';
-import { FlowPairsResponse, RemoteFilterOptions } from 'API/REST.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 
