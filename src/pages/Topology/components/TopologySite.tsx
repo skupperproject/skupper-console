@@ -21,6 +21,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
+import { FlowDirection } from '@API/REST.enum';
 import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
 import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
@@ -53,6 +54,8 @@ import { QueriesTopology, TopologyLabels } from '../Topology.enum';
 const DISPLAY_OPTIONS = 'display-site-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_ROUTER_LINKS];
 
+const linkQueryParams = { direction: FlowDirection.Outgoing };
+
 const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
   GraphComponent = GraphReactAdaptor
 }) {
@@ -77,54 +80,48 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     [displayOptionsSelected]
   );
 
-  const [{ data: sites }, { data: routers }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] =
-    useSuspenseQueries({
-      queries: [
-        {
-          queryKey: [QueriesSites.GetSites],
-          queryFn: () => RESTApi.fetchSites(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesSites.GetRouters],
-          queryFn: () => RESTApi.fetchRouters(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesSites.GetLinks],
-          queryFn: () => RESTApi.fetchLinks(),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
-          queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
-          refetchInterval: UPDATE_INTERVAL
-        },
-        {
-          queryKey: [
-            QueriesTopology.GetBytesByProcessPairs,
-            isDisplayOptionActive(SHOW_LINK_BYTES),
-            isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            isDisplayOptionActive(SHOW_LINK_LATENCY),
-            isDisplayOptionActive(SHOW_DATA_LINKS)
-          ],
-          queryFn: () =>
-            isDisplayOptionActive(SHOW_DATA_LINKS)
-              ? TopologyController.getMetrics({
-                  showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-                  showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-                  showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-                  params: {
-                    fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-                    fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-                    fetchLatency: { groupBy: 'sourceSite, destSite' }
-                  }
-                })
-              : null,
-          refetchInterval: UPDATE_INTERVAL
-        }
-      ]
-    });
+  const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: [QueriesSites.GetSites],
+        queryFn: () => RESTApi.fetchSites(),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesSites.GetLinks, linkQueryParams],
+        queryFn: () => RESTApi.fetchLinks(linkQueryParams),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
+        queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [
+          QueriesTopology.GetBytesByProcessPairs,
+          isDisplayOptionActive(SHOW_LINK_BYTES),
+          isDisplayOptionActive(SHOW_LINK_BYTERATE),
+          isDisplayOptionActive(SHOW_LINK_LATENCY),
+          isDisplayOptionActive(SHOW_DATA_LINKS)
+        ],
+        queryFn: () =>
+          isDisplayOptionActive(SHOW_DATA_LINKS)
+            ? TopologyController.getMetrics({
+                showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
+                showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
+                showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
+                params: {
+                  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
+                  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
+                  fetchLatency: { groupBy: 'sourceSite, destSite' }
+                }
+              })
+            : null,
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
+  });
 
   const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
     setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
@@ -177,7 +174,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   }, []);
 
   useEffect(() => {
-    if (!sites || !routerLinks || !routers) {
+    if (!sites || !routerLinks) {
       return;
     }
 
@@ -191,7 +188,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 
     if (!isDisplayOptionActive(SHOW_DATA_LINKS)) {
       const siteNodes = TopologyController.convertSitesToNodes(sites);
-      const siteEdges = TopologyController.convertRouterLinksToEdges(sites, routers, routerLinks);
+      const siteEdges = TopologyController.convertRouterLinksToEdges(sites, routerLinks);
 
       setNodes(siteNodes);
       setEdges(siteEdges);
@@ -227,7 +224,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     setEdges(siteEdgesWithLabel);
   }, [
     sites,
-    routers,
     routerLinks,
     sitesPairs,
     isDisplayOptionActive,

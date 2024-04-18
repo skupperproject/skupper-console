@@ -34,7 +34,7 @@ export interface GraphCombo {
 }
 
 export interface GraphEdgeMetrics {
-  protocol: string;
+  protocol: string | undefined;
   bytes: number | undefined;
   byteRate: number | undefined;
   latency: number | undefined;

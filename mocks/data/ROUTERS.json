@@ -16,7 +16,7 @@
     {
       "recType": "ROUTER",
       "identity": "6z7k7:0",
-      "parent": "site-2",
+      "parent": "site-2-1",
       "startTime": 1674048715265181,
       "endTime": 0,
       "name": "0/private1-skupper-router-site-2-6z7k7",
@@ -29,7 +29,7 @@
     {
       "recType": "ROUTER",
       "identity": "6z7k6:0",
-      "parent": "site-2",
+      "parent": "site-2-2",
       "startTime": 1674048715265181,
       "endTime": 0,
       "name": "0/private1-skupper-router-site-2-6z7k6",
