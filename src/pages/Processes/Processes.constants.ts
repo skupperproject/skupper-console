@@ -1,3 +1,4 @@
+import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
@@ -10,7 +11,6 @@ import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enu
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from 'API/REST.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
 

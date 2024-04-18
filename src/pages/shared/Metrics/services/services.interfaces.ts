@@ -1,5 +1,5 @@
+import { PrometheusMetric } from '@API/Prometheus.interfaces';
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
-import { PrometheusMetric } from 'API/Prometheus.interfaces';
 
 interface StatusCodeResponse {
   label: string;

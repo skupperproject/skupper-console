@@ -1,5 +1,13 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
+import {
+  ProcessPairsResponse,
+  LinkResponse,
+  ProcessGroupResponse,
+  ProcessResponse,
+  SiteResponse,
+  SitePairsResponse
+} from '@API/REST.interfaces';
 import componentIcon from '@assets/component.svg';
 import kubernetesIcon from '@assets/kubernetes.svg';
 import podmanIcon from '@assets/podman.png';
@@ -18,14 +26,6 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import SitesController from '@pages/Sites/services';
-import {
-  ProcessPairsResponse,
-  LinkResponse,
-  ProcessGroupResponse,
-  ProcessResponse,
-  SiteResponse,
-  SitePairsResponse
-} from 'API/REST.interfaces';
 
 import { TopologyLabels } from '../Topology.enum';
 import {

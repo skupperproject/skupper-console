@@ -1,4 +1,5 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
+import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
@@ -8,7 +9,6 @@ import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
-import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from 'API/REST.interfaces';
 
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
 
