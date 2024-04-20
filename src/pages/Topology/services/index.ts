@@ -120,9 +120,16 @@ export const TopologyController = {
     ),
 
   getNodeGroupsFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
-    const groups = nodes.map(({ comboId, comboName }) => ({ id: comboId || '', label: comboName || '' }));
+    const idLabelPairs = nodes
+      .map(({ comboId, comboName }) => ({ id: comboId || '', label: comboName || '' }))
+      .sort((a, b) => a.label.localeCompare(b.label));
 
-    return removeDuplicatesFromArrayOfObjects(groups);
+    // TODO: BE-bug: The API occasionally returns processes without a siteName for a site.
+    // While in some cases, using the hostname as a substitute is acceptable, it can lead to conflicts.
+    // This inconsistency results in situations where the hostname and siteName differ but share the same ID.
+    const uniqueNodes = [...new Map(idLabelPairs.map((item) => [item.id, item])).values()];
+
+    return removeDuplicatesFromArrayOfObjects(uniqueNodes);
   },
 
   convertPairsToEdges: (processesPairs: ProcessPairsResponse[] | SitePairsResponse[]): GraphEdge[] =>
