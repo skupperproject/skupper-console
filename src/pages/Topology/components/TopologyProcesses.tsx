@@ -15,7 +15,6 @@ import {
   Title
 } from '@patternfly/react-core';
 import { useSuspenseQueries } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, UPDATE_INTERVAL } from '@config/config';
@@ -25,11 +24,10 @@ import {
   GraphCombo,
   GraphNode,
   GraphReactAdaptorProps,
-  GraphReactAdaptorExposedMethods,
-  GraphEdgeMetrics
+  GraphReactAdaptorExposedMethods
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
+import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
 import LoadingPage from '@pages/shared/Loading';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
@@ -70,7 +68,6 @@ const TopologyProcesses: FC<{
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
 }> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
-  const navigate = useNavigate();
   const configuration =
     TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
 
@@ -130,7 +127,14 @@ const TopologyProcesses: FC<{
 
   const handleProcessSelected = useCallback((id?: string) => {
     setItemIdSelected(id);
-    setModalType(undefined);
+
+    if (!id) {
+      handleCloseModal();
+
+      return;
+    }
+
+    setModalType({ type: 'process', id });
   }, []);
 
   const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
@@ -145,36 +149,14 @@ const TopologyProcesses: FC<{
     setMoveToNodeSelected(checked);
   }, []);
 
-  const handleSelectedLink = useCallback(
-    ({ id, sourceName, source: sourceId, metrics: edgeMetrics }: GraphEdge) => {
-      if (id.split('~').length > 1) {
-        setModalType({ type: 'processPair', id });
+  const handleSelectedLink = useCallback(({ id }: GraphEdge) => {
+    setModalType({ type: 'processPair', id });
+  }, []);
 
-        return;
-      }
-
-      const protocol = (edgeMetrics as GraphEdgeMetrics).protocol;
-
-      navigate(
-        `${ProcessesRoutesPaths.Processes}/${sourceName}@${sourceId}/${ProcessesLabels.ProcessPairs}@${id}@${protocol}`
-      );
-    },
-    [navigate]
-  );
-
-  const handleSelectedNode = useCallback(
-    ({ id, label }: { id: string; label: string }) => {
-      if (id.split('~').length > 1) {
-        setItemIdSelected(id);
-        setModalType({ type: 'process', id });
-
-        return;
-      }
-
-      navigate(`${ProcessesRoutesPaths.Processes}/${label}@${id}`);
-    },
-    [navigate]
-  );
+  const handleSelectedNode = useCallback(({ id }: GraphNode) => {
+    setItemIdSelected(id);
+    setModalType({ type: 'process', id });
+  }, []);
 
   const handleServiceSelected = useCallback((ids: string[] | undefined) => {
     setItemIdSelected(undefined);
