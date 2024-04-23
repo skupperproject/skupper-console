@@ -1,5 +1,6 @@
 import { FlowPairsResponse } from '@API/REST.interfaces';
 import DurationCell from '@core/components/DurationCell';
+import EndTimeCell from '@core/components/EndTimeCell';
 import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
@@ -7,7 +8,6 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -38,6 +38,7 @@ export const flowPairsComponentsTable = {
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
+  ProcessTimestampCell: (props: LinkCellProps<FlowPairsResponse>) => EndTimeCell(props),
   TcpTTFB: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
@@ -50,6 +51,18 @@ export const flowPairsComponentsTable = {
 
 // no wrap fix the column
 export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+  {
+    name: FlowPairLabels.FlowPairClosed,
+    prop: 'endTime' as keyof FlowPairsResponse,
+    customCellName: 'ProcessTimestampCell',
+    width: 15
+  },
+  {
+    name: FlowPairLabels.Duration,
+    prop: 'duration' as keyof FlowPairsResponse,
+    customCellName: 'DurationCell',
+    modifier: 'nowrap'
+  },
   {
     name: FlowPairLabels.Client,
     prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
@@ -88,18 +101,6 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.Duration,
-    prop: 'duration' as keyof FlowPairsResponse,
-    customCellName: 'DurationCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: FlowPairLabels.FlowPairClosed,
-    prop: 'endTime' as keyof FlowPairsResponse,
-    format: timeAgo,
-    modifier: 'fitContent'
-  },
-  {
     name: FlowPairLabels.Site,
     prop: 'sourceSiteName' as keyof FlowPairsResponse,
     customCellName: 'SiteNameLinkCell',
@@ -120,15 +121,22 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
 
 export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
+    name: FlowPairLabels.Completed,
+    prop: 'endTime' as keyof FlowPairsResponse,
+    modifier: 'nowrap',
+    customCellName: 'ProcessTimestampCell',
+    width: 15
+  },
+  {
     name: FlowPairLabels.Method,
     prop: 'forwardFlow.method' as keyof FlowPairsResponse,
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.StatusCode,
     prop: 'counterFlow.result' as keyof FlowPairsResponse,
     customCellName: 'HttpStatusCell',
-    modifier: 'nowrap'
+    modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.From,
@@ -178,12 +186,7 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
     customCellName: 'TargetSiteNameLinkCell',
     modifier: 'fitContent'
   },
-  {
-    name: FlowPairLabels.Completed,
-    prop: 'endTime' as keyof FlowPairsResponse,
-    format: timeAgo,
-    modifier: 'truncate'
-  },
+
   {
     name: '',
     customCellName: 'viewDetailsLinkCell',
