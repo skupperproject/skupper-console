@@ -203,7 +203,13 @@ const SkTable = function <T>({
                         const Component = !!customCells && !!customCellName && customCells[customCellName];
 
                         return (
-                          <Td width={width} key={index} modifier={modifier} isStickyColumn={isStickyColumn}>
+                          <Td
+                            width={width}
+                            key={index}
+                            modifier={modifier}
+                            isStickyColumn={isStickyColumn}
+                            style={{ verticalAlign: 'middle' }}
+                          >
                             {Component && (
                               <Component
                                 data={data}

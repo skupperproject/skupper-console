@@ -1,4 +1,5 @@
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import EndTimeCell from '@core/components/EndTimeCell';
 import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
@@ -6,7 +7,6 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
@@ -56,7 +56,8 @@ export const CustomProcessCells = {
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes }),
   ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatByteRate })
+    HighlightValueCell({ ...props, format: formatByteRate }),
+  ProcessTimestampCell: (props: LinkCellProps<ProcessResponse>) => EndTimeCell(props)
 };
 
 export const processesTableColumns: SKColumn<ProcessResponse>[] = [
@@ -78,7 +79,7 @@ export const processesTableColumns: SKColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
-    format: timeAgo,
+    customCellName: 'ProcessTimestampCell',
     width: 15
   }
 ];
