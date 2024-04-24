@@ -62,7 +62,7 @@ export enum TopologyLabels {
   ToastSave = 'Topology saved successfully',
   ToastLoad = 'Topology loaded successfully',
   SiteLinkText = 'Cost',
-  TopologyModalTitle = 'Summary',
+  TopologyModalTitle = 'Details',
   TopologyModalAction1 = 'View details',
   TopologyModalAction2 = 'View pairs',
   TopologyModalAction3 = 'View charts'

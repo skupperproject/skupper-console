@@ -159,6 +159,10 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       // SELECT EVENTS
       const handleNodeSelected = useCallback(
         ({ currentTarget, item }: { currentTarget: Graph; item: Item }) => {
+          currentTarget.findAllByState('node', 'selected-default').forEach((node) => {
+            currentTarget.clearItemStates(node, 'selected-default');
+          });
+
           isItemHighlightedRef.current = true;
           activateNodeRelations({ currentTarget, item, state: 'selected-default' });
 

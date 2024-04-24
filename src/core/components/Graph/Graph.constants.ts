@@ -10,7 +10,10 @@ const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 export const EDGE_COLOR_DEFAULT = HexColors.Black600;
 export const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
-export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
+export const EDGE_COLOR_DEFAULT_SITE_TEXT = HexColors.Black900;
+export const EDGE_COLOR_DEFAULT_TEXT = HexColors.White;
+export const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.Black500;
+
 const COMBO__COLOR_DEFAULT = HexColors.Black100;
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
 const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
@@ -157,6 +160,19 @@ export const DEFAULT_REMOTE_NODE_CONFIG: Partial<{
   }
 };
 
+// EDGE
+export const DEFAUT_EDGE_BG_NO_LABEL = {
+  fill: EDGE_COLOR_DEFAULT_BG_TEXT,
+  padding: [0, 0, 0, 0],
+  radius: 0
+};
+
+export const DEFAUT_EDGE_BG_LABEL = {
+  ...DEFAUT_EDGE_BG_NO_LABEL,
+  padding: [3, 4, 2, 4],
+  radius: 2
+};
+
 export const DEFAULT_EDGE_CONFIG: Partial<{
   type: string;
   size: number | number[];
@@ -169,9 +185,8 @@ export const DEFAULT_EDGE_CONFIG: Partial<{
     autoRotate: true,
     style: {
       fill: EDGE_COLOR_DEFAULT_TEXT,
-      stroke: GRAPH_BG_COLOR,
-      lineWidth: 5,
-      fontSize: LABEL_FONT_SIZE
+      fontSize: LABEL_FONT_SIZE,
+      background: DEFAUT_EDGE_BG_NO_LABEL
     }
   },
   style: {
@@ -197,7 +212,6 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
   type: CUSTOM_ITEMS_NAMES.comboWithCustomLabel,
   padding: [15, 15, 30, 15],
   style: {
-    cursor: 'pointer',
     lineWidth: 4,
     fill: COMBO__COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
@@ -220,10 +234,8 @@ const DEFAULT_COMBO_CONFIG: ModelStyle & {
 
 const DEFAULT_NODE_STATE_CONFIG = {
   hover: {
-    shadowOffsetX: 0,
-    shadowOffsetY: 6,
-    shadowColor: HexColors.Black600,
-    shadowBlur: 14,
+    stroke: HexColors.Blue400,
+    strokeWidth: 1,
 
     [`${CUSTOM_ITEMS_NAMES.nodeWithBadges}-icon`]: {
       cursor: 'pointer'
