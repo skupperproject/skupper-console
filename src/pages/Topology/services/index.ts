@@ -15,11 +15,12 @@ import processIcon from '@assets/process.svg';
 import siteIcon from '@assets/site.svg';
 import skupperIcon from '@assets/skupper.svg';
 import {
-  EDGE_COLOR_DEFAULT,
   CUSTOM_ITEMS_NAMES,
   DEFAULT_REMOTE_NODE_CONFIG,
   DEFAULT_NODE_ICON,
-  DEFAULT_NODE_CONFIG
+  DEFAULT_NODE_CONFIG,
+  DEFAUT_EDGE_BG_LABEL,
+  DEFAUT_EDGE_BG_NO_LABEL
 } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -224,7 +225,6 @@ export const TopologyController = {
 
       return {
         ...edge,
-        type: edge.source === edge.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
         metrics: {
           protocol: protocolPairsMap ? protocolPairsMap[`${edge.source}${edge.target}`] : '',
           bytes: bytesByPairsMap[pairKey],
@@ -264,12 +264,18 @@ export const TopologyController = {
       const metrics = [bytesText, byteRateText, latencyText].filter(Boolean).join(', ');
       const reverseMetrics = [bytesReverseText, byteRateReverseText, latencyReverseText].filter(Boolean).join(', ');
 
+      const label = [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n');
+
       return {
         ...edge,
         type: edge.source === edge.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
-        labelCfg: { autoRotate: !options?.rotateLabel },
-        style: { ...edge.style, stroke: EDGE_COLOR_DEFAULT },
-        label: [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n')
+        labelCfg: {
+          autoRotate: !options?.rotateLabel,
+          style: {
+            background: label ? DEFAUT_EDGE_BG_LABEL : DEFAUT_EDGE_BG_NO_LABEL
+          }
+        },
+        label
       };
     }),
 
