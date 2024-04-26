@@ -164,6 +164,7 @@ const SkTable = function <T>({
               <Tr>
                 {skColumns.map(({ name, prop, columnDescription, isStickyColumn, modifier }, index) => (
                   <Th
+                    screenReaderText={!name ? 'Action Column' : undefined}
                     colSpan={1}
                     key={name}
                     modifier={modifier}

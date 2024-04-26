@@ -11,8 +11,8 @@ export const EDGE_COLOR_DEFAULT = HexColors.Black600;
 export const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_HOVER_DEFAULT = HexColors.Blue400;
 export const EDGE_COLOR_DEFAULT_SITE_TEXT = HexColors.Black900;
-export const EDGE_COLOR_DEFAULT_TEXT = HexColors.White;
-export const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.Black500;
+export const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
+export const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.Black100;
 
 const COMBO__COLOR_DEFAULT = HexColors.Black100;
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;

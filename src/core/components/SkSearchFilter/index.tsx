@@ -21,154 +21,161 @@ import { FilterIcon } from '@patternfly/react-icons';
 
 import useDebounce from 'hooks/useDebounce';
 
+import { SkSearchFilterController } from './services';
+import { SkSearchFilterLabels } from './Services.enum';
+import { FilterType, FilterSelected, ActiveFiltersProps, ActiveFilterProps } from './SkFilter.interfaces';
+import { DEBOUNCE_TIME_MS } from './SkSearchFilter.constants';
+
 import './SkSearchFilter.css';
 
-interface FilterValues {
-  [key: string]: string | undefined;
+interface SkSearchFilterProps {
+  text?: string;
+  selectOptions: FilterType[];
+  onSearch?: (filterSelected: FilterSelected) => void;
 }
 
-const PLACEHOLDER_PREFIX_LABEL = 'Search by';
-const CLEAR_ALL_LABEL = 'Clear all filters';
-const DEBOUNCE_TIME_MS = 300;
+const SkSearchFilter: FC<SkSearchFilterProps> = memo(({ text = '', onSearch, selectOptions }) => {
+  const initFiltersSearchValues = selectOptions.reduce((acc, { id }) => ({ ...acc, [id]: undefined }), {});
 
-const SkSearchFilter: FC<{ onSearch?: Function; selectOptions: { id: string; name: string }[] }> = memo(
-  ({ onSearch, selectOptions }) => {
-    const [inputValue, setInputValue] = useState('');
-    const [isStatusExpanded, setIsStatusExpanded] = useState(false);
-    const [statusSelected, setStatusSelected] = useState(selectOptions[0].id);
-    const [filterValues, setFilterValues] = useState<FilterValues>({});
-    const filterDebounceValues = useDebounce<FilterValues>(filterValues, DEBOUNCE_TIME_MS);
+  const [searchText, setSearchText] = useState(text);
+  const [isFilterTypeExpanded, setIsFilterTypeExpanded] = useState(false);
+  const [filterTypeSelected, setFilterTypeSelected] = useState(selectOptions[0].id);
+  const [filtersSelected, setFilterSelected] = useState<FilterSelected>(initFiltersSearchValues);
 
-    const handleInputChange = (_: FormEvent<HTMLInputElement>, newValue: string) => {
-      setInputValue(newValue);
+  // helps to avoid making unnecessary calls to the parent component whenever the filtersSelected state changes rapidly due to input text
+  const filterDebounceValues = useDebounce<FilterSelected>(filtersSelected, DEBOUNCE_TIME_MS);
 
-      if (newValue) {
-        setFilterValues({ ...filterValues, [statusSelected]: newValue });
-      } else {
-        handleDeleteFilter(statusSelected);
-      }
-    };
+  // Input search functions
+  const handleChangeSearchText = (_: FormEvent<HTMLInputElement>, newValue: string) => {
+    setSearchText(newValue);
 
-    const handleClearInput = () => {
-      handleDeleteFilter(statusSelected);
-    };
+    if (!newValue) {
+      return handleDeleteActiveFilters(filterTypeSelected);
+    }
 
-    const handleSelect = (_?: ReactMouseEvent<Element, MouseEvent>, selected?: string | number) => {
-      const selection = selected as keyof FilterValues;
+    setFilterSelected({ ...filtersSelected, [filterTypeSelected]: newValue });
+  };
 
-      setInputValue(filterValues[selection] as string);
-      setStatusSelected(selection as string);
-      setIsStatusExpanded(false);
-    };
+  const handleClearSearchText = () => {
+    setSearchText('');
+    handleDeleteActiveFilters(filterTypeSelected);
+  };
 
-    const handleDeleteFilter = (id: string) => {
-      const newFilterValues = { ...filterValues, [id]: undefined };
-      setInputValue('');
-      setFilterValues(newFilterValues);
-    };
+  const handleToggleFilterType = () => {
+    setIsFilterTypeExpanded(!isFilterTypeExpanded);
+  };
 
-    const handleDeleteGroup = () => {
-      const initFiltersValue = selectOptions.reduce(
-        (acc, { id }) => {
-          acc[id] = undefined;
+  const handleChangeFilterType = (_?: ReactMouseEvent<Element, MouseEvent>, selected?: string | number) => {
+    const selection = selected as keyof FilterSelected as string;
 
-          return acc;
-        },
-        {} as Record<string, undefined>
-      );
+    setSearchText(filtersSelected[selection]!); // Assert filtersSelected[selection] is not undefined here
+    setFilterTypeSelected(selection);
+    setIsFilterTypeExpanded(false);
+  };
 
-      setInputValue('');
-      setFilterValues(initFiltersValue);
-    };
+  const handleDeleteActiveFilters = (idToDelete?: string) => {
+    const searchFiltersSearchValues = idToDelete
+      ? { ...filtersSelected, [idToDelete]: undefined }
+      : initFiltersSearchValues;
 
-    const handleToggle = () => {
-      setIsStatusExpanded(!isStatusExpanded);
-    };
+    setFilterSelected(searchFiltersSearchValues);
+  };
 
-    useEffect(() => {
-      if (onSearch && Object.keys(filterDebounceValues).length) {
-        onSearch(filterDebounceValues);
-      }
-    }, [onSearch, filterDebounceValues]);
+  useEffect(() => {
+    if (onSearch && Object.keys(filterDebounceValues).length) {
+      onSearch(filterDebounceValues);
+    }
+  }, [onSearch, filterDebounceValues]);
 
-    const statusMenuItems = selectOptions.map((option) => (
-      <SelectOption key={option.id} value={option.id}>
-        {option.name}
-      </SelectOption>
-    ));
+  const selectedFilter = selectOptions.find(({ id }) => id === filterTypeSelected)?.name;
+  const selectedValues = SkSearchFilterController.getFilterTypesWithSearchValues(selectOptions, filtersSelected);
 
-    const filterNameSelected = selectOptions.find(({ id }) => id === statusSelected)?.name;
-    const toggleGroupItems = (
-      <ToolbarGroup variant="filter-group">
-        <Select
-          role="menu"
-          toggle={(toggleRef: Ref<MenuToggleElement>) => (
-            <MenuToggle ref={toggleRef} onClick={handleToggle} isExpanded={isStatusExpanded}>
-              <FilterIcon /> {filterNameSelected}
-            </MenuToggle>
-          )}
-          onSelect={handleSelect}
-          selected={statusSelected}
-          isOpen={isStatusExpanded}
-          onOpenChange={handleToggle}
-        >
-          <SelectList>{statusMenuItems}</SelectList>
-        </Select>
+  return (
+    <Toolbar collapseListedFiltersBreakpoint="xl">
+      <ToolbarContent>
+        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+          <ToolbarGroup variant="filter-group">
+            <ToolbarItem>
+              <Select
+                data-testid="sk-select-filter-type"
+                role="menu"
+                toggle={(toggleRef: Ref<MenuToggleElement>) => (
+                  <MenuToggle ref={toggleRef} onClick={handleToggleFilterType} isExpanded={isFilterTypeExpanded}>
+                    <FilterIcon /> {selectedFilter}
+                  </MenuToggle>
+                )}
+                onSelect={handleChangeFilterType}
+                selected={filterTypeSelected}
+                isOpen={isFilterTypeExpanded}
+                onOpenChange={handleToggleFilterType}
+              >
+                <SelectList>
+                  {selectOptions.map(({ id, name }) => (
+                    <SelectOption key={id} value={id}>
+                      {name}
+                    </SelectOption>
+                  ))}
+                </SelectList>
+              </Select>
+            </ToolbarItem>
 
-        <ToolbarItem variant="search-filter">
-          <SearchInput
-            className="sk-search-filter"
-            placeholder={`${PLACEHOLDER_PREFIX_LABEL} ${filterNameSelected?.toLocaleLowerCase()}`}
-            onChange={handleInputChange}
-            value={inputValue}
-            onClear={handleClearInput}
+            <ToolbarItem variant="search-filter">
+              <SearchInput
+                data-testid="sk-search-box"
+                className="sk-search-filter"
+                placeholder={`${SkSearchFilterLabels.PlaceHolderInputSearchPrefix} ${selectedFilter?.toLocaleLowerCase()}`}
+                onChange={handleChangeSearchText}
+                value={searchText}
+                onClear={handleClearSearchText}
+              />
+            </ToolbarItem>
+          </ToolbarGroup>
+        </ToolbarToggleGroup>
+      </ToolbarContent>
+
+      {!!selectedValues.length && (
+        <ToolbarContent>
+          <ActiveFilters
+            filterSelected={selectedValues}
+            onDeleteAll={handleDeleteActiveFilters}
+            onDeleteFilter={handleDeleteActiveFilters}
           />
-        </ToolbarItem>
-      </ToolbarGroup>
-    );
-
-    const toolbarItems = (
-      <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-        {toggleGroupItems}
-      </ToolbarToggleGroup>
-    );
-
-    const toolbarFilterItems = (
-      <ToolbarGroup spaceItems={{ default: 'spaceItemsSm' }}>
-        {selectOptions.map(({ id, name }) => {
-          const value = filterValues[id as keyof FilterValues];
-          if (value) {
-            return (
-              <ToolbarFilter key={id} categoryName={name}>
-                <ChipGroup categoryName={name}>
-                  <Chip key={value} onClick={() => handleDeleteFilter(id as string)}>
-                    {value}
-                  </Chip>
-                </ChipGroup>
-              </ToolbarFilter>
-            );
-          }
-
-          return null;
-        })}
-
-        {!!Object.values(filterValues).filter(Boolean).length && (
-          <ToolbarItem>
-            <Button variant="link" onClick={handleDeleteGroup}>
-              {CLEAR_ALL_LABEL}
-            </Button>
-          </ToolbarItem>
-        )}
-      </ToolbarGroup>
-    );
-
-    return (
-      <Toolbar collapseListedFiltersBreakpoint="xl">
-        <ToolbarContent>{toolbarItems}</ToolbarContent>
-        <ToolbarContent>{toolbarFilterItems}</ToolbarContent>
-      </Toolbar>
-    );
-  }
-);
+        </ToolbarContent>
+      )}
+    </Toolbar>
+  );
+});
 
 export default SkSearchFilter;
+
+const ActiveFilter: FC<ActiveFilterProps> = function ({ id, name, searchValue, onDelete }) {
+  return (
+    <ToolbarFilter key={`${id}${name}${searchValue}`} categoryName={name}>
+      <ChipGroup categoryName={name}>
+        <Chip onClick={onDelete}>{searchValue}</Chip>
+      </ChipGroup>
+    </ToolbarFilter>
+  );
+};
+
+const ActiveFilters: FC<ActiveFiltersProps> = function ({ filterSelected, onDeleteFilter, onDeleteAll }) {
+  return (
+    <ToolbarGroup spaceItems={{ default: 'spaceItemsSm' }}>
+      <ToolbarItem data-testid="sk-group-filter-labels">
+        {filterSelected.map((filter) => (
+          <ActiveFilter
+            key={`${filter.id}${filter.name}${filter.searchValue}`}
+            {...filter}
+            onDelete={() => onDeleteFilter(filter.id)}
+          />
+        ))}
+      </ToolbarItem>
+
+      <ToolbarItem>
+        <Button data-testid="sk-group-filter-labels-btn" variant="link" onClick={() => onDeleteAll()}>
+          {SkSearchFilterLabels.ClearAllLabelsBtn}
+        </Button>
+      </ToolbarItem>
+    </ToolbarGroup>
+  );
+};
