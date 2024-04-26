@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, renderHook } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { act, render, renderHook } from '@testing-library/react';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { Wrapper } from '@core/components/Wrapper';

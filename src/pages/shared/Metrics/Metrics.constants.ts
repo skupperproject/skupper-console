@@ -18,6 +18,3 @@ export const filterToggleDefault = {
   protocol: false,
   timeInterval: false
 };
-
-export const formatDate = 'yyyy-MM-dd';
-export const formatTime = 'H:mm';

@@ -35,9 +35,5 @@ export enum MetricsLabels {
   RequestsTitle = 'Http requests',
   RequestRateTitle = 'Request rate',
   ResposeTitle = 'Http responses',
-  Method = 'Method',
-  CalendarTitlePicker = 'Absolute time range',
-  StarDatePicker = 'From',
-  EndDatePicker = 'To',
-  CalendarPickerButton = 'Apply time range'
+  Method = 'Method'
 }

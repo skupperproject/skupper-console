@@ -22,9 +22,9 @@ import { FilterIcon } from '@patternfly/react-icons';
 import useDebounce from 'hooks/useDebounce';
 
 import { SkSearchFilterController } from './services';
-import { SkSearchFilterLabels } from './Services.enum';
 import { FilterType, FilterSelected, ActiveFiltersProps, ActiveFilterProps } from './SkFilter.interfaces';
 import { DEBOUNCE_TIME_MS } from './SkSearchFilter.constants';
+import { SkSearchFilterLabels } from './SkSearchFilter.enum';
 
 import './SkSearchFilter.css';
 

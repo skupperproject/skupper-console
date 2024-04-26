@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, renderHook } from '@testing-library/react';
+import { act, fireEvent, render, renderHook } from '@testing-library/react';
 import { Server } from 'miragejs';
-import { act } from 'react-dom/test-utils';
 
 import { Wrapper } from '@core/components/Wrapper';
 import { loadMockServer } from '@mocks/server';

@@ -21,10 +21,11 @@ import { format } from 'date-fns';
 
 import { timeIntervalMap } from '@config/prometheus';
 
-import DateTimePicker from './DateTimePicker';
-import { formatDate, formatTime } from '../Metrics.constants';
-import { MetricsLabels } from '../Metrics.enum';
-import { SelectTimeIntervalProps } from '../Metrics.interfaces';
+import { formatDate, formatTime } from './SkDateTimePicker.constants';
+import { SelectTimeIntervalProps } from './SkDateTimePicker.interfaces';
+import { SkDateTimePickerLabels } from './SkDateTimeRangeFilter.enum';
+
+import SkDateTimePicker from '.';
 
 interface DateTimeRangeFitlterContnt {
   startTimeLimit: number;
@@ -103,12 +104,12 @@ export const DateTimeRangeFilterContent: FC<DateTimeRangeFitlterContnt> = functi
       <FlexItem>
         <DescriptionList>
           <DescriptionListTerm>
-            <Title headingLevel="h4">{MetricsLabels.CalendarTitlePicker}</Title>
+            <Title headingLevel="h4">{SkDateTimePickerLabels.CalendarTitlePicker}</Title>
           </DescriptionListTerm>
           <DescriptionListGroup>
-            <DescriptionListTerm>{MetricsLabels.StarDatePicker}</DescriptionListTerm>
+            <DescriptionListTerm>{SkDateTimePickerLabels.StarDatePicker}</DescriptionListTerm>
             <DescriptionListDescription>
-              <DateTimePicker
+              <SkDateTimePicker
                 onSelect={handleSetDateTimeStart}
                 startDate={startDate}
                 defaultDate={formatDateTime(start, formatDate)}
@@ -119,9 +120,9 @@ export const DateTimeRangeFilterContent: FC<DateTimeRangeFitlterContnt> = functi
           </DescriptionListGroup>
 
           <DescriptionListGroup>
-            <DescriptionListTerm>{MetricsLabels.EndDatePicker}</DescriptionListTerm>
+            <DescriptionListTerm>{SkDateTimePickerLabels.EndDatePicker}</DescriptionListTerm>
             <DescriptionListDescription>
-              <DateTimePicker
+              <SkDateTimePicker
                 onSelect={handleSetDateTimeEnd}
                 isDisabled={!start}
                 startDate={startDate}
@@ -140,7 +141,7 @@ export const DateTimeRangeFilterContent: FC<DateTimeRangeFitlterContnt> = functi
                 onClick={() => handleSelectFromDateTimePicker()}
                 isDisabled={!(start && end)}
               >
-                {MetricsLabels.CalendarPickerButton}
+                {SkDateTimePickerLabels.CalendarPickerButton}
               </Button>
             </DescriptionListDescription>
           </DescriptionListGroup>
