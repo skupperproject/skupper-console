@@ -434,8 +434,11 @@ function normalizeByteRateFromSeries(
   const txTimeSerie = getTimeSeriesValuesFromPrometheusData(txData)?.[0];
   const rxTimeSerie = getTimeSeriesValuesFromPrometheusData(rxData)?.[rxData.length - 1];
 
-  const totalTxValue = txTimeSerie?.reduce((acc, { y }) => acc + y, 0);
-  const totalRxValue = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+  const totalAvgTxValue = txTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+  const totalAvgRxValue = rxTimeSerie?.reduce((acc, { y }) => acc + y, 0);
+
+  const totalTxValue = txTimeSerie ? calculateTotalBytes(txTimeSerie) : 0;
+  const totalRxValue = rxTimeSerie ? calculateTotalBytes(rxTimeSerie) : 0;
 
   const calculateAverage = (timeSerie: skAxisXY[] | undefined, totalValue: number | undefined): number | undefined => {
     if (!timeSerie || !totalValue) {
@@ -459,8 +462,8 @@ function normalizeByteRateFromSeries(
   return {
     txTimeSerie: txTimeSerie ? { data: txTimeSerie, label: 'Tx' } : undefined,
     rxTimeSerie: rxTimeSerie ? { data: rxTimeSerie, label: 'Rx' } : undefined,
-    avgTxValue: calculateAverage(txTimeSerie, totalTxValue),
-    avgRxValue: calculateAverage(rxTimeSerie, totalRxValue),
+    avgTxValue: calculateAverage(txTimeSerie, totalAvgTxValue),
+    avgRxValue: calculateAverage(rxTimeSerie, totalAvgRxValue),
     maxTxValue: calculateMaxValue(txTimeSerie),
     maxRxValue: calculateMaxValue(rxTimeSerie),
     currentTxValue,
@@ -468,4 +471,25 @@ function normalizeByteRateFromSeries(
     totalTxValue,
     totalRxValue
   };
+}
+
+/**
+ * The function iterates over each pair of adjacent data points (t1, r1) and (t2, r2).
+ * It calculates the trapezoidal area using the formula:
+ *  A = (r1 + r2) * (t2 - t1) / 2
+ */
+function calculateTotalBytes(timeSeries: { x: number; y: number }[]) {
+  let totalBytes = 0;
+
+  for (let i = 1; i < timeSeries.length; i++) {
+    const t1 = timeSeries[i - 1].x;
+    const r1 = timeSeries[i - 1].y;
+    const t2 = timeSeries[i].x;
+    const r2 = timeSeries[i].y;
+
+    const trapezoidArea = ((r1 + r2) * (t2 - t1)) / 2;
+    totalBytes += trapezoidArea;
+  }
+
+  return totalBytes;
 }

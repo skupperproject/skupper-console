@@ -6,7 +6,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
-import { formatByteRate } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 
 import { MetricsLabels } from '../Metrics.enum';
 import MetricsController from '../services';
@@ -56,7 +56,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
       <Divider orientation={{ default: 'horizontal' }} />
 
       <SkChartPie
-        format={formatByteRate}
+        format={formatBytes}
         themeColor={ChartThemeColor.multi}
         data={[
           {
