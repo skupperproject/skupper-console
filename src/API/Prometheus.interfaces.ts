@@ -15,7 +15,7 @@ export interface PrometheusResponse<T extends PrometheusResultType> {
 }
 
 // Union type representing different result data structures
-export type PrometheusResult<T extends PrometheusResultType> = T extends 'matrix'
+type PrometheusResult<T extends PrometheusResultType> = T extends 'matrix'
   ? PrometheusMetric<'matrix'>[]
   : T extends 'vector'
     ? PrometheusMetric<'vector'>[]

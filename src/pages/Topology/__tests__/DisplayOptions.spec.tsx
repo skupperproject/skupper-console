@@ -1,5 +1,4 @@
-import { renderHook, render, fireEvent } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { renderHook, render, fireEvent, act } from '@testing-library/react';
 
 import DisplayOptions, { useDisplayOptions } from '../components/DisplayOptions';
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';

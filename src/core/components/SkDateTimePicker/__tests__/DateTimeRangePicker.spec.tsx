@@ -2,8 +2,8 @@ import { render, fireEvent, screen } from '@testing-library/react';
 
 import { timeIntervalMap } from '@config/prometheus';
 
-import { DateTimeRangeFilterContent } from '../components/DateTimeRangeFilter';
-import { MetricsLabels } from '../Metrics.enum';
+import { DateTimeRangeFilterContent } from '../DateTimeRangeFilter';
+import { SkDateTimePickerLabels } from '../SkDateTimeRangeFilter.enum';
 
 describe('DateTimeRangeFilter component', () => {
   const onSelectTimeIntervalMock = jest.fn();
@@ -22,10 +22,10 @@ describe('DateTimeRangeFilter component', () => {
       />
     );
 
-    expect(screen.getByText(MetricsLabels.CalendarTitlePicker)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.StarDatePicker)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.EndDatePicker)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.CalendarPickerButton)).toBeInTheDocument();
+    expect(screen.getByText(SkDateTimePickerLabels.CalendarTitlePicker)).toBeInTheDocument();
+    expect(screen.getByText(SkDateTimePickerLabels.StarDatePicker)).toBeInTheDocument();
+    expect(screen.getByText(SkDateTimePickerLabels.EndDatePicker)).toBeInTheDocument();
+    expect(screen.getByText(SkDateTimePickerLabels.CalendarPickerButton)).toBeInTheDocument();
   });
 
   it('should select a time interval from the dropdown and call the callback function', () => {
@@ -39,7 +39,7 @@ describe('DateTimeRangeFilter component', () => {
         onChangeLabel={onChangeLabelMock}
       />
     );
-    const dropdownButton = screen.getByText(MetricsLabels.CalendarTitlePicker);
+    const dropdownButton = screen.getByText(SkDateTimePickerLabels.CalendarTitlePicker);
     fireEvent.click(dropdownButton);
 
     const timeIntervalOption = screen.getByText(timeIntervalMap.fiveMinutes.label);

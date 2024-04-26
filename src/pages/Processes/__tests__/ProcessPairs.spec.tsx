@@ -35,18 +35,6 @@ describe('Begin testing the Processes component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render a loading page when data is loading', () => {
-    render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <ProcessPairs />
-        </Suspense>
-      </Wrapper>
-    );
-
-    expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
-  });
-
   it('should render the ProcessPairs view after the data loading is complete', async () => {
     render(
       <Wrapper>

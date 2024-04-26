@@ -3,8 +3,8 @@ import { FC } from 'react';
 import { Button } from '@patternfly/react-core';
 import { render, screen, fireEvent } from '@testing-library/react';
 
-import DateTimePicker, { Calendar } from '../components/DateTimePicker';
-import { CalendarProps } from '../Metrics.interfaces';
+import SkDateTimePicker, { Calendar } from '..';
+import { CalendarProps } from '../SkDateTimePicker.interfaces';
 
 const CalendarComponentMock: FC<CalendarProps> = function ({ onChangeDate }) {
   return (
@@ -37,13 +37,13 @@ describe('DateTimePicker component', () => {
   const onSelectMock = jest.fn();
 
   it('should render with the provided initial date', () => {
-    render(<DateTimePicker startDate={new Date('2022-08-11')} />);
+    render(<SkDateTimePicker startDate={new Date('2022-08-11')} />);
     const dateTimePickerInput = screen.getByTestId('date-time-picker-calendar-button');
     expect(dateTimePickerInput).toBeInTheDocument();
   });
 
   it('should disable the calendar button when the isDisabled prop is true', () => {
-    render(<DateTimePicker isDisabled={true} startDate={new Date('2022-08-11')} />);
+    render(<SkDateTimePicker isDisabled={true} startDate={new Date('2022-08-11')} />);
 
     const dateTimePickerInput = screen.getByTestId('date-time-picker-calendar-button');
     expect(dateTimePickerInput).toBeDisabled();
@@ -51,7 +51,7 @@ describe('DateTimePicker component', () => {
 
   it('should open the calendar panel when the calendar button is clicked', () => {
     const { getByTestId } = render(
-      <DateTimePicker
+      <SkDateTimePicker
         startDate={new Date('2022-08-11')}
         onSelect={onSelectMock}
         CalendarComponent={CalendarComponentMock}
@@ -69,7 +69,7 @@ describe('DateTimePicker component', () => {
   });
 
   it('should open the time dropdown and allow selecting a time', () => {
-    const { getByTestId, getByText } = render(<DateTimePicker onSelect={onSelectMock} />);
+    const { getByTestId, getByText } = render(<SkDateTimePicker onSelect={onSelectMock} />);
 
     fireEvent.click(getByTestId('date-time-picker-calendar-dropdown-button'));
 
@@ -82,7 +82,7 @@ describe('DateTimePicker component', () => {
   });
 
   it('should toggle the calendar panel on clicking the calendar button', () => {
-    render(<DateTimePicker CalendarComponent={CalendarComponentMock} />);
+    render(<SkDateTimePicker CalendarComponent={CalendarComponentMock} />);
 
     const calendarButton = screen.getByTestId('date-time-picker-calendar-button');
     fireEvent.click(calendarButton);

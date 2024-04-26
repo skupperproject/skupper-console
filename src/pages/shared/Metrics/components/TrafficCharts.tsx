@@ -6,7 +6,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
 import SkChartPie from '@core/components/SkChartPie';
-import { formatByteRate } from '@core/utils/formatBytes';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 
 import { MetricsLabels } from '../Metrics.enum';
 import MetricsController from '../services';
@@ -31,7 +31,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
       <Table borders={false} variant="compact">
         <Thead noWrap>
           <Tr>
-            <Th />
+            <Th screenReaderText="metric" />
             <Th>{MetricsLabels.ByteRateMaxCol}</Th>
             <Th>{MetricsLabels.ByteRateAvgCol}</Th>
             <Th>{MetricsLabels.ByteRateCurrentCol}</Th>
@@ -40,15 +40,15 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
         <Tbody>
           <Tr>
             <Td>{MetricsLabels.TrafficReceived}</Td>
-            <Th>{formatByteRate(byteRateData?.maxRxValue || 0)}</Th>
-            <Th>{formatByteRate(byteRateData?.avgRxValue || 0)}</Th>
-            <Th>{formatByteRate(byteRateData?.currentRxValue || 0)}</Th>
+            <Td>{formatByteRate(byteRateData?.maxRxValue || 0)}</Td>
+            <Td>{formatByteRate(byteRateData?.avgRxValue || 0)}</Td>
+            <Td>{formatByteRate(byteRateData?.currentRxValue || 0)}</Td>
           </Tr>
           <Tr>
             <Td>{MetricsLabels.TrafficSent}</Td>
-            <Th>{formatByteRate(byteRateData?.maxTxValue || 0)}</Th>
-            <Th>{formatByteRate(byteRateData?.avgTxValue || 0)}</Th>
-            <Th>{formatByteRate(byteRateData?.currentTxValue || 0)}</Th>
+            <Td>{formatByteRate(byteRateData?.maxTxValue || 0)}</Td>
+            <Td>{formatByteRate(byteRateData?.avgTxValue || 0)}</Td>
+            <Td>{formatByteRate(byteRateData?.currentTxValue || 0)}</Td>
           </Tr>
         </Tbody>
       </Table>
@@ -56,7 +56,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
       <Divider orientation={{ default: 'horizontal' }} />
 
       <SkChartPie
-        format={formatByteRate}
+        format={formatBytes}
         themeColor={ChartThemeColor.multi}
         data={[
           {

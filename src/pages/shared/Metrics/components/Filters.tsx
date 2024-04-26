@@ -28,9 +28,9 @@ import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core
 import { AvailableProtocols } from '@API/REST.enum';
 import { prometheusProcessNameseparator, prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
+import DateTimeRangeFilter from '@core/components/SkDateTimePicker/DateTimeRangeFilter';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
 
-import DateTimeRangeFilter from './DateTimeRangeFilter';
 import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
 import { ConfigMetricFilters, MetricFiltersProps, QueryMetricsParams } from '../Metrics.interfaces';

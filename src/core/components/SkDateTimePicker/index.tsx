@@ -16,8 +16,8 @@ import {
 import { OutlinedCalendarAltIcon, OutlinedClockIcon } from '@patternfly/react-icons';
 import { format } from 'date-fns';
 
-import { formatDate, formatTime } from '../Metrics.constants';
-import { CalendarProps, DateTimePickerProps } from '../Metrics.interfaces';
+import { formatDate, formatTime } from './SkDateTimePicker.constants';
+import { CalendarProps, DateTimePickerProps } from './SkDateTimePicker.interfaces';
 
 export const Calendar: FC<CalendarProps> = function ({ date, onChangeDate, startDate }) {
   const disablePreEndDates = (currentDate: Date) => currentDate <= new Date();
@@ -40,7 +40,7 @@ export const Calendar: FC<CalendarProps> = function ({ date, onChangeDate, start
   );
 };
 
-const DateTimePicker: FC<DateTimePickerProps> = function ({
+const SkDateTimePicker: FC<DateTimePickerProps> = function ({
   defaultDate = formatDate,
   defaultTime = formatTime,
   isDisabled = false,
@@ -164,4 +164,4 @@ const DateTimePicker: FC<DateTimePickerProps> = function ({
   );
 };
 
-export default DateTimePicker;
+export default SkDateTimePicker;
