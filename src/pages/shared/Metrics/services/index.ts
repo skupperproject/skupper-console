@@ -336,7 +336,7 @@ const MetricsController = {
 export default MetricsController;
 
 /* UTILS */
-export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
+function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
   const axisValues = getTimeSeriesFromPrometheusData(data);
 
@@ -378,7 +378,7 @@ export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[])
   return { statusCode2xx, statusCode3xx, statusCode4xx, statusCode5xx, total };
 }
 
-export function normalizeRequestFromSeries(data: PrometheusMetric<'matrix'>[]): RequestMetrics[] | null {
+function normalizeRequestFromSeries(data: PrometheusMetric<'matrix'>[]): RequestMetrics[] | null {
   const axisValues = getTimeSeriesValuesFromPrometheusData(data);
   const labels = getTimeSeriesLabelsFromPrometheusData(data);
 
@@ -392,7 +392,7 @@ export function normalizeRequestFromSeries(data: PrometheusMetric<'matrix'>[]): 
   }));
 }
 
-export function normalizeLatencies({
+function normalizeLatencies({
   quantile50latency,
   quantile90latency,
   quantile95latency,
@@ -427,7 +427,7 @@ export function normalizeLatencies({
   return latenciesNormalized;
 }
 
-export function normalizeByteRateFromSeries(
+function normalizeByteRateFromSeries(
   txData: PrometheusMetric<'matrix'>[] | [],
   rxData: PrometheusMetric<'matrix'>[] | []
 ): ByteRateMetrics {
