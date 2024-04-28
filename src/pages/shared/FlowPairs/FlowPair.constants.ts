@@ -38,7 +38,7 @@ export const flowPairsComponentsTable = {
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
-  ProcessTimestampCell: (props: LinkCellProps<FlowPairsResponse>) => EndTimeCell(props),
+  TimestampCell: (props: LinkCellProps<FlowPairsResponse>) => EndTimeCell(props),
   TcpTTFB: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
@@ -54,7 +54,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairLabels.FlowPairClosed,
     prop: 'endTime' as keyof FlowPairsResponse,
-    customCellName: 'ProcessTimestampCell',
+    customCellName: 'TimestampCell',
     width: 15
   },
   {
@@ -121,7 +121,7 @@ export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairLabels.Completed,
     prop: 'endTime' as keyof FlowPairsResponse,
-    customCellName: 'ProcessTimestampCell',
+    customCellName: 'TimestampCell',
     width: 15
   },
   {

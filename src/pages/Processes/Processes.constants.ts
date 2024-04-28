@@ -57,7 +57,7 @@ export const CustomProcessCells = {
     HighlightValueCell({ ...props, format: formatBytes }),
   ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatByteRate }),
-  ProcessTimestampCell: (props: LinkCellProps<ProcessResponse>) => EndTimeCell(props)
+  TimestampCell: (props: LinkCellProps<ProcessResponse>) => EndTimeCell(props)
 };
 
 export const processesTableColumns: SKColumn<ProcessResponse>[] = [
@@ -79,7 +79,7 @@ export const processesTableColumns: SKColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
-    customCellName: 'ProcessTimestampCell',
+    customCellName: 'TimestampCell',
     width: 15
   }
 ];

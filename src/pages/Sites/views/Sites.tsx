@@ -33,7 +33,7 @@ const Sites = function () {
           rows={sites}
           paginationPageSize={BIG_PAGINATION_SIZE}
           customCells={{
-            ProcessTimestampCell: (props: LinkCellProps<SiteResponse>) => EndTimeCell(props),
+            TimestampCell: (props: LinkCellProps<SiteResponse>) => EndTimeCell(props),
             LinkCell: (props: LinkCellProps<SiteResponse>) =>
               LinkCell({
                 ...props,
