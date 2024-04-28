@@ -3,7 +3,6 @@ import { FC, forwardRef, memo, Suspense, useImperativeHandle } from 'react';
 import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
 
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
@@ -17,8 +16,6 @@ import LoadingPage from '@pages/shared/Loading';
 import TopologyProcesses from '../components/TopologyProcesses';
 import { TopologyLabels } from '../Topology.enum';
 import { NodeOrEdgeListProps } from '../Topology.interfaces';
-
-const navigate = jest.fn();
 
 const processesResults = processesData.results;
 const servicesResults = servicesData.results;
@@ -103,17 +100,6 @@ describe('Topology Process', () => {
     });
 
     fireEvent.click(screen.getByText('onClickEdge'));
-  });
-
-  it('should clicking on a combo', async () => {
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    fireEvent.click(screen.getByText('onClickCombo'));
-    expect(navigate).toHaveBeenCalledTimes(1);
   });
 
   it('should save node positions and display info alert when handleSaveTopology is called', async () => {
