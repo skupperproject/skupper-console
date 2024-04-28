@@ -31,7 +31,7 @@ export const siteColumns: SKColumn<SiteResponse>[] = [
   {
     name: SiteLabels.Created,
     prop: 'startTime' as keyof SiteResponse,
-    customCellName: 'ProcessTimestampCell',
+    customCellName: 'TimestampCell',
     width: 15
   }
 ];
