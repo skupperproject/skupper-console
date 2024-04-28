@@ -28,6 +28,7 @@ export enum MetricsLabels {
   DataTransferTitle = 'Traffic',
   ByteRateTitle = 'Byte rate',
   LatencyTitle = 'Latencies',
+  LatencyDescription = 'TCP: TTFB for terminated connections.  HTTP: Response time',
   ConnectionTitle = 'Tcp connections',
   TerminatedConnections = 'Closed connections',
   LiveConnections = 'Live connections',

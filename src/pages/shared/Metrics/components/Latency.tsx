@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { Button, Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Tooltip } from '@patternfly/react-core';
+import { QuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import EmptyData from '@core/components/EmptyData';
@@ -75,7 +75,14 @@ const Latency: FC<LatencyProps> = function ({
   return (
     <Card isExpanded={isExpanded}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.LatencyTitle}</CardTitle>
+        <CardTitle>
+          {MetricsLabels.LatencyTitle}{' '}
+          <Tooltip content={MetricsLabels.LatencyDescription}>
+            <Button variant="plain">
+              <QuestionCircleIcon />
+            </Button>
+          </Tooltip>
+        </CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
