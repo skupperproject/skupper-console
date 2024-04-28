@@ -1,27 +1,11 @@
-import { FC, Key, useCallback, useRef, useState, ComponentType } from 'react';
+import { FC, useCallback, useRef, useState, ComponentType } from 'react';
 
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  AlertProps,
-  AlertVariant,
-  Button,
-  Checkbox,
-  Divider,
-  Stack,
-  StackItem,
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  ToolbarItem,
-  getUniqueId
-} from '@patternfly/react-core';
+import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
+import { UPDATE_INTERVAL } from '@config/config';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
   GraphNode,
@@ -29,10 +13,10 @@ import {
   GraphReactAdaptorProps
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import NavigationViewLink from '@core/components/NavigationViewLink';
 import { ProcessGroupsRoutesPaths, QueriesProcessGroups } from '@pages/ProcessGroups/ProcessGroups.enum';
 
-import DisplayResources from './DisplayResources';
+import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
+import TopologyToolbar from './TopologyToolbar';
 import { TopologyController } from '../services';
 import { TopologyLabels, QueriesTopology } from '../Topology.enum';
 
@@ -48,12 +32,12 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
   const navigate = useNavigate();
 
   const [componentIdSelected, setComponentIdSelected] = useState<string | undefined>(componentId);
-  const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
 
   const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
   const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
+  const toastRef = useRef<ToastExposeMethods>(null);
 
   const [{ data: processGroups }, { data: processGroupsPairs }] = useSuspenseQueries({
     queries: [
@@ -71,22 +55,10 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
     ]
   });
 
-  const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
-    setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
-  };
-
-  const removeAlert = (key: Key) => {
-    setAlerts((prevAlerts) => [...prevAlerts.filter((alert) => alert.key !== key)]);
-  };
-
-  const addInfoAlert = useCallback((message: string) => {
-    addAlert(message, 'info', getUniqueId());
-  }, []);
-
   const handleSaveTopology = useCallback(() => {
     graphRef?.current?.saveNodePositions();
-    addInfoAlert(TopologyLabels.ToastSave);
-  }, [addInfoAlert]);
+    toastRef.current?.addMessage(TopologyLabels.ToastSave);
+  }, []);
 
   const handleComponentSelected = useCallback((id?: string) => {
     setComponentIdSelected(id);
@@ -131,66 +103,17 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
     <>
       <Stack>
         <StackItem>
-          <Toolbar>
-            <ToolbarContent>
-              <ToolbarGroup>
-                <ToolbarItem>
-                  <DisplayResources
-                    id={componentIdSelected}
-                    onSelect={handleComponentSelected}
-                    placeholder={TopologyLabels.DisplayComponentsDefaultLabel}
-                    options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
-                  />
-                </ToolbarItem>
-
-                <ToolbarItem>
-                  <Checkbox
-                    label={TopologyLabels.CheckboxShowOnlyNeghbours}
-                    isDisabled={!componentIdSelected}
-                    isChecked={showOnlyNeighbours}
-                    onChange={(_, checked) => {
-                      handleShowOnlyNeighboursChecked(checked);
-                    }}
-                    id="showOnlyNeighboursCheckbox"
-                  />
-                </ToolbarItem>
-
-                <ToolbarItem>
-                  <Checkbox
-                    label={TopologyLabels.CheckboxMoveToNodeSelected}
-                    isDisabled={!componentIdSelected || showOnlyNeighbours}
-                    isChecked={moveToNodeSelected}
-                    onChange={(_, checked) => {
-                      handleMoveToNodeSelectedChecked(checked);
-                    }}
-                    id="moveToNodeSelectedCheckbox"
-                  />
-                </ToolbarItem>
-              </ToolbarGroup>
-
-              <ToolbarItem variant="separator" />
-
-              <ToolbarItem
-                spacer={{
-                  default: 'spacerSm'
-                }}
-              >
-                <Button onClick={handleSaveTopology} variant="secondary">
-                  {TopologyLabels.SaveButton}
-                </Button>
-              </ToolbarItem>
-
-              <ToolbarGroup align={{ default: 'alignRight' }}>
-                <ToolbarItem>
-                  <NavigationViewLink
-                    link={ProcessGroupsRoutesPaths.ProcessGroups}
-                    linkLabel={TopologyLabels.ListView}
-                    iconName="listIcon"
-                  />
-                </ToolbarItem>
-              </ToolbarGroup>
-            </ToolbarContent>
-          </Toolbar>
+          <TopologyToolbar
+            nodes={nodes}
+            onProcessSelected={handleComponentSelected}
+            nodeIdSelected={componentIdSelected}
+            showOnlyNeighbours={showOnlyNeighbours}
+            onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
+            moveToNodeSelected={moveToNodeSelected}
+            onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
+            onSaveTopology={handleSaveTopology}
+            linkToPage={ProcessGroupsRoutesPaths.ProcessGroups}
+          />
           <Divider />
         </StackItem>
 
@@ -206,17 +129,7 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
           />
         </StackItem>
       </Stack>
-      <AlertGroup isToast>
-        {alerts.map(({ key, title }) => (
-          <Alert
-            key={key}
-            timeout={TOAST_VISIBILITY_TIMEOUT}
-            variant={AlertVariant.info}
-            title={title}
-            actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
-          />
-        ))}
-      </AlertGroup>
+      <AlertToasts ref={toastRef} />
     </>
   );
 };

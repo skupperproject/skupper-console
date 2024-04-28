@@ -1,28 +1,12 @@
-import { ComponentType, FC, Key, startTransition, useCallback, useEffect, useRef, useState } from 'react';
+import { ComponentType, FC, startTransition, useCallback, useEffect, useRef, useState } from 'react';
 
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  AlertProps,
-  AlertVariant,
-  Button,
-  Checkbox,
-  Divider,
-  getUniqueId,
-  Stack,
-  StackItem,
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  ToolbarItem
-} from '@patternfly/react-core';
+import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { FlowDirection } from '@API/REST.enum';
-import { TOAST_VISIBILITY_TIMEOUT, UPDATE_INTERVAL } from '@config/config';
+import { UPDATE_INTERVAL } from '@config/config';
 import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
@@ -32,12 +16,11 @@ import {
   GraphReactAdaptorProps
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import NavigationViewLink from '@core/components/NavigationViewLink';
 import LoadingPage from '@pages/shared/Loading';
 import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import DisplayOptions from './DisplayOptions';
-import DisplayResources from './DisplayResources';
+import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
+import TopologyToolbar from './TopologyToolbar';
 import { TopologyController } from '../services';
 import {
   displayOptionsForSites,
@@ -64,7 +47,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   const [nodes, setNodes] = useState<GraphNode[] | undefined>();
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
-  const [alerts, setAlerts] = useState<Partial<AlertProps>[]>([]);
 
   const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
   const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
@@ -74,6 +56,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
 
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
+  const toastRef = useRef<ToastExposeMethods>(null);
 
   const isDisplayOptionActive = useCallback(
     (option: string) => displayOptionsSelected.includes(option),
@@ -123,22 +106,10 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     ]
   });
 
-  const addAlert = (title: string, variant: AlertProps['variant'], key: Key) => {
-    setAlerts((prevAlerts) => [...prevAlerts, { title, variant, key }]);
-  };
-
-  const removeAlert = (key: Key) => {
-    setAlerts((prevAlerts) => [...prevAlerts.filter((alert) => alert.key !== key)]);
-  };
-
-  const addInfoAlert = useCallback((message: string) => {
-    addAlert(message, 'info', getUniqueId());
-  }, []);
-
   const handleSaveTopology = useCallback(() => {
     graphRef?.current?.saveNodePositions();
-    addInfoAlert(TopologyLabels.ToastSave);
-  }, [addInfoAlert]);
+    toastRef.current?.addMessage(TopologyLabels.ToastSave);
+  }, []);
 
   const handleGetSelectedNode = useCallback(
     ({ id: idSelected }: GraphNode) => {
@@ -236,39 +207,6 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     return <LoadingPage />;
   }
 
-  const displayOptions = displayOptionsForSites.map((option) => {
-    if (option.key === SHOW_LINK_BYTES || option.key === SHOW_LINK_BYTERATE || option.key === SHOW_LINK_LATENCY) {
-      return {
-        ...option,
-        isDisabled: () => !isDisplayOptionActive(SHOW_DATA_LINKS)
-      };
-    }
-
-    if (option.key === SHOW_LINK_REVERSE_LABEL) {
-      return {
-        ...option,
-        isDisabled: () =>
-          !isDisplayOptionActive(SHOW_DATA_LINKS) ||
-          (!isDisplayOptionActive(SHOW_LINK_BYTES) &&
-            !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
-            !isDisplayOptionActive(SHOW_LINK_LATENCY))
-      };
-    }
-
-    if (option.key === ROTATE_LINK_LABEL) {
-      return {
-        ...option,
-        isDisabled: () =>
-          !isDisplayOptionActive(SHOW_DATA_LINKS) ||
-          (!isDisplayOptionActive(SHOW_LINK_BYTES) &&
-            !isDisplayOptionActive(SHOW_LINK_BYTERATE) &&
-            !isDisplayOptionActive(SHOW_LINK_LATENCY))
-      };
-    }
-
-    return option;
-  });
-
   let filteredLinks = edges;
   let filteredNodes = nodes;
 
@@ -278,80 +216,25 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
     filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
   }
 
-  const TopologyToolbar = (
-    <Toolbar>
-      <ToolbarContent>
-        <ToolbarItem>
-          <DisplayOptions
-            options={displayOptions}
-            onSelected={handleDisplaySelect}
-            defaultSelected={displayOptionsSelected}
-          />
-        </ToolbarItem>
-
-        <ToolbarItem variant="separator" />
-
-        <ToolbarGroup>
-          <ToolbarItem>
-            <DisplayResources
-              id={siteIdSelected}
-              onSelect={handleProcessSelected}
-              placeholder={TopologyLabels.DisplaySitesDefaultLabel}
-              options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
-            />
-          </ToolbarItem>
-
-          <ToolbarItem>
-            <Checkbox
-              label={TopologyLabels.CheckboxShowOnlyNeghbours}
-              isDisabled={!siteIdSelected}
-              isChecked={showOnlyNeighbours}
-              onChange={(_, checked) => {
-                handleShowOnlyNeighboursChecked(checked);
-              }}
-              id="showOnlyNeighboursCheckbox"
-            />
-          </ToolbarItem>
-
-          <ToolbarItem>
-            <Checkbox
-              label={TopologyLabels.CheckboxMoveToNodeSelected}
-              isDisabled={!siteIdSelected || showOnlyNeighbours}
-              isChecked={moveToNodeSelected}
-              onChange={(_, checked) => {
-                handleMoveToNodeSelectedChecked(checked);
-              }}
-              id="moveToNodeSelectedCheckbox"
-            />
-          </ToolbarItem>
-        </ToolbarGroup>
-
-        <ToolbarItem variant="separator" />
-
-        <ToolbarItem
-          spacer={{
-            default: 'spacerSm'
-          }}
-        >
-          <Button onClick={handleSaveTopology} variant="secondary">
-            {TopologyLabels.SaveButton}
-          </Button>
-        </ToolbarItem>
-
-        <ToolbarGroup align={{ default: 'alignRight' }}>
-          <ToolbarItem align={{ default: 'alignRight' }}>
-            <NavigationViewLink link={SitesRoutesPaths.Sites} linkLabel={TopologyLabels.ListView} iconName="listIcon" />
-          </ToolbarItem>
-        </ToolbarGroup>
-      </ToolbarContent>
-    </Toolbar>
-  );
-
   return (
     <>
       <Stack>
         <StackItem>
-          {TopologyToolbar} <Divider />
+          <TopologyToolbar
+            nodes={nodes}
+            onProcessSelected={handleProcessSelected}
+            displayOptions={displayOptionsForSites}
+            onDisplayOptionSelected={handleDisplaySelect}
+            defaultDisplayOptionsSelected={displayOptionsSelected}
+            nodeIdSelected={siteIdSelected}
+            showOnlyNeighbours={showOnlyNeighbours}
+            onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
+            moveToNodeSelected={moveToNodeSelected}
+            onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
+            onSaveTopology={handleSaveTopology}
+            linkToPage={SitesRoutesPaths.Sites}
+          />
+          <Divider />
         </StackItem>
         <StackItem isFilled>
           <GraphComponent
@@ -365,17 +248,7 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
           />
         </StackItem>
       </Stack>
-      <AlertGroup isToast>
-        {alerts.map(({ key, title }) => (
-          <Alert
-            key={key}
-            timeout={TOAST_VISIBILITY_TIMEOUT}
-            variant={AlertVariant.info}
-            title={title}
-            actionClose={<AlertActionCloseButton title={title as string} onClose={() => removeAlert(key as Key)} />}
-          />
-        ))}
-      </AlertGroup>
+      <AlertToasts ref={toastRef} />
     </>
   );
 };
