@@ -31,7 +31,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateDat
       <Table borders={false} variant="compact">
         <Thead noWrap>
           <Tr>
-            <Th screenReaderText="metric" />
+            <Th aria-label="metric" />
             <Th>{MetricsLabels.ByteRateMaxCol}</Th>
             <Th>{MetricsLabels.ByteRateAvgCol}</Th>
             <Th>{MetricsLabels.ByteRateCurrentCol}</Th>

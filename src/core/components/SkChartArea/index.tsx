@@ -78,7 +78,7 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData}
-                title={(datum) => `${formatX(datum.x, startDate)}`}
+                title={(datum: skAxisXY) => `${formatX(datum.x, startDate)}`}
                 cornerRadius={5}
                 flyoutStyle={{
                   fillOpacity: 0.75
