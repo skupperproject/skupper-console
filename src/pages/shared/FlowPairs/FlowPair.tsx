@@ -44,10 +44,12 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
 
   const duration = formatTimeInterval(endTimeMicroSeconds || Date.now() * 1000, startTimeMicroSenconds);
 
+  const isHtpp = protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2;
+
   return (
     <Grid hasGutter data-testid={getTestsIds.flowPairsView(identity)}>
       <GridItem span={12}>
-        {protocol === AvailableProtocols.Tcp && (
+        {!isHtpp && (
           <>
             <TextContent>
               <Text component={TextVariants.h2}>
@@ -60,7 +62,7 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
                 <DescriptionList>
                   <DescriptionListGroup>
                     <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(flowTrace)}</DescriptionListDescription>
+                    <DescriptionListDescription>{formatTraceBySites(flowTrace) || '-'}</DescriptionListDescription>
                     {duration && (
                       <>
                         <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
@@ -73,7 +75,7 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
             </Card>
           </>
         )}
-        {protocol !== AvailableProtocols.Tcp && (
+        {isHtpp && (
           <>
             <TextContent>
               <Text component={TextVariants.h2}>
