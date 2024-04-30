@@ -1,4 +1,5 @@
-export function formatTraceBySites(trace: string) {
+// TODO: We don't expect trace = undefined. Remove when BE TCP flowpair API is stabilized
+export function formatTraceBySites(trace: string = '') {
   const traceSanitized = trace.replace(/\|+$/, '');
 
   if (!traceSanitized) {
