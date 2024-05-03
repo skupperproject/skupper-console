@@ -65,7 +65,10 @@ export enum TopologyLabels {
   TopologyModalTitle = 'Details',
   TopologyModalAction1 = 'View details',
   TopologyModalAction2 = 'View pairs',
-  TopologyModalAction3 = 'View charts'
+  TopologyModalAction3 = 'View charts',
+  Source = 'Source',
+  Destination = 'Destination',
+  Protocol = 'Protocol'
 }
 
 export enum TopologyURLQueyParams {
