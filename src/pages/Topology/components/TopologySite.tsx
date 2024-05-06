@@ -1,27 +1,22 @@
-import { ComponentType, FC, startTransition, useCallback, useEffect, useRef, useState } from 'react';
+import { ComponentType, FC, useCallback, useRef } from 'react';
 
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
-import { useSuspenseQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
-import { FlowDirection } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
-  GraphEdge,
   GraphNode,
   GraphReactAdaptorExposedMethods,
   GraphReactAdaptorProps
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import LoadingPage from '@pages/shared/Loading';
-import { QueriesSites, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
-import { TopologyController } from '../services';
+import useTopologySiteData from './useTopologySiteData';
+import useTopologySiteState from './useTopologySiteState';
+import { TopologySiteController } from '../services/topologySiteController';
 import {
   displayOptionsForSites,
   ROTATE_LINK_LABEL,
@@ -29,192 +24,70 @@ import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
-  SHOW_LINK_REVERSE_LABEL,
-  SHOW_ROUTER_LINKS
+  SHOW_LINK_REVERSE_LABEL
 } from '../Topology.constants';
-import { QueriesTopology, TopologyLabels } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 
-const DISPLAY_OPTIONS = 'display-site-options';
-const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_ROUTER_LINKS];
-
-const linkQueryParams = { direction: FlowDirection.Outgoing };
-
-const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+  id,
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
-
-  const [nodes, setNodes] = useState<GraphNode[] | undefined>();
-  const [edges, setEdges] = useState<GraphEdge[]>([]);
-  const [siteIdSelected, setSiteIdSelected] = useState<string | undefined>();
-
-  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
-  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
-
-  const configuration =
-    TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
-  const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
-
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
 
-  const isDisplayOptionActive = useCallback(
-    (option: string) => displayOptionsSelected.includes(option),
-    [displayOptionsSelected]
-  );
+  const {
+    idSelected,
+    showOnlyNeighbours,
+    moveToNodeSelected,
+    displayOptionsSelected,
+    handleSiteSelected,
+    handleShowOnlyNeighbours,
+    handleMoveToNodeSelectedChecked,
+    handleDisplaySelect
+  } = useTopologySiteState({ id });
 
-  const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesSites.GetSites],
-        queryFn: () => RESTApi.fetchSites(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesSites.GetLinks, linkQueryParams],
-        queryFn: () => RESTApi.fetchLinks(linkQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesTopology.GetSitesPairs, isDisplayOptionActive(SHOW_DATA_LINKS)],
-        queryFn: () => (isDisplayOptionActive(SHOW_DATA_LINKS) ? RESTApi.fetchSitesPairs() : null),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [
-          QueriesTopology.GetBytesByProcessPairs,
-          isDisplayOptionActive(SHOW_LINK_BYTES),
-          isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          isDisplayOptionActive(SHOW_LINK_LATENCY),
-          isDisplayOptionActive(SHOW_DATA_LINKS)
-        ],
-        queryFn: () =>
-          isDisplayOptionActive(SHOW_DATA_LINKS)
-            ? TopologyController.getMetrics({
-                showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-                showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-                showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-                params: {
-                  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-                  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-                  fetchLatency: { groupBy: 'sourceSite, destSite' }
-                }
-              })
-            : null,
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
+  const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
+    idSelected: showOnlyNeighbours ? idSelected : undefined,
+    showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
+    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
+    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
+    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
   });
 
-  const handleSaveTopology = useCallback(() => {
-    graphRef?.current?.saveNodePositions();
-    toastRef.current?.addMessage(TopologyLabels.ToastSave);
-  }, []);
+  const handleShowDetails = useCallback(
+    ({ id: siteId }: GraphNode) => {
+      const site = sites?.find(({ identity }) => identity === siteId);
 
-  const handleGetSelectedNode = useCallback(
-    ({ id: idSelected }: GraphNode) => {
-      const site = sites?.find(({ identity }) => identity === idSelected);
-
-      navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${idSelected}`);
+      navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${siteId}`);
     },
-    [sites, navigate]
+    [navigate, sites]
   );
 
-  const handleDisplaySelect = useCallback((options: string[]) => {
-    startTransition(() => {
-      setDisplayOptions(options);
-    });
+  const handleShowOnlyNeighboursChecked = useCallback(
+    (checked: boolean) => {
+      if (checked) {
+        graphRef?.current?.saveNodePositions();
+      }
 
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
-  }, []);
+      handleShowOnlyNeighbours(checked);
+    },
+    [graphRef, handleShowOnlyNeighbours]
+  );
 
-  const handleProcessSelected = useCallback((id?: string) => {
-    setSiteIdSelected(id);
-  }, []);
+  const handleSavePositions = useCallback(() => {
+    graphRef?.current?.saveNodePositions();
+    toastRef.current?.addMessage(TopologyLabels.ToastSave);
+  }, [graphRef, toastRef]);
 
-  const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
-    if (checked) {
-      graphRef?.current?.saveNodePositions();
-    }
-
-    setShowOnlyNeighbours(checked);
-  }, []);
-
-  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
-    setMoveToNodeSelected(checked);
-  }, []);
-
-  useEffect(() => {
-    if (!sites || !routerLinks) {
-      return;
-    }
-
-    const options = {
-      showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-      showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-      showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-      showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
-      rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
-    };
-
-    if (!isDisplayOptionActive(SHOW_DATA_LINKS)) {
-      const siteNodes = TopologyController.convertSitesToNodes(sites);
-      const siteEdges = TopologyController.convertRouterLinksToEdges(sites, routerLinks);
-
-      setNodes(siteNodes);
-      setEdges(siteEdges);
-
-      return;
-    }
-
-    if (!sitesPairs) {
-      return;
-    }
-
-    function addMetricsToEdges(prevLinks: GraphEdge[]) {
-      return TopologyController.addMetricsToEdges(
-        prevLinks.map((link) => ({
-          ...link,
-          sourceName: getPrometheusSiteLabel(link.sourceName, link.source),
-          targetName: getPrometheusSiteLabel(link.targetName, link.target)
-        })),
-        'sourceSite',
-        'destSite',
-        undefined, // no need to retrieve protocols
-        metrics?.bytesByProcessPairs,
-        metrics?.byteRateByProcessPairs,
-        metrics?.latencyByProcessPairs
-      );
-    }
-
-    const siteNodes = TopologyController.convertSitesToNodes(sites);
-    const siteEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(sitesPairs));
-    const siteEdgesWithLabel = TopologyController.configureEdges(siteEdges, options);
-
-    setNodes(siteNodes);
-    setEdges(siteEdgesWithLabel);
-  }, [
+  const { nodes, edges } = TopologySiteController.siteDataTransformer({
     sites,
-    routerLinks,
     sitesPairs,
-    isDisplayOptionActive,
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
-  ]);
-
-  if (!nodes) {
-    return <LoadingPage />;
-  }
-
-  let filteredLinks = edges;
-  let filteredNodes = nodes;
-
-  if (showOnlyNeighbours && siteIdSelected) {
-    filteredLinks = edges.filter((edge) => edge.source === siteIdSelected || edge.target === siteIdSelected);
-    const idsFromService = filteredLinks.flatMap(({ source, target }) => [source, target]);
-    filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
-  }
+    routerLinks,
+    metrics,
+    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
+    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+  });
 
   return (
     <>
@@ -222,29 +95,31 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onProcessSelected={handleProcessSelected}
+            onProcessSelected={handleSiteSelected}
             displayOptions={displayOptionsForSites}
             onDisplayOptionSelected={handleDisplaySelect}
             defaultDisplayOptionsSelected={displayOptionsSelected}
-            nodeIdSelected={siteIdSelected}
+            nodeIdSelected={idSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
-            onSaveTopology={handleSaveTopology}
+            onSaveTopology={handleSavePositions}
             linkToPage={SitesRoutesPaths.Sites}
+            resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
           />
           <Divider />
         </StackItem>
+
         <StackItem isFilled>
           <GraphComponent
             ref={graphRef}
-            nodes={filteredNodes}
-            edges={filteredLinks}
-            itemSelected={siteIdSelected}
-            onClickNode={handleGetSelectedNode}
-            layout={showOnlyNeighbours && siteIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-            moveToSelectedNode={moveToNodeSelected && !!siteIdSelected && !showOnlyNeighbours}
+            nodes={nodes}
+            edges={edges}
+            itemSelected={idSelected}
+            onClickNode={handleShowDetails}
+            layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+            moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}
           />
         </StackItem>
       </Stack>
@@ -254,19 +129,3 @@ const TopologySite: FC<{ id?: string | null; GraphComponent?: ComponentType<Grap
 };
 
 export default TopologySite;
-
-function getPrometheusSiteLabel(name?: string, id?: string) {
-  if (!id && !name) {
-    return '';
-  }
-
-  if (!id && name) {
-    return name;
-  }
-
-  if (!name && id) {
-    return id;
-  }
-
-  return `${name}${prometheusSiteNameAndIdSeparator}${id}`;
-}

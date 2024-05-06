@@ -114,7 +114,7 @@ const TopologyProcesses: FC<{
           isDisplayOptionActive(SHOW_LINK_LATENCY)
         ],
         queryFn: () =>
-          TopologyController.getMetrics({
+          TopologyController.getTopologyMetrics({
             showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
             showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
             showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
@@ -347,6 +347,7 @@ const TopologyProcesses: FC<{
             onLoadTopology={handleLoadTopology}
             onSaveTopology={handleSaveTopology}
             linkToPage={ProcessesRoutesPaths.Processes}
+            resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           />
           <Divider />
         </StackItem>

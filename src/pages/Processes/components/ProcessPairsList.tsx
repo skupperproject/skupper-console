@@ -56,7 +56,7 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   const { data: metricsTx } = useQuery({
     queryKey: [QueriesTopology.GetBytesByProcessPairs, { sourceProcess: processName }],
     queryFn: () =>
-      TopologyController.getMetrics({
+      TopologyController.getTopologyMetrics({
         showBytes: true,
         showByteRate: true,
         showLatency: true,
@@ -71,7 +71,7 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   const { data: metricsRx } = useQuery({
     queryKey: [QueriesTopology.GetBytesByProcessPairs, { destProcess: processName }],
     queryFn: () =>
-      TopologyController.getMetrics({
+      TopologyController.getTopologyMetrics({
         showBytes: true,
         showByteRate: true,
         showLatency: true,

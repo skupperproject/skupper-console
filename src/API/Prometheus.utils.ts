@@ -1,3 +1,4 @@
+import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 
 import { MetricData as MetricValuesAndLabels, PrometheusMetric } from './Prometheus.interfaces';
@@ -40,3 +41,7 @@ export function getTimeSeriesFromPrometheusData(data: PrometheusMetric<'matrix'>
 
   return { values, labels };
 }
+
+// prometheus site label has this format: siteName@_@siteId
+export const composePrometheusSiteLabel = (name?: string, id?: string) =>
+  (name || '') + (prometheusSiteNameAndIdSeparator || '') + (id || '');

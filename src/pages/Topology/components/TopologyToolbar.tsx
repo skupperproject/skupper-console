@@ -37,6 +37,7 @@ interface ToolbarProps {
   onLoadTopology?: () => void;
   onSaveTopology?: () => void;
   linkToPage: string;
+  resourcePlaceholder: string;
 }
 
 const TopologyToolbar: React.FC<ToolbarProps> = function ({
@@ -54,7 +55,8 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
   onServiceSelected,
   onLoadTopology,
   onSaveTopology,
-  linkToPage
+  linkToPage,
+  resourcePlaceholder
 }) {
   const isLinkOptionActive = useCallback(
     () =>
@@ -118,16 +120,16 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
         {onProcessSelected && (
           <>
             <ToolbarGroup>
-              <ToolbarItem>
+              <ToolbarItem data-testid="display-resources">
                 <DisplayResources
                   id={nodeIdSelected}
                   onSelect={onProcessSelected}
-                  placeholder={TopologyLabels.DisplayProcessesDefaultLabel}
+                  placeholder={resourcePlaceholder}
                   options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
                 />
               </ToolbarItem>
 
-              <ToolbarItem>
+              <ToolbarItem data-testid="show-only-neighbours-checkbox">
                 <Checkbox
                   label={TopologyLabels.CheckboxShowOnlyNeghbours}
                   isDisabled={!nodeIdSelected}
@@ -139,7 +141,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
                 />
               </ToolbarItem>
 
-              <ToolbarItem>
+              <ToolbarItem data-testid="move-to-node-selected-checkbox">
                 <Checkbox
                   label={TopologyLabels.CheckboxMoveToNodeSelected}
                   isDisabled={!nodeIdSelected || showOnlyNeighbours}
