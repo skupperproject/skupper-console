@@ -1,4 +1,4 @@
-import { ComponentType, FC, startTransition, useCallback, useEffect, useRef, useState } from 'react';
+import { ComponentType, FC, startTransition, useCallback, useRef, useState } from 'react';
 
 import {
   Divider,
@@ -14,26 +14,23 @@ import {
   StackItem,
   Title
 } from '@patternfly/react-core';
-import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, UPDATE_INTERVAL } from '@config/config';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import {
   GraphEdge,
-  GraphCombo,
   GraphNode,
   GraphReactAdaptorProps,
   GraphReactAdaptorExposedMethods
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
-import LoadingPage from '@pages/shared/Loading';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
 import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
-import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
+import useTopologyProcessData from './useTopologyProcessData';
+import { TopologyController } from '../services';
+import { TopologyProcessController } from '../services/topologyProcessController';
 import {
   ROTATE_LINK_LABEL,
   SHOW_LINK_BYTERATE,
@@ -44,23 +41,12 @@ import {
   SHOW_SITE_KEY,
   displayOptionsForProcesses
 } from '../Topology.constants';
-import { TopologyLabels, QueriesTopology } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const DISPLAY_OPTIONS = 'display-options';
 const SERVICE_OPTIONS = 'service-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
-
-const processesQueryParams = {
-  processRole: ['remote', 'external'],
-  endTime: 0
-};
-
-const metricQueryParams = {
-  fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchLatency: { groupBy: 'sourceProcess, destProcess' }
-};
 
 const TopologyProcesses: FC<{
   serviceIds?: string[];
@@ -71,11 +57,7 @@ const TopologyProcesses: FC<{
   const configuration =
     TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
 
-  const [nodes, setNodes] = useState<GraphNode[] | undefined>();
-  const [links, setLinks] = useState<GraphEdge[]>([]);
-  const [groups, setGroups] = useState<GraphCombo[]>([]);
-
-  const [itemIdSelected, setItemIdSelected] = useState<string | undefined>(itemId); //process or link id
+  const [idSelected, setIdSelected] = useState<string | undefined>(itemId); //process or link id
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
   const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
   const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
@@ -93,40 +75,15 @@ const TopologyProcesses: FC<{
     [displayOptionsSelected]
   );
 
-  const [{ data: processes }, { data: processesPairs }, { data: metrics }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, processesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(processesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-
-      {
-        queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [
-          QueriesTopology.GetBytesByProcessPairs,
-          isDisplayOptionActive(SHOW_LINK_BYTES),
-          isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          isDisplayOptionActive(SHOW_LINK_LATENCY)
-        ],
-        queryFn: () =>
-          TopologyController.getTopologyMetrics({
-            showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-            showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-            params: metricQueryParams
-          }),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
+  const { processes, processesPairs, metrics } = useTopologyProcessData({
+    idSelected: showOnlyNeighbours ? idSelected : undefined,
+    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
+    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
+    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
   });
 
   const handleProcessSelected = useCallback((id?: string) => {
-    setItemIdSelected(id);
+    setIdSelected(id);
 
     if (!id) {
       handleCloseModal();
@@ -154,12 +111,12 @@ const TopologyProcesses: FC<{
   }, []);
 
   const handleSelectedNode = useCallback(({ id }: GraphNode) => {
-    setItemIdSelected(id);
+    setIdSelected(id);
     setModalType({ type: 'process', id });
   }, []);
 
   const handleServiceSelected = useCallback((ids: string[] | undefined) => {
-    setItemIdSelected(undefined);
+    setIdSelected(undefined);
     setModalType(undefined);
     setServiceIdsSelected(ids);
   }, []);
@@ -198,110 +155,26 @@ const TopologyProcesses: FC<{
     setModalType(undefined);
   };
 
-  useEffect(() => {
-    const options = {
-      showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-      showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
-      showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-      showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-      showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
-      rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
-    };
-
-    function addMetricsToEdges(edges: GraphEdge[]) {
-      const protocolByProcessPairsMap = (processesPairs || []).reduce(
-        (acc, { sourceId, destinationId, protocol }) => {
-          acc[`${sourceId}${destinationId}`] = protocol || '';
-
-          return acc;
-        },
-        {} as Record<string, string>
-      );
-
-      return TopologyController.addMetricsToEdges(
-        edges,
-        'sourceProcess',
-        'destProcess',
-        protocolByProcessPairsMap,
-        metrics?.bytesByProcessPairs,
-        metrics?.byteRateByProcessPairs,
-        metrics?.latencyByProcessPairs
-      );
-    }
-
-    let pPairs = processesPairs;
-    let p = processes;
-
-    if (serviceIdsSelected) {
-      const serverIds = p
-        // the format of one address is  serviceName@seviceId@protocol
-        .filter(({ addresses }) =>
-          addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
-        )
-        .map(({ identity }) => identity);
-
-      pPairs = pPairs.filter((pair) => serverIds.includes(pair.destinationId));
-
-      const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      p = p.filter(({ identity }) => processIdsFromService.includes(identity));
-    }
-    let processNodes = TopologyController.convertProcessesToNodes(p);
-    let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
-
-    if (processNodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION) {
-      processNodes = groupNodes(processNodes);
-      processPairEdges = groupEdges(processNodes, processPairEdges);
-    }
-    const nodeGroups = isDisplayOptionActive(SHOW_SITE_KEY)
-      ? TopologyController.getNodeGroupsFromNodes(processNodes)
-      : [];
-    processPairEdges = TopologyController.configureEdges(processPairEdges, options);
-
-    setNodes(
-      processNodes.map((node) => ({
-        ...node,
-        persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
-      }))
-    );
-    setLinks(
-      processPairEdges.map((edge) => ({
-        ...edge,
-        style: { cursor: 'pointer' }
-      }))
-    );
-    setGroups(nodeGroups);
-  }, [
+  const { nodes, edges, combos } = TopologyProcessController.dataTransformer({
     processes,
     processesPairs,
-    isDisplayOptionActive,
     serviceIdsSelected,
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs,
-    showOnlyNeighbours,
-    itemIdSelected
-  ]);
+    metrics,
+    showSites: displayOptionsSelected.includes(SHOW_SITE_KEY),
+    showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
+    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
+    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+  });
 
-  if (!nodes) {
-    return <LoadingPage />;
+  let filteredCombos = combos;
+
+  // when we select a node we need to remove combos with empty nodes
+  if (showOnlyNeighbours && idSelected) {
+    const comboIdsFromNodes = nodes.flatMap(({ comboId }) => comboId || []);
+    filteredCombos = combos.filter(({ id }) => comboIdsFromNodes.includes(id));
   }
 
-  const nodeIdSelected = nodes.find(
-    ({ id }) => id.split('~').includes(itemIdSelected || '') || itemIdSelected === id
-  )?.id;
-
-  let filteredLinks = links;
-  let filteredNodes = nodes;
-  let filteredCombos = groups;
-
-  if (showOnlyNeighbours && itemIdSelected) {
-    filteredLinks = links.filter((edge) => edge.source === itemIdSelected || edge.target === itemIdSelected);
-    const idsFromService = filteredLinks.flatMap(({ source, target }) => [source, target]);
-    filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
-
-    const comboIdsFromNodes = filteredNodes.flatMap(({ comboId }) => comboId || []);
-    filteredCombos = groups.filter(({ id }) => comboIdsFromNodes.includes(id));
-  }
+  const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(idSelected || '') || idSelected === id)?.id;
 
   const onExpand = () => {
     drawerRef.current && drawerRef.current.focus();
@@ -357,8 +230,8 @@ const TopologyProcesses: FC<{
               <DrawerContentBody>
                 <GraphComponent
                   ref={graphRef}
-                  nodes={filteredNodes}
-                  edges={filteredLinks}
+                  nodes={nodes}
+                  edges={edges}
                   combos={filteredCombos}
                   itemSelected={nodeIdSelected}
                   layout={showOnlyNeighbours && nodeIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}

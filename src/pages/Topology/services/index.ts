@@ -1,18 +1,8 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
-import {
-  ProcessPairsResponse,
-  ComponentResponse,
-  ProcessResponse,
-  SitePairsResponse,
-  ComponentPairsResponse
-} from '@API/REST.interfaces';
-import componentIcon from '@assets/component.svg';
-import processIcon from '@assets/process.svg';
-import skupperIcon from '@assets/skupper.svg';
+import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@API/REST.interfaces';
 import {
   CUSTOM_ITEMS_NAMES,
-  DEFAULT_REMOTE_NODE_CONFIG,
   DEFAULT_NODE_ICON,
   DEFAULT_NODE_CONFIG,
   DEFAUT_EDGE_BG_LABEL,
@@ -55,47 +45,6 @@ export const TopologyController = {
       return Promise.reject(e);
     }
   },
-
-  convertProcessGroupsToNodes: (entities: ComponentResponse[]): GraphNode[] =>
-    entities.map(({ identity, name, processGroupRole, processCount }) => {
-      const img = processGroupRole === 'internal' ? skupperIcon : componentIcon;
-
-      const nodeConfig =
-        processGroupRole === 'remote'
-          ? DEFAULT_REMOTE_NODE_CONFIG
-          : { type: shape.bound, notificationValue: processCount, enableBadge1: true };
-
-      return convertEntityToNode({ id: identity, label: name, iconFileName: img, nodeConfig });
-    }),
-
-  convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
-    processes?.map(
-      ({
-        identity,
-        name: label,
-        parent: comboId,
-        parentName: comboName,
-        groupIdentity,
-        groupName,
-        processRole: role,
-        processBinding
-      }) => {
-        const img = role === 'internal' ? skupperIcon : processIcon;
-
-        const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
-
-        return convertEntityToNode({
-          id: identity,
-          comboId,
-          comboName,
-          label,
-          iconFileName: img,
-          nodeConfig,
-          groupId: groupIdentity,
-          groupName
-        });
-      }
-    ),
 
   getNodeGroupsFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
@@ -155,7 +104,7 @@ export const TopologyController = {
     edges: GraphEdge[],
     metricSourceLabel: 'sourceProcess' | 'sourceSite', // Prometheus metric label to compare with the metricDestLabel
     metricDestLabel: 'destProcess' | 'destSite',
-    protocolPairsMap?: Record<string, string>,
+    protocolPairsMap: Record<string, string> | undefined, //
     bytesByPairs?: PrometheusMetric<'vector'>[],
     byteRateByPairs?: PrometheusMetric<'vector'>[],
     latencyByPairs?: PrometheusMetric<'vector'>[]
@@ -208,7 +157,7 @@ export const TopologyController = {
       const bytesText = edge?.metrics?.bytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
       const latencyText = edge?.metrics?.latency && `${formatLatency(edge?.metrics?.latency || 0)}`;
 
-      const isTheSameEdge = edge.source !== edge.target;
+      const isTheSameEdge = edge.source === edge.target;
 
       const byteRateReverseText =
         !isTheSameEdge &&

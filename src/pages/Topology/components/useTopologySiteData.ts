@@ -10,7 +10,7 @@ import { QueriesTopology } from '../Topology.enum';
 
 const linkQueryParams = { direction: FlowDirection.Outgoing };
 
-interface UseSiteTopologyApiDataProps {
+interface UseTopologySiteDataProps {
   idSelected?: string;
   showDataLink: boolean;
   showBytes: boolean;
@@ -18,13 +18,19 @@ interface UseSiteTopologyApiDataProps {
   showLatency: boolean;
 }
 
-const useSiteTopologyApiData = ({
+const metricQueryParams = {
+  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
+  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
+  fetchLatency: { groupBy: 'sourceSite, destSite' }
+};
+
+const useTopologySiteData = ({
   idSelected,
   showDataLink,
   showBytes,
   showByteRate,
   showLatency
-}: UseSiteTopologyApiDataProps) => {
+}: UseTopologySiteDataProps) => {
   const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
@@ -50,11 +56,7 @@ const useSiteTopologyApiData = ({
                 showBytes,
                 showByteRate,
                 showLatency,
-                params: {
-                  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-                  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-                  fetchLatency: { groupBy: 'sourceSite, destSite' }
-                }
+                params: metricQueryParams
               })
             : null,
         refetchInterval: UPDATE_INTERVAL
@@ -82,4 +84,4 @@ const useSiteTopologyApiData = ({
   };
 };
 
-export default useSiteTopologyApiData;
+export default useTopologySiteData;
