@@ -11,7 +11,7 @@ import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import { CustomComponentCells, processGroupsColumns } from '../ProcessGroups.constants';
-import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
+import { ComponentLabels, QueriesComponent } from '../ProcessGroups.enum';
 
 const initComponentsQueryParams = {
   limit: BIG_PAGINATION_SIZE,
@@ -23,7 +23,7 @@ const ProcessGroups = function () {
   const [componentsQueryParams, setComponentsQueryParams] = useState<RemoteFilterOptions>(initComponentsQueryParams);
 
   const { data: componentsData } = useSuspenseQuery({
-    queryKey: [QueriesProcessGroups.GetProcessGroups, componentsQueryParams],
+    queryKey: [QueriesComponent.GetProcessGroups, componentsQueryParams],
     queryFn: () => RESTApi.fetchProcessGroups(componentsQueryParams),
     refetchInterval: UPDATE_INTERVAL
   });
@@ -40,8 +40,8 @@ const ProcessGroups = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.componentsView()}
-      title={ProcessGroupsLabels.Section}
-      description={ProcessGroupsLabels.Description}
+      title={ComponentLabels.Section}
+      description={ComponentLabels.Description}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}
       mainContentChildren={
         <SkTable

@@ -7,8 +7,8 @@ import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
+import TopologyComponent from '../components/TopologyComponent';
 import TopologyProcesses from '../components/TopologyProcesses';
-import TopologyProcessGroups from '../components/TopologyProcessGroups';
 import TopologySite from '../components/TopologySite';
 import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
@@ -48,7 +48,7 @@ const Topology = function () {
       mainContentChildren={
         <>
           {tabSelected === TopologyViews.Sites && <TopologySite id={id.current} />}
-          {tabSelected === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id.current} />}
+          {tabSelected === TopologyViews.ProcessGroups && <TopologyComponent id={id.current} />}
           {tabSelected === TopologyViews.Processes && (
             <TopologyProcesses serviceIds={serviceId ? [serviceId] : undefined} id={id.current} />
           )}

@@ -59,7 +59,7 @@ export interface SiteResponse extends BaseResponse {
   platform: 'kubernetes' | 'podman' | undefined;
 }
 
-export interface ProcessGroupResponse extends BaseResponse {
+export interface ComponentResponse extends BaseResponse {
   name: string;
   processGroupRole: 'external' | 'internal' | 'remote';
   processCount: number;
@@ -92,7 +92,7 @@ export interface ProcessPairsResponse extends BaseResponse {
   protocol?: AvailableProtocols; // undefined = there is a remote process
 }
 
-export type ProcessGroupPairsResponse = ProcessPairsResponse;
+export type ComponentPairsResponse = ProcessPairsResponse;
 
 export interface SitePairsResponse extends BaseResponse {
   pairType: string;

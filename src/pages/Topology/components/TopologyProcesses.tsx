@@ -333,7 +333,7 @@ const TopologyProcesses: FC<{
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onProcessSelected={handleProcessSelected}
+            onSelected={handleProcessSelected}
             displayOptions={displayOptionsForProcesses}
             onDisplayOptionSelected={handleDisplayOptionSelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}

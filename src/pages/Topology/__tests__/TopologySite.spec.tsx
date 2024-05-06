@@ -14,7 +14,7 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
 import TopologySite from '../components/TopologySite';
-import * as useTopologySiteState from '../components/useTopologySiteState';
+import * as useTopologySiteState from '../components/useTopologyState';
 import { TopologyLabels } from '../Topology.enum';
 
 const sitesResults = sitesData.results;
@@ -101,7 +101,7 @@ describe('TopologySite', () => {
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],
-      handleSiteSelected: jest.fn(),
+      handleSelected: jest.fn(),
       handleShowOnlyNeighbours,
       handleMoveToNodeSelectedChecked: jest.fn(),
       handleDisplaySelect: jest.fn()
@@ -128,7 +128,7 @@ describe('TopologySite', () => {
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],
-      handleSiteSelected: jest.fn(),
+      handleSelected: jest.fn(),
       handleShowOnlyNeighbours: jest.fn(),
       handleMoveToNodeSelectedChecked,
       handleDisplaySelect: jest.fn()

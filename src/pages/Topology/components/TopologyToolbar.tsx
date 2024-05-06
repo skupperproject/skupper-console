@@ -23,7 +23,7 @@ import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface ToolbarProps {
   nodes: GraphNode[];
-  onProcessSelected?: (id?: string) => void;
+  onSelected?: (id?: string) => void;
   displayOptions?: DisplaySelectProps[];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
@@ -42,7 +42,7 @@ interface ToolbarProps {
 
 const TopologyToolbar: React.FC<ToolbarProps> = function ({
   nodes,
-  onProcessSelected,
+  onSelected,
   displayOptions,
   onDisplayOptionSelected,
   defaultDisplayOptionsSelected,
@@ -117,13 +117,13 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
           </>
         )}
 
-        {onProcessSelected && (
+        {onSelected && (
           <>
             <ToolbarGroup>
               <ToolbarItem data-testid="display-resources">
                 <DisplayResources
                   id={nodeIdSelected}
-                  onSelect={onProcessSelected}
+                  onSelect={onSelected}
                   placeholder={resourcePlaceholder}
                   options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
                 />

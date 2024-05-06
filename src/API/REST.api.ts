@@ -1,6 +1,6 @@
 import { axiosFetch } from './apiMiddleware';
 import {
-  ProcessGroupResponse,
+  ComponentResponse,
   ServiceResponse,
   ProcessResponse,
   FlowPairsResponse,
@@ -12,7 +12,7 @@ import {
   ResponseWrapper,
   CollectorsResponse,
   SitePairsResponse,
-  ProcessGroupPairsResponse,
+  ComponentPairsResponse,
   UserResponse
 } from './REST.interfaces';
 import {
@@ -138,16 +138,16 @@ export const RESTApi = {
   },
 
   // PROCESS GROUPS APIs
-  fetchProcessGroups: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<ProcessGroupResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessGroupResponse[]>>(getProcessGroupsPATH(), {
+  fetchProcessGroups: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<ComponentResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ComponentResponse[]>>(getProcessGroupsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchProcessGroup: async (id: string, options?: RemoteFilterOptions): Promise<ProcessGroupResponse> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessGroupResponse>>(getProcessGroupPATH(id), {
+  fetchProcessGroup: async (id: string, options?: RemoteFilterOptions): Promise<ComponentResponse> => {
+    const data = await axiosFetch<ResponseWrapper<ComponentResponse>>(getProcessGroupPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
@@ -253,7 +253,7 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchProcessGroupsPairs: async (options?: RemoteFilterOptions): Promise<ProcessGroupPairsResponse[]> => {
+  fetchProcessGroupsPairs: async (options?: RemoteFilterOptions): Promise<ComponentPairsResponse[]> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getProcessGroupPairsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
@@ -261,7 +261,7 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchProcessGroupPairs: async (id: string, options?: RemoteFilterOptions): Promise<ProcessGroupPairsResponse> => {
+  fetchProcessGroupPairs: async (id: string, options?: RemoteFilterOptions): Promise<ComponentPairsResponse> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getProcessGroupPairPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });

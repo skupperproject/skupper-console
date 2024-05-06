@@ -6,13 +6,13 @@ import {
   ProcessPairsResponse,
   HostResponse,
   LinkResponse,
-  ProcessGroupResponse,
+  ComponentResponse,
   ProcessResponse,
   RouterResponse,
   SiteResponse,
   FlowPairsResponse,
   ResponseWrapper,
-  ProcessGroupPairsResponse,
+  ComponentPairsResponse,
   SitePairsResponse
 } from 'API/REST.interfaces';
 
@@ -26,8 +26,8 @@ const prefix = '/api/v1alpha1';
 const path = './data';
 const collectors = require(`${path}/COLLECTORS.json`);
 const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
-const processGroups: ResponseWrapper<ProcessGroupResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
-const processGroupPairs: ResponseWrapper<ProcessGroupPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
+const processGroups: ResponseWrapper<ComponentResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
+const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
 const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
@@ -220,7 +220,7 @@ export const MockApi = {
   },
 
   getComponent: (_: unknown, { params: { id } }: ApiProps) => {
-    const results = processGroups.results.find(({ identity }: ProcessGroupResponse) => identity === id);
+    const results = processGroups.results.find(({ identity }: ComponentResponse) => identity === id);
 
     return { results };
   },

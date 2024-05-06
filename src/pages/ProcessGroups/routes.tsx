@@ -1,17 +1,17 @@
 import { lazy } from 'react';
 
-import { ProcessGroupsRoutesPaths } from './ProcessGroups.enum';
+import { ComponentRoutesPaths } from './ProcessGroups.enum';
 
 const ProcessGroups = lazy(() => import(/* webpackChunkName: "components" */ './views/ProcessGroups'));
 const ProcessGroup = lazy(() => import(/* webpackChunkName: "component" */ './views/ProcessGroup'));
 
 export const processGroupsRoutes = [
   {
-    path: ProcessGroupsRoutesPaths.ProcessGroups,
+    path: ComponentRoutesPaths.ProcessGroups,
     element: <ProcessGroups />
   },
   {
-    path: `${ProcessGroupsRoutesPaths.ProcessGroups}/:id`,
+    path: `${ComponentRoutesPaths.ProcessGroups}/:id`,
     element: <ProcessGroup />
   }
 ];

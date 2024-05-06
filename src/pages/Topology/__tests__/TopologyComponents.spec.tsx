@@ -2,6 +2,7 @@ import { Suspense, memo, forwardRef, useImperativeHandle, FC } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
 import { waitForElementToBeRemovedTimeout } from '@config/config';
@@ -12,7 +13,8 @@ import sitesData from '@mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
-import TopologyProcessGroups from '../components/TopologyProcessGroups';
+import TopologyComponent from '../components/TopologyComponent';
+import * as useTopologySiteState from '../components/useTopologyState';
 import { TopologyLabels } from '../Topology.enum';
 
 const sitesResults = sitesData.results;
@@ -55,7 +57,7 @@ describe('Topology Components', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TopologyProcessGroups id={sitesResults[2].name} GraphComponent={MockGraphComponent} />
+          <TopologyComponent id={sitesResults[2].name} GraphComponent={MockGraphComponent} />
         </Suspense>
       </Wrapper>
     );
@@ -90,5 +92,32 @@ describe('Topology Components', () => {
     fireEvent.click(screen.getByText(TopologyLabels.SaveButton));
 
     expect(screen.getByText(TopologyLabels.ToastSave)).toBeInTheDocument();
+  });
+
+  it('should update showOnlyNeighbours state on checkbox click', async () => {
+    const handleShowOnlyNeighbours = jest.fn();
+
+    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
+      idSelected: sitesResults[2].identity,
+      showOnlyNeighbours: false,
+      moveToNodeSelected: false,
+      displayOptionsSelected: [],
+      handleSelected: jest.fn(),
+      handleShowOnlyNeighbours,
+      handleMoveToNodeSelectedChecked: jest.fn(),
+      handleDisplaySelect: jest.fn()
+    }));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    const checkbox = screen
+      .getByTestId('show-only-neighbours-checkbox')
+      .querySelector('input[type="checkbox') as HTMLInputElement;
+
+    await eventUser.click(checkbox);
+
+    expect(handleShowOnlyNeighbours).toHaveBeenCalled();
   });
 });

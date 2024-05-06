@@ -18,14 +18,14 @@ import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metric
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
-import { ProcessGroupsLabels, QueriesProcessGroups } from '../ProcessGroups.enum';
+import { ComponentLabels, QueriesComponent } from '../ProcessGroups.enum';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'component-metric-filter';
 const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `component-open-metric-sections`;
 
 const ProcessGroup = function () {
   const [searchParams] = useSearchParams();
-  const type = searchParams.get('type') || ProcessGroupsLabels.Overview;
+  const type = searchParams.get('type') || ComponentLabels.Overview;
 
   const { id } = useParams() as { id: string };
   const { id: processGroupId } = getIdAndNameFromUrlParams(id);
@@ -36,11 +36,11 @@ const ProcessGroup = function () {
   const [{ data: processes }, { data: processGroup }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcessGroups.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
+        queryKey: [QueriesComponent.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
         queryFn: () => RESTApi.fetchProcesses({ endTime: 0, groupIdentity: processGroupId })
       },
       {
-        queryKey: [QueriesProcessGroups.GetProcessGroup, processGroupId],
+        queryKey: [QueriesComponent.GetProcessGroup, processGroupId],
         queryFn: () => RESTApi.fetchProcessGroup(processGroupId)
       }
     ]
@@ -61,7 +61,7 @@ const ProcessGroup = function () {
   );
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setTabSelected(tabIndex as ProcessGroupsLabels);
+    setTabSelected(tabIndex as ComponentLabels);
   }
 
   const processResults = processes.results;
@@ -71,15 +71,12 @@ const ProcessGroup = function () {
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
+        <Tab eventKey={ComponentLabels.Overview} title={<TabTitleText>{ComponentLabels.Overview}</TabTitleText>} />
         <Tab
-          eventKey={ProcessGroupsLabels.Overview}
-          title={<TabTitleText>{ProcessGroupsLabels.Overview}</TabTitleText>}
-        />
-        <Tab
-          eventKey={ProcessGroupsLabels.Processes}
+          eventKey={ComponentLabels.Processes}
           title={
             <TabTitleText>
-              {ProcessGroupsLabels.Processes}{' '}
+              {ComponentLabels.Processes}{' '}
               {!!processGroup.processCount && (
                 <Badge isRead key={1}>
                   {processGroup.processCount}
@@ -100,7 +97,7 @@ const ProcessGroup = function () {
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
-          {tabSelected === ProcessGroupsLabels.Overview && (
+          {tabSelected === ComponentLabels.Overview && (
             <Metrics
               key={id}
               defaultOpenSections={{
@@ -129,7 +126,7 @@ const ProcessGroup = function () {
             />
           )}
 
-          {tabSelected === ProcessGroupsLabels.Processes && (
+          {tabSelected === ComponentLabels.Processes && (
             <SkTable
               title={ProcessesLabels.Section}
               columns={processesTableColumns}

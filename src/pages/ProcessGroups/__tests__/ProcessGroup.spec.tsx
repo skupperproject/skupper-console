@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessResponse, ProcessGroupResponse } from '@API/REST.interfaces';
+import { ProcessResponse, ComponentResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { Wrapper } from '@core/components/Wrapper';
@@ -14,10 +14,10 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
-import { ProcessGroupsLabels } from '../ProcessGroups.enum';
+import { ComponentLabels } from '../ProcessGroups.enum';
 import ProcessGroup from '../views/ProcessGroup';
 
-const processGroupResults = processGroupsData.results as ProcessGroupResponse[];
+const processGroupResults = processGroupsData.results as ComponentResponse[];
 const processResults = processesData.results as ProcessResponse[];
 
 describe('Component component', () => {
@@ -65,7 +65,7 @@ describe('Component component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getAllByText(ProcessGroupsLabels.Processes)[0]);
+    fireEvent.click(screen.getAllByText(ComponentLabels.Processes)[0]);
 
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processGroupResults[0].name);
     expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('Component component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getAllByText(ProcessGroupsLabels.Processes)[0]);
+    fireEvent.click(screen.getAllByText(ComponentLabels.Processes)[0]);
 
     expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
       'href',

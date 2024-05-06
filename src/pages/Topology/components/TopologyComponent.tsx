@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback, useRef } from 'react';
+import { FC, useCallback, useRef, ComponentType } from 'react';
 
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
@@ -10,25 +10,16 @@ import {
   GraphReactAdaptorProps
 } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 
 import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
-import useTopologySiteData from './useTopologySiteData';
+import useTopologyComponentData from './useTopologyComponentData';
 import useTopologyState from './useTopologyState';
-import { TopologySiteController } from '../services/topologySiteController';
-import {
-  displayOptionsForSites,
-  ROTATE_LINK_LABEL,
-  SHOW_DATA_LINKS,
-  SHOW_LINK_BYTERATE,
-  SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
-  SHOW_LINK_REVERSE_LABEL
-} from '../Topology.constants';
+import { TopologyComponentController } from '../services/topologyComponentController';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
   id,
   GraphComponent = GraphReactAdaptor
 }) {
@@ -40,28 +31,24 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
     idSelected,
     showOnlyNeighbours,
     moveToNodeSelected,
-    displayOptionsSelected,
     handleSelected,
     handleShowOnlyNeighbours,
-    handleMoveToNodeSelectedChecked,
-    handleDisplaySelect
+    handleMoveToNodeSelectedChecked
   } = useTopologyState({ id });
 
-  const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    idSelected: showOnlyNeighbours ? idSelected : undefined,
-    showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
-    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
+  const { components, componentsPairs } = useTopologyComponentData({
+    idSelected: showOnlyNeighbours ? idSelected : undefined
   });
 
   const handleShowDetails = useCallback(
-    ({ id: siteId }: GraphNode) => {
-      const site = sites?.find(({ identity }) => identity === siteId);
+    ({ id: componentId }: GraphNode) => {
+      const component = components.find(({ identity }) => identity === componentId);
 
-      navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${siteId}`);
+      if (component) {
+        navigate(`${ComponentRoutesPaths.ProcessGroups}/${component.name}@${componentId}`);
+      }
     },
-    [navigate, sites]
+    [navigate, components]
   );
 
   const handleShowOnlyNeighboursChecked = useCallback(
@@ -72,7 +59,7 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
 
       handleShowOnlyNeighbours(checked);
     },
-    [graphRef, handleShowOnlyNeighbours]
+    [handleShowOnlyNeighbours]
   );
 
   const handleSavePositions = useCallback(() => {
@@ -80,13 +67,9 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
     toastRef.current?.addMessage(TopologyLabels.ToastSave);
   }, [graphRef, toastRef]);
 
-  const { nodes, edges } = TopologySiteController.siteDataTransformer({
-    sites,
-    sitesPairs,
-    routerLinks,
-    metrics,
-    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+  const { nodes, edges } = TopologyComponentController.dataTransformer({
+    components,
+    componentsPairs
   });
 
   return (
@@ -96,17 +79,14 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
           <TopologyToolbar
             nodes={nodes}
             onSelected={handleSelected}
-            displayOptions={displayOptionsForSites}
-            onDisplayOptionSelected={handleDisplaySelect}
-            defaultDisplayOptionsSelected={displayOptionsSelected}
             nodeIdSelected={idSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             onSaveTopology={handleSavePositions}
-            linkToPage={SitesRoutesPaths.Sites}
-            resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
+            linkToPage={ComponentRoutesPaths.ProcessGroups}
+            resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
           />
           <Divider />
         </StackItem>
@@ -128,4 +108,4 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
   );
 };
 
-export default TopologySite;
+export default TopologyComponent;
