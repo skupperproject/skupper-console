@@ -47,7 +47,7 @@ const Topology = function () {
       }
       mainContentChildren={
         <>
-          {tabSelected === TopologyViews.Sites && <TopologySite />}
+          {tabSelected === TopologyViews.Sites && <TopologySite id={id.current} />}
           {tabSelected === TopologyViews.ProcessGroups && <TopologyProcessGroups id={id.current} />}
           {tabSelected === TopologyViews.Processes && (
             <TopologyProcesses serviceIds={serviceId ? [serviceId] : undefined} id={id.current} />

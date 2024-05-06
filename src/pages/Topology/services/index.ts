@@ -1,18 +1,8 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
-import {
-  ProcessPairsResponse,
-  LinkResponse,
-  ProcessGroupResponse,
-  ProcessResponse,
-  SiteResponse,
-  SitePairsResponse
-} from '@API/REST.interfaces';
+import { ProcessPairsResponse, ProcessGroupResponse, ProcessResponse, SitePairsResponse } from '@API/REST.interfaces';
 import componentIcon from '@assets/component.svg';
-import kubernetesIcon from '@assets/kubernetes.svg';
-import podmanIcon from '@assets/podman.png';
 import processIcon from '@assets/process.svg';
-import siteIcon from '@assets/site.svg';
 import skupperIcon from '@assets/skupper.svg';
 import {
   CUSTOM_ITEMS_NAMES,
@@ -26,9 +16,7 @@ import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.i
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
-import SitesController from '@pages/Sites/services';
 
-import { TopologyLabels } from '../Topology.enum';
 import {
   Entity,
   TopologyMetrics,
@@ -42,13 +30,8 @@ const shape = {
   unbound: 'diamond'
 };
 
-const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
-  kubernetes: kubernetesIcon,
-  podman: podmanIcon
-};
-
 export const TopologyController = {
-  getMetrics: async ({
+  getTopologyMetrics: async ({
     showBytes = false,
     showByteRate = false,
     showLatency = false,
@@ -66,18 +49,6 @@ export const TopologyController = {
       return Promise.reject(e);
     }
   },
-
-  convertSitesToNodes: (entities: SiteResponse[]): GraphNode[] =>
-    entities.map(({ identity, name, siteVersion, platform }) => {
-      const img = platform && platformsMap[platform] ? platformsMap[platform] : siteIcon;
-      const label = siteVersion ? `${name} (${siteVersion})` : name;
-
-      return convertEntityToNode({
-        id: identity,
-        label,
-        iconFileName: img
-      });
-    }),
 
   convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
     entities.map(({ identity, name, processGroupRole, processCount }) => {
@@ -141,22 +112,6 @@ export const TopologyController = {
       sourceName,
       targetName: destinationName
     })),
-
-  convertRouterLinksToEdges: (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {
-    const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links);
-
-    return sitesWithLinks.flatMap(({ identity: sourceId, linkSiteIds }) =>
-      linkSiteIds.flatMap(({ targetId, linkCost }) => [
-        {
-          id: `${sourceId}-to${targetId}`,
-          source: sourceId,
-          target: targetId,
-          label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : '',
-          type: CUSTOM_ITEMS_NAMES.siteEdge
-        }
-      ])
-    );
-  },
 
   addMetricsToProcessPairs: ({ processesPairs, metrics, prometheusKey, processPairsKey }: ProcessPairsWithMetrics) => {
     const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined, key: string) =>
@@ -241,24 +196,26 @@ export const TopologyController = {
   configureEdges: (edges: GraphEdge[], options?: DisplayOptions): GraphEdge[] =>
     edges.map((edge) => {
       const protocolText = options?.showLinkProtocol && edge?.metrics?.protocol;
-      const byteRateText = options?.showLinkByteRate && `${formatByteRate(edge?.metrics?.byteRate || 0)}`;
-      const bytesText = options?.showLinkBytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
-      const latencyText = options?.showLinkLatency && `${formatLatency(edge?.metrics?.latency || 0)}`;
+      const byteRateText = edge?.metrics?.byteRate && `${formatByteRate(edge?.metrics?.byteRate || 0)}`;
+      const bytesText = edge?.metrics?.bytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
+      const latencyText = edge?.metrics?.latency && `${formatLatency(edge?.metrics?.latency || 0)}`;
+
+      const isTheSameEdge = edge.source !== edge.target;
 
       const byteRateReverseText =
-        options?.showLinkByteRate &&
+        !isTheSameEdge &&
+        edge?.metrics?.byteRate &&
         options?.showLinkLabelReverse &&
-        edge.source !== edge.target &&
         `(${formatByteRate(edge?.metrics?.byteRateReverse || 0)})`;
       const bytesReverseText =
-        options?.showLinkBytes &&
+        !isTheSameEdge &&
+        edge?.metrics?.bytes &&
         options?.showLinkLabelReverse &&
-        edge.source !== edge.target &&
         `(${formatBytes(edge?.metrics?.bytesReverse || 0)})`;
       const latencyReverseText =
-        options?.showLinkLatency &&
+        !isTheSameEdge &&
+        edge?.metrics?.latency &&
         options?.showLinkLabelReverse &&
-        edge.source !== edge.target &&
         `(${formatLatency(edge?.metrics?.latencyReverse || 0)})`;
 
       const metrics = [bytesText, byteRateText, latencyText].filter(Boolean).join(', ');
@@ -289,7 +246,7 @@ export const TopologyController = {
   }
 };
 
-function convertEntityToNode({
+export function convertEntityToNode({
   id,
   comboId,
   comboName,

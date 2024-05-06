@@ -118,7 +118,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
         {onProcessSelected && (
           <>
             <ToolbarGroup>
-              <ToolbarItem>
+              <ToolbarItem data-testid="display-resources">
                 <DisplayResources
                   id={nodeIdSelected}
                   onSelect={onProcessSelected}
@@ -127,7 +127,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
                 />
               </ToolbarItem>
 
-              <ToolbarItem>
+              <ToolbarItem data-testid="show-only-neighbours-checkbox">
                 <Checkbox
                   label={TopologyLabels.CheckboxShowOnlyNeghbours}
                   isDisabled={!nodeIdSelected}
@@ -139,7 +139,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
                 />
               </ToolbarItem>
 
-              <ToolbarItem>
+              <ToolbarItem data-testid="move-to-node-selected-checkbox">
                 <Checkbox
                   label={TopologyLabels.CheckboxMoveToNodeSelected}
                   isDisabled={!nodeIdSelected || showOnlyNeighbours}
