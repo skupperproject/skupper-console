@@ -106,6 +106,7 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             onSaveTopology={handleSavePositions}
             linkToPage={SitesRoutesPaths.Sites}
+            resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
           />
           <Divider />
         </StackItem>

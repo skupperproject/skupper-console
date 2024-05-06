@@ -347,6 +347,7 @@ const TopologyProcesses: FC<{
             onLoadTopology={handleLoadTopology}
             onSaveTopology={handleSaveTopology}
             linkToPage={ProcessesRoutesPaths.Processes}
+            resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           />
           <Divider />
         </StackItem>

@@ -113,6 +113,7 @@ const TopologyProcessGroups: FC<{ id?: string; GraphComponent?: ComponentType<Gr
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             onSaveTopology={handleSaveTopology}
             linkToPage={ProcessGroupsRoutesPaths.ProcessGroups}
+            resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
           />
           <Divider />
         </StackItem>

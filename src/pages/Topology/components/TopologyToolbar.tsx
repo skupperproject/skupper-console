@@ -37,6 +37,7 @@ interface ToolbarProps {
   onLoadTopology?: () => void;
   onSaveTopology?: () => void;
   linkToPage: string;
+  resourcePlaceholder: string;
 }
 
 const TopologyToolbar: React.FC<ToolbarProps> = function ({
@@ -54,7 +55,8 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
   onServiceSelected,
   onLoadTopology,
   onSaveTopology,
-  linkToPage
+  linkToPage,
+  resourcePlaceholder
 }) {
   const isLinkOptionActive = useCallback(
     () =>
@@ -122,7 +124,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
                 <DisplayResources
                   id={nodeIdSelected}
                   onSelect={onProcessSelected}
-                  placeholder={TopologyLabels.DisplayProcessesDefaultLabel}
+                  placeholder={resourcePlaceholder}
                   options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
                 />
               </ToolbarItem>
