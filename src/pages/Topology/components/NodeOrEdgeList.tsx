@@ -23,7 +23,7 @@ import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyLabels } from '../Topology.enum';
@@ -82,7 +82,7 @@ const ProcessesGrouped: FC<{ data: ProcessResponse[] }> = function ({ data }) {
                         fitContent={true}
                         value={itemSelected.groupName}
                         data={itemSelected}
-                        link={`${ProcessGroupsRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                        link={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                       />
 
                       {itemSelected?.addresses?.map((service) => (
@@ -92,7 +92,7 @@ const ProcessesGrouped: FC<{ data: ProcessResponse[] }> = function ({ data }) {
                           fitContent={true}
                           value={service.split('@')[0]}
                           data={service}
-                          link={`${ProcessGroupsRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                          link={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                         />
                       ))}
                     </Flex>

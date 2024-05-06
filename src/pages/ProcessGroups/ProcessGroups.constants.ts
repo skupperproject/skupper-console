@@ -1,39 +1,39 @@
-import { ProcessGroupResponse } from '@API/REST.interfaces';
+import { ComponentResponse } from '@API/REST.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 
-import { ProcessGroupsLabels, ProcessGroupsRoutesPaths } from './ProcessGroups.enum';
+import { ComponentLabels, ComponentRoutesPaths } from './ProcessGroups.enum';
 
 export const ProcessGroupsPaths = {
-  path: ProcessGroupsRoutesPaths.ProcessGroups,
-  name: ProcessGroupsLabels.Section
+  path: ComponentRoutesPaths.ProcessGroups,
+  name: ComponentLabels.Section
 };
 
 export const CustomComponentCells = {
-  ComponentNameLinkCell: (props: LinkCellProps<ProcessGroupResponse>) =>
+  ComponentNameLinkCell: (props: LinkCellProps<ComponentResponse>) =>
     LinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}`
+      link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}`
     }),
-  ComponentProcessCountLinkCell: (props: LinkCellProps<ProcessGroupResponse>) =>
+  ComponentProcessCountLinkCell: (props: LinkCellProps<ComponentResponse>) =>
     LinkCell({
       ...props,
       fitContent: true,
-      link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}?type=${ProcessGroupsLabels.Processes}`
+      link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}?type=${ComponentLabels.Processes}`
     })
 };
 
-export const processGroupsColumns: SKColumn<ProcessGroupResponse>[] = [
+export const processGroupsColumns: SKColumn<ComponentResponse>[] = [
   {
-    name: ProcessGroupsLabels.Name,
-    prop: 'name' as keyof ProcessGroupResponse,
+    name: ComponentLabels.Name,
+    prop: 'name' as keyof ComponentResponse,
     customCellName: 'ComponentNameLinkCell'
   },
   {
-    name: ProcessGroupsLabels.Count,
-    prop: 'processCount' as keyof ProcessGroupResponse,
+    name: ComponentLabels.Count,
+    prop: 'processCount' as keyof ComponentResponse,
     customCellName: 'ComponentProcessCountLinkCell',
     width: 15
   }

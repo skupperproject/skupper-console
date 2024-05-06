@@ -6,7 +6,7 @@ import { SHOW_ROUTER_LINKS } from '../Topology.constants';
 const DISPLAY_OPTIONS = 'display-site-options';
 const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_ROUTER_LINKS];
 
-const useTopologySiteState = ({ id }: { id?: string }) => {
+const useTopologyState = ({ id }: { id?: string }) => {
   const configuration =
     TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
 
@@ -15,8 +15,8 @@ const useTopologySiteState = ({ id }: { id?: string }) => {
   const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
   const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
 
-  const handleSiteSelected = useCallback((siteId?: string) => {
-    setIdSelected(siteId);
+  const handleSelected = useCallback((selected?: string) => {
+    setIdSelected(selected);
   }, []);
 
   const handleShowOnlyNeighbours = useCallback((checked: boolean) => {
@@ -43,10 +43,10 @@ const useTopologySiteState = ({ id }: { id?: string }) => {
     moveToNodeSelected,
     displayOptionsSelected,
     handleDisplaySelect,
-    handleSiteSelected,
+    handleSelected,
     handleShowOnlyNeighbours,
     handleMoveToNodeSelectedChecked
   };
 };
 
-export default useTopologySiteState;
+export default useTopologyState;

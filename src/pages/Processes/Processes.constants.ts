@@ -7,7 +7,7 @@ import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
@@ -51,7 +51,7 @@ export const CustomProcessCells = {
     LinkCell({
       ...props,
       type: 'component',
-      link: `${ProcessGroupsRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
+      link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes }),

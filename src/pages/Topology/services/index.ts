@@ -1,6 +1,12 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
-import { ProcessPairsResponse, ProcessGroupResponse, ProcessResponse, SitePairsResponse } from '@API/REST.interfaces';
+import {
+  ProcessPairsResponse,
+  ComponentResponse,
+  ProcessResponse,
+  SitePairsResponse,
+  ComponentPairsResponse
+} from '@API/REST.interfaces';
 import componentIcon from '@assets/component.svg';
 import processIcon from '@assets/process.svg';
 import skupperIcon from '@assets/skupper.svg';
@@ -50,7 +56,7 @@ export const TopologyController = {
     }
   },
 
-  convertProcessGroupsToNodes: (entities: ProcessGroupResponse[]): GraphNode[] =>
+  convertProcessGroupsToNodes: (entities: ComponentResponse[]): GraphNode[] =>
     entities.map(({ identity, name, processGroupRole, processCount }) => {
       const img = processGroupRole === 'internal' ? skupperIcon : componentIcon;
 
@@ -104,7 +110,9 @@ export const TopologyController = {
     return removeDuplicatesFromArrayOfObjects(uniqueNodes);
   },
 
-  convertPairsToEdges: (processesPairs: ProcessPairsResponse[] | SitePairsResponse[]): GraphEdge[] =>
+  convertPairsToEdges: (
+    processesPairs: ProcessPairsResponse[] | ComponentPairsResponse[] | SitePairsResponse[]
+  ): GraphEdge[] =>
     processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
       id: identity,
       source: sourceId,

@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
 import { timeAgo } from '@core/utils/timeAgo';
-import { ProcessGroupsRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -65,9 +65,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                 <DescriptionListTerm>{ProcessesLabels.ProcessGroup}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="component" />
-                  <Link to={`${ProcessGroupsRoutesPaths.ProcessGroups}/${groupName}@${groupIdentity}`}>
-                    {groupName}
-                  </Link>
+                  <Link to={`${ComponentRoutesPaths.ProcessGroups}/${groupName}@${groupIdentity}`}>{groupName}</Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
