@@ -1,6 +1,7 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@API/REST.interfaces';
+import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
 import {
   CUSTOM_ITEMS_NAMES,
   DEFAULT_NODE_ICON,
@@ -46,7 +47,7 @@ export const TopologyController = {
     }
   },
 
-  getNodeGroupsFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
+  getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
       .map(({ comboId, comboName }) => ({ id: comboId || '', label: comboName || '' }))
       .sort((a, b) => a.label.localeCompare(b.label));
@@ -200,6 +201,15 @@ export const TopologyController = {
     }
 
     return null;
+  },
+  transformIdsToStringIds(ids?: string[]) {
+    return ids?.join(IDS_MULTIPLE_SELECTION_SEPARATOR);
+  },
+  transformStringIdsToIds(ids?: string) {
+    return ids?.split(IDS_MULTIPLE_SELECTION_SEPARATOR);
+  },
+  arePairIds(ids?: string) {
+    return !!ids?.includes(PAIR_SEPARATOR);
   }
 };
 
@@ -228,29 +238,26 @@ export function convertEntityToNode({
 /**
  * Groups an array of GraphNode objects based on their comboId and groupId properties.
  */
-export function groupNodes(data: GraphNode[]): GraphNode[] {
+export function groupNodes(nodes: GraphNode[]): GraphNode[] {
   const groupedNodes: Record<string, GraphNode> = {};
 
-  data.forEach((item) => {
-    // Create a unique key based on the combination of comboId and groupId
+  nodes.forEach((item) => {
     const group = `${item.comboId}-${item.groupId}`;
 
     if (!groupedNodes[group]) {
       groupedNodes[group] = {
         ...item,
-        id: '', // The 'id' string will be concatenated with the process ID
+        id: '',
         comboId: item.comboId,
         groupCount: 0
       };
     }
 
-    // Concatenate the process ID to the 'id' string
-    //! not null assertion operator  https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
-    if (groupedNodes[group].groupCount! > 0) {
-      groupedNodes[group].id += '~';
-    }
+    // Collect ids into an array
+    const ids = [groupedNodes[group].id, item.id];
 
-    groupedNodes[group].id += item.id;
+    // Use join to concatenate ids with the GROUP_SEPARATOR
+    groupedNodes[group].id = ids.filter(Boolean).join(IDS_GROUP_SEPARATOR);
     groupedNodes[group].groupCount! += 1;
 
     if (groupedNodes[group].groupCount! > 1) {
@@ -301,7 +308,7 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
       };
 
       if (acc[group].id !== '') {
-        acc[group].id += '~';
+        acc[group].id += IDS_GROUP_SEPARATOR;
       }
 
       acc[group].id += edge.id;

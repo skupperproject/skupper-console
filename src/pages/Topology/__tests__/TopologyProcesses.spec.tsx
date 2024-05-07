@@ -2,6 +2,7 @@ import { FC, forwardRef, memo, Suspense, useImperativeHandle } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
 import { waitForElementToBeRemovedTimeout } from '@config/config';
@@ -14,6 +15,8 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
 import TopologyProcesses from '../components/TopologyProcesses';
+import * as useTopologySiteState from '../components/useTopologyState';
+import { TopologyController } from '../services';
 import { TopologyLabels } from '../Topology.enum';
 import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
@@ -31,14 +34,10 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
 
     return (
       <>
-        <Button onClick={() => onClickNode && onClickNode({ id: processesResults[0].identity })}>onClickNode</Button>
+        <Button onClick={() => onClickNode && onClickNode(processesResults[0].identity)}>onClickNode</Button>
         <Button
           onClick={() =>
-            onClickEdge &&
-            onClickEdge({
-              id: `${processesResults[2].identity}-to-${processesResults[1].identity}`,
-              metrics: { protocol: 'http2' }
-            })
+            onClickEdge && onClickEdge(`${processesResults[2].identity}-to-${processesResults[1].identity}`)
           }
         >
           onClickEdge
@@ -71,8 +70,8 @@ describe('Topology Process', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TopologyProcesses
-            serviceIds={[serviceIdSelected]}
-            id={processesResults[2].name}
+            serviceIds={TopologyController.transformStringIdsToIds(serviceIdSelected)}
+            id={TopologyController.transformStringIdsToIds(processesResults[2].name)}
             GraphComponent={MockGraphComponent}
             ModalComponent={MockTopologyModalComponent}
           />
@@ -108,7 +107,61 @@ describe('Topology Process', () => {
     });
 
     fireEvent.click(screen.getByText(TopologyLabels.SaveButton));
-
     expect(screen.getByText(TopologyLabels.ToastSave)).toBeInTheDocument();
+  });
+
+  it('should update showOnlyNeighbours state on checkbox click', async () => {
+    const handleShowOnlyNeighbours = jest.fn();
+
+    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
+      idSelected: TopologyController.transformStringIdsToIds(processesResults[2].identity),
+      showOnlyNeighbours: false,
+      moveToNodeSelected: false,
+      displayOptionsSelected: [],
+      handleSelected: jest.fn(),
+      getDisplaySelectedFromLocalStorage: jest.fn(),
+      handleShowOnlyNeighbours,
+      handleMoveToNodeSelectedChecked: jest.fn(),
+      handleDisplaySelected: jest.fn()
+    }));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    const checkbox = screen
+      .getByTestId('show-only-neighbours-checkbox')
+      .querySelector('input[type="checkbox') as HTMLInputElement;
+
+    await eventUser.click(checkbox);
+
+    expect(handleShowOnlyNeighbours).toHaveBeenCalled();
+  });
+
+  it('should update moveToNodeSelected state on checkbox click', async () => {
+    const handleMoveToNodeSelectedChecked = jest.fn();
+
+    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
+      idSelected: TopologyController.transformStringIdsToIds(processesResults[2].identity),
+      showOnlyNeighbours: false,
+      moveToNodeSelected: false,
+      displayOptionsSelected: [],
+      handleSelected: jest.fn(),
+      getDisplaySelectedFromLocalStorage: jest.fn(),
+      handleShowOnlyNeighbours: jest.fn(),
+      handleMoveToNodeSelectedChecked,
+      handleDisplaySelected: jest.fn()
+    }));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    const checkbox = screen
+      .getByTestId('move-to-node-selected-checkbox')
+      .querySelector('input[type="checkbox') as HTMLInputElement;
+
+    await eventUser.click(checkbox);
+    expect(handleMoveToNodeSelectedChecked).toHaveBeenCalled();
   });
 });

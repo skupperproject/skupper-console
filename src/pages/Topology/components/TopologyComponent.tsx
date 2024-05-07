@@ -4,11 +4,7 @@ import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import {
-  GraphNode,
-  GraphReactAdaptorExposedMethods,
-  GraphReactAdaptorProps
-} from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorExposedMethods, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 
@@ -16,10 +12,11 @@ import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyComponentData from './useTopologyComponentData';
 import useTopologyState from './useTopologyState';
+import { TopologyController } from '../services';
 import { TopologyComponentController } from '../services/topologyComponentController';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
   id,
   GraphComponent = GraphReactAdaptor
 }) {
@@ -41,7 +38,7 @@ const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphR
   });
 
   const handleShowDetails = useCallback(
-    ({ id: componentId }: GraphNode) => {
+    (componentId: string) => {
       const component = components.find(({ identity }) => identity === componentId);
 
       if (component) {
@@ -51,13 +48,17 @@ const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphR
     [navigate, components]
   );
 
+  const handleSelectedWrapper = useCallback(
+    (siteId?: string) => {
+      handleSelected(TopologyController.transformStringIdsToIds(siteId));
+    },
+    [handleSelected]
+  );
+
   const handleShowOnlyNeighboursChecked = useCallback(
     (checked: boolean) => {
-      if (checked) {
-        graphRef?.current?.saveNodePositions();
-      }
-
       handleShowOnlyNeighbours(checked);
+      checked && graphRef?.current?.saveNodePositions();
     },
     [handleShowOnlyNeighbours]
   );
@@ -67,7 +68,8 @@ const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphR
     toastRef.current?.addMessage(TopologyLabels.ToastSave);
   }, [graphRef, toastRef]);
 
-  const { nodes, edges } = TopologyComponentController.dataTransformer({
+  const { nodeIdSelected, nodes, edges } = TopologyComponentController.dataTransformer({
+    idSelected,
     components,
     componentsPairs
   });
@@ -78,8 +80,8 @@ const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphR
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onSelected={handleSelected}
-            nodeIdSelected={idSelected}
+            onSelected={handleSelectedWrapper}
+            nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
@@ -96,7 +98,7 @@ const TopologyComponent: FC<{ id?: string; GraphComponent?: ComponentType<GraphR
             ref={graphRef}
             nodes={nodes}
             edges={edges}
-            itemSelected={idSelected}
+            itemSelected={nodeIdSelected}
             onClickNode={handleShowDetails}
             layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
             moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}

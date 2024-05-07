@@ -66,8 +66,8 @@ export interface GraphReactAdaptorProps {
   combos?: GraphCombo[];
   itemSelected?: string;
   onClickCombo?: Function;
-  onClickNode?: Function;
-  onClickEdge?: Function;
+  onClickNode?: (id: string) => void;
+  onClickEdge?: (id: string) => void;
   legendData?: GraphData;
   ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
   layout?: LayoutConfig;

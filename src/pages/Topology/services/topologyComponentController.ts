@@ -9,6 +9,7 @@ import { shape } from '../Topology.constants';
 import { TopologyController, convertEntityToNode } from '.';
 
 interface TopologyComponentControllerProps {
+  idSelected: string[] | undefined;
   components: ComponentResponse[];
   componentsPairs: ComponentPairsResponse[];
 }
@@ -26,7 +27,8 @@ const convertProcessGroupsToNodes = (entities: ComponentResponse[]): GraphNode[]
   });
 
 export const TopologyComponentController = {
-  dataTransformer: ({ components, componentsPairs }: TopologyComponentControllerProps) => ({
+  dataTransformer: ({ idSelected, components, componentsPairs }: TopologyComponentControllerProps) => ({
+    nodeIdSelected: TopologyController.transformIdsToStringIds(idSelected),
     nodes: convertProcessGroupsToNodes(components),
     edges: TopologyController.convertPairsToEdges(componentsPairs)
   })

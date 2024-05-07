@@ -270,7 +270,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const handleNodeClick = useCallback(
         ({ item }: G6GraphEvent) => {
           if (onClickNode) {
-            onClickNode(item.getModel());
+            onClickNode(item.getID());
           }
         },
         [onClickNode]
@@ -279,7 +279,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const handleEdgeClick = useCallback(
         ({ item }: G6GraphEvent) => {
           if (onClickEdge) {
-            onClickEdge(item.getModel());
+            onClickEdge(item.getID());
           }
         },
         [onClickEdge]

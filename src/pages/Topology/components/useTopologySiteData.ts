@@ -11,7 +11,7 @@ import { QueriesTopology } from '../Topology.enum';
 const linkQueryParams = { direction: FlowDirection.Outgoing };
 
 interface UseTopologySiteDataProps {
-  idSelected?: string;
+  idSelected?: string[];
   showDataLink: boolean;
   showBytes: boolean;
   showByteRate: boolean;
@@ -64,22 +64,41 @@ const useTopologySiteData = ({
     ]
   });
 
-  //transform data
+  let filteredRrouterLinks = routerLinks;
   let filteredPairs = sitesPairs;
   let filteredSites = sites;
 
-  // check if in the UI we are displaying data links and the option "show only neighbours" is selected
-  if (filteredPairs && idSelected) {
-    filteredPairs = filteredPairs.filter((edge) => edge.sourceId === idSelected || edge.destinationId === idSelected);
+  if (idSelected) {
+    if (filteredPairs) {
+      filteredPairs = filteredPairs.filter(
+        (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
+      );
 
-    const siteIds = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-    filteredSites = sites.filter(({ identity }) => siteIds.includes(identity));
+      const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
+      const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
+
+      filteredSites = filteredSites.filter(({ identity }) => uniqueIds.includes(identity));
+    }
+
+    if (filteredRrouterLinks) {
+      filteredRrouterLinks = filteredRrouterLinks.filter(
+        (edge) => idSelected.includes(edge.sourceSiteId) || idSelected.includes(edge.destinationSiteId)
+      );
+
+      const idsFromEdges = filteredRrouterLinks.flatMap(({ sourceSiteId, destinationSiteId }) => [
+        sourceSiteId,
+        destinationSiteId
+      ]);
+      const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
+
+      filteredSites = filteredSites.filter(({ identity }) => uniqueIds.includes(identity));
+    }
   }
 
   return {
     sites: filteredSites,
     sitesPairs: filteredPairs,
-    routerLinks,
+    routerLinks: filteredRrouterLinks,
     metrics
   };
 };

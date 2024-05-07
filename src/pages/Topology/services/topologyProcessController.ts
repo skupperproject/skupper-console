@@ -11,6 +11,7 @@ import { TopologyMetrics } from '../Topology.interfaces';
 import { TopologyController, convertEntityToNode, groupEdges, groupNodes } from '.';
 
 interface TopologyProcessControllerProps {
+  idSelected: string[] | undefined;
   processes: ProcessResponse[];
   processesPairs: ProcessPairsResponse[];
   metrics: TopologyMetrics | null;
@@ -67,6 +68,7 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
 
 export const TopologyProcessController = {
   dataTransformer: ({
+    idSelected,
     processes,
     processesPairs,
     metrics,
@@ -123,6 +125,7 @@ export const TopologyProcessController = {
     }
 
     return {
+      nodeIdSelected: TopologyController.transformIdsToStringIds(idSelected),
       nodes: processNodes.map((node) => ({
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
@@ -131,7 +134,7 @@ export const TopologyProcessController = {
         ...edge,
         style: { cursor: 'pointer' } // clickable
       })),
-      combos: showSites ? TopologyController.getNodeGroupsFromNodes(processNodes) : []
+      combos: showSites ? TopologyController.getCombosFromNodes(processNodes) : []
     };
   }
 };

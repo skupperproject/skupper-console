@@ -1,4 +1,4 @@
-import { ComponentType, FC, startTransition, useCallback, useRef, useState } from 'react';
+import { ComponentType, FC, useCallback, useRef } from 'react';
 
 import {
   Divider,
@@ -14,21 +14,20 @@ import {
   StackItem,
   Title
 } from '@patternfly/react-core';
+import { useNavigate } from 'react-router-dom';
 
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import {
-  GraphEdge,
-  GraphNode,
-  GraphReactAdaptorProps,
-  GraphReactAdaptorExposedMethods
-} from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorProps, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
 import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
+import useModalState from './useModalState';
+import useServiceState from './useServiceState';
 import useTopologyProcessData from './useTopologyProcessData';
+import useTopologyState from './useTopologyState';
 import { TopologyController } from '../services';
 import { TopologyProcessController } from '../services/topologyProcessController';
 import {
@@ -44,36 +43,32 @@ import {
 import { TopologyLabels } from '../Topology.enum';
 import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
-const DISPLAY_OPTIONS = 'display-options';
-const SERVICE_OPTIONS = 'service-options';
-const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
-
 const TopologyProcesses: FC<{
   serviceIds?: string[];
-  id?: string;
+  id?: string[];
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
-}> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
-  const configuration =
-    TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
-
-  const [idSelected, setIdSelected] = useState<string | undefined>(itemId); //process or link id
-  const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
-  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
-  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
-
-  const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
-
-  const [modalType, setModalType] = useState<{ type: 'process' | 'processPair'; id: string } | undefined>();
-
-  const drawerRef = useRef<HTMLDivElement>(null);
+}> = function ({ serviceIds, id: processId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
+  const navigate = useNavigate();
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
 
-  const isDisplayOptionActive = useCallback(
-    (option: string) => displayOptionsSelected.includes(option),
-    [displayOptionsSelected]
-  );
+  const { serviceIdsSelected, handleServiceSelected, saveServiceIdsToLocalStorage, getServiceIdsFromLocalStorage } =
+    useServiceState(serviceIds);
+
+  const {
+    idSelected,
+    showOnlyNeighbours,
+    moveToNodeSelected,
+    displayOptionsSelected,
+    handleSelected,
+    handleShowOnlyNeighbours,
+    handleMoveToNodeSelectedChecked,
+    handleDisplaySelected,
+    getDisplaySelectedFromLocalStorage
+  } = useTopologyState({ id: processId });
+
+  const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
 
   const { processes, processesPairs, metrics } = useTopologyProcessData({
     idSelected: showOnlyNeighbours ? idSelected : undefined,
@@ -82,103 +77,94 @@ const TopologyProcesses: FC<{
     showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
   });
 
-  const handleProcessSelected = useCallback((id?: string) => {
-    setIdSelected(id);
+  const handleShowOnlyNeighboursChecked = useCallback(
+    (checked: boolean) => {
+      handleShowOnlyNeighbours(checked);
+      checked && graphRef.current?.saveNodePositions();
+    },
+    [handleShowOnlyNeighbours]
+  );
 
-    if (!id) {
+  const handleShowProcessDetails = useCallback(
+    (id: string | undefined) => {
+      const ids = TopologyController.transformStringIdsToIds(id);
+
+      // handle nodes aggregated
+      if (ids?.length && ids.length > 1) {
+        handleSelected(TopologyController.transformStringIdsToIds(id));
+        id ? openProcessModal(id) : handleCloseModal();
+
+        return;
+      }
+
+      // handle a single node selection
+      const process = processes?.find(({ identity }) => identity === id);
+
+      if (process) {
+        navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
+      }
+    },
+    [handleCloseModal, handleSelected, navigate, openProcessModal, processes]
+  );
+
+  const handleShowProcessPairDetails = useCallback(
+    (id: string | undefined) => {
+      const ids = TopologyController.transformStringIdsToIds(id);
+
+      // handle nodes aggregated
+      if (ids?.length && ids.length > 1) {
+        handleSelected(TopologyController.transformStringIdsToIds(id));
+        id ? openProcessPairModal(id) : handleCloseModal();
+
+        return;
+      }
+
+      // handle a single node selection
+      const pair = processesPairs?.find(({ identity }) => identity === id);
+
+      if (pair) {
+        navigate(
+          `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}@${pair.protocol}`
+        );
+      }
+    },
+    [handleCloseModal, handleSelected, navigate, openProcessPairModal, processesPairs]
+  );
+
+  const handleServiceSelectedWrapper = useCallback(
+    (ids: string[] | undefined) => {
+      handleSelected(undefined);
+      handleServiceSelected(ids);
       handleCloseModal();
+    },
+    [handleCloseModal, handleSelected, handleServiceSelected]
+  );
 
-      return;
-    }
+  const handleSavePositions = useCallback(() => {
+    saveServiceIdsToLocalStorage();
 
-    setModalType({ type: 'process', id });
-  }, []);
-
-  const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
-    if (checked) {
-      graphRef.current?.saveNodePositions();
-    }
-
-    setShowOnlyNeighbours(checked);
-  }, []);
-
-  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
-    setMoveToNodeSelected(checked);
-  }, []);
-
-  const handleSelectedLink = useCallback(({ id }: GraphEdge) => {
-    setModalType({ type: 'processPair', id });
-  }, []);
-
-  const handleSelectedNode = useCallback(({ id }: GraphNode) => {
-    setIdSelected(id);
-    setModalType({ type: 'process', id });
-  }, []);
-
-  const handleServiceSelected = useCallback((ids: string[] | undefined) => {
-    setIdSelected(undefined);
-    setModalType(undefined);
-    setServiceIdsSelected(ids);
-  }, []);
-
-  const handleDisplayOptionSelected = useCallback((options: string[]) => {
-    startTransition(() => {
-      setDisplayOptionsSelected(options);
-    });
-
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
-  }, []);
-
-  const handleSaveTopology = useCallback(() => {
-    localStorage.setItem(SERVICE_OPTIONS, JSON.stringify(serviceIdsSelected));
     graphRef.current?.saveNodePositions();
-
     toastRef.current?.addMessage(TopologyLabels.ToastSave);
-  }, [serviceIdsSelected]);
+  }, [saveServiceIdsToLocalStorage]);
 
-  const handleLoadTopology = useCallback(() => {
-    const ids = localStorage.getItem(SERVICE_OPTIONS);
-    const options = localStorage.getItem(DISPLAY_OPTIONS);
-
-    if (ids) {
-      setServiceIdsSelected(ids !== 'undefined' ? JSON.parse(ids) : undefined);
-    }
-
-    if (options) {
-      setDisplayOptionsSelected(options !== 'undefined' ? JSON.parse(options) : undefined);
-    }
+  const handleLoadPositions = useCallback(() => {
+    getServiceIdsFromLocalStorage();
+    getDisplaySelectedFromLocalStorage();
 
     toastRef.current?.addMessage(TopologyLabels.ToastLoad);
-  }, []);
+  }, [getServiceIdsFromLocalStorage, getDisplaySelectedFromLocalStorage]);
 
-  const handleCloseModal = () => {
-    setModalType(undefined);
-  };
-
-  const { nodes, edges, combos } = TopologyProcessController.dataTransformer({
+  const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
+    idSelected,
     processes,
     processesPairs,
     serviceIdsSelected,
     metrics,
     showSites: displayOptionsSelected.includes(SHOW_SITE_KEY),
-    showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
+    showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
     showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
     rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
   });
-
-  let filteredCombos = combos;
-
-  // when we select a node we need to remove combos with empty nodes
-  if (showOnlyNeighbours && idSelected) {
-    const comboIdsFromNodes = nodes.flatMap(({ comboId }) => comboId || []);
-    filteredCombos = combos.filter(({ id }) => comboIdsFromNodes.includes(id));
-  }
-
-  const nodeIdSelected = nodes.find(({ id }) => id.split('~').includes(idSelected || '') || idSelected === id)?.id;
-
-  const onExpand = () => {
-    drawerRef.current && drawerRef.current.focus();
-  };
 
   const panelContent = (
     <DrawerPanelContent isResizable minSize="30%">
@@ -206,9 +192,9 @@ const TopologyProcesses: FC<{
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onSelected={handleProcessSelected}
+            onSelected={handleShowProcessDetails}
             displayOptions={displayOptionsForProcesses}
-            onDisplayOptionSelected={handleDisplayOptionSelected}
+            onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
             nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
@@ -216,28 +202,28 @@ const TopologyProcesses: FC<{
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             serviceIdsSelected={serviceIdsSelected}
-            onServiceSelected={handleServiceSelected}
-            onLoadTopology={handleLoadTopology}
-            onSaveTopology={handleSaveTopology}
+            onServiceSelected={handleServiceSelectedWrapper}
+            onLoadTopology={handleLoadPositions}
+            onSaveTopology={handleSavePositions}
             linkToPage={ProcessesRoutesPaths.Processes}
             resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           />
           <Divider />
         </StackItem>
         <StackItem isFilled>
-          <Drawer isExpanded={!!modalType?.id} onExpand={onExpand}>
+          <Drawer isExpanded={!!modalType?.id}>
             <DrawerContent panelContent={panelContent}>
               <DrawerContentBody>
                 <GraphComponent
                   ref={graphRef}
                   nodes={nodes}
                   edges={edges}
-                  combos={filteredCombos}
+                  combos={combos}
                   itemSelected={nodeIdSelected}
-                  layout={showOnlyNeighbours && nodeIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-                  moveToSelectedNode={moveToNodeSelected && !!nodeIdSelected && !showOnlyNeighbours}
-                  onClickNode={handleSelectedNode}
-                  onClickEdge={handleSelectedLink}
+                  layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+                  moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}
+                  onClickNode={handleShowProcessDetails}
+                  onClickEdge={handleShowProcessPairDetails}
                 />
               </DrawerContentBody>
             </DrawerContent>

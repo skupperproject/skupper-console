@@ -8,7 +8,7 @@ import { TopologyController } from '../services';
 import { QueriesTopology } from '../Topology.enum';
 
 interface UseSiteTopologyProcessDataProps {
-  idSelected?: string;
+  idSelected?: string[];
   showBytes: boolean;
   showByteRate: boolean;
   showLatency: boolean;
@@ -58,19 +58,18 @@ const useTopologyProcessData = ({
     ]
   });
 
-  //transform data
   let filteredPairs = processesPairs;
   let filteredProcesses = processes;
 
-  // check if in the UI we are displaying data links and the option "show only neighbours" is selected
   if (idSelected) {
-    if (filteredPairs && idSelected) {
-      filteredPairs = filteredPairs.filter((edge) => edge.sourceId === idSelected || edge.destinationId === idSelected);
+    filteredPairs = filteredPairs.filter(
+      (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
+    );
 
-      const ids = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      //It retrieves process neighbours and the process selected himself
-      filteredProcesses = processes.filter(({ identity }) => ids.includes(identity));
-    }
+    const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
+    const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
+
+    filteredProcesses = processes.filter(({ identity }) => uniqueIds.includes(identity));
   }
 
   return {

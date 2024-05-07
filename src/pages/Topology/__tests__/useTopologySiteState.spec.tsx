@@ -1,7 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 
 import useTopologyState from '../components/useTopologyState';
-import { SHOW_ROUTER_LINKS } from '../Topology.constants';
+import { TopologyController } from '../services';
+import { SHOW_ROUTER_LINKS, SHOW_SITE_KEY } from '../Topology.constants';
 
 const DISPLAY_OPTIONS = 'display-site-options';
 
@@ -13,7 +14,7 @@ describe('useTopologySiteToolbar', () => {
   it('should initialize with default display options', () => {
     const { result } = renderHook(() => useTopologyState({ id: undefined }));
 
-    expect(result.current.displayOptionsSelected).toEqual([SHOW_ROUTER_LINKS]);
+    expect(result.current.displayOptionsSelected).toEqual([SHOW_ROUTER_LINKS, SHOW_SITE_KEY]);
   });
 
   it('should handle display options selection', () => {
@@ -21,7 +22,7 @@ describe('useTopologySiteToolbar', () => {
     const newDisplayOptions = [SHOW_ROUTER_LINKS, 'new_option'];
 
     act(() => {
-      result.current.handleDisplaySelect(newDisplayOptions);
+      result.current.handleDisplaySelected(newDisplayOptions);
     });
 
     expect(result.current.displayOptionsSelected).toEqual(newDisplayOptions);
@@ -29,18 +30,20 @@ describe('useTopologySiteToolbar', () => {
   });
 
   it('sshould initialize the component with the correct selected id', () => {
-    const { result } = renderHook(() => useTopologyState({ id: 'site_id' }));
-    expect(result.current.idSelected).toEqual('site_id');
+    const { result } = renderHook(() =>
+      useTopologyState({ id: TopologyController.transformStringIdsToIds('site_id') })
+    );
+    expect(result.current.idSelected).toEqual(['site_id']);
   });
 
   it('should update the selected ID when a site is selected', () => {
     const { result } = renderHook(() => useTopologyState({ id: undefined }));
 
     act(() => {
-      result.current.handleSelected('site_id');
+      result.current.handleSelected(TopologyController.transformStringIdsToIds('site_id'));
     });
 
-    expect(result.current.idSelected).toEqual('site_id');
+    expect(result.current.idSelected).toEqual(['site_id']);
   });
 
   it('should handle show only neighbours', () => {

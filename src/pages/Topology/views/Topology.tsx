@@ -10,23 +10,30 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 import TopologyComponent from '../components/TopologyComponent';
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologySite from '../components/TopologySite';
+import { TopologyController } from '../services';
 import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
 const Topology = function () {
   const [searchParams] = useSearchParams();
 
-  const serviceId = searchParams.get(TopologyURLQueyParams.ServiceId) || undefined;
-  const id = useRef(searchParams.get(TopologyURLQueyParams.IdSelected) || undefined);
+  const serviceIdsString = searchParams.get(TopologyURLQueyParams.ServiceId) || undefined;
+  const idsString = useRef(searchParams.get(TopologyURLQueyParams.IdSelected) || undefined);
   const type = searchParams.get(TopologyURLQueyParams.Type);
 
   const [tabSelected, setTabSelected] = useState<string>(type || TopologyViews.Sites);
 
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
-  function handleChangeTopologyType(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
+  function handleChangeTab(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as string);
-    id.current = undefined;
+    idsString.current = undefined;
   }
+
+  const serviceIds = TopologyController.transformStringIdsToIds(serviceIdsString);
+  // IdsSting can be a site,component, process or a pairs. Avoid pairs IDS to be selected from URL
+  const ids = !TopologyController.arePairIds(idsString.current)
+    ? TopologyController.transformStringIdsToIds(idsString.current)
+    : undefined;
 
   return (
     <MainContainer
@@ -36,7 +43,7 @@ const Topology = function () {
       description={TopologyLabels.Description}
       hasMainContentPadding
       navigationComponent={
-        <Tabs activeKey={tabSelected} onSelect={handleChangeTopologyType}>
+        <Tabs activeKey={tabSelected} onSelect={handleChangeTab}>
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
           <Tab
             eventKey={TopologyViews.ProcessGroups}
@@ -47,11 +54,9 @@ const Topology = function () {
       }
       mainContentChildren={
         <>
-          {tabSelected === TopologyViews.Sites && <TopologySite id={id.current} />}
-          {tabSelected === TopologyViews.ProcessGroups && <TopologyComponent id={id.current} />}
-          {tabSelected === TopologyViews.Processes && (
-            <TopologyProcesses serviceIds={serviceId ? [serviceId] : undefined} id={id.current} />
-          )}
+          {tabSelected === TopologyViews.Sites && <TopologySite id={ids} />}
+          {tabSelected === TopologyViews.ProcessGroups && <TopologyComponent id={ids} />}
+          {tabSelected === TopologyViews.Processes && <TopologyProcesses serviceIds={serviceIds} id={ids} />}
         </>
       }
     />
