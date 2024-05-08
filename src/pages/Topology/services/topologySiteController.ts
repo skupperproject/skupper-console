@@ -13,6 +13,7 @@ import { TopologyMetrics } from '../Topology.interfaces';
 import { TopologyController, convertEntityToNode } from '.';
 
 interface TopologySiteControllerProps {
+  idSelected: string[] | undefined;
   sites: SiteResponse[];
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
@@ -29,6 +30,7 @@ const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
 const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) => {
   const sanitizedLinks = links.map((link) => ({
     ...link,
+    //name@_@id format
     sourceName: composePrometheusSiteLabel(link.sourceName, link.source),
     targetName: composePrometheusSiteLabel(link.targetName, link.target)
   }));
@@ -74,6 +76,7 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
 
 export const TopologySiteController = {
   siteDataTransformer: ({
+    idSelected,
     sites,
     routerLinks,
     sitesPairs,
@@ -89,13 +92,16 @@ export const TopologySiteController = {
     let edges: GraphEdge[] = [];
 
     if (sitesPairs) {
-      edges = sitesPairs ? addSiteMetricsToEdges(TopologyController.convertPairsToEdges(sitesPairs), metrics) : [];
+      TopologyController.transformIdsToStringIds(idSelected),
+        (edges = TopologyController.convertPairsToEdges(sitesPairs));
+      edges = addSiteMetricsToEdges(edges, metrics);
       edges = TopologyController.configureEdges(edges, options);
     } else if (routerLinks) {
       edges = convertRouterLinksToEdges(sites, routerLinks);
     }
 
     return {
+      nodeIdSelected: TopologyController.transformIdsToStringIds(idSelected),
       nodes: convertSitesToNodes(sites),
       edges
     };

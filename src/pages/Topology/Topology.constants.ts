@@ -1,3 +1,5 @@
+import { CUSTOM_ITEMS_NAMES } from '@core/components/Graph/Graph.constants';
+
 import { TopologyLabels, TopologyRoutesPaths } from './Topology.enum';
 import { DisplaySelectProps } from './Topology.interfaces';
 
@@ -95,3 +97,8 @@ export const displayOptionsForSites: DisplaySelectProps[] = [
     label: TopologyLabels.CheckboxRotateLabel
   }
 ];
+
+export const shape = {
+  bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
+  unbound: 'diamond'
+};

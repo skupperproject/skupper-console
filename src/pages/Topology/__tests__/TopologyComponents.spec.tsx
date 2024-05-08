@@ -15,6 +15,7 @@ import LoadingPage from '@pages/shared/Loading';
 
 import TopologyComponent from '../components/TopologyComponent';
 import * as useTopologySiteState from '../components/useTopologyState';
+import { TopologyController } from '../services';
 import { TopologyLabels } from '../Topology.enum';
 
 const sitesResults = sitesData.results;
@@ -29,15 +30,9 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
 
     return (
       <>
-        <Button onClick={() => onClickNode && onClickNode({ id: sitesResults[0].identity })}>onClickNode</Button>
+        <Button onClick={() => onClickNode && onClickNode(sitesResults[0].identity)}>onClickNode</Button>
         <Button
-          onClick={() =>
-            onClickEdge &&
-            onClickEdge({
-              id: `${sitesResults[2].identity}-to-${sitesResults[1].identity}`,
-              metrics: { protocol: 'http2' }
-            })
-          }
+          onClick={() => onClickEdge && onClickEdge(`${sitesResults[2].identity}-to-${sitesResults[1].identity}`)}
         >
           onClickEdge
         </Button>
@@ -57,7 +52,10 @@ describe('Topology Components', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TopologyComponent id={sitesResults[2].name} GraphComponent={MockGraphComponent} />
+          <TopologyComponent
+            id={TopologyController.transformStringIdsToIds(sitesResults[2].name)}
+            GraphComponent={MockGraphComponent}
+          />
         </Suspense>
       </Wrapper>
     );
@@ -98,14 +96,15 @@ describe('Topology Components', () => {
     const handleShowOnlyNeighbours = jest.fn();
 
     jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idSelected: sitesResults[2].identity,
+      idSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],
       handleSelected: jest.fn(),
+      getDisplaySelectedFromLocalStorage: jest.fn(),
       handleShowOnlyNeighbours,
       handleMoveToNodeSelectedChecked: jest.fn(),
-      handleDisplaySelect: jest.fn()
+      handleDisplaySelected: jest.fn()
     }));
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

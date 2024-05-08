@@ -1,18 +1,9 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
-import {
-  ProcessPairsResponse,
-  ComponentResponse,
-  ProcessResponse,
-  SitePairsResponse,
-  ComponentPairsResponse
-} from '@API/REST.interfaces';
-import componentIcon from '@assets/component.svg';
-import processIcon from '@assets/process.svg';
-import skupperIcon from '@assets/skupper.svg';
+import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@API/REST.interfaces';
+import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
 import {
   CUSTOM_ITEMS_NAMES,
-  DEFAULT_REMOTE_NODE_CONFIG,
   DEFAULT_NODE_ICON,
   DEFAULT_NODE_CONFIG,
   DEFAUT_EDGE_BG_LABEL,
@@ -56,48 +47,7 @@ export const TopologyController = {
     }
   },
 
-  convertProcessGroupsToNodes: (entities: ComponentResponse[]): GraphNode[] =>
-    entities.map(({ identity, name, processGroupRole, processCount }) => {
-      const img = processGroupRole === 'internal' ? skupperIcon : componentIcon;
-
-      const nodeConfig =
-        processGroupRole === 'remote'
-          ? DEFAULT_REMOTE_NODE_CONFIG
-          : { type: shape.bound, notificationValue: processCount, enableBadge1: true };
-
-      return convertEntityToNode({ id: identity, label: name, iconFileName: img, nodeConfig });
-    }),
-
-  convertProcessesToNodes: (processes: ProcessResponse[]): GraphNode[] =>
-    processes?.map(
-      ({
-        identity,
-        name: label,
-        parent: comboId,
-        parentName: comboName,
-        groupIdentity,
-        groupName,
-        processRole: role,
-        processBinding
-      }) => {
-        const img = role === 'internal' ? skupperIcon : processIcon;
-
-        const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
-
-        return convertEntityToNode({
-          id: identity,
-          comboId,
-          comboName,
-          label,
-          iconFileName: img,
-          nodeConfig,
-          groupId: groupIdentity,
-          groupName
-        });
-      }
-    ),
-
-  getNodeGroupsFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
+  getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
       .map(({ comboId, comboName }) => ({ id: comboId || '', label: comboName || '' }))
       .sort((a, b) => a.label.localeCompare(b.label));
@@ -155,7 +105,7 @@ export const TopologyController = {
     edges: GraphEdge[],
     metricSourceLabel: 'sourceProcess' | 'sourceSite', // Prometheus metric label to compare with the metricDestLabel
     metricDestLabel: 'destProcess' | 'destSite',
-    protocolPairsMap?: Record<string, string>,
+    protocolPairsMap: Record<string, string> | undefined, //
     bytesByPairs?: PrometheusMetric<'vector'>[],
     byteRateByPairs?: PrometheusMetric<'vector'>[],
     latencyByPairs?: PrometheusMetric<'vector'>[]
@@ -208,7 +158,7 @@ export const TopologyController = {
       const bytesText = edge?.metrics?.bytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
       const latencyText = edge?.metrics?.latency && `${formatLatency(edge?.metrics?.latency || 0)}`;
 
-      const isTheSameEdge = edge.source !== edge.target;
+      const isTheSameEdge = edge.source === edge.target;
 
       const byteRateReverseText =
         !isTheSameEdge &&
@@ -251,6 +201,15 @@ export const TopologyController = {
     }
 
     return null;
+  },
+  transformIdsToStringIds(ids?: string[]) {
+    return ids?.join(IDS_MULTIPLE_SELECTION_SEPARATOR);
+  },
+  transformStringIdsToIds(ids?: string) {
+    return ids?.split(IDS_MULTIPLE_SELECTION_SEPARATOR);
+  },
+  arePairIds(ids?: string) {
+    return !!ids?.includes(PAIR_SEPARATOR);
   }
 };
 
@@ -279,29 +238,26 @@ export function convertEntityToNode({
 /**
  * Groups an array of GraphNode objects based on their comboId and groupId properties.
  */
-export function groupNodes(data: GraphNode[]): GraphNode[] {
+export function groupNodes(nodes: GraphNode[]): GraphNode[] {
   const groupedNodes: Record<string, GraphNode> = {};
 
-  data.forEach((item) => {
-    // Create a unique key based on the combination of comboId and groupId
+  nodes.forEach((item) => {
     const group = `${item.comboId}-${item.groupId}`;
 
     if (!groupedNodes[group]) {
       groupedNodes[group] = {
         ...item,
-        id: '', // The 'id' string will be concatenated with the process ID
+        id: '',
         comboId: item.comboId,
         groupCount: 0
       };
     }
 
-    // Concatenate the process ID to the 'id' string
-    //! not null assertion operator  https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
-    if (groupedNodes[group].groupCount! > 0) {
-      groupedNodes[group].id += '~';
-    }
+    // Collect ids into an array
+    const ids = [groupedNodes[group].id, item.id];
 
-    groupedNodes[group].id += item.id;
+    // Use join to concatenate ids with the GROUP_SEPARATOR
+    groupedNodes[group].id = ids.filter(Boolean).join(IDS_GROUP_SEPARATOR);
     groupedNodes[group].groupCount! += 1;
 
     if (groupedNodes[group].groupCount! > 1) {
@@ -352,7 +308,7 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
       };
 
       if (acc[group].id !== '') {
-        acc[group].id += '~';
+        acc[group].id += IDS_GROUP_SEPARATOR;
       }
 
       acc[group].id += edge.id;

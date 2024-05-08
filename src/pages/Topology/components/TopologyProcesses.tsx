@@ -1,4 +1,4 @@
-import { ComponentType, FC, startTransition, useCallback, useEffect, useRef, useState } from 'react';
+import { ComponentType, FC, useCallback, useRef } from 'react';
 
 import {
   Divider,
@@ -14,26 +14,22 @@ import {
   StackItem,
   Title
 } from '@patternfly/react-core';
-import { useSuspenseQueries } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
-import { MAX_NODE_COUNT_WITHOUT_AGGREGATION, UPDATE_INTERVAL } from '@config/config';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import {
-  GraphEdge,
-  GraphCombo,
-  GraphNode,
-  GraphReactAdaptorProps,
-  GraphReactAdaptorExposedMethods
-} from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorProps, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
-import { ProcessesRoutesPaths, QueriesProcesses } from '@pages/Processes/Processes.enum';
-import LoadingPage from '@pages/shared/Loading';
+import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
 import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
-import { TopologyController, groupNodes, groupEdges as groupEdges } from '../services';
+import useModalState from './useModalState';
+import useServiceState from './useServiceState';
+import useTopologyProcessData from './useTopologyProcessData';
+import useTopologyState from './useTopologyState';
+import { TopologyController } from '../services';
+import { TopologyProcessController } from '../services/topologyProcessController';
 import {
   ROTATE_LINK_LABEL,
   SHOW_LINK_BYTERATE,
@@ -44,268 +40,131 @@ import {
   SHOW_SITE_KEY,
   displayOptionsForProcesses
 } from '../Topology.constants';
-import { TopologyLabels, QueriesTopology } from '../Topology.enum';
+import { TopologyLabels } from '../Topology.enum';
 import { NodeOrEdgeListProps } from '../Topology.interfaces';
-
-const DISPLAY_OPTIONS = 'display-options';
-const SERVICE_OPTIONS = 'service-options';
-const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_SITE_KEY];
-
-const processesQueryParams = {
-  processRole: ['remote', 'external'],
-  endTime: 0
-};
-
-const metricQueryParams = {
-  fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchLatency: { groupBy: 'sourceProcess, destProcess' }
-};
 
 const TopologyProcesses: FC<{
   serviceIds?: string[];
-  id?: string;
+  id?: string[];
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
-}> = function ({ serviceIds, id: itemId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
-  const configuration =
-    TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
-
-  const [nodes, setNodes] = useState<GraphNode[] | undefined>();
-  const [links, setLinks] = useState<GraphEdge[]>([]);
-  const [groups, setGroups] = useState<GraphCombo[]>([]);
-
-  const [itemIdSelected, setItemIdSelected] = useState<string | undefined>(itemId); //process or link id
-  const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
-  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
-  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
-
-  const [displayOptionsSelected, setDisplayOptionsSelected] = useState<string[]>(configuration);
-
-  const [modalType, setModalType] = useState<{ type: 'process' | 'processPair'; id: string } | undefined>();
-
-  const drawerRef = useRef<HTMLDivElement>(null);
+}> = function ({ serviceIds, id: processId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
+  const navigate = useNavigate();
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
 
-  const isDisplayOptionActive = useCallback(
-    (option: string) => displayOptionsSelected.includes(option),
-    [displayOptionsSelected]
-  );
+  const { serviceIdsSelected, handleServiceSelected, saveServiceIdsToLocalStorage, getServiceIdsFromLocalStorage } =
+    useServiceState(serviceIds);
 
-  const [{ data: processes }, { data: processesPairs }, { data: metrics }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessResult, processesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(processesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
+  const {
+    idSelected,
+    showOnlyNeighbours,
+    moveToNodeSelected,
+    displayOptionsSelected,
+    handleSelected,
+    handleShowOnlyNeighbours,
+    handleMoveToNodeSelectedChecked,
+    handleDisplaySelected,
+    getDisplaySelectedFromLocalStorage
+  } = useTopologyState({ id: processId });
 
-      {
-        queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [
-          QueriesTopology.GetBytesByProcessPairs,
-          isDisplayOptionActive(SHOW_LINK_BYTES),
-          isDisplayOptionActive(SHOW_LINK_BYTERATE),
-          isDisplayOptionActive(SHOW_LINK_LATENCY)
-        ],
-        queryFn: () =>
-          TopologyController.getTopologyMetrics({
-            showBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-            showByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-            showLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-            params: metricQueryParams
-          }),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
+  const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
+
+  const { processes, processesPairs, metrics } = useTopologyProcessData({
+    idSelected: showOnlyNeighbours ? idSelected : undefined,
+    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
+    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
+    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
   });
 
-  const handleProcessSelected = useCallback((id?: string) => {
-    setItemIdSelected(id);
+  const handleShowOnlyNeighboursChecked = useCallback(
+    (checked: boolean) => {
+      handleShowOnlyNeighbours(checked);
+      checked && graphRef.current?.saveNodePositions();
+    },
+    [handleShowOnlyNeighbours]
+  );
 
-    if (!id) {
+  const handleShowProcessDetails = useCallback(
+    (id: string | undefined) => {
+      const ids = TopologyController.transformStringIdsToIds(id);
+
+      // handle nodes aggregated
+      if (ids?.length && ids.length > 1) {
+        handleSelected(TopologyController.transformStringIdsToIds(id));
+        id ? openProcessModal(id) : handleCloseModal();
+
+        return;
+      }
+
+      // handle a single node selection
+      const process = processes?.find(({ identity }) => identity === id);
+
+      if (process) {
+        navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
+      }
+    },
+    [handleCloseModal, handleSelected, navigate, openProcessModal, processes]
+  );
+
+  const handleShowProcessPairDetails = useCallback(
+    (id: string | undefined) => {
+      const ids = TopologyController.transformStringIdsToIds(id);
+
+      // handle nodes aggregated
+      if (ids?.length && ids.length > 1) {
+        handleSelected(TopologyController.transformStringIdsToIds(id));
+        id ? openProcessPairModal(id) : handleCloseModal();
+
+        return;
+      }
+
+      // handle a single node selection
+      const pair = processesPairs?.find(({ identity }) => identity === id);
+
+      if (pair) {
+        navigate(
+          `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}@${pair.protocol}`
+        );
+      }
+    },
+    [handleCloseModal, handleSelected, navigate, openProcessPairModal, processesPairs]
+  );
+
+  const handleServiceSelectedWrapper = useCallback(
+    (ids: string[] | undefined) => {
+      handleSelected(undefined);
+      handleServiceSelected(ids);
       handleCloseModal();
+    },
+    [handleCloseModal, handleSelected, handleServiceSelected]
+  );
 
-      return;
-    }
+  const handleSavePositions = useCallback(() => {
+    saveServiceIdsToLocalStorage();
 
-    setModalType({ type: 'process', id });
-  }, []);
-
-  const handleShowOnlyNeighboursChecked = useCallback((checked: boolean) => {
-    if (checked) {
-      graphRef.current?.saveNodePositions();
-    }
-
-    setShowOnlyNeighbours(checked);
-  }, []);
-
-  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
-    setMoveToNodeSelected(checked);
-  }, []);
-
-  const handleSelectedLink = useCallback(({ id }: GraphEdge) => {
-    setModalType({ type: 'processPair', id });
-  }, []);
-
-  const handleSelectedNode = useCallback(({ id }: GraphNode) => {
-    setItemIdSelected(id);
-    setModalType({ type: 'process', id });
-  }, []);
-
-  const handleServiceSelected = useCallback((ids: string[] | undefined) => {
-    setItemIdSelected(undefined);
-    setModalType(undefined);
-    setServiceIdsSelected(ids);
-  }, []);
-
-  const handleDisplayOptionSelected = useCallback((options: string[]) => {
-    startTransition(() => {
-      setDisplayOptionsSelected(options);
-    });
-
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
-  }, []);
-
-  const handleSaveTopology = useCallback(() => {
-    localStorage.setItem(SERVICE_OPTIONS, JSON.stringify(serviceIdsSelected));
     graphRef.current?.saveNodePositions();
-
     toastRef.current?.addMessage(TopologyLabels.ToastSave);
-  }, [serviceIdsSelected]);
+  }, [saveServiceIdsToLocalStorage]);
 
-  const handleLoadTopology = useCallback(() => {
-    const ids = localStorage.getItem(SERVICE_OPTIONS);
-    const options = localStorage.getItem(DISPLAY_OPTIONS);
-
-    if (ids) {
-      setServiceIdsSelected(ids !== 'undefined' ? JSON.parse(ids) : undefined);
-    }
-
-    if (options) {
-      setDisplayOptionsSelected(options !== 'undefined' ? JSON.parse(options) : undefined);
-    }
+  const handleLoadPositions = useCallback(() => {
+    getServiceIdsFromLocalStorage();
+    getDisplaySelectedFromLocalStorage();
 
     toastRef.current?.addMessage(TopologyLabels.ToastLoad);
-  }, []);
+  }, [getServiceIdsFromLocalStorage, getDisplaySelectedFromLocalStorage]);
 
-  const handleCloseModal = () => {
-    setModalType(undefined);
-  };
-
-  useEffect(() => {
-    const options = {
-      showLinkBytes: isDisplayOptionActive(SHOW_LINK_BYTES),
-      showLinkProtocol: isDisplayOptionActive(SHOW_LINK_PROTOCOL),
-      showLinkByteRate: isDisplayOptionActive(SHOW_LINK_BYTERATE),
-      showLinkLatency: isDisplayOptionActive(SHOW_LINK_LATENCY),
-      showLinkLabelReverse: isDisplayOptionActive(SHOW_LINK_REVERSE_LABEL),
-      rotateLabel: isDisplayOptionActive(ROTATE_LINK_LABEL)
-    };
-
-    function addMetricsToEdges(edges: GraphEdge[]) {
-      const protocolByProcessPairsMap = (processesPairs || []).reduce(
-        (acc, { sourceId, destinationId, protocol }) => {
-          acc[`${sourceId}${destinationId}`] = protocol || '';
-
-          return acc;
-        },
-        {} as Record<string, string>
-      );
-
-      return TopologyController.addMetricsToEdges(
-        edges,
-        'sourceProcess',
-        'destProcess',
-        protocolByProcessPairsMap,
-        metrics?.bytesByProcessPairs,
-        metrics?.byteRateByProcessPairs,
-        metrics?.latencyByProcessPairs
-      );
-    }
-
-    let pPairs = processesPairs;
-    let p = processes;
-
-    if (serviceIdsSelected) {
-      const serverIds = p
-        // the format of one address is  serviceName@seviceId@protocol
-        .filter(({ addresses }) =>
-          addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
-        )
-        .map(({ identity }) => identity);
-
-      pPairs = pPairs.filter((pair) => serverIds.includes(pair.destinationId));
-
-      const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      p = p.filter(({ identity }) => processIdsFromService.includes(identity));
-    }
-    let processNodes = TopologyController.convertProcessesToNodes(p);
-    let processPairEdges = addMetricsToEdges(TopologyController.convertPairsToEdges(pPairs));
-
-    if (processNodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION) {
-      processNodes = groupNodes(processNodes);
-      processPairEdges = groupEdges(processNodes, processPairEdges);
-    }
-    const nodeGroups = isDisplayOptionActive(SHOW_SITE_KEY)
-      ? TopologyController.getNodeGroupsFromNodes(processNodes)
-      : [];
-    processPairEdges = TopologyController.configureEdges(processPairEdges, options);
-
-    setNodes(
-      processNodes.map((node) => ({
-        ...node,
-        persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
-      }))
-    );
-    setLinks(
-      processPairEdges.map((edge) => ({
-        ...edge,
-        style: { cursor: 'pointer' }
-      }))
-    );
-    setGroups(nodeGroups);
-  }, [
+  const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
+    idSelected,
     processes,
     processesPairs,
-    isDisplayOptionActive,
     serviceIdsSelected,
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs,
-    showOnlyNeighbours,
-    itemIdSelected
-  ]);
-
-  if (!nodes) {
-    return <LoadingPage />;
-  }
-
-  const nodeIdSelected = nodes.find(
-    ({ id }) => id.split('~').includes(itemIdSelected || '') || itemIdSelected === id
-  )?.id;
-
-  let filteredLinks = links;
-  let filteredNodes = nodes;
-  let filteredCombos = groups;
-
-  if (showOnlyNeighbours && itemIdSelected) {
-    filteredLinks = links.filter((edge) => edge.source === itemIdSelected || edge.target === itemIdSelected);
-    const idsFromService = filteredLinks.flatMap(({ source, target }) => [source, target]);
-    filteredNodes = nodes.filter(({ id }) => idsFromService.includes(id));
-
-    const comboIdsFromNodes = filteredNodes.flatMap(({ comboId }) => comboId || []);
-    filteredCombos = groups.filter(({ id }) => comboIdsFromNodes.includes(id));
-  }
-
-  const onExpand = () => {
-    drawerRef.current && drawerRef.current.focus();
-  };
+    metrics,
+    showSites: displayOptionsSelected.includes(SHOW_SITE_KEY),
+    showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
+    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
+    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+  });
 
   const panelContent = (
     <DrawerPanelContent isResizable minSize="30%">
@@ -333,9 +192,9 @@ const TopologyProcesses: FC<{
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onSelected={handleProcessSelected}
+            onSelected={handleShowProcessDetails}
             displayOptions={displayOptionsForProcesses}
-            onDisplayOptionSelected={handleDisplayOptionSelected}
+            onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
             nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
@@ -343,28 +202,28 @@ const TopologyProcesses: FC<{
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             serviceIdsSelected={serviceIdsSelected}
-            onServiceSelected={handleServiceSelected}
-            onLoadTopology={handleLoadTopology}
-            onSaveTopology={handleSaveTopology}
+            onServiceSelected={handleServiceSelectedWrapper}
+            onLoadTopology={handleLoadPositions}
+            onSaveTopology={handleSavePositions}
             linkToPage={ProcessesRoutesPaths.Processes}
             resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           />
           <Divider />
         </StackItem>
         <StackItem isFilled>
-          <Drawer isExpanded={!!modalType?.id} onExpand={onExpand}>
+          <Drawer isExpanded={!!modalType?.id}>
             <DrawerContent panelContent={panelContent}>
               <DrawerContentBody>
                 <GraphComponent
                   ref={graphRef}
-                  nodes={filteredNodes}
-                  edges={filteredLinks}
-                  combos={filteredCombos}
+                  nodes={nodes}
+                  edges={edges}
+                  combos={combos}
                   itemSelected={nodeIdSelected}
-                  layout={showOnlyNeighbours && nodeIdSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-                  moveToSelectedNode={moveToNodeSelected && !!nodeIdSelected && !showOnlyNeighbours}
-                  onClickNode={handleSelectedNode}
-                  onClickEdge={handleSelectedLink}
+                  layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+                  moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}
+                  onClickNode={handleShowProcessDetails}
+                  onClickEdge={handleShowProcessPairDetails}
                 />
               </DrawerContentBody>
             </DrawerContent>

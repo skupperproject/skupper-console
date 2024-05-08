@@ -4,11 +4,7 @@ import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import {
-  GraphNode,
-  GraphReactAdaptorExposedMethods,
-  GraphReactAdaptorProps
-} from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorExposedMethods, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -16,6 +12,7 @@ import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologySiteData from './useTopologySiteData';
 import useTopologyState from './useTopologyState';
+import { TopologyController } from '../services';
 import { TopologySiteController } from '../services/topologySiteController';
 import {
   displayOptionsForSites,
@@ -28,7 +25,7 @@ import {
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
   id,
   GraphComponent = GraphReactAdaptor
 }) {
@@ -44,7 +41,7 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
     handleSelected,
     handleShowOnlyNeighbours,
     handleMoveToNodeSelectedChecked,
-    handleDisplaySelect
+    handleDisplaySelected
   } = useTopologyState({ id });
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
@@ -56,21 +53,24 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
   });
 
   const handleShowDetails = useCallback(
-    ({ id: siteId }: GraphNode) => {
+    (siteId: string) => {
       const site = sites?.find(({ identity }) => identity === siteId);
-
       navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${siteId}`);
     },
     [navigate, sites]
   );
 
+  const handleSelectedWrapper = useCallback(
+    (siteId?: string) => {
+      handleSelected(TopologyController.transformStringIdsToIds(siteId));
+    },
+    [handleSelected]
+  );
+
   const handleShowOnlyNeighboursChecked = useCallback(
     (checked: boolean) => {
-      if (checked) {
-        graphRef?.current?.saveNodePositions();
-      }
-
       handleShowOnlyNeighbours(checked);
+      checked && graphRef?.current?.saveNodePositions();
     },
     [graphRef, handleShowOnlyNeighbours]
   );
@@ -80,7 +80,8 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
     toastRef.current?.addMessage(TopologyLabels.ToastSave);
   }, [graphRef, toastRef]);
 
-  const { nodes, edges } = TopologySiteController.siteDataTransformer({
+  const { nodes, edges, nodeIdSelected } = TopologySiteController.siteDataTransformer({
+    idSelected,
     sites,
     sitesPairs,
     routerLinks,
@@ -95,11 +96,11 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onSelected={handleSelected}
+            onSelected={handleSelectedWrapper}
             displayOptions={displayOptionsForSites}
-            onDisplayOptionSelected={handleDisplaySelect}
+            onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
-            nodeIdSelected={idSelected}
+            nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
@@ -116,7 +117,7 @@ const TopologySite: FC<{ id?: string; GraphComponent?: ComponentType<GraphReactA
             ref={graphRef}
             nodes={nodes}
             edges={edges}
-            itemSelected={idSelected}
+            itemSelected={nodeIdSelected}
             onClickNode={handleShowDetails}
             layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
             moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}

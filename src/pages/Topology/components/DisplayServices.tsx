@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
@@ -30,7 +30,7 @@ interface DisplayServicesContentProps {
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 
 export const useServiceSelection = ({ initialIdsSelected, options, onSelected }: DisplayServicesContentProps) => {
-  const [serviceIdsSelected, setServiceIdsSelected] = useState(initialIdsSelected);
+  const [serviceIdsSelected, setServiceIdsSelected] = useState<string[]>([]);
   const [isServiceSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
 
   const toggleServiceMenu = (isOpen: boolean) => {
@@ -70,6 +70,12 @@ export const useServiceSelection = ({ initialIdsSelected, options, onSelected }:
       ? options
       : //filter the service options to those containing the partialServiceName (case-insensitive)
         options.filter((option) => option.label.toLowerCase().includes(partialServiceName.toLowerCase()));
+
+  useEffect(() => {
+    if (initialIdsSelected.length > 0) {
+      setServiceIdsSelected(initialIdsSelected);
+    }
+  }, [initialIdsSelected]);
 
   return {
     serviceIdsSelected,

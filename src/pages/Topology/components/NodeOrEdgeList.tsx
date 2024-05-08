@@ -20,6 +20,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { IDS_GROUP_SEPARATOR } from '@config/config';
 import LinkCell from '@core/components/LinkCell';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -30,7 +31,7 @@ import { TopologyLabels } from '../Topology.enum';
 import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const NodeOrEdgeList: FC<NodeOrEdgeListProps> = function ({ ids, items, modalType }) {
-  const idsArray = ids?.split('~');
+  const idsArray = ids?.split(IDS_GROUP_SEPARATOR);
   const filteredItems = items.filter(({ identity }) => idsArray?.includes(identity));
 
   return (

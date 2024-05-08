@@ -12,7 +12,7 @@ const componentQueryParams = {
 };
 
 interface UseTopologyDataProps {
-  idSelected?: string;
+  idSelected?: string[];
 }
 
 const useTopologyComponentData = ({ idSelected }: UseTopologyDataProps) => {
@@ -32,16 +32,18 @@ const useTopologyComponentData = ({ idSelected }: UseTopologyDataProps) => {
     ]
   });
 
-  //transform data
   let filteredPairs = componentPairs;
   let filteredComponents = components.results;
 
-  // check if in the UI we are displaying data links and the option "show only neighbours" is selected
-  if (filteredPairs && idSelected) {
-    filteredPairs = filteredPairs.filter((edge) => edge.sourceId === idSelected || edge.destinationId === idSelected);
+  if (idSelected) {
+    filteredPairs = filteredPairs.filter(
+      (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
+    );
 
-    const ids = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-    filteredComponents = components.results.filter(({ identity }) => ids.includes(identity));
+    const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
+    const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
+
+    filteredComponents = filteredComponents.filter(({ identity }) => uniqueIds.includes(identity));
   }
 
   return {
