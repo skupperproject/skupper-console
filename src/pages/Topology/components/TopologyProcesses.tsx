@@ -85,6 +85,14 @@ const TopologyProcesses: FC<{
     [handleShowOnlyNeighbours]
   );
 
+  const handleProcessSelected = useCallback(
+    (id?: string) => {
+      handleSelected(TopologyController.transformStringIdsToIds(id));
+      handleCloseModal();
+    },
+    [handleCloseModal, handleSelected]
+  );
+
   const handleShowProcessDetails = useCallback(
     (id: string | undefined) => {
       const ids = TopologyController.transformStringIdsToIds(id);
@@ -192,7 +200,7 @@ const TopologyProcesses: FC<{
         <StackItem>
           <TopologyToolbar
             nodes={nodes}
-            onSelected={handleShowProcessDetails}
+            onSelected={handleProcessSelected}
             displayOptions={displayOptionsForProcesses}
             onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
