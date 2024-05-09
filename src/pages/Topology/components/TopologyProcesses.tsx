@@ -16,6 +16,7 @@ import {
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
+import { IDS_GROUP_SEPARATOR } from '@config/config';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import { GraphReactAdaptorProps, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
@@ -95,7 +96,7 @@ const TopologyProcesses: FC<{
 
   const handleShowProcessDetails = useCallback(
     (id: string | undefined) => {
-      const ids = TopologyController.transformStringIdsToIds(id);
+      const ids = id?.split(IDS_GROUP_SEPARATOR);
 
       // handle nodes aggregated
       if (ids?.length && ids.length > 1) {
