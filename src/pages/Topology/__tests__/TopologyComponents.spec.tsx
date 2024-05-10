@@ -9,7 +9,7 @@ import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import { Wrapper } from '@core/components/Wrapper';
-import sitesData from '@mocks/data/PROCESS_GROUPS.json';
+import componentData from '@mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
@@ -18,7 +18,7 @@ import * as useTopologySiteState from '../components/useTopologyState';
 import { TopologyController } from '../services';
 import { TopologyLabels } from '../Topology.enum';
 
-const sitesResults = sitesData.results;
+const componentResult = componentData.results;
 
 const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
   forwardRef(({ onClickEdge, onClickNode, onClickCombo }, ref) => {
@@ -30,9 +30,9 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
 
     return (
       <>
-        <Button onClick={() => onClickNode && onClickNode(sitesResults[0].identity)}>onClickNode</Button>
+        <Button onClick={() => onClickNode && onClickNode(componentResult[0].identity)}>onClickNode</Button>
         <Button
-          onClick={() => onClickEdge && onClickEdge(`${sitesResults[2].identity}-to-${sitesResults[1].identity}`)}
+          onClick={() => onClickEdge && onClickEdge(`${componentResult[2].identity}-to-${componentResult[1].identity}`)}
         >
           onClickEdge
         </Button>
@@ -53,7 +53,7 @@ describe('Topology Components', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TopologyComponent
-            id={TopologyController.transformStringIdsToIds(sitesResults[2].name)}
+            id={TopologyController.transformStringIdsToIds(componentResult[2].name)}
             GraphComponent={MockGraphComponent}
           />
         </Suspense>
@@ -82,6 +82,31 @@ describe('Topology Components', () => {
     fireEvent.click(screen.getByText('onClickEdge'));
   });
 
+  it('should select a Component from the toolbar', async () => {
+    const handleSelected = jest.fn();
+
+    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
+      idSelected: TopologyController.transformStringIdsToIds(componentResult[2].identity),
+      showOnlyNeighbours: false,
+      moveToNodeSelected: false,
+      displayOptionsSelected: [],
+      handleSelected,
+      getDisplaySelectedFromLocalStorage: jest.fn(),
+      handleShowOnlyNeighbours: jest.fn(),
+      handleMoveToNodeSelectedChecked: jest.fn(),
+      handleDisplaySelected: jest.fn()
+    }));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    await eventUser.click(screen.getByDisplayValue(componentResult[2].name));
+    await eventUser.click(screen.getByText(componentResult[3].name));
+
+    expect(handleSelected).toHaveBeenCalled();
+  });
+
   it('should save node positions and display info alert when handleSaveTopology is called', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
@@ -96,7 +121,7 @@ describe('Topology Components', () => {
     const handleShowOnlyNeighbours = jest.fn();
 
     jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
+      idSelected: TopologyController.transformStringIdsToIds(componentResult[2].identity),
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],

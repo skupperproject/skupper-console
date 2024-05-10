@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
 import processesData from '@mocks/data/PROCESSES.json';
@@ -22,38 +23,32 @@ describe('DisplayResources', () => {
   });
 
   it('should render the Select with a custom placeholder', () => {
-    render(
-      <DisplayResources options={[]} onSelect={() => {}} placeholder={TopologyLabels.DisplayProcessesDefaultLabel} />
+    const { getByPlaceholderText } = render(
+      <DisplayResources options={[]} onSelect={() => {}} placeholder={TopologyLabels.DisplayResourcesDefaultLabel} />
     );
-    expect(screen.getByText(TopologyLabels.DisplayProcessesDefaultLabel)).toBeInTheDocument();
+    expect(getByPlaceholderText(TopologyLabels.DisplayResourcesDefaultLabel)).toBeInTheDocument();
   });
 
-  it('should click on the Select and write an display the searchbar', () => {
-    render(<DisplayResources options={[]} onSelect={() => {}} />);
+  it('should click on the Select and write the name of one item in the searchbar', async () => {
+    const { getByPlaceholderText, queryByRole } = render(
+      <DisplayResources options={processesResults} onSelect={() => {}} />
+    );
 
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayResourcesDefaultLabel));
-    expect(screen.getByPlaceholderText(TopologyLabels.ProcessFilterPlaceholderText)).toBeInTheDocument();
-  });
+    await eventUser.type(getByPlaceholderText(TopologyLabels.DisplayResourcesDefaultLabel), processesResults[0].name);
 
-  it('should click on the Select and write the name of one item in the searchbar', () => {
-    render(<DisplayResources options={processesResults} onSelect={() => {}} />);
-
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayResourcesDefaultLabel));
-    fireEvent.change(screen.getByPlaceholderText(TopologyLabels.ProcessFilterPlaceholderText), {
-      target: { value: processesResults[0].name }
-    });
-
-    expect(screen.getByRole('option', { name: processesResults[0].name })).toBeInTheDocument();
-    expect(screen.queryByRole('option', { name: processesResults[1].name })).not.toBeInTheDocument();
+    expect(queryByRole('menuitem', { name: processesResults[0].name })).toBeInTheDocument();
+    expect(queryByRole('menuitem', { name: processesResults[1].name })).not.toBeInTheDocument();
   });
 
   it('should click on the Select and click on an option item', async () => {
     const handleSelect = jest.fn();
 
-    render(<DisplayResources options={processesResults} onSelect={handleSelect} />);
+    const { getByPlaceholderText, getByText } = render(
+      <DisplayResources options={processesResults} onSelect={handleSelect} />
+    );
 
-    fireEvent.click(screen.getByText(TopologyLabels.DisplayResourcesDefaultLabel));
-    fireEvent.click(screen.getByText(processesResults[0].name));
+    await eventUser.click(getByPlaceholderText(TopologyLabels.DisplayResourcesDefaultLabel));
+    await eventUser.click(getByText(processesResults[0].name));
 
     expect(handleSelect).toHaveBeenCalledTimes(1);
   });

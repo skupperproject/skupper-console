@@ -1,7 +1,6 @@
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import processIcon from '@assets/process.svg';
 import skupperIcon from '@assets/skupper.svg';
-import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
 import { DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
@@ -19,6 +18,7 @@ interface TopologyProcessControllerProps {
   rotateLabel: boolean;
   showSites: boolean;
   showLinkProtocol: boolean;
+  showDeployments?: boolean;
   serviceIdsSelected?: string[];
 }
 
@@ -61,7 +61,8 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
         iconFileName: img,
         nodeConfig,
         groupId: groupIdentity,
-        groupName
+        groupName,
+        enableBadge1: false
       });
     }
   );
@@ -76,6 +77,7 @@ export const TopologyProcessController = {
     rotateLabel,
     showSites,
     showLinkProtocol,
+    showDeployments = false,
     serviceIdsSelected
   }: TopologyProcessControllerProps) => {
     const options = {
@@ -119,13 +121,17 @@ export const TopologyProcessController = {
     );
 
     // Group nodes from the same combo and edges when nodes are > MAX_NODE_COUNT_WITHOUT_AGGREGATION
-    if (processNodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION) {
+    if (showDeployments) {
       processNodes = groupNodes(processNodes);
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
 
+    const nodeIdSelected = TopologyController.transformIdsToStringIds(idSelected);
+
     return {
-      nodeIdSelected: TopologyController.transformIdsToStringIds(idSelected),
+      // when the id selected comes from an other view the id is a single node but maybe this page has the option showDeployments == true.
+      // In that case we need to find the processNode with ids aggregated where the single node is contained
+      nodeIdSelected: nodeIdSelected ? processNodes.find(({ id }) => id.includes(nodeIdSelected))?.id : undefined,
       nodes: processNodes.map((node) => ({
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id

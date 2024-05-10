@@ -8,6 +8,7 @@
       "name": "cart:3000",
       "protocol": "http2",
       "connectorCount": 2,
+      "listenerCount": 2,
       "totalFlows": 3,
       "currentFlows": 0
     },
@@ -19,6 +20,7 @@
       "name": "payment:5000",
       "protocol": "http2",
       "connectorCount": 2,
+      "listenerCount": 2,
       "totalFlows": 3,
       "currentFlows": 0
     },
@@ -30,6 +32,7 @@
       "name": "cash-desk:3000",
       "protocol": "http2",
       "connectorCount": 2,
+      "listenerCount": 2,
       "totalFlows": 3,
       "currentFlows": 0
     },
@@ -41,6 +44,7 @@
       "name": "cash-desk:3000",
       "protocol": "http1",
       "connectorCount": 2,
+      "listenerCount": 2,
       "totalFlows": 3,
       "currentFlows": 0
     },
@@ -53,6 +57,7 @@
       "name": "op:4900",
       "protocol": "http2",
       "connectorCount": 0,
+      "listenerCount": 2,
       "totalFlows": 0,
       "currentFlows": 0
     },
@@ -64,6 +69,7 @@
       "name": "database:8000",
       "protocol": "tcp",
       "connectorCount": 1,
+      "listenerCount": 2,
       "totalFlows": 1,
       "currentFlows": 1
     }

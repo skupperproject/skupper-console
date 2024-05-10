@@ -35,6 +35,7 @@ export const CUSTOM_ITEMS_NAMES = {
   siteEdge: 'site-edge',
   loopEdge: 'loop',
   nodeWithBadges: 'nCircle',
+  unexposeddNodeWithBadges: 'nDiamond',
   comboWithCustomLabel: 'cRect'
 };
 

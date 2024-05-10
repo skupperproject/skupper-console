@@ -21,7 +21,8 @@ import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
-  SHOW_LINK_REVERSE_LABEL
+  SHOW_LINK_REVERSE_LABEL,
+  SHOW_ROUTER_LINKS
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
@@ -42,7 +43,11 @@ const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReac
     handleShowOnlyNeighbours,
     handleMoveToNodeSelectedChecked,
     handleDisplaySelected
-  } = useTopologyState({ id });
+  } = useTopologyState({
+    id,
+    initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS],
+    displayOptionsEnabledKey: 'display-site-options'
+  });
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
     idSelected: showOnlyNeighbours ? idSelected : undefined,

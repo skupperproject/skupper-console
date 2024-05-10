@@ -14,6 +14,7 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 
+import { shape } from '../Topology.constants';
 import {
   Entity,
   TopologyMetrics,
@@ -21,11 +22,6 @@ import {
   DisplayOptions,
   ProcessPairsWithMetrics
 } from '../Topology.interfaces';
-
-const shape = {
-  bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
-  unbound: 'diamond'
-};
 
 export const TopologyController = {
   getTopologyMetrics: async ({
@@ -210,6 +206,12 @@ export const TopologyController = {
   },
   arePairIds(ids?: string) {
     return !!ids?.includes(PAIR_SEPARATOR);
+  },
+  transformStringGroupIdsToGroupIds(ids?: string) {
+    return ids?.split(IDS_GROUP_SEPARATOR);
+  },
+  areGroupOfIds(ids?: string) {
+    return !!ids?.includes(IDS_GROUP_SEPARATOR);
   }
 };
 
@@ -222,7 +224,8 @@ export function convertEntityToNode({
   label,
   iconFileName,
   iconProps = DEFAULT_NODE_ICON,
-  nodeConfig
+  nodeConfig,
+  enableBadge1
 }: Entity): GraphNode {
   return {
     id,
@@ -231,6 +234,7 @@ export function convertEntityToNode({
     groupId,
     groupName,
     label,
+    enableBadge1,
     ...{ ...DEFAULT_NODE_CONFIG, icon: { ...iconProps, img: iconFileName }, ...nodeConfig }
   };
 }
@@ -249,20 +253,21 @@ export function groupNodes(nodes: GraphNode[]): GraphNode[] {
         ...item,
         id: '',
         comboId: item.comboId,
-        groupCount: 0
+        groupCount: 0,
+        type: item.type
       };
     }
 
     // Collect ids into an array
     const ids = [groupedNodes[group].id, item.id];
-
+    const type = groupedNodes[group].type === shape.bound ? shape.bound : item.type;
     // Use join to concatenate ids with the GROUP_SEPARATOR
     groupedNodes[group].id = ids.filter(Boolean).join(IDS_GROUP_SEPARATOR);
     groupedNodes[group].groupCount! += 1;
 
-    if (groupedNodes[group].groupCount! > 1) {
+    if (groupedNodes[group].groupCount) {
       groupedNodes[group].label = `${item.groupName}-${item.comboName}` || '';
-      groupedNodes[group].type = shape.bound;
+      groupedNodes[group].type = type;
       groupedNodes[group].notificationValue = groupedNodes[group].groupCount;
       groupedNodes[group].enableBadge1 = true;
     }

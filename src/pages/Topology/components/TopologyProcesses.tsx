@@ -16,7 +16,7 @@ import {
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import { IDS_GROUP_SEPARATOR } from '@config/config';
+import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
 import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import { GraphReactAdaptorProps, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
@@ -26,13 +26,14 @@ import NodeOrEdgeList from './NodeOrEdgeList';
 import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useModalState from './useModalState';
-import useServiceState from './useServiceState';
 import useTopologyProcessData from './useTopologyProcessData';
+import useServiceState from './useTopologyServiceState';
 import useTopologyState from './useTopologyState';
 import { TopologyController } from '../services';
 import { TopologyProcessController } from '../services/topologyProcessController';
 import {
   ROTATE_LINK_LABEL,
+  SHOW_DEPLOYMENTS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
@@ -67,7 +68,11 @@ const TopologyProcesses: FC<{
     handleMoveToNodeSelectedChecked,
     handleDisplaySelected,
     getDisplaySelectedFromLocalStorage
-  } = useTopologyState({ id: processId });
+  } = useTopologyState({
+    id: processId,
+    initDisplayOptionsEnabled: [SHOW_SITE_KEY],
+    displayOptionsEnabledKey: 'display-process-options'
+  });
 
   const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
 
@@ -95,40 +100,34 @@ const TopologyProcesses: FC<{
   );
 
   const handleShowProcessDetails = useCallback(
-    (id: string | undefined) => {
-      const ids = id?.split(IDS_GROUP_SEPARATOR);
-
-      // handle nodes aggregated
-      if (ids?.length && ids.length > 1) {
+    (id: string) => {
+      // handle process aggregated
+      if (TopologyController.areGroupOfIds(id)) {
         handleSelected(TopologyController.transformStringIdsToIds(id));
-        id ? openProcessModal(id) : handleCloseModal();
+        openProcessModal(id);
 
         return;
       }
 
-      // handle a single node selection
+      // handle a single process selection
       const process = processes?.find(({ identity }) => identity === id);
 
       if (process) {
         navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
       }
     },
-    [handleCloseModal, handleSelected, navigate, openProcessModal, processes]
+    [handleSelected, navigate, openProcessModal, processes]
   );
 
   const handleShowProcessPairDetails = useCallback(
-    (id: string | undefined) => {
-      const ids = TopologyController.transformStringIdsToIds(id);
-
-      // handle nodes aggregated
-      if (ids?.length && ids.length > 1) {
+    (id: string) => {
+      if (TopologyController.areGroupOfIds(id)) {
         handleSelected(TopologyController.transformStringIdsToIds(id));
-        id ? openProcessPairModal(id) : handleCloseModal();
+        openProcessPairModal(id);
 
         return;
       }
 
-      // handle a single node selection
       const pair = processesPairs?.find(({ identity }) => identity === id);
 
       if (pair) {
@@ -137,12 +136,12 @@ const TopologyProcesses: FC<{
         );
       }
     },
-    [handleCloseModal, handleSelected, navigate, openProcessPairModal, processesPairs]
+    [handleSelected, navigate, openProcessPairModal, processesPairs]
   );
 
   const handleServiceSelectedWrapper = useCallback(
     (ids: string[] | undefined) => {
-      handleSelected(undefined);
+      handleSelected();
       handleServiceSelected(ids);
       handleCloseModal();
     },
@@ -163,6 +162,9 @@ const TopologyProcesses: FC<{
     toastRef.current?.addMessage(TopologyLabels.ToastLoad);
   }, [getServiceIdsFromLocalStorage, getDisplaySelectedFromLocalStorage]);
 
+  const showDeployments =
+    displayOptionsSelected.includes(SHOW_DEPLOYMENTS) || processes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION;
+
   const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
     idSelected,
     processes,
@@ -172,7 +174,8 @@ const TopologyProcesses: FC<{
     showSites: displayOptionsSelected.includes(SHOW_SITE_KEY),
     showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
     showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL),
+    showDeployments // a deployment is a group of processes in the same site that have the same function
   });
 
   const panelContent = (
@@ -186,7 +189,7 @@ const TopologyProcesses: FC<{
       <DrawerPanelBody style={{ overflow: 'auto' }} hasNoPadding>
         {modalType?.type && (
           <ModalComponent
-            ids={modalType?.id}
+            ids={TopologyController.transformStringGroupIdsToGroupIds(modalType?.id)}
             items={modalType?.type === 'process' ? processes : processesPairs}
             modalType={modalType.type}
           />
@@ -204,7 +207,7 @@ const TopologyProcesses: FC<{
             onSelected={handleProcessSelected}
             displayOptions={displayOptionsForProcesses}
             onDisplayOptionSelected={handleDisplaySelected}
-            defaultDisplayOptionsSelected={displayOptionsSelected}
+            defaultDisplayOptionsSelected={[...displayOptionsSelected, showDeployments ? SHOW_DEPLOYMENTS : '']}
             nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}

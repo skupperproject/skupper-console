@@ -209,8 +209,8 @@ export function registerNodeWithBadges() {
     CUSTOM_ITEMS_NAMES.nodeWithBadges,
     {
       afterDraw(cfg: NodeWithBadgesProps | undefined, group) {
-        if (cfg?.enableBadge1 && group) {
-          group.addShape('circle', {
+        if (cfg && group) {
+          const circle = group.addShape('circle', {
             attrs: {
               x,
               y,
@@ -221,7 +221,7 @@ export function registerNodeWithBadges() {
             name: `${CUSTOM_ITEMS_NAMES.nodeWithBadges}-notification-container`
           });
 
-          group.addShape('text', {
+          const label = group.addShape('text', {
             attrs: {
               x,
               y,
@@ -231,11 +231,112 @@ export function registerNodeWithBadges() {
               fill: cfg.notificationColor || textColor,
 
               fontSize: cfg.notificationFontSize || textFontSize
-            }
+            },
+            name: `${CUSTOM_ITEMS_NAMES.nodeWithBadges}-notification-container-label`
           });
+
+          if (cfg?.enableBadge1) {
+            circle.show();
+            label.show();
+          } else {
+            circle.hide();
+            label.hide();
+          }
+        }
+      },
+      afterUpdate(cfg: NodeWithBadgesProps | undefined, node) {
+        const group = node?.get('group') as IGroup;
+        const badge = group.find(
+          (element) => element.get('name') === `${CUSTOM_ITEMS_NAMES.nodeWithBadges}-notification-container`
+        );
+        const badgeLabel = group.find(
+          (element) => element.get('name') === `${CUSTOM_ITEMS_NAMES.nodeWithBadges}-notification-container-label`
+        );
+
+        if (cfg?.enableBadge1) {
+          badge.show();
+          badgeLabel.show();
+          badgeLabel.attr({
+            text: cfg.notificationValue
+          });
+        } else {
+          badge.hide();
+          badgeLabel.hide();
         }
       }
     },
     'circle'
+  );
+}
+
+export function registerUnexposedNodeWithBadges() {
+  const { containerBg, containerBorderColor, textColor, textFontSize } = BADGE_STYLE;
+  const r = NODE_SIZE / 4;
+  const angleBadge1 = 180;
+  const x = r * Math.cos(angleBadge1) - r;
+  const y = r * Math.sin(angleBadge1) - r;
+
+  registerNode(
+    CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges,
+    {
+      afterDraw(cfg: NodeWithBadgesProps | undefined, group) {
+        if (cfg && group) {
+          const shape = group.addShape('circle', {
+            attrs: {
+              x,
+              y,
+              r,
+              stroke: containerBorderColor,
+              fill: containerBg
+            },
+            name: `${CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges}-notification-container`
+          });
+
+          const label = group.addShape('text', {
+            attrs: {
+              x,
+              y,
+              textAlign: 'center',
+              textBaseline: 'middle',
+              text: cfg.notificationValue,
+              fill: cfg.notificationColor || textColor,
+
+              fontSize: cfg.notificationFontSize || textFontSize
+            },
+            name: `${CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges}-notification-container-label`
+          });
+
+          if (cfg?.enableBadge1) {
+            shape.show();
+            label.show();
+          } else {
+            shape.hide();
+            label.hide();
+          }
+        }
+      },
+      afterUpdate(cfg: NodeWithBadgesProps | undefined, node) {
+        const group = node?.get('group') as IGroup;
+        const badge = group.find(
+          (element) => element.get('name') === `${CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges}-notification-container`
+        );
+        const badgeLabel = group.find(
+          (element) =>
+            element.get('name') === `${CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges}-notification-container-label`
+        );
+
+        if (cfg?.enableBadge1) {
+          badge.show();
+          badgeLabel.show();
+          badgeLabel.attr({
+            text: cfg.notificationValue
+          });
+        } else {
+          badge.hide();
+          badgeLabel.hide();
+        }
+      }
+    },
+    'diamond'
   );
 }

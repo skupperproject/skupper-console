@@ -13,6 +13,7 @@ export const SHOW_LINK_PROTOCOL = 'show-link-protocol';
 export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';
 export const SHOW_LINK_LATENCY = 'show-link-latency';
+export const SHOW_DEPLOYMENTS = 'show-deployments';
 export const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
 export const ROTATE_LINK_LABEL = 'show-link-label-rotated';
 
@@ -47,6 +48,11 @@ export const displayOptionsForProcesses: DisplaySelectProps[] = [
     value: SHOW_LINK_REVERSE_LABEL,
     label: TopologyLabels.CheckboxShowLabelReverse,
     addSeparator: true
+  },
+  {
+    key: SHOW_DEPLOYMENTS,
+    value: SHOW_DEPLOYMENTS,
+    label: TopologyLabels.ShowDeployments
   },
   {
     key: ROTATE_LINK_LABEL,
@@ -100,5 +106,5 @@ export const displayOptionsForSites: DisplaySelectProps[] = [
 
 export const shape = {
   bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
-  unbound: 'diamond'
+  unbound: CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges
 };

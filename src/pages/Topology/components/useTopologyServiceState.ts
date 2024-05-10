@@ -16,7 +16,8 @@ const useServiceState = (serviceIds?: string[]) => {
   const getServiceIdsFromLocalStorage = useCallback(() => {
     const storedServiceIds = localStorage.getItem(SERVICE_OPTIONS);
 
-    if (storedServiceIds) {
+    //TODO: storedServiceIds !== 'undefined' only for jest unit tests.
+    if (storedServiceIds && storedServiceIds !== 'undefined') {
       setServiceIdsSelected(JSON.parse(storedServiceIds));
     }
   }, []);
