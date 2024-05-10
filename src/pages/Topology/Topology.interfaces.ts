@@ -13,6 +13,7 @@ export interface Entity {
   iconFileName: string;
   iconProps?: { show: boolean; width: number; height: number };
   nodeConfig?: ModelStyle;
+  enableBadge1: boolean;
 }
 
 export interface TopologyMetrics {
@@ -51,7 +52,7 @@ export interface DisplayOptions {
 }
 
 export interface NodeOrEdgeListProps {
-  ids?: string;
+  ids?: string[];
   items: ProcessResponse[] | ProcessPairsResponse[];
   modalType: 'process' | 'processPair';
 }

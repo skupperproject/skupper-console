@@ -91,6 +91,31 @@ describe('TopologySite', () => {
     expect(screen.getByText(TopologyLabels.ToastSave)).toBeInTheDocument();
   });
 
+  it('should select a Site from the toolbar', async () => {
+    const handleSelected = jest.fn();
+
+    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
+      idSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
+      showOnlyNeighbours: false,
+      moveToNodeSelected: false,
+      displayOptionsSelected: [],
+      handleSelected,
+      getDisplaySelectedFromLocalStorage: jest.fn(),
+      handleShowOnlyNeighbours: jest.fn(),
+      handleMoveToNodeSelectedChecked: jest.fn(),
+      handleDisplaySelected: jest.fn()
+    }));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    await eventUser.click(screen.getByDisplayValue(`${sitesResults[2].name} (${sitesResults[2].siteVersion})`));
+    await eventUser.click(screen.getByText(`${sitesResults[3].name} (${sitesResults[3].siteVersion})`));
+
+    expect(handleSelected).toHaveBeenCalled();
+  });
+
   it('should update showOnlyNeighbours state on checkbox click', async () => {
     const handleShowOnlyNeighbours = jest.fn();
 

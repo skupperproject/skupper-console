@@ -30,7 +30,8 @@ import {
   registerDataEdge as registerDefaultEdgeWithHover,
   registerNodeWithBadges,
   regusterComboWithCustomLabel,
-  registerSiteLinkEdge
+  registerSiteLinkEdge,
+  registerUnexposedNodeWithBadges
 } from './services/customItems';
 
 import './SkGraph.css';
@@ -412,6 +413,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const graphRef = useCallback(($node: HTMLDivElement) => {
         if (nodesWithoutPosition && !topologyGraphRef.current) {
           registerNodeWithBadges();
+          registerUnexposedNodeWithBadges();
           registerDefaultEdgeWithHover();
           registerSiteLinkEdge();
           regusterComboWithCustomLabel();

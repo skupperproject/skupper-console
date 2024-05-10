@@ -1,14 +1,18 @@
 import { useState, useCallback, startTransition } from 'react';
 
 import { TopologyController } from '../services';
-import { SHOW_ROUTER_LINKS, SHOW_SITE_KEY } from '../Topology.constants';
 
-const DISPLAY_OPTIONS = 'display-site-options';
-const DEFAULT_DISPLAY_OPTIONS_ENABLED = [SHOW_ROUTER_LINKS, SHOW_SITE_KEY];
-
-const useTopologyState = ({ id }: { id?: string[] }) => {
+const useTopologyState = ({
+  id,
+  initDisplayOptionsEnabled = [],
+  displayOptionsEnabledKey = ''
+}: {
+  id?: string[];
+  initDisplayOptionsEnabled?: string[];
+  displayOptionsEnabledKey?: string;
+}) => {
   const configuration =
-    TopologyController.loadDisplayOptionsFromLocalStorage(DISPLAY_OPTIONS) || DEFAULT_DISPLAY_OPTIONS_ENABLED;
+    TopologyController.loadDisplayOptionsFromLocalStorage(displayOptionsEnabledKey) || initDisplayOptionsEnabled;
 
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
   const [idSelected, setIdSelected] = useState<string[] | undefined>(id);
@@ -27,23 +31,26 @@ const useTopologyState = ({ id }: { id?: string[] }) => {
     setMoveToNodeSelected(checked);
   }, []);
 
-  const handleDisplaySelected = useCallback((options: string[]) => {
-    // To prevent the UI from being replaced by a fallback during an update of React query,
-    // TWe need to wrap updates that change the QueryKey into startTransition
-    startTransition(() => {
-      setDisplayOptions(options);
-    });
+  const handleDisplaySelected = useCallback(
+    (options: string[]) => {
+      // To prevent the UI from being replaced by a fallback during an update of React query,
+      // TWe need to wrap updates that change the QueryKey into startTransition
+      startTransition(() => {
+        setDisplayOptions(options);
+      });
 
-    localStorage.setItem(DISPLAY_OPTIONS, JSON.stringify(options));
-  }, []);
+      localStorage.setItem(displayOptionsEnabledKey, JSON.stringify(options));
+    },
+    [displayOptionsEnabledKey]
+  );
 
   const getDisplaySelectedFromLocalStorage = useCallback(() => {
-    const storedOptions = localStorage.getItem(DISPLAY_OPTIONS);
+    const storedOptions = localStorage.getItem(displayOptionsEnabledKey);
 
     if (storedOptions) {
       handleDisplaySelected(storedOptions !== 'undefined' ? JSON.parse(storedOptions) : undefined);
     }
-  }, [handleDisplaySelected]);
+  }, [displayOptionsEnabledKey, handleDisplaySelected]);
 
   return {
     idSelected,

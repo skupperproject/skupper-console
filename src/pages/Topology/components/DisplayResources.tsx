@@ -1,6 +1,17 @@
-import { ChangeEvent, FC, MouseEvent, useCallback, useMemo, useState } from 'react';
+import { FC, FormEvent, Ref, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
+import {
+  Button,
+  MenuToggle,
+  MenuToggleElement,
+  Select,
+  SelectList,
+  SelectOption,
+  TextInputGroup,
+  TextInputGroupMain,
+  TextInputGroupUtilities
+} from '@patternfly/react-core';
+import { TimesIcon } from '@patternfly/react-icons';
 
 import { TopologyLabels } from '../Topology.enum';
 
@@ -20,65 +31,97 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
   onSelect,
   options
 }) {
-  const [isSelectMenuOpen, setIsServiceSelectMenuOpen] = useState(false);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
 
-  function handleToggleMenu(openServiceMenu: boolean) {
-    setIsServiceSelectMenuOpen(openServiceMenu);
+  const textInputRef = useRef<HTMLInputElement>();
+
+  function handleToggleMenu() {
+    setIsOpen(!isOpen);
   }
 
   function handleClear() {
+    setInputValue('');
+
     if (onSelect) {
       onSelect(undefined);
     }
   }
 
-  function handleSelect(_: MouseEvent | ChangeEvent, selection: string | SelectOptionObject) {
-    const currentSelected = selection as string;
+  const handleSelect = useCallback(
+    (selection: string) => {
+      const currentSelected = selection;
 
-    setIsServiceSelectMenuOpen(false);
+      setIsOpen(false);
+      setInputValue('');
 
-    if (onSelect) {
-      onSelect(currentSelected);
-    }
-  }
-
-  const getOptions = useMemo(
-    () =>
-      (options || []).map(({ name, identity }, index) => (
-        <SelectOption key={index + 1} value={identity}>
-          {name}
-        </SelectOption>
-      )),
-    [options]
+      if (onSelect) {
+        onSelect(currentSelected);
+      }
+    },
+    [onSelect]
   );
 
-  const handleFind = useCallback(
-    (_: ChangeEvent<HTMLInputElement> | null, value: string) =>
-      getOptions
-        .filter((element) => !value || element.props.children.toString().toLowerCase().includes(value.toLowerCase()))
-        .filter(Boolean),
-    [getOptions]
+  const handleTextInputChange = (_: FormEvent<HTMLInputElement>, selection: string) => {
+    setInputValue(selection);
+  };
+
+  useEffect(() => {
+    if (inputValue && !isOpen) {
+      setIsOpen(true);
+    }
+  }, [inputValue, isOpen]);
+
+  const selectOptions = useMemo(
+    () =>
+      (options || []).filter(
+        ({ name }) => !inputValue || name.toString().toLowerCase().includes(inputValue.toLowerCase())
+      ),
+    [inputValue, options]
   );
 
   return (
     <Select
       role="resource-select"
-      isOpen={isSelectMenuOpen}
-      placeholderText={placeholder}
-      onSelect={handleSelect}
-      onToggle={(_, isOpen) => handleToggleMenu(isOpen)}
-      selections={id}
-      hasInlineFilter
-      inlineFilterPlaceholderText={TopologyLabels.ProcessFilterPlaceholderText}
-      onFilter={handleFind}
+      isOpen={isOpen}
+      selected={id}
       style={{
         minWidth: `${FILTER_BY_SERVICE_MIN_WIDTH}px`,
         maxHeight: `${FILTER_BY_SERVICE_MAX_HEIGHT}px`,
         overflow: 'auto'
       }}
-      onClear={handleClear}
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle ref={toggleRef} onClick={handleToggleMenu} isExpanded={isOpen} isFullWidth variant="typeahead">
+          <TextInputGroup isPlain>
+            <TextInputGroupMain
+              value={inputValue || options.find(({ identity }) => identity === id)?.name}
+              onClick={handleToggleMenu}
+              onChange={handleTextInputChange}
+              autoComplete="off"
+              innerRef={textInputRef}
+              placeholder={placeholder}
+              role="combobox"
+              isExpanded={isOpen}
+            />
+
+            <TextInputGroupUtilities>
+              {!!(inputValue || options.find(({ identity }) => identity === id)?.name) && (
+                <Button variant="plain" onClick={handleClear} aria-label="Clear input value">
+                  <TimesIcon aria-hidden />
+                </Button>
+              )}
+            </TextInputGroupUtilities>
+          </TextInputGroup>
+        </MenuToggle>
+      )}
     >
-      {getOptions}
+      <SelectList>
+        {selectOptions.map(({ name, identity }) => (
+          <SelectOption key={identity} value={identity} onClick={() => handleSelect(identity)}>
+            {name}
+          </SelectOption>
+        ))}
+      </SelectList>
     </Select>
   );
 };

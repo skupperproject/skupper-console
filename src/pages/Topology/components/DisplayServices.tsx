@@ -151,9 +151,7 @@ const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected
 
   // If services options are not yet available, render a disabled placeholder
   if (!options) {
-    return (
-      <Select onToggle={() => null} isDisabled={true} placeholderText={TopologyLabels.DisplayServicesDefaultLabel} />
-    );
+    return <Select onToggle={() => null} isDisabled={true} placeholderText={TopologyLabels.DisplayResourcesNoData} />;
   }
 
   // Determine initial selected service IDs (from props or all options)

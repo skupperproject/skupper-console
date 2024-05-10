@@ -14,22 +14,22 @@ interface TopologyComponentControllerProps {
   componentsPairs: ComponentPairsResponse[];
 }
 
-const convertProcessGroupsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
+const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
   entities.map(({ identity, name, processGroupRole, processCount }) => {
     const img = processGroupRole === 'internal' ? skupperIcon : componentIcon;
 
     const nodeConfig =
       processGroupRole === 'remote'
         ? DEFAULT_REMOTE_NODE_CONFIG
-        : { type: shape.bound, notificationValue: processCount, enableBadge1: true };
+        : { type: shape.bound, notificationValue: processCount };
 
-    return convertEntityToNode({ id: identity, label: name, iconFileName: img, nodeConfig });
+    return convertEntityToNode({ id: identity, label: name, iconFileName: img, nodeConfig, enableBadge1: true });
   });
 
 export const TopologyComponentController = {
   dataTransformer: ({ idSelected, components, componentsPairs }: TopologyComponentControllerProps) => ({
     nodeIdSelected: TopologyController.transformIdsToStringIds(idSelected),
-    nodes: convertProcessGroupsToNodes(components),
+    nodes: convertComponentsToNodes(components),
     edges: TopologyController.convertPairsToEdges(componentsPairs)
   })
 };

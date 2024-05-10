@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Checkbox, Button, Tooltip } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 
+import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 
@@ -11,6 +12,7 @@ import DisplayResources from './DisplayResources';
 import DisplayServices from './DisplayServices';
 import {
   ROTATE_LINK_LABEL,
+  SHOW_DEPLOYMENTS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
@@ -58,7 +60,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
   linkToPage,
   resourcePlaceholder
 }) {
-  const isLinkOptionActive = useCallback(
+  const areMetricAvailable = useCallback(
     () =>
       defaultDisplayOptionsSelected?.includes(SHOW_LINK_BYTES) ||
       defaultDisplayOptionsSelected?.includes(SHOW_LINK_BYTERATE) ||
@@ -67,8 +69,8 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
   );
 
   const isRotateOptionActive = useCallback(
-    () => isLinkOptionActive() || defaultDisplayOptionsSelected?.includes(SHOW_LINK_PROTOCOL) || [isLinkOptionActive],
-    [defaultDisplayOptionsSelected, isLinkOptionActive]
+    () => areMetricAvailable() || defaultDisplayOptionsSelected?.includes(SHOW_LINK_PROTOCOL) || [areMetricAvailable],
+    [defaultDisplayOptionsSelected, areMetricAvailable]
   );
 
   const getDisplayOptions = useCallback(
@@ -84,7 +86,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
         if (option.key === SHOW_LINK_REVERSE_LABEL) {
           return {
             ...option,
-            isDisabled: () => defaultDisplayOptionsSelected?.includes(SHOW_ROUTER_LINKS) || !isLinkOptionActive()
+            isDisabled: () => defaultDisplayOptionsSelected?.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable()
           };
         }
 
@@ -95,9 +97,16 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
           };
         }
 
+        if (option.key === SHOW_DEPLOYMENTS) {
+          return {
+            ...option,
+            isDisabled: () => nodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION
+          };
+        }
+
         return option;
       }),
-    [defaultDisplayOptionsSelected, displayOptions, isLinkOptionActive, isRotateOptionActive]
+    [defaultDisplayOptionsSelected, displayOptions, areMetricAvailable, isRotateOptionActive, nodes.length]
   );
 
   return (
