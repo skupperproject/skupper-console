@@ -27,7 +27,7 @@ describe('NodeOrEdgeList', () => {
 
   it('should render a list of processes when modalType is "process"', () => {
     const items = processesResults;
-    const ids = `${processesResults[0].identity}~${processesResults[1].identity}`;
+    const ids = [processesResults[0].identity, processesResults[1].identity];
 
     render(
       <Wrapper>
@@ -48,7 +48,7 @@ describe('NodeOrEdgeList', () => {
 
   it('should render a list of process pairs when modalType is "process-pair"', () => {
     const items = processPairsResults;
-    const ids = `${processPairsResults[3].identity}~${processPairsResults[2].identity}`;
+    const ids = [processPairsResults[3].identity, processPairsResults[2].identity];
 
     render(
       <Wrapper>

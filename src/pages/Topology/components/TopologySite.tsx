@@ -100,19 +100,19 @@ const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReac
       <Stack>
         <StackItem>
           <TopologyToolbar
-            nodes={nodes}
-            onSelected={handleSelectedWrapper}
             displayOptions={displayOptionsForSites}
             onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
-            nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             onSaveTopology={handleSavePositions}
             linkToPage={SitesRoutesPaths.Sites}
+            resourceIdSelected={nodeIdSelected}
+            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
+            onResourceSelected={handleSelectedWrapper}
           />
           <Divider />
         </StackItem>

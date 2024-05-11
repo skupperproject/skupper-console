@@ -54,7 +54,8 @@ const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
     return convertEntityToNode({
       id: identity,
       label,
-      iconFileName: img
+      iconFileName: img,
+      enableBadge1: false
     });
   });
 
