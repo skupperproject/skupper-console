@@ -15,9 +15,14 @@ import { TimesIcon } from '@patternfly/react-icons';
 
 import { TopologyLabels } from '../Topology.enum';
 
+export interface ResourcesOptionsProps {
+  name: string;
+  identity: string;
+}
+
 interface DisplayResourcesProps {
   id?: string;
-  options: { name: string; identity: string }[];
+  options: ResourcesOptionsProps[];
   onSelect: Function;
   placeholder?: string;
 }

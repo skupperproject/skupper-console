@@ -1,14 +1,13 @@
-import React, { useCallback } from 'react';
+import { FC } from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Checkbox, Button, Tooltip } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 
 import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
-import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 import NavigationViewLink from '@core/components/NavigationViewLink';
 
 import DisplayOptions from './DisplayOptions';
-import DisplayResources from './DisplayResources';
+import DisplayResources, { ResourcesOptionsProps } from './DisplayResources';
 import DisplayServices from './DisplayServices';
 import {
   ROTATE_LINK_LABEL,
@@ -24,12 +23,9 @@ import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface ToolbarProps {
-  nodes: GraphNode[];
-  onSelected?: (id?: string) => void;
   displayOptions?: DisplaySelectProps[];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
-  nodeIdSelected?: string;
   showOnlyNeighbours?: boolean;
   onShowOnlyNeighboursChecked?: (checked: boolean) => void;
   moveToNodeSelected?: boolean;
@@ -39,16 +35,16 @@ interface ToolbarProps {
   onLoadTopology?: () => void;
   onSaveTopology?: () => void;
   linkToPage: string;
+  resourceIdSelected?: string;
+  resourceOptions: ResourcesOptionsProps[];
+  onResourceSelected?: (id: string | undefined) => void;
   resourcePlaceholder: string;
 }
 
-const TopologyToolbar: React.FC<ToolbarProps> = function ({
-  nodes,
-  onSelected,
-  displayOptions,
+const TopologyToolbar: FC<ToolbarProps> = function ({
+  displayOptions = [],
   onDisplayOptionSelected,
-  defaultDisplayOptionsSelected,
-  nodeIdSelected,
+  defaultDisplayOptionsSelected = [],
   showOnlyNeighbours,
   onShowOnlyNeighboursChecked,
   moveToNodeSelected,
@@ -58,56 +54,21 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
   onLoadTopology,
   onSaveTopology,
   linkToPage,
-  resourcePlaceholder
+  resourceIdSelected,
+  resourceOptions,
+  resourcePlaceholder,
+  onResourceSelected
 }) {
-  const areMetricAvailable = useCallback(
-    () =>
-      defaultDisplayOptionsSelected?.includes(SHOW_LINK_BYTES) ||
-      defaultDisplayOptionsSelected?.includes(SHOW_LINK_BYTERATE) ||
-      defaultDisplayOptionsSelected?.includes(SHOW_LINK_LATENCY),
-    [defaultDisplayOptionsSelected]
-  );
-
-  const isRotateOptionActive = useCallback(
-    () => areMetricAvailable() || defaultDisplayOptionsSelected?.includes(SHOW_LINK_PROTOCOL) || [areMetricAvailable],
-    [defaultDisplayOptionsSelected, areMetricAvailable]
-  );
-
-  const getDisplayOptions = useCallback(
-    () =>
-      (displayOptions || []).map((option) => {
-        if (option.key === SHOW_LINK_BYTES || option.key === SHOW_LINK_BYTERATE || option.key === SHOW_LINK_LATENCY) {
-          return {
-            ...option,
-            isDisabled: () => defaultDisplayOptionsSelected?.includes(SHOW_ROUTER_LINKS)
-          };
-        }
-
-        if (option.key === SHOW_LINK_REVERSE_LABEL) {
-          return {
-            ...option,
-            isDisabled: () => defaultDisplayOptionsSelected?.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable()
-          };
-        }
-
-        if (option.key === ROTATE_LINK_LABEL) {
-          return {
-            ...option,
-            isDisabled: () => defaultDisplayOptionsSelected?.includes(SHOW_ROUTER_LINKS) || !isRotateOptionActive()
-          };
-        }
-
-        if (option.key === SHOW_DEPLOYMENTS) {
-          return {
-            ...option,
-            isDisabled: () => nodes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION
-          };
-        }
-
-        return option;
-      }),
-    [defaultDisplayOptionsSelected, displayOptions, areMetricAvailable, isRotateOptionActive, nodes.length]
-  );
+  const displayOptionsDisabled = {
+    [SHOW_LINK_BYTES]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
+    [SHOW_LINK_BYTERATE]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
+    [SHOW_LINK_LATENCY]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
+    [SHOW_LINK_REVERSE_LABEL]:
+      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable(defaultDisplayOptionsSelected),
+    [ROTATE_LINK_LABEL]:
+      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !isRotateOptionActive(defaultDisplayOptionsSelected),
+    [SHOW_DEPLOYMENTS]: resourceOptions.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION
+  };
 
   return (
     <Toolbar>
@@ -116,9 +77,10 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
           <>
             <ToolbarItem>
               <DisplayOptions
-                options={getDisplayOptions()}
                 onSelected={onDisplayOptionSelected}
                 defaultSelected={defaultDisplayOptionsSelected}
+                options={displayOptions}
+                optionsDisabled={displayOptionsDisabled}
               />
             </ToolbarItem>
 
@@ -126,22 +88,22 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
           </>
         )}
 
-        {onSelected && (
+        {onResourceSelected && (
           <>
             <ToolbarGroup>
               <ToolbarItem data-testid="display-resources">
                 <DisplayResources
-                  id={nodeIdSelected}
-                  onSelect={onSelected}
+                  id={resourceIdSelected}
+                  options={resourceOptions}
                   placeholder={resourcePlaceholder}
-                  options={nodes.map((node) => ({ name: node.label, identity: node.id }))}
+                  onSelect={onResourceSelected}
                 />
               </ToolbarItem>
 
               <ToolbarItem data-testid="show-only-neighbours-checkbox">
                 <Checkbox
                   label={TopologyLabels.CheckboxShowOnlyNeghbours}
-                  isDisabled={!nodeIdSelected}
+                  isDisabled={!resourceIdSelected}
                   isChecked={showOnlyNeighbours}
                   onChange={(_, checked) => {
                     onShowOnlyNeighboursChecked?.(checked);
@@ -153,7 +115,7 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
               <ToolbarItem data-testid="move-to-node-selected-checkbox">
                 <Checkbox
                   label={TopologyLabels.CheckboxMoveToNodeSelected}
-                  isDisabled={!nodeIdSelected || showOnlyNeighbours}
+                  isDisabled={!resourceIdSelected || showOnlyNeighbours}
                   isChecked={moveToNodeSelected}
                   onChange={(_, checked) => {
                     onMoveToNodeSelectedChecked?.(checked);
@@ -207,3 +169,11 @@ const TopologyToolbar: React.FC<ToolbarProps> = function ({
 };
 
 export default TopologyToolbar;
+
+export const areMetricAvailable = (displayOptionsSelected: string[] = []) =>
+  displayOptionsSelected?.includes(SHOW_LINK_BYTES) ||
+  displayOptionsSelected?.includes(SHOW_LINK_BYTERATE) ||
+  displayOptionsSelected?.includes(SHOW_LINK_LATENCY);
+
+export const isRotateOptionActive = (displayOptionsSelected: string[] = []) =>
+  areMetricAvailable(displayOptionsSelected) || displayOptionsSelected?.includes(SHOW_LINK_PROTOCOL);

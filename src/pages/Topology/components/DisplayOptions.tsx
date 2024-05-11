@@ -14,6 +14,7 @@ interface DisplayUseOptionsProps {
 
 interface DisplayOptionsProps extends DisplayUseOptionsProps {
   options: DisplaySelectProps[];
+  optionsDisabled?: Record<string, boolean>;
 }
 
 export const useDisplayOptions = ({ defaultSelected = [], onSelected }: DisplayUseOptionsProps) => {
@@ -44,7 +45,12 @@ export const useDisplayOptions = ({ defaultSelected = [], onSelected }: DisplayU
   return { displayOptionsSelected, selectDisplayOptions };
 };
 
-const DisplayOptions: FC<DisplayOptionsProps> = function ({ defaultSelected = [], options, onSelected }) {
+const DisplayOptions: FC<DisplayOptionsProps> = function ({
+  defaultSelected,
+  options,
+  onSelected,
+  optionsDisabled = {}
+}) {
   const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState(false);
   const { displayOptionsSelected, selectDisplayOptions } = useDisplayOptions({
     defaultSelected,
@@ -65,8 +71,8 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({ defaultSelected = []
       placeholderText={TopologyLabels.DisplayPlaceholderText}
       isCheckboxSelectionBadgeHidden
     >
-      {options.map(({ key, value, label, isDisabled, addSeparator }) => (
-        <SelectOption key={key} value={value} isDisabled={isDisabled ? isDisabled() : false}>
+      {options.map(({ key, value, label, addSeparator }) => (
+        <SelectOption key={key} value={value} isDisabled={optionsDisabled[value]}>
           {label}
           {addSeparator && <Divider />}
         </SelectOption>

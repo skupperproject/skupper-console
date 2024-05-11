@@ -203,12 +203,9 @@ const TopologyProcesses: FC<{
       <Stack data-testid="sk-topology-processes">
         <StackItem>
           <TopologyToolbar
-            nodes={nodes}
-            onSelected={handleProcessSelected}
             displayOptions={displayOptionsForProcesses}
             onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={[...displayOptionsSelected, showDeployments ? SHOW_DEPLOYMENTS : '']}
-            nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
@@ -218,7 +215,10 @@ const TopologyProcesses: FC<{
             onLoadTopology={handleLoadPositions}
             onSaveTopology={handleSavePositions}
             linkToPage={ProcessesRoutesPaths.Processes}
+            resourceIdSelected={nodeIdSelected}
+            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
+            onResourceSelected={handleProcessSelected}
           />
           <Divider />
         </StackItem>

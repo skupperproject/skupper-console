@@ -79,16 +79,16 @@ const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<Grap
       <Stack>
         <StackItem>
           <TopologyToolbar
-            nodes={nodes}
-            onSelected={handleSelectedWrapper}
-            nodeIdSelected={nodeIdSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             onSaveTopology={handleSavePositions}
             linkToPage={ComponentRoutesPaths.ProcessGroups}
+            resourceIdSelected={nodeIdSelected}
+            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
+            onResourceSelected={handleSelectedWrapper}
           />
           <Divider />
         </StackItem>
