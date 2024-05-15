@@ -2,10 +2,10 @@ import { FC, useCallback } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
-import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
@@ -60,14 +60,14 @@ const Overview: FC<OverviewProps> = function ({
   const destProcessesRx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
     ...(processesPairsTxData || []).map(({ destinationName, destinationSiteId, destinationSiteName }) => ({
       destinationName,
-      siteName: `${destinationSiteName}${prometheusSiteNameAndIdSeparator}${destinationSiteId}`
+      siteName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
     }))
   ]);
 
   const destProcessesTx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
     ...(processesPairsRxData || []).map(({ sourceName, sourceSiteId, sourceSiteName }) => ({
       destinationName: sourceName,
-      siteName: `${sourceSiteName}${prometheusSiteNameAndIdSeparator}${sourceSiteId}`
+      siteName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
     }))
   ]);
 
@@ -94,7 +94,7 @@ const Overview: FC<OverviewProps> = function ({
       }}
       defaultMetricFilterValues={{
         sourceProcess: name,
-        sourceSite: `${parentName}${prometheusSiteNameAndIdSeparator}${parent}`,
+        sourceSite: composePrometheusSiteLabel(parentName, parent),
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       startTimeLimit={startTime}

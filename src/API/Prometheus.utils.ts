@@ -45,3 +45,5 @@ export function getTimeSeriesFromPrometheusData(data: PrometheusMetric<'matrix'>
 // prometheus site label has this format: siteName@_@siteId
 export const composePrometheusSiteLabel = (name?: string, id?: string) =>
   (name || '') + (prometheusSiteNameAndIdSeparator || '') + (id || '');
+
+export const decomposePrometheusSiteLabel = (name?: string) => name?.split(prometheusSiteNameAndIdSeparator)[0];
