@@ -25,8 +25,9 @@ import {
 } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 
+import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { AvailableProtocols } from '@API/REST.enum';
-import { prometheusProcessNameseparator, prometheusSiteNameAndIdSeparator } from '@config/prometheus';
+import { prometheusProcessNameseparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
 import DateTimeRangeFilter from '@core/components/SkDateTimePicker/DateTimeRangeFilter';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
@@ -147,7 +148,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </MenuItem>
               {(list || []).map(({ destinationName }) => (
                 <MenuItem key={`site-${destinationName}`} itemId={destinationName}>
-                  {destinationName.split(prometheusSiteNameAndIdSeparator)[0]}
+                  {decomposePrometheusSiteLabel(destinationName)}
                 </MenuItem>
               ))}
             </MenuList>
@@ -179,7 +180,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={sourceSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.sourceSite?.split(prometheusSiteNameAndIdSeparator)[0] || config.sourceSites?.placeholder,
+            decomposePrometheusSiteLabel(selectedFilters.sourceSite) || config.sourceSites?.placeholder,
             sourceSitesToggleRef,
             selectedFilterIsOpen.sourceSite,
             !!config.sourceSites?.disabled,
@@ -206,7 +207,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={destSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.destSite?.split(prometheusSiteNameAndIdSeparator)[0] || config.destSites?.placeholder,
+            decomposePrometheusSiteLabel(selectedFilters.destSite) || config.destSites?.placeholder,
             destSitesToggleRef,
             selectedFilterIsOpen.destSite,
             !!config.destSites?.disabled,

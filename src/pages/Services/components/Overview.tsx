@@ -2,10 +2,10 @@ import { FC, useCallback } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
+import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
-import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
@@ -49,25 +49,25 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
   const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
     processPairsResults.map(({ sourceName, sourceSiteName, sourceSiteId }) => ({
       destinationName: sourceName,
-      siteName: composePrometheusSiteId({ id: sourceSiteId, name: sourceSiteName })
+      siteName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
     }))
   );
   const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
     processPairsResults.map(({ destinationName, destinationSiteName, destinationSiteId }) => ({
       destinationName,
-      siteName: composePrometheusSiteId({ id: destinationSiteId, name: destinationSiteName })
+      siteName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
     }))
   );
 
   const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
     processPairsResults.map(({ destinationSiteId, destinationSiteName }) => ({
-      destinationName: composePrometheusSiteId({ id: destinationSiteId, name: destinationSiteName })
+      destinationName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
     }))
   );
 
   const sourceSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
     processPairsResults.map(({ sourceSiteId, sourceSiteName }) => ({
-      destinationName: composePrometheusSiteId({ id: sourceSiteId, name: sourceSiteName })
+      destinationName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
     }))
   );
 
@@ -110,8 +110,3 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
 };
 
 export default Overview;
-
-// prometheus use a combination of process name and site name as a siteId key
-function composePrometheusSiteId({ id, name }: { id: string; name: string }) {
-  return `${name}${prometheusSiteNameAndIdSeparator}${id}`;
-}

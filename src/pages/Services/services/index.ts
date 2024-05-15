@@ -1,7 +1,7 @@
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
+import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { ServiceResponse } from '@API/REST.interfaces';
 import { VarColors } from '@config/colors';
-import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
 
 export const ServicesController = {
@@ -36,15 +36,13 @@ export const ServicesController = {
 
     const clients =
       servicePairs?.map(({ metric }) => ({
-        id: `${
-          metric.sourceProcess || metric.sourceSite?.split(prometheusSiteNameAndIdSeparator)[0]
-        } ${sourceProcessSuffix}`,
+        id: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
         nodeColor: metric.sourceProcess ? VarColors.Blue400 : undefined
       })) || [];
 
     const servers =
       servicePairs?.map(({ metric }) => ({
-        id: metric.destProcess || metric.destSite?.split(prometheusSiteNameAndIdSeparator)[0],
+        id: metric.destProcess || decomposePrometheusSiteLabel(metric.destSite),
         nodeColor: metric.destProcess ? VarColors.Blue400 : undefined
       })) || [];
 
@@ -52,10 +50,8 @@ export const ServicesController = {
 
     const links =
       servicePairs.map(({ metric, value }) => ({
-        source: `${
-          metric.sourceProcess || metric.sourceSite?.split(prometheusSiteNameAndIdSeparator)[0]
-        } ${sourceProcessSuffix}`,
-        target: metric.destProcess || metric.destSite?.split(prometheusSiteNameAndIdSeparator)[0],
+        source: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
+        target: metric.destProcess || decomposePrometheusSiteLabel(metric.destSite),
         value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
       })) || [];
 

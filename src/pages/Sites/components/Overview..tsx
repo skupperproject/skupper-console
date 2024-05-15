@@ -2,9 +2,9 @@ import { FC, useCallback } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
 import { SiteResponse } from '@API/REST.interfaces';
-import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
@@ -59,19 +59,19 @@ const Overview: FC<OverviewProps> = function ({ site }) {
 
   const destProcessesRx = [
     ...(siteTxData || []).map(({ destinationName, destinationId }) => ({
-      destinationName: `${destinationName}${prometheusSiteNameAndIdSeparator}${destinationId}`,
+      destinationName: composePrometheusSiteLabel(destinationName, destinationId),
       siteName: ''
     }))
   ];
 
   const destProcessesTx = [
     ...(siteRxData || []).map(({ sourceName, sourceId }) => ({
-      destinationName: `${sourceName}${prometheusSiteNameAndIdSeparator}${sourceId}`,
+      destinationName: composePrometheusSiteLabel(sourceName, sourceId),
       siteName: ''
     }))
   ];
 
-  const sourceSites = [{ destinationName: `${name}${prometheusSiteNameAndIdSeparator}${siteId}` }];
+  const sourceSites = [{ destinationName: composePrometheusSiteLabel(name, siteId) }];
   const destSites = removeDuplicatesFromArrayOfObjects([...destProcessesTx, ...destProcessesRx]);
 
   const startTime = [...siteTxData, ...siteRxData].reduce(
@@ -88,7 +88,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
         ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
       }}
       defaultMetricFilterValues={{
-        sourceSite: `${name}${prometheusSiteNameAndIdSeparator}${siteId}`,
+        sourceSite: composePrometheusSiteLabel(name, siteId),
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
       }}
       startTimeLimit={startTime}
