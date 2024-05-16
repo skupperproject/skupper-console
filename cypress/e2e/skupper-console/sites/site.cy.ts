@@ -22,7 +22,7 @@ context('Sites', () => {
   });
 
   it('should navigate to the correct process page when clicking on a link', () => {
-    const expectedUrl = 'http://localhost:3000/#/processes/process%20payment%201@process-payment-1';
+    const expectedUrl = 'http://localhost:3000/#/processes/process%20payment%201@process-payment-1?type=Overview';
 
     const link = cy.get(`[data-testid="${testId}"]`).contains('process payment 1');
     link.should('have.attr', 'href', `#/processes/process payment 1@process-payment-1`);
