@@ -4,6 +4,7 @@ import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SkExposureCell from '@core/components/SkExposureCell';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -57,7 +58,8 @@ export const CustomProcessCells = {
     HighlightValueCell({ ...props, format: formatBytes }),
   ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatByteRate }),
-  TimestampCell: (props: LinkCellProps<ProcessResponse>) => EndTimeCell(props)
+  TimestampCell: (props: LinkCellProps<ProcessResponse>) => EndTimeCell(props),
+  ExposureCell: SkExposureCell
 };
 
 export const processesTableColumns: SKColumn<ProcessResponse>[] = [
@@ -75,6 +77,11 @@ export const processesTableColumns: SKColumn<ProcessResponse>[] = [
     name: ProcessesLabels.Site,
     prop: 'parentName' as keyof ProcessResponse,
     customCellName: 'linkCellSite'
+  },
+  {
+    name: ProcessesLabels.ExposedTitle,
+    prop: 'processBinding' as keyof ProcessResponse,
+    customCellName: 'ExposureCell'
   },
   {
     name: ProcessesLabels.Created,

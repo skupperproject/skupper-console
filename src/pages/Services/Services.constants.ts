@@ -45,7 +45,7 @@ export const ServiceColumns: SKColumn<ServiceResponse>[] = [
   },
   {
     name: ServicesLabels.CurrentFlowPairs,
-    columnDescription: 'Live connections',
+    columnDescription: 'Open connections',
 
     prop: 'currentFlows' as keyof ServiceResponse,
     width: 15

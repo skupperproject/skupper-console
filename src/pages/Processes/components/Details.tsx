@@ -11,7 +11,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Label,
   Title,
   Tooltip,
   Truncate
@@ -19,6 +18,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkExposureCell from '@core/components/SkExposureCell';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
@@ -106,11 +106,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {processBinding === 'bound' ? (
-                    <Label color="blue">{ProcessesLabels.IsExposed}</Label>
-                  ) : (
-                    <Label color="gold">{ProcessesLabels.IsNotExposed}</Label>
-                  )}
+                  <SkExposureCell value={processBinding} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>

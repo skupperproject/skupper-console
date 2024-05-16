@@ -74,7 +74,7 @@ describe('Begin testing the TCP service component', () => {
     expect(getByText(processResult[0].name)).toBeInTheDocument();
   });
 
-  it('should render the Connection view -> Live connections after the data loading is complete', async () => {
+  it('should render the Connection view -> Open connections after the data loading is complete', async () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
