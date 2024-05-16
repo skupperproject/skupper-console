@@ -73,7 +73,7 @@ describe('Begin testing the Processes component', () => {
     expect(screen.getByTestId('http2-table')).toBeInTheDocument();
   });
 
-  it('should render render the TCP Process Pairs Content Component and the tab Live connection is active', async () => {
+  it('should render render the TCP Process Pairs Content Component and the tab Open connection is active', async () => {
     const { queryByTestId, getByText, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>

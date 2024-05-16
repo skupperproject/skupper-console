@@ -93,7 +93,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
                   {connections.liveConnectionsSerie && (
                     <>
                       <Title headingLevel="h4">{MetricsLabels.LiveConnectionsChartLabel} </Title>
-                      <SkChartArea data={connections.liveConnectionsSerie} legendLabels={['live connections']} />
+                      <SkChartArea data={connections.liveConnectionsSerie} legendLabels={['open connections']} />
                     </>
                   )}
                 </FlexItem>

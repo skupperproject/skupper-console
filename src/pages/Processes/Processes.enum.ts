@@ -49,7 +49,7 @@ export enum ProcessesLabels {
   ExposedTitle = 'Exposure status',
   IsExposed = 'Exposed',
   IsNotExposed = 'Unexposed',
-  ActiveConnections = 'Live connections',
+  ActiveConnections = 'Open connections',
   OldConnections = 'Connection history',
   ProcessPairsEmptyTitle = 'No connections or requests to display',
   ProcessPairsEmptyMessage = 'As new connections or requests are established, they will be dynamically added to the table for display',
