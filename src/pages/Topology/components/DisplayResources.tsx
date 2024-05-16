@@ -1,4 +1,4 @@
-import { FC, FormEvent, Ref, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, FormEvent, Ref, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   Button,
@@ -28,7 +28,6 @@ interface DisplayResourcesProps {
 }
 
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
-const FILTER_BY_SERVICE_MIN_WIDTH = 150;
 
 const DisplayResources: FC<DisplayResourcesProps> = function ({
   id,
@@ -36,17 +35,24 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
   onSelect,
   options
 }) {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(findOptionSelected(options, id)?.name || '');
   const [isOpen, setIsOpen] = useState(false);
 
+  const filterValueRef = useRef<string>('');
   const textInputRef = useRef<HTMLInputElement>();
 
   function handleToggleMenu() {
     setIsOpen(!isOpen);
+
+    setTimeout(() => {
+      textInputRef.current?.focus();
+    }, 10);
   }
 
   function handleClear() {
     setInputValue('');
+    filterValueRef.current = '';
+    textInputRef.current?.focus();
 
     if (onSelect) {
       onSelect(undefined);
@@ -54,35 +60,34 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
   }
 
   const handleSelect = useCallback(
-    (selection: string) => {
-      const currentSelected = selection;
+    (idSelected: string) => {
+      const nameSelected = findOptionSelected(options, idSelected)?.name || '';
 
       setIsOpen(false);
-      setInputValue('');
+      setInputValue(nameSelected);
+      filterValueRef.current = '';
 
       if (onSelect) {
-        onSelect(currentSelected);
+        onSelect(idSelected);
       }
     },
-    [onSelect]
+    [onSelect, options]
   );
 
   const handleTextInputChange = (_: FormEvent<HTMLInputElement>, selection: string) => {
     setInputValue(selection);
+    filterValueRef.current = selection;
   };
 
   useEffect(() => {
-    if (inputValue && !isOpen) {
+    if (inputValue && filterValueRef.current && !isOpen) {
       setIsOpen(true);
     }
   }, [inputValue, isOpen]);
 
-  const selectOptions = useMemo(
-    () =>
-      (options || []).filter(
-        ({ name }) => !inputValue || name.toString().toLowerCase().includes(inputValue.toLowerCase())
-      ),
-    [inputValue, options]
+  const selectOptions = (options || []).filter(
+    ({ name }) =>
+      !filterValueRef.current || name.toString().toLowerCase().includes(filterValueRef.current.toLowerCase())
   );
 
   return (
@@ -90,16 +95,13 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
       role="resource-select"
       isOpen={isOpen}
       selected={id}
-      style={{
-        minWidth: `${FILTER_BY_SERVICE_MIN_WIDTH}px`,
-        maxHeight: `${FILTER_BY_SERVICE_MAX_HEIGHT}px`,
-        overflow: 'auto'
-      }}
+      maxMenuHeight={`${FILTER_BY_SERVICE_MAX_HEIGHT}px`}
+      isScrollable
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={handleToggleMenu} isExpanded={isOpen} isFullWidth variant="typeahead">
+        <MenuToggle ref={toggleRef} isExpanded={isOpen} onClick={handleToggleMenu} variant="typeahead">
           <TextInputGroup isPlain>
             <TextInputGroupMain
-              value={inputValue || options.find(({ identity }) => identity === id)?.name}
+              value={inputValue}
               onClick={handleToggleMenu}
               onChange={handleTextInputChange}
               autoComplete="off"
@@ -110,7 +112,7 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
             />
 
             <TextInputGroupUtilities>
-              {!!(inputValue || options.find(({ identity }) => identity === id)?.name) && (
+              {!!inputValue && (
                 <Button variant="plain" onClick={handleClear} aria-label="Clear input value">
                   <TimesIcon aria-hidden />
                 </Button>
@@ -122,7 +124,12 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
     >
       <SelectList>
         {selectOptions.map(({ name, identity }) => (
-          <SelectOption key={identity} value={identity} onClick={() => handleSelect(identity)}>
+          <SelectOption
+            key={identity}
+            value={identity}
+            onClick={() => handleSelect(identity)}
+            isSelected={identity === id}
+          >
             {name}
           </SelectOption>
         ))}
@@ -132,3 +139,7 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
 };
 
 export default DisplayResources;
+
+function findOptionSelected(options: ResourcesOptionsProps[], idSelected?: string) {
+  return options.find(({ identity }) => identity === idSelected);
+}
