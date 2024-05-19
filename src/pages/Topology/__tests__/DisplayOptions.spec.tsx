@@ -76,7 +76,7 @@ describe('useDisplayOptions', () => {
 describe('DisplayOptions', () => {
   it('renders Select component with correct props', () => {
     const { getByRole, getByText } = render(
-      <DisplayOptions defaultSelected={defaultSelected} options={options} onSelected={mockOnSelected} />
+      <DisplayOptions defaultSelected={defaultSelected} options={[options]} onSelected={mockOnSelected} />
     );
 
     const selectElement = getByRole('button');
@@ -88,7 +88,7 @@ describe('DisplayOptions', () => {
 
   it('renders options correctly', () => {
     const { getByRole, getByText } = render(
-      <DisplayOptions defaultSelected={defaultSelected} options={options} onSelected={mockOnSelected} />
+      <DisplayOptions defaultSelected={defaultSelected} options={[options]} onSelected={mockOnSelected} />
     );
 
     const selectElement = getByRole('button');
@@ -102,7 +102,7 @@ describe('DisplayOptions', () => {
 
   it('calls selectDisplayOption function on selecting an option', () => {
     const { getByRole, getByText } = render(
-      <DisplayOptions defaultSelected={defaultSelected} options={options} onSelected={mockOnSelected} />
+      <DisplayOptions defaultSelected={defaultSelected} options={[options]} onSelected={mockOnSelected} />
     );
     const selectElement = getByRole('button');
     fireEvent.click(selectElement);

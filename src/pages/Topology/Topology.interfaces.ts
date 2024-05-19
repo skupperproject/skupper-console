@@ -39,7 +39,6 @@ export interface DisplaySelectProps {
   value: string;
   label: string;
   isDisabled?: Function;
-  addSeparator?: boolean;
 }
 
 export interface DisplayOptions {

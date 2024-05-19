@@ -304,14 +304,15 @@ describe('Topology Process', () => {
     });
 
     // the service select load data asyncronously compared to the rest of the view
-    expect(screen.queryByText(TopologyLabels.DisplayResourcesNoData)).toBeInTheDocument();
+    const placeHolderText = `0 services selected`;
+    expect(screen.queryByPlaceholderText(placeHolderText)).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByText(TopologyLabels.DisplayResourcesNoData)).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText(placeHolderText)).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel)).toBeInTheDocument();
-    await eventUser.click(screen.getByText(TopologyLabels.DisplayServicesDefaultLabel));
+    expect(screen.getByPlaceholderText(`${serviceResults.length} services selected`)).toBeInTheDocument();
+    await eventUser.click(screen.getByPlaceholderText(`${serviceResults.length} services selected`));
     await eventUser.click(await screen.findByText(serviceResults[0].name));
 
     expect(mockHandleSelected).toHaveBeenCalledWith();

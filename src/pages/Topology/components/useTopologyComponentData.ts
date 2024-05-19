@@ -35,7 +35,7 @@ const useTopologyComponentData = ({ idSelected }: UseTopologyDataProps) => {
   let filteredPairs = componentPairs;
   let filteredComponents = components.results;
 
-  if (idSelected) {
+  if (idSelected?.length) {
     filteredPairs = filteredPairs.filter(
       (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
     );

@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 
-import { Divider } from '@patternfly/react-core';
+import { Divider, SelectGroup } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';
@@ -13,7 +13,7 @@ interface DisplayUseOptionsProps {
 }
 
 interface DisplayOptionsProps extends DisplayUseOptionsProps {
-  options: DisplaySelectProps[];
+  options: DisplaySelectProps[][];
   optionsDisabled?: Record<string, boolean>;
 }
 
@@ -70,12 +70,17 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
       selections={displayOptionsSelected}
       placeholderText={TopologyLabels.DisplayPlaceholderText}
       isCheckboxSelectionBadgeHidden
+      isGrouped
     >
-      {options.map(({ key, value, label, addSeparator }) => (
-        <SelectOption key={key} value={value} isDisabled={optionsDisabled[value]}>
-          {label}
-          {addSeparator && <Divider />}
-        </SelectOption>
+      {options.map((group, index) => (
+        <SelectGroup key={index}>
+          {<Divider />}
+          {group.map(({ key, value, label }) => (
+            <SelectOption key={key} value={value} isDisabled={optionsDisabled[value]}>
+              {label}
+            </SelectOption>
+          ))}
+        </SelectGroup>
       ))}
     </Select>
   );
