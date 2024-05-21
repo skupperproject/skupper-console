@@ -103,7 +103,7 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   );
 
   return (
-    <>
+    <div id="sk-update-data-button">
       <Select
         isOpen={isSelectOpen}
         onSelect={handleSelectRefreshInterval}
@@ -131,7 +131,7 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
       >
         <SyncIcon />
       </Button>
-    </>
+    </div>
   );
 };
 
