@@ -1,4 +1,4 @@
-import { FC, FormEvent, Ref, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, FormEvent, Ref, useCallback, useRef, useState } from 'react';
 
 import {
   Button,
@@ -43,10 +43,6 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
 
   function handleToggleMenu() {
     setIsOpen(!isOpen);
-
-    setTimeout(() => {
-      textInputRef.current?.focus();
-    }, 10);
   }
 
   function handleClear() {
@@ -78,12 +74,6 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
     setInputValue(selection);
     filterValueRef.current = selection;
   };
-
-  useEffect(() => {
-    if (inputValue && filterValueRef.current && !isOpen) {
-      setIsOpen(true);
-    }
-  }, [inputValue, isOpen]);
 
   const selectOptions = (options || []).filter(
     ({ name }) =>

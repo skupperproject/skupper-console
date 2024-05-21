@@ -33,7 +33,7 @@ export interface GraphCombo {
   style?: ModelStyle;
 }
 
-export interface GraphEdgeMetrics {
+interface GraphEdgeMetrics {
   protocol: string | undefined;
   bytes: number | undefined;
   byteRate: number | undefined;

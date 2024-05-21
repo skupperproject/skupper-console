@@ -23,7 +23,7 @@ import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface ToolbarProps {
-  displayOptions?: DisplaySelectProps[];
+  displayOptions?: DisplaySelectProps[][];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
   showOnlyNeighbours?: boolean;
@@ -42,7 +42,7 @@ interface ToolbarProps {
 }
 
 const TopologyToolbar: FC<ToolbarProps> = function ({
-  displayOptions = [],
+  displayOptions = [[]],
   onDisplayOptionSelected,
   defaultDisplayOptionsSelected = [],
   showOnlyNeighbours,
@@ -170,10 +170,10 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
 
 export default TopologyToolbar;
 
-export const areMetricAvailable = (displayOptionsSelected: string[] = []) =>
+const areMetricAvailable = (displayOptionsSelected: string[] = []) =>
   displayOptionsSelected?.includes(SHOW_LINK_BYTES) ||
   displayOptionsSelected?.includes(SHOW_LINK_BYTERATE) ||
   displayOptionsSelected?.includes(SHOW_LINK_LATENCY);
 
-export const isRotateOptionActive = (displayOptionsSelected: string[] = []) =>
+const isRotateOptionActive = (displayOptionsSelected: string[] = []) =>
   areMetricAvailable(displayOptionsSelected) || displayOptionsSelected?.includes(SHOW_LINK_PROTOCOL);

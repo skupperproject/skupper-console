@@ -1,4 +1,4 @@
-import { MouseEvent as ReactMouseEvent, useRef, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
@@ -34,6 +34,26 @@ const Topology = function () {
   const ids = !TopologyController.arePairIds(idsString.current)
     ? TopologyController.transformStringIdsToIds(idsString.current)
     : undefined;
+
+  useLayoutEffect(() => {
+    //Path global update button position to be alligned with the current title
+    const skUpdateButton = document.querySelector('#sk-update-data-button') as HTMLButtonElement | null;
+
+    if (!skUpdateButton) {
+      return;
+    }
+
+    const oldTop = skUpdateButton.offsetTop;
+
+    skUpdateButton.style.position = 'absolute';
+    skUpdateButton.style.top = `12px`;
+    skUpdateButton.style.right = '0px';
+
+    return () => {
+      skUpdateButton.style.position = 'relative';
+      skUpdateButton.style.top = `${oldTop}px`;
+    };
+  });
 
   return (
     <MainContainer

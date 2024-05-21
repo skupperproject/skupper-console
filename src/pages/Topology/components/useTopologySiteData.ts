@@ -68,7 +68,7 @@ const useTopologySiteData = ({
   let filteredPairs = sitesPairs;
   let filteredSites = sites;
 
-  if (idSelected) {
+  if (idSelected?.length) {
     if (filteredPairs) {
       filteredPairs = filteredPairs.filter(
         (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)

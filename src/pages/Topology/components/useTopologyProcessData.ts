@@ -61,7 +61,7 @@ const useTopologyProcessData = ({
   let filteredPairs = processesPairs;
   let filteredProcesses = processes;
 
-  if (idSelected) {
+  if (idSelected?.length) {
     filteredPairs = filteredPairs.filter(
       (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
     );

@@ -65,6 +65,14 @@ describe('TopologySite', () => {
     jest.restoreAllMocks();
   });
 
+  it('should display with idSelected', async () => {
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    await eventUser.click(screen.getByText('onClickNode'));
+  });
+
   it('should clicking on a node', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
@@ -140,8 +148,7 @@ describe('TopologySite', () => {
       .querySelector('input[type="checkbox') as HTMLInputElement;
 
     await eventUser.click(checkbox);
-
-    expect(handleShowOnlyNeighbours).toHaveBeenCalled();
+    expect(handleShowOnlyNeighbours).toHaveBeenCalledWith(true);
   });
 
   it('should update moveToNodeSelected state on checkbox click', async () => {
@@ -168,6 +175,6 @@ describe('TopologySite', () => {
       .querySelector('input[type="checkbox') as HTMLInputElement;
 
     await eventUser.click(checkbox);
-    expect(handleMoveToNodeSelectedChecked).toHaveBeenCalled();
+    expect(handleMoveToNodeSelectedChecked).toHaveBeenCalledWith(true);
   });
 });
