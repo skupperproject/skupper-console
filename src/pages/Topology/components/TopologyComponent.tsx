@@ -84,7 +84,6 @@ const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<Grap
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             onSaveTopology={handleSavePositions}
-            linkToPage={ComponentRoutesPaths.ProcessGroups}
             resourceIdSelected={nodeIdSelected}
             resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}

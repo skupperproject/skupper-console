@@ -1,10 +1,13 @@
-import { MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useRef, useState } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import TopologyComponent from '../components/TopologyComponent';
@@ -13,6 +16,11 @@ import TopologySite from '../components/TopologySite';
 import { TopologyController } from '../services';
 import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
+const links: Record<string, { linkToPage: string; linkLabel: string }> = {
+  [TopologyViews.Sites]: { linkToPage: SitesRoutesPaths.Sites, linkLabel: TopologyLabels.ListView },
+  [TopologyViews.ProcessGroups]: { linkToPage: ComponentRoutesPaths.ProcessGroups, linkLabel: TopologyLabels.ListView },
+  [TopologyViews.Processes]: { linkToPage: ProcessesRoutesPaths.Processes, linkLabel: TopologyLabels.ListView }
+};
 const Topology = function () {
   const [searchParams] = useSearchParams();
 
@@ -35,26 +43,6 @@ const Topology = function () {
     ? TopologyController.transformStringIdsToIds(idsString.current)
     : undefined;
 
-  useLayoutEffect(() => {
-    //Path global update button position to be alligned with the current title
-    const skUpdateButton = document.querySelector('#sk-update-data-button') as HTMLButtonElement | null;
-
-    if (!skUpdateButton) {
-      return;
-    }
-
-    const oldTop = skUpdateButton.offsetTop;
-
-    skUpdateButton.style.position = 'absolute';
-    skUpdateButton.style.top = `12px`;
-    skUpdateButton.style.right = '0px';
-
-    return () => {
-      skUpdateButton.style.position = 'relative';
-      skUpdateButton.style.top = `${oldTop}px`;
-    };
-  });
-
   return (
     <MainContainer
       dataTestId={getTestsIds.topologyView()}
@@ -62,6 +50,9 @@ const Topology = function () {
       title={TopologyLabels.Topology}
       description={TopologyLabels.Description}
       hasMainContentPadding
+      link={links[tabSelected].linkToPage}
+      linkLabel={links[tabSelected].linkLabel}
+      iconName="listIcon"
       navigationComponent={
         <Tabs activeKey={tabSelected} onSelect={handleChangeTab}>
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />

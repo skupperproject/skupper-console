@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react';
 
-import { Icon, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Button, Icon, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { ListIcon, TopologyIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
@@ -16,9 +16,11 @@ const NavigationViewLink: FC<{ link: string; linkLabel: string; iconName?: 'topo
 }) {
   return (
     <TextContent>
-      <Link to={link} style={{ whiteSpace: 'nowrap' }}>
+      <Link to={link} style={{ whiteSpace: 'nowrap' }} title={linkLabel}>
         <Text component={TextVariants.p}>
-          <Icon isInline>{icons[iconName]}</Icon> {linkLabel}
+          <Button>
+            <Icon isInline>{icons[iconName]}</Icon>
+          </Button>
         </Text>
       </Link>
     </TextContent>

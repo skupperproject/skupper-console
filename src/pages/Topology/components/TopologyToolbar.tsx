@@ -4,7 +4,6 @@ import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Checkbox, Button, T
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 
 import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
-import NavigationViewLink from '@core/components/NavigationViewLink';
 
 import DisplayOptions from './DisplayOptions';
 import DisplayResources, { ResourcesOptionsProps } from './DisplayResources';
@@ -34,7 +33,6 @@ interface ToolbarProps {
   onServiceSelected?: (ids: string[] | undefined) => void;
   onLoadTopology?: () => void;
   onSaveTopology?: () => void;
-  linkToPage: string;
   resourceIdSelected?: string;
   resourceOptions: ResourcesOptionsProps[];
   onResourceSelected?: (id: string | undefined) => void;
@@ -53,7 +51,6 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
   onServiceSelected,
   onLoadTopology,
   onSaveTopology,
-  linkToPage,
   resourceIdSelected,
   resourceOptions,
   resourcePlaceholder,
@@ -159,10 +156,6 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
             </Button>
           </ToolbarItem>
         )}
-
-        <ToolbarItem align={{ default: 'alignRight' }}>
-          <NavigationViewLink link={linkToPage} linkLabel={TopologyLabels.ListView} iconName="listIcon" />
-        </ToolbarItem>
       </ToolbarContent>
     </Toolbar>
   );

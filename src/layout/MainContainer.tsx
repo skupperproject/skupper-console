@@ -11,9 +11,13 @@ import {
   Text,
   TextContent,
   TextVariants,
-  Title
+  Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem
 } from '@patternfly/react-core';
 
+import SkUpdateDataButton from '@core/components/SkUpdateDataButton';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
@@ -28,6 +32,7 @@ interface MainContainerProps {
   title?: string;
   link?: string;
   linkLabel?: string;
+  iconName?: 'topologyIcon' | 'listIcon';
   description?: string;
   isPlain?: boolean;
   hasMainContentPadding?: boolean;
@@ -40,6 +45,7 @@ const MainContainer: FC<MainContainerProps> = function ({
   title,
   link,
   linkLabel = TopologyLabels.TopologyView,
+  iconName = 'topologyIcon',
   description,
   hasMainContentPadding = false,
   navigationComponent,
@@ -50,13 +56,30 @@ const MainContainer: FC<MainContainerProps> = function ({
       <PageGroup data-testid={dataTestId}>
         {title && (
           <PageSection role="sk-heading" variant={PageSectionVariants.light}>
-            <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+            <Flex
+              justifyContent={{ default: 'justifyContentSpaceBetween' }}
+              alignItems={{ default: 'alignItemsFlexStart' }}
+            >
               <TextContent>
                 <Title headingLevel="h1">{title}</Title>
                 {description && <Text component={TextVariants.p}>{description}</Text>}
               </TextContent>
               <Flex>
-                <FlexItem>{link && <NavigationViewLink link={link} linkLabel={linkLabel} />}</FlexItem>
+                <FlexItem>
+                  <Toolbar style={{ padding: 0 }}>
+                    <ToolbarContent style={{ padding: 0 }}>
+                      <ToolbarItem id="custom-element">
+                        <SkUpdateDataButton />
+                      </ToolbarItem>
+                      {link && <ToolbarItem variant="separator" />}
+                      {link && (
+                        <ToolbarItem>
+                          {<NavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />}
+                        </ToolbarItem>
+                      )}
+                    </ToolbarContent>
+                  </Toolbar>
+                </FlexItem>
               </Flex>
             </Flex>
           </PageSection>

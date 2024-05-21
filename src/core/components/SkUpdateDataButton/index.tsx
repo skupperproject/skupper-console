@@ -1,4 +1,4 @@
-import { FC, useMemo, MouseEvent as ReactMouseEvent, useState, useCallback, Ref, useRef } from 'react';
+import { FC, useMemo, MouseEvent as ReactMouseEvent, useState, useCallback, Ref, useRef, useEffect } from 'react';
 
 import {
   Button,
@@ -12,14 +12,23 @@ import {
 import { SyncIcon } from '@patternfly/react-icons';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 
+import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+
+type validIntervals = 'Refresh off' | '15s' | '30s' | '60s' | '120s';
+
+interface RefreshDataIntervalProps {
+  key: validIntervals;
+  value: number;
+}
+
 interface SkUpdateDataButtonProps {
   isLoading?: boolean;
   onClick?: Function;
   onRefreshIntervalSelected?: Function;
-  refreshIntervalDefault?: number;
+  refreshIntervalDefault?: validIntervals;
 }
 
-export const refreshDataIntervalMap = [
+export const refreshDataIntervalMap: RefreshDataIntervalProps[] = [
   {
     key: 'Refresh off',
     value: 0
@@ -42,6 +51,8 @@ export const refreshDataIntervalMap = [
   }
 ];
 
+const REFRESH_INTERVAL_KEY = 'refreshIntervalSelected';
+
 const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   onClick,
   onRefreshIntervalSelected,
@@ -51,9 +62,10 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   const fetchNumber = useIsFetching();
 
   const [isSelectOpen, setSelectOpen] = useState(false);
-  const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string | undefined>(
-    findRefreshDataIntervalLabelFromValue(refreshIntervalDefault)
+  const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string>(
+    getDataFromSession(REFRESH_INTERVAL_KEY) || refreshIntervalDefault || refreshDataIntervalMap[0].key
   );
+
   const refreshIntervalId = useRef<number>();
 
   const refreshIntervalOptions = useMemo(
@@ -82,25 +94,31 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
       const refreshDataIntervalSelected = selection as string;
 
       setSelectIntervalSelected(refreshDataIntervalSelected);
+      storeDataToSession('refreshIntervalSelected', refreshDataIntervalSelected);
+
       setSelectOpen(false);
-
-      const refreshInterval = findRefreshDataIntervalValueFromLabel(refreshDataIntervalSelected);
-      clearInterval(refreshIntervalId.current);
-
-      if (refreshInterval) {
-        refreshIntervalId.current = window.setInterval(() => {
-          revalidateLiveQueries();
-        }, refreshInterval);
-
-        revalidateLiveQueries();
-      }
 
       if (onRefreshIntervalSelected) {
         onRefreshIntervalSelected(findRefreshDataIntervalValueFromLabel(refreshDataIntervalSelected));
       }
     },
-    [onRefreshIntervalSelected, revalidateLiveQueries]
+    [onRefreshIntervalSelected]
   );
+
+  useEffect(() => {
+    const refreshInterval = findRefreshDataIntervalValueFromLabel(refreshIntervalSelected);
+    clearInterval(refreshIntervalId.current);
+
+    if (refreshInterval) {
+      refreshIntervalId.current = window.setInterval(() => {
+        revalidateLiveQueries();
+      }, refreshInterval);
+
+      revalidateLiveQueries();
+    }
+
+    return () => clearInterval(refreshIntervalId.current);
+  }, [refreshIntervalSelected, revalidateLiveQueries]);
 
   return (
     <div id="sk-update-data-button">
@@ -139,12 +157,4 @@ export default SkUpdateDataButton;
 
 function findRefreshDataIntervalValueFromLabel(value: string | undefined): number {
   return refreshDataIntervalMap.find(({ key }) => key === value)?.value || 0;
-}
-
-function findRefreshDataIntervalLabelFromValue(valueSelected: number | undefined) {
-  return (
-    // value !== refreshDataIntervalMap[0].value. We don't want to show the label "off" when we select this value from the button
-    refreshDataIntervalMap.find(({ value }) => value === valueSelected && value !== refreshDataIntervalMap[0].value)
-      ?.key || ''
-  );
 }
