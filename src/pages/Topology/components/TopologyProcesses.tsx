@@ -214,7 +214,6 @@ const TopologyProcesses: FC<{
             onServiceSelected={handleServiceSelectedWrapper}
             onLoadTopology={handleLoadPositions}
             onSaveTopology={handleSavePositions}
-            linkToPage={ProcessesRoutesPaths.Processes}
             resourceIdSelected={nodeIdSelected}
             resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
