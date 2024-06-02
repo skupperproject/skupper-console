@@ -22,7 +22,7 @@ export enum ServicesLabels {
   TCP = 'TCP',
   Description = 'Collection of processes (servers) that are exposed across the Application network, along with their respective connections to the processes (clients) they communicate with',
   NoMetricSourceProcessFilter = 'No Clients',
-  ActiveConnections = 'Live connections',
+  ActiveConnections = 'Open connections',
   OldConnections = 'Connection history',
   TcpTrafficTx = 'Outbound traffic ',
   TcpTrafficRx = 'Inbound traffic',
@@ -39,6 +39,6 @@ export enum ServicesLabels {
   SankeyChartDescription = 'Visualizing relationships and the distribution among processes and sites',
   Name = 'Address',
   Protocol = 'Protocol',
-  CurrentFlowPairs = 'Tcp live connections',
+  CurrentFlowPairs = 'Tcp open connections',
   TotalFLowPairs = 'Total'
 }
