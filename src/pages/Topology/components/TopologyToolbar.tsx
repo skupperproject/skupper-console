@@ -3,14 +3,11 @@ import { FC } from 'react';
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Checkbox, Button, Tooltip } from '@patternfly/react-core';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 
-import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
-
 import DisplayOptions from './DisplayOptions';
 import DisplayResources, { ResourcesOptionsProps } from './DisplayResources';
 import DisplayServices from './DisplayServices';
 import {
   ROTATE_LINK_LABEL,
-  SHOW_DEPLOYMENTS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
@@ -63,8 +60,7 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
     [SHOW_LINK_REVERSE_LABEL]:
       defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable(defaultDisplayOptionsSelected),
     [ROTATE_LINK_LABEL]:
-      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !isRotateOptionActive(defaultDisplayOptionsSelected),
-    [SHOW_DEPLOYMENTS]: resourceOptions.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION
+      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !isRotateOptionActive(defaultDisplayOptionsSelected)
   };
 
   return (

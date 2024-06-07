@@ -1,4 +1,4 @@
-import { CUSTOM_ITEMS_NAMES } from '@core/components/Graph/Graph.constants';
+import { CustomItemsProps } from '@core/components/Graph/Graph.interfaces';
 
 import { TopologyLabels, TopologyRoutesPaths } from './Topology.enum';
 import { DisplaySelectProps } from './Topology.interfaces';
@@ -8,7 +8,6 @@ export const TopologyPaths = {
   name: TopologyLabels.Topology
 };
 
-export const SHOW_SITE_KEY = 'showSite';
 export const SHOW_LINK_PROTOCOL = 'show-link-protocol';
 export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';
@@ -19,11 +18,6 @@ export const ROTATE_LINK_LABEL = 'show-link-label-rotated';
 
 export const displayOptionsForProcesses: DisplaySelectProps[][] = [
   [
-    {
-      key: SHOW_SITE_KEY,
-      value: SHOW_SITE_KEY,
-      label: TopologyLabels.CheckboxShowSite
-    },
     {
       key: SHOW_LINK_PROTOCOL,
       value: SHOW_LINK_PROTOCOL,
@@ -111,7 +105,8 @@ export const displayOptionsForSites: DisplaySelectProps[][] = [
   ]
 ];
 
-export const shape = {
-  bound: CUSTOM_ITEMS_NAMES.nodeWithBadges,
-  unbound: CUSTOM_ITEMS_NAMES.unexposeddNodeWithBadges
+export const shape: Record<string, CustomItemsProps> = {
+  bound: 'SkNode',
+  unbound: 'SkNodeUnexposed',
+  remote: 'SkNodeRemote'
 };

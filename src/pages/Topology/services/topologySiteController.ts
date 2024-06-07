@@ -3,7 +3,6 @@ import { LinkResponse, SitePairsResponse, SiteResponse } from '@API/REST.interfa
 import kubernetesIcon from '@assets/kubernetes.svg';
 import podmanIcon from '@assets/podman.png';
 import siteIcon from '@assets/site.svg';
-import { CUSTOM_ITEMS_NAMES } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
 
@@ -18,8 +17,13 @@ interface TopologySiteControllerProps {
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
   metrics: TopologyMetrics | null;
-  showLinkLabelReverse: boolean;
-  rotateLabel: boolean;
+  options: {
+    showLinkBytes: boolean;
+    showLinkByteRate: boolean;
+    showLinkLatency: boolean;
+    showLinkLabelReverse: boolean;
+    rotateLabel: boolean;
+  };
 }
 
 const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
@@ -48,14 +52,13 @@ const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | nu
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
   entities.map(({ identity, name, siteVersion, platform }) => {
-    const img = platform && platformsMap[platform] ? platformsMap[platform] : siteIcon;
+    const iconSrc = platform && platformsMap[platform] ? platformsMap[platform] : siteIcon;
     const label = siteVersion ? `${name} (${siteVersion})` : name;
 
     return convertEntityToNode({
       id: identity,
       label,
-      iconFileName: img,
-      enableBadge1: false
+      iconSrc
     });
   });
 
@@ -69,7 +72,7 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
         source: sourceId,
         target: targetId,
         label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : '',
-        type: CUSTOM_ITEMS_NAMES.siteEdge
+        type: 'SkSiteEdge'
       }
     ])
   );
@@ -82,14 +85,8 @@ export const TopologySiteController = {
     routerLinks,
     sitesPairs,
     metrics,
-    showLinkLabelReverse,
-    rotateLabel
+    options
   }: TopologySiteControllerProps) => {
-    const options = {
-      showLinkLabelReverse,
-      rotateLabel
-    };
-
     let edges: GraphEdge[] = [];
 
     if (sitesPairs) {

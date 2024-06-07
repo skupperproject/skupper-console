@@ -15,7 +15,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "noEmit": false,
+    "noEmit": true,
     "skipLibCheck": true,
     "downlevelIteration": true,
     "strictNullChecks": true,

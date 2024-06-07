@@ -33,3 +33,6 @@ export const MAX_NODE_COUNT_WITHOUT_AGGREGATION = Number(process.env.MAX_NODE_CO
 export const IDS_GROUP_SEPARATOR = '~';
 export const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
 export const PAIR_SEPARATOR = '-to-';
+
+export const MIN_DRAWER_WIDTH = 450;
+export const MAX_DRAWER_WIDTH = 800;

@@ -1,19 +1,17 @@
-import { ModelStyle } from '@antv/g6';
-
 import { PrometheusMetric, PrometheusLabels } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { CustomItemsProps } from '@core/components/Graph/Graph.interfaces';
 
 export interface Entity {
   id: string;
-  comboId?: string;
+  combo?: string;
   comboName?: string;
   groupId?: string;
   groupName?: string;
   label: string;
-  iconFileName: string;
-  iconProps?: { show: boolean; width: number; height: number };
-  nodeConfig?: ModelStyle;
-  enableBadge1: boolean;
+  iconSrc: string;
+  type?: CustomItemsProps;
+  groupedNodeCount?: number;
 }
 
 export interface TopologyMetrics {
@@ -53,6 +51,7 @@ export interface DisplayOptions {
 export interface NodeOrEdgeListProps {
   ids?: string[];
   items: ProcessResponse[] | ProcessPairsResponse[];
+  metrics: TopologyMetrics | null;
   modalType: 'process' | 'processPair';
 }
 

@@ -1,7 +1,6 @@
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import processIcon from '@assets/process.svg';
 import skupperIcon from '@assets/skupper.svg';
-import { DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
@@ -14,12 +13,16 @@ interface TopologyProcessControllerProps {
   processes: ProcessResponse[];
   processesPairs: ProcessPairsResponse[];
   metrics: TopologyMetrics | null;
-  showLinkLabelReverse: boolean;
-  rotateLabel: boolean;
-  showSites: boolean;
-  showLinkProtocol: boolean;
-  showDeployments?: boolean;
   serviceIdsSelected?: string[];
+  options: {
+    showLinkBytes: boolean;
+    showLinkByteRate: boolean;
+    showLinkLatency: boolean;
+    showLinkLabelReverse: boolean;
+    rotateLabel: boolean;
+    showLinkProtocol: boolean;
+    showDeployments: boolean;
+  };
 }
 
 const addProcessMetricsToEdges = (
@@ -42,27 +45,25 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
     ({
       identity,
       name: label,
-      parent: comboId,
+      parent: combo,
       parentName: comboName,
       groupIdentity,
       groupName,
       processRole: role,
       processBinding
     }) => {
-      const img = role === 'internal' ? skupperIcon : processIcon;
-
-      const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
+      const iconSrc = role === 'internal' ? skupperIcon : processIcon;
+      const type = shape[role === 'remote' ? role : processBinding];
 
       return convertEntityToNode({
         id: identity,
-        comboId,
+        combo,
         comboName,
         label,
-        iconFileName: img,
-        nodeConfig,
+        iconSrc,
+        type,
         groupId: groupIdentity,
-        groupName,
-        enableBadge1: false
+        groupName
       });
     }
   );
@@ -73,19 +74,9 @@ export const TopologyProcessController = {
     processes,
     processesPairs,
     metrics,
-    showLinkLabelReverse,
-    rotateLabel,
-    showSites,
-    showLinkProtocol,
-    showDeployments = false,
-    serviceIdsSelected
+    serviceIdsSelected,
+    options
   }: TopologyProcessControllerProps) => {
-    const options = {
-      showLinkProtocol,
-      showLinkLabelReverse,
-      rotateLabel
-    };
-
     let pPairs = processesPairs;
     let p = processes;
 
@@ -120,8 +111,7 @@ export const TopologyProcessController = {
       protocolByProcessPairsMap
     );
 
-    // Group nodes from the same combo and edges when nodes are > MAX_NODE_COUNT_WITHOUT_AGGREGATION
-    if (showDeployments) {
+    if (options.showDeployments) {
       processNodes = groupNodes(processNodes);
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
@@ -134,11 +124,8 @@ export const TopologyProcessController = {
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
       })),
-      edges: TopologyController.configureEdges(processPairEdges, options).map((edge) => ({
-        ...edge,
-        style: { cursor: 'pointer' } // clickable
-      })),
-      combos: showSites ? TopologyController.getCombosFromNodes(processNodes) : []
+      edges: TopologyController.configureEdges(processPairEdges, options),
+      combos: TopologyController.getCombosFromNodes(processNodes)
     };
   }
 };

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { Graph } from '@antv/g6-pc';
+import { Graph } from '@antv/g6';
 import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { ExpandArrowsAltIcon, ExpandIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
@@ -15,10 +15,6 @@ const ZOOM_RATIO_OUT = 1.2;
 const ZOOM_RATIO_IN = 0.8;
 
 const LEGEND_LABEL_NAME = 'Legend';
-const ZOOM_CONFIG = {
-  duration: 200,
-  easing: 'easeCubic'
-};
 
 const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
@@ -31,29 +27,34 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
     handleZoom(ZOOM_RATIO_IN);
   };
 
-  const handleZoom = (zoom: number) => {
-    const nodeCount = graphInstance.getNodes().length;
-    const centerPoint = graphInstance.getGraphCenterPoint();
+  const handleZoom = async (zoom: number) => {
+    const centerPoint = graphInstance.getViewportCenter();
 
-    graphInstance.zoom(zoom, centerPoint, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
+    await graphInstance.zoomBy(zoom, undefined, centerPoint);
   };
 
-  const handleFitView = () => {
-    const nodeCount = graphInstance.getNodes().length;
+  const handleFitView = async () => {
+    const container = GraphController.getParent();
+    graphInstance?.resize(container.clientWidth, container.clientHeight);
 
-    graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
+    // TODO; G6 bug -> need to duplicate the call
+    await graphInstance.fitView(undefined);
+    await graphInstance.fitView(undefined);
   };
 
-  const handleCenter = () => {
-    graphInstance.fitCenter(false);
+  const handleCenter = async () => {
+    const container = GraphController.getParent();
+    graphInstance?.resize(container.clientWidth, container.clientHeight);
+
+    await graphInstance.fitCenter();
   };
 
-  const handleCleanAllGraphConfigurations = () => {
-    GraphController.cleanAllLocalNodePositions(graphInstance.getNodes(), true);
+  const handleCleanAllGraphConfigurations = async () => {
+    GraphController.cleanAllLocalNodePositions(graphInstance.getNodeData(), true);
     GraphController.removeAllNodePositionsFromLocalStorage();
 
-    graphInstance.layout();
-    setTimeout(handleFitView, 250);
+    await graphInstance.render();
+    await handleFitView();
   };
 
   return (
