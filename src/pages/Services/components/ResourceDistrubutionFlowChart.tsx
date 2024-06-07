@@ -47,15 +47,15 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
       processPairs
     ],
     queryFn: () =>
-      processPairs?.results.length
+      processPairs.results.length
         ? PrometheusApi.fethResourcePairsByService({
             serviceName,
             clientType: clientResourceSelected,
             serverType: serverResourceSelected,
-            sourceProcesses: processPairs?.results
+            sourceProcesses: processPairs.results
               .map(({ sourceName }) => sourceName)
               .join(prometheusProcessNameseparator),
-            destProcesses: processPairs?.results
+            destProcesses: processPairs.results
               .map(({ destinationName }) => destinationName)
               .join(prometheusProcessNameseparator)
           })

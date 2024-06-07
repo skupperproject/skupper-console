@@ -4,6 +4,17 @@ import { ServiceResponse } from '@API/REST.interfaces';
 import { VarColors } from '@config/colors';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
 
+interface SKSankeyNodeProps {
+  id: string;
+  nodeColor?: string;
+}
+
+interface SKSankeyLinkProps {
+  source: string;
+  target: string;
+  value: number;
+}
+
 export const ServicesController = {
   extendServicesWithActiveAndTotalFlowPairs: (
     services: ServiceResponse[],
@@ -34,7 +45,7 @@ export const ServicesController = {
   convertToSankeyChartData: (servicePairs: PrometheusMetric<'vector'>[], withMetric = false) => {
     const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
 
-    const clients =
+    const clients: SKSankeyNodeProps[] =
       servicePairs?.map(({ metric }) => ({
         id: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
         nodeColor: metric.sourceProcess ? VarColors.Blue400 : undefined
@@ -46,14 +57,18 @@ export const ServicesController = {
         nodeColor: metric.destProcess ? VarColors.Blue400 : undefined
       })) || [];
 
-    const nodes = [...clients, ...servers].filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i);
+    const nodes = [...clients, ...servers]
+      .filter(({ id }) => id)
+      .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i) as SKSankeyNodeProps[];
 
     const links =
-      servicePairs.map(({ metric, value }) => ({
-        source: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
-        target: metric.destProcess || decomposePrometheusSiteLabel(metric.destSite),
-        value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
-      })) || [];
+      (servicePairs
+        .map(({ metric, value }) => ({
+          source: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
+          target: metric.destProcess || decomposePrometheusSiteLabel(metric.destSite),
+          value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
+        }))
+        .filter(({ source, target }) => source && target) as SKSankeyLinkProps[]) || [];
 
     return { nodes, links };
   }
