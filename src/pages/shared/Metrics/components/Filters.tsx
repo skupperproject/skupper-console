@@ -180,7 +180,9 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={sourceSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            decomposePrometheusSiteLabel(selectedFilters.sourceSite) || config.sourceSites?.placeholder,
+            selectedFilters.sourceSite
+              ? decomposePrometheusSiteLabel(selectedFilters.sourceSite)
+              : config.sourceSites?.placeholder,
             sourceSitesToggleRef,
             selectedFilterIsOpen.sourceSite,
             !!config.sourceSites?.disabled,
@@ -207,7 +209,9 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={destSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            decomposePrometheusSiteLabel(selectedFilters.destSite) || config.destSites?.placeholder,
+            selectedFilters.destSite
+              ? decomposePrometheusSiteLabel(selectedFilters.destSite)
+              : config.destSites?.placeholder,
             destSitesToggleRef,
             selectedFilterIsOpen.destSite,
             !!config.destSites?.disabled,

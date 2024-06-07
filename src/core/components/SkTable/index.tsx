@@ -211,15 +211,14 @@ const SkTable = function <T>({
                             isStickyColumn={isStickyColumn}
                             style={{ verticalAlign: 'middle' }}
                           >
-                            {Component && (
-                              <Component
-                                data={data}
-                                value={value}
-                                callback={callback}
-                                format={format && format(value)}
-                                fitContent={modifier === 'nowrap'}
-                              />
-                            )}
+                            {Component &&
+                              Component({
+                                data,
+                                value,
+                                callback,
+                                format: format && format(value),
+                                fitContent: modifier === 'nowrap'
+                              })}
                             {!Component && (
                               <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
                                 {(format && format(value)) || value}
