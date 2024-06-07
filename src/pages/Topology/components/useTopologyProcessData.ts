@@ -10,9 +10,6 @@ import { QueriesTopology } from '../Topology.enum';
 
 interface UseSiteTopologyProcessDataProps {
   idsSelected?: string[];
-  showBytes: boolean;
-  showByteRate: boolean;
-  showLatency: boolean;
 }
 
 const processesQueryParams = {
@@ -26,12 +23,7 @@ const metricQueryParams = {
   fetchLatency: { groupBy: 'sourceProcess, destProcess' }
 };
 
-const useTopologyProcessData = ({
-  idsSelected,
-  showBytes,
-  showByteRate,
-  showLatency
-}: UseSiteTopologyProcessDataProps) => {
+const useTopologyProcessData = ({ idsSelected }: UseSiteTopologyProcessDataProps) => {
   const [{ data: processes }, { data: processesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
@@ -46,12 +38,12 @@ const useTopologyProcessData = ({
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, showBytes, showByteRate, showLatency],
+        queryKey: [QueriesTopology.GetBytesByProcessPairs],
         queryFn: () =>
           TopologyController.getTopologyMetrics({
-            showBytes,
-            showByteRate,
-            showLatency,
+            showBytes: true,
+            showByteRate: true,
+            showLatency: true,
             params: metricQueryParams
           }),
         refetchInterval: UPDATE_INTERVAL

@@ -91,8 +91,13 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
     sitesPairs,
     routerLinks,
     metrics,
-    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+    options: {
+      showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
+      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
+      showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
+      showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
+      rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+    }
   });
 
   return (

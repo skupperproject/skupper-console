@@ -16,8 +16,8 @@ import {
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import { MAX_NODE_COUNT_WITHOUT_AGGREGATION } from '@config/config';
-import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
+import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
+import { LAYOUT_TOPOLOGY_COMBO, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
 import { GraphReactAdaptorProps, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -39,7 +39,6 @@ import {
   SHOW_LINK_LATENCY,
   SHOW_LINK_PROTOCOL,
   SHOW_LINK_REVERSE_LABEL,
-  SHOW_SITE_KEY,
   displayOptionsForProcesses
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
@@ -70,17 +69,14 @@ const TopologyProcesses: FC<{
     getDisplaySelectedFromLocalStorage
   } = useTopologyState({
     ids: processIds,
-    initDisplayOptionsEnabled: [SHOW_SITE_KEY],
+    initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS],
     displayOptionsEnabledKey: 'display-process-options'
   });
 
   const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
 
   const { processes, processesPairs, metrics } = useTopologyProcessData({
-    idsSelected: showOnlyNeighbours ? idsSelected : undefined,
-    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
+    idsSelected: showOnlyNeighbours ? idsSelected : undefined
   });
 
   const handleShowOnlyNeighboursChecked = useCallback(
@@ -164,25 +160,25 @@ const TopologyProcesses: FC<{
     toastRef.current?.addMessage(TopologyLabels.ToastLoad);
   }, [getServiceIdsFromLocalStorage, getDisplaySelectedFromLocalStorage]);
 
-  const showDeployments =
-    displayOptionsSelected.includes(SHOW_DEPLOYMENTS) ||
-    (!displayOptionsSelected.includes(SHOW_DEPLOYMENTS) && processes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION);
-
   const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
     idsSelected,
     processes,
     processesPairs,
     serviceIdsSelected,
     metrics,
-    showSites: displayOptionsSelected.includes(SHOW_SITE_KEY),
-    showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
-    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL),
-    showDeployments // a deployment is a group of processes in the same site that have the same function
+    options: {
+      showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
+      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
+      showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
+      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
+      showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
+      rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL),
+      showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
+    }
   });
 
   const panelContent = (
-    <DrawerPanelContent isResizable minSize="30%">
+    <DrawerPanelContent isResizable minSize={`${MIN_DRAWER_WIDTH}px`} maxSize={`${MAX_DRAWER_WIDTH}px`}>
       <DrawerHead>
         <Title headingLevel="h1">{TopologyLabels.TopologyModalTitle}</Title>
         <DrawerActions>
@@ -194,6 +190,7 @@ const TopologyProcesses: FC<{
           <ModalComponent
             ids={TopologyController.transformStringGroupIdsToGroupIds(modalType?.id)}
             items={modalType?.type === 'process' ? processes : processesPairs}
+            metrics={metrics}
             modalType={modalType.type}
           />
         )}
@@ -208,7 +205,7 @@ const TopologyProcesses: FC<{
           <TopologyToolbar
             displayOptions={displayOptionsForProcesses}
             onDisplayOptionSelected={handleDisplaySelected}
-            defaultDisplayOptionsSelected={[...displayOptionsSelected, showDeployments ? SHOW_DEPLOYMENTS : '']}
+            defaultDisplayOptionsSelected={displayOptionsSelected}
             showOnlyNeighbours={showOnlyNeighbours}
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
@@ -225,7 +222,7 @@ const TopologyProcesses: FC<{
           <Divider />
         </StackItem>
         <StackItem isFilled>
-          <Drawer isExpanded={!!modalType?.id}>
+          <Drawer isExpanded={!!modalType?.id} isInline>
             <DrawerContent panelContent={panelContent}>
               <DrawerContentBody>
                 <GraphComponent
@@ -234,7 +231,7 @@ const TopologyProcesses: FC<{
                   edges={edges}
                   combos={combos}
                   itemSelected={nodeIdSelected}
-                  layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+                  layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_COMBO}
                   moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
                   onClickNode={handleShowProcessDetails}
                   onClickEdge={handleShowProcessPairDetails}

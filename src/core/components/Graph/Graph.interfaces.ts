@@ -1,36 +1,25 @@
 import { MutableRefObject } from 'react';
 
-import { GraphData, LayoutConfig, ModelConfig, ModelStyle, ShapeStyle } from '@antv/g6';
-
 export interface GraphNode {
   id: string;
+  type?: CustomItemsProps;
   label: string;
-  comboId?: string;
+  combo?: string;
   comboName?: string;
   groupId?: string;
   groupName?: string;
   groupCount?: number;
-  type?: string;
-  enableBadge1?: boolean;
-  notificationValue?: number;
-  icon?: {
-    show?: boolean;
-    img?: string;
-    width?: number;
-    height?: number;
-  };
-  style?: Record<string, string>;
+  groupedNodeCount?: number;
   x?: number | undefined;
   y?: number | undefined;
-  fx?: number | undefined;
-  fy?: number | undefined;
   persistPositionKey?: string;
+  iconSrc: string;
 }
 
 export interface GraphCombo {
   id: string;
+  type?: CustomItemsProps;
   label: string;
-  style?: ModelStyle;
 }
 
 interface GraphEdgeMetrics {
@@ -45,14 +34,13 @@ interface GraphEdgeMetrics {
 
 export interface GraphEdge {
   id: string;
+  type?: CustomItemsProps;
   source: string;
   target: string;
   sourceName?: string;
   targetName?: string;
-  type?: string;
   label?: string;
-  labelCfg?: Record<string, unknown>;
-  style?: ShapeStyle;
+  labelRotate?: boolean;
   metrics?: GraphEdgeMetrics;
 }
 
@@ -65,12 +53,11 @@ export interface GraphReactAdaptorProps {
   edges: GraphEdge[];
   combos?: GraphCombo[];
   itemSelected?: string;
-  onClickCombo?: Function;
+  onClickCombo?: (id: string) => void;
   onClickNode?: (id: string) => void;
   onClickEdge?: (id: string) => void;
-  legendData?: GraphData;
   ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
-  layout?: LayoutConfig;
+  layout?: Function;
   moveToSelectedNode?: boolean;
 }
 
@@ -87,15 +74,12 @@ export interface LocalStorageData extends LocalStorageDataSavedPayload {
   id: string;
 }
 
-export interface NodeWithBadgesProps extends ModelConfig {
-  notificationValue?: number;
-  notificationColor?: string;
-  notificationFontSize?: number;
-}
-
-export interface ComboWithCustomLabel extends ModelConfig {
-  labelBgCfg?: {
-    fill?: string;
-    padding?: number[];
-  };
-}
+export type CustomItemsProps =
+  | 'SkDataEdge'
+  | 'SkSiteDataEdge'
+  | 'SkSiteEdge'
+  | 'SkLoopEdge'
+  | 'SkNode'
+  | 'SkNodeUnexposed'
+  | 'SkNodeRemote'
+  | 'SkCombo';
