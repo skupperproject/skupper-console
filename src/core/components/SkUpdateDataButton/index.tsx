@@ -59,7 +59,11 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   refreshIntervalDefault
 }) {
   const queryClient = useQueryClient();
-  const fetchNumber = useIsFetching();
+  const fetchNumber = useIsFetching({
+    type: 'active',
+    fetchStatus: 'fetching',
+    predicate: (query) => query.queryKey[0] !== 'QueriesGetUser' && query.queryKey[0] !== 'QueryLogout'
+  });
 
   const [isSelectOpen, setSelectOpen] = useState(false);
   const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string>(
@@ -120,6 +124,8 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
     return () => clearInterval(refreshIntervalId.current);
   }, [refreshIntervalSelected, revalidateLiveQueries]);
 
+  const isLoading = useMemo(() => fetchNumber > 0, [fetchNumber]);
+
   return (
     <div id="sk-update-data-button">
       <Select
@@ -145,7 +151,7 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
         data-testid="update-data-click"
         onClick={debounce(revalidateLiveQueries, 750)}
         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        isLoading={fetchNumber > 0}
+        isLoading={isLoading}
       >
         <SyncIcon />
       </Button>
