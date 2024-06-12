@@ -62,14 +62,14 @@ const useTopologyProcessData = ({
   let filteredProcesses = processes;
 
   if (idSelected?.length) {
-    filteredPairs = filteredPairs.filter(
-      (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
+    filteredPairs = filteredPairs.filter((edge) =>
+      idSelected.some((ids) => ids.includes(edge.sourceId) || ids.includes(edge.destinationId))
     );
 
     const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
     const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
 
-    filteredProcesses = processes.filter(({ identity }) => uniqueIds.includes(identity));
+    filteredProcesses = processes.filter(({ identity }) => uniqueIds.some((ids) => ids.includes(identity)));
   }
 
   return {
