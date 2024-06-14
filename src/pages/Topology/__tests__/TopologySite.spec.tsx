@@ -52,7 +52,7 @@ describe('TopologySite', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TopologySite
-            id={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
+            ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
             GraphComponent={MockGraphComponent}
           />
         </Suspense>
@@ -103,7 +103,7 @@ describe('TopologySite', () => {
     const handleSelected = jest.fn();
 
     jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
+      idsSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],
@@ -128,7 +128,7 @@ describe('TopologySite', () => {
     const handleShowOnlyNeighbours = jest.fn();
 
     jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
+      idsSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],
@@ -155,7 +155,7 @@ describe('TopologySite', () => {
     const handleMoveToNodeSelectedChecked = jest.fn();
 
     jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
+      idsSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
       showOnlyNeighbours: false,
       moveToNodeSelected: false,
       displayOptionsSelected: [],

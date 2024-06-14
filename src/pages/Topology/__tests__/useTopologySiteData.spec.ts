@@ -26,7 +26,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        idSelected: ['site1'],
+        idsSelected: ['site1'],
         showDataLink: true,
         showBytes: true,
         showByteRate: true,
@@ -59,7 +59,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        idSelected: ['site1'],
+        idsSelected: ['site1'],
         showDataLink: true,
         showBytes: true,
         showByteRate: true,
@@ -152,7 +152,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        idSelected: [],
+        idsSelected: [],
         showDataLink: true,
         showBytes: true,
         showByteRate: true,
@@ -182,7 +182,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        idSelected: ['site3'],
+        idsSelected: ['site3'],
         showDataLink: true,
         showBytes: true,
         showByteRate: true,

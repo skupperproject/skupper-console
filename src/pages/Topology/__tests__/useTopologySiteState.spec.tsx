@@ -10,21 +10,21 @@ describe('useTopologySiteState', () => {
   });
 
   it('should initialize with empty display options', () => {
-    const { result } = renderHook(() => useTopologyState({ id: undefined }));
+    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
 
     expect(result.current.displayOptionsSelected).toEqual([]);
   });
 
   it('should initialize with default display options', () => {
     const { result } = renderHook(() =>
-      useTopologyState({ id: undefined, initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_SITE_KEY] })
+      useTopologyState({ ids: undefined, initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_SITE_KEY] })
     );
 
     expect(result.current.displayOptionsSelected).toEqual([SHOW_ROUTER_LINKS, SHOW_SITE_KEY]);
   });
 
   it('should handle display options selection', () => {
-    const { result } = renderHook(() => useTopologyState({ id: undefined, displayOptionsEnabledKey: 'test-key' }));
+    const { result } = renderHook(() => useTopologyState({ ids: undefined, displayOptionsEnabledKey: 'test-key' }));
     const newDisplayOptions = ['new_option'];
 
     act(() => {
@@ -37,23 +37,23 @@ describe('useTopologySiteState', () => {
 
   it('sshould initialize the component with the correct selected id', () => {
     const { result } = renderHook(() =>
-      useTopologyState({ id: TopologyController.transformStringIdsToIds('site_id') })
+      useTopologyState({ ids: TopologyController.transformStringIdsToIds('site_id') })
     );
-    expect(result.current.idSelected).toEqual(['site_id']);
+    expect(result.current.idsSelected).toEqual(['site_id']);
   });
 
   it('should update the selected ID when a site is selected', () => {
-    const { result } = renderHook(() => useTopologyState({ id: undefined }));
+    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
 
     act(() => {
       result.current.handleSelected(TopologyController.transformStringIdsToIds('site_id'));
     });
 
-    expect(result.current.idSelected).toEqual(['site_id']);
+    expect(result.current.idsSelected).toEqual(['site_id']);
   });
 
   it('should handle show only neighbours', () => {
-    const { result } = renderHook(() => useTopologyState({ id: undefined }));
+    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
 
     act(() => {
       result.current.handleShowOnlyNeighbours(true);
@@ -63,7 +63,7 @@ describe('useTopologySiteState', () => {
   });
 
   it('should handle move to node selection', () => {
-    const { result } = renderHook(() => useTopologyState({ id: undefined }));
+    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
 
     act(() => {
       result.current.handleMoveToNodeSelectedChecked(true);

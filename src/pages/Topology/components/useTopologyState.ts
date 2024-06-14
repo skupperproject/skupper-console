@@ -3,11 +3,11 @@ import { useState, useCallback, startTransition } from 'react';
 import { TopologyController } from '../services';
 
 const useTopologyState = ({
-  id,
+  ids,
   initDisplayOptionsEnabled = [],
   displayOptionsEnabledKey = ''
 }: {
-  id?: string[];
+  ids?: string[];
   initDisplayOptionsEnabled?: string[];
   displayOptionsEnabledKey?: string;
 }) => {
@@ -15,12 +15,12 @@ const useTopologyState = ({
     TopologyController.loadDisplayOptionsFromLocalStorage(displayOptionsEnabledKey) || initDisplayOptionsEnabled;
 
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
-  const [idSelected, setIdSelected] = useState<string[] | undefined>(id);
+  const [idsSelected, setIdsSelected] = useState<string[] | undefined>(ids);
   const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
   const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
 
   const handleSelected = useCallback((selected?: string[]) => {
-    setIdSelected(selected);
+    setIdsSelected(selected);
   }, []);
 
   const handleShowOnlyNeighbours = useCallback((checked: boolean) => {
@@ -53,7 +53,7 @@ const useTopologyState = ({
   }, [displayOptionsEnabledKey, handleDisplaySelected]);
 
   return {
-    idSelected,
+    idsSelected,
     showOnlyNeighbours,
     moveToNodeSelected,
     displayOptionsSelected,

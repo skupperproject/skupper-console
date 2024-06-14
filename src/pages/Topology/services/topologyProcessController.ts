@@ -10,7 +10,7 @@ import { TopologyMetrics } from '../Topology.interfaces';
 import { TopologyController, convertEntityToNode, groupEdges, groupNodes } from '.';
 
 interface TopologyProcessControllerProps {
-  idSelected: string[] | undefined;
+  idsSelected: string[] | undefined;
   processes: ProcessResponse[];
   processesPairs: ProcessPairsResponse[];
   metrics: TopologyMetrics | null;
@@ -69,7 +69,7 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
 
 export const TopologyProcessController = {
   dataTransformer: ({
-    idSelected,
+    idsSelected,
     processes,
     processesPairs,
     metrics,
@@ -126,12 +126,10 @@ export const TopologyProcessController = {
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
 
-    const nodeIdSelected = TopologyController.transformIdsToStringIds(idSelected);
-
     return {
       // when the id selected comes from an other view the id is a single node but maybe this page has the option showDeployments == true.
       // In that case we need to find the processNode with ids aggregated where the single node is contained
-      nodeIdSelected: nodeIdSelected ? processNodes.find(({ id }) => id.includes(nodeIdSelected))?.id : undefined,
+      nodeIdSelected: findMatchedNode(processNodes, idsSelected),
       nodes: processNodes.map((node) => ({
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
@@ -144,3 +142,21 @@ export const TopologyProcessController = {
     };
   }
 };
+
+// Function to find the matched node based on the first node in idsSelected
+function findMatchedNode(processNodes: GraphNode[], idsSelected?: string[]) {
+  if (!idsSelected?.length) {
+    return undefined;
+  }
+
+  const nodeIdSelectedArray = idsSelected[0].split('~');
+
+  const processNode = processNodes.find(({ id }) => {
+    const nodeIds = id.split('~');
+    const nodeIdSet = new Set(nodeIds);
+
+    return nodeIdSelectedArray.every((nodeId) => nodeIdSet.has(nodeId));
+  });
+
+  return processNode?.id;
+}

@@ -61,7 +61,7 @@
       "parentName": "site 1",
       "imageName": "process op:v0.3.0",
       "groupName": "op",
-      "groupIdentity": "group-1",
+      "groupIdentity": "group-op",
       "hostName": "10.242.0.8",
       "sourceHost": "172.17.63.130",
       "processBinding": "bound",

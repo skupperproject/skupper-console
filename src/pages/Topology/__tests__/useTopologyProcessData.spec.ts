@@ -28,7 +28,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologyProcessData({
-        idSelected: ['process1'],
+        idsSelected: ['process1'],
         showBytes: true,
         showByteRate: true,
         showLatency: true
@@ -55,7 +55,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologyProcessData({
-        idSelected: [],
+        idsSelected: [],
         showBytes: true,
         showByteRate: true,
         showLatency: true
@@ -82,7 +82,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologyProcessData({
-        idSelected: ['process3'],
+        idsSelected: ['process3'],
         showBytes: true,
         showByteRate: true,
         showLatency: true
