@@ -65,9 +65,9 @@ const Topology = function () {
       }
       mainContentChildren={
         <>
-          {tabSelected === TopologyViews.Sites && <TopologySite id={ids} />}
-          {tabSelected === TopologyViews.ProcessGroups && <TopologyComponent id={ids} />}
-          {tabSelected === TopologyViews.Processes && <TopologyProcesses serviceIds={serviceIds} id={ids} />}
+          {tabSelected === TopologyViews.Sites && <TopologySite ids={ids} />}
+          {tabSelected === TopologyViews.ProcessGroups && <TopologyComponent ids={ids} />}
+          {tabSelected === TopologyViews.Processes && <TopologyProcesses serviceIds={serviceIds} ids={ids} />}
         </>
       }
     />

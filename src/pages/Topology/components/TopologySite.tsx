@@ -26,8 +26,8 @@ import {
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
-  id,
+const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+  ids,
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReac
   const toastRef = useRef<ToastExposeMethods>(null);
 
   const {
-    idSelected,
+    idsSelected,
     showOnlyNeighbours,
     moveToNodeSelected,
     displayOptionsSelected,
@@ -44,13 +44,13 @@ const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReac
     handleMoveToNodeSelectedChecked,
     handleDisplaySelected
   } = useTopologyState({
-    id,
+    ids,
     initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS],
     displayOptionsEnabledKey: 'display-site-options'
   });
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    idSelected: showOnlyNeighbours ? idSelected : undefined,
+    idsSelected: showOnlyNeighbours ? idsSelected : undefined,
     showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
     showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
     showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
@@ -86,7 +86,7 @@ const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReac
   }, [graphRef, toastRef]);
 
   const { nodes, edges, nodeIdSelected } = TopologySiteController.siteDataTransformer({
-    idSelected,
+    idsSelected,
     sites,
     sitesPairs,
     routerLinks,
@@ -123,8 +123,8 @@ const TopologySite: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReac
             edges={edges}
             itemSelected={nodeIdSelected}
             onClickNode={handleShowDetails}
-            layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-            moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}
+            layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+            moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
           />
         </StackItem>
       </Stack>

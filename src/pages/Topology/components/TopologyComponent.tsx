@@ -16,8 +16,8 @@ import { TopologyController } from '../services';
 import { TopologyComponentController } from '../services/topologyComponentController';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
-  id,
+const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+  ids,
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
@@ -25,16 +25,16 @@ const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<Grap
   const toastRef = useRef<ToastExposeMethods>(null);
 
   const {
-    idSelected,
+    idsSelected,
     showOnlyNeighbours,
     moveToNodeSelected,
     handleSelected,
     handleShowOnlyNeighbours,
     handleMoveToNodeSelectedChecked
-  } = useTopologyState({ id });
+  } = useTopologyState({ ids });
 
   const { components, componentsPairs } = useTopologyComponentData({
-    idSelected: showOnlyNeighbours ? idSelected : undefined
+    idSelected: showOnlyNeighbours ? idsSelected : undefined
   });
 
   const handleShowDetails = useCallback(
@@ -69,7 +69,7 @@ const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<Grap
   }, [graphRef, toastRef]);
 
   const { nodeIdSelected, nodes, edges } = TopologyComponentController.dataTransformer({
-    idSelected,
+    idsSelected,
     components,
     componentsPairs
   });
@@ -99,8 +99,8 @@ const TopologyComponent: FC<{ id?: string[]; GraphComponent?: ComponentType<Grap
             edges={edges}
             itemSelected={nodeIdSelected}
             onClickNode={handleShowDetails}
-            layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-            moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}
+            layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+            moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
           />
         </StackItem>
       </Stack>

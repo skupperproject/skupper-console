@@ -47,10 +47,10 @@ import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const TopologyProcesses: FC<{
   serviceIds?: string[];
-  id?: string[];
+  ids?: string[];
   GraphComponent?: ComponentType<GraphReactAdaptorProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
-}> = function ({ serviceIds, id: processId, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
+}> = function ({ serviceIds, ids: processIds, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
   const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
@@ -59,7 +59,7 @@ const TopologyProcesses: FC<{
     useServiceState(serviceIds);
 
   const {
-    idSelected,
+    idsSelected,
     showOnlyNeighbours,
     moveToNodeSelected,
     displayOptionsSelected,
@@ -69,7 +69,7 @@ const TopologyProcesses: FC<{
     handleDisplaySelected,
     getDisplaySelectedFromLocalStorage
   } = useTopologyState({
-    id: processId,
+    ids: processIds,
     initDisplayOptionsEnabled: [SHOW_SITE_KEY],
     displayOptionsEnabledKey: 'display-process-options'
   });
@@ -77,7 +77,7 @@ const TopologyProcesses: FC<{
   const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
 
   const { processes, processesPairs, metrics } = useTopologyProcessData({
-    idSelected: showOnlyNeighbours ? idSelected : undefined,
+    idsSelected: showOnlyNeighbours ? idsSelected : undefined,
     showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
     showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
     showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
@@ -93,10 +93,11 @@ const TopologyProcesses: FC<{
 
   const handleProcessSelected = useCallback(
     (id?: string) => {
+      handleShowOnlyNeighbours(false);
       handleSelected(TopologyController.transformStringIdsToIds(id));
       handleCloseModal();
     },
-    [handleCloseModal, handleSelected]
+    [handleCloseModal, handleSelected, handleShowOnlyNeighbours]
   );
 
   const handleShowProcessDetails = useCallback(
@@ -141,11 +142,12 @@ const TopologyProcesses: FC<{
 
   const handleServiceSelectedWrapper = useCallback(
     (ids: string[] | undefined) => {
+      handleShowOnlyNeighbours(false);
       handleSelected();
       handleServiceSelected(ids);
       handleCloseModal();
     },
-    [handleCloseModal, handleSelected, handleServiceSelected]
+    [handleCloseModal, handleSelected, handleServiceSelected, handleShowOnlyNeighbours]
   );
 
   const handleSavePositions = useCallback(() => {
@@ -163,10 +165,11 @@ const TopologyProcesses: FC<{
   }, [getServiceIdsFromLocalStorage, getDisplaySelectedFromLocalStorage]);
 
   const showDeployments =
-    displayOptionsSelected.includes(SHOW_DEPLOYMENTS) || processes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION;
+    displayOptionsSelected.includes(SHOW_DEPLOYMENTS) ||
+    (!displayOptionsSelected.includes(SHOW_DEPLOYMENTS) && processes.length > MAX_NODE_COUNT_WITHOUT_AGGREGATION);
 
   const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
-    idSelected,
+    idsSelected,
     processes,
     processesPairs,
     serviceIdsSelected,
@@ -231,8 +234,8 @@ const TopologyProcesses: FC<{
                   edges={edges}
                   combos={combos}
                   itemSelected={nodeIdSelected}
-                  layout={showOnlyNeighbours && idSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-                  moveToSelectedNode={moveToNodeSelected && !!idSelected && !showOnlyNeighbours}
+                  layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
+                  moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
                   onClickNode={handleShowProcessDetails}
                   onClickEdge={handleShowProcessPairDetails}
                 />

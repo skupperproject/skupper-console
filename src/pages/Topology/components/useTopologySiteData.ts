@@ -11,7 +11,7 @@ import { QueriesTopology } from '../Topology.enum';
 const linkQueryParams = { direction: FlowDirection.Outgoing };
 
 interface UseTopologySiteDataProps {
-  idSelected?: string[];
+  idsSelected?: string[];
   showDataLink: boolean;
   showBytes: boolean;
   showByteRate: boolean;
@@ -25,7 +25,7 @@ const metricQueryParams = {
 };
 
 const useTopologySiteData = ({
-  idSelected,
+  idsSelected,
   showDataLink,
   showBytes,
   showByteRate,
@@ -68,28 +68,28 @@ const useTopologySiteData = ({
   let filteredPairs = sitesPairs;
   let filteredSites = sites;
 
-  if (idSelected?.length) {
+  if (idsSelected?.length) {
     if (filteredPairs) {
       filteredPairs = filteredPairs.filter(
-        (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
+        (edge) => idsSelected.includes(edge.sourceId) || idsSelected.includes(edge.destinationId)
       );
 
       const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
+      const uniqueIds = [...new Set(idsSelected.concat(idsFromEdges))];
 
       filteredSites = filteredSites.filter(({ identity }) => uniqueIds.includes(identity));
     }
 
     if (filteredRrouterLinks) {
       filteredRrouterLinks = filteredRrouterLinks.filter(
-        (edge) => idSelected.includes(edge.sourceSiteId) || idSelected.includes(edge.destinationSiteId)
+        (edge) => idsSelected.includes(edge.sourceSiteId) || idsSelected.includes(edge.destinationSiteId)
       );
 
       const idsFromEdges = filteredRrouterLinks.flatMap(({ sourceSiteId, destinationSiteId }) => [
         sourceSiteId,
         destinationSiteId
       ]);
-      const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
+      const uniqueIds = [...new Set(idsSelected.concat(idsFromEdges))];
 
       filteredSites = filteredSites.filter(({ identity }) => uniqueIds.includes(identity));
     }

@@ -37,7 +37,7 @@ const mockHandleMoveToNodeSelectedChecked = jest.fn();
 const MockGetDisplaySelectedFromLocalStorage = jest.fn();
 
 const mockUseTopologyStateResults = {
-  idSelected: TopologyController.transformStringIdsToIds(processesResults[0].identity),
+  idsSelected: TopologyController.transformStringIdsToIds(processesResults[0].identity),
   showOnlyNeighbours: false,
   moveToNodeSelected: false,
   displayOptionsSelected: [],
@@ -111,7 +111,7 @@ describe('Topology Process', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TopologyProcesses
-            id={TopologyController.transformStringIdsToIds(processesResults[2].name)}
+            ids={TopologyController.transformStringIdsToIds(processesResults[2].name)}
             GraphComponent={MockGraphComponent}
             ModalComponent={MockTopologyModalComponent}
             serviceIds={serviceResults.map(({ identity }) => identity)}

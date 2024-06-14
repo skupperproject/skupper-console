@@ -13,7 +13,7 @@ import { TopologyMetrics } from '../Topology.interfaces';
 import { TopologyController, convertEntityToNode } from '.';
 
 interface TopologySiteControllerProps {
-  idSelected: string[] | undefined;
+  idsSelected: string[] | undefined;
   sites: SiteResponse[];
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
@@ -77,7 +77,7 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
 
 export const TopologySiteController = {
   siteDataTransformer: ({
-    idSelected,
+    idsSelected,
     sites,
     routerLinks,
     sitesPairs,
@@ -93,7 +93,7 @@ export const TopologySiteController = {
     let edges: GraphEdge[] = [];
 
     if (sitesPairs) {
-      TopologyController.transformIdsToStringIds(idSelected),
+      TopologyController.transformIdsToStringIds(idsSelected),
         (edges = TopologyController.convertPairsToEdges(sitesPairs));
       edges = addSiteMetricsToEdges(edges, metrics);
       edges = TopologyController.configureEdges(edges, options);
@@ -102,7 +102,7 @@ export const TopologySiteController = {
     }
 
     return {
-      nodeIdSelected: TopologyController.transformIdsToStringIds(idSelected),
+      nodeIdSelected: TopologyController.transformIdsToStringIds(idsSelected),
       nodes: convertSitesToNodes(sites),
       edges
     };

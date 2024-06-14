@@ -1,4 +1,4 @@
-import { FC, FormEvent, Ref, useCallback, useRef, useState } from 'react';
+import { FC, FormEvent, Ref, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   Button,
@@ -35,39 +35,29 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
   onSelect,
   options
 }) {
-  const [inputValue, setInputValue] = useState<string>(findOptionSelected(options, id)?.name || '');
+  const [inputValue, setInputValue] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
 
   const filterValueRef = useRef<string>('');
   const textInputRef = useRef<HTMLInputElement>();
 
   function handleToggleMenu() {
-    setIsOpen(!isOpen);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
   }
 
-  function handleClear() {
+  const handleClear = useCallback(() => {
     setInputValue('');
     filterValueRef.current = '';
     textInputRef.current?.focus();
-
-    if (onSelect) {
-      onSelect(undefined);
-    }
-  }
+    onSelect?.(undefined);
+  }, [onSelect]);
 
   const handleSelect = useCallback(
     (idSelected: string) => {
-      const nameSelected = findOptionSelected(options, idSelected)?.name || '';
-
       setIsOpen(false);
-      setInputValue(nameSelected);
-      filterValueRef.current = '';
-
-      if (onSelect) {
-        onSelect(idSelected);
-      }
+      onSelect?.(idSelected);
     },
-    [onSelect, options]
+    [onSelect]
   );
 
   const handleTextInputChange = (_: FormEvent<HTMLInputElement>, selection: string) => {
@@ -79,6 +69,17 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
     ({ name }) =>
       !filterValueRef.current || name.toString().toLowerCase().includes(filterValueRef.current.toLowerCase())
   );
+
+  useEffect(() => {
+    if (id) {
+      setInputValue(findOptionNameSelected(options, id));
+      filterValueRef.current = '';
+    }
+  }, [id, options]);
+
+  useEffect(() => {
+    setIsOpen(!!inputValue && !!filterValueRef.current);
+  }, [inputValue]);
 
   return (
     <Select
@@ -130,6 +131,6 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
 
 export default DisplayResources;
 
-function findOptionSelected(options: ResourcesOptionsProps[], idSelected?: string) {
-  return options.find(({ identity }) => identity === idSelected);
+function findOptionNameSelected(options: ResourcesOptionsProps[], idSelected?: string) {
+  return options.find(({ identity }) => identity === idSelected)?.name || '';
 }
