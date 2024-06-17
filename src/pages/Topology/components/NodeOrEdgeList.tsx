@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 
 import {
   DataList,
@@ -20,16 +20,18 @@ import {
 import { Link } from 'react-router-dom';
 
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import LinkCell from '@core/components/LinkCell';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkExposureCell from '@core/components/SkExposureCell';
+import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
+import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyLabels } from '../Topology.enum';
-import { NodeOrEdgeListProps } from '../Topology.interfaces';
+import { NodeOrEdgeListProps, TopologyMetrics } from '../Topology.interfaces';
 
-const NodeOrEdgeList: FC<NodeOrEdgeListProps> = function ({ ids, items, modalType }) {
+const NodeOrEdgeList: FC<NodeOrEdgeListProps> = function ({ ids, items, metrics, modalType }) {
   const filteredItems = items.filter(({ identity }) => ids?.includes(identity));
 
   return (
@@ -37,7 +39,7 @@ const NodeOrEdgeList: FC<NodeOrEdgeListProps> = function ({ ids, items, modalTyp
       {modalType === 'process' ? (
         <ProcessesGrouped data={filteredItems as ProcessResponse[]} />
       ) : (
-        <ProcessesPairsGrouped data={filteredItems as ProcessPairsResponse[]} />
+        <ProcessesPairsGrouped data={filteredItems as ProcessPairsResponse[]} metrics={metrics} />
       )}
     </div>
   );
@@ -57,44 +59,60 @@ const ProcessesGrouped: FC<{ data: ProcessResponse[] }> = function ({ data }) {
               <DataListItemCells
                 dataListCells={[
                   <DataListCell key="primary-content">
-                    <Flex spaceItems={{ default: 'spaceItemsMd' }} direction={{ default: 'column' }}>
-                      <FlexItem>
-                        <Title headingLevel="h6">
-                          <ResourceIcon type="process" />
-                          {itemSelected.name}
-                        </Title>
-                        <small>
-                          {itemSelected.sourceHost}/{itemSelected.hostName}
-                        </small>
-                      </FlexItem>
+                    <DescriptionList>
+                      <DescriptionListGroup>
+                        <DescriptionListDescription>
+                          <Title headingLevel="h6">
+                            <ResourceIcon type="process" />
+                            {itemSelected.name}
+                          </Title>
+                          <small>
+                            {itemSelected.sourceHost}/{itemSelected.hostName}
+                          </small>
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
 
-                      <LinkCell
-                        type="site"
-                        fitContent={true}
-                        value={itemSelected.parentName}
-                        data={itemSelected}
-                        link={`${SitesRoutesPaths.Sites}/${itemSelected.parentName}@${itemSelected.parent}`}
-                      />
+                      <DescriptionListGroup>
+                        <DescriptionListDescription>
+                          <SkExposureCell value={itemSelected.processBinding} />
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
 
-                      <LinkCell
-                        type="component"
-                        fitContent={true}
-                        value={itemSelected.groupName}
-                        data={itemSelected}
-                        link={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
-                      />
+                      <DescriptionListGroup>
+                        <DescriptionListDescription>
+                          <Flex direction={{ default: 'column' }}>
+                            <FlexItem>
+                              <ResourceIcon type="site" />
+                              <Link to={`${SitesRoutesPaths.Sites}/${itemSelected.parentName}@${itemSelected.parent}`}>
+                                {itemSelected.parentName}
+                              </Link>
+                            </FlexItem>
 
-                      {itemSelected?.addresses?.map((service) => (
-                        <LinkCell
-                          key={service}
-                          type="service"
-                          fitContent={true}
-                          value={service.split('@')[0]}
-                          data={service}
-                          link={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
-                        />
-                      ))}
-                    </Flex>
+                            <FlexItem>
+                              <ResourceIcon type="component" />
+                              <Link
+                                to={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                              >
+                                {itemSelected.groupName}
+                              </Link>
+                            </FlexItem>
+
+                            <FlexItem>
+                              {itemSelected?.addresses?.map((service) => (
+                                <Fragment key={service}>
+                                  <ResourceIcon type="service" />
+                                  <Link
+                                    to={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                                  >
+                                    {service.split('@')[0]}
+                                  </Link>
+                                </Fragment>
+                              ))}
+                            </FlexItem>
+                          </Flex>
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+                    </DescriptionList>
                   </DataListCell>,
                   <DataListAction
                     key={`actions-${itemSelected.identity}`}
@@ -132,67 +150,127 @@ const ProcessesGrouped: FC<{ data: ProcessResponse[] }> = function ({ data }) {
   );
 };
 
-const ProcessesPairsGrouped: FC<{ data: ProcessPairsResponse[] }> = function ({ data }) {
+const ProcessesPairsGrouped: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics | null }> = function ({
+  data,
+  metrics
+}) {
   return (
     <DataList aria-label="">
-      {data.map((itemSelected) => (
-        <DataListItem key={itemSelected.identity}>
-          <DataListItemRow>
-            <DataListItemCells
-              dataListCells={[
-                <DataListCell key="primary-content">
-                  <DescriptionList>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>{TopologyLabels.Source}</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        <ResourceIcon type="process" />
-                        <Link
-                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected?.sourceName}@${itemSelected?.sourceId}`}
-                        >
-                          {itemSelected.sourceName}
-                        </Link>
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
+      {data.map((itemSelected) => {
+        const sourceName = itemSelected.sourceName;
+        const destinationName = itemSelected.destinationName;
 
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>{TopologyLabels.Destination}</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        <ResourceIcon type="process" />
-                        <Link
-                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected?.destinationName}@${itemSelected?.destinationId}`}
-                        >
-                          {itemSelected.destinationName}
-                        </Link>
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
+        let bytes = 0;
+        metrics?.bytesByProcessPairs.forEach(({ metric, value }) => {
+          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
+            bytes = Number(value[1]);
+          }
 
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>{TopologyLabels.Protocol}</DescriptionListTerm>
-                      <DescriptionListDescription>{itemSelected.protocol}</DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </DescriptionList>
-                </DataListCell>,
-                <DataListAction
-                  key={`actions-${itemSelected.identity}`}
-                  id={`full-page-action-${itemSelected.identity}`}
-                  aria-labelledby={`full-page-item1 full-page-action-${itemSelected.identity}`}
-                  aria-label={`Actions ${itemSelected.identity}`}
-                >
-                  <Stack>
-                    <StackItem>
-                      <Link
-                        to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${ProcessesLabels.ProcessPairs}@${itemSelected.identity}@${itemSelected.protocol}`}
-                      >
-                        {TopologyLabels.TopologyModalAction2}
-                      </Link>
-                    </StackItem>
-                  </Stack>
-                </DataListAction>
-              ]}
-            />
-          </DataListItemRow>
-        </DataListItem>
-      ))}
+          return metric;
+        });
+
+        let byteRate = 0;
+        metrics?.byteRateByProcessPairs.forEach(({ metric, value }) => {
+          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
+            byteRate = Number(value[1]);
+          }
+
+          return metric;
+        });
+
+        let latency = 0;
+        metrics?.latencyByProcessPairs.forEach(({ metric, value }) => {
+          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
+            latency = Number(value[1]);
+          }
+
+          return metric;
+        });
+
+        return (
+          <DataListItem key={itemSelected.identity}>
+            <DataListItemRow>
+              <DataListItemCells
+                dataListCells={[
+                  <DataListCell key="primary-content">
+                    <DescriptionList>
+                      <DescriptionListGroup>
+                        <DescriptionListTerm>{TopologyLabels.Source}</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          <ResourceIcon type="process" />
+                          <Link
+                            to={`${ProcessesRoutesPaths.Processes}/${itemSelected?.sourceName}@${itemSelected?.sourceId}`}
+                          >
+                            {itemSelected.sourceName}
+                          </Link>
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+
+                      <DescriptionListGroup>
+                        <DescriptionListTerm>{TopologyLabels.Destination}</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          <ResourceIcon type="process" />
+                          <Link
+                            to={`${ProcessesRoutesPaths.Processes}/${itemSelected?.destinationName}@${itemSelected?.destinationId}`}
+                          >
+                            {itemSelected.destinationName}
+                          </Link>
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+
+                      {!!itemSelected.protocol && (
+                        <DescriptionListGroup>
+                          <DescriptionListTerm>{TopologyLabels.Protocol}</DescriptionListTerm>
+                          <DescriptionListDescription>{itemSelected.protocol}</DescriptionListDescription>
+                        </DescriptionListGroup>
+                      )}
+
+                      <Flex>
+                        {!!bytes && (
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>{TopologyLabels.CheckboxShowTotalBytes}</DescriptionListTerm>
+                            <DescriptionListDescription>{`${formatBytes(bytes)}`}</DescriptionListDescription>
+                          </DescriptionListGroup>
+                        )}
+
+                        {!!byteRate && (
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>{TopologyLabels.CheckboxShowCurrentByteRate}</DescriptionListTerm>
+                            <DescriptionListDescription>{`${formatByteRate(byteRate)}`}</DescriptionListDescription>
+                          </DescriptionListGroup>
+                        )}
+
+                        {!!latency && (
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>{TopologyLabels.CheckboxShowLatency}</DescriptionListTerm>
+                            <DescriptionListDescription>{`${formatLatency(latency)}`}</DescriptionListDescription>
+                          </DescriptionListGroup>
+                        )}
+                      </Flex>
+                    </DescriptionList>
+                  </DataListCell>,
+                  <DataListAction
+                    key={`actions-${itemSelected.identity}`}
+                    id={`full-page-action-${itemSelected.identity}`}
+                    aria-labelledby={`full-page-item1 full-page-action-${itemSelected.identity}`}
+                    aria-label={`Actions ${itemSelected.identity}`}
+                  >
+                    <Stack>
+                      <StackItem>
+                        <Link
+                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${ProcessesLabels.ProcessPairs}@${itemSelected.identity}@${itemSelected.protocol}`}
+                        >
+                          {TopologyLabels.TopologyModalAction2}
+                        </Link>
+                      </StackItem>
+                    </Stack>
+                  </DataListAction>
+                ]}
+              />
+            </DataListItemRow>
+          </DataListItem>
+        );
+      })}
     </DataList>
   );
 };

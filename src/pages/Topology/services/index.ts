@@ -2,14 +2,7 @@ import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@API/REST.interfaces';
 import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
-import {
-  CUSTOM_ITEMS_NAMES,
-  DEFAULT_NODE_ICON,
-  DEFAULT_NODE_CONFIG,
-  DEFAUT_EDGE_BG_LABEL,
-  DEFAUT_EDGE_BG_NO_LABEL
-} from '@core/components/Graph/Graph.constants';
-import { GraphEdge, GraphCombo, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphCombo, GraphNode, CustomItemsProps } from '@core/components/Graph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
@@ -45,7 +38,7 @@ export const TopologyController = {
 
   getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
-      .map(({ comboId, comboName }) => ({ id: comboId || '', label: comboName || '' }))
+      .map(({ combo, comboName }) => ({ id: combo || '', label: comboName || '' }))
       .sort((a, b) => a.label.localeCompare(b.label));
 
     // TODO: BE-bug: The API occasionally returns processes without a siteName for a site.
@@ -57,14 +50,16 @@ export const TopologyController = {
   },
 
   convertPairsToEdges: (
-    processesPairs: ProcessPairsResponse[] | ComponentPairsResponse[] | SitePairsResponse[]
+    processesPairs: ProcessPairsResponse[] | ComponentPairsResponse[] | SitePairsResponse[],
+    type?: CustomItemsProps
   ): GraphEdge[] =>
     processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
       id: identity,
       source: sourceId,
       target: destinationId,
       sourceName,
-      targetName: destinationName
+      targetName: destinationName,
+      type
     })),
 
   addMetricsToProcessPairs: ({ processesPairs, metrics, prometheusKey, processPairsKey }: ProcessPairsWithMetrics) => {
@@ -150,9 +145,11 @@ export const TopologyController = {
   configureEdges: (edges: GraphEdge[], options?: DisplayOptions): GraphEdge[] =>
     edges.map((edge) => {
       const protocolText = options?.showLinkProtocol && edge?.metrics?.protocol;
-      const byteRateText = edge?.metrics?.byteRate && `${formatByteRate(edge?.metrics?.byteRate || 0)}`;
-      const bytesText = edge?.metrics?.bytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
-      const latencyText = edge?.metrics?.latency && `${formatLatency(edge?.metrics?.latency || 0)}`;
+      const byteRateText =
+        options?.showLinkByteRate && edge?.metrics?.byteRate && `${formatByteRate(edge?.metrics?.byteRate || 0)}`;
+      const bytesText = options?.showLinkBytes && edge?.metrics?.bytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
+      const latencyText =
+        options?.showLinkLatency && edge?.metrics?.latency && `${formatLatency(edge?.metrics?.latency || 0)}`;
 
       const isTheSameEdge = edge.source === edge.target;
 
@@ -179,14 +176,8 @@ export const TopologyController = {
 
       return {
         ...edge,
-        type: edge.source === edge.target ? CUSTOM_ITEMS_NAMES.loopEdge : CUSTOM_ITEMS_NAMES.animatedDashEdge,
-        labelCfg: {
-          autoRotate: !options?.rotateLabel,
-          style: {
-            background: label ? DEFAUT_EDGE_BG_LABEL : DEFAUT_EDGE_BG_NO_LABEL
-          }
-        },
-        label
+        label,
+        labelRotate: !options?.rotateLabel
       };
     }),
 
@@ -217,42 +208,42 @@ export const TopologyController = {
 
 export function convertEntityToNode({
   id,
-  comboId,
+  type,
+  combo,
   comboName,
   groupId,
   groupName,
   label,
-  iconFileName,
-  iconProps = DEFAULT_NODE_ICON,
-  nodeConfig,
-  enableBadge1
+  iconSrc,
+  groupedNodeCount
 }: Entity): GraphNode {
   return {
     id,
-    comboId,
+    combo,
     comboName,
     groupId,
     groupName,
     label,
-    enableBadge1,
-    ...{ ...DEFAULT_NODE_CONFIG, icon: { ...iconProps, img: iconFileName }, ...nodeConfig }
+    groupedNodeCount,
+    iconSrc,
+    type
   };
 }
 
 /**
- * Groups an array of GraphNode objects based on their comboId and groupId properties.
+ * Groups an array of GraphNode objects based on their combo and groupId properties.
  */
 export function groupNodes(nodes: GraphNode[]): GraphNode[] {
   const groupedNodes: Record<string, GraphNode> = {};
 
   nodes.forEach((item) => {
-    const group = `${item.comboId}-${item.groupId}`;
+    const group = `${item.combo}-${item.groupId}`;
 
     if (!groupedNodes[group]) {
       groupedNodes[group] = {
         ...item,
         id: '',
-        comboId: item.comboId,
+        combo: item.combo,
         groupCount: 0,
         type: item.type
       };
@@ -265,11 +256,10 @@ export function groupNodes(nodes: GraphNode[]): GraphNode[] {
     groupedNodes[group].id = ids.filter(Boolean).join(IDS_GROUP_SEPARATOR);
     groupedNodes[group].groupCount! += 1;
 
-    if (groupedNodes[group].groupCount) {
+    if (groupedNodes[group].groupCount! > 1) {
       groupedNodes[group].label = `${item.groupName}-${item.comboName}` || '';
       groupedNodes[group].type = type;
-      groupedNodes[group].notificationValue = groupedNodes[group].groupCount;
-      groupedNodes[group].enableBadge1 = true;
+      groupedNodes[group].groupedNodeCount = groupedNodes[group].groupCount;
     }
   });
 
