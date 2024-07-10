@@ -27,26 +27,20 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
     handleZoom(ZOOM_RATIO_IN);
   };
 
-  const handleZoom = async (zoom: number) => {
-    const centerPoint = graphInstance.getViewportCenter();
-
-    await graphInstance.zoomBy(zoom, undefined, centerPoint);
+  const handleZoom = (zoom: number) => {
+    graphInstance.zoomBy(zoom, undefined);
   };
 
-  const handleFitView = async () => {
+  const handleFitView = () => {
     const container = GraphController.getParent();
     graphInstance?.resize(container.clientWidth, container.clientHeight);
-
-    // TODO; G6 bug -> need to duplicate the call
-    await graphInstance.fitView(undefined);
-    await graphInstance.fitView(undefined);
+    graphInstance.fitView();
   };
 
-  const handleCenter = async () => {
+  const handleCenter = () => {
     const container = GraphController.getParent();
     graphInstance?.resize(container.clientWidth, container.clientHeight);
-
-    await graphInstance.fitCenter();
+    graphInstance.fitCenter();
   };
 
   const handleCleanAllGraphConfigurations = async () => {
@@ -54,7 +48,7 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
     GraphController.removeAllNodePositionsFromLocalStorage();
 
     await graphInstance.render();
-    await handleFitView();
+    await graphInstance.fitView();
   };
 
   return (

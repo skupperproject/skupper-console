@@ -59,6 +59,7 @@ export interface GraphReactAdaptorProps {
   ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
   layout?: Function;
   moveToSelectedNode?: boolean;
+  savePositions?: boolean;
 }
 
 export interface LocalStorageDataSavedPayload {

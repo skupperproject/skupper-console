@@ -21,8 +21,7 @@ import {
   IGraphLifeCycleEvent,
   IPointerEvent,
   Node,
-  NodeEvent,
-  SingleLayoutOptions
+  NodeEvent
 } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
@@ -54,7 +53,8 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         onClickCombo,
         itemSelected,
         layout = LAYOUT_TOPOLOGY_DEFAULT,
-        moveToSelectedNode = false
+        moveToSelectedNode = false,
+        savePositions = true
       },
       ref
     ) => {
@@ -66,22 +66,26 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const prevCombosRef = useRef<GraphCombo[] | undefined>(combos);
       const topologyGraphRef = useRef<Graph>();
 
+      const save = () => {
+        const graphInstance = topologyGraphRef.current;
+
+        if (!graphInstance?.getNodeData()) {
+          return;
+        }
+
+        const updatedNodes = GraphController.fromNodesToLocalStorageData(
+          graphInstance.getNodeData(),
+          ({ id, x, y }: LocalStorageData) => ({ id, x, y })
+        );
+
+        GraphController.saveAllNodePositions(updatedNodes);
+      };
+
       //exposed methods
       useImperativeHandle(ref, () => ({
         // save the nodes positions to the local storage
         saveNodePositions() {
-          const graphInstance = topologyGraphRef.current;
-
-          if (!graphInstance?.getNodeData()) {
-            return;
-          }
-
-          const updatedNodes = GraphController.fromNodesToLocalStorageData(
-            graphInstance.getNodeData(),
-            ({ id, x, y }: LocalStorageData) => ({ id, x, y })
-          );
-
-          GraphController.saveAllNodePositions(updatedNodes);
+          save();
         }
       }));
 
@@ -105,7 +109,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
               return;
             }
-
+            //disable the hover effect of the graph if an item is selected
             toggleHover(!itemSelectedRef.current);
 
             const type = graphInstance.getElementType(id);
@@ -137,37 +141,33 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       /** Creates network topology instance */
       const graphRef = useCallback(async ($node: HTMLDivElement) => {
         if (nodesWithoutPosition && !topologyGraphRef.current) {
-          const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition);
-          const positionsAreStored = nodes.every((node) => node.x !== undefined);
+          const nodes = savePositions
+            ? GraphController.addPositionsToNodes(nodesWithoutPosition)
+            : nodesWithoutPosition;
 
           const options: GraphOptions = {
             ...DEFAULT_GRAPH_CONFIG,
             container: $node,
             autoResize: false,
             animation: false,
+            data: GraphController.transformData({ edges, nodes, combos }),
             layout: layout({
               sideLength: calculateNumberOfGroupedNodes(nodes)
             })
           };
 
-          const graph = new Graph(options) as Graph;
+          const graph = new Graph(options);
 
-          graph?.on<IPointerEvent<Node>>(NodeEvent.POINTER_DOWN, () => toggleHover(false));
-          graph?.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, () => toggleHover(!itemSelectedRef.current));
-          graph?.on<IPointerEvent<Node>>(NodeEvent.POINTER_ENTER, () => toggleHover(!itemSelectedRef.current));
           graph?.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target: { id } }) => onClickNode?.(id));
           graph?.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target: { id } }) => onClickEdge?.(id));
           graph?.on<IPointerEvent<Combo>>(ComboEvent.CLICK, ({ target: { id } }) => onClickCombo?.(id));
           graph?.on<IGraphLifeCycleEvent>(GraphEvent.AFTER_LAYOUT, afterLayout);
           graph?.on<IGraphLifeCycleEvent>(GraphEvent.AFTER_SIZE_CHANGE, () => graph.fitCenter());
 
-          graph.setData(GraphController.transformData({ edges, nodes, combos }));
-
           registerElements();
 
-          positionsAreStored ? await graph.draw() : await graph.render();
-          await graph.fitView(undefined);
-          await graph.fitCenter();
+          await graph.render();
+          await graph.fitView();
 
           topologyGraphRef.current = graph;
           setIsGraphLoaded(true);
@@ -189,41 +189,17 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         ) {
           return;
         }
-
-        const isLayoutChanged = (graphInstance.getLayout() as SingleLayoutOptions).type !== layout({}).type;
-        // if the layout has changed, then we don't want to use the previous positions from the current graph
-        // but we want to use the positions saved from the local storage
-        // This avoids the nodes to be repositioned in the graph based on a different layout (ie from dagree to force)
-        const nodes = GraphController.addPositionsToNodes(
-          nodesWithoutPosition,
-          isLayoutChanged ? undefined : graphInstance.getNodeData()
-        );
-        const newNodesIds = nodes.map((node) => node.id).join(',');
-        const prevNodeIds = prevNodesRef.current.map((node) => node.id).join(',');
-
-        if (isLayoutChanged) {
-          graphInstance?.setLayout(
-            layout({
-              sideLength: calculateNumberOfGroupedNodes(nodes)
-            })
-          );
-        }
+        save();
+        const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition, graphInstance.getNodeData());
 
         graphInstance.setData(GraphController.transformData({ edges, nodes, combos }));
-
-        if (JSON.stringify(newNodesIds) !== JSON.stringify(prevNodeIds)) {
-          await graphInstance.render();
-          await graphInstance.fitView(undefined);
-          await graphInstance.fitCenter(false);
-        } else {
-          await graphInstance.draw();
-        }
+        await graphInstance.render();
 
         // updated the prev values with the new ones
         prevNodesRef.current = nodesWithoutPosition;
         prevEdgesRef.current = edges;
         prevCombosRef.current = combos;
-      }, [combos, edges, isGraphLoaded, layout, nodesWithoutPosition]);
+      }, [combos, edges, isGraphLoaded, nodesWithoutPosition]);
 
       // This effect updates the topology when there are changes to the nodes, edges.
       useEffect(() => {
@@ -260,15 +236,16 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         };
       }, []);
 
+      useEffect(() => () => save(), []);
+
       return (
         <div
           id={GRAPH_CONTAINER_ID}
           ref={graphRef}
           style={{
-            height: '99%',
+            height: '99.9%',
             background: GRAPH_BG_COLOR,
-            position: 'relative',
-            cursor: 'default'
+            position: 'relative'
           }}
         >
           {topologyGraphRef.current && <MenuControl graphInstance={topologyGraphRef.current} />}

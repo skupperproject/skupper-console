@@ -11,7 +11,7 @@ import { BaseLayoutOptions } from '@antv/g6/lib/layouts/types';
 
 import { HexColors } from '@config/colors';
 
-export const GRAPH_BG_COLOR = HexColors.White;
+export const GRAPH_BG_COLOR = HexColors.Black100;
 const NODE_COLOR_DEFAULT = HexColors.White;
 const NODE_BORDER_COLOR_DEFAULT = HexColors.Black300;
 const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
@@ -19,11 +19,11 @@ const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
 const EDGE_COLOR_DEFAULT = HexColors.Black600;
 const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
 const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
-const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.Black100;
+const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.White;
 
-const COMBO__COLOR_DEFAULT = HexColors.Black100;
-const COMBO_BORDER_COLOR_DEFAULT = HexColors.White;
-const COMBO_BORDER_COLOR_HOVER = HexColors.Black900;
+const COMBO__BG_COLOR_DEFAULT = 'transparent';
+const COMBO_BORDER_COLOR_DEFAULT = HexColors.Black400;
+const COMBO_BORDER_COLOR_HOVER = HexColors.Blue400;
 const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
@@ -141,8 +141,8 @@ export const SITE_EDGE_CONFIG: EdgeOptions = {
 export const COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
-    lineWidth: 4,
-    fill: COMBO__COLOR_DEFAULT,
+    lineWidth: 2,
+    fill: COMBO__BG_COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 10,
     cursor: 'grab',
@@ -259,14 +259,14 @@ export const LAYOUT_TOPOLOGY_GRID = ({ sideLength }: { sideLength: number }): Ba
 
 export const LAYOUT_TOPOLOGY_GRID_COMBO = ({ sideLength }: { sideLength: number }): BaseLayoutOptions => ({
   type: 'combo-combined',
-  comboPadding: 10,
-  outerLayout: new ForceAtlas2Layout({ kr: 12000 }),
+  comboPadding: 100,
+  outerLayout: new ForceAtlas2Layout({ kr: sideLength * 200 }),
   innerLayout: new GridLayout({
     condense: false,
     rows: sideLength,
-    cols: sideLength,
+    cols: sideLength >= 8 ? sideLength - 4 : sideLength,
     height: NODE_SIZE * sideLength * 2,
-    width: NODE_SIZE * sideLength * 4
+    width: NODE_SIZE * sideLength * 3
   })
 });
 

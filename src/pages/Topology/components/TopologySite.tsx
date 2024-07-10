@@ -80,11 +80,6 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
     [graphRef, handleShowOnlyNeighbours]
   );
 
-  const handleSavePositions = useCallback(() => {
-    graphRef?.current?.saveNodePositions();
-    toastRef.current?.addMessage(TopologyLabels.ToastSave);
-  }, [graphRef, toastRef]);
-
   const { nodes, edges, nodeIdSelected } = TopologySiteController.siteDataTransformer({
     idsSelected,
     sites,
@@ -112,7 +107,6 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
             onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
             moveToNodeSelected={moveToNodeSelected}
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
-            onSaveTopology={handleSavePositions}
             resourceIdSelected={nodeIdSelected}
             resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
@@ -122,15 +116,28 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
         </StackItem>
 
         <StackItem isFilled>
-          <GraphComponent
-            ref={graphRef}
-            nodes={nodes}
-            edges={edges}
-            itemSelected={nodeIdSelected}
-            onClickNode={handleShowDetails}
-            layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-            moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
-          />
+          {showOnlyNeighbours && (
+            <GraphComponent
+              ref={graphRef}
+              nodes={nodes}
+              edges={edges}
+              itemSelected={nodeIdSelected}
+              layout={LAYOUT_TOPOLOGY_SINGLE_NODE}
+              savePositions={false}
+            />
+          )}
+
+          {!showOnlyNeighbours && (
+            <GraphComponent
+              ref={graphRef}
+              nodes={nodes}
+              edges={edges}
+              itemSelected={nodeIdSelected}
+              onClickNode={handleShowDetails}
+              layout={LAYOUT_TOPOLOGY_DEFAULT}
+              moveToSelectedNode={moveToNodeSelected && !!idsSelected}
+            />
+          )}
         </StackItem>
       </Stack>
       <AlertToasts ref={toastRef} />

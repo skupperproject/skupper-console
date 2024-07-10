@@ -27,7 +27,7 @@ export enum VarColors {
 export enum HexColors {
   White = '#FFFFFF',
   Blue200 = '#73BCF7',
-  Blue400 = '#0066CC',
+  Blue400 = '#4394e5',
   Black100 = '#F0F0F0',
   Black400 = '#B8BBBE',
   Black300 = '#D2D2d2',

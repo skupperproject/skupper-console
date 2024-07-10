@@ -157,7 +157,18 @@ export const GraphController = {
       })),
 
       edges: transformedEdges.map(
-        ({ id, source, target, label, labelRotate, isSame, hasPair, type = 'SkSiteDataEdge', ...data }) => ({
+        ({
+          id,
+          source,
+          target,
+          label,
+          labelRotate,
+          isSame,
+          hasPair,
+          usageCount,
+          type = 'SkSiteDataEdge',
+          ...data
+        }) => ({
           id,
           source,
           target,
@@ -167,7 +178,7 @@ export const GraphController = {
             label: !!label,
             labelText: label,
             labelAutoRotate: labelRotate,
-            curveOffset: hasPair ? 30 : 0 //(usageCount - 1) * 18
+            curveOffset: hasPair ? 30 : (usageCount - 1) * 15
           }
         })
       ),

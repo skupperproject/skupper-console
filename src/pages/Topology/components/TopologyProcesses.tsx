@@ -225,17 +225,32 @@ const TopologyProcesses: FC<{
           <Drawer isExpanded={!!modalType?.id} isInline>
             <DrawerContent panelContent={panelContent}>
               <DrawerContentBody>
-                <GraphComponent
-                  ref={graphRef}
-                  nodes={nodes}
-                  edges={edges}
-                  combos={combos}
-                  itemSelected={nodeIdSelected}
-                  layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_COMBO}
-                  moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
-                  onClickNode={handleShowProcessDetails}
-                  onClickEdge={handleShowProcessPairDetails}
-                />
+                {showOnlyNeighbours && (
+                  <GraphComponent
+                    ref={graphRef}
+                    nodes={nodes}
+                    edges={edges}
+                    itemSelected={nodeIdSelected}
+                    layout={LAYOUT_TOPOLOGY_SINGLE_NODE}
+                    onClickNode={handleShowProcessDetails}
+                    onClickEdge={handleShowProcessPairDetails}
+                    savePositions={false}
+                  />
+                )}
+
+                {!showOnlyNeighbours && (
+                  <GraphComponent
+                    ref={graphRef}
+                    nodes={nodes}
+                    edges={edges}
+                    combos={combos}
+                    itemSelected={nodeIdSelected}
+                    layout={LAYOUT_TOPOLOGY_COMBO}
+                    moveToSelectedNode={moveToNodeSelected && !!idsSelected}
+                    onClickNode={handleShowProcessDetails}
+                    onClickEdge={handleShowProcessPairDetails}
+                  />
+                )}
               </DrawerContentBody>
             </DrawerContent>
           </Drawer>
