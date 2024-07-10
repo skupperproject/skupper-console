@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
@@ -32,17 +33,17 @@ describe('SkHeader', () => {
     expect(logo).toBeInTheDocument();
   });
 
-  it('should set/unset the dark mode', () => {
+  it('should set/unset the dark mode', async () => {
     render(
       <Wrapper>
         <DarkModeSwitch />
       </Wrapper>
     );
 
-    fireEvent.click(screen.getByTestId(HeaderLabels.DarkModeTestId));
+    await eventUser.click(screen.getByTestId(HeaderLabels.DarkModeTestId));
     expect(document.documentElement.classList.contains(ThemePreference.Dark)).toBeTruthy();
 
-    fireEvent.click(screen.getByTestId(HeaderLabels.DarkModeTestId));
+    await eventUser.click(screen.getByTestId(HeaderLabels.LightModeTestId));
     expect(document.documentElement.classList.contains(ThemePreference.Dark)).toBeFalsy();
   });
 
