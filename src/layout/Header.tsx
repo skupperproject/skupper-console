@@ -1,4 +1,4 @@
-import { FormEvent, Ref, Suspense, useEffect, useState } from 'react';
+import { Ref, Suspense, useEffect, useState } from 'react';
 
 import {
   Brand,
@@ -13,13 +13,14 @@ import {
   MenuToggle,
   MenuToggleElement,
   PageToggleButton,
-  Switch,
+  ToggleGroup,
+  ToggleGroupItem,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem
 } from '@patternfly/react-core';
-import { BarsIcon } from '@patternfly/react-icons';
+import { BarsIcon, MoonIcon, SunIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +31,8 @@ import { getThemePreference, removeThemePreference, setThemePreference } from '@
 export enum HeaderLabels {
   Logout = 'Logout',
   DarkMode = ' Dark mode',
-  DarkModeTestId = 'dark-mode-testId',
+  LightModeTestId = 'light-mode-btn-testId',
+  DarkModeTestId = 'dark-mode-btn-testId',
   UserDropdownTestId = 'user-dropdown-testId',
   OpenShiftAuth = 'openshift'
 }
@@ -74,27 +76,34 @@ const SkHeader = function () {
 export default SkHeader;
 
 export const DarkModeSwitch = function () {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isDarkModeSelected, setIsDarkModeSelected] = useState<boolean>(false);
 
-  const handleChange = (_event: FormEvent<HTMLInputElement>, checked: boolean) => {
-    setIsChecked(checked);
+  const handleChange = (isDarkMode: boolean) => {
+    setIsDarkModeSelected(isDarkMode);
 
-    checked ? setThemePreference(DARK_THEME_CLASS) : removeThemePreference();
+    isDarkMode ? setThemePreference(DARK_THEME_CLASS) : removeThemePreference();
   };
 
   useEffect(() => {
     const isDarkTheme = getThemePreference() ? true : false;
-    setIsChecked(isDarkTheme);
+    setIsDarkModeSelected(isDarkTheme);
   }, []);
 
   return (
-    <Switch
-      label={HeaderLabels.DarkMode}
-      labelOff={HeaderLabels.DarkMode}
-      isChecked={isChecked}
-      onChange={handleChange}
-      data-testid={HeaderLabels.DarkModeTestId}
-    />
+    <ToggleGroup>
+      <ToggleGroupItem
+        data-testid={HeaderLabels.LightModeTestId}
+        icon={<SunIcon />}
+        isSelected={!isDarkModeSelected}
+        onClick={() => handleChange(false)}
+      />
+      <ToggleGroupItem
+        data-testid={HeaderLabels.DarkModeTestId}
+        icon={<MoonIcon />}
+        isSelected={isDarkModeSelected}
+        onClick={() => handleChange(true)}
+      />
+    </ToggleGroup>
   );
 };
 
