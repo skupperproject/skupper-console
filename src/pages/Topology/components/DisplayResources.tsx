@@ -71,11 +71,16 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
   );
 
   useEffect(() => {
+    if (!id) {
+      setInputValue('');
+      filterValueRef.current = '';
+    }
+
     if (id) {
       setInputValue(findOptionNameSelected(options, id));
       filterValueRef.current = '';
     }
-  }, [id, options]);
+  }, [handleClear, id, options]);
 
   useEffect(() => {
     setIsOpen(!!inputValue && !!filterValueRef.current);

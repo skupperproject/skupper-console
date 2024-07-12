@@ -4,34 +4,36 @@ import {
   IPointerEvent,
   NodeOptions,
   EdgeOptions,
-  ForceAtlas2Layout,
-  GridLayout
+  ForceLayoutOptions,
+  AntVDagreLayoutOptions,
+  LayoutOptions
 } from '@antv/g6';
-import { BaseLayoutOptions } from '@antv/g6/lib/layouts/types';
 
 import { HexColors } from '@config/colors';
 
-export const GRAPH_BG_COLOR = HexColors.Black100;
+export const GRAPH_BG_COLOR = HexColors.White;
 const NODE_COLOR_DEFAULT = HexColors.White;
 const NODE_BORDER_COLOR_DEFAULT = HexColors.Black300;
 const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
 const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
+
 const EDGE_COLOR_DEFAULT = HexColors.Black600;
 const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
-const EDGE_COLOR_DEFAULT_TEXT = HexColors.Black900;
-const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.White;
+const EDGE_COLOR_DEFAULT_TEXT = HexColors.White;
+const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.Black600;
 
-const COMBO__BG_COLOR_DEFAULT = 'transparent';
+const COMBO__BG_COLOR_DEFAULT = HexColors.Black100;
 const COMBO_BORDER_COLOR_DEFAULT = HexColors.Black400;
 const COMBO_BORDER_COLOR_HOVER = HexColors.Blue400;
 const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
 export const GRAPH_CONTAINER_ID = 'container';
-const NODE_SIZE = 36;
-const ICON_SIZE = 14;
-const LABEL_FONT_SIZE = 8;
+const NODE_SIZE = 96;
+const ICON_SIZE = NODE_SIZE / 2;
+const LABEL_FONT_SIZE = 16;
 const INACTIVE_OPACITY_VALUE = 0.3;
+const LABEL_PADDING = [2, 6];
 
 // Nodes
 export const NODE_CONFIG: NodeOptions = {
@@ -41,30 +43,34 @@ export const NODE_CONFIG: NodeOptions = {
     fill: NODE_COLOR_DEFAULT,
     strokeWidth: 1,
     stroke: NODE_BORDER_COLOR_DEFAULT,
-    lineWidth: 0.8,
-    cursor: 'pointer',
-    labelPosition: 'bottom',
-    labelOffset: 8,
+    lineWidth: 2,
+    labelOffsetY: 4,
     labelFill: NODE_COLOR_DEFAULT_LABEL,
     labelFontSize: LABEL_FONT_SIZE,
     labelFontFamily: 'RedHatText',
     labelBackground: true,
     labelBackgroundFill: NODE_COLOR_DEFAULT_LABEL_BG,
     labelBackgroundStroke: NODE_BORDER_COLOR_DEFAULT,
-    labelBackgroundLineWidth: 0.5,
+    labelBackgroundLineWidth: 1,
     labelBackgroundRadius: 2,
     labelBackgroundOpacity: 1,
+    labelPadding: LABEL_PADDING,
     icon: true,
     iconWidth: ICON_SIZE,
-    iconHeight: ICON_SIZE
+    iconHeight: ICON_SIZE,
+    badgeFontSize: LABEL_FONT_SIZE,
+    badgeBackgroundHeight: 30,
+    badgeBackgroundWidth: 30
   },
 
   state: {
     hover: {
-      stroke: HexColors.Blue400
+      stroke: HexColors.Blue400,
+      cursor: 'pointer'
     },
 
     activeElement: {
+      cursor: 'pointer',
       stroke: HexColors.Blue400,
       labelFill: HexColors.White,
       labelBackgroundFill: HexColors.Blue400,
@@ -101,7 +107,7 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     increasedLineWidthForHitTesting: 20,
     stroke: EDGE_COLOR_DEFAULT,
     endArrow: true,
-    endArrowSize: 8,
+    endArrowSize: 12,
     labelFontFamily: 'RedHatText',
     labelBackground: true,
     labelFill: EDGE_COLOR_DEFAULT_TEXT,
@@ -110,7 +116,8 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     labelBackgroundRadius: 2,
     labelBackgroundOpacity: 1,
     labelBackgroundFillOpacity: 1,
-    labelPadding: [2, 2]
+    labelPadding: LABEL_PADDING,
+    labelAutoRotate: false
   },
 
   state: {
@@ -121,7 +128,8 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
       halo: true
     },
     hover: {
-      halo: true
+      halo: true,
+      cursor: 'pointer'
     }
   }
 };
@@ -141,18 +149,18 @@ export const SITE_EDGE_CONFIG: EdgeOptions = {
 export const COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
-    lineWidth: 2,
+    lineWidth: 6,
     fill: COMBO__BG_COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 10,
-    cursor: 'grab',
+    cursor: 'auto',
     labelFill: COMBO_COLOR_DEFAULT_LABEL,
     labelFontFamily: 'RedHatText',
     labelPadding: [2, 5],
-    labelFontSize: LABEL_FONT_SIZE + 2,
+    labelFontSize: LABEL_FONT_SIZE + 4,
     labelPosition: 'bottom',
     labelBackground: true,
-    labelOffsetY: 5,
+    labelOffsetY: 15,
     labelBackgroundRadius: 2,
     labelBackgroundFill: COMBO_COLOR_DEFAULT_LABEL_BG,
     labelBackgroundStroke: COMBO_BORDER_COLOR_DEFAULT
@@ -169,7 +177,7 @@ export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
   behaviors: [
     'drag-canvas',
     'zoom-canvas',
-    { type: 'drag-element', trigger: 'down' },
+    'drag-element',
     {
       // state for the rest of the nodes
       key: 'click-select',
@@ -186,13 +194,7 @@ export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
       type: 'hover-activate',
       degree: 0,
       state: 'hover',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge',
-      onHover: ({ view }: IPointerEvent) => {
-        view.setCursor('pointer');
-      },
-      onHoverEnd: ({ view }: IPointerEvent) => {
-        view.setCursor('default');
-      }
+      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
     },
     {
       // state for the rest of the nodes
@@ -201,77 +203,52 @@ export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
       degree: 1,
       state: '',
       inactiveState: 'hidden',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge',
-      onHover: ({ view }: IPointerEvent) => {
-        view.setCursor('pointer');
-      },
-      onHoverEnd: ({ view }: IPointerEvent) => {
-        view.setCursor('default');
-      }
+      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
     },
     {
       key: 'hover-activate-combo',
       type: 'hover-activate',
       state: 'hover',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'combo',
-      onHover: ({ view }: IPointerEvent) => {
-        view.setCursor('pointer');
-      },
-      onHoverEnd: ({ view }: IPointerEvent) => {
-        view.setCursor('default');
-      }
+      enable: ({ targetType }: IPointerEvent) => targetType === 'combo'
     }
   ],
   node: { ...NODE_CONFIG },
   edge: { ...DATA_EDGE_CONFIG },
-  combo: { ...COMBO_CONFIG }
+  combo: { ...COMBO_CONFIG },
+  autoResize: false,
+  animation: false,
+  padding: 15
 };
 
-export const LAYOUT_TOPOLOGY_DEFAULT = (): BaseLayoutOptions => ({
+// LAYOUTS
+const LAYOUT_TOPOLOGY_DEFAULT: ForceLayoutOptions & { type: 'force' } = {
   type: 'force',
   nodeSize: NODE_SIZE,
   nodeSpacing: NODE_SIZE,
-  preventOverlap: true
-});
+  preventOverlap: true,
+  linkDistance: 250,
+  factor: 4
+};
 
-export const LAYOUT_TOPOLOGY_COMBO = (): BaseLayoutOptions => ({
+const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
   type: 'force',
   nodeSize: NODE_SIZE,
   preventOverlap: true,
   clustering: true,
   nodeClusterBy: 'cluster',
-  distanceThresholdMode: 'max',
-  clusterNodeStrength: 500000,
-  nodeStrength: 7000,
-  leafCluster: true,
-  gravity: 1000,
-  factor: 800
-});
+  clusterNodeStrength: 100,
+  linkDistance: 600,
+  factor: 15
+};
 
-export const LAYOUT_TOPOLOGY_GRID = ({ sideLength }: { sideLength: number }): BaseLayoutOptions => ({
-  type: 'grid',
-  condense: false,
-  rows: sideLength,
-  cols: sideLength,
-  height: NODE_SIZE * sideLength * 2,
-  width: NODE_SIZE * sideLength * 4
-});
-
-export const LAYOUT_TOPOLOGY_GRID_COMBO = ({ sideLength }: { sideLength: number }): BaseLayoutOptions => ({
-  type: 'combo-combined',
-  comboPadding: 100,
-  outerLayout: new ForceAtlas2Layout({ kr: sideLength * 200 }),
-  innerLayout: new GridLayout({
-    condense: false,
-    rows: sideLength,
-    cols: sideLength >= 8 ? sideLength - 4 : sideLength,
-    height: NODE_SIZE * sideLength * 2,
-    width: NODE_SIZE * sideLength * 3
-  })
-});
-
-export const LAYOUT_TOPOLOGY_SINGLE_NODE: () => BaseLayoutOptions = () => ({
+const LAYOUT_TOPOLOGY_SINGLE_NODE: AntVDagreLayoutOptions & { type: 'antv-dagre' } = {
   type: 'antv-dagre',
   rankdir: 'BT',
   sortByCombo: true
-});
+};
+
+export const LAYOUT_MAP: Record<string, LayoutOptions> = {
+  default: LAYOUT_TOPOLOGY_DEFAULT,
+  combo: LAYOUT_TOPOLOGY_COMBO,
+  neighbour: LAYOUT_TOPOLOGY_SINGLE_NODE
+};

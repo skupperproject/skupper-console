@@ -1,5 +1,3 @@
-import { MutableRefObject } from 'react';
-
 export interface GraphNode {
   id: string;
   type?: CustomItemsProps;
@@ -40,12 +38,7 @@ export interface GraphEdge {
   sourceName?: string;
   targetName?: string;
   label?: string;
-  labelRotate?: boolean;
   metrics?: GraphEdgeMetrics;
-}
-
-export interface GraphReactAdaptorExposedMethods {
-  saveNodePositions: Function;
 }
 
 export interface GraphReactAdaptorProps {
@@ -53,11 +46,9 @@ export interface GraphReactAdaptorProps {
   edges: GraphEdge[];
   combos?: GraphCombo[];
   itemSelected?: string;
-  onClickCombo?: (id: string) => void;
   onClickNode?: (id: string) => void;
   onClickEdge?: (id: string) => void;
-  ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
-  layout?: Function;
+  layout?: 'combo' | 'default' | 'neighbour';
   moveToSelectedNode?: boolean;
   savePositions?: boolean;
 }

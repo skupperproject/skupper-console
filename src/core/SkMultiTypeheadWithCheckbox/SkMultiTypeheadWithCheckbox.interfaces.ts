@@ -7,7 +7,7 @@ interface Option {
 export interface UseDataProps {
   initIdsSelected: string[];
   initOptions: Option[];
-  onSelected?: (items: string[] | undefined) => void;
+  onSelected?: (items: string[]) => void;
 }
 
 export interface SkSelectMultiTypeaheadCheckboxProps extends UseDataProps {

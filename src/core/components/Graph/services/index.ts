@@ -61,6 +61,22 @@ export const GraphController = {
       .filter(Boolean) as LocalStorageData[];
   },
 
+  calculateNumberOfGroupedNodes(nodes: GraphNode[]) {
+    const counts = nodes.reduce(
+      (acc, node) => {
+        acc[node.combo || ''] = (acc[node.combo || ''] || 0) + 1;
+
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    const max = Math.max(...Object.values(counts), 25);
+    const sideLength = Math.floor(Math.sqrt(max));
+
+    return sideLength;
+  },
+
   addPositionsToNodes(nodesWithoutPosition: GraphNode[], nodesWithPositions: NodeData[] = []): GraphNode[] {
     const cache = JSON.parse(localStorage.getItem(prefixLocalStorageItem) || '{}');
 
@@ -98,14 +114,16 @@ export const GraphController = {
   },
 
   cleanAllLocalNodePositions(nodes: NodeData[], shouldRemoveFixedPosition: boolean = false) {
-    return nodes.forEach((node) => {
-      const nodeModel = node.style as NodeData;
-      nodeModel.x = undefined;
-      nodeModel.y = undefined;
-
-      if (shouldRemoveFixedPosition && nodeModel.data) {
-        nodeModel.data.fx = undefined;
-        nodeModel.data.fy = undefined;
+    nodes.map((node) => {
+      if (node.style) {
+        node.style.x = undefined;
+        node.style.y = undefined;
+      }
+      if (node.data) {
+        if (shouldRemoveFixedPosition) {
+          node.data.fx = undefined;
+          node.data.fy = undefined;
+        }
       }
     });
   },
@@ -129,14 +147,17 @@ export const GraphController = {
       isSame: boolean;
     })[];
     const comboIds = combos?.map(({ id }) => id);
+    const sortedNodes = nodes.sort((a, b) => (a.combo || '')?.localeCompare(b.combo || ''));
 
     return {
-      nodes: nodes.map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
+      nodes: sortedNodes.map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
         id,
         combo: combo && comboIds?.includes(combo) ? combo : undefined,
         type,
         data: {
           ...data,
+          fullLabelText: label,
+          partialLabelText: ellipsisInTheMiddle(label),
           cluster: combo,
           fx: x,
           fy: y
@@ -144,7 +165,7 @@ export const GraphController = {
         style: {
           x,
           y,
-          labelText: label,
+          labelText: ellipsisInTheMiddle(label),
           iconSrc,
           badge: groupedNodeCount !== undefined,
           badges: [
@@ -157,18 +178,7 @@ export const GraphController = {
       })),
 
       edges: transformedEdges.map(
-        ({
-          id,
-          source,
-          target,
-          label,
-          labelRotate,
-          isSame,
-          hasPair,
-          usageCount,
-          type = 'SkSiteDataEdge',
-          ...data
-        }) => ({
+        ({ id, source, target, label, isSame, hasPair, type = 'SkSiteDataEdge', ...data }) => ({
           id,
           source,
           target,
@@ -177,8 +187,7 @@ export const GraphController = {
           style: {
             label: !!label,
             labelText: label,
-            labelAutoRotate: labelRotate,
-            curveOffset: hasPair ? 30 : (usageCount - 1) * 15
+            curveOffset: hasPair ? 30 : 0 // (usageCount - 1) * 15
           }
         })
       ),
@@ -267,18 +276,6 @@ export const GraphController = {
     graphInstance.setElementState(allIdsWithSEmptyState, false);
   },
 
-  calculateMaxIteration: (nodeCount: number) => {
-    if (nodeCount >= 400) {
-      return 100;
-    }
-
-    if (nodeCount > 100) {
-      return 500;
-    }
-
-    return 1000;
-  },
-
   getParent: (): Element => document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element
 };
 
@@ -323,4 +320,19 @@ function markPairs(data: GraphEdge[]) {
       isSame
     };
   });
+}
+
+function ellipsisInTheMiddle(str: string) {
+  const maxLength = 20;
+  const leftPartLength = 15;
+  const rightPartLength = 5;
+
+  if (str.length <= maxLength) {
+    return str;
+  }
+
+  const leftPart = str.substring(0, leftPartLength);
+  const rightPart = str.substring(str.length - rightPartLength);
+
+  return `${leftPart}...${rightPart}`;
 }

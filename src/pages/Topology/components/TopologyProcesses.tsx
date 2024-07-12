@@ -17,8 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
-import { LAYOUT_TOPOLOGY_COMBO, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import { GraphReactAdaptorProps, GraphReactAdaptorExposedMethods } from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
@@ -32,7 +31,6 @@ import useTopologyState from './useTopologyState';
 import { TopologyController } from '../services';
 import { TopologyProcessController } from '../services/topologyProcessController';
 import {
-  ROTATE_LINK_LABEL,
   SHOW_DEPLOYMENTS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
@@ -51,11 +49,9 @@ const TopologyProcesses: FC<{
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
 }> = function ({ serviceIds, ids: processIds, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
-  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
 
-  const { serviceIdsSelected, handleServiceSelected, saveServiceIdsToLocalStorage, getServiceIdsFromLocalStorage } =
-    useServiceState(serviceIds);
+  const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
 
   const {
     idsSelected,
@@ -65,8 +61,7 @@ const TopologyProcesses: FC<{
     handleSelected,
     handleShowOnlyNeighbours,
     handleMoveToNodeSelectedChecked,
-    handleDisplaySelected,
-    getDisplaySelectedFromLocalStorage
+    handleDisplaySelected
   } = useTopologyState({
     ids: processIds,
     initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS],
@@ -82,7 +77,6 @@ const TopologyProcesses: FC<{
   const handleShowOnlyNeighboursChecked = useCallback(
     (checked: boolean) => {
       handleShowOnlyNeighbours(checked);
-      checked && graphRef.current?.saveNodePositions();
     },
     [handleShowOnlyNeighbours]
   );
@@ -138,27 +132,12 @@ const TopologyProcesses: FC<{
 
   const handleServiceSelectedWrapper = useCallback(
     (ids: string[] | undefined) => {
-      handleShowOnlyNeighbours(false);
       handleSelected();
       handleServiceSelected(ids);
       handleCloseModal();
     },
-    [handleCloseModal, handleSelected, handleServiceSelected, handleShowOnlyNeighbours]
+    [handleCloseModal, handleSelected, handleServiceSelected]
   );
-
-  const handleSavePositions = useCallback(() => {
-    saveServiceIdsToLocalStorage();
-
-    graphRef.current?.saveNodePositions();
-    toastRef.current?.addMessage(TopologyLabels.ToastSave);
-  }, [saveServiceIdsToLocalStorage]);
-
-  const handleLoadPositions = useCallback(() => {
-    getServiceIdsFromLocalStorage();
-    getDisplaySelectedFromLocalStorage();
-
-    toastRef.current?.addMessage(TopologyLabels.ToastLoad);
-  }, [getServiceIdsFromLocalStorage, getDisplaySelectedFromLocalStorage]);
 
   const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
     idsSelected,
@@ -172,7 +151,6 @@ const TopologyProcesses: FC<{
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
       showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
       showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-      rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
     }
   });
@@ -212,8 +190,6 @@ const TopologyProcesses: FC<{
             onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             serviceIdsSelected={serviceIdsSelected}
             onServiceSelected={handleServiceSelectedWrapper}
-            onLoadTopology={handleLoadPositions}
-            onSaveTopology={handleSavePositions}
             resourceIdSelected={nodeIdSelected}
             resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
@@ -227,11 +203,10 @@ const TopologyProcesses: FC<{
               <DrawerContentBody>
                 {showOnlyNeighbours && (
                   <GraphComponent
-                    ref={graphRef}
                     nodes={nodes}
                     edges={edges}
                     itemSelected={nodeIdSelected}
-                    layout={LAYOUT_TOPOLOGY_SINGLE_NODE}
+                    layout="neighbour"
                     onClickNode={handleShowProcessDetails}
                     onClickEdge={handleShowProcessPairDetails}
                     savePositions={false}
@@ -240,12 +215,11 @@ const TopologyProcesses: FC<{
 
                 {!showOnlyNeighbours && (
                   <GraphComponent
-                    ref={graphRef}
                     nodes={nodes}
                     edges={edges}
                     combos={combos}
                     itemSelected={nodeIdSelected}
-                    layout={LAYOUT_TOPOLOGY_COMBO}
+                    layout="combo"
                     moveToSelectedNode={moveToNodeSelected && !!idsSelected}
                     onClickNode={handleShowProcessDetails}
                     onClickEdge={handleShowProcessPairDetails}

@@ -22,7 +22,6 @@ interface TopologySiteControllerProps {
     showLinkByteRate: boolean;
     showLinkLatency: boolean;
     showLinkLabelReverse: boolean;
-    rotateLabel: boolean;
   };
 }
 

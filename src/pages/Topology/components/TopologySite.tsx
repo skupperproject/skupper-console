@@ -3,8 +3,7 @@ import { ComponentType, FC, useCallback, useRef } from 'react';
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import { GraphReactAdaptorExposedMethods, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
@@ -16,7 +15,6 @@ import { TopologyController } from '../services';
 import { TopologySiteController } from '../services/topologySiteController';
 import {
   displayOptionsForSites,
-  ROTATE_LINK_LABEL,
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
@@ -31,7 +29,6 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
-  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
 
   const {
@@ -75,9 +72,8 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
   const handleShowOnlyNeighboursChecked = useCallback(
     (checked: boolean) => {
       handleShowOnlyNeighbours(checked);
-      checked && graphRef?.current?.saveNodePositions();
     },
-    [graphRef, handleShowOnlyNeighbours]
+    [handleShowOnlyNeighbours]
   );
 
   const { nodes, edges, nodeIdSelected } = TopologySiteController.siteDataTransformer({
@@ -90,8 +86,7 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-      rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+      showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL)
     }
   });
 
@@ -118,23 +113,20 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
         <StackItem isFilled>
           {showOnlyNeighbours && (
             <GraphComponent
-              ref={graphRef}
               nodes={nodes}
               edges={edges}
               itemSelected={nodeIdSelected}
-              layout={LAYOUT_TOPOLOGY_SINGLE_NODE}
+              layout="neighbour"
               savePositions={false}
             />
           )}
 
           {!showOnlyNeighbours && (
             <GraphComponent
-              ref={graphRef}
               nodes={nodes}
               edges={edges}
               itemSelected={nodeIdSelected}
               onClickNode={handleShowDetails}
-              layout={LAYOUT_TOPOLOGY_DEFAULT}
               moveToSelectedNode={moveToNodeSelected && !!idsSelected}
             />
           )}

@@ -176,8 +176,7 @@ export const TopologyController = {
 
       return {
         ...edge,
-        label,
-        labelRotate: !options?.rotateLabel
+        label
       };
     }),
 

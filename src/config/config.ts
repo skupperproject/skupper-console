@@ -27,9 +27,6 @@ export const waitForElementToBeRemovedTimeout = 10000;
 export const DARK_THEME_CLASS = 'pf-v5-theme-dark';
 export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
 
-// number of nodes to start showing the aggregate nodes in the topology
-export const MAX_NODE_COUNT_WITHOUT_AGGREGATION = Number(process.env.MAX_NODE_COUNT_WITHOUT_AGGREGATION) || 26;
-
 export const IDS_GROUP_SEPARATOR = '~';
 export const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
 export const PAIR_SEPARATOR = '-to-';

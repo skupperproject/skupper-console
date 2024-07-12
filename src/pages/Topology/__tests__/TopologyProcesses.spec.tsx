@@ -59,7 +59,7 @@ const mockUseServiceStateResults = {
 };
 
 const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
-  forwardRef(({ onClickEdge, onClickNode, onClickCombo }, ref) => {
+  forwardRef(({ onClickEdge, onClickNode }, ref) => {
     useImperativeHandle(ref, () => ({
       saveNodePositions() {
         return jest.fn();
@@ -82,7 +82,6 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
         >
           onClickEdgeDeployment
         </Button>
-        <Button onClick={() => onClickCombo && onClickCombo({ id: 'combo', label: 'combo' })}>onClickCombo</Button>
       </>
     );
   })
@@ -205,29 +204,6 @@ describe('Topology Process', () => {
     expect(screen.getByTestId('sk-topology-details')).toBeInTheDocument();
   });
 
-  it('should save node positions and display info alert when handleSaveTopology is called', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    await eventUser.click(screen.getByText(TopologyLabels.SaveButton));
-    expect(screen.getByText(TopologyLabels.ToastSave)).toBeInTheDocument();
-  });
-
-  it('should load node positions and display info alert when handleLoadTopology is called', async () => {
-    jest.spyOn(useTopologyState, 'default').mockImplementation(() => mockUseTopologyStateResults);
-    jest.spyOn(useServiceState, 'default').mockImplementation(() => mockUseServiceStateResults);
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    await eventUser.click(screen.getByText(TopologyLabels.LoadButton));
-    expect(screen.getByText(TopologyLabels.ToastLoad)).toBeInTheDocument();
-    expect(mockGetServiceIdsFromLocalStorage).toHaveBeenCalled();
-    expect(MockGetDisplaySelectedFromLocalStorage).toHaveBeenCalled();
-  });
-
   it('should select a process from the toolbar', async () => {
     jest.spyOn(useTopologyState, 'default').mockImplementation(() => mockUseTopologyStateResults);
 
@@ -305,21 +281,15 @@ describe('Topology Process', () => {
 
     // the service select load data asyncronously compared to the rest of the view
     const placeHolderText = `0 services selected`;
-    expect(screen.queryByPlaceholderText(placeHolderText)).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByPlaceholderText(placeHolderText)).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText('')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByPlaceholderText(`${serviceResults.length} services selected`)).toBeInTheDocument();
-    await eventUser.click(screen.getByPlaceholderText(`${serviceResults.length} services selected`));
+    expect(screen.getByPlaceholderText(placeHolderText)).toBeInTheDocument();
+    await eventUser.click(screen.getByPlaceholderText(placeHolderText));
     await eventUser.click(await screen.findByText(serviceResults[0].name));
 
-    expect(mockHandleSelected).toHaveBeenCalledWith();
-
-    const idsSelected = serviceResults
-      .map(({ identity }) => identity)
-      .filter((id) => id !== serviceResults[0].identity);
-    expect(mockHandleServiceSelected).toHaveBeenCalledWith(idsSelected);
+    expect(mockHandleServiceSelected).toHaveBeenCalledWith([serviceResults[0].identity]);
   });
 });

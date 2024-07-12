@@ -16,7 +16,6 @@ import LoadingPage from '@pages/shared/Loading';
 import TopologySite from '../components/TopologySite';
 import * as useTopologySiteState from '../components/useTopologyState';
 import { TopologyController } from '../services';
-import { TopologyLabels } from '../Topology.enum';
 
 const sitesResults = sitesData.results;
 
@@ -87,16 +86,6 @@ describe('TopologySite', () => {
     });
 
     await eventUser.click(screen.getByText('onClickEdge'));
-  });
-
-  it('should save node positions and display info alert when handleSaveTopology is called', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    await eventUser.click(screen.getByText(TopologyLabels.SaveButton));
-
-    expect(screen.getByText(TopologyLabels.ToastSave)).toBeInTheDocument();
   });
 
   it('should select a Site from the toolbar', async () => {

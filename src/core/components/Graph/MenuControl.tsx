@@ -28,18 +28,14 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   };
 
   const handleZoom = (zoom: number) => {
-    graphInstance.zoomBy(zoom, undefined);
+    graphInstance.zoomBy(zoom);
   };
 
   const handleFitView = () => {
-    const container = GraphController.getParent();
-    graphInstance?.resize(container.clientWidth, container.clientHeight);
     graphInstance.fitView();
   };
 
   const handleCenter = () => {
-    const container = GraphController.getParent();
-    graphInstance?.resize(container.clientWidth, container.clientHeight);
     graphInstance.fitCenter();
   };
 
@@ -48,7 +44,7 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
     GraphController.removeAllNodePositionsFromLocalStorage();
 
     await graphInstance.render();
-    await graphInstance.fitView();
+    graphInstance.fitView();
   };
 
   return (

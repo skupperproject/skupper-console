@@ -16,12 +16,11 @@ import LoadingPage from '@pages/shared/Loading';
 import TopologyComponent from '../components/TopologyComponent';
 import * as useTopologySiteState from '../components/useTopologyState';
 import { TopologyController } from '../services';
-import { TopologyLabels } from '../Topology.enum';
 
 const componentResult = componentData.results;
 
 const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
-  forwardRef(({ onClickEdge, onClickNode, onClickCombo }, ref) => {
+  forwardRef(({ onClickEdge, onClickNode }, ref) => {
     useImperativeHandle(ref, () => ({
       saveNodePositions() {
         return jest.fn();
@@ -36,7 +35,6 @@ const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
         >
           onClickEdge
         </Button>
-        <Button onClick={() => onClickCombo && onClickCombo({ id: 'combo', label: 'combo' })}>onClickCombo</Button>
       </>
     );
   })
@@ -105,16 +103,6 @@ describe('Topology Components', () => {
     await eventUser.click(screen.getByText(componentResult[3].name));
 
     expect(handleSelected).toHaveBeenCalled();
-  });
-
-  it('should save node positions and display info alert when handleSaveTopology is called', async () => {
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    fireEvent.click(screen.getByText(TopologyLabels.SaveButton));
-
-    expect(screen.getByText(TopologyLabels.ToastSave)).toBeInTheDocument();
   });
 
   it('should update showOnlyNeighbours state on checkbox click', async () => {

@@ -6,7 +6,7 @@ const useServiceState = (serviceIds?: string[]) => {
   const [serviceIdsSelected, setServiceIdsSelected] = useState<string[] | undefined>(serviceIds);
 
   const handleServiceSelected = useCallback((ids: string[] | undefined) => {
-    setServiceIdsSelected(ids);
+    setServiceIdsSelected(ids?.sort());
   }, []);
 
   const saveServiceIdsToLocalStorage = useCallback(() => {

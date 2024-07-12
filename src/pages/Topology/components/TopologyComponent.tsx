@@ -3,8 +3,7 @@ import { FC, useCallback, useRef, ComponentType } from 'react';
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import { GraphReactAdaptorExposedMethods, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 
@@ -21,7 +20,6 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
-  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
   const toastRef = useRef<ToastExposeMethods>(null);
 
   const {
@@ -58,7 +56,6 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
   const handleShowOnlyNeighboursChecked = useCallback(
     (checked: boolean) => {
       handleShowOnlyNeighbours(checked);
-      checked && graphRef?.current?.saveNodePositions();
     },
     [handleShowOnlyNeighbours]
   );
@@ -89,23 +86,20 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
         <StackItem isFilled>
           {showOnlyNeighbours && (
             <GraphComponent
-              ref={graphRef}
               nodes={nodes}
               edges={edges}
               itemSelected={nodeIdSelected}
-              layout={LAYOUT_TOPOLOGY_SINGLE_NODE}
+              layout="neighbour"
               savePositions={false}
             />
           )}
 
           {!showOnlyNeighbours && (
             <GraphComponent
-              ref={graphRef}
               nodes={nodes}
               edges={edges}
               itemSelected={nodeIdSelected}
               onClickNode={handleShowDetails}
-              layout={LAYOUT_TOPOLOGY_DEFAULT}
               moveToSelectedNode={moveToNodeSelected && !!idsSelected}
             />
           )}

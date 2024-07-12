@@ -14,7 +14,6 @@ export const SHOW_LINK_BYTERATE = 'show-link-byterate';
 export const SHOW_LINK_LATENCY = 'show-link-latency';
 export const SHOW_DEPLOYMENTS = 'show-deployments';
 export const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
-export const ROTATE_LINK_LABEL = 'show-link-label-rotated';
 
 export const displayOptionsForProcesses: DisplaySelectProps[][] = [
   [
@@ -49,11 +48,6 @@ export const displayOptionsForProcesses: DisplaySelectProps[][] = [
       key: SHOW_DEPLOYMENTS,
       value: SHOW_DEPLOYMENTS,
       label: TopologyLabels.ShowDeployments
-    },
-    {
-      key: ROTATE_LINK_LABEL,
-      value: ROTATE_LINK_LABEL,
-      label: TopologyLabels.CheckboxRotateLabel
     }
   ]
 ];
@@ -94,13 +88,6 @@ export const displayOptionsForSites: DisplaySelectProps[][] = [
       key: SHOW_LINK_REVERSE_LABEL,
       value: SHOW_LINK_REVERSE_LABEL,
       label: TopologyLabels.CheckboxShowLabelReverse
-    }
-  ],
-  [
-    {
-      key: ROTATE_LINK_LABEL,
-      value: ROTATE_LINK_LABEL,
-      label: TopologyLabels.CheckboxRotateLabel
     }
   ]
 ];

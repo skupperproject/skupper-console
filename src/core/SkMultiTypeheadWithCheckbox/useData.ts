@@ -32,20 +32,9 @@ export const useData = ({ initIdsSelected, initOptions, onSelected }: UseDataPro
     }
   };
 
-  const selectAllServices = () => {
-    const allServicesSelected = selected.length === initOptions.length;
-
-    // Set the new selected services to either:
-    // - An empty array if all were previously selected (deselecting everything)
-    // - A sorted array of all service IDs if not all were selected (selecting everything)
-    const updatedSelecteServices =
-      selected.length === initOptions.length ? [] : initOptions.map(({ value }) => value).sort() ?? [];
-
-    setSelected(updatedSelecteServices);
-
-    if (onSelected) {
-      onSelected(allServicesSelected ? [] : undefined);
-    }
+  const clearAllServices = () => {
+    setSelected([]);
+    onSelected?.([]);
   };
 
   const onTextInputChange = (value: string) => {
@@ -151,7 +140,7 @@ export const useData = ({ initIdsSelected, initOptions, onSelected }: UseDataPro
     activeItem,
     focusedItemIndex,
     toggleServiceMenu,
-    selectAllServices,
+    selectAllServices: clearAllServices,
     selectService,
     onTextInputChange,
     handleMenuArrowKeys,

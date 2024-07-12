@@ -45,7 +45,6 @@ export interface DisplayOptions {
   showLinkByteRate?: boolean;
   showLinkLatency?: boolean;
   showLinkLabelReverse?: boolean;
-  rotateLabel?: boolean;
 }
 
 export interface NodeOrEdgeListProps {
