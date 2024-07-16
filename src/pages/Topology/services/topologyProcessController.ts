@@ -10,6 +10,7 @@ import { TopologyController, convertEntityToNode, groupEdges, groupNodes } from 
 
 interface TopologyProcessControllerProps {
   idsSelected: string[] | undefined;
+  searchText: string;
   processes: ProcessResponse[];
   processesPairs: ProcessPairsResponse[];
   metrics: TopologyMetrics | null;
@@ -70,6 +71,7 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
 export const TopologyProcessController = {
   dataTransformer: ({
     idsSelected,
+    searchText,
     processes,
     processesPairs,
     metrics,
@@ -119,6 +121,7 @@ export const TopologyProcessController = {
       // when the id selected comes from an other view the id is a single node but maybe this page has the option showDeployments == true.
       // In that case we need to find the processNode with ids aggregated where the single node is contained
       nodeIdSelected: findMatchedNode(processNodes, idsSelected),
+      nodeIdsToHighLight: TopologyController.nodesToHighlight(processNodes, searchText),
       nodes: processNodes.map((node) => ({
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id

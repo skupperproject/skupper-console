@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import { Graph } from '@antv/g6';
 import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { ExpandArrowsAltIcon, ExpandIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
+import { ExpandArrowsAltIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import ProcessLegend from './Legend';
 import { GraphController } from './services';
@@ -33,10 +33,6 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
 
   const handleFitView = () => {
     graphInstance.fitView();
-  };
-
-  const handleCenter = () => {
-    graphInstance.fitCenter();
   };
 
   const handleCleanAllGraphConfigurations = async () => {
@@ -88,19 +84,7 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
           </ToolbarItem>
 
           <ToolbarItem>
-            <Tooltip content={'center'}>
-              <Button
-                size="sm"
-                variant="tertiary"
-                onClick={handleCenter}
-                icon={<ExpandIcon />}
-                className="sk-topology-control-bar__button"
-              />
-            </Tooltip>
-          </ToolbarItem>
-
-          <ToolbarItem>
-            <Tooltip content={'reposition'}>
+            <Tooltip content={'reset'}>
               <Button
                 size="sm"
                 variant="tertiary"

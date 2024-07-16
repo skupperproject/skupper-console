@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
-import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Checkbox } from '@patternfly/react-core';
+import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 
 import DisplayOptions from './DisplayOptions';
-import DisplayResources, { ResourcesOptionsProps } from './DisplayResources';
+import DisplayResources from './DisplayResources';
 import DisplayServices from './DisplayServices';
 import {
   SHOW_LINK_BYTERATE,
@@ -12,7 +12,6 @@ import {
   SHOW_LINK_REVERSE_LABEL,
   SHOW_ROUTER_LINKS
 } from '../Topology.constants';
-import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface ToolbarProps {
@@ -25,9 +24,7 @@ interface ToolbarProps {
   onMoveToNodeSelectedChecked?: (checked: boolean) => void;
   serviceIdsSelected?: string[];
   onServiceSelected?: (ids: string[] | undefined) => void;
-  resourceIdSelected?: string;
-  resourceOptions: ResourcesOptionsProps[];
-  onResourceSelected?: (id: string | undefined) => void;
+  onResourceSelected?: (id: string) => void;
   resourcePlaceholder: string;
 }
 
@@ -35,14 +32,12 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
   displayOptions = [[]],
   onDisplayOptionSelected,
   defaultDisplayOptionsSelected = [],
-  showOnlyNeighbours,
-  onShowOnlyNeighboursChecked,
-  moveToNodeSelected,
-  onMoveToNodeSelectedChecked,
+  // showOnlyNeighbours,
+  // onShowOnlyNeighboursChecked,
+  // moveToNodeSelected,
+  // onMoveToNodeSelectedChecked,
   serviceIdsSelected,
   onServiceSelected,
-  resourceIdSelected,
-  resourceOptions,
   resourcePlaceholder,
   onResourceSelected
 }) {
@@ -83,15 +78,10 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
         {onResourceSelected && (
           <ToolbarGroup>
             <ToolbarItem data-testid="display-resources">
-              <DisplayResources
-                id={resourceIdSelected}
-                options={resourceOptions}
-                placeholder={resourcePlaceholder}
-                onSelect={onResourceSelected}
-              />
+              <DisplayResources placeholder={resourcePlaceholder} onSelect={onResourceSelected} />
             </ToolbarItem>
 
-            <ToolbarItem data-testid="show-only-neighbours-checkbox">
+            {/* <ToolbarItem data-testid="show-only-neighbours-checkbox">
               <Checkbox
                 label={TopologyLabels.CheckboxShowOnlyNeghbours}
                 isDisabled={!resourceIdSelected}
@@ -113,7 +103,7 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
                 }}
                 id="moveToNodeSelectedCheckbox"
               />
-            </ToolbarItem>
+            </ToolbarItem> */}
           </ToolbarGroup>
         )}
       </ToolbarContent>

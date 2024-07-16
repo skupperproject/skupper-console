@@ -10,7 +10,7 @@ const useModalState = () => {
   }, []);
 
   const openProcessModal = useCallback((id: string) => {
-    setModalType({ type: 'process', id });
+    setModalType((prev) => ({ type: 'process', id: prev?.id !== id ? id : '' }));
   }, []);
 
   const openProcessPairModal = useCallback((id: string) => {

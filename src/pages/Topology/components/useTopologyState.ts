@@ -16,19 +16,15 @@ const useTopologyState = ({
 
   const [displayOptionsSelected, setDisplayOptions] = useState<string[]>(configuration);
   const [idsSelected, setIdsSelected] = useState<string[] | undefined>(ids);
-  const [showOnlyNeighbours, setShowOnlyNeighbours] = useState(false);
-  const [moveToNodeSelected, setMoveToNodeSelected] = useState(false);
+
+  const [searchText, setSearchText] = useState('');
 
   const handleSelected = useCallback((selected?: string[]) => {
     setIdsSelected(selected);
   }, []);
 
-  const handleShowOnlyNeighbours = useCallback((checked: boolean) => {
-    setShowOnlyNeighbours(checked);
-  }, []);
-
-  const handleMoveToNodeSelectedChecked = useCallback((checked: boolean) => {
-    setMoveToNodeSelected(checked);
+  const handleSearchText = useCallback((text: string) => {
+    setSearchText(text);
   }, []);
 
   const handleDisplaySelected = useCallback(
@@ -54,14 +50,12 @@ const useTopologyState = ({
 
   return {
     idsSelected,
-    showOnlyNeighbours,
-    moveToNodeSelected,
+    searchText,
     displayOptionsSelected,
     handleDisplaySelected,
+    handleSearchText,
     getDisplaySelectedFromLocalStorage,
-    handleSelected,
-    handleShowOnlyNeighbours,
-    handleMoveToNodeSelectedChecked
+    handleSelected
   };
 };
 

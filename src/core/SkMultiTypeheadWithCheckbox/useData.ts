@@ -16,6 +16,10 @@ export const useData = ({ initIdsSelected, initOptions, onSelected }: UseDataPro
     setIsOpen(!isOpen);
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   const selectService = (value: string) => {
     if (value && value !== 'no results') {
       const items = selected.includes(value)
@@ -144,6 +148,7 @@ export const useData = ({ initIdsSelected, initOptions, onSelected }: UseDataPro
     selectService,
     onTextInputChange,
     handleMenuArrowKeys,
-    onInputKeyDown
+    onInputKeyDown,
+    closeMenu
   };
 };

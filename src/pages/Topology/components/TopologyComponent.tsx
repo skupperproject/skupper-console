@@ -11,7 +11,6 @@ import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyComponentData from './useTopologyComponentData';
 import useTopologyState from './useTopologyState';
-import { TopologyController } from '../services';
 import { TopologyComponentController } from '../services/topologyComponentController';
 import { TopologyLabels } from '../Topology.enum';
 
@@ -22,17 +21,10 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
   const navigate = useNavigate();
   const toastRef = useRef<ToastExposeMethods>(null);
 
-  const {
-    idsSelected,
-    showOnlyNeighbours,
-    moveToNodeSelected,
-    handleSelected,
-    handleShowOnlyNeighbours,
-    handleMoveToNodeSelectedChecked
-  } = useTopologyState({ ids });
+  const { idsSelected, searchText, handleSearchText } = useTopologyState({ ids });
 
   const { components, componentsPairs } = useTopologyComponentData({
-    idSelected: showOnlyNeighbours ? idsSelected : undefined
+    idSelected: undefined
   });
 
   const handleShowDetails = useCallback(
@@ -46,22 +38,9 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
     [navigate, components]
   );
 
-  const handleSelectedWrapper = useCallback(
-    (siteId?: string) => {
-      handleSelected(TopologyController.transformStringIdsToIds(siteId));
-    },
-    [handleSelected]
-  );
-
-  const handleShowOnlyNeighboursChecked = useCallback(
-    (checked: boolean) => {
-      handleShowOnlyNeighbours(checked);
-    },
-    [handleShowOnlyNeighbours]
-  );
-
-  const { nodeIdSelected, nodes, edges } = TopologyComponentController.dataTransformer({
+  const { nodeIdSelected, nodes, edges, nodeIdsToHighLight } = TopologyComponentController.dataTransformer({
     idsSelected,
+    searchText,
     components,
     componentsPairs
   });
@@ -71,38 +50,20 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
       <Stack>
         <StackItem>
           <TopologyToolbar
-            showOnlyNeighbours={showOnlyNeighbours}
-            onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
-            moveToNodeSelected={moveToNodeSelected}
-            onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
-            resourceIdSelected={nodeIdSelected}
-            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
-            onResourceSelected={handleSelectedWrapper}
+            onResourceSelected={handleSearchText}
           />
           <Divider />
         </StackItem>
 
         <StackItem isFilled>
-          {showOnlyNeighbours && (
-            <GraphComponent
-              nodes={nodes}
-              edges={edges}
-              itemSelected={nodeIdSelected}
-              layout="neighbour"
-              savePositions={false}
-            />
-          )}
-
-          {!showOnlyNeighbours && (
-            <GraphComponent
-              nodes={nodes}
-              edges={edges}
-              itemSelected={nodeIdSelected}
-              onClickNode={handleShowDetails}
-              moveToSelectedNode={moveToNodeSelected && !!idsSelected}
-            />
-          )}
+          <GraphComponent
+            nodes={nodes}
+            edges={edges}
+            itemSelected={nodeIdSelected}
+            itemsToHighlight={nodeIdsToHighLight}
+            onClickNode={handleShowDetails}
+          />
         </StackItem>
       </Stack>
       <AlertToasts ref={toastRef} />

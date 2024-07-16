@@ -51,24 +51,4 @@ describe('useTopologySiteState', () => {
 
     expect(result.current.idsSelected).toEqual(['site_id']);
   });
-
-  it('should handle show only neighbours', () => {
-    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
-
-    act(() => {
-      result.current.handleShowOnlyNeighbours(true);
-    });
-
-    expect(result.current.showOnlyNeighbours).toBe(true);
-  });
-
-  it('should handle move to node selection', () => {
-    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
-
-    act(() => {
-      result.current.handleMoveToNodeSelectedChecked(true);
-    });
-
-    expect(result.current.moveToNodeSelected).toBe(true);
-  });
 });

@@ -45,6 +45,7 @@ export interface GraphReactAdaptorProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
   combos?: GraphCombo[];
+  itemsToHighlight?: string[];
   itemSelected?: string;
   onClickNode?: (id: string) => void;
   onClickEdge?: (id: string) => void;

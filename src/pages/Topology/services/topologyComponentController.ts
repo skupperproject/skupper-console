@@ -9,6 +9,7 @@ import { TopologyController, convertEntityToNode } from '.';
 
 interface TopologyComponentControllerProps {
   idsSelected: string[] | undefined;
+  searchText: string;
   components: ComponentResponse[];
   componentsPairs: ComponentPairsResponse[];
 }
@@ -29,9 +30,14 @@ const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
   });
 
 export const TopologyComponentController = {
-  dataTransformer: ({ idsSelected, components, componentsPairs }: TopologyComponentControllerProps) => ({
-    nodeIdSelected: TopologyController.transformIdsToStringIds(idsSelected),
-    nodes: convertComponentsToNodes(components),
-    edges: TopologyController.convertPairsToEdges(componentsPairs)
-  })
+  dataTransformer: ({ idsSelected, components, componentsPairs, searchText }: TopologyComponentControllerProps) => {
+    const nodes = convertComponentsToNodes(components);
+
+    return {
+      nodeIdSelected: TopologyController.transformIdsToStringIds(idsSelected),
+      nodeIdsToHighLight: TopologyController.nodesToHighlight(nodes, searchText),
+      nodes,
+      edges: TopologyController.convertPairsToEdges(componentsPairs)
+    };
+  }
 };

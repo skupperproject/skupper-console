@@ -202,6 +202,9 @@ export const TopologyController = {
   },
   areGroupOfIds(ids?: string) {
     return !!ids?.includes(IDS_GROUP_SEPARATOR);
+  },
+  nodesToHighlight(nodes: GraphNode[], text: string) {
+    return nodes.filter((node) => text && node.label.includes(text)).map((node) => node.id);
   }
 };
 

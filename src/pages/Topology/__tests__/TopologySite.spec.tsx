@@ -14,7 +14,6 @@ import { loadMockServer } from '@mocks/server';
 import LoadingPage from '@pages/shared/Loading';
 
 import TopologySite from '../components/TopologySite';
-import * as useTopologySiteState from '../components/useTopologyState';
 import { TopologyController } from '../services';
 
 const sitesResults = sitesData.results;
@@ -86,84 +85,5 @@ describe('TopologySite', () => {
     });
 
     await eventUser.click(screen.getByText('onClickEdge'));
-  });
-
-  it('should select a Site from the toolbar', async () => {
-    const handleSelected = jest.fn();
-
-    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idsSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
-      showOnlyNeighbours: false,
-      moveToNodeSelected: false,
-      displayOptionsSelected: [],
-      handleSelected,
-      getDisplaySelectedFromLocalStorage: jest.fn(),
-      handleShowOnlyNeighbours: jest.fn(),
-      handleMoveToNodeSelectedChecked: jest.fn(),
-      handleDisplaySelected: jest.fn()
-    }));
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    await eventUser.click(screen.getByDisplayValue(`${sitesResults[2].name} (${sitesResults[2].siteVersion})`));
-    await eventUser.click(screen.getByText(`${sitesResults[3].name} (${sitesResults[3].siteVersion})`));
-
-    expect(handleSelected).toHaveBeenCalled();
-  });
-
-  it('should update showOnlyNeighbours state on checkbox click', async () => {
-    const handleShowOnlyNeighbours = jest.fn();
-
-    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idsSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
-      showOnlyNeighbours: false,
-      moveToNodeSelected: false,
-      displayOptionsSelected: [],
-      handleSelected: jest.fn(),
-      getDisplaySelectedFromLocalStorage: jest.fn(),
-      handleShowOnlyNeighbours,
-      handleMoveToNodeSelectedChecked: jest.fn(),
-      handleDisplaySelected: jest.fn()
-    }));
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    const checkbox = screen
-      .getByTestId('show-only-neighbours-checkbox')
-      .querySelector('input[type="checkbox') as HTMLInputElement;
-
-    await eventUser.click(checkbox);
-    expect(handleShowOnlyNeighbours).toHaveBeenCalledWith(true);
-  });
-
-  it('should update moveToNodeSelected state on checkbox click', async () => {
-    const handleMoveToNodeSelectedChecked = jest.fn();
-
-    jest.spyOn(useTopologySiteState, 'default').mockImplementation(() => ({
-      idsSelected: TopologyController.transformStringIdsToIds(sitesResults[2].identity),
-      showOnlyNeighbours: false,
-      moveToNodeSelected: false,
-      displayOptionsSelected: [],
-      handleSelected: jest.fn(),
-      getDisplaySelectedFromLocalStorage: jest.fn(),
-      handleShowOnlyNeighbours: jest.fn(),
-      handleMoveToNodeSelectedChecked,
-      handleDisplaySelected: jest.fn()
-    }));
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    const checkbox = screen
-      .getByTestId('move-to-node-selected-checkbox')
-      .querySelector('input[type="checkbox') as HTMLInputElement;
-
-    await eventUser.click(checkbox);
-    expect(handleMoveToNodeSelectedChecked).toHaveBeenCalledWith(true);
   });
 });

@@ -13,6 +13,7 @@ import { TopologyController, convertEntityToNode } from '.';
 
 interface TopologySiteControllerProps {
   idsSelected: string[] | undefined;
+  searchText: string;
   sites: SiteResponse[];
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
@@ -80,6 +81,7 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
 export const TopologySiteController = {
   siteDataTransformer: ({
     idsSelected,
+    searchText,
     sites,
     routerLinks,
     sitesPairs,
@@ -97,9 +99,12 @@ export const TopologySiteController = {
       edges = convertRouterLinksToEdges(sites, routerLinks);
     }
 
+    const nodes = convertSitesToNodes(sites);
+
     return {
       nodeIdSelected: TopologyController.transformIdsToStringIds(idsSelected),
-      nodes: convertSitesToNodes(sites),
+      nodeIdsToHighLight: TopologyController.nodesToHighlight(nodes, searchText),
+      nodes,
       edges
     };
   }

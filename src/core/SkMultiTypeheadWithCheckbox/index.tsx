@@ -34,7 +34,8 @@ const SkSelectMultiTypeaheadCheckbox: FC<SkSelectMultiTypeaheadCheckboxProps> = 
     selectAllServices,
     selectService,
     onTextInputChange,
-    onInputKeyDown
+    onInputKeyDown,
+    closeMenu
   } = useData({
     initIdsSelected,
     initOptions,
@@ -90,6 +91,7 @@ const SkSelectMultiTypeaheadCheckbox: FC<SkSelectMultiTypeaheadCheckboxProps> = 
       isOpen={isOpen}
       selected={selected}
       onSelect={(_, selection) => handleSelectService(selection as string)}
+      onOpenChange={(open) => !open && closeMenu()}
       toggle={toggle}
     >
       <SelectList id="select-multi-typeahead-checkbox-listbox">

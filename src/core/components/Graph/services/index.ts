@@ -227,9 +227,9 @@ export const GraphController = {
       }
     });
 
-    graphInstance.setElementState(allIdsWithEmptyState, false);
-    graphInstance.setElementState(allHiddenIds, false);
-    graphInstance.setElementState(itemId, 'activeElement', false);
+    graphInstance.setElementState(allIdsWithEmptyState);
+    graphInstance.setElementState(allHiddenIds);
+    graphInstance.setElementState(itemId, 'activeElement');
   },
 
   activateEdgeRelations: (graphInstance: Graph, itemId: ID) => {
@@ -256,9 +256,9 @@ export const GraphController = {
       }
     });
 
-    graphInstance.setElementState(allIdsWithEmptyState, false);
-    graphInstance.setElementState(allHiddenIds, false);
-    graphInstance.setElementState(itemId, 'activeElement', false);
+    graphInstance.setElementState(allIdsWithEmptyState);
+    graphInstance.setElementState(allHiddenIds);
+    graphInstance.setElementState(itemId, 'activeElement');
   },
 
   cleanAllRelations: (graphInstance: Graph) => {

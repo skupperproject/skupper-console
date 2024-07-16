@@ -55,12 +55,11 @@ const TopologyProcesses: FC<{
 
   const {
     idsSelected,
-    showOnlyNeighbours,
-    moveToNodeSelected,
+    searchText,
+
     displayOptionsSelected,
     handleSelected,
-    handleShowOnlyNeighbours,
-    handleMoveToNodeSelectedChecked,
+    handleSearchText,
     handleDisplaySelected
   } = useTopologyState({
     ids: processIds,
@@ -71,43 +70,26 @@ const TopologyProcesses: FC<{
   const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
 
   const { processes, processesPairs, metrics } = useTopologyProcessData({
-    idsSelected: showOnlyNeighbours ? idsSelected : undefined
+    idsSelected: undefined
   });
-
-  const handleShowOnlyNeighboursChecked = useCallback(
-    (checked: boolean) => {
-      handleShowOnlyNeighbours(checked);
-    },
-    [handleShowOnlyNeighbours]
-  );
-
-  const handleProcessSelected = useCallback(
-    (id?: string) => {
-      handleShowOnlyNeighbours(false);
-      handleSelected(TopologyController.transformStringIdsToIds(id));
-      handleCloseModal();
-    },
-    [handleCloseModal, handleSelected, handleShowOnlyNeighbours]
-  );
 
   const handleShowProcessDetails = useCallback(
     (id: string) => {
       // handle process aggregated
       if (TopologyController.areGroupOfIds(id)) {
-        handleSelected(TopologyController.transformStringIdsToIds(id));
         openProcessModal(id);
 
         return;
       }
 
-      // handle a single process selection
+      //handle a single process selection
       const process = processes?.find(({ identity }) => identity === id);
 
       if (process) {
         navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
       }
     },
-    [handleSelected, navigate, openProcessModal, processes]
+    [navigate, openProcessModal, processes]
   );
 
   const handleShowProcessPairDetails = useCallback(
@@ -139,8 +121,9 @@ const TopologyProcesses: FC<{
     [handleCloseModal, handleSelected, handleServiceSelected]
   );
 
-  const { nodes, edges, combos, nodeIdSelected } = TopologyProcessController.dataTransformer({
+  const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
     idsSelected,
+    searchText,
     processes,
     processesPairs,
     serviceIdsSelected,
@@ -184,16 +167,10 @@ const TopologyProcesses: FC<{
             displayOptions={displayOptionsForProcesses}
             onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
-            showOnlyNeighbours={showOnlyNeighbours}
-            onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
-            moveToNodeSelected={moveToNodeSelected}
-            onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
             serviceIdsSelected={serviceIdsSelected}
             onServiceSelected={handleServiceSelectedWrapper}
-            resourceIdSelected={nodeIdSelected}
-            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
-            onResourceSelected={handleProcessSelected}
+            onResourceSelected={handleSearchText}
           />
           <Divider />
         </StackItem>
@@ -201,30 +178,16 @@ const TopologyProcesses: FC<{
           <Drawer isExpanded={!!modalType?.id} isInline>
             <DrawerContent panelContent={panelContent}>
               <DrawerContentBody>
-                {showOnlyNeighbours && (
-                  <GraphComponent
-                    nodes={nodes}
-                    edges={edges}
-                    itemSelected={nodeIdSelected}
-                    layout="neighbour"
-                    onClickNode={handleShowProcessDetails}
-                    onClickEdge={handleShowProcessPairDetails}
-                    savePositions={false}
-                  />
-                )}
-
-                {!showOnlyNeighbours && (
-                  <GraphComponent
-                    nodes={nodes}
-                    edges={edges}
-                    combos={combos}
-                    itemSelected={nodeIdSelected}
-                    layout="combo"
-                    moveToSelectedNode={moveToNodeSelected && !!idsSelected}
-                    onClickNode={handleShowProcessDetails}
-                    onClickEdge={handleShowProcessPairDetails}
-                  />
-                )}
+                <GraphComponent
+                  nodes={nodes}
+                  edges={edges}
+                  combos={combos}
+                  itemSelected={nodeIdSelected}
+                  itemsToHighlight={nodeIdsToHighLight}
+                  layout="combo"
+                  onClickNode={handleShowProcessDetails}
+                  onClickEdge={handleShowProcessPairDetails}
+                />
               </DrawerContentBody>
             </DrawerContent>
           </Drawer>

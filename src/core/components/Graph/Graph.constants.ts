@@ -29,11 +29,16 @@ const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
 export const GRAPH_CONTAINER_ID = 'container';
-const NODE_SIZE = 96;
+const NODE_SIZE = 52;
 const ICON_SIZE = NODE_SIZE / 2;
-const LABEL_FONT_SIZE = 16;
+const LABEL_FONT_SIZE = 10;
 const INACTIVE_OPACITY_VALUE = 0.3;
-const LABEL_PADDING = [2, 6];
+const LABEL_PADDING = [0, 4];
+
+export enum GraphStates {
+  Highlight = 'highlightElement',
+  Exclude = 'excludeElement'
+}
 
 // Nodes
 export const NODE_CONFIG: NodeOptions = {
@@ -41,9 +46,8 @@ export const NODE_CONFIG: NodeOptions = {
     opacity: 1,
     size: NODE_SIZE,
     fill: NODE_COLOR_DEFAULT,
-    strokeWidth: 1,
     stroke: NODE_BORDER_COLOR_DEFAULT,
-    lineWidth: 2,
+    lineWidth: 1,
     labelOffsetY: 4,
     labelFill: NODE_COLOR_DEFAULT_LABEL,
     labelFontSize: LABEL_FONT_SIZE,
@@ -59,14 +63,23 @@ export const NODE_CONFIG: NodeOptions = {
     iconWidth: ICON_SIZE,
     iconHeight: ICON_SIZE,
     badgeFontSize: LABEL_FONT_SIZE,
-    badgeBackgroundHeight: 30,
-    badgeBackgroundWidth: 30
+    badgeBackgroundHeight: LABEL_FONT_SIZE * 2,
+    badgeBackgroundWidth: LABEL_FONT_SIZE * 2,
+    shadowColor: HexColors.Black400,
+    shadowBlur: 0,
+    shadowOffsetX: 0,
+    shadowOffsetY: 4,
+    labelBackgroundShadowColor: HexColors.Black400,
+    labelBackgroundShadowBlur: 0,
+    labelBackgroundShadowOffsetX: 0,
+    labelBackgroundShadowOffsetY: 4
   },
 
   state: {
     hover: {
-      stroke: HexColors.Blue400,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      shadowBlur: 8,
+      labelBackgroundShadowBlur: 8
     },
 
     activeElement: {
@@ -74,11 +87,21 @@ export const NODE_CONFIG: NodeOptions = {
       stroke: HexColors.Blue400,
       labelFill: HexColors.White,
       labelBackgroundFill: HexColors.Blue400,
-      labelBackgroundStroke: HexColors.Blue400
+      labelBackgroundStroke: HexColors.Blue400,
+      lineWidth: 2
+    },
+
+    [GraphStates.Highlight]: {
+      stroke: 'orange',
+      lineWidth: 2
     },
 
     hidden: {
       opacity: INACTIVE_OPACITY_VALUE
+    },
+
+    [GraphStates.Exclude]: {
+      opacity: 0.5
     }
   }
 };
@@ -102,6 +125,7 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
   style: {
     visibility: 'visible',
     halo: false,
+    opacity: 1,
     haloOpacity: 0.1,
     lineWidth: 0.5,
     increasedLineWidthForHitTesting: 20,
@@ -124,11 +148,21 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     hidden: {
       visibility: 'hidden'
     },
+
+    active: {
+      opacity: 1
+    },
+
+    [GraphStates.Exclude]: {
+      opacity: 0.5
+    },
+
     activeElement: {
       halo: true
     },
+
     hover: {
-      halo: true,
+      //halo: true,
       cursor: 'pointer'
     }
   }
@@ -149,7 +183,7 @@ export const SITE_EDGE_CONFIG: EdgeOptions = {
 export const COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
-    lineWidth: 6,
+    lineWidth: 4,
     fill: COMBO__BG_COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 10,
@@ -179,13 +213,12 @@ export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
     'zoom-canvas',
     'drag-element',
     {
-      // state for the rest of the nodes
       key: 'click-select',
       type: 'click-select',
       degree: 1,
       state: 'activeElement',
       neighborState: 'hover',
-      unselectedState: 'hidden',
+      unselectedState: '',
       enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
     },
     {
@@ -194,14 +227,14 @@ export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
       type: 'hover-activate',
       degree: 0,
       state: 'hover',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
+      enable: ({ targetType }: IPointerEvent) => targetType === 'node'
     },
     {
       // state for the rest of the nodes
       key: 'hover-activate',
       type: 'hover-activate',
       degree: 1,
-      state: '',
+      state: 'active',
       inactiveState: 'hidden',
       enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
     },
@@ -236,9 +269,10 @@ const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
   preventOverlap: true,
   clustering: true,
   nodeClusterBy: 'cluster',
-  clusterNodeStrength: 100,
+  clusterNodeStrength: 150,
   linkDistance: 600,
-  factor: 15
+  factor: 15,
+  gravity: 80
 };
 
 const LAYOUT_TOPOLOGY_SINGLE_NODE: AntVDagreLayoutOptions & { type: 'antv-dagre' } = {

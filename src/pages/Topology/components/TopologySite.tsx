@@ -11,7 +11,6 @@ import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologySiteData from './useTopologySiteData';
 import useTopologyState from './useTopologyState';
-import { TopologyController } from '../services';
 import { TopologySiteController } from '../services/topologySiteController';
 import {
   displayOptionsForSites,
@@ -33,12 +32,10 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
 
   const {
     idsSelected,
-    showOnlyNeighbours,
-    moveToNodeSelected,
+    searchText,
     displayOptionsSelected,
-    handleSelected,
-    handleShowOnlyNeighbours,
-    handleMoveToNodeSelectedChecked,
+    handleSearchText,
+
     handleDisplaySelected
   } = useTopologyState({
     ids,
@@ -47,7 +44,7 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
   });
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    idsSelected: showOnlyNeighbours ? idsSelected : undefined,
+    idsSelected: undefined,
     showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
     showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
     showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
@@ -62,22 +59,9 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
     [navigate, sites]
   );
 
-  const handleSelectedWrapper = useCallback(
-    (siteId?: string) => {
-      handleSelected(TopologyController.transformStringIdsToIds(siteId));
-    },
-    [handleSelected]
-  );
-
-  const handleShowOnlyNeighboursChecked = useCallback(
-    (checked: boolean) => {
-      handleShowOnlyNeighbours(checked);
-    },
-    [handleShowOnlyNeighbours]
-  );
-
-  const { nodes, edges, nodeIdSelected } = TopologySiteController.siteDataTransformer({
+  const { nodes, edges, nodeIdSelected, nodeIdsToHighLight } = TopologySiteController.siteDataTransformer({
     idsSelected,
+    searchText,
     sites,
     sitesPairs,
     routerLinks,
@@ -98,38 +82,20 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
             displayOptions={displayOptionsForSites}
             onDisplayOptionSelected={handleDisplaySelected}
             defaultDisplayOptionsSelected={displayOptionsSelected}
-            showOnlyNeighbours={showOnlyNeighbours}
-            onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
-            moveToNodeSelected={moveToNodeSelected}
-            onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
-            resourceIdSelected={nodeIdSelected}
-            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
             resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
-            onResourceSelected={handleSelectedWrapper}
+            onResourceSelected={handleSearchText}
           />
           <Divider />
         </StackItem>
 
         <StackItem isFilled>
-          {showOnlyNeighbours && (
-            <GraphComponent
-              nodes={nodes}
-              edges={edges}
-              itemSelected={nodeIdSelected}
-              layout="neighbour"
-              savePositions={false}
-            />
-          )}
-
-          {!showOnlyNeighbours && (
-            <GraphComponent
-              nodes={nodes}
-              edges={edges}
-              itemSelected={nodeIdSelected}
-              onClickNode={handleShowDetails}
-              moveToSelectedNode={moveToNodeSelected && !!idsSelected}
-            />
-          )}
+          <GraphComponent
+            nodes={nodes}
+            edges={edges}
+            itemSelected={nodeIdSelected}
+            itemsToHighlight={nodeIdsToHighLight}
+            onClickNode={handleShowDetails}
+          />
         </StackItem>
       </Stack>
       <AlertToasts ref={toastRef} />

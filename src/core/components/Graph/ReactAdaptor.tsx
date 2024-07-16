@@ -14,16 +14,10 @@ import {
 } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
-import {
-  GraphEdge,
-  GraphCombo,
-  GraphNode,
-  GraphReactAdaptorProps,
-  LocalStorageData
-} from '@core/components/Graph/Graph.interfaces';
+import { GraphReactAdaptorProps, LocalStorageData } from '@core/components/Graph/Graph.interfaces';
 
 import { registerElements } from './CustomElements';
-import { DEFAULT_GRAPH_CONFIG, GRAPH_BG_COLOR, GRAPH_CONTAINER_ID, LAYOUT_MAP } from './Graph.constants';
+import { DEFAULT_GRAPH_CONFIG, GRAPH_BG_COLOR, GRAPH_CONTAINER_ID, GraphStates, LAYOUT_MAP } from './Graph.constants';
 import MenuControl from './MenuControl';
 import { GraphController } from './services';
 
@@ -36,23 +30,19 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     combos,
     onClickEdge,
     onClickNode,
+    itemsToHighlight,
     itemSelected,
     layout = 'default',
     moveToSelectedNode = false,
     savePositions = true
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
-
-    const itemSelectedRef = useRef<string | undefined>();
-    const prevNodesRef = useRef<GraphNode[]>(nodesWithoutPosition);
-    const prevEdgesRef = useRef<GraphEdge[]>(edges);
-    const prevCombosRef = useRef<GraphCombo[] | undefined>(combos);
     const topologyGraphRef = useRef<Graph>();
 
-    const save = () => {
+    const save = useCallback(() => {
       const graphInstance = topologyGraphRef.current;
 
-      if (!graphInstance?.getNodeData()) {
+      if (!graphInstance?.getNodeData() || !savePositions) {
         return;
       }
 
@@ -62,7 +52,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       );
 
       GraphController.saveAllNodePositions(updatedNodes);
-    };
+    }, [savePositions]);
 
     const toggleHover = useCallback((enable: boolean = false) => {
       const graphInstance = topologyGraphRef.current as Graph;
@@ -79,43 +69,36 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     }, []);
 
     /** Simulate a Select event, regardless of whether a node or edge is preselected */
-    const handleItemSelected = useCallback(
-      (id?: string) => {
-        const graphInstance = topologyGraphRef.current;
+    // const handleItemSelected = useCallback((id?: string) => {
+    //   const graphInstance = topologyGraphRef.current!;
 
-        if (graphInstance) {
-          if (!id) {
-            GraphController.cleanAllRelations(graphInstance);
+    //   if (graphInstance) {
+    //     if (!id) {
+    //       GraphController.cleanAllRelations(graphInstance);
 
-            return;
-          }
-          //disable the hover effect of the graph if an item is selected
-          toggleHover(!itemSelectedRef.current);
-          const type = graphInstance.getElementType(id);
+    //       return;
+    //     }
 
-          if (type === 'node') {
-            GraphController.activateNodeRelations(graphInstance, id);
-          }
+    //     const type = graphInstance.getElementType(id);
 
-          if (type === 'edge') {
-            GraphController.activateEdgeRelations(graphInstance, id);
-          }
-        }
-      },
-      [toggleHover]
-    );
+    //     if (type === 'node') {
+    //       GraphController.activateNodeRelations(graphInstance, id);
+    //     }
 
-    // const afterLayout = useCallback(() => {
-    //   if (itemSelectedRef.current) {
-    //     handleItemSelected(itemSelectedRef.current);
+    //     if (type === 'edge') {
+    //       GraphController.activateEdgeRelations(graphInstance, id);
+    //     }
     //   }
-    //   save();
-    // }, [handleItemSelected]);
+    // }, []);
 
-    const handleResize = async () => {
+    const handleResize = () => {
       const graphInstance = topologyGraphRef.current;
-      //await graphInstance?.fitView();
-      graphInstance?.resize();
+      const dimensions = graphInstance?.getSize()!;
+      const newDimension = document.getElementById(GRAPH_CONTAINER_ID)?.getBoundingClientRect()!;
+
+      if (newDimension?.width > dimensions[0]) {
+        graphInstance?.resize();
+      }
     };
 
     const setLabelText = (id: string, labelKey: string) => {
@@ -144,68 +127,40 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         const graph = new Graph(options);
         registerElements();
 
-        graph.on<IDragEvent<Combo>>(ComboEvent.DRAG_END, ({ target: { id } }) => {
-          graph.setElementZIndex(id, 0);
-        });
-        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_ENTER, ({ target: { id } }) =>
-          setLabelText(id, 'fullLabelText')
-        );
-        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_LEAVE, ({ target: { id } }) =>
-          setLabelText(id, 'partialLabelText')
-        );
+        graph.on<IDragEvent<Combo>>(ComboEvent.DRAG_END, (e) => graph.setElementZIndex(e.target.id, 0));
+        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_ENTER, (e) => setLabelText(e.target.id, 'fullLabelText'));
+        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_LEAVE, (e) => setLabelText(e.target.id, 'partialLabelText'));
         // Enable the graphic behavior ActivateNodeRelation for the drag and drop event
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_DOWN, () => toggleHover(false));
-        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, () => toggleHover(!itemSelectedRef.current));
+        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, () => toggleHover(true));
 
-        graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target: { id } }) => onClickNode?.(id));
+        graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => onClickNode?.(target.id));
         graph.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target: { id } }) => onClickEdge?.(id));
-        // graph.on<IGraphLifeCycleEvent>(GraphEvent.AFTER_SIZE_CHANGE, () => graph.fitCenter());
-        //graph.on<IGraphLifeCycleEvent>(GraphEvent.AFTER_LAYOUT, afterLayout);
 
         await graph.render();
         graph.fitView();
 
-        setIsGraphLoaded(true);
         topologyGraphRef.current = graph;
+        save();
+        setIsGraphLoaded(true);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const updateData = useCallback(async () => {
-      const graphInstance = topologyGraphRef.current;
-
-      if (!graphInstance || !isGraphLoaded) {
-        return;
-      }
-
-      if (
-        JSON.stringify(prevNodesRef.current) === JSON.stringify(nodesWithoutPosition) &&
-        JSON.stringify(prevEdgesRef.current) === JSON.stringify(edges) &&
-        JSON.stringify(prevCombosRef.current) === JSON.stringify(combos)
-      ) {
+      if (!isGraphLoaded) {
         return;
       }
       save();
 
-      const shoulDraw = graphInstance.getNodeData().length === nodesWithoutPosition.length;
+      const graphInstance = topologyGraphRef.current!;
       const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition, graphInstance.getNodeData());
 
       graphInstance.setData(GraphController.transformData({ edges, nodes, combos }));
-
-      if (shoulDraw) {
-        await graphInstance.draw();
-      } else {
-        await graphInstance.render();
-        graphInstance.fitView();
-      }
-
-      // updated the prev values with the new ones
-      prevNodesRef.current = nodesWithoutPosition;
-      prevEdgesRef.current = edges;
-      prevCombosRef.current = combos;
+      await graphInstance.render();
 
       save();
-    }, [combos, edges, isGraphLoaded, nodesWithoutPosition]);
+    }, [combos, edges, isGraphLoaded, nodesWithoutPosition, save]);
 
     // This effect updates the topology when there are changes to the nodes, edges.
     useEffect(() => {
@@ -214,28 +169,50 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
     // Center the node selected
     useEffect(() => {
-      if (itemSelected && moveToSelectedNode) {
+      if (isGraphLoaded && itemSelected && moveToSelectedNode) {
         topologyGraphRef.current?.focusElement(itemSelected);
       }
-    }, [itemSelected, moveToSelectedNode]);
+    }, [isGraphLoaded, itemSelected, moveToSelectedNode]);
 
-    // Select the node or edge
+    // highlight nodes
     useEffect(() => {
-      if (isGraphLoaded && itemSelectedRef.current !== itemSelected) {
-        itemSelectedRef.current = itemSelected;
-        handleItemSelected(itemSelectedRef.current);
-      }
-    }, [handleItemSelected, itemSelected, isGraphLoaded]);
+      const graphInstance = topologyGraphRef.current!;
+      if (isGraphLoaded) {
+        const allElemetsStateMap: Record<string, string[]> = {};
+        [...graphInstance.getNodeData(), ...graphInstance.getEdgeData()].forEach(({ id, states }) => {
+          const filteredStates =
+            states?.filter((state) => state !== GraphStates.Highlight && state !== GraphStates.Exclude) || [];
 
-    useEffect(() => () => save(), []);
+          if (id) {
+            const selectedState = itemsToHighlight?.length
+              ? itemsToHighlight.includes(id)
+                ? GraphStates.Highlight
+                : GraphStates.Exclude
+              : '';
+            allElemetsStateMap[id] = selectedState ? [selectedState, ...filteredStates] : filteredStates;
+          }
+        });
+
+        graphInstance.setElementState(allElemetsStateMap);
+      }
+    }, [isGraphLoaded, itemsToHighlight]);
+
+    // select node
+    useEffect(() => {
+      if (isGraphLoaded && itemSelected) {
+        topologyGraphRef.current?.setElementState(itemSelected, 'activeElement');
+
+        //handleItemSelected(itemSelected);
+      }
+    }, [isGraphLoaded, itemSelected]);
+
+    useEffect(() => () => save(), [save]);
 
     useLayoutEffect(() => {
       const container = document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element;
-      const resizeObserver = new ResizeObserver((entries) => {
-        debouncedHandleResize(entries);
-      });
+      const resizeObserver = new ResizeObserver((entries) => debouncedHandleResize(entries));
 
-      const debouncedHandleResize = debounce(handleResize, 250);
+      const debouncedHandleResize = debounce(handleResize, 400);
       resizeObserver.observe(container);
 
       return () => {
@@ -248,6 +225,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         id={GRAPH_CONTAINER_ID}
         ref={graphRef}
         style={{
+          overflow: 'hidden',
           height: '99.9%',
           background: GRAPH_BG_COLOR
         }}
