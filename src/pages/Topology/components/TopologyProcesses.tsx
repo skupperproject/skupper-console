@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback, useRef } from 'react';
+import { ComponentType, FC, useCallback } from 'react';
 
 import {
   Divider,
@@ -22,9 +22,7 @@ import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
-import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
-import useModalState from './useModalState';
 import useTopologyProcessData from './useTopologyProcessData';
 import useServiceState from './useTopologyServiceState';
 import useTopologyState from './useTopologyState';
@@ -49,37 +47,25 @@ const TopologyProcesses: FC<{
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
 }> = function ({ serviceIds, ids: processIds, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
-  const toastRef = useRef<ToastExposeMethods>(null);
-
   const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
 
-  const {
-    idsSelected,
-    searchText,
+  const { idsSelected, searchText, displayOptionsSelected, handleSelected, handleSearchText, handleDisplaySelected } =
+    useTopologyState({
+      ids: processIds,
+      initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS],
+      displayOptionsEnabledKey: 'display-process-options'
+    });
 
-    displayOptionsSelected,
-    handleSelected,
-    handleSearchText,
-    handleDisplaySelected
-  } = useTopologyState({
-    ids: processIds,
-    initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS],
-    displayOptionsEnabledKey: 'display-process-options'
-  });
-
-  const { modalType, handleCloseModal, openProcessModal, openProcessPairModal } = useModalState();
-
-  const { processes, processesPairs, metrics } = useTopologyProcessData({
-    idsSelected: undefined
-  });
+  const { processes, processesPairs, metrics } = useTopologyProcessData();
 
   const handleShowProcessDetails = useCallback(
     (id: string) => {
+      if (!id) {
+        return handleSelected();
+      }
       // handle process aggregated
       if (TopologyController.areGroupOfIds(id)) {
-        openProcessModal(id);
-
-        return;
+        return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
       //handle a single process selection
@@ -89,16 +75,17 @@ const TopologyProcesses: FC<{
         navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
       }
     },
-    [navigate, openProcessModal, processes]
+    [handleSelected, navigate, processes]
   );
 
   const handleShowProcessPairDetails = useCallback(
     (id: string) => {
-      if (TopologyController.areGroupOfIds(id)) {
-        handleSelected(TopologyController.transformStringIdsToIds(id));
-        openProcessPairModal(id);
+      if (!id) {
+        return handleSelected();
+      }
 
-        return;
+      if (TopologyController.areGroupOfIds(id)) {
+        return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
       const pair = processesPairs?.find(({ identity }) => identity === id);
@@ -109,18 +96,16 @@ const TopologyProcesses: FC<{
         );
       }
     },
-    [handleSelected, navigate, openProcessPairModal, processesPairs]
+    [handleSelected, navigate, processesPairs]
   );
 
   const handleServiceSelectedWrapper = useCallback(
     (ids: string[] | undefined) => {
       handleSelected();
       handleServiceSelected(ids);
-      handleCloseModal();
     },
-    [handleCloseModal, handleSelected, handleServiceSelected]
+    [handleSelected, handleServiceSelected]
   );
-
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
     idsSelected,
     searchText,
@@ -143,58 +128,53 @@ const TopologyProcesses: FC<{
       <DrawerHead>
         <Title headingLevel="h1">{TopologyLabels.TopologyModalTitle}</Title>
         <DrawerActions>
-          <DrawerCloseButton onClick={handleCloseModal} />
+          <DrawerCloseButton onClick={() => handleSelected()} />
         </DrawerActions>
       </DrawerHead>
       <DrawerPanelBody style={{ overflow: 'auto' }} hasNoPadding>
-        {modalType?.type && (
-          <ModalComponent
-            ids={TopologyController.transformStringGroupIdsToGroupIds(modalType?.id)}
-            items={modalType?.type === 'process' ? processes : processesPairs}
-            metrics={metrics}
-            modalType={modalType.type}
-          />
-        )}
+        <ModalComponent
+          ids={TopologyController.transformStringGroupIdsToGroupIds(nodeIdSelected)}
+          items={TopologyController.arePairIds(nodeIdSelected) ? processesPairs : processes}
+          modalType={TopologyController.arePairIds(nodeIdSelected) ? 'processPair' : 'process'}
+          metrics={metrics}
+        />
       </DrawerPanelBody>
     </DrawerPanelContent>
   );
 
   return (
-    <>
-      <Stack data-testid="sk-topology-processes">
-        <StackItem>
-          <TopologyToolbar
-            displayOptions={displayOptionsForProcesses}
-            onDisplayOptionSelected={handleDisplaySelected}
-            defaultDisplayOptionsSelected={displayOptionsSelected}
-            serviceIdsSelected={serviceIdsSelected}
-            onServiceSelected={handleServiceSelectedWrapper}
-            resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
-            onResourceSelected={handleSearchText}
-          />
-          <Divider />
-        </StackItem>
-        <StackItem isFilled>
-          <Drawer isExpanded={!!modalType?.id} isInline>
-            <DrawerContent panelContent={panelContent}>
-              <DrawerContentBody>
-                <GraphComponent
-                  nodes={nodes}
-                  edges={edges}
-                  combos={combos}
-                  itemSelected={nodeIdSelected}
-                  itemsToHighlight={nodeIdsToHighLight}
-                  layout="combo"
-                  onClickNode={handleShowProcessDetails}
-                  onClickEdge={handleShowProcessPairDetails}
-                />
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
-        </StackItem>
-      </Stack>
-      <AlertToasts ref={toastRef} />
-    </>
+    <Stack data-testid="sk-topology-processes">
+      <StackItem>
+        <TopologyToolbar
+          displayOptions={displayOptionsForProcesses}
+          onDisplayOptionSelected={handleDisplaySelected}
+          defaultDisplayOptionsSelected={displayOptionsSelected}
+          serviceIdsSelected={serviceIdsSelected}
+          onServiceSelected={handleServiceSelectedWrapper}
+          resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
+          onResourceSelected={handleSearchText}
+        />
+        <Divider />
+      </StackItem>
+      <StackItem isFilled>
+        <Drawer isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected} isInline>
+          <DrawerContent panelContent={panelContent}>
+            <DrawerContentBody>
+              <GraphComponent
+                nodes={nodes}
+                edges={edges}
+                combos={combos}
+                itemSelected={nodeIdSelected}
+                itemsToHighlight={nodeIdsToHighLight}
+                layout="combo"
+                onClickNode={handleShowProcessDetails}
+                onClickEdge={handleShowProcessPairDetails}
+              />
+            </DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
+      </StackItem>
+    </Stack>
   );
 };
 

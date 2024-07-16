@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback, useRef } from 'react';
+import { ComponentType, FC, useCallback } from 'react';
 
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces'
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologySiteData from './useTopologySiteData';
 import useTopologyState from './useTopologyState';
@@ -28,7 +27,6 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
-  const toastRef = useRef<ToastExposeMethods>(null);
 
   const {
     idsSelected,
@@ -75,31 +73,28 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
   });
 
   return (
-    <>
-      <Stack>
-        <StackItem>
-          <TopologyToolbar
-            displayOptions={displayOptionsForSites}
-            onDisplayOptionSelected={handleDisplaySelected}
-            defaultDisplayOptionsSelected={displayOptionsSelected}
-            resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
-            onResourceSelected={handleSearchText}
-          />
-          <Divider />
-        </StackItem>
+    <Stack>
+      <StackItem>
+        <TopologyToolbar
+          displayOptions={displayOptionsForSites}
+          onDisplayOptionSelected={handleDisplaySelected}
+          defaultDisplayOptionsSelected={displayOptionsSelected}
+          resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
+          onResourceSelected={handleSearchText}
+        />
+        <Divider />
+      </StackItem>
 
-        <StackItem isFilled>
-          <GraphComponent
-            nodes={nodes}
-            edges={edges}
-            itemSelected={nodeIdSelected}
-            itemsToHighlight={nodeIdsToHighLight}
-            onClickNode={handleShowDetails}
-          />
-        </StackItem>
-      </Stack>
-      <AlertToasts ref={toastRef} />
-    </>
+      <StackItem isFilled>
+        <GraphComponent
+          nodes={nodes}
+          edges={edges}
+          itemSelected={nodeIdSelected}
+          itemsToHighlight={nodeIdsToHighLight}
+          onClickNode={handleShowDetails}
+        />
+      </StackItem>
+    </Stack>
   );
 };
 

@@ -1,6 +1,6 @@
 import { ComboData, EdgeData, Graph, ID, NodeData } from '@antv/g6';
 
-import { GRAPH_CONTAINER_ID } from '../Graph.constants';
+import { GRAPH_CONTAINER_ID, GraphStates } from '../Graph.constants';
 import {
   GraphCombo,
   GraphEdge,
@@ -229,7 +229,7 @@ export const GraphController = {
 
     graphInstance.setElementState(allIdsWithEmptyState);
     graphInstance.setElementState(allHiddenIds);
-    graphInstance.setElementState(itemId, 'activeElement');
+    graphInstance.setElementState(itemId, GraphStates.Select);
   },
 
   activateEdgeRelations: (graphInstance: Graph, itemId: ID) => {
@@ -258,7 +258,7 @@ export const GraphController = {
 
     graphInstance.setElementState(allIdsWithEmptyState);
     graphInstance.setElementState(allHiddenIds);
-    graphInstance.setElementState(itemId, 'activeElement');
+    graphInstance.setElementState(itemId, GraphStates.Select);
   },
 
   cleanAllRelations: (graphInstance: Graph) => {

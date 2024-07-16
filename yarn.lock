@@ -55,7 +55,7 @@
     gl-matrix "^3.4.3"
     tslib "^2.5.3"
 
-"@antv/g-canvas@^2.0.7":
+"@antv/g-canvas@^2.0.8":
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/@antv/g-canvas/-/g-canvas-2.0.8.tgz#b74fbab77c0d31fc7326f6601eac5ed2df0ff499"
   integrity sha512-XyzFGq3xqIRxEnIIU310FyOyuNAuUKyh93plgkRkF2dOCpS3RAVQRRxD1vnG47NShwjfo3Pn0qiIKTSyxGXQZg==
@@ -163,7 +163,7 @@
     "@antv/g-lite" "2.0.6"
     tslib "^2.5.3"
 
-"@antv/g-plugin-dragndrop@^2.0.5":
+"@antv/g-plugin-dragndrop@^2.0.6":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@antv/g-plugin-dragndrop/-/g-plugin-dragndrop-2.0.6.tgz#065989d708e8695cd4e83e78907db4556e0a066c"
   integrity sha512-qMrDbrGEnM66Qg/vwI+zNdhFNoN+pjzyZtO3MD+CjNQnEGpQqy1W9PNLpWcFE43BU5Z/JkoUtu6Oy5C/WKHBbQ==
@@ -210,22 +210,32 @@
     "@antv/util" "^3.3.5"
     tslib "^2.5.3"
 
-"@antv/g6@^5.0.7":
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/@antv/g6/-/g6-5.0.7.tgz#11f1df6221f5db869dc11848eaf9fd9ad76cad15"
-  integrity sha512-sR1Bg8nZ1xDSFI1BKlNyf/iYmTEwa3N2lOd7K2Tj6ixIvMWvtK8nAdwTq2jKe7BHL6jovtCYdgGW10ho1BfI7w==
+"@antv/g6@^5.0.8":
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@antv/g6/-/g6-5.0.9.tgz#829e1b6f59eae24a92da565c11bbd14534ec02ca"
+  integrity sha512-sRLP9e1/g8khrNr+GCiQ09sP5MkvpByQVtVWF2Lt3xhxEj9Hrrfs9wWuWFqpdu16AHvMtaamsqQsEx48RistRQ==
   dependencies:
     "@antv/component" "^2.0.1"
     "@antv/event-emitter" "^0.1.3"
-    "@antv/g" "^6.0.6"
-    "@antv/g-canvas" "^2.0.7"
-    "@antv/g-plugin-dragndrop" "^2.0.5"
+    "@antv/g" "^6.0.10"
+    "@antv/g-canvas" "^2.0.8"
+    "@antv/g-plugin-dragndrop" "^2.0.6"
     "@antv/graphlib" "^2.0.3"
     "@antv/hierarchy" "^0.6.12"
-    "@antv/layout" "^1.2.14-beta.4"
+    "@antv/layout" "^1.2.14-beta.5"
     "@antv/util" "^3.3.7"
     bubblesets-js "^2.3.3"
     hull.js "^1.0.6"
+
+"@antv/g@^6.0.10":
+  version "6.0.10"
+  resolved "https://registry.yarnpkg.com/@antv/g/-/g-6.0.10.tgz#34fd7f71b8709b1c25669e4411362de29bdfe5ec"
+  integrity sha512-VH45ddgHQhEzWZ4aDpHHcu6f77vIVKhfEMgHZzUL9bnMTmJ2P4qf0DtarhP6BKvxcHlFFpJcSyYSxTurNHvW5w==
+  dependencies:
+    "@antv/g-camera-api" "2.0.9"
+    "@antv/g-dom-mutation-observer-api" "2.0.6"
+    "@antv/g-lite" "2.0.6"
+    "@antv/g-web-animations-api" "2.0.7"
 
 "@antv/g@^6.0.5":
   version "6.0.6"
@@ -236,16 +246,6 @@
     "@antv/g-dom-mutation-observer-api" "2.0.5"
     "@antv/g-lite" "2.0.5"
     "@antv/g-web-animations-api" "2.0.6"
-
-"@antv/g@^6.0.6":
-  version "6.0.10"
-  resolved "https://registry.yarnpkg.com/@antv/g/-/g-6.0.10.tgz#34fd7f71b8709b1c25669e4411362de29bdfe5ec"
-  integrity sha512-VH45ddgHQhEzWZ4aDpHHcu6f77vIVKhfEMgHZzUL9bnMTmJ2P4qf0DtarhP6BKvxcHlFFpJcSyYSxTurNHvW5w==
-  dependencies:
-    "@antv/g-camera-api" "2.0.9"
-    "@antv/g-dom-mutation-observer-api" "2.0.6"
-    "@antv/g-lite" "2.0.6"
-    "@antv/g-web-animations-api" "2.0.7"
 
 "@antv/graphlib@^2.0.0":
   version "2.0.2"
@@ -266,10 +266,10 @@
   resolved "https://registry.yarnpkg.com/@antv/hierarchy/-/hierarchy-0.6.12.tgz#f35e081acd41ed7bb870322e5ac9038e5f68459d"
   integrity sha512-WvWT9WYtm2SvYunm1HtzrHazvOozeP4cPFDhJWsnLzmTGMX/tNhsoCD3O+DDB3aeDY8fyM+wfZDvLv7+/4lIeA==
 
-"@antv/layout@^1.2.14-beta.4":
-  version "1.2.14-beta.4"
-  resolved "https://registry.yarnpkg.com/@antv/layout/-/layout-1.2.14-beta.4.tgz#d50d1fd67abc6193e99da4bc2e64bd23c35a2bae"
-  integrity sha512-XrzjLHTRqafyfDk6aDJFuHDsKlO02+6lfwrFiEOyLaNtSMMv1CGG0sKN5EEhiFV3qz4ebriKenThbTqFf9v38Q==
+"@antv/layout@^1.2.14-beta.5":
+  version "1.2.14-beta.5"
+  resolved "https://registry.yarnpkg.com/@antv/layout/-/layout-1.2.14-beta.5.tgz#849addadfd3f7afb5ef041d41088dda47e6f7bf0"
+  integrity sha512-r/twRLE2kql+jawu/qp5+7rcUH3ul6RFlLg5MGi3B/83WktMNyqOOYYHbk6T89/KWUUSPDCdvrb56BVfvLFqRQ==
   dependencies:
     "@antv/event-emitter" "^0.1.3"
     "@antv/graphlib" "^2.0.0"

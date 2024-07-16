@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef, ComponentType } from 'react';
+import { FC, useCallback, ComponentType } from 'react';
 
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces'
 import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 
-import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyComponentData from './useTopologyComponentData';
 import useTopologyState from './useTopologyState';
@@ -19,7 +18,6 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
-  const toastRef = useRef<ToastExposeMethods>(null);
 
   const { idsSelected, searchText, handleSearchText } = useTopologyState({ ids });
 
@@ -46,28 +44,25 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
   });
 
   return (
-    <>
-      <Stack>
-        <StackItem>
-          <TopologyToolbar
-            resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
-            onResourceSelected={handleSearchText}
-          />
-          <Divider />
-        </StackItem>
+    <Stack>
+      <StackItem>
+        <TopologyToolbar
+          resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
+          onResourceSelected={handleSearchText}
+        />
+        <Divider />
+      </StackItem>
 
-        <StackItem isFilled>
-          <GraphComponent
-            nodes={nodes}
-            edges={edges}
-            itemSelected={nodeIdSelected}
-            itemsToHighlight={nodeIdsToHighLight}
-            onClickNode={handleShowDetails}
-          />
-        </StackItem>
-      </Stack>
-      <AlertToasts ref={toastRef} />
-    </>
+      <StackItem isFilled>
+        <GraphComponent
+          nodes={nodes}
+          edges={edges}
+          itemSelected={nodeIdSelected}
+          itemsToHighlight={nodeIdsToHighLight}
+          onClickNode={handleShowDetails}
+        />
+      </StackItem>
+    </Stack>
   );
 };
 

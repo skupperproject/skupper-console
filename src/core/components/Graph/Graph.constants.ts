@@ -29,13 +29,15 @@ const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
 const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
 
 export const GRAPH_CONTAINER_ID = 'container';
-const NODE_SIZE = 52;
+const NODE_SIZE = 50;
 const ICON_SIZE = NODE_SIZE / 2;
-const LABEL_FONT_SIZE = 10;
-const INACTIVE_OPACITY_VALUE = 0.3;
-const LABEL_PADDING = [0, 4];
+const LABEL_FONT_SIZE = 8;
+const INACTIVE_OPACITY_VALUE = 0.35;
+const LABEL_PADDING = [-2, 4];
+const LABEL_EDGE_PADDING = [0, 4];
 
 export enum GraphStates {
+  Select = 'activeElement',
   Highlight = 'highlightElement',
   Exclude = 'excludeElement'
 }
@@ -79,20 +81,25 @@ export const NODE_CONFIG: NodeOptions = {
     hover: {
       cursor: 'pointer',
       shadowBlur: 8,
-      labelBackgroundShadowBlur: 8
+      labelBackgroundShadowBlur: 8,
+      opacity: 1
     },
 
-    activeElement: {
-      cursor: 'pointer',
+    visible: {
+      opacity: 1
+    },
+
+    [GraphStates.Select]: {
       stroke: HexColors.Blue400,
+      lineWidth: 2,
+      cursor: 'pointer',
       labelFill: HexColors.White,
       labelBackgroundFill: HexColors.Blue400,
-      labelBackgroundStroke: HexColors.Blue400,
-      lineWidth: 2
+      labelBackgroundStroke: HexColors.Blue400
     },
 
     [GraphStates.Highlight]: {
-      stroke: 'orange',
+      stroke: HexColors.Orange200,
       lineWidth: 2
     },
 
@@ -101,7 +108,7 @@ export const NODE_CONFIG: NodeOptions = {
     },
 
     [GraphStates.Exclude]: {
-      opacity: 0.5
+      opacity: INACTIVE_OPACITY_VALUE
     }
   }
 };
@@ -126,7 +133,7 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     visibility: 'visible',
     halo: false,
     opacity: 1,
-    haloOpacity: 0.1,
+    haloOpacity: 0.15,
     lineWidth: 0.5,
     increasedLineWidthForHitTesting: 20,
     stroke: EDGE_COLOR_DEFAULT,
@@ -140,7 +147,7 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     labelBackgroundRadius: 2,
     labelBackgroundOpacity: 1,
     labelBackgroundFillOpacity: 1,
-    labelPadding: LABEL_PADDING,
+    labelPadding: LABEL_EDGE_PADDING,
     labelAutoRotate: false
   },
 
@@ -149,21 +156,25 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
       visibility: 'hidden'
     },
 
-    active: {
+    [GraphStates.Exclude]: {
+      opacity: INACTIVE_OPACITY_VALUE
+    },
+
+    [GraphStates.Select]: {
+      halo: true,
+      cursor: 'pointer',
+      opacity: 1,
+      stroke: HexColors.Blue400
+    },
+
+    visible: {
       opacity: 1
     },
 
-    [GraphStates.Exclude]: {
-      opacity: 0.5
-    },
-
-    activeElement: {
-      halo: true
-    },
-
-    hover: {
-      //halo: true,
-      cursor: 'pointer'
+    'hover-edge': {
+      halo: true,
+      cursor: 'pointer',
+      opacity: 1
     }
   }
 };
@@ -191,7 +202,7 @@ export const COMBO_CONFIG: ComboOptions = {
     labelFill: COMBO_COLOR_DEFAULT_LABEL,
     labelFontFamily: 'RedHatText',
     labelPadding: [2, 5],
-    labelFontSize: LABEL_FONT_SIZE + 4,
+    labelFontSize: LABEL_FONT_SIZE + 2,
     labelPosition: 'bottom',
     labelBackground: true,
     labelOffsetY: 15,
@@ -207,43 +218,61 @@ export const COMBO_CONFIG: ComboOptions = {
   }
 };
 
+export const CLICK_SELECT_BEHAVIOR = {
+  key: 'click-select',
+  type: 'click-select',
+  degree: 1,
+  state: GraphStates.Select,
+  neighborState: 'hover',
+  unselectedState: '',
+  enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
+};
+
+export const HOVER_ACTIVATE_BEHAVIOR = {
+  HOVER_DEGREE_0_NODE: {
+    // state for the node/edge with state hover
+    key: 'hover-activate-single-node',
+    type: 'hover-activate',
+    degree: 0,
+    state: 'hover',
+    enable: ({ targetType }: IPointerEvent) => targetType === 'node'
+  },
+
+  HOVER_DEGREE_1_NODE: {
+    // state for the rest of the nodes
+    key: 'hover-activate',
+    type: 'hover-activate',
+    degree: 1,
+    state: 'visible',
+    inactiveState: 'hidden',
+    enable: ({ targetType }: IPointerEvent) => targetType === 'node'
+  },
+
+  HOVER_DEGREE_0_EDGE: {
+    // state for the node/edge with state hover
+    key: 'hover-activate-single-edge',
+    type: 'hover-activate',
+    degree: 0,
+    state: 'hover-edge',
+    enable: ({ targetType }: IPointerEvent) => targetType === 'edge'
+  }
+};
+
 export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
   behaviors: [
     'drag-canvas',
     'zoom-canvas',
     'drag-element',
-    {
-      key: 'click-select',
-      type: 'click-select',
-      degree: 1,
-      state: 'activeElement',
-      neighborState: 'hover',
-      unselectedState: '',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
-    },
-    {
-      // state for the node with state hover
-      key: 'hover-activate-single',
-      type: 'hover-activate',
-      degree: 0,
-      state: 'hover',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'node'
-    },
-    {
-      // state for the rest of the nodes
-      key: 'hover-activate',
-      type: 'hover-activate',
-      degree: 1,
-      state: 'active',
-      inactiveState: 'hidden',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
-    },
-    {
-      key: 'hover-activate-combo',
-      type: 'hover-activate',
-      state: 'hover',
-      enable: ({ targetType }: IPointerEvent) => targetType === 'combo'
-    }
+    CLICK_SELECT_BEHAVIOR,
+    HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_NODE,
+    HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_EDGE,
+    HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_1_NODE
+    // {
+    //   key: 'hover-activate-combo',
+    //   type: 'hover-activate',
+    //   state: 'hover',
+    //   enable: ({ targetType }: IPointerEvent) => targetType === 'combo'
+    // }
   ],
   node: { ...NODE_CONFIG },
   edge: { ...DATA_EDGE_CONFIG },
@@ -260,19 +289,23 @@ const LAYOUT_TOPOLOGY_DEFAULT: ForceLayoutOptions & { type: 'force' } = {
   nodeSpacing: NODE_SIZE,
   preventOverlap: true,
   linkDistance: 250,
-  factor: 4
+  factor: 4,
+  animations: false
 };
 
 const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
   type: 'force',
   nodeSize: NODE_SIZE,
+  nodeSpacing: NODE_SIZE,
   preventOverlap: true,
   clustering: true,
   nodeClusterBy: 'cluster',
-  clusterNodeStrength: 150,
-  linkDistance: 600,
-  factor: 15,
-  gravity: 80
+  distanceThresholdMode: 'max',
+  clusterNodeStrength: 300000,
+  nodeStrength: 8000,
+  leafCluster: true,
+  factor: 1000,
+  animations: false
 };
 
 const LAYOUT_TOPOLOGY_SINGLE_NODE: AntVDagreLayoutOptions & { type: 'antv-dagre' } = {

@@ -1,4 +1,4 @@
-import { FC, forwardRef, memo, Suspense, useImperativeHandle } from 'react';
+import { FC, memo, Suspense } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
@@ -48,34 +48,24 @@ const mockUseTopologyStateResults = {
   handleDisplaySelected: jest.fn()
 };
 
-const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
-  forwardRef(({ onClickEdge, onClickNode }, ref) => {
-    useImperativeHandle(ref, () => ({
-      saveNodePositions() {
-        return jest.fn();
+const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(({ onClickEdge, onClickNode }) => (
+  <>
+    <Button onClick={() => onClickNode && onClickNode(processesResults[0].identity)}>onClickNode</Button>
+    <Button
+      onClick={() => onClickNode && onClickNode(`${processesResults[0].identity}~${processesResults[2].identity}`)}
+    >
+      onClickNodeDeployment
+    </Button>
+    <Button onClick={() => onClickEdge && onClickEdge(processesPairsResults[0].identity)}>onClickEdge</Button>
+    <Button
+      onClick={() =>
+        onClickEdge && onClickEdge(`${processesPairsResults[0].identity}~${processesPairsResults[2].identity}`)
       }
-    }));
-
-    return (
-      <>
-        <Button onClick={() => onClickNode && onClickNode(processesResults[0].identity)}>onClickNode</Button>
-        <Button
-          onClick={() => onClickNode && onClickNode(`${processesResults[0].identity}~${processesResults[2].identity}`)}
-        >
-          onClickNodeDeployment
-        </Button>
-        <Button onClick={() => onClickEdge && onClickEdge(processesPairsResults[0].identity)}>onClickEdge</Button>
-        <Button
-          onClick={() =>
-            onClickEdge && onClickEdge(`${processesPairsResults[0].identity}~${processesPairsResults[2].identity}`)
-          }
-        >
-          onClickEdgeDeployment
-        </Button>
-      </>
-    );
-  })
-);
+    >
+      onClickEdgeDeployment
+    </Button>
+  </>
+));
 
 const MockTopologyModalComponent: FC<NodeOrEdgeListProps> = function ({ ids, items, modalType }) {
   return (
@@ -147,26 +137,18 @@ describe('Topology Process', () => {
   });
 
   it('should clicking on a edge with a group of pairIDs', async () => {
-    jest.spyOn(useTopologyState, 'default').mockImplementation(() => ({
-      ...mockUseTopologyStateResults,
-      idSelected: TopologyController.transformStringIdsToIds(
-        `${processesPairsResults[0].identity}~${processesPairsResults[2].identity}`
-      )
-    }));
+    jest.spyOn(useTopologyState, 'default').mockImplementation(() => mockUseTopologyStateResults);
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.queryByTestId('sk-topology-details')).not.toBeInTheDocument();
-
     const mockClick = screen.getByText('onClickEdgeDeployment');
 
     await eventUser.click(mockClick);
+
     expect(mockHandleSelected).toHaveBeenCalledWith([
       `${processesPairsResults[0].identity}~${processesPairsResults[2].identity}`
     ]);
-
-    expect(screen.getByTestId('sk-topology-details')).toBeInTheDocument();
   });
 });

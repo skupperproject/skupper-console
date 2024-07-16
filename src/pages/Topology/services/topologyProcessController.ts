@@ -118,9 +118,9 @@ export const TopologyProcessController = {
     }
 
     return {
-      // when the id selected comes from an other view the id is a single node but maybe this page has the option showDeployments == true.
-      // In that case we need to find the processNode with ids aggregated where the single node is contained
-      nodeIdSelected: findMatchedNode(processNodes, idsSelected),
+      // when the id selected comes from an other view the id is a single node/edge but if the topology has the option showDeployments == true, this id can be part of grouped edge/node.
+      // In that case, we need to find the node/edge group where the single node is contained
+      nodeIdSelected: findMatched(processNodes, idsSelected) || findMatched(processPairEdges, idsSelected),
       nodeIdsToHighLight: TopologyController.nodesToHighlight(processNodes, searchText),
       nodes: processNodes.map((node) => ({
         ...node,
@@ -132,8 +132,8 @@ export const TopologyProcessController = {
   }
 };
 
-// Function to find the matched node based on the first node in idsSelected
-function findMatchedNode(processNodes: GraphNode[], idsSelected?: string[]) {
+// Function to find the matched node/edge based on the first node in idsSelected
+function findMatched(processNodes: GraphNode[] | GraphEdge[], idsSelected?: string[]) {
   if (!idsSelected?.length) {
     return undefined;
   }

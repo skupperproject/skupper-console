@@ -34,5 +34,6 @@ export enum HexColors {
   Black500 = '#8A8D90',
   Black600 = '#6A6E73',
   Black800 = '#3C3F42',
-  Black900 = '#151515'
+  Black900 = '#151515',
+  Orange200 = '#EF9234'
 }
