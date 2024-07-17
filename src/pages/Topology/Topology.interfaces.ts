@@ -40,11 +40,14 @@ export interface DisplaySelectProps {
 }
 
 export interface DisplayOptions {
-  showLinkProtocol?: boolean;
-  showLinkBytes?: boolean;
-  showLinkByteRate?: boolean;
-  showLinkLatency?: boolean;
-  showLinkLabelReverse?: boolean;
+  showLinkBytes: boolean;
+  showLinkByteRate: boolean;
+  showLinkLatency: boolean;
+  showLinkProtocol: boolean;
+  showDeployments: boolean;
+  showInboundMetrics: boolean;
+  showMetricDistribution: boolean;
+  showMetricValue: boolean;
 }
 
 export interface NodeOrEdgeListProps {

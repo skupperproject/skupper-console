@@ -36,7 +36,7 @@
     "commit": "git-cz"
   },
   "dependencies": {
-    "@antv/g6": "^5.0.8",
+    "@antv/g6": "^5.0.9",
     "@nivo/sankey": "^0.87.0",
     "@patternfly/patternfly": "^5.3.1",
     "@patternfly/react-charts": "^7.3.0",
@@ -61,6 +61,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",
     "commitizen": "^4.3.0",

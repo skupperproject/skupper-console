@@ -13,15 +13,12 @@ export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';
 export const SHOW_LINK_LATENCY = 'show-link-latency';
 export const SHOW_DEPLOYMENTS = 'show-deployments';
-export const SHOW_LINK_REVERSE_LABEL = 'show-reverse-link-label';
+export const SHOW_INBOUND_METRICS = 'show-inbound-metrics';
+export const SHOW_LINK_METRIC_DISTRIBUTION = 'show-metric-distribution';
+export const SHOW_LINK_METRIC_VALUE = 'show-metric-value';
 
 export const displayOptionsForProcesses: DisplaySelectProps[][] = [
   [
-    {
-      key: SHOW_LINK_PROTOCOL,
-      value: SHOW_LINK_PROTOCOL,
-      label: TopologyLabels.CheckboxShowProtocol
-    },
     {
       key: SHOW_LINK_BYTES,
       value: SHOW_LINK_BYTES,
@@ -36,14 +33,32 @@ export const displayOptionsForProcesses: DisplaySelectProps[][] = [
       key: SHOW_LINK_LATENCY,
       value: SHOW_LINK_LATENCY,
       label: TopologyLabels.CheckboxShowLatency
+    }
+  ],
+  [
+    {
+      key: SHOW_LINK_METRIC_DISTRIBUTION,
+      value: SHOW_LINK_METRIC_DISTRIBUTION,
+      label: TopologyLabels.CheckboxShowMetricDistribution
     },
     {
-      key: SHOW_LINK_REVERSE_LABEL,
-      value: SHOW_LINK_REVERSE_LABEL,
+      key: SHOW_LINK_METRIC_VALUE,
+      value: SHOW_LINK_METRIC_VALUE,
+      label: TopologyLabels.CheckboxShowMetricValue
+    },
+    {
+      key: SHOW_INBOUND_METRICS,
+      value: SHOW_INBOUND_METRICS,
       label: TopologyLabels.CheckboxShowLabelReverse
     }
   ],
   [
+    {
+      key: SHOW_LINK_PROTOCOL,
+      value: SHOW_LINK_PROTOCOL,
+      label: TopologyLabels.CheckboxShowProtocol
+    },
+
     {
       key: SHOW_DEPLOYMENTS,
       value: SHOW_DEPLOYMENTS,
@@ -83,10 +98,22 @@ export const displayOptionsForSites: DisplaySelectProps[][] = [
       key: SHOW_LINK_LATENCY,
       value: SHOW_LINK_LATENCY,
       label: TopologyLabels.CheckboxShowLatency
+    }
+  ],
+  [
+    {
+      key: SHOW_LINK_METRIC_DISTRIBUTION,
+      value: SHOW_LINK_METRIC_DISTRIBUTION,
+      label: TopologyLabels.CheckboxShowMetricDistribution
     },
     {
-      key: SHOW_LINK_REVERSE_LABEL,
-      value: SHOW_LINK_REVERSE_LABEL,
+      key: SHOW_LINK_METRIC_VALUE,
+      value: SHOW_LINK_METRIC_VALUE,
+      label: TopologyLabels.CheckboxShowMetricValue
+    },
+    {
+      key: SHOW_INBOUND_METRICS,
+      value: SHOW_INBOUND_METRICS,
       label: TopologyLabels.CheckboxShowLabelReverse
     }
   ]

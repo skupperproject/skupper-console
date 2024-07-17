@@ -19,9 +19,11 @@ interface TopologyProcessControllerProps {
     showLinkBytes: boolean;
     showLinkByteRate: boolean;
     showLinkLatency: boolean;
-    showLinkLabelReverse: boolean;
     showLinkProtocol: boolean;
     showDeployments: boolean;
+    showInboundMetrics: boolean;
+    showMetricDistribution: boolean;
+    showMetricValue: boolean;
   };
 }
 

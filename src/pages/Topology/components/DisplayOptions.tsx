@@ -3,7 +3,13 @@ import { FC, useCallback, useState } from 'react';
 import { Divider, SelectGroup } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
-import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';
+import {
+  SHOW_DATA_LINKS,
+  SHOW_LINK_BYTERATE,
+  SHOW_LINK_BYTES,
+  SHOW_LINK_LATENCY,
+  SHOW_ROUTER_LINKS
+} from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
@@ -27,6 +33,21 @@ export const useDisplayOptions = ({ defaultSelected = [], onSelected }: DisplayU
       let updatedDisplayOptions = isOptionSelected
         ? displayOptionsSelected.filter((option) => option !== selectedOption)
         : [...displayOptionsSelected, selectedOption];
+
+      if (
+        selectedOption === SHOW_LINK_BYTES ||
+        selectedOption === SHOW_LINK_BYTERATE ||
+        selectedOption === SHOW_LINK_LATENCY
+      ) {
+        updatedDisplayOptions = isOptionSelected
+          ? displayOptionsSelected.filter((option) => option !== selectedOption)
+          : [
+              ...displayOptionsSelected.filter(
+                (option) => option !== SHOW_LINK_BYTES && option !== SHOW_LINK_BYTERATE && option !== SHOW_LINK_LATENCY
+              ),
+              selectedOption
+            ];
+      }
 
       if (selectedOption === SHOW_DATA_LINKS || selectedOption === SHOW_ROUTER_LINKS) {
         const otherOption = selectedOption === SHOW_DATA_LINKS ? SHOW_ROUTER_LINKS : SHOW_DATA_LINKS;

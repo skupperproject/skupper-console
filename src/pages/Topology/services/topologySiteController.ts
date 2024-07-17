@@ -7,7 +7,7 @@ import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
 
 import { TopologyLabels } from '../Topology.enum';
-import { TopologyMetrics } from '../Topology.interfaces';
+import { DisplayOptions, TopologyMetrics } from '../Topology.interfaces';
 
 import { TopologyController, convertEntityToNode } from '.';
 
@@ -18,12 +18,7 @@ interface TopologySiteControllerProps {
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
   metrics: TopologyMetrics | null;
-  options: {
-    showLinkBytes: boolean;
-    showLinkByteRate: boolean;
-    showLinkLatency: boolean;
-    showLinkLabelReverse: boolean;
-  };
+  options: DisplayOptions;
 }
 
 const platformsMap: Record<string, 'kubernetes' | 'podman'> = {

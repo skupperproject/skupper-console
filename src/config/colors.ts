@@ -4,6 +4,7 @@ export enum Colors {
   Black600 = '--pf-v5-global--palette--black-600',
   Black500 = '--pf-v5-global--palette--black-500',
   Black400 = '--pf-v5-global--palette--black-400',
+  Black200 = '--pf-v5-global--palette--black-200',
   Black100 = '--pf-v5-global--palette--black-100',
   Green500 = '--pf-v5-global--palette--green-500',
   Blue400 = '--pf-v5-global--palette--blue-400',
@@ -16,6 +17,7 @@ export enum Colors {
 export enum VarColors {
   White = `var(${Colors.White})`,
   Black100 = `var(${Colors.Black100})`,
+  Black200 = `var(${Colors.Black200})`,
   Black400 = `var(${Colors.Black400})`,
   Black500 = `var(${Colors.Black500})`,
   Black600 = `var(${Colors.Black600})`,
@@ -26,13 +28,20 @@ export enum VarColors {
 
 export enum HexColors {
   White = '#FFFFFF',
+  Blue50 = '#E7F1FA',
   Blue200 = '#73BCF7',
-  Blue400 = '#4394e5',
-  Black100 = '#F0F0F0',
+  Blue400 = '#0066CC',
+  Black200 = '#F0F0F0',
   Black400 = '#B8BBBE',
+  DefaultBackground = '#F0F0F0',
+  DefaultBorder = '#c7c7c7',
+  DefaultEdge = '#707070',
+  DarkThemeBackground = '#151515',
+  DarkThemeText = '#f2f2f2',
   Black300 = '#D2D2d2',
   Black500 = '#8A8D90',
   Black600 = '#6A6E73',
+  Black700 = '#4F5255',
   Black800 = '#3C3F42',
   Black900 = '#151515',
   Orange200 = '#EF9234'

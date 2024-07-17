@@ -302,7 +302,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       const container = document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element;
       const resizeObserver = new ResizeObserver((entries) => debouncedHandleResize(entries));
 
-      const debouncedHandleResize = debounce(handleTranslateGraph, 300);
+      const debouncedHandleResize = debounce(handleTranslateGraph, 350);
       resizeObserver.observe(container);
 
       return () => {

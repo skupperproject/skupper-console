@@ -38,6 +38,8 @@ export interface GraphEdge {
   sourceName?: string;
   targetName?: string;
   label?: string;
+  protocolLabel?: string;
+  metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }
 

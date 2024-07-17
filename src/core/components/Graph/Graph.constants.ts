@@ -12,29 +12,37 @@ import {
 import { HexColors } from '@config/colors';
 
 export const GRAPH_BG_COLOR = HexColors.White;
-const NODE_COLOR_DEFAULT = HexColors.White;
-const NODE_BORDER_COLOR_DEFAULT = HexColors.Black300;
-const NODE_COLOR_DEFAULT_LABEL = HexColors.Black900;
-const NODE_COLOR_DEFAULT_LABEL_BG = HexColors.White;
+const NODE_BACKGROUND_COLOR = HexColors.White;
+const NODE_BORDER_COLOR = HexColors.DefaultBorder;
+const NODE_LABEL_TEXT_COLOR = HexColors.Black900;
+const NODE_LABEL_BACKGROUND_COLOR = HexColors.White;
+const NODE_SELECT_BORDER = HexColors.Blue400;
+const NODE_HIGHLIGHT_BORDER = HexColors.Orange200;
+const NODE_BACKGROUND_COLOR_DARK = HexColors.DarkThemeBackground;
+const NODE_LABEL_TEXT_COLOR_DARK = HexColors.DarkThemeText;
 
-const EDGE_COLOR_DEFAULT = HexColors.Black600;
-const EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT = HexColors.Blue400;
-const EDGE_COLOR_DEFAULT_TEXT = HexColors.White;
-const EDGE_COLOR_DEFAULT_BG_TEXT = HexColors.Black600;
+const EDGE_LINE_COLOR = HexColors.DefaultEdge;
+const EDGE_TERMINAL_COLOR = HexColors.DefaultEdge;
+const EDGE_TERMINAL_COLOR_2 = HexColors.Blue400;
+const EDGE_BORDER_COLOR = HexColors.DefaultBorder;
+const EDGE_LABEL_TEXT_COLOR = HexColors.Black900;
+const EDGE_LABEL_BACKGROUND_COLOR = HexColors.White;
+const EDGE_SELECT_LINE = HexColors.Blue400;
 
-const COMBO__BG_COLOR_DEFAULT = HexColors.Black100;
-const COMBO_BORDER_COLOR_DEFAULT = HexColors.Black400;
+const COMBO__BG_COLOR_DEFAULT = HexColors.DefaultBackground;
+const COMBO_BORDER_COLOR_DEFAULT = HexColors.DefaultBorder;
 const COMBO_BORDER_COLOR_HOVER = HexColors.Blue400;
-const COMBO_COLOR_DEFAULT_LABEL = HexColors.White;
-const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.Black900;
+const COMBO_COLOR_DEFAULT_LABEL = HexColors.DarkThemeText;
+const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.DarkThemeBackground;
 
 export const GRAPH_CONTAINER_ID = 'container';
 const NODE_SIZE = 50;
 const ICON_SIZE = NODE_SIZE / 2;
-const LABEL_FONT_SIZE = 8;
+const LABEL_FONT_SIZE = 9;
 const INACTIVE_OPACITY_VALUE = 0.35;
-const LABEL_PADDING = [-2, 4];
-const LABEL_EDGE_PADDING = [0, 4];
+const LABEL_PADDING = [0, 4];
+const LABEL_EDGE_PADDING = [1, 4];
+const LABEL_EDGE_BADGE_PADDING = [2, 6];
 
 export enum GraphStates {
   Select = 'activeElement',
@@ -47,16 +55,16 @@ export const NODE_CONFIG: NodeOptions = {
   style: {
     opacity: 1,
     size: NODE_SIZE,
-    fill: NODE_COLOR_DEFAULT,
-    stroke: NODE_BORDER_COLOR_DEFAULT,
+    fill: NODE_BACKGROUND_COLOR,
+    stroke: NODE_BORDER_COLOR,
     lineWidth: 1,
     labelOffsetY: 4,
-    labelFill: NODE_COLOR_DEFAULT_LABEL,
+    labelFill: NODE_LABEL_TEXT_COLOR,
     labelFontSize: LABEL_FONT_SIZE,
     labelFontFamily: 'RedHatText',
     labelBackground: true,
-    labelBackgroundFill: NODE_COLOR_DEFAULT_LABEL_BG,
-    labelBackgroundStroke: NODE_BORDER_COLOR_DEFAULT,
+    labelBackgroundFill: NODE_LABEL_BACKGROUND_COLOR,
+    labelBackgroundStroke: NODE_BORDER_COLOR,
     labelBackgroundLineWidth: 1,
     labelBackgroundRadius: 2,
     labelBackgroundOpacity: 1,
@@ -65,13 +73,19 @@ export const NODE_CONFIG: NodeOptions = {
     iconWidth: ICON_SIZE,
     iconHeight: ICON_SIZE,
     badgeFontSize: LABEL_FONT_SIZE,
+    badgeDx: -NODE_SIZE / 6,
+    badgeFill: NODE_LABEL_TEXT_COLOR_DARK,
+    badgeBackgroundFill: NODE_BACKGROUND_COLOR_DARK,
+    badgeBackgroundStroke: NODE_BACKGROUND_COLOR_DARK,
+    badgeBackgroundLineWidth: 1,
     badgeBackgroundHeight: LABEL_FONT_SIZE * 2,
     badgeBackgroundWidth: LABEL_FONT_SIZE * 2,
-    shadowColor: HexColors.Black400,
+    badgeFontWeight: 'bold',
+    shadowColor: NODE_BORDER_COLOR,
     shadowBlur: 0,
     shadowOffsetX: 0,
     shadowOffsetY: 4,
-    labelBackgroundShadowColor: HexColors.Black400,
+    labelBackgroundShadowColor: NODE_BORDER_COLOR,
     labelBackgroundShadowBlur: 0,
     labelBackgroundShadowOffsetX: 0,
     labelBackgroundShadowOffsetY: 4
@@ -90,16 +104,16 @@ export const NODE_CONFIG: NodeOptions = {
     },
 
     [GraphStates.Select]: {
-      stroke: HexColors.Blue400,
-      lineWidth: 2,
       cursor: 'pointer',
-      labelFill: HexColors.White,
-      labelBackgroundFill: HexColors.Blue400,
-      labelBackgroundStroke: HexColors.Blue400
+      lineWidth: 2,
+      stroke: NODE_SELECT_BORDER,
+      labelFill: NODE_BACKGROUND_COLOR,
+      labelBackgroundFill: NODE_SELECT_BORDER,
+      labelBackgroundStroke: NODE_SELECT_BORDER
     },
 
     [GraphStates.Highlight]: {
-      stroke: HexColors.Orange200,
+      stroke: NODE_HIGHLIGHT_BORDER,
       lineWidth: 2
     },
 
@@ -116,8 +130,8 @@ export const NODE_CONFIG: NodeOptions = {
 export const REMOTE_NODE_CONFIG: NodeOptions = {
   style: {
     opacity: 1,
-    fill: NODE_BORDER_COLOR_DEFAULT,
-    stroke: NODE_COLOR_DEFAULT,
+    fill: NODE_BORDER_COLOR,
+    stroke: NODE_BACKGROUND_COLOR,
     size: NODE_SIZE / 2,
     icon: false,
     badge: false,
@@ -131,24 +145,34 @@ export const REMOTE_NODE_CONFIG: NodeOptions = {
 export const DATA_EDGE_CONFIG: EdgeOptions = {
   style: {
     visibility: 'visible',
-    halo: false,
     opacity: 1,
     haloOpacity: 0.15,
+    haloStroke: EDGE_LINE_COLOR,
     lineWidth: 0.5,
     increasedLineWidthForHitTesting: 20,
-    stroke: EDGE_COLOR_DEFAULT,
+    stroke: EDGE_LINE_COLOR,
     endArrow: true,
     endArrowSize: 12,
+    endArrowFill: EDGE_TERMINAL_COLOR,
     labelFontFamily: 'RedHatText',
     labelBackground: true,
-    labelFill: EDGE_COLOR_DEFAULT_TEXT,
     labelFontSize: LABEL_FONT_SIZE,
-    labelBackgroundFill: EDGE_COLOR_DEFAULT_BG_TEXT,
+    labelFill: EDGE_LABEL_TEXT_COLOR,
+    labelBackgroundFill: EDGE_LABEL_BACKGROUND_COLOR,
+    labelBackgroundStroke: EDGE_BORDER_COLOR,
+    labelBackgroundLineWidth: 1,
     labelBackgroundRadius: 2,
     labelBackgroundOpacity: 1,
     labelBackgroundFillOpacity: 1,
+    labelPlacement: 'center',
     labelPadding: LABEL_EDGE_PADDING,
-    labelAutoRotate: false
+    labelAutoRotate: false,
+    badgeFontSize: LABEL_FONT_SIZE,
+    badgePadding: LABEL_EDGE_BADGE_PADDING,
+    badgeBackgroundFill: EDGE_LABEL_BACKGROUND_COLOR,
+    badgeFill: EDGE_LABEL_TEXT_COLOR,
+    badgeBackgroundStroke: EDGE_BORDER_COLOR,
+    badgeBackgroundLineWidth: 1
   },
 
   state: {
@@ -161,10 +185,10 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     },
 
     [GraphStates.Select]: {
-      halo: true,
       cursor: 'pointer',
+      lineWidth: 2,
       opacity: 1,
-      stroke: HexColors.Blue400
+      stroke: EDGE_SELECT_LINE
     },
 
     visible: {
@@ -172,9 +196,10 @@ export const DATA_EDGE_CONFIG: EdgeOptions = {
     },
 
     'hover-edge': {
-      halo: true,
       cursor: 'pointer',
-      opacity: 1
+      lineWidth: 2,
+      haloOpacity: 0.35,
+      zIndex: 2
     }
   }
 };
@@ -184,7 +209,7 @@ export const SITE_EDGE_CONFIG: EdgeOptions = {
     ...DATA_EDGE_CONFIG.style,
     endArrowOffset: 0.5,
     lineDash: [4, 4],
-    endArrowFill: EDGE_COLOR_ENDPOINT_SITE_CONNECTION_DEFAULT,
+    endArrowFill: EDGE_TERMINAL_COLOR_2,
     endArrowType: 'circle'
   },
 
@@ -194,7 +219,7 @@ export const SITE_EDGE_CONFIG: EdgeOptions = {
 export const COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
-    lineWidth: 4,
+    lineWidth: 3,
     fill: COMBO__BG_COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 10,
@@ -208,7 +233,7 @@ export const COMBO_CONFIG: ComboOptions = {
     labelOffsetY: 15,
     labelBackgroundRadius: 2,
     labelBackgroundFill: COMBO_COLOR_DEFAULT_LABEL_BG,
-    labelBackgroundStroke: COMBO_BORDER_COLOR_DEFAULT
+    labelBackgroundOpacity: 1
   },
 
   state: {
@@ -218,7 +243,7 @@ export const COMBO_CONFIG: ComboOptions = {
   }
 };
 
-export const CLICK_SELECT_BEHAVIOR = {
+const CLICK_SELECT_BEHAVIOR = {
   key: 'click-select',
   type: 'click-select',
   degree: 1,
@@ -228,7 +253,7 @@ export const CLICK_SELECT_BEHAVIOR = {
   enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
 };
 
-export const HOVER_ACTIVATE_BEHAVIOR = {
+const HOVER_ACTIVATE_BEHAVIOR = {
   HOVER_DEGREE_0_NODE: {
     // state for the node/edge with state hover
     key: 'hover-activate-single-node',
@@ -267,12 +292,6 @@ export const DEFAULT_GRAPH_CONFIG: GraphOptions = {
     HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_NODE,
     HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_EDGE,
     HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_1_NODE
-    // {
-    //   key: 'hover-activate-combo',
-    //   type: 'hover-activate',
-    //   state: 'hover',
-    //   enable: ({ targetType }: IPointerEvent) => targetType === 'combo'
-    // }
   ],
   node: { ...NODE_CONFIG },
   edge: { ...DATA_EDGE_CONFIG },
@@ -289,8 +308,7 @@ const LAYOUT_TOPOLOGY_DEFAULT: ForceLayoutOptions & { type: 'force' } = {
   nodeSpacing: NODE_SIZE,
   preventOverlap: true,
   linkDistance: 250,
-  factor: 4,
-  animations: false
+  factor: 4
 };
 
 const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
@@ -304,8 +322,7 @@ const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
   clusterNodeStrength: 300000,
   nodeStrength: 8000,
   leafCluster: true,
-  factor: 1000,
-  animations: false
+  factor: 1000
 };
 
 const LAYOUT_TOPOLOGY_SINGLE_NODE: AntVDagreLayoutOptions & { type: 'antv-dagre' } = {

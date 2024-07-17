@@ -17,8 +17,12 @@ import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
-  SHOW_LINK_REVERSE_LABEL,
-  SHOW_ROUTER_LINKS
+  SHOW_INBOUND_METRICS,
+  SHOW_ROUTER_LINKS,
+  SHOW_LINK_METRIC_VALUE,
+  SHOW_DEPLOYMENTS,
+  SHOW_LINK_PROTOCOL,
+  SHOW_LINK_METRIC_DISTRIBUTION
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
@@ -37,7 +41,7 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
     handleDisplaySelected
   } = useTopologyState({
     ids,
-    initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS],
+    initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_LINK_METRIC_DISTRIBUTION],
     displayOptionsEnabledKey: 'display-site-options'
   });
 
@@ -68,7 +72,11 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL)
+      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
+      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
+      showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
+      showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
+      showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
     }
   });
 

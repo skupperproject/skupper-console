@@ -1,14 +1,14 @@
 import { FC, useCallback, useState } from 'react';
 
-import { SearchInput } from '@patternfly/react-core';
+import { Button, Icon, Popover, SearchInput } from '@patternfly/react-core';
+import { ExpandArrowsAltIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
 import { TopologyLabels } from '../Topology.enum';
 
-export interface ResourcesOptionsProps {
-  name: string;
-  identity: string;
+enum DisplayResourcesLabels {
+  SearchInfo1 = 'Search results may appear outside of the visible area. Click to the',
+  SearchInfo2 = 'button to fit to the screen.'
 }
-
 interface DisplayResourcesProps {
   onSelect: (searchText: string) => void;
   placeholder?: string;
@@ -31,14 +31,30 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
   };
 
   return (
-    <SearchInput
-      data-testid="sk-search-box"
-      className="sk-search-filter"
-      placeholder={placeholder}
-      onChange={(_, selection) => handleTextInputChange(selection)}
-      value={searchText}
-      onClear={handleClear}
-    />
+    <>
+      <SearchInput
+        data-testid="sk-search-box"
+        className="sk-search-filter"
+        placeholder={placeholder}
+        onChange={(_, selection) => handleTextInputChange(selection)}
+        value={searchText}
+        onClear={handleClear}
+      />
+      <Popover
+        position={'right'}
+        bodyContent={
+          <>
+            {DisplayResourcesLabels.SearchInfo1} <ExpandArrowsAltIcon /> {DisplayResourcesLabels.SearchInfo2}
+          </>
+        }
+      >
+        <Button variant="plain">
+          <Icon status="info">
+            <InfoCircleIcon />
+          </Icon>
+        </Button>
+      </Popover>
+    </>
   );
 };
 

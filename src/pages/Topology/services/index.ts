@@ -144,39 +144,40 @@ export const TopologyController = {
 
   configureEdges: (edges: GraphEdge[], options?: DisplayOptions): GraphEdge[] =>
     edges.map((edge) => {
-      const protocolText = options?.showLinkProtocol && edge?.metrics?.protocol;
-      const byteRateText =
-        options?.showLinkByteRate && edge?.metrics?.byteRate && `${formatByteRate(edge?.metrics?.byteRate || 0)}`;
-      const bytesText = options?.showLinkBytes && edge?.metrics?.bytes && `${formatBytes(edge?.metrics?.bytes || 0)}`;
-      const latencyText =
-        options?.showLinkLatency && edge?.metrics?.latency && `${formatLatency(edge?.metrics?.latency || 0)}`;
+      const byteRate = options?.showLinkByteRate ? edge?.metrics?.byteRate : undefined;
+      const bytes = options?.showLinkBytes ? edge?.metrics?.bytes : undefined;
+      const latency = options?.showLinkLatency ? edge?.metrics?.latency : undefined;
 
-      const isTheSameEdge = edge.source === edge.target;
+      // The same edge has RX === Tx
+      const showRxMetric = !!options?.showInboundMetrics && !(edge.source === edge.target);
 
-      const byteRateReverseText =
-        !isTheSameEdge &&
-        edge?.metrics?.byteRate &&
-        options?.showLinkLabelReverse &&
-        `(${formatByteRate(edge?.metrics?.byteRateReverse || 0)})`;
-      const bytesReverseText =
-        !isTheSameEdge &&
-        edge?.metrics?.bytes &&
-        options?.showLinkLabelReverse &&
-        `(${formatBytes(edge?.metrics?.bytesReverse || 0)})`;
-      const latencyReverseText =
-        !isTheSameEdge &&
-        edge?.metrics?.latency &&
-        options?.showLinkLabelReverse &&
-        `(${formatLatency(edge?.metrics?.latencyReverse || 0)})`;
+      const byteRateRx = showRxMetric && byteRate ? edge?.metrics?.byteRateReverse : undefined;
+      const bytesRx = showRxMetric && bytes ? edge?.metrics?.bytesReverse : undefined;
+      const latencyRx = showRxMetric && latency ? edge?.metrics?.latencyReverse : undefined;
 
-      const metrics = [bytesText, byteRateText, latencyText].filter(Boolean).join(', ');
-      const reverseMetrics = [bytesReverseText, byteRateReverseText, latencyReverseText].filter(Boolean).join(', ');
+      const metricsString = [
+        bytes && `${formatBytes(bytes)}`,
+        byteRate && `${formatByteRate(byteRate)}`,
+        latency && `${formatLatency(latency)}`
+      ]
+        .filter(Boolean)
+        .join(', ');
 
-      const label = [protocolText, metrics, reverseMetrics].filter(Boolean).join('\n');
+      const metricsRxString = [
+        byteRateRx && `(${formatByteRate(byteRateRx)})`,
+        bytesRx && `(${formatBytes(bytesRx)})`,
+        latencyRx && `(${formatLatency(latencyRx)})`
+      ]
+        .filter(Boolean)
+        .join(', ');
+
+      const label = options?.showMetricValue ? [metricsString, metricsRxString].filter(Boolean).join('   ') : undefined;
 
       return {
         ...edge,
-        label
+        label,
+        protocolLabel: options?.showLinkProtocol ? edge?.metrics?.protocol : undefined,
+        metricValue: options?.showMetricDistribution ? bytes || byteRate || latency || 0 : undefined
       };
     }),
 

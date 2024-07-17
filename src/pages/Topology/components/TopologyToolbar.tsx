@@ -9,8 +9,10 @@ import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
-  SHOW_LINK_REVERSE_LABEL,
-  SHOW_ROUTER_LINKS
+  SHOW_INBOUND_METRICS,
+  SHOW_ROUTER_LINKS,
+  SHOW_LINK_METRIC_DISTRIBUTION,
+  SHOW_LINK_METRIC_VALUE
 } from '../Topology.constants';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
@@ -32,10 +34,6 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
   displayOptions = [[]],
   onDisplayOptionSelected,
   defaultDisplayOptionsSelected = [],
-  // showOnlyNeighbours,
-  // onShowOnlyNeighboursChecked,
-  // moveToNodeSelected,
-  // onMoveToNodeSelectedChecked,
   serviceIdsSelected,
   onServiceSelected,
   resourcePlaceholder,
@@ -45,7 +43,13 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
     [SHOW_LINK_BYTES]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
     [SHOW_LINK_BYTERATE]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
     [SHOW_LINK_LATENCY]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
-    [SHOW_LINK_REVERSE_LABEL]:
+    [SHOW_INBOUND_METRICS]:
+      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) ||
+      !defaultDisplayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE) ||
+      !areMetricAvailable(defaultDisplayOptionsSelected),
+    [SHOW_LINK_METRIC_DISTRIBUTION]:
+      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable(defaultDisplayOptionsSelected),
+    [SHOW_LINK_METRIC_VALUE]:
       defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable(defaultDisplayOptionsSelected)
   };
 
@@ -80,30 +84,6 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
             <ToolbarItem data-testid="display-resources">
               <DisplayResources placeholder={resourcePlaceholder} onSelect={onResourceSelected} />
             </ToolbarItem>
-
-            {/* <ToolbarItem data-testid="show-only-neighbours-checkbox">
-              <Checkbox
-                label={TopologyLabels.CheckboxShowOnlyNeghbours}
-                isDisabled={!resourceIdSelected}
-                isChecked={!!resourceIdSelected && showOnlyNeighbours}
-                onChange={(_, checked) => {
-                  onShowOnlyNeighboursChecked?.(checked);
-                }}
-                id="showOnlyNeighboursCheckbox"
-              />
-            </ToolbarItem>
-
-            <ToolbarItem data-testid="move-to-node-selected-checkbox">
-              <Checkbox
-                label={TopologyLabels.CheckboxMoveToNodeSelected}
-                isDisabled={!resourceIdSelected || showOnlyNeighbours}
-                isChecked={!!resourceIdSelected && moveToNodeSelected}
-                onChange={(_, checked) => {
-                  onMoveToNodeSelectedChecked?.(checked);
-                }}
-                id="moveToNodeSelectedCheckbox"
-              />
-            </ToolbarItem> */}
           </ToolbarGroup>
         )}
       </ToolbarContent>

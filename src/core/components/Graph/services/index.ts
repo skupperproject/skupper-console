@@ -149,6 +149,10 @@ export const GraphController = {
     const comboIds = combos?.map(({ id }) => id);
     const sortedNodes = nodes.sort((a, b) => (a.combo || '')?.localeCompare(b.combo || ''));
 
+    const metrics = transformedEdges.map((edge) => Number(edge.metricValue));
+    const maxMetricValue = Math.max(...metrics);
+    const minMetricValue = Math.min(...metrics.filter((metric) => metric)) || 0;
+
     return {
       nodes: sortedNodes.map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
         id,
@@ -178,13 +182,27 @@ export const GraphController = {
       })),
 
       edges: transformedEdges.map(
-        ({ id, source, target, label, isSame, hasPair, type = 'SkSiteDataEdge', ...data }) => ({
+        ({
+          id,
+          source,
+          target,
+          label,
+          isSame,
+          hasPair,
+          type = 'SkSiteDataEdge',
+          metricValue,
+          protocolLabel,
+          ...data
+        }) => ({
           id,
           source,
           target,
           type: isSame ? 'SkLoopEdge' : hasPair && type !== 'SkSiteEdge' ? 'SkSiteDataEdge' : type,
           data,
           style: {
+            halo: true,
+            haloLineWidth: normalizeBitrateToLineThicknessPower(metricValue as number, minMetricValue, maxMetricValue),
+            badgeText: protocolLabel,
             label: !!label,
             labelText: label,
             curveOffset: hasPair ? 30 : 0 // (usageCount - 1) * 15
@@ -335,4 +353,27 @@ function ellipsisInTheMiddle(str: string) {
   const rightPart = str.substring(str.length - rightPartLength);
 
   return `${leftPart}...${rightPart}`;
+}
+
+// function normalizeBitrateToLineThickness(value: number, maxMetricValue: number, maxLineThickness: number) {
+//   const normalizationFactor = maxMetricValue / maxLineThickness;
+//   const normalizedValue = value / normalizationFactor;
+//   const lineThickness = Math.max(Math.ceil(normalizedValue) * maxLineThickness, 0.5);
+
+//   return lineThickness;
+// }
+
+function normalizeBitrateToLineThicknessPower(
+  value: number,
+  minMetricValue: number,
+  maxMetricValue: number,
+  maxLineThickness = 30,
+  power = 0.35
+) {
+  const range = maxMetricValue - (minMetricValue === Infinity ? 0 : minMetricValue);
+  const normalizedValue =
+    Math.pow((value - (minMetricValue === Infinity ? 0 : minMetricValue)) / range, power) * maxLineThickness;
+  const lineThickness = Math.max(Math.ceil(normalizedValue), 0.5);
+
+  return lineThickness;
 }

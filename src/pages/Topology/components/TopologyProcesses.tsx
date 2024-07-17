@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback } from 'react';
+import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
 
 import {
   Divider,
@@ -33,8 +33,10 @@ import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
+  SHOW_LINK_METRIC_DISTRIBUTION,
+  SHOW_LINK_METRIC_VALUE,
   SHOW_LINK_PROTOCOL,
-  SHOW_LINK_REVERSE_LABEL,
+  SHOW_INBOUND_METRICS,
   displayOptionsForProcesses
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
@@ -49,10 +51,11 @@ const TopologyProcesses: FC<{
   const navigate = useNavigate();
   const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
 
+  const [enableDrawer, setEnableDrawer] = useState(false);
   const { idsSelected, searchText, displayOptionsSelected, handleSelected, handleSearchText, handleDisplaySelected } =
     useTopologyState({
       ids: processIds,
-      initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS],
+      initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS, SHOW_LINK_METRIC_DISTRIBUTION],
       displayOptionsEnabledKey: 'display-process-options'
     });
 
@@ -118,10 +121,16 @@ const TopologyProcesses: FC<{
       showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
       showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
-      showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
+      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
+      showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
+      showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
     }
   });
+
+  useEffect(() => {
+    setEnableDrawer(true);
+  }, []);
 
   const panelContent = (
     <DrawerPanelContent isResizable minSize={`${MIN_DRAWER_WIDTH}px`} maxSize={`${MAX_DRAWER_WIDTH}px`}>
@@ -157,7 +166,10 @@ const TopologyProcesses: FC<{
         <Divider />
       </StackItem>
       <StackItem isFilled>
-        <Drawer isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected} isInline>
+        <Drawer
+          isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected && enableDrawer}
+          isInline
+        >
           <DrawerContent panelContent={panelContent}>
             <DrawerContentBody>
               <GraphComponent
