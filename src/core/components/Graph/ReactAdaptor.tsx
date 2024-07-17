@@ -101,18 +101,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
     //   }
     // }, []);
 
-    const handleResize = () => {
-      const graphInstance = topologyGraphRef.current;
-      // const dimensions = graphInstance?.getSize()!;
-      // const newDimension = document.getElementById(GRAPH_CONTAINER_ID)?.getBoundingClientRect()!;
-
-      // if (newDimension?.width > dimensions[0]) {
-      graphInstance?.resize();
-      //  }
-
-      graphInstance?.fitView({ when: 'overflow' });
-    };
-
     const setLabelText = (id: string, labelKey: string) => {
       const graphInstance = topologyGraphRef.current!;
 
@@ -272,11 +260,49 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
     useEffect(() => () => save(), [save]);
 
+    // handle size change from the browers
     useLayoutEffect(() => {
+      const handleResizeGraph = async () => {
+        const graphInstance = topologyGraphRef.current!;
+        const container = document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element;
+
+        try {
+          graphInstance.resize(container.clientWidth, container.clientHeight);
+        } catch {
+          return;
+        }
+      };
+
+      const debouncedHandleResize = debounce(handleResizeGraph, 0);
+      window.addEventListener('resize', debouncedHandleResize);
+
+      return () => {
+        window.removeEventListener('resize', debouncedHandleResize);
+      };
+    }, []);
+
+    // handle size change from the parent. ie open / close drawer
+    useLayoutEffect(() => {
+      const handleTranslateGraph = () => {
+        const graphInstance = topologyGraphRef.current!;
+
+        const container = document.getElementById(GRAPH_CONTAINER_ID)!.getBoundingClientRect();
+        const nodes = graphInstance.getElementDataByState('node', GraphStates.Select);
+        if (nodes?.length) {
+          const itemSelectedPos = graphInstance.getElementPosition(nodes[0].id);
+          // we need to keep in consideration scaling from zoom
+          const itemSelectedPosCanvas = graphInstance.getViewportByCanvas(itemSelectedPos);
+
+          if (container.width < itemSelectedPosCanvas[0]) {
+            graphInstance.translateBy([container.width - itemSelectedPosCanvas[0] - 50 * graphInstance.getZoom(), 0]);
+          }
+        }
+      };
+
       const container = document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element;
       const resizeObserver = new ResizeObserver((entries) => debouncedHandleResize(entries));
 
-      const debouncedHandleResize = debounce(handleResize, 400);
+      const debouncedHandleResize = debounce(handleTranslateGraph, 300);
       resizeObserver.observe(container);
 
       return () => {
@@ -290,7 +316,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         ref={graphRef}
         style={{
           overflow: 'hidden',
-          height: '99.9%',
+          height: '99.5%',
           background: GRAPH_BG_COLOR
         }}
       >
