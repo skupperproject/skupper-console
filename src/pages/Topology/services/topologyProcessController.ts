@@ -1,12 +1,10 @@
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import processIcon from '@assets/process.svg';
-import skupperIcon from '@assets/skupper.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
 import { TopologyMetrics } from '../Topology.interfaces';
 
-import { TopologyController, convertEntityToNode, groupEdges, groupNodes } from '.';
+import { TopologyController, groupEdges, groupNodes } from '.';
 
 interface TopologyProcessControllerProps {
   idsSelected: string[] | undefined;
@@ -54,10 +52,10 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
       processRole: role,
       processBinding
     }) => {
-      const iconSrc = role === 'internal' ? skupperIcon : processIcon;
+      const iconSrc = role === 'internal' ? 'skupper' : 'process';
       const type = shape[role === 'remote' ? role : processBinding];
 
-      return convertEntityToNode({
+      return {
         id: identity,
         combo,
         comboName,
@@ -66,7 +64,7 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
         type,
         groupId: groupIdentity,
         groupName
-      });
+      };
     }
   );
 

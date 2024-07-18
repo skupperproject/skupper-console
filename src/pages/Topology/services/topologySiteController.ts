@@ -1,15 +1,12 @@
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { LinkResponse, SitePairsResponse, SiteResponse } from '@API/REST.interfaces';
-import kubernetesIcon from '@assets/kubernetes.svg';
-import podmanIcon from '@assets/podman.png';
-import siteIcon from '@assets/site.svg';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
 
 import { TopologyLabels } from '../Topology.enum';
 import { DisplayOptions, TopologyMetrics } from '../Topology.interfaces';
 
-import { TopologyController, convertEntityToNode } from '.';
+import { TopologyController } from '.';
 
 interface TopologySiteControllerProps {
   idsSelected: string[] | undefined;
@@ -20,11 +17,6 @@ interface TopologySiteControllerProps {
   metrics: TopologyMetrics | null;
   options: DisplayOptions;
 }
-
-const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
-  kubernetes: kubernetesIcon,
-  podman: podmanIcon
-};
 
 const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) => {
   const sanitizedLinks = links.map((link) => ({
@@ -47,14 +39,13 @@ const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | nu
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
   entities.map(({ identity, name, siteVersion, platform }) => {
-    const iconSrc = platform && platformsMap[platform] ? platformsMap[platform] : siteIcon;
     const label = siteVersion ? `${name} (${siteVersion})` : name;
 
-    return convertEntityToNode({
+    return {
       id: identity,
       label,
-      iconSrc
-    });
+      iconSrc: platform || 'site'
+    };
   });
 
 const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {

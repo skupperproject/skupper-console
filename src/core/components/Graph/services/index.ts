@@ -1,6 +1,6 @@
-import { ComboData, EdgeData, Graph, ID, NodeData } from '@antv/g6';
+import { ComboData, EdgeData, NodeData } from '@antv/g6';
 
-import { GRAPH_CONTAINER_ID, GraphStates } from '../Graph.constants';
+import { graphIconsMap } from '../Graph.config';
 import {
   GraphCombo,
   GraphEdge,
@@ -11,6 +11,7 @@ import {
 } from '../Graph.interfaces';
 
 const prefixLocalStorageItem = 'skupper';
+const GRAPH_CONTAINER_ID = 'container';
 
 export const GraphController = {
   saveAllNodePositions: (nodes: LocalStorageData[]) => {
@@ -170,7 +171,7 @@ export const GraphController = {
           x,
           y,
           labelText: ellipsisInTheMiddle(label),
-          iconSrc,
+          iconSrc: graphIconsMap[iconSrc],
           badge: groupedNodeCount !== undefined,
           badges: [
             {
@@ -201,7 +202,7 @@ export const GraphController = {
           data,
           style: {
             halo: true,
-            haloLineWidth: normalizeBitrateToLineThicknessPower(metricValue as number, minMetricValue, maxMetricValue),
+            haloLineWidth: normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue),
             badgeText: protocolLabel,
             label: !!label,
             labelText: label,
@@ -220,81 +221,8 @@ export const GraphController = {
     };
   },
 
-  activateNodeRelations: (graphInstance: Graph, itemId: ID) => {
-    const neighbors = graphInstance.getNeighborNodesData(itemId);
-    const neighborsIds = neighbors.map(({ id }) => id);
-
-    const allIdsWithEmptyState: Record<string, []> = {};
-    const allHiddenIds: Record<string, 'hidden'> = {};
-
-    graphInstance.getNodeData().forEach(({ id }) => {
-      allIdsWithEmptyState[id] = [];
-
-      if (itemId !== id && !neighborsIds.includes(id)) {
-        allHiddenIds[id] = 'hidden';
-      }
-    });
-
-    graphInstance.getEdgeData().forEach(({ id, source, target }) => {
-      if (id) {
-        if (itemId !== source && itemId !== target) {
-          allHiddenIds[id] = 'hidden';
-        } else {
-          allIdsWithEmptyState[id] = [];
-        }
-      }
-    });
-
-    graphInstance.setElementState(allIdsWithEmptyState);
-    graphInstance.setElementState(allHiddenIds);
-    graphInstance.setElementState(itemId, GraphStates.Select);
-  },
-
-  activateEdgeRelations: (graphInstance: Graph, itemId: ID) => {
-    const { target, source } = graphInstance.getEdgeData(itemId);
-
-    const allIdsWithEmptyState: Record<string, []> = {};
-    const allHiddenIds: Record<string, 'hidden'> = {};
-
-    graphInstance.getNodeData().forEach(({ id }) => {
-      allIdsWithEmptyState[id] = [];
-
-      if (id !== source && id !== target) {
-        allHiddenIds[id] = 'hidden';
-      }
-    });
-
-    graphInstance.getEdgeData().forEach(({ id }) => {
-      if (id) {
-        if (itemId !== id) {
-          allHiddenIds[id] = 'hidden';
-        } else {
-          allIdsWithEmptyState[id] = [];
-        }
-      }
-    });
-
-    graphInstance.setElementState(allIdsWithEmptyState);
-    graphInstance.setElementState(allHiddenIds);
-    graphInstance.setElementState(itemId, GraphStates.Select);
-  },
-
-  cleanAllRelations: (graphInstance: Graph) => {
-    if (!graphInstance) {
-      return;
-    }
-    const allIdsWithSEmptyState: Record<string, []> = {};
-
-    [...graphInstance.getNodeData(), ...graphInstance.getEdgeData()].forEach(({ id }) => {
-      if (id) {
-        allIdsWithSEmptyState[id] = [];
-      }
-    });
-
-    graphInstance.setElementState(allIdsWithSEmptyState, false);
-  },
-
-  getParent: (): Element => document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element
+  getParent: (): Element => document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element,
+  getParentName: () => GRAPH_CONTAINER_ID
 };
 
 // TODO: remove this function when Backend sanitize the old process pairs
@@ -355,15 +283,7 @@ function ellipsisInTheMiddle(str: string) {
   return `${leftPart}...${rightPart}`;
 }
 
-// function normalizeBitrateToLineThickness(value: number, maxMetricValue: number, maxLineThickness: number) {
-//   const normalizationFactor = maxMetricValue / maxLineThickness;
-//   const normalizedValue = value / normalizationFactor;
-//   const lineThickness = Math.max(Math.ceil(normalizedValue) * maxLineThickness, 0.5);
-
-//   return lineThickness;
-// }
-
-function normalizeBitrateToLineThicknessPower(
+function normalizeBitrateToLineThickness(
   value: number,
   minMetricValue: number,
   maxMetricValue: number,

@@ -1,9 +1,9 @@
-import { Tooltip, Truncate } from '@patternfly/react-core';
+import { Icon, Text, Tooltip, Truncate } from '@patternfly/react-core';
+import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
-import EarthIcon from '@assets/earth.svg';
 import { timeAgo } from '@core/utils/timeAgo';
 
-import { EndTimeProps } from './EndTime';
+import { EndTimeProps } from './EndTime.interfaces';
 
 const EndTimeCell = function <T>({ value }: EndTimeProps<T>) {
   if (!value) {
@@ -14,10 +14,12 @@ const EndTimeCell = function <T>({ value }: EndTimeProps<T>) {
 
   return (
     <Tooltip content={timeAgo(value as number)}>
-      <div style={{ display: 'flex' }}>
-        <img src={EarthIcon} alt="Timestamp icon" width={14} className="pf-v5-u-mr-sm" />
+      <Text component="p">
+        <Icon size="md" isInline>
+          <GlobeAmericasIcon />
+        </Icon>{' '}
         <Truncate content={timeAgo(value as number)} position={'middle'} />
-      </div>
+      </Text>
     </Tooltip>
   );
 };

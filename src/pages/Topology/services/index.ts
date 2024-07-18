@@ -9,7 +9,6 @@ import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicates
 
 import { shape } from '../Topology.constants';
 import {
-  Entity,
   TopologyMetrics,
   TopologyConfigMetrics,
   DisplayOptions,
@@ -208,30 +207,6 @@ export const TopologyController = {
     return nodes.filter((node) => text && node.label.includes(text)).map((node) => node.id);
   }
 };
-
-export function convertEntityToNode({
-  id,
-  type,
-  combo,
-  comboName,
-  groupId,
-  groupName,
-  label,
-  iconSrc,
-  groupedNodeCount
-}: Entity): GraphNode {
-  return {
-    id,
-    combo,
-    comboName,
-    groupId,
-    groupName,
-    label,
-    groupedNodeCount,
-    iconSrc,
-    type
-  };
-}
 
 /**
  * Groups an array of GraphNode objects based on their combo and groupId properties.

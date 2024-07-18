@@ -8,7 +8,6 @@ export const TopologyPaths = {
   name: TopologyLabels.Topology
 };
 
-export const SHOW_SITE_KEY = 'showSite';
 export const SHOW_LINK_PROTOCOL = 'show-link-protocol';
 export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';

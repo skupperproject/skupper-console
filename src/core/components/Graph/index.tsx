@@ -22,12 +22,17 @@ import {
   LocalStorageData
 } from '@core/components/Graph/Graph.interfaces';
 
-import { registerElements } from './CustomElements';
-import { DEFAULT_GRAPH_CONFIG, GRAPH_BG_COLOR, GRAPH_CONTAINER_ID, GraphStates, LAYOUT_MAP } from './Graph.constants';
-import MenuControl from './MenuControl';
+import ControlBar from './components/ControlBar';
+import { registerElements } from './components/CustomElements';
+import { DEFAULT_GRAPH_CONFIG } from './Graph.config';
+import { GRAPH_BG_COLOR } from './Graph.constants';
+import { GraphElementStates } from './Graph.enum';
+import { LAYOUT_MAP } from './layout';
 import { GraphController } from './services';
 
 import './SkGraph.css';
+
+registerElements();
 
 const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   ({
@@ -78,29 +83,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       });
     }, []);
 
-    /** Simulate a Select event, regardless of whether a node or edge is preselected */
-    // const handleItemSelected = useCallback((id?: string) => {
-    //   const graphInstance = topologyGraphRef.current!;
-
-    //   if (graphInstance) {
-    //     if (!id) {
-    //       GraphController.cleanAllRelations(graphInstance);
-
-    //       return;
-    //     }
-
-    //     const type = graphInstance.getElementType(id);
-
-    //     if (type === 'node') {
-    //       GraphController.activateNodeRelations(graphInstance, id);
-    //     }
-
-    //     if (type === 'edge') {
-    //       GraphController.activateEdgeRelations(graphInstance, id);
-    //     }
-    //   }
-    // }, []);
-
     const setLabelText = (id: string, labelKey: string) => {
       const graphInstance = topologyGraphRef.current!;
 
@@ -125,7 +107,6 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         };
 
         const graph = new Graph(options);
-        registerElements();
 
         graph.on<IDragEvent<Combo>>(ComboEvent.DRAG_END, (e) => graph.setElementZIndex(e.target.id, 0));
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_ENTER, (e) => setLabelText(e.target.id, 'fullLabelText'));
@@ -136,12 +117,12 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
           // if the node is already selected , set id = undefined to deleselect it
-          const node = graph.getElementDataByState('node', GraphStates.Select);
+          const node = graph.getElementDataByState('node', GraphElementStates.Select);
           onClickNode?.(target.id === (node.length && node[0].id) ? '' : target.id);
         });
         graph.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target }) => {
           // if the edge is already selected , set id = undefined to deleselect it
-          const edge = graph.getElementDataByState('edge', GraphStates.Select);
+          const edge = graph.getElementDataByState('edge', GraphElementStates.Select);
           onClickEdge?.(target.id === (edge.length && edge[0].id) ? '' : target.id);
         });
 
@@ -210,13 +191,15 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         const allElemetsStateMap: Record<string, string[]> = {};
         [...graphInstance.getNodeData(), ...graphInstance.getEdgeData()].forEach(({ id, states }) => {
           const filteredStates =
-            states?.filter((state) => state !== GraphStates.Highlight && state !== GraphStates.Exclude) || [];
+            states?.filter(
+              (state) => state !== GraphElementStates.HighlightNode && state !== GraphElementStates.Exclude
+            ) || [];
 
           if (id) {
             const selectedState = itemsToHighlight?.length
               ? itemsToHighlight.includes(id)
-                ? GraphStates.Highlight
-                : GraphStates.Exclude
+                ? GraphElementStates.HighlightNode
+                : GraphElementStates.Exclude
               : '';
             allElemetsStateMap[id] = selectedState ? [selectedState, ...filteredStates] : filteredStates;
           }
@@ -232,27 +215,27 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
       if (isGraphLoaded) {
         if (itemSelected) {
-          graphInstance.setElementState(itemSelected, GraphStates.Select);
+          graphInstance.setElementState(itemSelected, GraphElementStates.Select);
 
           return;
         }
 
-        const nodes = graphInstance?.getElementDataByState('node', GraphStates.Select);
+        const nodes = graphInstance?.getElementDataByState('node', GraphElementStates.Select);
         if (nodes.length) {
           graphInstance.setElementState(
             nodes[0].id,
-            nodes[0].states?.filter((state) => state !== GraphStates.Select) || []
+            nodes[0].states?.filter((state) => state !== GraphElementStates.Select) || []
           );
 
           return;
         }
 
-        const activeEdges = graphInstance?.getElementDataByState('edge', GraphStates.Select);
+        const activeEdges = graphInstance?.getElementDataByState('edge', GraphElementStates.Select);
 
         if (activeEdges.length && activeEdges[0].id) {
           graphInstance.setElementState(
             activeEdges[0].id,
-            activeEdges[0].states?.filter((state) => state !== GraphStates.Select) || []
+            activeEdges[0].states?.filter((state) => state !== GraphElementStates.Select) || []
           );
         }
       }
@@ -260,20 +243,20 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
     useEffect(() => () => save(), [save]);
 
-    // handle size change from the browers
+    // handle the resize from the  browers window
     useLayoutEffect(() => {
       const handleResizeGraph = async () => {
-        const graphInstance = topologyGraphRef.current!;
-        const container = document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element;
+        const graphInstance = topologyGraphRef.current;
+        const container = GraphController.getParent();
 
         try {
-          graphInstance.resize(container.clientWidth, container.clientHeight);
+          graphInstance?.resize(container.clientWidth, container.clientHeight);
         } catch {
           return;
         }
       };
 
-      const debouncedHandleResize = debounce(handleResizeGraph, 0);
+      const debouncedHandleResize = debounce(handleResizeGraph, 350);
       window.addEventListener('resize', debouncedHandleResize);
 
       return () => {
@@ -281,13 +264,16 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
       };
     }, []);
 
-    // handle size change from the parent. ie open / close drawer
+    // handle resize from the Graph parent.
     useLayoutEffect(() => {
       const handleTranslateGraph = () => {
-        const graphInstance = topologyGraphRef.current!;
+        const graphInstance = topologyGraphRef.current;
+        if (!graphInstance) {
+          return;
+        }
 
-        const container = document.getElementById(GRAPH_CONTAINER_ID)!.getBoundingClientRect();
-        const nodes = graphInstance.getElementDataByState('node', GraphStates.Select);
+        const container = GraphController.getParent()!.getBoundingClientRect();
+        const nodes = graphInstance.getElementDataByState('node', GraphElementStates.Select);
         if (nodes?.length) {
           const itemSelectedPos = graphInstance.getElementPosition(nodes[0].id);
           // we need to keep in consideration scaling from zoom
@@ -299,7 +285,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
         }
       };
 
-      const container = document.querySelector(`#${GRAPH_CONTAINER_ID}`) as Element;
+      const container = GraphController.getParent();
       const resizeObserver = new ResizeObserver((entries) => debouncedHandleResize(entries));
 
       const debouncedHandleResize = debounce(handleTranslateGraph, 350);
@@ -312,7 +298,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
 
     return (
       <div
-        id={GRAPH_CONTAINER_ID}
+        id={GraphController.getParentName()}
         ref={graphRef}
         style={{
           overflow: 'hidden',
@@ -320,7 +306,7 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
           background: GRAPH_BG_COLOR
         }}
       >
-        {topologyGraphRef.current && <MenuControl graphInstance={topologyGraphRef.current} />}
+        {topologyGraphRef.current && <ControlBar graphInstance={topologyGraphRef.current} />}
       </div>
     );
   }

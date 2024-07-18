@@ -1,3 +1,11 @@
+import { LayoutOptions } from '@antv/g6';
+
+export type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
+
+export type GraphIconsMap = {
+  [key in GraphIconKeys]: HTMLImageElement;
+};
+
 export interface GraphNode {
   id: string;
   type?: CustomItemsProps;
@@ -11,7 +19,7 @@ export interface GraphNode {
   x?: number | undefined;
   y?: number | undefined;
   persistPositionKey?: string;
-  iconSrc: string;
+  iconSrc: GraphIconKeys;
 }
 
 export interface GraphCombo {
@@ -43,6 +51,11 @@ export interface GraphEdge {
   metrics?: GraphEdgeMetrics;
 }
 
+export interface GraphLayouts {
+  combo: LayoutOptions;
+  default: LayoutOptions;
+}
+
 export interface GraphReactAdaptorProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
@@ -51,7 +64,7 @@ export interface GraphReactAdaptorProps {
   itemSelected?: string;
   onClickNode?: (id: string) => void;
   onClickEdge?: (id: string) => void;
-  layout?: 'combo' | 'default' | 'neighbour';
+  layout?: keyof GraphLayouts;
   moveToSelectedNode?: boolean;
   savePositions?: boolean;
 }

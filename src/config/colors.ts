@@ -30,10 +30,12 @@ export enum HexColors {
   White = '#FFFFFF',
   Blue50 = '#E7F1FA',
   Blue200 = '#73BCF7',
-  Blue400 = '#0066CC',
   Black200 = '#F0F0F0',
   Black400 = '#B8BBBE',
+  DefaultHighLight = '#0066CC',
   DefaultBackground = '#F0F0F0',
+  DefaultStatusBackground = '#E7F1FA',
+  DefaultStatusText = '#002952',
   DefaultBorder = '#c7c7c7',
   DefaultEdge = '#707070',
   DarkThemeBackground = '#151515',
@@ -43,6 +45,5 @@ export enum HexColors {
   Black600 = '#6A6E73',
   Black700 = '#4F5255',
   Black800 = '#3C3F42',
-  Black900 = '#151515',
-  Orange200 = '#EF9234'
+  Black900 = '#151515'
 }

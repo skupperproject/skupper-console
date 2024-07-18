@@ -17,8 +17,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
+import GraphReactAdaptor from '@core/components/Graph';
 import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';

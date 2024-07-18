@@ -1,11 +1,9 @@
 import { ComponentPairsResponse, ComponentResponse } from '@API/REST.interfaces';
-import componentIcon from '@assets/component.svg';
-import skupperIcon from '@assets/skupper.svg';
 import { GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
 
-import { TopologyController, convertEntityToNode } from '.';
+import { TopologyController } from '.';
 
 interface TopologyComponentControllerProps {
   idsSelected: string[] | undefined;
@@ -15,19 +13,13 @@ interface TopologyComponentControllerProps {
 }
 
 const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, processGroupRole: role, processCount }) => {
-    const iconSrc = role === 'internal' ? skupperIcon : componentIcon;
-
-    const type = role === 'remote' ? shape.remote : shape.bound;
-
-    return convertEntityToNode({
-      id: identity,
-      label: name,
-      iconSrc,
-      type,
-      groupedNodeCount: processCount
-    });
-  });
+  entities.map(({ identity, name, processGroupRole: role, processCount }) => ({
+    id: identity,
+    label: name,
+    iconSrc: role === 'internal' ? 'skupper' : 'component',
+    type: role === 'remote' ? shape.remote : shape.bound,
+    groupedNodeCount: processCount
+  }));
 
 export const TopologyComponentController = {
   dataTransformer: ({ idsSelected, components, componentsPairs, searchText }: TopologyComponentControllerProps) => {

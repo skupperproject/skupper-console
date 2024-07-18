@@ -5,7 +5,7 @@ import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, To
 import { ExpandArrowsAltIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import ProcessLegend from './Legend';
-import { GraphController } from './services';
+import { GraphController } from '../services';
 
 type ZoomControlsProps = {
   graphInstance: Graph;
@@ -16,7 +16,7 @@ const ZOOM_RATIO_IN = 0.8;
 
 const LEGEND_LABEL_NAME = 'Legend';
 
-const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
+const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
 
   const handleIncreaseZoom = () => {
@@ -112,4 +112,4 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   );
 };
 
-export default MenuControl;
+export default ControlBar;

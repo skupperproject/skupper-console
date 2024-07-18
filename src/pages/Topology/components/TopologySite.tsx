@@ -3,8 +3,8 @@ import { ComponentType, FC, useCallback } from 'react';
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
+import GraphReactAdaptor from '@core/components/Graph';
 import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import TopologyToolbar from './TopologyToolbar';

@@ -1,6 +1,6 @@
 import { PrometheusMetric, PrometheusLabels } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import { CustomItemsProps } from '@core/components/Graph/Graph.interfaces';
+import { CustomItemsProps, GraphIconKeys } from '@core/components/Graph/Graph.interfaces';
 
 export interface Entity {
   id: string;
@@ -9,7 +9,7 @@ export interface Entity {
   groupId?: string;
   groupName?: string;
   label: string;
-  iconSrc: string;
+  iconSrc: GraphIconKeys;
   type?: CustomItemsProps;
   groupedNodeCount?: number;
 }
