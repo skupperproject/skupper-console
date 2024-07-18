@@ -17,7 +17,7 @@ import {
 import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface ToolbarProps {
-  displayOptions?: DisplaySelectProps[][];
+  displayOptions?: DisplaySelectProps[];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
   showOnlyNeighbours?: boolean;
@@ -31,7 +31,7 @@ interface ToolbarProps {
 }
 
 const TopologyToolbar: FC<ToolbarProps> = function ({
-  displayOptions = [[]],
+  displayOptions = [],
   onDisplayOptionSelected,
   defaultDisplayOptionsSelected = [],
   serviceIdsSelected,

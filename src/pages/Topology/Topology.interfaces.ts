@@ -33,10 +33,13 @@ export interface TopologyConfigMetrics {
 }
 
 export interface DisplaySelectProps {
-  key: string;
-  value: string;
-  label: string;
-  isDisabled?: Function;
+  title?: string;
+  items: {
+    key: string;
+    value: string;
+    label: string;
+    isDisabled?: Function;
+  }[];
 }
 
 export interface DisplayOptions {

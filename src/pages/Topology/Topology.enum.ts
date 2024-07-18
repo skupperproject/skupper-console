@@ -70,7 +70,10 @@ export enum TopologyLabels {
   TopologyModalAction3 = 'View charts',
   Source = 'Source',
   Destination = 'Destination',
-  Protocol = 'Protocol'
+  Protocol = 'Protocol',
+  TitleGroupDisplayOptionsMenuMetrics = 'Metrics',
+  TitleGroupDisplayOptionsMenuMetricVisualization = 'Metric Visualization',
+  TitleGroupDisplayOptionsMenuOther = 'Other'
 }
 
 export enum TopologyURLQueyParams {

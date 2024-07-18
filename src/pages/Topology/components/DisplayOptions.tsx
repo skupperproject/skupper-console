@@ -1,7 +1,6 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, Ref, useCallback, useState } from 'react';
 
-import { Divider, SelectGroup } from '@patternfly/react-core';
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
+import { MenuToggle, MenuToggleElement, Select, SelectGroup, SelectOption } from '@patternfly/react-core';
 
 import {
   SHOW_DATA_LINKS,
@@ -19,7 +18,7 @@ interface DisplayUseOptionsProps {
 }
 
 interface DisplayOptionsProps extends DisplayUseOptionsProps {
-  options: DisplaySelectProps[][];
+  options: DisplaySelectProps[];
   optionsDisabled?: Record<string, boolean>;
 }
 
@@ -78,26 +77,33 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
     onSelected
   });
 
-  function toggleDisplayMenu(openDisplayMenu: boolean) {
-    setIsDisplayMenuOpen(openDisplayMenu);
+  function toggleDisplayMenu() {
+    setIsDisplayMenuOpen(!isDisplayMenuOpen);
   }
+
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={toggleDisplayMenu} isExpanded={isDisplayMenuOpen}>
+      {TopologyLabels.DisplayPlaceholderText}
+    </MenuToggle>
+  );
 
   return (
     <Select
-      variant={SelectVariant.checkbox}
       isOpen={isDisplayMenuOpen}
-      onSelect={(_, selection) => selectDisplayOptions(selection.toString())}
-      onToggle={(_, isOpen) => toggleDisplayMenu(isOpen)}
-      selections={displayOptionsSelected}
-      placeholderText={TopologyLabels.DisplayPlaceholderText}
-      isCheckboxSelectionBadgeHidden
-      isGrouped
+      onSelect={(_, selection) => selectDisplayOptions(selection!.toString())}
+      selected={displayOptionsSelected}
+      toggle={toggle}
     >
       {options.map((group, index) => (
-        <SelectGroup key={index}>
-          {<Divider />}
-          {group.map(({ key, value, label }) => (
-            <SelectOption key={key} value={value} isDisabled={optionsDisabled[value]}>
+        <SelectGroup key={index} label={group.title}>
+          {group.items.map(({ key, value, label }) => (
+            <SelectOption
+              key={key}
+              value={value}
+              isDisabled={optionsDisabled[value]}
+              hasCheckbox
+              isSelected={displayOptionsSelected.includes(value)}
+            >
               {label}
             </SelectOption>
           ))}
