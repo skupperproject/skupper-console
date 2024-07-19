@@ -144,7 +144,6 @@ export const GraphController = {
   } => {
     const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
       hasPair: boolean;
-      isSame: boolean;
     })[];
     // Match the combo of the node with the existing combos
     const comboIds = combos?.map(({ id }) => id);
@@ -160,7 +159,7 @@ export const GraphController = {
     return {
       nodes: nodes
         .sort(sortNodesByCombo)
-        .map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
+        .map(({ id, combo, label, iconName, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
           id,
           combo: combo && comboIds?.includes(combo) ? combo : undefined,
           type,
@@ -176,7 +175,7 @@ export const GraphController = {
             x,
             y,
             labelText: ellipsisInTheMiddle(label),
-            iconSrc: graphIconsMap[iconSrc],
+            iconSrc: graphIconsMap[iconName],
             badge: groupedNodeCount !== undefined,
             badges: [
               {
@@ -188,7 +187,7 @@ export const GraphController = {
         })),
 
       edges: transformedEdges.map(
-        ({ id, source, target, label, isSame, hasPair, type, metricValue, protocolLabel, ...data }) => ({
+        ({ id, source, target, label, hasPair, type, metricValue, protocolLabel, ...data }) => ({
           type,
           id,
           source,
@@ -196,7 +195,7 @@ export const GraphController = {
           data,
           style: {
             halo: true,
-            haloLineWidth: !isSame
+            haloLineWidth: !(source === target)
               ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
               : 0,
             badgeText: protocolLabel,
@@ -207,7 +206,7 @@ export const GraphController = {
         })
       ),
 
-      combos: combos?.map(({ id, label, type = 'SkCombo' }) => ({
+      combos: combos?.map(({ id, label, type }) => ({
         id,
         type,
         style: {
@@ -242,12 +241,10 @@ function markPairs(data: GraphEdge[]) {
   return data.map((item) => {
     const reversePair = `${item.target}-${item.source}`;
     const hasPair = set.has(reversePair);
-    const isSame = item.source === item.target;
 
     return {
       ...item,
-      hasPair,
-      isSame
+      hasPair
     };
   });
 }

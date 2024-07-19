@@ -17,8 +17,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
-import GraphReactAdaptor from '@core/components/Graph';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import SkGraph from '@core/components/SkGraph';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
@@ -45,9 +45,9 @@ import { NodeOrEdgeListProps } from '../Topology.interfaces';
 const TopologyProcesses: FC<{
   serviceIds?: string[];
   ids?: string[];
-  GraphComponent?: ComponentType<GraphReactAdaptorProps>;
+  GraphComponent?: ComponentType<SkGraphProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
-}> = function ({ serviceIds, ids: processIds, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
+}> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
 
   // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.

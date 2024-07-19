@@ -6,7 +6,7 @@ import { Server } from 'miragejs';
 
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { Wrapper } from '@core/components/Wrapper';
 import componentData from '@mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '@mocks/server';
@@ -17,7 +17,7 @@ import { TopologyController } from '../services';
 
 const componentResult = componentData.results;
 
-const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
+const MockGraphComponent: FC<SkGraphProps> = memo(
   forwardRef(({ onClickEdge, onClickNode }, ref) => {
     useImperativeHandle(ref, () => ({
       saveNodePositions() {

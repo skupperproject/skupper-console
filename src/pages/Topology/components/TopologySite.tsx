@@ -3,8 +3,8 @@ import { ComponentType, FC, useCallback } from 'react';
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import GraphReactAdaptor from '@core/components/Graph';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import SkGraph from '@core/components/SkGraph';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import TopologyToolbar from './TopologyToolbar';
@@ -26,16 +26,21 @@ import {
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+const TopologySite: FC<{
+  ids?: string[];
+  GraphComponent?: ComponentType<SkGraphProps>;
+  initDisplayOptionsEnabled?: string[];
+}> = function ({
   ids,
-  GraphComponent = GraphReactAdaptor
+  GraphComponent = SkGraph,
+  initDisplayOptionsEnabled = [SHOW_ROUTER_LINKS, SHOW_LINK_METRIC_VALUE]
 }) {
   const navigate = useNavigate();
 
   const { idsSelected, searchText, displayOptionsSelected, handleSearchText, handleDisplaySelected } = useTopologyState(
     {
       ids,
-      initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_LINK_METRIC_VALUE],
+      initDisplayOptionsEnabled,
       //name of the configuration to be saved in the localstorage
       displayOptionsEnabledKey: 'display-site-options'
     }

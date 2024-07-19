@@ -2,7 +2,7 @@ import { PrometheusApi } from '@API/Prometheus.api';
 import { PrometheusMetric } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@API/REST.interfaces';
 import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
-import { GraphEdge, GraphCombo, GraphNode, CustomItemsProps } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphCombo, GraphNode, CustomItemsProps } from '@core/components/SkGraph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
@@ -37,13 +37,13 @@ export const TopologyController = {
 
   getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
-      .map(({ combo, comboName }) => ({ id: combo || '', label: comboName || '' }))
+      .map(({ combo, comboName }) => ({ type: 'SkCombo' as CustomItemsProps, id: combo || '', label: comboName || '' }))
       .sort((a, b) => a.label.localeCompare(b.label));
 
     // TODO: BE-bug: The API occasionally returns processes without a siteName for a site.
     // While in some cases, using the hostname as a substitute is acceptable, it can lead to conflicts.
     // This inconsistency results in situations where the hostname and siteName differ but share the same ID.
-    const uniqueNodes = [...new Map(idLabelPairs.map((item) => [item.id, item])).values()];
+    const uniqueNodes: GraphCombo[] = [...new Map(idLabelPairs.map((item) => [item.id, item])).values()];
 
     return removeDuplicatesFromArrayOfObjects(uniqueNodes);
   },

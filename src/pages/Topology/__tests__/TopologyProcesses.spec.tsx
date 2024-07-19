@@ -9,7 +9,7 @@ import * as router from 'react-router';
 import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '@API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { Wrapper } from '@core/components/Wrapper';
 import processesPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import processesData from '@mocks/data/PROCESSES.json';
@@ -46,7 +46,7 @@ const mockUseTopologyStateResults = {
   handleDisplaySelected: jest.fn()
 };
 
-const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(({ onClickEdge, onClickNode }) => (
+const MockGraphComponent: FC<SkGraphProps> = memo(({ onClickEdge, onClickNode }) => (
   <>
     <Button onClick={() => onClickNode && onClickNode(processesResults[0].identity)}>onClickNode</Button>
     <Button

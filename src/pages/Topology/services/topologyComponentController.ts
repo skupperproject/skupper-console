@@ -1,5 +1,5 @@
 import { ComponentPairsResponse, ComponentResponse } from '@API/REST.interfaces';
-import { GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
 
@@ -16,7 +16,7 @@ const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
   entities.map(({ identity, name, processGroupRole: role, processCount }) => ({
     id: identity,
     label: name,
-    iconSrc: role === 'internal' ? 'skupper' : 'component',
+    iconName: role === 'internal' ? 'skupper' : 'component',
     type: role === 'remote' ? shape.remote : shape.bound,
     groupedNodeCount: processCount
   }));

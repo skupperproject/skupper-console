@@ -18,9 +18,9 @@ import {
   GraphCombo,
   GraphEdge,
   GraphNode,
-  GraphReactAdaptorProps,
+  SkGraphProps,
   LocalStorageData
-} from '@core/components/Graph/Graph.interfaces';
+} from '@core/components/SkGraph/Graph.interfaces';
 
 import ControlBar from './components/ControlBar';
 import { registerElements } from './components/CustomElements';
@@ -34,7 +34,7 @@ import './SkGraph.css';
 
 registerElements();
 
-const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
+const SkGraph: FC<SkGraphProps> = memo(
   ({
     nodes: nodesWithoutPosition,
     edges,
@@ -312,4 +312,4 @@ const GraphReactAdaptor: FC<GraphReactAdaptorProps> = memo(
   }
 );
 
-export default GraphReactAdaptor;
+export default SkGraph;

@@ -3,8 +3,8 @@ import { FC, useCallback, ComponentType } from 'react';
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import GraphReactAdaptor from '@core/components/Graph';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import SkGraph from '@core/components/SkGraph';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 
 import TopologyToolbar from './TopologyToolbar';
@@ -13,9 +13,9 @@ import useTopologyState from './useTopologyState';
 import { TopologyComponentController } from '../services/topologyComponentController';
 import { TopologyLabels } from '../Topology.enum';
 
-const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphReactAdaptorProps> }> = function ({
+const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkGraphProps> }> = function ({
   ids,
-  GraphComponent = GraphReactAdaptor
+  GraphComponent = SkGraph
 }) {
   const navigate = useNavigate();
 

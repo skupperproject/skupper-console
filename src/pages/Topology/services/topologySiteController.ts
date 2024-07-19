@@ -1,6 +1,6 @@
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { LinkResponse, SitePairsResponse, SiteResponse } from '@API/REST.interfaces';
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
 
 import { TopologyLabels } from '../Topology.enum';
@@ -42,7 +42,7 @@ const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
     type: 'SkNode',
     id: identity,
     label: siteVersion ? `${name} (${siteVersion})` : name,
-    iconSrc: platform || 'site'
+    iconName: platform || 'site'
   }));
 
 const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {

@@ -19,12 +19,12 @@ export interface GraphNode {
   x?: number | undefined;
   y?: number | undefined;
   persistPositionKey?: string;
-  iconSrc: GraphIconKeys;
+  iconName: GraphIconKeys;
 }
 
 export interface GraphCombo {
+  type: CustomItemsProps;
   id: string;
-  type?: CustomItemsProps;
   label: string;
 }
 
@@ -56,7 +56,7 @@ export interface GraphLayouts {
   default: LayoutOptions;
 }
 
-export interface GraphReactAdaptorProps {
+export interface SkGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
   combos?: GraphCombo[];

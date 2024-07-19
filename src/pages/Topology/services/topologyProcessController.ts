@@ -1,5 +1,5 @@
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
 import { TopologyMetrics } from '../Topology.interfaces';
@@ -55,7 +55,7 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
       type: shape[role === 'remote' ? role : processBinding],
       id: identity,
       label,
-      iconSrc: role === 'internal' ? 'skupper' : 'process',
+      iconName: role === 'internal' ? 'skupper' : 'process',
       combo,
       comboName,
       groupId: groupIdentity,
