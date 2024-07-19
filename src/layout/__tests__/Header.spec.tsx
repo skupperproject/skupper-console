@@ -1,13 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { Wrapper } from '@core/components/Wrapper';
-import { ThemePreference } from '@core/utils/isDarkTheme';
 import { loadMockServer } from '@mocks/server';
 
-import SkHeader, { DarkModeSwitch, HeaderLabels, UserDropdown } from '../Header';
+import SkHeader, { HeaderLabels, UserDropdown } from '../Header';
 
 describe('SkHeader', () => {
   let server: Server;
@@ -31,20 +29,6 @@ describe('SkHeader', () => {
 
     const logo = getByAltText('logo');
     expect(logo).toBeInTheDocument();
-  });
-
-  it('should set/unset the dark mode', async () => {
-    render(
-      <Wrapper>
-        <DarkModeSwitch />
-      </Wrapper>
-    );
-
-    await eventUser.click(screen.getByTestId(HeaderLabels.DarkModeTestId));
-    expect(document.documentElement.classList.contains(ThemePreference.Dark)).toBeTruthy();
-
-    await eventUser.click(screen.getByTestId(HeaderLabels.LightModeTestId));
-    expect(document.documentElement.classList.contains(ThemePreference.Dark)).toBeFalsy();
   });
 
   it('should show the username', async () => {
