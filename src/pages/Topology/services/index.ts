@@ -50,15 +50,15 @@ export const TopologyController = {
 
   convertPairsToEdges: (
     processesPairs: ProcessPairsResponse[] | ComponentPairsResponse[] | SitePairsResponse[],
-    type?: CustomItemsProps
+    type: CustomItemsProps
   ): GraphEdge[] =>
     processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
+      type: sourceId === destinationId ? 'SkLoopEdge' : type,
       id: identity,
       source: sourceId,
       target: destinationId,
       sourceName,
-      targetName: destinationName,
-      type
+      targetName: destinationName
     })),
 
   addMetricsToProcessPairs: ({ processesPairs, metrics, prometheusKey, processPairsKey }: ProcessPairsWithMetrics) => {

@@ -51,21 +51,16 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
       groupName,
       processRole: role,
       processBinding
-    }) => {
-      const iconSrc = role === 'internal' ? 'skupper' : 'process';
-      const type = shape[role === 'remote' ? role : processBinding];
-
-      return {
-        id: identity,
-        combo,
-        comboName,
-        label,
-        iconSrc,
-        type,
-        groupId: groupIdentity,
-        groupName
-      };
-    }
+    }) => ({
+      type: shape[role === 'remote' ? role : processBinding],
+      id: identity,
+      label,
+      iconSrc: role === 'internal' ? 'skupper' : 'process',
+      combo,
+      comboName,
+      groupId: groupIdentity,
+      groupName
+    })
   );
 
 export const TopologyProcessController = {
@@ -107,7 +102,7 @@ export const TopologyProcessController = {
 
     let processNodes = convertProcessesToNodes(p);
     let processPairEdges = addProcessMetricsToEdges(
-      TopologyController.convertPairsToEdges(pPairs),
+      TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
       metrics,
       protocolByProcessPairsMap
     );

@@ -18,7 +18,7 @@ import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topolog
 
 const links: Record<string, { linkToPage: string; linkLabel: string }> = {
   [TopologyViews.Sites]: { linkToPage: SitesRoutesPaths.Sites, linkLabel: TopologyLabels.ListView },
-  [TopologyViews.ProcessGroups]: { linkToPage: ComponentRoutesPaths.ProcessGroups, linkLabel: TopologyLabels.ListView },
+  [TopologyViews.Components]: { linkToPage: ComponentRoutesPaths.ProcessGroups, linkLabel: TopologyLabels.ListView },
   [TopologyViews.Processes]: { linkToPage: ProcessesRoutesPaths.Processes, linkLabel: TopologyLabels.ListView }
 };
 const Topology = function () {
@@ -54,17 +54,14 @@ const Topology = function () {
       navigationComponent={
         <Tabs activeKey={tabSelected} onSelect={handleChangeTab}>
           <Tab eventKey={TopologyViews.Sites} title={<TabTitleText>{TopologyViews.Sites}</TabTitleText>} />
-          <Tab
-            eventKey={TopologyViews.ProcessGroups}
-            title={<TabTitleText>{TopologyViews.ProcessGroups}</TabTitleText>}
-          />
+          <Tab eventKey={TopologyViews.Components} title={<TabTitleText>{TopologyViews.Components}</TabTitleText>} />
           <Tab eventKey={TopologyViews.Processes} title={<TabTitleText>{TopologyViews.Processes}</TabTitleText>} />
         </Tabs>
       }
       mainContentChildren={
         <>
           {tabSelected === TopologyViews.Sites && <TopologySite ids={ids} />}
-          {tabSelected === TopologyViews.ProcessGroups && <TopologyComponent ids={ids} />}
+          {tabSelected === TopologyViews.Components && <TopologyComponent ids={ids} />}
           {tabSelected === TopologyViews.Processes && <TopologyProcesses serviceIds={serviceIds} ids={ids} />}
         </>
       }

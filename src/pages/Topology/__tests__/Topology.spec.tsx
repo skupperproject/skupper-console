@@ -42,9 +42,9 @@ describe('Begin testing the Topology component', () => {
   });
 
   it('should clicking on a tab will result in the Components tab being highlighted', async () => {
-    fireEvent.click(screen.getByText(TopologyViews.ProcessGroups));
+    fireEvent.click(screen.getByText(TopologyViews.Components));
 
-    expect(screen.getByText(TopologyViews.ProcessGroups).parentNode?.parentNode).toHaveClass('pf-m-current');
+    expect(screen.getByText(TopologyViews.Components).parentNode?.parentNode).toHaveClass('pf-m-current');
   });
 
   it('should clicking on a tab will result in the Processes tab being highlighted', async () => {

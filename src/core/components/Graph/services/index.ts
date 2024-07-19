@@ -142,8 +142,7 @@ export const GraphController = {
     edges: EdgeData[];
     combos?: ComboData[];
   } => {
-    const transformedEdges = markPairs(addCountUsageSource(sanitizeEdges(nodes, edges))) as (GraphEdge & {
-      usageCount: number;
+    const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
       hasPair: boolean;
       isSame: boolean;
     })[];
@@ -189,22 +188,11 @@ export const GraphController = {
         })),
 
       edges: transformedEdges.map(
-        ({
+        ({ id, source, target, label, isSame, hasPair, type, metricValue, protocolLabel, ...data }) => ({
+          type,
           id,
           source,
           target,
-          label,
-          isSame,
-          hasPair,
-          type = 'SkSiteDataEdge',
-          metricValue,
-          protocolLabel,
-          ...data
-        }) => ({
-          id,
-          source,
-          target,
-          type: isSame ? 'SkLoopEdge' : hasPair && type !== 'SkSiteEdge' ? 'SkSiteDataEdge' : type,
           data,
           style: {
             halo: true,
@@ -214,7 +202,7 @@ export const GraphController = {
             badgeText: protocolLabel,
             label: !!label,
             labelText: label,
-            curveOffset: hasPair ? 30 : 0 // (usageCount - 1) * 15
+            curveOffset: hasPair && 30
           }
         })
       ),
@@ -245,18 +233,6 @@ function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge[]) {
   );
 
   return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
-}
-
-// usageCount controls the curve of edges with the same source
-function addCountUsageSource(edges: GraphEdge[]) {
-  const sourceUsageCount = new Map<string, number>();
-
-  return edges.map((edge) => {
-    const { source } = edge;
-    sourceUsageCount.set(source, (sourceUsageCount.get(source) || 0) + 1);
-
-    return { ...edge, usageCount: sourceUsageCount.get(source) || 0 };
-  });
 }
 
 // Identify edges that have a bidirectional direction

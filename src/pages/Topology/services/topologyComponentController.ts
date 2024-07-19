@@ -29,7 +29,7 @@ export const TopologyComponentController = {
       nodeIdSelected: TopologyController.transformIdsToStringIds(idsSelected),
       nodeIdsToHighLight: TopologyController.nodesToHighlight(nodes, searchText),
       nodes,
-      edges: TopologyController.convertPairsToEdges(componentsPairs)
+      edges: TopologyController.convertPairsToEdges(componentsPairs, 'SkDataEdge')
     };
   }
 };

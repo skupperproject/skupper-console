@@ -16,7 +16,7 @@ export enum QueriesTopology {
 
 export enum TopologyViews {
   Sites = 'Sites',
-  ProcessGroups = 'Components',
+  Components = 'Components',
   Processes = 'Processes'
 }
 

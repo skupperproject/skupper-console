@@ -8,7 +8,7 @@ export type GraphIconsMap = {
 
 export interface GraphNode {
   id: string;
-  type?: CustomItemsProps;
+  type: CustomItemsProps;
   label: string;
   combo?: string;
   comboName?: string;
@@ -40,7 +40,7 @@ interface GraphEdgeMetrics {
 
 export interface GraphEdge {
   id: string;
-  type?: CustomItemsProps;
+  type: CustomItemsProps;
   source: string;
   target: string;
   sourceName?: string;

@@ -93,7 +93,7 @@ const ProcessGroup = function () {
     <MainContainer
       dataTestId={getTestsIds.componentView(processGroupId)}
       title={processGroup.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.ProcessGroups}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Components}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
