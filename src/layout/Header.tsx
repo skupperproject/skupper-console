@@ -13,20 +13,17 @@ import {
   MenuToggle,
   MenuToggleElement,
   PageToggleButton,
-  ToggleGroup,
-  ToggleGroupItem,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem
 } from '@patternfly/react-core';
-import { BarsIcon, MoonIcon, SunIcon } from '@patternfly/react-icons';
+import { BarsIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
-import { DARK_THEME_CLASS, brandLogo } from '@config/config';
-import { getThemePreference, removeThemePreference, setThemePreference } from '@core/utils/isDarkTheme';
+import { brandLogo } from '@config/config';
 
 export enum HeaderLabels {
   Logout = 'Logout',
@@ -57,10 +54,6 @@ const SkHeader = function () {
           <ToolbarContent>
             <ToolbarGroup align={{ default: 'alignRight' }} spacer={{ default: 'spacerMd' }}>
               <ToolbarItem>
-                <DarkModeSwitch />
-              </ToolbarItem>
-
-              <ToolbarItem>
                 <Suspense fallback={null}>
                   <UserDropdown />
                 </Suspense>
@@ -74,38 +67,6 @@ const SkHeader = function () {
 };
 
 export default SkHeader;
-
-export const DarkModeSwitch = function () {
-  const [isDarkModeSelected, setIsDarkModeSelected] = useState<boolean>(false);
-
-  const handleChange = (isDarkMode: boolean) => {
-    setIsDarkModeSelected(isDarkMode);
-
-    isDarkMode ? setThemePreference(DARK_THEME_CLASS) : removeThemePreference();
-  };
-
-  useEffect(() => {
-    const isDarkTheme = getThemePreference() ? true : false;
-    setIsDarkModeSelected(isDarkTheme);
-  }, []);
-
-  return (
-    <ToggleGroup>
-      <ToggleGroupItem
-        data-testid={HeaderLabels.LightModeTestId}
-        icon={<SunIcon />}
-        isSelected={!isDarkModeSelected}
-        onClick={() => handleChange(false)}
-      />
-      <ToggleGroupItem
-        data-testid={HeaderLabels.DarkModeTestId}
-        icon={<MoonIcon />}
-        isSelected={isDarkModeSelected}
-        onClick={() => handleChange(true)}
-      />
-    </ToggleGroup>
-  );
-};
 
 export const UserDropdown = function () {
   const navigate = useNavigate();

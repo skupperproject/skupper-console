@@ -4,7 +4,6 @@ import { Page, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-co
 import { AnimatePresence } from 'framer-motion';
 
 import SkBreadcrumb from '@core/components/SkBreadcrumb';
-import { getThemePreference, reflectThemePreference } from '@core/utils/isDarkTheme';
 import SkHeader from '@layout/Header';
 import RouteContainer from '@layout/RouteContainer';
 import SkSidebar from '@layout/SideBar';
@@ -15,8 +14,6 @@ import '@patternfly/react-core/dist/styles/base.css';
 import './App.css';
 
 const App = function () {
-  reflectThemePreference(getThemePreference());
-
   return (
     <Page
       header={<SkHeader />}

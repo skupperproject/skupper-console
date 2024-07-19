@@ -1,19 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { VarColors } from '@config/colors';
-import { ThemePreference } from '@core/utils/isDarkTheme';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
-import SkSankeyChart, { addThemeChangeListener, getColors, getTheme, valueFormat } from '../index';
-import { DEFAULT_SANKEY_CHART_FLOW_VALUE, themeStyle } from '../SkSankey.constants';
+import SkSankeyChart, { addThemeChangeListener, getColors, valueFormat } from '../index';
+import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../SkSankey.constants';
 
 describe('SkSankeyChart', () => {
-  it('should return the dark theme when the preference is set to dark', () => {
-    jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValue(ThemePreference.Dark);
-    const theme = getTheme();
-    expect(theme).toEqual(themeStyle.dark);
-  });
-
   it('should return an empty string if the value is the default flow value', () => {
     expect(valueFormat(DEFAULT_SANKEY_CHART_FLOW_VALUE)).toEqual('');
   });

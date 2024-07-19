@@ -1,25 +1,15 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import { ResponsiveSankey } from '@nivo/sankey';
 
-import { VarColors } from '@config/colors';
+import { HexColors, VarColors } from '@config/colors';
+import { DEFAULT_FONT_VAR } from '@config/config';
 import { formatByteRate } from '@core/utils/formatBytes';
-import { ThemePreference, getThemePreference } from '@core/utils/isDarkTheme';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
-import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT, themeStyle } from './SkSankey.constants';
-import { SkSankeyChartNode, SkSankeyChartProps, ThemesProps } from './SkSankeyChart.interfaces';
+import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
+import { SkSankeyChartNode, SkSankeyChartProps } from './SkSankeyChart.interfaces';
 import EmptyData from '../EmptyData';
-
-/**
- * Returns the theme to be used for the chart.
- * @returns The theme to be used for the chart.
- */
-export function getTheme() {
-  const selectedTheme = getThemePreference() === ThemePreference.Dark ? themeStyle.dark : themeStyle.light;
-
-  return selectedTheme;
-}
 
 /**
  * Adds a listener for changes to the theme class on the document element.
@@ -67,18 +57,6 @@ export function valueFormat(value: number): string {
  * @returns A React component that displays the Sankey chart.
  */
 const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
-  const [theme, setTheme] = useState<ThemesProps | null>(null);
-
-  useEffect(() => {
-    // Add a listener for theme changes, update the component's theme state when a change is detected
-    const cleanup = addThemeChangeListener(() => {
-      const selectedTheme = getTheme();
-      setTheme(selectedTheme);
-    });
-
-    return cleanup;
-  }, []);
-
   if (!data.links.length) {
     return (
       <EmptyData
@@ -113,12 +91,12 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
         labelPadding={16}
         theme={{
           text: {
-            fontSize: theme?.fontSize,
-            fontFamily: theme?.fontFamily
+            fontSize: 14,
+            fontFamily: DEFAULT_FONT_VAR
           },
-          tooltip: theme?.tooltip
+          tooltip: { container: { color: VarColors.Black900 } }
         }}
-        labelTextColor={theme?.labelTextColor}
+        labelTextColor={HexColors.Black900}
         valueFormat={valueFormat}
         colors={getColors}
       />
