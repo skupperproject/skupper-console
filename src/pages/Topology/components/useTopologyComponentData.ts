@@ -11,12 +11,8 @@ const componentQueryParams = {
   endTime: 0
 };
 
-interface UseTopologyDataProps {
-  idSelected?: string[];
-}
-
-const useTopologyComponentData = ({ idSelected }: UseTopologyDataProps) => {
-  const [{ data: components }, { data: componentPairs }] = useSuspenseQueries({
+const useTopologyComponentData = () => {
+  const [{ data: components }, { data: componentsPairs }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesComponent.GetProcessGroups, componentQueryParams],
@@ -32,23 +28,9 @@ const useTopologyComponentData = ({ idSelected }: UseTopologyDataProps) => {
     ]
   });
 
-  let filteredPairs = componentPairs;
-  let filteredComponents = components.results;
-
-  if (idSelected?.length) {
-    filteredPairs = filteredPairs.filter(
-      (edge) => idSelected.includes(edge.sourceId) || idSelected.includes(edge.destinationId)
-    );
-
-    const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-    const uniqueIds = [...new Set(idSelected.concat(idsFromEdges))];
-
-    filteredComponents = filteredComponents.filter(({ identity }) => uniqueIds.includes(identity));
-  }
-
   return {
-    components: filteredComponents,
-    componentsPairs: filteredPairs
+    components: components.results,
+    componentsPairs
   };
 };
 

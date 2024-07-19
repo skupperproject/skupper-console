@@ -11,7 +11,6 @@ import { QueriesTopology } from '../Topology.enum';
 const linkQueryParams = { direction: FlowDirection.Outgoing };
 
 interface UseTopologySiteDataProps {
-  idsSelected?: string[];
   showDataLink: boolean;
   showBytes: boolean;
   showByteRate: boolean;
@@ -24,13 +23,7 @@ const metricQueryParams = {
   fetchLatency: { groupBy: 'sourceSite, destSite' }
 };
 
-const useTopologySiteData = ({
-  idsSelected,
-  showDataLink,
-  showBytes,
-  showByteRate,
-  showLatency
-}: UseTopologySiteDataProps) => {
+const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatency }: UseTopologySiteDataProps) => {
   const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
@@ -64,41 +57,10 @@ const useTopologySiteData = ({
     ]
   });
 
-  let filteredRrouterLinks = routerLinks;
-  let filteredPairs = sitesPairs;
-  let filteredSites = sites;
-
-  if (idsSelected?.length) {
-    if (filteredPairs) {
-      filteredPairs = filteredPairs.filter(
-        (edge) => idsSelected.includes(edge.sourceId) || idsSelected.includes(edge.destinationId)
-      );
-
-      const idsFromEdges = filteredPairs.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      const uniqueIds = [...new Set(idsSelected.concat(idsFromEdges))];
-
-      filteredSites = filteredSites.filter(({ identity }) => uniqueIds.includes(identity));
-    }
-
-    if (filteredRrouterLinks) {
-      filteredRrouterLinks = filteredRrouterLinks.filter(
-        (edge) => idsSelected.includes(edge.sourceSiteId) || idsSelected.includes(edge.destinationSiteId)
-      );
-
-      const idsFromEdges = filteredRrouterLinks.flatMap(({ sourceSiteId, destinationSiteId }) => [
-        sourceSiteId,
-        destinationSiteId
-      ]);
-      const uniqueIds = [...new Set(idsSelected.concat(idsFromEdges))];
-
-      filteredSites = filteredSites.filter(({ identity }) => uniqueIds.includes(identity));
-    }
-  }
-
   return {
-    sites: filteredSites,
-    sitesPairs: filteredPairs,
-    routerLinks: filteredRrouterLinks,
+    sites,
+    sitesPairs,
+    routerLinks,
     metrics
   };
 };

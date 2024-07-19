@@ -26,7 +26,6 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        idsSelected: ['site1'],
         showDataLink: true,
         showBytes: true,
         showByteRate: true,
@@ -38,39 +37,6 @@ describe('useTopologySiteData', () => {
       expect(result.current.sites).toEqual(mockSites);
       expect(result.current.routerLinks).toEqual(null);
       expect(result.current.sitesPairs).toEqual(mockSitesPairs);
-      expect(result.current.metrics).toEqual(mockMetrics);
-    });
-  });
-
-  it('should filter the data based on idSelected', async () => {
-    const mockSites = [{ identity: 'site1' }, { identity: 'site2' }, { identity: 'site3' }];
-    const mockSitesPairs = [
-      { sourceId: 'site1', destinationId: 'site2' },
-      { sourceId: 'site2', destinationId: 'site3' }
-    ];
-    const mockMetrics = { bytes: 1000 };
-
-    (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
-      { data: null },
-      { data: mockSitesPairs },
-      { data: mockMetrics }
-    ]);
-
-    const { result } = renderHook(() =>
-      useTopologySiteData({
-        idsSelected: ['site1'],
-        showDataLink: true,
-        showBytes: true,
-        showByteRate: true,
-        showLatency: true
-      })
-    );
-
-    await waitFor(() => {
-      expect(result.current.sites).toEqual([{ identity: 'site1' }, { identity: 'site2' }]);
-      expect(result.current.routerLinks).toEqual(null);
-      expect(result.current.sitesPairs).toEqual([{ sourceId: 'site1', destinationId: 'site2' }]);
       expect(result.current.metrics).toEqual(mockMetrics);
     });
   });
@@ -135,66 +101,6 @@ describe('useTopologySiteData', () => {
       expect(result.current.routerLinks).toBeNull();
       expect(result.current.sitesPairs).toEqual(mockSitesPairs);
       expect(result.current.metrics).toBeNull();
-    });
-  });
-
-  it('should handle empty idSelected', async () => {
-    const mockSites = [{ identity: 'site1' }, { identity: 'site2' }];
-    const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
-    const mockMetrics = { bytes: 1000 };
-
-    (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
-      { data: null },
-      { data: mockSitesPairs },
-      { data: mockMetrics }
-    ]);
-
-    const { result } = renderHook(() =>
-      useTopologySiteData({
-        idsSelected: [],
-        showDataLink: true,
-        showBytes: true,
-        showByteRate: true,
-        showLatency: true
-      })
-    );
-
-    await waitFor(() => {
-      expect(result.current.sites).toEqual(mockSites);
-      expect(result.current.routerLinks).toEqual(null);
-      expect(result.current.sitesPairs).toEqual(mockSitesPairs);
-      expect(result.current.metrics).toEqual(mockMetrics);
-    });
-  });
-
-  it('should handle idSelected with non-matching elements', async () => {
-    const mockSites = [{ identity: 'site1' }, { identity: 'site2' }];
-    const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
-    const mockMetrics = { bytes: 1000 };
-
-    (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
-      { data: null },
-      { data: mockSitesPairs },
-      { data: mockMetrics }
-    ]);
-
-    const { result } = renderHook(() =>
-      useTopologySiteData({
-        idsSelected: ['site3'],
-        showDataLink: true,
-        showBytes: true,
-        showByteRate: true,
-        showLatency: true
-      })
-    );
-
-    await waitFor(() => {
-      expect(result.current.sites).toEqual([]);
-      expect(result.current.routerLinks).toEqual(null);
-      expect(result.current.sitesPairs).toEqual([]);
-      expect(result.current.metrics).toEqual(mockMetrics);
     });
   });
 });

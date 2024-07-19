@@ -32,21 +32,16 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
 }) {
   const navigate = useNavigate();
 
-  const {
-    idsSelected,
-    searchText,
-    displayOptionsSelected,
-    handleSearchText,
-
-    handleDisplaySelected
-  } = useTopologyState({
-    ids,
-    initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_LINK_METRIC_DISTRIBUTION],
-    displayOptionsEnabledKey: 'display-site-options'
-  });
+  const { idsSelected, searchText, displayOptionsSelected, handleSearchText, handleDisplaySelected } = useTopologyState(
+    {
+      ids,
+      initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_LINK_METRIC_VALUE],
+      //name of the configuration to be saved in the localstorage
+      displayOptionsEnabledKey: 'display-site-options'
+    }
+  );
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    idsSelected: undefined,
     showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
     showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
     showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),

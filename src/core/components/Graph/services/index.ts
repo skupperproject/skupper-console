@@ -147,40 +147,46 @@ export const GraphController = {
       hasPair: boolean;
       isSame: boolean;
     })[];
+    // Match the combo of the node with the existing combos
     const comboIds = combos?.map(({ id }) => id);
-    const sortedNodes = nodes.sort((a, b) => (a.combo || '')?.localeCompare(b.combo || ''));
 
-    const metrics = transformedEdges.map((edge) => Number(edge.metricValue));
-    const maxMetricValue = Math.max(...metrics);
-    const minMetricValue = Math.min(...metrics.filter((metric) => metric)) || 0;
+    // calculate the visual distribution of the metrics
+    const edgeMetrics = transformedEdges.map(({ metricValue, source, target }) =>
+      // remove metrics within the same site
+      source === target ? 0 : metricValue || 0
+    );
+    const maxMetricValue = Math.max(...edgeMetrics);
+    const minMetricValue = Math.min(...edgeMetrics.filter((metric) => metric)) || 0;
 
     return {
-      nodes: sortedNodes.map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
-        id,
-        combo: combo && comboIds?.includes(combo) ? combo : undefined,
-        type,
-        data: {
-          ...data,
-          fullLabelText: label,
-          partialLabelText: ellipsisInTheMiddle(label),
-          cluster: combo,
-          fx: x,
-          fy: y
-        },
-        style: {
-          x,
-          y,
-          labelText: ellipsisInTheMiddle(label),
-          iconSrc: graphIconsMap[iconSrc],
-          badge: groupedNodeCount !== undefined,
-          badges: [
-            {
-              text: groupedNodeCount ? groupedNodeCount?.toString() : '',
-              placement: 'right-top'
-            }
-          ]
-        }
-      })),
+      nodes: nodes
+        .sort(sortNodesByCombo)
+        .map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
+          id,
+          combo: combo && comboIds?.includes(combo) ? combo : undefined,
+          type,
+          data: {
+            ...data,
+            fullLabelText: label,
+            partialLabelText: ellipsisInTheMiddle(label),
+            cluster: combo,
+            fx: x,
+            fy: y
+          },
+          style: {
+            x,
+            y,
+            labelText: ellipsisInTheMiddle(label),
+            iconSrc: graphIconsMap[iconSrc],
+            badge: groupedNodeCount !== undefined,
+            badges: [
+              {
+                text: groupedNodeCount ? groupedNodeCount?.toString() : '',
+                placement: 'right-top'
+              }
+            ]
+          }
+        })),
 
       edges: transformedEdges.map(
         ({
@@ -202,7 +208,9 @@ export const GraphController = {
           data,
           style: {
             halo: true,
-            haloLineWidth: normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue),
+            haloLineWidth: !isSame
+              ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
+              : 0,
             badgeText: protocolLabel,
             label: !!label,
             labelText: label,
@@ -283,17 +291,31 @@ function ellipsisInTheMiddle(str: string) {
   return `${leftPart}...${rightPart}`;
 }
 
+/**
+ * Normalizes a given metric value (such as bitrate) to a line thickness value
+ * for visual representations like graphs or charts. The normalization is done
+ * within a specified range, and the result is adjusted to fit within a maximum
+ * line thickness. An optional power parameter allows for adjusting the scaling curve.
+ */
 function normalizeBitrateToLineThickness(
   value: number,
   minMetricValue: number,
   maxMetricValue: number,
-  maxLineThickness = 30,
-  power = 0.35
+  maxLineThickness = 30, // The maximum possible thickness of the line. Default is 30.
+  power = 0.35 //The exponent used for scaling, affecting the curve of normalization. Default is 0.35.
 ) {
-  const range = maxMetricValue - (minMetricValue === Infinity ? 0 : minMetricValue);
+  const minMetricValueSanitized = maxMetricValue - minMetricValue !== 0 ? minMetricValue : 0.1;
+
+  const range = maxMetricValue - (minMetricValueSanitized === Infinity ? 0 : 1);
+
   const normalizedValue =
-    Math.pow((value - (minMetricValue === Infinity ? 0 : minMetricValue)) / range, power) * maxLineThickness;
+    Math.pow((value - (minMetricValueSanitized === Infinity ? 0 : minMetricValueSanitized)) / range, power) *
+    maxLineThickness;
   const lineThickness = Math.max(Math.ceil(normalizedValue), 0.5);
 
   return lineThickness;
+}
+
+function sortNodesByCombo(a: GraphNode, b: GraphNode): number {
+  return (a.combo || '')?.localeCompare(b.combo || '') || 0;
 }

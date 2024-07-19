@@ -18,25 +18,10 @@ describe('useTopologyComponentData', () => {
     { sourceId: 'component2', destinationId: 'component3' }
   ];
 
-  it('should filter the data based on idSelected', async () => {
+  it('should call useTopologyComponentData', async () => {
     (useSuspenseQueries as jest.Mock).mockReturnValue([{ data: components }, { data: componentPairs }]);
 
-    const { result } = renderHook(() =>
-      useTopologyComponentData({
-        idSelected: ['component1']
-      })
-    );
-
-    await waitFor(() => {
-      expect(result.current.components).toEqual([components.results[0], components.results[1]]);
-      expect(result.current.componentsPairs).toEqual([componentPairs[0]]);
-    });
-  });
-
-  it('should handle empty idSelected', async () => {
-    (useSuspenseQueries as jest.Mock).mockReturnValue([{ data: components }, { data: componentPairs }]);
-
-    const { result } = renderHook(() => useTopologyComponentData({}));
+    const { result } = renderHook(() => useTopologyComponentData());
 
     await waitFor(() => {
       expect(result.current.components).toEqual(components.results);

@@ -33,7 +33,6 @@ const mockHandleSelected = jest.fn();
 const mockHandleSearchText = jest.fn();
 const mockHandleShowOnlyNeighbours = jest.fn();
 const mockHandleMoveToNodeSelectedChecked = jest.fn();
-const MockGetDisplaySelectedFromLocalStorage = jest.fn();
 
 const mockUseTopologyStateResults = {
   idsSelected: TopologyController.transformStringIdsToIds(processesResults[0].identity),
@@ -42,7 +41,6 @@ const mockUseTopologyStateResults = {
   displayOptionsSelected: [],
   handleSelected: mockHandleSelected,
   handleSearchText: mockHandleSearchText,
-  getDisplaySelectedFromLocalStorage: MockGetDisplaySelectedFromLocalStorage,
   handleShowOnlyNeighbours: mockHandleShowOnlyNeighbours,
   handleMoveToNodeSelectedChecked: mockHandleMoveToNodeSelectedChecked,
   handleDisplaySelected: jest.fn()

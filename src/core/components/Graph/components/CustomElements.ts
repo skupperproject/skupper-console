@@ -47,7 +47,7 @@ import {
 } from '../Graph.constants';
 import { GraphElementStates } from '../Graph.enum';
 
-const NODE_CONFIG: NodeOptions = {
+const DEFAULT_NODE_CONFIG: NodeOptions = {
   style: {
     opacity: 1,
     size: NODE_SIZE,
@@ -83,7 +83,8 @@ const NODE_CONFIG: NodeOptions = {
     labelBackgroundShadowColor: NODE_BORDER_COLOR,
     labelBackgroundShadowBlur: 0,
     labelBackgroundShadowOffsetX: 0,
-    labelBackgroundShadowOffsetY: 4
+    labelBackgroundShadowOffsetY: 4,
+    zIndex: 3
   },
 
   state: {
@@ -122,22 +123,8 @@ const NODE_CONFIG: NodeOptions = {
   }
 };
 
-const REMOTE_NODE_CONFIG: NodeOptions = {
-  style: {
-    opacity: 1,
-    fill: NODE_BORDER_COLOR,
-    stroke: NODE_BACKGROUND_COLOR,
-    size: NODE_SIZE / 2,
-    icon: false,
-    badge: false,
-    halo: true
-  },
-
-  state: NODE_CONFIG.state
-};
-
 // EDGE
-const DATA_EDGE_CONFIG: EdgeOptions = {
+export const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
   style: {
     visibility: 'visible',
     opacity: 1,
@@ -200,19 +187,7 @@ const DATA_EDGE_CONFIG: EdgeOptions = {
   }
 };
 
-const SITE_EDGE_CONFIG: EdgeOptions = {
-  style: {
-    ...DATA_EDGE_CONFIG.style,
-    endArrowOffset: 0.5,
-    lineDash: [4, 4],
-    endArrowFill: EDGE_TERMINAL_COLOR_2,
-    endArrowType: 'circle'
-  },
-
-  state: DATA_EDGE_CONFIG.state
-};
-
-const COMBO_CONFIG: ComboOptions = {
+const DEFAULT_COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
     lineWidth: 3,
@@ -235,56 +210,71 @@ const COMBO_CONFIG: ComboOptions = {
 
 class SkNode extends Circle {
   render(attrs: Required<CircleStyleProps>) {
-    super.render({ ...attrs, ...NODE_CONFIG });
+    super.render(attrs);
+  }
+}
+
+class SkNodeRemote extends SkNode {
+  render(attrs: Required<CircleStyleProps>) {
+    super.render({
+      ...attrs,
+      opacity: 1,
+      fill: NODE_BORDER_COLOR,
+      stroke: NODE_BACKGROUND_COLOR,
+      size: NODE_SIZE / 2,
+      icon: false,
+      badge: false,
+      halo: true
+    });
   }
 }
 
 class SkNodeUnexposed extends Diamond {
   render(attrs: Required<DiamondStyleProps>) {
-    super.render({ ...attrs, ...NODE_CONFIG });
-  }
-}
-
-class SkNodeRemote extends Circle {
-  render(attrs: Required<DiamondStyleProps>) {
-    super.render({ ...attrs, ...(REMOTE_NODE_CONFIG.style as DiamondStyleProps) });
+    super.render(attrs);
   }
 }
 
 class SkDataEdge extends Line {
   render(attrs: Required<LineStyleProps>) {
-    super.render({ ...attrs, ...DATA_EDGE_CONFIG });
+    super.render(attrs);
   }
 }
 
-class SkSiteEdge extends Line {
+class SkSiteEdge extends SkDataEdge {
   render(attrs: Required<LineStyleProps>) {
-    super.render({ ...attrs, ...(SITE_EDGE_CONFIG.style as LineStyleProps) });
+    super.render({
+      ...attrs,
+      endArrowOffset: 0.5,
+      lineDash: [4, 4],
+      endArrowFill: EDGE_TERMINAL_COLOR_2,
+      endArrowType: 'circle'
+    });
   }
 }
 
 class SkSiteDataEdge extends Quadratic {
   render(attrs: Required<QuadraticStyleProps>) {
-    super.render({ ...attrs, ...DATA_EDGE_CONFIG });
+    super.render(attrs);
   }
 }
 
 class SkLoopEdge extends Line {
   render(attrs: Required<LineStyleProps>) {
-    super.render({ ...attrs, ...DATA_EDGE_CONFIG, loop: true });
+    super.render({ ...attrs, loop: true });
   }
 }
 
 class SkCombo extends RectCombo {
   render(attrs: Required<RectComboStyleProps>) {
-    super.render({ ...attrs, ...COMBO_CONFIG });
+    super.render(attrs);
   }
 }
 
 export const defaultConfigElements = {
-  node: NODE_CONFIG,
-  edge: DATA_EDGE_CONFIG,
-  combo: COMBO_CONFIG
+  node: DEFAULT_NODE_CONFIG,
+  edge: DEFAULT_DATA_EDGE_CONFIG,
+  combo: DEFAULT_COMBO_CONFIG
 };
 
 export function registerElements() {

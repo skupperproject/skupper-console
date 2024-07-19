@@ -91,6 +91,7 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
     <Select
       isOpen={isDisplayMenuOpen}
       onSelect={(_, selection) => selectDisplayOptions(selection!.toString())}
+      onOpenChange={(open) => !open && setIsDisplayMenuOpen(false)}
       selected={displayOptionsSelected}
       toggle={toggle}
     >

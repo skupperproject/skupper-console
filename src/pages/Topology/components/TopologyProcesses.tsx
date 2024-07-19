@@ -49,16 +49,19 @@ const TopologyProcesses: FC<{
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
 }> = function ({ serviceIds, ids: processIds, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
-  const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
 
+  // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.
+  // To fix this, we need to delay the action of opening the drawer until after the graph has been mounted
+  // We can do this by opening the drawer in a separate useEffect that runs after the graph has been
   const [enableDrawer, setEnableDrawer] = useState(false);
+  const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
   const { idsSelected, searchText, displayOptionsSelected, handleSelected, handleSearchText, handleDisplaySelected } =
     useTopologyState({
       ids: processIds,
-      initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS, SHOW_LINK_METRIC_DISTRIBUTION],
+      initDisplayOptionsEnabled: [SHOW_DEPLOYMENTS, SHOW_LINK_METRIC_VALUE],
+      //name of the configuration to be saved in the localstorage
       displayOptionsEnabledKey: 'display-process-options'
     });
-
   const { processes, processesPairs, metrics } = useTopologyProcessData();
 
   const handleShowProcessDetails = useCallback(

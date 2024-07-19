@@ -20,10 +20,7 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<Gra
   const navigate = useNavigate();
 
   const { idsSelected, searchText, handleSearchText } = useTopologyState({ ids });
-
-  const { components, componentsPairs } = useTopologyComponentData({
-    idSelected: undefined
-  });
+  const { components, componentsPairs } = useTopologyComponentData();
 
   const handleShowDetails = useCallback(
     (componentId: string) => {

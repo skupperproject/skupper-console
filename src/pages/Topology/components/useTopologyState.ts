@@ -40,21 +40,12 @@ const useTopologyState = ({
     [displayOptionsEnabledKey]
   );
 
-  const getDisplaySelectedFromLocalStorage = useCallback(() => {
-    const storedOptions = localStorage.getItem(displayOptionsEnabledKey);
-
-    if (storedOptions) {
-      handleDisplaySelected(storedOptions !== 'undefined' ? JSON.parse(storedOptions) : undefined);
-    }
-  }, [displayOptionsEnabledKey, handleDisplaySelected]);
-
   return {
     idsSelected,
     searchText,
     displayOptionsSelected,
     handleDisplaySelected,
     handleSearchText,
-    getDisplaySelectedFromLocalStorage,
     handleSelected
   };
 };
