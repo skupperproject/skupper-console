@@ -1,25 +1,28 @@
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import processIcon from '@assets/process.svg';
-import skupperIcon from '@assets/skupper.svg';
-import { DEFAULT_REMOTE_NODE_CONFIG } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
 import { TopologyMetrics } from '../Topology.interfaces';
 
-import { TopologyController, convertEntityToNode, groupEdges, groupNodes } from '.';
+import { TopologyController, groupEdges, groupNodes } from '.';
 
 interface TopologyProcessControllerProps {
   idsSelected: string[] | undefined;
+  searchText: string;
   processes: ProcessResponse[];
   processesPairs: ProcessPairsResponse[];
   metrics: TopologyMetrics | null;
-  showLinkLabelReverse: boolean;
-  rotateLabel: boolean;
-  showSites: boolean;
-  showLinkProtocol: boolean;
-  showDeployments?: boolean;
   serviceIdsSelected?: string[];
+  options: {
+    showLinkBytes: boolean;
+    showLinkByteRate: boolean;
+    showLinkLatency: boolean;
+    showLinkProtocol: boolean;
+    showDeployments: boolean;
+    showInboundMetrics: boolean;
+    showMetricDistribution: boolean;
+    showMetricValue: boolean;
+  };
 }
 
 const addProcessMetricsToEdges = (
@@ -42,50 +45,39 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
     ({
       identity,
       name: label,
-      parent: comboId,
+      parent: combo,
       parentName: comboName,
       groupIdentity,
       groupName,
       processRole: role,
       processBinding
     }) => {
-      const img = role === 'internal' ? skupperIcon : processIcon;
+      const iconSrc = role === 'internal' ? 'skupper' : 'process';
+      const type = shape[role === 'remote' ? role : processBinding];
 
-      const nodeConfig = role === 'remote' ? DEFAULT_REMOTE_NODE_CONFIG : { type: shape[processBinding] };
-
-      return convertEntityToNode({
+      return {
         id: identity,
-        comboId,
+        combo,
         comboName,
         label,
-        iconFileName: img,
-        nodeConfig,
+        iconSrc,
+        type,
         groupId: groupIdentity,
-        groupName,
-        enableBadge1: false
-      });
+        groupName
+      };
     }
   );
 
 export const TopologyProcessController = {
   dataTransformer: ({
     idsSelected,
+    searchText,
     processes,
     processesPairs,
     metrics,
-    showLinkLabelReverse,
-    rotateLabel,
-    showSites,
-    showLinkProtocol,
-    showDeployments = false,
-    serviceIdsSelected
+    serviceIdsSelected,
+    options
   }: TopologyProcessControllerProps) => {
-    const options = {
-      showLinkProtocol,
-      showLinkLabelReverse,
-      rotateLabel
-    };
-
     let pPairs = processesPairs;
     let p = processes;
 
@@ -120,31 +112,28 @@ export const TopologyProcessController = {
       protocolByProcessPairsMap
     );
 
-    // Group nodes from the same combo and edges when nodes are > MAX_NODE_COUNT_WITHOUT_AGGREGATION
-    if (showDeployments) {
+    if (options.showDeployments) {
       processNodes = groupNodes(processNodes);
       processPairEdges = groupEdges(processNodes, processPairEdges);
     }
 
     return {
-      // when the id selected comes from an other view the id is a single node but maybe this page has the option showDeployments == true.
-      // In that case we need to find the processNode with ids aggregated where the single node is contained
-      nodeIdSelected: findMatchedNode(processNodes, idsSelected),
+      // when the id selected comes from an other view the id is a single node/edge but if the topology has the option showDeployments == true, this id can be part of grouped edge/node.
+      // In that case, we need to find the node/edge group where the single node is contained
+      nodeIdSelected: findMatched(processNodes, idsSelected) || findMatched(processPairEdges, idsSelected),
+      nodeIdsToHighLight: TopologyController.nodesToHighlight(processNodes, searchText),
       nodes: processNodes.map((node) => ({
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
       })),
-      edges: TopologyController.configureEdges(processPairEdges, options).map((edge) => ({
-        ...edge,
-        style: { cursor: 'pointer' } // clickable
-      })),
-      combos: showSites ? TopologyController.getCombosFromNodes(processNodes) : []
+      edges: TopologyController.configureEdges(processPairEdges, options),
+      combos: TopologyController.getCombosFromNodes(processNodes)
     };
   }
 };
 
-// Function to find the matched node based on the first node in idsSelected
-function findMatchedNode(processNodes: GraphNode[], idsSelected?: string[]) {
+// Function to find the matched node/edge based on the first node in idsSelected
+function findMatched(processNodes: GraphNode[] | GraphEdge[], idsSelected?: string[]) {
   if (!idsSelected?.length) {
     return undefined;
   }

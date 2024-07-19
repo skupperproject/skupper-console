@@ -34,7 +34,8 @@ const SkSelectMultiTypeaheadCheckbox: FC<SkSelectMultiTypeaheadCheckboxProps> = 
     selectAllServices,
     selectService,
     onTextInputChange,
-    onInputKeyDown
+    onInputKeyDown,
+    closeMenu
   } = useData({
     initIdsSelected,
     initOptions,
@@ -73,7 +74,7 @@ const SkSelectMultiTypeaheadCheckbox: FC<SkSelectMultiTypeaheadCheckboxProps> = 
           id="multi-typeahead-select-checkbox-input"
           autoComplete="off"
           innerRef={textInputRef}
-          placeholder={placeholder}
+          placeholder={isDisabled ? '' : placeholder}
           {...(activeItem && { 'aria-activedescendant': activeItem })}
           role="combobox"
           isExpanded={isOpen}
@@ -90,7 +91,7 @@ const SkSelectMultiTypeaheadCheckbox: FC<SkSelectMultiTypeaheadCheckboxProps> = 
       isOpen={isOpen}
       selected={selected}
       onSelect={(_, selection) => handleSelectService(selection as string)}
-      // onOpenChange={() => setIsOpen(false)}
+      onOpenChange={(open) => !open && closeMenu()}
       toggle={toggle}
     >
       <SelectList id="select-multi-typeahead-checkbox-listbox">
@@ -111,7 +112,7 @@ const SkSelectMultiTypeaheadCheckbox: FC<SkSelectMultiTypeaheadCheckboxProps> = 
       </SelectList>
       <MenuFooter>
         <Button variant="link" isInline onClick={selectAllServices}>
-          {selected.length === selectOptions.length ? TopologyLabels.DeselectAll : TopologyLabels.SelectAll}
+          {TopologyLabels.DeselectAll}
         </Button>
       </MenuFooter>
     </Select>

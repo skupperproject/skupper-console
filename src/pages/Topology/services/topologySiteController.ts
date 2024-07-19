@@ -1,31 +1,22 @@
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { LinkResponse, SitePairsResponse, SiteResponse } from '@API/REST.interfaces';
-import kubernetesIcon from '@assets/kubernetes.svg';
-import podmanIcon from '@assets/podman.png';
-import siteIcon from '@assets/site.svg';
-import { CUSTOM_ITEMS_NAMES } from '@core/components/Graph/Graph.constants';
 import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
 
 import { TopologyLabels } from '../Topology.enum';
-import { TopologyMetrics } from '../Topology.interfaces';
+import { DisplayOptions, TopologyMetrics } from '../Topology.interfaces';
 
-import { TopologyController, convertEntityToNode } from '.';
+import { TopologyController } from '.';
 
 interface TopologySiteControllerProps {
   idsSelected: string[] | undefined;
+  searchText: string;
   sites: SiteResponse[];
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
   metrics: TopologyMetrics | null;
-  showLinkLabelReverse: boolean;
-  rotateLabel: boolean;
+  options: DisplayOptions;
 }
-
-const platformsMap: Record<string, 'kubernetes' | 'podman'> = {
-  kubernetes: kubernetesIcon,
-  podman: podmanIcon
-};
 
 const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) => {
   const sanitizedLinks = links.map((link) => ({
@@ -48,15 +39,13 @@ const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | nu
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
   entities.map(({ identity, name, siteVersion, platform }) => {
-    const img = platform && platformsMap[platform] ? platformsMap[platform] : siteIcon;
     const label = siteVersion ? `${name} (${siteVersion})` : name;
 
-    return convertEntityToNode({
+    return {
       id: identity,
       label,
-      iconFileName: img,
-      enableBadge1: false
-    });
+      iconSrc: platform || 'site'
+    };
   });
 
 const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {
@@ -69,7 +58,7 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
         source: sourceId,
         target: targetId,
         label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : '',
-        type: CUSTOM_ITEMS_NAMES.siteEdge
+        type: 'SkSiteEdge'
       }
     ])
   );
@@ -78,32 +67,31 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
 export const TopologySiteController = {
   siteDataTransformer: ({
     idsSelected,
+    searchText,
     sites,
     routerLinks,
     sitesPairs,
     metrics,
-    showLinkLabelReverse,
-    rotateLabel
+    options
   }: TopologySiteControllerProps) => {
-    const options = {
-      showLinkLabelReverse,
-      rotateLabel
-    };
-
     let edges: GraphEdge[] = [];
 
     if (sitesPairs) {
-      TopologyController.transformIdsToStringIds(idsSelected),
-        (edges = TopologyController.convertPairsToEdges(sitesPairs));
+      TopologyController.transformIdsToStringIds(idsSelected);
+      edges = TopologyController.convertPairsToEdges(sitesPairs);
       edges = addSiteMetricsToEdges(edges, metrics);
+      // We skip edges within the same site as we're only interested in communication between different sites
       edges = TopologyController.configureEdges(edges, options);
     } else if (routerLinks) {
       edges = convertRouterLinksToEdges(sites, routerLinks);
     }
 
+    const nodes = convertSitesToNodes(sites);
+
     return {
       nodeIdSelected: TopologyController.transformIdsToStringIds(idsSelected),
-      nodes: convertSitesToNodes(sites),
+      nodeIdsToHighLight: TopologyController.nodesToHighlight(nodes, searchText),
+      nodes,
       edges
     };
   }

@@ -1,29 +1,21 @@
-import {
-  FC,
-  useMemo,
-  useState,
-  useRef,
-  MouseEvent,
-  ChangeEvent,
-  memo,
-  MouseEvent as ReactMouseEvent,
-  RefObject
-} from 'react';
+import { FC, useMemo, useState, useRef, memo, MouseEvent as ReactMouseEvent, RefObject, Ref } from 'react';
 
 import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
   ToolbarGroup,
-  Card,
   Popper,
   MenuToggle,
   Menu,
   MenuContent,
   MenuList,
-  MenuItem
+  MenuItem,
+  SelectOption,
+  Select,
+  MenuToggleElement,
+  PageSection
 } from '@patternfly/react-core';
-import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
 
 import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { AvailableProtocols } from '@API/REST.enum';
@@ -75,8 +67,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, ...openFilter });
     }
 
-    function handleToggleProtocol(isOpen: boolean) {
-      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: isOpen });
+    function handleToggleProtocol() {
+      setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: !selectedFilterIsOpen.protocol });
     }
 
     function handleSelect(selections: Record<string, string | undefined>) {
@@ -90,7 +82,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       }
     }
 
-    function handleSelectProtocol(_: MouseEvent | ChangeEvent, selection?: SelectOptionObject) {
+    function handleSelectProtocol(selection?: AvailableProtocols) {
       const protocol = selection as AvailableProtocols | undefined;
       const filter = { ...selectedFilters, protocol };
 
@@ -120,7 +112,12 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
     // protocol select options
     const optionsProtocolsWithDefault = useMemo(
-      () => availableProtocols.map((option, index) => <SelectOption key={index} value={option} />),
+      () =>
+        availableProtocols.map((option, index) => (
+          <SelectOption key={index} value={option}>
+            {option}
+          </SelectOption>
+        )),
       [availableProtocols]
     );
 
@@ -296,8 +293,19 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       </div>
     );
 
+    const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+      <MenuToggle
+        ref={toggleRef}
+        isDisabled={!!config.protocols?.disabled}
+        onClick={handleToggleProtocol}
+        isExpanded={selectedFilterIsOpen.protocol}
+      >
+        {selectedFilters.protocol || MetricsLabels.FilterProtocolsDefault}
+      </MenuToggle>
+    );
+
     return (
-      <Card>
+      <PageSection padding={{ default: 'noPadding' }}>
         <Toolbar>
           <ToolbarContent>
             <ToolbarGroup>
@@ -313,12 +321,10 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             {!!optionsProtocolsWithDefault.length && (
               <ToolbarItem>
                 <Select
-                  selections={selectedFilters.protocol}
-                  placeholderText={MetricsLabels.FilterProtocolsDefault}
+                  selected={selectedFilters.protocol}
                   isOpen={selectedFilterIsOpen.protocol}
-                  isDisabled={!!config.protocols?.disabled}
-                  onSelect={handleSelectProtocol}
-                  onToggle={(_, isOpen) => handleToggleProtocol(isOpen)}
+                  onSelect={(_, selection) => handleSelectProtocol(selection as AvailableProtocols)}
+                  toggle={toggle}
                 >
                   {[
                     <SelectOption key={MetricsLabels.FilterProtocolsDefault} value={undefined}>
@@ -343,7 +349,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             </ToolbarGroup>
           </ToolbarContent>
         </Toolbar>
-      </Card>
+      </PageSection>
     );
   }
 );

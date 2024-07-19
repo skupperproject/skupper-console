@@ -39,9 +39,7 @@ const Topology = function () {
 
   const serviceIds = TopologyController.transformStringIdsToIds(serviceIdsString);
   // IdsSting can be a site,component, process or a pairs. Avoid pairs IDS to be selected from URL
-  const ids = !TopologyController.arePairIds(idsString.current)
-    ? TopologyController.transformStringIdsToIds(idsString.current)
-    : undefined;
+  const ids = TopologyController.transformStringIdsToIds(idsString.current);
 
   return (
     <MainContainer

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -19,6 +19,12 @@ const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected
     refetchInterval: UPDATE_INTERVAL
   });
 
+  const handleSelected = useCallback(
+    (items: string[]) => {
+      onSelect(items.length ? items : undefined);
+    },
+    [onSelect]
+  );
   // useQuery is async: If services are not yet available (undefined), render a disabled placeholder
   if (!services) {
     return (
@@ -26,7 +32,7 @@ const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected
         key={1}
         initOptions={[]}
         initIdsSelected={[]}
-        onSelected={onSelect}
+        onSelected={handleSelected}
         isDisabled={true}
       />
     );
@@ -42,9 +48,9 @@ const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected
   return (
     <SkSelectMultiTypeaheadCheckbox
       key={2}
-      initIdsSelected={initialIdsSelected || options.map(({ value }) => value)}
+      initIdsSelected={initialIdsSelected || []}
       initOptions={options}
-      onSelected={onSelect}
+      onSelected={handleSelected}
     />
   );
 };

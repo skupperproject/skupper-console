@@ -1,28 +1,28 @@
-import { ComponentType, FC, useCallback, useRef } from 'react';
+import { ComponentType, FC, useCallback } from 'react';
 
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import { LAYOUT_TOPOLOGY_DEFAULT, LAYOUT_TOPOLOGY_SINGLE_NODE } from '@core/components/Graph/Graph.constants';
-import { GraphReactAdaptorExposedMethods, GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
-import GraphReactAdaptor from '@core/components/Graph/ReactAdaptor';
+import GraphReactAdaptor from '@core/components/Graph';
+import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
-import AlertToasts, { ToastExposeMethods } from './TopologyToasts';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologySiteData from './useTopologySiteData';
 import useTopologyState from './useTopologyState';
-import { TopologyController } from '../services';
 import { TopologySiteController } from '../services/topologySiteController';
 import {
   displayOptionsForSites,
-  ROTATE_LINK_LABEL,
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
   SHOW_LINK_LATENCY,
-  SHOW_LINK_REVERSE_LABEL,
-  SHOW_ROUTER_LINKS
+  SHOW_INBOUND_METRICS,
+  SHOW_ROUTER_LINKS,
+  SHOW_LINK_METRIC_VALUE,
+  SHOW_DEPLOYMENTS,
+  SHOW_LINK_PROTOCOL,
+  SHOW_LINK_METRIC_DISTRIBUTION
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
@@ -31,26 +31,17 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
   GraphComponent = GraphReactAdaptor
 }) {
   const navigate = useNavigate();
-  const graphRef = useRef<GraphReactAdaptorExposedMethods>();
-  const toastRef = useRef<ToastExposeMethods>(null);
 
-  const {
-    idsSelected,
-    showOnlyNeighbours,
-    moveToNodeSelected,
-    displayOptionsSelected,
-    handleSelected,
-    handleShowOnlyNeighbours,
-    handleMoveToNodeSelectedChecked,
-    handleDisplaySelected
-  } = useTopologyState({
-    ids,
-    initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS],
-    displayOptionsEnabledKey: 'display-site-options'
-  });
+  const { idsSelected, searchText, displayOptionsSelected, handleSearchText, handleDisplaySelected } = useTopologyState(
+    {
+      ids,
+      initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_LINK_METRIC_VALUE],
+      //name of the configuration to be saved in the localstorage
+      displayOptionsEnabledKey: 'display-site-options'
+    }
+  );
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    idsSelected: showOnlyNeighbours ? idsSelected : undefined,
     showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
     showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
     showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
@@ -65,71 +56,48 @@ const TopologySite: FC<{ ids?: string[]; GraphComponent?: ComponentType<GraphRea
     [navigate, sites]
   );
 
-  const handleSelectedWrapper = useCallback(
-    (siteId?: string) => {
-      handleSelected(TopologyController.transformStringIdsToIds(siteId));
-    },
-    [handleSelected]
-  );
-
-  const handleShowOnlyNeighboursChecked = useCallback(
-    (checked: boolean) => {
-      handleShowOnlyNeighbours(checked);
-      checked && graphRef?.current?.saveNodePositions();
-    },
-    [graphRef, handleShowOnlyNeighbours]
-  );
-
-  const handleSavePositions = useCallback(() => {
-    graphRef?.current?.saveNodePositions();
-    toastRef.current?.addMessage(TopologyLabels.ToastSave);
-  }, [graphRef, toastRef]);
-
-  const { nodes, edges, nodeIdSelected } = TopologySiteController.siteDataTransformer({
+  const { nodes, edges, nodeIdSelected, nodeIdsToHighLight } = TopologySiteController.siteDataTransformer({
     idsSelected,
+    searchText,
     sites,
     sitesPairs,
     routerLinks,
     metrics,
-    showLinkLabelReverse: displayOptionsSelected.includes(SHOW_LINK_REVERSE_LABEL),
-    rotateLabel: displayOptionsSelected.includes(ROTATE_LINK_LABEL)
+    options: {
+      showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
+      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
+      showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
+      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
+      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
+      showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
+      showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
+      showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
+    }
   });
 
   return (
-    <>
-      <Stack>
-        <StackItem>
-          <TopologyToolbar
-            displayOptions={displayOptionsForSites}
-            onDisplayOptionSelected={handleDisplaySelected}
-            defaultDisplayOptionsSelected={displayOptionsSelected}
-            showOnlyNeighbours={showOnlyNeighbours}
-            onShowOnlyNeighboursChecked={handleShowOnlyNeighboursChecked}
-            moveToNodeSelected={moveToNodeSelected}
-            onMoveToNodeSelectedChecked={handleMoveToNodeSelectedChecked}
-            onSaveTopology={handleSavePositions}
-            resourceIdSelected={nodeIdSelected}
-            resourceOptions={nodes.map((node) => ({ name: node.label, identity: node.id }))}
-            resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
-            onResourceSelected={handleSelectedWrapper}
-          />
-          <Divider />
-        </StackItem>
+    <Stack>
+      <StackItem>
+        <TopologyToolbar
+          displayOptions={displayOptionsForSites}
+          onDisplayOptionSelected={handleDisplaySelected}
+          defaultDisplayOptionsSelected={displayOptionsSelected}
+          resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
+          onResourceSelected={handleSearchText}
+        />
+        <Divider />
+      </StackItem>
 
-        <StackItem isFilled>
-          <GraphComponent
-            ref={graphRef}
-            nodes={nodes}
-            edges={edges}
-            itemSelected={nodeIdSelected}
-            onClickNode={handleShowDetails}
-            layout={showOnlyNeighbours && idsSelected ? LAYOUT_TOPOLOGY_SINGLE_NODE : LAYOUT_TOPOLOGY_DEFAULT}
-            moveToSelectedNode={moveToNodeSelected && !!idsSelected && !showOnlyNeighbours}
-          />
-        </StackItem>
-      </Stack>
-      <AlertToasts ref={toastRef} />
-    </>
+      <StackItem isFilled>
+        <GraphComponent
+          nodes={nodes}
+          edges={edges}
+          itemSelected={nodeIdSelected}
+          itemsToHighlight={nodeIdsToHighLight}
+          onClickNode={handleShowDetails}
+        />
+      </StackItem>
+    </Stack>
   );
 };
 

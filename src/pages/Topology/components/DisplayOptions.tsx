@@ -1,9 +1,14 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, Ref, useCallback, useState } from 'react';
 
-import { Divider, SelectGroup } from '@patternfly/react-core';
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
+import { MenuToggle, MenuToggleElement, Select, SelectGroup, SelectOption } from '@patternfly/react-core';
 
-import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';
+import {
+  SHOW_DATA_LINKS,
+  SHOW_LINK_BYTERATE,
+  SHOW_LINK_BYTES,
+  SHOW_LINK_LATENCY,
+  SHOW_ROUTER_LINKS
+} from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 import { DisplaySelectProps } from '../Topology.interfaces';
 
@@ -13,7 +18,7 @@ interface DisplayUseOptionsProps {
 }
 
 interface DisplayOptionsProps extends DisplayUseOptionsProps {
-  options: DisplaySelectProps[][];
+  options: DisplaySelectProps[];
   optionsDisabled?: Record<string, boolean>;
 }
 
@@ -27,6 +32,21 @@ export const useDisplayOptions = ({ defaultSelected = [], onSelected }: DisplayU
       let updatedDisplayOptions = isOptionSelected
         ? displayOptionsSelected.filter((option) => option !== selectedOption)
         : [...displayOptionsSelected, selectedOption];
+
+      if (
+        selectedOption === SHOW_LINK_BYTES ||
+        selectedOption === SHOW_LINK_BYTERATE ||
+        selectedOption === SHOW_LINK_LATENCY
+      ) {
+        updatedDisplayOptions = isOptionSelected
+          ? displayOptionsSelected.filter((option) => option !== selectedOption)
+          : [
+              ...displayOptionsSelected.filter(
+                (option) => option !== SHOW_LINK_BYTES && option !== SHOW_LINK_BYTERATE && option !== SHOW_LINK_LATENCY
+              ),
+              selectedOption
+            ];
+      }
 
       if (selectedOption === SHOW_DATA_LINKS || selectedOption === SHOW_ROUTER_LINKS) {
         const otherOption = selectedOption === SHOW_DATA_LINKS ? SHOW_ROUTER_LINKS : SHOW_DATA_LINKS;
@@ -57,26 +77,34 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
     onSelected
   });
 
-  function toggleDisplayMenu(openDisplayMenu: boolean) {
-    setIsDisplayMenuOpen(openDisplayMenu);
+  function toggleDisplayMenu() {
+    setIsDisplayMenuOpen(!isDisplayMenuOpen);
   }
+
+  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+    <MenuToggle ref={toggleRef} onClick={toggleDisplayMenu} isExpanded={isDisplayMenuOpen}>
+      {TopologyLabels.DisplayPlaceholderText}
+    </MenuToggle>
+  );
 
   return (
     <Select
-      variant={SelectVariant.checkbox}
       isOpen={isDisplayMenuOpen}
-      onSelect={(_, selection) => selectDisplayOptions(selection.toString())}
-      onToggle={(_, isOpen) => toggleDisplayMenu(isOpen)}
-      selections={displayOptionsSelected}
-      placeholderText={TopologyLabels.DisplayPlaceholderText}
-      isCheckboxSelectionBadgeHidden
-      isGrouped
+      onSelect={(_, selection) => selectDisplayOptions(selection!.toString())}
+      onOpenChange={(open) => !open && setIsDisplayMenuOpen(false)}
+      selected={displayOptionsSelected}
+      toggle={toggle}
     >
       {options.map((group, index) => (
-        <SelectGroup key={index}>
-          {<Divider />}
-          {group.map(({ key, value, label }) => (
-            <SelectOption key={key} value={value} isDisabled={optionsDisabled[value]}>
+        <SelectGroup key={index} label={group.title}>
+          {group.items.map(({ key, value, label }) => (
+            <SelectOption
+              key={key}
+              value={value}
+              isDisabled={optionsDisabled[value]}
+              hasCheckbox
+              isSelected={displayOptionsSelected.includes(value)}
+            >
               {label}
             </SelectOption>
           ))}

@@ -31,7 +31,7 @@ describe('NodeOrEdgeList', () => {
 
     render(
       <Wrapper>
-        <NodeOrEdgeList ids={ids} items={items} modalType="process" />
+        <NodeOrEdgeList ids={ids} items={items} modalType="process" metrics={null} />
       </Wrapper>
     );
 
@@ -52,7 +52,7 @@ describe('NodeOrEdgeList', () => {
 
     render(
       <Wrapper>
-        <NodeOrEdgeList ids={ids} items={items} modalType="processPair" />
+        <NodeOrEdgeList ids={ids} items={items} modalType="processPair" metrics={null} />
       </Wrapper>
     );
 

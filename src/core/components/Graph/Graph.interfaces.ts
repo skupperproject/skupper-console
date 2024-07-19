@@ -1,36 +1,31 @@
-import { MutableRefObject } from 'react';
+import { LayoutOptions } from '@antv/g6';
 
-import { GraphData, LayoutConfig, ModelConfig, ModelStyle, ShapeStyle } from '@antv/g6';
+export type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
+
+export type GraphIconsMap = {
+  [key in GraphIconKeys]: HTMLImageElement;
+};
 
 export interface GraphNode {
   id: string;
+  type?: CustomItemsProps;
   label: string;
-  comboId?: string;
+  combo?: string;
   comboName?: string;
   groupId?: string;
   groupName?: string;
   groupCount?: number;
-  type?: string;
-  enableBadge1?: boolean;
-  notificationValue?: number;
-  icon?: {
-    show?: boolean;
-    img?: string;
-    width?: number;
-    height?: number;
-  };
-  style?: Record<string, string>;
+  groupedNodeCount?: number;
   x?: number | undefined;
   y?: number | undefined;
-  fx?: number | undefined;
-  fy?: number | undefined;
   persistPositionKey?: string;
+  iconSrc: GraphIconKeys;
 }
 
 export interface GraphCombo {
   id: string;
+  type?: CustomItemsProps;
   label: string;
-  style?: ModelStyle;
 }
 
 interface GraphEdgeMetrics {
@@ -45,33 +40,33 @@ interface GraphEdgeMetrics {
 
 export interface GraphEdge {
   id: string;
+  type?: CustomItemsProps;
   source: string;
   target: string;
   sourceName?: string;
   targetName?: string;
-  type?: string;
   label?: string;
-  labelCfg?: Record<string, unknown>;
-  style?: ShapeStyle;
+  protocolLabel?: string;
+  metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }
 
-export interface GraphReactAdaptorExposedMethods {
-  saveNodePositions: Function;
+export interface GraphLayouts {
+  combo: LayoutOptions;
+  default: LayoutOptions;
 }
 
 export interface GraphReactAdaptorProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
   combos?: GraphCombo[];
+  itemsToHighlight?: string[];
   itemSelected?: string;
-  onClickCombo?: Function;
   onClickNode?: (id: string) => void;
   onClickEdge?: (id: string) => void;
-  legendData?: GraphData;
-  ref?: MutableRefObject<GraphReactAdaptorExposedMethods | undefined>;
-  layout?: LayoutConfig;
+  layout?: keyof GraphLayouts;
   moveToSelectedNode?: boolean;
+  savePositions?: boolean;
 }
 
 export interface LocalStorageDataSavedPayload {
@@ -87,15 +82,12 @@ export interface LocalStorageData extends LocalStorageDataSavedPayload {
   id: string;
 }
 
-export interface NodeWithBadgesProps extends ModelConfig {
-  notificationValue?: number;
-  notificationColor?: string;
-  notificationFontSize?: number;
-}
-
-export interface ComboWithCustomLabel extends ModelConfig {
-  labelBgCfg?: {
-    fill?: string;
-    padding?: number[];
-  };
-}
+export type CustomItemsProps =
+  | 'SkDataEdge'
+  | 'SkSiteDataEdge'
+  | 'SkSiteEdge'
+  | 'SkLoopEdge'
+  | 'SkNode'
+  | 'SkNodeUnexposed'
+  | 'SkNodeRemote'
+  | 'SkCombo';

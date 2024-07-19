@@ -47,7 +47,7 @@ describe('useData', () => {
     act(() => {
       result.current.selectAllServices();
     });
-    expect(result.current.selected).toEqual(['1', '2', '3']);
+    expect(result.current.selected).toEqual([]);
 
     act(() => {
       result.current.selectAllServices();

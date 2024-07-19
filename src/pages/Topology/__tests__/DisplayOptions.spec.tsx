@@ -6,13 +6,16 @@ import { TopologyLabels } from '../Topology.enum';
 
 const mockOnSelected = jest.fn();
 const defaultSelected: string[] = [];
-const options = [
-  { key: '1', value: '1', label: 'Option 1' },
-  { key: '2', value: '2', label: 'Option 2' },
-  { key: '3', value: '3', label: 'Option 3' },
-  { key: SHOW_DATA_LINKS, value: SHOW_DATA_LINKS, label: TopologyLabels.CheckboxShowDataLinks },
-  { key: SHOW_ROUTER_LINKS, value: SHOW_ROUTER_LINKS, label: TopologyLabels.CheckBoxShowRouterLinks }
-];
+const options = {
+  title: 'test',
+  items: [
+    { key: '1', value: '1', label: 'Option 1' },
+    { key: '2', value: '2', label: 'Option 2' },
+    { key: '3', value: '3', label: 'Option 3' },
+    { key: SHOW_DATA_LINKS, value: SHOW_DATA_LINKS, label: TopologyLabels.CheckboxShowDataLinks },
+    { key: SHOW_ROUTER_LINKS, value: SHOW_ROUTER_LINKS, label: TopologyLabels.CheckBoxShowRouterLinks }
+  ]
+};
 
 describe('useDisplayOptions', () => {
   it('initializes with defaultSelected values', () => {
@@ -94,7 +97,7 @@ describe('DisplayOptions', () => {
     const selectElement = getByRole('button');
     fireEvent.click(selectElement);
 
-    options.forEach((option) => {
+    options.items.forEach((option) => {
       const optionElement = getByText(option.label);
       expect(optionElement).toBeInTheDocument();
     });

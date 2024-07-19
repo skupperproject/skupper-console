@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 
 import useTopologyState from '../components/useTopologyState';
 import { TopologyController } from '../services';
-import { SHOW_ROUTER_LINKS, SHOW_SITE_KEY } from '../Topology.constants';
+import { SHOW_ROUTER_LINKS } from '../Topology.constants';
 
 describe('useTopologySiteState', () => {
   beforeEach(() => {
@@ -17,10 +17,10 @@ describe('useTopologySiteState', () => {
 
   it('should initialize with default display options', () => {
     const { result } = renderHook(() =>
-      useTopologyState({ ids: undefined, initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS, SHOW_SITE_KEY] })
+      useTopologyState({ ids: undefined, initDisplayOptionsEnabled: [SHOW_ROUTER_LINKS] })
     );
 
-    expect(result.current.displayOptionsSelected).toEqual([SHOW_ROUTER_LINKS, SHOW_SITE_KEY]);
+    expect(result.current.displayOptionsSelected).toEqual([SHOW_ROUTER_LINKS]);
   });
 
   it('should handle display options selection', () => {
@@ -50,25 +50,5 @@ describe('useTopologySiteState', () => {
     });
 
     expect(result.current.idsSelected).toEqual(['site_id']);
-  });
-
-  it('should handle show only neighbours', () => {
-    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
-
-    act(() => {
-      result.current.handleShowOnlyNeighbours(true);
-    });
-
-    expect(result.current.showOnlyNeighbours).toBe(true);
-  });
-
-  it('should handle move to node selection', () => {
-    const { result } = renderHook(() => useTopologyState({ ids: undefined }));
-
-    act(() => {
-      result.current.handleMoveToNodeSelectedChecked(true);
-    });
-
-    expect(result.current.moveToNodeSelected).toBe(true);
   });
 });

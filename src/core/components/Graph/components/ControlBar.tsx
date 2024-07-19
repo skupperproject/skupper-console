@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 
-import { Graph } from '@antv/g6-pc';
+import { Graph } from '@antv/g6';
 import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { ExpandArrowsAltIcon, ExpandIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
+import { ExpandArrowsAltIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 import ProcessLegend from './Legend';
-import { GraphController } from './services';
+import { GraphController } from '../services';
 
 type ZoomControlsProps = {
   graphInstance: Graph;
@@ -15,12 +15,8 @@ const ZOOM_RATIO_OUT = 1.2;
 const ZOOM_RATIO_IN = 0.8;
 
 const LEGEND_LABEL_NAME = 'Legend';
-const ZOOM_CONFIG = {
-  duration: 200,
-  easing: 'easeCubic'
-};
 
-const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
+const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
   const popoverRef = useRef<HTMLButtonElement>(null);
 
   const handleIncreaseZoom = () => {
@@ -32,28 +28,19 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   };
 
   const handleZoom = (zoom: number) => {
-    const nodeCount = graphInstance.getNodes().length;
-    const centerPoint = graphInstance.getGraphCenterPoint();
-
-    graphInstance.zoom(zoom, centerPoint, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
+    graphInstance.zoomBy(zoom);
   };
 
   const handleFitView = () => {
-    const nodeCount = graphInstance.getNodes().length;
-
-    graphInstance.fitView(20, undefined, !GraphController.isPerformanceThresholdExceeded(nodeCount), ZOOM_CONFIG);
+    graphInstance.fitView();
   };
 
-  const handleCenter = () => {
-    graphInstance.fitCenter(false);
-  };
-
-  const handleCleanAllGraphConfigurations = () => {
-    GraphController.cleanAllLocalNodePositions(graphInstance.getNodes(), true);
+  const handleCleanAllGraphConfigurations = async () => {
+    GraphController.cleanAllLocalNodePositions(graphInstance.getNodeData(), true);
     GraphController.removeAllNodePositionsFromLocalStorage();
 
-    graphInstance.layout();
-    setTimeout(handleFitView, 250);
+    await graphInstance.render();
+    graphInstance.fitView();
   };
 
   return (
@@ -97,19 +84,7 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
           </ToolbarItem>
 
           <ToolbarItem>
-            <Tooltip content={'center'}>
-              <Button
-                size="sm"
-                variant="tertiary"
-                onClick={handleCenter}
-                icon={<ExpandIcon />}
-                className="sk-topology-control-bar__button"
-              />
-            </Tooltip>
-          </ToolbarItem>
-
-          <ToolbarItem>
-            <Tooltip content={'reposition'}>
+            <Tooltip content={'reset'}>
               <Button
                 size="sm"
                 variant="tertiary"
@@ -137,4 +112,4 @@ const MenuControl = function ({ graphInstance }: ZoomControlsProps) {
   );
 };
 
-export default MenuControl;
+export default ControlBar;
