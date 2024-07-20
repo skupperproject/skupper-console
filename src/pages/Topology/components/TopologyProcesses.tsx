@@ -75,11 +75,8 @@ const TopologyProcesses: FC<{
       }
 
       //handle a single process selection
-      const process = processes?.find(({ identity }) => identity === id);
-
-      if (process) {
-        navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
-      }
+      const process = processes.find(({ identity }) => identity === id);
+      navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${process?.identity}`);
     },
     [handleSelected, navigate, processes]
   );
@@ -94,24 +91,14 @@ const TopologyProcesses: FC<{
         return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
-      const pair = processesPairs?.find(({ identity }) => identity === id);
-
-      if (pair) {
-        navigate(
-          `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}@${pair.protocol}`
-        );
-      }
+      const pair = processesPairs.find(({ identity }) => identity === id);
+      navigate(
+        `${ProcessesRoutesPaths.Processes}/${pair?.sourceName}@${pair?.sourceId}/${ProcessesLabels.ProcessPairs}@${pair?.identity}@${pair?.protocol}`
+      );
     },
     [handleSelected, navigate, processesPairs]
   );
 
-  const handleServiceSelectedWrapper = useCallback(
-    (ids: string[] | undefined) => {
-      handleSelected();
-      handleServiceSelected(ids);
-    },
-    [handleSelected, handleServiceSelected]
-  );
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
     idsSelected,
     searchText,
@@ -162,7 +149,7 @@ const TopologyProcesses: FC<{
           onDisplayOptionSelected={handleDisplaySelected}
           defaultDisplayOptionsSelected={displayOptionsSelected}
           serviceIdsSelected={serviceIdsSelected}
-          onServiceSelected={handleServiceSelectedWrapper}
+          onServiceSelected={handleServiceSelected}
           resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           onResourceSelected={handleSearchText}
         />

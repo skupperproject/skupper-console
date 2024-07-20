@@ -77,7 +77,6 @@ export const TopologySiteController = {
       TopologyController.transformIdsToStringIds(idsSelected);
       edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkSiteDataEdge');
       edges = addSiteMetricsToEdges(edges, metrics);
-      // We skip edges within the same site as we're only interested in communication between different sites
       edges = TopologyController.configureEdges(edges, options);
     } else if (routerLinks) {
       edges = convertRouterLinksToEdges(sites, routerLinks);

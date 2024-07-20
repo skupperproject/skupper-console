@@ -1,4 +1,5 @@
-import { renderHook, render, fireEvent, act } from '@testing-library/react';
+import { renderHook, render, act } from '@testing-library/react';
+import eventUser from '@testing-library/user-event';
 
 import DisplayOptions, { useDisplayOptions } from '../components/DisplayOptions';
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../Topology.constants';
@@ -89,13 +90,13 @@ describe('DisplayOptions', () => {
     expect(placeholderTextElement).toBeInTheDocument();
   });
 
-  it('renders options correctly', () => {
+  it('renders options correctly', async () => {
     const { getByRole, getByText } = render(
       <DisplayOptions defaultSelected={defaultSelected} options={[options]} onSelected={mockOnSelected} />
     );
 
     const selectElement = getByRole('button');
-    fireEvent.click(selectElement);
+    await eventUser.click(selectElement);
 
     options.items.forEach((option) => {
       const optionElement = getByText(option.label);
@@ -103,15 +104,15 @@ describe('DisplayOptions', () => {
     });
   });
 
-  it('calls selectDisplayOption function on selecting an option', () => {
+  it('calls selectDisplayOption function on selecting an option', async () => {
     const { getByRole, getByText } = render(
       <DisplayOptions defaultSelected={defaultSelected} options={[options]} onSelected={mockOnSelected} />
     );
     const selectElement = getByRole('button');
-    fireEvent.click(selectElement);
+    await eventUser.click(selectElement);
 
     const optionToSelect = getByText('Option 1');
-    fireEvent.click(optionToSelect);
+    await eventUser.click(optionToSelect);
 
     expect(mockOnSelected).toHaveBeenCalledWith(['1'], '1');
   });
