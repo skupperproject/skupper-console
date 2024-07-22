@@ -74,11 +74,6 @@ const Overview: FC<OverviewProps> = function ({ site }) {
   const sourceSites = [{ destinationName: composePrometheusSiteLabel(name, siteId) }];
   const destSites = removeDuplicatesFromArrayOfObjects([...destProcessesTx, ...destProcessesRx]);
 
-  const startTime = [...siteTxData, ...siteRxData].reduce(
-    (acc, { startTime: t }) => Math.min(acc !== 0 ? acc : t, t),
-    0
-  );
-
   return (
     <Metrics
       key={siteId}
@@ -91,7 +86,6 @@ const Overview: FC<OverviewProps> = function ({ site }) {
         sourceSite: composePrometheusSiteLabel(name, siteId),
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
       }}
-      startTimeLimit={startTime}
       configFilters={{
         sourceSites: { disabled: true },
         destinationProcesses: { hide: true },

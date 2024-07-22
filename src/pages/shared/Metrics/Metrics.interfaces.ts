@@ -40,7 +40,6 @@ export interface ExpandedMetricSections {
 export interface MetricsProps {
   defaultMetricFilterValues: QueryMetricsParams;
   defaultOpenSections?: ExpandedMetricSections;
-  startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
   destSites?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string; siteName?: string }[];
@@ -53,7 +52,6 @@ export interface MetricsProps {
 
 export interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
-  startTimeLimit: number;
   sourceSites?: { destinationName: string }[];
   destSites?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string; siteName?: string }[];

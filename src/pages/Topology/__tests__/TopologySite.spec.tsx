@@ -7,7 +7,7 @@ import { Server } from 'miragejs';
 
 import { waitForElementToBeRemovedTimeout } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { Wrapper } from '@core/components/Wrapper';
 import sitesData from '@mocks/data/SITES.json';
 import { loadMockServer } from '@mocks/server';
@@ -15,10 +15,11 @@ import LoadingPage from '@pages/shared/Loading';
 
 import TopologySite from '../components/TopologySite';
 import { TopologyController } from '../services';
+import { SHOW_DATA_LINKS } from '../Topology.constants';
 
 const sitesResults = sitesData.results;
 
-const MockGraphComponent: FC<GraphReactAdaptorProps> = memo(
+const MockGraphComponent: FC<SkGraphProps> = memo(
   forwardRef(({ onClickEdge, onClickNode }, ref) => {
     useImperativeHandle(ref, () => ({
       saveNodePositions() {
@@ -45,7 +46,14 @@ describe('TopologySite', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
+  });
 
+  afterEach(() => {
+    server.shutdown();
+    jest.restoreAllMocks();
+  });
+
+  it('should display with idSelected', async () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
@@ -56,14 +64,7 @@ describe('TopologySite', () => {
         </Suspense>
       </Wrapper>
     );
-  });
 
-  afterEach(() => {
-    server.shutdown();
-    jest.restoreAllMocks();
-  });
-
-  it('should display with idSelected', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
@@ -72,6 +73,17 @@ describe('TopologySite', () => {
   });
 
   it('should clicking on a node', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <TopologySite
+            ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
+            GraphComponent={MockGraphComponent}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
@@ -80,10 +92,35 @@ describe('TopologySite', () => {
   });
 
   it('should clicking on a edge', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <TopologySite
+            ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
+            GraphComponent={MockGraphComponent}
+          />
+        </Suspense>
+      </Wrapper>
+    );
+
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
     await eventUser.click(screen.getByText('onClickEdge'));
+  });
+
+  it('should render data links', async () => {
+    render(
+      <Wrapper>
+        <Suspense fallback={<LoadingPage />}>
+          <TopologySite GraphComponent={MockGraphComponent} initDisplayOptionsEnabled={[SHOW_DATA_LINKS]} />
+        </Suspense>
+      </Wrapper>
+    );
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
   });
 });

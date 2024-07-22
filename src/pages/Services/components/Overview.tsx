@@ -44,7 +44,6 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
   );
 
   const processPairsResults = processPairs?.results || [];
-  const startTime = processPairsResults.reduce((acc, processPair) => Math.min(acc, processPair.startTime), 0);
 
   const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
     processPairsResults.map(({ sourceName, sourceSiteName, sourceSiteId }) => ({
@@ -102,7 +101,6 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         },
         protocols: { disabled: true }
       }}
-      startTimeLimit={startTime}
       onGetMetricFiltersConfig={handleSelectedFilters}
       onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />

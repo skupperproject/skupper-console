@@ -44,7 +44,6 @@ describe('Metrics component', () => {
           protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
         }}
         defaultMetricFilterValues={{ sourceProcess: undefined }}
-        startTimeLimit={0}
         isRefetching={false}
         onRefetch={onRefetch}
         onSelectFilters={() => {}}
@@ -108,7 +107,6 @@ describe('Metrics component', () => {
           protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
         }}
         defaultMetricFilterValues={{ sourceProcess: undefined }}
-        startTimeLimit={0}
         isRefetching={false}
         onRefetch={onRefetch}
         onSelectFilters={() => {}}

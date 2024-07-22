@@ -21,7 +21,7 @@ import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { AvailableProtocols } from '@API/REST.enum';
 import { prometheusProcessNameseparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
-import DateTimeRangeFilter from '@core/components/SkDateTimePicker/DateTimeRangeFilter';
+import SkTimeRangeFilter from '@core/components/SkTimeRangeFilter';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
 
 import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
@@ -38,7 +38,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     sourceProcesses,
     destProcesses,
     availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
-    startTimeLimit = 0, // Use startTimeLimit to set the left temporal limit of the SelectTimeInterval filter
     onSelectFilters
   }) => {
     const config: ConfigMetricFilters = deepMergeJSONObjects<ConfigMetricFilters>(configDefaultFilters, configFilters);
@@ -338,11 +337,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
             <ToolbarGroup align={{ default: 'alignRight' }}>
               <ToolbarItem>
-                <DateTimeRangeFilter
-                  startSelected={selectedFilters.start}
-                  endSelected={selectedFilters.end}
+                <SkTimeRangeFilter
                   duration={selectedFilters.duration}
-                  startTimeLimit={startTimeLimit}
                   onSelectTimeInterval={handleSelectTimeInterval}
                 />
               </ToolbarItem>

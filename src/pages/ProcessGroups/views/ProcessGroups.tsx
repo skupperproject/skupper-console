@@ -42,7 +42,7 @@ const ProcessGroups = function () {
       dataTestId={getTestsIds.componentsView()}
       title={ComponentLabels.Section}
       description={ComponentLabels.Description}
-      link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.ProcessGroups}`}
+      link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Components}`}
       mainContentChildren={
         <SkTable
           columns={processGroupsColumns}

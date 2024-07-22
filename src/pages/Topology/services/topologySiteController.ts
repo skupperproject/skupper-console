@@ -1,6 +1,6 @@
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { LinkResponse, SitePairsResponse, SiteResponse } from '@API/REST.interfaces';
-import { GraphEdge, GraphNode } from '@core/components/Graph/Graph.interfaces';
+import { GraphEdge, GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
 
 import { TopologyLabels } from '../Topology.enum';
@@ -38,15 +38,12 @@ const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | nu
 };
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, siteVersion, platform }) => {
-    const label = siteVersion ? `${name} (${siteVersion})` : name;
-
-    return {
-      id: identity,
-      label,
-      iconSrc: platform || 'site'
-    };
-  });
+  entities.map(({ identity, name, siteVersion, platform }) => ({
+    type: 'SkNode',
+    id: identity,
+    label: siteVersion ? `${name} (${siteVersion})` : name,
+    iconName: platform || 'site'
+  }));
 
 const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {
   const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links);
@@ -54,11 +51,11 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
   return sitesWithLinks.flatMap(({ identity: sourceId, linkSiteIds }) =>
     linkSiteIds.flatMap(({ targetId, linkCost }) => [
       {
+        type: 'SkSiteEdge',
         id: `${sourceId}-to${targetId}`,
         source: sourceId,
         target: targetId,
-        label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : '',
-        type: 'SkSiteEdge'
+        label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : ''
       }
     ])
   );
@@ -78,9 +75,8 @@ export const TopologySiteController = {
 
     if (sitesPairs) {
       TopologyController.transformIdsToStringIds(idsSelected);
-      edges = TopologyController.convertPairsToEdges(sitesPairs);
+      edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkSiteDataEdge');
       edges = addSiteMetricsToEdges(edges, metrics);
-      // We skip edges within the same site as we're only interested in communication between different sites
       edges = TopologyController.configureEdges(edges, options);
     } else if (routerLinks) {
       edges = convertRouterLinksToEdges(sites, routerLinks);

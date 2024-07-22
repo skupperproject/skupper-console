@@ -17,8 +17,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
-import GraphReactAdaptor from '@core/components/Graph';
-import { GraphReactAdaptorProps } from '@core/components/Graph/Graph.interfaces';
+import SkGraph from '@core/components/SkGraph';
+import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import NodeOrEdgeList from './NodeOrEdgeList';
@@ -45,9 +45,9 @@ import { NodeOrEdgeListProps } from '../Topology.interfaces';
 const TopologyProcesses: FC<{
   serviceIds?: string[];
   ids?: string[];
-  GraphComponent?: ComponentType<GraphReactAdaptorProps>;
+  GraphComponent?: ComponentType<SkGraphProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
-}> = function ({ serviceIds, ids: processIds, GraphComponent = GraphReactAdaptor, ModalComponent = NodeOrEdgeList }) {
+}> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = NodeOrEdgeList }) {
   const navigate = useNavigate();
 
   // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.
@@ -75,11 +75,8 @@ const TopologyProcesses: FC<{
       }
 
       //handle a single process selection
-      const process = processes?.find(({ identity }) => identity === id);
-
-      if (process) {
-        navigate(`${ProcessesRoutesPaths.Processes}/${process.name}@${process.identity}`);
-      }
+      const process = processes.find(({ identity }) => identity === id);
+      navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${process?.identity}`);
     },
     [handleSelected, navigate, processes]
   );
@@ -94,24 +91,14 @@ const TopologyProcesses: FC<{
         return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
-      const pair = processesPairs?.find(({ identity }) => identity === id);
-
-      if (pair) {
-        navigate(
-          `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}@${pair.protocol}`
-        );
-      }
+      const pair = processesPairs.find(({ identity }) => identity === id);
+      navigate(
+        `${ProcessesRoutesPaths.Processes}/${pair?.sourceName}@${pair?.sourceId}/${ProcessesLabels.ProcessPairs}@${pair?.identity}@${pair?.protocol}`
+      );
     },
     [handleSelected, navigate, processesPairs]
   );
 
-  const handleServiceSelectedWrapper = useCallback(
-    (ids: string[] | undefined) => {
-      handleSelected();
-      handleServiceSelected(ids);
-    },
-    [handleSelected, handleServiceSelected]
-  );
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
     idsSelected,
     searchText,
@@ -162,7 +149,7 @@ const TopologyProcesses: FC<{
           onDisplayOptionSelected={handleDisplaySelected}
           defaultDisplayOptionsSelected={displayOptionsSelected}
           serviceIdsSelected={serviceIdsSelected}
-          onServiceSelected={handleServiceSelectedWrapper}
+          onServiceSelected={handleServiceSelected}
           resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           onResourceSelected={handleSearchText}
         />

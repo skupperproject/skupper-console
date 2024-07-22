@@ -142,10 +142,8 @@ export const GraphController = {
     edges: EdgeData[];
     combos?: ComboData[];
   } => {
-    const transformedEdges = markPairs(addCountUsageSource(sanitizeEdges(nodes, edges))) as (GraphEdge & {
-      usageCount: number;
+    const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
       hasPair: boolean;
-      isSame: boolean;
     })[];
     // Match the combo of the node with the existing combos
     const comboIds = combos?.map(({ id }) => id);
@@ -161,7 +159,7 @@ export const GraphController = {
     return {
       nodes: nodes
         .sort(sortNodesByCombo)
-        .map(({ id, combo, label, iconSrc, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
+        .map(({ id, combo, label, iconName, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
           id,
           combo: combo && comboIds?.includes(combo) ? combo : undefined,
           type,
@@ -177,7 +175,7 @@ export const GraphController = {
             x,
             y,
             labelText: ellipsisInTheMiddle(label),
-            iconSrc: graphIconsMap[iconSrc],
+            iconSrc: graphIconsMap[iconName],
             badge: groupedNodeCount !== undefined,
             badges: [
               {
@@ -189,37 +187,26 @@ export const GraphController = {
         })),
 
       edges: transformedEdges.map(
-        ({
+        ({ id, source, target, label, hasPair, type, metricValue, protocolLabel, ...data }) => ({
+          type,
           id,
           source,
           target,
-          label,
-          isSame,
-          hasPair,
-          type = 'SkSiteDataEdge',
-          metricValue,
-          protocolLabel,
-          ...data
-        }) => ({
-          id,
-          source,
-          target,
-          type: isSame ? 'SkLoopEdge' : hasPair && type !== 'SkSiteEdge' ? 'SkSiteDataEdge' : type,
           data,
           style: {
             halo: true,
-            haloLineWidth: !isSame
+            haloLineWidth: !(source === target)
               ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
               : 0,
             badgeText: protocolLabel,
             label: !!label,
             labelText: label,
-            curveOffset: hasPair ? 30 : 0 // (usageCount - 1) * 15
+            curveOffset: hasPair && 30
           }
         })
       ),
 
-      combos: combos?.map(({ id, label, type = 'SkCombo' }) => ({
+      combos: combos?.map(({ id, label, type }) => ({
         id,
         type,
         style: {
@@ -247,18 +234,6 @@ function sanitizeEdges(nodes: GraphNode[], edges: GraphEdge[]) {
   return edges.filter(({ source, target }) => availableNodesMap[source] && availableNodesMap[target]);
 }
 
-// usageCount controls the curve of edges with the same source
-function addCountUsageSource(edges: GraphEdge[]) {
-  const sourceUsageCount = new Map<string, number>();
-
-  return edges.map((edge) => {
-    const { source } = edge;
-    sourceUsageCount.set(source, (sourceUsageCount.get(source) || 0) + 1);
-
-    return { ...edge, usageCount: sourceUsageCount.get(source) || 0 };
-  });
-}
-
 // Identify edges that have a bidirectional direction
 function markPairs(data: GraphEdge[]) {
   const set = new Set(data.map((item) => `${item.source}-${item.target}`));
@@ -266,12 +241,10 @@ function markPairs(data: GraphEdge[]) {
   return data.map((item) => {
     const reversePair = `${item.target}-${item.source}`;
     const hasPair = set.has(reversePair);
-    const isSame = item.source === item.target;
 
     return {
       ...item,
-      hasPair,
-      isSame
+      hasPair
     };
   });
 }

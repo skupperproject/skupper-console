@@ -14,7 +14,7 @@ const EndTimeCell = function <T>({ value }: EndTimeProps<T>) {
 
   return (
     <Tooltip content={timeAgo(value as number)}>
-      <Text component="p">
+      <Text component="h4">
         <Icon size="md" isInline>
           <GlobeAmericasIcon />
         </Icon>{' '}

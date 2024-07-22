@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import eventUser from '@testing-library/user-event';
 
 import SkSelectMultiTypeaheadCheckbox from '@core/SkMultiTypeheadWithCheckbox';
 
@@ -27,7 +28,7 @@ describe('SkSelectMultiTypeaheadCheckbox', () => {
     expect(placeholderTextElement).toBeInTheDocument();
   });
 
-  it('renders options correctly', () => {
+  it('renders options correctly', async () => {
     const { getByRole, getByText } = render(
       <SkSelectMultiTypeaheadCheckbox
         initIdsSelected={initialIdsSelected}
@@ -37,7 +38,7 @@ describe('SkSelectMultiTypeaheadCheckbox', () => {
     );
 
     const selectElement = getByRole('button');
-    fireEvent.click(selectElement);
+    await eventUser.click(selectElement);
 
     initOptions.forEach((option) => {
       const optionElement = getByText(option.label);
@@ -45,7 +46,7 @@ describe('SkSelectMultiTypeaheadCheckbox', () => {
     });
   });
 
-  it('calls selectService function on selecting an option', () => {
+  it('calls selectService function on selecting an option', async () => {
     const { getByRole, getByText } = render(
       <SkSelectMultiTypeaheadCheckbox
         initIdsSelected={initialIdsSelected}
@@ -55,15 +56,15 @@ describe('SkSelectMultiTypeaheadCheckbox', () => {
     );
 
     const selectElement = getByRole('button');
-    fireEvent.click(selectElement);
+    await eventUser.click(selectElement);
 
     const optionToSelect = getByText('Service 1');
-    fireEvent.click(optionToSelect);
+    await eventUser.click(optionToSelect);
 
     expect(mockOnSelected).toHaveBeenCalledWith(['1']);
   });
 
-  it('filters options correctly based on search input', () => {
+  it('filters options correctly based on search input', async () => {
     const { getByRole, getByPlaceholderText, queryByText } = render(
       <SkSelectMultiTypeaheadCheckbox
         initIdsSelected={initialIdsSelected}
@@ -73,7 +74,7 @@ describe('SkSelectMultiTypeaheadCheckbox', () => {
     );
 
     const selectElement = getByRole('button');
-    fireEvent.click(selectElement);
+    await eventUser.click(selectElement);
 
     const searchInput = getByPlaceholderText(`${initialIdsSelected.length} services selected`);
     fireEvent.change(searchInput, { target: { value: 'Service 1' } });

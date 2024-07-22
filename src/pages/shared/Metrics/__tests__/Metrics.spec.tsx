@@ -65,7 +65,6 @@ describe('Metrics Component', () => {
     sourceProcesses: [],
     destProcesses: [],
     availableProtocols: [AvailableProtocols.Http, AvailableProtocols.Tcp, AvailableProtocols.Http2],
-    startTimeLimit: 1695433450000000,
     onGetMetricFiltersConfig: jest.fn(),
     onGetExpandedSectionsConfig: jest.fn(),
     ...overrides

@@ -1,4 +1,4 @@
-import { CustomItemsProps } from '@core/components/Graph/Graph.interfaces';
+import { CustomItemsProps } from '@core/components/SkGraph/Graph.interfaces';
 
 import { TopologyLabels, TopologyRoutesPaths } from './Topology.enum';
 import { DisplaySelectProps } from './Topology.interfaces';

@@ -77,7 +77,6 @@ const Metrics: FC<MetricsProps> = function (props) {
     sourceProcesses,
     destProcesses,
     availableProtocols,
-    startTimeLimit,
     onGetMetricFiltersConfig,
     onGetExpandedSectionsConfig
   } = props;
@@ -105,7 +104,6 @@ const Metrics: FC<MetricsProps> = function (props) {
           sourceProcesses={sourceProcesses}
           destProcesses={destProcesses}
           availableProtocols={availableProtocols}
-          startTimeLimit={startTimeLimit}
           onRefetch={triggerMetricUpdate}
           onSelectFilters={handleFilterChange}
         />

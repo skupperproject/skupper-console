@@ -8,7 +8,7 @@ export type GraphIconsMap = {
 
 export interface GraphNode {
   id: string;
-  type?: CustomItemsProps;
+  type: CustomItemsProps;
   label: string;
   combo?: string;
   comboName?: string;
@@ -19,12 +19,12 @@ export interface GraphNode {
   x?: number | undefined;
   y?: number | undefined;
   persistPositionKey?: string;
-  iconSrc: GraphIconKeys;
+  iconName: GraphIconKeys;
 }
 
 export interface GraphCombo {
+  type: CustomItemsProps;
   id: string;
-  type?: CustomItemsProps;
   label: string;
 }
 
@@ -40,7 +40,7 @@ interface GraphEdgeMetrics {
 
 export interface GraphEdge {
   id: string;
-  type?: CustomItemsProps;
+  type: CustomItemsProps;
   source: string;
   target: string;
   sourceName?: string;
@@ -56,7 +56,7 @@ export interface GraphLayouts {
   default: LayoutOptions;
 }
 
-export interface GraphReactAdaptorProps {
+export interface SkGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
   combos?: GraphCombo[];

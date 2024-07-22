@@ -66,7 +66,6 @@ const ProcessGroup = function () {
 
   const processResults = processes.results;
   const serverNameFilters = Object.values(processResults).map(({ name: destinationName }) => ({ destinationName }));
-  const startTime = processResults.reduce((acc, process) => Math.min(acc, process.startTime), 0);
 
   const NavigationMenu = function () {
     return (
@@ -93,7 +92,7 @@ const ProcessGroup = function () {
     <MainContainer
       dataTestId={getTestsIds.componentView(processGroupId)}
       title={processGroup.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.ProcessGroups}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Components}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
@@ -111,7 +110,6 @@ const ProcessGroup = function () {
                   .join(prometheusProcessNameseparator),
                 ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processGroupId}`)
               }}
-              startTimeLimit={startTime}
               sourceProcesses={serverNameFilters}
               configFilters={{
                 sourceSites: { hide: true },

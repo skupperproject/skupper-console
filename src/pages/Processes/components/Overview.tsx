@@ -17,9 +17,7 @@ import { OverviewProps } from '../Processes.interfaces';
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `process-open-metric-sections`;
 
-const Overview: FC<OverviewProps> = function ({
-  process: { identity: processId, name, startTime, parent, parentName }
-}) {
+const Overview: FC<OverviewProps> = function ({ process: { identity: processId, name, parent, parentName } }) {
   const processesPairsTxQueryParams = {
     sourceId: processId
   };
@@ -97,7 +95,6 @@ const Overview: FC<OverviewProps> = function ({
         sourceSite: composePrometheusSiteLabel(parentName, parent),
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
-      startTimeLimit={startTime}
       configFilters={{
         destSites: {
           hide: destSites.length === 0
