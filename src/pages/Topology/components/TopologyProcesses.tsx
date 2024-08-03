@@ -21,7 +21,7 @@ import SkGraph from '@core/components/SkGraph';
 import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
-import NodeOrEdgeList from './NodeOrEdgeList';
+import TopologyDetails from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyProcessData from './useTopologyProcessData';
 import useServiceState from './useTopologyServiceState';
@@ -47,7 +47,7 @@ const TopologyProcesses: FC<{
   ids?: string[];
   GraphComponent?: ComponentType<SkGraphProps>;
   ModalComponent?: ComponentType<NodeOrEdgeListProps>;
-}> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = NodeOrEdgeList }) {
+}> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = TopologyDetails }) {
   const navigate = useNavigate();
 
   // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.

@@ -5,12 +5,6 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
-  DataList,
-  DataListAction,
-  DataListCell,
-  DataListItem,
-  DataListItemCells,
-  DataListItemRow,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -27,35 +21,18 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { FlowDirection } from '@API/REST.enum';
-import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { ProcessResponse } from '@API/REST.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkExposureCell from '@core/components/SkExposureCell';
 import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 
 import { TopologyLabels } from '../Topology.enum';
-import { NodeOrEdgeListProps, TopologyMetrics } from '../Topology.interfaces';
-
-const NodeOrEdgeList: FC<NodeOrEdgeListProps> = function ({ ids, items, metrics, modalType }) {
-  const filteredItems = items.filter(({ identity }) => ids?.includes(identity));
-
-  return (
-    <div style={{ height: 0 }}>
-      {modalType === 'process' ? (
-        <ProcessesGrouped data={filteredItems as ProcessResponse[]} metrics={metrics} />
-      ) : (
-        <ProcessesPairsGrouped data={filteredItems as ProcessPairsResponse[]} metrics={metrics} />
-      )}
-    </div>
-  );
-};
-
-export default NodeOrEdgeList;
+import { TopologyMetrics } from '../Topology.interfaces';
 
 type Totals = {
   totalBytesIn: Record<string, number>;
@@ -64,7 +41,7 @@ type Totals = {
   totalByteRateOut: Record<string, number>;
 };
 
-const ProcessesGrouped: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = function ({ data, metrics }) {
+const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = function ({ data, metrics }) {
   const names = data.map((itemSelected) => itemSelected.name);
 
   const initialTotals: Totals = {
@@ -274,127 +251,4 @@ const ProcessesGrouped: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }
   );
 };
 
-const ProcessesPairsGrouped: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics | null }> = function ({
-  data,
-  metrics
-}) {
-  return (
-    <DataList aria-label="">
-      {data.map((itemSelected) => {
-        const sourceName = itemSelected.sourceName;
-        const destinationName = itemSelected.destinationName;
-
-        let bytes = 0;
-        metrics?.bytesByProcessPairs.forEach(({ metric, value }) => {
-          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
-            bytes = Number(value[1]);
-          }
-
-          return metric;
-        });
-
-        let byteRate = 0;
-        metrics?.byteRateByProcessPairs.forEach(({ metric, value }) => {
-          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
-            byteRate = Number(value[1]);
-          }
-
-          return metric;
-        });
-
-        let latency = 0;
-        metrics?.latencyByProcessPairs.forEach(({ metric, value }) => {
-          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
-            latency = Number(value[1]);
-          }
-
-          return metric;
-        });
-
-        return (
-          <DataListItem key={itemSelected.identity}>
-            <DataListItemRow>
-              <DataListItemCells
-                dataListCells={[
-                  <DataListCell key="primary-content">
-                    <DescriptionList>
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>{TopologyLabels.Source}</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          <ResourceIcon type="process" />
-                          <Link
-                            to={`${ProcessesRoutesPaths.Processes}/${itemSelected?.sourceName}@${itemSelected?.sourceId}`}
-                          >
-                            {itemSelected.sourceName}
-                          </Link>
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>{TopologyLabels.Destination}</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          <ResourceIcon type="process" />
-                          <Link
-                            to={`${ProcessesRoutesPaths.Processes}/${itemSelected?.destinationName}@${itemSelected?.destinationId}`}
-                          >
-                            {itemSelected.destinationName}
-                          </Link>
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-
-                      {!!itemSelected.protocol && (
-                        <DescriptionListGroup>
-                          <DescriptionListTerm>{TopologyLabels.Protocol}</DescriptionListTerm>
-                          <DescriptionListDescription>{itemSelected.protocol}</DescriptionListDescription>
-                        </DescriptionListGroup>
-                      )}
-
-                      <Flex>
-                        {!!bytes && (
-                          <DescriptionListGroup>
-                            <DescriptionListTerm>{TopologyLabels.CheckboxShowTotalBytes}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatBytes(bytes)}`}</DescriptionListDescription>
-                          </DescriptionListGroup>
-                        )}
-
-                        {!!byteRate && (
-                          <DescriptionListGroup>
-                            <DescriptionListTerm>{TopologyLabels.CheckboxShowCurrentByteRate}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatByteRate(byteRate)}`}</DescriptionListDescription>
-                          </DescriptionListGroup>
-                        )}
-
-                        {!!latency && (
-                          <DescriptionListGroup>
-                            <DescriptionListTerm>{TopologyLabels.CheckboxShowLatency}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatLatency(latency)}`}</DescriptionListDescription>
-                          </DescriptionListGroup>
-                        )}
-                      </Flex>
-                    </DescriptionList>
-                  </DataListCell>,
-                  <DataListAction
-                    key={`actions-${itemSelected.identity}`}
-                    id={`full-page-action-${itemSelected.identity}`}
-                    aria-labelledby={`full-page-item1 full-page-action-${itemSelected.identity}`}
-                    aria-label={`Actions ${itemSelected.identity}`}
-                  >
-                    <Stack>
-                      <StackItem>
-                        <Link
-                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${ProcessesLabels.ProcessPairs}@${itemSelected.identity}@${itemSelected.protocol}`}
-                        >
-                          {TopologyLabels.TopologyModalAction2}
-                        </Link>
-                      </StackItem>
-                    </Stack>
-                  </DataListAction>
-                ]}
-              />
-            </DataListItemRow>
-          </DataListItem>
-        );
-      })}
-    </DataList>
-  );
-};
+export default NodeDetails;
