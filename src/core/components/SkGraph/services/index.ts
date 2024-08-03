@@ -1,5 +1,7 @@
 import { ComboData, EdgeData, NodeData } from '@antv/g6';
 
+import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
+
 import { graphIconsMap } from '../Graph.config';
 import {
   GraphCombo,
@@ -247,21 +249,6 @@ function markPairs(data: GraphEdge[]) {
       hasPair
     };
   });
-}
-
-function ellipsisInTheMiddle(str: string) {
-  const maxLength = 20;
-  const leftPartLength = 15;
-  const rightPartLength = 5;
-
-  if (str.length <= maxLength) {
-    return str;
-  }
-
-  const leftPart = str.substring(0, leftPartLength);
-  const rightPart = str.substring(str.length - rightPartLength);
-
-  return `${leftPart}...${rightPart}`;
 }
 
 /**

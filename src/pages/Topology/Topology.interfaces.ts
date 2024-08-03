@@ -56,7 +56,7 @@ export interface DisplayOptions {
 export interface NodeOrEdgeListProps {
   ids?: string[];
   items: ProcessResponse[] | ProcessPairsResponse[];
-  metrics: TopologyMetrics | null;
+  metrics: TopologyMetrics;
   modalType: 'process' | 'processPair';
 }
 
