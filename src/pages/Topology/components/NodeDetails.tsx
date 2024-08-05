@@ -63,7 +63,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     return acc;
   }, initialTotals);
 
-  const byteRates = metrics?.byteRateByProcessPairs.reduce((acc, { metric, value }) => {
+  const byteRate = metrics?.byteRateByProcessPairs.reduce((acc, { metric, value }) => {
     if (names.includes(metric.sourceProcess) && metric.direction === FlowDirection.Incoming) {
       acc.totalByteRateOut[metric.sourceProcess] = (acc.totalByteRateOut[metric.sourceProcess] || 0) + Number(value[1]);
     }
@@ -75,8 +75,8 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     return acc;
   }, initialTotals);
 
-  const byteRateInValues = Object.values(byteRates.totalByteRateIn);
-  const byteRateOutValues = Object.values(byteRates.totalByteRateOut);
+  const byteRateInValues = Object.values(byteRate.totalByteRateIn);
+  const byteRateOutValues = Object.values(byteRate.totalByteRateOut);
 
   const totalBytesInSum = Object.values(bytes.totalBytesIn).reduce((acc, val) => acc + val, 0);
   const totalBytesOutSum = Object.values(bytes.totalBytesOut).reduce((acc, val) => acc + val, 0);
@@ -185,8 +185,8 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                             <Th>
                               <b>{ProcessesLabels.ByteRate}</b>
                             </Th>
-                            <Td>{formatBytes(byteRates?.totalByteRateIn[itemSelected.name] || 0)}</Td>
-                            <Td>{formatBytes(byteRates?.totalByteRateOut[itemSelected.name] || 0)}</Td>
+                            <Td>{formatBytes(byteRate?.totalByteRateIn[itemSelected.name] || 0)}</Td>
+                            <Td>{formatBytes(byteRate?.totalByteRateOut[itemSelected.name] || 0)}</Td>
                           </Tr>
                           <Tr>
                             <Th>
