@@ -7,8 +7,8 @@ export const NODE_LABEL_TEXT_COLOR = HexColors.Black900;
 export const NODE_LABEL_BACKGROUND_COLOR = HexColors.White;
 export const NODE_SELECT_BORDER = HexColors.DefaultHighLight;
 export const NODE_HIGHLIGHT_BORDER = HexColors.DefaultHighLight;
-export const NODE_BADGE_GROUP_ELEMENTS_BACKGROUND = HexColors.DefaultStatusBackground;
-export const NODE_BADGE_GROUP_ELEMENTS_TEXT = HexColors.DefaultStatusText;
+export const NODE_BADGE_GROUP_ELEMENTS_BACKGROUND = HexColors.Black500;
+export const NODE_BADGE_GROUP_ELEMENTS_TEXT = HexColors.White;
 
 export const EDGE_LINE_COLOR = HexColors.DefaultEdge;
 export const EDGE_TERMINAL_COLOR = HexColors.DefaultEdge;
