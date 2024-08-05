@@ -7,7 +7,7 @@ import processesPairsData from '@mocks/data/PROCESS_PAIRS.json';
 import processesData from '@mocks/data/PROCESSES.json';
 import { loadMockServer } from '@mocks/server';
 
-import NodeOrEdgeList from '../components/NodeOrEdgeList';
+import TopologyDetails from '../components/TopologyDetails';
 
 const processesResults = processesData.results as ProcessResponse[];
 const processPairsResults = processesPairsData.results as ProcessPairsResponse[];
@@ -31,12 +31,58 @@ describe('NodeOrEdgeList', () => {
 
     render(
       <Wrapper>
-        <NodeOrEdgeList ids={ids} items={items} modalType="process" metrics={null} />
+        <TopologyDetails
+          ids={ids}
+          items={items}
+          modalType="process"
+          metrics={{
+            bytesByProcessPairs: [
+              {
+                metric: {
+                  destProcess: processesResults[0].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[1].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              },
+              {
+                metric: {
+                  destProcess: processesResults[1].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[0].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            byteRateByProcessPairs: [
+              {
+                metric: {
+                  destProcess: processesResults[0].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[1].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              },
+              {
+                metric: {
+                  destProcess: processesResults[1].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[0].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            latencyByProcessPairs: []
+          }}
+        />
       </Wrapper>
     );
 
     expect(screen.getByText(processesResults[0].name)).toBeInTheDocument();
-    expect(screen.getByText(`${processesResults[0].sourceHost}/${processesResults[0].hostName}`)).toBeInTheDocument();
     expect(screen.getAllByText(processesResults[0].groupName)[0]).toBeInTheDocument();
     expect(screen.getAllByText(processesResults[0].parentName)[0]).toBeInTheDocument();
     expect(
@@ -48,17 +94,51 @@ describe('NodeOrEdgeList', () => {
 
   it('should render a list of process pairs when modalType is "process-pair"', () => {
     const items = processPairsResults;
-    const ids = [processPairsResults[3].identity, processPairsResults[2].identity];
+    const ids = [processPairsResults[2].identity];
 
     render(
       <Wrapper>
-        <NodeOrEdgeList ids={ids} items={items} modalType="processPair" metrics={null} />
+        <TopologyDetails
+          ids={ids}
+          items={items}
+          modalType="processPair"
+          metrics={{
+            bytesByProcessPairs: [
+              {
+                metric: {
+                  destProcess: processPairsResults[2].destinationName,
+                  sourceProcess: processPairsResults[2].sourceName
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            byteRateByProcessPairs: [
+              {
+                metric: {
+                  destProcess: processPairsResults[2].destinationName,
+                  sourceProcess: processPairsResults[2].sourceName
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            latencyByProcessPairs: [
+              {
+                metric: {
+                  destProcess: processPairsResults[2].destinationName,
+                  sourceProcess: processPairsResults[2].sourceName
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ]
+          }}
+        />
       </Wrapper>
     );
 
     expect(screen.getByText(processPairsResults[2].sourceName)).toBeInTheDocument();
     expect(screen.getByText(processPairsResults[2].destinationName)).toBeInTheDocument();
-    expect(screen.getByText(processPairsResults[3].sourceName)).toBeInTheDocument();
-    expect(screen.getByText(processPairsResults[3].destinationName)).toBeInTheDocument();
   });
 });

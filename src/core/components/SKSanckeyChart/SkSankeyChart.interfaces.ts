@@ -1,16 +1,3 @@
-import { VarColors } from '@config/colors';
-
-export interface ThemesProps {
-  labelTextColor: VarColors;
-  fontFamily: string;
-  fontSize: number;
-  tooltip: { container: { color: string } };
-}
-
-export interface Themes {
-  [key: string]: ThemesProps;
-}
-
 export interface SkSankeyChartNode {
   id: string;
   nodeColor?: string;

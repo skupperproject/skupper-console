@@ -61,6 +61,6 @@ export enum ProcessesLabels {
   Latency = 'Latency',
   Name = 'Name',
   Component = 'Component',
-  ByteRateRx = 'Rx byte rate',
+  ByteRateRx = 'Byte rate In',
   Exposed = 'Exposed'
 }
