@@ -1,6 +1,10 @@
 import { FC } from 'react';
 
 import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
   DataList,
   DataListAction,
   DataListCell,
@@ -15,6 +19,7 @@ import {
   Stack,
   StackItem
 } from '@patternfly/react-core';
+import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { ProcessPairsResponse } from '@API/REST.interfaces';
@@ -26,44 +31,89 @@ import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processe
 import { TopologyLabels } from '../Topology.enum';
 import { TopologyMetrics } from '../Topology.interfaces';
 
-const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics | null }> = function ({
-  data,
-  metrics
-}) {
+const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }> = function ({ data, metrics }) {
+  const sourceNames = data.map((itemSelected) => itemSelected.sourceName);
+  const destinationNames = data.map((itemSelected) => itemSelected.destinationName);
+
+  const bytes = metrics.bytesByProcessPairs.reduce(
+    (acc, { metric, value }) => {
+      const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
+
+      if (sourceNames.includes(metric.sourceProcess) && destinationNames.includes(metric.destProcess)) {
+        acc[id] = (acc[id] || 0) + Number(value[1]);
+      }
+
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  const byteRate = metrics.byteRateByProcessPairs.reduce(
+    (acc, { metric, value }) => {
+      const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
+
+      if (sourceNames.includes(metric.sourceProcess) && destinationNames.includes(metric.destProcess)) {
+        acc[id] = (acc[id] || 0) + Number(value[1]);
+      }
+
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  const latency = metrics.latencyByProcessPairs.reduce(
+    (acc, { metric, value }) => {
+      const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
+
+      if (sourceNames.includes(metric.sourceProcess) && destinationNames.includes(metric.destProcess)) {
+        acc[id] = (acc[id] || 0) + Number(value[1]);
+      }
+
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  const totalByteRateSum = Object.values(byteRate).reduce((acc, val) => acc + val, 0);
+  const totalBytesSum = Object.values(bytes).reduce((acc, val) => acc + val, 0);
+  const totalLatencySum = Object.values(latency).reduce((acc, val) => acc + val, 0);
+
   return (
-    <DataList aria-label="">
-      {data.map((itemSelected) => {
-        const sourceName = itemSelected.sourceName;
-        const destinationName = itemSelected.destinationName;
+    <>
+      <Card isPlain>
+        <CardHeader>
+          <CardTitle>Summary</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Table borders={false} variant="compact">
+            <Tbody>
+              <Tr>
+                <Td>
+                  <b>{ProcessesLabels.ByteRate}</b>
+                </Td>
+                <Td>{formatByteRate(totalByteRateSum)}</Td>
+              </Tr>
 
-        let bytes = 0;
-        metrics?.bytesByProcessPairs.forEach(({ metric, value }) => {
-          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
-            bytes = Number(value[1]);
-          }
+              <Tr>
+                <Td>
+                  <b>{ProcessesLabels.Latency}</b>
+                </Td>
+                <Td>{formatLatency(totalLatencySum)}</Td>
+              </Tr>
 
-          return metric;
-        });
+              <Tr>
+                <Td>
+                  <b>{ProcessesLabels.Bytes}</b>
+                </Td>
+                <Td>{formatBytes(totalBytesSum)}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </CardBody>
+      </Card>
 
-        let byteRate = 0;
-        metrics?.byteRateByProcessPairs.forEach(({ metric, value }) => {
-          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
-            byteRate = Number(value[1]);
-          }
-
-          return metric;
-        });
-
-        let latency = 0;
-        metrics?.latencyByProcessPairs.forEach(({ metric, value }) => {
-          if (metric.sourceProcess === sourceName && metric.destProcess === destinationName) {
-            latency = Number(value[1]);
-          }
-
-          return metric;
-        });
-
-        return (
+      <DataList aria-label="">
+        {data.map((itemSelected) => (
           <DataListItem key={itemSelected.identity}>
             <DataListItemRow>
               <DataListItemCells
@@ -105,21 +155,21 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics |
                         {!!bytes && (
                           <DescriptionListGroup>
                             <DescriptionListTerm>{TopologyLabels.CheckboxShowTotalBytes}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatBytes(bytes)}`}</DescriptionListDescription>
+                            <DescriptionListDescription>{`${formatBytes(bytes[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
                           </DescriptionListGroup>
                         )}
 
                         {!!byteRate && (
                           <DescriptionListGroup>
                             <DescriptionListTerm>{TopologyLabels.CheckboxShowCurrentByteRate}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatByteRate(byteRate)}`}</DescriptionListDescription>
+                            <DescriptionListDescription>{`${formatByteRate(byteRate[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
                           </DescriptionListGroup>
                         )}
 
                         {!!latency && (
                           <DescriptionListGroup>
                             <DescriptionListTerm>{TopologyLabels.CheckboxShowLatency}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatLatency(latency)}`}</DescriptionListDescription>
+                            <DescriptionListDescription>{`${formatLatency(latency[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
                           </DescriptionListGroup>
                         )}
                       </Flex>
@@ -145,9 +195,9 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics |
               />
             </DataListItemRow>
           </DataListItem>
-        );
-      })}
-    </DataList>
+        ))}
+      </DataList>
+    </>
   );
 };
 
