@@ -124,7 +124,7 @@ const DEFAULT_NODE_CONFIG: NodeOptions = {
 };
 
 // EDGE
-export const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
+const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
   style: {
     visibility: 'visible',
     opacity: 1,

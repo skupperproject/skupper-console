@@ -1,6 +1,6 @@
 import { LayoutOptions } from '@antv/g6';
 
-export type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
+type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
 
 export type GraphIconsMap = {
   [key in GraphIconKeys]: HTMLImageElement;

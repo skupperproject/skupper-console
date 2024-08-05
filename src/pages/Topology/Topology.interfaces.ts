@@ -1,18 +1,5 @@
 import { PrometheusMetric, PrometheusLabels } from '@API/Prometheus.interfaces';
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import { CustomItemsProps, GraphIconKeys } from '@core/components/SkGraph/Graph.interfaces';
-
-export interface Entity {
-  id: string;
-  combo?: string;
-  comboName?: string;
-  groupId?: string;
-  groupName?: string;
-  label: string;
-  iconName: GraphIconKeys;
-  type?: CustomItemsProps;
-  groupedNodeCount?: number;
-}
 
 export interface TopologyMetrics {
   bytesByProcessPairs: PrometheusMetric<'vector'>[];
