@@ -143,29 +143,29 @@ export const TopologyController = {
 
   configureEdges: (edges: GraphEdge[], options?: DisplayOptions): GraphEdge[] =>
     edges.map((edge) => {
-      const byteRate = options?.showLinkByteRate ? edge?.metrics?.byteRate : undefined;
-      const bytes = options?.showLinkBytes ? edge?.metrics?.bytes : undefined;
-      const latency = options?.showLinkLatency ? edge?.metrics?.latency : undefined;
+      const byteRate = options?.showLinkByteRate ? edge?.metrics?.byteRate || 0 : undefined;
+      const bytes = options?.showLinkBytes ? edge?.metrics?.bytes || 0 : undefined;
+      const latency = options?.showLinkLatency ? edge?.metrics?.latency || 0 : undefined;
 
       // The same edge has RX === Tx
       const showRxMetric = !!options?.showInboundMetrics && !(edge.source === edge.target);
 
-      const byteRateRx = showRxMetric && byteRate ? edge?.metrics?.byteRateReverse : undefined;
-      const bytesRx = showRxMetric && bytes ? edge?.metrics?.bytesReverse : undefined;
-      const latencyRx = showRxMetric && latency ? edge?.metrics?.latencyReverse : undefined;
+      const byteRateRx = showRxMetric && byteRate !== undefined ? edge?.metrics?.byteRateReverse || 0 : undefined;
+      const bytesRx = showRxMetric && bytes !== undefined ? edge?.metrics?.bytesReverse || 0 : undefined;
+      const latencyRx = showRxMetric && latency !== undefined ? edge?.metrics?.latencyReverse || 0 : undefined;
 
       const metricsString = [
-        bytes && `${formatBytes(bytes)}`,
-        byteRate && `${formatByteRate(byteRate)}`,
-        latency && `${formatLatency(latency)}`
+        bytes !== undefined && `${formatBytes(bytes)}`,
+        byteRate !== undefined && `${formatByteRate(byteRate)}`,
+        latency !== undefined && `${formatLatency(latency)}`
       ]
         .filter(Boolean)
         .join(', ');
 
       const metricsRxString = [
-        byteRateRx && `(${formatByteRate(byteRateRx)})`,
-        bytesRx && `(${formatBytes(bytesRx)})`,
-        latencyRx && `(${formatLatency(latencyRx)})`
+        bytesRx !== undefined && `(${formatBytes(bytesRx)})`,
+        byteRateRx !== undefined && `(${formatByteRate(byteRateRx)})`,
+        latencyRx !== undefined && `(${formatLatency(latencyRx)})`
       ]
         .filter(Boolean)
         .join(', ');

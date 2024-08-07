@@ -22,7 +22,7 @@ export interface ProcessPairsContentProps {
   processPairId: string;
   sourceId: string;
   destinationId: string;
-  protocol: AvailableProtocols;
+  protocol: AvailableProtocols | 'undefined';
 }
 
 // Process Details component
