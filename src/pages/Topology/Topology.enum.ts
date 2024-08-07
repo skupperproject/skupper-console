@@ -71,6 +71,7 @@ export enum TopologyLabels {
   Source = 'Source',
   Destination = 'Destination',
   Protocol = 'Protocol',
+  TitleGroupDisplayOptionsLinkType = 'Link type',
   TitleGroupDisplayOptionsMenuMetrics = 'Metrics',
   TitleGroupDisplayOptionsMenuMetricVisualization = 'Metric Visualization',
   TitleGroupDisplayOptionsMenuOther = 'Other'

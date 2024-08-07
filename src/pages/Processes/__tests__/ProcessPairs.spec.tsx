@@ -74,7 +74,7 @@ describe('Begin testing the Processes component', () => {
   });
 
   it('should render render the TCP Process Pairs Content Component and the tab Open connection is active', async () => {
-    const { queryByTestId, getByText, getByTestId } = render(
+    const { queryByTestId, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairsContent
@@ -92,7 +92,6 @@ describe('Begin testing the Processes component', () => {
     });
 
     expect(getByTestId('tcp-active-connections-table')).toBeInTheDocument();
-    expect(getByText('Connection history (0)').closest('button')).toBeDisabled();
   });
 
   it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
@@ -117,33 +116,4 @@ describe('Begin testing the Processes component', () => {
 
     expect(getByTestId('tcp-old-connections-table')).toBeInTheDocument();
   });
-
-  // it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
-  //   const { handleGetFilters } = renderHook(() =>
-  //     useProcessPairsContent({
-  //       protocol: AvailableProtocols.Tcp
-  //     })
-  //   );
-
-  //   const { queryByTestId, getByText } = render(
-  //     <Wrapper>
-  //       <Suspense fallback={<LoadingPage />}>
-  //         <ProcessPairsContent
-  //           processPairId={processPairsResultPayment2ToOp.identity}
-  //           sourceId={processPairsResultPayment2ToOp.sourceId}
-  //           destinationId={processPairsResultPayment2ToOp.destinationId}
-  //           protocol={AvailableProtocols.Tcp}
-  //         />
-  //       </Suspense>
-  //     </Wrapper>
-  //   );
-
-  //   await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
-  //     timeout: waitForElementToBeRemovedTimeout
-  //   });
-
-  //   fireEvent.click(getByText('Duration'));
-
-  //   expect(handleGetFilters).toHaveBeenCalledTimes(1);
-  // });
 });

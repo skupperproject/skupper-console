@@ -41,8 +41,7 @@ export const flowPairsComponentsTable = {
   TimestampCell: (props: LinkCellProps<FlowPairsResponse>) => EndTimeCell(props),
   TcpTTFB: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
-  DurationCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    DurationCell({ ...props, endTime: props.data.endTime || Date.now() * 1000, startTime: props.data.startTime }),
+  DurationCell,
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes }),
   HttpStatusCell: (props: { data?: FlowPairsResponse }) =>

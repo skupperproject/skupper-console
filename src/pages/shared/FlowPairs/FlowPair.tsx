@@ -25,24 +25,13 @@ import { getTestsIds } from '@config/testIds';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { formatTimeInterval } from '@core/utils/formatTimeInterval';
 import { formatTraceBySites } from '@core/utils/formatTrace';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import { FlowPairLabels } from './FlowPair.enum';
 
 const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
-  const {
-    forwardFlow,
-    counterFlow,
-    protocol,
-    endTime: endTimeMicroSeconds,
-    startTime: startTimeMicroSenconds,
-    identity,
-    flowTrace
-  } = flowPair;
-
-  const duration = formatTimeInterval(endTimeMicroSeconds || Date.now() * 1000, startTimeMicroSenconds);
+  const { forwardFlow, counterFlow, protocol, endTime: endTimeMicroSeconds, identity, flowTrace, duration } = flowPair;
 
   const isHtpp = protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2;
 
@@ -63,10 +52,10 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
                   <DescriptionListGroup>
                     <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
                     <DescriptionListDescription>{formatTraceBySites(flowTrace) || '-'}</DescriptionListDescription>
-                    {duration && (
+                    {!!duration && (
                       <>
                         <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
-                        <DescriptionListDescription>{duration}</DescriptionListDescription>
+                        <DescriptionListDescription>{formatLatency(duration)}</DescriptionListDescription>
                       </>
                     )}
                   </DescriptionListGroup>
@@ -94,10 +83,10 @@ const FlowPair: FC<{ flowPair: FlowPairsResponse }> = function ({ flowPair }) {
                     <DescriptionListDescription>{forwardFlow.result || counterFlow.result}</DescriptionListDescription>
                     <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
                     <DescriptionListDescription>{formatTraceBySites(flowTrace)}</DescriptionListDescription>
-                    {duration && (
+                    {!!duration && (
                       <>
                         <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
-                        <DescriptionListDescription>{duration}</DescriptionListDescription>
+                        <DescriptionListDescription>{formatLatency(duration)}</DescriptionListDescription>
                       </>
                     )}
                   </DescriptionListGroup>

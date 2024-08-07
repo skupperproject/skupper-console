@@ -81,7 +81,7 @@ export const SHOW_DATA_LINKS = 'show-site-data-links';
 
 export const displayOptionsForSites: DisplaySelectProps[] = [
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
+    title: TopologyLabels.TitleGroupDisplayOptionsLinkType,
     items: [
       {
         key: SHOW_ROUTER_LINKS,
@@ -96,7 +96,7 @@ export const displayOptionsForSites: DisplaySelectProps[] = [
     ]
   },
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetricVisualization,
+    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
     items: [
       {
         key: SHOW_LINK_BYTES,
@@ -116,7 +116,7 @@ export const displayOptionsForSites: DisplaySelectProps[] = [
     ]
   },
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuOther,
+    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetricVisualization,
     items: [
       {
         key: SHOW_LINK_METRIC_DISTRIBUTION,

@@ -19,6 +19,8 @@ import { ProcessPairsFlowsProps, RemoteFilterOptionsProtocolMap } from '../Proce
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
+const TAB_3_KEY = 'http2Requests';
+const TAB_4_KEY = 'httpRequests';
 
 const initPaginatedFlowPairsQueryParams: RemoteFilterOptions = {
   offset: 0,
@@ -58,7 +60,7 @@ const initPaginatedQueryParams: RemoteFilterOptionsProtocolMap = {
   }
 };
 
-const useProcessPairsContent = ({ protocol }: { protocol: AvailableProtocols }) => {
+const useProcessPairsContent = ({ protocol }: { protocol: AvailableProtocols | 'undefined' }) => {
   const [queryParamsPaginated, setQueryParamsPaginated] =
     useState<RemoteFilterOptionsProtocolMap>(initPaginatedQueryParams);
 
@@ -97,7 +99,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
     useFlowPairsQuery(
       queryParamsPaginated[AvailableProtocols.Http],
       processPairId,
-      AvailableProtocols.Http === protocol
+      AvailableProtocols.Http === protocol || protocol === 'undefined'
     )
   );
 
@@ -105,7 +107,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
     useFlowPairsQuery(
       queryParamsPaginated[AvailableProtocols.Http2],
       processPairId,
-      AvailableProtocols.Http2 === protocol
+      AvailableProtocols.Http2 === protocol || protocol === 'undefined'
     )
   );
 
@@ -113,7 +115,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
     useFlowPairsQuery(
       queryParamsPaginated[AvailableProtocols.Tcp].active,
       processPairId,
-      AvailableProtocols.Tcp === protocol
+      AvailableProtocols.Tcp === protocol || protocol === 'undefined'
     )
   );
 
@@ -121,7 +123,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
     useFlowPairsQuery(
       queryParamsPaginated[AvailableProtocols.Tcp].old,
       processPairId,
-      AvailableProtocols.Tcp === protocol
+      AvailableProtocols.Tcp === protocol || protocol === 'undefined'
     )
   );
 
@@ -131,7 +133,11 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
       ? TAB_1_KEY
       : oldConnectionsCount
         ? TAB_2_KEY
-        : '';
+        : http2RequestsCount
+          ? TAB_3_KEY
+          : httpRequestsCount
+            ? TAB_4_KEY
+            : '';
 
   return (
     <>
@@ -147,62 +153,79 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
         </Card>
       )}
 
-      {((protocol === AvailableProtocols.Tcp && !!activeConnectionsCount) || !!oldConnectionsCount) && (
+      {(!!activeConnectionsCount || !!oldConnectionsCount || !!http2RequestsCount || !!httpRequestsCount) && (
         <Tabs activeKey={activeTab} onSelect={handleTabClick} component="nav" isBox>
-          <Tab
-            eventKey={TAB_1_KEY}
-            title={<TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>}
-          >
-            <FlowPairs
-              data-testid={'tcp-active-connections-table'}
-              columns={activeTcpColumns}
-              rows={activeConnections}
-              paginationTotalRows={activeConnectionsCount}
-              pagination={true}
-              paginationPageSize={DEFAULT_PAGINATION_SIZE}
-              onGetFilters={(filters: RemoteFilterOptions) => handleGetFilters(filters, 'active')}
-            />
-          </Tab>
-          <Tab
-            disabled={oldConnectionsCount === 0}
-            eventKey={TAB_2_KEY}
-            title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
-          >
-            <FlowPairs
-              data-testid={'tcp-old-connections-table'}
-              columns={oldTcpColumns}
-              rows={oldConnections}
-              paginationTotalRows={oldConnectionsCount}
-              pagination={true}
-              paginationPageSize={DEFAULT_PAGINATION_SIZE}
-              onGetFilters={(filters: RemoteFilterOptions) => handleGetFilters(filters, 'old')}
-            />
-          </Tab>
+          {!!activeConnectionsCount && (
+            <Tab
+              eventKey={TAB_1_KEY}
+              title={<TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>}
+            >
+              <FlowPairs
+                data-testid={'tcp-active-connections-table'}
+                columns={activeTcpColumns}
+                rows={activeConnections}
+                paginationTotalRows={activeConnectionsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={(filters: RemoteFilterOptions) => handleGetFilters(filters, 'active')}
+              />
+            </Tab>
+          )}
+
+          {!!oldConnectionsCount && (
+            <Tab
+              disabled={oldConnectionsCount === 0}
+              eventKey={TAB_2_KEY}
+              title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
+            >
+              <FlowPairs
+                data-testid={'tcp-old-connections-table'}
+                columns={oldTcpColumns}
+                rows={oldConnections}
+                paginationTotalRows={oldConnectionsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={(filters: RemoteFilterOptions) => handleGetFilters(filters, 'old')}
+              />
+            </Tab>
+          )}
+          {!!http2RequestsCount && (
+            <Tab
+              disabled={http2RequestsCount === 0}
+              eventKey={TAB_3_KEY}
+              title={<TabTitleText>{`${ProcessesLabels.Http2Requests} (${http2RequestsCount})`}</TabTitleText>}
+            >
+              <FlowPairs
+                data-testid={'http2-table'}
+                columns={httpColumns}
+                rows={http2Requests}
+                paginationTotalRows={http2RequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={handleGetFilters}
+              />
+            </Tab>
+          )}
+
+          {!!httpRequestsCount && (
+            <Tab
+              disabled={httpRequestsCount === 0}
+              eventKey={TAB_4_KEY}
+              title={<TabTitleText>{`${ProcessesLabels.HttpRequests} (${httpRequestsCount})`}</TabTitleText>}
+            >
+              <FlowPairs
+                data-testid={'http-table'}
+                title={ProcessesLabels.HttpRequests}
+                columns={httpColumns}
+                rows={httpRequests}
+                paginationTotalRows={httpRequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={handleGetFilters}
+              />
+            </Tab>
+          )}
         </Tabs>
-      )}
-      {protocol === AvailableProtocols.Http2 && !!http2RequestsCount && (
-        <FlowPairs
-          data-testid={'http2-table'}
-          title={ProcessesLabels.Http2Requests}
-          columns={httpColumns}
-          rows={http2Requests}
-          paginationTotalRows={http2RequestsCount}
-          pagination={true}
-          paginationPageSize={DEFAULT_PAGINATION_SIZE}
-          onGetFilters={handleGetFilters}
-        />
-      )}
-      {protocol === AvailableProtocols.Http && !!httpRequestsCount && (
-        <FlowPairs
-          data-testid={'http-table'}
-          title={ProcessesLabels.HttpRequests}
-          columns={httpColumns}
-          rows={httpRequests}
-          paginationTotalRows={httpRequestsCount}
-          pagination={true}
-          paginationPageSize={DEFAULT_PAGINATION_SIZE}
-          onGetFilters={handleGetFilters}
-        />
       )}
     </>
   );
@@ -210,7 +233,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
 
 export default ProcessPairsFlows;
 
-const useFlowPairsQuery = (queryParams: RemoteFilterOptions, processPairId: string, enabled: boolean) => {
+const useFlowPairsQuery = (queryParams: RemoteFilterOptions, processPairId: string, enabled = true) => {
   const { data } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetFlowPairs, queryParams, processPairId],
     queryFn: () =>
