@@ -5,7 +5,7 @@ import { timeAgo } from '@core/utils/timeAgo';
 
 import { EndTimeProps } from './EndTime.interfaces';
 
-const EndTimeCell = function <T>({ value }: EndTimeProps<T>) {
+const SkEndTimeCell = function <T>({ value }: EndTimeProps<T>) {
   if (!value) {
     return null;
   }
@@ -24,4 +24,4 @@ const EndTimeCell = function <T>({ value }: EndTimeProps<T>) {
   );
 };
 
-export default EndTimeCell;
+export default SkEndTimeCell;

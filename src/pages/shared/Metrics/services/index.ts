@@ -5,6 +5,7 @@ import {
   getTimeSeriesValuesFromPrometheusData,
   getTimeSeriesFromPrometheusData
 } from '@API/Prometheus.utils';
+import { Quantiles } from '@API/REST.enum';
 import { calculateStep, defaultTimeInterval } from '@config/prometheus';
 import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
@@ -48,10 +49,10 @@ const MetricsController = {
 
     try {
       const [quantile50latency, quantile90latency, quantile95latency, quantile99latency] = await Promise.all([
-        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.5 }),
-        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.9 }),
-        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.95 }),
-        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: 0.99 })
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: Quantiles.Median }),
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: Quantiles.Ninety }),
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: Quantiles.NinetyFive }),
+        PrometheusApi.fetchPercentilesByLeInTimeRange({ ...params, quantile: Quantiles.NinetyNine })
       ]);
 
       const latenciesData = normalizeLatencies({

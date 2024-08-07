@@ -3,6 +3,7 @@ import { useCallback, useState, startTransition } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { Role } from '@API/REST.enum';
 import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
@@ -15,7 +16,7 @@ import { ComponentLabels, QueriesComponent } from '../ProcessGroups.enum';
 
 const initComponentsQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processGroupRole: ['remote', 'external'],
+  processGroupRole: [Role.Remote, Role.External],
   endTime: 0
 };
 

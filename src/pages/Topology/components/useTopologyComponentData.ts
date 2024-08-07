@@ -1,13 +1,14 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { Role } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { QueriesComponent } from '@pages/ProcessGroups/ProcessGroups.enum';
 
 import { QueriesTopology } from '../Topology.enum';
 
 const componentQueryParams = {
-  processGroupRole: ['remote', 'external'],
+  processGroupRole: [Role.Remote, Role.External],
   endTime: 0
 };
 

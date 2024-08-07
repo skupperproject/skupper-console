@@ -18,7 +18,7 @@ import {
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { FlowDirection } from '@API/REST.enum';
+import { Direction, Role } from '@API/REST.enum';
 import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -29,7 +29,7 @@ import { DetailsProps } from '../Sites.interfaces';
 import { queryDetails } from '../Sites.queries';
 
 const processQueryParams = { endTime: 0 };
-const linkQueryParams = { direction: FlowDirection.Outgoing };
+const linkQueryParams = { direction: Direction.Outgoing };
 
 const Details: FC<DetailsProps> = function ({ site }) {
   const { identity: siteId, nameSpace, siteVersion, platform } = site;
@@ -45,7 +45,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
 
   const { linkSiteIds } = SitesController.bindLinksWithSiteIds([site], links)[0];
   const linkedSites = sites.filter(({ identity }) => linkSiteIds.map((id) => id.targetId).includes(identity));
-  const processResults = processesData.results.filter(({ processRole }) => processRole !== 'internal');
+  const processResults = processesData.results.filter(({ processRole }) => processRole !== Role.Internal);
 
   return (
     <Grid hasGutter sm={12} xl={6} xl2={4}>

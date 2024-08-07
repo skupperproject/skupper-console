@@ -132,7 +132,8 @@ const ProcessGroup = function () {
               customCells={{
                 linkCell: CustomProcessCells.linkCell,
                 linkCellSite: CustomProcessCells.linkCellSite,
-                TimestampCell: CustomProcessCells.TimestampCell
+                TimestampCell: CustomProcessCells.TimestampCell,
+                ExposureCell: CustomProcessCells.ExposureCell
               }}
             />
           )}

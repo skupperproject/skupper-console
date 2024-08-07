@@ -1,6 +1,6 @@
 import { createServer, Response } from 'miragejs';
 
-import { AvailableProtocols, FlowDirection } from '@API/REST.enum';
+import { AvailableProtocols, Direction } from '@API/REST.enum';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -123,7 +123,7 @@ mockSitePairsForPerf.forEach((_, index) => {
       mode: 'interior',
       name: '',
       linkCost: 1,
-      direction: FlowDirection.Outgoing,
+      direction: Direction.Outgoing,
       sourceSiteId: site1.identity,
       destinationSiteId: site2.identity
     },
@@ -136,7 +136,7 @@ mockSitePairsForPerf.forEach((_, index) => {
       mode: 'interior',
       name: '',
       linkCost: 1,
-      direction: FlowDirection.Incoming,
+      direction: Direction.Incoming,
       sourceSiteId: site2.identity,
       destinationSiteId: site1.identity
     }

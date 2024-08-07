@@ -1,3 +1,4 @@
+import { Role } from '@API/REST.enum';
 import { ComponentPairsResponse, ComponentResponse } from '@API/REST.interfaces';
 import { GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 
@@ -16,8 +17,8 @@ const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
   entities.map(({ identity, name, processGroupRole: role, processCount }) => ({
     id: identity,
     label: name,
-    iconName: role === 'internal' ? 'skupper' : 'component',
-    type: role === 'remote' ? shape.remote : shape.bound,
+    iconName: role === Role.Internal ? 'skupper' : 'component',
+    type: role === Role.Remote ? shape.remote : shape.bound,
     groupedNodeCount: processCount
   }));
 

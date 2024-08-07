@@ -20,10 +20,10 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { FlowDirection } from '@API/REST.enum';
+import { Direction } from '@API/REST.enum';
 import { ProcessResponse } from '@API/REST.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
-import SkExposureCell from '@core/components/SkExposureCell';
+import SkExposedCell from '@core/components/SkExposedCell';
 import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
@@ -52,11 +52,11 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
   };
 
   const bytes = metrics?.bytesByProcessPairs.reduce((acc, { metric, value }) => {
-    if (names.includes(metric.sourceProcess) && metric.direction === FlowDirection.Incoming) {
+    if (names.includes(metric.sourceProcess) && metric.direction === Direction.Incoming) {
       acc.totalBytesOut[metric.sourceProcess] = (acc.totalBytesOut[metric.sourceProcess] || 0) + Number(value[1]);
     }
 
-    if (names.includes(metric.destProcess) && metric.direction === FlowDirection.Incoming) {
+    if (names.includes(metric.destProcess) && metric.direction === Direction.Incoming) {
       acc.totalBytesIn[metric.destProcess] = (acc.totalBytesIn[metric.destProcess] || 0) + Number(value[1]);
     }
 
@@ -64,11 +64,11 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
   }, initialTotals);
 
   const byteRate = metrics?.byteRateByProcessPairs.reduce((acc, { metric, value }) => {
-    if (names.includes(metric.sourceProcess) && metric.direction === FlowDirection.Incoming) {
+    if (names.includes(metric.sourceProcess) && metric.direction === Direction.Incoming) {
       acc.totalByteRateOut[metric.sourceProcess] = (acc.totalByteRateOut[metric.sourceProcess] || 0) + Number(value[1]);
     }
 
-    if (names.includes(metric.destProcess) && metric.direction === FlowDirection.Incoming) {
+    if (names.includes(metric.destProcess) && metric.direction === Direction.Incoming) {
       acc.totalByteRateIn[metric.destProcess] = (acc.totalByteRateIn[metric.destProcess] || 0) + Number(value[1]);
     }
 
@@ -148,7 +148,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                           </Title>
                         </FlexItem>
                         <FlexItem>
-                          <SkExposureCell value={itemSelected.processBinding} />
+                          <SkExposedCell value={itemSelected.processBinding} />
                         </FlexItem>
                       </Flex>
 

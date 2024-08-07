@@ -1,6 +1,7 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { Role } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { QueriesProcesses } from '@pages/Processes/Processes.enum';
 
@@ -8,7 +9,7 @@ import { TopologyController } from '../services';
 import { QueriesTopology } from '../Topology.enum';
 
 const processesQueryParams = {
-  processRole: ['remote', 'external'],
+  processRole: [Role.Remote, Role.External],
   endTime: 0
 };
 

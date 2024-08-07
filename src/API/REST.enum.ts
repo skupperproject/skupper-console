@@ -15,7 +15,7 @@ export enum TcpStatus {
   Terminated = 'terminated'
 }
 
-export enum FlowDirection {
+export enum Direction {
   Outgoing = 'outgoing',
   Incoming = 'incoming'
 }
@@ -25,4 +25,17 @@ export enum Quantiles {
   Ninety = 0.9,
   NinetyFive = 0.95,
   NinetyNine = 0.99
+}
+
+// Process and Component Exposure
+export enum Binding {
+  Exposed = 'bound',
+  Unexposed = 'unbound'
+}
+
+// Process and Component Roles
+export enum Role {
+  External = 'external',
+  Internal = 'internal',
+  Remote = 'remote'
 }

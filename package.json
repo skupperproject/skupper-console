@@ -36,7 +36,7 @@
     "commit": "git-cz"
   },
   "dependencies": {
-    "@antv/g6": "^5.0.10",
+    "@antv/g6": "^5.0.13",
     "@nivo/sankey": "^0.87.0",
     "@patternfly/patternfly": "^5.3.1",
     "@patternfly/react-charts": "^7.3.0",
@@ -46,14 +46,14 @@
     "@tanstack/react-query": "^5.51.21",
     "axios": "^1.7.3",
     "date-fns": "^3.6.0",
-    "framer-motion": "^11.3.21",
+    "framer-motion": "^11.3.23",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
     "react-router-dom": "^6.26.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
+    "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
@@ -68,7 +68,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
-    "cypress": "^13.13.1",
+    "cypress": "^13.13.2",
     "cz-git": "^1.9.4",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
