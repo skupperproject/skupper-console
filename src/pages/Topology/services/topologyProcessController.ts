@@ -1,3 +1,4 @@
+import { Role } from '@API/REST.enum';
 import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import { GraphEdge, GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 
@@ -52,10 +53,10 @@ const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
       processRole: role,
       processBinding
     }) => ({
-      type: shape[role === 'remote' ? role : processBinding],
+      type: shape[role === Role.Remote ? role : processBinding],
       id: identity,
       label,
-      iconName: role === 'internal' ? 'skupper' : 'process',
+      iconName: role === Role.Internal ? 'skupper' : 'process',
       combo,
       comboName,
       groupId: groupIdentity,

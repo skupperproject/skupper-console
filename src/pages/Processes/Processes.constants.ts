@@ -1,10 +1,10 @@
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import EndTimeCell from '@core/components/EndTimeCell';
 import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import SkExposureCell from '@core/components/SkExposureCell';
+import SkEndTimeCell from '@core/components/SkEndTimeCell';
+import SkExposedCell from '@core/components/SkExposedCell';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -58,8 +58,8 @@ export const CustomProcessCells = {
     HighlightValueCell({ ...props, format: formatBytes }),
   ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatByteRate }),
-  TimestampCell: (props: LinkCellProps<ProcessResponse>) => EndTimeCell(props),
-  ExposureCell: SkExposureCell
+  TimestampCell: (props: LinkCellProps<ProcessResponse>) => SkEndTimeCell(props),
+  ExposureCell: SkExposedCell
 };
 
 export const processesTableColumns: SKColumn<ProcessResponse>[] = [

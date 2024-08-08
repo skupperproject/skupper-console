@@ -18,7 +18,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import ResourceIcon from '@core/components/ResourceIcon';
-import SkExposureCell from '@core/components/SkExposureCell';
+import SkExposedCell from '@core/components/SkExposedCell';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
@@ -106,7 +106,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <SkExposureCell value={processBinding} />
+                  <SkExposedCell value={processBinding} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>

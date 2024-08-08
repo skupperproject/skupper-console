@@ -1,9 +1,9 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { AvailableProtocols, FlowDirection, SortDirection } from './REST.enum';
+import { AvailableProtocols, Binding, Direction, Role, SortDirection } from './REST.enum';
 
 export type FetchWithOptions = AxiosRequestConfig;
-export type FlowDirections = FlowDirection.Outgoing | FlowDirection.Incoming;
+export type FlowDirections = Direction.Outgoing | Direction.Incoming;
 
 export interface RemoteFilterOptions extends Record<string, string | string[] | number | SortDirection | undefined> {
   filter?: string;
@@ -61,7 +61,7 @@ export interface SiteResponse extends BaseResponse {
 
 export interface ComponentResponse extends BaseResponse {
   name: string;
-  processGroupRole: 'external' | 'internal' | 'remote';
+  processGroupRole: Role;
   processCount: number;
 }
 
@@ -74,8 +74,8 @@ export interface ProcessResponse extends BaseResponse {
   imageName?: string;
   sourceHost: string;
   hostName: string;
-  processBinding: 'bound' | 'unbound';
-  processRole: 'external' | 'internal' | 'remote';
+  processBinding: Binding;
+  processRole: Role;
   addresses?: string[];
 }
 

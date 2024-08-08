@@ -1,10 +1,10 @@
 import { FlowPairsResponse } from '@API/REST.interfaces';
-import DurationCell from '@core/components/DurationCell';
-import EndTimeCell from '@core/components/EndTimeCell';
 import HighlightValueCell from '@core/components/HighlightValueCell';
 import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
 import LinkCell from '@core/components/LinkCell';
 import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SkDurationCell from '@core/components/SKDurationCell';
+import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -38,10 +38,10 @@ export const flowPairsComponentsTable = {
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
-  TimestampCell: (props: LinkCellProps<FlowPairsResponse>) => EndTimeCell(props),
+  TimestampCell: SkEndTimeCell,
   TcpTTFB: (props: LinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
-  DurationCell,
+  DurationCell: SkDurationCell,
   ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
     HighlightValueCell({ ...props, format: formatBytes }),
   HttpStatusCell: (props: { data?: FlowPairsResponse }) =>

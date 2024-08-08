@@ -1,14 +1,14 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { FlowDirection } from '@API/REST.enum';
+import { Direction } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../Topology.enum';
 
-const linkQueryParams = { direction: FlowDirection.Outgoing };
+const linkQueryParams = { direction: Direction.Outgoing };
 
 interface UseTopologySiteDataProps {
   showDataLink: boolean;

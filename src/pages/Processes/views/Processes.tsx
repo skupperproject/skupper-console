@@ -3,6 +3,7 @@ import { startTransition, useCallback, useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
+import { Role } from '@API/REST.enum';
 import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
@@ -17,7 +18,7 @@ import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 //TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
 const initProcessesQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: ['remote', 'external'],
+  processRole: [Role.Remote, Role.External],
   endTime: 0
 };
 
