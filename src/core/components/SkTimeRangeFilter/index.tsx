@@ -5,7 +5,18 @@ import { OutlinedClockIcon } from '@patternfly/react-icons';
 
 import { defaultTimeInterval, timeIntervalMap } from '@config/prometheus';
 
-import { TimeRangeFilterProps } from './SkTimeRange.interfaces';
+interface TimeRangeFilterProps {
+  duration?: number;
+  onSelectTimeInterval: ({
+    start,
+    end,
+    duration
+  }: {
+    start: number | undefined;
+    end: number | undefined;
+    duration: number | undefined;
+  }) => void;
+}
 
 const SkTimeRangeFilter: FC<TimeRangeFilterProps> = function ({ duration, onSelectTimeInterval }) {
   const [isOpen, setIsOpen] = useState(false);

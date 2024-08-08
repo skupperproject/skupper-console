@@ -8,7 +8,7 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { ProcessPairsResponse } from '@API/REST.interfaces';
 import { SMALL_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable from '@core/components/SkTable';
 import { TopologyController } from '@pages/Topology/services';
 import { QueriesTopology } from '@pages/Topology/Topology.enum';
@@ -120,7 +120,7 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
 
   const CustomProcessPairCellsWithLinkDetail = {
     ...CustomProcessPairCells,
-    viewDetailsLinkCell: ({ data }: LinkCellProps<ProcessPairsResponse>) => (
+    viewDetailsLinkCell: ({ data }: SkLinkCellProps<ProcessPairsResponse>) => (
       <Link
         to={`${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.sourceId}/${ProcessesLabels.ProcessPairs}@${data.identity}@${data.protocol}?type=${ProcessesLabels.ProcessPairs}`}
       >

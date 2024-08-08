@@ -1,11 +1,9 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { ChartDonut, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
+import { ChartDonut, ChartDonutProps, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-
-import { SkChartPieProps } from './ChartPie.interfaces';
 
 const DEFAULT_CHART_PADDING = {
   bottom: 65,
@@ -13,6 +11,11 @@ const DEFAULT_CHART_PADDING = {
   right: 0,
   top: 20
 };
+
+interface SkChartPieProps extends ChartDonutProps {
+  data: { x: string; y: number }[];
+  format?: Function;
+}
 
 const SkChartPie: FC<SkChartPieProps> = function ({
   data,

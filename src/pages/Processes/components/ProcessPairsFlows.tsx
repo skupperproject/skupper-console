@@ -8,7 +8,7 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import EmptyData from '@core/components/EmptyData';
+import SKEmptyData from '@core/components/SkEmptyData';
 import FlowPairs from '@pages/shared/FlowPairs';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
@@ -144,7 +144,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
       {!activeConnectionsCount && !oldConnectionsCount && !http2RequestsCount && !httpRequestsCount && (
         <Card isFullHeight>
           <CardBody>
-            <EmptyData
+            <SKEmptyData
               message={ProcessesLabels.ProcessPairsEmptyTitle}
               description={ProcessesLabels.ProcessPairsEmptyMessage}
               icon={ResourcesEmptyIcon}

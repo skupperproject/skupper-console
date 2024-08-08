@@ -4,7 +4,7 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import EmptyData from '@core/components/EmptyData';
+import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
 import RequestCharts from './RequestCharts';
@@ -82,7 +82,7 @@ const Request: FC<RequestProps> = function ({
           )}
 
           {!isLoading && !request?.requestRateData?.length && (
-            <EmptyData
+            <SKEmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}
               icon={SearchIcon}

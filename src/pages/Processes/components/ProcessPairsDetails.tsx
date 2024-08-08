@@ -7,7 +7,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { ProcessResponse } from '@API/REST.interfaces';
 import { VarColors } from '@config/colors';
-import LinkCell from '@core/components/LinkCell';
+import SkLinkCell from '@core/components/SkLinkCell';
 
 import Details from './Details';
 import { ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
@@ -21,7 +21,7 @@ const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, 
       <GridItem sm={12} md={5}>
         <Details
           process={source}
-          title={LinkCell<ProcessResponse>({
+          title={SkLinkCell<ProcessResponse>({
             data: source,
             value: source.name,
             link: `${ProcessesRoutesPaths.Processes}/${source.name}@${source.identity}`
@@ -40,7 +40,7 @@ const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, 
       <GridItem sm={12} md={5}>
         <Details
           process={destination}
-          title={LinkCell<ProcessResponse>({
+          title={SkLinkCell<ProcessResponse>({
             data: destination,
             value: destination.name,
             link: `${ProcessesRoutesPaths.Processes}/${destination.name}@${destination.identity}`

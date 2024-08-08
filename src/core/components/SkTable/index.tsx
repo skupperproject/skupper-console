@@ -18,11 +18,28 @@ import {
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 
 import SkPagination from './SkPagination';
-import { NonNullableValue, SKTableProps } from './SkTable.interfaces';
-import EmptyData from '../EmptyData';
+import { NonNullableValue, SKColumn } from './SkTable.interfaces';
+import SKEmptyData from '../SkEmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;
+
+export interface SKTableProps<T> {
+  columns: SKColumn<NonNullableValue<T>>[];
+  rows?: NonNullableValue<T>[];
+  title?: string;
+  customCells?: Record<string, Function>;
+  borders?: boolean;
+  isStriped?: boolean;
+  isPlain?: boolean;
+  isFullHeight?: boolean;
+  shouldSort?: boolean;
+  pagination?: boolean;
+  alwaysShowPagination?: boolean;
+  paginationPageSize?: number;
+  paginationTotalRows?: number;
+  onGetFilters?: Function;
+}
 
 const SkTable = function <T>({
   title,
@@ -191,7 +208,7 @@ const SkTable = function <T>({
               {skRows.length === 0 && (
                 <Tr>
                   <Td colSpan={12}>
-                    <EmptyData icon={SearchIcon} />
+                    <SKEmptyData icon={SearchIcon} />
                   </Td>
                 </Tr>
               )}

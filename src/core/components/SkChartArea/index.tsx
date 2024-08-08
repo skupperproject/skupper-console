@@ -8,13 +8,14 @@ import {
   ChartLegendTooltip,
   ChartThemeColor,
   ChartArea,
-  ChartLine
+  ChartLine,
+  ChartProps
 } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatChartDate } from '@core/utils/formatChartDate';
 
-import { SkChartAreaProps, skAxisXY } from './SkChartArea.interfaces';
+import { skAxisXY } from './SkChartArea.interfaces';
 
 const DEFAULT_CHART_PADDING = {
   bottom: 70,
@@ -22,6 +23,17 @@ const DEFAULT_CHART_PADDING = {
   right: 0,
   top: 20
 };
+
+interface SkChartAreaProps extends ChartProps {
+  data: skAxisXY[][];
+  formatY?: Function;
+  formatYTooltip?: Function;
+  formatX?: Function;
+  axisYLabel?: string;
+  legendLabels?: string[];
+  isChartLine?: boolean;
+  showLegend?: boolean;
+}
 
 const SkChartArea: FC<SkChartAreaProps> = function ({
   data,

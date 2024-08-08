@@ -1,10 +1,8 @@
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import HighlightValueCell from '@core/components/HighlightValueCell';
-import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
-import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkExposedCell from '@core/components/SkExposedCell';
+import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
+import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -21,44 +19,44 @@ export const ProcessesPaths = {
 };
 
 export const CustomProcessPairCells = {
-  ProcessConnectedLinkCell: (props: LinkCellProps<ProcessPairsResponse>) =>
-    LinkCell({
+  ProcessConnectedLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}?type=${ProcessesLabels.ProcessPairs}`
     }),
-  ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatBytes }),
-  ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatByteRate }),
-  LatencyFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatLatency })
+  ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+    SkHighlightValueCell({ ...props, format: formatBytes }),
+  ByteRateFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+    SkHighlightValueCell({ ...props, format: formatByteRate }),
+  LatencyFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+    SkHighlightValueCell({ ...props, format: formatLatency })
 };
 
 export const CustomProcessCells = {
-  linkCell: (props: LinkCellProps<ProcessResponse>) =>
-    LinkCell({
+  linkCell: (props: SkLinkCellProps<ProcessResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.name}@${props.data.identity}`
     }),
-  linkCellSite: (props: LinkCellProps<ProcessResponse>) =>
-    LinkCell({
+  linkCellSite: (props: SkLinkCellProps<ProcessResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.parentName}@${props.data.parent}`
     }),
-  linkComponentCell: (props: LinkCellProps<ProcessResponse>) =>
-    LinkCell({
+  linkComponentCell: (props: SkLinkCellProps<ProcessResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'component',
       link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
-  ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatBytes }),
-  ByteRateFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatByteRate }),
-  TimestampCell: (props: LinkCellProps<ProcessResponse>) => SkEndTimeCell(props),
+  ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+    SkHighlightValueCell({ ...props, format: formatBytes }),
+  ByteRateFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+    SkHighlightValueCell({ ...props, format: formatByteRate }),
+  TimestampCell: (props: SkLinkCellProps<ProcessResponse>) => SkEndTimeCell(props),
   ExposureCell: SkExposedCell
 };
 

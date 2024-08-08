@@ -1,9 +1,14 @@
+import { ReactNode } from 'react';
+
 import { Icon, Text, Tooltip, Truncate } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
 import { timeAgo } from '@core/utils/timeAgo';
 
-import { EndTimeProps } from './EndTime.interfaces';
+interface EndTimeProps<T> {
+  data: T;
+  value: ReactNode;
+}
 
 const SkEndTimeCell = function <T>({ value }: EndTimeProps<T>) {
   if (!value) {

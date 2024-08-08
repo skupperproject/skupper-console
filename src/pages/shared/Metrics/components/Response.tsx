@@ -4,7 +4,7 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@p
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import EmptyData from '@core/components/EmptyData';
+import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
 import ResponseCharts from './ResponseCharts';
@@ -112,7 +112,7 @@ const Response: FC<ResponseProps> = function ({
           )}
 
           {!isLoading && !isLoadingReverse && !responseData && (
-            <EmptyData
+            <SKEmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}
               icon={SearchIcon}

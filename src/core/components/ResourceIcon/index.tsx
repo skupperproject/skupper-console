@@ -6,10 +6,6 @@ import skupperProcessSVG from '@assets/skupper.svg';
 
 import './ResourceIcon.css';
 
-interface ResourceIconProps {
-  type: 'site' | 'component' | 'service' | 'process' | 'skupper';
-}
-
 const RESOURCE_MAP = {
   site: { class: 'sk-resource-site', symbol: 'S' },
   component: { class: 'sk-resource-process-group', symbol: 'C' },
@@ -17,6 +13,10 @@ const RESOURCE_MAP = {
   process: { class: 'sk-resource-process', symbol: 'P' },
   skupper: { class: 'sk-resource-skupper', symbol: '' }
 };
+
+interface ResourceIconProps {
+  type: 'site' | 'component' | 'service' | 'process' | 'skupper';
+}
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {
   return (

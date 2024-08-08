@@ -4,9 +4,8 @@ import { RESTApi } from '@API/REST.api';
 import { SiteResponse } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable from '@core/components/SkTable';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
@@ -34,8 +33,8 @@ const Sites = function () {
           paginationPageSize={BIG_PAGINATION_SIZE}
           customCells={{
             TimestampCell: SkEndTimeCell,
-            LinkCell: (props: LinkCellProps<SiteResponse>) =>
-              LinkCell({
+            LinkCell: (props: SkLinkCellProps<SiteResponse>) =>
+              SkLinkCell({
                 ...props,
                 type: 'site',
                 link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`

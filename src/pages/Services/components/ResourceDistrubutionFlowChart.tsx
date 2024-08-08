@@ -8,11 +8,11 @@ import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { prometheusProcessNameseparator } from '@config/prometheus';
 import SkSankeyChart from '@core/components/SKSanckeyChart';
-import SankeyFilter from '@core/components/SKSanckeyChart/SankeyFilter';
 import {
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
 } from '@core/components/SKSanckeyChart/SkSankey.constants';
+import SankeyFilter from '@core/components/SKSanckeyChart/SkSankeyFilter';
 
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
