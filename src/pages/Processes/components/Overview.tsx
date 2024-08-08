@@ -17,7 +17,7 @@ import { OverviewProps } from '../Processes.interfaces';
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `process-open-metric-sections`;
 
-const Overview: FC<OverviewProps> = function ({ process: { identity: processId, name, parent, parentName } }) {
+const Overview: FC<OverviewProps> = function ({ process: { identity: processId, name } }) {
   const processesPairsTxQueryParams = {
     sourceId: processId
   };
@@ -92,7 +92,6 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
       }}
       defaultMetricFilterValues={{
         sourceProcess: name,
-        sourceSite: composePrometheusSiteLabel(parentName, parent),
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
       }}
       configFilters={{
@@ -103,7 +102,7 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
           hide: destProcesses.length === 0
         },
         sourceProcesses: { disabled: true },
-        sourceSites: { disabled: true }
+        sourceSites: { hide: true }
       }}
       onGetMetricFiltersConfig={handleSelectedFilters}
       onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
