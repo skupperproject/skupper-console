@@ -19,8 +19,8 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import { Direction, Role } from '@API/REST.enum';
-import EmptyData from '@core/components/EmptyData';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SKEmptyData from '@core/components/SkEmptyData';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 
 import SitesController from '../services';
@@ -86,7 +86,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
                   </ListItem>
                 ))}
               </List>
-            )) || <EmptyData />}
+            )) || <SKEmptyData />}
           </CardBody>
         </Card>
       </GridItem>
@@ -103,7 +103,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
                   <ListItem key={identity}>{provider ? `${provider} (${hostName})` : hostName}</ListItem>
                 ))}
               </List>
-            )) || <EmptyData />}
+            )) || <SKEmptyData />}
           </CardBody>
         </Card>
       </GridItem>
@@ -125,7 +125,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
                   </ListItem>
                 ))}
               </List>
-            )) || <EmptyData />}
+            )) || <SKEmptyData />}
           </CardBody>
         </Card>
       </GridItem>

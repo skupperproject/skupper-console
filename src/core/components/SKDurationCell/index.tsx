@@ -5,7 +5,7 @@ import { TableText } from '@patternfly/react-table';
 
 import { formatLatency } from '@core/utils/formatLatency';
 
-export interface SKDurationCellProps<T> {
+interface SKDurationCellProps<T> {
   data: T;
   value: ReactNode;
 }

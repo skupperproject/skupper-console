@@ -3,15 +3,10 @@ export interface SkSankeyChartNode {
   nodeColor?: string;
 }
 
-interface SkSankeyChartLink {
+export interface SkSankeyChartLink {
   source: string;
   target: string;
   value: number;
-}
-
-export interface SkSankeyChartProps {
-  nodes: SkSankeyChartNode[];
-  links: SkSankeyChartLink[];
 }
 
 export interface SankeyFilterValues {

@@ -4,9 +4,14 @@ import { Card, CardBody, TextContent, TextVariants, Text, Flex } from '@patternf
 
 import { Colors } from '@config/colors';
 
-import { MetricCardProps } from './SkCounterCart.interfaces';
+interface SkCounterCardProps {
+  title?: string;
+  value: string | number;
+  bgColor?: string;
+  fontColor?: string;
+}
 
-const SkCounterCard: FC<MetricCardProps> = function ({
+const SkCounterCard: FC<SkCounterCardProps> = function ({
   title,
   value,
   bgColor = Colors.Black500,

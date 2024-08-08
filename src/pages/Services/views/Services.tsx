@@ -7,8 +7,8 @@ import { RESTApi } from '@API/REST.api';
 import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
-import SkSearchFilter from '@core/components/SkSearchFilter';
 import SkTable from '@core/components/SkTable';
+import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import MainContainer from '@layout/MainContainer';
 
 import { ServicesController } from '../services';

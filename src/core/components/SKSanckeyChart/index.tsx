@@ -8,8 +8,13 @@ import { formatByteRate } from '@core/utils/formatBytes';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
-import { SkSankeyChartNode, SkSankeyChartProps } from './SkSankeyChart.interfaces';
-import EmptyData from '../EmptyData';
+import { SkSankeyChartLink, SkSankeyChartNode } from './SkSankeyChart.interfaces';
+import SKEmptyData from '../SkEmptyData';
+
+interface SkSankeyChartProps {
+  nodes: SkSankeyChartNode[];
+  links: SkSankeyChartLink[];
+}
 
 /**
  * Adds a listener for changes to the theme class on the document element.
@@ -59,7 +64,7 @@ export function valueFormat(value: number): string {
 const SkSankeyChart: FC<{ data: SkSankeyChartProps }> = function ({ data }) {
   if (!data.links.length) {
     return (
-      <EmptyData
+      <SKEmptyData
         message={MetricsLabels.NoMetricFoundTitleMessage}
         description={MetricsLabels.NoMetricFoundDescriptionMessage}
       />

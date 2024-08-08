@@ -16,8 +16,8 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import EmptyData from '@core/components/EmptyData';
 import SkChartArea from '@core/components/SkChartArea';
+import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 import { formatNumber } from '@core/utils/formatNumber';
 
@@ -119,7 +119,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
           )}
 
           {!isLoading && !connections && (
-            <EmptyData
+            <SKEmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}
               icon={SearchIcon}

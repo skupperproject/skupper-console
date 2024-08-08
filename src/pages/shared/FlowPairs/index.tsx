@@ -3,10 +3,9 @@ import { FC, useCallback, useState } from 'react';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 
 import { FlowPairsResponse } from '@API/REST.interfaces';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
-import SkTable from '@core/components/SkTable';
-import { SKTableProps } from '@core/components/SkTable/SkTable.interfaces';
-import ViewDetailCell from '@core/components/ViewDetailsCell';
+import { SkLinkCellProps } from '@core/components/SkLinkCell';
+import SkTable, { SKTableProps } from '@core/components/SkTable';
+import SkViewDetailCell from '@core/components/SkViewDetailsCell';
 
 import FlowPair from './FlowPair';
 import { flowPairsComponentsTable } from './FlowPair.constants';
@@ -24,8 +23,8 @@ const FlowPairs: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
         {...props}
         customCells={{
           ...flowPairsComponentsTable,
-          viewDetailsLinkCell: ({ data }: LinkCellProps<FlowPairsResponse>) => (
-            <ViewDetailCell onClick={handleOnClickDetails} value={data} />
+          viewDetailsLinkCell: ({ data }: SkLinkCellProps<FlowPairsResponse>) => (
+            <SkViewDetailCell onClick={handleOnClickDetails} value={data} />
           )
         }}
       />

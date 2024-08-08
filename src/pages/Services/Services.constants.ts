@@ -1,8 +1,7 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
 import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE } from '@config/config';
-import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { timeAgo } from '@core/utils/timeAgo';
@@ -18,8 +17,8 @@ export const ServicesPaths = {
 };
 
 export const customServiceCells = {
-  ServiceNameLinkCell: (props: LinkCellProps<ServiceResponse>) =>
-    LinkCell({
+  ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'service',
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}@${props.data.protocol}`

@@ -1,10 +1,8 @@
 import { FlowPairsResponse } from '@API/REST.interfaces';
-import HighlightValueCell from '@core/components/HighlightValueCell';
-import { HighlightValueCellProps } from '@core/components/HighlightValueCell/HighightValueCell.interfaces';
-import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
 import SkDurationCell from '@core/components/SKDurationCell';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
+import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
+import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -14,36 +12,36 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { FlowPairLabels } from './FlowPair.enum';
 
 export const flowPairsComponentsTable = {
-  ProcessNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    LinkCell({
+  ProcessNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.forwardFlow.processName}@${props.data.forwardFlow.process}`
     }),
-  SiteNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    LinkCell({
+  SiteNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteName}@${props.data.sourceSiteId}`
     }),
-  TargetSiteNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    LinkCell({
+  TargetSiteNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
     }),
-  TargetProcessNameLinkCell: (props: LinkCellProps<FlowPairsResponse>) =>
-    LinkCell({
+  TargetProcessNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
   TimestampCell: SkEndTimeCell,
-  TcpTTFB: (props: LinkCellProps<FlowPairsResponse>) =>
+  TcpTTFB: (props: SkLinkCellProps<FlowPairsResponse>) =>
     formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: SkDurationCell,
-  ByteFormatCell: (props: HighlightValueCellProps<FlowPairsResponse>) =>
-    HighlightValueCell({ ...props, format: formatBytes }),
+  ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+    SkHighlightValueCell({ ...props, format: formatBytes }),
   HttpStatusCell: (props: { data?: FlowPairsResponse }) =>
     props.data?.counterFlow?.result || props.data?.forwardFlow?.result || ''
 };

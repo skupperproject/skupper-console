@@ -1,6 +1,5 @@
 import { ComponentResponse } from '@API/REST.interfaces';
-import LinkCell from '@core/components/LinkCell';
-import { LinkCellProps } from '@core/components/LinkCell/LinkCell.interfaces';
+import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 
 import { ComponentLabels, ComponentRoutesPaths } from './ProcessGroups.enum';
@@ -11,14 +10,14 @@ export const ProcessGroupsPaths = {
 };
 
 export const CustomComponentCells = {
-  ComponentNameLinkCell: (props: LinkCellProps<ComponentResponse>) =>
-    LinkCell({
+  ComponentNameLinkCell: (props: SkLinkCellProps<ComponentResponse>) =>
+    SkLinkCell({
       ...props,
       type: 'process',
       link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}`
     }),
-  ComponentProcessCountLinkCell: (props: LinkCellProps<ComponentResponse>) =>
-    LinkCell({
+  ComponentProcessCountLinkCell: (props: SkLinkCellProps<ComponentResponse>) =>
+    SkLinkCell({
       ...props,
       fitContent: true,
       link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.name}@${props.data.identity}?type=${ComponentLabels.Processes}`

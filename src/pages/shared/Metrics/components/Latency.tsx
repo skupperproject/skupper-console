@@ -4,7 +4,7 @@ import { Button, Card, CardBody, CardExpandableContent, CardHeader, CardTitle, T
 import { QuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import EmptyData from '@core/components/EmptyData';
+import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 
 import LatencyCharts from './LatencyCharts';
@@ -101,7 +101,7 @@ const Latency: FC<LatencyProps> = function ({
           )}
 
           {!isLoading && !isLoadingBuckets && (!data?.length || !bucketsData) && (
-            <EmptyData
+            <SKEmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}
               icon={SearchIcon}

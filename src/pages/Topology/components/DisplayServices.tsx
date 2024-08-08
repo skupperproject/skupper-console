@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
-import SkSelectMultiTypeaheadCheckbox from '@core/SkMultiTypeheadWithCheckbox';
+import SkSelectTypeHeadWithCheckbox from '@core/components/SkSelectTypeHeadWithCheckbox';
 import { QueriesServices } from '@pages/Services/Services.enum';
 
 interface DisplayServicesProps {
@@ -28,7 +28,7 @@ const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected
   // useQuery is async: If services are not yet available (undefined), render a disabled placeholder
   if (!services) {
     return (
-      <SkSelectMultiTypeaheadCheckbox
+      <SkSelectTypeHeadWithCheckbox
         key={1}
         initOptions={[]}
         initIdsSelected={[]}
@@ -46,7 +46,7 @@ const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected
   }));
 
   return (
-    <SkSelectMultiTypeaheadCheckbox
+    <SkSelectTypeHeadWithCheckbox
       key={2}
       initIdsSelected={initialIdsSelected || []}
       initOptions={options}

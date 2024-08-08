@@ -6,12 +6,12 @@ import {
   ChartBar,
   ChartGroup,
   ChartLegendTooltip,
+  ChartProps,
   ChartThemeColor,
   createContainer
 } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 
-import { SkChartBarProps } from './SkChartBar.interfaces';
 import { skAxisXY } from '../SkChartArea/SkChartArea.interfaces';
 
 const DEFAULT_CHART_PADDING = {
@@ -20,6 +20,17 @@ const DEFAULT_CHART_PADDING = {
   right: 20,
   top: 20
 };
+
+interface SkChartBarProps extends ChartProps {
+  data: { x: string; y: number }[][];
+  formatY?: Function;
+  formatYTooltip?: Function;
+  formatX?: Function;
+  axisYLabel?: string;
+  legendLabels?: string[];
+  isChartLine?: boolean;
+  showLegend?: boolean;
+}
 
 const SkChartBar: FC<SkChartBarProps> = function ({
   data,
