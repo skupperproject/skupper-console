@@ -20,6 +20,16 @@ const Sites = function () {
     refetchInterval: UPDATE_INTERVAL
   });
 
+  const customCells = {
+    TimestampCell: SkEndTimeCell,
+    LinkCell: (props: SkLinkCellProps<SiteResponse>) =>
+      SkLinkCell({
+        ...props,
+        type: 'site',
+        link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
+      })
+  };
+
   return (
     <MainContainer
       dataTestId={getTestsIds.sitesView()}
@@ -31,15 +41,7 @@ const Sites = function () {
           columns={siteColumns}
           rows={sites}
           paginationPageSize={BIG_PAGINATION_SIZE}
-          customCells={{
-            TimestampCell: SkEndTimeCell,
-            LinkCell: (props: SkLinkCellProps<SiteResponse>) =>
-              SkLinkCell({
-                ...props,
-                type: 'site',
-                link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
-              })
-          }}
+          customCells={customCells}
         />
       }
     />
