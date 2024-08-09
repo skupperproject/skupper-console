@@ -2,6 +2,8 @@ const ROOT = process.cwd();
 
 const ROOT_PROJECT = `${ROOT}`;
 const SRC_PATH = `${ROOT_PROJECT}/src`;
+const TESTS_PATH = `${ROOT_PROJECT}/__tests__`;
+const MODE_MODULES_PATH = `${ROOT_PROJECT}/node_modules`;
 const MOCKS_PATH = `${ROOT_PROJECT}/mocks`;
 const TS_CONFIG_PATH = './tsconfig.paths.json';
 const FILE_MOCK = 'jest.config.fileMock.ts';
@@ -30,9 +32,10 @@ const config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
-  moduleDirectories: [`${ROOT_PROJECT}/node_modules`, `${ROOT_PROJECT}/src`],
-  roots: [SRC_PATH],
-  transformIgnorePatterns: [`${ROOT_PROJECT}/node_modules/(?!d3|internmap)`],
+  moduleDirectories: [MODE_MODULES_PATH, SRC_PATH],
+  roots: [TESTS_PATH],
+  // We need to include 'd3' or 'internmap' for the @nivo/sankey library
+  transformIgnorePatterns: [`${MODE_MODULES_PATH}/(?!d3|internmap)`],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { isolatedModules: true }],
     '^.+\\.svg$': `${MOCKS_PATH}/${FILE_MOCK}`,
