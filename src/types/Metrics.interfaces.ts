@@ -1,5 +1,44 @@
-import { PrometheusMetric } from '@API/Prometheus.interfaces';
-import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
+import { AvailableProtocols } from '@API/REST.enum';
+
+import { PrometheusMetric } from './Prometheus.interfaces';
+import { skAxisXY } from './SkChartArea.interfaces';
+
+export interface ConfigMetricFilters {
+  sourceSites?: { disabled?: boolean; placeholder?: string; hide?: boolean };
+  destSites?: { disabled?: boolean; placeholder?: string; hide?: boolean };
+  destinationProcesses?: { disabled?: boolean; placeholder?: string; hide?: boolean };
+  sourceProcesses?: { disabled?: boolean; placeholder?: string; hide?: boolean };
+  protocols?: { disabled?: boolean; placeholder?: string };
+}
+
+export enum QueriesMetrics {
+  GetTraffic = 'get-metric-traffic-query',
+  GetLatency = 'get-metric-latency-query',
+  GetLatencyBuckets = 'get-metric-latency-buckets-query',
+  GetRequest = 'get-metric-request-query',
+  GetResponse = 'get-metric-response-query',
+  GetConnection = 'get-metric-connection-query'
+}
+
+export interface QueryMetricsParams {
+  sourceSite?: string;
+  destSite?: string;
+  sourceProcess?: string;
+  destProcess?: string;
+  service?: string;
+  protocol?: AvailableProtocols;
+  start?: number;
+  end?: number;
+  duration?: number;
+}
+
+export interface ExpandedMetricSections {
+  byterate?: boolean;
+  latency?: boolean;
+  request?: boolean;
+  response?: boolean;
+  connection?: boolean;
+}
 
 interface StatusCodeResponse {
   label: string;

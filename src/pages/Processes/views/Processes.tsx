@@ -4,13 +4,13 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { Role } from '@API/REST.enum';
-import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
+import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
 
 import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';

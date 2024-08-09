@@ -1,10 +1,8 @@
-import { LinkResponse, SiteResponse } from '@API/REST.interfaces';
-
-import { SiteWithLinks } from '../Sites.interfaces';
+import { LinkResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
 const SitesController = {
   // The output is an object that assigns to each source site id the ids of the connected
-  bindLinksWithSiteIds: (sites: SiteResponse[], links: LinkResponse[]): SiteWithLinks[] => {
+  bindLinksWithSiteIds: (sites: SiteResponse[], links: LinkResponse[]) => {
     const linksExtendedMap = links.reduce(
       function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
         const existingLink = (acc[sourceSiteId] || []).find((link) => link.targetId === destinationSiteId);

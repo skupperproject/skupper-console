@@ -7,7 +7,6 @@ import * as router from 'react-router';
 import processGroupsData from '../../../mocks/data/PROCESS_GROUPS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { ProcessResponse, ComponentResponse } from '../../../src/API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -15,6 +14,7 @@ import { ComponentLabels } from '../../../src/pages/ProcessGroups/ProcessGroups.
 import ProcessGroup from '../../../src/pages/ProcessGroups/views/ProcessGroup';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
+import { ProcessResponse, ComponentResponse } from '../../../src/types/REST.interfaces';
 
 const processGroupResults = processGroupsData.results as ComponentResponse[];
 const processResults = processesData.results as ProcessResponse[];

@@ -2,6 +2,8 @@ import { FC, Ref, useCallback, useState } from 'react';
 
 import { MenuToggle, MenuToggleElement, Select, SelectGroup, SelectOption } from '@patternfly/react-core';
 
+import { TopologyDisplayOptionsMenu } from '@sk-types/Topology.interfaces';
+
 import {
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
@@ -10,7 +12,6 @@ import {
   SHOW_ROUTER_LINKS
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
-import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface DisplayUseOptionsProps {
   defaultSelected?: string[];
@@ -18,7 +19,7 @@ interface DisplayUseOptionsProps {
 }
 
 interface DisplayOptionsProps extends DisplayUseOptionsProps {
-  options: DisplaySelectProps[];
+  options: TopologyDisplayOptionsMenu[];
   optionsDisabled?: Record<string, boolean>;
 }
 

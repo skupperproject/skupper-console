@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
+import { AvailableProtocols } from '@API/REST.enum';
 import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPairs/FlowPair.constants';
 
 import ExposedServers from '../components/ExposedServers';
@@ -17,7 +18,13 @@ import {
   initOldConnectionsQueryParams,
   tcpColumns
 } from '../Services.constants';
-import { ConnectionsByServiceProps } from '../Services.interfaces';
+
+interface ConnectionsByServiceProps {
+  serviceId: string;
+  serviceName: string;
+  protocol: AvailableProtocols;
+  viewSelected: string;
+}
 
 const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
   serviceId,

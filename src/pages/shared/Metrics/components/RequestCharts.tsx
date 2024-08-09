@@ -6,9 +6,9 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import SkChartArea from '@core/components/SkChartArea';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
+import { RequestMetrics } from '@sk-types/Metrics.interfaces';
 
 import { MetricsLabels } from '../Metrics.enum';
-import { RequestMetrics } from '../services/services.interfaces';
 
 const RequestCharts: FC<{
   requestRateData: RequestMetrics[];

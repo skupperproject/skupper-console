@@ -1,4 +1,4 @@
-import { LinkResponse, SiteResponse } from '../../../src/API/REST.interfaces';
+import { LinkResponse, SiteResponse } from '../../../src/types/REST.interfaces';
 import SitesController from '../../../src/pages/Sites/services';
 
 describe('SitesController', () => {

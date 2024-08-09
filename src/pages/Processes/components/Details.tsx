@@ -23,9 +23,14 @@ import { timeAgo } from '@core/utils/timeAgo';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessResponse } from '@sk-types/REST.interfaces';
 
 import { ProcessesLabels } from '../Processes.enum';
-import { DetailsProps } from '../Processes.interfaces';
+
+interface DetailsProps {
+  process: ProcessResponse;
+  title?: string | JSX.Element;
+}
 
 const Details: FC<DetailsProps> = function ({ process, title }) {
   const {

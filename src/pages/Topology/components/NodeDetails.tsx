@@ -21,7 +21,6 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { Direction } from '@API/REST.enum';
-import { ProcessResponse } from '@API/REST.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkExposedCell from '@core/components/SkExposedCell';
 import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
@@ -30,9 +29,10 @@ import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processe
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessResponse } from '@sk-types/REST.interfaces';
+import { TopologyMetrics } from '@sk-types/Topology.interfaces';
 
 import { TopologyLabels } from '../Topology.enum';
-import { TopologyMetrics } from '../Topology.interfaces';
 
 type Totals = {
   totalBytesIn: Record<string, number>;

@@ -1,6 +1,6 @@
-import { ComponentResponse } from '@API/REST.interfaces';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
+import { ComponentResponse } from '@sk-types/REST.interfaces';
+import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ComponentLabels, ComponentRoutesPaths } from './ProcessGroups.enum';
 
@@ -24,7 +24,7 @@ export const CustomComponentCells = {
     })
 };
 
-export const processGroupsColumns: SKColumn<ComponentResponse>[] = [
+export const processGroupsColumns: SKTableColumn<ComponentResponse>[] = [
   {
     name: ComponentLabels.Name,
     prop: 'name' as keyof ComponentResponse,

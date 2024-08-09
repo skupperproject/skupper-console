@@ -14,8 +14,7 @@ import {
 import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatChartDate } from '@core/utils/formatChartDate';
-
-import { skAxisXY } from './SkChartArea.interfaces';
+import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
 
 const DEFAULT_CHART_PADDING = {
   bottom: 70,

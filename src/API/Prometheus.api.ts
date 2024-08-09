@@ -1,13 +1,13 @@
 import { PROMETHEUS_URL } from '@config/config';
-
-import { axiosFetch } from './apiMiddleware';
 import {
   PrometheusQueryParams,
   PrometheusResponse,
   PrometheusLabels,
   PrometheusQueryParamsLatency,
   PrometheusMetric
-} from './Prometheus.interfaces';
+} from '@sk-types/Prometheus.interfaces';
+
+import { axiosFetch } from './apiMiddleware';
 import { queries } from './Prometheus.queries';
 
 export const PrometheusApi = {

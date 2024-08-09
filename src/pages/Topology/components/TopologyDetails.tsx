@@ -1,12 +1,19 @@
 import { FC } from 'react';
 
-import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
+import { TopologyMetrics } from '@sk-types/Topology.interfaces';
 
 import EdgeDetails from './EdgeDetails';
 import NodeDetails from './NodeDetails';
-import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
-const TopologyDetails: FC<NodeOrEdgeListProps> = function ({ ids, items, metrics, modalType }) {
+export interface TopoloyDetailsProps {
+  ids?: string[];
+  items: ProcessResponse[] | ProcessPairsResponse[];
+  metrics: TopologyMetrics;
+  modalType: 'process' | 'processPair';
+}
+
+const TopologyDetails: FC<TopoloyDetailsProps> = function ({ ids, items, metrics, modalType }) {
   const filteredItems = items.filter(({ identity }) => ids?.includes(identity));
 
   return (

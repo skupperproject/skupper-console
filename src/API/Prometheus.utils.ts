@@ -1,7 +1,6 @@
 import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
-import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
-
-import { MetricData as MetricValuesAndLabels, PrometheusMetric } from './Prometheus.interfaces';
+import { MetricData as MetricValuesAndLabels, PrometheusMetric } from '@sk-types/Prometheus.interfaces';
+import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
 
 export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {
   // Prometheus can retrieve empty arrays wich are not valid data for us

@@ -6,6 +6,7 @@
       "@layout/*": ["layout/*"],
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"],
+      "@sk-types/*": ["types/*"],
       "@utils/*": ["utils/*"],
       "@API/*": ["API/*"],
       "@mocks/*": ["../mocks/*"]

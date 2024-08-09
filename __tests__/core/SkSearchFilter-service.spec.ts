@@ -3,7 +3,7 @@ import {
   FilterType,
   FilterTypeWithSearchText,
   FilterSelected
-} from '../../src/core/components/SkTable/SkSearchFilter/SkFilter.interfaces'; // Assuming your interface file path
+} from '../../src/types/SkFilter.interfaces'; // Assuming your interface file path
 
 describe('SkSearchFilterController', () => {
   describe('getFilterTypesWithSearchValues', () => {

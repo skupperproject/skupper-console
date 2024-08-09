@@ -20,9 +20,9 @@ import SkChartArea from '@core/components/SkChartArea';
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 import { formatNumber } from '@core/utils/formatNumber';
+import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
 
 import { MetricsLabels } from '../Metrics.enum';
-import { QueryMetricsParams, QueriesMetrics } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface TcpConnectionProps {

@@ -6,14 +6,14 @@ import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
+import { TopoloyDetailsProps } from '@pages/Topology/components/TopologyDetails';
+
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '../../../src/API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
-import { SkGraphProps } from '../../../src/core/components/SkGraph/Graph.interfaces';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import LoadingPage from '../../../src/pages/shared/Loading';
@@ -21,7 +21,8 @@ import TopologyProcesses from '../../../src/pages/Topology/components/TopologyPr
 import * as useTopologyState from '../../../src/pages/Topology/components/useTopologyState';
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { TopologyLabels } from '../../../src/pages/Topology/Topology.enum';
-import { NodeOrEdgeListProps } from '../../../src/pages/Topology/Topology.interfaces';
+import { SkGraphProps } from '../../../src/types/Graph.interfaces';
+import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '../../../src/types/REST.interfaces';
 
 const processesResults = processesData.results as ProcessResponse[];
 const processesPairsResults = processesPairsData.results as ProcessPairsResponse[];
@@ -64,7 +65,7 @@ const MockGraphComponent: FC<SkGraphProps> = memo(({ onClickEdge, onClickNode })
   </>
 ));
 
-const MockTopologyModalComponent: FC<NodeOrEdgeListProps> = function ({ ids, items, modalType }) {
+const MockTopologyModalComponent: FC<TopoloyDetailsProps> = function ({ ids, items, modalType }) {
   return (
     <div data-testid="sk-topology-details">
       <div>{TopologyLabels.TopologyModalTitle}</div>

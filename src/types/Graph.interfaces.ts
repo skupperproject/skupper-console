@@ -2,13 +2,23 @@ import { LayoutOptions } from '@antv/g6';
 
 type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
 
+export type GraphElementNames =
+  | 'SkDataEdge'
+  | 'SkSiteDataEdge'
+  | 'SkSiteEdge'
+  | 'SkLoopEdge'
+  | 'SkNode'
+  | 'SkNodeUnexposed'
+  | 'SkNodeRemote'
+  | 'SkCombo';
+
 export type GraphIconsMap = {
   [key in GraphIconKeys]: HTMLImageElement;
 };
 
 export interface GraphNode {
   id: string;
-  type: CustomItemsProps;
+  type: GraphElementNames;
   label: string;
   combo?: string;
   comboName?: string;
@@ -23,7 +33,7 @@ export interface GraphNode {
 }
 
 export interface GraphCombo {
-  type: CustomItemsProps;
+  type: GraphElementNames;
   id: string;
   label: string;
 }
@@ -40,7 +50,7 @@ interface GraphEdgeMetrics {
 
 export interface GraphEdge {
   id: string;
-  type: CustomItemsProps;
+  type: GraphElementNames;
   source: string;
   target: string;
   sourceName?: string;
@@ -81,13 +91,3 @@ export interface LocalStorageDataSaved {
 export interface LocalStorageData extends LocalStorageDataSavedPayload {
   id: string;
 }
-
-export type CustomItemsProps =
-  | 'SkDataEdge'
-  | 'SkSiteDataEdge'
-  | 'SkSiteEdge'
-  | 'SkLoopEdge'
-  | 'SkNode'
-  | 'SkNodeUnexposed'
-  | 'SkNodeRemote'
-  | 'SkCombo';

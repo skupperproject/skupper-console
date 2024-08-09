@@ -4,9 +4,9 @@ import { Server } from 'miragejs';
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { ProcessPairsResponse, ProcessResponse } from '../../../src/API/REST.interfaces';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import TopologyDetails from '../../../src/pages/Topology/components/TopologyDetails';
+import { ProcessPairsResponse, ProcessResponse } from '../../../src/types/REST.interfaces';
 
 const processesResults = processesData.results as ProcessResponse[];
 const processPairsResults = processesPairsData.results as ProcessPairsResponse[];

@@ -4,12 +4,12 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
-import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import MainContainer from '@layout/MainContainer';
+import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
 
 import { ServicesController } from '../services';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';

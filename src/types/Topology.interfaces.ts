@@ -1,5 +1,5 @@
-import { PrometheusMetric, PrometheusLabels } from '@API/Prometheus.interfaces';
-import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
+import { PrometheusMetric, PrometheusLabels } from './Prometheus.interfaces';
+import { ProcessPairsResponse } from './REST.interfaces';
 
 export interface TopologyMetrics {
   bytesByProcessPairs: PrometheusMetric<'vector'>[];
@@ -19,7 +19,7 @@ export interface TopologyConfigMetrics {
   };
 }
 
-export interface DisplaySelectProps {
+export interface TopologyDisplayOptionsMenu {
   title?: string;
   items: {
     key: string;
@@ -29,7 +29,7 @@ export interface DisplaySelectProps {
   }[];
 }
 
-export interface DisplayOptions {
+export interface TopologyShowOptionsSelected {
   showLinkBytes: boolean;
   showLinkByteRate: boolean;
   showLinkLatency: boolean;
@@ -38,13 +38,6 @@ export interface DisplayOptions {
   showInboundMetrics: boolean;
   showMetricDistribution: boolean;
   showMetricValue: boolean;
-}
-
-export interface NodeOrEdgeListProps {
-  ids?: string[];
-  items: ProcessResponse[] | ProcessPairsResponse[];
-  metrics: TopologyMetrics;
-  modalType: 'process' | 'processPair';
 }
 
 export interface ProcessPairsWithMetrics {

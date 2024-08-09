@@ -8,11 +8,11 @@ import componentData from '../../../mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
-import { SkGraphProps } from '../../../src/core/components/SkGraph/Graph.interfaces';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import TopologyComponent from '../../../src/pages/Topology/components/TopologyComponent';
 import { TopologyController } from '../../../src/pages/Topology/services';
+import { SkGraphProps } from '../../../src/types/Graph.interfaces';
 
 const componentResult = componentData.results;
 

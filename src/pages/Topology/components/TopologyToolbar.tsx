@@ -2,6 +2,8 @@ import { FC } from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 
+import { TopologyDisplayOptionsMenu } from '@sk-types/Topology.interfaces';
+
 import DisplayOptions from './DisplayOptions';
 import DisplayResources from './DisplayResources';
 import DisplayServices from './DisplayServices';
@@ -14,10 +16,9 @@ import {
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE
 } from '../Topology.constants';
-import { DisplaySelectProps } from '../Topology.interfaces';
 
 interface ToolbarProps {
-  displayOptions?: DisplaySelectProps[];
+  displayOptions?: TopologyDisplayOptionsMenu[];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
   showOnlyNeighbours?: boolean;

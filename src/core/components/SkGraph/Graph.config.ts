@@ -6,10 +6,10 @@ import podmanIcon from '@assets/podman.svg';
 import processIcon from '@assets/process.svg';
 import siteIcon from '@assets/site.svg';
 import skupperIcon from '@assets/skupper.svg';
+import { GraphIconsMap } from '@sk-types/Graph.interfaces';
 
 import { behaviors } from './behaviours';
 import { defaultConfigElements } from './components/CustomElements';
-import { GraphIconsMap } from './Graph.interfaces';
 
 export const graphIconsMap: GraphIconsMap = {
   component: componentIcon,

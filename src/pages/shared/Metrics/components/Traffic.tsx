@@ -6,10 +6,10 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
+import { QueriesMetrics, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import TrafficCharts from './TrafficCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import { QueriesMetrics, QueryMetricsParams } from '../Metrics.interfaces';
 import MetricsController from '../services';
 
 interface TrafficProps {

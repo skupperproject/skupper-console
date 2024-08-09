@@ -1,13 +1,13 @@
-import { FlowPairsResponse } from '@API/REST.interfaces';
 import SkDurationCell from '@core/components/SKDurationCell';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { FlowPairsResponse } from '@sk-types/REST.interfaces';
+import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { FlowPairLabels } from './FlowPair.enum';
 
@@ -47,7 +47,7 @@ export const flowPairsComponentsTable = {
 };
 
 // no wrap fix the column
-export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairLabels.FlowPairClosed,
     prop: 'endTime' as keyof FlowPairsResponse,
@@ -114,7 +114,7 @@ export const tcpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
   }
 ];
 
-export const httpFlowPairsColumns: SKColumn<FlowPairsResponse>[] = [
+export const httpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   {
     name: FlowPairLabels.Completed,
     prop: 'endTime' as keyof FlowPairsResponse,

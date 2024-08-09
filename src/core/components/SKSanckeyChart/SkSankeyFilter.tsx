@@ -13,8 +13,9 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
+import { SankeyFilterValues } from '@sk-types/SkSankeyChart.interfaces';
+
 import { sankeyMetricOptions, ServiceClientResourceOptions, ServiceServerResourceOptions } from './SkSankey.constants';
-import { SankeyFilterValues } from './SkSankeyChart.interfaces';
 
 const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   const [isClientExpanded, setIsClientExpanded] = useState(false);

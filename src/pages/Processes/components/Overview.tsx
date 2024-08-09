@@ -9,13 +9,17 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { ProcessResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesProcesses } from '../Processes.enum';
-import { OverviewProps } from '../Processes.interfaces';
 
 const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
 const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `process-open-metric-sections`;
+
+interface OverviewProps {
+  process: ProcessResponse;
+}
 
 const Overview: FC<OverviewProps> = function ({ process: { identity: processId, name } }) {
   const processesPairsTxQueryParams = {

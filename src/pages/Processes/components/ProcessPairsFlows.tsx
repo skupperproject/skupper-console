@@ -6,16 +6,16 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { RemoteFilterOptions } from '@API/REST.interfaces';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SKEmptyData from '@core/components/SkEmptyData';
 import FlowPairs from '@pages/shared/FlowPairs';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
+import { RemoteFilterOptionsProtocolMap } from '@sk-types/Processes.interfaces';
+import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
-import { ProcessPairsFlowsProps, RemoteFilterOptionsProtocolMap } from '../Processes.interfaces';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
@@ -84,6 +84,11 @@ const useProcessPairsContent = ({ protocol }: { protocol: AvailableProtocols | '
 
   return { queryParamsPaginated, handleGetFilters };
 };
+
+interface ProcessPairsFlowsProps {
+  processPairId: string;
+  protocol: AvailableProtocols | 'undefined';
+}
 
 const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId, protocol }) {
   const [tabSelected, setTabSelected] = useState<string>();

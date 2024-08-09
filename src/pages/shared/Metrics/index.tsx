@@ -3,6 +3,7 @@ import { FC, useCallback, useRef, useState, startTransition } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 import { AvailableProtocols } from '@API/REST.enum';
+import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import MetricFilters from './components/Filters';
 import Latency from './components/Latency';
@@ -10,7 +11,6 @@ import Request from './components/Request';
 import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
-import { ExpandedMetricSections, MetricsProps, QueryMetricsParams } from './Metrics.interfaces';
 
 interface UseMetricsProps {
   defaultMetricFilterValues: QueryMetricsParams;
@@ -66,6 +66,19 @@ export const useMetrics = ({
     handleSectionToggle
   };
 };
+
+export interface MetricsProps {
+  defaultMetricFilterValues: QueryMetricsParams;
+  defaultOpenSections?: ExpandedMetricSections;
+  sourceSites?: { destinationName: string }[];
+  destSites?: { destinationName: string }[];
+  sourceProcesses?: { destinationName: string; siteName?: string }[];
+  destProcesses?: { destinationName: string; siteName?: string }[];
+  availableProtocols?: AvailableProtocols[];
+  configFilters?: ConfigMetricFilters;
+  onGetMetricFiltersConfig?: Function;
+  onGetExpandedSectionsConfig?: Function;
+}
 
 const Metrics: FC<MetricsProps> = function (props) {
   const {
