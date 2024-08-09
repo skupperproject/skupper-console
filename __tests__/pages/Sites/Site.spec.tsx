@@ -7,13 +7,13 @@ import * as router from 'react-router';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { ProcessResponse, SiteResponse } from '../../../src/API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import { SiteLabels } from '../../../src/pages/Sites/Sites.enum';
 import Site from '../../../src/pages/Sites/views/Site';
+import { ProcessResponse, SiteResponse } from '../../../src/types/REST.interfaces';
 
 const siteResults = sitesData.results as SiteResponse[];
 const processResults = processesData.results as ProcessResponse[];

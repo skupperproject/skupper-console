@@ -1,4 +1,3 @@
-import { axiosFetch } from './apiMiddleware';
 import {
   ComponentResponse,
   ServiceResponse,
@@ -14,7 +13,9 @@ import {
   SitePairsResponse,
   ComponentPairsResponse,
   UserResponse
-} from './REST.interfaces';
+} from '@sk-types/REST.interfaces';
+
+import { axiosFetch } from './apiMiddleware';
 import {
   getFlowsPairsByServicePATH,
   getProcessesByServicePATH,

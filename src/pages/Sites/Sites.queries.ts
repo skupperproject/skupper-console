@@ -1,5 +1,5 @@
 import { RESTApi } from '@API/REST.api';
-import { RemoteFilterOptions } from '@API/REST.interfaces';
+import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from './Sites.enum';
 

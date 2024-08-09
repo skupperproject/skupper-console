@@ -2,10 +2,10 @@ import { FC, useCallback, useState } from 'react';
 
 import { Modal, ModalVariant } from '@patternfly/react-core';
 
-import { FlowPairsResponse } from '@API/REST.interfaces';
 import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable, { SKTableProps } from '@core/components/SkTable';
 import SkViewDetailCell from '@core/components/SkViewDetailsCell';
+import { FlowPairsResponse } from '@sk-types/REST.interfaces';
 
 import FlowPair from './FlowPair';
 import { flowPairsComponentsTable } from './FlowPair.constants';

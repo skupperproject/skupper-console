@@ -1,4 +1,5 @@
-import { IntervalTimePropValue } from './Prometheus.interfaces';
+import { IntervalTimePropValue } from '@sk-types/Prometheus.interfaces';
+
 import { AvailableProtocols, Quantiles } from './REST.enum';
 
 export const queries = {

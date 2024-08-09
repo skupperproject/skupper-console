@@ -1,5 +1,6 @@
+import { QueryParams, RemoteFilterOptions } from '@sk-types/REST.interfaces';
+
 import { SortDirection } from './REST.enum';
-import { QueryParams, RemoteFilterOptions } from './REST.interfaces';
 
 /**
  * Extracts the "results" property from an Axios HTTP response data object with a "results" property.

@@ -1,8 +1,6 @@
 import { ComboData, EdgeData, NodeData } from '@antv/g6';
 
 import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
-
-import { graphIconsMap } from '../Graph.config';
 import {
   GraphCombo,
   GraphEdge,
@@ -10,7 +8,9 @@ import {
   LocalStorageData,
   LocalStorageDataSaved,
   LocalStorageDataSavedPayload
-} from '../Graph.interfaces';
+} from '@sk-types/Graph.interfaces';
+
+import { graphIconsMap } from '../Graph.config';
 
 const prefixLocalStorageItem = 'skupper';
 const GRAPH_CONTAINER_ID = 'container';

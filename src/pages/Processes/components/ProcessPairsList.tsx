@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { ProcessPairsResponse } from '@API/REST.interfaces';
 import { SMALL_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable from '@core/components/SkTable';
 import { TopologyController } from '@pages/Topology/services';
 import { QueriesTopology } from '@pages/Topology/Topology.enum';
+import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 
 import {
   CustomProcessPairCells,
@@ -19,13 +19,16 @@ import {
   processesHttpConnectedColumns
 } from '../Processes.constants';
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
-import { ProcessesPairsListProps } from '../Processes.interfaces';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
   fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
   fetchLatency: { groupBy: 'sourceProcess, destProcess' }
 };
+
+interface ProcessesPairsListProps {
+  process: ProcessResponse;
+}
 
 const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   process: { identity: processId, name: processName }

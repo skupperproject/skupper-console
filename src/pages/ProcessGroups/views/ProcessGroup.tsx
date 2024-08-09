@@ -14,8 +14,8 @@ import MainContainer from '@layout/MainContainer';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
+import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import { ComponentLabels, QueriesComponent } from '../ProcessGroups.enum';

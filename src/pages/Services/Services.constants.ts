@@ -1,13 +1,13 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
-import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@API/REST.interfaces';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
+import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@sk-types/REST.interfaces';
+import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
 
@@ -26,7 +26,7 @@ export const customServiceCells = {
 };
 
 // Services Table
-export const ServiceColumns: SKColumn<ServiceResponse>[] = [
+export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
     name: ServicesLabels.Name,
     prop: 'name',

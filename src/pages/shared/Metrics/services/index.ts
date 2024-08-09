@@ -1,5 +1,4 @@
 import { PrometheusApi } from '@API/Prometheus.api';
-import { PrometheusMetric, PrometheusQueryParams } from '@API/Prometheus.interfaces';
 import {
   getTimeSeriesLabelsFromPrometheusData,
   getTimeSeriesValuesFromPrometheusData,
@@ -7,10 +6,8 @@ import {
 } from '@API/Prometheus.utils';
 import { Quantiles } from '@API/REST.enum';
 import { calculateStep, defaultTimeInterval } from '@config/prometheus';
-import { skAxisXY } from '@core/components/SkChartArea/SkChartArea.interfaces';
 import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
-
 import {
   LatencyMetricsProps,
   ByteRateMetrics,
@@ -18,10 +15,13 @@ import {
   RequestMetrics,
   ResponseMetrics,
   LantencyBucketMetrics,
-  ConnectionMetrics
-} from './services.interfaces';
+  ConnectionMetrics,
+  QueryMetricsParams
+} from '@sk-types/Metrics.interfaces';
+import { PrometheusMetric, PrometheusQueryParams } from '@sk-types/Prometheus.interfaces';
+import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
+
 import { MetricsLabels } from '../Metrics.enum';
-import { QueryMetricsParams } from '../Metrics.interfaces';
 
 const MetricsController = {
   getLatencyPercentiles: async ({

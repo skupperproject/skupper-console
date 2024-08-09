@@ -7,12 +7,12 @@ import * as router from 'react-router';
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { AvailableProtocols } from '../../../src/API/REST.enum';
-import { ProcessPairsResponse, SitePairsResponse } from '../../../src/API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import ProcessPairs, { ProcessPairsContent } from '../../../src/pages/Processes/views/ProcessPairs';
 import LoadingPage from '../../../src/pages/shared/Loading';
+import { ProcessPairsResponse, SitePairsResponse } from '../../../src/types/REST.interfaces';
 
 const processPairsResultOpToCart = processPairsData.results[0] as ProcessPairsResponse | SitePairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as ProcessPairsResponse | SitePairsResponse; // old TCP flow and active TCP flow

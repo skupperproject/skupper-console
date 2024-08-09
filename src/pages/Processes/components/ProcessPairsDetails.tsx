@@ -5,13 +5,17 @@ import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { ProcessResponse } from '@API/REST.interfaces';
 import { VarColors } from '@config/colors';
 import SkLinkCell from '@core/components/SkLinkCell';
+import { ProcessResponse } from '@sk-types/REST.interfaces';
 
 import Details from './Details';
 import { ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
-import { ProcessPairsDetailsDataProps, ProcessPairsDetailsProps } from '../Processes.interfaces';
+
+interface ProcessPairsDetailsProps {
+  sourceId: string;
+  destinationId: string;
+}
 
 const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, destinationId }) {
   const { source, destination } = useFetchProcessPairDetails({ sourceId, destinationId });
@@ -52,6 +56,11 @@ const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, 
 };
 
 export default ProcessPairsDetails;
+
+interface ProcessPairsDetailsDataProps {
+  source: ProcessResponse;
+  destination: ProcessResponse;
+}
 
 const useFetchProcessPairDetails = ({
   sourceId,

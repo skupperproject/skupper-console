@@ -19,10 +19,10 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
+import { FilterType, FilterSelected, FilterTypeWithSearchText } from '@sk-types/SkFilter.interfaces';
 import useDebounce from 'hooks/useDebounce';
 
 import { SkSearchFilterController } from './services';
-import { FilterType, FilterSelected, ActiveFiltersProps, ActiveFilterProps } from './SkFilter.interfaces';
 import { DEBOUNCE_TIME_MS } from './SkSearchFilter.constants';
 import { SkSearchFilterLabels } from './SkSearchFilter.enum';
 
@@ -148,6 +148,13 @@ const SkSearchFilter: FC<SkSearchFilterProps> = memo(({ text = '', onSearch, sel
 
 export default SkSearchFilter;
 
+interface ActiveFilterProps {
+  id: string;
+  name: string;
+  searchValue: string;
+  onDelete: () => void;
+}
+
 const ActiveFilter: FC<ActiveFilterProps> = function ({ id, name, searchValue, onDelete }) {
   return (
     <ToolbarFilter key={`${id}${name}${searchValue}`} categoryName={name}>
@@ -157,6 +164,12 @@ const ActiveFilter: FC<ActiveFilterProps> = function ({ id, name, searchValue, o
     </ToolbarFilter>
   );
 };
+
+interface ActiveFiltersProps {
+  filterSelected: FilterTypeWithSearchText[];
+  onDeleteFilter: (id: string) => void;
+  onDeleteAll: () => void;
+}
 
 const ActiveFilters: FC<ActiveFiltersProps> = function ({ filterSelected, onDeleteFilter, onDeleteAll }) {
   return (

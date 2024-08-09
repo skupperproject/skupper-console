@@ -1,4 +1,4 @@
-import { IntervalTimeMap } from '@API/Prometheus.interfaces';
+import { IntervalTimeMap } from '@sk-types/Prometheus.interfaces';
 
 export function calculateStep(seconds: number) {
   if (seconds <= 60) {

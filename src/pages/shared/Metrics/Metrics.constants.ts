@@ -1,5 +1,6 @@
+import { ConfigMetricFilters } from '@sk-types/Metrics.interfaces';
+
 import { MetricsLabels } from './Metrics.enum';
-import { ConfigMetricFilters } from './Metrics.interfaces';
 
 // default values to enable/disable filters
 export const configDefaultFilters: ConfigMetricFilters = {

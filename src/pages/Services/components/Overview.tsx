@@ -9,7 +9,7 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 

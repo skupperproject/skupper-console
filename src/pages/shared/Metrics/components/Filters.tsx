@@ -23,10 +23,23 @@ import { prometheusProcessNameseparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTimeRangeFilter from '@core/components/SkTimeRangeFilter';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
+import { ConfigMetricFilters, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import { configDefaultFilters, filterToggleDefault } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
-import { ConfigMetricFilters, MetricFiltersProps, QueryMetricsParams } from '../Metrics.interfaces';
+
+interface MetricFiltersProps {
+  defaultMetricFilterValues: QueryMetricsParams;
+  sourceSites?: { destinationName: string }[];
+  destSites?: { destinationName: string }[];
+  sourceProcesses?: { destinationName: string; siteName?: string }[];
+  destProcesses?: { destinationName: string; siteName?: string }[];
+  availableProtocols?: AvailableProtocols[];
+  configFilters?: ConfigMetricFilters;
+  isRefetching?: boolean;
+  onRefetch?: Function;
+  onSelectFilters?: (params: QueryMetricsParams) => void;
+}
 
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
 const MetricFilters: FC<MetricFiltersProps> = memo(

@@ -1,7 +1,7 @@
-import { CustomItemsProps } from '@core/components/SkGraph/Graph.interfaces';
+import { TopologyDisplayOptionsMenu } from '@sk-types/Topology.interfaces';
+import { GraphElementNames } from 'types/Graph.interfaces';
 
 import { TopologyLabels, TopologyRoutesPaths } from './Topology.enum';
-import { DisplaySelectProps } from './Topology.interfaces';
 
 export const TopologyPaths = {
   path: TopologyRoutesPaths.Topology,
@@ -17,7 +17,7 @@ export const SHOW_INBOUND_METRICS = 'show-inbound-metrics';
 export const SHOW_LINK_METRIC_DISTRIBUTION = 'show-metric-distribution';
 export const SHOW_LINK_METRIC_VALUE = 'show-metric-value';
 
-export const displayOptionsForProcesses: DisplaySelectProps[] = [
+export const displayOptionsForProcesses: TopologyDisplayOptionsMenu[] = [
   {
     title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
     items: [
@@ -79,7 +79,7 @@ export const displayOptionsForProcesses: DisplaySelectProps[] = [
 export const SHOW_ROUTER_LINKS = 'show-site-router-links';
 export const SHOW_DATA_LINKS = 'show-site-data-links';
 
-export const displayOptionsForSites: DisplaySelectProps[] = [
+export const displayOptionsForSites: TopologyDisplayOptionsMenu[] = [
   {
     title: TopologyLabels.TitleGroupDisplayOptionsLinkType,
     items: [
@@ -137,7 +137,7 @@ export const displayOptionsForSites: DisplaySelectProps[] = [
   }
 ];
 
-export const shape: Record<string, CustomItemsProps> = {
+export const shape: Record<string, GraphElementNames> = {
   bound: 'SkNode',
   unbound: 'SkNodeUnexposed',
   remote: 'SkNodeRemote'

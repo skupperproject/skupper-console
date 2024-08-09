@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 
 import { SelectOptionProps } from '@patternfly/react-core';
 
-import { Option } from './SkSelectTypeHeadWithCheckbox.interfaces';
-
 export interface SkSelectTypeHeadWithCheckboxUseDataUseDataProps {
   initIdsSelected: string[];
-  initOptions: Option[];
+  initOptions: {
+    value: string;
+    label: string;
+    isDisabled?: boolean;
+  }[];
   onSelected?: (items: string[]) => void;
 }
 

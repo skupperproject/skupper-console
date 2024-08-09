@@ -6,9 +6,9 @@ import { HexColors, VarColors } from '@config/colors';
 import { DEFAULT_FONT_VAR } from '@config/config';
 import { formatByteRate } from '@core/utils/formatBytes';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
+import { SkSankeyChartLink, SkSankeyChartNode } from '@sk-types/SkSankeyChart.interfaces';
 
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
-import { SkSankeyChartLink, SkSankeyChartNode } from './SkSankeyChart.interfaces';
 import SKEmptyData from '../SkEmptyData';
 
 interface SkSankeyChartProps {

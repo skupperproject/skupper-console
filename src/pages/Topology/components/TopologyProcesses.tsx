@@ -18,10 +18,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
 import SkGraph from '@core/components/SkGraph';
-import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { SkGraphProps } from 'types/Graph.interfaces';
 
-import TopologyDetails from './TopologyDetails';
+import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyProcessData from './useTopologyProcessData';
 import useServiceState from './useTopologyServiceState';
@@ -40,13 +40,12 @@ import {
   displayOptionsForProcesses
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
-import { NodeOrEdgeListProps } from '../Topology.interfaces';
 
 const TopologyProcesses: FC<{
   serviceIds?: string[];
   ids?: string[];
   GraphComponent?: ComponentType<SkGraphProps>;
-  ModalComponent?: ComponentType<NodeOrEdgeListProps>;
+  ModalComponent?: ComponentType<TopoloyDetailsProps>;
 }> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = TopologyDetails }) {
   const navigate = useNavigate();
 

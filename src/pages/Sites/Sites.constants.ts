@@ -1,5 +1,5 @@
-import { SiteResponse } from '@API/REST.interfaces';
-import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
+import { SiteResponse } from '@sk-types/REST.interfaces';
+import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { SiteLabels, SitesRoutesPaths } from './Sites.enum';
 
@@ -8,7 +8,7 @@ export const SitesPaths = {
   name: SiteLabels.Section
 };
 
-export const siteColumns: SKColumn<SiteResponse>[] = [
+export const siteColumns: SKTableColumn<SiteResponse>[] = [
   {
     name: SiteLabels.Name,
     prop: 'name' as keyof SiteResponse,

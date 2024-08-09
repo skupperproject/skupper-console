@@ -4,8 +4,8 @@ import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
 import SkGraph from '@core/components/SkGraph';
-import { SkGraphProps } from '@core/components/SkGraph/Graph.interfaces';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyComponentData from './useTopologyComponentData';

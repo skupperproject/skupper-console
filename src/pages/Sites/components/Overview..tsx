@@ -4,11 +4,11 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
-import { SiteResponse } from '@API/REST.interfaces';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@pages/shared/Metrics/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { SiteResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
 

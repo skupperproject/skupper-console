@@ -6,13 +6,13 @@ import { Server } from 'miragejs';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
 import * as PrometheusAPIModule from '../../../src/API/Prometheus.api';
-import { ProcessResponse } from '../../../src/API/REST.interfaces';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import TcpConnection from '../../../src/pages/shared/Metrics/components/TcpConnection';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
+import { ProcessResponse } from '../../../src/types/REST.interfaces';
 
 const processResult = processesData.results[0] as ProcessResponse;
 

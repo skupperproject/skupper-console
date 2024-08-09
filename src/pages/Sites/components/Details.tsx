@@ -22,14 +22,18 @@ import { Direction, Role } from '@API/REST.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SKEmptyData from '@core/components/SkEmptyData';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { SiteResponse } from '@sk-types/REST.interfaces';
 
 import SitesController from '../services';
 import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
-import { DetailsProps } from '../Sites.interfaces';
 import { queryDetails } from '../Sites.queries';
 
 const processQueryParams = { endTime: 0 };
 const linkQueryParams = { direction: Direction.Outgoing };
+
+interface DetailsProps {
+  site: SiteResponse;
+}
 
 const Details: FC<DetailsProps> = function ({ site }) {
   const { identity: siteId, nameSpace, siteVersion, platform } = site;

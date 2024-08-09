@@ -22,14 +22,14 @@ import {
 import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { ProcessPairsResponse } from '@API/REST.interfaces';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
+import { TopologyMetrics } from '@sk-types/Topology.interfaces';
 
 import { TopologyLabels } from '../Topology.enum';
-import { TopologyMetrics } from '../Topology.interfaces';
 
 const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }> = function ({ data, metrics }) {
   const sourceNames = data.map((itemSelected) => itemSelected.sourceName);

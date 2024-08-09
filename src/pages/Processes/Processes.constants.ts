@@ -1,15 +1,15 @@
-import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@API/REST.interfaces';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkExposedCell from '@core/components/SkExposedCell';
 import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { SKColumn } from '@core/components/SkTable/SkTable.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
 import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
+import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
 
@@ -60,7 +60,7 @@ export const CustomProcessCells = {
   ExposureCell: SkExposedCell
 };
 
-export const processesTableColumns: SKColumn<ProcessResponse>[] = [
+export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Name,
     prop: 'name' as keyof ProcessResponse,
@@ -89,7 +89,7 @@ export const processesTableColumns: SKColumn<ProcessResponse>[] = [
   }
 ];
 
-export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
+export const processesConnectedColumns: SKTableColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessesLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,
@@ -120,7 +120,7 @@ export const processesConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
   }
 ];
 
-export const processesHttpConnectedColumns: SKColumn<ProcessPairsResponse>[] = [
+export const processesHttpConnectedColumns: SKTableColumn<ProcessPairsResponse>[] = [
   {
     name: ProcessesLabels.Process,
     prop: 'destinationName' as keyof ProcessPairsResponse,

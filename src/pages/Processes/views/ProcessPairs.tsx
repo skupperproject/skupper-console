@@ -12,7 +12,6 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 import ProcessPairDetails from '../components/ProcessPairsDetails';
 import ProcessPairsFlows from '../components/ProcessPairsFlows';
 import { ProcessesLabels } from '../Processes.enum';
-import { ProcessPairsContentProps } from '../Processes.interfaces';
 
 const ProcessPairs = function () {
   const { processPair } = useParams() as { processPair: string };
@@ -31,6 +30,13 @@ const ProcessPairs = function () {
     />
   );
 };
+
+export interface ProcessPairsContentProps {
+  processPairId: string;
+  sourceId: string;
+  destinationId: string;
+  protocol: AvailableProtocols | 'undefined';
+}
 
 export const ProcessPairsContent: FC<ProcessPairsContentProps> = function ({
   processPairId,

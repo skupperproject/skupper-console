@@ -16,16 +16,16 @@ import {
 } from '@patternfly/react-table';
 
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
+import { NonNullableValue, SKTableColumn } from '@sk-types/SkTable.interfaces';
 
 import SkPagination from './SkPagination';
-import { NonNullableValue, SKColumn } from './SkTable.interfaces';
 import SKEmptyData from '../SkEmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;
 
 export interface SKTableProps<T> {
-  columns: SKColumn<NonNullableValue<T>>[];
+  columns: SKTableColumn<NonNullableValue<T>>[];
   rows?: NonNullableValue<T>[];
   title?: string;
   customCells?: Record<string, Function>;

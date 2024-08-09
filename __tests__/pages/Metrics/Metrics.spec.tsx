@@ -5,9 +5,8 @@ import { act, render, renderHook } from '@testing-library/react';
 import { AvailableProtocols } from '../../../src/API/REST.enum';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
-import Metrics, { useMetrics } from '../../../src/pages/shared/Metrics';
+import Metrics, { MetricsProps, useMetrics } from '../../../src/pages/shared/Metrics';
 import { configDefaultFilters } from '../../../src/pages/shared/Metrics/Metrics.constants';
-import { MetricsProps } from '../../../src/pages/shared/Metrics/Metrics.interfaces';
 
 describe('useMetrics', () => {
   const initialProps = {

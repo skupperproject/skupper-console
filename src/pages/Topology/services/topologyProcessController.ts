@@ -1,9 +1,9 @@
 import { Role } from '@API/REST.enum';
-import { ProcessPairsResponse, ProcessResponse } from '@API/REST.interfaces';
-import { GraphEdge, GraphNode } from '@core/components/SkGraph/Graph.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
+import { TopologyMetrics } from '@sk-types/Topology.interfaces';
+import { GraphEdge, GraphNode } from 'types/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
-import { TopologyMetrics } from '../Topology.interfaces';
 
 import { TopologyController, groupEdges, groupNodes } from '.';
 

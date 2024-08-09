@@ -1,6 +1,6 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { AvailableProtocols, Binding, Direction, Role, SortDirection } from './REST.enum';
+import { AvailableProtocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
 
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = Direction.Outgoing | Direction.Incoming;

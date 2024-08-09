@@ -1,19 +1,19 @@
 import { PrometheusApi } from '@API/Prometheus.api';
-import { PrometheusMetric } from '@API/Prometheus.interfaces';
-import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@API/REST.interfaces';
 import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
-import { GraphEdge, GraphCombo, GraphNode, CustomItemsProps } from '@core/components/SkGraph/Graph.interfaces';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
-
-import { shape } from '../Topology.constants';
+import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
+import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@sk-types/REST.interfaces';
 import {
   TopologyMetrics,
   TopologyConfigMetrics,
-  DisplayOptions,
+  TopologyShowOptionsSelected,
   ProcessPairsWithMetrics
-} from '../Topology.interfaces';
+} from '@sk-types/Topology.interfaces';
+import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph.interfaces';
+
+import { shape } from '../Topology.constants';
 
 export const TopologyController = {
   getTopologyMetrics: async ({
@@ -37,7 +37,11 @@ export const TopologyController = {
 
   getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
-      .map(({ combo, comboName }) => ({ type: 'SkCombo' as CustomItemsProps, id: combo || '', label: comboName || '' }))
+      .map(({ combo, comboName }) => ({
+        type: 'SkCombo' as GraphElementNames,
+        id: combo || '',
+        label: comboName || ''
+      }))
       .sort((a, b) => a.label.localeCompare(b.label));
 
     // TODO: BE-bug: The API occasionally returns processes without a siteName for a site.
@@ -50,7 +54,7 @@ export const TopologyController = {
 
   convertPairsToEdges: (
     processesPairs: ProcessPairsResponse[] | ComponentPairsResponse[] | SitePairsResponse[],
-    type: CustomItemsProps
+    type: GraphElementNames
   ): GraphEdge[] =>
     processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
       type: sourceId === destinationId ? 'SkLoopEdge' : type,
@@ -141,7 +145,7 @@ export const TopologyController = {
     });
   },
 
-  configureEdges: (edges: GraphEdge[], options?: DisplayOptions): GraphEdge[] =>
+  configureEdges: (edges: GraphEdge[], options?: TopologyShowOptionsSelected): GraphEdge[] =>
     edges.map((edge) => {
       const byteRate = options?.showLinkByteRate ? edge?.metrics?.byteRate || 0 : undefined;
       const bytes = options?.showLinkBytes ? edge?.metrics?.bytes || 0 : undefined;

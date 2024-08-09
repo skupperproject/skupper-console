@@ -14,13 +14,7 @@ import {
 } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
-import {
-  GraphCombo,
-  GraphEdge,
-  GraphNode,
-  SkGraphProps,
-  LocalStorageData
-} from '@core/components/SkGraph/Graph.interfaces';
+import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
 
 import ControlBar from './components/ControlBar';
 import { registerElements } from './components/CustomElements';

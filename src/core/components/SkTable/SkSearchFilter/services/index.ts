@@ -1,4 +1,4 @@
-import { FilterType, FilterSelected, FilterTypeWithSearchText } from '../SkFilter.interfaces';
+import { FilterType, FilterSelected, FilterTypeWithSearchText } from '@sk-types/SkFilter.interfaces';
 
 export const SkSearchFilterController = {
   getFilterTypesWithSearchValues: (

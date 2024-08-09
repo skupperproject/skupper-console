@@ -1,10 +1,10 @@
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
-import { LinkResponse, SitePairsResponse, SiteResponse } from '@API/REST.interfaces';
-import { GraphEdge, GraphNode } from '@core/components/SkGraph/Graph.interfaces';
 import SitesController from '@pages/Sites/services';
+import { GraphEdge, GraphNode } from '@sk-types/Graph.interfaces';
+import { LinkResponse, SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { TopologyShowOptionsSelected, TopologyMetrics } from '@sk-types/Topology.interfaces';
 
 import { TopologyLabels } from '../Topology.enum';
-import { DisplayOptions, TopologyMetrics } from '../Topology.interfaces';
 
 import { TopologyController } from '.';
 
@@ -15,7 +15,7 @@ interface TopologySiteControllerProps {
   routerLinks: LinkResponse[] | null;
   sitesPairs: SitePairsResponse[] | null;
   metrics: TopologyMetrics | null;
-  options: DisplayOptions;
+  options: TopologyShowOptionsSelected;
 }
 
 const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) => {

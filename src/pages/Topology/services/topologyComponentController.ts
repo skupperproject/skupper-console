@@ -1,6 +1,6 @@
 import { Role } from '@API/REST.enum';
-import { ComponentPairsResponse, ComponentResponse } from '@API/REST.interfaces';
-import { GraphNode } from '@core/components/SkGraph/Graph.interfaces';
+import { ComponentPairsResponse, ComponentResponse } from '@sk-types/REST.interfaces';
+import { GraphNode } from 'types/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
 

@@ -9,12 +9,12 @@ import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
-import { SkGraphProps } from '../../../src/core/components/SkGraph/Graph.interfaces';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import TopologySite from '../../../src/pages/Topology/components/TopologySite';
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { SHOW_DATA_LINKS } from '../../../src/pages/Topology/Topology.constants';
+import { SkGraphProps } from '../../../src/types/Graph.interfaces';
 
 const sitesResults = sitesData.results;
 

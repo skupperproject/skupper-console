@@ -1,8 +1,8 @@
-import { PrometheusMetric } from '@API/Prometheus.interfaces';
 import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
-import { ServiceResponse } from '@API/REST.interfaces';
 import { VarColors } from '@config/colors';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
+import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
+import { ServiceResponse } from '@sk-types/REST.interfaces';
 
 interface SKSankeyNodeProps {
   id: string;
