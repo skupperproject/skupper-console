@@ -8,7 +8,7 @@ import { getDataFromSession, storeDataToSession } from '@core/utils/persistData'
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
 import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-import { SiteResponse } from '@sk-types/REST.interfaces';
+import { SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
 
@@ -30,7 +30,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
     destinationId: siteId
   };
 
-  const [{ data: siteTxData }, { data: siteRxData }] = useSuspenseQueries({
+  const [{ data: sitePairsTx }, { data: sitePairsRx }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesSites.GetSitesPairs, sitePairsTxQueryParams],
@@ -57,22 +57,11 @@ const Overview: FC<OverviewProps> = function ({ site }) {
     [siteId]
   );
 
-  const destProcessesRx = [
-    ...(siteTxData || []).map(({ destinationName, destinationId }) => ({
-      destinationName: composePrometheusSiteLabel(destinationName, destinationId),
-      siteName: ''
-    }))
-  ];
-
-  const destProcessesTx = [
-    ...(siteRxData || []).map(({ sourceName, sourceId }) => ({
-      destinationName: composePrometheusSiteLabel(sourceName, sourceId),
-      siteName: ''
-    }))
-  ];
-
   const sourceSites = [{ destinationName: composePrometheusSiteLabel(name, siteId) }];
-  const destSites = removeDuplicatesFromArrayOfObjects([...destProcessesTx, ...destProcessesRx]);
+  const destSites = removeDuplicatesFromArrayOfObjects([
+    ...createDestProcesses(sitePairsTx, 'destinationName', 'destinationId'),
+    ...createDestProcesses(sitePairsRx, 'sourceName', 'sourceId')
+  ]);
 
   return (
     <Metrics
@@ -98,3 +87,14 @@ const Overview: FC<OverviewProps> = function ({ site }) {
 };
 
 export default Overview;
+
+const createDestProcesses = (
+  sitePairs: SitePairsResponse[],
+  nameKey: keyof SitePairsResponse,
+  idKey: keyof SitePairsResponse
+) => [
+  ...(sitePairs || []).map(({ [nameKey]: namePair, [idKey]: idPair }) => ({
+    destinationName: composePrometheusSiteLabel(namePair as string, idPair as string),
+    siteName: ''
+  }))
+];
