@@ -151,14 +151,6 @@
     "react/display-name": 0,
     "require-atomic-updates": 0,
     "@typescript-eslint/no-shadow": ["error", { "ignoreTypeValueShadow": true }],
-    "@typescript-eslint/padding-line-between-statements": [
-      "error",
-      {
-        "blankLine": "always",
-        "next": "*",
-        "prev": ["interface", "type", "function"]
-      }
-    ],
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/naming-convention": [
