@@ -8,8 +8,8 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
-import useTopologySiteData from './useTopologySiteData';
-import useTopologyState from './useTopologyState';
+import useTopologySiteData from '../hooks/useTopologySiteData';
+import useTopologyState from '../hooks/useTopologyState';
 import { TopologySiteController } from '../services/topologySiteController';
 import {
   displayOptionsForSites,

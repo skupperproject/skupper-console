@@ -3,22 +3,22 @@ import { FC } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { httpSelectOptions } from '@pages/shared/FlowPairs/FlowPair.constants';
+import { httpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 
-import ExposedServers from '../components/ExposedServers';
-import FlowPairsService from '../components/FlowPairsService';
-import Overview from '../components/Overview';
-import ResourceDistributionFlowChart from '../components/ResourceDistrubutionFlowChart';
+import ExposedServers from './ExposedServers';
+import FlowPairsTable from './FlowPairsTable';
+import Overview from './Overview';
+import ProcessPairsSankeyChart from './ProcessPairsSankey';
 import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, httpColumns, initRequestsQueryParams } from '../Services.constants';
 
-interface RequestsByServiceProps {
+interface HttpRequestsProps {
   serviceId: string;
   serviceName: string;
   protocol: AvailableProtocols;
   viewSelected: string;
 }
 
-const HttpService: FC<RequestsByServiceProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
+const HttpRequests: FC<HttpRequestsProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
   return (
     <>
       {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} serviceName={serviceName} protocol={protocol} />}
@@ -26,10 +26,10 @@ const HttpService: FC<RequestsByServiceProps> = function ({ serviceId, serviceNa
       {viewSelected === TAB_2_KEY && (
         <Stack hasGutter>
           <StackItem>
-            <ResourceDistributionFlowChart serviceId={serviceId} serviceName={serviceName} />
+            <ProcessPairsSankeyChart serviceId={serviceId} serviceName={serviceName} />
           </StackItem>
           <StackItem>
-            <FlowPairsService
+            <FlowPairsTable
               serviceId={serviceId}
               options={httpSelectOptions}
               columns={httpColumns}
@@ -42,4 +42,4 @@ const HttpService: FC<RequestsByServiceProps> = function ({ serviceId, serviceNa
   );
 };
 
-export default HttpService;
+export default HttpRequests;

@@ -3,12 +3,12 @@ import { FC } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 import { AvailableProtocols } from '@API/REST.enum';
-import { tcpFlowPairsColumns, tcpSelectOptions } from '@pages/shared/FlowPairs/FlowPair.constants';
+import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 
+import ProcessPairsSankeyChart from './ProcessPairsSankey';
 import ExposedServers from '../components/ExposedServers';
-import FlowPairsService from '../components/FlowPairsService';
+import FlowPairsTable from '../components/FlowPairsTable';
 import Overview from '../components/Overview';
-import ResourceDistributionFlowChart from '../components/ResourceDistrubutionFlowChart';
 import {
   TAB_0_KEY,
   TAB_1_KEY,
@@ -19,19 +19,14 @@ import {
   tcpColumns
 } from '../Services.constants';
 
-interface ConnectionsByServiceProps {
+interface TcpConnectionsProps {
   serviceId: string;
   serviceName: string;
   protocol: AvailableProtocols;
   viewSelected: string;
 }
 
-const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
-  serviceId,
-  serviceName,
-  protocol,
-  viewSelected
-}) {
+const TcpConnections: FC<TcpConnectionsProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
   const service = {
     [TAB_2_KEY]: { filters: initActiveConnectionsQueryParams, columns: tcpColumns },
     [TAB_3_KEY]: { filters: initOldConnectionsQueryParams, columns: tcpFlowPairsColumns }
@@ -46,10 +41,10 @@ const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
       {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
         <Stack hasGutter>
           <StackItem>
-            <ResourceDistributionFlowChart serviceId={serviceId} serviceName={serviceName} />
+            <ProcessPairsSankeyChart serviceId={serviceId} serviceName={serviceName} />
           </StackItem>
           <StackItem>
-            <FlowPairsService
+            <FlowPairsTable
               serviceId={serviceId}
               options={tcpSelectOptions}
               columns={service[viewSelected].columns}
@@ -62,4 +57,4 @@ const ConnectionsByService: FC<ConnectionsByServiceProps> = function ({
   );
 };
 
-export default ConnectionsByService;
+export default TcpConnections;

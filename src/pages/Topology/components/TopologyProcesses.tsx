@@ -23,9 +23,9 @@ import { SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
-import useTopologyProcessData from './useTopologyProcessData';
-import useServiceState from './useTopologyServiceState';
-import useTopologyState from './useTopologyState';
+import useTopologyProcessData from '../hooks/useTopologyProcessData';
+import useServiceState from '../hooks/useTopologyServiceState';
+import useTopologyState from '../hooks/useTopologyState';
 import { TopologyController } from '../services';
 import { TopologyProcessController } from '../services/topologyProcessController';
 import {

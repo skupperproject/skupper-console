@@ -4,8 +4,8 @@ import { Server } from 'miragejs';
 import flowPairsData from '../../mocks/data/FLOW_PAIRS.json';
 import { loadMockServer } from '../../mocks/server';
 import { getTestsIds } from '../../src/config/testIds';
+import FlowPair from '../../src/core/components/SkFlowPairsTable/FlowPair';
 import { Wrapper } from '../../src/core/components/Wrapper';
-import FlowPair from '../../src/pages/shared/FlowPairs/FlowPair';
 import { FlowPairsResponse } from '../../src/types/REST.interfaces';
 
 describe('FlowPairs component', () => {

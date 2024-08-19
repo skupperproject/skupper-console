@@ -8,7 +8,7 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SKEmptyData from '@core/components/SkEmptyData';
-import FlowPairs from '@pages/shared/FlowPairs';
+import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
 import { RemoteFilterOptionsProtocolMap } from '@sk-types/Processes.interfaces';
 import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
@@ -165,7 +165,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
               eventKey={TAB_1_KEY}
               title={<TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>}
             >
-              <FlowPairs
+              <SkFlowPairsTable
                 data-testid={'tcp-active-connections-table'}
                 columns={activeTcpColumns}
                 rows={activeConnections}
@@ -183,7 +183,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
               eventKey={TAB_2_KEY}
               title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
             >
-              <FlowPairs
+              <SkFlowPairsTable
                 data-testid={'tcp-old-connections-table'}
                 columns={oldTcpColumns}
                 rows={oldConnections}
@@ -200,7 +200,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
               eventKey={TAB_3_KEY}
               title={<TabTitleText>{`${ProcessesLabels.Http2Requests} (${http2RequestsCount})`}</TabTitleText>}
             >
-              <FlowPairs
+              <SkFlowPairsTable
                 data-testid={'http2-table'}
                 columns={httpColumns}
                 rows={http2Requests}
@@ -218,7 +218,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ processPairId,
               eventKey={TAB_4_KEY}
               title={<TabTitleText>{`${ProcessesLabels.HttpRequests} (${httpRequestsCount})`}</TabTitleText>}
             >
-              <FlowPairs
+              <SkFlowPairsTable
                 data-testid={'http-table'}
                 title={ProcessesLabels.HttpRequests}
                 columns={httpColumns}
