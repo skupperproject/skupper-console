@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 
-import useServiceState from '../../../src/pages/Topology/components/useTopologyServiceState';
+import useServiceState from '../../../src/pages/Topology/hooks/useTopologyServiceState';
 
 describe('useTopologyServiceState', () => {
   beforeEach(() => {

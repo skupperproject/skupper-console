@@ -8,8 +8,8 @@ import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
 import { SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
-import useTopologyComponentData from './useTopologyComponentData';
-import useTopologyState from './useTopologyState';
+import useTopologyComponentData from '../hooks/useTopologyComponentData';
+import useTopologyState from '../hooks/useTopologyState';
 import { TopologyComponentController } from '../services/topologyComponentController';
 import { TopologyLabels } from '../Topology.enum';
 

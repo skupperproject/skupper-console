@@ -1,12 +1,12 @@
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkExposedCell from '@core/components/SkExposedCell';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { FlowPairLabels } from '@core/components/SkFlowPairsTable/FlowPair.enum';
 import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
-import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';

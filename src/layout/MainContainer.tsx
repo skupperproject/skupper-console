@@ -21,7 +21,7 @@ import SkUpdateDataButton from '@core/components/SkUpdateDataButton';
 import LoadingPage from '@pages/shared/Loading';
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
-import NavigationViewLink from '../core/components/NavigationViewLink';
+import SkNavigationViewLink from '../core/components/SkNavigationViewLink';
 import TransitionPage from '../core/components/TransitionPages/Fade';
 
 import '@patternfly/patternfly/patternfly-addons.css';
@@ -74,7 +74,7 @@ const MainContainer: FC<MainContainerProps> = function ({
                       {link && <ToolbarItem variant="separator" />}
                       {link && (
                         <ToolbarItem>
-                          {<NavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />}
+                          {<SkNavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />}
                         </ToolbarItem>
                       )}
                     </ToolbarContent>

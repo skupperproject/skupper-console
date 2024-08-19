@@ -1,11 +1,11 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE } from '@config/config';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { FlowPairLabels } from '@core/components/SkFlowPairsTable/FlowPair.enum';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@pages/shared/FlowPairs/FlowPair.constants';
-import { FlowPairLabels } from '@pages/shared/FlowPairs/FlowPair.enum';
 import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 

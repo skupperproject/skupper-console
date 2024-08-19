@@ -1,54 +1,15 @@
-import { startTransition, useCallback, useState } from 'react';
-
-import { useSuspenseQueries } from '@tanstack/react-query';
-
-import { PrometheusApi } from '@API/Prometheus.api';
-import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import MainContainer from '@layout/MainContainer';
-import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
 
-import { ServicesController } from '../services';
+import useServicesData from '../hooks/useServicesData';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
-import { ServicesLabels, QueriesServices } from '../Services.enum';
-
-const initOldConnectionsQueryParams: RemoteFilterOptions = {
-  limit: BIG_PAGINATION_SIZE
-};
+import { ServicesLabels } from '../Services.enum';
 
 const Services = function () {
-  const [servicesQueryParams, setServicesQueryParams] = useState<RemoteFilterOptions>(initOldConnectionsQueryParams);
-
-  const [{ data: servicesData }, { data: tcpActiveFlows }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesServices.GetServices, servicesQueryParams],
-        queryFn: () => RESTApi.fetchServices(servicesQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesServices.GetPrometheusActiveFlows],
-        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService(),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
-  });
-
-  const handleSetServiceFilters = useCallback((params: RemoteFilterOptions) => {
-    startTransition(() => {
-      setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
-    });
-  }, []);
-
-  const services = servicesData?.results || [];
-  const serviceCount = servicesData?.timeRangeCount || 0;
-
-  const serviceRows = ServicesController.extendServicesWithActiveAndTotalFlowPairs(services, {
-    tcpActiveFlows
-  });
+  const { serviceRows, timeRangeCount, handleSetServiceFilters } = useServicesData({ limit: BIG_PAGINATION_SIZE });
 
   return (
     <MainContainer
@@ -63,9 +24,9 @@ const Services = function () {
             rows={serviceRows}
             columns={ServiceColumns}
             pagination={true}
-            paginationPageSize={initOldConnectionsQueryParams.limit}
+            paginationPageSize={BIG_PAGINATION_SIZE}
             onGetFilters={handleSetServiceFilters}
-            paginationTotalRows={serviceCount}
+            paginationTotalRows={timeRangeCount}
             customCells={customServiceCells}
           />
         </>

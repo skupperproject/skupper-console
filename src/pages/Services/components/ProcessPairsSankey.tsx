@@ -18,12 +18,12 @@ import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
 import { ServicesLabels, QueriesServices } from '../Services.enum';
 
-interface ResourceDistrubutionFlowChartProps {
+interface SankeyChartProps {
   serviceId: string;
   serviceName: string;
 }
 
-const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = function ({ serviceId, serviceName }) {
+const ProcessPairsSankeyChart: FC<SankeyChartProps> = function ({ serviceId, serviceName }) {
   const [metricSelected, setMetricSelected] = useState(defaultMetric);
   const [clientResourceSelected, setClientResourceSelected] = useState<'client' | 'clientSite'>(
     ServiceClientResourceOptions[0].id
@@ -103,4 +103,4 @@ const ResourceDistributionFlowChart: FC<ResourceDistrubutionFlowChartProps> = fu
   );
 };
 
-export default ResourceDistributionFlowChart;
+export default ProcessPairsSankeyChart;

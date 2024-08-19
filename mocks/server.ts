@@ -1,3 +1,6 @@
+import { createServer, Response } from 'miragejs';
+
+import { AvailableProtocols, Direction } from '@API/REST.enum';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -12,9 +15,6 @@ import {
   ComponentPairsResponse,
   SitePairsResponse
 } from '@sk-types/REST.interfaces';
-import { createServer, Response } from 'miragejs';
-
-import { AvailableProtocols, Direction } from '@API/REST.enum';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
 const ITEM_COUNT = Number(process.env.MOCK_ITEM_COUNT) || 0;
@@ -41,6 +41,7 @@ const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 interface ApiProps {
   params: Record<string, string>;
   queryParams: Record<string, string[] | string | null | number | undefined>;
+  url?: string;
 }
 
 const mockSitesForPerf: SiteResponse[] = [];
@@ -224,11 +225,12 @@ export const MockApi = {
 
     return { results };
   },
-  getProcesses: (_: unknown, { queryParams }: ApiProps) => {
+  getProcesses: (_: unknown, { queryParams, url }: ApiProps) => {
     const processesForPerfTests = ITEM_COUNT ? mockProcessesForPerf : [];
     const results = [...processes.results, ...processesForPerfTests];
+    const filters = getQueryParams(url);
 
-    if (queryParams && !Object.keys(queryParams).length) {
+    if (!filters?.processRole?.length) {
       return {
         ...processes,
         results,
@@ -240,7 +242,7 @@ export const MockApi = {
 
     const filteredResults = results.filter(
       (result) =>
-        result.processRole === queryParams.processRole ||
+        filters.processRole.includes(result.processRole) ||
         result.groupIdentity === queryParams.groupIdentity ||
         result.parent === queryParams.parent
     );
@@ -463,4 +465,22 @@ export function loadMockServer() {
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }
   });
+}
+
+// Function to extract query parameters from the URL
+function getQueryParams(url?: string): Record<string, string[]> | null {
+  if (!url) {
+    return null;
+  }
+  const params = new URLSearchParams(new URL(url).search);
+  const queryParams: Record<string, string[]> = {};
+
+  for (const [key, value] of params.entries()) {
+    if (!queryParams[key]) {
+      queryParams[key] = [];
+    }
+    queryParams[key].push(value);
+  }
+
+  return queryParams;
 }

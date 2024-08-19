@@ -10,7 +10,7 @@ import { FlowPairsResponse } from '@sk-types/REST.interfaces';
 import FlowPair from './FlowPair';
 import { flowPairsComponentsTable } from './FlowPair.constants';
 
-const FlowPairs: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
+const SkFlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
   const [flowPairSelected, setFlowPairIdSelected] = useState<FlowPairsResponse>();
 
   const handleOnClickDetails = useCallback((flowPair?: FlowPairsResponse) => {
@@ -40,4 +40,4 @@ const FlowPairs: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
   );
 };
 
-export default FlowPairs;
+export default SkFlowPairsTable;

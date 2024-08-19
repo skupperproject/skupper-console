@@ -18,7 +18,7 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import TopologyProcesses from '../../../src/pages/Topology/components/TopologyProcesses';
-import * as useTopologyState from '../../../src/pages/Topology/components/useTopologyState';
+import * as useTopologyState from '../../../src/pages/Topology/hooks/useTopologyState';
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { TopologyLabels } from '../../../src/pages/Topology/Topology.enum';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';

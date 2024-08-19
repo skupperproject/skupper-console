@@ -13,22 +13,22 @@ import { SiteResponse } from '@sk-types/REST.interfaces';
 import { siteColumns } from '../Sites.constants';
 import { SiteLabels, SitesRoutesPaths, QueriesSites } from '../Sites.enum';
 
+const customCells = {
+  TimestampCell: SkEndTimeCell,
+  LinkCell: (props: SkLinkCellProps<SiteResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
+    })
+};
+
 const Sites = function () {
   const { data: sites } = useSuspenseQuery({
     queryKey: [QueriesSites.GetSites],
     queryFn: () => RESTApi.fetchSites(),
     refetchInterval: UPDATE_INTERVAL
   });
-
-  const customCells = {
-    TimestampCell: SkEndTimeCell,
-    LinkCell: (props: SkLinkCellProps<SiteResponse>) =>
-      SkLinkCell({
-        ...props,
-        type: 'site',
-        link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
-      })
-  };
 
   return (
     <MainContainer

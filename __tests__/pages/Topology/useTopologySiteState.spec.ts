@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 
-import useTopologyState from '../../../src/pages/Topology/components/useTopologyState';
+import useTopologyState from '../../../src/pages/Topology/hooks/useTopologyState';
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { SHOW_ROUTER_LINKS } from '../../../src/pages/Topology/Topology.constants';
 

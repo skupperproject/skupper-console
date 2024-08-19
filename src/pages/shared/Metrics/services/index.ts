@@ -318,26 +318,14 @@ const MetricsController = {
    * If one of the two series is empty, it is filled with values where y=0 and x equals the timestamp of the other series.
    */
   fillMissingDataWithZeros(rxSeries: skAxisXY[] = [], txSeries: skAxisXY[] = []) {
-    if (rxSeries.length === 0 && txSeries.length > 0) {
-      const filledRxSeries = txSeries.map(({ x }) => ({ y: 0, x }));
-
-      return [filledRxSeries, txSeries];
-    }
-
-    if (txSeries.length === 0 && rxSeries.length > 0) {
-      const filledTxSeries = rxSeries.map(({ x }) => ({ y: 0, x }));
-
-      return [rxSeries, filledTxSeries];
-    }
-
-    return [rxSeries, txSeries];
+    return alignDataSeriesWithZeros(rxSeries, txSeries);
   }
 };
 
 export default MetricsController;
 
 /* UTILS */
-function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
+export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format
   const axisValues = getTimeSeriesFromPrometheusData(data);
 
@@ -493,4 +481,24 @@ function calculateTotalBytes(timeSeries: { x: number; y: number }[]) {
   }
 
   return totalBytes;
+}
+
+/**
+ * Ensure that both the "Tx" and "Rx" data series have the same number of data points, even if one of the series has fewer data points than the other.
+ * If one of the two series is empty, it is filled with values where y=0 and x equals the timestamp of the other series.
+ */
+export function alignDataSeriesWithZeros(rxSeries: skAxisXY[] = [], txSeries: skAxisXY[] = []) {
+  if (rxSeries.length === 0 && txSeries.length > 0) {
+    const filledRxSeries = txSeries.map(({ x }) => ({ y: 0, x }));
+
+    return [filledRxSeries, txSeries];
+  }
+
+  if (txSeries.length === 0 && rxSeries.length > 0) {
+    const filledTxSeries = rxSeries.map(({ x }) => ({ y: 0, x }));
+
+    return [rxSeries, filledTxSeries];
+  }
+
+  return [rxSeries, txSeries];
 }

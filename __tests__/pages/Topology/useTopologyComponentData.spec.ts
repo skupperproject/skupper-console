@@ -1,7 +1,7 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import useTopologyComponentData from '../../../src/pages/Topology/components/useTopologyComponentData';
+import useTopologyComponentData from '../../../src/pages/Topology/hooks/useTopologyComponentData';
 
 jest.mock('@tanstack/react-query', () => ({
   useSuspenseQueries: jest.fn()
