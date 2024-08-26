@@ -18,9 +18,9 @@ interface UseTopologySiteDataProps {
 }
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: 'destSite, sourceSite,direction' },
-  fetchByteRate: { groupBy: 'destSite, sourceSite,direction' },
-  fetchLatency: { groupBy: 'sourceSite, destSite' }
+  fetchBytes: { groupBy: 'destSite, sourceSite, direction' },
+  fetchByteRate: { groupBy: 'destSite, sourceSite, direction' },
+  fetchLatency: { groupBy: 'sourceSite, destSite, direction' }
 };
 
 const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatency }: UseTopologySiteDataProps) => {

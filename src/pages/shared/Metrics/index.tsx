@@ -2,7 +2,7 @@ import { FC, useCallback, useRef, useState, startTransition } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { AvailableProtocols } from '@API/REST.enum';
+import { AvailableProtocols, Direction } from '@API/REST.enum';
 import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import MetricFilters from './components/Filters';
@@ -11,6 +11,7 @@ import Request from './components/Request';
 import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
+import { MetricsLabels } from './Metrics.enum';
 
 interface UseMetricsProps {
   defaultMetricFilterValues: QueryMetricsParams;
@@ -141,7 +142,20 @@ const Metrics: FC<MetricsProps> = function (props) {
       )}
       <StackItem>
         <Latency
-          selectedFilters={queryParams}
+          title={MetricsLabels.LatencyTitleOut}
+          description={MetricsLabels.LatencyDescriptionOut}
+          selectedFilters={{ ...queryParams, direction: Direction.Incoming }}
+          openSections={defaultOpenSections?.latency}
+          forceUpdate={shouldUpdateData}
+          onGetIsSectionExpanded={handleSectionToggle}
+        />
+      </StackItem>
+
+      <StackItem>
+        <Latency
+          title={MetricsLabels.LatencyTitleIn}
+          description={MetricsLabels.LatencyDescriptionIn}
+          selectedFilters={{ ...queryParams, direction: Direction.Outgoing }}
           openSections={defaultOpenSections?.latency}
           forceUpdate={shouldUpdateData}
           onGetIsSectionExpanded={handleSectionToggle}

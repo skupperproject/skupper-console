@@ -16,7 +16,7 @@ const processesQueryParams = {
 const metricQueryParams = {
   fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
   fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchLatency: { groupBy: 'sourceProcess, destProcess' }
+  fetchLatency: { groupBy: 'sourceProcess, destProcess, direction' }
 };
 
 const useTopologyProcessData = () => {
