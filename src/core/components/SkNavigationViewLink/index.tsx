@@ -16,7 +16,7 @@ const SkNavigationViewLink: FC<{ link: string; linkLabel: string; iconName?: 'to
         <Link to={link} style={{ whiteSpace: 'nowrap' }} title={linkLabel}>
           <Text component={TextVariants.p}>
             <Button>
-              <Icon isInline data-testId={iconName}>
+              <Icon isInline data-testid={iconName}>
                 {icons[iconName]}
               </Icon>
             </Button>
