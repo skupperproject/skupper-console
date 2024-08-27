@@ -548,7 +548,7 @@ exports[`Metrics Component renders correctly 1`] = `
               <div
                 class="pf-v5-c-card__title-text"
               >
-                Latencies Out 
+                Incoming Latency 
                 <div
                   style="display: contents;"
                 >
@@ -641,7 +641,7 @@ exports[`Metrics Component renders correctly 1`] = `
               <div
                 class="pf-v5-c-card__title-text"
               >
-                Latencies In 
+                Outgoing Latency 
                 <div
                   style="display: contents;"
                 >
