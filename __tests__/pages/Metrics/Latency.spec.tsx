@@ -35,6 +35,7 @@ describe('Latency component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <Latency
+            title={MetricsLabels.LatencyTitleOut}
             selectedFilters={{
               sourceProcess: processResult.name
             }}
@@ -50,7 +51,7 @@ describe('Latency component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.LatencyTitle)).toBeInTheDocument();
+    expect(screen.getByText(MetricsLabels.LatencyTitleOut)).toBeInTheDocument();
 
     fireEvent.click(document.querySelector('.pf-v5-c-card__header-toggle')?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);

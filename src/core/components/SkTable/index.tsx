@@ -1,4 +1,4 @@
-import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, useMemo } from 'react';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, useMemo, FC } from 'react';
 
 import { Card, CardBody, CardHeader, Flex, Text, TextContent, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
@@ -39,6 +39,15 @@ export interface SKTableProps<T> {
   paginationPageSize?: number;
   paginationTotalRows?: number;
   onGetFilters?: Function;
+}
+
+export interface CustomCellProps<T> {
+  value: string | T[keyof T] | undefined;
+  data: T;
+  callback?: Function;
+  isDisabled?: boolean;
+  format?: Function;
+  fitContent?: boolean;
 }
 
 const SkTable = function <T>({
@@ -218,7 +227,8 @@ const SkTable = function <T>({
                   <Tr key={row.id}>
                     {row.columns.map(
                       ({ data, value, customCellName, callback, format, width, modifier, isStickyColumn }, index) => {
-                        const Component = !!customCells && !!customCellName && customCells[customCellName];
+                        const Component =
+                          !!customCells && !!customCellName && (customCells[customCellName] as FC<CustomCellProps<T>>);
 
                         return (
                           <Td
@@ -228,14 +238,16 @@ const SkTable = function <T>({
                             isStickyColumn={isStickyColumn}
                             style={{ verticalAlign: 'middle' }}
                           >
-                            {Component &&
-                              Component({
-                                data,
-                                value,
-                                callback,
-                                format: format && format(value),
-                                fitContent: modifier === 'nowrap'
-                              })}
+                            {Component && (
+                              <Component
+                                value={value}
+                                data={data}
+                                callback={callback}
+                                format={format && format(value)}
+                                fitContent={modifier === 'nowrap'}
+                              />
+                            )}
+
                             {!Component && (
                               <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
                                 {(format && format(value)) || value}

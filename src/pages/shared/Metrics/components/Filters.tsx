@@ -75,7 +75,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     const [selectedFilterIsOpen, setSelectedFilterIsOpen] = useState<Record<string, boolean>>(filterToggleDefault);
 
     // Handler for toggling the open and closed states of a Select element.
-    function handleToggleMenu(ev: ReactMouseEvent, openFilter: Record<string, boolean>) {
+    function handleToggleMenu(_: ReactMouseEvent, openFilter: Record<string, boolean>) {
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, ...openFilter });
     }
 

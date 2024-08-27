@@ -548,7 +548,7 @@ exports[`Metrics Component renders correctly 1`] = `
               <div
                 class="pf-v5-c-card__title-text"
               >
-                Latencies 
+                Incoming Latency 
                 <div
                   style="display: contents;"
                 >
@@ -560,19 +560,27 @@ exports[`Metrics Component renders correctly 1`] = `
                     data-ouia-safe="true"
                     type="button"
                   >
-                    <svg
-                      aria-hidden="true"
-                      class="pf-v5-svg"
-                      fill="currentColor"
-                      height="1em"
-                      role="img"
-                      viewBox="0 0 512 512"
-                      width="1em"
+                    <span
+                      class="pf-v5-c-icon"
                     >
-                      <path
-                        d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z"
-                      />
-                    </svg>
+                      <span
+                        class="pf-v5-c-icon__content pf-m-info"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="pf-v5-svg"
+                          fill="currentColor"
+                          height="1em"
+                          role="img"
+                          viewBox="0 0 512 512"
+                          width="1em"
+                        >
+                          <path
+                            d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
                   </button>
                 </div>
               </div>
@@ -633,7 +641,41 @@ exports[`Metrics Component renders correctly 1`] = `
               <div
                 class="pf-v5-c-card__title-text"
               >
-                Http requests
+                Outgoing Latency 
+                <div
+                  style="display: contents;"
+                >
+                  <button
+                    aria-disabled="false"
+                    class="pf-v5-c-button pf-m-plain"
+                    data-ouia-component-id="OUIA-Generated-Button-plain-6"
+                    data-ouia-component-type="PF5/Button"
+                    data-ouia-safe="true"
+                    type="button"
+                  >
+                    <span
+                      class="pf-v5-c-icon"
+                    >
+                      <span
+                        class="pf-v5-c-icon__content pf-m-info"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="pf-v5-svg"
+                          fill="currentColor"
+                          height="1em"
+                          role="img"
+                          viewBox="0 0 512 512"
+                          width="1em"
+                        >
+                          <path
+                            d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -659,7 +701,66 @@ exports[`Metrics Component renders correctly 1`] = `
             <button
               aria-disabled="false"
               class="pf-v5-c-button pf-m-plain"
-              data-ouia-component-id="OUIA-Generated-Button-plain-6"
+              data-ouia-component-id="OUIA-Generated-Button-plain-7"
+              data-ouia-component-type="PF5/Button"
+              data-ouia-safe="true"
+              type="button"
+            >
+              <span
+                class="pf-v5-c-card__header-toggle-icon"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="pf-v5-svg"
+                  fill="currentColor"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 256 512"
+                  width="1em"
+                >
+                  <path
+                    d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div
+            class="pf-v5-c-card__header-main"
+          >
+            <div
+              class="pf-v5-c-card__title"
+            >
+              <div
+                class="pf-v5-c-card__title-text"
+              >
+                Http requests
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="pf-v5-l-stack__item"
+    >
+      <div
+        class="pf-v5-c-card"
+        data-ouia-component-id="OUIA-Generated-Card-6"
+        data-ouia-component-type="PF5/Card"
+        data-ouia-safe="true"
+        id=""
+      >
+        <div
+          class="pf-v5-c-card__header"
+        >
+          <div
+            class="pf-v5-c-card__header-toggle"
+          >
+            <button
+              aria-disabled="false"
+              class="pf-v5-c-button pf-m-plain"
+              data-ouia-component-id="OUIA-Generated-Button-plain-8"
               data-ouia-component-type="PF5/Button"
               data-ouia-safe="true"
               type="button"

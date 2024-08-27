@@ -37,8 +37,6 @@ export const flowPairsComponentsTable = {
       link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
     }),
   TimestampCell: SkEndTimeCell,
-  TcpTTFB: (props: SkLinkCellProps<FlowPairsResponse>) =>
-    formatLatency(props.data.counterFlow.latency + props.data.forwardFlow.latency),
   DurationCell: SkDurationCell,
   ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
     SkHighlightValueCell({ ...props, format: formatBytes }),
@@ -78,6 +76,13 @@ export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
+    name: FlowPairLabels.TxLatency,
+    columnDescription: 'The TCP latency primarily concerns the start of data transmission',
+    prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
+    format: formatLatency,
+    modifier: 'nowrap'
+  },
+  {
     name: FlowPairLabels.Server,
     prop: 'counterFlow.processName' as keyof FlowPairsResponse,
     customCellName: 'TargetProcessNameLinkCell',
@@ -96,15 +101,16 @@ export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.Duration,
-    prop: 'duration' as keyof FlowPairsResponse,
-    customCellName: 'DurationCell',
+    name: FlowPairLabels.RxLatency,
+    columnDescription: 'The TCP latency primarily concerns the start of data transmission',
+    prop: 'counterFlow.latency' as keyof FlowPairsResponse,
+    format: formatLatency,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.TTFB,
-    columnDescription: 'time elapsed between client and server',
-    customCellName: 'TcpTTFB',
+    name: FlowPairLabels.Duration,
+    prop: 'duration' as keyof FlowPairsResponse,
+    customCellName: 'DurationCell',
     modifier: 'nowrap'
   },
   {

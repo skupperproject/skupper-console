@@ -1,6 +1,15 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { Button, Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Tooltip } from '@patternfly/react-core';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardExpandableContent,
+  CardHeader,
+  CardTitle,
+  Icon,
+  Tooltip
+} from '@patternfly/react-core';
 import { QuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
@@ -13,6 +22,8 @@ import { MetricsLabels } from '../Metrics.enum';
 import MetricsController from '../services';
 
 interface LatencyProps {
+  title?: string;
+  description?: string;
   selectedFilters: QueryMetricsParams;
   openSections?: boolean;
   forceUpdate?: number;
@@ -23,6 +34,8 @@ interface LatencyProps {
 const minChartHeight = 680;
 
 const Latency: FC<LatencyProps> = function ({
+  title = '',
+  description = '',
   selectedFilters,
   forceUpdate,
   openSections = false,
@@ -76,10 +89,12 @@ const Latency: FC<LatencyProps> = function ({
     <Card isExpanded={isExpanded}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>
-          {MetricsLabels.LatencyTitle}{' '}
-          <Tooltip content={MetricsLabels.LatencyDescription}>
+          {title}{' '}
+          <Tooltip content={description}>
             <Button variant="plain">
-              <QuestionCircleIcon />
+              <Icon status="info">
+                <QuestionCircleIcon />
+              </Icon>
             </Button>
           </Tooltip>
         </CardTitle>

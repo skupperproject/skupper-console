@@ -1,4 +1,5 @@
 import { PrometheusApi } from '@API/Prometheus.api';
+import { Direction } from '@API/REST.enum';
 import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -26,7 +27,9 @@ export const TopologyController = {
       const [bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs] = await Promise.all([
         showBytes ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy, params.filterBy) : [],
         showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates(params.fetchByteRate.groupBy, params.filterBy) : [],
-        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy, params.filterBy) : []
+        showLatency
+          ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy, { ...params.filterBy })
+          : []
       ]);
 
       return { bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs };
@@ -124,7 +127,15 @@ export const TopologyController = {
 
     const bytesByPairsMap = getPairsMap(bytesByPairs);
     const byteRateByPairsMap = getPairsMap(byteRateByPairs);
-    const latencyByPairsMap = getPairsMap(latencyByPairs);
+    // Incoming metrics indicate that the source is the client and the destination is the server. In our case, the edges have a direction from client to server
+    const latencyByPairsMapIn = getPairsMap(
+      latencyByPairs?.filter((pair) => pair.metric.direction === Direction.Incoming)
+    );
+
+    // Outgoing metrics indicate that the source is the server and the destination is the client. It is used to determine the reverse metric
+    const latencyByPairsMapOut = getPairsMap(
+      latencyByPairs?.filter((pair) => pair.metric.direction === Direction.Outgoing)
+    );
 
     return edges.map((edge) => {
       const pairKey = `${edge.sourceName}${edge.targetName}`;
@@ -136,10 +147,10 @@ export const TopologyController = {
           protocol: protocolPairsMap ? protocolPairsMap[`${edge.source}${edge.target}`] : '',
           bytes: bytesByPairsMap[pairKey],
           byteRate: byteRateByPairsMap[pairKey],
-          latency: latencyByPairsMap[pairKey],
+          latency: latencyByPairsMapIn[pairKey],
           bytesReverse: bytesByPairsMap[reversePairKey],
           byteRateReverse: byteRateByPairsMap[reversePairKey],
-          latencyReverse: latencyByPairsMap[reversePairKey]
+          latencyReverse: latencyByPairsMapOut[reversePairKey]
         }
       };
     });

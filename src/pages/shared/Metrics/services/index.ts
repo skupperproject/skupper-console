@@ -31,6 +31,7 @@ const MetricsController = {
     destProcess,
     service,
     protocol,
+    direction,
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
@@ -42,6 +43,7 @@ const MetricsController = {
       destProcess,
       service,
       protocol,
+      direction,
       start,
       end,
       step: calculateStep(end - start)
@@ -75,6 +77,7 @@ const MetricsController = {
     destProcess,
     service,
     protocol,
+    direction,
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
@@ -86,6 +89,7 @@ const MetricsController = {
       destProcess,
       service,
       protocol,
+      direction,
       start,
       end,
       step: calculateStep(end - start)
