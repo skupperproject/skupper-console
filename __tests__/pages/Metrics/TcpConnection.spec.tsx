@@ -65,10 +65,6 @@ describe('Tcp component', () => {
       .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchFlowsDeltaInTimeRange')
       .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchtotalFlows')
-      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
-
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>

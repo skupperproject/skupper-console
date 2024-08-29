@@ -1,4 +1,5 @@
 import { Role } from '@API/REST.enum';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 import { TopologyMetrics } from '@sk-types/Topology.interfaces';
 import { GraphEdge, GraphNode } from 'types/Graph.interfaces';
@@ -33,8 +34,8 @@ const addProcessMetricsToEdges = (
 ) =>
   TopologyController.addMetricsToEdges(
     edges,
-    'sourceProcess',
-    'destProcess',
+    PrometheusLabelsV2.SourceProcess,
+    PrometheusLabelsV2.DestProcess,
     protocolByProcessPairsMap,
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,

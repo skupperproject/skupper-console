@@ -259,18 +259,33 @@ const MetricsController = {
     };
 
     try {
-      const [byteRateDataTx, byteRateDataRx] = await Promise.all([
+      const [byteRateTx, byteRateRx, counterByteRateRx, counterByteRateTx] = await Promise.all([
+        // flows sent  - outgoing
         PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+        // flows  sent from the other side - outgoing
         PrometheusApi.fetchByteRateByDirectionInTimeRange({
           ...params,
-          sourceSite: destSite,
-          destSite: sourceSite,
+          sourceSite: destSite, //client
+          destSite: sourceSite, //server
           sourceProcess: destProcess,
           destProcess: sourceProcess
-        })
+        }),
+        // counterFlows received - incoming
+        PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+        // counterFlows sent - incoming
+        PrometheusApi.fetchByteRateByDirectionInTimeRange(
+          {
+            ...params,
+            sourceSite: destSite, //server
+            destSite: sourceSite, //client
+            sourceProcess: destProcess,
+            destProcess: sourceProcess
+          },
+          true
+        )
       ]);
 
-      return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
+      return normalizeByteRateFromSeries([...byteRateTx, ...counterByteRateTx], [...byteRateRx, ...counterByteRateRx]);
     } catch (e: unknown) {
       return Promise.reject(e);
     }

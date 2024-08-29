@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { SMALL_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable from '@core/components/SkTable';
 import { TopologyController } from '@pages/Topology/services';
@@ -21,9 +22,9 @@ import {
 import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchLatency: { groupBy: 'sourceProcess, destProcess' }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
+  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` }
 };
 
 interface ProcessesPairsListProps {
@@ -74,29 +75,32 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   const { data: metricsRx } = useQuery({
     queryKey: [QueriesTopology.GetBytesByProcessPairs, { destProcess: processName }],
     queryFn: () =>
-      TopologyController.getTopologyMetrics({
-        showBytes: true,
-        showByteRate: true,
-        showLatency: true,
-        params: {
-          ...metricQueryParams,
-          filterBy: { destProcess: processName }
-        }
-      }),
+      TopologyController.getTopologyMetrics(
+        {
+          showBytes: true,
+          showByteRate: true,
+          showLatency: true,
+          params: {
+            ...metricQueryParams,
+            filterBy: { destProcess: processName }
+          }
+        },
+        true
+      ),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const clients = TopologyController.addMetricsToProcessPairs({
     processesPairs: processesPairsRxData,
     metrics: metricsRx,
-    prometheusKey: 'sourceProcess',
+    prometheusKey: PrometheusLabelsV2.SourceProcess,
     processPairsKey: 'sourceName'
   });
 
   const servers = TopologyController.addMetricsToProcessPairs({
     processesPairs: processesPairsTxData,
     metrics: metricsTx,
-    prometheusKey: 'destProcess',
+    prometheusKey: PrometheusLabelsV2.DestProcess,
     processPairsKey: 'destinationName'
   });
 

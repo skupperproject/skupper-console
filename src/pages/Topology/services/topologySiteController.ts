@@ -1,4 +1,4 @@
-import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import SitesController from '@pages/Sites/services';
 import { GraphEdge, GraphNode } from '@sk-types/Graph.interfaces';
 import { LinkResponse, SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
@@ -18,24 +18,16 @@ interface TopologySiteControllerProps {
   options: TopologyShowOptionsSelected;
 }
 
-const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) => {
-  const sanitizedLinks = links.map((link) => ({
-    ...link,
-    //name@_@id format
-    sourceName: composePrometheusSiteLabel(link.sourceName, link.source),
-    targetName: composePrometheusSiteLabel(link.targetName, link.target)
-  }));
-
-  return TopologyController.addMetricsToEdges(
-    sanitizedLinks,
-    'sourceSite',
-    'destSite',
+const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) =>
+  TopologyController.addMetricsToEdges(
+    links,
+    PrometheusLabelsV2.SourceSiteName,
+    PrometheusLabelsV2.DestSiteName,
     undefined, // no need to retrieve protocols
     metrics?.bytesByProcessPairs,
     metrics?.byteRateByProcessPairs,
     metrics?.latencyByProcessPairs
   );
-};
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
   entities.map(({ identity, name, siteVersion, platform }) => ({

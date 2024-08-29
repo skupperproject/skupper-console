@@ -1,6 +1,7 @@
 import { PrometheusApi } from '@API/Prometheus.api';
 import { Direction } from '@API/REST.enum';
 import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
@@ -17,19 +18,19 @@ import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph
 import { shape } from '../Topology.constants';
 
 export const TopologyController = {
-  getTopologyMetrics: async ({
-    showBytes = false,
-    showByteRate = false,
-    showLatency = false,
-    params
-  }: TopologyConfigMetrics): Promise<TopologyMetrics> => {
+  getTopologyMetrics: async (
+    { showBytes = false, showByteRate = false, showLatency = false, params }: TopologyConfigMetrics,
+    areDataReceived = false
+  ): Promise<TopologyMetrics> => {
     try {
       const [bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs] = await Promise.all([
-        showBytes ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy, params.filterBy) : [],
-        showByteRate ? PrometheusApi.fetchAllProcessPairsByteRates(params.fetchByteRate.groupBy, params.filterBy) : [],
-        showLatency
-          ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy, { ...params.filterBy })
-          : []
+        showBytes
+          ? PrometheusApi.fetchAllProcessPairsBytes(params.fetchBytes.groupBy, params.filterBy, areDataReceived)
+          : [],
+        showByteRate
+          ? PrometheusApi.fetchAllProcessPairsByteRates(params.fetchByteRate.groupBy, params.filterBy, areDataReceived)
+          : [],
+        showLatency ? PrometheusApi.fetchAllProcessPairsLatencies(params.fetchLatency.groupBy, params.filterBy) : []
       ]);
 
       return { bytesByProcessPairs, byteRateByProcessPairs, latencyByProcessPairs };
@@ -40,6 +41,8 @@ export const TopologyController = {
 
   getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {
     const idLabelPairs = nodes
+      // TODO: remove when backend sanitize combo = '' and comboname = 'unknown'
+      .filter(({ combo }) => combo)
       .map(({ combo, comboName }) => ({
         type: 'SkCombo' as GraphElementNames,
         id: combo || '',
@@ -100,8 +103,8 @@ export const TopologyController = {
 
   addMetricsToEdges: (
     edges: GraphEdge[],
-    metricSourceLabel: 'sourceProcess' | 'sourceSite', // Prometheus metric label to compare with the metricDestLabel
-    metricDestLabel: 'destProcess' | 'destSite',
+    metricSourceLabel: PrometheusLabelsV2, // Prometheus metric label to compare with the metricDestLabel
+    metricDestLabel: PrometheusLabelsV2,
     protocolPairsMap: Record<string, string> | undefined, //
     bytesByPairs?: PrometheusMetric<'vector'>[],
     byteRateByPairs?: PrometheusMetric<'vector'>[],

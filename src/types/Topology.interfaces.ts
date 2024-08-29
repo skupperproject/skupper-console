@@ -1,3 +1,5 @@
+import { PrometheusLabelsV2 } from '@config/prometheus';
+
 import { PrometheusMetric, PrometheusLabels } from './Prometheus.interfaces';
 import { ProcessPairsResponse } from './REST.interfaces';
 
@@ -43,6 +45,6 @@ export interface TopologyShowOptionsSelected {
 export interface ProcessPairsWithMetrics {
   processesPairs?: ProcessPairsResponse[];
   metrics?: TopologyMetrics;
-  prometheusKey: 'sourceProcess' | 'destProcess';
+  prometheusKey: PrometheusLabelsV2;
   processPairsKey: 'sourceName' | 'destinationName';
 }

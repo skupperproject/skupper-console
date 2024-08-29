@@ -48,3 +48,31 @@ export const timeIntervalMap: IntervalTimeMap = {
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
 export const prometheusSiteNameAndIdSeparator = '@_@'; // This is an internal team role convention to unify a siteId and a siteName in prometheus
 export const prometheusProcessNameseparator = '|';
+
+export enum PrometheusLabelsV2 {
+  SourceSiteId = 'source_site_id',
+  SourceSiteName = 'source_site_name',
+  DestSiteId = 'dest_site_id',
+  DestSiteName = 'dest_site_name',
+  SourceProcess = 'source_process',
+  DestProcess = 'dest_process',
+  Direction = 'direction',
+  Protocol = 'protocol',
+  Address = 'address',
+  RoutingKey = 'routing_key',
+  Code = 'code', // L7 response
+  Method = 'method' // L7 request
+}
+
+export enum PrometheusMetricsV2 {
+  SentBytes = 'skupper_sent_bytes_total',
+  ReceivedBytes = 'skupper_received_bytes_total',
+  LatencyBuckets = 'legacy_flow_latency_microseconds_bucket',
+  LatencySum = 'legacy_flow_latency_microseconds_sum',
+  LatencyCount = 'legacy_flow_latency_microseconds_count',
+  SourceProcess = 'source_process',
+  DestProcess = 'dest_process',
+  HttpRequestMethod = 'http_requests_method_total',
+  HttpResponse = 'http_requests_result_total',
+  TcpOpenOnnections = 'skupper_connections_opened_total'
+}
