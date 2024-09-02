@@ -35,7 +35,7 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
   const sourceNames = data.map((itemSelected) => itemSelected.sourceName);
   const destinationNames = data.map((itemSelected) => itemSelected.destinationName);
 
-  const bytes = metrics.bytesByProcessPairs.reduce(
+  const bytes = metrics.sourceToDestBytes.reduce(
     (acc, { metric, value }) => {
       const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
 
@@ -48,7 +48,7 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
     {} as Record<string, number>
   );
 
-  const byteRate = metrics.byteRateByProcessPairs.reduce(
+  const byteRate = metrics.sourceToDestByteRate.reduce(
     (acc, { metric, value }) => {
       const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
 

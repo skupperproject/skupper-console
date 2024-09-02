@@ -10,7 +10,7 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ByteRateMetrics } from '@sk-types/Metrics.interfaces';
 
 import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { MetricsController } from '../services';
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics }> = memo(({ byteRateData }) => (
   <Flex direction={{ xl: 'row', md: 'column' }}>

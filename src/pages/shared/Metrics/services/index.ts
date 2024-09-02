@@ -23,7 +23,7 @@ import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
 
 import { MetricsLabels } from '../Metrics.enum';
 
-const MetricsController = {
+export const MetricsController = {
   getLatencyPercentiles: async ({
     sourceSite,
     destSite,
@@ -247,45 +247,42 @@ const MetricsController = {
     end = getCurrentAndPastTimestamps(duration).end
   }: QueryMetricsParams): Promise<ByteRateMetrics> => {
     const params: PrometheusQueryParams = {
-      sourceSite,
-      destSite,
-      sourceProcess,
-      destProcess,
       service,
       protocol,
       start,
       end,
-      step: calculateStep(end - start)
+      step: calculateStep(end - start),
+      sourceSite,
+      destSite,
+      sourceProcess,
+      destProcess
+    };
+
+    const invertedParams = {
+      ...params,
+      sourceSite: destSite, //client
+      destSite: sourceSite, //server
+      sourceProcess: destProcess,
+      destProcess: sourceProcess
     };
 
     try {
-      const [byteRateTx, byteRateRx, counterByteRateRx, counterByteRateTx] = await Promise.all([
-        // flows sent  - outgoing
-        PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
-        // flows  sent from the other side - outgoing
-        PrometheusApi.fetchByteRateByDirectionInTimeRange({
-          ...params,
-          sourceSite: destSite, //client
-          destSite: sourceSite, //server
-          sourceProcess: destProcess,
-          destProcess: sourceProcess
-        }),
-        // counterFlows received - incoming
-        PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
-        // counterFlows sent - incoming
-        PrometheusApi.fetchByteRateByDirectionInTimeRange(
-          {
-            ...params,
-            sourceSite: destSite, //server
-            destSite: sourceSite, //client
-            sourceProcess: destProcess,
-            destProcess: sourceProcess
-          },
-          true
-        )
-      ]);
+      const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
+        await Promise.all([
+          // Outgoing byte rate: Data sent from the source to the destination
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+          // Incoming byte rate: Data received at the destination from the source
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+          // Outgoing byte rate from the other side: Data sent from the destination to the source
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          // Incoming byte rate from the other side: Data received at the source from the destination
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+        ]);
 
-      return normalizeByteRateFromSeries([...byteRateTx, ...counterByteRateTx], [...byteRateRx, ...counterByteRateRx]);
+      return normalizeByteRateFromSeries(
+        sumValuesByTimestamp([...sourceToDestByteRateTx, ...sourceToDestByteRateRx]),
+        sumValuesByTimestamp([...destToSourceByteRateTx, ...destToSourceByteRateRx])
+      );
     } catch (e: unknown) {
       return Promise.reject(e);
     }
@@ -340,8 +337,6 @@ const MetricsController = {
     return alignDataSeriesWithZeros(rxSeries, txSeries);
   }
 };
-
-export default MetricsController;
 
 /* UTILS */
 export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
@@ -520,4 +515,38 @@ export function alignDataSeriesWithZeros(rxSeries: skAxisXY[] = [], txSeries: sk
   }
 
   return [rxSeries, txSeries];
+}
+
+function sumValuesByTimestamp(combinedArray: PrometheusMetric<'matrix'>[]): PrometheusMetric<'matrix'>[] {
+  // Dictionary to store the sum of values for each unique timestamp
+  const timestampSum: { [key: number]: number } = {};
+
+  // Iterate through the combined array and sum the values for each timestamp
+  combinedArray.forEach((metric) => {
+    metric.values.forEach((item) => {
+      const timestamp = item[0];
+      const value = parseFloat(item[1].toString()); // Ensure the value is parsed as a number
+
+      if (timestampSum[timestamp]) {
+        timestampSum[timestamp] += value;
+      } else {
+        timestampSum[timestamp] = value;
+      }
+    });
+  });
+
+  // Convert the dictionary back into an array of [number, number] tuples
+  const resultValues: [number, number][] = Object.keys(timestampSum).map((timestamp) => [
+    parseFloat(timestamp),
+    timestampSum[parseFloat(timestamp)]
+  ]);
+
+  // Return the result as an array of PrometheusMetric<'matrix'> objects
+  return [
+    {
+      metric: {},
+      values: resultValues,
+      value: undefined as never // Explicitly set value to never for matrix type
+    }
+  ];
 }

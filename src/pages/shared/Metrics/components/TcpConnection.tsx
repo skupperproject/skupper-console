@@ -23,7 +23,7 @@ import { formatNumber } from '@core/utils/formatNumber';
 import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
 
 import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { MetricsController } from '../services';
 
 interface TcpConnectionProps {
   selectedFilters: QueryMetricsParams;

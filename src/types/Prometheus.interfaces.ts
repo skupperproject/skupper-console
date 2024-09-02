@@ -40,6 +40,7 @@ export interface PrometheusLabels {
   direction?: FlowDirections;
   protocol?: AvailableProtocols;
 }
+
 export interface PrometheusQueryParams extends PrometheusLabels {
   step: string;
   start: number;
@@ -50,10 +51,10 @@ export interface PrometheusQueryParamsLatency extends PrometheusQueryParams {
   quantile: Quantiles;
 }
 
-export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
 export type IntervalTimeMap = {
   [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
 };
+export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
 
 export interface MetricData {
   values: skAxisXY[][];

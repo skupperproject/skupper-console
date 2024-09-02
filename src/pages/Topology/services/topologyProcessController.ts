@@ -27,21 +27,6 @@ interface TopologyProcessControllerProps {
   };
 }
 
-const addProcessMetricsToEdges = (
-  edges: GraphEdge[],
-  metrics: TopologyMetrics | null,
-  protocolByProcessPairsMap: Record<string, string>
-) =>
-  TopologyController.addMetricsToEdges(
-    edges,
-    PrometheusLabelsV2.SourceProcess,
-    PrometheusLabelsV2.DestProcess,
-    protocolByProcessPairsMap,
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
-  );
-
 const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
   processes?.map(
     ({
@@ -103,10 +88,12 @@ export const TopologyProcessController = {
     );
 
     let processNodes = convertProcessesToNodes(p);
-    let processPairEdges = addProcessMetricsToEdges(
+    let processPairEdges = TopologyController.addMetricsToEdges(
       TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
-      metrics,
-      protocolByProcessPairsMap
+      PrometheusLabelsV2.SourceProcess,
+      PrometheusLabelsV2.DestProcess,
+      protocolByProcessPairsMap,
+      metrics
     );
 
     if (options.showDeployments) {
@@ -123,7 +110,7 @@ export const TopologyProcessController = {
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
       })),
-      edges: TopologyController.configureEdges(processPairEdges, options),
+      edges: TopologyController.addLabelToEdges(processPairEdges, options),
       combos: TopologyController.getCombosFromNodes(processNodes)
     };
   }

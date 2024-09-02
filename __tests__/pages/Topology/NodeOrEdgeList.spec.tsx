@@ -35,7 +35,7 @@ describe('NodeOrEdgeList', () => {
           items={items}
           modalType="process"
           metrics={{
-            bytesByProcessPairs: [
+            sourceToDestBytes: [
               {
                 metric: {
                   destProcess: processesResults[0].name,
@@ -55,7 +55,47 @@ describe('NodeOrEdgeList', () => {
                 values: [] as never
               }
             ],
-            byteRateByProcessPairs: [
+            destToSourceBytes: [
+              {
+                metric: {
+                  destProcess: processesResults[0].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[1].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              },
+              {
+                metric: {
+                  destProcess: processesResults[1].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[0].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            sourceToDestByteRate: [
+              {
+                metric: {
+                  destProcess: processesResults[0].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[1].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              },
+              {
+                metric: {
+                  destProcess: processesResults[1].name,
+                  direction: 'incoming',
+                  sourceProcess: processesResults[0].name
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            destToSourceByteRate: [
               {
                 metric: {
                   destProcess: processesResults[0].name,
@@ -102,7 +142,7 @@ describe('NodeOrEdgeList', () => {
           items={items}
           modalType="processPair"
           metrics={{
-            bytesByProcessPairs: [
+            sourceToDestBytes: [
               {
                 metric: {
                   destProcess: processPairsResults[2].destinationName,
@@ -112,7 +152,27 @@ describe('NodeOrEdgeList', () => {
                 values: [] as never
               }
             ],
-            byteRateByProcessPairs: [
+            destToSourceBytes: [
+              {
+                metric: {
+                  destProcess: processPairsResults[2].destinationName,
+                  sourceProcess: processPairsResults[2].sourceName
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            sourceToDestByteRate: [
+              {
+                metric: {
+                  destProcess: processPairsResults[2].destinationName,
+                  sourceProcess: processPairsResults[2].sourceName
+                },
+                value: [1722715709.263, 38],
+                values: [] as never
+              }
+            ],
+            destToSourceByteRate: [
               {
                 metric: {
                   destProcess: processPairsResults[2].destinationName,

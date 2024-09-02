@@ -18,17 +18,6 @@ interface TopologySiteControllerProps {
   options: TopologyShowOptionsSelected;
 }
 
-const addSiteMetricsToEdges = (links: GraphEdge[], metrics: TopologyMetrics | null) =>
-  TopologyController.addMetricsToEdges(
-    links,
-    PrometheusLabelsV2.SourceSiteName,
-    PrometheusLabelsV2.DestSiteName,
-    undefined, // no need to retrieve protocols
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
-  );
-
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
   entities.map(({ identity, name, siteVersion, platform }) => ({
     type: 'SkNode',
@@ -68,8 +57,14 @@ export const TopologySiteController = {
     if (sitesPairs) {
       TopologyController.transformIdsToStringIds(idsSelected);
       edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkSiteDataEdge');
-      edges = addSiteMetricsToEdges(edges, metrics);
-      edges = TopologyController.configureEdges(edges, options);
+      edges = TopologyController.addMetricsToEdges(
+        edges,
+        PrometheusLabelsV2.SourceSiteName,
+        PrometheusLabelsV2.DestSiteName,
+        undefined, // no need to retrieve protocols
+        metrics
+      );
+      edges = TopologyController.addLabelToEdges(edges, options);
     } else if (routerLinks) {
       edges = convertRouterLinksToEdges(sites, routerLinks);
     }

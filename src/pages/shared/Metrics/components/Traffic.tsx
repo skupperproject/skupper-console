@@ -10,7 +10,7 @@ import { QueriesMetrics, QueryMetricsParams } from '@sk-types/Metrics.interfaces
 
 import TrafficCharts from './TrafficCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { MetricsController } from '../services';
 
 interface TrafficProps {
   selectedFilters: QueryMetricsParams;

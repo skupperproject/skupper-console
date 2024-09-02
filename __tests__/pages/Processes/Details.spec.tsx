@@ -6,10 +6,10 @@ import * as router from 'react-router';
 
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { ProcessResponse } from '../../../src/types/REST.interfaces';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import Details from '../../../src/pages/Processes/components/Details';
 import LoadingPage from '../../../src/pages/shared/Loading';
+import { ProcessResponse } from '../../../src/types/REST.interfaces';
 
 const processResult = processesData.results[0] as ProcessResponse;
 

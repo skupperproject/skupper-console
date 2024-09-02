@@ -19,7 +19,7 @@ import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces
 
 import LatencyCharts from './LatencyCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { MetricsController } from '../services';
 
 interface LatencyProps {
   title?: string;

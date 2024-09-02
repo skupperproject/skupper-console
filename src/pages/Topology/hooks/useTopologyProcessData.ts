@@ -39,11 +39,11 @@ const useTopologyProcessData = () => {
       {
         queryKey: [QueriesTopology.GetBytesByProcessPairs],
         queryFn: () =>
-          TopologyController.getTopologyMetrics({
+          TopologyController.getAllTopologyMetrics({
             showBytes: true,
             showByteRate: true,
             showLatency: true,
-            params: metricQueryParams
+            metricQueryParams
           }),
         refetchInterval: UPDATE_INTERVAL
       }

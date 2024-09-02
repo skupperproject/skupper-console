@@ -48,11 +48,11 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
         queryKey: [QueriesTopology.GetBytesByProcessPairs, showBytes, showByteRate, showLatency, showDataLink],
         queryFn: () =>
           showDataLink
-            ? TopologyController.getTopologyMetrics({
+            ? TopologyController.getAllTopologyMetrics({
                 showBytes,
                 showByteRate,
                 showLatency,
-                params: metricQueryParams
+                metricQueryParams
               })
             : null,
         refetchInterval: UPDATE_INTERVAL

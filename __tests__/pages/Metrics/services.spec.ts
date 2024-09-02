@@ -1,4 +1,5 @@
-import MetricsController, {
+import {
+  MetricsController,
   alignDataSeriesWithZeros,
   normalizeResponsesFromSeries
 } from '@pages/shared/Metrics/services';

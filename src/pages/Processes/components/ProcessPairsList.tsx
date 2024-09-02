@@ -60,11 +60,11 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   const { data: metricsTx } = useQuery({
     queryKey: [QueriesTopology.GetBytesByProcessPairs, { sourceProcess: processName }],
     queryFn: () =>
-      TopologyController.getTopologyMetrics({
+      TopologyController.getAllTopologyMetrics({
         showBytes: true,
         showByteRate: true,
         showLatency: true,
-        params: {
+        metricQueryParams: {
           ...metricQueryParams,
           filterBy: { sourceProcess: processName }
         }
@@ -75,29 +75,26 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   const { data: metricsRx } = useQuery({
     queryKey: [QueriesTopology.GetBytesByProcessPairs, { destProcess: processName }],
     queryFn: () =>
-      TopologyController.getTopologyMetrics(
-        {
-          showBytes: true,
-          showByteRate: true,
-          showLatency: true,
-          params: {
-            ...metricQueryParams,
-            filterBy: { destProcess: processName }
-          }
-        },
-        true
-      ),
+      TopologyController.getAllTopologyMetrics({
+        showBytes: true,
+        showByteRate: true,
+        showLatency: true,
+        metricQueryParams: {
+          ...metricQueryParams,
+          filterBy: { destProcess: processName }
+        }
+      }),
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const clients = TopologyController.addMetricsToProcessPairs({
+  const clients = TopologyController.addMetricsToTopologyDetails({
     processesPairs: processesPairsRxData,
     metrics: metricsRx,
     prometheusKey: PrometheusLabelsV2.SourceProcess,
     processPairsKey: 'sourceName'
   });
 
-  const servers = TopologyController.addMetricsToProcessPairs({
+  const servers = TopologyController.addMetricsToTopologyDetails({
     processesPairs: processesPairsTxData,
     metrics: metricsTx,
     prometheusKey: PrometheusLabelsV2.DestProcess,

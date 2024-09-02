@@ -15,7 +15,7 @@ export const PrometheusApi = {
   //When direction is outgoing, it is the response from from the server (sourceProcess) to the client (destProcess)
   fetchByteRateByDirectionInTimeRange: async (
     params: PrometheusQueryParams,
-    areDataReceived = false
+    isRx = false
   ): Promise<PrometheusMetric<'matrix'>[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
@@ -24,7 +24,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'matrix'>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getByteRateByDirectionInTimeRange(queryFilterString, '1m', areDataReceived),
+        query: queries.getByteRateByDirectionInTimeRange(queryFilterString, '1m', isRx),
         start,
         end,
         step
@@ -135,14 +135,14 @@ export const PrometheusApi = {
   fetchAllProcessPairsBytes: async (
     groupBy: string,
     filters?: PrometheusLabels,
-    areDataReceived = false
+    isRx = false
   ): Promise<PrometheusMetric<'vector'>[]> => {
     const queryFilterString = filters ? convertToPrometheusQueryParams(filters) : undefined;
 
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllPairsBytes(groupBy, queryFilterString, areDataReceived) }
+      params: { query: queries.getAllPairsBytes(groupBy, queryFilterString, isRx) }
     });
 
     return result;
@@ -151,14 +151,14 @@ export const PrometheusApi = {
   fetchAllProcessPairsByteRates: async (
     groupBy: string,
     filters?: PrometheusLabels,
-    areDataReceived = false
+    isRx = false
   ): Promise<PrometheusMetric<'vector'>[]> => {
     const queryFilterString = filters ? convertToPrometheusQueryParams(filters) : undefined;
 
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getAllPairsByteRates(groupBy, queryFilterString, areDataReceived) }
+      params: { query: queries.getAllPairsByteRates(groupBy, queryFilterString, isRx) }
     });
 
     return result;
