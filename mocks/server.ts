@@ -440,15 +440,15 @@ export function loadMockServer() {
 
         if (queryParams.protocol === AvailableProtocols.Tcp) {
           results = flowPairs.results.filter(
-            ({ processAggregateId, protocol, endTime }: FlowPairsResponse) =>
-              processAggregateId === queryParams.processAggregateId &&
+            ({ processGroupPairId, protocol, endTime }: FlowPairsResponse) =>
+              processGroupPairId === queryParams.processGroupPairId &&
               protocol === queryParams.protocol &&
               (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
           );
         } else {
           results = flowPairs.results.filter(
-            ({ processAggregateId, protocol }: FlowPairsResponse) =>
-              processAggregateId === queryParams.processAggregateId && protocol === queryParams.protocol
+            ({ processGroupPairId, protocol }: FlowPairsResponse) =>
+              processGroupPairId === queryParams.processGroupPairId && protocol === queryParams.protocol
           );
         }
 

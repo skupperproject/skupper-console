@@ -57,8 +57,6 @@ describe('Begin testing the Processes component', () => {
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairsContent
             processPairId={processPairsResultOpToCart.identity}
-            sourceId={processPairsResultOpToCart.sourceId}
-            destinationId={processPairsResultOpToCart.destinationId}
             protocol={AvailableProtocols.Http2}
           />
         </Suspense>
@@ -78,8 +76,6 @@ describe('Begin testing the Processes component', () => {
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairsContent
             processPairId={processPairsResultDatabaseToPayment.identity}
-            sourceId={processPairsResultDatabaseToPayment.sourceId}
-            destinationId={processPairsResultDatabaseToPayment.destinationId}
             protocol={AvailableProtocols.Tcp}
           />
         </Suspense>
@@ -99,8 +95,6 @@ describe('Begin testing the Processes component', () => {
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairsContent
             processPairId={processPairsResultPayment2ToOp.identity}
-            sourceId={processPairsResultPayment2ToOp.sourceId}
-            destinationId={processPairsResultPayment2ToOp.destinationId}
             protocol={AvailableProtocols.Tcp}
           />
         </Suspense>

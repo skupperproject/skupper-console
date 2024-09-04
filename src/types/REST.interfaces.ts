@@ -110,47 +110,61 @@ export interface ServiceResponse extends BaseResponse {
   listenerCount: number;
 }
 
-export interface FlowPairsResponse<T = RequestHTTP & ConnectionTCP> extends BaseResponse {
+interface BiFlow extends BaseResponse {
+  identity: string;
+  sitePairId: null;
+  processGroupPairId: null;
+  processPairId: null;
+  protocol: AvailableProtocols;
+  sourceProcessId: string;
+  sourceProcessName: string;
   sourceSiteId: string;
   sourceSiteName: string;
-  destinationSiteId: string;
-  destinationSiteName: string;
-  protocol: string;
-  forwardFlow: T;
-  counterFlow: T;
-  flowTrace: string;
-  siteAggregateId: string;
-  processGroupAggregateId: string;
-  processAggregateId: string;
-  duration: number;
+  destSiteId: string;
+  destSiteName: string;
+  destProcessId: string;
+  destProcessName: string;
+  address: string;
+  octets: number;
+  octetsReverse: number;
+  latency: number;
+  latencyReverse: number;
+  trace: string; //ie: '0/site-a-skupper-router-57447855dd-h2hfw';
 }
 
-export interface ConnectionTCP extends BaseResponse {
-  parent: string;
-  counterFlow: string;
-  octets: number;
-  octetsUnacked: number;
-  windowSize: number;
-  sourceHost: string;
-  sourcePort: string;
-  latency: number;
-  process: string;
-  processName: string;
+export interface TcpBiflow extends BiFlow {
+  active: boolean;
+  connectorError: null;
+  connectorId: string;
+  listenerId: '';
+  listenerError: null;
+  duration: number | null;
+  proxyHost: string; //ie: 172.17.44.249
+  proxyPort: number; //ie: 56956
+  sourceHost: string; //ie: '172.17.44.196'
+  sourcePort: number; //ie:  47504
 }
 
-export interface RequestHTTP extends BaseResponse {
-  counterFlow: string;
-  parent: string;
-  octets: number;
-  method?: string;
-  latency: number;
-  process: string;
-  processName: string;
-  streamIdentity?: number;
-  result?: number;
-  reason?: string;
-  place: 1 | 2;
+export interface HttpBiflow extends BiFlow {
+  active: boolean;
+  connectorError: null;
+  connectorId: string;
+  duration: number | null;
+  listenerError: null;
+  listenerId: '';
+  forwardFlow: {
+    method?: string;
+    result?: number;
+    reason?: string;
+  };
+  counterFlow: {
+    method?: string;
+    result?: number;
+    reason?: string;
+  };
 }
+
+export type FlowPairsResponse = TcpBiflow | HttpBiflow;
 
 export interface RouterResponse extends BaseResponse {
   name: string;

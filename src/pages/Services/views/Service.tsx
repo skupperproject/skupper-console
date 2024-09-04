@@ -22,7 +22,7 @@ const Service = function () {
     serviceId,
     protocol,
     serverCount,
-    requestsCount,
+    // requestsCount,
     tcpActiveConnectionCount,
     tcpTerminatedConnectionCount
   } = useServiceData();
@@ -37,7 +37,7 @@ const Service = function () {
         <NavigationMenu
           protocol={protocol}
           serverCount={serverCount}
-          requestsCount={requestsCount}
+          //requestsCount={requestsCount}
           tcpActiveConnectionCount={tcpActiveConnectionCount}
           tcpTerminatedConnectionCount={tcpTerminatedConnectionCount}
           menuSelected={menuSelected}

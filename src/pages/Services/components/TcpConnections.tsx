@@ -5,9 +5,9 @@ import { Stack, StackItem } from '@patternfly/react-core';
 import { AvailableProtocols } from '@API/REST.enum';
 import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 
+import FlowPairsTable from './FlowPairsTable';
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
 import ExposedServers from '../components/ExposedServers';
-import FlowPairsTable from '../components/FlowPairsTable';
 import Overview from '../components/Overview';
 import {
   TAB_0_KEY,
@@ -35,9 +35,7 @@ const TcpConnections: FC<TcpConnectionsProps> = function ({ serviceId, serviceNa
   return (
     <>
       {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} serviceName={serviceName} protocol={protocol} />}
-
       {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
-
       {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
         <Stack hasGutter>
           <StackItem>

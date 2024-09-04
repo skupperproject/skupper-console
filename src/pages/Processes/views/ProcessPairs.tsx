@@ -11,39 +11,25 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 
 import ProcessPairDetails from '../components/ProcessPairsDetails';
 import ProcessPairsFlows from '../components/ProcessPairsFlows';
+import useProcessPairData from '../hooks/useProcessPairsData';
 import { ProcessesLabels } from '../Processes.enum';
 
 const ProcessPairs = function () {
   const { processPair } = useParams() as { processPair: string };
 
   const { id: processPairId, protocol } = getIdAndNameFromUrlParams(processPair);
-  const ids = processPairId?.split('-to-') || [];
-  const sourceId = ids[0];
-  const destinationId = ids[1];
 
-  return (
-    <ProcessPairsContent
-      processPairId={processPairId}
-      sourceId={sourceId}
-      destinationId={destinationId}
-      protocol={protocol as AvailableProtocols}
-    />
-  );
+  return <ProcessPairsContent processPairId={processPairId} protocol={protocol as AvailableProtocols} />;
 };
 
 export interface ProcessPairsContentProps {
   processPairId: string;
-  sourceId: string;
-  destinationId: string;
   protocol: AvailableProtocols | 'undefined';
 }
 
-export const ProcessPairsContent: FC<ProcessPairsContentProps> = function ({
-  processPairId,
-  sourceId,
-  destinationId,
-  protocol
-}) {
+export const ProcessPairsContent: FC<ProcessPairsContentProps> = function ({ processPairId, protocol }) {
+  const { source, destination } = useProcessPairData({ processPairId });
+
   return (
     <MainContainer
       dataTestId={getTestsIds.processPairsView(processPairId)}
@@ -52,11 +38,15 @@ export const ProcessPairsContent: FC<ProcessPairsContentProps> = function ({
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
-            <ProcessPairDetails sourceId={sourceId} destinationId={destinationId} />
+            <ProcessPairDetails source={source} destination={destination} />
           </StackItem>
 
           <StackItem isFilled>
-            <ProcessPairsFlows processPairId={processPairId} protocol={protocol} />
+            <ProcessPairsFlows
+              sourceProcessId={source.identity}
+              destProcessId={destination.identity}
+              protocol={protocol}
+            />
           </StackItem>
         </Stack>
       }

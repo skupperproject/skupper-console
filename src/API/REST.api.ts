@@ -37,6 +37,7 @@ import {
   getHostsPATH,
   getProcessGroupPairsPATH,
   getProcessPairsPATH,
+  getProcessPairPairPATH,
   getProcessGroupsPATH,
   getCollectors,
   getProcessPairsByServicePATH,
@@ -282,5 +283,16 @@ export const RESTApi = {
     const data = await RESTApi.fetchProcessesPairs(options);
 
     return getApiResults(data);
+  },
+
+  fetchProcessesPair: async (
+    id: string,
+    options?: RemoteFilterOptions
+  ): Promise<ResponseWrapper<ProcessPairsResponse>> => {
+    const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getProcessPairPairPATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
+    });
+
+    return data;
   }
 };

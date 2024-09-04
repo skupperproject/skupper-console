@@ -33,17 +33,16 @@ const useServiceData = () => {
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const { data: requestsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
-    enabled: protocol !== AvailableProtocols.Tcp,
-    refetchInterval: UPDATE_INTERVAL
-  });
+  // const { data: requestsData } = useQuery({
+  //   queryKey: [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
+  //   queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
+  //   enabled: protocol !== AvailableProtocols.Tcp,
+  //   refetchInterval: UPDATE_INTERVAL
+  // });
 
   const { data: activeConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
     queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
-    enabled: protocol === AvailableProtocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -59,7 +58,7 @@ const useServiceData = () => {
     serviceId,
     protocol,
     serverCount: serversData?.timeRangeCount || 0,
-    requestsCount: requestsData?.timeRangeCount || 0,
+    //requestsCount: requestsData?.timeRangeCount || 0,
     tcpActiveConnectionCount: activeConnectionsData?.timeRangeCount || 0,
     tcpTerminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0
   };
