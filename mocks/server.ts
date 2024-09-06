@@ -1,6 +1,6 @@
 import { createServer, Response } from 'miragejs';
 
-import { AvailableProtocols, Direction } from '@API/REST.enum';
+import { Direction } from '@API/REST.enum';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -24,7 +24,6 @@ const prefix = '/api/v1alpha1';
 
 // api data
 const path = './data';
-const collectors = require(`${path}/COLLECTORS.json`);
 const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
 const processGroups: ResponseWrapper<ComponentResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
 const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
@@ -47,7 +46,6 @@ interface ApiProps {
 const mockSitesForPerf: SiteResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
   mockSitesForPerf.push({
-    recType: 'SITE',
     identity: `sitePerf${i}`,
     platform: 'kubernetes',
     startTime: 1674048705000000,
@@ -61,7 +59,6 @@ for (let i = 0; i < ITEM_COUNT; i++) {
 const mockRoutersForPerf: RouterResponse[] = [];
 mockSitesForPerf.forEach((site, index) => {
   mockRoutersForPerf.push({
-    recType: 'ROUTER',
     identity: `router${index}:0`,
     parent: site.identity,
     startTime: 1674048674810887,
@@ -116,7 +113,6 @@ mockSitePairsForPerf.forEach((_, index) => {
 
   mockLinksForPerf.push(
     {
-      recType: 'LINK',
       identity: `link-out-${index}`,
       parent: '',
       startTime: 1674048706622878,
@@ -129,7 +125,6 @@ mockSitePairsForPerf.forEach((_, index) => {
       destinationSiteId: site2.identity
     },
     {
-      recType: 'LINK',
       identity: `link-in-${index}`,
       parent: '',
       startTime: 1674151543561656,
@@ -164,7 +159,6 @@ export const MockApi = {
   get500Error: () => new Response(500),
   get503Error: () => new Response(503),
   get404Error: () => new Response(404),
-  getCollectors: () => collectors,
 
   getUser: () => ({
     username: 'IAM#Mock-User@user.mock',
@@ -293,6 +287,10 @@ export const MockApi = {
     return { ...processPairs, results: resultsFiltered };
   },
 
+  getProcessPair: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: processPairs.results.find(({ identity }) => identity === id) || []
+  }),
+
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
     if ((queryParams.query as string)?.includes('sum by(destProcess, sourceProcess, direction)(rate(octets_total')) {
       return {
@@ -357,7 +355,6 @@ export const MockApi = {
 
 // api paths
 export const MockApiPaths = {
-  Collectors: `${prefix}/collectors`,
   User: `${prefix}/user`,
   Logout: `${prefix}/logout`,
   Sites: `${prefix}/sites`,
@@ -367,6 +364,7 @@ export const MockApiPaths = {
   Component: `${prefix}/processgroups/:id`,
   Processes: `${prefix}/processes`,
   ProcessPairs: `${prefix}/processpairs`,
+  ProcessPair: `${prefix}/processpairs/:id`,
   Routers: `${prefix}/routers`,
   Links: `${prefix}/links`,
   PrometheusQuery: `${prefix}/internal/prom/query/`,
@@ -389,7 +387,6 @@ export function loadMockServer() {
       this.get('', MockApi.get500Error);
       this.get(MockApiPaths.User, MockApi.getUser);
       this.get(MockApiPaths.Logout, MockApi.logout);
-      this.get(MockApiPaths.Collectors, MockApi.getCollectors);
       this.get(MockApiPaths.Sites, MockApi.getSites);
       this.get(MockApiPaths.Site, MockApi.getSite);
       this.get(MockApiPaths.Links, MockApi.getLinks);
@@ -398,6 +395,7 @@ export function loadMockServer() {
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
       this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
+      this.get(MockApiPaths.ProcessPair, MockApi.getProcessPair);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
 
@@ -435,32 +433,21 @@ export function loadMockServer() {
         };
       });
 
-      this.get(`${prefix}/flowpairs`, (_, { queryParams }) => {
-        let results = [];
-
-        if (queryParams.protocol === AvailableProtocols.Tcp) {
-          results = flowPairs.results.filter(
-            ({ processGroupPairId, protocol, endTime }: FlowPairsResponse) =>
-              processGroupPairId === queryParams.processGroupPairId &&
-              protocol === queryParams.protocol &&
-              (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
-          );
-        } else {
-          results = flowPairs.results.filter(
-            ({ processGroupPairId, protocol }: FlowPairsResponse) =>
-              processGroupPairId === queryParams.processGroupPairId && protocol === queryParams.protocol
-          );
-        }
+      this.get(`${prefix}/connections`, (_, { queryParams }) => {
+        const results = flowPairs.results.filter(
+          ({ protocol, endTime }: FlowPairsResponse) =>
+            protocol === queryParams.protocol && (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
+        );
 
         return { ...processPairs, results, timeRangeCount: results.length };
       });
 
-      this.get(`${prefix}/flowpairs/:id`, (_, { params: { id } }) => ({
+      this.get(`${prefix}/connections/:id`, (_, { params: { id } }) => ({
         results: flowPairs.results.find(({ identity }: ServiceResponse) => identity === id)
       }));
 
       this.get(`${prefix}/addresses`, () => services);
-      this.get(`${prefix}/addresses/:id/flowpairs`, () => serviceFlowPairs);
+      this.get(`${prefix}/addresses/:id/connections`, () => serviceFlowPairs);
       this.get(`${prefix}/addresses/:id/processes`, () => serviceProcesses);
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }

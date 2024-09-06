@@ -203,7 +203,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchFlowsDeltaInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'matrix'>[]> => {
+  fetchOpenConnectionsInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'matrix'>[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -211,7 +211,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'matrix'>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getActiveFlowsInTimeRange(queryFilterString),
+        query: queries.getOpenConnections(queryFilterString),
         start,
         end,
         step
@@ -221,7 +221,7 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchLiveFlows: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'vector'>[]> => {
+  fetchOpenConnections: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'vector'>[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);
 
@@ -229,7 +229,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
       params: {
-        query: queries.getActiveFlows(queryFilterString),
+        query: queries.getOpenConnections(queryFilterString),
         start,
         end,
         step
@@ -261,14 +261,14 @@ export const PrometheusApi = {
         ? `${PrometheusLabelsV2.DestProcess},${PrometheusLabelsV2.DestSiteName}`
         : PrometheusLabelsV2.DestSiteName;
 
-    let queryFilters = `address="${serviceName}", direction="incoming"`;
+    let queryFilters = `${PrometheusLabelsV2.RoutingKey}="${serviceName}"`;
 
     if (sourceProcesses) {
-      queryFilters = [queryFilters, `sourceProcess=~"${sourceProcesses}"`].join(',');
+      queryFilters = [queryFilters, `${PrometheusLabelsV2.SourceProcess}=~"${sourceProcesses}"`].join(',');
     }
 
     if (destProcesses) {
-      queryFilters = [queryFilters, `destProcess=~"${destProcesses}"`].join(',');
+      queryFilters = [queryFilters, `${PrometheusLabelsV2.DestProcess}=~"${destProcesses}"`].join(',');
     }
 
     const {

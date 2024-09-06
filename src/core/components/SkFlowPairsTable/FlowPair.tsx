@@ -35,7 +35,7 @@ interface FlowPairProps {
 }
 
 const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
-  const { protocol, endTime: endTimeMicroSeconds, identity, trace, duration } = flowPair;
+  const { protocol, endTime: endTimeMicroSeconds, identity, traceSites, duration } = flowPair;
 
   const hasHttp = protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2;
 
@@ -54,7 +54,7 @@ const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
               <DescriptionList>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
-                  <DescriptionListDescription>{formatTraceBySites(trace) || '-'}</DescriptionListDescription>
+                  <DescriptionListDescription>{formatTraceBySites(traceSites) || '-'}</DescriptionListDescription>
                   {!!duration && (
                     <>
                       <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
@@ -79,12 +79,9 @@ const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
                   <DescriptionListGroup>
                     <DescriptionListTerm>{FlowPairLabels.Protocol}</DescriptionListTerm>
                     <DescriptionListDescription>{protocol}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowPairLabels.Method}</DescriptionListTerm>
-                    {/* <DescriptionListDescription>{forwardFlow.method}</DescriptionListDescription>
-                    <DescriptionListTerm>{FlowPairLabels.Status}</DescriptionListTerm>
-                    <DescriptionListDescription>{forwardFlow.result || counterFlow.result}</DescriptionListDescription> */}
+
                     <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(trace)}</DescriptionListDescription>
+                    <DescriptionListDescription>{formatTraceBySites(traceSites)}</DescriptionListDescription>
                     {!!duration && (
                       <>
                         <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
@@ -128,8 +125,8 @@ interface DescriptionProps<T> {
 const ConnectionDetail: FC<DescriptionProps<TcpBiflow>> = function ({ title, flow, isCounterflow = false }) {
   const processId = isCounterflow ? flow.sourceProcessId : flow.destProcessId;
   const processName = isCounterflow ? flow.sourceProcessName : flow.destProcessName;
-  const host = isCounterflow ? flow.sourceHost : flow.proxyHost;
-  const port = isCounterflow ? flow.sourcePort : flow.proxyPort;
+  const host = isCounterflow ? `${flow.destHost} : ${flow.destPort}` : `${flow.sourceHost} : ${flow.sourcePort}`;
+  const proxyHost = isCounterflow ? '-' : `${flow.proxyHost} : ${flow.proxyPort}`;
   const octets = isCounterflow ? flow.octets : flow.octetsReverse;
   const latency = isCounterflow ? flow.latency : flow.latencyReverse;
 
@@ -157,14 +154,10 @@ const ConnectionDetail: FC<DescriptionProps<TcpBiflow>> = function ({ title, flo
             </DescriptionListDescription>
             <DescriptionListTerm>{FlowPairLabels.Host}</DescriptionListTerm>
             <DescriptionListDescription>{host}</DescriptionListDescription>
-            <DescriptionListTerm>{FlowPairLabels.Port}</DescriptionListTerm>
-            <DescriptionListDescription>{port}</DescriptionListDescription>
+            <DescriptionListTerm>{FlowPairLabels.ProxyHost}</DescriptionListTerm>
+            <DescriptionListDescription>{proxyHost}</DescriptionListDescription>
             <DescriptionListTerm>{FlowPairLabels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{octets} </DescriptionListDescription>
-            <DescriptionListTerm>{FlowPairLabels.ByteUnacked}</DescriptionListTerm>
-            {/* <DescriptionListDescription>{formatBytes(flow.octetsUnacked)}</DescriptionListDescription>
-            <DescriptionListTerm>{FlowPairLabels.WindowSize}</DescriptionListTerm>
-            <DescriptionListDescription>{formatBytes(flow.windowSize)}</DescriptionListDescription> */}
             <DescriptionListTerm>{FlowPairLabels.Latency}</DescriptionListTerm>
             <DescriptionListDescription>{formatLatency(latency)}</DescriptionListDescription>
           </DescriptionListGroup>
@@ -179,6 +172,8 @@ const RequestDetail: FC<DescriptionProps<HttpBiflow>> = function ({ title, flow,
   const processName = isCounterflow ? flow.sourceProcessName : flow.destProcessName;
   const octets = isCounterflow ? flow.octets : flow.octetsReverse;
   const latency = isCounterflow ? flow.latency : flow.latencyReverse;
+  const method = isCounterflow ? '' : flow.forwardFlow.method;
+  const result = isCounterflow ? flow.counterFlow.result : '';
 
   return (
     <Card isFullHeight isPlain>
@@ -202,6 +197,20 @@ const RequestDetail: FC<DescriptionProps<HttpBiflow>> = function ({ title, flow,
                 <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${processId}`}>{processName}</Link>
               </>
             </DescriptionListDescription>
+            {method && (
+              <>
+                <DescriptionListTerm>{FlowPairLabels.Method}</DescriptionListTerm>
+                <DescriptionListDescription>{method}</DescriptionListDescription>
+              </>
+            )}
+            {result && (
+              <>
+                <DescriptionListTerm>{FlowPairLabels.Status}</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {flow.forwardFlow.result || flow.counterFlow.result}
+                </DescriptionListDescription>
+              </>
+            )}
             <DescriptionListTerm>{FlowPairLabels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(octets)}</DescriptionListDescription>{' '}
             <DescriptionListTerm>{FlowPairLabels.Latency}</DescriptionListTerm>

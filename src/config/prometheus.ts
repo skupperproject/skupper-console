@@ -54,11 +54,10 @@ export enum PrometheusLabelsV2 {
   SourceSiteName = 'source_site_name',
   DestSiteId = 'dest_site_id',
   DestSiteName = 'dest_site_name',
-  SourceProcess = 'source_process',
-  DestProcess = 'dest_process',
+  SourceProcess = 'source_process_name',
+  DestProcess = 'dest_process_name',
   Direction = 'direction',
   Protocol = 'protocol',
-  Address = 'address',
   RoutingKey = 'routing_key',
   Code = 'code', // L7 response
   Method = 'method' // L7 request

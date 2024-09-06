@@ -105,7 +105,7 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(getByText('Connection history (1)'));
+    fireEvent.click(getByText('Connection history (2)'));
 
     expect(getByTestId('tcp-old-connections-table')).toBeInTheDocument();
   });

@@ -58,11 +58,11 @@ describe('Tcp component', () => {
 
   it('should not render the Tcp section', async () => {
     jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchLiveFlows')
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections')
       .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchFlowsDeltaInTimeRange')
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsInTimeRange')
       .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     render(

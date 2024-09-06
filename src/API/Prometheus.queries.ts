@@ -21,15 +21,8 @@ export const queries = {
   },
 
   // calculate the open connections serie
-  getActiveFlowsInTimeRange(paramSource: string) {
-    //TODO: active flows are supposed to be in and out. In case we don't have processes as filters these values are used for both in and out (duplicated)
-    // this is a temporary solution
-    const hasProcessParam =
-      paramSource.includes(`${PrometheusLabelsV2.SourceProcess}`) ||
-      paramSource.includes(`${PrometheusLabelsV2.DestProcess}`);
-    const divider = hasProcessParam ? '' : '/2';
-
-    return `sum(${PrometheusMetricsV2.TcpOpenOnnections}{${paramSource}})${divider}`;
+  getOpenConnections(paramSource: string) {
+    return `sum(${PrometheusMetricsV2.TcpOpenOnnections}{${paramSource}})`;
   },
 
   // count the number of active tcp flows in the services table
@@ -82,14 +75,6 @@ export const queries = {
 
   // SERVICES queries
   // calculate the open connections count (used in the services table)
-  getActiveFlows(paramSource: string) {
-    const hasProcessParam =
-      paramSource.includes(`${PrometheusLabelsV2.SourceProcess}`) ||
-      paramSource.includes(`${PrometheusLabelsV2.DestProcess}`);
-    const divider = hasProcessParam ? '' : '/2';
-
-    return `sum(${PrometheusMetricsV2.TcpOpenOnnections}{${paramSource}})${divider}`;
-  },
 
   // calculate the TCP byterate for exposed services
   getTcpByteRateByService(serviceName: string) {
@@ -98,6 +83,6 @@ export const queries = {
 
   // calculate the byterate used by the sankey diagram in the requests/connections page
   getResourcePairsByService(param: string, groupBy: string, time: string) {
-    return `sum by(${groupBy})(rate(octets_total{${param}}[${time}]) > 0)`;
+    return `sum by(${groupBy})(rate(${PrometheusMetricsV2.SentBytes}{${param}}[${time}]) > 0)`;
   }
 };

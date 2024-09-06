@@ -42,7 +42,7 @@ export function convertToPrometheusQueryParams({
   }
 
   if (service) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Address}=~"${service}"`];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.RoutingKey}=~"${service}"`];
   }
 
   if (protocol) {

@@ -3,9 +3,6 @@
 import { COLLECTOR_URL } from '@config/config';
 
 // ask to Skupper the url to call the api that retrieves the url of the prometheus server
-const COLLECTORS_PATH = `${COLLECTOR_URL}/collectors/`;
-export const getCollectors = () => COLLECTORS_PATH;
-
 export const getUser = () => `${COLLECTOR_URL}/user/`;
 
 export const logout = () => `${COLLECTOR_URL}/logout?nonce=${Date.now()}`;

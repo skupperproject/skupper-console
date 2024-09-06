@@ -12,7 +12,7 @@ import { ServicesLabels } from '../Services.enum';
 interface NavigationMenuProps {
   protocol: AvailableProtocols | undefined;
   serverCount: number;
-  //requestsCount: number;
+  requestsCount: number;
   tcpActiveConnectionCount: number;
   tcpTerminatedConnectionCount: number;
   menuSelected: string;
@@ -20,7 +20,7 @@ interface NavigationMenuProps {
 }
 const NavigationMenu: FC<NavigationMenuProps> = function ({
   serverCount,
-  //requestsCount,
+  requestsCount,
   tcpActiveConnectionCount,
   tcpTerminatedConnectionCount,
   protocol,
@@ -50,13 +50,13 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
           </TabTitleText>
         }
       />
-      {/* {protocol !== AvailableProtocols.Tcp && (
+      {protocol !== AvailableProtocols.Tcp && (
         <Tab
           isDisabled={!requestsCount}
           eventKey={TAB_2_KEY}
           title={<TabTitleText>{ServicesLabels.Requests}</TabTitleText>}
         />
-      )} */}
+      )}
       {protocol === AvailableProtocols.Tcp && (
         <Tab
           isDisabled={!tcpActiveConnectionCount}

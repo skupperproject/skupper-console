@@ -16,7 +16,7 @@ import LoadingPage from '../../../src/pages/shared/Loading';
 import { ProcessPairsResponse, ProcessResponse, SitePairsResponse } from '../../../src/types/REST.interfaces';
 
 const processResult = processesData.results[7] as ProcessResponse;
-const processPairsResult = processesPairsData.results[7] as ProcessPairsResponse | SitePairsResponse;
+const processPairsResult = processesPairsData.results[6] as ProcessPairsResponse | SitePairsResponse;
 
 describe('Processes Pairs component', () => {
   let server: Server;
@@ -45,9 +45,9 @@ describe('Processes Pairs component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByRole('link', { name: 'view pairs' })[0]).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: 'view pairs' })[1]).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.destinationName}@${processPairsResult.destinationId}/${ProcessesLabels.ProcessPairs}@${processesPairsData.results[6].identity}@${processesPairsData.results[6].protocol}?type=${ProcessesLabels.ProcessPairs}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}@${processPairsResult.protocol}?type=${ProcessesLabels.ProcessPairs}`
     );
   });
 });

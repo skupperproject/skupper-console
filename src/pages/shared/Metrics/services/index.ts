@@ -266,6 +266,11 @@ export const MetricsController = {
       destProcess: sourceProcess
     };
 
+    const isSameSite = sourceSite === destSite;
+    const isService = service && !sourceSite && !destSite && !sourceProcess && !destProcess;
+    // For sites and services where the destination is the same of the source we don't want to calculate the reversed queries
+    const disableReverseQuery = isSameSite && isService;
+
     try {
       const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
         await Promise.all([
@@ -274,9 +279,9 @@ export const MetricsController = {
           // Incoming byte rate: Data received at the destination from the source
           PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
-          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          disableReverseQuery ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
-          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+          disableReverseQuery ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
         ]);
 
       return normalizeByteRateFromSeries(
@@ -313,8 +318,8 @@ export const MetricsController = {
 
     try {
       const [liveConnections, liveConnectionsInTimeRangeData] = await Promise.all([
-        PrometheusApi.fetchLiveFlows(params),
-        PrometheusApi.fetchFlowsDeltaInTimeRange(params)
+        PrometheusApi.fetchOpenConnections(params),
+        PrometheusApi.fetchOpenConnectionsInTimeRange(params)
       ]);
 
       if (!liveConnections.length && !liveConnectionsInTimeRangeData.length) {

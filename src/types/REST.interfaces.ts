@@ -42,7 +42,6 @@ export type ResponseWrapper<T> = {
 // Properties that are shared by every response
 interface BaseResponse {
   identity: string;
-  recType: string;
   startTime: number;
   endTime: number;
 }
@@ -80,7 +79,6 @@ export interface ProcessResponse extends BaseResponse {
 }
 
 export interface ProcessPairsResponse extends BaseResponse {
-  pairType: string;
   sourceId: string;
   sourceName: string;
   destinationId: string;
@@ -95,7 +93,6 @@ export interface ProcessPairsResponse extends BaseResponse {
 export type ComponentPairsResponse = ProcessPairsResponse;
 
 export interface SitePairsResponse extends BaseResponse {
-  pairType: string;
   sourceId: string;
   sourceName: string;
   destinationId: string;
@@ -112,10 +109,6 @@ export interface ServiceResponse extends BaseResponse {
 
 interface BiFlow extends BaseResponse {
   identity: string;
-  sitePairId: null;
-  processGroupPairId: null;
-  processPairId: null;
-  protocol: AvailableProtocols;
   sourceProcessId: string;
   sourceProcessName: string;
   sourceSiteId: string;
@@ -125,33 +118,30 @@ interface BiFlow extends BaseResponse {
   destProcessId: string;
   destProcessName: string;
   address: string;
+  duration: number | null;
   octets: number;
   octetsReverse: number;
   latency: number;
   latencyReverse: number;
-  trace: string; //ie: '0/site-a-skupper-router-57447855dd-h2hfw';
+  traceRouters: string[];
+  traceSites: string[];
+  protocol: AvailableProtocols;
+  connectorError: null;
+  connectorId: string;
+  listenerId: string;
+  listenerError: string | null;
 }
 
 export interface TcpBiflow extends BiFlow {
-  active: boolean;
-  connectorError: null;
-  connectorId: string;
-  listenerId: '';
-  listenerError: null;
-  duration: number | null;
-  proxyHost: string; //ie: 172.17.44.249
+  proxyHost: string; //what the service will see as the client.  ie: 172.17.44.249
   proxyPort: number; //ie: 56956
+  destHost: string; //what the service will see as the
+  destPort: number;
   sourceHost: string; //ie: '172.17.44.196'
   sourcePort: number; //ie:  47504
 }
 
 export interface HttpBiflow extends BiFlow {
-  active: boolean;
-  connectorError: null;
-  connectorId: string;
-  duration: number | null;
-  listenerError: null;
-  listenerId: '';
   forwardFlow: {
     method?: string;
     result?: number;
@@ -190,12 +180,4 @@ export interface HostResponse extends BaseResponse {
   name: string;
   parent: string;
   provider?: string;
-}
-
-// The collector is not part of the data model. It retrieves setup information such as prometheus properties
-export interface CollectorsResponse {
-  recType: string;
-  identity: string;
-  startTime: number;
-  endTime: number;
 }

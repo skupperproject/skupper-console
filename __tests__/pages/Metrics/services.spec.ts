@@ -83,7 +83,7 @@ describe('useMetrics', () => {
     const error = new Error('API request failed');
 
     jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchLiveFlows')
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections')
       .mockImplementation(jest.fn().mockRejectedValue(error));
 
     await expect(
