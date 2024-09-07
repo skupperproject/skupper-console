@@ -117,7 +117,7 @@ interface BiFlow extends BaseResponse {
   destSiteName: string;
   destProcessId: string;
   destProcessName: string;
-  address: string;
+  routingKey: string;
   duration: number | null;
   octets: number;
   octetsReverse: number;

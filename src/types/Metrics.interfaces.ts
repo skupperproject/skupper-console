@@ -90,6 +90,12 @@ export interface ByteRateMetrics {
   totalRxValue: number | undefined;
 }
 
+export interface getDataTrafficMetrics {
+  traffic: ByteRateMetrics;
+  trafficClient: ByteRateMetrics;
+  trafficServer: ByteRateMetrics;
+}
+
 export interface LatencyMetrics {
   data: skAxisXY[];
   label: string;

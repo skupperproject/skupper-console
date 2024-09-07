@@ -16,7 +16,8 @@ import {
   ResponseMetrics,
   LantencyBucketMetrics,
   ConnectionMetrics,
-  QueryMetricsParams
+  QueryMetricsParams,
+  getDataTrafficMetrics
 } from '@sk-types/Metrics.interfaces';
 import { PrometheusMetric, PrometheusQueryParams } from '@sk-types/Prometheus.interfaces';
 import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
@@ -245,7 +246,7 @@ export const MetricsController = {
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
-  }: QueryMetricsParams): Promise<ByteRateMetrics> => {
+  }: QueryMetricsParams): Promise<getDataTrafficMetrics> => {
     const params: PrometheusQueryParams = {
       service,
       protocol,
@@ -284,10 +285,20 @@ export const MetricsController = {
           disableReverseQuery ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
         ]);
 
-      return normalizeByteRateFromSeries(
-        sumValuesByTimestamp([...sourceToDestByteRateTx, ...sourceToDestByteRateRx]),
-        sumValuesByTimestamp([...destToSourceByteRateTx, ...destToSourceByteRateRx])
-      );
+      return {
+        traffic: normalizeByteRateFromSeries(
+          sumValuesByTimestamp([...sourceToDestByteRateTx, ...sourceToDestByteRateRx]),
+          sumValuesByTimestamp([...destToSourceByteRateTx, ...destToSourceByteRateRx])
+        ),
+        trafficClient: normalizeByteRateFromSeries(
+          sumValuesByTimestamp(sourceToDestByteRateTx),
+          sumValuesByTimestamp(destToSourceByteRateRx)
+        ),
+        trafficServer: normalizeByteRateFromSeries(
+          sumValuesByTimestamp(destToSourceByteRateTx),
+          sumValuesByTimestamp(sourceToDestByteRateRx)
+        )
+      };
     } catch (e: unknown) {
       return Promise.reject(e);
     }

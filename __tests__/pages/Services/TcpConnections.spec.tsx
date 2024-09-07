@@ -4,7 +4,6 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 
 import TcpConnections from '@pages/Services/components/TcpConnections';
-import { TcpBiflow } from '@sk-types/REST.interfaces';
 
 import flowPairsData from '../../../mocks/data/SERVICE_FLOW_PAIRS.json';
 import processesData from '../../../mocks/data/SERVICE_PROCESSES.json';
@@ -19,7 +18,7 @@ import LoadingPage from '../../../src/pages/shared/Loading';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 
 const servicesResults = servicesData.results;
-const tcpBiFlow = flowPairsData.results[3] as TcpBiflow;
+const tcpBiFlow = flowPairsData.results[3] ;
 const processResult = processesData.results;
 
 describe('Begin testing the TCP connections component', () => {
