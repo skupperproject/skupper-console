@@ -105,7 +105,7 @@ export const TAB_3_KEY = '3';
 
 export const servicesSelectOptions: { name: string; id: string }[] = [
   {
-    name: 'Address',
+    name: 'Routing key',
     id: 'name'
   },
   {
