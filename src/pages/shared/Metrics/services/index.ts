@@ -267,7 +267,6 @@ export const MetricsController = {
       destProcess: sourceProcess
     };
 
-    const isSameSite = sourceSite === destSite;
     const isService = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
 
     try {
@@ -278,9 +277,9 @@ export const MetricsController = {
           // Incoming byte rate: Data received at the destination from the source
           isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
-          isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
-          isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
         ]);
 
       return {

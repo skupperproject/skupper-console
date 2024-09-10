@@ -87,7 +87,7 @@ const Traffic: FC<TrafficProps> = function ({
           {(!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
             <>
               {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle} as Client`} </Title>
+              <Title headingLevel="h4">{`Client ${MetricsLabels.ByteRateTitle}`} </Title>
               <TrafficCharts
                 byteRateData={data.trafficClient}
                 colorScale={[VarColors.Orange100, VarColors.Orange400]}
@@ -98,7 +98,7 @@ const Traffic: FC<TrafficProps> = function ({
           {(!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
             <>
               {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle} as Server`} </Title>
+              <Title headingLevel="h4">{`Server ${MetricsLabels.ByteRateTitle}`} </Title>
               <TrafficCharts
                 byteRateData={data.trafficServer}
                 colorScale={[VarColors.Purple100, VarColors.Purple400]}
