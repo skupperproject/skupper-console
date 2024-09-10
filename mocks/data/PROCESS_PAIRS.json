@@ -1,7 +1,6 @@
 {
   "results": [
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-op-to-process-cart-1",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -17,7 +16,6 @@
       "protocol": "http2"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-op-to-process-cash-desk-2",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -29,7 +27,6 @@
       "protocol": "http2"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-payment-3-to-process-cash-desk-2",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -41,7 +38,6 @@
       "protocol": "http2"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-payment-1-to-process-cash-desk-1",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -53,7 +49,6 @@
       "protocol": "http1"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-payment-2-to-process-op",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -65,7 +60,6 @@
       "protocol": "tcp"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-cart-1-to-process-payment-3",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -81,7 +75,6 @@
       "protocol": "tcp"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-database-1-to-process-payment-1",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -97,7 +90,6 @@
       "protocol": "tcp"
     },
     {
-      "recType": "FLOWAGGREGATE",
       "identity": "process-mm-to-process-database-1",
       "startTime": 1674202485242353,
       "endTime": 0,
@@ -105,11 +97,10 @@
       "sourceId": "process-mm",
       "sourceName": "process mm",
       "destinationId": "process-database-1",
-      "destinationName": "process database 1"
+      "destinationName": "process database 1",
+      "protocol": "tcp"
     }
   ],
-  "status": "",
   "count": 8,
-  "timeRangeCount": 8,
-  "totalCount": 8
+  "timeRangeCount": 8
 }

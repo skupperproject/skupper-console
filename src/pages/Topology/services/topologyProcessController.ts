@@ -1,4 +1,5 @@
 import { Role } from '@API/REST.enum';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 import { TopologyMetrics } from '@sk-types/Topology.interfaces';
 import { GraphEdge, GraphNode } from 'types/Graph.interfaces';
@@ -25,21 +26,6 @@ interface TopologyProcessControllerProps {
     showMetricValue: boolean;
   };
 }
-
-const addProcessMetricsToEdges = (
-  edges: GraphEdge[],
-  metrics: TopologyMetrics | null,
-  protocolByProcessPairsMap: Record<string, string>
-) =>
-  TopologyController.addMetricsToEdges(
-    edges,
-    'sourceProcess',
-    'destProcess',
-    protocolByProcessPairsMap,
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
-  );
 
 const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
   processes?.map(
@@ -102,10 +88,12 @@ export const TopologyProcessController = {
     );
 
     let processNodes = convertProcessesToNodes(p);
-    let processPairEdges = addProcessMetricsToEdges(
+    let processPairEdges = TopologyController.addMetricsToEdges(
       TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
-      metrics,
-      protocolByProcessPairsMap
+      PrometheusLabelsV2.SourceProcess,
+      PrometheusLabelsV2.DestProcess,
+      protocolByProcessPairsMap,
+      metrics
     );
 
     if (options.showDeployments) {
@@ -122,7 +110,7 @@ export const TopologyProcessController = {
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
       })),
-      edges: TopologyController.configureEdges(processPairEdges, options),
+      edges: TopologyController.addLabelToEdges(processPairEdges, options),
       combos: TopologyController.getCombosFromNodes(processNodes)
     };
   }

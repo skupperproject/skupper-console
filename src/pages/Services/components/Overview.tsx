@@ -82,7 +82,6 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`)
       }}
       defaultMetricFilterValues={{
-        protocol,
         service: serviceName,
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
       }}
@@ -98,8 +97,7 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         },
         destinationProcesses: {
           hide: destProcesses.length === 0
-        },
-        protocols: { disabled: true }
+        }
       }}
       onGetMetricFiltersConfig={handleSelectedFilters}
       onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}

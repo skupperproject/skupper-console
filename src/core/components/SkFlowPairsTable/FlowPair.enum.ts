@@ -2,6 +2,7 @@ export enum FlowPairLabels {
   Protocol = 'Protocol',
   Status = 'Status',
   Host = 'Host',
+  ProxyHost = 'Proxy Host',
   Port = 'Port',
   Process = 'Process',
   Method = 'Method',

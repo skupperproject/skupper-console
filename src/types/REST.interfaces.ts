@@ -42,7 +42,6 @@ export type ResponseWrapper<T> = {
 // Properties that are shared by every response
 interface BaseResponse {
   identity: string;
-  recType: string;
   startTime: number;
   endTime: number;
 }
@@ -80,7 +79,6 @@ export interface ProcessResponse extends BaseResponse {
 }
 
 export interface ProcessPairsResponse extends BaseResponse {
-  pairType: string;
   sourceId: string;
   sourceName: string;
   destinationId: string;
@@ -89,18 +87,17 @@ export interface ProcessPairsResponse extends BaseResponse {
   sourceSiteName: string;
   destinationSiteId: string;
   destinationSiteName: string;
-  protocol?: AvailableProtocols; // undefined = there is a remote process
+  protocol: AvailableProtocols; // undefined = there is a remote process
 }
 
 export type ComponentPairsResponse = ProcessPairsResponse;
 
 export interface SitePairsResponse extends BaseResponse {
-  pairType: string;
   sourceId: string;
   sourceName: string;
   destinationId: string;
   destinationName: string;
-  protocol?: AvailableProtocols;
+  protocol: AvailableProtocols;
 }
 
 export interface ServiceResponse extends BaseResponse {
@@ -110,47 +107,54 @@ export interface ServiceResponse extends BaseResponse {
   listenerCount: number;
 }
 
-export interface FlowPairsResponse<T = RequestHTTP & ConnectionTCP> extends BaseResponse {
+interface BiFlow extends BaseResponse {
+  identity: string;
+  sourceProcessId: string;
+  sourceProcessName: string;
   sourceSiteId: string;
   sourceSiteName: string;
-  destinationSiteId: string;
-  destinationSiteName: string;
-  protocol: string;
-  forwardFlow: T;
-  counterFlow: T;
-  flowTrace: string;
-  siteAggregateId: string;
-  processGroupAggregateId: string;
-  processAggregateId: string;
-  duration: number;
+  destSiteId: string;
+  destSiteName: string;
+  destProcessId: string;
+  destProcessName: string;
+  routingKey: string;
+  duration: number | null;
+  octets: number;
+  octetsReverse: number;
+  latency: number;
+  latencyReverse: number;
+  traceRouters: string[];
+  traceSites: string[];
+  protocol: AvailableProtocols;
+  connectorError: null;
+  connectorId: string;
+  listenerId: string;
+  listenerError: string | null;
 }
 
-export interface ConnectionTCP extends BaseResponse {
-  parent: string;
-  counterFlow: string;
-  octets: number;
-  octetsUnacked: number;
-  windowSize: number;
-  sourceHost: string;
-  sourcePort: string;
-  latency: number;
-  process: string;
-  processName: string;
+export interface TcpBiflow extends BiFlow {
+  proxyHost: string; //what the service will see as the client.  ie: 172.17.44.249
+  proxyPort: number; //ie: 56956
+  destHost: string; //what the service will see as the
+  destPort: number;
+  sourceHost: string; //ie: '172.17.44.196'
+  sourcePort: number; //ie:  47504
 }
 
-export interface RequestHTTP extends BaseResponse {
-  counterFlow: string;
-  parent: string;
-  octets: number;
-  method?: string;
-  latency: number;
-  process: string;
-  processName: string;
-  streamIdentity?: number;
-  result?: number;
-  reason?: string;
-  place: 1 | 2;
+export interface HttpBiflow extends BiFlow {
+  forwardFlow: {
+    method?: string;
+    result?: number;
+    reason?: string;
+  };
+  counterFlow: {
+    method?: string;
+    result?: number;
+    reason?: string;
+  };
 }
+
+export type FlowPairsResponse = TcpBiflow | HttpBiflow;
 
 export interface RouterResponse extends BaseResponse {
   name: string;
@@ -176,12 +180,4 @@ export interface HostResponse extends BaseResponse {
   name: string;
   parent: string;
   provider?: string;
-}
-
-// The collector is not part of the data model. It retrieves setup information such as prometheus properties
-export interface CollectorsResponse {
-  recType: string;
-  identity: string;
-  startTime: number;
-  endTime: number;
 }

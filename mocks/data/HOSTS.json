@@ -1,7 +1,6 @@
 {
   "results": [
     {
-      "recType": "HOST",
       "identity": "host-1",
       "parent": "site-1",
       "startTime": 1699573293000000,
@@ -11,7 +10,6 @@
       "name": "10.251.0.4"
     },
     {
-      "recType": "HOST",
       "identity": "host-2",
       "parent": "site-2",
       "startTime": 1699573313000000,
@@ -21,8 +19,6 @@
       "name": "10.251.0.5"
     }
   ],
-  "status": "",
   "count": 0,
-  "timeRangeCount": 0,
-  "totalCount": 0
+  "timeRangeCount": 0
 }

@@ -7,7 +7,7 @@ describe('useTopologyServiceState', () => {
     localStorage.clear();
   });
 
-  it('should initialize with services selected', () => {
+  it('should initialize with routing keys selected', () => {
     const { result } = renderHook(() => useServiceState(['a', 'b']));
 
     expect(result.current.serviceIdsSelected).toEqual(['a', 'b']);

@@ -3,6 +3,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { Role } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { QueriesProcesses } from '@pages/Processes/Processes.enum';
 
 import { TopologyController } from '../services';
@@ -14,9 +15,11 @@ const processesQueryParams = {
 };
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchLatency: { groupBy: 'sourceProcess, destProcess, direction' }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
+  fetchLatency: {
+    groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess},${PrometheusLabelsV2.Direction}`
+  }
 };
 
 const useTopologyProcessData = () => {
@@ -36,11 +39,11 @@ const useTopologyProcessData = () => {
       {
         queryKey: [QueriesTopology.GetBytesByProcessPairs],
         queryFn: () =>
-          TopologyController.getTopologyMetrics({
+          TopologyController.getAllTopologyMetrics({
             showBytes: true,
             showByteRate: true,
             showLatency: true,
-            params: metricQueryParams
+            metricQueryParams
           }),
         refetchInterval: UPDATE_INTERVAL
       }

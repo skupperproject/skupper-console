@@ -1,17 +1,28 @@
+import { PrometheusLabelsV2 } from '@config/prometheus';
+
 import { PrometheusMetric, PrometheusLabels } from './Prometheus.interfaces';
 import { ProcessPairsResponse } from './REST.interfaces';
 
 export interface TopologyMetrics {
-  bytesByProcessPairs: PrometheusMetric<'vector'>[];
-  byteRateByProcessPairs: PrometheusMetric<'vector'>[];
+  sourceToDestBytes: PrometheusMetric<'vector'>[];
+  destToSourceBytes: PrometheusMetric<'vector'>[];
+  sourceToDestByteRate: PrometheusMetric<'vector'>[];
+  destToSourceByteRate: PrometheusMetric<'vector'>[];
   latencyByProcessPairs: PrometheusMetric<'vector'>[];
+}
+
+export interface TopologyConfigMetricsParams {
+  fetchBytes: { groupBy: string };
+  fetchByteRate: { groupBy: string };
+  fetchLatency: { groupBy: string };
+  filterBy?: PrometheusLabels;
 }
 
 export interface TopologyConfigMetrics {
   showBytes?: boolean;
   showByteRate?: boolean;
   showLatency?: boolean;
-  params: {
+  metricQueryParams: {
     fetchBytes: { groupBy: string };
     fetchByteRate: { groupBy: string };
     fetchLatency: { groupBy: string };
@@ -43,6 +54,6 @@ export interface TopologyShowOptionsSelected {
 export interface ProcessPairsWithMetrics {
   processesPairs?: ProcessPairsResponse[];
   metrics?: TopologyMetrics;
-  prometheusKey: 'sourceProcess' | 'destProcess';
+  prometheusKey: PrometheusLabelsV2;
   processPairsKey: 'sourceName' | 'destinationName';
 }

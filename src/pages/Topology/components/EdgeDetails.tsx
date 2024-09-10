@@ -22,6 +22,7 @@ import {
 import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -35,11 +36,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
   const sourceNames = data.map((itemSelected) => itemSelected.sourceName);
   const destinationNames = data.map((itemSelected) => itemSelected.destinationName);
 
-  const bytes = metrics.bytesByProcessPairs.reduce(
+  const bytes = metrics.sourceToDestBytes.reduce(
     (acc, { metric, value }) => {
-      const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
+      const id = `${metric[PrometheusLabelsV2.SourceProcess]}-to-${metric[PrometheusLabelsV2.DestProcess]}`;
 
-      if (sourceNames.includes(metric.sourceProcess) && destinationNames.includes(metric.destProcess)) {
+      if (
+        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcess]) &&
+        destinationNames.includes(metric[PrometheusLabelsV2.DestProcess])
+      ) {
         acc[id] = (acc[id] || 0) + Number(value[1]);
       }
 
@@ -48,11 +52,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
     {} as Record<string, number>
   );
 
-  const byteRate = metrics.byteRateByProcessPairs.reduce(
+  const byteRate = metrics.sourceToDestByteRate.reduce(
     (acc, { metric, value }) => {
-      const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
+      const id = `${metric[PrometheusLabelsV2.SourceProcess]}-to-${metric[PrometheusLabelsV2.DestProcess]}`;
 
-      if (sourceNames.includes(metric.sourceProcess) && destinationNames.includes(metric.destProcess)) {
+      if (
+        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcess]) &&
+        destinationNames.includes(metric[PrometheusLabelsV2.DestProcess])
+      ) {
         acc[id] = (acc[id] || 0) + Number(value[1]);
       }
 
@@ -63,9 +70,12 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
 
   const latency = metrics.latencyByProcessPairs.reduce(
     (acc, { metric, value }) => {
-      const id = `${metric.sourceProcess}-to-${metric.destProcess}`;
+      const id = `${metric[PrometheusLabelsV2.SourceProcess]}-to-${metric[PrometheusLabelsV2.DestProcess]}`;
 
-      if (sourceNames.includes(metric.sourceProcess) && destinationNames.includes(metric.destProcess)) {
+      if (
+        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcess]) &&
+        destinationNames.includes(metric[PrometheusLabelsV2.DestProcess])
+      ) {
         acc[id] = (acc[id] || 0) + Number(value[1]);
       }
 

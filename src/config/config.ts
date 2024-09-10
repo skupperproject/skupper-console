@@ -28,7 +28,7 @@ export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
 
 export const IDS_GROUP_SEPARATOR = '~';
 export const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
-export const PAIR_SEPARATOR = '-to-';
+export const PAIR_SEPARATOR = 'processpair-';
 
 export const MIN_DRAWER_WIDTH = 500;
 export const MAX_DRAWER_WIDTH = 800;

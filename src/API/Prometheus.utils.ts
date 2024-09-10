@@ -1,6 +1,64 @@
-import { prometheusSiteNameAndIdSeparator } from '@config/prometheus';
-import { MetricData as MetricValuesAndLabels, PrometheusMetric } from '@sk-types/Prometheus.interfaces';
+import { PROMETHEUS_URL } from '@config/config';
+import { PrometheusLabelsV2, prometheusSiteNameAndIdSeparator } from '@config/prometheus';
+import {
+  MetricData as MetricValuesAndLabels,
+  PrometheusLabels,
+  PrometheusMetric
+} from '@sk-types/Prometheus.interfaces';
 import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
+
+export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
+  queryType === 'range' ? `${PROMETHEUS_URL}/rangequery/` : `${PROMETHEUS_URL}/query/`;
+
+export function convertToPrometheusQueryParams({
+  sourceSite,
+  sourceProcess,
+  destSite,
+  destProcess,
+  service,
+  protocol,
+  direction,
+  code
+}: PrometheusLabels) {
+  let queryFilters: string[] = [];
+
+  if (sourceSite) {
+    queryFilters = [
+      ...queryFilters,
+      `${PrometheusLabelsV2.SourceSiteName}=~"${decomposePrometheusSiteLabel(sourceSite)}"`
+    ];
+  }
+
+  if (destSite) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestSiteName}=~"${decomposePrometheusSiteLabel(destSite)}"`];
+  }
+
+  if (sourceProcess) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceProcess}=~"${sourceProcess}"`];
+  }
+
+  if (destProcess) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestProcess}=~"${destProcess}"`];
+  }
+
+  if (service) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.RoutingKey}=~"${service}"`];
+  }
+
+  if (protocol) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Protocol}=~"${protocol}"`];
+  }
+
+  if (code) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Code}=~"${code}"`];
+  }
+
+  if (direction) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Direction}=~"${direction}"`];
+  }
+
+  return queryFilters.join(',');
+}
 
 export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {
   // Prometheus can retrieve empty arrays wich are not valid data for us

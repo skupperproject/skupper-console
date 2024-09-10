@@ -92,6 +92,6 @@ describe('Begin testing the Http requests component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(flowPairsResults[0].sourceProcessName)[0]).toBeInTheDocument();
   });
 });

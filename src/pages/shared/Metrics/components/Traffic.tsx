@@ -4,13 +4,14 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
+import { VarColors } from '@config/colors';
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
 import { QueriesMetrics, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import TrafficCharts from './TrafficCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { MetricsController } from '../services';
 
 interface TrafficProps {
   selectedFilters: QueryMetricsParams;
@@ -57,6 +58,13 @@ const Traffic: FC<TrafficProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
+  const dataClientAvailable =
+    !!data?.trafficClient.txTimeSerie?.data.length && !!data?.trafficClient.rxTimeSerie?.data.length;
+  const dataSeverAvailable =
+    !!data?.trafficServer.txTimeSerie?.data.length && !!data?.trafficServer.rxTimeSerie?.data.length;
+
+  const isClientAndServer = dataSeverAvailable && dataClientAvailable;
+
   return (
     <Card isExpanded={isExpanded}>
       <CardHeader onExpand={handleExpand}>
@@ -67,15 +75,38 @@ const Traffic: FC<TrafficProps> = function ({
         <CardBody style={{ minHeight: minChartHeight }}>
           {isLoading && <SkIsLoading />}
 
-          {(data?.txTimeSerie || data?.rxTimeSerie) && (
+          {isClientAndServer &&
+            (!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
+              <>
+                {!isLoading && isRefetching && <SkIsLoading />}
+                <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle}`} </Title>
+                <TrafficCharts byteRateData={data.traffic} />
+              </>
+            )}
+
+          {(!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
             <>
               {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{MetricsLabels.ByteRateTitle} </Title>
-              <TrafficCharts byteRateData={data} />
+              <Title headingLevel="h4">{`Client ${MetricsLabels.ByteRateTitle}`} </Title>
+              <TrafficCharts
+                byteRateData={data.trafficClient}
+                colorScale={[VarColors.Orange100, VarColors.Orange400]}
+              />
             </>
           )}
 
-          {!isLoading && !data?.txTimeSerie && !data?.rxTimeSerie && (
+          {(!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
+            <>
+              {!isLoading && isRefetching && <SkIsLoading />}
+              <Title headingLevel="h4">{`Server ${MetricsLabels.ByteRateTitle}`} </Title>
+              <TrafficCharts
+                byteRateData={data.trafficServer}
+                colorScale={[VarColors.Purple100, VarColors.Purple400]}
+              />
+            </>
+          )}
+
+          {!isLoading && !data?.traffic.txTimeSerie?.data.length && !data?.traffic.rxTimeSerie?.data.length && (
             <SKEmptyData
               message={MetricsLabels.NoMetricFoundTitleMessage}
               description={MetricsLabels.NoMetricFoundDescriptionMessage}

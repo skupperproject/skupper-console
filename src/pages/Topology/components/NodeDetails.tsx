@@ -51,7 +51,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     totalByteRateOut: {}
   };
 
-  const bytes = metrics?.bytesByProcessPairs.reduce((acc, { metric, value }) => {
+  const bytes = metrics?.sourceToDestBytes.reduce((acc, { metric, value }) => {
     if (names.includes(metric.sourceProcess) && metric.direction === Direction.Incoming) {
       acc.totalBytesOut[metric.sourceProcess] = (acc.totalBytesOut[metric.sourceProcess] || 0) + Number(value[1]);
     }
@@ -63,7 +63,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     return acc;
   }, initialTotals);
 
-  const byteRate = metrics?.byteRateByProcessPairs.reduce((acc, { metric, value }) => {
+  const byteRate = metrics?.sourceToDestByteRate.reduce((acc, { metric, value }) => {
     if (names.includes(metric.sourceProcess) && metric.direction === Direction.Incoming) {
       acc.totalByteRateOut[metric.sourceProcess] = (acc.totalByteRateOut[metric.sourceProcess] || 0) + Number(value[1]);
     }

@@ -16,14 +16,15 @@ import {
   ResponseMetrics,
   LantencyBucketMetrics,
   ConnectionMetrics,
-  QueryMetricsParams
+  QueryMetricsParams,
+  getDataTrafficMetrics
 } from '@sk-types/Metrics.interfaces';
 import { PrometheusMetric, PrometheusQueryParams } from '@sk-types/Prometheus.interfaces';
 import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
 
 import { MetricsLabels } from '../Metrics.enum';
 
-const MetricsController = {
+export const MetricsController = {
   getLatencyPercentiles: async ({
     sourceSite,
     destSite,
@@ -245,32 +246,56 @@ const MetricsController = {
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
-  }: QueryMetricsParams): Promise<ByteRateMetrics> => {
+  }: QueryMetricsParams): Promise<getDataTrafficMetrics> => {
     const params: PrometheusQueryParams = {
-      sourceSite,
-      destSite,
-      sourceProcess,
-      destProcess,
       service,
       protocol,
       start,
       end,
-      step: calculateStep(end - start)
+      step: calculateStep(end - start),
+      sourceSite,
+      destSite,
+      sourceProcess,
+      destProcess
     };
 
-    try {
-      const [byteRateDataTx, byteRateDataRx] = await Promise.all([
-        PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
-        PrometheusApi.fetchByteRateByDirectionInTimeRange({
-          ...params,
-          sourceSite: destSite,
-          destSite: sourceSite,
-          sourceProcess: destProcess,
-          destProcess: sourceProcess
-        })
-      ]);
+    const invertedParams = {
+      ...params,
+      sourceSite: destSite, //client
+      destSite: sourceSite, //server
+      sourceProcess: destProcess,
+      destProcess: sourceProcess
+    };
 
-      return normalizeByteRateFromSeries(byteRateDataTx, byteRateDataRx);
+    const isService = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
+
+    try {
+      const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
+        await Promise.all([
+          // Outgoing byte rate: Data sent from the source to the destination
+          isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+          // Incoming byte rate: Data received at the destination from the source
+          isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+          // Outgoing byte rate from the other side: Data sent from the destination to the source
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          // Incoming byte rate from the other side: Data received at the source from the destination
+          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+        ]);
+
+      return {
+        traffic: normalizeByteRateFromSeries(
+          sumValuesByTimestamp([...sourceToDestByteRateTx, ...sourceToDestByteRateRx]),
+          sumValuesByTimestamp([...destToSourceByteRateTx, ...destToSourceByteRateRx])
+        ),
+        trafficClient: normalizeByteRateFromSeries(
+          sumValuesByTimestamp(sourceToDestByteRateTx),
+          sumValuesByTimestamp(destToSourceByteRateRx)
+        ),
+        trafficServer: normalizeByteRateFromSeries(
+          sumValuesByTimestamp(destToSourceByteRateTx),
+          sumValuesByTimestamp(sourceToDestByteRateRx)
+        )
+      };
     } catch (e: unknown) {
       return Promise.reject(e);
     }
@@ -301,8 +326,8 @@ const MetricsController = {
 
     try {
       const [liveConnections, liveConnectionsInTimeRangeData] = await Promise.all([
-        PrometheusApi.fetchLiveFlows(params),
-        PrometheusApi.fetchFlowsDeltaInTimeRange(params)
+        PrometheusApi.fetchOpenConnections(params),
+        PrometheusApi.fetchOpenConnectionsInTimeRange(params)
       ]);
 
       if (!liveConnections.length && !liveConnectionsInTimeRangeData.length) {
@@ -325,8 +350,6 @@ const MetricsController = {
     return alignDataSeriesWithZeros(rxSeries, txSeries);
   }
 };
-
-export default MetricsController;
 
 /* UTILS */
 export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
@@ -505,4 +528,38 @@ export function alignDataSeriesWithZeros(rxSeries: skAxisXY[] = [], txSeries: sk
   }
 
   return [rxSeries, txSeries];
+}
+
+function sumValuesByTimestamp(combinedArray: PrometheusMetric<'matrix'>[]): PrometheusMetric<'matrix'>[] {
+  // Dictionary to store the sum of values for each unique timestamp
+  const timestampSum: { [key: number]: number } = {};
+
+  // Iterate through the combined array and sum the values for each timestamp
+  combinedArray.forEach((metric) => {
+    metric.values.forEach((item) => {
+      const timestamp = item[0];
+      const value = parseFloat(item[1].toString()); // Ensure the value is parsed as a number
+
+      if (timestampSum[timestamp]) {
+        timestampSum[timestamp] += value;
+      } else {
+        timestampSum[timestamp] = value;
+      }
+    });
+  });
+
+  // Convert the dictionary back into an array of [number, number] tuples
+  const resultValues: [number, number][] = Object.keys(timestampSum).map((timestamp) => [
+    parseFloat(timestamp),
+    timestampSum[parseFloat(timestamp)]
+  ]);
+
+  // Return the result as an array of PrometheusMetric<'matrix'> objects
+  return [
+    {
+      metric: {},
+      values: resultValues,
+      value: undefined as never // Explicitly set value to never for matrix type
+    }
+  ];
 }

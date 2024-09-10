@@ -43,7 +43,6 @@ const useServiceData = () => {
   const { data: activeConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
     queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
-    enabled: protocol === AvailableProtocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 

@@ -18,7 +18,7 @@ import LoadingPage from '../../../src/pages/shared/Loading';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 
 const servicesResults = servicesData.results;
-const flowPairsResults = flowPairsData.results;
+const tcpBiFlow = flowPairsData.results[3] ;
 const processResult = processesData.results;
 
 describe('Begin testing the TCP connections component', () => {
@@ -39,8 +39,8 @@ describe('Begin testing the TCP connections component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TcpConnections
-            serviceId={servicesResults[2].identity}
-            serviceName={servicesResults[2].name}
+            serviceId={servicesResults[5].identity}
+            serviceName={servicesResults[5].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_0_KEY}
           />
@@ -79,8 +79,8 @@ describe('Begin testing the TCP connections component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TcpConnections
-            serviceId={servicesResults[2].identity}
-            serviceName={servicesResults[2].name}
+            serviceId={servicesResults[5].identity}
+            serviceName={servicesResults[5].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_2_KEY}
           />
@@ -92,7 +92,7 @@ describe('Begin testing the TCP connections component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(tcpBiFlow.sourceProcessName)[0]).toBeInTheDocument();
   });
 
   it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
@@ -113,7 +113,7 @@ describe('Begin testing the TCP connections component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(getAllByText(flowPairsResults[0].forwardFlow.processName)[0]).toBeInTheDocument();
+    expect(getAllByText(tcpBiFlow.sourceProcessName)[0]).toBeInTheDocument();
     expect(getByText('Closed')).toBeInTheDocument();
   });
 });

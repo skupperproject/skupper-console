@@ -1,81 +1,60 @@
 {
   "results": [
     {
-      "recType": "VanAddress",
       "identity": "cart:3000",
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "cart:3000",
       "protocol": "http2",
       "connectorCount": 2,
-      "listenerCount": 2,
-      "totalFlows": 3,
-      "currentFlows": 0
+      "listenerCount": 2
     },
     {
-      "recType": "VanAddress",
       "identity": "payment:5000",
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "payment:5000",
       "protocol": "http2",
-      "connectorCount": 2,
-      "listenerCount": 2,
-      "totalFlows": 3,
-      "currentFlows": 0
+      "connectorCount": 2
     },
     {
-      "recType": "VanAddress",
       "identity": "cash-desk-http2:3000",
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "cash-desk:3000",
       "protocol": "http2",
       "connectorCount": 2,
-      "listenerCount": 2,
-      "totalFlows": 3,
-      "currentFlows": 0
+      "listenerCount": 2
     },
     {
-      "recType": "VanAddress",
       "identity": "cash-desk-http1:3000",
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "cash-desk:3000",
       "protocol": "http1",
       "connectorCount": 2,
-      "listenerCount": 2,
-      "totalFlows": 3,
-      "currentFlows": 0
+      "listenerCount": 2
     },
 
     {
-      "recType": "VanAddress",
       "identity": "op:4900",
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "op:4900",
       "protocol": "http2",
       "connectorCount": 0,
-      "listenerCount": 2,
-      "totalFlows": 0,
-      "currentFlows": 0
+      "listenerCount": 2
     },
     {
-      "recType": "VanAddress",
       "identity": "database:8000",
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "database:8000",
       "protocol": "tcp",
       "connectorCount": 1,
-      "listenerCount": 2,
-      "totalFlows": 1,
-      "currentFlows": 1
+      "listenerCount": 2
     }
   ],
-  "status": "",
   "count": 6,
-  "timeRangeCount": 6,
-  "totalCount": 6
+  "timeRangeCount": 6
 }

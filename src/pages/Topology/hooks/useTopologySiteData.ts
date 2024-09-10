@@ -3,6 +3,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { Direction } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
@@ -18,9 +19,11 @@ interface UseTopologySiteDataProps {
 }
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: 'destSite, sourceSite, direction' },
-  fetchByteRate: { groupBy: 'destSite, sourceSite, direction' },
-  fetchLatency: { groupBy: 'sourceSite, destSite, direction' }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
+  fetchLatency: {
+    groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName},${PrometheusLabelsV2.Direction}`
+  }
 };
 
 const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatency }: UseTopologySiteDataProps) => {
@@ -45,11 +48,11 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
         queryKey: [QueriesTopology.GetBytesByProcessPairs, showBytes, showByteRate, showLatency, showDataLink],
         queryFn: () =>
           showDataLink
-            ? TopologyController.getTopologyMetrics({
+            ? TopologyController.getAllTopologyMetrics({
                 showBytes,
                 showByteRate,
                 showLatency,
-                params: metricQueryParams
+                metricQueryParams
               })
             : null,
         refetchInterval: UPDATE_INTERVAL

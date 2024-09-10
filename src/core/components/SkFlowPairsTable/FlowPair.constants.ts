@@ -6,7 +6,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { FlowPairsResponse } from '@sk-types/REST.interfaces';
+import { FlowPairsResponse, HttpBiflow } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { FlowPairLabels } from './FlowPair.enum';
@@ -16,7 +16,7 @@ export const flowPairsComponentsTable = {
     SkLinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.forwardFlow.processName}@${props.data.forwardFlow.process}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceProcessName}@${props.data.sourceProcessId}`
     }),
   SiteNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
     SkLinkCell({
@@ -28,19 +28,19 @@ export const flowPairsComponentsTable = {
     SkLinkCell({
       ...props,
       type: 'site',
-      link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
+      link: `${SitesRoutesPaths.Sites}/${props.data.destSiteName}@${props.data.destSiteId}`
     }),
   TargetProcessNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
     SkLinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.counterFlow.processName}@${props.data.counterFlow.process}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destProcessName}@${props.data.destSiteId}`
     }),
   TimestampCell: SkEndTimeCell,
   DurationCell: SkDurationCell,
   ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
     SkHighlightValueCell({ ...props, format: formatBytes }),
-  HttpStatusCell: (props: { data?: FlowPairsResponse }) =>
+  HttpStatusCell: (props: { data?: HttpBiflow }) =>
     props.data?.counterFlow?.result || props.data?.forwardFlow?.result || ''
 };
 
@@ -54,7 +54,7 @@ export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairLabels.Client,
-    prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
+    prop: 'sourceProcessName' as keyof FlowPairsResponse,
     customCellName: 'ProcessNameLinkCell',
     modifier: 'fitContent'
   },
@@ -66,44 +66,44 @@ export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairLabels.Port,
-    prop: 'forwardFlow.sourcePort' as keyof FlowPairsResponse,
+    prop: 'sourcePort' as keyof FlowPairsResponse,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.TxBytes,
-    prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
+    prop: 'octets' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.TxLatency,
     columnDescription: 'The TCP latency primarily concerns the start of data transmission',
-    prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
+    prop: 'latency' as keyof FlowPairsResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.Server,
-    prop: 'counterFlow.processName' as keyof FlowPairsResponse,
+    prop: 'destProcessName' as keyof FlowPairsResponse,
     customCellName: 'TargetProcessNameLinkCell',
     modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.ServerSite,
-    prop: 'destinationSiteName' as keyof FlowPairsResponse,
+    prop: 'destSiteName' as keyof FlowPairsResponse,
     customCellName: 'TargetSiteNameLinkCell',
     modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.RxBytes,
-    prop: 'counterFlow.octets' as keyof FlowPairsResponse,
+    prop: 'octetsReverse' as keyof FlowPairsResponse,
     customCellName: 'ByteFormatCell',
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.RxLatency,
     columnDescription: 'The TCP latency primarily concerns the start of data transmission',
-    prop: 'counterFlow.latency' as keyof FlowPairsResponse,
+    prop: 'latencyReverse' as keyof FlowPairsResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
@@ -140,7 +140,7 @@ export const httpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairLabels.From,
-    prop: 'forwardFlow.processName' as keyof FlowPairsResponse,
+    prop: 'sourceProcessName' as keyof FlowPairsResponse,
     customCellName: 'ProcessNameLinkCell',
     modifier: 'fitContent'
   },
@@ -152,37 +152,37 @@ export const httpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   },
   {
     name: FlowPairLabels.TxBytes,
-    prop: 'forwardFlow.octets' as keyof FlowPairsResponse,
+    prop: 'octets' as keyof FlowPairsResponse,
     format: formatBytes,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.TxLatency,
-    prop: 'forwardFlow.latency' as keyof FlowPairsResponse,
+    prop: 'latency' as keyof FlowPairsResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.To,
-    prop: 'counterFlow.processName' as keyof FlowPairsResponse,
+    prop: 'destProcessName' as keyof FlowPairsResponse,
     customCellName: 'TargetProcessNameLinkCell',
     modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.ServerSite,
-    prop: 'destinationSiteName' as keyof FlowPairsResponse,
+    prop: 'destSiteName' as keyof FlowPairsResponse,
     customCellName: 'TargetSiteNameLinkCell',
     modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.RxBytes,
-    prop: 'counterFlow.octets' as keyof FlowPairsResponse,
+    prop: 'octetsReverse' as keyof FlowPairsResponse,
     format: formatBytes,
     modifier: 'nowrap'
   },
   {
     name: FlowPairLabels.RxLatency,
-    prop: 'counterFlow.latency' as keyof FlowPairsResponse,
+    prop: 'latencyReverse' as keyof FlowPairsResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
@@ -196,11 +196,11 @@ export const httpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
 const defaultSelectOptions: { name: string; id: string }[] = [
   {
     name: FlowPairLabels.Client,
-    id: 'forwardFlow.processName'
+    id: 'sourceProcessName'
   },
   {
     name: FlowPairLabels.Server,
-    id: 'counterFlow.processName'
+    id: 'destProcessName'
   },
   {
     name: FlowPairLabels.Site,
@@ -208,7 +208,7 @@ const defaultSelectOptions: { name: string; id: string }[] = [
   },
   {
     name: FlowPairLabels.ServerSite,
-    id: 'destinationSiteName'
+    id: 'destSiteName'
   }
 ];
 

@@ -1,5 +1,6 @@
 import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { VarColors } from '@config/colors';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
 import { ServiceResponse } from '@sk-types/REST.interfaces';
@@ -28,7 +29,7 @@ export const ServicesController = {
       tcpActiveFlows?.length &&
       tcpActiveFlows.reduce(
         (acc, flow) => {
-          acc[flow.metric.address] = Number(flow.value[1]) / 2;
+          acc[flow.metric[PrometheusLabelsV2.RoutingKey]] = Number(flow.value[1]);
 
           return acc;
         },
@@ -47,13 +48,15 @@ export const ServicesController = {
 
     const clients: SKSankeyNodeProps[] =
       servicePairs?.map(({ metric }) => ({
-        id: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
-        nodeColor: metric.sourceProcess ? VarColors.Blue400 : undefined
+        id: `${metric[PrometheusLabelsV2.SourceProcess] || decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.SourceSiteName])} ${sourceProcessSuffix}`,
+        nodeColor: metric[PrometheusLabelsV2.SourceProcess] ? VarColors.Blue400 : undefined
       })) || [];
 
     const servers =
       servicePairs?.map(({ metric }) => ({
-        id: metric.destProcess || decomposePrometheusSiteLabel(metric.destSite),
+        id:
+          metric[PrometheusLabelsV2.DestProcess] ||
+          decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.DestSiteName]),
         nodeColor: metric.destProcess ? VarColors.Blue400 : undefined
       })) || [];
 
@@ -64,8 +67,10 @@ export const ServicesController = {
     const links =
       (servicePairs
         .map(({ metric, value }) => ({
-          source: `${metric.sourceProcess || decomposePrometheusSiteLabel(metric.sourceSite)} ${sourceProcessSuffix}`,
-          target: metric.destProcess || decomposePrometheusSiteLabel(metric.destSite),
+          source: `${metric[PrometheusLabelsV2.SourceProcess] || decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.SourceSiteName])} ${sourceProcessSuffix}`,
+          target:
+            metric[PrometheusLabelsV2.DestProcess] ||
+            decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.DestSiteName]),
           value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
         }))
         .filter(({ source, target }) => source && target) as SKSankeyLinkProps[]) || [];

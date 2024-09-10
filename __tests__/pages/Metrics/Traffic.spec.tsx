@@ -5,13 +5,13 @@ import { Server } from 'miragejs';
 
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import * as PrometheusAPIModule from '../../../src/API/Prometheus.api';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import Traffic from '../../../src/pages/shared/Metrics/components/Traffic';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
+import * as MetricsModule from '../../../src/pages/shared/Metrics/services/index';
 import { ProcessResponse } from '../../../src/types/REST.interfaces';
 
 const processResult = processesData.results[0] as ProcessResponse;
@@ -57,9 +57,13 @@ describe('Traffic component', () => {
   });
 
   it('should render the Traffic section and display the no metric found message', async () => {
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateByDirectionInTimeRange')
-      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+    jest.spyOn(MetricsModule.MetricsController, 'getDataTraffic').mockImplementation(
+      jest.fn().mockReturnValue({
+        traffic: [],
+        trafficClient: [],
+        trafficServer: []
+      })
+    );
 
     render(
       <Wrapper>

@@ -10,7 +10,7 @@ import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces
 
 import ResponseCharts from './ResponseCharts';
 import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { MetricsController } from '../services';
 
 interface ResponseProps {
   selectedFilters: QueryMetricsParams;

@@ -2,24 +2,20 @@ import { FC } from 'react';
 
 import { Bullseye, Grid, GridItem, Icon } from '@patternfly/react-core';
 import { LongArrowAltRightIcon } from '@patternfly/react-icons';
-import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
 import { VarColors } from '@config/colors';
 import SkLinkCell from '@core/components/SkLinkCell';
 import { ProcessResponse } from '@sk-types/REST.interfaces';
 
 import Details from './Details';
-import { ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
+import { ProcessesRoutesPaths } from '../Processes.enum';
 
 interface ProcessPairsDetailsProps {
-  sourceId: string;
-  destinationId: string;
+  source: ProcessResponse;
+  destination: ProcessResponse;
 }
 
-const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, destinationId }) {
-  const { source, destination } = useFetchProcessPairDetails({ sourceId, destinationId });
-
+const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ source, destination }) {
   return (
     <Grid hasGutter>
       <GridItem sm={12} md={5}>
@@ -56,28 +52,3 @@ const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ sourceId, 
 };
 
 export default ProcessPairsDetails;
-
-interface ProcessPairsDetailsDataProps {
-  source: ProcessResponse;
-  destination: ProcessResponse;
-}
-
-const useFetchProcessPairDetails = ({
-  sourceId,
-  destinationId
-}: ProcessPairsDetailsProps): ProcessPairsDetailsDataProps => {
-  const [{ data: source }, { data: destination }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcess, sourceId],
-        queryFn: () => RESTApi.fetchProcess(sourceId)
-      },
-      {
-        queryKey: [QueriesProcesses.GetDestination, destinationId],
-        queryFn: () => RESTApi.fetchProcess(destinationId)
-      }
-    ]
-  });
-
-  return { source, destination };
-};
