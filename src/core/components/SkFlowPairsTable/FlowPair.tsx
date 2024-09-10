@@ -126,7 +126,7 @@ const ConnectionDetail: FC<DescriptionProps<TcpBiflow>> = function ({ title, flo
   const processId = isCounterflow ? flow.sourceProcessId : flow.destProcessId;
   const processName = isCounterflow ? flow.sourceProcessName : flow.destProcessName;
   const host = isCounterflow ? `${flow.destHost} : ${flow.destPort}` : `${flow.sourceHost} : ${flow.sourcePort}`;
-  const proxyHost = isCounterflow ? '-' : `${flow.proxyHost} : ${flow.proxyPort}`;
+  const proxyHost = isCounterflow ? `${flow.proxyHost} : ${flow.proxyPort}` : undefined;
   const octets = isCounterflow ? flow.octets : flow.octetsReverse;
   const latency = isCounterflow ? flow.latency : flow.latencyReverse;
 
@@ -152,14 +152,14 @@ const ConnectionDetail: FC<DescriptionProps<TcpBiflow>> = function ({ title, flo
                 <Link to={`${ProcessesRoutesPaths.Processes}/${processName}@${processId}`}>{processName}</Link>
               </>
             </DescriptionListDescription>
-            <DescriptionListTerm>{FlowPairLabels.Host}</DescriptionListTerm>
-            <DescriptionListDescription>{host}</DescriptionListDescription>
-            <DescriptionListTerm>{FlowPairLabels.ProxyHost}</DescriptionListTerm>
-            <DescriptionListDescription>{proxyHost}</DescriptionListDescription>
             <DescriptionListTerm>{FlowPairLabels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{octets} </DescriptionListDescription>
             <DescriptionListTerm>{FlowPairLabels.Latency}</DescriptionListTerm>
             <DescriptionListDescription>{formatLatency(latency)}</DescriptionListDescription>
+            <DescriptionListTerm>{FlowPairLabels.Host}</DescriptionListTerm>
+            <DescriptionListDescription>{host}</DescriptionListDescription>
+            {proxyHost && <DescriptionListTerm>{FlowPairLabels.ProxyHost}</DescriptionListTerm>}
+            {proxyHost && <DescriptionListDescription>{proxyHost}</DescriptionListDescription>}
           </DescriptionListGroup>
         </DescriptionList>
       </CardBody>

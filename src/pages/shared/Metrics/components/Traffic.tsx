@@ -63,7 +63,7 @@ const Traffic: FC<TrafficProps> = function ({
   const dataSeverAvailable =
     !!data?.trafficServer.txTimeSerie?.data.length && !!data?.trafficServer.rxTimeSerie?.data.length;
 
-  const isClientAndServer = dataSeverAvailable && dataClientAvailable;
+  const isOnlyClientOrServer = dataSeverAvailable && dataClientAvailable;
 
   return (
     <Card isExpanded={isExpanded}>
@@ -75,36 +75,37 @@ const Traffic: FC<TrafficProps> = function ({
         <CardBody style={{ minHeight: minChartHeight }}>
           {isLoading && <SkIsLoading />}
 
-          {isClientAndServer &&
-            (!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
+          {(!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
+            <>
+              {!isLoading && isRefetching && <SkIsLoading />}
+              <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle}`} </Title>
+              <TrafficCharts byteRateData={data.traffic} />
+            </>
+          )}
+
+          {isOnlyClientOrServer &&
+            (!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
               <>
                 {!isLoading && isRefetching && <SkIsLoading />}
-                <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle}`} </Title>
-                <TrafficCharts byteRateData={data.traffic} />
+                <Title headingLevel="h4">{`Client ${MetricsLabels.ByteRateTitle}`} </Title>
+                <TrafficCharts
+                  byteRateData={data.trafficClient}
+                  colorScale={[VarColors.Orange100, VarColors.Orange400]}
+                />
               </>
             )}
 
-          {(!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
-            <>
-              {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{`Client ${MetricsLabels.ByteRateTitle}`} </Title>
-              <TrafficCharts
-                byteRateData={data.trafficClient}
-                colorScale={[VarColors.Orange100, VarColors.Orange400]}
-              />
-            </>
-          )}
-
-          {(!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
-            <>
-              {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{`Server ${MetricsLabels.ByteRateTitle}`} </Title>
-              <TrafficCharts
-                byteRateData={data.trafficServer}
-                colorScale={[VarColors.Purple100, VarColors.Purple400]}
-              />
-            </>
-          )}
+          {isOnlyClientOrServer &&
+            (!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
+              <>
+                {!isLoading && isRefetching && <SkIsLoading />}
+                <Title headingLevel="h4">{`Server ${MetricsLabels.ByteRateTitle}`} </Title>
+                <TrafficCharts
+                  byteRateData={data.trafficServer}
+                  colorScale={[VarColors.Purple100, VarColors.Purple400]}
+                />
+              </>
+            )}
 
           {!isLoading && !data?.traffic.txTimeSerie?.data.length && !data?.traffic.rxTimeSerie?.data.length && (
             <SKEmptyData
