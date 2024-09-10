@@ -268,21 +268,19 @@ export const MetricsController = {
     };
 
     const isSameSite = sourceSite === destSite;
-    const isService = service && !sourceSite && !destSite && !sourceProcess && !destProcess;
-    // For sites and services where the destination is the same of the source we don't want to calculate the reversed queries
-    const disableReverseQuery = isSameSite && isService;
+    const isService = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
 
     try {
       const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
         await Promise.all([
           // Outgoing byte rate: Data sent from the source to the destination
-          PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+          isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
           // Incoming byte rate: Data received at the destination from the source
-          PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+          isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
-          disableReverseQuery ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
-          disableReverseQuery ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+          isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
         ]);
 
       return {

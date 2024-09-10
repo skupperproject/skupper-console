@@ -4,7 +4,6 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
@@ -79,18 +78,15 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
       destinationName: siteName
     }))
   );
-  const availableProtocols = [
-    ...new Set(
-      [...(processesPairsTxData || []), ...(processesPairsRxData || [])].map(({ protocol }) => protocol).filter(Boolean)
-    )
-  ] as AvailableProtocols[];
+
+  const uniqueProtocols = [...new Set([...processesPairsTxData, ...processesPairsRxData].map((item) => item.protocol))];
 
   return (
     <Metrics
       key={processId}
       destSites={destSites}
       destProcesses={destProcesses}
-      availableProtocols={availableProtocols}
+      availableProtocols={uniqueProtocols}
       defaultOpenSections={{
         ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processId}`)
       }}

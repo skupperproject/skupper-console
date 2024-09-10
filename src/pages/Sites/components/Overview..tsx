@@ -63,11 +63,14 @@ const Overview: FC<OverviewProps> = function ({ site }) {
     ...createDestProcesses(sitePairsRx, 'sourceName', 'sourceId')
   ]);
 
+  const uniqueProtocols = [...new Set([...sitePairsTx, ...sitePairsRx].map((item) => item.protocol))];
+
   return (
     <Metrics
       key={siteId}
       sourceSites={sourceSites}
       destSites={destSites}
+      availableProtocols={uniqueProtocols}
       defaultOpenSections={{
         ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
       }}

@@ -87,7 +87,7 @@ export interface ProcessPairsResponse extends BaseResponse {
   sourceSiteName: string;
   destinationSiteId: string;
   destinationSiteName: string;
-  protocol?: AvailableProtocols; // undefined = there is a remote process
+  protocol: AvailableProtocols; // undefined = there is a remote process
 }
 
 export type ComponentPairsResponse = ProcessPairsResponse;
@@ -97,7 +97,7 @@ export interface SitePairsResponse extends BaseResponse {
   sourceName: string;
   destinationId: string;
   destinationName: string;
-  protocol?: AvailableProtocols;
+  protocol: AvailableProtocols;
 }
 
 export interface ServiceResponse extends BaseResponse {
