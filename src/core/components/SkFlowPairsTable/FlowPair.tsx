@@ -123,12 +123,12 @@ interface DescriptionProps<T> {
 }
 
 const ConnectionDetail: FC<DescriptionProps<TcpBiflow>> = function ({ title, flow, isCounterflow = false }) {
-  const processId = isCounterflow ? flow.sourceProcessId : flow.destProcessId;
-  const processName = isCounterflow ? flow.sourceProcessName : flow.destProcessName;
+  const processId = isCounterflow ? flow.destProcessId : flow.sourceHost;
+  const processName = isCounterflow ? flow.destProcessName : flow.sourceProcessName;
   const host = isCounterflow ? `${flow.destHost} : ${flow.destPort}` : `${flow.sourceHost} : ${flow.sourcePort}`;
   const proxyHost = isCounterflow ? `${flow.proxyHost} : ${flow.proxyPort}` : undefined;
-  const octets = isCounterflow ? flow.octets : flow.octetsReverse;
-  const latency = isCounterflow ? flow.latency : flow.latencyReverse;
+  const octets = isCounterflow ? flow.octetsReverse : flow.octets;
+  const latency = isCounterflow ? flow.latencyReverse : flow.latency;
 
   return (
     <Card isFullHeight isPlain>
