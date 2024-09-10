@@ -49,7 +49,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
     onSelected
   });
 
-  const [placeholder, setPlaceholder] = useState(`${selected.length} services selected`);
+  const [placeholder, setPlaceholder] = useState(`${selected.length} routing keys selected`);
   const textInputRef = useRef<HTMLInputElement>();
 
   const handleSelectService = (item: string) => {
@@ -58,7 +58,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
   };
 
   useEffect(() => {
-    setPlaceholder(`${selected.length} services selected`);
+    setPlaceholder(`${selected.length} routing keys selected`);
   }, [selected]);
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (

@@ -26,7 +26,7 @@ export enum ProcessesLabels {
   Details = 'Details',
   ProcessPairs = 'Process pairs',
   Processes = 'Processes',
-  Services = 'Services',
+  Services = 'Routing keys',
   Process = 'Process',
   Site = 'Site',
   ProcessGroup = 'Component',

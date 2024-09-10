@@ -57,7 +57,13 @@ describe('Traffic component', () => {
   });
 
   it('should render the Traffic section and display the no metric found message', async () => {
-    jest.spyOn(MetricsModule.MetricsController, 'getDataTraffic').mockImplementation(jest.fn().mockReturnValue([]));
+    jest.spyOn(MetricsModule.MetricsController, 'getDataTraffic').mockImplementation(
+      jest.fn().mockReturnValue({
+        traffic: [],
+        trafficClient: [],
+        trafficServer: []
+      })
+    );
 
     render(
       <Wrapper>

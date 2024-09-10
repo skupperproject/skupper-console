@@ -24,7 +24,7 @@ describe('SkSelectTypeaHeadWithCheckbox', () => {
     const selectElement = getByRole('button');
     expect(selectElement).toBeInTheDocument();
 
-    const placeholderTextElement = getByPlaceholderText(`${initialIdsSelected.length} services selected`);
+    const placeholderTextElement = getByPlaceholderText(`${initialIdsSelected.length} routing keys selected`);
     expect(placeholderTextElement).toBeInTheDocument();
   });
 
@@ -76,7 +76,7 @@ describe('SkSelectTypeaHeadWithCheckbox', () => {
     const selectElement = getByRole('button');
     await eventUser.click(selectElement);
 
-    const searchInput = getByPlaceholderText(`${initialIdsSelected.length} services selected`);
+    const searchInput = getByPlaceholderText(`${initialIdsSelected.length} routing keys selected`);
     fireEvent.change(searchInput, { target: { value: 'Service 1' } });
 
     expect(queryByText('Service 1')).toBeInTheDocument();
