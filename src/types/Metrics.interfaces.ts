@@ -25,6 +25,8 @@ export interface QueryMetricsParams {
   destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  sourceComponent?: string;
+  destComponent?: string;
   service?: string;
   protocol?: AvailableProtocols;
   start?: number;

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { startTransition, useCallback, useState } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
 
@@ -38,7 +38,9 @@ const useServicesData = ({ limit }: useServicesDataProps) => {
   });
 
   const handleSetServiceFilters = useCallback((params: RemoteFilterOptions) => {
-    setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    startTransition(() => {
+      setServicesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
+    });
   }, []);
 
   const serviceRows = ServicesController.extendServicesWithActiveAndTotalFlowPairs(results, { tcpActiveFlows });

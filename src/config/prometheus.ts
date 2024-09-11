@@ -73,5 +73,6 @@ export enum PrometheusMetricsV2 {
   DestProcess = 'dest_process',
   HttpRequestMethod = 'http_requests_method_total',
   HttpResponse = 'http_requests_result_total',
-  TcpOpenOnnections = 'skupper_connections_opened_total'
+  TcpOpenConnections = 'skupper_connections_opened_total',
+  TcpCloseCOnnections = 'skupper_connections_closed_total'
 }
