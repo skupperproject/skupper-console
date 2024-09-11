@@ -35,7 +35,6 @@ const hosts = require(`${path}/HOSTS.json`);
 const services = require(`${path}/SERVICES.json`);
 const serviceProcesses = require(`${path}/SERVICE_PROCESSES.json`);
 const flowPairs = require(`${path}/FLOW_PAIRS.json`);
-const serviceFlowPairs = require(`${path}/SERVICE_FLOW_PAIRS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
 interface ApiProps {
@@ -439,9 +438,14 @@ export function loadMockServer() {
       });
 
       this.get(`${prefix}/connections`, (_, { queryParams }) => {
+        const queryProtocol = queryParams.protocol;
+        const queryRoutingKey = queryParams.routingKey;
+
         const results = flowPairs.results.filter(
-          ({ protocol, endTime }: FlowPairsResponse) =>
-            protocol === queryParams.protocol && (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
+          ({ protocol, routingKey, endTime }: FlowPairsResponse) =>
+            (queryProtocol ? protocol === queryProtocol : true) &&
+            (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
+            (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
         );
 
         return { ...processPairs, results, timeRangeCount: results.length };
@@ -452,7 +456,6 @@ export function loadMockServer() {
       }));
 
       this.get(`${prefix}/addresses`, () => services);
-      this.get(`${prefix}/addresses/:id/connections`, () => serviceFlowPairs);
       this.get(`${prefix}/addresses/:id/processes`, () => serviceProcesses);
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }

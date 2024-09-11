@@ -41,7 +41,7 @@
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "op:4900",
-      "protocol": "http2",
+      "protocol": "tcp",
       "connectorCount": 0,
       "listenerCount": 2
     },

@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import HttpRequests from '@pages/Services/components/HttpRequests';
 
-import flowPairsData from '../../../mocks/data/SERVICE_FLOW_PAIRS.json';
+import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
 import processesData from '../../../mocks/data/SERVICE_PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';

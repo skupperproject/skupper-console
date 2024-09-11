@@ -16,7 +16,6 @@ import {
 
 import { axiosFetch } from './apiMiddleware';
 import {
-  getFlowsPairsByServicePATH,
   getProcessesByServicePATH,
   getSitePATH,
   getLinksBySitePATH,
@@ -172,23 +171,6 @@ export const RESTApi = {
     });
 
     return data;
-  },
-
-  fetchFlowPairsByService: async (
-    id: string,
-    options?: RemoteFilterOptions
-  ): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse[]>>(getFlowsPairsByServicePATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return data;
-  },
-
-  fetchFlowPairsByServiceResults: async (id: string, options?: RemoteFilterOptions): Promise<FlowPairsResponse[]> => {
-    const data = await RESTApi.fetchFlowPairsByService(id, options);
-
-    return getApiResults(data);
   },
 
   fetchServersByService: async (

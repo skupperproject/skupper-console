@@ -28,8 +28,14 @@ interface TcpConnectionsProps {
 
 const TcpConnections: FC<TcpConnectionsProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
   const service = {
-    [TAB_2_KEY]: { filters: initActiveConnectionsQueryParams, columns: tcpColumns },
-    [TAB_3_KEY]: { filters: initOldConnectionsQueryParams, columns: tcpFlowPairsColumns }
+    [TAB_2_KEY]: {
+      filters: { ...initActiveConnectionsQueryParams, routingKey: serviceName },
+      columns: tcpColumns
+    },
+    [TAB_3_KEY]: {
+      filters: { ...initOldConnectionsQueryParams, routingKey: serviceName },
+      columns: tcpFlowPairsColumns
+    }
   };
 
   return (
@@ -43,7 +49,6 @@ const TcpConnections: FC<TcpConnectionsProps> = function ({ serviceId, serviceNa
           </StackItem>
           <StackItem>
             <FlowPairsTable
-              serviceId={serviceId}
               options={tcpSelectOptions}
               columns={service[viewSelected].columns}
               filters={service[viewSelected].filters}

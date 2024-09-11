@@ -268,14 +268,15 @@ export const MetricsController = {
     };
 
     const isService = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
+    const isSameSite = !!sourceSite && !!destSite && sourceSite === destSite;
 
     try {
       const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
         await Promise.all([
           // Outgoing byte rate: Data sent from the source to the destination
-          isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+          isService || isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
           // Incoming byte rate: Data received at the destination from the source
-          isService ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+          isService || isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
           PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
@@ -324,20 +325,43 @@ export const MetricsController = {
       step: calculateStep(end - start)
     };
 
-    try {
-      const [liveConnections, liveConnectionsInTimeRangeData] = await Promise.all([
-        PrometheusApi.fetchOpenConnections(params),
-        PrometheusApi.fetchOpenConnectionsInTimeRange(params)
-      ]);
+    const invertedParams = {
+      ...params,
+      sourceSite: destSite, //client
+      destSite: sourceSite, //server
+      sourceProcess: destProcess,
+      destProcess: sourceProcess
+    };
 
-      if (!liveConnections.length && !liveConnectionsInTimeRangeData.length) {
+    try {
+      const [liveConnectionsIn, liveConnectionsInTimeRangeData, liveConnectionOut, liveConnectionsOutTimeRangeData] =
+        await Promise.all([
+          PrometheusApi.fetchOpenConnections(params),
+          PrometheusApi.fetchOpenConnectionsInTimeRange(params),
+          service ? [] : PrometheusApi.fetchOpenConnections(invertedParams),
+          service ? [] : PrometheusApi.fetchOpenConnectionsInTimeRange(invertedParams)
+        ]);
+
+      if (
+        !liveConnectionsIn.length &&
+        !liveConnectionOut.length &&
+        !liveConnectionsInTimeRangeData.length &&
+        !liveConnectionsOutTimeRangeData.length
+      ) {
         return null;
       }
 
-      const liveConnectionsCount = Number(liveConnections[0]?.value[1]) || 0;
-      const liveConnectionsSerie = getTimeSeriesValuesFromPrometheusData(liveConnectionsInTimeRangeData);
+      const liveConnectionsCount =
+        (Number(liveConnectionsIn[0]?.value[1]) || 0) + (Number(liveConnectionOut[0]?.value[1]) || 0);
 
-      return { liveConnectionsCount, liveConnectionsSerie };
+      const liveConnectionsSerie = getTimeSeriesValuesFromPrometheusData(
+        sumValuesByTimestamp([...liveConnectionsInTimeRangeData, ...liveConnectionsOutTimeRangeData])
+      );
+
+      return {
+        liveConnectionsCount,
+        liveConnectionsSerie
+      };
     } catch (e: unknown) {
       return Promise.reject(e);
     }

@@ -30,10 +30,9 @@ const HttpRequests: FC<HttpRequestsProps> = function ({ serviceId, serviceName, 
           </StackItem>
           <StackItem>
             <FlowPairsTable
-              serviceId={serviceId}
               options={httpSelectOptions}
               columns={httpColumns}
-              filters={initRequestsQueryParams}
+              filters={{ ...initRequestsQueryParams, routingKey: serviceName }}
             />
           </StackItem>
         </Stack>

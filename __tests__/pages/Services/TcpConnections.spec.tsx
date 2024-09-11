@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import TcpConnections from '@pages/Services/components/TcpConnections';
 
-import flowPairsData from '../../../mocks/data/SERVICE_FLOW_PAIRS.json';
+import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
 import processesData from '../../../mocks/data/SERVICE_PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
@@ -18,7 +18,8 @@ import LoadingPage from '../../../src/pages/shared/Loading';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 
 const servicesResults = servicesData.results;
-const tcpBiFlow = flowPairsData.results[3] ;
+const tcpBiFlowOpen = flowPairsData.results[5];
+const tcpBiFlowTerminated = flowPairsData.results[6];
 const processResult = processesData.results;
 
 describe('Begin testing the TCP connections component', () => {
@@ -79,8 +80,8 @@ describe('Begin testing the TCP connections component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TcpConnections
-            serviceId={servicesResults[5].identity}
-            serviceName={servicesResults[5].name}
+            serviceId={servicesResults[4].identity}
+            serviceName={servicesResults[4].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_2_KEY}
           />
@@ -92,7 +93,7 @@ describe('Begin testing the TCP connections component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(tcpBiFlow.sourceProcessName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(tcpBiFlowOpen.sourceProcessName)[0]).toBeInTheDocument();
   });
 
   it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
@@ -100,8 +101,8 @@ describe('Begin testing the TCP connections component', () => {
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
           <TcpConnections
-            serviceId={servicesResults[2].identity}
-            serviceName={servicesResults[2].name}
+            serviceId={servicesResults[4].identity}
+            serviceName={servicesResults[4].name}
             protocol={AvailableProtocols.Tcp}
             viewSelected={TAB_3_KEY}
           />
@@ -113,7 +114,7 @@ describe('Begin testing the TCP connections component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(getAllByText(tcpBiFlow.sourceProcessName)[0]).toBeInTheDocument();
+    expect(getAllByText(tcpBiFlowTerminated.sourceProcessName)[0]).toBeInTheDocument();
     expect(getByText('Closed')).toBeInTheDocument();
   });
 });

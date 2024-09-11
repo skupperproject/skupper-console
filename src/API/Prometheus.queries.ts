@@ -22,12 +22,12 @@ export const queries = {
 
   // calculate the open connections serie
   getOpenConnections(paramSource: string) {
-    return `sum(${PrometheusMetricsV2.TcpOpenOnnections}{${paramSource}})`;
+    return `sum(${PrometheusMetricsV2.TcpOpenConnections}{${paramSource}}-${PrometheusMetricsV2.TcpCloseCOnnections}{${paramSource}})`;
   },
 
   // count the number of active tcp flows in the services table
   getTcpActiveFlowsByService() {
-    return `sum by(${PrometheusLabelsV2.RoutingKey})(${PrometheusMetricsV2.TcpOpenOnnections}{protocol="${AvailableProtocols.Tcp}"})`;
+    return `sum by(${PrometheusLabelsV2.RoutingKey})(${PrometheusMetricsV2.TcpOpenConnections}{protocol="${AvailableProtocols.Tcp}"}-${PrometheusMetricsV2.TcpCloseCOnnections}{protocol="${AvailableProtocols.Tcp}"})`;
   },
 
   // http request queries

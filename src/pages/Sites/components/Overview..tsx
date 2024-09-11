@@ -59,16 +59,8 @@ const Overview: FC<OverviewProps> = function ({ site }) {
 
   const sourceSites = [{ destinationName: composePrometheusSiteLabel(name, siteId) }];
   const destSites = removeDuplicatesFromArrayOfObjects([
-    ...createDestProcesses(
-      sitePairsTx.filter((sitePair) => sitePair.destinationName !== name),
-      'destinationName',
-      'destinationId'
-    ),
-    ...createDestProcesses(
-      sitePairsRx.filter((sitePair) => sitePair.sourceName !== name),
-      'sourceName',
-      'sourceId'
-    )
+    ...createDestProcesses(sitePairsTx, 'destinationName', 'destinationId'),
+    ...createDestProcesses(sitePairsRx, 'sourceName', 'sourceId')
   ]);
 
   const uniqueProtocols = [...new Set([...sitePairsTx, ...sitePairsRx].map((item) => item.protocol))];

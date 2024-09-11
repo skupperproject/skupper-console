@@ -34,21 +34,21 @@ const useServiceData = () => {
   });
 
   const { data: requestsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
+    queryKey: [QueriesServices.GetFlowPairsByService, initServersQueryParams],
+    queryFn: () => RESTApi.fetchFlowPairs({ ...initServersQueryParams, routingKey: serviceName }),
     enabled: protocol !== AvailableProtocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
+    queryKey: [QueriesServices.GetFlowPairsByService, activeConnectionsQueryParams],
+    queryFn: () => RESTApi.fetchFlowPairs({ ...activeConnectionsQueryParams, routingKey: serviceName }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, terminatedConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, terminatedConnectionsQueryParams),
+    queryKey: [QueriesServices.GetFlowPairsByService, terminatedConnectionsQueryParams],
+    queryFn: () => RESTApi.fetchFlowPairs({ ...terminatedConnectionsQueryParams, routingKey: serviceName }),
     enabled: protocol === AvailableProtocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });

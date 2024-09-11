@@ -12,7 +12,6 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 import { QueriesServices } from '../Services.enum';
 
 interface FlowPairsTableProps {
-  serviceId: string;
   columns: SKTableColumn<FlowPairsResponse>[];
   filters: RemoteFilterOptions;
   options: { id: string; name: string }[];
@@ -20,7 +19,6 @@ interface FlowPairsTableProps {
 }
 
 const FlowPairsTable: FC<FlowPairsTableProps> = function ({
-  serviceId,
   columns,
   filters,
   options,
@@ -29,8 +27,8 @@ const FlowPairsTable: FC<FlowPairsTableProps> = function ({
   const [queryParams, setQueryParams] = useState({});
 
   const { data: flowPairsData } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, { ...filters, ...queryParams }],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, { ...filters, ...queryParams }),
+    queryKey: [QueriesServices.GetFlowPairsByService, { ...filters, ...queryParams }],
+    queryFn: () => RESTApi.fetchFlowPairs({ ...filters, ...queryParams }),
     refetchInterval: UPDATE_INTERVAL
   });
 
