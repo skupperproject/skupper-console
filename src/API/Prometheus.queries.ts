@@ -78,7 +78,7 @@ export const queries = {
 
   // calculate the TCP byterate for exposed services
   getTcpByteRateByService(serviceName: string) {
-    return `rate(octets_total{protocol="tcp",  ${PrometheusLabelsV2.RoutingKey}="${serviceName}"}[1m])`;
+    return `rate(${PrometheusMetricsV2.SentBytes}{protocol="tcp",  ${PrometheusLabelsV2.RoutingKey}="${serviceName}"}[1m])`;
   },
 
   // calculate the byterate used by the sankey diagram in the requests/connections page

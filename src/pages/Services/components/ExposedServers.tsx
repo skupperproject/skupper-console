@@ -5,6 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { PrometheusApi } from '@API/Prometheus.api';
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import SkTable from '@core/components/SkTable';
 import { CustomProcessCells } from '@pages/Processes/Processes.constants';
 
@@ -38,17 +39,22 @@ const ExposedServers: FC<ExposedServersProps> = function ({
   let servers = exposedServersData?.results || [];
 
   if (byteRates) {
+    // Create a map of byte rates using the destination process as the key
     const byteRatesMap = byteRates.reduce(
       (acc, byteRate) => {
-        acc[`${byteRate.metric.destProcess}`] = Number(byteRate.value[1]);
+        // Extract the destination process from the byteRate metric
+        const destProcess = byteRate.metric[PrometheusLabelsV2.DestProcess];
+        // Accumulate the byte rate value for the destination process
+        acc[destProcess] = (acc[destProcess] || 0) + Number(byteRate.value[1]);
 
         return acc;
       },
       {} as Record<string, number>
     );
-    servers = servers.map((conn) => ({
-      ...conn,
-      byteRate: byteRatesMap[`${conn.name}`] || 0
+    // Map over the servers array and add the byteRate property to each server object
+    servers = servers.map((server) => ({
+      ...server,
+      byteRate: byteRatesMap[server.name] || 0
     }));
   }
 
