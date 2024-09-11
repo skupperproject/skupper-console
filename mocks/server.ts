@@ -1,6 +1,7 @@
 import { createServer, Response } from 'miragejs';
 
 import { Direction } from '@API/REST.enum';
+import { PrometheusMetricsV2 } from '@config/prometheus';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -292,7 +293,11 @@ export const MockApi = {
   }),
 
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
-    if ((queryParams.query as string)?.includes('sum by(destProcess, sourceProcess, direction)(rate(octets_total')) {
+    if (
+      (queryParams.query as string)?.includes(
+        `sum by(destProcess, sourceProcess, direction)(rate(${PrometheusMetricsV2.SentBytes}`
+      )
+    ) {
       return {
         data: {
           resultType: 'vector',
