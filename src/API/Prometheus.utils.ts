@@ -15,6 +15,8 @@ export function convertToPrometheusQueryParams({
   sourceProcess,
   destSite,
   destProcess,
+  sourceComponent,
+  destComponent,
   service,
   protocol,
   direction,
@@ -39,6 +41,14 @@ export function convertToPrometheusQueryParams({
 
   if (destProcess) {
     queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestProcess}=~"${destProcess}"`];
+  }
+
+  if (sourceComponent) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceComponent}=~"${sourceComponent}"`];
+  }
+
+  if (destComponent) {
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestComponent}=~"${destComponent}"`];
   }
 
   if (service) {

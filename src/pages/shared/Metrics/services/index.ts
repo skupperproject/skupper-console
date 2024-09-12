@@ -28,6 +28,8 @@ export const MetricsController = {
   getLatencyPercentiles: async ({
     sourceSite,
     destSite,
+    sourceComponent,
+    destComponent,
     sourceProcess,
     destProcess,
     service,
@@ -40,6 +42,8 @@ export const MetricsController = {
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
+      sourceComponent,
+      destComponent,
       sourceProcess,
       destProcess,
       service,
@@ -74,6 +78,8 @@ export const MetricsController = {
   getLatencyBuckets: async ({
     sourceSite,
     destSite,
+    sourceComponent,
+    destComponent,
     sourceProcess,
     destProcess,
     service,
@@ -86,6 +92,8 @@ export const MetricsController = {
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
+      sourceComponent,
+      destComponent,
       sourceProcess,
       destProcess,
       service,
@@ -149,6 +157,8 @@ export const MetricsController = {
   getRequests: async ({
     sourceSite,
     destSite,
+    sourceComponent,
+    destComponent,
     sourceProcess,
     destProcess,
     service,
@@ -163,6 +173,8 @@ export const MetricsController = {
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
+      sourceComponent,
+      destComponent,
       sourceProcess,
       destProcess,
       service,
@@ -193,6 +205,8 @@ export const MetricsController = {
   getResponses: async ({
     sourceSite,
     destSite,
+    sourceComponent,
+    destComponent,
     sourceProcess,
     destProcess,
     service,
@@ -208,6 +222,8 @@ export const MetricsController = {
       const params: PrometheusQueryParams = {
         sourceSite,
         destSite,
+        sourceComponent,
+        destComponent,
         // who send a request (sourceProcess) should query the response as a destProcess
         sourceProcess,
         destProcess,
@@ -239,6 +255,8 @@ export const MetricsController = {
   getDataTraffic: async ({
     sourceSite,
     destSite,
+    sourceComponent,
+    destComponent,
     sourceProcess,
     destProcess,
     service,
@@ -255,6 +273,8 @@ export const MetricsController = {
       step: calculateStep(end - start),
       sourceSite,
       destSite,
+      sourceComponent,
+      destComponent,
       sourceProcess,
       destProcess
     };
@@ -263,6 +283,8 @@ export const MetricsController = {
       ...params,
       sourceSite: destSite, //client
       destSite: sourceSite, //server
+      sourceComponent: destComponent,
+      destComponent: sourceComponent,
       sourceProcess: destProcess,
       destProcess: sourceProcess
     };
@@ -305,6 +327,8 @@ export const MetricsController = {
   getConnections: async ({
     sourceSite,
     destSite,
+    sourceComponent,
+    destComponent,
     sourceProcess,
     destProcess,
     service,
@@ -316,6 +340,8 @@ export const MetricsController = {
     const params: PrometheusQueryParams = {
       sourceSite,
       destSite,
+      sourceComponent,
+      destComponent,
       sourceProcess,
       destProcess,
       service,
@@ -329,6 +355,8 @@ export const MetricsController = {
       ...params,
       sourceSite: destSite, //client
       destSite: sourceSite, //server
+      sourceComponent: destComponent,
+      destComponent: sourceComponent,
       sourceProcess: destProcess,
       destProcess: sourceProcess
     };
