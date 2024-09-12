@@ -25,7 +25,10 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkG
   const handleShowDetails = useCallback(
     (componentId: string) => {
       const component = components.find(({ identity }) => identity === componentId);
-      navigate(`${ComponentRoutesPaths.ProcessGroups}/${component?.name}@${componentId}`);
+
+      if (component) {
+        navigate(`${ComponentRoutesPaths.ProcessGroups}/${component?.name}@${componentId}`);
+      }
     },
     [navigate, components]
   );

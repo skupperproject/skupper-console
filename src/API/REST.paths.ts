@@ -4,7 +4,6 @@ import { COLLECTOR_URL } from '@config/config';
 
 // ask to Skupper the url to call the api that retrieves the url of the prometheus server
 export const getUser = () => `${COLLECTOR_URL}/user/`;
-
 export const logout = () => `${COLLECTOR_URL}/logout?nonce=${Date.now()}`;
 
 // SITES
@@ -13,10 +12,6 @@ export const getSitesPATH = () => SITES_PATH;
 export const getSitePATH = (id: string) => `${SITES_PATH}${id}`;
 export const getLinksBySitePATH = (id: string) => `${SITES_PATH}${id}/links`;
 export const getHostsBySitePATH = (id: string) => `${SITES_PATH}${id}/hosts`;
-
-// HOSTS
-const HOSTS_PATH = `${COLLECTOR_URL}/hosts/`;
-export const getHostsPATH = () => HOSTS_PATH;
 
 // LINKS
 const LINKS_PATH = `${COLLECTOR_URL}/links/`;
