@@ -33,7 +33,6 @@ const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PA
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const hosts = require(`${path}/HOSTS.json`);
 const services = require(`${path}/SERVICES.json`);
-const serviceProcesses = require(`${path}/SERVICE_PROCESSES.json`);
 const flowPairs = require(`${path}/FLOW_PAIRS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
@@ -456,7 +455,6 @@ export function loadMockServer() {
       }));
 
       this.get(`${prefix}/addresses`, () => services);
-      this.get(`${prefix}/addresses/:id/processes`, () => serviceProcesses);
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }
   });

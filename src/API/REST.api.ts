@@ -16,7 +16,6 @@ import {
 
 import { axiosFetch } from './apiMiddleware';
 import {
-  getProcessesByServicePATH,
   getSitePATH,
   getLinksBySitePATH,
   getHostsBySitePATH,
@@ -157,17 +156,6 @@ export const RESTApi = {
   // SERVICES APIs
   fetchServices: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<ServiceResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<ServiceResponse[]>>(getServicesPath(), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return data;
-  },
-
-  fetchServersByService: async (
-    id: string,
-    options?: RemoteFilterOptions
-  ): Promise<ResponseWrapper<ProcessResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<ProcessResponse[]>>(getProcessesByServicePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
