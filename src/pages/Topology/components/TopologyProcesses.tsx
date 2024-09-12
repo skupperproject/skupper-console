@@ -75,7 +75,10 @@ const TopologyProcesses: FC<{
 
       //handle a single process selection
       const process = processes.find(({ identity }) => identity === id);
-      navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${process?.identity}`);
+
+      if (process) {
+        navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${process?.identity}`);
+      }
     },
     [handleSelected, navigate, processes]
   );

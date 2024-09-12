@@ -32,7 +32,6 @@ import {
   getLinksPATH,
   getServicesPath,
   getSitePairsPATH,
-  getHostsPATH,
   getProcessGroupPairsPATH,
   getProcessPairsPATH,
   getProcessPairPairPATH,
@@ -119,15 +118,6 @@ export const RESTApi = {
       ...patchedData,
       parentName: patchedData.parentName || patchedData.hostName || patchedData.sourceHost
     };
-  },
-
-  // HOST APIs
-  fetchHosts: async (options?: RemoteFilterOptions): Promise<HostResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<HostResponse[]>>(getHostsPATH(), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
   },
 
   // PROCESS GROUPS APIs
