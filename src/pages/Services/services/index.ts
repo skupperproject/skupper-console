@@ -4,17 +4,7 @@ import { PrometheusLabelsV2 } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
 import { ServiceResponse } from '@sk-types/REST.interfaces';
-
-interface SKSankeyNodeProps {
-  id: string;
-  nodeColor?: string;
-}
-
-interface SKSankeyLinkProps {
-  source: string;
-  target: string;
-  value: number;
-}
+import { SkSankeyChartLink, SkSankeyChartNode } from '@sk-types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
   extendServicesWithActiveAndTotalFlowPairs: (
@@ -46,7 +36,7 @@ export const ServicesController = {
   convertToSankeyChartData: (servicePairs: PrometheusMetric<'vector'>[], withMetric = false) => {
     const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
 
-    const clients: SKSankeyNodeProps[] =
+    const clients: SkSankeyChartNode[] =
       servicePairs?.map(({ metric }) => ({
         id: `${metric[PrometheusLabelsV2.SourceProcess] || decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.SourceSiteName])} ${sourceProcessSuffix}`,
         nodeColor: metric[PrometheusLabelsV2.SourceProcess] ? VarColors.Blue400 : undefined
@@ -62,7 +52,7 @@ export const ServicesController = {
 
     const nodes = [...clients, ...servers]
       .filter(({ id }) => id)
-      .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i) as SKSankeyNodeProps[];
+      .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i) as SkSankeyChartNode[];
 
     const links =
       (servicePairs
@@ -73,7 +63,7 @@ export const ServicesController = {
             decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.DestSiteName]),
           value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
         }))
-        .filter(({ source, target }) => source && target) as SKSankeyLinkProps[]) || [];
+        .filter(({ source, target }) => source && target) as SkSankeyChartLink[]) || [];
 
     return { nodes, links };
   }
