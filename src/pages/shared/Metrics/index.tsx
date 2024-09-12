@@ -103,6 +103,7 @@ const Metrics: FC<MetricsProps> = function (props) {
   });
   // case: hide if We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
   const showHttp =
+    !!availableProtocols?.length &&
     queryParams.protocol !== AvailableProtocols.Tcp &&
     !(availableProtocols?.length === 1 && availableProtocols[0] === AvailableProtocols.Tcp);
   const showTcp = !queryParams.protocol || queryParams.protocol === AvailableProtocols.Tcp;

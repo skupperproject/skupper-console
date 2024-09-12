@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import { Flex } from '@patternfly/react-core';
+import { Card, Flex } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { useSuspenseQueries, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +9,7 @@ import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { SMALL_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
+import SKEmptyData from '@core/components/SkEmptyData';
 import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable from '@core/components/SkTable';
 import { TopologyController } from '@pages/Topology/services';
@@ -134,79 +136,91 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
   };
 
   return (
-    <Flex direction={{ default: 'column' }}>
-      {!!TCPClients.length && (
-        <SkTable
-          alwaysShowPagination={false}
-          title={ProcessesLabels.TCPClients}
-          columns={processesConnectedColumns}
-          rows={TCPClients}
-          pagination={true}
-          paginationPageSize={SMALL_PAGINATION_SIZE}
-          customCells={CustomProcessPairCellsWithLinkDetail}
-        />
-      )}
+    <>
+      {!TCPClients.length &&
+        !TCPServers.length &&
+        !HTTPClients.length &&
+        !HTTPServers.length &&
+        !remoteClients.length &&
+        !remoteServers.length && (
+          <Card isFullHeight>
+            <SKEmptyData icon={SearchIcon} />
+          </Card>
+        )}
+      <Flex direction={{ default: 'column' }}>
+        {!!TCPClients.length && (
+          <SkTable
+            alwaysShowPagination={false}
+            title={ProcessesLabels.TCPClients}
+            columns={processesConnectedColumns}
+            rows={TCPClients}
+            pagination={true}
+            paginationPageSize={SMALL_PAGINATION_SIZE}
+            customCells={CustomProcessPairCellsWithLinkDetail}
+          />
+        )}
 
-      {!!TCPServers.length && (
-        <SkTable
-          alwaysShowPagination={false}
-          title={ProcessesLabels.TCPServers}
-          columns={processesConnectedColumns}
-          rows={TCPServers}
-          pagination={true}
-          paginationPageSize={SMALL_PAGINATION_SIZE}
-          customCells={CustomProcessPairCellsWithLinkDetail}
-        />
-      )}
+        {!!TCPServers.length && (
+          <SkTable
+            alwaysShowPagination={false}
+            title={ProcessesLabels.TCPServers}
+            columns={processesConnectedColumns}
+            rows={TCPServers}
+            pagination={true}
+            paginationPageSize={SMALL_PAGINATION_SIZE}
+            customCells={CustomProcessPairCellsWithLinkDetail}
+          />
+        )}
 
-      {!!HTTPClients.length && (
-        <SkTable
-          alwaysShowPagination={false}
-          title={ProcessesLabels.HTTPClients}
-          columns={processesHttpConnectedColumns}
-          rows={HTTPClients}
-          pagination={true}
-          paginationPageSize={SMALL_PAGINATION_SIZE}
-          customCells={CustomProcessPairCellsWithLinkDetail}
-        />
-      )}
+        {!!HTTPClients.length && (
+          <SkTable
+            alwaysShowPagination={false}
+            title={ProcessesLabels.HTTPClients}
+            columns={processesHttpConnectedColumns}
+            rows={HTTPClients}
+            pagination={true}
+            paginationPageSize={SMALL_PAGINATION_SIZE}
+            customCells={CustomProcessPairCellsWithLinkDetail}
+          />
+        )}
 
-      {!!HTTPServers.length && (
-        <SkTable
-          alwaysShowPagination={false}
-          title={ProcessesLabels.HTTPServers}
-          columns={processesHttpConnectedColumns}
-          rows={HTTPServers}
-          pagination={true}
-          paginationPageSize={SMALL_PAGINATION_SIZE}
-          customCells={CustomProcessPairCellsWithLinkDetail}
-        />
-      )}
+        {!!HTTPServers.length && (
+          <SkTable
+            alwaysShowPagination={false}
+            title={ProcessesLabels.HTTPServers}
+            columns={processesHttpConnectedColumns}
+            rows={HTTPServers}
+            pagination={true}
+            paginationPageSize={SMALL_PAGINATION_SIZE}
+            customCells={CustomProcessPairCellsWithLinkDetail}
+          />
+        )}
 
-      {!!remoteClients.length && (
-        <SkTable
-          alwaysShowPagination={false}
-          title={ProcessesLabels.RemoteClients}
-          columns={processesConnectedColumns}
-          rows={remoteClients}
-          pagination={true}
-          paginationPageSize={SMALL_PAGINATION_SIZE}
-          customCells={CustomProcessPairCellsWithLinkDetail}
-        />
-      )}
+        {!!remoteClients.length && (
+          <SkTable
+            alwaysShowPagination={false}
+            title={ProcessesLabels.RemoteClients}
+            columns={processesConnectedColumns}
+            rows={remoteClients}
+            pagination={true}
+            paginationPageSize={SMALL_PAGINATION_SIZE}
+            customCells={CustomProcessPairCellsWithLinkDetail}
+          />
+        )}
 
-      {!!remoteServers.length && (
-        <SkTable
-          alwaysShowPagination={false}
-          title={ProcessesLabels.RemoteServers}
-          columns={processesConnectedColumns}
-          rows={remoteServers}
-          pagination={true}
-          paginationPageSize={SMALL_PAGINATION_SIZE}
-          customCells={CustomProcessPairCellsWithLinkDetail}
-        />
-      )}
-    </Flex>
+        {!!remoteServers.length && (
+          <SkTable
+            alwaysShowPagination={false}
+            title={ProcessesLabels.RemoteServers}
+            columns={processesConnectedColumns}
+            rows={remoteServers}
+            pagination={true}
+            paginationPageSize={SMALL_PAGINATION_SIZE}
+            customCells={CustomProcessPairCellsWithLinkDetail}
+          />
+        )}
+      </Flex>
+    </>
   );
 };
 
