@@ -6,7 +6,7 @@ import { Server } from 'miragejs';
 import TcpConnections from '@pages/Services/components/TcpConnections';
 
 import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
-import processesData from '../../../mocks/data/SERVICE_PROCESSES.json';
+import processesData from '../../../mocks/data/PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { AvailableProtocols } from '../../../src/API/REST.enum';

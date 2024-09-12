@@ -24,8 +24,8 @@ const ExposedServers: FC<ExposedServersProps> = function ({
   pagination = BIG_PAGINATION_SIZE
 }) {
   const { data: exposedServersData } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
-    queryFn: () => (serviceId ? RESTApi.fetchServersByService(serviceId, initServersQueryParams) : null),
+    queryKey: [QueriesServices.GetProcessesByService, { ...initServersQueryParams, addresses: [serviceId] }],
+    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [serviceId] }),
 
     refetchInterval: UPDATE_INTERVAL
   });

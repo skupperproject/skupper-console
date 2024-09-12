@@ -23,13 +23,13 @@ const terminatedConnectionsQueryParams = {
 
 const useServiceData = () => {
   const { service } = useParams();
-  const serviceName = service?.split('@')[0];
+  const serviceName = service?.split('@')[0] as string;
   const serviceId = service?.split('@')[1] as string;
   const protocol = service?.split('@')[2] as AvailableProtocols | undefined;
 
   const { data: serversData } = useQuery({
-    queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
-    queryFn: () => RESTApi.fetchServersByService(serviceId, initServersQueryParams),
+    queryKey: [QueriesServices.GetProcessesByService, { ...initServersQueryParams, addresses: [serviceId] }],
+    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [serviceId] }),
     refetchInterval: UPDATE_INTERVAL
   });
 
