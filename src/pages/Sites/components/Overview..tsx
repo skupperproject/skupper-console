@@ -80,6 +80,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
       }}
       configFilters={{
         sourceSites: { disabled: true },
+        destSites: { hide: !destSites.length },
         destinationProcesses: { hide: true },
         sourceProcesses: { hide: true }
       }}
