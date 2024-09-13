@@ -9,7 +9,7 @@ import './ResourceIcon.css';
 const RESOURCE_MAP = {
   site: { class: 'sk-resource-site', symbol: 'S' },
   component: { class: 'sk-resource-process-group', symbol: 'C' },
-  service: { class: 'sk-resource-service', symbol: 'SE' },
+  service: { class: 'sk-resource-service', symbol: 'RK' },
   process: { class: 'sk-resource-process', symbol: 'P' },
   skupper: { class: 'sk-resource-skupper', symbol: '' }
 };
