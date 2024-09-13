@@ -1,5 +1,5 @@
 import { PROMETHEUS_URL } from '@config/config';
-import { PrometheusLabelsV2, prometheusSiteNameAndIdSeparator } from '@config/prometheus';
+import { PrometheusLabelsV2 } from '@config/prometheus';
 import {
   MetricData as MetricValuesAndLabels,
   PrometheusLabels,
@@ -25,14 +25,11 @@ export function convertToPrometheusQueryParams({
   let queryFilters: string[] = [];
 
   if (sourceSite) {
-    queryFilters = [
-      ...queryFilters,
-      `${PrometheusLabelsV2.SourceSiteName}=~"${decomposePrometheusSiteLabel(sourceSite)}"`
-    ];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceSiteName}=~"${sourceSite}"`];
   }
 
   if (destSite) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestSiteName}=~"${decomposePrometheusSiteLabel(destSite)}"`];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestSiteName}=~"${destSite}"`];
   }
 
   if (sourceProcess) {
@@ -108,9 +105,3 @@ export function getTimeSeriesFromPrometheusData(data: PrometheusMetric<'matrix'>
 
   return { values, labels };
 }
-
-// prometheus site label has this format: siteName@_@siteId
-export const composePrometheusSiteLabel = (name?: string, id?: string) =>
-  (name || '') + (prometheusSiteNameAndIdSeparator || '') + (id || '');
-
-export const decomposePrometheusSiteLabel = (name?: string) => name?.split(prometheusSiteNameAndIdSeparator)[0];

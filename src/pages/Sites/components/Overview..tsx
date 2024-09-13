@@ -2,7 +2,6 @@ import { FC, useCallback } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
@@ -57,10 +56,10 @@ const Overview: FC<OverviewProps> = function ({ site }) {
     [siteId]
   );
 
-  const sourceSites = [{ destinationName: composePrometheusSiteLabel(name, siteId) }];
+  const sourceSites = [{ destinationName: name }];
   const destSites = removeDuplicatesFromArrayOfObjects([
-    ...createDestProcesses(sitePairsTx, 'destinationName', 'destinationId'),
-    ...createDestProcesses(sitePairsRx, 'sourceName', 'sourceId')
+    ...createDestProcesses(sitePairsTx, 'destinationName'),
+    ...createDestProcesses(sitePairsRx, 'sourceName')
   ]);
 
   const uniqueProtocols = [...new Set([...sitePairsTx, ...sitePairsRx].map((item) => item.protocol))];
@@ -75,7 +74,7 @@ const Overview: FC<OverviewProps> = function ({ site }) {
         ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
       }}
       defaultMetricFilterValues={{
-        sourceSite: composePrometheusSiteLabel(name, siteId),
+        sourceSite: name,
         ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
       }}
       configFilters={{
@@ -92,13 +91,9 @@ const Overview: FC<OverviewProps> = function ({ site }) {
 
 export default Overview;
 
-const createDestProcesses = (
-  sitePairs: SitePairsResponse[],
-  nameKey: keyof SitePairsResponse,
-  idKey: keyof SitePairsResponse
-) => [
-  ...(sitePairs || []).map(({ [nameKey]: namePair, [idKey]: idPair }) => ({
-    destinationName: composePrometheusSiteLabel(namePair as string, idPair as string),
+const createDestProcesses = (sitePairs: SitePairsResponse[], nameKey: keyof SitePairsResponse) => [
+  ...(sitePairs || []).map(({ [nameKey]: namePair }) => ({
+    destinationName: namePair as string,
     siteName: ''
   }))
 ];

@@ -149,13 +149,15 @@ const SkGraph: FC<SkGraphProps> = memo(
       const nodes = GraphController.addPositionsToNodes(nodesWithoutPosition, graphInstance.getNodeData());
 
       graphInstance.setData(GraphController.transformData({ edges, nodes, combos }));
-      await graphInstance.render();
 
-      const newNodesIds = nodes.map((node) => node.id).join(',');
+      const newNodesIds = nodesWithoutPosition.map((node) => node.id).join(',');
       const prevNodeIds = prevNodesRef.current.map((node) => node.id).join(',');
 
       if (JSON.stringify(newNodesIds) !== JSON.stringify(prevNodeIds)) {
+        await graphInstance.render();
         graphInstance.fitView({ when: 'overflow' });
+      } else {
+        await graphInstance.draw();
       }
 
       save();

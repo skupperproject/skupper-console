@@ -18,7 +18,7 @@ export const EDGE_LABEL_TEXT_COLOR = HexColors.Black900;
 export const EDGE_LABEL_BACKGROUND_COLOR = HexColors.White;
 export const EDGE_SELECT_LINE = HexColors.DefaultHighLight;
 
-export const COMBO__BG_COLOR_DEFAULT = HexColors.DefaultBackground;
+export const COMBO__BG_COLOR_DEFAULT = 'transparent';
 export const COMBO_BORDER_COLOR_DEFAULT = HexColors.DefaultBorder;
 export const COMBO_COLOR_DEFAULT_LABEL = HexColors.DarkThemeText;
 export const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.DarkThemeBackground;

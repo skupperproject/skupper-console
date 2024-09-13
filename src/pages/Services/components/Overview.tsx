@@ -2,7 +2,6 @@ import { FC, useCallback } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
@@ -46,27 +45,27 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
   const processPairsResults = processPairs?.results || [];
 
   const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ sourceName, sourceSiteName, sourceSiteId }) => ({
+    processPairsResults.map(({ sourceName, sourceSiteName }) => ({
       destinationName: sourceName,
-      siteName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
+      siteName: sourceSiteName
     }))
   );
   const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ destinationName, destinationSiteName, destinationSiteId }) => ({
+    processPairsResults.map(({ destinationName, destinationSiteName }) => ({
       destinationName,
-      siteName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
+      siteName: destinationSiteName
     }))
   );
 
   const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ destinationSiteId, destinationSiteName }) => ({
-      destinationName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
+    processPairsResults.map(({ destinationSiteName }) => ({
+      destinationName: destinationSiteName
     }))
   );
 
   const sourceSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ sourceSiteId, sourceSiteName }) => ({
-      destinationName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
+    processPairsResults.map(({ sourceSiteName }) => ({
+      destinationName: sourceSiteName
     }))
   );
 

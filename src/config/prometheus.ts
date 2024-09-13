@@ -1,5 +1,7 @@
 import { IntervalTimeMap } from '@sk-types/Prometheus.interfaces';
 
+export const prometheusProcessNameseparator = '|';
+
 export function calculateStep(seconds: number) {
   if (seconds <= 60) {
     return '5s';
@@ -46,8 +48,6 @@ export const timeIntervalMap: IntervalTimeMap = {
 };
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
-export const prometheusSiteNameAndIdSeparator = '@_@'; // This is an internal team role convention to unify a siteId and a siteName in prometheus
-export const prometheusProcessNameseparator = '|';
 
 export enum PrometheusLabelsV2 {
   SourceSiteId = 'source_site_id',
