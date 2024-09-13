@@ -41,7 +41,7 @@ export interface SKTableProps<T> {
   onGetFilters?: Function;
 }
 
-export interface CustomCellProps<T> {
+interface CustomCellProps<T> {
   value: string | T[keyof T] | undefined;
   data: T;
   callback?: Function;
