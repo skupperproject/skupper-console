@@ -11,7 +11,6 @@ const SITES_PATH = `${COLLECTOR_URL}/sites/`;
 export const getSitesPATH = () => SITES_PATH;
 export const getSitePATH = (id: string) => `${SITES_PATH}${id}`;
 export const getLinksBySitePATH = (id: string) => `${SITES_PATH}${id}/links`;
-export const getHostsBySitePATH = (id: string) => `${SITES_PATH}${id}/hosts`;
 
 // LINKS
 const LINKS_PATH = `${COLLECTOR_URL}/links/`;

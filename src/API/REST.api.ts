@@ -5,7 +5,6 @@ import {
   FlowPairsResponse,
   SiteResponse,
   LinkResponse,
-  HostResponse,
   ProcessPairsResponse,
   RemoteFilterOptions,
   ResponseWrapper,
@@ -18,7 +17,6 @@ import { axiosFetch } from './apiMiddleware';
 import {
   getSitePATH,
   getLinksBySitePATH,
-  getHostsBySitePATH,
   getProcessGroupPATH,
   geProcessPATH,
   getLinkPATH,
@@ -66,14 +64,6 @@ export const RESTApi = {
 
   fetchLinksBySite: async (id: string, options?: RemoteFilterOptions): Promise<LinkResponse[]> => {
     const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksBySitePATH(id), {
-      params: options ? mapOptionsToQueryParams(options) : null
-    });
-
-    return getApiResults(data);
-  },
-
-  fetchHostsBySite: async (id: string, options?: RemoteFilterOptions): Promise<HostResponse[]> => {
-    const data = await axiosFetch<ResponseWrapper<HostResponse[]>>(getHostsBySitePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 

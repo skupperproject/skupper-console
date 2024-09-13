@@ -5,10 +5,6 @@ import { QueriesSites } from './Sites.enum';
 
 // Queries Details
 const fetchSites = () => ({ queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites() });
-const fetchHostsBySiteId = (siteId: string) => ({
-  queryKey: [QueriesSites.GetHostsBySiteId, siteId],
-  queryFn: () => RESTApi.fetchHostsBySite(siteId)
-});
 
 const fetchLinksBySiteId = (siteId: string, queryParams: RemoteFilterOptions) => ({
   queryKey: [QueriesSites.GetLinksBySiteId, siteId],
@@ -22,7 +18,6 @@ const fetchProcessesBySiteId = (siteId: string, queryParams: RemoteFilterOptions
 
 export const queryDetails = {
   fetchSites,
-  fetchHostsBySiteId,
   fetchLinksBySiteId,
   fetchProcessesBySiteId
 };

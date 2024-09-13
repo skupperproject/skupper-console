@@ -5,7 +5,6 @@ import { PrometheusMetricsV2 } from '@config/prometheus';
 import {
   ServiceResponse,
   ProcessPairsResponse,
-  HostResponse,
   LinkResponse,
   ComponentResponse,
   ProcessResponse,
@@ -31,7 +30,6 @@ const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
 const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
-const hosts = require(`${path}/HOSTS.json`);
 const services = require(`${path}/SERVICES.json`);
 const flowPairs = require(`${path}/FLOW_PAIRS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
@@ -401,10 +399,6 @@ export function loadMockServer() {
       this.get(MockApiPaths.ProcessPair, MockApi.getProcessPair);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
-
-      this.get(`${prefix}/sites/:id/hosts`, (_, { params: { id } }) => ({
-        results: hosts.results.filter(({ parent }: HostResponse) => parent === id)
-      }));
 
       this.get(`${prefix}/sites/:id/links`, (_, { params: { id } }) => ({
         results: links.results.filter(() => sites.results.find((site) => site.identity === id))
