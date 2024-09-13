@@ -17,7 +17,6 @@ import {
   PageSection
 } from '@patternfly/react-core';
 
-import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { AvailableProtocols } from '@API/REST.enum';
 import { prometheusProcessNameseparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
@@ -157,7 +156,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               </MenuItem>
               {(list || []).map(({ destinationName }) => (
                 <MenuItem key={`site-${destinationName}`} itemId={destinationName}>
-                  {decomposePrometheusSiteLabel(destinationName)}
+                  {destinationName}
                 </MenuItem>
               ))}
             </MenuList>
@@ -189,9 +188,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={sourceSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.sourceSite
-              ? decomposePrometheusSiteLabel(selectedFilters.sourceSite)
-              : config.sourceSites?.placeholder,
+            selectedFilters.sourceSite || config.sourceSites?.placeholder,
             sourceSitesToggleRef,
             selectedFilterIsOpen.sourceSite,
             !!config.sourceSites?.disabled,
@@ -218,9 +215,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       <div ref={destSitesContainerRef}>
         <Popper
           trigger={getToggle(
-            selectedFilters.destSite
-              ? decomposePrometheusSiteLabel(selectedFilters.destSite)
-              : config.destSites?.placeholder,
+            selectedFilters.destSite || config.destSites?.placeholder,
             destSitesToggleRef,
             selectedFilterIsOpen.destSite,
             !!config.destSites?.disabled,

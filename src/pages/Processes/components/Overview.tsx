@@ -2,7 +2,6 @@ import { FC, useCallback } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
@@ -59,16 +58,16 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
   );
 
   const destProcessesRx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
-    ...(processesPairsTxData || []).map(({ destinationName, destinationSiteId, destinationSiteName }) => ({
+    ...(processesPairsTxData || []).map(({ destinationName, destinationSiteName }) => ({
       destinationName,
-      siteName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
+      siteName: destinationSiteName
     }))
   ]);
 
   const destProcessesTx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
-    ...(processesPairsRxData || []).map(({ sourceName, sourceSiteId, sourceSiteName }) => ({
+    ...(processesPairsRxData || []).map(({ sourceName, sourceSiteName }) => ({
       destinationName: sourceName,
-      siteName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
+      siteName: sourceSiteName
     }))
   ]);
 

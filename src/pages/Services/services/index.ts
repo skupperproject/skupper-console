@@ -1,4 +1,3 @@
-import { decomposePrometheusSiteLabel } from '@API/Prometheus.utils';
 import { VarColors } from '@config/colors';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
@@ -38,15 +37,13 @@ export const ServicesController = {
 
     const clients: SkSankeyChartNode[] =
       servicePairs?.map(({ metric }) => ({
-        id: `${metric[PrometheusLabelsV2.SourceProcess] || decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.SourceSiteName])} ${sourceProcessSuffix}`,
+        id: `${metric[PrometheusLabelsV2.SourceProcess] || metric[PrometheusLabelsV2.SourceSiteName]} ${sourceProcessSuffix}`,
         nodeColor: metric[PrometheusLabelsV2.SourceProcess] ? VarColors.Blue400 : undefined
       })) || [];
 
     const servers =
       servicePairs?.map(({ metric }) => ({
-        id:
-          metric[PrometheusLabelsV2.DestProcess] ||
-          decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.DestSiteName]),
+        id: metric[PrometheusLabelsV2.DestProcess] || metric[PrometheusLabelsV2.DestSiteName],
         nodeColor: metric.destProcess ? VarColors.Blue400 : undefined
       })) || [];
 
@@ -57,10 +54,8 @@ export const ServicesController = {
     const links =
       (servicePairs
         .map(({ metric, value }) => ({
-          source: `${metric[PrometheusLabelsV2.SourceProcess] || decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.SourceSiteName])} ${sourceProcessSuffix}`,
-          target:
-            metric[PrometheusLabelsV2.DestProcess] ||
-            decomposePrometheusSiteLabel(metric[PrometheusLabelsV2.DestSiteName]),
+          source: `${metric[PrometheusLabelsV2.SourceProcess] || metric[PrometheusLabelsV2.SourceSiteName]} ${sourceProcessSuffix}`,
+          target: metric[PrometheusLabelsV2.DestProcess] || metric[PrometheusLabelsV2.DestSiteName],
           value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
         }))
         .filter(({ source, target }) => source && target) as SkSankeyChartLink[]) || [];
