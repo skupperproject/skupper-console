@@ -38,10 +38,9 @@ interface DetailsProps {
 const Details: FC<DetailsProps> = function ({ site }) {
   const { identity: siteId, nameSpace, siteVersion, platform } = site;
 
-  const [{ data: sites }, { data: hosts }, { data: links }, { data: processesData }] = useSuspenseQueries({
+  const [{ data: sites }, { data: links }, { data: processesData }] = useSuspenseQueries({
     queries: [
       queryDetails.fetchSites(),
-      queryDetails.fetchHostsBySiteId(siteId),
       queryDetails.fetchLinksBySiteId(siteId, linkQueryParams),
       queryDetails.fetchProcessesBySiteId(siteId, processQueryParams)
     ]
@@ -52,7 +51,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
   const processResults = processesData.results.filter(({ processRole }) => processRole !== Role.Internal);
 
   return (
-    <Grid hasGutter sm={12} xl={6} xl2={4}>
+    <Grid hasGutter sm={12} xl={6} xl2={6}>
       <GridItem sm={12}>
         <Card>
           <CardTitle>
@@ -95,7 +94,7 @@ const Details: FC<DetailsProps> = function ({ site }) {
         </Card>
       </GridItem>
 
-      <GridItem>
+      {/*<GridItem>
         <Card isFullHeight>
           <CardTitle>
             <Title headingLevel="h2">{SiteLabels.Hosts}</Title>
@@ -110,9 +109,9 @@ const Details: FC<DetailsProps> = function ({ site }) {
             )) || <SKEmptyData />}
           </CardBody>
         </Card>
-      </GridItem>
+      </GridItem> */}
 
-      <GridItem sm={12} xl={12} xl2={4}>
+      <GridItem sm={12} xl={12} xl2={6}>
         <Card isFullHeight>
           <CardTitle>
             <Title headingLevel="h2">{SiteLabels.Processes}</Title>

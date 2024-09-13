@@ -175,9 +175,3 @@ export interface LinkResponse extends BaseResponse {
   sourceSiteId: string;
   destinationSiteId: string;
 }
-
-export interface HostResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  provider?: string;
-}
