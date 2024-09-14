@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds';
+import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
@@ -13,26 +14,28 @@ import TcpConnections from '../components/TcpConnections';
 import useServiceData from '../hooks/useServiceData';
 import { TAB_0_KEY } from '../Services.constants';
 
-const Service = function () {
-  const [searchParams] = useSearchParams();
-  const [menuSelected, setMenuSelected] = useState(searchParams.get('type') || TAB_0_KEY);
+interface ServiceProps {
+  id: string;
+  defaultTab: string;
+}
+
+const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
+  const [menuSelected, setMenuSelected] = useState(defaultTab);
 
   const {
-    serviceName,
-    serviceId,
-    protocol,
+    service: { name, protocol },
     serverCount,
     requestsCount,
     tcpActiveConnectionCount,
     tcpTerminatedConnectionCount
-  } = useServiceData();
+  } = useServiceData(id);
 
   return (
     <MainContainer
-      dataTestId={getTestsIds.serviceView(serviceId)}
+      dataTestId={getTestsIds.serviceView(id)}
       isPlain
-      title={serviceName || ''}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${serviceId}`}
+      title={name}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${id}`}
       navigationComponent={
         <NavigationMenu
           protocol={protocol}
@@ -47,25 +50,25 @@ const Service = function () {
       mainContentChildren={
         <>
           {protocol === AvailableProtocols.Tcp && (
-            <TcpConnections
-              serviceName={serviceName || ''}
-              serviceId={serviceId || ''}
-              protocol={protocol}
-              viewSelected={menuSelected}
-            />
+            <TcpConnections serviceName={name} serviceId={id} protocol={protocol} viewSelected={menuSelected} />
           )}
           {(protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2) && (
-            <HttpRequests
-              serviceName={serviceName || ''}
-              serviceId={serviceId || ''}
-              protocol={protocol}
-              viewSelected={menuSelected}
-            />
+            <HttpRequests serviceName={name} serviceId={id} protocol={protocol} viewSelected={menuSelected} />
           )}
         </>
       }
     />
   );
+};
+
+const Service = function () {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') || TAB_0_KEY;
+
+  const { id: paramId } = useParams();
+  const { id } = getIdAndNameFromUrlParams(paramId as string);
+
+  return <ServiceComponent id={id} defaultTab={type} />;
 };
 
 export default Service;

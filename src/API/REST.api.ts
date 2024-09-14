@@ -17,7 +17,7 @@ import { axiosFetch } from './apiMiddleware';
 import {
   getSitePATH,
   getLinksBySitePATH,
-  getProcessGroupPATH,
+  getComponentPATH,
   geProcessPATH,
   getLinkPATH,
   getFlowPairPATH,
@@ -27,15 +27,16 @@ import {
   geProcessesPATH,
   getSitesPATH,
   getLinksPATH,
-  getServicesPath,
+  getServicesPATH,
   getSitePairsPATH,
   getProcessGroupPairsPATH,
   getProcessPairsPATH,
   getProcessPairPairPATH,
-  getProcessGroupsPATH,
+  getComponentsPATH,
   getProcessPairsByServicePATH,
   logout,
-  getUser
+  getUser,
+  getServicePATH
 } from './REST.paths';
 import { mapOptionsToQueryParams, getApiResults } from './REST.utils';
 
@@ -46,12 +47,12 @@ export const RESTApi = {
   fetchUser: async (): Promise<UserResponse> => axiosFetch<UserResponse>(getUser()),
 
   // SITES APIs
-  fetchSites: async (options?: RemoteFilterOptions): Promise<SiteResponse[]> => {
+  fetchSites: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<SiteResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<SiteResponse[]>>(getSitesPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getApiResults(data);
+    return data;
   },
 
   fetchSite: async (id: string, options?: RemoteFilterOptions): Promise<SiteResponse> => {
@@ -62,12 +63,12 @@ export const RESTApi = {
     return getApiResults(data);
   },
 
-  fetchLinksBySite: async (id: string, options?: RemoteFilterOptions): Promise<LinkResponse[]> => {
+  fetchLinksBySite: async (id: string, options?: RemoteFilterOptions): Promise<ResponseWrapper<LinkResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksBySitePATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
-    return getApiResults(data);
+    return data;
   },
 
   // PROCESS APIs
@@ -110,16 +111,16 @@ export const RESTApi = {
   },
 
   // PROCESS GROUPS APIs
-  fetchProcessGroups: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<ComponentResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<ComponentResponse[]>>(getProcessGroupsPATH(), {
+  fetchComponents: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<ComponentResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ComponentResponse[]>>(getComponentsPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchProcessGroup: async (id: string, options?: RemoteFilterOptions): Promise<ComponentResponse> => {
-    const data = await axiosFetch<ResponseWrapper<ComponentResponse>>(getProcessGroupPATH(id), {
+  fetchComponent: async (id: string, options?: RemoteFilterOptions): Promise<ComponentResponse> => {
+    const data = await axiosFetch<ResponseWrapper<ComponentResponse>>(getComponentPATH(id), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
@@ -145,11 +146,19 @@ export const RESTApi = {
 
   // SERVICES APIs
   fetchServices: async (options?: RemoteFilterOptions): Promise<ResponseWrapper<ServiceResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<ServiceResponse[]>>(getServicesPath(), {
+    const data = await axiosFetch<ResponseWrapper<ServiceResponse[]>>(getServicesPATH(), {
       params: options ? mapOptionsToQueryParams(options) : null
     });
 
     return data;
+  },
+
+  fetchService: async (id: string, options?: RemoteFilterOptions): Promise<ServiceResponse> => {
+    const data = await axiosFetch<ResponseWrapper<ServiceResponse>>(getServicePATH(id), {
+      params: options ? mapOptionsToQueryParams(options) : null
+    });
+
+    return getApiResults(data);
   },
 
   fetchProcessPairsByService: async (

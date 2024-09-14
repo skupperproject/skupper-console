@@ -107,13 +107,13 @@ const useProcessPairsContent = ({ protocol }: { protocol: AvailableProtocols | '
   return { queryParamsPaginated, handleGetFilters };
 };
 
-interface ProcessPairsFlowsProps {
+interface FlowPairsListProps {
   sourceProcessId: string;
   destProcessId: string;
   protocol: AvailableProtocols | 'undefined';
 }
 
-const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessId, destProcessId, protocol }) {
+const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destProcessId, protocol }) {
   const [tabSelected, setTabSelected] = useState<string>();
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected || '', true);
 
@@ -142,21 +142,11 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessI
   );
 
   const { results: activeConnections, count: activeConnectionsCount } = extractData(
-    useFlowPairsQuery(
-      queryParamsPaginated[AvailableProtocols.Tcp].active,
-      sourceProcessId,
-      destProcessId,
-      AvailableProtocols.Tcp === protocol || protocol === 'undefined'
-    )
+    useFlowPairsQuery(queryParamsPaginated[AvailableProtocols.Tcp].active, sourceProcessId, destProcessId, true)
   );
 
   const { results: oldConnections, count: oldConnectionsCount } = extractData(
-    useFlowPairsQuery(
-      queryParamsPaginated[AvailableProtocols.Tcp].old,
-      sourceProcessId,
-      destProcessId,
-      AvailableProtocols.Tcp === protocol || protocol === 'undefined'
-    )
+    useFlowPairsQuery(queryParamsPaginated[AvailableProtocols.Tcp].old, sourceProcessId, destProcessId, true)
   );
 
   const activeTab = tabSelected
@@ -263,7 +253,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessI
   );
 };
 
-export default ProcessPairsFlows;
+export default FlowPairsList;
 
 interface Data<T> {
   results?: T[];

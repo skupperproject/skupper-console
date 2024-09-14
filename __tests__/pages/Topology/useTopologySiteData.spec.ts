@@ -18,7 +18,7 @@ describe('useTopologySiteData', () => {
     const mockMetrics = { bytes: 1000 };
 
     (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
+      { data: { results: mockSites } },
       { data: null },
       { data: mockSitesPairs },
       { data: mockMetrics }
@@ -53,7 +53,7 @@ describe('useTopologySiteData', () => {
     ];
 
     (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
+      { data: { results: mockSites } },
       { data: mockRouterLinks },
       { data: null },
       { data: null }
@@ -81,7 +81,7 @@ describe('useTopologySiteData', () => {
     const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
 
     (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
+      { data: { results: mockSites } },
       { data: null },
       { data: mockSitesPairs },
       { data: null }

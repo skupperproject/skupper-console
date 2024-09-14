@@ -1,11 +1,8 @@
-import { useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
@@ -15,51 +12,26 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 import Details from '../components/Details';
 import Overview from '../components/Overview';
 import ProcessPairsList from '../components/ProcessPairsList';
-import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
+import { useProcessData } from '../hooks/useProcessData';
+import { ProcessesLabels } from '../Processes.enum';
 
-const Process = function () {
-  const [searchParams] = useSearchParams();
+interface ProcessProps {
+  id: string;
+  defaultTab: string;
+}
 
-  const { id } = useParams() as { id: string };
-  const { id: processId, name: processName } = getIdAndNameFromUrlParams(id);
+const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
+  const {
+    process,
+    summary: { processPairsCount }
+  } = useProcessData(id);
 
-  const type = searchParams.get('type') || ProcessesLabels.Overview;
-  const [tabSelected, setTabSelected] = useState(type);
-
+  const [tabSelected, setTabSelected] = useState(defaultTab);
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
-
-  const clientPairsQueryParams = {
-    limit: 0,
-    sourceId: processId
-  };
-
-  const serverPairsQueryParams = {
-    limit: 0,
-    destinationId: processId
-  };
-
-  const { data: process } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcess, processId],
-    queryFn: () => RESTApi.fetchProcess(processId)
-  });
-
-  const { data: clientPairs } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairs, clientPairsQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairs(clientPairsQueryParams),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: serverPairs } = useQuery({
-    queryKey: [QueriesProcesses.GetProcessPairs, serverPairsQueryParams],
-    queryFn: () => RESTApi.fetchProcessesPairs(serverPairsQueryParams),
-    refetchInterval: UPDATE_INTERVAL
-  });
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ProcessesLabels);
   }
-
-  const processesCount = (clientPairs?.timeRangeCount || 0) + (serverPairs?.timeRangeCount || 0);
 
   const NavigationMenu = function () {
     return (
@@ -67,14 +39,14 @@ const Process = function () {
         <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
         <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
         <Tab
-          disabled={!processesCount}
+          disabled={!processPairsCount}
           eventKey={ProcessesLabels.ProcessPairs}
           title={
             <TabTitleText>
               {ProcessesLabels.ProcessPairs}{' '}
-              {!!processesCount && (
+              {!!processPairsCount && (
                 <Badge isRead key={1}>
-                  {processesCount}
+                  {processPairsCount}
                 </Badge>
               )}
             </TabTitleText>
@@ -86,9 +58,9 @@ const Process = function () {
 
   return (
     <MainContainer
-      dataTestId={getTestsIds.processView(processId)}
-      title={processName}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processId}`}
+      dataTestId={getTestsIds.processView(id)}
+      title={process.name}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${id}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
@@ -99,6 +71,16 @@ const Process = function () {
       }
     />
   );
+};
+
+const Process = function () {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') || ProcessesLabels.Overview;
+
+  const { id: paramId } = useParams();
+  const { id } = getIdAndNameFromUrlParams(paramId as string);
+
+  return <ProcessContent defaultTab={type} id={id} />;
 };
 
 export default Process;

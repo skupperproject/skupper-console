@@ -6,7 +6,6 @@ import * as router from 'react-router';
 
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { AvailableProtocols } from '../../../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -16,7 +15,7 @@ import LoadingPage from '../../../src/pages/shared/Loading';
 
 const servicesResults = servicesData.results;
 
-describe('Begin testing the FlowPairs component', () => {
+describe('Begin testing the Service component', () => {
   let server: Server;
 
   beforeEach(() => {
@@ -24,7 +23,7 @@ describe('Begin testing the FlowPairs component', () => {
     server.logging = false;
 
     jest.spyOn(router, 'useParams').mockReturnValue({
-      service: `${servicesResults[2].name}@${servicesResults[2].identity}@${AvailableProtocols.Tcp}`
+      id: `${servicesResults[0].name}@${servicesResults[0].identity}`
     });
 
     render(
@@ -54,7 +53,7 @@ describe('Begin testing the FlowPairs component', () => {
 
   it('should render the HTTP/2 Service view after the data loading is complete', async () => {
     jest.spyOn(router, 'useParams').mockReturnValue({
-      service: `${servicesResults[0].name}@${servicesResults[0].identity}@${AvailableProtocols.Http2}`
+      id: `${servicesResults[2].name}@${servicesResults[2].identity}`
     });
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

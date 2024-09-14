@@ -1,12 +1,12 @@
 export enum ComponentRoutesPaths {
-  ProcessGroups = '/components'
+  Components = '/components'
 }
 
 export enum QueriesComponent {
-  GetProcessGroups = 'get-process-groups-query',
-  GetProcessGroup = 'get-process-groups-query',
-  GetProcessesByProcessGroup = 'get-processes-by-process-group-query',
-  GetProcessGroupPairs = 'get-process-groups-pairs-query'
+  GetComponents = 'get-components-query',
+  GetComponent = 'get-component-query',
+  GetProcessesByComponent = 'get-processes-by-process-component',
+  GetComponentPairs = 'get-component-pairs-query'
 }
 
 export enum ComponentLabels {

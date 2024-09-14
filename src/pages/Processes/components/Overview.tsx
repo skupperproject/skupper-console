@@ -1,97 +1,38 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
-
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-import { ProcessResponse } from '@sk-types/REST.interfaces';
+import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
+import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 
-import { QueriesProcesses } from '../Processes.enum';
-
-const PREFIX_METRIC_FILTERS_CACHE_KEY = 'process-metric-filters';
-const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `process-open-metric-sections`;
+import { useProcessOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
   process: ProcessResponse;
 }
 
-const Overview: FC<OverviewProps> = function ({ process: { identity: processId, name } }) {
-  const processesPairsTxQueryParams = {
-    sourceId: processId
-  };
+const Overview: FC<OverviewProps> = function ({ process: { identity: id, name } }) {
+  const { pairsTx, pairsRx } = useProcessOverviewData(id);
+  const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } = useMetricSessionHandlers(id);
 
-  const processesPairsRxQueryParams = {
-    destinationId: processId
-  };
-
-  const [{ data: processesPairsTxData }, { data: processesPairsRxData }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
-  });
-
-  const handleSelectedFilters = useCallback(
-    (filters: QueryMetricsParams) => {
-      storeDataToSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`, filters);
-    },
-    [processId]
+  // Format destination processes and sites
+  const destProcesses = formatDestinationProcesses(pairsTx, pairsRx);
+  const destSites = removeDuplicatesFromArrayOfObjects(
+    destProcesses.map(({ siteName }) => ({ destinationName: siteName }))
   );
 
-  const handleGetExpandedSectionsConfig = useCallback(
-    (sections: ExpandedMetricSections) => {
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processId}`, sections);
-    },
-    [processId]
-  );
-
-  const destProcessesRx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
-    ...(processesPairsTxData || []).map(({ destinationName, destinationSiteName }) => ({
-      destinationName,
-      siteName: destinationSiteName
-    }))
-  ]);
-
-  const destProcessesTx = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>([
-    ...(processesPairsRxData || []).map(({ sourceName, sourceSiteName }) => ({
-      destinationName: sourceName,
-      siteName: sourceSiteName
-    }))
-  ]);
-
-  const destProcesses = [...destProcessesTx, ...destProcessesRx];
-  const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    destProcesses.map(({ siteName }) => ({
-      destinationName: siteName
-    }))
-  );
-
-  const uniqueProtocols = [...new Set([...processesPairsTxData, ...processesPairsRxData].map((item) => item.protocol))];
+  const uniqueProtocols = [...new Set([...pairsTx, ...pairsRx].map((item) => item.protocol))];
 
   return (
     <Metrics
-      key={processId}
+      key={id}
       destSites={destSites}
       destProcesses={destProcesses}
       availableProtocols={uniqueProtocols}
-      defaultOpenSections={{
-        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${processId}`)
-      }}
+      defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
         sourceProcess: name,
-        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${processId}`)
+        ...selectedFilters
       }}
       configFilters={{
         destSites: {
@@ -103,10 +44,24 @@ const Overview: FC<OverviewProps> = function ({ process: { identity: processId, 
         sourceProcesses: { disabled: true },
         sourceSites: { hide: true }
       }}
-      onGetMetricFiltersConfig={handleSelectedFilters}
-      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
+      onGetMetricFiltersConfig={setSelectedFilters}
+      onGetExpandedSectionsConfig={setVisibleMetrics}
     />
   );
 };
 
 export default Overview;
+
+// Utility function to format destination processes
+const formatDestinationProcesses = (txData: ProcessPairsResponse[], rxData: ProcessPairsResponse[]) => {
+  const formatProcess = (
+    data: ProcessPairsResponse[],
+    keyName: keyof ProcessPairsResponse,
+    siteKey: keyof ProcessPairsResponse
+  ) => data.map((item) => ({ destinationName: item[keyName] as string, siteName: item[siteKey] as string }));
+
+  const txProcesses = formatProcess(txData, 'destinationName', 'destinationSiteName');
+  const rxProcesses = formatProcess(rxData, 'sourceName', 'sourceSiteName');
+
+  return removeDuplicatesFromArrayOfObjects([...txProcesses, ...rxProcesses]);
+};

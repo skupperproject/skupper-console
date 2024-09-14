@@ -21,7 +21,7 @@ export const customServiceCells = {
     SkLinkCell({
       ...props,
       type: 'service',
-      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
+      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
     })
 };
 

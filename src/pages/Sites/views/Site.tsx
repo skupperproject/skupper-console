@@ -1,4 +1,4 @@
-import { useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -15,20 +15,18 @@ import Details from '../components/Details';
 import Overview from '../components/Overview.';
 import { SiteLabels, QueriesSites } from '../Sites.enum';
 
-const Site = function () {
-  const { id } = useParams() as { id: string };
-  const [searchParams] = useSearchParams();
+interface SiteProps {
+  id: string;
+  defaultTab: string;
+}
 
-  const { id: siteId } = getIdAndNameFromUrlParams(id);
-  const type = searchParams.get('type') || SiteLabels.Overview;
-
+const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
   const { data: site } = useSuspenseQuery({
-    queryKey: [QueriesSites.GetSite, siteId],
-    queryFn: () => RESTApi.fetchSite(siteId)
+    queryKey: [QueriesSites.GetSite, id],
+    queryFn: () => RESTApi.fetchSite(id)
   });
 
-  const [tabSelected, setTabSelected] = useState(type);
-
+  const [tabSelected, setTabSelected] = useState(defaultTab);
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
@@ -46,9 +44,9 @@ const Site = function () {
 
   return (
     <MainContainer
-      dataTestId={getTestsIds.siteView(siteId)}
+      dataTestId={getTestsIds.siteView(id)}
       title={site.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${siteId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${id}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
@@ -58,6 +56,16 @@ const Site = function () {
       }
     />
   );
+};
+
+const Site = function () {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') || SiteLabels.Overview;
+
+  const { id: paramId } = useParams();
+  const { id } = getIdAndNameFromUrlParams(paramId as string);
+
+  return <SiteContent defaultTab={type} id={id} />;
 };
 
 export default Site;

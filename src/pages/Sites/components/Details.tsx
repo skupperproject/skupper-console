@@ -15,21 +15,16 @@ import {
   ListItem,
   Title
 } from '@patternfly/react-core';
-import { useSuspenseQueries } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { Direction, Role } from '@API/REST.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SKEmptyData from '@core/components/SkEmptyData';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SiteResponse } from '@sk-types/REST.interfaces';
 
+import { useSiteDetailsData } from '../hooks/useSiteDetailsData';
 import SitesController from '../services';
 import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
-import { queryDetails } from '../Sites.queries';
-
-const processQueryParams = { endTime: 0 };
-const linkQueryParams = { direction: Direction.Outgoing };
 
 interface DetailsProps {
   site: SiteResponse;
@@ -38,17 +33,10 @@ interface DetailsProps {
 const Details: FC<DetailsProps> = function ({ site }) {
   const { identity: siteId, nameSpace, siteVersion, platform } = site;
 
-  const [{ data: sites }, { data: links }, { data: processesData }] = useSuspenseQueries({
-    queries: [
-      queryDetails.fetchSites(),
-      queryDetails.fetchLinksBySiteId(siteId, linkQueryParams),
-      queryDetails.fetchProcessesBySiteId(siteId, processQueryParams)
-    ]
-  });
+  const { sites, links, processes } = useSiteDetailsData(siteId);
 
   const { linkSiteIds } = SitesController.bindLinksWithSiteIds([site], links)[0];
   const linkedSites = sites.filter(({ identity }) => linkSiteIds.map((id) => id.targetId).includes(identity));
-  const processResults = processesData.results.filter(({ processRole }) => processRole !== Role.Internal);
 
   return (
     <Grid hasGutter sm={12} xl={6} xl2={6}>
@@ -117,9 +105,9 @@ const Details: FC<DetailsProps> = function ({ site }) {
             <Title headingLevel="h2">{SiteLabels.Processes}</Title>
           </CardTitle>
           <CardBody>
-            {(!!processResults.length && (
+            {(!!processes.length && (
               <List isPlain>
-                {processResults.map(({ identity, name: processName }) => (
+                {processes.map(({ identity, name: processName }) => (
                   <ListItem key={identity}>
                     <Flex>
                       <ResourceIcon type="process" />

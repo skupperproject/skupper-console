@@ -6,7 +6,7 @@ import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/component
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
@@ -50,7 +50,7 @@ export const CustomProcessCells = {
     SkLinkCell({
       ...props,
       type: 'component',
-      link: `${ComponentRoutesPaths.ProcessGroups}/${props.data.groupName}@${props.data.groupIdentity}`
+      link: `${ComponentRoutesPaths.Components}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
   ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
     SkHighlightValueCell({ ...props, format: formatBytes }),

@@ -26,7 +26,7 @@ import SkExposedCell from '@core/components/SkExposedCell';
 import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from '@sk-types/REST.interfaces';
@@ -221,7 +221,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                               <FlexItem>
                                 <ResourceIcon type="component" />
                                 <Link
-                                  to={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                                  to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                                 >
                                   {itemSelected.groupName}
                                 </Link>
@@ -232,7 +232,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                                   <Fragment key={service}>
                                     <ResourceIcon type="service" />
                                     <Link
-                                      to={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                                      to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                                     >
                                       {service.split('@')[0]}
                                     </Link>

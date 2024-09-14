@@ -1,5 +1,7 @@
+import { AvailableProtocols } from '@API/REST.enum';
+
 export function getIdAndNameFromUrlParams(urlParams: string) {
   const params = urlParams.split('@');
 
-  return { id: params[1], name: params[0], protocol: params[2] };
+  return { name: params[0], id: params[1], protocol: params[2] as AvailableProtocols };
 }

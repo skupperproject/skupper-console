@@ -1,10 +1,8 @@
-import { useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
 import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useSuspenseQueries } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
@@ -13,30 +11,23 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 
 import Overview from '../components/Overview.';
 import ProcessList from '../components/ProcessList';
-import { ComponentLabels, QueriesComponent } from '../ProcessGroups.enum';
+import { ComponentLabels } from '../Components.enum';
+import { useComponentData } from '../hooks/useComponentData';
 
-const ProcessGroup = function () {
-  const [searchParams] = useSearchParams();
-  const type = searchParams.get('type') || ComponentLabels.Overview;
+interface ComponentProps {
+  id: string;
+  defaultTab: string;
+}
 
-  const { id } = useParams() as { id: string };
-  const { id: processGroupId } = getIdAndNameFromUrlParams(id);
-  const [tabSelected, setTabSelected] = useState(type);
+const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
+  const {
+    component,
+    processes,
+    summary: { processCount }
+  } = useComponentData(id);
 
+  const [tabSelected, setTabSelected] = useState(defaultTab);
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
-
-  const [{ data: processes }, { data: component }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesComponent.GetProcessesByProcessGroup, { groupIdentity: processGroupId }],
-        queryFn: () => RESTApi.fetchProcessesResult({ endTime: 0, groupIdentity: processGroupId })
-      },
-      {
-        queryKey: [QueriesComponent.GetProcessGroup, processGroupId],
-        queryFn: () => RESTApi.fetchProcessGroup(processGroupId)
-      }
-    ]
-  });
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as ComponentLabels);
@@ -51,9 +42,9 @@ const ProcessGroup = function () {
           title={
             <TabTitleText>
               {ComponentLabels.Processes}{' '}
-              {!!component.processCount && (
+              {!!processCount && (
                 <Badge isRead key={1}>
-                  {component.processCount}
+                  {processCount}
                 </Badge>
               )}
             </TabTitleText>
@@ -65,9 +56,9 @@ const ProcessGroup = function () {
 
   return (
     <MainContainer
-      dataTestId={getTestsIds.componentView(processGroupId)}
+      dataTestId={getTestsIds.componentView(id)}
       title={component.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Components}&${TopologyURLQueyParams.IdSelected}=${processGroupId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Components}&${TopologyURLQueyParams.IdSelected}=${id}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
@@ -79,4 +70,14 @@ const ProcessGroup = function () {
   );
 };
 
-export default ProcessGroup;
+const Component = function () {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') || ComponentLabels.Overview;
+
+  const { id: paramId } = useParams();
+  const { id } = getIdAndNameFromUrlParams(paramId as string);
+
+  return <ComponentContent defaultTab={type} id={id} />;
+};
+
+export default Component;

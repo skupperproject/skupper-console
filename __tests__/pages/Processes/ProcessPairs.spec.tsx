@@ -6,7 +6,6 @@ import * as router from 'react-router';
 
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';
-import { AvailableProtocols } from '../../../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -24,9 +23,7 @@ describe('Begin testing the Processes component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    jest
-      .spyOn(router, 'useParams')
-      .mockReturnValue({ processPair: `${'test'}@${processPairsResultOpToCart.identity}` });
+    jest.spyOn(router, 'useParams').mockReturnValue({ id: `${'test'}@${processPairsResultOpToCart.identity}` });
   });
 
   afterEach(() => {
@@ -55,10 +52,7 @@ describe('Begin testing the Processes component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsContent
-            processPairId={processPairsResultOpToCart.identity}
-            protocol={AvailableProtocols.Http2}
-          />
+          <ProcessPairsContent id={processPairsResultOpToCart.identity} />
         </Suspense>
       </Wrapper>
     );
@@ -74,10 +68,7 @@ describe('Begin testing the Processes component', () => {
     const { queryByTestId, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsContent
-            processPairId={processPairsResultDatabaseToPayment.identity}
-            protocol={AvailableProtocols.Tcp}
-          />
+          <ProcessPairsContent id={processPairsResultDatabaseToPayment.identity} />
         </Suspense>
       </Wrapper>
     );
@@ -93,10 +84,7 @@ describe('Begin testing the Processes component', () => {
     const { queryByTestId, getByText, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsContent
-            processPairId={processPairsResultPayment2ToOp.identity}
-            protocol={AvailableProtocols.Tcp}
-          />
+          <ProcessPairsContent id={processPairsResultPayment2ToOp.identity} />
         </Suspense>
       </Wrapper>
     );

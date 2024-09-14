@@ -216,6 +216,7 @@ export const MockApi = {
 
     return { results };
   },
+
   getProcesses: (_: unknown, { queryParams, url }: ApiProps) => {
     const processesForPerfTests = ITEM_COUNT ? mockProcessesForPerf : [];
     const results = [...processes.results, ...processesForPerfTests];
@@ -247,8 +248,29 @@ export const MockApi = {
       ...processes,
       results: paginatedResults,
       count: filteredResults.length,
-      totalCount: filteredResults.length,
       timeRangeCount: filteredResults.length
+    };
+  },
+
+  getServices: (_: unknown, { queryParams }: ApiProps) => {
+    let results = services.results;
+
+    if (queryParams.name || queryParams.protocol) {
+      results = results.filter(
+        ({ name, protocol }: ServiceResponse) =>
+          name.startsWith(queryParams.name as string) || protocol.startsWith(queryParams.protocol as string)
+      );
+    }
+
+    const paginatedResults = results.slice(
+      Number(queryParams.offset || 0),
+      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length - 1)
+    );
+
+    return {
+      results: paginatedResults,
+      count: results.length,
+      timeRangeCount: results.length
     };
   },
 
@@ -287,6 +309,12 @@ export const MockApi = {
   getProcessPair: (_: unknown, { params: { id } }: ApiProps) => ({
     results: processPairs.results.find(({ identity }) => identity === id) || []
   }),
+
+  getService: (_: unknown, { params: { id } }: ApiProps) => {
+    const results = services.results.find(({ identity }: ServiceResponse) => identity === id);
+
+    return { results };
+  },
 
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
     if (
@@ -363,6 +391,8 @@ export const MockApiPaths = {
   SitePairs: `${prefix}/sitepairs`,
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
+  Services: `${prefix}/addresses`,
+  Service: `${prefix}/addresses/:id`,
   Processes: `${prefix}/processes`,
   ProcessPairs: `${prefix}/processpairs`,
   ProcessPair: `${prefix}/processpairs/:id`,
@@ -393,6 +423,8 @@ export function loadMockServer() {
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
+      this.get(MockApiPaths.Services, MockApi.getServices);
+      this.get(MockApiPaths.Service, MockApi.getService);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
       this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
@@ -448,7 +480,6 @@ export function loadMockServer() {
         results: flowPairs.results.find(({ identity }: ServiceResponse) => identity === id)
       }));
 
-      this.get(`${prefix}/addresses`, () => services);
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }
   });

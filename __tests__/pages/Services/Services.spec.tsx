@@ -59,7 +59,7 @@ describe('Begin testing the Service component', () => {
 
     expect(screen.getByRole('link', { name: service.name })).toHaveAttribute(
       'href',
-      `#/services/${service.name}@${service.identity}@${service.protocol}`
+      `#/services/${service.name}@${service.identity}`
     );
   });
 });

@@ -3,38 +3,28 @@ import { FC } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useParams } from 'react-router-dom';
 
-import { AvailableProtocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
+import FlowPairsList from '../components/FlowPairsList';
 import ProcessPairDetails from '../components/ProcessPairsDetails';
-import ProcessPairsFlows from '../components/ProcessPairsFlows';
-import useProcessPairData from '../hooks/useProcessPairsData';
+import { useProcessPairData } from '../hooks/useProcessPairsData';
 import { ProcessesLabels } from '../Processes.enum';
 
-const ProcessPairs = function () {
-  const { processPair } = useParams() as { processPair: string };
-
-  const { id: processPairId, protocol } = getIdAndNameFromUrlParams(processPair);
-
-  return <ProcessPairsContent processPairId={processPairId} protocol={protocol as AvailableProtocols} />;
-};
-
-export interface ProcessPairsContentProps {
-  processPairId: string;
-  protocol: AvailableProtocols | 'undefined';
+export interface ProcessPairsProps {
+  id: string;
 }
 
-export const ProcessPairsContent: FC<ProcessPairsContentProps> = function ({ processPairId, protocol }) {
-  const { source, destination } = useProcessPairData({ processPairId });
+export const ProcessPairsContent: FC<ProcessPairsProps> = function ({ id }) {
+  const { processPairs, source, destination } = useProcessPairData({ id });
 
   return (
     <MainContainer
-      dataTestId={getTestsIds.processPairsView(processPairId)}
+      dataTestId={getTestsIds.processPairsView(id)}
       title={ProcessesLabels.Title}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${processPairId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${id}`}
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
@@ -42,16 +32,23 @@ export const ProcessPairsContent: FC<ProcessPairsContentProps> = function ({ pro
           </StackItem>
 
           <StackItem isFilled>
-            <ProcessPairsFlows
+            <FlowPairsList
               sourceProcessId={source.identity}
               destProcessId={destination.identity}
-              protocol={protocol}
+              protocol={processPairs.protocol}
             />
           </StackItem>
         </Stack>
       }
     />
   );
+};
+
+const ProcessPairs = function () {
+  const { id: paramId } = useParams();
+  const { id } = getIdAndNameFromUrlParams(paramId as string);
+
+  return <ProcessPairsContent id={id} />;
 };
 
 export default ProcessPairs;

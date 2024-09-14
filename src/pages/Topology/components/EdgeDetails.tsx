@@ -194,7 +194,7 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                     <Stack>
                       <StackItem>
                         <Link
-                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${ProcessesLabels.ProcessPairs}@${itemSelected.identity}@${itemSelected.protocol}`}
+                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${ProcessesLabels.ProcessPairs}@${itemSelected.identity}`}
                         >
                           {TopologyLabels.TopologyModalAction2}
                         </Link>

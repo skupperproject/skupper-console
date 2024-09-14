@@ -31,10 +31,8 @@ export interface HTTPError extends AxiosError {
 
 export type ResponseWrapper<T> = {
   results: T; // Type based on the Response interface
-  status: string; // this field is for debug scope. Empty value => OK. In case we have some internal BE error that is not a http status this field is not empty. For example a value can be `Malformed sortBy query`
   count: number;
   timeRangeCount: number;
-  totalCount: number;
 };
 
 /* Response Interfaces */

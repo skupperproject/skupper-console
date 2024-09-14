@@ -61,7 +61,7 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
   });
 
   return {
-    sites,
+    sites: sites.results,
     sitesPairs,
     routerLinks,
     metrics

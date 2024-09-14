@@ -1,81 +1,38 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
-
-import { RESTApi } from '@API/REST.api';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
 import { SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
-import { QueriesSites } from '../Sites.enum';
-
-const PREFIX_METRIC_FILTERS_CACHE_KEY = 'site-metric-filter';
-const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `site-open-metric-sections`;
+import { useSiteProcessOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
   site: SiteResponse;
 }
 
-const Overview: FC<OverviewProps> = function ({ site }) {
-  const { identity: siteId, name } = site;
-
-  const sitePairsTxQueryParams = {
-    sourceId: siteId
-  };
-
-  const sitePairsRxQueryParams = {
-    destinationId: siteId
-  };
-
-  const [{ data: sitePairsTx }, { data: sitePairsRx }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesSites.GetSitesPairs, sitePairsTxQueryParams],
-        queryFn: () => RESTApi.fetchSitesPairs(sitePairsTxQueryParams)
-      },
-      {
-        queryKey: [QueriesSites.GetSitesPairs, sitePairsRxQueryParams],
-        queryFn: () => RESTApi.fetchSitesPairs(sitePairsRxQueryParams)
-      }
-    ]
-  });
-
-  const handleSelectedFilters = useCallback(
-    (filters: QueryMetricsParams) => {
-      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`, filters);
-    },
-    [siteId]
-  );
-
-  const handleGetExpandedSectionsConfig = useCallback(
-    (sections: ExpandedMetricSections) => {
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`, sections);
-    },
-    [siteId]
-  );
+const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) {
+  const { pairsTx, pairsRx } = useSiteProcessOverviewData(id);
+  const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } = useMetricSessionHandlers(id);
 
   const sourceSites = [{ destinationName: name }];
   const destSites = removeDuplicatesFromArrayOfObjects([
-    ...createDestProcesses(sitePairsTx, 'destinationName'),
-    ...createDestProcesses(sitePairsRx, 'sourceName')
+    ...createDestSites(pairsTx, 'destinationName'),
+    ...createDestSites(pairsRx, 'sourceName')
   ]);
 
-  const uniqueProtocols = [...new Set([...sitePairsTx, ...sitePairsRx].map((item) => item.protocol))];
+  const uniqueProtocols = [...new Set([...pairsTx, ...pairsRx].map((item) => item.protocol))];
 
   return (
     <Metrics
-      key={siteId}
+      key={id}
       sourceSites={sourceSites}
       destSites={destSites}
       availableProtocols={uniqueProtocols}
-      defaultOpenSections={{
-        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
-      }}
+      defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
         sourceSite: name,
-        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
+        ...selectedFilters
       }}
       configFilters={{
         sourceSites: { disabled: true },
@@ -83,15 +40,15 @@ const Overview: FC<OverviewProps> = function ({ site }) {
         destinationProcesses: { hide: true },
         sourceProcesses: { hide: true }
       }}
-      onGetMetricFiltersConfig={handleSelectedFilters}
-      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
+      onGetMetricFiltersConfig={setSelectedFilters}
+      onGetExpandedSectionsConfig={setVisibleMetrics}
     />
   );
 };
 
 export default Overview;
 
-const createDestProcesses = (sitePairs: SitePairsResponse[], nameKey: keyof SitePairsResponse) => [
+const createDestSites = (sitePairs: SitePairsResponse[], nameKey: keyof SitePairsResponse) => [
   ...(sitePairs || []).map(({ [nameKey]: namePair }) => ({
     destinationName: namePair as string,
     siteName: ''

@@ -47,7 +47,7 @@ describe('Processes Pairs component', () => {
 
     expect(screen.getAllByRole('link', { name: 'view pairs' })[1]).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}@${processPairsResult.protocol}?type=${ProcessesLabels.ProcessPairs}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}?type=${ProcessesLabels.ProcessPairs}`
     );
   });
 });

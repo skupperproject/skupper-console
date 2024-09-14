@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkExposedCell from '@core/components/SkExposedCell';
 import { timeAgo } from '@core/utils/timeAgo';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from '@sk-types/REST.interfaces';
@@ -70,7 +70,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                 <DescriptionListTerm>{ProcessesLabels.ProcessGroup}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="component" />
-                  <Link to={`${ComponentRoutesPaths.ProcessGroups}/${groupName}@${groupIdentity}`}>{groupName}</Link>
+                  <Link to={`${ComponentRoutesPaths.Components}/${groupName}@${groupIdentity}`}>{groupName}</Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
