@@ -44,7 +44,6 @@ const Topology = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.topologyView()}
-      isPlain
       title={TopologyLabels.Topology}
       description={TopologyLabels.Description}
       hasMainContentPadding

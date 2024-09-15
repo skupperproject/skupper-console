@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import TcpConnections from '@pages/Services/components/TcpConnections';
+import TcpTerminatedConnections from '@pages/Services/components/TcpTerminatedConnections';
 
 import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
@@ -14,7 +14,7 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 
 const servicesResults = servicesData.results;
-const tcpBiFlowOpen = flowPairsData.results[5];
+const tcpBiFlowTerminated = flowPairsData.results[6];
 
 describe('Begin testing the TCP connections component', () => {
   let server: Server;
@@ -29,19 +29,20 @@ describe('Begin testing the TCP connections component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the Connection view -> Open connections after the data loading is complete', async () => {
-    render(
+  it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
+    const { queryByTestId, getByText, getAllByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpConnections id={servicesResults[4].identity} name={servicesResults[4].name} />
+          <TcpTerminatedConnections id={servicesResults[4].identity} name={servicesResults[4].name} />
         </Suspense>
       </Wrapper>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+    await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(tcpBiFlowOpen.sourceProcessName)[0]).toBeInTheDocument();
+    expect(getAllByText(tcpBiFlowTerminated.sourceProcessName)[0]).toBeInTheDocument();
+    expect(getByText('Closed')).toBeInTheDocument();
   });
 });

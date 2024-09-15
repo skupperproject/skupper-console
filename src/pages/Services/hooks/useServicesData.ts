@@ -26,7 +26,7 @@ const useServicesData = ({ limit }: useServicesDataProps) => {
       },
       {
         queryKey: [QueriesServices.GetPrometheusActiveFlows],
-        queryFn: () => PrometheusApi.fetchTcpActiveFlowsByService(),
+        queryFn: () => PrometheusApi.fetchOpenConnectionsByService(),
         refetchInterval: UPDATE_INTERVAL
       }
     ]

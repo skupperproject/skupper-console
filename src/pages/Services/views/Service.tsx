@@ -10,9 +10,12 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 
 import HttpRequests from '../components/HttpRequests';
 import NavigationMenu from '../components/NavigationMenu';
+import Overview from '../components/Overview';
+import Servers from '../components/Servers';
 import TcpConnections from '../components/TcpConnections';
+import TcpTerminatedConnections from '../components/TcpTerminatedConnections';
 import useServiceData from '../hooks/useServiceData';
-import { TAB_0_KEY } from '../Services.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, TAB_4_KEY } from '../Services.constants';
 
 interface ServiceProps {
   id: string;
@@ -30,7 +33,6 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
   return (
     <MainContainer
       dataTestId={getTestsIds.serviceView(id)}
-      isPlain
       title={name}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${id}`}
       navigationComponent={
@@ -46,10 +48,11 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       }
       mainContentChildren={
         <>
-          {protocol === AvailableProtocols.Tcp && <TcpConnections name={name} id={id} viewSelected={menuSelected} />}
-          {(protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2) && (
-            <HttpRequests name={name} id={id} viewSelected={menuSelected} />
-          )}
+          {menuSelected === TAB_0_KEY && <Overview id={id} name={name} />}
+          {menuSelected === TAB_1_KEY && <Servers id={id} />}
+          {menuSelected === TAB_3_KEY && <TcpConnections name={name} id={id} />}
+          {menuSelected === TAB_4_KEY && <TcpTerminatedConnections name={name} id={id} />}
+          {menuSelected === TAB_2_KEY && protocol !== AvailableProtocols.Tcp && <HttpRequests name={name} id={id} />}
         </>
       }
     />

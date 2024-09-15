@@ -34,7 +34,6 @@ interface MainContainerProps {
   linkLabel?: string;
   iconName?: 'topologyIcon' | 'listIcon';
   description?: string;
-  isPlain?: boolean;
   hasMainContentPadding?: boolean;
   navigationComponent?: ReactElement;
   mainContentChildren?: ReactElement;

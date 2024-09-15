@@ -1,10 +1,10 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE } from '@config/config';
+import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 import { FlowPairLabels } from '@core/components/SkFlowPairsTable/FlowPair.enum';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { ServiceResponse, ProcessResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
@@ -22,7 +22,8 @@ export const customServiceCells = {
       ...props,
       type: 'service',
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
-    })
+    }),
+  TimestampCell: (props: SkLinkCellProps<ProcessResponse>) => SkEndTimeCell(props)
 };
 
 // Services Table
@@ -45,7 +46,6 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
     name: ServicesLabels.CurrentFlowPairs,
     columnDescription: 'Open connections',
-
     prop: 'currentFlows' as keyof ServiceResponse,
     width: 15
   }
@@ -59,24 +59,19 @@ export const tcpServerColumns = [
     customCellName: 'linkCell'
   },
   {
-    name: ProcessesLabels.Component,
-    prop: 'groupName' as keyof ProcessResponse,
-    customCellName: 'linkComponentCell'
-  },
-  {
     name: ProcessesLabels.Site,
     prop: 'parentName' as keyof ProcessResponse,
     customCellName: 'linkCellSite'
   },
   {
-    name: ProcessesLabels.ByteRateRx,
-    prop: 'byteRate' as keyof ProcessResponse,
-    customCellName: 'ByteRateFormatCell'
+    name: ProcessesLabels.Component,
+    prop: 'groupName' as keyof ProcessResponse,
+    customCellName: 'linkComponentCell'
   },
   {
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
-    format: timeAgo
+    customCellName: 'TimestampCell'
   }
 ];
 
@@ -116,11 +111,6 @@ export const servicesSelectOptions: { name: string; id: string }[] = [
 ];
 
 // Filters
-export const initServersQueryParams = {
-  limit: BIG_PAGINATION_SIZE,
-  endTime: 0 // active servers
-};
-
 export const initActiveConnectionsQueryParams: QueryFilters = {
   state: TcpStatus.Active,
   limit: BIG_PAGINATION_SIZE,

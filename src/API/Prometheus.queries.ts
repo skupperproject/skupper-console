@@ -26,7 +26,7 @@ export const queries = {
   },
 
   // count the number of active tcp flows in the services table
-  getTcpActiveFlowsByService() {
+  getOpenConnectionsByService() {
     return `sum by(${PrometheusLabelsV2.RoutingKey})(${PrometheusMetricsV2.TcpOpenConnections}{protocol="${AvailableProtocols.Tcp}"}-${PrometheusMetricsV2.TcpCloseCOnnections}{protocol="${AvailableProtocols.Tcp}"})`;
   },
 
@@ -74,13 +74,6 @@ export const queries = {
   },
 
   // SERVICES queries
-  // calculate the open connections count (used in the services table)
-
-  // calculate the TCP byterate for exposed services
-  getTcpByteRateByService(serviceName: string) {
-    return `rate(${PrometheusMetricsV2.SentBytes}{protocol="tcp",  ${PrometheusLabelsV2.RoutingKey}="${serviceName}"}[1m])`;
-  },
-
   // calculate the byterate used by the sankey diagram in the requests/connections page
   getResourcePairsByService(param: string, groupBy: string, time: string) {
     return `sum by(${groupBy})(rate(${PrometheusMetricsV2.SentBytes}{${param}}[${time}]) > 0)`;

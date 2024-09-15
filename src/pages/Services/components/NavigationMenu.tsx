@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Badge, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
+import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 
 import { AvailableProtocols } from '@API/REST.enum';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
@@ -39,37 +39,23 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
       <Tab
         isDisabled={!serverCount}
         eventKey={TAB_1_KEY}
-        title={
-          <TabTitleText>
-            {`${ServicesLabels.Servers} `}
-            {!!serverCount && (
-              <Badge isRead key={1}>
-                {serverCount}
-              </Badge>
-            )}
-          </TabTitleText>
-        }
+        title={<TabTitleText>{`${ServicesLabels.Servers} `}</TabTitleText>}
+      />
+      <Tab
+        isDisabled={!tcpActiveConnectionCount}
+        eventKey={TAB_3_KEY}
+        title={<TabTitleText>{ServicesLabels.ActiveConnections}</TabTitleText>}
+      />
+      <Tab
+        isDisabled={!tcpTerminatedConnectionCount}
+        eventKey={TAB_4_KEY}
+        title={<TabTitleText>{ServicesLabels.OldConnections}</TabTitleText>}
       />
       {protocol !== AvailableProtocols.Tcp && (
         <Tab
           isDisabled={!requestsCount}
           eventKey={TAB_2_KEY}
           title={<TabTitleText>{ServicesLabels.Requests}</TabTitleText>}
-        />
-      )}
-      {protocol === AvailableProtocols.Tcp && (
-        <Tab
-          isDisabled={!tcpActiveConnectionCount}
-          eventKey={TAB_3_KEY}
-          title={<TabTitleText>{ServicesLabels.ActiveConnections}</TabTitleText>}
-        />
-      )}
-
-      {protocol === AvailableProtocols.Tcp && (
-        <Tab
-          isDisabled={!tcpTerminatedConnectionCount}
-          eventKey={TAB_4_KEY}
-          title={<TabTitleText>{ServicesLabels.OldConnections}</TabTitleText>}
         />
       )}
     </Tabs>
