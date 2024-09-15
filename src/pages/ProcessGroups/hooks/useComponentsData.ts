@@ -5,7 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { Role } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
+import { QueryFilters } from '@sk-types/REST.interfaces';
 
 import { QueriesComponent } from '../Components.enum';
 
@@ -16,7 +16,7 @@ const defaultQueryParams = {
 };
 
 export const useComponentsData = () => {
-  const [queryParams, setQueryParams] = useState<RemoteFilterOptions>(defaultQueryParams);
+  const [queryParams, setQueryParams] = useState<QueryFilters>(defaultQueryParams);
 
   const { data } = useSuspenseQuery({
     queryKey: [QueriesComponent.GetComponents, queryParams],
@@ -24,7 +24,7 @@ export const useComponentsData = () => {
     refetchInterval: UPDATE_INTERVAL
   });
 
-  function handleGetFilters(filters: RemoteFilterOptions) {
+  function handleGetFilters(filters: QueryFilters) {
     startTransition(() => {
       setQueryParams((prevQueryParams) => ({ ...prevQueryParams, ...filters }));
     });

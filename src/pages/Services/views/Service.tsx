@@ -24,10 +24,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
 
   const {
     service: { name, protocol },
-    serverCount,
-    requestsCount,
-    tcpActiveConnectionCount,
-    tcpTerminatedConnectionCount
+    summary: { serverCount, requestsCount, activeConnectionCount, terminatedConnectionCount }
   } = useServiceData(id);
 
   return (
@@ -41,19 +38,17 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
           protocol={protocol}
           serverCount={serverCount}
           requestsCount={requestsCount}
-          tcpActiveConnectionCount={tcpActiveConnectionCount}
-          tcpTerminatedConnectionCount={tcpTerminatedConnectionCount}
+          tcpActiveConnectionCount={activeConnectionCount}
+          tcpTerminatedConnectionCount={terminatedConnectionCount}
           menuSelected={menuSelected}
           onMenuSelected={(index) => setMenuSelected(index)}
         />
       }
       mainContentChildren={
         <>
-          {protocol === AvailableProtocols.Tcp && (
-            <TcpConnections serviceName={name} serviceId={id} protocol={protocol} viewSelected={menuSelected} />
-          )}
+          {protocol === AvailableProtocols.Tcp && <TcpConnections name={name} id={id} viewSelected={menuSelected} />}
           {(protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2) && (
-            <HttpRequests serviceName={name} serviceId={id} protocol={protocol} viewSelected={menuSelected} />
+            <HttpRequests name={name} id={id} viewSelected={menuSelected} />
           )}
         </>
       }

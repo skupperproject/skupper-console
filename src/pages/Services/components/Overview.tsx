@@ -1,70 +1,39 @@
 import { FC } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
-
-import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
+import { extractUniqueValues } from '@core/utils/extractUniqueValues';
+import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import Metrics from '@pages/shared/Metrics';
 import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
 
-import { QueriesServices } from '../Services.enum';
+import { useServiceOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
-  serviceId: string;
-  serviceName: string;
-  protocol: AvailableProtocols;
+  id: string;
+  name: string;
 }
 
-const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol }) {
-  const { data: processPairs } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
-    queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
-    refetchInterval: UPDATE_INTERVAL
-  });
+const Overview: FC<OverviewProps> = function ({ id, name }) {
+  const { pairs } = useServiceOverviewData(id);
+  const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } = useMetricSessionHandlers(name);
 
-  const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } =
-    useMetricSessionHandlers(serviceId);
+  const sourceProcesses = mapDataToMetricFilterOptions(pairs, 'sourceName', 'sourceSiteName');
+  const destProcesses = mapDataToMetricFilterOptions(pairs, 'destinationName', 'destinationSiteName');
+  const sourceSites = mapDataToMetricFilterOptions(pairs, 'sourceSiteName');
+  const destSites = mapDataToMetricFilterOptions(pairs, 'destinationSiteName');
 
-  const processPairsResults = processPairs?.results || [];
-
-  const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ sourceName, sourceSiteName }) => ({
-      destinationName: sourceName,
-      siteName: sourceSiteName
-    }))
-  );
-  const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ destinationName, destinationSiteName }) => ({
-      destinationName,
-      siteName: destinationSiteName
-    }))
-  );
-
-  const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ destinationSiteName }) => ({
-      destinationName: destinationSiteName
-    }))
-  );
-
-  const sourceSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ sourceSiteName }) => ({
-      destinationName: sourceSiteName
-    }))
-  );
+  const uniqueProtocols = extractUniqueValues(pairs, 'protocol');
 
   return (
     <Metrics
-      key={serviceId}
+      key={id}
       sourceSites={sourceSites}
       destSites={destSites}
       sourceProcesses={sourceProcesses}
       destProcesses={destProcesses}
-      availableProtocols={[protocol]}
+      availableProtocols={uniqueProtocols}
       defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
-        service: serviceName,
+        service: name,
         ...selectedFilters
       }}
       configFilters={{

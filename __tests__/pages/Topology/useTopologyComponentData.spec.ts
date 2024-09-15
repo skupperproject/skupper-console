@@ -13,10 +13,12 @@ describe('useTopologyComponentData', () => {
   });
 
   const components = { results: [{ identity: 'component1' }, { identity: 'component2' }, { identity: 'component3' }] };
-  const componentPairs = [
-    { sourceId: 'component1', destinationId: 'component2' },
-    { sourceId: 'component2', destinationId: 'component3' }
-  ];
+  const componentPairs = {
+    results: [
+      { sourceId: 'component1', destinationId: 'component2' },
+      { sourceId: 'component2', destinationId: 'component3' }
+    ]
+  };
 
   it('should call useTopologyComponentData', async () => {
     (useSuspenseQueries as jest.Mock).mockReturnValue([{ data: components }, { data: componentPairs }]);
@@ -25,7 +27,7 @@ describe('useTopologyComponentData', () => {
 
     await waitFor(() => {
       expect(result.current.components).toEqual(components.results);
-      expect(result.current.componentsPairs).toEqual(componentPairs);
+      expect(result.current.componentsPairs).toEqual(componentPairs.results);
     });
   });
 });

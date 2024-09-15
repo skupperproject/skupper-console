@@ -1,10 +1,8 @@
 import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
@@ -13,7 +11,8 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 
 import Details from '../components/Details';
 import Overview from '../components/Overview.';
-import { SiteLabels, QueriesSites } from '../Sites.enum';
+import { useSiteData } from '../hooks/useSiteData';
+import { SiteLabels } from '../Sites.enum';
 
 interface SiteProps {
   id: string;
@@ -21,10 +20,7 @@ interface SiteProps {
 }
 
 const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
-  const { data: site } = useSuspenseQuery({
-    queryKey: [QueriesSites.GetSite, id],
-    queryFn: () => RESTApi.fetchSite(id)
-  });
+  const { site } = useSiteData(id);
 
   const [tabSelected, setTabSelected] = useState(defaultTab);
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);

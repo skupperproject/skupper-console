@@ -30,13 +30,14 @@ interface DetailsProps {
   site: SiteResponse;
 }
 
-const Details: FC<DetailsProps> = function ({ site }) {
-  const { identity: siteId, nameSpace, siteVersion, platform } = site;
+const Details: FC<DetailsProps> = function ({ site: { identity: id, nameSpace, siteVersion, platform } }) {
+  const { sites, links, processes } = useSiteDetailsData(id);
 
-  const { sites, links, processes } = useSiteDetailsData(siteId);
-
-  const { linkSiteIds } = SitesController.bindLinksWithSiteIds([site], links)[0];
-  const linkedSites = sites.filter(({ identity }) => linkSiteIds.map((id) => id.targetId).includes(identity));
+  const { linkSiteIds } = SitesController.bindLinksWithSiteIds(
+    sites.filter(({ identity }) => identity === id),
+    links
+  )[0];
+  const linkedSites = sites.filter(({ identity }) => linkSiteIds.map(({ targetId }) => targetId).includes(identity));
 
   return (
     <Grid hasGutter sm={12} xl={6} xl2={6}>

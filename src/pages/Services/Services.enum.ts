@@ -35,7 +35,7 @@ export enum ServicesLabels {
   AvgByteRateRx = 'Avg. rate responses',
   AvgByteRateTx = 'Avg. rate requests',
   Overview = 'Overview',
-  Servers = 'Exposed servers',
+  Servers = 'Servers',
   SankeyChartTitle = 'Process and site pairs',
   SankeyChartDescription = 'Visualizing relationships and the distribution among processes and sites',
   Name = 'Routing key',

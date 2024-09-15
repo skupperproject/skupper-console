@@ -21,5 +21,9 @@ export const useComponentData = (id: string) => {
     ]
   });
 
-  return { component, processes: processes.results, summary: { processCount: component.processCount } };
+  return {
+    component: component.results,
+    processes: processes.results,
+    summary: { processCount: component.results.processCount || 0 }
+  };
 };

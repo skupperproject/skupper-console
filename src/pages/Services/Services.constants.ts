@@ -6,7 +6,7 @@ import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { timeAgo } from '@core/utils/timeAgo';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@sk-types/REST.interfaces';
+import { ServiceResponse, ProcessResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
@@ -98,10 +98,11 @@ export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
   show: tcpHiddenColumns[flowPair.name]?.show
 }));
 
-export const TAB_0_KEY = '0';
-export const TAB_1_KEY = '1';
-export const TAB_2_KEY = '2';
-export const TAB_3_KEY = '3';
+export const TAB_0_KEY = ServicesLabels.Overview;
+export const TAB_1_KEY = ServicesLabels.Servers;
+export const TAB_2_KEY = ServicesLabels.Requests;
+export const TAB_3_KEY = ServicesLabels.ActiveConnections;
+export const TAB_4_KEY = ServicesLabels.OldConnections;
 
 export const servicesSelectOptions: { name: string; id: string }[] = [
   {
@@ -120,21 +121,21 @@ export const initServersQueryParams = {
   endTime: 0 // active servers
 };
 
-export const initActiveConnectionsQueryParams: RemoteFilterOptions = {
+export const initActiveConnectionsQueryParams: QueryFilters = {
   state: TcpStatus.Active,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-export const initOldConnectionsQueryParams: RemoteFilterOptions = {
+export const initOldConnectionsQueryParams: QueryFilters = {
   state: TcpStatus.Terminated,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-export const initRequestsQueryParams: RemoteFilterOptions = {
+export const initRequestsQueryParams: QueryFilters = {
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC

@@ -34,5 +34,5 @@ export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
     ]
   });
 
-  return { processPairs: processPairs.results, source, destination };
+  return { processPairs: processPairs.results, source: source.results, destination: destination.results };
 };

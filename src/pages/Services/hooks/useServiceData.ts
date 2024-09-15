@@ -28,37 +28,42 @@ const useServiceData = (serviceId: string) => {
   });
 
   const { data: serversData } = useQuery({
-    queryKey: [QueriesServices.GetProcessesByService, { ...initServersQueryParams, addresses: [service.identity] }],
-    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [service.identity] }),
+    queryKey: [
+      QueriesServices.GetProcessesByService,
+      { ...initServersQueryParams, addresses: [service.results.identity] }
+    ],
+    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [service.results.identity] }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: requestsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, initServersQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairs({ ...initServersQueryParams, routingKey: service.name }),
-    enabled: service.protocol !== AvailableProtocols.Tcp,
+    queryFn: () => RESTApi.fetchFlowPairs({ ...initServersQueryParams, routingKey: service.results.name }),
+    enabled: service.results.protocol !== AvailableProtocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, activeConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairs({ ...activeConnectionsQueryParams, routingKey: service.name }),
+    queryFn: () => RESTApi.fetchFlowPairs({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, terminatedConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairs({ ...terminatedConnectionsQueryParams, routingKey: service.name }),
-    enabled: service.protocol === AvailableProtocols.Tcp,
+    queryFn: () => RESTApi.fetchFlowPairs({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
+    enabled: service.results.protocol === AvailableProtocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 
   return {
-    service,
-    serverCount: serversData?.timeRangeCount || 0,
-    requestsCount: requestsData?.timeRangeCount || 0,
-    tcpActiveConnectionCount: activeConnectionsData?.timeRangeCount || 0,
-    tcpTerminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0
+    service: service.results,
+    summary: {
+      serverCount: serversData?.timeRangeCount || 0,
+      requestsCount: requestsData?.timeRangeCount || 0,
+      activeConnectionCount: activeConnectionsData?.timeRangeCount || 0,
+      terminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0
+    }
   };
 };
 

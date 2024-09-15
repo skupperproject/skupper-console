@@ -23,7 +23,7 @@ const useTopologyComponentData = () => {
 
       {
         queryKey: [QueriesTopology.GetProcessGroupsPairs],
-        queryFn: () => RESTApi.fetchProcessGroupsPairs(),
+        queryFn: () => RESTApi.fetchComponentsPairs(),
         refetchInterval: UPDATE_INTERVAL
       }
     ]
@@ -31,7 +31,7 @@ const useTopologyComponentData = () => {
 
   return {
     components: components.results,
-    componentsPairs
+    componentsPairs: componentsPairs.results
   };
 };
 

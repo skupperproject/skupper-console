@@ -9,11 +9,10 @@ import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { AvailableProtocols } from '../../../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../../../src/pages/Services/Services.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_3_KEY, TAB_4_KEY } from '../../../src/pages/Services/Services.constants';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 
@@ -39,12 +38,7 @@ describe('Begin testing the TCP connections component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpConnections
-            serviceId={servicesResults[5].identity}
-            serviceName={servicesResults[5].name}
-            protocol={AvailableProtocols.Tcp}
-            viewSelected={TAB_0_KEY}
-          />
+          <TcpConnections id={servicesResults[5].identity} name={servicesResults[5].name} viewSelected={TAB_0_KEY} />
         </Suspense>
       </Wrapper>
     );
@@ -59,12 +53,7 @@ describe('Begin testing the TCP connections component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpConnections
-            serviceId={servicesResults[2].identity}
-            serviceName={servicesResults[2].name}
-            protocol={AvailableProtocols.Tcp}
-            viewSelected={TAB_1_KEY}
-          />
+          <TcpConnections id={servicesResults[2].identity} name={servicesResults[2].name} viewSelected={TAB_1_KEY} />
         </Suspense>
       </Wrapper>
     );
@@ -79,12 +68,7 @@ describe('Begin testing the TCP connections component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpConnections
-            serviceId={servicesResults[4].identity}
-            serviceName={servicesResults[4].name}
-            protocol={AvailableProtocols.Tcp}
-            viewSelected={TAB_2_KEY}
-          />
+          <TcpConnections id={servicesResults[4].identity} name={servicesResults[4].name} viewSelected={TAB_3_KEY} />
         </Suspense>
       </Wrapper>
     );
@@ -100,12 +84,7 @@ describe('Begin testing the TCP connections component', () => {
     const { queryByTestId, getByText, getAllByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpConnections
-            serviceId={servicesResults[4].identity}
-            serviceName={servicesResults[4].name}
-            protocol={AvailableProtocols.Tcp}
-            viewSelected={TAB_3_KEY}
-          />
+          <TcpConnections id={servicesResults[4].identity} name={servicesResults[4].name} viewSelected={TAB_4_KEY} />
         </Suspense>
       </Wrapper>
     );

@@ -38,5 +38,5 @@ export const useProcessData = (id: string) => {
 
   const processPairsCount = (clientPairs?.timeRangeCount || 0) + (serverPairs?.timeRangeCount || 0);
 
-  return { process, summary: { processPairsCount } };
+  return { process: process.results, summary: { processPairsCount } };
 };

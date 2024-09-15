@@ -9,7 +9,6 @@ import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { AvailableProtocols } from '../../../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -38,12 +37,7 @@ describe('Begin testing the Http requests component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <HttpRequests
-            serviceId={servicesResults[0].identity}
-            serviceName={servicesResults[0].name}
-            protocol={AvailableProtocols.Http2}
-            viewSelected={TAB_0_KEY}
-          />
+          <HttpRequests id={servicesResults[0].identity} name={servicesResults[0].name} viewSelected={TAB_0_KEY} />
         </Suspense>
       </Wrapper>
     );
@@ -58,12 +52,7 @@ describe('Begin testing the Http requests component', () => {
     const { getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <HttpRequests
-            serviceId={servicesResults[0].identity}
-            serviceName={servicesResults[0].name}
-            protocol={AvailableProtocols.Http2}
-            viewSelected={TAB_1_KEY}
-          />
+          <HttpRequests id={servicesResults[0].identity} name={servicesResults[0].name} viewSelected={TAB_1_KEY} />
         </Suspense>
       </Wrapper>
     );
@@ -78,12 +67,7 @@ describe('Begin testing the Http requests component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <HttpRequests
-            serviceId={servicesResults[0].identity}
-            serviceName={servicesResults[0].name}
-            protocol={AvailableProtocols.Http2}
-            viewSelected={TAB_2_KEY}
-          />
+          <HttpRequests id={servicesResults[0].identity} name={servicesResults[0].name} viewSelected={TAB_2_KEY} />
         </Suspense>
       </Wrapper>
     );

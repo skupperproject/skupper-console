@@ -6,7 +6,7 @@ import { AvailableProtocols } from '@API/REST.enum';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, TAB_4_KEY } from '../Services.constants';
 import { ServicesLabels } from '../Services.enum';
 
 interface NavigationMenuProps {
@@ -60,7 +60,7 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
       {protocol === AvailableProtocols.Tcp && (
         <Tab
           isDisabled={!tcpActiveConnectionCount}
-          eventKey={TAB_2_KEY}
+          eventKey={TAB_3_KEY}
           title={<TabTitleText>{ServicesLabels.ActiveConnections}</TabTitleText>}
         />
       )}
@@ -68,7 +68,7 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
       {protocol === AvailableProtocols.Tcp && (
         <Tab
           isDisabled={!tcpTerminatedConnectionCount}
-          eventKey={TAB_3_KEY}
+          eventKey={TAB_4_KEY}
           title={<TabTitleText>{ServicesLabels.OldConnections}</TabTitleText>}
         />
       )}

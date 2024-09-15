@@ -1,27 +1,28 @@
 import { FC } from 'react';
 
+import { extractUniqueValues } from '@core/utils/extractUniqueValues';
+import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
 import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
 import { SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
-import { useSiteProcessOverviewData } from '../hooks/useOverviewData';
+import { useSiteOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
   site: SiteResponse;
 }
 
 const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) {
-  const { pairsTx, pairsRx } = useSiteProcessOverviewData(id);
+  const { pairsTx, pairsRx } = useSiteOverviewData(id);
   const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } = useMetricSessionHandlers(id);
 
   const sourceSites = [{ destinationName: name }];
   const destSites = removeDuplicatesFromArrayOfObjects([
-    ...createDestSites(pairsTx, 'destinationName'),
-    ...createDestSites(pairsRx, 'sourceName')
+    ...mapDataToMetricFilterOptions<SitePairsResponse>(pairsTx, 'destinationName'),
+    ...mapDataToMetricFilterOptions<SitePairsResponse>(pairsRx, 'sourceName')
   ]);
-
-  const uniqueProtocols = [...new Set([...pairsTx, ...pairsRx].map((item) => item.protocol))];
+  const uniqueProtocols = extractUniqueValues([...pairsTx, ...pairsRx], 'protocol');
 
   return (
     <Metrics
@@ -47,10 +48,3 @@ const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) 
 };
 
 export default Overview;
-
-const createDestSites = (sitePairs: SitePairsResponse[], nameKey: keyof SitePairsResponse) => [
-  ...(sitePairs || []).map(({ [nameKey]: namePair }) => ({
-    destinationName: namePair as string,
-    siteName: ''
-  }))
-];

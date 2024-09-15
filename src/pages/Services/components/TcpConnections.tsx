@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { AvailableProtocols } from '@API/REST.enum';
 import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 
 import FlowPairsTable from './FlowPairsTable';
@@ -12,40 +11,39 @@ import Overview from '../components/Overview';
 import {
   TAB_0_KEY,
   TAB_1_KEY,
-  TAB_2_KEY,
   TAB_3_KEY,
+  TAB_4_KEY,
   initActiveConnectionsQueryParams,
   initOldConnectionsQueryParams,
   tcpColumns
 } from '../Services.constants';
 
 interface TcpConnectionsProps {
-  serviceId: string;
-  serviceName: string;
-  protocol: AvailableProtocols;
+  id: string;
+  name: string;
   viewSelected: string;
 }
 
-const TcpConnections: FC<TcpConnectionsProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
+const TcpConnections: FC<TcpConnectionsProps> = function ({ id, name, viewSelected }) {
   const service = {
-    [TAB_2_KEY]: {
-      filters: { ...initActiveConnectionsQueryParams, routingKey: serviceName },
+    [TAB_3_KEY]: {
+      filters: { ...initActiveConnectionsQueryParams, routingKey: name },
       columns: tcpColumns
     },
-    [TAB_3_KEY]: {
-      filters: { ...initOldConnectionsQueryParams, routingKey: serviceName },
+    [TAB_4_KEY]: {
+      filters: { ...initOldConnectionsQueryParams, routingKey: name },
       columns: tcpFlowPairsColumns
     }
   };
 
   return (
     <>
-      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} serviceName={serviceName} protocol={protocol} />}
-      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
-      {(viewSelected === TAB_2_KEY || viewSelected === TAB_3_KEY) && (
+      {viewSelected === TAB_0_KEY && <Overview id={id} name={name} />}
+      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={id} serviceName={name} />}
+      {(viewSelected === TAB_3_KEY || viewSelected === TAB_4_KEY) && (
         <Stack hasGutter>
           <StackItem>
-            <ProcessPairsSankeyChart serviceId={serviceId} serviceName={serviceName} />
+            <ProcessPairsSankeyChart serviceId={id} serviceName={name} />
           </StackItem>
           <StackItem>
             <FlowPairsTable

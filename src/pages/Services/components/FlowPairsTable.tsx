@@ -6,14 +6,14 @@ import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
-import { FlowPairsResponse, RemoteFilterOptions } from '@sk-types/REST.interfaces';
+import { FlowPairsResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 
 interface FlowPairsTableProps {
   columns: SKTableColumn<FlowPairsResponse>[];
-  filters: RemoteFilterOptions;
+  filters: QueryFilters;
   options: { id: string; name: string }[];
   pagination?: number;
 }
@@ -32,7 +32,7 @@ const FlowPairsTable: FC<FlowPairsTableProps> = function ({
     refetchInterval: UPDATE_INTERVAL
   });
 
-  const handleGetFilters = useCallback((params: RemoteFilterOptions) => {
+  const handleGetFilters = useCallback((params: QueryFilters) => {
     startTransition(() => {
       setQueryParams(params);
     });
