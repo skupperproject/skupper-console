@@ -42,6 +42,7 @@ export const ComponentColumns: SKTableColumn<ComponentResponse>[] = [
     name: ComponentLabels.Created,
     prop: 'startTime' as keyof ComponentResponse,
     customCellName: 'TimestampCell',
+    modifier: 'fitContent',
     width: 15
   }
 ];

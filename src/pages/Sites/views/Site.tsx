@@ -21,7 +21,10 @@ interface SiteProps {
 }
 
 const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
-  const { site } = useSiteData(id);
+  const {
+    site,
+    summary: { processCount }
+  } = useSiteData(id);
 
   const [tabSelected, setTabSelected] = useState(defaultTab);
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
@@ -35,7 +38,11 @@ const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
         <Tab eventKey={SiteLabels.Overview} title={<TabTitleText>{SiteLabels.Overview}</TabTitleText>} />
         <Tab eventKey={SiteLabels.Details} title={<TabTitleText>{SiteLabels.Details}</TabTitleText>} />
-        <Tab eventKey={SiteLabels.Processes} title={<TabTitleText>{SiteLabels.Processes}</TabTitleText>} />
+        <Tab
+          eventKey={SiteLabels.Processes}
+          title={<TabTitleText>{SiteLabels.Processes}</TabTitleText>}
+          disabled={!processCount}
+        />
       </Tabs>
     );
   };

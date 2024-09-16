@@ -160,8 +160,6 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
             ? TAB_4_KEY
             : '';
 
-  //         {!activeConnectionsCount && !oldConnectionsCount && !http2RequestsCount && !httpRequestsCount && (
-
   return (
     <>
       {!activeConnectionsCount && !oldConnectionsCount && (
@@ -197,7 +195,7 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           <Tab
             disabled={oldConnectionsCount === 0}
             eventKey={TAB_2_KEY}
-            title={<TabTitleText>{`${ProcessesLabels.OldConnections} (${oldConnectionsCount})`}</TabTitleText>}
+            title={<TabTitleText>{ProcessesLabels.OldConnections}</TabTitleText>}
           >
             <SkFlowPairsTable
               data-testid={'tcp-old-connections-table'}

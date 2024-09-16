@@ -44,6 +44,7 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
     name: SiteLabels.Created,
     prop: 'startTime' as keyof SiteResponse,
     customCellName: 'TimestampCell',
+    modifier: 'fitContent',
     width: 15
   }
 ];

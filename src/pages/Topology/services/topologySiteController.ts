@@ -36,7 +36,7 @@ const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[])
         id: `${sourceId}-to${targetId}`,
         source: sourceId,
         target: targetId,
-        label: linkCost !== undefined ? `${TopologyLabels.SiteLinkText} ${linkCost}` : ''
+        label: linkCost !== undefined && linkCost > 0 ? `${TopologyLabels.SiteLinkText} ${linkCost}` : ''
       }
     ])
   );
