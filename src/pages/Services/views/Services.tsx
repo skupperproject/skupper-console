@@ -9,7 +9,11 @@ import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Se
 import { ServicesLabels } from '../Services.enum';
 
 const Services = function () {
-  const { serviceRows, timeRangeCount, handleSetServiceFilters } = useServicesData({ limit: BIG_PAGINATION_SIZE });
+  const {
+    services,
+    summary: { serviceCount },
+    handleSetServiceFilters
+  } = useServicesData({ limit: BIG_PAGINATION_SIZE });
 
   return (
     <MainContainer
@@ -21,12 +25,12 @@ const Services = function () {
           <SkSearchFilter onSearch={handleSetServiceFilters} selectOptions={servicesSelectOptions} />
 
           <SkTable
-            rows={serviceRows}
+            rows={services}
             columns={ServiceColumns}
             pagination={true}
             paginationPageSize={BIG_PAGINATION_SIZE}
             onGetFilters={handleSetServiceFilters}
-            paginationTotalRows={timeRangeCount}
+            paginationTotalRows={serviceCount}
             customCells={customServiceCells}
           />
         </>

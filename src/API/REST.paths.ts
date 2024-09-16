@@ -1,51 +1,46 @@
-//COLLECTORS
+import { API_URL } from '@config/config';
 
-import { COLLECTOR_URL } from '@config/config';
+export const getUser = () => `${API_URL}/user`;
+export const logout = () => `${API_URL}/logout?nonce=${Date.now()}`;
 
-// ask to Skupper the url to call the api that retrieves the url of the prometheus server
-export const getUser = () => `${COLLECTOR_URL}/user/`;
-export const logout = () => `${COLLECTOR_URL}/logout?nonce=${Date.now()}`;
-
-// SITES
-const SITES_PATH = `${COLLECTOR_URL}/sites/`;
+const SITES_PATH = `${API_URL}/sites`;
 export const getSitesPATH = () => SITES_PATH;
-export const getSitePATH = (id: string) => `${SITES_PATH}${id}`;
-export const getLinksBySitePATH = (id: string) => `${SITES_PATH}${id}/links`;
+export const getSitePATH = (id: string) => composePath([SITES_PATH, id]);
+export const getLinksBySitePATH = (id: string) => composePath([SITES_PATH, id, 'links']);
 
-// LINKS
-const LINKS_PATH = `${COLLECTOR_URL}/links/`;
+const LINKS_PATH = `${API_URL}/links`;
 export const getLinksPATH = () => LINKS_PATH;
-export const getLinkPATH = (id: string) => `${LINKS_PATH}${id}`;
+export const getLinkPATH = (id: string) => composePath([LINKS_PATH, id]);
 
-// PROCESSES
-const PROCESSES_PATH = `${COLLECTOR_URL}/processes/`;
+const PROCESSES_PATH = `${API_URL}/processes`;
 export const geProcessesPATH = () => PROCESSES_PATH;
-export const geProcessPATH = (id: string) => `${PROCESSES_PATH}${id}`;
+export const geProcessPATH = (id: string) => composePath([PROCESSES_PATH, id]);
 
-// PROCESS_GROUPS
-const PROCESS_GROUPS_PATH = `${COLLECTOR_URL}/processgroups/`;
-export const getProcessGroupsPATH = () => PROCESS_GROUPS_PATH;
-export const getProcessGroupPATH = (id: string) => `${PROCESS_GROUPS_PATH}${id}`;
+const COMPONENT_PATH = `${API_URL}/processgroups`;
+export const getComponentsPATH = () => COMPONENT_PATH;
+export const getComponentPATH = (id: string) => composePath([COMPONENT_PATH, id]);
 
-// SERVICES
-const SERVICE_PATH = `${COLLECTOR_URL}/addresses/`;
-export const getServicesPath = () => SERVICE_PATH;
-export const getProcessPairsByServicePATH = (id: string) => `${SERVICE_PATH}${id}/processpairs`;
+const SERVICE_PATH = `${API_URL}/addresses`;
+export const getServicesPATH = () => SERVICE_PATH;
+export const getServicePATH = (id: string) => composePath([SERVICE_PATH, id]);
+export const getProcessPairsByServicePATH = (id: string) => composePath([SERVICE_PATH, id, 'processpairs']);
 
-// CONNECTIONS & RESPONSES
-const CONNECTIONS_PATH = `${COLLECTOR_URL}/connections/`;
-
+const CONNECTIONS_PATH = `${API_URL}/connections`;
 export const getFlowPairsPATH = () => CONNECTIONS_PATH;
-export const getFlowPairPATH = (id: string) => `${CONNECTIONS_PATH}${id}`;
+export const getFlowPairPATH = (id: string) => composePath([CONNECTIONS_PATH, id]);
 
-const SITE_PAIRS_PATH = `${COLLECTOR_URL}/sitepairs/`;
+const SITE_PAIRS_PATH = `${API_URL}/sitepairs`;
 export const getSitePairsPATH = () => SITE_PAIRS_PATH;
-export const getSitePairPATH = (id: string) => `${SITE_PAIRS_PATH}${id}`;
+export const getSitePairPATH = (id: string) => composePath([SITE_PAIRS_PATH, id]);
 
-const PROCESS_GROUP_PAIRS_PATH = `${COLLECTOR_URL}/processgrouppairs/`;
-export const getProcessGroupPairsPATH = () => PROCESS_GROUP_PAIRS_PATH;
-export const getProcessGroupPairPATH = (id: string) => `${PROCESS_GROUP_PAIRS_PATH}${id}`;
+const COMPONENT_PAIRS_PATH = `${API_URL}/processgrouppairs`;
+export const getComponentsPairsPATH = () => COMPONENT_PAIRS_PATH;
+export const getComponentPairPATH = (id: string) => composePath([COMPONENT_PAIRS_PATH, id]);
 
-const PROCESS_PAIRS_PATH = `${COLLECTOR_URL}/processpairs/`;
+const PROCESS_PAIRS_PATH = `${API_URL}/processpairs`;
 export const getProcessPairsPATH = () => PROCESS_PAIRS_PATH;
-export const getProcessPairPairPATH = (id: string) => `${PROCESS_PAIRS_PATH}${id}`;
+export const getProcessPairPairPATH = (id: string) => composePath([PROCESS_PAIRS_PATH, id]);
+
+function composePath(elements: string[]) {
+  return elements.join('/');
+}

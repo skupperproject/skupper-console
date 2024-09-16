@@ -5,20 +5,24 @@ import { RESTApi } from '@API/REST.api';
 import { QueriesProcesses } from '../Processes.enum';
 
 interface useProcessPairDataProps {
-  processPairId: string;
+  id: string;
 }
 
-const useProcessPairData = ({ processPairId }: useProcessPairDataProps) => {
-  const { data: processPair } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcessPair, processPairId],
-    queryFn: () => RESTApi.fetchProcessesPair(processPairId)
+export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
+  const { data } = useSuspenseQuery({
+    queryKey: [QueriesProcesses.GetProcessPair, id],
+    queryFn: () => RESTApi.fetchProcessesPair(id)
   });
 
-  const sourceId = processPair.results.sourceId;
-  const destId = processPair.results.destinationId;
+  const sourceId = data.results.sourceId;
+  const destId = data.results.destinationId;
 
-  const [{ data: source }, { data: destination }] = useSuspenseQueries({
+  const [{ data: processPairs }, { data: source }, { data: destination }] = useSuspenseQueries({
     queries: [
+      {
+        queryKey: [QueriesProcesses.GetProcessPair, id],
+        queryFn: () => RESTApi.fetchProcessesPair(id)
+      },
       {
         queryKey: [QueriesProcesses.GetProcess, sourceId],
         queryFn: () => RESTApi.fetchProcess(sourceId)
@@ -30,7 +34,5 @@ const useProcessPairData = ({ processPairId }: useProcessPairDataProps) => {
     ]
   });
 
-  return { source, destination };
+  return { processPairs: processPairs.results, source: source.results, destination: destination.results };
 };
-
-export default useProcessPairData;

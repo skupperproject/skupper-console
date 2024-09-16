@@ -130,7 +130,7 @@ describe('Topology Process', () => {
     await eventUser.click(mockClick);
 
     expect(mockNavigate).toHaveBeenCalledWith(
-      `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}@${pair.protocol}`
+      `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}`
     );
   });
 

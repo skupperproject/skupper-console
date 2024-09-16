@@ -27,13 +27,13 @@ const useTopologyProcessData = () => {
     queries: [
       {
         queryKey: [QueriesProcesses.GetProcessResult, processesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(processesQueryParams),
+        queryFn: () => RESTApi.fetchProcesses(processesQueryParams),
         refetchInterval: UPDATE_INTERVAL
       },
 
       {
         queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
+        queryFn: () => RESTApi.fetchProcessesPairs(),
         refetchInterval: UPDATE_INTERVAL
       },
       {
@@ -51,8 +51,8 @@ const useTopologyProcessData = () => {
   });
 
   return {
-    processes,
-    processesPairs,
+    processes: processes.results,
+    processesPairs: processesPairs.results,
     metrics
   };
 };

@@ -1,12 +1,12 @@
 import { AvailableProtocols } from '@API/REST.enum';
 
-import { RemoteFilterOptions } from './REST.interfaces';
+import { QueryFilters } from './REST.interfaces';
 
-export interface RemoteFilterOptionsProtocolMap {
-  [AvailableProtocols.Http]: RemoteFilterOptions;
-  [AvailableProtocols.Http2]: RemoteFilterOptions;
+export interface QueryFiltersProtocolMap {
+  [AvailableProtocols.Http]: QueryFilters;
+  [AvailableProtocols.Http2]: QueryFilters;
   [AvailableProtocols.Tcp]: {
-    active: RemoteFilterOptions;
-    old: RemoteFilterOptions;
+    active: QueryFilters;
+    old: QueryFilters;
   };
 }

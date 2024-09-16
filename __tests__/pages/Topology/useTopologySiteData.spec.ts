@@ -18,9 +18,9 @@ describe('useTopologySiteData', () => {
     const mockMetrics = { bytes: 1000 };
 
     (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
-      { data: null },
-      { data: mockSitesPairs },
+      { data: { results: mockSites } },
+      { data: undefined },
+      { data: { results: mockSitesPairs } },
       { data: mockMetrics }
     ]);
 
@@ -35,7 +35,7 @@ describe('useTopologySiteData', () => {
 
     await waitFor(() => {
       expect(result.current.sites).toEqual(mockSites);
-      expect(result.current.routerLinks).toEqual(null);
+      expect(result.current.routerLinks).toBeUndefined();
       expect(result.current.sitesPairs).toEqual(mockSitesPairs);
       expect(result.current.metrics).toEqual(mockMetrics);
     });
@@ -53,9 +53,9 @@ describe('useTopologySiteData', () => {
     ];
 
     (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
-      { data: mockRouterLinks },
-      { data: null },
+      { data: { results: mockSites } },
+      { data: { results: mockRouterLinks } },
+      { data: undefined },
       { data: null }
     ]);
 
@@ -71,7 +71,7 @@ describe('useTopologySiteData', () => {
     await waitFor(() => {
       expect(result.current.sites).toEqual(mockSites);
       expect(result.current.routerLinks).toBe(mockRouterLinks);
-      expect(result.current.sitesPairs).toBeNull();
+      expect(result.current.sitesPairs).toBeUndefined();
       expect(result.current.metrics).toBeNull();
     });
   });
@@ -81,9 +81,9 @@ describe('useTopologySiteData', () => {
     const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
 
     (useSuspenseQueries as jest.Mock).mockReturnValue([
-      { data: mockSites },
-      { data: null },
-      { data: mockSitesPairs },
+      { data: { results: mockSites } },
+      { data: undefined },
+      { data: { results: mockSitesPairs } },
       { data: null }
     ]);
 
@@ -98,7 +98,7 @@ describe('useTopologySiteData', () => {
 
     await waitFor(() => {
       expect(result.current.sites).toEqual(mockSites);
-      expect(result.current.routerLinks).toBeNull();
+      expect(result.current.routerLinks).toBeUndefined();
       expect(result.current.sitesPairs).toEqual(mockSitesPairs);
       expect(result.current.metrics).toBeNull();
     });

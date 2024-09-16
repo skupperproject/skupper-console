@@ -1,45 +1,20 @@
-import { startTransition, useCallback, useState } from 'react';
-
-import { useSuspenseQuery } from '@tanstack/react-query';
-
-import { RESTApi } from '@API/REST.api';
-import { Role } from '@API/REST.enum';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { BIG_PAGINATION_SIZE } from '@config/config';
 import { getTestsIds } from '@config/testIds';
 import SkTable from '@core/components/SkTable';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
-import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
 
+import { useProcessesData } from '../hooks/useProcessesData';
 import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
-import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
-
-//TODO: currently we can't query filter for a multivalue and we need to call separate queries, merge and sort them locally
-const initProcessesQueryParams = {
-  limit: BIG_PAGINATION_SIZE,
-  processRole: [Role.Remote, Role.External],
-  endTime: 0
-};
+import { ProcessesLabels } from '../Processes.enum';
 
 const Processes = function () {
-  const [externalProcessesQueryParams, setExternalProcessesQueryParams] =
-    useState<RemoteFilterOptions>(initProcessesQueryParams);
-
-  const { data: processData } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcessesPaginated, externalProcessesQueryParams],
-    queryFn: () => RESTApi.fetchProcesses(externalProcessesQueryParams),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const handleGetFilters = useCallback((params: RemoteFilterOptions) => {
-    startTransition(() => {
-      setExternalProcessesQueryParams((previousQueryParams) => ({ ...previousQueryParams, ...params }));
-    });
-  }, []);
-
-  const processes = processData?.results || [];
-  const processesCount = processData?.timeRangeCount || 0;
+  const {
+    processes,
+    summary: { processCount },
+    handleGetFilters
+  } = useProcessesData();
 
   return (
     <MainContainer
@@ -56,7 +31,7 @@ const Processes = function () {
             rows={processes}
             customCells={CustomProcessCells}
             pagination={true}
-            paginationTotalRows={processesCount}
+            paginationTotalRows={processCount}
             paginationPageSize={BIG_PAGINATION_SIZE}
             onGetFilters={handleGetFilters}
           />

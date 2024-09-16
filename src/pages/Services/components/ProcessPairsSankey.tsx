@@ -47,7 +47,7 @@ const ProcessPairsSankeyChart: FC<SankeyChartProps> = function ({ serviceId, ser
       processPairs
     ],
     queryFn: () =>
-      processPairs.results.length
+      processPairs.results?.length
         ? PrometheusApi.fethResourcePairsByService({
             serviceName,
             clientType: clientResourceSelected,

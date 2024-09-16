@@ -5,7 +5,7 @@
       "startTime": 1674048767157175,
       "endTime": 0,
       "name": "cart:3000",
-      "protocol": "http2",
+      "protocol": "tcp",
       "connectorCount": 2,
       "listenerCount": 2
     },

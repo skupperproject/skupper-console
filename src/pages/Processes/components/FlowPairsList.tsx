@@ -10,8 +10,8 @@ import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
-import { RemoteFilterOptionsProtocolMap } from '@sk-types/Processes.interfaces';
-import { RemoteFilterOptions } from '@sk-types/REST.interfaces';
+import { QueryFiltersProtocolMap } from '@sk-types/Processes.interfaces';
+import { QueryFilters } from '@sk-types/REST.interfaces';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
@@ -22,36 +22,36 @@ const TAB_2_KEY = 'connections';
 const TAB_3_KEY = 'http2Requests';
 const TAB_4_KEY = 'httpRequests';
 
-const initPaginatedFlowPairsQueryParams: RemoteFilterOptions = {
+const initPaginatedFlowPairsQueryParams: QueryFilters = {
   offset: 0,
   limit: DEFAULT_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-const initPaginatedHttpRequestsQueryParams: RemoteFilterOptions = {
+const initPaginatedHttpRequestsQueryParams: QueryFilters = {
   ...initPaginatedFlowPairsQueryParams,
   protocol: AvailableProtocols.Http
 };
 
-const initPaginatedHttp2RequestsQueryParams: RemoteFilterOptions = {
+const initPaginatedHttp2RequestsQueryParams: QueryFilters = {
   ...initPaginatedFlowPairsQueryParams,
   protocol: AvailableProtocols.Http2
 };
 
-const initPaginatedActiveConnectionsQueryParams: RemoteFilterOptions = {
+const initPaginatedActiveConnectionsQueryParams: QueryFilters = {
   ...initPaginatedFlowPairsQueryParams,
   protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Active
 };
 
-const initPaginatedOldConnectionsQueryParams: RemoteFilterOptions = {
+const initPaginatedOldConnectionsQueryParams: QueryFilters = {
   ...initPaginatedFlowPairsQueryParams,
   protocol: AvailableProtocols.Tcp,
   state: TcpStatus.Terminated
 };
 
-const initPaginatedQueryParams: RemoteFilterOptionsProtocolMap = {
+const initPaginatedQueryParams: QueryFiltersProtocolMap = {
   [AvailableProtocols.Http]: initPaginatedHttpRequestsQueryParams,
   [AvailableProtocols.Http2]: initPaginatedHttp2RequestsQueryParams,
   [AvailableProtocols.Tcp]: {
@@ -61,7 +61,7 @@ const initPaginatedQueryParams: RemoteFilterOptionsProtocolMap = {
 };
 
 const useFlowPairsQuery = (
-  queryParams: RemoteFilterOptions,
+  queryParams: QueryFilters,
   sourceProcessId: string,
   destProcessId: string,
   enabled = true
@@ -83,19 +83,18 @@ const useFlowPairsQuery = (
 };
 
 const useProcessPairsContent = ({ protocol }: { protocol: AvailableProtocols | 'undefined' }) => {
-  const [queryParamsPaginated, setQueryParamsPaginated] =
-    useState<RemoteFilterOptionsProtocolMap>(initPaginatedQueryParams);
+  const [queryParamsPaginated, setQueryParamsPaginated] = useState<QueryFiltersProtocolMap>(initPaginatedQueryParams);
 
   const handleGetFilters = useCallback(
-    (params: RemoteFilterOptions, tcpType?: 'active' | 'old') => {
-      const protocolKey = protocol as keyof RemoteFilterOptionsProtocolMap;
+    (params: QueryFilters, tcpType?: 'active' | 'old') => {
+      const protocolKey = protocol as keyof QueryFiltersProtocolMap;
 
       //we are using the startTransition hook to ensure that the UI remains responsive during the update
       startTransition(() => {
         setQueryParamsPaginated((prevQueryParams) => ({
           ...prevQueryParams,
           [protocolKey]: tcpType
-            ? { ...(prevQueryParams[protocolKey][tcpType] as RemoteFilterOptions), ...params }
+            ? { ...(prevQueryParams[protocolKey][tcpType] as QueryFilters), ...params }
             : { ...prevQueryParams[protocolKey], ...params }
         }));
       });
@@ -107,13 +106,13 @@ const useProcessPairsContent = ({ protocol }: { protocol: AvailableProtocols | '
   return { queryParamsPaginated, handleGetFilters };
 };
 
-interface ProcessPairsFlowsProps {
+interface FlowPairsListProps {
   sourceProcessId: string;
   destProcessId: string;
   protocol: AvailableProtocols | 'undefined';
 }
 
-const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessId, destProcessId, protocol }) {
+const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destProcessId, protocol }) {
   const [tabSelected, setTabSelected] = useState<string>();
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected || '', true);
 
@@ -142,21 +141,11 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessI
   );
 
   const { results: activeConnections, count: activeConnectionsCount } = extractData(
-    useFlowPairsQuery(
-      queryParamsPaginated[AvailableProtocols.Tcp].active,
-      sourceProcessId,
-      destProcessId,
-      AvailableProtocols.Tcp === protocol || protocol === 'undefined'
-    )
+    useFlowPairsQuery(queryParamsPaginated[AvailableProtocols.Tcp].active, sourceProcessId, destProcessId, true)
   );
 
   const { results: oldConnections, count: oldConnectionsCount } = extractData(
-    useFlowPairsQuery(
-      queryParamsPaginated[AvailableProtocols.Tcp].old,
-      sourceProcessId,
-      destProcessId,
-      AvailableProtocols.Tcp === protocol || protocol === 'undefined'
-    )
+    useFlowPairsQuery(queryParamsPaginated[AvailableProtocols.Tcp].old, sourceProcessId, destProcessId, true)
   );
 
   const activeTab = tabSelected
@@ -199,7 +188,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessI
               paginationTotalRows={activeConnectionsCount}
               pagination={true}
               paginationPageSize={DEFAULT_PAGINATION_SIZE}
-              onGetFilters={(filters: RemoteFilterOptions) => handleGetFilters(filters, 'active')}
+              onGetFilters={(filters: QueryFilters) => handleGetFilters(filters, 'active')}
             />
           </Tab>
         )}
@@ -217,7 +206,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessI
               paginationTotalRows={oldConnectionsCount}
               pagination={true}
               paginationPageSize={DEFAULT_PAGINATION_SIZE}
-              onGetFilters={(filters: RemoteFilterOptions) => handleGetFilters(filters, 'old')}
+              onGetFilters={(filters: QueryFilters) => handleGetFilters(filters, 'old')}
             />
           </Tab>
         )}
@@ -263,7 +252,7 @@ const ProcessPairsFlows: FC<ProcessPairsFlowsProps> = function ({ sourceProcessI
   );
 };
 
-export default ProcessPairsFlows;
+export default FlowPairsList;
 
 interface Data<T> {
   results?: T[];

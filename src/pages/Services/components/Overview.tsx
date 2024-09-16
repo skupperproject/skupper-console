@@ -1,88 +1,40 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
-
-import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
+import { extractUniqueValues } from '@core/utils/extractUniqueValues';
+import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
 
-import { QueriesServices } from '../Services.enum';
-
-const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
-const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `service-open-metric-sections`;
+import { useServiceOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
-  serviceId: string;
-  serviceName: string;
-  protocol: AvailableProtocols;
+  id: string;
+  name: string;
 }
 
-const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol }) {
-  const { data: processPairs } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
-    queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
-    refetchInterval: UPDATE_INTERVAL
-  });
+const Overview: FC<OverviewProps> = function ({ id, name }) {
+  const { pairs } = useServiceOverviewData(id);
+  const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } = useMetricSessionHandlers(name);
 
-  const handleSelectedFilters = useCallback(
-    (filters: string) => {
-      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`, filters);
-    },
-    [serviceId]
-  );
+  const sourceProcesses = mapDataToMetricFilterOptions(pairs, 'sourceName', 'sourceSiteName');
+  const destProcesses = mapDataToMetricFilterOptions(pairs, 'destinationName', 'destinationSiteName');
+  const sourceSites = mapDataToMetricFilterOptions(pairs, 'sourceSiteName');
+  const destSites = mapDataToMetricFilterOptions(pairs, 'destinationSiteName');
 
-  const handleGetExpandedSectionsConfig = useCallback(
-    (sections: ExpandedMetricSections) => {
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`, sections);
-    },
-    [serviceId]
-  );
-
-  const processPairsResults = processPairs?.results || [];
-
-  const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ sourceName, sourceSiteName }) => ({
-      destinationName: sourceName,
-      siteName: sourceSiteName
-    }))
-  );
-  const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ destinationName, destinationSiteName }) => ({
-      destinationName,
-      siteName: destinationSiteName
-    }))
-  );
-
-  const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ destinationSiteName }) => ({
-      destinationName: destinationSiteName
-    }))
-  );
-
-  const sourceSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ sourceSiteName }) => ({
-      destinationName: sourceSiteName
-    }))
-  );
+  const uniqueProtocols = extractUniqueValues(pairs, 'protocol');
 
   return (
     <Metrics
-      key={serviceId}
+      key={id}
       sourceSites={sourceSites}
       destSites={destSites}
       sourceProcesses={sourceProcesses}
       destProcesses={destProcesses}
-      availableProtocols={[protocol]}
-      defaultOpenSections={{
-        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`)
-      }}
+      availableProtocols={uniqueProtocols}
+      defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
-        service: serviceName,
-        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
+        service: name,
+        ...selectedFilters
       }}
       configFilters={{
         sourceSites: {
@@ -98,8 +50,8 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
           hide: destProcesses.length === 0
         }
       }}
-      onGetMetricFiltersConfig={handleSelectedFilters}
-      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
+      onGetMetricFiltersConfig={setSelectedFilters}
+      onGetExpandedSectionsConfig={setVisibleMetrics}
     />
   );
 };

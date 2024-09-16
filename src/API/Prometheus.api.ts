@@ -12,7 +12,6 @@ import { queries } from './Prometheus.queries';
 import { convertToPrometheusQueryParams, gePrometheusQueryPATH } from './Prometheus.utils';
 
 export const PrometheusApi = {
-  //When direction is outgoing, it is the response from from the server (sourceProcess) to the client (destProcess)
   fetchByteRateByDirectionInTimeRange: async (
     params: PrometheusQueryParams,
     isRx = false
@@ -179,25 +178,11 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchTcpActiveFlowsByService: async (): Promise<PrometheusMetric<'vector'>[]> => {
+  fetchOpenConnectionsByService: async (): Promise<PrometheusMetric<'vector'>[]> => {
     const {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTcpActiveFlowsByService() }
-    });
-
-    return result;
-  },
-
-  fetchTcpByteRateByService: async ({
-    serviceName
-  }: {
-    serviceName: string;
-  }): Promise<PrometheusMetric<'vector'>[]> => {
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getTcpByteRateByService(serviceName) }
+      params: { query: queries.getOpenConnectionsByService() }
     });
 
     return result;

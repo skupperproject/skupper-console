@@ -4,6 +4,8 @@ import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
+import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+
 import processesData from '../../../mocks/data/PROCESSES.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
@@ -64,21 +66,24 @@ describe('Site component', () => {
     await waitFor(() => {
       expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
       expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
-      expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
     });
   });
 
-  it('Should ensure the Site details component renders with correct link href after loading page', async () => {
+  it('Should ensure the Site processes component renders with correct link href after loading page', async () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(SiteLabels.Details));
+    fireEvent.click(screen.getByText(SiteLabels.Processes));
+
+    await waitFor(() => {
+      expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
         'href',
-        `#/processes/${processResults[0].name}@${processResults[0].identity}`
+        `#${ProcessesRoutesPaths.Processes}/${processResults[0].name}@${processResults[0].identity}`
       );
     });
   });

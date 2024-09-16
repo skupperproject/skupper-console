@@ -95,7 +95,7 @@ const TopologyProcesses: FC<{
 
       const pair = processesPairs.find(({ identity }) => identity === id);
       navigate(
-        `${ProcessesRoutesPaths.Processes}/${pair?.sourceName}@${pair?.sourceId}/${ProcessesLabels.ProcessPairs}@${pair?.identity}@${pair?.protocol}`
+        `${ProcessesRoutesPaths.Processes}/${pair?.sourceName}@${pair?.sourceId}/${ProcessesLabels.ProcessPairs}@${pair?.identity}`
       );
     },
     [handleSelected, navigate, processesPairs]

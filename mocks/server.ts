@@ -30,8 +30,8 @@ const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
 const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
-const services = require(`${path}/SERVICES.json`);
-const flowPairs = require(`${path}/FLOW_PAIRS.json`);
+const services: ResponseWrapper<ServiceResponse[]> = require(`${path}/SERVICES.json`);
+const flowPairs: ResponseWrapper<FlowPairsResponse[]> = require(`${path}/FLOW_PAIRS.json`);
 const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
 
 interface ApiProps {
@@ -216,6 +216,7 @@ export const MockApi = {
 
     return { results };
   },
+
   getProcesses: (_: unknown, { queryParams, url }: ApiProps) => {
     const processesForPerfTests = ITEM_COUNT ? mockProcessesForPerf : [];
     const results = [...processes.results, ...processesForPerfTests];
@@ -247,8 +248,29 @@ export const MockApi = {
       ...processes,
       results: paginatedResults,
       count: filteredResults.length,
-      totalCount: filteredResults.length,
       timeRangeCount: filteredResults.length
+    };
+  },
+
+  getServices: (_: unknown, { queryParams }: ApiProps) => {
+    let results = services.results;
+
+    if (queryParams.name || queryParams.protocol) {
+      results = results.filter(
+        ({ name, protocol }) =>
+          name.startsWith(queryParams.name as string) || protocol.startsWith(queryParams.protocol as string)
+      );
+    }
+
+    const paginatedResults = results.slice(
+      Number(queryParams.offset || 0),
+      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length - 1)
+    );
+
+    return {
+      results: paginatedResults,
+      count: results.length,
+      timeRangeCount: results.length
     };
   },
 
@@ -261,8 +283,7 @@ export const MockApi = {
     }
 
     const resultsFiltered = results.filter(
-      ({ sourceId, destinationId }: SitePairsResponse) =>
-        sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
+      ({ sourceId, destinationId }) => sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
     );
 
     return { ...processPairs, results: resultsFiltered };
@@ -277,8 +298,7 @@ export const MockApi = {
     }
 
     const resultsFiltered = results.filter(
-      ({ sourceId, destinationId }: ProcessPairsResponse) =>
-        sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
+      ({ sourceId, destinationId }) => sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
     );
 
     return { ...processPairs, results: resultsFiltered };
@@ -287,6 +307,12 @@ export const MockApi = {
   getProcessPair: (_: unknown, { params: { id } }: ApiProps) => ({
     results: processPairs.results.find(({ identity }) => identity === id) || []
   }),
+
+  getService: (_: unknown, { params: { id } }: ApiProps) => {
+    const results = services.results.find(({ identity }) => identity === id);
+
+    return { results };
+  },
 
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
     if (
@@ -363,6 +389,8 @@ export const MockApiPaths = {
   SitePairs: `${prefix}/sitepairs`,
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
+  Services: `${prefix}/addresses`,
+  Service: `${prefix}/addresses/:id`,
   Processes: `${prefix}/processes`,
   ProcessPairs: `${prefix}/processpairs`,
   ProcessPair: `${prefix}/processpairs/:id`,
@@ -393,6 +421,8 @@ export function loadMockServer() {
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
+      this.get(MockApiPaths.Services, MockApi.getServices);
+      this.get(MockApiPaths.Service, MockApi.getService);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
       this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
@@ -407,17 +437,17 @@ export function loadMockServer() {
       this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
 
       this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => ({
-        results: processGroupPairs.results.find(({ identity }: ProcessPairsResponse) => identity === id)
+        results: processGroupPairs.results.find(({ identity }) => identity === id)
       }));
 
       this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => ({
         results: MockApi.getProcesses(null, { params: {}, queryParams: {} }).results.find(
-          ({ identity }: ProcessResponse) => identity === id
+          ({ identity }) => identity === id
         )
       }));
 
-      this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }): { results: ProcessResponse[] } => {
-        const process = processes.results.find(({ identity }: ProcessResponse) => identity === id);
+      this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }): { results: ServiceResponse[] } => {
+        const process = processes.results.find(({ identity }) => identity === id);
 
         if (!process) {
           return { results: [] };
@@ -426,7 +456,7 @@ export function loadMockServer() {
         const processNamePrefix = process.name.split('-')[0];
 
         return {
-          results: services.results.filter(({ name }: ServiceResponse) => name.includes(processNamePrefix))
+          results: services.results.filter(({ name }) => name.includes(processNamePrefix))
         };
       });
 
@@ -435,7 +465,7 @@ export function loadMockServer() {
         const queryRoutingKey = queryParams.routingKey;
 
         const results = flowPairs.results.filter(
-          ({ protocol, routingKey, endTime }: FlowPairsResponse) =>
+          ({ protocol, routingKey, endTime }) =>
             (queryProtocol ? protocol === queryProtocol : true) &&
             (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
             (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
@@ -445,10 +475,9 @@ export function loadMockServer() {
       });
 
       this.get(`${prefix}/connections/:id`, (_, { params: { id } }) => ({
-        results: flowPairs.results.find(({ identity }: ServiceResponse) => identity === id)
+        results: flowPairs.results.find(({ identity }) => identity === id)
       }));
 
-      this.get(`${prefix}/addresses`, () => services);
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }
   });

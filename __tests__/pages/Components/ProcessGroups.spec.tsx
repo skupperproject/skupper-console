@@ -8,7 +8,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import Components from '../../../src/pages/ProcessGroups/views/ProcessGroups';
+import Components from '../../../src/pages/ProcessGroups/views/Components';
 import LoadingPage from '../../../src/pages/shared/Loading';
 
 const componentResults = componentsData.results;

@@ -11,7 +11,7 @@ export const servicesRoutes = [
     element: <Services />
   },
   {
-    path: `${ServicesRoutesPaths.Services}/:service`,
+    path: `${ServicesRoutesPaths.Services}/:id`,
     element: <Service />
   }
 ];

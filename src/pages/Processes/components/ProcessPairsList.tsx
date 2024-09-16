@@ -2,102 +2,41 @@ import { FC } from 'react';
 
 import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { useSuspenseQueries, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
 import { AvailableProtocols } from '@API/REST.enum';
-import { SMALL_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import { SMALL_PAGINATION_SIZE } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import SKEmptyData from '@core/components/SkEmptyData';
 import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable from '@core/components/SkTable';
 import { TopologyController } from '@pages/Topology/services';
-import { QueriesTopology } from '@pages/Topology/Topology.enum';
 import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 
+import { useProcessPairsListData } from '../hooks/useProcessPairsListData';
 import {
   CustomProcessPairCells,
   processesConnectedColumns,
   processesHttpConnectedColumns
 } from '../Processes.constants';
-import { ProcessesLabels, ProcessesRoutesPaths, QueriesProcesses } from '../Processes.enum';
-
-const metricQueryParams = {
-  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
-  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` }
-};
+import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes.enum';
 
 interface ProcessesPairsListProps {
   process: ProcessResponse;
 }
 
-const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
-  process: { identity: processId, name: processName }
-}) {
-  const processesPairsTxQueryParams = {
-    sourceId: processId
-  };
-
-  const processesPairsRxQueryParams = {
-    destinationId: processId
-  };
-
-  const [{ data: processesPairsRxData }, { data: processesPairsTxData }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsRxQueryParams],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsRxQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, processesPairsTxQueryParams],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(processesPairsTxQueryParams),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
-  });
-
-  const { data: metricsTx } = useQuery({
-    queryKey: [QueriesTopology.GetBytesByProcessPairs, { sourceProcess: processName }],
-    queryFn: () =>
-      TopologyController.getAllTopologyMetrics({
-        showBytes: true,
-        showByteRate: true,
-        showLatency: true,
-        metricQueryParams: {
-          ...metricQueryParams,
-          filterBy: { sourceProcess: processName }
-        }
-      }),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: metricsRx } = useQuery({
-    queryKey: [QueriesTopology.GetBytesByProcessPairs, { destProcess: processName }],
-    queryFn: () =>
-      TopologyController.getAllTopologyMetrics({
-        showBytes: true,
-        showByteRate: true,
-        showLatency: true,
-        metricQueryParams: {
-          ...metricQueryParams,
-          filterBy: { destProcess: processName }
-        }
-      }),
-    refetchInterval: UPDATE_INTERVAL
-  });
+const ProcessPairsList: FC<ProcessesPairsListProps> = function ({ process: { identity: id, name } }) {
+  const { pairsTx, pairsRx, metricsTx, metricsRx } = useProcessPairsListData(id, name);
 
   const clients = TopologyController.addMetricsToTopologyDetails({
-    processesPairs: processesPairsRxData,
+    processesPairs: pairsRx,
     metrics: metricsRx,
     prometheusKey: PrometheusLabelsV2.SourceProcess,
     processPairsKey: 'sourceName'
   });
 
   const servers = TopologyController.addMetricsToTopologyDetails({
-    processesPairs: processesPairsTxData,
+    processesPairs: pairsTx,
     metrics: metricsTx,
     prometheusKey: PrometheusLabelsV2.DestProcess,
     processPairsKey: 'destinationName'
@@ -128,7 +67,7 @@ const ProcessPairsList: FC<ProcessesPairsListProps> = function ({
     ...CustomProcessPairCells,
     viewDetailsLinkCell: ({ data }: SkLinkCellProps<ProcessPairsResponse>) => (
       <Link
-        to={`${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.sourceId}/${ProcessesLabels.ProcessPairs}@${data.identity}@${data.protocol}?type=${ProcessesLabels.ProcessPairs}`}
+        to={`${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.sourceId}/${ProcessesLabels.ProcessPairs}@${data.identity}?type=${ProcessesLabels.ProcessPairs}`}
       >
         view pairs
       </Link>

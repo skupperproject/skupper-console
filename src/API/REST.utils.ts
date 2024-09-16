@@ -1,18 +1,11 @@
-import { QueryParams, RemoteFilterOptions } from '@sk-types/REST.interfaces';
+import { QueryParams, QueryFilters } from '@sk-types/REST.interfaces';
 
 import { SortDirection } from './REST.enum';
 
 /**
- * Extracts the "results" property from an Axios HTTP response data object with a "results" property.
- */
-export function getApiResults<T>(data: { results: T }) {
-  return data?.results;
-}
-
-/**
  * Maps an options object to query parameters for an HTTP request.
  */
-export function mapOptionsToQueryParams({
+export function mapQueryFiltersToQueryParams({
   filter,
   offset,
   limit,
@@ -21,7 +14,7 @@ export function mapOptionsToQueryParams({
   timeRangeEnd,
   timeRangeStart,
   ...queryParams
-}: RemoteFilterOptions): QueryParams {
+}: QueryFilters): QueryParams {
   return {
     filter,
     offset,

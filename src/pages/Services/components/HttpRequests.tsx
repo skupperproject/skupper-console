@@ -2,42 +2,31 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { AvailableProtocols } from '@API/REST.enum';
 import { httpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 
-import ExposedServers from './ExposedServers';
 import FlowPairsTable from './FlowPairsTable';
-import Overview from './Overview';
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, httpColumns, initRequestsQueryParams } from '../Services.constants';
+import { httpColumns, initRequestsQueryParams } from '../Services.constants';
 
 interface HttpRequestsProps {
-  serviceId: string;
-  serviceName: string;
-  protocol: AvailableProtocols;
-  viewSelected: string;
+  id: string;
+  name: string;
 }
 
-const HttpRequests: FC<HttpRequestsProps> = function ({ serviceId, serviceName, protocol, viewSelected }) {
+const HttpRequests: FC<HttpRequestsProps> = function ({ id, name }) {
   return (
-    <>
-      {viewSelected === TAB_0_KEY && <Overview serviceId={serviceId} serviceName={serviceName} protocol={protocol} />}
-      {viewSelected === TAB_1_KEY && <ExposedServers serviceId={serviceId} serviceName={serviceName} />}
-      {viewSelected === TAB_2_KEY && (
-        <Stack hasGutter>
-          <StackItem>
-            <ProcessPairsSankeyChart serviceId={serviceId} serviceName={serviceName} />
-          </StackItem>
-          <StackItem>
-            <FlowPairsTable
-              options={httpSelectOptions}
-              columns={httpColumns}
-              filters={{ ...initRequestsQueryParams, routingKey: serviceName }}
-            />
-          </StackItem>
-        </Stack>
-      )}
-    </>
+    <Stack hasGutter>
+      <StackItem>
+        <ProcessPairsSankeyChart serviceId={id} serviceName={name} />
+      </StackItem>
+      <StackItem>
+        <FlowPairsTable
+          options={httpSelectOptions}
+          columns={httpColumns}
+          filters={{ ...initRequestsQueryParams, routingKey: name }}
+        />
+      </StackItem>
+    </Stack>
   );
 };
 

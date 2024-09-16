@@ -6,8 +6,8 @@ const API_VERSION = '/api/v1alpha1';
 const PROMETHEUS_SUFFIX = '/internal/prom';
 
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
-export const COLLECTOR_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
-export const PROMETHEUS_URL = `${COLLECTOR_URL}${PROMETHEUS_SUFFIX}`;
+export const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
+export const PROMETHEUS_URL = `${API_URL}${PROMETHEUS_SUFFIX}`;
 
 // Default page size for tables. Set in environment variables, but can be overridden.
 export const DEFAULT_PAGINATION_SIZE = 10;

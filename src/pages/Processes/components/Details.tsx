@@ -3,7 +3,6 @@ import { FC } from 'react';
 import {
   Card,
   CardBody,
-  CardTitle,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -11,7 +10,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Title,
   Tooltip,
   Truncate
 } from '@patternfly/react-core';
@@ -20,7 +18,7 @@ import { Link } from 'react-router-dom';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkExposedCell from '@core/components/SkExposedCell';
 import { timeAgo } from '@core/utils/timeAgo';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { ProcessResponse } from '@sk-types/REST.interfaces';
@@ -32,7 +30,7 @@ interface DetailsProps {
   title?: string | JSX.Element;
 }
 
-const Details: FC<DetailsProps> = function ({ process, title }) {
+const Details: FC<DetailsProps> = function ({ process }) {
   const {
     parent,
     parentName,
@@ -48,11 +46,6 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
 
   return (
     <Card>
-      {title && (
-        <CardTitle>
-          <Title headingLevel="h2">{title}</Title>
-        </CardTitle>
-      )}
       <CardBody>
         <DescriptionList>
           <Grid hasGutter>
@@ -70,7 +63,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                 <DescriptionListTerm>{ProcessesLabels.ProcessGroup}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="component" />
-                  <Link to={`${ComponentRoutesPaths.ProcessGroups}/${groupName}@${groupIdentity}`}>{groupName}</Link>
+                  <Link to={`${ComponentRoutesPaths.Components}/${groupName}@${groupIdentity}`}>{groupName}</Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>

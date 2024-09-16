@@ -5,7 +5,7 @@ import { AvailableProtocols, Binding, Direction, Role, SortDirection } from '@AP
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = Direction.Outgoing | Direction.Incoming;
 
-export interface RemoteFilterOptions extends Record<string, string | string[] | number | SortDirection | undefined> {
+export interface QueryFilters extends Record<string, string | string[] | number | SortDirection | undefined> {
   filter?: string;
   offset?: number;
   limit?: number;
@@ -31,10 +31,8 @@ export interface HTTPError extends AxiosError {
 
 export type ResponseWrapper<T> = {
   results: T; // Type based on the Response interface
-  status: string; // this field is for debug scope. Empty value => OK. In case we have some internal BE error that is not a http status this field is not empty. For example a value can be `Malformed sortBy query`
   count: number;
   timeRangeCount: number;
-  totalCount: number;
 };
 
 /* Response Interfaces */
@@ -78,26 +76,21 @@ export interface ProcessResponse extends BaseResponse {
   addresses?: string[];
 }
 
-export interface ProcessPairsResponse extends BaseResponse {
-  sourceId: string;
-  sourceName: string;
-  destinationId: string;
-  destinationName: string;
-  sourceSiteId: string;
-  sourceSiteName: string;
-  destinationSiteId: string;
-  destinationSiteName: string;
-  protocol: AvailableProtocols; // undefined = there is a remote process
-}
-
-export type ComponentPairsResponse = ProcessPairsResponse;
-
 export interface SitePairsResponse extends BaseResponse {
   sourceId: string;
   sourceName: string;
   destinationId: string;
   destinationName: string;
   protocol: AvailableProtocols;
+}
+
+export type ComponentPairsResponse = SitePairsResponse;
+
+export interface ProcessPairsResponse extends ComponentPairsResponse {
+  sourceSiteId: string;
+  sourceSiteName: string;
+  destinationSiteId: string;
+  destinationSiteName: string;
 }
 
 export interface ServiceResponse extends BaseResponse {

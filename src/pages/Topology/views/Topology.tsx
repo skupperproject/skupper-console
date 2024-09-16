@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getTestsIds } from '@config/testIds';
 import MainContainer from '@layout/MainContainer';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
+import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
@@ -18,7 +18,7 @@ import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topolog
 
 const links: Record<string, { linkToPage: string; linkLabel: string }> = {
   [TopologyViews.Sites]: { linkToPage: SitesRoutesPaths.Sites, linkLabel: TopologyLabels.ListView },
-  [TopologyViews.Components]: { linkToPage: ComponentRoutesPaths.ProcessGroups, linkLabel: TopologyLabels.ListView },
+  [TopologyViews.Components]: { linkToPage: ComponentRoutesPaths.Components, linkLabel: TopologyLabels.ListView },
   [TopologyViews.Processes]: { linkToPage: ProcessesRoutesPaths.Processes, linkLabel: TopologyLabels.ListView }
 };
 const Topology = function () {
@@ -44,7 +44,6 @@ const Topology = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.topologyView()}
-      isPlain
       title={TopologyLabels.Topology}
       description={TopologyLabels.Description}
       hasMainContentPadding

@@ -12,8 +12,8 @@ interface TopologySiteControllerProps {
   idsSelected: string[] | undefined;
   searchText: string;
   sites: SiteResponse[];
-  routerLinks: LinkResponse[] | null;
-  sitesPairs: SitePairsResponse[] | null;
+  routerLinks?: LinkResponse[];
+  sitesPairs?: SitePairsResponse[];
   metrics: TopologyMetrics | null;
   options: TopologyShowOptionsSelected;
 }
