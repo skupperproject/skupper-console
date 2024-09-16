@@ -1,4 +1,5 @@
 import { VarColors } from '@config/colors';
+import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
@@ -28,7 +29,9 @@ export const ServicesController = {
     return services.map((service) => ({
       ...service,
       currentFlows:
-        tcpActiveFlowsMap && tcpActiveFlowsMap[service.name] ? Math.round(tcpActiveFlowsMap[service.name]) : '-'
+        tcpActiveFlowsMap && tcpActiveFlowsMap[service.name]
+          ? Math.round(tcpActiveFlowsMap[service.name])
+          : EMPTY_VALUE_PLACEHOLDER
     }));
   },
 

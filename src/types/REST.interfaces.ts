@@ -68,12 +68,12 @@ export interface ProcessResponse extends BaseResponse {
   parentName: string;
   groupIdentity: string;
   groupName: string;
-  imageName?: string;
   sourceHost: string;
-  hostName: string;
   processBinding: Binding;
   processRole: Role;
-  addresses?: string[];
+  hostName: string | null;
+  imageName: string | null;
+  addresses: string[] | null;
 }
 
 export interface SitePairsResponse extends BaseResponse {

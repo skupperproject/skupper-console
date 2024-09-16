@@ -44,6 +44,7 @@ const Details: FC<DetailsProps> = function ({ process }) {
     addresses
   } = process;
 
+
   return (
     <Card>
       <CardBody>
@@ -78,7 +79,7 @@ const Details: FC<DetailsProps> = function ({ process }) {
             <GridItem span={6}>
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.Host}</DescriptionListTerm>
-                <DescriptionListDescription>{hostName}</DescriptionListDescription>
+                <DescriptionListDescription>{hostName || '-'}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
@@ -93,8 +94,8 @@ const Details: FC<DetailsProps> = function ({ process }) {
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.Image}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <Tooltip content={imageName || ''}>
-                    <Truncate content={imageName || ''} trailingNumChars={10} position={'middle'} />
+                  <Tooltip content={imageName}>
+                    <Truncate content={imageName || '-'} trailingNumChars={10} position={'middle'} />
                   </Tooltip>
                 </DescriptionListDescription>
               </DescriptionListGroup>

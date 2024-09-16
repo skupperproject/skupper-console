@@ -4,10 +4,6 @@ import { Binding } from '@API/REST.enum';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 
 const SkExposedCell = function ({ value }: { value: Binding }) {
-  if (!value) {
-    return '-';
-  }
-
   if (value === Binding.Exposed) {
     return <Label color="blue">{ProcessesLabels.IsExposed}</Label>;
   }
