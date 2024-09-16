@@ -50,7 +50,7 @@ export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
     name: FlowPairLabels.FlowPairClosed,
     prop: 'endTime' as keyof FlowPairsResponse,
     customCellName: 'TimestampCell',
-    width: 15
+    modifier: 'fitContent'
   },
   {
     name: FlowPairLabels.Client,

@@ -85,6 +85,7 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
     customCellName: 'TimestampCell',
+    modifier: 'fitContent',
     width: 15
   }
 ];

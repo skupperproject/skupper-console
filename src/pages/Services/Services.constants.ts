@@ -60,6 +60,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ServiceResponse,
     customCellName: 'TimestampCell',
+    modifier: 'fitContent',
     width: 15
   }
 ];

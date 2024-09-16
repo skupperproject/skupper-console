@@ -44,7 +44,6 @@ const Details: FC<DetailsProps> = function ({ process }) {
     addresses
   } = process;
 
-
   return (
     <Card>
       <CardBody>

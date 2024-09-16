@@ -4,6 +4,8 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
+import { ProcessesLabels } from '@pages/Processes/Processes.enum';
+
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
@@ -93,7 +95,7 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(getByText('Connection history (2)'));
+    fireEvent.click(getByText(ProcessesLabels.OldConnections));
 
     expect(getByTestId('tcp-old-connections-table')).toBeInTheDocument();
   });

@@ -6,7 +6,7 @@ import { UPDATE_INTERVAL } from '@config/config';
 
 import { QueriesSites } from '../Sites.enum';
 
-const processQueryParams = { processRole: [Role.Remote, Role.External], endTime: 0 };
+const processQueryParams = { processRole: [Role.Remote, Role.External] };
 
 export const useSiteProcessListData = (id: string) => {
   const { data: processes } = useSuspenseQuery({
