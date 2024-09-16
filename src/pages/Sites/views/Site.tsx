@@ -11,6 +11,7 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 
 import Details from '../components/Details';
 import Overview from '../components/Overview.';
+import ProcessList from '../components/ProcessList';
 import { useSiteData } from '../hooks/useSiteData';
 import { SiteLabels } from '../Sites.enum';
 
@@ -34,6 +35,7 @@ const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
         <Tab eventKey={SiteLabels.Overview} title={<TabTitleText>{SiteLabels.Overview}</TabTitleText>} />
         <Tab eventKey={SiteLabels.Details} title={<TabTitleText>{SiteLabels.Details}</TabTitleText>} />
+        <Tab eventKey={SiteLabels.Processes} title={<TabTitleText>{SiteLabels.Processes}</TabTitleText>} />
       </Tabs>
     );
   };
@@ -48,6 +50,7 @@ const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
         <>
           {tabSelected === SiteLabels.Overview && <Overview site={site} />}
           {tabSelected === SiteLabels.Details && <Details site={site} />}
+          {tabSelected === SiteLabels.Processes && <ProcessList site={site} />}
         </>
       }
     />

@@ -1,6 +1,6 @@
 import { getTestsIds } from '@config/testIds';
 
-context('Sites', () => {
+context('Site Detail', () => {
   const testId = `${getTestsIds.siteView('site-1')}`;
 
   beforeEach(() => {
@@ -19,6 +19,14 @@ context('Sites', () => {
     link.should('have.attr', 'href', `#/sites/site 2@site-2`);
     link.click();
     cy.url().should('eq', expectedUrl);
+  });
+});
+
+context('Site Processes', () => {
+  const testId = `${getTestsIds.siteView('site-1')}`;
+
+  beforeEach(() => {
+    cy.visit('#/sites/site%201@site-1?type=Processes');
   });
 
   it('should navigate to the correct process page when clicking on a link', () => {
