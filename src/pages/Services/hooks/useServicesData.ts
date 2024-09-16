@@ -20,8 +20,8 @@ const useServicesData = ({ limit }: useServicesDataProps) => {
   const [{ data: services }, { data: tcpActiveFlows }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesServices.GetServices, servicesQueryParams],
-        queryFn: () => RESTApi.fetchServices(servicesQueryParams),
+        queryKey: [QueriesServices.GetServices, { ...servicesQueryParams, isBound: true }],
+        queryFn: () => RESTApi.fetchServices({ ...servicesQueryParams, isBound: true }),
         refetchInterval: UPDATE_INTERVAL
       },
       {

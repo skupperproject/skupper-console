@@ -5,7 +5,7 @@ import { AvailableProtocols, Binding, Direction, Role, SortDirection } from '@AP
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = Direction.Outgoing | Direction.Incoming;
 
-export interface QueryFilters extends Record<string, string | string[] | number | SortDirection | undefined> {
+export interface QueryFilters extends Record<string, string | string[] | number | boolean | SortDirection | undefined> {
   filter?: string;
   offset?: number;
   limit?: number;
@@ -98,6 +98,7 @@ export interface ServiceResponse extends BaseResponse {
   protocol: AvailableProtocols;
   connectorCount: number;
   listenerCount: number;
+  isBound: boolean;
 }
 
 interface BiFlow extends BaseResponse {
