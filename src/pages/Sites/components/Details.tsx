@@ -17,6 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
+import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { SiteResponse } from '@sk-types/REST.interfaces';
 
@@ -67,7 +68,7 @@ const Details: FC<DetailsProps> = function ({ site: { identity: id, nameSpace, s
                             </Flex>
                           </ListItem>
                         ))
-                      : '-'}
+                      : EMPTY_VALUE_PLACEHOLDER}
                   </List>
                 </DescriptionListDescription>
               </DescriptionListGroup>

@@ -24,7 +24,7 @@ import { getTestsIds } from '@config/testIds';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
-import { formatTraceBySites } from '@core/utils/formatTrace';
+import { renderTraceBySites } from '@core/utils/renderTraceBySites';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { TcpBiflow, FlowPairsResponse, HttpBiflow } from '@sk-types/REST.interfaces';
 
@@ -54,7 +54,7 @@ const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
               <DescriptionList>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
-                  <DescriptionListDescription>{formatTraceBySites(traceSites) || '-'}</DescriptionListDescription>
+                  <DescriptionListDescription>{renderTraceBySites(traceSites)}</DescriptionListDescription>
                   {!!duration && (
                     <>
                       <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>
@@ -81,7 +81,7 @@ const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
                     <DescriptionListDescription>{protocol}</DescriptionListDescription>
 
                     <DescriptionListTerm>{FlowPairLabels.Trace}</DescriptionListTerm>
-                    <DescriptionListDescription>{formatTraceBySites(traceSites)}</DescriptionListDescription>
+                    <DescriptionListDescription>{renderTraceBySites(traceSites)}</DescriptionListDescription>
                     {!!duration && (
                       <>
                         <DescriptionListTerm>{FlowPairLabels.Duration}</DescriptionListTerm>

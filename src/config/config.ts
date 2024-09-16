@@ -26,6 +26,7 @@ export const waitForElementToBeRemovedTimeout = 10000;
 
 export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
 
+export const EMPTY_VALUE_PLACEHOLDER = '-';
 export const IDS_GROUP_SEPARATOR = '~';
 export const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
 export const PAIR_SEPARATOR = 'processpair-';
