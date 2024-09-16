@@ -1,6 +1,6 @@
 import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
-import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds';
@@ -39,16 +39,8 @@ const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
         <Tab eventKey={ComponentLabels.Overview} title={<TabTitleText>{ComponentLabels.Overview}</TabTitleText>} />
         <Tab
           eventKey={ComponentLabels.Processes}
-          title={
-            <TabTitleText>
-              {ComponentLabels.Processes}{' '}
-              {!!processCount && (
-                <Badge isRead key={1}>
-                  {processCount}
-                </Badge>
-              )}
-            </TabTitleText>
-          }
+          title={<TabTitleText>{ComponentLabels.Processes}</TabTitleText>}
+          disabled={!processCount}
         />
       </Tabs>
     );

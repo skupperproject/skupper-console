@@ -23,7 +23,13 @@ export const customServiceCells = {
       type: 'service',
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
     }),
-  TimestampCell: (props: SkLinkCellProps<ProcessResponse>) => SkEndTimeCell(props)
+  TimestampCell: SkEndTimeCell,
+  ProcessCountCell: (props: SkLinkCellProps<ServiceResponse>) =>
+    SkLinkCell({
+      ...props,
+      fitContent: true,
+      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}?type=${ServicesLabels.Servers}`
+    })
 };
 
 // Services Table
@@ -40,7 +46,8 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   },
   {
     name: ServicesLabels.Servers,
-    prop: 'connectorCount',
+    prop: 'connectorCount' as keyof ServiceResponse,
+    customCellName: 'ProcessCountCell',
     width: 15
   },
   {
@@ -48,11 +55,17 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     columnDescription: 'Open connections',
     prop: 'currentFlows' as keyof ServiceResponse,
     width: 15
+  },
+  {
+    name: ProcessesLabels.Created,
+    prop: 'startTime' as keyof ServiceResponse,
+    customCellName: 'TimestampCell',
+    width: 15
   }
 ];
 
 // Server Table
-export const tcpServerColumns = [
+export const tcpServerColumns: SKTableColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Name,
     prop: 'name' as keyof ProcessResponse,
@@ -71,7 +84,8 @@ export const tcpServerColumns = [
   {
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
-    customCellName: 'TimestampCell'
+    customCellName: 'TimestampCell',
+    width: 15
   }
 ];
 

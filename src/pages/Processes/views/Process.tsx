@@ -1,6 +1,6 @@
 import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
-import { Badge, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '@config/testIds';
@@ -41,16 +41,7 @@ const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
         <Tab
           disabled={!processPairsCount}
           eventKey={ProcessesLabels.ProcessPairs}
-          title={
-            <TabTitleText>
-              {ProcessesLabels.ProcessPairs}{' '}
-              {!!processPairsCount && (
-                <Badge isRead key={1}>
-                  {processPairsCount}
-                </Badge>
-              )}
-            </TabTitleText>
-          }
+          title={<TabTitleText>{ProcessesLabels.ProcessPairs}</TabTitleText>}
         />
       </Tabs>
     );

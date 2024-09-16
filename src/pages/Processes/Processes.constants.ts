@@ -56,7 +56,7 @@ export const CustomProcessCells = {
     SkHighlightValueCell({ ...props, format: formatBytes }),
   ByteRateFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
     SkHighlightValueCell({ ...props, format: formatByteRate }),
-  TimestampCell: (props: SkLinkCellProps<ProcessResponse>) => SkEndTimeCell(props),
+  TimestampCell: SkEndTimeCell,
   ExposureCell: SkExposedCell
 };
 

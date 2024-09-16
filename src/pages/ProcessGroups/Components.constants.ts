@@ -1,3 +1,4 @@
+import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { ComponentResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
@@ -10,13 +11,14 @@ export const ComponentsPaths = {
 };
 
 export const CustomComponentCells = {
+  TimestampCell: SkEndTimeCell,
   ComponentNameLinkCell: (props: SkLinkCellProps<ComponentResponse>) =>
     SkLinkCell({
       ...props,
       type: 'process',
       link: `${ComponentRoutesPaths.Components}/${props.data.name}@${props.data.identity}`
     }),
-  ComponentProcessCountLinkCell: (props: SkLinkCellProps<ComponentResponse>) =>
+  ProcessCountCell: (props: SkLinkCellProps<ComponentResponse>) =>
     SkLinkCell({
       ...props,
       fitContent: true,
@@ -33,7 +35,13 @@ export const ComponentColumns: SKTableColumn<ComponentResponse>[] = [
   {
     name: ComponentLabels.Count,
     prop: 'processCount' as keyof ComponentResponse,
-    customCellName: 'ComponentProcessCountLinkCell',
+    customCellName: 'ProcessCountCell',
+    width: 15
+  },
+  {
+    name: ComponentLabels.Created,
+    prop: 'startTime' as keyof ComponentResponse,
+    customCellName: 'TimestampCell',
     width: 15
   }
 ];
