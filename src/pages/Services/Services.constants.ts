@@ -1,8 +1,6 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
-import { FlowPairLabels } from '@core/components/SkFlowPairsTable/FlowPair.enum';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
@@ -15,6 +13,12 @@ export const ServicesPaths = {
   path: ServicesRoutesPaths.Services,
   name: ServicesLabels.Section
 };
+
+export const TAB_0_KEY = ServicesLabels.Overview;
+export const TAB_1_KEY = ServicesLabels.Servers;
+export const TAB_2_KEY = ServicesLabels.Requests;
+export const TAB_3_KEY = ServicesLabels.OpenConnections;
+export const TAB_4_KEY = ServicesLabels.OldConnections;
 
 export const customServiceCells = {
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
@@ -51,8 +55,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     width: 15
   },
   {
-    name: ServicesLabels.CurrentFlowPairs,
-    columnDescription: 'Open connections',
+    name: ServicesLabels.OpenConnections,
     prop: 'currentFlows' as keyof ServiceResponse,
     width: 15
   },
@@ -89,30 +92,6 @@ export const tcpServerColumns: SKTableColumn<ProcessResponse>[] = [
     width: 15
   }
 ];
-
-// Http/2 Table
-export const httpColumns = httpFlowPairsColumns;
-
-// Tcp Table
-const tcpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairLabels.FlowPairClosed]: {
-    show: false
-  },
-  [FlowPairLabels.To]: {
-    show: false
-  }
-};
-
-export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
-  ...flowPair,
-  show: tcpHiddenColumns[flowPair.name]?.show
-}));
-
-export const TAB_0_KEY = ServicesLabels.Overview;
-export const TAB_1_KEY = ServicesLabels.Servers;
-export const TAB_2_KEY = ServicesLabels.Requests;
-export const TAB_3_KEY = ServicesLabels.ActiveConnections;
-export const TAB_4_KEY = ServicesLabels.OldConnections;
 
 export const servicesSelectOptions: { name: string; id: string }[] = [
   {

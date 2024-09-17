@@ -2,11 +2,11 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { httpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { httpFlowPairsColumns, httpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 
 import FlowPairsTable from './FlowPairsTable';
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
-import { httpColumns, initRequestsQueryParams } from '../Services.constants';
+import { initRequestsQueryParams } from '../Services.constants';
 
 interface HttpRequestsProps {
   id: string;
@@ -22,7 +22,7 @@ const HttpRequests: FC<HttpRequestsProps> = function ({ id, name }) {
       <StackItem>
         <FlowPairsTable
           options={httpSelectOptions}
-          columns={httpColumns}
+          columns={httpFlowPairsColumns}
           filters={{ ...initRequestsQueryParams, routingKey: name }}
         />
       </StackItem>

@@ -9,12 +9,13 @@ import { AvailableProtocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
+import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
 import { QueryFiltersProtocolMap } from '@sk-types/Processes.interfaces';
 import { QueryFilters } from '@sk-types/REST.interfaces';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
-import { activeTcpColumns, httpColumns, oldTcpColumns } from '../Processes.constants';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const TAB_1_KEY = 'liveConnections';
@@ -175,13 +176,10 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
       )}
       <Tabs activeKey={activeTab} onSelect={handleTabClick} component="nav" isBox>
         {!!activeConnectionsCount && (
-          <Tab
-            eventKey={TAB_1_KEY}
-            title={<TabTitleText>{`${ProcessesLabels.ActiveConnections} (${activeConnectionsCount})`}</TabTitleText>}
-          >
+          <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{ProcessesLabels.OpenConnections}</TabTitleText>}>
             <SkFlowPairsTable
               data-testid={'tcp-active-connections-table'}
-              columns={activeTcpColumns}
+              columns={setColumnVisibility(tcpFlowPairsColumns, { duration: false, endTime: false })}
               rows={activeConnections}
               paginationTotalRows={activeConnectionsCount}
               pagination={true}
@@ -199,7 +197,7 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           >
             <SkFlowPairsTable
               data-testid={'tcp-old-connections-table'}
-              columns={oldTcpColumns}
+              columns={setColumnVisibility(tcpFlowPairsColumns, { duration: false, endTime: false })}
               rows={oldConnections}
               paginationTotalRows={oldConnectionsCount}
               pagination={true}
@@ -213,11 +211,16 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           <Tab
             disabled={http2RequestsCount === 0}
             eventKey={TAB_3_KEY}
-            title={<TabTitleText>{`${ProcessesLabels.Http2Requests} (${http2RequestsCount})`}</TabTitleText>}
+            title={<TabTitleText>{ProcessesLabels.Http2Requests}</TabTitleText>}
           >
             <SkFlowPairsTable
               data-testid={'http2-table'}
-              columns={httpColumns}
+              columns={setColumnVisibility(httpFlowPairsColumns, {
+                sourceProcessName: false,
+                destProcessName: false,
+                sourceSiteName: false,
+                destSiteName: false
+              })}
               rows={http2Requests}
               paginationTotalRows={http2RequestsCount}
               pagination={true}
@@ -231,12 +234,17 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           <Tab
             disabled={httpRequestsCount === 0}
             eventKey={TAB_4_KEY}
-            title={<TabTitleText>{`${ProcessesLabels.HttpRequests} (${httpRequestsCount})`}</TabTitleText>}
+            title={<TabTitleText>{ProcessesLabels.HttpRequests}</TabTitleText>}
           >
             <SkFlowPairsTable
               data-testid={'http-table'}
               title={ProcessesLabels.HttpRequests}
-              columns={httpColumns}
+              columns={setColumnVisibility(httpFlowPairsColumns, {
+                sourceProcessName: false,
+                destProcessName: false,
+                sourceSiteName: false,
+                destSiteName: false
+              })}
               rows={httpRequests}
               paginationTotalRows={httpRequestsCount}
               pagination={true}

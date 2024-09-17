@@ -20,6 +20,7 @@ import { NonNullableValue, SKTableColumn } from '@sk-types/SkTable.interfaces';
 
 import SkPagination from './SkPagination';
 import SKEmptyData from '../SkEmptyData';
+import { sortRowsByColumnName } from './SkTable.utils';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;
@@ -278,17 +279,3 @@ const SkTable = function <T>({
 };
 
 export default SkTable;
-
-function sortRowsByColumnName<T>(rows: NonNullableValue<T>[], columnName: string, direction: number) {
-  return rows.sort((a, b) => {
-    // Get the values of the sort column for the two rows being compared, and handle null values.
-    const paramA = getValueFromNestedProperty(a, columnName.split('.') as (keyof T)[]);
-    const paramB = getValueFromNestedProperty(b, columnName.split('.') as (keyof T)[]);
-
-    if (paramA == null || paramB == null || paramA === paramB) {
-      return 0;
-    }
-
-    return paramA > paramB ? direction : -direction;
-  });
-}

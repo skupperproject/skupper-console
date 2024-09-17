@@ -1,7 +1,5 @@
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkExposedCell from '@core/components/SkExposedCell';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
-import { FlowPairLabels } from '@core/components/SkFlowPairsTable/FlowPair.enum';
 import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
@@ -156,61 +154,6 @@ export const processesHttpConnectedColumns: SKTableColumn<ProcessPairsResponse>[
     modifier: 'fitContent'
   }
 ];
-
-const oldTcpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairLabels.Client]: {
-    show: false
-  },
-  [FlowPairLabels.Site]: {
-    show: false
-  },
-  [FlowPairLabels.Server]: {
-    show: false
-  },
-  [FlowPairLabels.ServerSite]: {
-    show: false
-  }
-};
-
-const activeTcpHiddenColumns: Record<string, { show: boolean }> = {
-  ...oldTcpHiddenColumns,
-  [FlowPairLabels.Duration]: {
-    show: false
-  },
-  [FlowPairLabels.FlowPairClosed]: {
-    show: false
-  }
-};
-
-const httpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairLabels.From]: {
-    show: false
-  },
-  [FlowPairLabels.To]: {
-    show: false
-  },
-  [FlowPairLabels.Site]: {
-    show: false
-  },
-  [FlowPairLabels.ServerSite]: {
-    show: false
-  }
-};
-
-export const httpColumns = httpFlowPairsColumns.map((flowPair) => ({
-  ...flowPair,
-  show: httpHiddenColumns[flowPair.name]?.show
-}));
-
-export const oldTcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
-  ...flowPair,
-  show: oldTcpHiddenColumns[flowPair.name]?.show
-}));
-
-export const activeTcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
-  ...flowPair,
-  show: activeTcpHiddenColumns[flowPair.name]?.show
-}));
 
 export const processesSelectOptions: { name: string; id: string }[] = [
   {

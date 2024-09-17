@@ -24,7 +24,7 @@ describe('SkLinkCell', () => {
 
   it('should render an empty cell', () => {
     render(<SkLinkCell data={data} value="" link="/some-link" />);
-    const emptyElement = screen.getByText("''");
+    const emptyElement = screen.getByText('');
     expect(emptyElement).toBeInTheDocument();
   });
 
@@ -40,7 +40,7 @@ describe('SkLinkCell', () => {
 
   it('should handle non-string values', () => {
     render(<SkLinkCell data={data} value={undefined} link="/some-link" />);
-    const emptyElement = screen.getByText("''");
+    const emptyElement = screen.getByText('');
     expect(emptyElement).toBeInTheDocument();
   });
 });
