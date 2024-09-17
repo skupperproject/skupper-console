@@ -2,12 +2,12 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
-import { LinkResponse } from '@sk-types/REST.interfaces';
+import { RouterLinkResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
 
 export const useSiteDetailsData = (id: string) => {
-  const queryParams = (idKey: keyof LinkResponse) => ({ [idKey]: id });
+  const queryParams = (idKey: keyof RouterLinkResponse) => ({ [idKey]: id });
 
   const [{ data: sites }, { data: links }] = useSuspenseQueries({
     queries: [

@@ -9,7 +9,7 @@ const SITES_PATH = `${API_URL}/sites`;
 export const getSitesPATH = () => SITES_PATH;
 export const getSitePATH = (id: string) => composePath([SITES_PATH, id]);
 
-const LINKS_PATH = `${API_URL}/links`;
+const LINKS_PATH = `${API_URL}/routerlinks`;
 export const getLinksPATH = () => LINKS_PATH;
 export const getLinkPATH = (id: string) => composePath([LINKS_PATH, id]);
 

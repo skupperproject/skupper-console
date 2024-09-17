@@ -1,24 +1,21 @@
-import { LinkResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { RouterLinkResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
 const SitesController = {
   // The output is an object that assigns to each source site id the ids of the connected
-  bindLinksWithSiteIds: (sites: SiteResponse[], links: LinkResponse[]) => {
+  bindLinksWithSiteIds: (sites: SiteResponse[], links: RouterLinkResponse[]) => {
     const linksExtendedMap = links.reduce(
-      function (acc, { sourceSiteId, destinationSiteId, linkCost }) {
+      function (acc, { sourceSiteId, destinationSiteId, cost }) {
         const existingLink = (acc[sourceSiteId] || []).find((link) => link.targetId === destinationSiteId);
-        if (
-          !existingLink ||
-          (existingLink.linkCost !== undefined && linkCost !== undefined && linkCost > existingLink.linkCost)
-        ) {
+        if (!existingLink || (existingLink.cost !== null && cost !== null && cost > existingLink.cost)) {
           acc[sourceSiteId] = acc[sourceSiteId] || [];
-          acc[sourceSiteId].push({ targetId: destinationSiteId, linkCost });
-        } else if (existingLink && existingLink.linkCost === undefined) {
-          existingLink.linkCost = linkCost;
+          acc[sourceSiteId].push({ targetId: destinationSiteId, cost });
+        } else if (existingLink && existingLink.cost !== null) {
+          existingLink.cost = cost;
         }
 
         return acc;
       },
-      {} as Record<string, { targetId: string; linkCost: number }[]>
+      {} as Record<string, { targetId: string | null; cost: number | null }[]>
     );
 
     return sites.map((site) => ({

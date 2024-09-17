@@ -52,7 +52,7 @@ export interface GraphEdge {
   id: string;
   type: GraphElementNames;
   source: string;
-  target: string;
+  target: string | 'unknown';
   sourceName?: string;
   targetName?: string;
   label?: string;

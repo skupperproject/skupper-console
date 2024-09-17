@@ -1,9 +1,9 @@
 import SitesController from '../../../src/pages/Sites/services';
-import { LinkResponse, SiteResponse } from '../../../src/types/REST.interfaces';
+import { RouterLinkResponse, SiteResponse } from '../../../src/types/REST.interfaces';
 
 describe('SitesController', () => {
   const emptySites: SiteResponse[] = [];
-  const emptyLinks: LinkResponse[] = [];
+  const emptyLinks: RouterLinkResponse[] = [];
 
   it('should return an empty array if sites input is empty', () => {
     const result = SitesController.bindLinksWithSiteIds(emptySites, []);

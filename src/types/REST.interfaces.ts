@@ -169,12 +169,15 @@ export interface RouterResponse extends BaseResponse {
   buildVersion: string;
 }
 
-export interface LinkResponse extends BaseResponse {
-  name?: string;
-  parent: string;
-  mode: string;
-  direction: FlowDirections;
-  linkCost: number;
+export interface RouterLinkResponse extends BaseResponse {
+  cost: number | null;
+  destinationSiteId: string | null;
+  name: string;
+  octets: number;
+  octetsReverse: number;
+  peer: string | null;
+  routerId: string;
   sourceSiteId: string;
-  destinationSiteId: string;
+  role: 'inter-router' | 'edge-router';
+  status: 'up' | 'down';
 }

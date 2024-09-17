@@ -4,7 +4,7 @@ import {
   ProcessResponse,
   FlowPairsResponse,
   SiteResponse,
-  LinkResponse,
+  RouterLinkResponse,
   ProcessPairsResponse,
   QueryFilters,
   ResponseWrapper,
@@ -97,16 +97,16 @@ export const RESTApi = {
   },
 
   // LINKS  APIs
-  fetchLinks: async (options?: QueryFilters): Promise<ResponseWrapper<LinkResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksPATH(), {
+  fetchLinks: async (options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<RouterLinkResponse[]>>(getLinksPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchLink: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<LinkResponse>> => {
-    const data = await axiosFetch<ResponseWrapper<LinkResponse>>(getLinkPATH(id), {
+  fetchLink: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse>> => {
+    const data = await axiosFetch<ResponseWrapper<RouterLinkResponse>>(getLinkPATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 

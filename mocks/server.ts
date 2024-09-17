@@ -1,11 +1,10 @@
 import { createServer, Response } from 'miragejs';
 
-import { Direction } from '@API/REST.enum';
 import { PrometheusMetricsV2 } from '@config/prometheus';
 import {
   ServiceResponse,
   ProcessPairsResponse,
-  LinkResponse,
+  RouterLinkResponse,
   ComponentResponse,
   ProcessResponse,
   RouterResponse,
@@ -32,7 +31,7 @@ const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PA
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const services: ResponseWrapper<ServiceResponse[]> = require(`${path}/SERVICES.json`);
 const flowPairs: ResponseWrapper<FlowPairsResponse[]> = require(`${path}/FLOW_PAIRS.json`);
-const links: ResponseWrapper<LinkResponse[]> = require(`${path}/LINKS.json`);
+const links: ResponseWrapper<RouterLinkResponse[]> = require(`${path}/LINKS.json`);
 
 interface ApiProps {
   params: Record<string, string>;
@@ -100,7 +99,7 @@ for (let i = 0; i < ITEM_COUNT; i++) {
   });
 }
 
-const mockLinksForPerf: LinkResponse[] = [];
+const mockLinksForPerf: RouterLinkResponse[] = [];
 mockSitePairsForPerf.forEach((_, index) => {
   const idx1 = Math.floor(Math.random() * ITEM_COUNT);
   const idx2 = Math.floor(Math.random() * ITEM_COUNT);
@@ -111,27 +110,33 @@ mockSitePairsForPerf.forEach((_, index) => {
   mockLinksForPerf.push(
     {
       identity: `link-out-${index}`,
-      parent: '',
       startTime: 1674048706622878,
       endTime: 0,
-      mode: 'interior',
-      name: '',
-      linkCost: 1,
-      direction: Direction.Outgoing,
+      role: 'inter-router',
+      name: 'out link',
+      cost: 1,
+      octets: 10,
+      octetsReverse: 100,
+      peer: '',
+      routerId: '',
       sourceSiteId: site1.identity,
-      destinationSiteId: site2.identity
+      destinationSiteId: site2.identity,
+      status: 'up'
     },
     {
       identity: `link-in-${index}`,
-      parent: '',
       startTime: 1674151543561656,
       endTime: 0,
-      mode: 'interior',
-      name: '',
-      linkCost: 1,
-      direction: Direction.Incoming,
+      role: 'edge-router',
+      name: 'in link',
+      octets: 205,
+      octetsReverse: 1100,
+      cost: 1,
+      peer: '',
+      routerId: '',
       sourceSiteId: site2.identity,
-      destinationSiteId: site1.identity
+      destinationSiteId: site1.identity,
+      status: 'up'
     }
   );
 });
@@ -395,7 +400,7 @@ export const MockApiPaths = {
   ProcessPairs: `${prefix}/processpairs`,
   ProcessPair: `${prefix}/processpairs/:id`,
   Routers: `${prefix}/routers`,
-  Links: `${prefix}/links`,
+  Links: `${prefix}/routerlinks`,
   PrometheusQuery: `${prefix}/internal/prom/query/`,
   PrometheusRangeQuery: `${prefix}/internal/prom/rangequery/`
 };
