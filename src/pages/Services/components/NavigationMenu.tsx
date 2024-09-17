@@ -44,7 +44,7 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
       <Tab
         isDisabled={!tcpActiveConnectionCount}
         eventKey={TAB_3_KEY}
-        title={<TabTitleText>{ServicesLabels.ActiveConnections}</TabTitleText>}
+        title={<TabTitleText>{ServicesLabels.OpenConnections}</TabTitleText>}
       />
       <Tab
         isDisabled={!tcpTerminatedConnectionCount}

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import SkTable from '@core/components/SkTable';
+import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { ProcessResponse } from '@sk-types/REST.interfaces';
@@ -13,7 +14,7 @@ const ProcessList: FC<ProcessListProps> = function ({ processes }) {
   return (
     <SkTable
       title={ProcessesLabels.Section}
-      columns={processesTableColumns}
+      columns={setColumnVisibility(processesTableColumns, { groupName: false })}
       rows={processes}
       customCells={{
         linkCell: CustomProcessCells.linkCell,

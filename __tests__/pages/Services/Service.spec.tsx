@@ -47,7 +47,7 @@ describe('Begin testing the Service component', () => {
 
     expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.ActiveConnections}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.OpenConnections}`)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.OldConnections}`)).toBeInTheDocument();
   });
 
