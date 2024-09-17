@@ -1,5 +1,4 @@
 import { PrometheusLabelsV2 } from '@config/prometheus';
-import SitesController from '@pages/Sites/services';
 import { GraphEdge, GraphNode } from '@sk-types/Graph.interfaces';
 import { LinkResponse, SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 import { TopologyShowOptionsSelected, TopologyMetrics } from '@sk-types/Topology.interfaces';
@@ -26,21 +25,14 @@ const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
     iconName: platform || 'site'
   }));
 
-const convertRouterLinksToEdges = (sites: SiteResponse[], links: LinkResponse[]): GraphEdge[] => {
-  const sitesWithLinks = SitesController.bindLinksWithSiteIds(sites, links);
-
-  return sitesWithLinks.flatMap(({ identity: sourceId, linkSiteIds }) =>
-    linkSiteIds.flatMap(({ targetId, linkCost }) => [
-      {
-        type: 'SkSiteEdge',
-        id: `${sourceId}-to${targetId}`,
-        source: sourceId,
-        target: targetId,
-        label: linkCost !== undefined && linkCost > 0 ? `${TopologyLabels.SiteLinkText} ${linkCost}` : ''
-      }
-    ])
-  );
-};
+const convertRouterLinksToEdges = (links: LinkResponse[]): GraphEdge[] =>
+  links.map(({ sourceSiteId, destinationSiteId, linkCost }) => ({
+    type: 'SkSiteEdge',
+    id: `${sourceSiteId}-to${destinationSiteId}`,
+    source: sourceSiteId,
+    target: destinationSiteId,
+    label: linkCost !== undefined && linkCost > 0 ? `${TopologyLabels.SiteLinkText} ${linkCost}` : ''
+  }));
 
 export const TopologySiteController = {
   siteDataTransformer: ({
@@ -55,7 +47,6 @@ export const TopologySiteController = {
     let edges: GraphEdge[] = [];
 
     if (sitesPairs) {
-      TopologyController.transformIdsToStringIds(idsSelected);
       edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkSiteDataEdge');
       edges = TopologyController.addMetricsToEdges(
         edges,
@@ -66,7 +57,7 @@ export const TopologySiteController = {
       );
       edges = TopologyController.addLabelToEdges(edges, options);
     } else if (routerLinks) {
-      edges = convertRouterLinksToEdges(sites, routerLinks);
+      edges = convertRouterLinksToEdges(routerLinks);
     }
 
     const nodes = convertSitesToNodes(sites);

@@ -1,20 +1,20 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { Direction } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
+import { LinkResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
 
-const linkQueryParams = { direction: Direction.Outgoing };
-
 export const useSiteDetailsData = (id: string) => {
+  const queryParams = (idKey: keyof LinkResponse) => ({ [idKey]: id });
+
   const [{ data: sites }, { data: links }] = useSuspenseQueries({
     queries: [
       { queryKey: [QueriesSites.GetSites], queryFn: () => RESTApi.fetchSites(), refetchInterval: UPDATE_INTERVAL },
       {
-        queryKey: [QueriesSites.GetLinksBySiteId, id, linkQueryParams],
-        queryFn: () => RESTApi.fetchLinksBySite(id, linkQueryParams),
+        queryKey: [QueriesSites.GetLinksBySiteId, queryParams('sourceSiteId')],
+        queryFn: () => RESTApi.fetchLinks(queryParams('sourceSiteId')),
         refetchInterval: UPDATE_INTERVAL
       }
     ]

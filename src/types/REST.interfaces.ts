@@ -29,6 +29,15 @@ export interface HTTPError extends AxiosError {
   httpStatus?: string;
 }
 
+/**
+ * Represents a response wrapper that contains the results, count, and time range count.
+ * The `results` property holds the actual data based on the Response interface.
+ * The `count` property represents the total count of the results.
+ * The `timeRangeCount` property represents the count of results within the specified time range.
+ *
+ * @typeParam T - The type of the results based on the Response interface.
+ * @returns A ResponseWrapper object containing the results, count, and time range count.
+ */
 export type ResponseWrapper<T> = {
   results: T; // Type based on the Response interface
   count: number;

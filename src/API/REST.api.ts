@@ -16,7 +16,6 @@ import {
 import { axiosFetch } from './apiMiddleware';
 import {
   getSitePATH,
-  getLinksBySitePATH,
   getComponentPATH,
   geProcessPATH,
   getLinkPATH,
@@ -57,14 +56,6 @@ export const RESTApi = {
 
   fetchSite: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<SiteResponse>> => {
     const data = await axiosFetch<ResponseWrapper<SiteResponse>>(getSitePATH(id), {
-      params: options ? mapQueryFiltersToQueryParams(options) : null
-    });
-
-    return data;
-  },
-
-  fetchLinksBySite: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<LinkResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<LinkResponse[]>>(getLinksBySitePATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 

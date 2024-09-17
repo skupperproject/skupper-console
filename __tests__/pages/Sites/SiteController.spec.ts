@@ -1,5 +1,5 @@
-import { LinkResponse, SiteResponse } from '../../../src/types/REST.interfaces';
 import SitesController from '../../../src/pages/Sites/services';
+import { LinkResponse, SiteResponse } from '../../../src/types/REST.interfaces';
 
 describe('SitesController', () => {
   const emptySites: SiteResponse[] = [];
