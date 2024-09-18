@@ -7,9 +7,9 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { Protocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
+import BiFlowList from '@core/components/SkBiFlowList';
+import { httpBiFlowColumns, tcpBiFlowColumns } from '@core/components/SkBiFlowList/BiFlowList.constants';
 import SKEmptyData from '@core/components/SkEmptyData';
-import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
 import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
 import { QueryFiltersProtocolMap } from '@sk-types/Processes.interfaces';
@@ -23,7 +23,7 @@ const TAB_2_KEY = 'connections';
 const TAB_3_KEY = 'http2Requests';
 const TAB_4_KEY = 'httpRequests';
 
-const initPaginatedFlowPairsQueryParams: QueryFilters = {
+const initPaginatedBiFLowQueryParams: QueryFilters = {
   offset: 0,
   limit: DEFAULT_PAGINATION_SIZE,
   sortName: 'endTime',
@@ -31,23 +31,23 @@ const initPaginatedFlowPairsQueryParams: QueryFilters = {
 };
 
 const initPaginatedHttpRequestsQueryParams: QueryFilters = {
-  ...initPaginatedFlowPairsQueryParams,
+  ...initPaginatedBiFLowQueryParams,
   protocol: Protocols.Http
 };
 
 const initPaginatedHttp2RequestsQueryParams: QueryFilters = {
-  ...initPaginatedFlowPairsQueryParams,
+  ...initPaginatedBiFLowQueryParams,
   protocol: Protocols.Http2
 };
 
 const initPaginatedActiveConnectionsQueryParams: QueryFilters = {
-  ...initPaginatedFlowPairsQueryParams,
+  ...initPaginatedBiFLowQueryParams,
   protocol: Protocols.Tcp,
   state: TcpStatus.Active
 };
 
 const initPaginatedOldConnectionsQueryParams: QueryFilters = {
-  ...initPaginatedFlowPairsQueryParams,
+  ...initPaginatedBiFLowQueryParams,
   protocol: Protocols.Tcp,
   state: TcpStatus.Terminated
 };
@@ -61,17 +61,12 @@ const initPaginatedQueryParams: QueryFiltersProtocolMap = {
   }
 };
 
-const useFlowPairsQuery = (
-  queryParams: QueryFilters,
-  sourceProcessId: string,
-  destProcessId: string,
-  enabled = true
-) => {
+const useBiFlowQuery = (queryParams: QueryFilters, sourceProcessId: string, destProcessId: string, enabled = true) => {
   const { data } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetFlowPairs, queryParams, sourceProcessId, destProcessId],
+    queryKey: [QueriesProcesses.GetBiFlows, queryParams, sourceProcessId, destProcessId],
     queryFn: () =>
       enabled
-        ? RESTApi.fetchFlowPairs({
+        ? RESTApi.fetchBiFlows({
             ...queryParams,
             sourceProcessId,
             destProcessId
@@ -107,13 +102,13 @@ const useProcessPairsContent = ({ protocol }: { protocol: Protocols | 'undefined
   return { queryParamsPaginated, handleGetFilters };
 };
 
-interface FlowPairsListProps {
+interface ProcessBiFlowListProps {
   sourceProcessId: string;
   destProcessId: string;
   protocol: Protocols | 'undefined';
 }
 
-const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destProcessId, protocol }) {
+const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, destProcessId, protocol }) {
   const [tabSelected, setTabSelected] = useState<string>();
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected || '', true);
 
@@ -124,7 +119,7 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
   const { queryParamsPaginated, handleGetFilters } = useProcessPairsContent({ protocol });
 
   const { results: httpRequests, count: httpRequestsCount } = extractData(
-    useFlowPairsQuery(
+    useBiFlowQuery(
       queryParamsPaginated[Protocols.Http],
       sourceProcessId,
       destProcessId,
@@ -133,7 +128,7 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
   );
 
   const { results: http2Requests, count: http2RequestsCount } = extractData(
-    useFlowPairsQuery(
+    useBiFlowQuery(
       queryParamsPaginated[Protocols.Http2],
       sourceProcessId,
       destProcessId,
@@ -142,11 +137,11 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
   );
 
   const { results: activeConnections, count: activeConnectionsCount } = extractData(
-    useFlowPairsQuery(queryParamsPaginated[Protocols.Tcp].active, sourceProcessId, destProcessId, true)
+    useBiFlowQuery(queryParamsPaginated[Protocols.Tcp].active, sourceProcessId, destProcessId, true)
   );
 
   const { results: oldConnections, count: oldConnectionsCount } = extractData(
-    useFlowPairsQuery(queryParamsPaginated[Protocols.Tcp].old, sourceProcessId, destProcessId, true)
+    useBiFlowQuery(queryParamsPaginated[Protocols.Tcp].old, sourceProcessId, destProcessId, true)
   );
 
   const activeTab = tabSelected
@@ -179,9 +174,9 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
     <Tabs activeKey={activeTab} onSelect={handleTabClick} component="nav" isBox>
       {!!activeConnectionsCount && (
         <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{ProcessesLabels.OpenConnections}</TabTitleText>}>
-          <SkFlowPairsTable
+          <BiFlowList
             data-testid={'tcp-active-connections-table'}
-            columns={setColumnVisibility(tcpFlowPairsColumns, { duration: false, endTime: false })}
+            columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
             rows={activeConnections}
             paginationTotalRows={activeConnectionsCount}
             pagination={true}
@@ -197,9 +192,9 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           eventKey={TAB_2_KEY}
           title={<TabTitleText>{ProcessesLabels.OldConnections}</TabTitleText>}
         >
-          <SkFlowPairsTable
+          <BiFlowList
             data-testid={'tcp-old-connections-table'}
-            columns={setColumnVisibility(tcpFlowPairsColumns, { duration: false, endTime: false })}
+            columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
             rows={oldConnections}
             paginationTotalRows={oldConnectionsCount}
             pagination={true}
@@ -215,9 +210,9 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           eventKey={TAB_3_KEY}
           title={<TabTitleText>{ProcessesLabels.Http2Requests}</TabTitleText>}
         >
-          <SkFlowPairsTable
+          <BiFlowList
             data-testid={'http2-table'}
-            columns={setColumnVisibility(httpFlowPairsColumns, {
+            columns={setColumnVisibility(httpBiFlowColumns, {
               sourceProcessName: false,
               destProcessName: false,
               sourceSiteName: false,
@@ -238,10 +233,10 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
           eventKey={TAB_4_KEY}
           title={<TabTitleText>{ProcessesLabels.HttpRequests}</TabTitleText>}
         >
-          <SkFlowPairsTable
+          <BiFlowList
             data-testid={'http-table'}
             title={ProcessesLabels.HttpRequests}
-            columns={setColumnVisibility(httpFlowPairsColumns, {
+            columns={setColumnVisibility(httpBiFlowColumns, {
               sourceProcessName: false,
               destProcessName: false,
               sourceSiteName: false,
@@ -259,7 +254,7 @@ const FlowPairsList: FC<FlowPairsListProps> = function ({ sourceProcessId, destP
   );
 };
 
-export default FlowPairsList;
+export default ProcessBiFlowList;
 
 interface Data<T> {
   results?: T[];

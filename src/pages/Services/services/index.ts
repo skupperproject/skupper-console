@@ -7,7 +7,7 @@ import { ServiceResponse } from '@sk-types/REST.interfaces';
 import { SkSankeyChartLink, SkSankeyChartNode } from '@sk-types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
-  extendServicesWithActiveAndTotalFlowPairs: (
+  extendServicesWithActiveAndTotalBiFlows: (
     services: ServiceResponse[],
     {
       tcpActiveFlows

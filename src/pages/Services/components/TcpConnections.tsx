@@ -2,11 +2,11 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { tcpBiFlowColumns, tcpSelectOptions } from '@core/components/SkBiFlowList/BiFlowList.constants';
 import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 
-import FlowPairsTable from './FlowPairsTable';
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
+import ServiceBiFlow from './ServiceBiFlowList';
 import { initActiveConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {
@@ -21,9 +21,9 @@ const TcpConnections: FC<TcpConnectionsProps> = function ({ id, name }) {
         <ProcessPairsSankeyChart serviceId={id} serviceName={name} />
       </StackItem>
       <StackItem>
-        <FlowPairsTable
+        <ServiceBiFlow
           options={tcpSelectOptions}
-          columns={setColumnVisibility(tcpFlowPairsColumns, { duration: false, endTime: false })}
+          columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
           filters={{ ...initActiveConnectionsQueryParams, routingKey: name }}
         />
       </StackItem>

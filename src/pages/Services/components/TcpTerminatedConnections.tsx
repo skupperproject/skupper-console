@@ -2,10 +2,10 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { tcpBiFlowColumns, tcpSelectOptions } from '@core/components/SkBiFlowList/BiFlowList.constants';
 
-import FlowPairsTable from './FlowPairsTable';
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
+import ServiceBiFlow from './ServiceBiFlowList';
 import { initOldConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {
@@ -20,9 +20,9 @@ const TcpTerminatedConnections: FC<TcpConnectionsProps> = function ({ id, name }
         <ProcessPairsSankeyChart serviceId={id} serviceName={name} />
       </StackItem>
       <StackItem>
-        <FlowPairsTable
+        <ServiceBiFlow
           options={tcpSelectOptions}
-          columns={tcpFlowPairsColumns}
+          columns={tcpBiFlowColumns}
           filters={{ ...initOldConnectionsQueryParams, routingKey: name }}
         />
       </StackItem>

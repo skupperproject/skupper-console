@@ -4,21 +4,21 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
+import BiFlowList from '@core/components/SkBiFlowList';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
-import { FlowPairsResponse, QueryFilters } from '@sk-types/REST.interfaces';
+import { BiFlowResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { QueriesServices } from '../Services.enum';
 
-interface FlowPairsTableProps {
-  columns: SKTableColumn<FlowPairsResponse>[];
+interface ServiceBiFlowProps {
+  columns: SKTableColumn<BiFlowResponse>[];
   filters: QueryFilters;
   options: { id: string; name: string }[];
   pagination?: number;
 }
 
-const FlowPairsTable: FC<FlowPairsTableProps> = function ({
+const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
   columns,
   filters,
   options,
@@ -26,9 +26,9 @@ const FlowPairsTable: FC<FlowPairsTableProps> = function ({
 }) {
   const [queryParams, setQueryParams] = useState({});
 
-  const { data: flowPairsData } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, { ...filters, ...queryParams }],
-    queryFn: () => RESTApi.fetchFlowPairs({ ...filters, ...queryParams }),
+  const { data: biFlow } = useSuspenseQuery({
+    queryKey: [QueriesServices.GetBiFlowByService, { ...filters, ...queryParams }],
+    queryFn: () => RESTApi.fetchBiFlows({ ...filters, ...queryParams }),
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -38,17 +38,14 @@ const FlowPairsTable: FC<FlowPairsTableProps> = function ({
     });
   }, []);
 
-  const flowPairs = flowPairsData?.results || [];
-  const flowPairsCount = flowPairsData?.timeRangeCount;
-
   return (
     <>
       <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />
 
-      <SkFlowPairsTable
+      <BiFlowList
         columns={columns}
-        rows={flowPairs}
-        paginationTotalRows={flowPairsCount}
+        rows={biFlow?.results || []}
+        paginationTotalRows={biFlow?.timeRangeCount}
         pagination={true}
         paginationPageSize={pagination}
         onGetFilters={handleGetFilters}
@@ -57,4 +54,4 @@ const FlowPairsTable: FC<FlowPairsTableProps> = function ({
   );
 };
 
-export default FlowPairsTable;
+export default ServiceBiFlow;

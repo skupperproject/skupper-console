@@ -157,7 +157,7 @@ export interface HttpBiflow extends BiFlow {
   };
 }
 
-export type FlowPairsResponse = TcpBiflow | HttpBiflow;
+export type BiFlowResponse = TcpBiflow | HttpBiflow;
 
 export interface RouterResponse extends BaseResponse {
   name: string;
