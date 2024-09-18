@@ -16,7 +16,7 @@ export const ProcessesPaths = {
   name: ProcessesLabels.Section
 };
 
-export const CustomProcessPairCells = {
+export const CustomPairsCells = {
   ProcessConnectedLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
     SkLinkCell({
       ...props,
@@ -28,7 +28,13 @@ export const CustomProcessPairCells = {
   ByteRateFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
     SkHighlightValueCell({ ...props, format: formatByteRate }),
   LatencyFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatLatency })
+    SkHighlightValueCell({ ...props, format: formatLatency }),
+  viewDetailsLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      value: ProcessesLabels.GoToDetailsLink,
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessesLabels.ProcessPairs}@${props.data.identity}?type=${ProcessesLabels.ProcessPairs}`
+    })
 };
 
 export const CustomProcessCells = {

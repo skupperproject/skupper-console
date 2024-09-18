@@ -11,7 +11,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import ProcessPairs, { ProcessPairsContent } from '../../../src/pages/Processes/views/ProcessPairs';
+import ProcessPair, { ProcessPairContent } from '../../../src/pages/Processes/views/ProcessPair';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import { ProcessPairsResponse, SitePairsResponse } from '../../../src/types/REST.interfaces';
 
@@ -37,7 +37,7 @@ describe('Begin testing the Processes component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairs />
+          <ProcessPair />
         </Suspense>
       </Wrapper>
     );
@@ -54,7 +54,7 @@ describe('Begin testing the Processes component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsContent id={processPairsResultOpToCart.identity} />
+          <ProcessPairContent id={processPairsResultOpToCart.identity} />
         </Suspense>
       </Wrapper>
     );
@@ -70,7 +70,7 @@ describe('Begin testing the Processes component', () => {
     const { queryByTestId, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsContent id={processPairsResultDatabaseToPayment.identity} />
+          <ProcessPairContent id={processPairsResultDatabaseToPayment.identity} />
         </Suspense>
       </Wrapper>
     );
@@ -86,7 +86,7 @@ describe('Begin testing the Processes component', () => {
     const { queryByTestId, getByText, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsContent id={processPairsResultPayment2ToOp.identity} />
+          <ProcessPairContent id={processPairsResultPayment2ToOp.identity} />
         </Suspense>
       </Wrapper>
     );

@@ -2,7 +2,7 @@ import { FC, useCallback, useRef, useState, startTransition } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { AvailableProtocols, Direction } from '@API/REST.enum';
+import { Protocols, Direction } from '@API/REST.enum';
 import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
 import MetricFilters from './components/Filters';
@@ -75,7 +75,7 @@ export interface MetricsProps {
   destSites?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string; siteName?: string }[];
   destProcesses?: { destinationName: string; siteName?: string }[];
-  availableProtocols?: AvailableProtocols[];
+  availableProtocols?: Protocols[];
   configFilters?: ConfigMetricFilters;
   onGetMetricFiltersConfig?: Function;
   onGetExpandedSectionsConfig?: Function;
@@ -104,9 +104,9 @@ const Metrics: FC<MetricsProps> = function (props) {
   // case: hide if We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
   const showHttp =
     !!availableProtocols?.length &&
-    queryParams.protocol !== AvailableProtocols.Tcp &&
-    !(availableProtocols?.length === 1 && availableProtocols[0] === AvailableProtocols.Tcp);
-  const showTcp = !queryParams.protocol || queryParams.protocol === AvailableProtocols.Tcp;
+    queryParams.protocol !== Protocols.Tcp &&
+    !(availableProtocols?.length === 1 && availableProtocols[0] === Protocols.Tcp);
+  const showTcp = !queryParams.protocol || queryParams.protocol === Protocols.Tcp;
 
   return (
     <Stack hasGutter>

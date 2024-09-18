@@ -10,12 +10,12 @@ import { ProcessResponse } from '@sk-types/REST.interfaces';
 import Details from './Details';
 import { ProcessesRoutesPaths } from '../Processes.enum';
 
-interface ProcessPairsDetailsProps {
+interface ProcessPairDetailsProps {
   source: ProcessResponse;
   destination: ProcessResponse;
 }
 
-const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ source, destination }) {
+const ProcessPairDetails: FC<ProcessPairDetailsProps> = function ({ source, destination }) {
   return (
     <Grid hasGutter>
       <GridItem sm={12} md={5}>
@@ -51,4 +51,4 @@ const ProcessPairsDetails: FC<ProcessPairsDetailsProps> = function ({ source, de
   );
 };
 
-export default ProcessPairsDetails;
+export default ProcessPairDetails;

@@ -3,20 +3,24 @@ import { FC } from 'react';
 import SkTable from '@core/components/SkTable';
 import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
-import { ProcessResponse } from '@sk-types/REST.interfaces';
 
-interface ProcessListProps {
-  processes: ProcessResponse[];
+import { useServersData } from '../hooks/useServersData';
+
+interface ProcessServerListProps {
+  id: string;
 }
 
-const ProcessList: FC<ProcessListProps> = function ({ processes }) {
+const ProcessServerList: FC<ProcessServerListProps> = function ({ id }) {
+  const { processes } = useServersData(id);
+
   return (
     <SkTable
-      columns={setColumnVisibility(processesTableColumns, { groupName: false })}
+      columns={setColumnVisibility(processesTableColumns, { processBinding: false })}
       rows={processes}
       customCells={{
         linkCell: CustomProcessCells.linkCell,
         linkCellSite: CustomProcessCells.linkCellSite,
+        linkComponentCell: CustomProcessCells.linkComponentCell,
         TimestampCell: CustomProcessCells.TimestampCell,
         ExposureCell: CustomProcessCells.ExposureCell
       }}
@@ -24,4 +28,4 @@ const ProcessList: FC<ProcessListProps> = function ({ processes }) {
   );
 };
 
-export default ProcessList;
+export default ProcessServerList;

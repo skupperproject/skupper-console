@@ -4,7 +4,7 @@ import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { ServiceResponse, ProcessResponse, QueryFilters } from '@sk-types/REST.interfaces';
+import { ServiceResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
@@ -64,31 +64,6 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     prop: 'startTime' as keyof ServiceResponse,
     customCellName: 'TimestampCell',
     modifier: 'fitContent',
-    width: 15
-  }
-];
-
-// Server Table
-export const tcpServerColumns: SKTableColumn<ProcessResponse>[] = [
-  {
-    name: ProcessesLabels.Name,
-    prop: 'name' as keyof ProcessResponse,
-    customCellName: 'linkCell'
-  },
-  {
-    name: ProcessesLabels.Site,
-    prop: 'parentName' as keyof ProcessResponse,
-    customCellName: 'linkCellSite'
-  },
-  {
-    name: ProcessesLabels.Component,
-    prop: 'groupName' as keyof ProcessResponse,
-    customCellName: 'linkComponentCell'
-  },
-  {
-    name: ProcessesLabels.Created,
-    prop: 'startTime' as keyof ProcessResponse,
-    customCellName: 'TimestampCell',
     width: 15
   }
 ];

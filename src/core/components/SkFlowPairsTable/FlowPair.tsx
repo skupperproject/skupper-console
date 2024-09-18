@@ -19,7 +19,7 @@ import {
 import { LaptopIcon, ServerIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
-import { AvailableProtocols } from '@API/REST.enum';
+import { Protocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
@@ -37,7 +37,7 @@ interface FlowPairProps {
 const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
   const { protocol, endTime: endTimeMicroSeconds, identity, traceSites, duration } = flowPair;
 
-  const hasHttp = protocol === AvailableProtocols.Http || protocol === AvailableProtocols.Http2;
+  const hasHttp = protocol === Protocols.Http || protocol === Protocols.Http2;
 
   return (
     <Grid hasGutter data-testid={getTestsIds.flowPairsView(identity)}>
@@ -97,14 +97,14 @@ const FlowPair: FC<FlowPairProps> = function ({ flowPair }) {
       </GridItem>
 
       <GridItem span={6}>
-        {flowPair.protocol === AvailableProtocols.Tcp ? (
+        {flowPair.protocol === Protocols.Tcp ? (
           <ConnectionDetail title={FlowPairLabels.Flow} flow={flowPair as TcpBiflow} />
         ) : (
           <RequestDetail title={FlowPairLabels.Flow} flow={flowPair as HttpBiflow} />
         )}
       </GridItem>
       <GridItem span={6}>
-        {flowPair.protocol === AvailableProtocols.Tcp ? (
+        {flowPair.protocol === Protocols.Tcp ? (
           <ConnectionDetail title={FlowPairLabels.CounterFlow} flow={flowPair as TcpBiflow} isCounterflow={true} />
         ) : (
           <RequestDetail title={FlowPairLabels.CounterFlow} flow={flowPair as HttpBiflow} isCounterflow={true} />

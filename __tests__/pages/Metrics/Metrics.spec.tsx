@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
 
-import { AvailableProtocols } from '../../../src/API/REST.enum';
+import { Protocols } from '../../../src/API/REST.enum';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import Metrics, { MetricsProps, useMetrics } from '../../../src/pages/shared/Metrics';
@@ -10,7 +10,7 @@ import { configDefaultFilters } from '../../../src/pages/shared/Metrics/Metrics.
 
 describe('useMetrics', () => {
   const initialProps = {
-    defaultMetricFilterValues: { protocol: AvailableProtocols.Http },
+    defaultMetricFilterValues: { protocol: Protocols.Http },
     defaultOpenSections: { byterate: true },
     onGetMetricFiltersConfig: jest.fn(),
     onGetExpandedSectionsConfig: jest.fn()
@@ -18,7 +18,7 @@ describe('useMetrics', () => {
 
   it('initializes with the correct state from props', () => {
     const { result } = renderHook(() => useMetrics(initialProps));
-    expect(result.current.queryParams).toEqual({ protocol: AvailableProtocols.Http });
+    expect(result.current.queryParams).toEqual({ protocol: Protocols.Http });
     expect(result.current.shouldUpdateData).toBe(0);
   });
 
@@ -32,7 +32,7 @@ describe('useMetrics', () => {
 
   it('updates queryParams and calls onGetMetricFiltersConfig when handleFilterChange is invoked', () => {
     const { result } = renderHook(() => useMetrics(initialProps));
-    const newFilters = { protocol: AvailableProtocols.Tcp };
+    const newFilters = { protocol: Protocols.Tcp };
     act(() => {
       result.current.handleFilterChange(newFilters);
     });
@@ -62,7 +62,7 @@ describe('Metrics Component', () => {
     destSites: [],
     sourceProcesses: [],
     destProcesses: [],
-    availableProtocols: [AvailableProtocols.Http, AvailableProtocols.Tcp, AvailableProtocols.Http2],
+    availableProtocols: [Protocols.Http, Protocols.Tcp, Protocols.Http2],
     onGetMetricFiltersConfig: jest.fn(),
     onGetExpandedSectionsConfig: jest.fn(),
     ...overrides

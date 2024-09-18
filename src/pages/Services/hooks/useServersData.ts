@@ -8,11 +8,11 @@ import { QueriesServices } from '../Services.enum';
 const initServersQueryParams = { limit: BIG_PAGINATION_SIZE };
 
 export const useServersData = (id: string) => {
-  const { data: servers } = useSuspenseQuery({
+  const { data: processes } = useSuspenseQuery({
     queryKey: [QueriesServices.GetProcessesByService, { ...initServersQueryParams, addresses: [id] }],
     queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [id] }),
     refetchInterval: UPDATE_INTERVAL
   });
 
-  return { servers: servers.results };
+  return { processes: processes.results };
 };

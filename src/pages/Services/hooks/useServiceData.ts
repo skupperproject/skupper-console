@@ -1,7 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols, TcpStatus } from '@API/REST.enum';
+import { Protocols, TcpStatus } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 
 import { QueriesServices } from '../Services.enum';
@@ -39,7 +39,7 @@ const useServiceData = (serviceId: string) => {
   const { data: requestsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, initServersQueryParams],
     queryFn: () => RESTApi.fetchFlowPairs({ ...initServersQueryParams, routingKey: service.results.name }),
-    enabled: service.results.protocol !== AvailableProtocols.Tcp,
+    enabled: service.results.protocol !== Protocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -52,7 +52,7 @@ const useServiceData = (serviceId: string) => {
   const { data: terminatedConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetFlowPairsByService, terminatedConnectionsQueryParams],
     queryFn: () => RESTApi.fetchFlowPairs({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
-    enabled: service.results.protocol === AvailableProtocols.Tcp,
+    enabled: service.results.protocol === Protocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 

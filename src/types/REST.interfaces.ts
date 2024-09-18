@@ -1,6 +1,6 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { AvailableProtocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
+import { Protocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
 
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = Direction.Outgoing | Direction.Incoming;
@@ -90,7 +90,7 @@ export interface SitePairsResponse extends BaseResponse {
   sourceName: string;
   destinationId: string;
   destinationName: string;
-  protocol: AvailableProtocols;
+  protocol: Protocols;
 }
 
 export type ComponentPairsResponse = SitePairsResponse;
@@ -104,7 +104,7 @@ export interface ProcessPairsResponse extends ComponentPairsResponse {
 
 export interface ServiceResponse extends BaseResponse {
   name: string;
-  protocol: AvailableProtocols;
+  protocol: Protocols;
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
@@ -128,7 +128,7 @@ interface BiFlow extends BaseResponse {
   latencyReverse: number;
   traceRouters: string[];
   traceSites: string[];
-  protocol: AvailableProtocols;
+  protocol: Protocols;
   connectorError: null;
   connectorId: string;
   listenerId: string;
@@ -172,12 +172,14 @@ export interface RouterResponse extends BaseResponse {
 export interface RouterLinkResponse extends BaseResponse {
   cost: number | null;
   destinationSiteId: string | null;
+  destinationSiteName: string | null;
   name: string;
   octets: number;
   octetsReverse: number;
   peer: string | null;
   routerId: string;
   sourceSiteId: string;
+  sourceSiteName: string;
   role: 'inter-router' | 'edge-router';
   status: 'up' | 'down';
 }

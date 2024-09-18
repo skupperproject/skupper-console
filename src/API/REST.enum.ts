@@ -3,7 +3,7 @@ export enum SortDirection {
   DESC = 'desc'
 }
 
-export enum AvailableProtocols {
+export enum Protocols {
   Tcp = 'tcp',
   Http = 'http1',
   Http2 = 'http2',

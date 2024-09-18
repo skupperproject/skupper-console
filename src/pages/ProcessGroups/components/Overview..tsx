@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { extractUniqueValues } from '@core/utils/extractUniqueValues';
 import Metrics from '@pages/shared/Metrics';
-import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
+import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { ComponentResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 
 import { useComponentOverviewData } from '../hooks/useOverviewData';
