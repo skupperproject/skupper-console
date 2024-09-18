@@ -121,6 +121,8 @@ mockSitePairsForPerf.forEach((_, index) => {
       routerId: '',
       sourceSiteId: site1.identity,
       destinationSiteId: site2.identity,
+      sourceSiteName: site1.sourceName,
+      destinationSiteName: site2.destinationName,
       status: 'up'
     },
     {
@@ -136,6 +138,8 @@ mockSitePairsForPerf.forEach((_, index) => {
       routerId: '',
       sourceSiteId: site2.identity,
       destinationSiteId: site1.identity,
+      sourceSiteName: site2.sourceName,
+      destinationSiteName: site1.destinationName,
       status: 'up'
     }
   );

@@ -19,26 +19,6 @@ export const SHOW_LINK_METRIC_VALUE = 'show-metric-value';
 
 export const displayOptionsForProcesses: TopologyDisplayOptionsMenu[] = [
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
-    items: [
-      {
-        key: SHOW_LINK_BYTES,
-        value: SHOW_LINK_BYTES,
-        label: TopologyLabels.CheckboxShowTotalBytes
-      },
-      {
-        key: SHOW_LINK_BYTERATE,
-        value: SHOW_LINK_BYTERATE,
-        label: TopologyLabels.CheckboxShowCurrentByteRate
-      },
-      {
-        key: SHOW_LINK_LATENCY,
-        value: SHOW_LINK_LATENCY,
-        label: TopologyLabels.CheckboxShowLatency
-      }
-    ]
-  },
-  {
     title: TopologyLabels.TitleGroupDisplayOptionsMenuMetricVisualization,
     items: [
       {
@@ -58,6 +38,27 @@ export const displayOptionsForProcesses: TopologyDisplayOptionsMenu[] = [
       }
     ]
   },
+  {
+    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
+    items: [
+      {
+        key: SHOW_LINK_BYTES,
+        value: SHOW_LINK_BYTES,
+        label: TopologyLabels.CheckboxShowTotalBytes
+      },
+      {
+        key: SHOW_LINK_BYTERATE,
+        value: SHOW_LINK_BYTERATE,
+        label: TopologyLabels.CheckboxShowCurrentByteRate
+      },
+      {
+        key: SHOW_LINK_LATENCY,
+        value: SHOW_LINK_LATENCY,
+        label: TopologyLabels.CheckboxShowLatency
+      }
+    ]
+  },
+
   {
     title: TopologyLabels.TitleGroupDisplayOptionsMenuOther,
     items: [
@@ -96,26 +97,6 @@ export const displayOptionsForSites: TopologyDisplayOptionsMenu[] = [
     ]
   },
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
-    items: [
-      {
-        key: SHOW_LINK_BYTES,
-        value: SHOW_LINK_BYTES,
-        label: TopologyLabels.CheckboxShowTotalBytes
-      },
-      {
-        key: SHOW_LINK_BYTERATE,
-        value: SHOW_LINK_BYTERATE,
-        label: TopologyLabels.CheckboxShowCurrentByteRate
-      },
-      {
-        key: SHOW_LINK_LATENCY,
-        value: SHOW_LINK_LATENCY,
-        label: TopologyLabels.CheckboxShowLatency
-      }
-    ]
-  },
-  {
     title: TopologyLabels.TitleGroupDisplayOptionsMenuMetricVisualization,
     items: [
       {
@@ -132,6 +113,26 @@ export const displayOptionsForSites: TopologyDisplayOptionsMenu[] = [
         key: SHOW_INBOUND_METRICS,
         value: SHOW_INBOUND_METRICS,
         label: TopologyLabels.CheckboxShowLabelReverse
+      }
+    ]
+  },
+  {
+    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
+    items: [
+      {
+        key: SHOW_LINK_BYTES,
+        value: SHOW_LINK_BYTES,
+        label: TopologyLabels.CheckboxShowTotalBytes
+      },
+      {
+        key: SHOW_LINK_BYTERATE,
+        value: SHOW_LINK_BYTERATE,
+        label: TopologyLabels.CheckboxShowCurrentByteRate
+      },
+      {
+        key: SHOW_LINK_LATENCY,
+        value: SHOW_LINK_LATENCY,
+        label: TopologyLabels.CheckboxShowLatency
       }
     ]
   }

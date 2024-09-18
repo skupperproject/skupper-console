@@ -1,70 +1,16 @@
-import { FC, Ref, useCallback, useState } from 'react';
+import { FC, MouseEvent as ReactMouseEvent, Ref, useCallback, useState } from 'react';
 
 import { MenuToggle, MenuToggleElement, Select, SelectGroup, SelectOption } from '@patternfly/react-core';
 
 import { TopologyDisplayOptionsMenu } from '@sk-types/Topology.interfaces';
 
-import {
-  SHOW_DATA_LINKS,
-  SHOW_LINK_BYTERATE,
-  SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
-  SHOW_ROUTER_LINKS
-} from '../Topology.constants';
+import { DisplayUseOptionsStateProps, useDisplayOptionsState } from '../hooks/useDisplayOptionsState';
 import { TopologyLabels } from '../Topology.enum';
 
-interface DisplayUseOptionsProps {
-  defaultSelected?: string[];
-  onSelected: (items: string[], item: string) => void;
-}
-
-interface DisplayOptionsProps extends DisplayUseOptionsProps {
+interface DisplayOptionsProps extends DisplayUseOptionsStateProps {
   options: TopologyDisplayOptionsMenu[];
   optionsDisabled?: Record<string, boolean>;
 }
-
-export const useDisplayOptions = ({ defaultSelected = [], onSelected }: DisplayUseOptionsProps) => {
-  const [displayOptionsSelected, setDisplayOptions] = useState(defaultSelected);
-
-  const selectDisplayOptions = useCallback(
-    (selectedOption: string) => {
-      const isOptionSelected = displayOptionsSelected.includes(selectedOption);
-
-      let updatedDisplayOptions = isOptionSelected
-        ? displayOptionsSelected.filter((option) => option !== selectedOption)
-        : [...displayOptionsSelected, selectedOption];
-
-      if (
-        selectedOption === SHOW_LINK_BYTES ||
-        selectedOption === SHOW_LINK_BYTERATE ||
-        selectedOption === SHOW_LINK_LATENCY
-      ) {
-        updatedDisplayOptions = isOptionSelected
-          ? displayOptionsSelected.filter((option) => option !== selectedOption)
-          : [
-              ...displayOptionsSelected.filter(
-                (option) => option !== SHOW_LINK_BYTES && option !== SHOW_LINK_BYTERATE && option !== SHOW_LINK_LATENCY
-              ),
-              selectedOption
-            ];
-      }
-
-      if (selectedOption === SHOW_DATA_LINKS || selectedOption === SHOW_ROUTER_LINKS) {
-        const otherOption = selectedOption === SHOW_DATA_LINKS ? SHOW_ROUTER_LINKS : SHOW_DATA_LINKS;
-
-        updatedDisplayOptions = isOptionSelected
-          ? [...updatedDisplayOptions, otherOption]
-          : updatedDisplayOptions.filter((option) => option !== otherOption);
-      }
-
-      setDisplayOptions(updatedDisplayOptions);
-      onSelected(updatedDisplayOptions, selectedOption);
-    },
-    [displayOptionsSelected, onSelected]
-  );
-
-  return { displayOptionsSelected, selectDisplayOptions };
-};
 
 const DisplayOptions: FC<DisplayOptionsProps> = function ({
   defaultSelected,
@@ -73,41 +19,45 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
   optionsDisabled = {}
 }) {
   const [isDisplayMenuOpen, setIsDisplayMenuOpen] = useState(false);
-  const { displayOptionsSelected, selectDisplayOptions } = useDisplayOptions({
+  const { displayOptionsSelected, selectDisplayOptions } = useDisplayOptionsState({
     defaultSelected,
     onSelected
   });
 
-  function toggleDisplayMenu() {
-    setIsDisplayMenuOpen(!isDisplayMenuOpen);
-  }
+  const toggleDisplayMenu = useCallback(() => {
+    setIsDisplayMenuOpen((prev) => !prev);
+  }, []);
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={toggleDisplayMenu} isExpanded={isDisplayMenuOpen}>
-      {TopologyLabels.DisplayPlaceholderText}
-    </MenuToggle>
+  const handleSelect = useCallback(
+    (_?: ReactMouseEvent<Element, MouseEvent>, selection?: string | number) =>
+      selectDisplayOptions(selection!.toString()),
+    [selectDisplayOptions]
   );
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    if (!open) {
+      setIsDisplayMenuOpen(false);
+    }
+  }, []);
 
   return (
     <Select
       isOpen={isDisplayMenuOpen}
-      onSelect={(_, selection) => selectDisplayOptions(selection!.toString())}
-      onOpenChange={(open) => !open && setIsDisplayMenuOpen(false)}
+      onSelect={handleSelect}
+      onOpenChange={handleOpenChange}
       selected={displayOptionsSelected}
-      toggle={toggle}
+      toggle={(toggleRef) => <Toggle toggleRef={toggleRef} isOpen={isDisplayMenuOpen} onClick={toggleDisplayMenu} />}
     >
       {options.map((group, index) => (
         <SelectGroup key={index} label={group.title}>
           {group.items.map(({ key, value, label }) => (
-            <SelectOption
+            <Option
               key={key}
               value={value}
+              label={label}
               isDisabled={optionsDisabled[value]}
-              hasCheckbox
               isSelected={displayOptionsSelected.includes(value)}
-            >
-              {label}
-            </SelectOption>
+            />
           ))}
         </SelectGroup>
       ))}
@@ -116,3 +66,29 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
 };
 
 export default DisplayOptions;
+
+const Toggle: FC<{ toggleRef: Ref<MenuToggleElement>; isOpen: boolean; onClick: () => void }> = function ({
+  toggleRef,
+  isOpen,
+  onClick
+}) {
+  return (
+    <MenuToggle ref={toggleRef} onClick={onClick} isExpanded={isOpen}>
+      {TopologyLabels.DisplayPlaceholderText}
+    </MenuToggle>
+  );
+};
+
+const Option: FC<{
+  key: string;
+  value: string;
+  label: string;
+  isDisabled: boolean;
+  isSelected: boolean;
+}> = function ({ key, value, label, isDisabled, isSelected }) {
+  return (
+    <SelectOption key={key} value={value} isDisabled={isDisabled} hasCheckbox isSelected={isSelected}>
+      {label}
+    </SelectOption>
+  );
+};
