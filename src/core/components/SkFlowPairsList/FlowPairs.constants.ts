@@ -9,7 +9,7 @@ import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { FlowPairsResponse, HttpBiflow } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
-import { FlowPairLabels } from './FlowPair.enum';
+import { FlowPairLabels } from './FlowPairs.enum';
 
 export const flowPairsComponentsTable = {
   ProcessNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>

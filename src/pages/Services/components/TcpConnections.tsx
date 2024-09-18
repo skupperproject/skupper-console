@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsTable/FlowPair.constants';
+import { tcpFlowPairsColumns, tcpSelectOptions } from '@core/components/SkFlowPairsList/FlowPairs.constants';
 import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 
 import FlowPairsTable from './FlowPairsTable';

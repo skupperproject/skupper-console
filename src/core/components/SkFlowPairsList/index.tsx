@@ -7,8 +7,8 @@ import SkTable, { SKTableProps } from '@core/components/SkTable';
 import SkViewDetailCell from '@core/components/SkViewDetailsCell';
 import { FlowPairsResponse } from '@sk-types/REST.interfaces';
 
-import FlowPair from './FlowPair';
-import { flowPairsComponentsTable } from './FlowPair.constants';
+import { flowPairsComponentsTable } from './FlowPairs.constants';
+import BiFlowDetails from '../SkBiFlowDetails';
 
 const SkFlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
   const [flowPairSelected, setFlowPairIdSelected] = useState<FlowPairsResponse>();
@@ -34,7 +34,7 @@ const SkFlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...pro
         onClose={() => handleOnClickDetails(undefined)}
         variant={ModalVariant.medium}
       >
-        {flowPairSelected ? <FlowPair flowPair={flowPairSelected} /> : null}
+        {flowPairSelected ? <BiFlowDetails biflow={flowPairSelected} /> : null}
       </Modal>
     </>
   );

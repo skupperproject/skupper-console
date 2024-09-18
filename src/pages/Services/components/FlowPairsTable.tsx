@@ -4,7 +4,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import SkFlowPairsTable from '@core/components/SkFlowPairsTable';
+import SkFlowPairsTable from '@core/components/SkFlowPairsList';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import { FlowPairsResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
