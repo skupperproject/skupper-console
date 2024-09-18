@@ -12,7 +12,8 @@ import {
   TopologyConfigMetrics,
   TopologyShowOptionsSelected,
   ProcessPairsWithMetrics,
-  TopologyConfigMetricsParams
+  TopologyConfigMetricsParams,
+  ProcessPairsWithStats
 } from '@sk-types/Topology.interfaces';
 import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph.interfaces';
 
@@ -81,12 +82,12 @@ export const TopologyController = {
     }
   },
 
-  addMetricsToTopologyDetails: ({
+  addMetricsToPairs: ({
     processesPairs,
     metrics,
     prometheusKey,
     processPairsKey
-  }: ProcessPairsWithMetrics) => {
+  }: ProcessPairsWithMetrics): ProcessPairsWithStats[] => {
     const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined, key: string) =>
       (metricPairs || []).reduce(
         (acc, { metric, value }) => {

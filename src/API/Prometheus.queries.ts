@@ -1,7 +1,7 @@
 import { PrometheusLabelsV2, PrometheusMetricsV2 } from '@config/prometheus';
 import { IntervalTimePropValue } from '@sk-types/Prometheus.interfaces';
 
-import { AvailableProtocols, Quantiles } from './REST.enum';
+import { Protocols, Quantiles } from './REST.enum';
 
 export const queries = {
   // data transfer queries
@@ -27,7 +27,7 @@ export const queries = {
 
   // count the number of active tcp flows in the services table
   getOpenConnectionsByService() {
-    return `sum by(${PrometheusLabelsV2.RoutingKey})(${PrometheusMetricsV2.TcpOpenConnections}{protocol="${AvailableProtocols.Tcp}"}-${PrometheusMetricsV2.TcpCloseCOnnections}{protocol="${AvailableProtocols.Tcp}"})`;
+    return `sum by(${PrometheusLabelsV2.RoutingKey})(${PrometheusMetricsV2.TcpOpenConnections}{protocol="${Protocols.Tcp}"}-${PrometheusMetricsV2.TcpCloseCOnnections}{protocol="${Protocols.Tcp}"})`;
   },
 
   // http request queries

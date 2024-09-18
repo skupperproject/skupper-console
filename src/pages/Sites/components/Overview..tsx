@@ -4,7 +4,7 @@ import { extractUniqueValues } from '@core/utils/extractUniqueValues';
 import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
-import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
+import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
 import { useSiteOverviewData } from '../hooks/useOverviewData';

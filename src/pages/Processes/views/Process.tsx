@@ -11,7 +11,7 @@ import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStri
 
 import Details from '../components/Details';
 import Overview from '../components/Overview';
-import ProcessPairsList from '../components/ProcessPairsList';
+import PairsList from '../components/PairsList';
 import { useProcessData } from '../hooks/useProcessData';
 import { ProcessesLabels } from '../Processes.enum';
 
@@ -57,7 +57,7 @@ const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
         <>
           {tabSelected === ProcessesLabels.Overview && <Overview process={process} />}
           {tabSelected === ProcessesLabels.Details && <Details process={process} />}
-          {tabSelected === ProcessesLabels.ProcessPairs && <ProcessPairsList process={process} />}
+          {tabSelected === ProcessesLabels.ProcessPairs && <PairsList process={process} />}
         </>
       }
     />

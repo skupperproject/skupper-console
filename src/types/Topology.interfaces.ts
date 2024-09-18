@@ -52,8 +52,14 @@ export interface TopologyShowOptionsSelected {
 }
 
 export interface ProcessPairsWithMetrics {
-  processesPairs?: ProcessPairsResponse[];
-  metrics?: TopologyMetrics;
+  processesPairs: ProcessPairsResponse[];
   prometheusKey: PrometheusLabelsV2;
   processPairsKey: 'sourceName' | 'destinationName';
+  metrics?: TopologyMetrics;
+}
+
+export interface ProcessPairsWithStats extends ProcessPairsResponse {
+  bytes: number;
+  byteRate: number;
+  latency: number;
 }

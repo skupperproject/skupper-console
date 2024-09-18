@@ -1,15 +1,12 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { Direction } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
 import { QueriesTopology } from '../Topology.enum';
-
-const linkQueryParams = { direction: Direction.Outgoing };
 
 interface UseTopologySiteDataProps {
   showDataLink: boolean;
@@ -35,8 +32,8 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesSites.GetLinks, linkQueryParams, showDataLink],
-        queryFn: () => (!showDataLink ? RESTApi.fetchLinks(linkQueryParams) : null),
+        queryKey: [QueriesSites.GetLinks, showDataLink],
+        queryFn: () => (!showDataLink ? RESTApi.fetchLinks() : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {

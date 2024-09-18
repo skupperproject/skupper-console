@@ -20,7 +20,6 @@ export const useMetricSessionHandlers = (id: string) => {
   );
 
   const selectedFilters = getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_KEY}-${id}`);
-
   const visibleMetrics = getDataFromSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`) || undefined;
 
   return {

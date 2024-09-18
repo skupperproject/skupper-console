@@ -17,7 +17,7 @@ import {
   PageSection
 } from '@patternfly/react-core';
 
-import { AvailableProtocols } from '@API/REST.enum';
+import { Protocols } from '@API/REST.enum';
 import { prometheusProcessNameseparator } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkTimeRangeFilter from '@core/components/SkTimeRangeFilter';
@@ -33,7 +33,7 @@ interface MetricFiltersProps {
   destSites?: { destinationName: string }[];
   sourceProcesses?: { destinationName: string; siteName?: string }[];
   destProcesses?: { destinationName: string; siteName?: string }[];
-  availableProtocols?: AvailableProtocols[];
+  availableProtocols?: Protocols[];
   configFilters?: ConfigMetricFilters;
   isRefetching?: boolean;
   onRefetch?: Function;
@@ -49,7 +49,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     destSites,
     sourceProcesses,
     destProcesses,
-    availableProtocols = [AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp],
+    availableProtocols = [Protocols.Http, Protocols.Http2, Protocols.Tcp],
     onSelectFilters
   }) => {
     const config: ConfigMetricFilters = deepMergeJSONObjects<ConfigMetricFilters>(configDefaultFilters, configFilters);
@@ -93,8 +93,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       }
     }
 
-    function handleSelectProtocol(selection?: AvailableProtocols) {
-      const protocol = selection as AvailableProtocols | undefined;
+    function handleSelectProtocol(selection?: Protocols) {
+      const protocol = selection as Protocols | undefined;
       const filter = { ...selectedFilters, protocol };
 
       setSelectedFilterIsOpen({ ...selectedFilterIsOpen, protocol: false });
@@ -330,7 +330,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                 <Select
                   selected={selectedFilters.protocol}
                   isOpen={selectedFilterIsOpen.protocol}
-                  onSelect={(_, selection) => handleSelectProtocol(selection as AvailableProtocols)}
+                  onSelect={(_, selection) => handleSelectProtocol(selection as Protocols)}
                   toggle={toggle}
                 >
                   {[

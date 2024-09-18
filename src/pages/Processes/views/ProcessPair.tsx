@@ -9,16 +9,16 @@ import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
 import FlowPairsList from '../components/FlowPairsList';
-import ProcessPairDetails from '../components/ProcessPairsDetails';
+import ProcessPairDetails from '../components/ProcessPairDetails';
 import { useProcessPairData } from '../hooks/useProcessPairsData';
 import { ProcessesLabels } from '../Processes.enum';
 
-export interface ProcessPairsProps {
+export interface ProcessPairProps {
   id: string;
 }
 
-export const ProcessPairsContent: FC<ProcessPairsProps> = function ({ id }) {
-  const { processPairs, source, destination } = useProcessPairData({ id });
+export const ProcessPairContent: FC<ProcessPairProps> = function ({ id }) {
+  const { processPair, source, destination } = useProcessPairData({ id });
 
   return (
     <MainContainer
@@ -35,7 +35,7 @@ export const ProcessPairsContent: FC<ProcessPairsProps> = function ({ id }) {
             <FlowPairsList
               sourceProcessId={source.identity}
               destProcessId={destination.identity}
-              protocol={processPairs.protocol}
+              protocol={processPair.protocol}
             />
           </StackItem>
         </Stack>
@@ -44,11 +44,11 @@ export const ProcessPairsContent: FC<ProcessPairsProps> = function ({ id }) {
   );
 };
 
-const ProcessPairs = function () {
+const ProcessPair = function () {
   const { id: paramId } = useParams();
   const { id } = getIdAndNameFromUrlParams(paramId as string);
 
-  return <ProcessPairsContent id={id} />;
+  return <ProcessPairContent id={id} />;
 };
 
-export default ProcessPairs;
+export default ProcessPair;

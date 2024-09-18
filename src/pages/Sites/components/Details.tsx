@@ -22,7 +22,6 @@ import ResourceIcon from '@core/components/ResourceIcon';
 import { SiteResponse } from '@sk-types/REST.interfaces';
 
 import { useSiteDetailsData } from '../hooks/useSiteDetailsData';
-import SitesController from '../services';
 import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
 
 interface DetailsProps {
@@ -30,13 +29,7 @@ interface DetailsProps {
 }
 
 const Details: FC<DetailsProps> = function ({ site: { identity: id, nameSpace, siteVersion, platform } }) {
-  const { sites, links } = useSiteDetailsData(id);
-
-  const { linkSiteIds } = SitesController.bindLinksWithSiteIds(
-    sites.filter(({ identity }) => identity === id),
-    links
-  )[0];
-  const linkedSites = sites.filter(({ identity }) => linkSiteIds.map(({ targetId }) => targetId).includes(identity));
+  const { links } = useSiteDetailsData(id);
 
   return (
     <Grid hasGutter>
@@ -57,13 +50,13 @@ const Details: FC<DetailsProps> = function ({ site: { identity: id, nameSpace, s
                 <DescriptionListTerm>{SiteLabels.Links}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <List isPlain>
-                    {linkedSites.length
-                      ? linkedSites.map(({ identity, name: linkedSiteName }) => (
+                    {links.length
+                      ? links.map(({ identity, destinationSiteId, destinationSiteName }) => (
                           <ListItem key={identity}>
                             <Flex>
                               <ResourceIcon type="site" />
-                              <Link to={`${SitesRoutesPaths.Sites}/${linkedSiteName}@${identity}`}>
-                                {linkedSiteName}
+                              <Link to={`${SitesRoutesPaths.Sites}/${destinationSiteName}@${destinationSiteId}`}>
+                                {destinationSiteName}
                               </Link>
                             </Flex>
                           </ListItem>

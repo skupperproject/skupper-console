@@ -1,6 +1,6 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { AvailableProtocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
+import { Protocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
 
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = Direction.Outgoing | Direction.Incoming;
@@ -29,6 +29,15 @@ export interface HTTPError extends AxiosError {
   httpStatus?: string;
 }
 
+/**
+ * Represents a response wrapper that contains the results, count, and time range count.
+ * The `results` property holds the actual data based on the Response interface.
+ * The `count` property represents the total count of the results.
+ * The `timeRangeCount` property represents the count of results within the specified time range.
+ *
+ * @typeParam T - The type of the results based on the Response interface.
+ * @returns A ResponseWrapper object containing the results, count, and time range count.
+ */
 export type ResponseWrapper<T> = {
   results: T; // Type based on the Response interface
   count: number;
@@ -81,7 +90,7 @@ export interface SitePairsResponse extends BaseResponse {
   sourceName: string;
   destinationId: string;
   destinationName: string;
-  protocol: AvailableProtocols;
+  protocol: Protocols;
 }
 
 export type ComponentPairsResponse = SitePairsResponse;
@@ -95,7 +104,7 @@ export interface ProcessPairsResponse extends ComponentPairsResponse {
 
 export interface ServiceResponse extends BaseResponse {
   name: string;
-  protocol: AvailableProtocols;
+  protocol: Protocols;
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
@@ -119,7 +128,7 @@ interface BiFlow extends BaseResponse {
   latencyReverse: number;
   traceRouters: string[];
   traceSites: string[];
-  protocol: AvailableProtocols;
+  protocol: Protocols;
   connectorError: null;
   connectorId: string;
   listenerId: string;
@@ -160,12 +169,17 @@ export interface RouterResponse extends BaseResponse {
   buildVersion: string;
 }
 
-export interface LinkResponse extends BaseResponse {
-  name?: string;
-  parent: string;
-  mode: string;
-  direction: FlowDirections;
-  linkCost: number;
+export interface RouterLinkResponse extends BaseResponse {
+  cost: number | null;
+  destinationSiteId: string | null;
+  destinationSiteName: string | null;
+  name: string;
+  octets: number;
+  octetsReverse: number;
+  peer: string | null;
+  routerId: string;
   sourceSiteId: string;
-  destinationSiteId: string;
+  sourceSiteName: string;
+  role: 'inter-router' | 'edge-router';
+  status: 'up' | 'down';
 }

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { extractUniqueValues } from '@core/utils/extractUniqueValues';
 import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import Metrics from '@pages/shared/Metrics';
-import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useSessionHandler';
+import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { ProcessResponse } from '@sk-types/REST.interfaces';
 
 import { useProcessOverviewData } from '../hooks/useOverviewData';

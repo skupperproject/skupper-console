@@ -1,4 +1,4 @@
-import { AvailableProtocols, Direction } from '@API/REST.enum';
+import { Protocols, Direction } from '@API/REST.enum';
 
 import { PrometheusMetric } from './Prometheus.interfaces';
 import { skAxisXY } from './SkChartArea.interfaces';
@@ -28,7 +28,7 @@ export interface QueryMetricsParams {
   sourceComponent?: string;
   destComponent?: string;
   service?: string;
-  protocol?: AvailableProtocols;
+  protocol?: Protocols;
   start?: number;
   end?: number;
   duration?: number;

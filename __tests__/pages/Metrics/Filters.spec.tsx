@@ -4,7 +4,7 @@ import { Server } from 'miragejs';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import siteData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { AvailableProtocols } from '../../../src/API/REST.enum';
+import { Protocols } from '../../../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import MetricFilters from '../../../src/pages/shared/Metrics/components/Filters';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
@@ -36,7 +36,7 @@ describe('Metrics component', () => {
           { destinationName: processesData.results[2].name },
           { destinationName: processesData.results[3].name }
         ]}
-        availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
+        availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
           sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
@@ -99,7 +99,7 @@ describe('Metrics component', () => {
           { destinationName: processesData.results[2].name },
           { destinationName: processesData.results[3].name }
         ]}
-        availableProtocols={[AvailableProtocols.Http, AvailableProtocols.Http2, AvailableProtocols.Tcp]}
+        availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
           sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
@@ -123,11 +123,11 @@ describe('Metrics component', () => {
     });
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
-    await waitFor(() => expect(screen.getByText(AvailableProtocols.Http2)).toBeInTheDocument(), {
+    await waitFor(() => expect(screen.getByText(Protocols.Http2)).toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(AvailableProtocols.Http2));
+    fireEvent.click(screen.getByText(Protocols.Http2));
     await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterProtocolsDefault)).not.toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });

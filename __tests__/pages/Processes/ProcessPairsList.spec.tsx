@@ -10,7 +10,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import ProcessPairsList from '../../../src/pages/Processes/components/ProcessPairsList';
+import PairsList from '../../../src/pages/Processes/components/PairsList';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import LoadingPage from '../../../src/pages/shared/Loading';
 import { ProcessPairsResponse, ProcessResponse, SitePairsResponse } from '../../../src/types/REST.interfaces';
@@ -29,7 +29,7 @@ describe('Processes Pairs component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairsList process={processResult} />
+          <PairsList process={processResult} />
         </Suspense>
       </Wrapper>
     );
@@ -45,7 +45,7 @@ describe('Processes Pairs component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByRole('link', { name: 'view pairs' })[1]).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: ProcessesLabels.GoToDetailsLink })[1]).toHaveAttribute(
       'href',
       `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}?type=${ProcessesLabels.ProcessPairs}`
     );

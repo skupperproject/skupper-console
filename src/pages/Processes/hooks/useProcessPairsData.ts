@@ -17,12 +17,8 @@ export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
   const sourceId = data.results.sourceId;
   const destId = data.results.destinationId;
 
-  const [{ data: processPairs }, { data: source }, { data: destination }] = useSuspenseQueries({
+  const [{ data: source }, { data: destination }] = useSuspenseQueries({
     queries: [
-      {
-        queryKey: [QueriesProcesses.GetProcessPair, id],
-        queryFn: () => RESTApi.fetchProcessesPair(id)
-      },
       {
         queryKey: [QueriesProcesses.GetProcess, sourceId],
         queryFn: () => RESTApi.fetchProcess(sourceId)
@@ -34,5 +30,5 @@ export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
     ]
   });
 
-  return { processPairs: processPairs.results, source: source.results, destination: destination.results };
+  return { processPair: data.results, source: source.results, destination: destination.results };
 };

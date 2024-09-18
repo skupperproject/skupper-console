@@ -4,7 +4,7 @@ import { ProcessesRoutesPaths } from './Processes.enum';
 
 const Processes = lazy(() => import(/* webpackChunkName: "processes" */ './views/Processes'));
 const Process = lazy(() => import(/* webpackChunkName: "process" */ './views/Process'));
-const ProcessFlowPairs = lazy(() => import(/* webpackChunkName: "process-flowpairs" */ './views/ProcessPairs'));
+const ProcessPair = lazy(() => import(/* webpackChunkName: "process-pair" */ './views/ProcessPair'));
 
 export const processesRoutes = [
   {
@@ -17,6 +17,6 @@ export const processesRoutes = [
   },
   {
     path: `${ProcessesRoutesPaths.Processes}/:process/:id`,
-    element: <ProcessFlowPairs />
+    element: <ProcessPair />
   }
 ];

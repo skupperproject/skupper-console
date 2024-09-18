@@ -1,7 +1,9 @@
 import { renderHook, render, act } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
 
-import DisplayOptions, { useDisplayOptions } from '../../../src/pages/Topology/components/DisplayOptions';
+import { useDisplayOptionsState } from '@pages/Topology/hooks/useDisplayOptionsState';
+
+import DisplayOptions from '../../../src/pages/Topology/components/DisplayOptions';
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../../../src/pages/Topology/Topology.constants';
 import { TopologyLabels } from '../../../src/pages/Topology/Topology.enum';
 
@@ -21,13 +23,13 @@ const options = {
 describe('useDisplayOptions', () => {
   it('initializes with defaultSelected values', () => {
     const { result } = renderHook(() =>
-      useDisplayOptions({ defaultSelected: ['option1', 'option2'], onSelected: mockOnSelected })
+      useDisplayOptionsState({ defaultSelected: ['option1', 'option2'], onSelected: mockOnSelected })
     );
     expect(result.current.displayOptionsSelected).toEqual(['option1', 'option2']);
   });
 
   it('adds and removes options correctly', () => {
-    const { result } = renderHook(() => useDisplayOptions({ defaultSelected: [], onSelected: mockOnSelected }));
+    const { result } = renderHook(() => useDisplayOptionsState({ defaultSelected: [], onSelected: mockOnSelected }));
     const { selectDisplayOptions } = result.current;
 
     // Add an option
@@ -41,7 +43,7 @@ describe('useDisplayOptions', () => {
 
   it('toggles between SHOW_DATA_LINKS and SHOW_ROUTER_LINKS correctly', () => {
     const { result } = renderHook(() =>
-      useDisplayOptions({ defaultSelected: [SHOW_DATA_LINKS], onSelected: mockOnSelected })
+      useDisplayOptionsState({ defaultSelected: [SHOW_DATA_LINKS], onSelected: mockOnSelected })
     );
 
     // Initially, SHOW_DATA_LINKS is selected
@@ -56,7 +58,7 @@ describe('useDisplayOptions', () => {
 
   it('clicks on SHOW_DATA_LINKS already checked and SHOW_ROUTER_LINKS correctly', () => {
     const { result } = renderHook(() =>
-      useDisplayOptions({ defaultSelected: [SHOW_DATA_LINKS], onSelected: mockOnSelected })
+      useDisplayOptionsState({ defaultSelected: [SHOW_DATA_LINKS], onSelected: mockOnSelected })
     );
 
     // Initially, SHOW_DATA_LINKS is selected
@@ -69,7 +71,7 @@ describe('useDisplayOptions', () => {
   });
 
   it('calls onSelect callback with updated options and selected option', () => {
-    const { result } = renderHook(() => useDisplayOptions({ defaultSelected: [], onSelected: mockOnSelected }));
+    const { result } = renderHook(() => useDisplayOptionsState({ defaultSelected: [], onSelected: mockOnSelected }));
     const { selectDisplayOptions } = result.current;
 
     act(() => selectDisplayOptions('option1'));
