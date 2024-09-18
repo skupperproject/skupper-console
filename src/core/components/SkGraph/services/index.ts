@@ -144,19 +144,22 @@ export const GraphController = {
     edges: EdgeData[];
     combos?: ComboData[];
   } => {
-    const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
-      hasPair: boolean;
-    })[];
     // Match the combo of the node with the existing combos
     const comboIds = combos?.map(({ id }) => id);
 
+    // find bidirectional edges
+    const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
+      hasPair: boolean;
+    })[];
+
     // calculate the visual distribution of the metrics
     const edgeMetrics = transformedEdges.map(({ metricValue, source, target }) =>
-      // remove metrics within the same site
       source === target ? 0 : metricValue || 0
     );
     const maxMetricValue = Math.max(...edgeMetrics);
-    const minMetricValue = Math.min(...edgeMetrics.filter((metric) => metric)) || 0;
+    //exclude metric values that are 0
+    //the fallback ensures that if the filtered result is empty, we get 0 instead of potentially Infinity or NaN
+    const minMetricValue = Math.min(...edgeMetrics.filter(Boolean)) || 0;
 
     return {
       nodes: nodes
