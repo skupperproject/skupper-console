@@ -6,7 +6,7 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessPairsResponse, FlowPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
+import { ProcessPairsResponse, BiFlowResponse, ProcessResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
@@ -23,11 +23,11 @@ export const CustomPairsCells = {
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}?type=${ProcessesLabels.ProcessPairs}`
     }),
-  ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+  ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
     SkHighlightValueCell({ ...props, format: formatBytes }),
-  ByteRateFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+  ByteRateFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
     SkHighlightValueCell({ ...props, format: formatByteRate }),
-  LatencyFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+  LatencyFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
     SkHighlightValueCell({ ...props, format: formatLatency }),
   viewDetailsLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
     SkLinkCell({
@@ -56,9 +56,9 @@ export const CustomProcessCells = {
       type: 'component',
       link: `${ComponentRoutesPaths.Components}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
-  ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+  ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
     SkHighlightValueCell({ ...props, format: formatBytes }),
-  ByteRateFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+  ByteRateFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
     SkHighlightValueCell({ ...props, format: formatByteRate }),
   TimestampCell: SkEndTimeCell,
   ExposureCell: SkExposedCell

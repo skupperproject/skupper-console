@@ -18,14 +18,14 @@ import { Protocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds';
 import { formatLatency } from '@core/utils/formatLatency';
 import { renderTraceBySites } from '@core/utils/renderTraceBySites';
-import { TcpBiflow, FlowPairsResponse, HttpBiflow } from '@sk-types/REST.interfaces';
+import { TcpBiflow, BiFlowResponse, HttpBiflow } from '@sk-types/REST.interfaces';
 
 import { BiFlowLabels } from './BiFlow.enum';
 import HttpFlowDetails from './HttpFlowDetails';
 import TcpFlowDetails from './TcpFlowDetails';
 
 interface BiFlowDetailsProp {
-  biflow: FlowPairsResponse;
+  biflow: BiFlowResponse;
 }
 
 const BiFlowDetails: FC<BiFlowDetailsProp> = function ({ biflow }) {
@@ -34,7 +34,7 @@ const BiFlowDetails: FC<BiFlowDetailsProp> = function ({ biflow }) {
   const hasHttp = protocol === Protocols.Http || protocol === Protocols.Http2;
 
   return (
-    <Grid hasGutter data-testid={getTestsIds.flowPairsView(identity)}>
+    <Grid hasGutter data-testid={getTestsIds.biFlowView(identity)}>
       <GridItem span={12}>
         <>
           <TextContent>

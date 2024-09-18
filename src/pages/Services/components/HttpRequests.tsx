@@ -2,10 +2,10 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { httpFlowPairsColumns, httpSelectOptions } from '@core/components/SkFlowPairsList/FlowPairs.constants';
+import { httpBiFlowColumns, httpSelectOptions } from '@core/components/SkBiFlowList/BiFlowList.constants';
 
-import FlowPairsTable from './FlowPairsTable';
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
+import ServiceBiFlow from './ServiceBiFlowList';
 import { initRequestsQueryParams } from '../Services.constants';
 
 interface HttpRequestsProps {
@@ -20,9 +20,9 @@ const HttpRequests: FC<HttpRequestsProps> = function ({ id, name }) {
         <ProcessPairsSankeyChart serviceId={id} serviceName={name} />
       </StackItem>
       <StackItem>
-        <FlowPairsTable
+        <ServiceBiFlow
           options={httpSelectOptions}
-          columns={httpFlowPairsColumns}
+          columns={httpBiFlowColumns}
           filters={{ ...initRequestsQueryParams, routingKey: name }}
         />
       </StackItem>

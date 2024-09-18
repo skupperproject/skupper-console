@@ -2,7 +2,7 @@ import {
   ComponentResponse,
   ServiceResponse,
   ProcessResponse,
-  FlowPairsResponse,
+  BiFlowResponse,
   SiteResponse,
   RouterLinkResponse,
   ProcessPairsResponse,
@@ -19,10 +19,10 @@ import {
   getComponentPATH,
   geProcessPATH,
   getLinkPATH,
-  getFlowPairPATH,
+  getBiFlowPATH,
   getSitePairPATH,
   getComponentPairPATH,
-  getFlowPairsPATH,
+  getBiFLowsPATH,
   geProcessesPATH,
   getSitesPATH,
   getLinksPATH,
@@ -142,16 +142,16 @@ export const RESTApi = {
   },
 
   // FLOW PAIRS  APIs
-  fetchFlowPairs: async (options?: QueryFilters): Promise<ResponseWrapper<FlowPairsResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse[]>>(getFlowPairsPATH(), {
+  fetchBiFlows: async (options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<BiFlowResponse[]>>(getBiFLowsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchFlowPair: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<FlowPairsResponse>> => {
-    const data = await axiosFetch<ResponseWrapper<FlowPairsResponse>>(getFlowPairPATH(id), {
+  fetchBiFlow: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse>> => {
+    const data = await axiosFetch<ResponseWrapper<BiFlowResponse>>(getBiFlowPATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 

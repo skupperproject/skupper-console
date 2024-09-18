@@ -9,7 +9,7 @@ import {
   ProcessResponse,
   RouterResponse,
   SiteResponse,
-  FlowPairsResponse,
+  BiFlowResponse,
   ResponseWrapper,
   ComponentPairsResponse,
   SitePairsResponse
@@ -30,7 +30,7 @@ const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES
 const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const services: ResponseWrapper<ServiceResponse[]> = require(`${path}/SERVICES.json`);
-const flowPairs: ResponseWrapper<FlowPairsResponse[]> = require(`${path}/FLOW_PAIRS.json`);
+const biFlow: ResponseWrapper<BiFlowResponse[]> = require(`${path}/FLOW_PAIRS.json`);
 const links: ResponseWrapper<RouterLinkResponse[]> = require(`${path}/LINKS.json`);
 
 interface ApiProps {
@@ -473,7 +473,7 @@ export function loadMockServer() {
         const queryProtocol = queryParams.protocol;
         const queryRoutingKey = queryParams.routingKey;
 
-        const results = flowPairs.results.filter(
+        const results = biFlow.results.filter(
           ({ protocol, routingKey, endTime }) =>
             (queryProtocol ? protocol === queryProtocol : true) &&
             (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
@@ -484,7 +484,7 @@ export function loadMockServer() {
       });
 
       this.get(`${prefix}/connections/:id`, (_, { params: { id } }) => ({
-        results: flowPairs.results.find(({ identity }) => identity === id)
+        results: biFlow.results.find(({ identity }) => identity === id)
       }));
 
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);

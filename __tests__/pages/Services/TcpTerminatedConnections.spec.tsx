@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import TcpTerminatedConnections from '@pages/Services/components/TcpTerminatedConnections';
 
-import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
+import BiflowData from '../../../mocks/data/FLOW_PAIRS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
@@ -14,7 +14,7 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 
 const servicesResults = servicesData.results;
-const tcpBiFlowTerminated = flowPairsData.results[6];
+const tcpBiFlowTerminated = BiflowData.results[6];
 
 describe('Begin testing the TCP connections component', () => {
   let server: Server;

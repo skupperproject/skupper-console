@@ -5,16 +5,16 @@ import { Modal, ModalVariant } from '@patternfly/react-core';
 import { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkTable, { SKTableProps } from '@core/components/SkTable';
 import SkViewDetailCell from '@core/components/SkViewDetailsCell';
-import { FlowPairsResponse } from '@sk-types/REST.interfaces';
+import { BiFlowResponse } from '@sk-types/REST.interfaces';
 
-import { flowPairsComponentsTable } from './FlowPairs.constants';
+import { customCells } from './BiFlowList.constants';
 import BiFlowDetails from '../SkBiFlowDetails';
 
-const SkFlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...props }) {
-  const [flowPairSelected, setFlowPairIdSelected] = useState<FlowPairsResponse>();
+const BiFlowList: FC<SKTableProps<BiFlowResponse>> = function ({ ...props }) {
+  const [biFlowSelected, setBiflowSelected] = useState<BiFlowResponse>();
 
-  const handleOnClickDetails = useCallback((flowPair?: FlowPairsResponse) => {
-    setFlowPairIdSelected(flowPair);
+  const handleOnClickDetails = useCallback((biflow?: BiFlowResponse) => {
+    setBiflowSelected(biflow);
   }, []);
 
   return (
@@ -22,22 +22,22 @@ const SkFlowPairsTable: FC<SKTableProps<FlowPairsResponse>> = function ({ ...pro
       <SkTable
         {...props}
         customCells={{
-          ...flowPairsComponentsTable,
-          viewDetailsLinkCell: ({ data }: SkLinkCellProps<FlowPairsResponse>) => (
+          ...customCells,
+          viewDetailsLinkCell: ({ data }: SkLinkCellProps<BiFlowResponse>) => (
             <SkViewDetailCell onClick={handleOnClickDetails} value={data} />
           )
         }}
       />
       <Modal
         title={'Details'}
-        isOpen={!!flowPairSelected}
+        isOpen={!!biFlowSelected}
         onClose={() => handleOnClickDetails(undefined)}
         variant={ModalVariant.medium}
       >
-        {flowPairSelected ? <BiFlowDetails biflow={flowPairSelected} /> : null}
+        {biFlowSelected ? <BiFlowDetails biflow={biFlowSelected} /> : null}
       </Modal>
     </>
   );
 };
 
-export default SkFlowPairsTable;
+export default BiFlowList;

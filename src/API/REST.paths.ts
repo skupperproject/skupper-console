@@ -27,8 +27,8 @@ export const getServicePATH = (id: string) => composePath([SERVICE_PATH, id]);
 export const getProcessPairsByServicePATH = (id: string) => composePath([SERVICE_PATH, id, 'processpairs']);
 
 const CONNECTIONS_PATH = `${API_URL}/connections`;
-export const getFlowPairsPATH = () => CONNECTIONS_PATH;
-export const getFlowPairPATH = (id: string) => composePath([CONNECTIONS_PATH, id]);
+export const getBiFLowsPATH = () => CONNECTIONS_PATH;
+export const getBiFlowPATH = (id: string) => composePath([CONNECTIONS_PATH, id]);
 
 const SITE_PAIRS_PATH = `${API_URL}/sitepairs`;
 export const getSitePairsPATH = () => SITE_PAIRS_PATH;

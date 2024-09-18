@@ -6,31 +6,31 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { FlowPairsResponse, HttpBiflow } from '@sk-types/REST.interfaces';
+import { BiFlowResponse, HttpBiflow } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
-import { FlowPairLabels } from './FlowPairs.enum';
+import { BiFlowListLabels } from './BiFlowList.enum';
 
-export const flowPairsComponentsTable = {
-  ProcessNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+export const customCells = {
+  ProcessNameLinkCell: (props: SkLinkCellProps<BiFlowResponse>) =>
     SkLinkCell({
       ...props,
       type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceProcessName}@${props.data.sourceProcessId}`
     }),
-  SiteNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+  SiteNameLinkCell: (props: SkLinkCellProps<BiFlowResponse>) =>
     SkLinkCell({
       ...props,
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteName}@${props.data.sourceSiteId}`
     }),
-  TargetSiteNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+  TargetSiteNameLinkCell: (props: SkLinkCellProps<BiFlowResponse>) =>
     SkLinkCell({
       ...props,
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.destSiteName}@${props.data.destSiteId}`
     }),
-  TargetProcessNameLinkCell: (props: SkLinkCellProps<FlowPairsResponse>) =>
+  TargetProcessNameLinkCell: (props: SkLinkCellProps<BiFlowResponse>) =>
     SkLinkCell({
       ...props,
       type: 'process',
@@ -38,78 +38,78 @@ export const flowPairsComponentsTable = {
     }),
   TimestampCell: SkEndTimeCell,
   DurationCell: SkDurationCell,
-  ByteFormatCell: (props: SkHighlightValueCellProps<FlowPairsResponse>) =>
+  ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
     SkHighlightValueCell({ ...props, format: formatBytes }),
   HttpStatusCell: (props: { data?: HttpBiflow }) =>
     props.data?.counterFlow?.result || props.data?.forwardFlow?.result || ''
 };
 
 // no wrap fix the column
-export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
+export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
-    name: FlowPairLabels.FlowPairClosed,
-    prop: 'endTime' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Closed,
+    prop: 'endTime' as keyof BiFlowResponse,
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.Client,
-    prop: 'sourceProcessName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Client,
+    prop: 'sourceProcessName' as keyof BiFlowResponse,
     customCellName: 'ProcessNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.Site,
-    prop: 'sourceSiteName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Site,
+    prop: 'sourceSiteName' as keyof BiFlowResponse,
     customCellName: 'SiteNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.Port,
-    prop: 'sourcePort' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Port,
+    prop: 'sourcePort' as keyof BiFlowResponse,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.TxBytes,
-    prop: 'octets' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.TxBytes,
+    prop: 'octets' as keyof BiFlowResponse,
     customCellName: 'ByteFormatCell',
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.TxLatency,
+    name: BiFlowListLabels.TxLatency,
     columnDescription: 'The TCP latency primarily concerns the start of data transmission',
-    prop: 'latency' as keyof FlowPairsResponse,
+    prop: 'latency' as keyof BiFlowResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.Server,
-    prop: 'destProcessName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Server,
+    prop: 'destProcessName' as keyof BiFlowResponse,
     customCellName: 'TargetProcessNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.ServerSite,
-    prop: 'destSiteName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.ServerSite,
+    prop: 'destSiteName' as keyof BiFlowResponse,
     customCellName: 'TargetSiteNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.RxBytes,
-    prop: 'octetsReverse' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.RxBytes,
+    prop: 'octetsReverse' as keyof BiFlowResponse,
     customCellName: 'ByteFormatCell',
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.RxLatency,
+    name: BiFlowListLabels.RxLatency,
     columnDescription: 'The TCP latency primarily concerns the start of data transmission',
-    prop: 'latencyReverse' as keyof FlowPairsResponse,
+    prop: 'latencyReverse' as keyof BiFlowResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.Duration,
-    prop: 'duration' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Duration,
+    prop: 'duration' as keyof BiFlowResponse,
     customCellName: 'DurationCell',
     modifier: 'nowrap'
   },
@@ -120,69 +120,69 @@ export const tcpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
   }
 ];
 
-export const httpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
+export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
-    name: FlowPairLabels.Completed,
-    prop: 'endTime' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Completed,
+    prop: 'endTime' as keyof BiFlowResponse,
     customCellName: 'TimestampCell',
     width: 15
   },
   {
-    name: FlowPairLabels.StatusCode,
-    prop: 'counterFlow.result' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.StatusCode,
+    prop: 'counterFlow.result' as keyof BiFlowResponse,
     customCellName: 'HttpStatusCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.Method,
-    prop: 'forwardFlow.method' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Method,
+    prop: 'forwardFlow.method' as keyof BiFlowResponse,
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.From,
-    prop: 'sourceProcessName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.From,
+    prop: 'sourceProcessName' as keyof BiFlowResponse,
     customCellName: 'ProcessNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.Site,
-    prop: 'sourceSiteName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.Site,
+    prop: 'sourceSiteName' as keyof BiFlowResponse,
     customCellName: 'SiteNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.TxBytes,
-    prop: 'octets' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.TxBytes,
+    prop: 'octets' as keyof BiFlowResponse,
     format: formatBytes,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.TxLatency,
-    prop: 'latency' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.TxLatency,
+    prop: 'latency' as keyof BiFlowResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.To,
-    prop: 'destProcessName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.To,
+    prop: 'destProcessName' as keyof BiFlowResponse,
     customCellName: 'TargetProcessNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.ServerSite,
-    prop: 'destSiteName' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.ServerSite,
+    prop: 'destSiteName' as keyof BiFlowResponse,
     customCellName: 'TargetSiteNameLinkCell',
     modifier: 'fitContent'
   },
   {
-    name: FlowPairLabels.RxBytes,
-    prop: 'octetsReverse' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.RxBytes,
+    prop: 'octetsReverse' as keyof BiFlowResponse,
     format: formatBytes,
     modifier: 'nowrap'
   },
   {
-    name: FlowPairLabels.RxLatency,
-    prop: 'latencyReverse' as keyof FlowPairsResponse,
+    name: BiFlowListLabels.RxLatency,
+    prop: 'latencyReverse' as keyof BiFlowResponse,
     format: formatLatency,
     modifier: 'nowrap'
   },
@@ -195,19 +195,19 @@ export const httpFlowPairsColumns: SKTableColumn<FlowPairsResponse>[] = [
 
 const defaultSelectOptions: { name: string; id: string }[] = [
   {
-    name: FlowPairLabels.Client,
+    name: BiFlowListLabels.Client,
     id: 'sourceProcessName'
   },
   {
-    name: FlowPairLabels.Server,
+    name: BiFlowListLabels.Server,
     id: 'destProcessName'
   },
   {
-    name: FlowPairLabels.Site,
+    name: BiFlowListLabels.Site,
     id: 'sourceSiteName'
   },
   {
-    name: FlowPairLabels.ServerSite,
+    name: BiFlowListLabels.ServerSite,
     id: 'destSiteName'
   }
 ];

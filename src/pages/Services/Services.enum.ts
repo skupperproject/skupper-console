@@ -3,8 +3,8 @@ export enum ServicesRoutesPaths {
 }
 
 export enum QueriesServices {
-  GetFlowPair = 'services-flowpair-query',
-  GetFlowPairsByService = 'services-flowpairs-by-service-query',
+  GetBiFlow = 'services-biFlow-query',
+  GetBiFlowByService = 'services-biFlow-by-service-query',
   GetProcessesByService = 'processes-by-service-query',
   GetTcpByteRateByService = 'tcp-byterate-by-service-query',
   GetServices = 'services-query',
@@ -40,5 +40,5 @@ export enum ServicesLabels {
   SankeyChartDescription = 'Visualizing relationships and the distribution among processes and sites',
   Name = 'Routing key',
   Protocol = 'Protocol',
-  TotalFLowPairs = 'Total'
+  TotalBiFlows = 'Total'
 }

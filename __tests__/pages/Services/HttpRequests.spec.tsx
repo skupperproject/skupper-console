@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import HttpRequests from '@pages/Services/components/HttpRequests';
 
-import flowPairsData from '../../../mocks/data/FLOW_PAIRS.json';
+import biFlowData from '../../../mocks/data/FLOW_PAIRS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
@@ -14,7 +14,7 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
 
 const servicesResults = servicesData.results;
-const flowPairsResults = flowPairsData.results;
+const biFlowResults = biFlowData.results;
 
 describe('Begin testing the Http requests component', () => {
   let server: Server;
@@ -42,6 +42,6 @@ describe('Begin testing the Http requests component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(flowPairsResults[0].sourceProcessName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(biFlowResults[0].sourceProcessName)[0]).toBeInTheDocument();
   });
 });

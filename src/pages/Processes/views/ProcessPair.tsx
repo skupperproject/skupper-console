@@ -8,7 +8,7 @@ import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams
 import MainContainer from '@layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
 
-import FlowPairsList from '../components/FlowPairsList';
+import BiFlowList from '../components/ProcessBiFlowList';
 import ProcessPairDetails from '../components/ProcessPairDetails';
 import { useProcessPairData } from '../hooks/useProcessPairsData';
 import { ProcessesLabels } from '../Processes.enum';
@@ -32,7 +32,7 @@ export const ProcessPairContent: FC<ProcessPairProps> = function ({ id }) {
           </StackItem>
 
           <StackItem isFilled>
-            <FlowPairsList
+            <BiFlowList
               sourceProcessId={source.identity}
               destProcessId={destination.identity}
               protocol={processPair.protocol}
