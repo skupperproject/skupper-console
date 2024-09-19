@@ -7,7 +7,7 @@ import { ServiceResponse } from '@sk-types/REST.interfaces';
 import { SkSankeyChartLink, SkSankeyChartNode } from '@sk-types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
-  extendServicesWithActiveAndTotalBiFlows: (
+  extendServicesWithOpenAndTotalConnections: (
     services: ServiceResponse[],
     {
       tcpActiveFlows
@@ -15,7 +15,7 @@ export const ServicesController = {
       tcpActiveFlows?: PrometheusMetric<'vector'>[];
     }
   ) => {
-    const tcpActiveFlowsMap =
+    const tcpOpenConnectionsMap =
       tcpActiveFlows?.length &&
       tcpActiveFlows.reduce(
         (acc, flow) => {
@@ -29,8 +29,8 @@ export const ServicesController = {
     return services.map((service) => ({
       ...service,
       currentFlows:
-        tcpActiveFlowsMap && tcpActiveFlowsMap[service.name]
-          ? Math.round(tcpActiveFlowsMap[service.name])
+        tcpOpenConnectionsMap && tcpOpenConnectionsMap[service.name]
+          ? Math.round(tcpOpenConnectionsMap[service.name])
           : EMPTY_VALUE_PLACEHOLDER
     }));
   },

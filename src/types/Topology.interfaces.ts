@@ -30,16 +30,6 @@ export interface TopologyConfigMetrics {
   };
 }
 
-export interface TopologyDisplayOptionsMenu {
-  title?: string;
-  items: {
-    key: string;
-    value: string;
-    label: string;
-    isDisabled?: Function;
-  }[];
-}
-
 export interface TopologyShowOptionsSelected {
   showLinkBytes: boolean;
   showLinkByteRate: boolean;

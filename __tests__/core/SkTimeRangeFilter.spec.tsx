@@ -9,7 +9,7 @@ describe('SkTimeRangeFilter', () => {
     const mockHandleToggle = jest.fn();
     render(<SkTimeRangeFilter duration={defaultTimeInterval.seconds} onSelectTimeInterval={mockHandleToggle} />);
 
-    await eventUser.click(screen.getByTestId('sk-time-range-filter-type'));
+    await eventUser.click(screen.getByText(timeIntervalMap.oneMinute.label));
     await eventUser.click(screen.getByText(timeIntervalMap.fiveMinutes.label));
 
     expect(mockHandleToggle).toHaveBeenCalledTimes(1);

@@ -7,7 +7,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { RESTApi } from '@API/REST.api';
 import { Protocols, SortDirection, TcpStatus } from '@API/REST.enum';
 import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import BiFlowList from '@core/components/SkBiFlowList';
+import SkBiFlowList from '@core/components/SkBiFlowList';
 import { httpBiFlowColumns, tcpBiFlowColumns } from '@core/components/SkBiFlowList/BiFlowList.constants';
 import SKEmptyData from '@core/components/SkEmptyData';
 import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
@@ -174,7 +174,7 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
     <Tabs activeKey={activeTab} onSelect={handleTabClick} component="nav" isBox>
       {!!activeConnectionsCount && (
         <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{ProcessesLabels.OpenConnections}</TabTitleText>}>
-          <BiFlowList
+          <SkBiFlowList
             data-testid={'tcp-active-connections-table'}
             columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
             rows={activeConnections}
@@ -192,7 +192,7 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
           eventKey={TAB_2_KEY}
           title={<TabTitleText>{ProcessesLabels.OldConnections}</TabTitleText>}
         >
-          <BiFlowList
+          <SkBiFlowList
             data-testid={'tcp-old-connections-table'}
             columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
             rows={oldConnections}
@@ -210,7 +210,7 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
           eventKey={TAB_3_KEY}
           title={<TabTitleText>{ProcessesLabels.Http2Requests}</TabTitleText>}
         >
-          <BiFlowList
+          <SkBiFlowList
             data-testid={'http2-table'}
             columns={setColumnVisibility(httpBiFlowColumns, {
               sourceProcessName: false,
@@ -233,7 +233,7 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
           eventKey={TAB_4_KEY}
           title={<TabTitleText>{ProcessesLabels.HttpRequests}</TabTitleText>}
         >
-          <BiFlowList
+          <SkBiFlowList
             data-testid={'http-table'}
             title={ProcessesLabels.HttpRequests}
             columns={setColumnVisibility(httpBiFlowColumns, {

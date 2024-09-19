@@ -8,10 +8,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   Grid,
-  GridItem,
-  Text,
-  TextContent,
-  TextVariants
+  GridItem
 } from '@patternfly/react-core';
 
 import { Protocols } from '@API/REST.enum';
@@ -24,57 +21,32 @@ import { BiFlowLabels } from './BiFlow.enum';
 import HttpFlowDetails from './HttpFlowDetails';
 import TcpFlowDetails from './TcpFlowDetails';
 
-interface BiFlowDetailsProp {
+interface SkBiFlowDetailsProp {
   biflow: BiFlowResponse;
 }
 
-const BiFlowDetails: FC<BiFlowDetailsProp> = function ({ biflow }) {
+const SkBiFlowDetails: FC<SkBiFlowDetailsProp> = function ({ biflow }) {
   const { protocol, endTime: endTimeMicroSeconds, identity, traceSites, duration } = biflow;
 
-  const hasHttp = protocol === Protocols.Http || protocol === Protocols.Http2;
+  const isHttp = protocol === Protocols.Http || protocol === Protocols.Http2;
+  const isTcp = protocol === Protocols.Tcp;
 
   return (
     <Grid hasGutter data-testid={getTestsIds.biFlowView(identity)}>
       <GridItem span={12}>
-        <>
-          <TextContent>
-            <Text component={TextVariants.h2}>
-              Connection {endTimeMicroSeconds ? BiFlowLabels.Closed : BiFlowLabels.Open}
-            </Text>
-          </TextContent>
-
-          <Card isPlain>
-            <CardBody>
-              <DescriptionList>
-                <DescriptionListGroup>
-                  {renderTraceDetails(traceSites)}
-                  {!!duration && renderDuration(duration)}
-                </DescriptionListGroup>
-              </DescriptionList>
-            </CardBody>
-          </Card>
-        </>
-
-        {hasHttp && (
-          <>
-            <TextContent>
-              <Text component={TextVariants.h2}>
-                Request {endTimeMicroSeconds ? BiFlowLabels.Terminated : BiFlowLabels.Open}
-              </Text>
-            </TextContent>
-            <Card isPlain>
-              <CardBody>
-                <DescriptionList>
-                  <DescriptionListGroup>
-                    {renderProtocol(protocol)}
-                    {renderTraceDetails(traceSites)}
-                    {!!duration && renderDuration(duration)}
-                  </DescriptionListGroup>
-                </DescriptionList>
-              </CardBody>
-            </Card>
-          </>
-        )}
+        <Card isPlain>
+          <CardBody>
+            <DescriptionList>
+              <DescriptionListGroup>
+                {isTcp && sessionState(endTimeMicroSeconds ? BiFlowLabels.Closed : BiFlowLabels.Open)}
+                {isHttp && sessionState(endTimeMicroSeconds ? BiFlowLabels.Terminated : BiFlowLabels.Open)}
+                {renderProtocol(protocol)}
+                {renderTraceDetails(traceSites)}
+                {!!duration && renderDuration(duration)}
+              </DescriptionListGroup>
+            </DescriptionList>
+          </CardBody>
+        </Card>
       </GridItem>
 
       <GridItem span={6}>
@@ -95,20 +67,21 @@ const BiFlowDetails: FC<BiFlowDetailsProp> = function ({ biflow }) {
   );
 };
 
-export default BiFlowDetails;
+export default SkBiFlowDetails;
 
-const renderDuration = (duration?: number) => {
-  if (!duration) {
-    return null;
-  }
+const sessionState = (state: BiFlowLabels.Terminated | BiFlowLabels.Closed | BiFlowLabels.Open) => (
+  <>
+    <DescriptionListTerm>{BiFlowLabels.State}</DescriptionListTerm>
+    <DescriptionListDescription>{state}</DescriptionListDescription>
+  </>
+);
 
-  return (
-    <>
-      <DescriptionListTerm>{BiFlowLabels.Duration}</DescriptionListTerm>
-      <DescriptionListDescription>{formatLatency(duration)}</DescriptionListDescription>
-    </>
-  );
-};
+const renderDuration = (duration: number) => (
+  <>
+    <DescriptionListTerm>{BiFlowLabels.Duration}</DescriptionListTerm>
+    <DescriptionListDescription>{formatLatency(duration)}</DescriptionListDescription>
+  </>
+);
 
 const renderTraceDetails = (traceSites: string[]) => (
   <>

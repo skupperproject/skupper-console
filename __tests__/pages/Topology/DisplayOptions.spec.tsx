@@ -12,11 +12,11 @@ const defaultSelected: string[] = [];
 const options = {
   title: 'test',
   items: [
-    { key: '1', value: '1', label: 'Option 1' },
-    { key: '2', value: '2', label: 'Option 2' },
-    { key: '3', value: '3', label: 'Option 3' },
-    { key: SHOW_DATA_LINKS, value: SHOW_DATA_LINKS, label: TopologyLabels.CheckboxShowDataLinks },
-    { key: SHOW_ROUTER_LINKS, value: SHOW_ROUTER_LINKS, label: TopologyLabels.CheckBoxShowRouterLinks }
+    { id: '1', label: 'Option 1' },
+    { id: '2', label: 'Option 2' },
+    { id: '3', label: 'Option 3' },
+    { id: SHOW_DATA_LINKS, label: TopologyLabels.CheckboxShowDataLinks },
+    { id: SHOW_ROUTER_LINKS, label: TopologyLabels.CheckBoxShowRouterLinks }
   ]
 };
 
