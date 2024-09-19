@@ -623,3 +623,20 @@ function sumValuesByTimestamp(combinedArray: PrometheusMetric<'matrix'>[]): Prom
     }
   ];
 }
+
+export const generateFilterItems = ({
+  data,
+  parentSelected
+}: {
+  data?: { destinationName: string; siteName?: string }[];
+  parentSelected?: string;
+}): {
+  id: string;
+  label: string;
+}[] =>
+  data
+    ?.filter(({ siteName }) => (parentSelected ? siteName === parentSelected : true))
+    .map(({ destinationName }) => ({
+      id: destinationName,
+      label: destinationName
+    })) || [];

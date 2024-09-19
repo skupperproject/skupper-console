@@ -10,6 +10,7 @@ export enum BiFlowLabels {
   Host = 'Node',
   ProxyHost = 'Proxy',
   Status = 'Status',
+  State = 'State',
   Port = 'Port',
   Method = 'Method',
   Process = 'Process',

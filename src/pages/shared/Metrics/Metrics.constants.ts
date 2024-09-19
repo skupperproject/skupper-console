@@ -10,12 +10,3 @@ export const configDefaultFilters: ConfigMetricFilters = {
   destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses, hide: false },
   protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
 };
-
-export const filterToggleDefault = {
-  sourceSite: false,
-  destSite: false,
-  sourceProcess: false,
-  destProcess: false,
-  protocol: false,
-  timeInterval: false
-};

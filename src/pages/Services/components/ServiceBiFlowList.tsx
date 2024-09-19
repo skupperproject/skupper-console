@@ -4,7 +4,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import BiFlowList from '@core/components/SkBiFlowList';
+import SkBiFlowList from '@core/components/SkBiFlowList';
 import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
 import { BiFlowResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
@@ -42,7 +42,7 @@ const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
     <>
       <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />
 
-      <BiFlowList
+      <SkBiFlowList
         columns={columns}
         rows={biFlow?.results || []}
         paginationTotalRows={biFlow?.timeRangeCount}

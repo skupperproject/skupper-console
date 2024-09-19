@@ -85,9 +85,9 @@ const Option: FC<{
   label: string;
   isDisabled: boolean;
   isSelected: boolean;
-}> = function ({ key, value, label, isDisabled, isSelected }) {
+}> = function ({ value, label, isDisabled, isSelected }) {
   return (
-    <SelectOption key={key} value={value} isDisabled={isDisabled} hasCheckbox isSelected={isSelected}>
+    <SelectOption value={value} isDisabled={isDisabled} hasCheckbox isSelected={isSelected}>
       {label}
     </SelectOption>
   );

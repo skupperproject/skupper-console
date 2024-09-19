@@ -8,9 +8,9 @@ import SkViewDetailCell from '@core/components/SkViewDetailsCell';
 import { BiFlowResponse } from '@sk-types/REST.interfaces';
 
 import { customCells } from './BiFlowList.constants';
-import BiFlowDetails from '../SkBiFlowDetails';
+import SkBiFlowDetails from '../SkBiFlowDetails';
 
-const BiFlowList: FC<SKTableProps<BiFlowResponse>> = function ({ ...props }) {
+const SkBiFlowList: FC<SKTableProps<BiFlowResponse>> = function ({ ...props }) {
   const [biFlowSelected, setBiflowSelected] = useState<BiFlowResponse>();
 
   const handleOnClickDetails = useCallback((biflow?: BiFlowResponse) => {
@@ -34,10 +34,10 @@ const BiFlowList: FC<SKTableProps<BiFlowResponse>> = function ({ ...props }) {
         onClose={() => handleOnClickDetails(undefined)}
         variant={ModalVariant.medium}
       >
-        {biFlowSelected ? <BiFlowDetails biflow={biFlowSelected} /> : null}
+        {biFlowSelected ? <SkBiFlowDetails biflow={biFlowSelected} /> : null}
       </Modal>
     </>
   );
 };
 
-export default BiFlowList;
+export default SkBiFlowList;

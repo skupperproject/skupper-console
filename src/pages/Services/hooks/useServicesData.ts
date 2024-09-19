@@ -38,7 +38,7 @@ const useServicesData = ({ limit }: useServicesDataProps) => {
     });
   }, []);
 
-  const servicesExtended = ServicesController.extendServicesWithActiveAndTotalBiFlows(services.results, {
+  const servicesExtended = ServicesController.extendServicesWithOpenAndTotalConnections(services.results, {
     tcpActiveFlows
   });
 
