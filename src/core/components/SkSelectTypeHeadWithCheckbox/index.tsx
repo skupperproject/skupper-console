@@ -101,7 +101,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
       onOpenChange={(open) => !open && closeMenu()}
       toggle={toggle}
     >
-      <SelectList id="select-multi-typeahead-checkbox-listbox">
+      <SelectList>
         {selectOptions.map((option, index) => (
           <SelectOption
             {...(!option.isDisabled && { hasCheckbox: true })}

@@ -4,14 +4,14 @@ import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, PageSection } from 
 
 import { Protocols } from '@API/REST.enum';
 import ResourceIcon from '@core/components/ResourceIcon';
+import SkSelect from '@core/components/SkSelect';
 import SkTimeRangeFilter from '@core/components/SkTimeRangeFilter';
 import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
 import { ConfigMetricFilters, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
 
+import useMetricFiltersState from '../hooks/useMetricFiltersState';
 import { configDefaultFilters } from '../Metrics.constants';
 import { MetricsLabels } from '../Metrics.enum';
-import PopperSelect from './PopperSelect';
-import useMetricFiltersState from '../hooks/useMetricFiltersState';
 import { generateFilterItems } from '../services';
 
 interface MetricFiltersProps {
@@ -60,8 +60,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
             <ToolbarGroup>
               <ToolbarItem>
                 {!config.sourceSites?.hide && (
-                  <PopperSelect
-                    selectedItem={selectedFilters.sourceSite}
+                  <SkSelect
+                    selected={selectedFilters.sourceSite}
                     items={generateFilterItems({ data: sourceSites })}
                     onSelect={handleSelectSourceSite}
                     placeholder={config.sourceSites?.placeholder || ''}
@@ -73,8 +73,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
               <ToolbarItem>
                 {!config.sourceProcesses?.hide && (
-                  <PopperSelect
-                    selectedItem={selectedFilters.sourceProcess}
+                  <SkSelect
+                    selected={selectedFilters.sourceProcess}
                     items={generateFilterItems({
                       data: sourceProcesses,
                       parentSelected: selectedFilters.sourceSite
@@ -89,8 +89,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
               <ToolbarItem>
                 {!config.destSites?.hide && (
-                  <PopperSelect
-                    selectedItem={selectedFilters.destSite}
+                  <SkSelect
+                    selected={selectedFilters.destSite}
                     items={generateFilterItems({ data: destSites })}
                     onSelect={handleSelectDestSite}
                     placeholder={config.destSites?.placeholder || ''}
@@ -102,8 +102,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
               <ToolbarItem>
                 {!config.destinationProcesses?.hide && (
-                  <PopperSelect
-                    selectedItem={selectedFilters.destProcess}
+                  <SkSelect
+                    selected={selectedFilters.destProcess}
                     items={generateFilterItems({
                       data: destProcesses,
                       parentSelected: selectedFilters.destSite
@@ -118,8 +118,8 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
 
               {!!availableProtocols.length && (
                 <ToolbarItem>
-                  <PopperSelect
-                    selectedItem={selectedFilters.protocol}
+                  <SkSelect
+                    selected={selectedFilters.protocol}
                     items={availableProtocols.map((name) => ({
                       id: name,
                       label: name

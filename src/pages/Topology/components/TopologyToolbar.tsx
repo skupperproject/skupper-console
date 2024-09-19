@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 
-import { TopologyDisplayOptionsMenu } from '@sk-types/Topology.interfaces';
+import { SkSelectGroupedOptions } from '@core/components/SkSelect';
 
 import DisplayOptions from './DisplayOptions';
 import DisplayResources from './DisplayResources';
@@ -18,7 +18,7 @@ import {
 } from '../Topology.constants';
 
 interface ToolbarProps {
-  displayOptions?: TopologyDisplayOptionsMenu[];
+  displayOptions?: SkSelectGroupedOptions[];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
   showOnlyNeighbours?: boolean;

@@ -70,7 +70,6 @@ describe('SkSelectTypeHeadWithCheckboxUseData', () => {
       result.current.toggleServiceMenu();
     });
 
-    // Simulate ArrowDown key press (focus first option)
     act(() => {
       result.current.handleMenuArrowKeys('ArrowDown');
     });
@@ -78,7 +77,6 @@ describe('SkSelectTypeHeadWithCheckboxUseData', () => {
     expect(result.current.focusedItemIndex).toBe(0);
     expect(result.current.activeItem).toBe('select-multi-typeahead-checkbox-1');
 
-    // Simulate another ArrowDown key press (focus second enabled option)
     act(() => {
       result.current.handleMenuArrowKeys('ArrowDown');
     });
@@ -86,7 +84,6 @@ describe('SkSelectTypeHeadWithCheckboxUseData', () => {
     expect(result.current.focusedItemIndex).toBe(1);
     expect(result.current.activeItem).toBe('select-multi-typeahead-checkbox-2');
 
-    // Simulate ArrowUp key press (wrap around to last option)
     act(() => {
       result.current.handleMenuArrowKeys('ArrowUp');
     });
@@ -100,25 +97,20 @@ describe('SkSelectTypeHeadWithCheckboxUseData', () => {
       SkSelectTypeHeadWithCheckboxUseData({ initIdsSelected: [], initOptions, onSelected: mockOnSelected })
     );
 
-    // Simulate Enter key press (open menu)
     act(() => {
       result.current.onInputKeyDown({ key: 'Enter' });
     });
     expect(result.current.isOpen).toBe(true);
 
-    // Simulate Tab key press (close menu)
     act(() => {
       result.current.onInputKeyDown({ key: 'Tab' });
     });
     expect(result.current.isOpen).toBe(false);
 
-    // Simulate Escape key press (close menu)
     act(() => {
       result.current.onInputKeyDown({ key: 'Escape' });
     });
     expect(result.current.isOpen).toBe(false);
-
-    // Simulate ArrowDown key press (focus first option)
 
     act(() => {
       result.current.toggleServiceMenu();
@@ -130,14 +122,12 @@ describe('SkSelectTypeHeadWithCheckboxUseData', () => {
     expect(result.current.focusedItemIndex).toBe(0);
     expect(result.current.activeItem).toBe('select-multi-typeahead-checkbox-1');
 
-    // Simulate ArrowUp key press (wrap around to last option)
     act(() => {
       result.current.onInputKeyDown({ key: 'ArrowUp' });
     });
     expect(result.current.focusedItemIndex).toBe(2);
     expect(result.current.activeItem).toBe('select-multi-typeahead-checkbox-3');
 
-    // Simulate Enter key press (select focused option)
     act(() => {
       result.current.onInputKeyDown({ key: 'Enter' });
     });
