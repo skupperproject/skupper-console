@@ -265,7 +265,7 @@ function normalizeBitrateToLineThickness(
   minMetricValue: number,
   maxMetricValue: number,
   maxLineThickness = 30, // The maximum possible thickness of the line. Default is 30.
-  power = 0.35 //The exponent used for scaling, affecting the curve of normalization. Default is 0.35.
+  power = 0.55 //The exponent used for scaling, affecting the curve of normalization. Default is 0.35.
 ) {
   const minMetricValueSanitized = maxMetricValue - minMetricValue !== 0 ? minMetricValue : 0.1;
 
@@ -274,7 +274,7 @@ function normalizeBitrateToLineThickness(
   const normalizedValue =
     Math.pow((value - (minMetricValueSanitized === Infinity ? 0 : minMetricValueSanitized)) / range, power) *
     maxLineThickness;
-  const lineThickness = Math.max(Math.ceil(normalizedValue), 0.5);
+  const lineThickness = Math.max(Math.ceil(normalizedValue), 5);
 
   return lineThickness;
 }
