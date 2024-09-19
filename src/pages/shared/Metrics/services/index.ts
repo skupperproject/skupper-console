@@ -289,20 +289,28 @@ export const MetricsController = {
       destProcess: sourceProcess
     };
 
-    const isService = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
+    const isServiceWIthoutSelecedResources = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
     const isSameSite = !!sourceSite && !!destSite && sourceSite === destSite;
 
     try {
       const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
         await Promise.all([
           // Outgoing byte rate: Data sent from the source to the destination
-          isService || isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+          isServiceWIthoutSelecedResources || (!service && isSameSite)
+            ? []
+            : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
           // Incoming byte rate: Data received at the destination from the source
-          isService || isSameSite ? [] : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+          isServiceWIthoutSelecedResources || (!service && isSameSite)
+            ? []
+            : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
-          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          !isServiceWIthoutSelecedResources && service
+            ? []
+            : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
-          PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+          !isServiceWIthoutSelecedResources && service
+            ? []
+            : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
         ]);
 
       return {
