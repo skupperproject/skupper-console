@@ -8,7 +8,3 @@ export interface SkSankeyChartLink {
   target: string;
   value: number;
 }
-
-export interface SankeyFilterValues {
-  [key: string]: string | undefined;
-}

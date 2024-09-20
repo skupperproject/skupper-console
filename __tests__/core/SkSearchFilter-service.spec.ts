@@ -1,16 +1,14 @@
+import { SkSelectOption } from '@core/components/SkSelect';
+
 import { SkSearchFilterController } from '../../src/core/components/SkTable/SkSearchFilter/services'; // Assuming your service file path
-import {
-  FilterType,
-  FilterTypeWithSearchText,
-  FilterSelected
-} from '../../src/types/SkFilter.interfaces'; // Assuming your interface file path
+import { FilterTypeWithSearchText, FilterSelected } from '../../src/types/SkFilter.interfaces'; // Assuming your interface file path
 
 describe('SkSearchFilterController', () => {
   describe('getFilterTypesWithSearchValues', () => {
     it('should return an empty array when filterValues is undefined', () => {
-      const selectOptions: FilterType[] = [
-        { id: 'filter1', name: 'Filter 1' },
-        { id: 'filter2', name: 'Filter 2' }
+      const selectOptions: SkSelectOption[] = [
+        { id: 'filter1', label: 'Filter 1' },
+        { id: 'filter2', label: 'Filter 2' }
       ];
 
       const result = SkSearchFilterController.getFilterTypesWithSearchValues(selectOptions, undefined);
@@ -19,9 +17,9 @@ describe('SkSearchFilterController', () => {
     });
 
     it('should return all selected filters with search values', () => {
-      const selectOptions: FilterType[] = [
-        { id: 'filter1', name: 'Filter 1' },
-        { id: 'filter2', name: 'Filter 2' }
+      const selectOptions: SkSelectOption[] = [
+        { id: 'filter1', label: 'Filter 1' },
+        { id: 'filter2', label: 'Filter 2' }
       ];
 
       const filterValues: FilterSelected = {
@@ -30,8 +28,8 @@ describe('SkSearchFilterController', () => {
       };
 
       const expectedResult: FilterTypeWithSearchText[] = [
-        { id: 'filter1', name: 'Filter 1', searchValue: 'value1' },
-        { id: 'filter2', name: 'Filter 2', searchValue: 'value2' }
+        { id: 'filter1', label: 'Filter 1', searchValue: 'value1' },
+        { id: 'filter2', label: 'Filter 2', searchValue: 'value2' }
       ];
 
       const result = SkSearchFilterController.getFilterTypesWithSearchValues(selectOptions, filterValues);
@@ -40,10 +38,10 @@ describe('SkSearchFilterController', () => {
     });
 
     it('should return only selected filters with search values', () => {
-      const selectOptions: FilterType[] = [
-        { id: 'filter1', name: 'Filter 1' },
-        { id: 'filter2', name: 'Filter 2' },
-        { id: 'filter3', name: 'Filter 3' }
+      const selectOptions: SkSelectOption[] = [
+        { id: 'filter1', label: 'Filter 1' },
+        { id: 'filter2', label: 'Filter 2' },
+        { id: 'filter3', label: 'Filter 3' }
       ];
 
       const filterValues: FilterSelected = {
@@ -51,7 +49,7 @@ describe('SkSearchFilterController', () => {
         filter2: undefined
       };
 
-      const expectedResult: FilterTypeWithSearchText[] = [{ id: 'filter1', name: 'Filter 1', searchValue: 'value1' }];
+      const expectedResult: FilterTypeWithSearchText[] = [{ id: 'filter1', label: 'Filter 1', searchValue: 'value1' }];
 
       const result = SkSearchFilterController.getFilterTypesWithSearchValues(selectOptions, filterValues);
 

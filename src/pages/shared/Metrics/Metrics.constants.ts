@@ -1,3 +1,4 @@
+import { defaultTimeInterval } from '@config/prometheus';
 import { ConfigMetricFilters } from '@sk-types/Metrics.interfaces';
 
 import { MetricsLabels } from './Metrics.enum';
@@ -8,5 +9,6 @@ export const configDefaultFilters: ConfigMetricFilters = {
   destSites: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationSites, hide: false },
   sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses, hide: false },
   destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses, hide: false },
-  protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
+  protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault },
+  timeInterval: { disabled: false, placeholder: defaultTimeInterval.seconds }
 };

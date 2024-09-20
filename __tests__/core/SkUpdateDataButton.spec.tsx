@@ -24,7 +24,7 @@ describe('SkUpdateDataButton component', () => {
 
     await waitFor(() => {
       fireEvent.click(screen.getByText('Refresh off'));
-      expect(screen.getByText(refreshDataIntervalMap[1].key)).toBeInTheDocument();
+      expect(screen.getByText(refreshDataIntervalMap[1].label)).toBeInTheDocument();
     });
   });
 
@@ -37,18 +37,17 @@ describe('SkUpdateDataButton component', () => {
         <SkUpdateDataButton
           onRefreshIntervalSelected={onRefreshIntervalSelectedMock}
           onClick={revalidateLiveQueriesMock}
-          refreshIntervalDefault={'15s'}
         />
       </Wrapper>
     );
 
-    fireEvent.click(screen.getByText(refreshDataIntervalMap[1].key));
-    fireEvent.click(screen.getByText(refreshDataIntervalMap[2].key));
+    fireEvent.click(screen.getByText(refreshDataIntervalMap[0].label));
+    fireEvent.click(screen.getByText(refreshDataIntervalMap[2].label));
 
     await waitFor(() => {
       // call the first one and the one inside the setInterval
-      expect(revalidateLiveQueriesMock).toHaveBeenCalledTimes(2);
-      expect(onRefreshIntervalSelectedMock).toHaveBeenCalledWith(refreshDataIntervalMap[2].value);
+      expect(revalidateLiveQueriesMock).toHaveBeenCalledTimes(1);
+      expect(onRefreshIntervalSelectedMock).toHaveBeenCalledWith(Number(refreshDataIntervalMap[2].id));
     });
   });
 
@@ -56,11 +55,11 @@ describe('SkUpdateDataButton component', () => {
     const revalidateLiveQueriesMock = jest.fn();
     render(
       <Wrapper>
-        <SkUpdateDataButton onClick={revalidateLiveQueriesMock} refreshIntervalDefault={'15s'} />
+        <SkUpdateDataButton onClick={revalidateLiveQueriesMock} refreshIntervalDefault={'15'} />
       </Wrapper>
     );
 
     fireEvent.click(screen.getByTestId('update-data-click'));
-    await waitFor(() => expect(revalidateLiveQueriesMock).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(revalidateLiveQueriesMock).toHaveBeenCalledTimes(1));
   });
 });

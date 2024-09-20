@@ -1,12 +1,13 @@
-import { FC, ReactNode, Ref, MouseEvent as ReactMouseEvent, useState } from 'react';
+import { FC, ReactNode, Ref, MouseEvent as ReactMouseEvent, useState, useCallback } from 'react';
 
 import { MenuToggle, MenuToggleElement, Select, SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 
-type Selected = string | string[] | undefined;
+type SelectParam = string | number | undefined;
+type Selected = SelectParam | string[];
 
-interface SkSelectOption {
+export interface SkSelectOption {
   id: string;
-  label: string;
+  label: string | number;
   isDisabled?: boolean;
 }
 
@@ -15,8 +16,10 @@ export interface SkSelectGroupedOptions {
   items: SkSelectOption[];
 }
 
+type SelectOptions = SkSelectOption[] | SkSelectGroupedOptions[];
+
 interface SkSelectProps {
-  items: SkSelectOption[] | SkSelectGroupedOptions[];
+  items: SelectOptions;
   selected: Selected;
   isGrouped?: boolean;
   placeholder?: string;
@@ -27,7 +30,7 @@ interface SkSelectProps {
   optionsDisabled?: { [key: string]: boolean };
   icon?: ReactNode;
   formatToggle?: (value: Selected) => Selected;
-  onSelect: (value: string) => void;
+  onSelect: (value: SelectParam) => void;
 }
 
 const FILTER_BY_SERVICE_MAX_HEIGHT = 400;
@@ -48,31 +51,33 @@ const SkSelect: FC<SkSelectProps> = function ({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
-  const handleSelect = (_: ReactMouseEvent | undefined, selection: string | number | undefined) => {
-    if (forceClose) {
-      setIsOpen(false);
-    }
+  const handleSelect = useCallback(
+    (_: ReactMouseEvent | undefined, selection: SelectParam) => {
+      if (forceClose) {
+        setIsOpen(false);
+      }
 
-    onSelect(selection as string);
-  };
+      onSelect(selection);
+    },
+    [forceClose, onSelect]
+  );
 
   return (
     <Select
       role="menu"
       isOpen={isOpen}
       onSelect={handleSelect}
-      onOpenChange={handleToggle}
       style={{
         maxHeight: `${FILTER_BY_SERVICE_MAX_HEIGHT}px`,
         overflow: 'auto'
       }}
       toggle={(toggleRef) => (
         <Toggle
-          selected={selected}
+          selected={getSelectedLabel(items, selected)}
           isDisabled={isDisabled}
           toggleRef={toggleRef}
           isExpanded={isOpen}
@@ -88,12 +93,12 @@ const SkSelect: FC<SkSelectProps> = function ({
         (items as SkSelectGroupedOptions[]).map((group, index) => (
           <SelectGroup key={index} label={group.title}>
             {group.items.map(({ id, label }, index2) => (
-              <Option
+              <Options
                 key={index2}
                 value={id}
                 label={label}
-                isDisabled={optionsDisabled[id]}
-                isSelected={(selected?.length && selected.includes(id)) || false}
+                isDisabled={optionsDisabled[id] ?? false}
+                isSelected={(Array.isArray(selected) && selected.includes(id)) || selected === id}
                 hasCheckbox={hasCheckbox}
               />
             ))}
@@ -103,12 +108,12 @@ const SkSelect: FC<SkSelectProps> = function ({
         <SelectList>
           {placeholder && <SelectOption value={undefined}>{placeholder}</SelectOption>}
           {(items as SkSelectOption[]).map(({ id, label }, index) => (
-            <Option
+            <Options
               key={index}
               value={id}
               label={label}
-              isDisabled={optionsDisabled[id]}
-              isSelected={label === selected}
+              isDisabled={optionsDisabled[id] ?? false}
+              isSelected={id === selected}
               hasCheckbox={hasCheckbox}
             />
           ))}
@@ -120,6 +125,7 @@ const SkSelect: FC<SkSelectProps> = function ({
 
 export default SkSelect;
 
+// Toggle component
 const Toggle: FC<{
   toggleRef: Ref<MenuToggleElement>;
   isExpanded: boolean;
@@ -142,22 +148,15 @@ const Toggle: FC<{
   onClick
 }) {
   return (
-    <MenuToggle
-      isDisabled={!!isDisabled}
-      ref={toggleRef}
-      onClick={onClick}
-      isExpanded={isExpanded}
-      icon={icon}
-      disabled={isDisabled}
-    >
+    <MenuToggle isDisabled={!!isDisabled} ref={toggleRef} onClick={onClick} isExpanded={isExpanded} icon={icon}>
       {(!forcePlaceholder && formatToggle(selected)) || placeholder}
     </MenuToggle>
   );
 };
 
-const Option: FC<{
+const Options: FC<{
   value: string;
-  label: string;
+  label: string | number;
   isDisabled: boolean;
   isSelected: boolean;
   hasCheckbox: boolean;
@@ -168,3 +167,25 @@ const Option: FC<{
     </SelectOption>
   );
 };
+
+// Utility function to get selected label
+function getSelectedLabel(options: SelectOptions, selected: Selected): SelectParam {
+  // Ensure options is a valid array and has at least one element
+  if (Array.isArray(options) && options.length > 0) {
+    // Check if the first element has the 'id' property (i.e., it's a flat list of SkSelectOption)
+    if ('id' in options[0]) {
+      return (options as SkSelectOption[]).find((option) => option.id === selected)?.label;
+    }
+
+    // If options are grouped (SkSelectGroupedOptions[])
+    for (const group of options as SkSelectGroupedOptions[]) {
+      const foundItem = group.items.find((option) => option.id === selected);
+      if (foundItem) {
+        return foundItem.label;
+      }
+    }
+  }
+
+  // Return undefined if no matching label is found
+  return undefined;
+}

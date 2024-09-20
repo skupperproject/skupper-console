@@ -7,8 +7,8 @@ import { testIds } from '../../src/core/components/SkTable/SkSearchFilter/SkSear
 describe('SkSearchFilter', () => {
   const onSearchMock = jest.fn();
   const selectOptions = [
-    { id: 'option1', name: 'Option 1' },
-    { id: 'option2', name: 'Option 2' }
+    { id: 'option1', label: 'Option 1' },
+    { id: 'option2', label: 'Option 2' }
   ];
 
   it('should handle input change', async () => {
@@ -66,15 +66,15 @@ describe('SkSearchFilter', () => {
     const { getByTestId, getByText, getByPlaceholderText } = render(
       <SkSearchFilter onSearch={onSearchMock} selectOptions={selectOptions} />
     );
-    let selectedFilterBtn = getByText(selectOptions[0].name);
+    let selectedFilterBtn = getByText(selectOptions[0].label);
 
     await eventUser.click(selectedFilterBtn);
     expect(getByTestId(testIds.selectFilterType)).toBeInTheDocument();
 
-    selectedFilterBtn = getByText(selectOptions[1].name);
+    selectedFilterBtn = getByText(selectOptions[1].label);
 
     await eventUser.click(selectedFilterBtn);
-    expect(getByPlaceholderText(`Search by ${selectOptions[1].name.toLowerCase()}`)).toBeInTheDocument();
+    expect(getByPlaceholderText(`Search by ${selectOptions[1].label.toLowerCase()}`)).toBeInTheDocument();
   });
 
   it('should change the filter type selection', async () => {

@@ -2,7 +2,8 @@ import { SortDirection, TcpStatus } from '@API/REST.enum';
 import { BIG_PAGINATION_SIZE } from '@config/config';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
+import { SankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
+import { SkSelectOption } from '@core/components/SkSelect';
 import { ProcessesLabels } from '@pages/Processes/Processes.enum';
 import { ServiceResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
@@ -68,13 +69,13 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   }
 ];
 
-export const servicesSelectOptions: { name: string; id: string }[] = [
+export const servicesSelectOptions: SkSelectOption[] = [
   {
-    name: 'Routing key',
+    label: 'Routing key',
     id: 'name'
   },
   {
-    name: 'Protocol',
+    label: 'Protocol',
     id: 'protocol'
   }
 ];
@@ -100,4 +101,4 @@ export const initRequestsQueryParams: QueryFilters = {
   sortDirection: SortDirection.DESC
 };
 
-export const defaultMetricOption = sankeyMetricOptions[0].id;
+export const defaultMetricOption = SankeyMetricOptions[0].id;

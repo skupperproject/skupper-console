@@ -10,6 +10,7 @@ import { BiFlowResponse, HttpBiflow } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { BiFlowListLabels } from './BiFlowList.enum';
+import { SkSelectOption } from '../SkSelect';
 
 export const customCells = {
   ProcessNameLinkCell: (props: SkLinkCellProps<BiFlowResponse>) =>
@@ -193,21 +194,21 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   }
 ];
 
-const defaultSelectOptions: { name: string; id: string }[] = [
+const defaultSelectOptions: SkSelectOption[] = [
   {
-    name: BiFlowListLabels.Client,
+    label: BiFlowListLabels.Client,
     id: 'sourceProcessName'
   },
   {
-    name: BiFlowListLabels.Server,
+    label: BiFlowListLabels.Server,
     id: 'destProcessName'
   },
   {
-    name: BiFlowListLabels.Site,
+    label: BiFlowListLabels.Site,
     id: 'sourceSiteName'
   },
   {
-    name: BiFlowListLabels.ServerSite,
+    label: BiFlowListLabels.ServerSite,
     id: 'destSiteName'
   }
 ];

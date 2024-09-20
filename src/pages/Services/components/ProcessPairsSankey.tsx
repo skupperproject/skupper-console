@@ -12,7 +12,6 @@ import {
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
 } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import SankeyFilter from '@core/components/SKSanckeyChart/SkSankeyFilter';
 
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
@@ -96,8 +95,7 @@ const ProcessPairsSankeyChart: FC<SankeyChartProps> = function ({ serviceId, ser
         </TextContent>
       </CardHeader>
       <CardBody>
-        <SankeyFilter onSearch={handleGetPairType} />
-        <SkSankeyChart data={{ nodes, links }} />
+        <SkSankeyChart data={{ nodes, links }} onSearch={handleGetPairType} />
       </CardBody>
     </Card>
   );
