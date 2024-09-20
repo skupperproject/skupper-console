@@ -12,8 +12,6 @@ describe('useMetricFiltersState', () => {
     sourceSite: 'site1',
     destSite: 'site2',
     protocol: Protocols.Tcp,
-    start: 0,
-    end: 100,
     duration: 1000
   };
 
@@ -85,18 +83,16 @@ describe('useMetricFiltersState', () => {
       })
     );
 
-    const newTimeInterval = { start: 1609545600, end: 1609632000, duration: 86400 };
+    const duration = 86400;
     act(() => {
-      result.current.handleSelectTimeInterval(newTimeInterval);
+      result.current.handleSelectTimeInterval(86400);
     });
 
-    expect(result.current.selectedFilters.start).toEqual(newTimeInterval.start);
-    expect(result.current.selectedFilters.end).toEqual(newTimeInterval.end);
-    expect(result.current.selectedFilters.duration).toEqual(newTimeInterval.duration);
+    expect(result.current.selectedFilters.duration).toEqual(duration);
 
     expect(onSelectFiltersMock).toHaveBeenCalledWith({
       ...defaultMetricFilterValues,
-      ...newTimeInterval
+      duration
     });
   });
 

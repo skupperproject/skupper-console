@@ -9,6 +9,7 @@ export interface ConfigMetricFilters {
   destinationProcesses?: { disabled?: boolean; placeholder?: string; hide?: boolean };
   sourceProcesses?: { disabled?: boolean; placeholder?: string; hide?: boolean };
   protocols?: { disabled?: boolean; placeholder?: string };
+  timeInterval?: { disabled?: boolean; placeholder?: number };
 }
 
 export enum QueriesMetrics {

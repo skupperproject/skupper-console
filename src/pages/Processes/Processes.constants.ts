@@ -2,6 +2,7 @@ import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkExposedCell from '@core/components/SkExposedCell';
 import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
+import { SkSelectOption } from '@core/components/SkSelect';
 import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
@@ -161,17 +162,17 @@ export const processesHttpConnectedColumns: SKTableColumn<ProcessPairsResponse>[
   }
 ];
 
-export const processesSelectOptions: { name: string; id: string }[] = [
+export const processesSelectOptions: SkSelectOption[] = [
   {
-    name: 'Process',
+    label: 'Process',
     id: 'name'
   },
   {
-    name: 'Component',
+    label: 'Component',
     id: 'groupName'
   },
   {
-    name: 'Site',
+    label: 'Site',
     id: 'parentName'
   }
 ];

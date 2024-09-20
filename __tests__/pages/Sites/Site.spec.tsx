@@ -64,8 +64,10 @@ describe('Site component', () => {
     fireEvent.click(screen.getByText(SiteLabels.Details));
 
     await waitFor(() => {
-      expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
       expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
+      expect(screen.getByText(siteResults[0].name)).toBeInTheDocument();
+      expect(screen.getByText(siteResults[0].platform as string)).toBeInTheDocument();
+      expect(screen.getByText(siteResults[0].siteVersion)).toBeInTheDocument();
     });
   });
 

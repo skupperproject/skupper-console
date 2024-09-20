@@ -51,7 +51,7 @@ const useMetricFiltersState = ({ defaultMetricFilterValues, onSelectFilters }: U
   );
 
   const handleSelectProtocol = useCallback(
-    (selection?: string) => {
+    (selection: string | number | undefined) => {
       const protocol = selection as Protocols;
 
       setSelectedFilters((prev) => ({ ...prev, protocol }));
@@ -64,19 +64,13 @@ const useMetricFiltersState = ({ defaultMetricFilterValues, onSelectFilters }: U
   );
 
   const handleSelectTimeInterval = useCallback(
-    ({
-      start,
-      end,
-      duration
-    }: {
-      start: number | undefined;
-      end: number | undefined;
-      duration: number | undefined;
-    }) => {
-      setSelectedFilters((prev) => ({ ...prev, start, end, duration }));
+    (selection: string | number | undefined) => {
+      const duration = selection as number;
+
+      setSelectedFilters((prev) => ({ ...prev, duration }));
 
       if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilters, start, end, duration });
+        onSelectFilters({ ...selectedFilters, duration });
       }
     },
     [onSelectFilters, selectedFilters]

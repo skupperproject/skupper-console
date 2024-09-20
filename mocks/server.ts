@@ -184,11 +184,20 @@ export const MockApi = {
     results: sites.results.find(({ identity }) => identity === id) || []
   }),
 
-  getLinks: () => {
+  getLinks: (_: unknown, { queryParams }: ApiProps) => {
     const linksForPerfTests = ITEM_COUNT ? mockLinksForPerf : [];
     const results = [...links.results, ...linksForPerfTests];
 
-    return { ...links, results };
+    const filteredResults = results.filter(
+      (result) => queryParams.sourceSiteId && result.sourceSiteId === queryParams.sourceSiteId
+    );
+
+    return {
+      ...links,
+      results: filteredResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
   getComponents: (_: unknown, { queryParams }: ApiProps) => {
     const results = [...processGroups.results];
@@ -197,13 +206,12 @@ export const MockApi = {
         ...processGroups,
         results,
         count: results.length,
-        totalCount: results.length,
         timeRangeCount: results.length
       };
     }
 
     const filteredResults = results.filter(
-      (result) => (queryParams.processGroupRole && result.processGroupRole === queryParams.processGroupRole) || true
+      (result) => queryParams.processGroupRole && result.processGroupRole === queryParams.processGroupRole
     );
 
     const paginatedResults = filteredResults.slice(
@@ -215,7 +223,6 @@ export const MockApi = {
       ...processGroups,
       results: paginatedResults,
       count: filteredResults.length,
-      totalCount: filteredResults.length,
       timeRangeCount: filteredResults.length
     };
   },
@@ -236,7 +243,6 @@ export const MockApi = {
         ...processes,
         results,
         count: results.length,
-        totalCount: results.length,
         timeRangeCount: results.length
       };
     }
@@ -438,10 +444,6 @@ export function loadMockServer() {
       this.get(MockApiPaths.ProcessPair, MockApi.getProcessPair);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
-
-      this.get(`${prefix}/sites/:id/links`, (_, { params: { id } }) => ({
-        results: links.results.filter(() => sites.results.find((site) => site.identity === id))
-      }));
 
       this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
 

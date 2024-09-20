@@ -48,21 +48,23 @@ export const useDisplayOptionsState = ({ defaultSelected = [], onSelected }: Dis
   const [displayOptionsSelected, setDisplayOptions] = useState(defaultSelected);
 
   const selectDisplayOptions = useCallback(
-    (selectedOption: string) => {
-      const isOptionSelected = displayOptionsSelected.includes(selectedOption);
+    (selectedOption: string | number | undefined) => {
+      const selected = selectedOption as string;
 
-      let updatedDisplayOptions = toggleOption(selectedOption, displayOptionsSelected, isOptionSelected);
+      const isOptionSelected = displayOptionsSelected.includes(selected);
 
-      if ([SHOW_LINK_BYTES, SHOW_LINK_BYTERATE, SHOW_LINK_LATENCY].includes(selectedOption)) {
-        updatedDisplayOptions = handleLinkMetrics(selectedOption, isOptionSelected, displayOptionsSelected);
+      let updatedDisplayOptions = toggleOption(selected, displayOptionsSelected, isOptionSelected);
+
+      if ([SHOW_LINK_BYTES, SHOW_LINK_BYTERATE, SHOW_LINK_LATENCY].includes(selected)) {
+        updatedDisplayOptions = handleLinkMetrics(selected, isOptionSelected, displayOptionsSelected);
       }
 
-      if ([SHOW_DATA_LINKS, SHOW_ROUTER_LINKS].includes(selectedOption)) {
-        updatedDisplayOptions = handleDataRouterLinks(selectedOption, isOptionSelected, updatedDisplayOptions);
+      if ([SHOW_DATA_LINKS, SHOW_ROUTER_LINKS].includes(selected)) {
+        updatedDisplayOptions = handleDataRouterLinks(selected, isOptionSelected, updatedDisplayOptions);
       }
 
       setDisplayOptions(updatedDisplayOptions);
-      onSelected(updatedDisplayOptions, selectedOption);
+      onSelected(updatedDisplayOptions, selected);
     },
     [displayOptionsSelected, onSelected]
   );

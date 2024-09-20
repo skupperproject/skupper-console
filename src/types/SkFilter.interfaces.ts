@@ -1,9 +1,6 @@
-export interface FilterType {
-  id: string;
-  name: string;
-}
+import { SkSelectOption } from '@core/components/SkSelect';
 
-export interface FilterTypeWithSearchText extends FilterType {
+export interface FilterTypeWithSearchText extends SkSelectOption {
   searchValue: string;
 }
 

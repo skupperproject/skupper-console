@@ -4,29 +4,29 @@ export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 // Themes
 
 //Filters
-export const sankeyMetricOptions = [
-  { id: 'none', name: 'Display only relationships' },
-  { id: 'byterate', name: 'Compare avg. byterate (last hour)' }
+export const SankeyMetricOptions = [
+  { id: 'none', label: 'Display only pairs' },
+  { id: 'byterate', label: 'Display avg. byterate (last hour)' }
 ];
 
-export const ServiceClientResourceOptions: { name: string; id: 'client' | 'clientSite' }[] = [
+export const ServiceClientResourceOptions: { label: string; id: 'client' | 'clientSite' }[] = [
   {
-    name: 'Client sites',
+    label: 'Client sites',
     id: 'clientSite'
   },
   {
-    name: 'Client processes',
+    label: 'Client processes',
     id: 'client'
   }
 ];
 
-export const ServiceServerResourceOptions: { name: string; id: 'server' | 'serverSite' }[] = [
+export const ServiceServerResourceOptions: { label: string; id: 'server' | 'serverSite' }[] = [
   {
-    name: 'Server sites',
+    label: 'Server sites',
     id: 'serverSite'
   },
   {
-    name: 'Server processes',
+    label: 'Server processes',
     id: 'server'
   }
 ];

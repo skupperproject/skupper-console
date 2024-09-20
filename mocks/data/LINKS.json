@@ -17,21 +17,6 @@
     },
     {
       "recType": "LINK",
-      "identity": "hth7l:12",
-      "parent": "",
-      "startTime": 1674048706622878,
-      "endTime": 0,
-      "mode": "interior",
-      "name": "",
-      "linkCost": 1,
-      "direction": "incoming",
-      "sourceSiteId": "site-1",
-      "sourceSiteName": "site-1",
-      "destinationSiteId": "site-3",
-      "destinationSiteName": "site 3"
-    },
-    {
-      "recType": "LINK",
       "identity": "52tjs:1402",
       "parent": "",
       "startTime": 1674151543561656,
@@ -47,52 +32,7 @@
     },
     {
       "recType": "LINK",
-      "identity": "6z7k6:2",
-      "parent": "",
-      "startTime": 1674048729859049,
-      "endTime": 0,
-      "mode": "interior",
-      "name": "",
-      "linkCost": 1,
-      "direction": "incoming",
-      "sourceSiteId": "site-1",
-      "sourceSiteName": "site-1",
-      "destinationSiteId": "site-2",
-      "destinationSiteName": "site 2"
-    },
-    {
-      "recType": "LINK",
       "identity": "hth7l:31",
-      "parent": "",
-      "startTime": 1674151543581947,
-      "endTime": 0,
-      "mode": "interior",
-      "name": "",
-      "linkCost": 1,
-      "direction": "outgoing",
-      "sourceSiteId": "site-3",
-      "sourceSiteName": "site-3",
-      "destinationSiteId": "site-2",
-      "destinationSiteName": "site 2"
-    },
-    {
-      "recType": "LINK",
-      "identity": "6z7k6:1701",
-      "parent": "6z7k6:0",
-      "startTime": 1674149422366200,
-      "endTime": 0,
-      "mode": "interior",
-      "name": "site 3",
-      "linkCost": 1,
-      "direction": "incoming",
-      "sourceSiteId": "site-3",
-      "sourceSiteName": "site-3",
-      "destinationSiteId": "site-2",
-      "destinationSiteName": "site 2"
-    },
-    {
-      "recType": "LINK",
-      "identity": "hth7l:39",
       "parent": "",
       "startTime": 1674151543581947,
       "endTime": 0,
@@ -121,8 +61,6 @@
       "destinationSiteName": "site 1"
     }
   ],
-  "status": "",
-  "count": 6,
-  "timeRangeCount": 6,
-  "totalCount": 6
+  "count": 4,
+  "timeRangeCount": 4
 }
