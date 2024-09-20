@@ -98,11 +98,37 @@ export const RESTApi = {
 
   // LINKS  APIs
   fetchLinks: async (options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse[]>> => {
+    //TODO: this is a temporary path
+    const removeInvalidAndDuplicatesRouterLinks = (results: RouterLinkResponse[]): RouterLinkResponse[] => {
+      const uniquePairs = new Set<string>();
+
+      return results.filter(({ sourceSiteId, destinationSiteId }) => {
+        if (sourceSiteId === destinationSiteId) {
+          return false;
+        }
+
+        // Create a unique key for both directions (source-destination and destination-source)
+        const pairKey = [sourceSiteId, destinationSiteId].sort().join('-');
+
+        // Check if this pair already exists in the Set (either direction)
+        if (uniquePairs.has(pairKey)) {
+          return false;
+        }
+
+        // Otherwise, add the pair to the Set and include this result
+        uniquePairs.add(pairKey);
+
+        return true;
+      });
+    };
+
     const data = await axiosFetch<ResponseWrapper<RouterLinkResponse[]>>(getLinksPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return data;
+    const cleanedResults = removeInvalidAndDuplicatesRouterLinks(data.results);
+
+    return { ...data, results: cleanedResults };
   },
 
   fetchLink: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse>> => {
