@@ -4,7 +4,7 @@ import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { TopologyController } from '@pages/Topology/services';
-import { QueriesTopology } from '@pages/Topology/Topology.enum';
+import { QueriesPairs } from '@pages/Topology/Topology.enum';
 import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesProcesses } from '../Processes.enum';
@@ -21,7 +21,7 @@ export const useProcessPairsListData = (id: string, name: string) => {
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, { sourceProcess: name }],
+        queryKey: [QueriesPairs.GetMetricsByPairs, { sourceProcess: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -35,7 +35,7 @@ export const useProcessPairsListData = (id: string, name: string) => {
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, { destProcess: name }],
+        queryKey: [QueriesPairs.GetMetricsByPairs, { destProcess: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,

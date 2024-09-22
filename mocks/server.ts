@@ -11,7 +11,6 @@ import {
   SiteResponse,
   BiFlowResponse,
   ResponseWrapper,
-  ComponentPairsResponse,
   PairsResponse
 } from '@sk-types/REST.interfaces';
 
@@ -25,7 +24,7 @@ const prefix = '/api/v1alpha1';
 const path = './data';
 const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
 const processGroups: ResponseWrapper<ComponentResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
-const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
+const processGroupPairs: ResponseWrapper<PairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
 const sitePairs: ResponseWrapper<PairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);

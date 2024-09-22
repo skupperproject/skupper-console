@@ -7,14 +7,13 @@ import { SMALL_PAGINATION_SIZE } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkTable from '@core/components/SkTable';
-import { CustomPairsCells } from '@pages/Processes/Processes.constants';
-import { invertProcessPairsList } from '@pages/Processes/Processes.utls';
-import { TopologyController } from '@pages/Topology/services';
-import { PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { combineInstantMetricsToPairs } from '@core/utils/combineInstantMetricsToPairs';
+import { invertPairs } from '@core/utils/invertPairs';
+import { CustomPairsCells, PairsListColumns } from '@pages/Processes/Processes.constants';
+import { PairsWithInstantMetrics, SiteResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from '@sk-types/SkTable.interfaces';
 
 import { useSitePairsListData } from '../hooks/useSitePairsData';
-import { paisColumns } from '../Sites.constants';
 import { SiteLabels } from '../Sites.enum';
 
 interface PairsListProps {
@@ -24,8 +23,8 @@ interface PairsListProps {
 const PairsList: FC<PairsListProps> = function ({ site: { identity: id, name } }) {
   const { pairsTx, pairsRx, metricsTx, metricsRx } = useSitePairsListData(id, name);
 
-  const clients = invertProcessPairsList(
-    TopologyController.addMetricsToPairs({
+  const clients = invertPairs(
+    combineInstantMetricsToPairs({
       processesPairs: pairsRx,
       metrics: metricsRx,
       prometheusKey: PrometheusLabelsV2.SourceSiteName,
@@ -33,40 +32,46 @@ const PairsList: FC<PairsListProps> = function ({ site: { identity: id, name } }
     })
   );
 
-  const servers = TopologyController.addMetricsToPairs({
+  const servers = combineInstantMetricsToPairs({
     processesPairs: pairsTx,
     metrics: metricsTx,
     prometheusKey: PrometheusLabelsV2.DestSiteName,
     processPairsKey: 'destinationName'
   });
 
-  const renderTable = (title: string, rows: PairsResponse[], columns: SKTableColumn<PairsResponse>[]) =>
-    !!rows.length && (
-      <SkTable
-        alwaysShowPagination={false}
-        title={title}
-        columns={columns}
-        rows={rows}
-        pagination={true}
-        paginationPageSize={SMALL_PAGINATION_SIZE}
-        customCells={CustomPairsCells}
-      />
+  const isEmpty = !servers.length && !clients.length;
+
+  if (isEmpty) {
+    return (
+      <Card isFullHeight>
+        <SKEmptyData icon={SearchIcon} />
+      </Card>
     );
+  }
 
   return (
-    <>
-      {!servers.length && !clients.length && (
-        <Card isFullHeight>
-          <SKEmptyData icon={SearchIcon} />
-        </Card>
-      )}
-
-      <Flex direction={{ default: 'column' }}>
-        {renderTable(SiteLabels.Clients, clients, paisColumns)}
-        {renderTable(SiteLabels.Servers, servers, paisColumns)}
-      </Flex>
-    </>
+    <Flex direction={{ default: 'column' }}>
+      {renderTable(SiteLabels.Clients, clients, PairsListColumns)}
+      {renderTable(SiteLabels.Servers, servers, PairsListColumns)}
+    </Flex>
   );
 };
 
 export default PairsList;
+
+const renderTable = (
+  title: string,
+  rows: PairsWithInstantMetrics[],
+  columns: SKTableColumn<PairsWithInstantMetrics>[]
+) =>
+  !!rows.length && (
+    <SkTable
+      alwaysShowPagination={false}
+      title={title}
+      columns={columns}
+      rows={rows}
+      pagination={true}
+      paginationPageSize={SMALL_PAGINATION_SIZE}
+      customCells={CustomPairsCells}
+    />
+  );

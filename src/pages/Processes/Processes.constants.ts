@@ -7,7 +7,12 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessPairsResponse, BiFlowResponse, ProcessResponse } from '@sk-types/REST.interfaces';
+import {
+  ProcessPairsResponse,
+  BiFlowResponse,
+  ProcessResponse,
+  PairsWithInstantMetrics
+} from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
@@ -95,66 +100,39 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   }
 ];
 
-export const processesConnectedColumns: SKTableColumn<ProcessPairsResponse>[] = [
+export const PairsListColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
-    name: ProcessesLabels.Process,
-    prop: 'destinationName' as keyof ProcessPairsResponse,
-    customCellName: 'ProcessConnectedLinkCell'
-  },
-  {
-    name: ProcessesLabels.Bytes,
-    prop: 'bytes' as keyof ProcessPairsResponse,
-    customCellName: 'ByteFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: ProcessesLabels.ByteRate,
-    prop: 'byteRate' as keyof ProcessPairsResponse,
-    customCellName: 'ByteRateFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: ProcessesLabels.Latency,
-    prop: 'latency' as keyof ProcessPairsResponse,
-    customCellName: 'LatencyFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: '',
-    customCellName: 'viewDetailsLinkCell',
-    modifier: 'fitContent'
-  }
-];
-
-export const processesHttpConnectedColumns: SKTableColumn<ProcessPairsResponse>[] = [
-  {
-    name: ProcessesLabels.Process,
-    prop: 'destinationName' as keyof ProcessPairsResponse,
+    name: ProcessesLabels.Name,
+    prop: 'destinationName',
     customCellName: 'ProcessConnectedLinkCell'
   },
   {
     name: ProcessesLabels.Protocol,
-    prop: 'protocol' as keyof ProcessPairsResponse,
+    prop: 'protocol',
     modifier: 'fitContent'
   },
   {
     name: ProcessesLabels.Bytes,
-    prop: 'bytes' as keyof ProcessPairsResponse,
+    prop: 'bytes',
     customCellName: 'ByteFormatCell',
     modifier: 'fitContent'
   },
   {
     name: ProcessesLabels.ByteRate,
-    prop: 'byteRate' as keyof ProcessPairsResponse,
+    prop: 'byteRate',
     customCellName: 'ByteRateFormatCell',
     modifier: 'fitContent'
   },
   {
     name: ProcessesLabels.Latency,
-    prop: 'latency' as keyof ProcessPairsResponse,
+    prop: 'latency',
     customCellName: 'LatencyFormatCell',
     modifier: 'fitContent'
-  },
+  }
+];
+
+export const PairsListColumnsWithLinkDetails: SKTableColumn<PairsWithInstantMetrics>[] = [
+  ...PairsListColumns,
   {
     name: '',
     customCellName: 'viewDetailsLinkCell',

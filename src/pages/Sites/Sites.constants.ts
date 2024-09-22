@@ -1,7 +1,6 @@
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { SiteResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { SiteLabels, SitesRoutesPaths } from './Sites.enum';
@@ -47,36 +46,5 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
     customCellName: 'TimestampCell',
     modifier: 'fitContent',
     width: 15
-  }
-];
-
-export const paisColumns: SKTableColumn<PairsResponse>[] = [
-  {
-    name: ProcessesLabels.Process,
-    prop: 'destinationName' as keyof PairsResponse,
-    customCellName: 'ProcessConnectedLinkCell'
-  },
-  {
-    name: ProcessesLabels.Bytes,
-    prop: 'bytes' as keyof PairsResponse,
-    customCellName: 'ByteFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: ProcessesLabels.ByteRate,
-    prop: 'byteRsate' as keyof PairsResponse,
-    customCellName: 'ByteRateFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: ProcessesLabels.Latency,
-    prop: 'latency' as keyof PairsResponse,
-    customCellName: 'LatencyFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: '',
-    customCellName: 'viewDetailsLinkCell',
-    modifier: 'fitContent'
   }
 ];

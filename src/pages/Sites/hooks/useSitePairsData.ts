@@ -4,7 +4,7 @@ import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { TopologyController } from '@pages/Topology/services';
-import { QueriesTopology } from '@pages/Topology/Topology.enum';
+import { QueriesPairs } from '@pages/Topology/Topology.enum';
 import { PairsResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
@@ -21,7 +21,7 @@ export const useSitePairsListData = (id: string, name: string) => {
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, { sourceSite: name }],
+        queryKey: [QueriesPairs.GetMetricsByPairs, { sourceSite: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -35,7 +35,7 @@ export const useSitePairsListData = (id: string, name: string) => {
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, { sourceSite: name }],
+        queryKey: [QueriesPairs.GetMetricsByPairs, { destSite: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -43,7 +43,7 @@ export const useSitePairsListData = (id: string, name: string) => {
             showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
-              filterBy: { sourceSite: name }
+              filterBy: { destSite: name }
             }
           }),
         refetchInterval: UPDATE_INTERVAL

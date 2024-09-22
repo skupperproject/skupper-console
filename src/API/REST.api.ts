@@ -9,7 +9,6 @@ import {
   QueryFilters,
   ResponseWrapper,
   PairsResponse,
-  ComponentPairsResponse,
   UserResponse
 } from '@sk-types/REST.interfaces';
 
@@ -180,7 +179,7 @@ export const RESTApi = {
     return data;
   },
 
-  fetchComponentsPairs: async (options?: QueryFilters): Promise<ResponseWrapper<ComponentPairsResponse[]>> => {
+  fetchComponentsPairs: async (options?: QueryFilters): Promise<ResponseWrapper<PairsResponse[]>> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse[]>>(getComponentsPairsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
@@ -188,7 +187,7 @@ export const RESTApi = {
     return data;
   },
 
-  fetchComponentPairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<ComponentPairsResponse>> => {
+  fetchComponentPairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<PairsResponse>> => {
     const data = await axiosFetch<ResponseWrapper<ProcessPairsResponse>>(getComponentPairPATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });

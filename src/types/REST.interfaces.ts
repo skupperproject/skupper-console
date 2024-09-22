@@ -99,9 +99,7 @@ export interface PairsResponse extends BaseResponse, BasePairs {
   protocol: Protocols;
 }
 
-export type ComponentPairsResponse = PairsResponse;
-
-export interface ProcessPairsResponse extends ComponentPairsResponse {
+export interface ProcessPairsResponse extends PairsResponse {
   sourceSiteId: string;
   sourceSiteName: string;
   destinationSiteId: string;
@@ -114,13 +112,6 @@ export interface ServiceResponse extends BaseResponse {
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
-}
-
-export interface ProcessPairsWithMetrics<T> {
-  processesPairs: T[];
-  prometheusKey: PrometheusLabelsV2;
-  processPairsKey: 'sourceName' | 'destinationName';
-  metrics?: TopologyMetrics;
 }
 
 interface BiFlow extends BaseResponse {
@@ -195,4 +186,17 @@ export interface RouterLinkResponse extends BaseResponse {
   sourceSiteName: string;
   role: 'inter-router' | 'edge-router';
   status: 'up' | 'down';
+}
+
+export interface PairsWithMetrics<T> {
+  processesPairs: T[];
+  prometheusKey: PrometheusLabelsV2;
+  processPairsKey: 'sourceName' | 'destinationName';
+  metrics?: TopologyMetrics;
+}
+
+export interface PairsWithInstantMetrics extends PairsResponse {
+  bytes: number;
+  byteRate: number;
+  latency: number;
 }

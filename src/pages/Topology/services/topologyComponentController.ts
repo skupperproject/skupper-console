@@ -1,5 +1,5 @@
 import { Role } from '@API/REST.enum';
-import { ComponentPairsResponse, ComponentResponse } from '@sk-types/REST.interfaces';
+import { PairsResponse, ComponentResponse } from '@sk-types/REST.interfaces';
 import { GraphNode } from 'types/Graph.interfaces';
 
 import { shape } from '../Topology.constants';
@@ -10,7 +10,7 @@ interface TopologyComponentControllerProps {
   idsSelected: string[] | undefined;
   searchText: string;
   components: ComponentResponse[];
-  componentsPairs: ComponentPairsResponse[];
+  componentsPairs: PairsResponse[];
 }
 
 const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>

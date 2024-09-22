@@ -54,11 +54,11 @@ const TopologySite: FC<{
   });
 
   const handleShowDetails = useCallback(
-    (siteId: string) => {
-      const site = sites.find(({ identity }) => identity === siteId);
+    (id: string) => {
+      const site = sites.find(({ identity }) => identity === id);
 
       if (site) {
-        navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${siteId}`);
+        navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${id}`);
       }
     },
     [navigate, sites]

@@ -6,7 +6,7 @@ import { PrometheusLabelsV2 } from '@config/prometheus';
 import { QueriesSites } from '@pages/Sites/Sites.enum';
 
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../Topology.enum';
+import { QueriesPairs } from '../Topology.enum';
 
 interface UseTopologySiteDataProps {
   showDataLink: boolean;
@@ -37,12 +37,12 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetSitesPairs, showDataLink],
+        queryKey: [QueriesPairs.GetSitesPairs, showDataLink],
         queryFn: () => (showDataLink ? RESTApi.fetchSitesPairs() : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, showBytes, showByteRate, showLatency, showDataLink],
+        queryKey: [QueriesPairs.GetMetricsByPairs, showBytes, showByteRate, showLatency, showDataLink],
         queryFn: () =>
           showDataLink
             ? TopologyController.getAllTopologyMetrics({
