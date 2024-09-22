@@ -2,12 +2,12 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
 import { UPDATE_INTERVAL } from '@config/config';
-import { SitePairsResponse } from '@sk-types/REST.interfaces';
+import { PairsResponse } from '@sk-types/REST.interfaces';
 
 import { QueriesSites } from '../Sites.enum';
 
 export const useSiteOverviewData = (id: string) => {
-  const queryParams = (idKey: keyof SitePairsResponse) => ({ [idKey]: id });
+  const queryParams = (idKey: keyof PairsResponse) => ({ [idKey]: id });
 
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [

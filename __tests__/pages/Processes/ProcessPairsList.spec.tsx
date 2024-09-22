@@ -13,10 +13,10 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import PairsList from '../../../src/pages/Processes/components/PairsList';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import LoadingPage from '../../../src/pages/shared/Loading';
-import { ProcessPairsResponse, ProcessResponse, SitePairsResponse } from '../../../src/types/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse, PairsResponse } from '../../../src/types/REST.interfaces';
 
 const processResult = processesData.results[7] as ProcessResponse;
-const processPairsResult = processesPairsData.results[6] as ProcessPairsResponse | SitePairsResponse;
+const processPairsResult = processesPairsData.results[6] as ProcessPairsResponse | PairsResponse;
 
 describe('Processes Pairs component', () => {
   let server: Server;

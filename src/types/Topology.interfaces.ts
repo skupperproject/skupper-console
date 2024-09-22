@@ -1,7 +1,4 @@
-import { PrometheusLabelsV2 } from '@config/prometheus';
-
 import { PrometheusMetric, PrometheusLabels } from './Prometheus.interfaces';
-import { ProcessPairsResponse } from './REST.interfaces';
 
 export interface TopologyMetrics {
   sourceToDestBytes: PrometheusMetric<'vector'>[];
@@ -39,17 +36,4 @@ export interface TopologyShowOptionsSelected {
   showInboundMetrics: boolean;
   showMetricDistribution: boolean;
   showMetricValue: boolean;
-}
-
-export interface ProcessPairsWithMetrics {
-  processesPairs: ProcessPairsResponse[];
-  prometheusKey: PrometheusLabelsV2;
-  processPairsKey: 'sourceName' | 'destinationName';
-  metrics?: TopologyMetrics;
-}
-
-export interface ProcessPairsWithStats extends ProcessPairsResponse {
-  bytes: number;
-  byteRate: number;
-  latency: number;
 }

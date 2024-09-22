@@ -1,6 +1,9 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
 import { Protocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
+import { PrometheusLabelsV2 } from '@config/prometheus';
+
+import { TopologyMetrics } from './Topology.interfaces';
 
 export type FetchWithOptions = AxiosRequestConfig;
 export type FlowDirections = Direction.Outgoing | Direction.Incoming;
@@ -85,15 +88,18 @@ export interface ProcessResponse extends BaseResponse {
   addresses: string[] | null;
 }
 
-export interface SitePairsResponse extends BaseResponse {
+export interface BasePairs {
   sourceId: string;
   sourceName: string;
   destinationId: string;
   destinationName: string;
+}
+
+export interface PairsResponse extends BaseResponse, BasePairs {
   protocol: Protocols;
 }
 
-export type ComponentPairsResponse = SitePairsResponse;
+export type ComponentPairsResponse = PairsResponse;
 
 export interface ProcessPairsResponse extends ComponentPairsResponse {
   sourceSiteId: string;
@@ -108,6 +114,13 @@ export interface ServiceResponse extends BaseResponse {
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
+}
+
+export interface ProcessPairsWithMetrics<T> {
+  processesPairs: T[];
+  prometheusKey: PrometheusLabelsV2;
+  processPairsKey: 'sourceName' | 'destinationName';
+  metrics?: TopologyMetrics;
 }
 
 interface BiFlow extends BaseResponse {

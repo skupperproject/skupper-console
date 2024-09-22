@@ -19,7 +19,7 @@ const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
     label: name,
     iconName: role === Role.Internal ? 'skupper' : 'component',
     type: role === Role.Remote ? shape.remote : shape.bound,
-    groupedNodeCount: processCount
+    info: { primary: processCount.toString() }
   }));
 
 export const TopologyComponentController = {

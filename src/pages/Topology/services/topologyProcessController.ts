@@ -90,8 +90,8 @@ export const TopologyProcessController = {
     let processNodes = convertProcessesToNodes(p);
     let processPairEdges = TopologyController.addMetricsToEdges(
       TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
-      PrometheusLabelsV2.SourceProcess,
-      PrometheusLabelsV2.DestProcess,
+      PrometheusLabelsV2.SourceProcessName,
+      PrometheusLabelsV2.DestProcessName,
       protocolByProcessPairsMap,
       metrics
     );

@@ -38,11 +38,11 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
 
   const bytes = metrics.sourceToDestBytes.reduce(
     (acc, { metric, value }) => {
-      const id = `${metric[PrometheusLabelsV2.SourceProcess]}-to-${metric[PrometheusLabelsV2.DestProcess]}`;
+      const id = `${metric[PrometheusLabelsV2.SourceProcessName]}-to-${metric[PrometheusLabelsV2.DestProcessName]}`;
 
       if (
-        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcess]) &&
-        destinationNames.includes(metric[PrometheusLabelsV2.DestProcess])
+        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcessName]) &&
+        destinationNames.includes(metric[PrometheusLabelsV2.DestProcessName])
       ) {
         acc[id] = (acc[id] || 0) + Number(value[1]);
       }
@@ -54,11 +54,11 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
 
   const byteRate = metrics.sourceToDestByteRate.reduce(
     (acc, { metric, value }) => {
-      const id = `${metric[PrometheusLabelsV2.SourceProcess]}-to-${metric[PrometheusLabelsV2.DestProcess]}`;
+      const id = `${metric[PrometheusLabelsV2.SourceProcessName]}-to-${metric[PrometheusLabelsV2.DestProcessName]}`;
 
       if (
-        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcess]) &&
-        destinationNames.includes(metric[PrometheusLabelsV2.DestProcess])
+        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcessName]) &&
+        destinationNames.includes(metric[PrometheusLabelsV2.DestProcessName])
       ) {
         acc[id] = (acc[id] || 0) + Number(value[1]);
       }
@@ -70,11 +70,11 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
 
   const latency = metrics.latencyByProcessPairs.reduce(
     (acc, { metric, value }) => {
-      const id = `${metric[PrometheusLabelsV2.SourceProcess]}-to-${metric[PrometheusLabelsV2.DestProcess]}`;
+      const id = `${metric[PrometheusLabelsV2.SourceProcessName]}-to-${metric[PrometheusLabelsV2.DestProcessName]}`;
 
       if (
-        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcess]) &&
-        destinationNames.includes(metric[PrometheusLabelsV2.DestProcess])
+        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcessName]) &&
+        destinationNames.includes(metric[PrometheusLabelsV2.DestProcessName])
       ) {
         acc[id] = (acc[id] || 0) + Number(value[1]);
       }

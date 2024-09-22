@@ -33,19 +33,19 @@ export function convertToPrometheusQueryParams({
   }
 
   if (sourceProcess) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceProcess}=~"${sourceProcess}"`];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceProcessName}=~"${sourceProcess}"`];
   }
 
   if (destProcess) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestProcess}=~"${destProcess}"`];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestProcessName}=~"${destProcess}"`];
   }
 
   if (sourceComponent) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceComponent}=~"${sourceComponent}"`];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceComponentName}=~"${sourceComponent}"`];
   }
 
   if (destComponent) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestComponent}=~"${destComponent}"`];
+    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestComponentName}=~"${destComponent}"`];
   }
 
   if (service) {

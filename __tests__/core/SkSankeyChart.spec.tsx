@@ -34,7 +34,7 @@ describe('SkSankeyChart', () => {
       links: [{ source: 'node1', target: 'node2', value: 42 }]
     };
 
-    const component = render(<SkSankeyChart data={data} />);
+    const component = render(<SkSankeyChart data={data} onSearch={jest.fn()} />);
     expect(component).toMatchSnapshot();
   });
 
@@ -44,7 +44,7 @@ describe('SkSankeyChart', () => {
       links: []
     };
 
-    render(<SkSankeyChart data={data} />);
+    render(<SkSankeyChart data={data} onSearch={jest.fn()} />);
 
     expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
     expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();

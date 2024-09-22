@@ -6,8 +6,6 @@ import {
   DiamondStyleProps,
   EdgeOptions,
   ExtensionCategory,
-  Line,
-  LineStyleProps,
   NodeOptions,
   Quadratic,
   QuadraticStyleProps,
@@ -23,7 +21,9 @@ import {
   COMBO_COLOR_DEFAULT_LABEL_BG,
   EDGE_BORDER_COLOR,
   EDGE_LABEL_BACKGROUND_COLOR,
+  EDGE_LABEL_BACKGROUND_COLOR_SECONDARY,
   EDGE_LABEL_TEXT_COLOR,
+  EDGE_LABEL_TEXT_COLOR_SECONDARY,
   EDGE_LINE_COLOR,
   EDGE_SELECT_LINE,
   EDGE_TERMINAL_COLOR,
@@ -36,8 +36,8 @@ import {
   LABEL_FONT_SIZE,
   LABEL_PADDING,
   NODE_BACKGROUND_COLOR,
-  NODE_BADGE_GROUP_ELEMENTS_BACKGROUND,
-  NODE_BADGE_GROUP_ELEMENTS_TEXT,
+  NODE_BADGE_PRIMARY_BACKGROUND,
+  NODE_BADGE_PRIMARY_TEXT,
   NODE_BORDER_COLOR,
   NODE_HIGHLIGHT_BORDER,
   NODE_LABEL_BACKGROUND_COLOR,
@@ -69,9 +69,8 @@ const DEFAULT_NODE_CONFIG: NodeOptions = {
     iconWidth: ICON_SIZE,
     iconHeight: ICON_SIZE,
     badgeFontSize: LABEL_FONT_SIZE + 2,
-    badgeDx: -NODE_SIZE / 6,
-    badgeFill: NODE_BADGE_GROUP_ELEMENTS_TEXT,
-    badgeBackgroundFill: NODE_BADGE_GROUP_ELEMENTS_BACKGROUND,
+    badgeFill: NODE_BADGE_PRIMARY_TEXT,
+    badgeBackgroundFill: NODE_BADGE_PRIMARY_BACKGROUND,
     badgeBackgroundStroke: NODE_BACKGROUND_COLOR,
     badgeBackgroundLineWidth: 1,
     badgeBackgroundHeight: LABEL_FONT_SIZE * 2,
@@ -134,7 +133,6 @@ const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
     increasedLineWidthForHitTesting: 20,
     stroke: EDGE_LINE_COLOR,
     endArrow: true,
-    endArrowSize: 12,
     endArrowFill: EDGE_TERMINAL_COLOR,
     labelFontFamily: FONT_FAMILY,
     labelBackground: true,
@@ -235,33 +233,25 @@ class SkNodeUnexposed extends Diamond {
   }
 }
 
-class SkDataEdge extends Line {
-  render(attrs: Required<LineStyleProps>) {
-    super.render(attrs);
-  }
-}
-
-class SkSiteEdge extends SkDataEdge {
-  render(attrs: Required<LineStyleProps>) {
-    super.render({
-      ...attrs,
-      endArrowOffset: 0.5,
-      lineDash: [4, 4],
-      endArrowFill: EDGE_TERMINAL_COLOR_2,
-      endArrowType: 'circle'
-    });
-  }
-}
-
-class SkSiteDataEdge extends Quadratic {
+class SkDataEdge extends Quadratic {
   render(attrs: Required<QuadraticStyleProps>) {
     super.render(attrs);
   }
 }
 
-class SkLoopEdge extends Line {
-  render(attrs: Required<LineStyleProps>) {
-    super.render({ ...attrs, loop: true });
+class SkSiteEdge extends SkDataEdge {
+  render(attrs: Required<QuadraticStyleProps>) {
+    super.render({
+      ...attrs,
+      endArrowOffset: 1.5,
+      lineDash: [4, 4],
+      endArrowFill: EDGE_TERMINAL_COLOR_2,
+      endArrowStroke: EDGE_TERMINAL_COLOR_2,
+      endArrowType: 'circle',
+      badgeBackgroundFill: EDGE_LABEL_BACKGROUND_COLOR_SECONDARY,
+      badgeFill: EDGE_LABEL_TEXT_COLOR_SECONDARY,
+      badgeBackgroundStroke: EDGE_BORDER_COLOR
+    });
   }
 }
 
@@ -283,7 +273,5 @@ export function registerElements() {
   register(ExtensionCategory.NODE, 'SkNodeRemote', SkNodeRemote);
   register(ExtensionCategory.EDGE, 'SkDataEdge', SkDataEdge);
   register(ExtensionCategory.EDGE, 'SkSiteEdge', SkSiteEdge);
-  register(ExtensionCategory.EDGE, 'SkSiteDataEdge', SkSiteDataEdge);
-  register(ExtensionCategory.EDGE, 'SkLoopEdge', SkLoopEdge);
   register(ExtensionCategory.COMBO, 'SkCombo', SkCombo);
 }

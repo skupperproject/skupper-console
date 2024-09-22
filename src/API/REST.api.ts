@@ -8,7 +8,7 @@ import {
   ProcessPairsResponse,
   QueryFilters,
   ResponseWrapper,
-  SitePairsResponse,
+  PairsResponse,
   ComponentPairsResponse,
   UserResponse
 } from '@sk-types/REST.interfaces';
@@ -99,36 +99,15 @@ export const RESTApi = {
   // LINKS  APIs
   fetchLinks: async (options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse[]>> => {
     //TODO: this is a temporary path
-    const removeInvalidAndDuplicatesRouterLinks = (results: RouterLinkResponse[]): RouterLinkResponse[] => {
-      const uniquePairs = new Set<string>();
-
-      return results.filter(({ sourceSiteId, destinationSiteId }) => {
-        if (sourceSiteId === destinationSiteId) {
-          return false;
-        }
-
-        // Create a unique key for both directions (source-destination and destination-source)
-        const pairKey = [sourceSiteId, destinationSiteId].sort().join('-');
-
-        // Check if this pair already exists in the Set (either direction)
-        if (uniquePairs.has(pairKey)) {
-          return false;
-        }
-
-        // Otherwise, add the pair to the Set and include this result
-        uniquePairs.add(pairKey);
-
-        return true;
-      });
-    };
+    const removeInvalidAndDuplicatesRouterLinks = (results: RouterLinkResponse[]): RouterLinkResponse[] =>
+      // remove links in the smae site: case High Availability (HA)
+      results.filter(({ sourceSiteId, destinationSiteId }) => sourceSiteId !== destinationSiteId);
 
     const data = await axiosFetch<ResponseWrapper<RouterLinkResponse[]>>(getLinksPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    const cleanedResults = removeInvalidAndDuplicatesRouterLinks(data.results);
-
-    return { ...data, results: cleanedResults };
+    return { ...data, results: removeInvalidAndDuplicatesRouterLinks(data.results) };
   },
 
   fetchLink: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse>> => {
@@ -185,16 +164,16 @@ export const RESTApi = {
   },
 
   // AGGREGATE  APIs
-  fetchSitesPairs: async (options?: QueryFilters): Promise<ResponseWrapper<SitePairsResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<SitePairsResponse[]>>(getSitePairsPATH(), {
+  fetchSitesPairs: async (options?: QueryFilters): Promise<ResponseWrapper<PairsResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<PairsResponse[]>>(getSitePairsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchSitePairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<SitePairsResponse>> => {
-    const data = await axiosFetch<ResponseWrapper<SitePairsResponse>>(getSitePairPATH(id), {
+  fetchSitePairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<PairsResponse>> => {
+    const data = await axiosFetch<ResponseWrapper<PairsResponse>>(getSitePairPATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 

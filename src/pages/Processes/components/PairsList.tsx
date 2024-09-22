@@ -27,7 +27,7 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
     TopologyController.addMetricsToPairs({
       processesPairs: pairsRx,
       metrics: metricsRx,
-      prometheusKey: PrometheusLabelsV2.SourceProcess,
+      prometheusKey: PrometheusLabelsV2.SourceProcessName,
       processPairsKey: 'sourceName'
     })
   );
@@ -35,7 +35,7 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
   const servers = TopologyController.addMetricsToPairs({
     processesPairs: pairsTx,
     metrics: metricsTx,
-    prometheusKey: PrometheusLabelsV2.DestProcess,
+    prometheusKey: PrometheusLabelsV2.DestProcessName,
     processPairsKey: 'destinationName'
   });
   const { TCPClients, TCPServers, HTTPClients, HTTPServers, remoteClients, remoteServers } = useMemo(

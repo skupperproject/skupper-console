@@ -5,7 +5,7 @@ import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs'
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import Metrics from '@pages/shared/Metrics';
 import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
-import { SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 
 import { useSiteOverviewData } from '../hooks/useOverviewData';
 
@@ -19,8 +19,8 @@ const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) 
 
   const sourceSites = [{ destinationName: name }];
   const destSites = removeDuplicatesFromArrayOfObjects([
-    ...mapDataToMetricFilterOptions<SitePairsResponse>(pairsTx, 'destinationName'),
-    ...mapDataToMetricFilterOptions<SitePairsResponse>(pairsRx, 'sourceName')
+    ...mapDataToMetricFilterOptions<PairsResponse>(pairsTx, 'destinationName'),
+    ...mapDataToMetricFilterOptions<PairsResponse>(pairsRx, 'sourceName')
   ]);
   const uniqueProtocols = extractUniqueValues([...pairsTx, ...pairsRx], 'protocol');
 

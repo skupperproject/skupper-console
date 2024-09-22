@@ -1,4 +1,4 @@
-import { ComboData, EdgeData, NodeData } from '@antv/g6';
+import { ComboData, CornerPlacement, EdgeData, NodeData } from '@antv/g6';
 
 import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@sk-types/Graph.interfaces';
 
 import { graphIconsMap } from '../Graph.config';
+import { NODE_SIZE } from '../Graph.constants';
 
 const prefixLocalStorageItem = 'skupper';
 const GRAPH_CONTAINER_ID = 'container';
@@ -131,93 +132,111 @@ export const GraphController = {
     });
   },
 
-  transformData: ({
-    nodes,
-    edges,
-    combos
-  }: {
-    nodes: GraphNode[];
-    edges: GraphEdge[];
-    combos?: GraphCombo[];
-  }): {
+  transformData({ nodes, edges, combos }: { nodes: GraphNode[]; edges: GraphEdge[]; combos?: GraphCombo[] }): {
     nodes: NodeData[];
     edges: EdgeData[];
     combos?: ComboData[];
-  } => {
-    // Match the combo of the node with the existing combos
+  } {
+    // Get all combo IDs for easier node combo matching
     const comboIds = combos?.map(({ id }) => id);
 
-    // find bidirectional edges
-    const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
+    // Sanitize edges and mark bidirectional edges
+    const processedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
       hasPair: boolean;
     })[];
 
-    // calculate the visual distribution of the metrics
-    const edgeMetrics = transformedEdges.map(({ metricValue, source, target }) =>
+    // Calculate metric values for edges
+    const edgeMetrics = processedEdges.map(({ metricValue, source, target }) =>
       source === target ? 0 : metricValue || 0
     );
+
     const maxMetricValue = Math.max(...edgeMetrics);
-    //exclude metric values that are 0
-    //the fallback ensures that if the filtered result is empty, we get 0 instead of potentially Infinity or NaN
+
+    // Get minimum metric value, ignoring 0 values
     const minMetricValue = Math.min(...edgeMetrics.filter(Boolean)) || 0;
 
-    return {
-      nodes: nodes
-        .sort(sortNodesByCombo)
-        .map(({ id, combo, label, iconName, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
-          id,
-          combo: combo && comboIds?.includes(combo) ? combo : undefined,
-          type,
-          data: {
-            ...data,
-            fullLabelText: label,
-            partialLabelText: ellipsisInTheMiddle(label),
-            cluster: combo,
-            fx: x,
-            fy: y
-          },
-          style: {
-            x,
-            y,
-            labelText: ellipsisInTheMiddle(label),
-            iconSrc: graphIconsMap[iconName],
-            badge: groupedNodeCount !== undefined,
-            badges: [
-              {
-                text: groupedNodeCount ? groupedNodeCount?.toString() : '',
-                placement: 'right-top'
-              }
-            ]
-          }
-        })),
+    const createBadges = (info?: { primary?: string; secondary?: string }) => [
+      ...(info?.primary
+        ? [
+            {
+              text: info.primary,
+              placement: 'right-top' as CornerPlacement,
+              offsetX: -NODE_SIZE / 6
+            }
+          ]
+        : []),
+      ...(info?.secondary
+        ? [
+            {
+              text: info.secondary,
+              placement: 'left-top' as CornerPlacement,
+              offsetX: NODE_SIZE / 6,
+              fontSize: 6
+            }
+          ]
+        : [])
+    ];
 
-      edges: transformedEdges.map(
-        ({ id, source, target, label, hasPair, type, metricValue, protocolLabel, ...data }) => ({
-          type,
-          id,
-          source,
-          target,
-          data,
-          style: {
-            halo: true,
-            haloLineWidth: !(source === target)
+    // Process nodes with combo matching and style assignment
+    const transformedNodes = nodes
+      .sort(sortNodesByCombo)
+      .map(({ id, combo, label, iconName, type = 'SkNode', info, x, y, ...rest }) => ({
+        id,
+        combo: combo && comboIds?.includes(combo) ? combo : undefined,
+        type,
+        data: {
+          ...rest,
+          fullLabelText: label,
+          partialLabelText: ellipsisInTheMiddle(label),
+          cluster: combo,
+          fx: x,
+          fy: y
+        },
+        style: {
+          x,
+          y,
+          labelText: ellipsisInTheMiddle(label),
+          iconSrc: graphIconsMap[iconName],
+          badge: !!info,
+          badges: createBadges(info)
+        }
+      }));
+
+    // Process edges with metric-based styling
+    const transformedEdges = processedEdges.map(
+      ({ id, source, target, label, hasPair, type, metricValue, secondarylabel, ...rest }) => ({
+        type,
+        id,
+        source,
+        target,
+        data: rest,
+        style: {
+          halo: true,
+          haloLineWidth:
+            source !== target
               ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
               : 0,
-            badgeText: protocolLabel,
-            label: !!label,
-            labelText: label,
-            curveOffset: hasPair && 30
-          }
-        })
-      ),
-
-      combos: combos?.map(({ id, label, type }) => ({
-        id,
-        type,
-        style: {
-          labelText: label
+          badgeText: secondarylabel,
+          label: !!label,
+          labelText: label,
+          curveOffset: hasPair ? 30 : 0
         }
-      }))
+      })
+    );
+
+    // Process combos if provided
+    const transformedCombos = combos?.map(({ id, label, type }) => ({
+      id,
+      type,
+      style: {
+        labelText: label
+      }
+    }));
+
+    return {
+      nodes: transformedNodes,
+      edges: transformedEdges,
+      combos: transformedCombos
     };
   },
 

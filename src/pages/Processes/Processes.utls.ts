@@ -1,5 +1,5 @@
 import { Protocols } from '@API/REST.enum';
-import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
+import { ProcessPairsResponse, PairsResponse } from '@sk-types/REST.interfaces';
 
 export const filterPairsByProtocols = (clients: ProcessPairsResponse[], servers: ProcessPairsResponse[]) => {
   const TCPClients = clients.filter(({ protocol }) => protocol === Protocols.Tcp);
@@ -21,7 +21,7 @@ export const filterPairsByProtocols = (clients: ProcessPairsResponse[], servers:
   };
 };
 
-export function invertProcessPairsList(processPairs: ProcessPairsResponse[]): ProcessPairsResponse[] {
+export function invertProcessPairsList<T extends PairsResponse>(processPairs: T[]): T[] {
   return processPairs.map((pair) => ({
     ...pair,
     sourceId: pair.destinationId,

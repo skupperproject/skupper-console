@@ -15,10 +15,10 @@ const processesQueryParams = {
 };
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
   fetchLatency: {
-    groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess},${PrometheusLabelsV2.Direction}`
+    groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName},${PrometheusLabelsV2.Direction}`
   }
 };
 

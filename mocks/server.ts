@@ -12,7 +12,7 @@ import {
   BiFlowResponse,
   ResponseWrapper,
   ComponentPairsResponse,
-  SitePairsResponse
+  PairsResponse
 } from '@sk-types/REST.interfaces';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
@@ -27,7 +27,7 @@ const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
 const processGroups: ResponseWrapper<ComponentResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
 const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
-const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
+const sitePairs: ResponseWrapper<PairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const services: ResponseWrapper<ServiceResponse[]> = require(`${path}/SERVICES.json`);
 const biFlow: ResponseWrapper<BiFlowResponse[]> = require(`${path}/FLOW_PAIRS.json`);
@@ -84,7 +84,7 @@ for (let i = 0; i < ITEM_COUNT; i++) {
   });
 }
 
-const mockSitePairsForPerf: SitePairsResponse[] = [];
+const mockSitePairsForPerf: PairsResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
   const sourceIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
   const destinationIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
