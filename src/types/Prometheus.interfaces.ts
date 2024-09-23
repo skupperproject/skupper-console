@@ -1,6 +1,5 @@
-import { FlowDirections } from './REST.interfaces';
 import { skAxisXY } from './SkChartArea.interfaces';
-import { Protocols, Quantiles } from '../API/REST.enum';
+import { Direction, Protocols, Quantiles } from '../API/REST.enum';
 // Common base type for result types
 type PrometheusResultType = 'matrix' | 'vector' | 'scalar' | 'string';
 
@@ -39,7 +38,7 @@ export interface PrometheusLabels {
   destComponent?: string;
   service?: string;
   code?: string;
-  direction?: FlowDirections;
+  direction?: Direction;
   protocol?: Protocols;
 }
 

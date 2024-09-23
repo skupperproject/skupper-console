@@ -1,12 +1,11 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { Protocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
+import { Protocols, Binding, Role, SortDirection } from '@API/REST.enum';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 
 import { TopologyMetrics } from './Topology.interfaces';
 
 export type FetchWithOptions = AxiosRequestConfig;
-export type FlowDirections = Direction.Outgoing | Direction.Incoming;
 
 export interface QueryFilters extends Record<string, string | string[] | number | boolean | SortDirection | undefined> {
   filter?: string;
