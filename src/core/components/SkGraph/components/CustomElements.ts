@@ -20,14 +20,12 @@ import {
   COMBO_COLOR_DEFAULT_LABEL,
   COMBO_COLOR_DEFAULT_LABEL_BG,
   EDGE_BORDER_COLOR,
+  EDGE_LINE_DOWN_COLOR,
   EDGE_LABEL_BACKGROUND_COLOR,
-  EDGE_LABEL_BACKGROUND_COLOR_SECONDARY,
   EDGE_LABEL_TEXT_COLOR,
-  EDGE_LABEL_TEXT_COLOR_SECONDARY,
   EDGE_LINE_COLOR,
   EDGE_SELECT_LINE,
   EDGE_TERMINAL_COLOR,
-  EDGE_TERMINAL_COLOR_2,
   FONT_FAMILY,
   ICON_SIZE,
   INACTIVE_OPACITY_VALUE,
@@ -43,7 +41,11 @@ import {
   NODE_LABEL_BACKGROUND_COLOR,
   NODE_LABEL_TEXT_COLOR,
   NODE_SELECT_BORDER,
-  NODE_SIZE
+  NODE_SIZE,
+  EDGE_LINE_PARTIAL_DOWN_COLOR,
+  EDGE_BADGE_PRIMARY_BACKGROUND,
+  EDGE_BADGE_PRIMARY_TEXT,
+  EDGE_BADGE_FONT_SIZE
 } from '../Graph.constants';
 import { GraphElementStates } from '../Graph.enum';
 
@@ -89,9 +91,8 @@ const DEFAULT_NODE_CONFIG: NodeOptions = {
   state: {
     [GraphElementStates.HoverNode]: {
       cursor: 'pointer',
-      shadowBlur: 8,
-      labelBackgroundShadowBlur: 8,
-      opacity: 1
+      opacity: 1,
+      stroke: NODE_SELECT_BORDER
     },
 
     [GraphElementStates.Visible]: {
@@ -243,14 +244,36 @@ class SkSiteEdge extends SkDataEdge {
   render(attrs: Required<QuadraticStyleProps>) {
     super.render({
       ...attrs,
-      endArrowOffset: 1.5,
-      lineDash: [4, 4],
-      endArrowFill: EDGE_TERMINAL_COLOR_2,
-      endArrowStroke: EDGE_TERMINAL_COLOR_2,
+      lineDash: 3,
+      endArrow: true,
       endArrowType: 'circle',
-      badgeBackgroundFill: EDGE_LABEL_BACKGROUND_COLOR_SECONDARY,
-      badgeFill: EDGE_LABEL_TEXT_COLOR_SECONDARY,
-      badgeBackgroundStroke: EDGE_BORDER_COLOR
+      endArrowOffset: -5,
+      badgeFontSize: EDGE_BADGE_FONT_SIZE,
+      badgeFill: EDGE_BADGE_PRIMARY_TEXT,
+      badgeBackgroundFill: EDGE_BADGE_PRIMARY_BACKGROUND,
+      badgeBackgroundHeight: LABEL_FONT_SIZE + 2,
+      badgeBackgroundWidth: LABEL_FONT_SIZE + 2,
+      labelOffsetX: 0
+    });
+  }
+}
+
+class SkSiteEdgeDown extends SkSiteEdge {
+  render(attrs: Required<QuadraticStyleProps>) {
+    super.render({
+      ...attrs,
+      stroke: EDGE_LINE_DOWN_COLOR,
+      lineWidth: 2
+    });
+  }
+}
+
+class SkSiteEdgePartialUp extends SkSiteEdge {
+  render(attrs: Required<QuadraticStyleProps>) {
+    super.render({
+      ...attrs,
+      stroke: EDGE_LINE_PARTIAL_DOWN_COLOR,
+      lineWidth: 2
     });
   }
 }
@@ -273,5 +296,7 @@ export function registerElements() {
   register(ExtensionCategory.NODE, 'SkNodeRemote', SkNodeRemote);
   register(ExtensionCategory.EDGE, 'SkDataEdge', SkDataEdge);
   register(ExtensionCategory.EDGE, 'SkSiteEdge', SkSiteEdge);
+  register(ExtensionCategory.EDGE, 'SkSiteEdgeDown', SkSiteEdgeDown);
+  register(ExtensionCategory.EDGE, 'SkSiteEdgePartialDown', SkSiteEdgePartialUp);
   register(ExtensionCategory.COMBO, 'SkCombo', SkCombo);
 }

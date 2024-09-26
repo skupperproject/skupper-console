@@ -100,13 +100,38 @@ export const RESTApi = {
     //TODO: this is a temporary path
     const removeInvalidAndDuplicatesRouterLinks = (results: RouterLinkResponse[]): RouterLinkResponse[] =>
       // remove links in the smae site: case High Availability (HA)
-      results.filter(({ sourceSiteId, destinationSiteId }) => sourceSiteId !== destinationSiteId);
+      results.filter(({ sourceSiteId, destinationSiteId }) => destinationSiteId && sourceSiteId !== destinationSiteId);
 
+    const aggregateLinksBySite = (linksData: RouterLinkResponse[]): RouterLinkResponse[] =>
+      linksData.length === 0
+        ? []
+        : Object.values(
+            linksData.reduce(
+              (acc, link) => {
+                const key = `${link.sourceSiteId}-${link.destinationSiteId}`;
+                acc[key] = acc[key] || [];
+                acc[key].push(link);
+
+                return acc;
+              },
+              {} as { [key: string]: RouterLinkResponse[] }
+            )
+          ).map((links) => {
+            const referenceLink = { ...links[0] };
+            const allStatuses = links.map(({ status }) => status);
+            referenceLink.status = allStatuses.every((s) => s === 'up')
+              ? 'up'
+              : allStatuses.every((s) => s === 'down')
+                ? 'down'
+                : 'partially_up';
+
+            return referenceLink;
+          });
     const data = await axiosFetch<ResponseWrapper<RouterLinkResponse[]>>(getLinksPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return { ...data, results: removeInvalidAndDuplicatesRouterLinks(data.results) };
+    return { ...data, results: removeInvalidAndDuplicatesRouterLinks(aggregateLinksBySite(data.results)) };
   },
 
   fetchLink: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse>> => {

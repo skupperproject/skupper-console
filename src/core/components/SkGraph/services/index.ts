@@ -204,7 +204,7 @@ export const GraphController = {
 
     // Process edges with metric-based styling
     const transformedEdges = processedEdges.map(
-      ({ id, source, target, label, hasPair, type, metricValue, secondarylabel, ...rest }) => ({
+      ({ id, source, target, label, hasPair, type, metricValue, ...rest }) => ({
         type,
         id,
         source,
@@ -216,8 +216,7 @@ export const GraphController = {
             source !== target
               ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
               : 0,
-          badgeText: secondarylabel,
-          label: !!label,
+          label: true,
           labelText: label,
           curveOffset: hasPair ? 30 : 0
         }

@@ -10,6 +10,7 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import Details from '../components/Details';
+import Links from '../components/Links';
 import Overview from '../components/Overview.';
 import PairsList from '../components/PairList';
 import ProcessList from '../components/ProcessList';
@@ -39,6 +40,7 @@ const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
         <Tab eventKey={SiteLabels.Overview} title={<TabTitleText>{SiteLabels.Overview}</TabTitleText>} />
         <Tab eventKey={SiteLabels.Details} title={<TabTitleText>{SiteLabels.Details}</TabTitleText>} />
+        <Tab eventKey={SiteLabels.Links} title={<TabTitleText>{SiteLabels.Links}</TabTitleText>} />
         <Tab eventKey={SiteLabels.Pairs} title={<TabTitleText>{SiteLabels.Pairs}</TabTitleText>} />
         <Tab
           eventKey={SiteLabels.Processes}
@@ -59,6 +61,7 @@ const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
         <>
           {tabSelected === SiteLabels.Overview && <Overview site={site} />}
           {tabSelected === SiteLabels.Details && <Details site={site} />}
+          {tabSelected === SiteLabels.Links && <Links site={site} />}
           {tabSelected === SiteLabels.Pairs && <PairsList site={site} />}
           {tabSelected === SiteLabels.Processes && <ProcessList site={site} />}
         </>

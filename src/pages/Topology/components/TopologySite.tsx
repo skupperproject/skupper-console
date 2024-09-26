@@ -4,7 +4,7 @@ import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
 import SkGraph from '@core/components/SkGraph';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
+import { SiteLabels, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
 import { SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
@@ -64,6 +64,17 @@ const TopologySite: FC<{
     [navigate, sites]
   );
 
+  const handleShowLinkDetails = useCallback(
+    (id: string) => {
+      const link = routerLinks?.find(({ identity }) => identity === id);
+
+      if (SHOW_ROUTER_LINKS && link) {
+        navigate(`${SitesRoutesPaths.Sites}/${link.sourceSiteName}@${link.sourceSiteId}?type=${SiteLabels.Links}`);
+      }
+    },
+    [navigate, routerLinks]
+  );
+
   const { nodes, edges, nodeIdSelected, nodeIdsToHighLight } = TopologySiteController.siteDataTransformer({
     idsSelected,
     searchText,
@@ -103,6 +114,7 @@ const TopologySite: FC<{
           itemSelected={nodeIdSelected}
           itemsToHighlight={nodeIdsToHighLight}
           onClickNode={handleShowDetails}
+          onClickEdge={handleShowLinkDetails}
         />
       </StackItem>
     </Stack>

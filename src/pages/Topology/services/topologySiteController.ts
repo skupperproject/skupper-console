@@ -3,8 +3,6 @@ import { GraphEdge, GraphNode } from '@sk-types/Graph.interfaces';
 import { RouterLinkResponse, PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 import { TopologyShowOptionsSelected, TopologyMetrics } from '@sk-types/Topology.interfaces';
 
-import { TopologyLabels } from '../Topology.enum';
-
 import { TopologyController } from '.';
 
 interface TopologySiteControllerProps {
@@ -18,44 +16,24 @@ interface TopologySiteControllerProps {
 }
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, siteVersion, platform }) => ({
+  entities.map(({ identity, name, siteVersion, platform, routerCount }) => ({
     type: 'SkNode',
     id: identity,
     label: siteVersion ? `${name} (${siteVersion})` : name,
-    iconName: platform || 'site'
+    iconName: platform || 'site',
+    info: {
+      secondary: routerCount > 1 ? 'HA' : ''
+    }
   }));
 
-const convertRouterLinksToEdges = (links: RouterLinkResponse[]): GraphEdge[] => {
-  // Helper function to create the unique key for source and destination
-  const createKey = (source: string, destination: string | null) => `${source}-${destination}`;
-
-  // Group edges by source and destination, storing only the count of edges
-  const edgeGroupMap = links.reduce(
-    (acc, { sourceSiteId, destinationSiteId }) => {
-      const key = createKey(sourceSiteId, destinationSiteId);
-      acc[key] = (acc[key] || 0) + 1;
-
-      return acc;
-    },
-    {} as Record<string, number>
-  );
-
+const convertRouterLinksToEdges = (links: RouterLinkResponse[]): GraphEdge[] =>
   // Convert links to GraphEdge format
-  return links.map(({ sourceSiteId, destinationSiteId, cost, identity }) => {
-    const key = createKey(sourceSiteId, destinationSiteId);
-    const edgeCount = edgeGroupMap[key];
-
-    return {
-      type: 'SkSiteEdge',
-      id: identity,
-      source: sourceSiteId,
-      target: destinationSiteId || 'unknown',
-      label: cost ? `${TopologyLabels.SiteLinkText} ${cost}` : '',
-      secondarylabel: edgeCount > 1 ? `${edgeCount}` : ''
-    };
-  });
-};
-
+  links.map(({ sourceSiteId, destinationSiteId, identity, status }) => ({
+    type: status === 'down' ? 'SkSiteEdgeDown' : status === 'partially_up' ? 'SkSiteEdgePartialDown' : 'SkSiteEdge',
+    id: identity,
+    source: sourceSiteId,
+    target: destinationSiteId || 'unknown'
+  }));
 export const TopologySiteController = {
   siteDataTransformer: ({
     idsSelected,

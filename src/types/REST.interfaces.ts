@@ -65,6 +65,36 @@ export interface SiteResponse extends BaseResponse {
   nameSpace: string;
   siteVersion: string;
   platform: 'kubernetes' | 'podman' | undefined;
+  routerCount: number;
+}
+
+export interface RouterResponse extends BaseResponse {
+  parent: string;
+  name: string;
+  namespace: string;
+  hostName: string;
+  buildVersion: string;
+  imageName: string;
+  imageVersion: string;
+  mode: string;
+}
+
+export interface RouterLinkResponse extends BaseResponse {
+  cost: number | null;
+  routerAccessId: string | null; // When connected, the identity of the destitation (peer) router access
+  destinationRouterId: string | null; // When connected, the identity of the destitation (peer) router
+  destinationRouterName: string | null;
+  destinationSiteId: string | null;
+  destinationSiteName: string | null;
+  name: string;
+  octets: number;
+  octetsReverse: number;
+  routerId: string;
+  routerName: string;
+  sourceSiteId: string;
+  sourceSiteName: string;
+  role: 'inter-router' | 'edge-router';
+  status: 'up' | 'down' | 'partially_up';
 }
 
 export interface ComponentResponse extends BaseResponse {
@@ -161,31 +191,6 @@ export interface HttpBiflow extends BiFlow {
 }
 
 export type BiFlowResponse = TcpBiflow | HttpBiflow;
-
-export interface RouterResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  namespace: string;
-  hostname: string;
-  imageName: string;
-  imageVersion: string;
-  buildVersion: string;
-}
-
-export interface RouterLinkResponse extends BaseResponse {
-  cost: number | null;
-  destinationSiteId: string | null;
-  destinationSiteName: string | null;
-  name: string;
-  octets: number;
-  octetsReverse: number;
-  peer: string | null;
-  routerId: string;
-  sourceSiteId: string;
-  sourceSiteName: string;
-  role: 'inter-router' | 'edge-router';
-  status: 'up' | 'down';
-}
 
 export interface PairsWithMetrics<T> {
   processesPairs: T[];

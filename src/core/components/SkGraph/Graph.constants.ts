@@ -11,15 +11,16 @@ export const NODE_BADGE_PRIMARY_BACKGROUND = HexColors.Black500;
 export const NODE_BADGE_PRIMARY_TEXT = HexColors.White;
 
 export const EDGE_LINE_COLOR = HexColors.DefaultEdge;
-export const EDGE_TERMINAL_COLOR = HexColors.DefaultEdge;
-export const EDGE_TERMINAL_COLOR_2 = HexColors.DefaultHighLight;
+export const EDGE_TERMINAL_COLOR = HexColors.Black500;
 export const EDGE_BORDER_COLOR = HexColors.DefaultBorder;
 export const EDGE_LABEL_TEXT_COLOR = HexColors.Black900;
 export const EDGE_LABEL_BACKGROUND_COLOR = HexColors.White;
 export const EDGE_SELECT_LINE = HexColors.DefaultHighLight;
-export const EDGE_LABEL_TEXT_COLOR_SECONDARY = HexColors.White;
-export const EDGE_LABEL_BACKGROUND_COLOR_SECONDARY = HexColors.DefaultHighLight;
-
+export const EDGE_BADGE_FONT_SIZE = 6;
+export const EDGE_BADGE_PRIMARY_BACKGROUND = HexColors.Black500;
+export const EDGE_BADGE_PRIMARY_TEXT = HexColors.White;
+export const EDGE_LINE_DOWN_COLOR = HexColors.DefaultStatusDanger;
+export const EDGE_LINE_PARTIAL_DOWN_COLOR = HexColors.DefaultStatusWarning;
 export const COMBO__BG_COLOR_DEFAULT = 'transparent';
 export const COMBO_BORDER_COLOR_DEFAULT = HexColors.DefaultBorder;
 export const COMBO_COLOR_DEFAULT_LABEL = HexColors.DarkThemeText;

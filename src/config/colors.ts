@@ -49,6 +49,8 @@ export enum HexColors {
   DefaultEdge = '#707070',
   DarkThemeBackground = '#151515',
   DarkThemeText = '#f2f2f2',
+  DefaultStatusDanger = '#C9190B',
+  DefaultStatusWarning = '#F0AB00',
   Black300 = '#D2D2d2',
   Black500 = '#8A8D90',
   Black600 = '#6A6E73',

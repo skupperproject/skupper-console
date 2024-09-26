@@ -47,7 +47,8 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     endTime: 0,
     name: `site ${i}`,
     nameSpace: `config-grpc-site-${i}-test`,
-    siteVersion: 'x.x.x'
+    siteVersion: 'x.x.x',
+    routerCount: 1
   });
 }
 
@@ -62,8 +63,9 @@ mockSitesForPerf.forEach((site, index) => {
     namespace: `router-namespace-${`router${index}`}`,
     imageName: 'skupper-router',
     imageVersion: 'latest',
-    hostname: `skupper-router-${`router${index}`}`,
-    buildVersion: 'UNKNOWN'
+    hostName: `skupper-router-${`router${index}`}`,
+    buildVersion: 'UNKNOWN',
+    mode: 'interior'
   });
 });
 
@@ -116,13 +118,16 @@ mockSitePairsForPerf.forEach((_, index) => {
       cost: 1,
       octets: 10,
       octetsReverse: 100,
-      peer: '',
+      routerAccessId: '',
       routerId: '',
       sourceSiteId: site1.identity,
       destinationSiteId: site2.identity,
       sourceSiteName: site1.sourceName,
       destinationSiteName: site2.destinationName,
-      status: 'up'
+      destinationRouterId: '',
+      destinationRouterName: '',
+      status: 'up',
+      routerName: 'skupper'
     },
     {
       identity: `link-in-${index}`,
@@ -133,13 +138,16 @@ mockSitePairsForPerf.forEach((_, index) => {
       octets: 205,
       octetsReverse: 1100,
       cost: 1,
-      peer: '',
+      routerAccessId: '',
       routerId: '',
       sourceSiteId: site2.identity,
       destinationSiteId: site1.identity,
       sourceSiteName: site2.sourceName,
       destinationSiteName: site1.destinationName,
-      status: 'up'
+      destinationRouterId: '',
+      destinationRouterName: '',
+      status: 'up',
+      routerName: 'skupper'
     }
   );
 });
@@ -187,12 +195,21 @@ export const MockApi = {
     const linksForPerfTests = ITEM_COUNT ? mockLinksForPerf : [];
     const results = [...links.results, ...linksForPerfTests];
 
+    if (queryParams && !Object.keys(queryParams).length) {
+      return {
+        results,
+        count: results.length,
+        timeRangeCount: results.length
+      };
+    }
+
     const filteredResults = results.filter(
-      (result) => queryParams.sourceSiteId && result.sourceSiteId === queryParams.sourceSiteId
+      (result) =>
+        (queryParams.sourceSiteId && result.sourceSiteId === queryParams.sourceSiteId) ||
+        (queryParams.destinationSiteId && result.destinationSiteId === queryParams.destinationSiteId)
     );
 
     return {
-      ...links,
       results: filteredResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length

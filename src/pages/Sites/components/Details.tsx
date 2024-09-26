@@ -8,29 +8,20 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Flex,
   Grid,
   GridItem,
-  List,
-  ListItem,
   Title
 } from '@patternfly/react-core';
-import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import ResourceIcon from '@core/components/ResourceIcon';
 import { SiteResponse } from '@sk-types/REST.interfaces';
 
-import { useSiteDetailsData } from '../hooks/useSiteDetailsData';
-import { SitesRoutesPaths, SiteLabels } from '../Sites.enum';
+import { SiteLabels } from '../Sites.enum';
 
 interface DetailsProps {
   site: SiteResponse;
 }
 
-const Details: FC<DetailsProps> = function ({ site: { identity: id, nameSpace, siteVersion, platform } }) {
-  const { links } = useSiteDetailsData(id);
-
+const Details: FC<DetailsProps> = function ({ site: { nameSpace, siteVersion, platform, routerCount } }) {
   return (
     <Grid hasGutter>
       <GridItem>
@@ -47,22 +38,9 @@ const Details: FC<DetailsProps> = function ({ site: { identity: id, nameSpace, s
                 <DescriptionListDescription>{platform}</DescriptionListDescription>
                 <DescriptionListTerm>{SiteLabels.SiteVersion}</DescriptionListTerm>
                 <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
-                <DescriptionListTerm>{SiteLabels.Links}</DescriptionListTerm>
+                <DescriptionListTerm>{SiteLabels.HA}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <List isPlain>
-                    {links.length
-                      ? links.map(({ identity, destinationSiteId, destinationSiteName }) => (
-                          <ListItem key={identity}>
-                            <Flex>
-                              <ResourceIcon type="site" />
-                              <Link to={`${SitesRoutesPaths.Sites}/${destinationSiteName}@${destinationSiteId}`}>
-                                {destinationSiteName}
-                              </Link>
-                            </Flex>
-                          </ListItem>
-                        ))
-                      : EMPTY_VALUE_PLACEHOLDER}
-                  </List>
+                  {routerCount > 1 ? SiteLabels.YES : SiteLabels.NO}
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </DescriptionList>

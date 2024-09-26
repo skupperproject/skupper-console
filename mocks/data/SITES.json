@@ -6,8 +6,9 @@
       "endTime": 0,
       "name": "site 1",
       "nameSpace": "config-grpc-site-1-test",
-      "platform": "podman",
-      "siteVersion": "X.X.X"
+      "platform": "kubernetes",
+      "siteVersion": "X.X.X",
+      "routerCount": 2
     },
     {
       "identity": "site-2",
@@ -16,7 +17,8 @@
       "name": "site 2",
       "nameSpace": "config-grpc-site-2-test",
       "platform": "kubernetes",
-      "siteVersion": "X.X.X"
+      "siteVersion": "X.X.X",
+      "routerCount": 1
     },
     {
       "identity": "site-3",
@@ -24,8 +26,9 @@
       "endTime": 0,
       "name": "site 3",
       "nameSpace": "config-grpc-site-3-test",
-      "platform": "podman",
-      "siteVersion": "X.X.X"
+      "platform": "kubernetes",
+      "siteVersion": "X.X.X",
+      "routerCount": 1
     },
     {
       "identity": "site-4",
@@ -34,7 +37,8 @@
       "name": "site 4",
       "nameSpace": "config-grpc-site-4-test",
       "platform": "kubernetes",
-      "siteVersion": "X.X.X"
+      "siteVersion": "X.X.X",
+      "routerCount": 1
     },
     {
       "identity": "site-5",
@@ -43,7 +47,8 @@
       "name": "site 5",
       "nameSpace": "config-grpc-site-5-test",
       "platform": "podman",
-      "siteVersion": "X.X.X"
+      "siteVersion": "X.X.X",
+      "routerCount": 1
     }
   ],
   "count": 5,

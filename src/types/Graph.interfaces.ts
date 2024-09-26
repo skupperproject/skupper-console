@@ -2,7 +2,15 @@ import { LayoutOptions } from '@antv/g6';
 
 type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
 
-export type GraphElementNames = 'SkDataEdge' | 'SkSiteEdge' | 'SkNode' | 'SkNodeUnexposed' | 'SkNodeRemote' | 'SkCombo';
+export type GraphElementNames =
+  | 'SkDataEdge'
+  | 'SkSiteEdge'
+  | 'SkSiteEdgeDown'
+  | 'SkSiteEdgePartialDown'
+  | 'SkNode'
+  | 'SkNodeUnexposed'
+  | 'SkNodeRemote'
+  | 'SkCombo';
 
 export type GraphIconsMap = {
   [key in GraphIconKeys]: HTMLImageElement;
@@ -48,7 +56,6 @@ export interface GraphEdge {
   sourceName?: string;
   targetName?: string;
   label?: string;
-  secondarylabel?: string;
   metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }
