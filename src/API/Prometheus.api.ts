@@ -239,21 +239,21 @@ export const PrometheusApi = {
   }): Promise<PrometheusMetric<'vector'>[]> => {
     const client =
       clientType === 'client'
-        ? `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.SourceSiteName}`
+        ? `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.SourceSiteName}`
         : PrometheusLabelsV2.SourceSiteName;
     const server =
       serverType === 'server'
-        ? `${PrometheusLabelsV2.DestProcess},${PrometheusLabelsV2.DestSiteName}`
+        ? `${PrometheusLabelsV2.DestProcessName},${PrometheusLabelsV2.DestSiteName}`
         : PrometheusLabelsV2.DestSiteName;
 
     let queryFilters = `${PrometheusLabelsV2.RoutingKey}="${serviceName}"`;
 
     if (sourceProcesses) {
-      queryFilters = [queryFilters, `${PrometheusLabelsV2.SourceProcess}=~"${sourceProcesses}"`].join(',');
+      queryFilters = [queryFilters, `${PrometheusLabelsV2.SourceProcessName}=~"${sourceProcesses}"`].join(',');
     }
 
     if (destProcesses) {
-      queryFilters = [queryFilters, `${PrometheusLabelsV2.DestProcess}=~"${destProcesses}"`].join(',');
+      queryFilters = [queryFilters, `${PrometheusLabelsV2.DestProcessName}=~"${destProcesses}"`].join(',');
     }
 
     const {

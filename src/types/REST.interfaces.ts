@@ -1,9 +1,11 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { Protocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
+import { Protocols, Binding, Role, SortDirection } from '@API/REST.enum';
+import { PrometheusLabelsV2 } from '@config/prometheus';
+
+import { TopologyMetrics } from './Topology.interfaces';
 
 export type FetchWithOptions = AxiosRequestConfig;
-export type FlowDirections = Direction.Outgoing | Direction.Incoming;
 
 export interface QueryFilters extends Record<string, string | string[] | number | boolean | SortDirection | undefined> {
   filter?: string;
@@ -63,6 +65,36 @@ export interface SiteResponse extends BaseResponse {
   nameSpace: string;
   siteVersion: string;
   platform: 'kubernetes' | 'podman' | undefined;
+  routerCount: number;
+}
+
+export interface RouterResponse extends BaseResponse {
+  parent: string;
+  name: string;
+  namespace: string;
+  hostName: string;
+  buildVersion: string;
+  imageName: string;
+  imageVersion: string;
+  mode: string;
+}
+
+export interface RouterLinkResponse extends BaseResponse {
+  cost: number | null;
+  routerAccessId: string | null; // When connected, the identity of the destitation (peer) router access
+  destinationRouterId: string | null; // When connected, the identity of the destitation (peer) router
+  destinationRouterName: string | null;
+  destinationSiteId: string | null;
+  destinationSiteName: string | null;
+  name: string;
+  octets: number;
+  octetsReverse: number;
+  routerId: string;
+  routerName: string;
+  sourceSiteId: string;
+  sourceSiteName: string;
+  role: 'inter-router' | 'edge-router';
+  status: 'up' | 'down' | 'partially_up';
 }
 
 export interface ComponentResponse extends BaseResponse {
@@ -85,17 +117,18 @@ export interface ProcessResponse extends BaseResponse {
   addresses: string[] | null;
 }
 
-export interface SitePairsResponse extends BaseResponse {
+export interface BasePairs {
   sourceId: string;
   sourceName: string;
   destinationId: string;
   destinationName: string;
+}
+
+export interface PairsResponse extends BaseResponse, BasePairs {
   protocol: Protocols;
 }
 
-export type ComponentPairsResponse = SitePairsResponse;
-
-export interface ProcessPairsResponse extends ComponentPairsResponse {
+export interface ProcessPairsResponse extends PairsResponse {
   sourceSiteId: string;
   sourceSiteName: string;
   destinationSiteId: string;
@@ -159,27 +192,15 @@ export interface HttpBiflow extends BiFlow {
 
 export type BiFlowResponse = TcpBiflow | HttpBiflow;
 
-export interface RouterResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  namespace: string;
-  hostname: string;
-  imageName: string;
-  imageVersion: string;
-  buildVersion: string;
+export interface PairsWithMetrics<T> {
+  processesPairs: T[];
+  prometheusKey: PrometheusLabelsV2;
+  processPairsKey: 'sourceName' | 'destinationName';
+  metrics?: TopologyMetrics;
 }
 
-export interface RouterLinkResponse extends BaseResponse {
-  cost: number | null;
-  destinationSiteId: string | null;
-  destinationSiteName: string | null;
-  name: string;
-  octets: number;
-  octetsReverse: number;
-  peer: string | null;
-  routerId: string;
-  sourceSiteId: string;
-  sourceSiteName: string;
-  role: 'inter-router' | 'edge-router';
-  status: 'up' | 'down';
+export interface PairsWithInstantMetrics extends PairsResponse {
+  bytes: number;
+  byteRate: number;
+  latency: number;
 }

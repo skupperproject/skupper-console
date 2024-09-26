@@ -11,8 +11,7 @@ import {
   SiteResponse,
   BiFlowResponse,
   ResponseWrapper,
-  ComponentPairsResponse,
-  SitePairsResponse
+  PairsResponse
 } from '@sk-types/REST.interfaces';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
@@ -24,10 +23,10 @@ const prefix = '/api/v1alpha1';
 // api data
 const path = './data';
 const sites: ResponseWrapper<SiteResponse[]> = require(`${path}/SITES.json`);
-const processGroups: ResponseWrapper<ComponentResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
-const processGroupPairs: ResponseWrapper<ComponentPairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
+const components: ResponseWrapper<ComponentResponse[]> = require(`${path}/PROCESS_GROUPS.json`);
+const componentPairs: ResponseWrapper<PairsResponse[]> = require(`${path}/PROCESS_GROUP_PAIRS.json`);
 const processes: ResponseWrapper<ProcessResponse[]> = require(`${path}/PROCESSES.json`);
-const sitePairs: ResponseWrapper<SitePairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
+const sitePairs: ResponseWrapper<PairsResponse[]> = require(`${path}/SITE_PAIRS.json`);
 const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/PROCESS_PAIRS.json`);
 const services: ResponseWrapper<ServiceResponse[]> = require(`${path}/SERVICES.json`);
 const biFlow: ResponseWrapper<BiFlowResponse[]> = require(`${path}/FLOW_PAIRS.json`);
@@ -48,7 +47,8 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     endTime: 0,
     name: `site ${i}`,
     nameSpace: `config-grpc-site-${i}-test`,
-    siteVersion: 'x.x.x'
+    siteVersion: 'x.x.x',
+    routerCount: 1
   });
 }
 
@@ -63,8 +63,9 @@ mockSitesForPerf.forEach((site, index) => {
     namespace: `router-namespace-${`router${index}`}`,
     imageName: 'skupper-router',
     imageVersion: 'latest',
-    hostname: `skupper-router-${`router${index}`}`,
-    buildVersion: 'UNKNOWN'
+    hostName: `skupper-router-${`router${index}`}`,
+    buildVersion: 'UNKNOWN',
+    mode: 'interior'
   });
 });
 
@@ -84,7 +85,7 @@ for (let i = 0; i < ITEM_COUNT; i++) {
   });
 }
 
-const mockSitePairsForPerf: SitePairsResponse[] = [];
+const mockSitePairsForPerf: PairsResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
   const sourceIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
   const destinationIndex = Math.floor(Math.random() * mockProcessesForPerf.length);
@@ -117,13 +118,16 @@ mockSitePairsForPerf.forEach((_, index) => {
       cost: 1,
       octets: 10,
       octetsReverse: 100,
-      peer: '',
+      routerAccessId: '',
       routerId: '',
       sourceSiteId: site1.identity,
       destinationSiteId: site2.identity,
       sourceSiteName: site1.sourceName,
       destinationSiteName: site2.destinationName,
-      status: 'up'
+      destinationRouterId: '',
+      destinationRouterName: '',
+      status: 'up',
+      routerName: 'skupper'
     },
     {
       identity: `link-in-${index}`,
@@ -134,13 +138,16 @@ mockSitePairsForPerf.forEach((_, index) => {
       octets: 205,
       octetsReverse: 1100,
       cost: 1,
-      peer: '',
+      routerAccessId: '',
       routerId: '',
       sourceSiteId: site2.identity,
       destinationSiteId: site1.identity,
       sourceSiteName: site2.sourceName,
       destinationSiteName: site1.destinationName,
-      status: 'up'
+      destinationRouterId: '',
+      destinationRouterName: '',
+      status: 'up',
+      routerName: 'skupper'
     }
   );
 });
@@ -188,22 +195,31 @@ export const MockApi = {
     const linksForPerfTests = ITEM_COUNT ? mockLinksForPerf : [];
     const results = [...links.results, ...linksForPerfTests];
 
+    if (queryParams && !Object.keys(queryParams).length) {
+      return {
+        results,
+        count: results.length,
+        timeRangeCount: results.length
+      };
+    }
+
     const filteredResults = results.filter(
-      (result) => queryParams.sourceSiteId && result.sourceSiteId === queryParams.sourceSiteId
+      (result) =>
+        (queryParams.sourceSiteId && result.sourceSiteId === queryParams.sourceSiteId) ||
+        (queryParams.destinationSiteId && result.destinationSiteId === queryParams.destinationSiteId)
     );
 
     return {
-      ...links,
       results: filteredResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length
     };
   },
   getComponents: (_: unknown, { queryParams }: ApiProps) => {
-    const results = [...processGroups.results];
+    const results = [...components.results];
     if (queryParams && !Object.keys(queryParams).length) {
       return {
-        ...processGroups,
+        ...components,
         results,
         count: results.length,
         timeRangeCount: results.length
@@ -220,7 +236,7 @@ export const MockApi = {
     );
 
     return {
-      ...processGroups,
+      ...components,
       results: paginatedResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length
@@ -228,7 +244,7 @@ export const MockApi = {
   },
 
   getComponent: (_: unknown, { params: { id } }: ApiProps) => {
-    const results = processGroups.results.find(({ identity }: ComponentResponse) => identity === id);
+    const results = components.results.find(({ identity }: ComponentResponse) => identity === id);
 
     return { results };
   },
@@ -302,6 +318,20 @@ export const MockApi = {
     );
 
     return { ...processPairs, results: resultsFiltered };
+  },
+
+  getComponentPairs: (_: unknown, { queryParams }: ApiProps) => {
+    const results = componentPairs.results;
+
+    if (queryParams && !Object.keys(queryParams).length) {
+      return { ...componentPairs, results };
+    }
+
+    const resultsFiltered = results.filter(
+      ({ sourceId, destinationId }) => sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
+    );
+
+    return { ...componentPairs, results: resultsFiltered };
   },
 
   getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
@@ -404,6 +434,7 @@ export const MockApiPaths = {
   SitePairs: `${prefix}/sitepairs`,
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
+  ComponentPairs: `${prefix}/processgrouppairs`,
   Services: `${prefix}/addresses`,
   Service: `${prefix}/addresses/:id`,
   Processes: `${prefix}/processes`,
@@ -440,15 +471,14 @@ export function loadMockServer() {
       this.get(MockApiPaths.Service, MockApi.getService);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
       this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
+      this.get(MockApiPaths.ComponentPairs, MockApi.getComponentPairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
       this.get(MockApiPaths.ProcessPair, MockApi.getProcessPair);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
 
-      this.get(`${prefix}/processgrouppairs`, () => processGroupPairs);
-
       this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => ({
-        results: processGroupPairs.results.find(({ identity }) => identity === id)
+        results: componentPairs.results.find(({ identity }) => identity === id)
       }));
 
       this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => ({

@@ -5,23 +5,23 @@ import { UPDATE_INTERVAL } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { TopologyController } from '@pages/Topology/services';
 import { QueriesPairs } from '@pages/Topology/Topology.enum';
-import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
+import { PairsResponse } from '@sk-types/REST.interfaces';
 
-import { QueriesProcesses } from '../Processes.enum';
+import { QueriesSites } from '../Sites.enum';
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
-  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
+  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` }
 };
 
-export const useProcessPairsListData = (id: string, name: string) => {
-  const queryParams = (idKey: keyof ProcessPairsResponse) => ({ [idKey]: id });
+export const useSitePairsListData = (id: string, name: string) => {
+  const queryParams = (idKey: keyof PairsResponse) => ({ [idKey]: id });
 
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, { sourceProcess: name }],
+        queryKey: [QueriesPairs.GetMetricsByPairs, { sourceSite: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -29,13 +29,13 @@ export const useProcessPairsListData = (id: string, name: string) => {
             showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
-              filterBy: { sourceProcess: name }
+              filterBy: { sourceSite: name }
             }
           }),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, { destProcess: name }],
+        queryKey: [QueriesPairs.GetMetricsByPairs, { destSite: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -43,7 +43,7 @@ export const useProcessPairsListData = (id: string, name: string) => {
             showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
-              filterBy: { destProcess: name }
+              filterBy: { destSite: name }
             }
           }),
         refetchInterval: UPDATE_INTERVAL
@@ -54,13 +54,13 @@ export const useProcessPairsListData = (id: string, name: string) => {
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, queryParams('sourceId')],
-        queryFn: () => RESTApi.fetchProcessesPairs(queryParams('sourceId')),
+        queryKey: [QueriesSites.GetSitesPairs, queryParams('sourceId')],
+        queryFn: () => RESTApi.fetchSitesPairs(queryParams('sourceId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, queryParams('destinationId')],
-        queryFn: () => RESTApi.fetchProcessesPairs(queryParams('destinationId')),
+        queryKey: [QueriesSites.GetSitesPairs, queryParams('destinationId')],
+        queryFn: () => RESTApi.fetchSitesPairs(queryParams('destinationId')),
         refetchInterval: UPDATE_INTERVAL
       }
     ]

@@ -5,7 +5,7 @@ import { Role } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { QueriesComponent } from '@pages/ProcessGroups/Components.enum';
 
-import { QueriesTopology } from '../Topology.enum';
+import { QueriesPairs } from '../Topology.enum';
 
 const componentQueryParams = {
   processGroupRole: [Role.Remote, Role.External],
@@ -22,7 +22,7 @@ const useTopologyComponentData = () => {
       },
 
       {
-        queryKey: [QueriesTopology.GetProcessGroupsPairs],
+        queryKey: [QueriesPairs.GetComponentsPairs],
         queryFn: () => RESTApi.fetchComponentsPairs(),
         refetchInterval: UPDATE_INTERVAL
       }

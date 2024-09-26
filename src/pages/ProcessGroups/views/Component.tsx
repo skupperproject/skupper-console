@@ -10,6 +10,7 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@page
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
 import Overview from '../components/Overview.';
+import PairsList from '../components/PairList';
 import ProcessList from '../components/ProcessList';
 import { ComponentLabels } from '../Components.enum';
 import { useComponentData } from '../hooks/useComponentData';
@@ -37,6 +38,7 @@ const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
         <Tab eventKey={ComponentLabels.Overview} title={<TabTitleText>{ComponentLabels.Overview}</TabTitleText>} />
+        <Tab eventKey={ComponentLabels.Pairs} title={<TabTitleText>{ComponentLabels.Pairs}</TabTitleText>} />
         <Tab
           eventKey={ComponentLabels.Processes}
           title={<TabTitleText>{ComponentLabels.Processes}</TabTitleText>}
@@ -55,6 +57,7 @@ const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
       mainContentChildren={
         <>
           {tabSelected === ComponentLabels.Overview && <Overview component={component} processes={processes} />}
+          {tabSelected === ComponentLabels.Pairs && <PairsList component={component} />}
           {tabSelected === ComponentLabels.Processes && <ProcessList processes={processes} />}
         </>
       }

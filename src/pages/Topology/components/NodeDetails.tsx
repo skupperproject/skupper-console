@@ -52,28 +52,28 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
   };
 
   const bytes = metrics?.sourceToDestBytes.reduce((acc, { metric, value }) => {
-    if (names.includes(metric[PrometheusLabelsV2.SourceProcess])) {
-      acc.totalBytesOut[metric[PrometheusLabelsV2.SourceProcess]] =
-        (acc.totalBytesOut[metric[PrometheusLabelsV2.SourceProcess]] || 0) + Number(value[1]);
+    if (names.includes(metric[PrometheusLabelsV2.SourceProcessName])) {
+      acc.totalBytesOut[metric[PrometheusLabelsV2.SourceProcessName]] =
+        (acc.totalBytesOut[metric[PrometheusLabelsV2.SourceProcessName]] || 0) + Number(value[1]);
     }
 
-    if (names.includes(metric[PrometheusLabelsV2.DestProcess])) {
-      acc.totalBytesIn[metric[PrometheusLabelsV2.DestProcess]] =
-        (acc.totalBytesIn[metric[PrometheusLabelsV2.DestProcess]] || 0) + Number(value[1]);
+    if (names.includes(metric[PrometheusLabelsV2.DestProcessName])) {
+      acc.totalBytesIn[metric[PrometheusLabelsV2.DestProcessName]] =
+        (acc.totalBytesIn[metric[PrometheusLabelsV2.DestProcessName]] || 0) + Number(value[1]);
     }
 
     return acc;
   }, initialTotals);
 
   const byteRate = metrics?.sourceToDestByteRate.reduce((acc, { metric, value }) => {
-    if (names.includes(metric[PrometheusLabelsV2.SourceProcess])) {
-      acc.totalByteRateOut[metric[PrometheusLabelsV2.SourceProcess]] =
-        (acc.totalByteRateOut[metric[PrometheusLabelsV2.SourceProcess]] || 0) + Number(value[1]);
+    if (names.includes(metric[PrometheusLabelsV2.SourceProcessName])) {
+      acc.totalByteRateOut[metric[PrometheusLabelsV2.SourceProcessName]] =
+        (acc.totalByteRateOut[metric[PrometheusLabelsV2.SourceProcessName]] || 0) + Number(value[1]);
     }
 
-    if (names.includes(metric[PrometheusLabelsV2.DestProcess])) {
-      acc.totalByteRateIn[metric[PrometheusLabelsV2.DestProcess]] =
-        (acc.totalByteRateIn[metric[PrometheusLabelsV2.DestProcess]] || 0) + Number(value[1]);
+    if (names.includes(metric[PrometheusLabelsV2.DestProcessName])) {
+      acc.totalByteRateIn[metric[PrometheusLabelsV2.DestProcessName]] =
+        (acc.totalByteRateIn[metric[PrometheusLabelsV2.DestProcessName]] || 0) + Number(value[1]);
     }
 
     return acc;

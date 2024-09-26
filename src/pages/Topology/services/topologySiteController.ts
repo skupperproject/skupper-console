@@ -1,9 +1,7 @@
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { GraphEdge, GraphNode } from '@sk-types/Graph.interfaces';
-import { RouterLinkResponse, SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { RouterLinkResponse, PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
 import { TopologyShowOptionsSelected, TopologyMetrics } from '@sk-types/Topology.interfaces';
-
-import { TopologyLabels } from '../Topology.enum';
 
 import { TopologyController } from '.';
 
@@ -12,28 +10,30 @@ interface TopologySiteControllerProps {
   searchText: string;
   sites: SiteResponse[];
   routerLinks?: RouterLinkResponse[];
-  sitesPairs?: SitePairsResponse[];
+  sitesPairs?: PairsResponse[];
   metrics: TopologyMetrics | null;
   options: TopologyShowOptionsSelected;
 }
 
 const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, siteVersion, platform }) => ({
+  entities.map(({ identity, name, siteVersion, platform, routerCount }) => ({
     type: 'SkNode',
     id: identity,
     label: siteVersion ? `${name} (${siteVersion})` : name,
-    iconName: platform || 'site'
+    iconName: platform || 'site',
+    info: {
+      secondary: routerCount > 1 ? 'HA' : ''
+    }
   }));
 
 const convertRouterLinksToEdges = (links: RouterLinkResponse[]): GraphEdge[] =>
-  links.map(({ sourceSiteId, destinationSiteId, cost }) => ({
-    type: 'SkSiteEdge',
-    id: `${sourceSiteId}-to${destinationSiteId}`,
+  // Convert links to GraphEdge format
+  links.map(({ sourceSiteId, destinationSiteId, identity, status }) => ({
+    type: status === 'down' ? 'SkSiteEdgeDown' : status === 'partially_up' ? 'SkSiteEdgePartialDown' : 'SkSiteEdge',
+    id: identity,
     source: sourceSiteId,
-    target: destinationSiteId || 'unknown',
-    label: cost ? `${TopologyLabels.SiteLinkText} ${cost}` : ''
+    target: destinationSiteId || 'unknown'
   }));
-
 export const TopologySiteController = {
   siteDataTransformer: ({
     idsSelected,
@@ -47,7 +47,7 @@ export const TopologySiteController = {
     let edges: GraphEdge[] = [];
 
     if (sitesPairs) {
-      edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkSiteDataEdge');
+      edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkDataEdge');
       edges = TopologyController.addMetricsToEdges(
         edges,
         PrometheusLabelsV2.SourceSiteName,

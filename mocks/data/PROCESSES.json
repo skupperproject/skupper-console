@@ -150,10 +150,23 @@
       "hostName": "10.242.0.13",
       "sourceHost": "172.17.12.236",
       "processRole": "remote"
+    },
+    {
+      "recType": "PROCESS",
+      "identity": "process-load-generator",
+      "parent": "site-2",
+      "startTime": 1674048729000000,
+      "endTime": 0,
+      "name": "process load generator",
+      "parentName": "site 2",
+      "imageName": "gcr.io/google-samples/microservices-demo/process-load-generator:v0.3.0",
+      "groupName": "group load generator",
+      "groupIdentity": "group-load-generator",
+      "hostName": "10.242.0.53",
+      "sourceHost": "172.17.12.296",
+      "processRole": "external"
     }
   ],
-  "status": "",
-  "count": 9,
-  "timeRangeCount": 9,
-  "totalCount": 9
+  "count": 10,
+  "timeRangeCount": 10
 }

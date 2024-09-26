@@ -4,9 +4,9 @@ type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' 
 
 export type GraphElementNames =
   | 'SkDataEdge'
-  | 'SkSiteDataEdge'
   | 'SkSiteEdge'
-  | 'SkLoopEdge'
+  | 'SkSiteEdgeDown'
+  | 'SkSiteEdgePartialDown'
   | 'SkNode'
   | 'SkNodeUnexposed'
   | 'SkNodeRemote'
@@ -25,7 +25,7 @@ export interface GraphNode {
   groupId?: string;
   groupName?: string;
   groupCount?: number;
-  groupedNodeCount?: number;
+  info?: { primary?: string; secondary?: string };
   x?: number | undefined;
   y?: number | undefined;
   persistPositionKey?: string;
@@ -56,7 +56,6 @@ export interface GraphEdge {
   sourceName?: string;
   targetName?: string;
   label?: string;
-  protocolLabel?: string;
   metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }

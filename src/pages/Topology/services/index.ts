@@ -6,14 +6,12 @@ import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
 import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
-import { ProcessPairsResponse, SitePairsResponse, ComponentPairsResponse } from '@sk-types/REST.interfaces';
+import { ProcessPairsResponse, PairsResponse } from '@sk-types/REST.interfaces';
 import {
   TopologyMetrics,
   TopologyConfigMetrics,
   TopologyShowOptionsSelected,
-  ProcessPairsWithMetrics,
-  TopologyConfigMetricsParams,
-  ProcessPairsWithStats
+  TopologyConfigMetricsParams
 } from '@sk-types/Topology.interfaces';
 import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph.interfaces';
 
@@ -40,11 +38,11 @@ export const TopologyController = {
   },
 
   convertPairsToEdges: (
-    processesPairs: ProcessPairsResponse[] | ComponentPairsResponse[] | SitePairsResponse[],
+    processesPairs: ProcessPairsResponse[] | PairsResponse[] | PairsResponse[],
     type: GraphElementNames
   ): GraphEdge[] =>
     processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
-      type: sourceId === destinationId ? 'SkLoopEdge' : type,
+      type,
       id: identity,
       source: sourceId,
       target: destinationId,
@@ -80,41 +78,6 @@ export const TopologyController = {
     } catch (e: unknown) {
       return Promise.reject(e);
     }
-  },
-
-  addMetricsToPairs: ({
-    processesPairs,
-    metrics,
-    prometheusKey,
-    processPairsKey
-  }: ProcessPairsWithMetrics): ProcessPairsWithStats[] => {
-    const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined, key: string) =>
-      (metricPairs || []).reduce(
-        (acc, { metric, value }) => {
-          {
-            if (metric[PrometheusLabelsV2.SourceProcess] === metric[PrometheusLabelsV2.DestProcess]) {
-              // When the source and destination are identical, we should avoid displaying the reverse metric. Instead, we should present the cumulative sum of all directions as a single value.
-              acc[`${metric[key]}`] = (Number(acc[`${metric[key]}`]) || 0) + Number(value[1]);
-            } else {
-              acc[`${metric[key]}`] = Number(value[1]);
-            }
-          }
-
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-    const sourceToDestBytesMap = getPairsMap(metrics?.sourceToDestBytes, prometheusKey);
-    const sourceToDestByteRateMap = getPairsMap(metrics?.sourceToDestByteRate, prometheusKey);
-    const txLatencyByPairsMap = getPairsMap(metrics?.latencyByProcessPairs, prometheusKey);
-
-    return processesPairs?.map((processPairsData) => ({
-      ...processPairsData,
-      bytes: sourceToDestBytesMap[processPairsData[processPairsKey]] || 0,
-      byteRate: sourceToDestByteRateMap[processPairsData[processPairsKey]] || 0,
-      latency: txLatencyByPairsMap[processPairsData[processPairsKey]] || 0
-    }));
   },
 
   addMetricsToEdges: (
@@ -210,7 +173,7 @@ export const TopologyController = {
       return {
         ...edge,
         label,
-        protocolLabel: options?.showLinkProtocol ? edge?.metrics?.protocol : undefined,
+        secondarylabel: options?.showLinkProtocol ? edge?.metrics?.protocol : undefined,
         metricValue: options?.showMetricDistribution ? bytes || byteRate || latency || 0 : undefined
       };
     }),
@@ -272,7 +235,7 @@ export function groupNodes(nodes: GraphNode[]): GraphNode[] {
     if (groupedNodes[group].groupCount! > 1) {
       groupedNodes[group].label = `${item.groupName}-${item.comboName}` || '';
       groupedNodes[group].type = type;
-      groupedNodes[group].groupedNodeCount = groupedNodes[group].groupCount;
+      groupedNodes[group].info = { primary: groupedNodes[group].groupCount?.toString() };
     }
   });
 

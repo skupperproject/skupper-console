@@ -1,7 +1,6 @@
 {
   "results": [
     {
-      "recType": "PROCESS_GROUP",
       "identity": "group-payment",
       "startTime": 1674202485253544,
       "endTime": 0,
@@ -10,7 +9,6 @@
       "processCount": 3
     },
     {
-      "recType": "PROCESS_GROUP",
       "identity": "group-cart",
       "startTime": 1674202485253544,
       "endTime": 0,
@@ -19,7 +17,6 @@
       "processCount": 1
     },
     {
-      "recType": "PROCESS_GROUP",
       "identity": "group-op",
       "startTime": 1674202485253544,
       "endTime": 0,
@@ -28,7 +25,6 @@
       "processCount": 1
     },
     {
-      "recType": "PROCESS_GROUP",
       "identity": "group-cash-desk",
       "startTime": 1674202475303866,
       "endTime": 0,
@@ -37,7 +33,6 @@
       "processCount": 2
     },
     {
-      "recType": "PROCESS_GROUP",
       "identity": "group-database",
       "startTime": 1674202475303866,
       "endTime": 0,
@@ -46,15 +41,22 @@
       "processCount": 1
     },
     {
-      "recType": "PROCESS_GROUP",
       "identity": "group-mm",
       "startTime": 1674202475303866,
       "endTime": 0,
       "name": "mm",
       "processGroupRole": "external",
       "processCount": 1
+    },
+    {
+      "identity": "group-load-generator",
+      "startTime": 1674202475303866,
+      "endTime": 0,
+      "name": "load generator",
+      "processGroupRole": "external",
+      "processCount": 1
     }
   ],
-  "count": 6,
-  "timeRangeCount": 6
+  "count": 7,
+  "timeRangeCount": 7
 }

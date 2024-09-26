@@ -51,7 +51,7 @@
     {
       "identity": "process-payment-2-to-process-op",
       "startTime": 1674202485242353,
-      "endTime": 0,
+      "endTime": 1674202485242354,
       "pairType": "PROCESS",
       "sourceId": "process-payment-2",
       "sourceName": "process payment 2",

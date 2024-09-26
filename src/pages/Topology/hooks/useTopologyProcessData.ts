@@ -7,7 +7,7 @@ import { PrometheusLabelsV2 } from '@config/prometheus';
 import { QueriesProcesses } from '@pages/Processes/Processes.enum';
 
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../Topology.enum';
+import { QueriesPairs } from '../Topology.enum';
 
 const processesQueryParams = {
   processRole: [Role.Remote, Role.External],
@@ -15,10 +15,10 @@ const processesQueryParams = {
 };
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess}` },
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
   fetchLatency: {
-    groupBy: `${PrometheusLabelsV2.SourceProcess},${PrometheusLabelsV2.DestProcess},${PrometheusLabelsV2.Direction}`
+    groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName},${PrometheusLabelsV2.Direction}`
   }
 };
 
@@ -32,12 +32,12 @@ const useTopologyProcessData = () => {
       },
 
       {
-        queryKey: [QueriesTopology.GetProcessesPairs],
+        queryKey: [QueriesPairs.GetProcessesPairs],
         queryFn: () => RESTApi.fetchProcessesPairs(),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs],
+        queryKey: [QueriesPairs.GetMetricsByPairs],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,

@@ -17,5 +17,8 @@ export enum ComponentLabels {
   Name = 'Name',
   Overview = 'Overview',
   Count = 'Processes',
-  Created = 'Created'
+  Created = 'Created',
+  Pairs = 'Pairs',
+  Clients = 'Clients',
+  Servers = 'Servers'
 }
