@@ -242,6 +242,8 @@ export const MetricsController = {
       const responseData = normalizeResponsesFromSeries(responsesByProcess);
       const responseRateData = normalizeResponsesFromSeries(errorRateByProcess);
 
+      console.log(responseData);
+
       return {
         responseData,
         responseRateData
@@ -436,7 +438,7 @@ export function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[])
     }
 
     if (responseValues.length > 1) {
-      total = responseValues[responseValues.length - 1].y - responseValues[0].y;
+      total = Math.round(responseValues[responseValues.length - 1].y);
     }
 
     return { total, label: partialCode, data: responseValues };
