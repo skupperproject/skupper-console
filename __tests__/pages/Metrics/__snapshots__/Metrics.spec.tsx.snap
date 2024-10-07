@@ -313,7 +313,9 @@ exports[`Metrics Component renders correctly 1`] = `
                     </span>
                     <span
                       class="pf-v5-c-menu-toggle__text"
-                    />
+                    >
+                      Last 1 min.
+                    </span>
                     <span
                       class="pf-v5-c-menu-toggle__controls"
                     >
