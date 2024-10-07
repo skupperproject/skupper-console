@@ -71,8 +71,7 @@ export enum PrometheusMetricsV2 {
   LatencyBuckets = 'legacy_flow_latency_microseconds_bucket',
   LatencySum = 'legacy_flow_latency_microseconds_sum',
   LatencyCount = 'legacy_flow_latency_microseconds_count',
-  HttpRequestMethod = 'http_requests_method_total',
-  HttpResponse = 'http_requests_result_total',
+  HttpRequests = 'skupper_requests_total',
   TcpOpenConnections = 'skupper_connections_opened_total',
   TcpCloseCOnnections = 'skupper_connections_closed_total'
 }

@@ -174,7 +174,7 @@ function getSelectedLabel(options: SelectOptions, selected: Selected): SelectPar
   if (Array.isArray(options) && options.length > 0) {
     // Check if the first element has the 'id' property (i.e., it's a flat list of SkSelectOption)
     if ('id' in options[0]) {
-      return (options as SkSelectOption[]).find((option) => option.id === selected)?.label;
+      return (options as SkSelectOption[]).find((option) => option.id === selected?.toString())?.label;
     }
 
     // If options are grouped (SkSelectGroupedOptions[])

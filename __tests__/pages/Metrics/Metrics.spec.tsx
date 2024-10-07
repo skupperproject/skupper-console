@@ -2,10 +2,12 @@ import { Suspense } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
 
+import { useMetricsState } from '@pages/shared/Metrics/hooks/useMetricsState';
+
 import { Protocols } from '../../../src/API/REST.enum';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import LoadingPage from '../../../src/pages/shared/Loading';
-import Metrics, { MetricsProps, useMetrics } from '../../../src/pages/shared/Metrics';
+import Metrics, { MetricsProps } from '../../../src/pages/shared/Metrics';
 import { configDefaultFilters } from '../../../src/pages/shared/Metrics/Metrics.constants';
 
 describe('useMetrics', () => {
@@ -17,13 +19,13 @@ describe('useMetrics', () => {
   };
 
   it('initializes with the correct state from props', () => {
-    const { result } = renderHook(() => useMetrics(initialProps));
+    const { result } = renderHook(() => useMetricsState(initialProps));
     expect(result.current.queryParams).toEqual({ protocol: Protocols.Http });
     expect(result.current.shouldUpdateData).toBe(0);
   });
 
   it('updates shouldUpdateData correctly when triggerMetricUpdate is called', () => {
-    const { result } = renderHook(() => useMetrics(initialProps));
+    const { result } = renderHook(() => useMetricsState(initialProps));
     act(() => {
       result.current.triggerMetricUpdate();
     });
@@ -31,7 +33,7 @@ describe('useMetrics', () => {
   });
 
   it('updates queryParams and calls onGetMetricFiltersConfig when handleFilterChange is invoked', () => {
-    const { result } = renderHook(() => useMetrics(initialProps));
+    const { result } = renderHook(() => useMetricsState(initialProps));
     const newFilters = { protocol: Protocols.Tcp };
     act(() => {
       result.current.handleFilterChange(newFilters);
@@ -41,7 +43,7 @@ describe('useMetrics', () => {
   });
 
   it('updates expanded sections and calls onGetExpandedSectionsConfig when handleSectionToggle is invoked', () => {
-    const { result } = renderHook(() => useMetrics(initialProps));
+    const { result } = renderHook(() => useMetricsState(initialProps));
     const newSections = { traffic: false };
     act(() => {
       result.current.handleSectionToggle(newSections);

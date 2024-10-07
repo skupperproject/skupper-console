@@ -32,16 +32,16 @@ export const queries = {
 
   // http request queries
   getRequestRateByMethodInInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(${PrometheusLabelsV2.Method})(rate(${PrometheusMetricsV2.HttpRequestMethod}{${param}}[${range}]))`;
+    return `sum by(${PrometheusLabelsV2.Method})(rate(${PrometheusMetricsV2.HttpRequests}{${param}}[${range}]))`;
   },
 
   // http response queries
   getResponseCountsByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(partial_code)(label_replace(sum_over_time(${PrometheusMetricsV2.HttpResponse}{${param}}[${range}]),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
+    return `sum by(partial_code)(label_replace(increase(${PrometheusMetricsV2.HttpRequests}{${param}}[${range}]),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
   },
 
   getResponseRateByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(partial_code)(label_replace(rate((${PrometheusMetricsV2.HttpResponse}{${param}}[${range}])),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
+    return `sum by(partial_code)(label_replace(rate((${PrometheusMetricsV2.HttpRequests}{${param}}[${range}])),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
   },
 
   // TOPOLOGY instant queries
