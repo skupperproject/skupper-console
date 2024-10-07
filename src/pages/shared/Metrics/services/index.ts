@@ -234,14 +234,13 @@ export const MetricsController = {
         step: calculateStep(end - start)
       };
 
-      const [responsesByProcess, responseRateByProcess] = await Promise.all([
-        PrometheusApi.fetchResponseCountsByPartialCodeInTimeRange(params),
+      const [responsesByProcess, errorRateByProcess] = await Promise.all([
         PrometheusApi.fetchResponseCountsByPartialCodeInTimeRange(params),
         PrometheusApi.fetchHttpErrorRateByPartialCodeInTimeRange(params)
       ]);
 
       const responseData = normalizeResponsesFromSeries(responsesByProcess);
-      const responseRateData = normalizeResponsesFromSeries(responseRateByProcess);
+      const responseRateData = normalizeResponsesFromSeries(errorRateByProcess);
 
       return {
         responseData,

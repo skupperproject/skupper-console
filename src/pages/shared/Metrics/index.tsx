@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef, useState, startTransition } from 'react';
+import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
@@ -11,62 +11,8 @@ import Request from './components/Request';
 import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
+import { useMetricsState } from './hooks/useMetricsState';
 import { MetricsLabels } from './Metrics.enum';
-
-interface UseMetricsProps {
-  defaultMetricFilterValues: QueryMetricsParams;
-  defaultOpenSections?: ExpandedMetricSections;
-  onGetMetricFiltersConfig?: Function;
-  onGetExpandedSectionsConfig?: Function;
-}
-
-export const useMetrics = ({
-  defaultMetricFilterValues,
-  defaultOpenSections,
-  onGetMetricFiltersConfig,
-  onGetExpandedSectionsConfig
-}: UseMetricsProps) => {
-  const { ...filters } = defaultMetricFilterValues;
-  const [queryParams, setQueryParams] = useState<QueryMetricsParams>(filters);
-  const [shouldUpdateData, setShouldUpdateData] = useState(0);
-  const expandedSectionsConfigRef = useRef(defaultOpenSections);
-
-  const triggerMetricUpdate = () => {
-    setShouldUpdateData(new Date().getTime());
-  };
-
-  const handleFilterChange = useCallback(
-    (updatedFilters: QueryMetricsParams) => {
-      startTransition(() => {
-        setQueryParams(updatedFilters);
-      });
-
-      if (onGetMetricFiltersConfig) {
-        onGetMetricFiltersConfig({ ...updatedFilters });
-      }
-    },
-    [onGetMetricFiltersConfig]
-  );
-
-  const handleSectionToggle = useCallback(
-    (section: Record<string, boolean>) => {
-      if (onGetExpandedSectionsConfig) {
-        const config = { ...expandedSectionsConfigRef.current, ...section };
-        onGetExpandedSectionsConfig(config);
-        expandedSectionsConfigRef.current = config;
-      }
-    },
-    [onGetExpandedSectionsConfig]
-  );
-
-  return {
-    queryParams,
-    shouldUpdateData,
-    triggerMetricUpdate,
-    handleFilterChange,
-    handleSectionToggle
-  };
-};
 
 export interface MetricsProps {
   defaultMetricFilterValues: QueryMetricsParams;
@@ -95,18 +41,13 @@ const Metrics: FC<MetricsProps> = function (props) {
     onGetExpandedSectionsConfig
   } = props;
 
-  const { queryParams, shouldUpdateData, triggerMetricUpdate, handleFilterChange, handleSectionToggle } = useMetrics({
-    defaultMetricFilterValues,
-    defaultOpenSections,
-    onGetMetricFiltersConfig,
-    onGetExpandedSectionsConfig
-  });
-  // case: hide if We select TCP from the protocol filter or the protocol list has only 1 item and this item is TCP
-  const showHttp =
-    !!availableProtocols?.length &&
-    queryParams.protocol !== Protocols.Tcp &&
-    !(availableProtocols?.length === 1 && availableProtocols[0] === Protocols.Tcp);
-  const showTcp = !queryParams.protocol || queryParams.protocol === Protocols.Tcp;
+  const { queryParams, shouldUpdateData, triggerMetricUpdate, handleFilterChange, handleSectionToggle } =
+    useMetricsState({
+      defaultMetricFilterValues,
+      defaultOpenSections,
+      onGetMetricFiltersConfig,
+      onGetExpandedSectionsConfig
+    });
 
   return (
     <Stack hasGutter>
@@ -131,16 +72,15 @@ const Metrics: FC<MetricsProps> = function (props) {
           onGetIsSectionExpanded={handleSectionToggle}
         />
       </StackItem>
-      {showTcp && (
-        <StackItem>
-          <TcpConnection
-            selectedFilters={queryParams}
-            forceUpdate={shouldUpdateData}
-            openSections={defaultOpenSections?.connection}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
-        </StackItem>
-      )}
+      <StackItem>
+        <TcpConnection
+          selectedFilters={queryParams}
+          forceUpdate={shouldUpdateData}
+          openSections={defaultOpenSections?.connection}
+          onGetIsSectionExpanded={handleSectionToggle}
+        />
+      </StackItem>
+
       <StackItem>
         <Latency
           title={MetricsLabels.LatencyTitleOut}
@@ -162,26 +102,25 @@ const Metrics: FC<MetricsProps> = function (props) {
           onGetIsSectionExpanded={handleSectionToggle}
         />
       </StackItem>
-      {showHttp && (
-        <>
-          <StackItem>
-            <Request
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.request}
-              forceUpdate={shouldUpdateData}
-              onGetIsSectionExpanded={handleSectionToggle}
-            />
-          </StackItem>
-          <StackItem>
-            <Response
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.response}
-              forceUpdate={shouldUpdateData}
-              onGetIsSectionExpanded={handleSectionToggle}
-            />
-          </StackItem>
-        </>
-      )}
+
+      <>
+        <StackItem>
+          <Request
+            selectedFilters={queryParams}
+            openSections={defaultOpenSections?.request}
+            forceUpdate={shouldUpdateData}
+            onGetIsSectionExpanded={handleSectionToggle}
+          />
+        </StackItem>
+        <StackItem>
+          <Response
+            selectedFilters={queryParams}
+            openSections={defaultOpenSections?.response}
+            forceUpdate={shouldUpdateData}
+            onGetIsSectionExpanded={handleSectionToggle}
+          />
+        </StackItem>
+      </>
     </Stack>
   );
 };
