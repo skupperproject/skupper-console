@@ -242,8 +242,6 @@ export const MetricsController = {
       const responseData = normalizeResponsesFromSeries(responsesByProcess);
       const responseRateData = normalizeResponsesFromSeries(errorRateByProcess);
 
-      console.log(responseData);
-
       return {
         responseData,
         responseRateData

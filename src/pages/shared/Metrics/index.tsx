@@ -103,24 +103,22 @@ const Metrics: FC<MetricsProps> = function (props) {
         />
       </StackItem>
 
-      <>
-        <StackItem>
-          <Request
-            selectedFilters={queryParams}
-            openSections={defaultOpenSections?.request}
-            forceUpdate={shouldUpdateData}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
-        </StackItem>
-        <StackItem>
-          <Response
-            selectedFilters={queryParams}
-            openSections={defaultOpenSections?.response}
-            forceUpdate={shouldUpdateData}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
-        </StackItem>
-      </>
+      <StackItem>
+        <Request
+          selectedFilters={queryParams}
+          openSections={defaultOpenSections?.request}
+          forceUpdate={shouldUpdateData}
+          onGetIsSectionExpanded={handleSectionToggle}
+        />
+      </StackItem>
+      <StackItem>
+        <Response
+          selectedFilters={queryParams}
+          openSections={defaultOpenSections?.response}
+          forceUpdate={shouldUpdateData}
+          onGetIsSectionExpanded={handleSectionToggle}
+        />
+      </StackItem>
     </Stack>
   );
 };
