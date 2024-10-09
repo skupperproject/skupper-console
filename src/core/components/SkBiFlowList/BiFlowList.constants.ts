@@ -6,7 +6,7 @@ import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
 import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { BiFlowResponse, ApplicationFlowResponse } from '@sk-types/REST.interfaces';
+import { BiFlowResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { BiFlowListLabels } from './BiFlowList.enum';
@@ -40,8 +40,7 @@ export const customCells = {
   TimestampCell: SkEndTimeCell,
   DurationCell: SkDurationCell,
   ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatBytes }),
-  HttpStatusCell: (props: { data?: ApplicationFlowResponse }) => props.data
+    SkHighlightValueCell({ ...props, format: formatBytes })
 };
 
 // no wrap fix the column
@@ -130,7 +129,6 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
     name: BiFlowListLabels.StatusCode,
     prop: 'code' as keyof BiFlowResponse,
-    customCellName: 'HttpStatusCell',
     modifier: 'fitContent'
   },
   {

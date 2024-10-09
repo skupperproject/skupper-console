@@ -24,6 +24,7 @@ const HttpRequests: FC<HttpRequestsProps> = function ({ id, name }) {
           options={httpSelectOptions}
           columns={httpBiFlowColumns}
           filters={{ ...initRequestsQueryParams, routingKey: name }}
+          showAppplicationFlows={true}
         />
       </StackItem>
     </Stack>

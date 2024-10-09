@@ -17,19 +17,27 @@ interface ServiceBiFlowProps {
   filters: QueryFilters;
   options: SkSelectOption[];
   pagination?: number;
+  showAppplicationFlows?: boolean;
 }
 
 const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
   columns,
   filters,
   options,
-  pagination = BIG_PAGINATION_SIZE
+  pagination = BIG_PAGINATION_SIZE,
+  showAppplicationFlows = false
 }) {
   const [queryParams, setQueryParams] = useState({});
 
-  const { data: biFlow } = useSuspenseQuery({
+  const { data: transportFlows } = useSuspenseQuery({
     queryKey: [QueriesServices.GetBiFlowByService, { ...filters, ...queryParams }],
-    queryFn: () => RESTApi.fetchBiFlows({ ...filters, ...queryParams }),
+    queryFn: () => RESTApi.fetchTransportFlows({ ...filters, ...queryParams }),
+    refetchInterval: UPDATE_INTERVAL
+  });
+
+  const { data: applicationFlows } = useSuspenseQuery({
+    queryKey: [QueriesServices.GetBiFlowByService, { ...filters, ...queryParams }],
+    queryFn: () => RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }),
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -39,14 +47,16 @@ const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
     });
   }, []);
 
+  const biFlows = showAppplicationFlows ? applicationFlows : transportFlows;
+
   return (
     <>
       <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />
 
       <SkBiFlowList
         columns={columns}
-        rows={biFlow?.results || []}
-        paginationTotalRows={biFlow?.timeRangeCount}
+        rows={biFlows?.results || []}
+        paginationTotalRows={biFlows?.timeRangeCount}
         pagination={true}
         paginationPageSize={pagination}
         onGetFilters={handleGetFilters}

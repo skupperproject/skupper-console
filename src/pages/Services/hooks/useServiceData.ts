@@ -38,20 +38,21 @@ const useServiceData = (serviceId: string) => {
 
   const { data: requestsData } = useQuery({
     queryKey: [QueriesServices.GetBiFlowByService, initServersQueryParams],
-    queryFn: () => RESTApi.fetchBiFlows({ ...initServersQueryParams, routingKey: service.results.name }),
+    queryFn: () => RESTApi.fetchTransportFlows({ ...initServersQueryParams, routingKey: service.results.name }),
     enabled: service.results.protocol !== Protocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetBiFlowByService, activeConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchBiFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
+    queryFn: () => RESTApi.fetchTransportFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
     queryKey: [QueriesServices.GetBiFlowByService, terminatedConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchBiFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
+    queryFn: () =>
+      RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
     enabled: service.results.protocol === Protocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });

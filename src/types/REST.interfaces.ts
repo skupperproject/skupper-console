@@ -143,7 +143,7 @@ export interface ServiceResponse extends BaseResponse {
   isBound: boolean;
 }
 
-interface BiFlow extends BaseResponse {
+interface BaseFlow extends BaseResponse {
   identity: string;
   sourceProcessId: string;
   sourceProcessName: string;
@@ -168,7 +168,7 @@ interface BiFlow extends BaseResponse {
   listenerError: string | null;
 }
 
-export interface ConnectionResponse extends BiFlow {
+export interface TransportFlowResponse extends BaseFlow {
   proxyHost: string; //what the service will see as the client.  ie: 172.17.44.249
   proxyPort: string; //ie: 56956
   destHost: string; //what the service will see as the
@@ -177,13 +177,13 @@ export interface ConnectionResponse extends BiFlow {
   sourcePort: string; //ie:  47504
 }
 
-export interface ApplicationFlowResponse extends BiFlow {
+export interface ApplicationFlowResponse extends BaseFlow {
   connectionId: string;
   method?: string;
   code?: number;
 }
 
-export type BiFlowResponse = ConnectionResponse | ApplicationFlowResponse;
+export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;
 
 export interface PairsWithMetrics<T> {
   processesPairs: T[];

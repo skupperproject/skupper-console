@@ -519,6 +519,21 @@ export function loadMockServer() {
         results: biFlow.results.find(({ identity }) => identity === id)
       }));
 
+
+      this.get(`${prefix}/applicationflows`, (_, { queryParams }) => {
+        const queryProtocol = queryParams.protocol;
+        const queryRoutingKey = queryParams.routingKey;
+
+        const results = biFlow.results.filter(
+          ({ protocol, routingKey, endTime }) =>
+            (queryProtocol ? protocol === queryProtocol : true) &&
+            (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
+            (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
+        );
+
+        return { ...processPairs, results, timeRangeCount: results.length };
+      });
+
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);
     }
   });

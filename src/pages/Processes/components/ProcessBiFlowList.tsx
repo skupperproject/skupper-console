@@ -61,12 +61,19 @@ const initPaginatedQueryParams: QueryFiltersProtocolMap = {
   }
 };
 
-const useBiFlowQuery = (queryParams: QueryFilters, sourceProcessId: string, destProcessId: string, enabled = true) => {
+const useBiFlowsQuery = (
+  queryParams: QueryFilters,
+  sourceProcessId: string,
+  destProcessId: string,
+  enabled = true,
+  isApplicationFlow = false
+) => {
+  const biFlowsQuery = isApplicationFlow ? RESTApi.fetchApplicationFlows : RESTApi.fetchTransportFlows;
   const { data } = useSuspenseQuery({
     queryKey: [QueriesProcesses.GetBiFlows, queryParams, sourceProcessId, destProcessId],
     queryFn: () =>
       enabled
-        ? RESTApi.fetchBiFlows({
+        ? biFlowsQuery({
             ...queryParams,
             sourceProcessId,
             destProcessId
@@ -78,7 +85,7 @@ const useBiFlowQuery = (queryParams: QueryFilters, sourceProcessId: string, dest
   return data;
 };
 
-const useProcessPairsContent = ({ protocol }: { protocol: Protocols | 'undefined' }) => {
+const useProcessBiFlowsState = ({ protocol }: { protocol: Protocols | 'undefined' }) => {
   const [queryParamsPaginated, setQueryParamsPaginated] = useState<QueryFiltersProtocolMap>(initPaginatedQueryParams);
 
   const handleGetFilters = useCallback(
@@ -116,32 +123,22 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
     setTabSelected(tabIndex as string);
   }
 
-  const { queryParamsPaginated, handleGetFilters } = useProcessPairsContent({ protocol });
+  const { queryParamsPaginated, handleGetFilters } = useProcessBiFlowsState({ protocol });
 
   const { results: httpRequests, count: httpRequestsCount } = extractData(
-    useBiFlowQuery(
-      queryParamsPaginated[Protocols.Http],
-      sourceProcessId,
-      destProcessId,
-      Protocols.Http === protocol || protocol === 'undefined'
-    )
+    useBiFlowsQuery(queryParamsPaginated[Protocols.Http], sourceProcessId, destProcessId, true, true)
   );
 
   const { results: http2Requests, count: http2RequestsCount } = extractData(
-    useBiFlowQuery(
-      queryParamsPaginated[Protocols.Http2],
-      sourceProcessId,
-      destProcessId,
-      Protocols.Http2 === protocol || protocol === 'undefined'
-    )
+    useBiFlowsQuery(queryParamsPaginated[Protocols.Http2], sourceProcessId, destProcessId, true, true)
   );
 
   const { results: activeConnections, count: activeConnectionsCount } = extractData(
-    useBiFlowQuery(queryParamsPaginated[Protocols.Tcp].active, sourceProcessId, destProcessId, true)
+    useBiFlowsQuery(queryParamsPaginated[Protocols.Tcp].active, sourceProcessId, destProcessId, true)
   );
 
   const { results: oldConnections, count: oldConnectionsCount } = extractData(
-    useBiFlowQuery(queryParamsPaginated[Protocols.Tcp].old, sourceProcessId, destProcessId, true)
+    useBiFlowsQuery(queryParamsPaginated[Protocols.Tcp].old, sourceProcessId, destProcessId, true)
   );
 
   const activeTab = tabSelected
