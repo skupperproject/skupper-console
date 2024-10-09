@@ -37,10 +37,10 @@
     },
 
     {
-      "identity": "op:4900",
+      "identity": "catalog:4900",
       "startTime": 1674048767157175,
       "endTime": 0,
-      "name": "op:4900",
+      "name": "catalog:4900",
       "protocol": "tcp",
       "connectorCount": 0,
       "listenerCount": 2

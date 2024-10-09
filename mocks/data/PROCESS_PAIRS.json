@@ -1,12 +1,11 @@
 {
   "results": [
     {
-      "identity": "process-op-to-process-cart-1",
+      "identity": "process-catalog-to-process-cart-1",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
-      "sourceId": "process-op",
-      "sourceName": "process op",
+      "sourceId": "process-catalog",
+      "sourceName": "process catalog",
       "destinationId": "process-cart-1",
       "destinationName": "process cart 1",
       "sourceSiteId": "site-1",
@@ -16,12 +15,11 @@
       "protocol": "http2"
     },
     {
-      "identity": "process-op-to-process-cash-desk-2",
+      "identity": "process-catalog-to-process-cash-desk-2",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
-      "sourceId": "process-op",
-      "sourceName": "process op",
+      "sourceId": "process-catalog",
+      "sourceName": "process catalog",
       "destinationId": "process-cash-desk-2",
       "destinationName": "process cash desk 2",
       "protocol": "http2"
@@ -30,7 +28,6 @@
       "identity": "process-payment-3-to-process-cash-desk-2",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
       "sourceId": "process-payment-3",
       "sourceName": "process payment 3",
       "destinationId": "process-cash-desk-2",
@@ -41,7 +38,6 @@
       "identity": "process-payment-1-to-process-cash-desk-1",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
       "sourceId": "process-payment-1",
       "sourceName": "process payment 1",
       "destinationId": "process-cash-desk-1",
@@ -49,21 +45,19 @@
       "protocol": "http1"
     },
     {
-      "identity": "process-payment-2-to-process-op",
+      "identity": "process-payment-2-to-process-catalog",
       "startTime": 1674202485242353,
       "endTime": 1674202485242354,
-      "pairType": "PROCESS",
       "sourceId": "process-payment-2",
       "sourceName": "process payment 2",
-      "destinationId": "process-op",
-      "destinationName": "process-op",
+      "destinationId": "process-catalog",
+      "destinationName": "process-catalog",
       "protocol": "tcp"
     },
     {
       "identity": "process-cart-1-to-process-payment-3",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
       "sourceId": "process-cart-1",
       "sourceName": "process cart 1",
       "destinationId": "process-payment-3",
@@ -78,7 +72,6 @@
       "identity": "process-database-1-to-process-payment-1",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
       "sourceId": "process-database-1",
       "sourceName": "process database 1",
       "destinationId": "process-payment-1",
@@ -90,14 +83,27 @@
       "protocol": "tcp"
     },
     {
-      "identity": "process-mm-to-process-database-1",
+      "identity": "site-client-1-to-process-database-1",
       "startTime": 1674202485242353,
       "endTime": 0,
-      "pairType": "PROCESS",
-      "sourceId": "process-mm",
-      "sourceName": "process mm",
+      "sourceId": "site-client-1",
+      "sourceName": "site client 1",
       "destinationId": "process-database-1",
       "destinationName": "process database 1",
+      "protocol": "tcp"
+    },
+    {
+      "identity": "process-cash-desk-2-to-process-payment-1",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "sourceId": "process-cash-desk-2",
+      "sourceName": "process cash desk 2",
+      "destinationId": "process-payment-1",
+      "destinationName": "process payment 1",
+      "sourceSiteId": "site-2",
+      "sourceSiteName": "site 2",
+      "destinationSiteId": "site-1",
+      "destinationSiteName": "site 1",
       "protocol": "tcp"
     }
   ],

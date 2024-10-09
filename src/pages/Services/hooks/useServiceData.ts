@@ -38,7 +38,7 @@ const useServiceData = (serviceId: string) => {
 
   const { data: requestsData } = useQuery({
     queryKey: [QueriesServices.GetBiFlowByService, initServersQueryParams],
-    queryFn: () => RESTApi.fetchTransportFlows({ ...initServersQueryParams, routingKey: service.results.name }),
+    queryFn: () => RESTApi.fetchApplicationFlows({ ...initServersQueryParams, routingKey: service.results.name }),
     enabled: service.results.protocol !== Protocols.Tcp,
     refetchInterval: UPDATE_INTERVAL
   });

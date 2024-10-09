@@ -4,7 +4,7 @@ import { Truncate } from '@patternfly/react-core';
 
 import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 
-export interface SkValueOrPlaceHolderCellProps {
+interface SkValueOrPlaceHolderCellProps {
   value: string | number | boolean | undefined;
 }
 

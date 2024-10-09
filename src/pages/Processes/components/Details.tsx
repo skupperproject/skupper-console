@@ -3,6 +3,7 @@ import { FC } from 'react';
 import {
   Card,
   CardBody,
+  CardTitle,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -10,6 +11,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Title,
   Tooltip,
   Truncate
 } from '@patternfly/react-core';
@@ -30,7 +32,7 @@ interface DetailsProps {
   title?: string | JSX.Element;
 }
 
-const Details: FC<DetailsProps> = function ({ process }) {
+const Details: FC<DetailsProps> = function ({ process, title }) {
   const {
     parent,
     parentName,
@@ -46,6 +48,11 @@ const Details: FC<DetailsProps> = function ({ process }) {
 
   return (
     <Card>
+      {title && (
+        <CardTitle>
+          <Title headingLevel="h1">{title}</Title>
+        </CardTitle>
+      )}
       <CardBody>
         <DescriptionList>
           <Grid hasGutter>

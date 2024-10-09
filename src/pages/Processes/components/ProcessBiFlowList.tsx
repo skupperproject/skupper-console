@@ -153,7 +153,7 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
             ? TAB_4_KEY
             : '';
 
-  if (!activeConnectionsCount && !oldConnectionsCount) {
+  if (!activeConnectionsCount && !oldConnectionsCount && !http2RequestsCount && !httpRequestsCount) {
     return (
       <Card isFullHeight>
         <CardBody>
