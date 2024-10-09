@@ -36,8 +36,8 @@ export enum ServicesLabels {
   AvgByteRateTx = 'Avg. rate requests',
   Overview = 'Overview',
   Servers = 'Servers',
-  SankeyChartTitle = 'Process and site pairs',
-  SankeyChartDescription = 'Visualizing relationships and the distribution among processes and sites',
+  SankeyChartTitle = 'Pairs relationship',
+  SankeyChartDescription = 'Visualizing relationships and the distribution',
   Name = 'Routing key',
   Protocol = 'Protocol',
   TotalBiFlows = 'Total'

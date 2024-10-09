@@ -40,10 +40,7 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
     processPairsKey: 'destinationName'
   });
 
-  const { TCPClients, TCPServers, HTTPClients, HTTPServers, remoteClients, remoteServers } = useMemo(
-    () => filterPairsByProtocols(clients, servers),
-    [clients, servers]
-  );
+  const { TCPClients, TCPServers } = useMemo(() => filterPairsByProtocols(clients, servers), [clients, servers]);
 
   const isEmpty = !servers.length && !clients.length;
 
@@ -59,10 +56,6 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
     <Flex direction={{ default: 'column' }}>
       {renderTable(ProcessesLabels.TCPClients, TCPClients, PairsListColumnsWithLinkDetails)}
       {renderTable(ProcessesLabels.TCPServers, TCPServers, PairsListColumnsWithLinkDetails)}
-      {renderTable(ProcessesLabels.HTTPClients, HTTPClients, PairsListColumnsWithLinkDetails)}
-      {renderTable(ProcessesLabels.HTTPServers, HTTPServers, PairsListColumnsWithLinkDetails)}
-      {renderTable(ProcessesLabels.RemoteClients, remoteClients, PairsListColumnsWithLinkDetails)}
-      {renderTable(ProcessesLabels.RemoteServers, remoteServers, PairsListColumnsWithLinkDetails)}
     </Flex>
   );
 };

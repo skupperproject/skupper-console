@@ -49,6 +49,8 @@ const Metrics: FC<MetricsProps> = function (props) {
       onGetExpandedSectionsConfig
     });
 
+  const showHttp = !!availableProtocols?.includes(Protocols.Http || Protocols.Http2);
+
   return (
     <Stack hasGutter>
       <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
@@ -103,24 +105,26 @@ const Metrics: FC<MetricsProps> = function (props) {
         />
       </StackItem>
 
-      <>
-        <StackItem>
-          <Request
-            selectedFilters={queryParams}
-            openSections={defaultOpenSections?.request}
-            forceUpdate={shouldUpdateData}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
-        </StackItem>
-        <StackItem>
-          <Response
-            selectedFilters={queryParams}
-            openSections={defaultOpenSections?.response}
-            forceUpdate={shouldUpdateData}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
-        </StackItem>
-      </>
+      {showHttp && (
+        <>
+          <StackItem>
+            <Request
+              selectedFilters={queryParams}
+              openSections={defaultOpenSections?.request}
+              forceUpdate={shouldUpdateData}
+              onGetIsSectionExpanded={handleSectionToggle}
+            />
+          </StackItem>
+          <StackItem>
+            <Response
+              selectedFilters={queryParams}
+              openSections={defaultOpenSections?.response}
+              forceUpdate={shouldUpdateData}
+              onGetIsSectionExpanded={handleSectionToggle}
+            />
+          </StackItem>
+        </>
+      )}
     </Stack>
   );
 };

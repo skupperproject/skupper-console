@@ -5,7 +5,7 @@ import { Protocols, Quantiles } from './REST.enum';
 
 export const queries = {
   // data transfer queries
-  getByteRateByDirectionInTimeRange(param: string, range: IntervalTimePropValue, areDataReceived = false) {
+  getByteRateInTimeRange(param: string, range: IntervalTimePropValue, areDataReceived = false) {
     const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
 
     return `sum(rate(${label}{${param}}[${range}]))`;

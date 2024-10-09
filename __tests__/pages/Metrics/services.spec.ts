@@ -69,7 +69,7 @@ describe('useMetrics', () => {
     const error = new Error('API request failed');
 
     jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateByDirectionInTimeRange')
+      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateInTimeRange')
       .mockImplementation(jest.fn().mockRejectedValue(error));
 
     await expect(
@@ -203,7 +203,7 @@ describe('normalizeResponsesFromSeries', () => {
 
     expect(result).toEqual({
       statusCode2xx: {
-        total: 10,
+        total: 20,
         label: '2',
         data: [
           { x: 1, y: 10 },
@@ -211,7 +211,7 @@ describe('normalizeResponsesFromSeries', () => {
         ]
       },
       statusCode3xx: {
-        total: 10,
+        total: 20,
         label: '3',
         data: [
           { x: 1, y: 10 },
@@ -219,7 +219,7 @@ describe('normalizeResponsesFromSeries', () => {
         ]
       },
       statusCode4xx: {
-        total: 10,
+        total: 20,
         label: '4',
         data: [
           { x: 1, y: 10 },
@@ -227,14 +227,14 @@ describe('normalizeResponsesFromSeries', () => {
         ]
       },
       statusCode5xx: {
-        total: 10,
+        total: 20,
         label: '5',
         data: [
           { x: 1, y: 10 },
           { x: 2, y: 20 }
         ]
       },
-      total: 40
+      total: 80
     });
   });
 });

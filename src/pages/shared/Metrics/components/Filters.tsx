@@ -12,7 +12,6 @@ import { ConfigMetricFilters, QueryMetricsParams } from '@sk-types/Metrics.inter
 
 import useMetricFiltersState from '../hooks/useMetricFiltersState';
 import { configDefaultFilters } from '../Metrics.constants';
-import { MetricsLabels } from '../Metrics.enum';
 import { generateFilterItems } from '../services';
 
 interface MetricFiltersProps {
@@ -36,7 +35,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     destSites,
     sourceProcesses,
     destProcesses,
-    availableProtocols = [Protocols.Http, Protocols.Http2, Protocols.Tcp],
     onSelectFilters
   }) => {
     const config: ConfigMetricFilters = deepMergeJSONObjects<ConfigMetricFilters>(configDefaultFilters, configFilters);
@@ -47,7 +45,6 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
       handleSelectDestSite,
       handleSelectSourceProcess,
       handleSelectDestProcess,
-      handleSelectProtocol,
       handleSelectTimeInterval
     } = useMetricFiltersState({
       defaultMetricFilterValues: {
@@ -119,7 +116,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                   />
                 )}
               </ToolbarItem>
-
+              {/*
               {!!availableProtocols.length && (
                 <ToolbarItem>
                   <SkSelect
@@ -132,7 +129,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
                     placeholder={MetricsLabels.FilterProtocolsDefault}
                   />
                 </ToolbarItem>
-              )}
+              )} */}
             </ToolbarGroup>
 
             <ToolbarGroup align={{ default: 'alignRight' }}>

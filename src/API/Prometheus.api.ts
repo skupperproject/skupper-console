@@ -12,7 +12,7 @@ import { queries } from './Prometheus.queries';
 import { convertToPrometheusQueryParams, gePrometheusQueryPATH } from './Prometheus.utils';
 
 export const PrometheusApi = {
-  fetchByteRateByDirectionInTimeRange: async (
+  fetchByteRateInTimeRange: async (
     params: PrometheusQueryParams,
     isRx = false
   ): Promise<PrometheusMetric<'matrix'>[]> => {
@@ -23,7 +23,7 @@ export const PrometheusApi = {
       data: { result }
     } = await axiosFetch<PrometheusResponse<'matrix'>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getByteRateByDirectionInTimeRange(queryFilterString, '1m', isRx),
+        query: queries.getByteRateInTimeRange(queryFilterString, '1m', isRx),
         start,
         end,
         step
