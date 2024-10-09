@@ -33,7 +33,6 @@ export const MetricsController = {
     sourceProcess,
     destProcess,
     service,
-    protocol,
     direction,
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
@@ -47,7 +46,6 @@ export const MetricsController = {
       sourceProcess,
       destProcess,
       service,
-      protocol,
       direction,
       start,
       end,
@@ -83,7 +81,6 @@ export const MetricsController = {
     sourceProcess,
     destProcess,
     service,
-    protocol,
     direction,
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
@@ -97,7 +94,6 @@ export const MetricsController = {
       sourceProcess,
       destProcess,
       service,
-      protocol,
       direction,
       start,
       end,
@@ -259,14 +255,12 @@ export const MetricsController = {
     sourceProcess,
     destProcess,
     service,
-    protocol,
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
   }: QueryMetricsParams): Promise<getDataTrafficMetrics> => {
     const params: PrometheusQueryParams = {
       service,
-      protocol,
       start,
       end,
       step: calculateStep(end - start),
@@ -297,19 +291,17 @@ export const MetricsController = {
           // Outgoing byte rate: Data sent from the source to the destination
           isServiceWIthoutSelecedResources || (!service && isSameSite)
             ? []
-            : PrometheusApi.fetchByteRateByDirectionInTimeRange(params),
+            : PrometheusApi.fetchByteRateInTimeRange(params),
           // Incoming byte rate: Data received at the destination from the source
           isServiceWIthoutSelecedResources || (!service && isSameSite)
             ? []
-            : PrometheusApi.fetchByteRateByDirectionInTimeRange(params, true),
+            : PrometheusApi.fetchByteRateInTimeRange(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
-          !isServiceWIthoutSelecedResources && service
-            ? []
-            : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams),
+          !isServiceWIthoutSelecedResources && service ? [] : PrometheusApi.fetchByteRateInTimeRange(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
           !isServiceWIthoutSelecedResources && service
             ? []
-            : PrometheusApi.fetchByteRateByDirectionInTimeRange(invertedParams, true)
+            : PrometheusApi.fetchByteRateInTimeRange(invertedParams, true)
         ]);
 
       return {
@@ -339,7 +331,6 @@ export const MetricsController = {
     sourceProcess,
     destProcess,
     service,
-    protocol,
     duration = defaultTimeInterval.seconds,
     start = getCurrentAndPastTimestamps(duration).start,
     end = getCurrentAndPastTimestamps(duration).end
@@ -352,7 +343,6 @@ export const MetricsController = {
       sourceProcess,
       destProcess,
       service,
-      protocol,
       start,
       end,
       step: calculateStep(end - start)

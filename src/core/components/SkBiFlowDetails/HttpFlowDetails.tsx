@@ -2,14 +2,14 @@ import { FC } from 'react';
 
 import { DescriptionListDescription, DescriptionListTerm } from '@patternfly/react-core';
 
-import { HttpBiflow } from '@sk-types/REST.interfaces';
+import { ApplicationFlowResponse } from '@sk-types/REST.interfaces';
 
 import { BiFlowLabels } from './BiFlow.enum';
 import FlowDetailsBase from './FlowDetailsBase';
 
 interface HttpFlowDetailsProps {
   title: string;
-  flow: HttpBiflow;
+  flow: ApplicationFlowResponse;
   isCounterflow?: boolean;
 }
 
@@ -24,8 +24,8 @@ const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
     octetsReverse,
     latency,
     latencyReverse,
-    forwardFlow,
-    counterFlow
+    method,
+    code
   },
   isCounterflow = false
 }) {
@@ -33,8 +33,8 @@ const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
   const processName = isCounterflow ? sourceProcessName : destProcessName;
   const octetsResolved = isCounterflow ? octets : octetsReverse;
   const latencyResolved = isCounterflow ? latency : latencyReverse;
-  const methodResolved = isCounterflow ? '' : forwardFlow.method;
-  const resultResolved = isCounterflow ? counterFlow.result : '';
+  const methodResolved = isCounterflow ? '' : method;
+  const resultResolved = isCounterflow ? code : '';
 
   return (
     <FlowDetailsBase

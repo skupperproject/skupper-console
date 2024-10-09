@@ -15,7 +15,7 @@ import { Protocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds';
 import { formatLatency } from '@core/utils/formatLatency';
 import { renderTraceBySites } from '@core/utils/renderTraceBySites';
-import { TcpBiflow, BiFlowResponse, HttpBiflow } from '@sk-types/REST.interfaces';
+import { ConnectionResponse, BiFlowResponse, ApplicationFlowResponse } from '@sk-types/REST.interfaces';
 
 import { BiFlowLabels } from './BiFlow.enum';
 import HttpFlowDetails from './HttpFlowDetails';
@@ -51,16 +51,16 @@ const SkBiFlowDetails: FC<SkBiFlowDetailsProp> = function ({ biflow }) {
 
       <GridItem span={6}>
         {protocol === Protocols.Tcp ? (
-          <TcpFlowDetails title={BiFlowLabels.Client} flow={biflow as TcpBiflow} />
+          <TcpFlowDetails title={BiFlowLabels.Client} flow={biflow as ConnectionResponse} />
         ) : (
-          <HttpFlowDetails title={BiFlowLabels.Client} flow={biflow as HttpBiflow} />
+          <HttpFlowDetails title={BiFlowLabels.Client} flow={biflow as ApplicationFlowResponse} />
         )}
       </GridItem>
       <GridItem span={6}>
         {protocol === Protocols.Tcp ? (
-          <TcpFlowDetails title={BiFlowLabels.Server} flow={biflow as TcpBiflow} isCounterflow={true} />
+          <TcpFlowDetails title={BiFlowLabels.Server} flow={biflow as ConnectionResponse} isCounterflow={true} />
         ) : (
-          <HttpFlowDetails title={BiFlowLabels.Server} flow={biflow as HttpBiflow} isCounterflow={true} />
+          <HttpFlowDetails title={BiFlowLabels.Server} flow={biflow as ApplicationFlowResponse} isCounterflow={true} />
         )}
       </GridItem>
     </Grid>

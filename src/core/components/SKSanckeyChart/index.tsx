@@ -40,7 +40,7 @@ interface SkSankeyChartProps {
   links: SkSankeyChartLink[];
 }
 
-const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch: Function }> = function ({ data, onSearch }) {
+const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function }> = function ({ data, onSearch }) {
   if (!data.links.length) {
     return (
       <SKEmptyData
@@ -52,7 +52,7 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch: Function }> = func
 
   return (
     <>
-      <SankeyFilter onSearch={onSearch} />
+      {onSearch && <SankeyFilter onSearch={onSearch} />}
 
       <div style={{ height: DEFAULT_SANKEY_CHART_HEIGHT }}>
         <ResponsiveSankey

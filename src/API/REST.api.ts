@@ -18,10 +18,10 @@ import {
   getComponentPATH,
   geProcessPATH,
   getLinkPATH,
-  getBiFlowPATH,
+  getConnectionPATH,
   getSitePairPATH,
   getComponentPairPATH,
-  getBiFLowsPATH,
+  getConnectionsPATH,
   geProcessesPATH,
   getSitesPATH,
   getLinksPATH,
@@ -172,7 +172,7 @@ export const RESTApi = {
 
   // FLOW PAIRS  APIs
   fetchBiFlows: async (options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<BiFlowResponse[]>>(getBiFLowsPATH(), {
+    const data = await axiosFetch<ResponseWrapper<BiFlowResponse[]>>(getConnectionsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
@@ -180,7 +180,7 @@ export const RESTApi = {
   },
 
   fetchBiFlow: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse>> => {
-    const data = await axiosFetch<ResponseWrapper<BiFlowResponse>>(getBiFlowPATH(id), {
+    const data = await axiosFetch<ResponseWrapper<BiFlowResponse>>(getConnectionPATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 

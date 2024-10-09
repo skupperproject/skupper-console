@@ -33,12 +33,8 @@
       "startTime": 1674159205860550,
       "traceRouters": ["0/site-1-skupper-router-x", "0/site-2-skupper-router-x"],
       "traceSites": ["site-1", "site-2"],
-      "forwardFlow": {
-        "method": "GET"
-      },
-      "counterFlow": {
-        "result": "200"
-      }
+      "method": "GET",
+      "code": "200"
     },
     {
       "identity": "fp-process-za-to-process-2-tr",
@@ -73,12 +69,8 @@
       "startTime": 1674202674218241,
       "traceRouters": ["0/site-1-skupper-router-x", "0/site-2-skupper-router-x"],
       "traceSites": ["site-1", "site-2"],
-      "forwardFlow": {
-        "method": "GET"
-      },
-      "counterFlow": {
-        "result": "200"
-      }
+      "method": "GET",
+      "code": "200"
     },
     {
       "identity": "fp-6z7k6:2304",
@@ -113,12 +105,8 @@
       "startTime": 1674202675458245,
       "traceRouters": ["0/site-1-skupper-router-x", "0/site-2-skupper-router-x"],
       "traceSites": ["site-1", "site-2"],
-      "forwardFlow": {
-        "method": "POST"
-      },
-      "counterFlow": {
-        "result": "200"
-      }
+      "method": "POST",
+      "code": "200"
     },
     {
       "identity": "fp-6z7k6:230",

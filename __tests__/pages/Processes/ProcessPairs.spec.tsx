@@ -50,22 +50,6 @@ describe('Begin testing the Processes component', () => {
     expect(screen.getByTestId(getTestsIds.processPairsView(processPairsResultOpToCart.identity))).toBeInTheDocument();
   });
 
-  it('should render render the HTTP2 Process Pairs Content Component', async () => {
-    render(
-      <Wrapper>
-        <Suspense fallback={<LoadingPage />}>
-          <ProcessPairContent id={processPairsResultOpToCart.identity} />
-        </Suspense>
-      </Wrapper>
-    );
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-      timeout: waitForElementToBeRemovedTimeout
-    });
-
-    expect(screen.getByTestId('http2-table')).toBeInTheDocument();
-  });
-
   it('should render render the TCP Process Pairs Content Component and the tab Open connection is active', async () => {
     const { queryByTestId, getByTestId } = render(
       <Wrapper>

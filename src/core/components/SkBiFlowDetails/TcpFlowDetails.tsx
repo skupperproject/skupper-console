@@ -2,14 +2,14 @@ import { FC } from 'react';
 
 import { DescriptionListDescription, DescriptionListTerm } from '@patternfly/react-core';
 
-import { TcpBiflow } from '@sk-types/REST.interfaces';
+import { ConnectionResponse } from '@sk-types/REST.interfaces';
 
 import { BiFlowLabels } from './BiFlow.enum';
 import FlowDetailsBase from './FlowDetailsBase';
 
 interface TcpFlowDetailsProps {
   title: string;
-  flow: TcpBiflow;
+  flow: ConnectionResponse;
   isCounterflow?: boolean;
 }
 

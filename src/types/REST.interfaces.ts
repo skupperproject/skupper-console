@@ -168,29 +168,22 @@ interface BiFlow extends BaseResponse {
   listenerError: string | null;
 }
 
-export interface TcpBiflow extends BiFlow {
+export interface ConnectionResponse extends BiFlow {
   proxyHost: string; //what the service will see as the client.  ie: 172.17.44.249
-  proxyPort: number; //ie: 56956
+  proxyPort: string; //ie: 56956
   destHost: string; //what the service will see as the
-  destPort: number;
+  destPort: string;
   sourceHost: string; //ie: '172.17.44.196'
-  sourcePort: number; //ie:  47504
+  sourcePort: string; //ie:  47504
 }
 
-export interface HttpBiflow extends BiFlow {
-  forwardFlow: {
-    method?: string;
-    result?: number;
-    reason?: string;
-  };
-  counterFlow: {
-    method?: string;
-    result?: number;
-    reason?: string;
-  };
+export interface ApplicationFlowResponse extends BiFlow {
+  connectionId: string;
+  method?: string;
+  code?: number;
 }
 
-export type BiFlowResponse = TcpBiflow | HttpBiflow;
+export type BiFlowResponse = ConnectionResponse | ApplicationFlowResponse;
 
 export interface PairsWithMetrics<T> {
   processesPairs: T[];

@@ -6,8 +6,7 @@ export enum SortDirection {
 export enum Protocols {
   Tcp = 'tcp',
   Http = 'http1',
-  Http2 = 'http2',
-  AllHttp = 'http.*'
+  Http2 = 'http2'
 }
 
 export enum TcpStatus {
