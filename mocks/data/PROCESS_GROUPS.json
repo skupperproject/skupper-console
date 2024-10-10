@@ -41,10 +41,10 @@
       "processCount": 1
     },
     {
-      "identity": "group-mm",
+      "identity": "group-site-client",
       "startTime": 1674202475303866,
       "endTime": 0,
-      "name": "mm",
+      "name": "site client",
       "processGroupRole": "external",
       "processCount": 1
     },

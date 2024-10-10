@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { Protocols } from '@API/REST.enum';
 import { getTestsIds } from '@config/testIds';
 import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '@layout/MainContainer';
@@ -26,7 +25,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
   const [menuSelected, setMenuSelected] = useState(defaultTab);
 
   const {
-    service: { name, protocol },
+    service: { name, observedApplicationProtocols },
     summary: { serverCount, requestsCount, activeConnectionCount, terminatedConnectionCount }
   } = useServiceData(id);
 
@@ -37,8 +36,8 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${id}`}
       navigationComponent={
         <NavigationMenu
-          protocol={protocol}
           serverCount={serverCount}
+          hasApplicationProtocol={!!observedApplicationProtocols.length}
           requestsCount={requestsCount}
           tcpActiveConnectionCount={activeConnectionCount}
           tcpTerminatedConnectionCount={terminatedConnectionCount}
@@ -52,7 +51,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
           {menuSelected === TAB_1_KEY && <ProcessServerList id={id} />}
           {menuSelected === TAB_3_KEY && <TcpConnections name={name} id={id} />}
           {menuSelected === TAB_4_KEY && <TcpTerminatedConnections name={name} id={id} />}
-          {menuSelected === TAB_2_KEY && protocol !== Protocols.Tcp && <HttpRequests name={name} id={id} />}
+          {menuSelected === TAB_2_KEY && <HttpRequests name={name} id={id} />}
         </>
       }
     />

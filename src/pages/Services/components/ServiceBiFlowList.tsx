@@ -17,19 +17,27 @@ interface ServiceBiFlowProps {
   filters: QueryFilters;
   options: SkSelectOption[];
   pagination?: number;
+  showAppplicationFlows?: boolean;
 }
 
-const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
+const ServiceBiFlowList: FC<ServiceBiFlowProps> = function ({
   columns,
   filters,
   options,
-  pagination = BIG_PAGINATION_SIZE
+  pagination = BIG_PAGINATION_SIZE,
+  showAppplicationFlows = false
 }) {
   const [queryParams, setQueryParams] = useState({});
 
-  const { data: biFlow } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetBiFlowByService, { ...filters, ...queryParams }],
-    queryFn: () => RESTApi.fetchBiFlows({ ...filters, ...queryParams }),
+  const { data: transportFlows } = useSuspenseQuery({
+    queryKey: [QueriesServices.GetTransportFlows, { ...filters, ...queryParams }],
+    queryFn: () => (!showAppplicationFlows ? RESTApi.fetchTransportFlows({ ...filters, ...queryParams }) : null),
+    refetchInterval: UPDATE_INTERVAL
+  });
+
+  const { data: applicationFlows } = useSuspenseQuery({
+    queryKey: [QueriesServices.GetApplicationFlows, { ...filters, ...queryParams }],
+    queryFn: () => (showAppplicationFlows ? RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }) : null),
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -39,14 +47,16 @@ const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
     });
   }, []);
 
+  const biFlows = showAppplicationFlows ? applicationFlows : transportFlows;
+
   return (
     <>
       <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />
 
       <SkBiFlowList
         columns={columns}
-        rows={biFlow?.results || []}
-        paginationTotalRows={biFlow?.timeRangeCount}
+        rows={biFlows?.results || []}
+        paginationTotalRows={biFlows?.timeRangeCount}
         pagination={true}
         paginationPageSize={pagination}
         onGetFilters={handleGetFilters}
@@ -55,4 +65,4 @@ const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
   );
 };
 
-export default ServiceBiFlow;
+export default ServiceBiFlowList;

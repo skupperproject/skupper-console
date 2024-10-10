@@ -353,6 +353,47 @@ export const MockApi = {
     results: processPairs.results.find(({ identity }) => identity === id) || []
   }),
 
+  getBiflows: (_: unknown, { queryParams }: ApiProps) => {
+    const queryProcessSourceId = queryParams.sourceProcessId;
+    const queryProcessDestinationId = queryParams.destProcessId;
+    const queryProcessSourceName = queryParams.sourceProcessName;
+    const queryProcessDestinationName = queryParams.destProcessName;
+    const queryProtocol = queryParams.protocol;
+    const queryStatus = queryParams.status;
+    const queryMethod = queryParams.method;
+    const queryRoutingKey = queryParams.routingKey;
+
+    const results = biFlow.results.filter(
+      ({
+        protocol,
+        endTime,
+        sourceProcessId,
+        destProcessId,
+        sourceProcessName,
+        destProcessName,
+        status,
+        method,
+        routingKey
+      }) =>
+        (!queryRoutingKey && queryProcessSourceId ? sourceProcessId === queryProcessSourceId : true) &&
+        (!queryRoutingKey && queryProcessDestinationId ? destProcessId === queryProcessDestinationId : true) &&
+        (queryProtocol ? protocol === queryProtocol : true) &&
+        (queryProcessSourceName ? sourceProcessName.startsWith(queryProcessSourceName as string) : true) &&
+        (queryProcessDestinationId ? destProcessName.startsWith(queryProcessDestinationName as string) : true) &&
+        (queryMethod ? !!method?.startsWith(queryMethod as string) : true) &&
+        (queryStatus ? !!status?.startsWith(queryStatus as string) : true) &&
+        (queryProtocol ? protocol.startsWith(queryProtocol as string) : true) &&
+        (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
+        (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
+    );
+
+    return { ...processPairs, results, timeRangeCount: results.length };
+  },
+
+  getBiflow: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: biFlow.results.find(({ identity }) => identity === id)
+  }),
+
   getService: (_: unknown, { params: { id } }: ApiProps) => {
     const results = services.results.find(({ identity }) => identity === id);
 
@@ -440,6 +481,10 @@ export const MockApiPaths = {
   Processes: `${prefix}/processes`,
   ProcessPairs: `${prefix}/processpairs`,
   ProcessPair: `${prefix}/processpairs/:id`,
+  Connections: `${prefix}/connections`,
+  Connection: `${prefix}/connections/:id`,
+  ApplicationFlows: `${prefix}/applicationflows`,
+  ApplicationFlow: `${prefix}/applicationflows/:id`,
   Routers: `${prefix}/routers`,
   Links: `${prefix}/routerlinks`,
   PrometheusQuery: `${prefix}/internal/prom/query/`,
@@ -474,6 +519,10 @@ export function loadMockServer() {
       this.get(MockApiPaths.ComponentPairs, MockApi.getComponentPairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
       this.get(MockApiPaths.ProcessPair, MockApi.getProcessPair);
+      this.get(MockApiPaths.Connections, MockApi.getBiflows);
+      this.get(MockApiPaths.Connection, MockApi.getBiflow);
+      this.get(MockApiPaths.ApplicationFlows, MockApi.getBiflows);
+      this.get(MockApiPaths.ApplicationFlow, MockApi.getBiflow);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
 
@@ -485,38 +534,6 @@ export function loadMockServer() {
         results: MockApi.getProcesses(null, { params: {}, queryParams: {} }).results.find(
           ({ identity }) => identity === id
         )
-      }));
-
-      this.get(`${prefix}/processes/:id/addresses`, (_, { params: { id } }): { results: ServiceResponse[] } => {
-        const process = processes.results.find(({ identity }) => identity === id);
-
-        if (!process) {
-          return { results: [] };
-        }
-
-        const processNamePrefix = process.name.split('-')[0];
-
-        return {
-          results: services.results.filter(({ name }) => name.includes(processNamePrefix))
-        };
-      });
-
-      this.get(`${prefix}/connections`, (_, { queryParams }) => {
-        const queryProtocol = queryParams.protocol;
-        const queryRoutingKey = queryParams.routingKey;
-
-        const results = biFlow.results.filter(
-          ({ protocol, routingKey, endTime }) =>
-            (queryProtocol ? protocol === queryProtocol : true) &&
-            (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
-            (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
-        );
-
-        return { ...processPairs, results, timeRangeCount: results.length };
-      });
-
-      this.get(`${prefix}/connections/:id`, (_, { params: { id } }) => ({
-        results: biFlow.results.find(({ identity }) => identity === id)
       }));
 
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);

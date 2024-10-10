@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 
-import { Protocols } from '@API/REST.enum';
 import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
 import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
 
@@ -10,7 +9,7 @@ import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, TAB_4_KEY } from '../Servic
 import { ServicesLabels } from '../Services.enum';
 
 interface NavigationMenuProps {
-  protocol: Protocols | undefined;
+  hasApplicationProtocol: boolean;
   serverCount: number;
   requestsCount: number;
   tcpActiveConnectionCount: number;
@@ -23,7 +22,7 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
   requestsCount,
   tcpActiveConnectionCount,
   tcpTerminatedConnectionCount,
-  protocol,
+  hasApplicationProtocol,
   menuSelected,
   onMenuSelected
 }) {
@@ -51,7 +50,7 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
         eventKey={TAB_4_KEY}
         title={<TabTitleText>{ServicesLabels.OldConnections}</TabTitleText>}
       />
-      {protocol !== Protocols.Tcp && (
+      {hasApplicationProtocol && (
         <Tab
           isDisabled={!requestsCount}
           eventKey={TAB_2_KEY}

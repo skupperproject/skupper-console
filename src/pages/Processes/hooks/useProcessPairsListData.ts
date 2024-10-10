@@ -1,7 +1,6 @@
 import { useQueries, useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { Protocols } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import { TopologyController } from '@pages/Topology/services';
@@ -17,7 +16,7 @@ const metricQueryParams = {
 };
 
 export const useProcessPairsListData = (id: string, name: string) => {
-  const queryParams = (idKey: keyof ProcessPairsResponse) => ({ [idKey]: id, protocol: Protocols.Tcp });
+  const queryParams = (idKey: keyof ProcessPairsResponse) => ({ [idKey]: id });
 
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [

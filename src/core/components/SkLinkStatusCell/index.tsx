@@ -1,8 +1,6 @@
 import { Button, Icon, Popover, Text } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
-import { RouterLinkResponse } from '@sk-types/REST.interfaces';
-
 const WarningMessage =
   'The sites are connected, but not all the links are active. For example, this situation can occur when one of the sites is in High Availability (HA).';
 
@@ -32,8 +30,7 @@ const statusMap: Record<
 };
 
 interface SkLinkStatusCellProps {
-  data: RouterLinkResponse;
-  value: string | undefined;
+  data: { destinationSiteId: string; status: 'down' | 'up' | 'partially_up' };
 }
 
 const SkLinkStatusCell = function ({ data }: SkLinkStatusCellProps) {

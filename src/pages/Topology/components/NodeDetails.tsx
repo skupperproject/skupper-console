@@ -20,6 +20,7 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
+import { VarColors } from '@config/colors';
 import { PrometheusLabelsV2 } from '@config/prometheus';
 import ResourceIcon from '@core/components/ResourceIcon';
 import SkExposedCell from '@core/components/SkExposedCell';
@@ -142,7 +143,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
 
               return (
                 <StackItem key={itemSelected.identity} className="pf-u-v5-mb-md">
-                  <Card isFlat>
+                  <Card isFlat style={{ backgroundColor: VarColors.Black100 }}>
                     <CardBody>
                       <Flex>
                         <FlexItem>
@@ -176,7 +177,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                         </SplitItem>
                       </Split>
 
-                      <Table borders={false} variant="compact">
+                      <Table borders={false} variant="compact" style={{ backgroundColor: VarColors.Black100 }}>
                         <Thead noWrap>
                           <Tr>
                             <Th aria-label="metric" />

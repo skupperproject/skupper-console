@@ -1,7 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '@API/REST.api';
-import { Protocols, TcpStatus } from '@API/REST.enum';
+import { TcpStatus } from '@API/REST.enum';
 import { UPDATE_INTERVAL } from '@config/config';
 
 import { QueriesServices } from '../Services.enum';
@@ -37,22 +37,22 @@ const useServiceData = (serviceId: string) => {
   });
 
   const { data: requestsData } = useQuery({
-    queryKey: [QueriesServices.GetBiFlowByService, initServersQueryParams],
-    queryFn: () => RESTApi.fetchBiFlows({ ...initServersQueryParams, routingKey: service.results.name }),
-    enabled: service.results.protocol !== Protocols.Tcp,
+    queryKey: [QueriesServices.GetApplicationFlows, initServersQueryParams],
+    queryFn: () => RESTApi.fetchApplicationFlows({ ...initServersQueryParams, routingKey: service.results.name }),
+    enabled: !!service.results.observedApplicationProtocols.length,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetBiFlowByService, activeConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchBiFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
+    queryKey: [QueriesServices.GetTransportFlows, activeConnectionsQueryParams],
+    queryFn: () => RESTApi.fetchTransportFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetBiFlowByService, terminatedConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchBiFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
-    enabled: service.results.protocol === Protocols.Tcp,
+    queryKey: [QueriesServices.GetTransportFlows, terminatedConnectionsQueryParams],
+    queryFn: () =>
+      RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 

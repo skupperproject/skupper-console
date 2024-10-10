@@ -9,7 +9,8 @@ import {
   QueryFilters,
   ResponseWrapper,
   PairsResponse,
-  UserResponse
+  UserResponse,
+  ApplicationFlowResponse
 } from '@sk-types/REST.interfaces';
 
 import { axiosFetch } from './apiMiddleware';
@@ -18,10 +19,10 @@ import {
   getComponentPATH,
   geProcessPATH,
   getLinkPATH,
-  getConnectionPATH,
+  getTransportFlow,
   getSitePairPATH,
   getComponentPairPATH,
-  getConnectionsPATH,
+  getTransportFlowsPATH,
   geProcessesPATH,
   getSitesPATH,
   getLinksPATH,
@@ -34,9 +35,11 @@ import {
   getProcessPairsByServicePATH,
   logout,
   getUser,
-  getServicePATH
+  getServicePATH,
+  getApplicationFlowPATH,
+  getApplicationFlowsPATH
 } from './REST.paths';
-import { mapQueryFiltersToQueryParams } from './REST.utils';
+import { aggregatePairs, mapQueryFiltersToQueryParams } from './REST.utils';
 
 export const RESTApi = {
   //for logout with auth basic the response return 401 but using validateStatus: () => true axios will not throw error
@@ -170,17 +173,36 @@ export const RESTApi = {
     return data;
   },
 
-  // FLOW PAIRS  APIs
-  fetchBiFlows: async (options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<BiFlowResponse[]>>(getConnectionsPATH(), {
+  // BIFLOW APIs
+  fetchTransportFlows: async (options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<BiFlowResponse[]>>(getTransportFlowsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
     return data;
   },
 
-  fetchBiFlow: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse>> => {
-    const data = await axiosFetch<ResponseWrapper<BiFlowResponse>>(getConnectionPATH(id), {
+  fetchTransportFlow: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse>> => {
+    const data = await axiosFetch<ResponseWrapper<BiFlowResponse>>(getTransportFlow(id), {
+      params: options ? mapQueryFiltersToQueryParams(options) : null
+    });
+
+    return data;
+  },
+
+  fetchApplicationFlows: async (options?: QueryFilters): Promise<ResponseWrapper<ApplicationFlowResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ApplicationFlowResponse[]>>(getApplicationFlowsPATH(), {
+      params: options ? mapQueryFiltersToQueryParams(options) : null
+    });
+
+    return data;
+  },
+
+  fetchApplicationFlow: async (
+    id: string,
+    options?: QueryFilters
+  ): Promise<ResponseWrapper<ApplicationFlowResponse>> => {
+    const data = await axiosFetch<ResponseWrapper<ApplicationFlowResponse>>(getApplicationFlowPATH(id), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
@@ -193,7 +215,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return data;
+    return { ...data, results: aggregatePairs(data.results) };
   },
 
   fetchSitePairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<PairsResponse>> => {
@@ -209,7 +231,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return data;
+    return { ...data, results: aggregatePairs(data.results) };
   },
 
   fetchComponentPairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<PairsResponse>> => {
@@ -225,7 +247,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return data;
+    return { ...data, results: aggregatePairs(data.results) as ProcessPairsResponse[] };
   },
 
   fetchProcessesPair: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<ProcessPairsResponse>> => {

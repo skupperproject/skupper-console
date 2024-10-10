@@ -25,7 +25,7 @@ const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
     latency,
     latencyReverse,
     method,
-    code
+    status
   },
   isCounterflow = false
 }) {
@@ -34,7 +34,7 @@ const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
   const octetsResolved = isCounterflow ? octets : octetsReverse;
   const latencyResolved = isCounterflow ? latency : latencyReverse;
   const methodResolved = isCounterflow ? '' : method;
-  const resultResolved = isCounterflow ? code : '';
+  const resultResolved = isCounterflow ? status : '';
 
   return (
     <FlowDetailsBase
