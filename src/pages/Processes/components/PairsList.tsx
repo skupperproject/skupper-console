@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 
 import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
@@ -15,7 +15,6 @@ import { SKTableColumn } from '@sk-types/SkTable.interfaces';
 import { useProcessPairsListData } from '../hooks/useProcessPairsListData';
 import { CustomPairsCells, PairsListColumnsWithLinkDetails } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
-import { filterPairsByProtocols } from '../Processes.utls';
 
 interface PairsListProps {
   process: ProcessResponse;
@@ -40,8 +39,6 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
     processPairsKey: 'destinationName'
   });
 
-  const { TCPClients, TCPServers } = useMemo(() => filterPairsByProtocols(clients, servers), [clients, servers]);
-
   const isEmpty = !servers.length && !clients.length;
 
   if (isEmpty) {
@@ -54,8 +51,8 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
 
   return (
     <Flex direction={{ default: 'column' }}>
-      {renderTable(ProcessesLabels.TCPClients, TCPClients, PairsListColumnsWithLinkDetails)}
-      {renderTable(ProcessesLabels.TCPServers, TCPServers, PairsListColumnsWithLinkDetails)}
+      {renderTable(ProcessesLabels.Clients, clients, PairsListColumnsWithLinkDetails)}
+      {renderTable(ProcessesLabels.Servers, servers, PairsListColumnsWithLinkDetails)}
     </Flex>
   );
 };

@@ -1,6 +1,6 @@
-import { QueryParams, QueryFilters } from '@sk-types/REST.interfaces';
+import { QueryParams, QueryFilters, PairsResponse, ProcessPairsResponse } from '@sk-types/REST.interfaces';
 
-import { SortDirection } from './REST.enum';
+import { Protocols, SortDirection } from './REST.enum';
 
 export function mapQueryFiltersToQueryParams({
   filter,
@@ -23,11 +23,33 @@ export function mapQueryFiltersToQueryParams({
   };
 }
 
-/**
- * Composes a path from an array of elements.
- * @param {string[]} elements - An array of elements that will be joined together to form the path.
- * @returns {string} - The composed path as a string.
- */
+// Composes a path from an array of elements.
 export function composePath(elements: string[]): string {
   return elements.join('/');
 }
+
+// Function to aggregate the pairs by sourceId and destinationId, updating only the protocol
+export const aggregatePairs = (
+  pairs: PairsResponse[] | ProcessPairsResponse[]
+): PairsResponse[] | ProcessPairsResponse[] => {
+  const map = new Map<string, PairsResponse | ProcessPairsResponse>();
+
+  pairs.forEach((pair) => {
+    const { sourceId, destinationId, protocol } = pair;
+
+    const key = `${sourceId}-${destinationId}`;
+    const entry = map.get(key);
+
+    if (entry) {
+      // If entry exists, update the protocol if not already present
+      if (!entry.protocol.split(', ').includes(protocol)) {
+        entry.protocol = [entry.protocol, protocol].sort().join(', ') as Protocols;
+      }
+    } else {
+      // If no entry exists, create a new one and retain all original properties
+      map.set(key, { ...pair });
+    }
+  });
+
+  return Array.from(map.values());
+};

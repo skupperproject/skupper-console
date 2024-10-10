@@ -141,6 +141,7 @@ export interface ServiceResponse extends BaseResponse {
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
+  observedApplicationProtocols: string[];
 }
 
 interface BaseFlow extends BaseResponse {
@@ -180,7 +181,7 @@ export interface TransportFlowResponse extends BaseFlow {
 export interface ApplicationFlowResponse extends BaseFlow {
   connectionId: string;
   method?: string;
-  code?: number;
+  status?: number;
 }
 
 export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;

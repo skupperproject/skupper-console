@@ -173,7 +173,14 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
         <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{ProcessesLabels.OpenConnections}</TabTitleText>}>
           <SkBiFlowList
             data-testid={'tcp-active-connections-table'}
-            columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
+            columns={setColumnVisibility(tcpBiFlowColumns, {
+              duration: false,
+              endTime: false,
+              sourceProcessName: false,
+              destProcessName: false,
+              sourceSiteName: false,
+              destSiteName: false
+            })}
             rows={activeConnections}
             paginationTotalRows={activeConnectionsCount}
             pagination={true}
@@ -191,7 +198,12 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
         >
           <SkBiFlowList
             data-testid={'tcp-old-connections-table'}
-            columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
+            columns={setColumnVisibility(tcpBiFlowColumns, {
+              sourceProcessName: false,
+              destProcessName: false,
+              sourceSiteName: false,
+              destSiteName: false
+            })}
             rows={oldConnections}
             paginationTotalRows={oldConnectionsCount}
             pagination={true}

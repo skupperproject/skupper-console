@@ -19,5 +19,6 @@ export enum BiFlowListLabels {
   StatusCode = 'Status',
   Open = 'Open',
   Closed = 'Closed',
+  Protocol = 'Protocol',
   Terminated = 'Terminated'
 }

@@ -6,7 +6,7 @@ import { tcpBiFlowColumns, tcpSelectOptions } from '@core/components/SkBiFlowLis
 import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
 
 import ProcessPairsSankeyChart from './ProcessPairsSankey';
-import ServiceBiFlow from './ServiceBiFlowList';
+import ServiceBiFlowList from './ServiceBiFlowList';
 import { initActiveConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {
@@ -21,7 +21,7 @@ const TcpConnections: FC<TcpConnectionsProps> = function ({ id, name }) {
         <ProcessPairsSankeyChart serviceId={id} serviceName={name} />
       </StackItem>
       <StackItem>
-        <ServiceBiFlow
+        <ServiceBiFlowList
           options={tcpSelectOptions}
           columns={setColumnVisibility(tcpBiFlowColumns, { duration: false, endTime: false })}
           filters={{ ...initActiveConnectionsQueryParams, routingKey: name }}

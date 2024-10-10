@@ -34,7 +34,7 @@
       "traceRouters": ["0/site-1-skupper-router-x", "0/site-2-skupper-router-x"],
       "traceSites": ["site-1", "site-2"],
       "method": "GET",
-      "code": "200"
+      "status": "200"
     },
     {
       "identity": "process-cash-desk-2-to-process-payment-1",
@@ -70,7 +70,7 @@
       "traceRouters": ["0/site-2-skupper-router-x", "0/site-1-skupper-router-x"],
       "traceSites": ["site-2", "site-1"],
       "method": "GET",
-      "code": "200"
+      "status": "200"
     },
     {
       "identity": "fp-6z7k6:2304",
@@ -106,7 +106,7 @@
       "traceRouters": ["0/site-1-skupper-router-x", "0/site-2-skupper-router-x"],
       "traceSites": ["site-1", "site-2"],
       "method": "POST",
-      "code": "200"
+      "status": "200"
     },
     {
       "identity": "fp-6z7k6:230",
@@ -278,7 +278,7 @@
       "traceRouters": ["0/site-2-skupper-router-x", "0/site-1-skupper-router-x"],
       "traceSites": ["site-2", "site-1"],
       "method": "GET",
-      "code": "200"
+      "status": "200"
     },
     {
       "identity": "fp-process-catalog-to-process-cash-desk-2",
@@ -314,9 +314,43 @@
       "traceRouters": ["0/site-1-skupper-router-x", "0/site-2-skupper-router-x"],
       "traceSites": ["site-1", "site-2"],
       "method": "GET",
-      "code": "200"
+      "status": "200"
+    },
+    {
+      "identity": "fp-process-catalog-to-process-cart-1",
+      "routingKey": "cart:3000",
+      "connectorError": null,
+      "connectorId": "p8cxj:11",
+      "destHost": "172.17.59.150",
+      "destPort": "33333",
+      "destProcessId": "process-cart-1",
+      "destProcessName": "process cart 1",
+      "destSiteId": "site-2",
+      "destSiteName": "site 2",
+      "duration": 10000,
+      "endTime": 0,
+      "latency": 0,
+      "latencyReverse": 0,
+      "listenerError": null,
+      "listenerId": "mtjsg:2",
+      "octets": 300202,
+      "octetsReverse": 1111,
+      "processGroupPairId": null,
+      "processPairId": null,
+      "protocol": "tcp",
+      "proxyHost": "172.17.44.229",
+      "proxyPort": "7890",
+      "sourceHost": "172.17.44.128",
+      "sourcePort": "33222",
+      "sourceProcessId": "process-catalog",
+      "sourceProcessName": "pprocess catalog",
+      "sourceSiteId": "site-1",
+      "sourceSiteName": "site 1",
+      "startTime": 171310000200000,
+      "traceRouters": ["0/site-2-skupper-router-x", "0/site-2-skupper-router-xj"],
+      "traceSites": ["site-1", "site-2"]
     }
   ],
-  "count": 9,
-  "timeRangeCount": 9
+  "count": 10,
+  "timeRangeCount": 10
 }

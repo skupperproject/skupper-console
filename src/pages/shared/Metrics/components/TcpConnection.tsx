@@ -15,7 +15,6 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
-import { Protocols } from '@API/REST.enum';
 import SkChartArea from '@core/components/SkChartArea';
 import SKEmptyData from '@core/components/SkEmptyData';
 import SkIsLoading from '@core/components/SkIsLoading';
@@ -51,7 +50,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
     isLoading
   } = useQuery({
     queryKey: [QueriesMetrics.GetConnection, selectedFilters],
-    queryFn: () => MetricsController.getConnections({ ...selectedFilters, protocol: Protocols.Tcp }),
+    queryFn: () => MetricsController.getConnections(selectedFilters),
     refetchInterval,
     enabled: isExpanded
   });

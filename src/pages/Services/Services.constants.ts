@@ -1,5 +1,5 @@
 import { SortDirection, TcpStatus } from '@API/REST.enum';
-import { BIG_PAGINATION_SIZE } from '@config/config';
+import { BIG_PAGINATION_SIZE, EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import { SankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
@@ -34,19 +34,26 @@ export const customServiceCells = {
       ...props,
       fitContent: true,
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}?type=${ServicesLabels.Servers}`
-    })
+    }),
+  ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
+    data?.observedApplicationProtocols.join(',') || EMPTY_VALUE_PLACEHOLDER
 };
 
 // Services Table
 export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
-    name: ServicesLabels.Name,
+    name: ServicesLabels.RoutingKey,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell'
   },
   {
-    name: ServicesLabels.Protocol,
+    name: ServicesLabels.TransportProtocol,
     prop: 'protocol',
+    width: 15
+  },
+  {
+    name: ServicesLabels.ApplicationProtocols,
+    prop: 'observedApplicationProtocols',
     width: 15
   },
   {
@@ -71,12 +78,8 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
 
 export const servicesSelectOptions: SkSelectOption[] = [
   {
-    label: 'Routing key',
+    label: ServicesLabels.RoutingKey,
     id: 'name'
-  },
-  {
-    label: 'Protocol',
-    id: 'protocol'
   }
 ];
 

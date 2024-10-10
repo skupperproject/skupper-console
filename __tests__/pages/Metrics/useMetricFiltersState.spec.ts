@@ -11,7 +11,6 @@ describe('useMetricFiltersState', () => {
   const defaultMetricFilterValues: QueryMetricsParams = {
     sourceSite: 'site1',
     destSite: 'site2',
-    protocol: Protocols.Tcp,
     duration: 1000
   };
 

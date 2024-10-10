@@ -22,6 +22,10 @@
       "sourceName": "process catalog",
       "destinationId": "process-cash-desk-2",
       "destinationName": "process cash desk 2",
+      "sourceSiteId": "site-1",
+      "sourceSiteName": "site 1",
+      "destinationSiteId": "site-2",
+      "destinationSiteName": "site 2",
       "protocol": "http2"
     },
     {
@@ -32,6 +36,10 @@
       "sourceName": "process payment 3",
       "destinationId": "process-cash-desk-2",
       "destinationName": "process cash desk 2",
+      "sourceSiteId": "site-1",
+      "sourceSiteName": "site 1",
+      "destinationSiteId": "site-2",
+      "destinationSiteName": "site 2",
       "protocol": "http2"
     },
     {
@@ -42,6 +50,10 @@
       "sourceName": "process payment 1",
       "destinationId": "process-cash-desk-1",
       "destinationName": "process cash desk 1",
+      "sourceSiteId": "site-1",
+      "sourceSiteName": "site 1",
+      "destinationSiteId": "site-2",
+      "destinationSiteName": "site 2",
       "protocol": "http1"
     },
     {
@@ -52,6 +64,10 @@
       "sourceName": "process payment 2",
       "destinationId": "process-catalog",
       "destinationName": "process-catalog",
+      "sourceSiteId": "site-2",
+      "sourceSiteName": "site 2",
+      "destinationSiteId": "site-1",
+      "destinationSiteName": "site 1",
       "protocol": "tcp"
     },
     {
@@ -90,6 +106,10 @@
       "sourceName": "site client 1",
       "destinationId": "process-database-1",
       "destinationName": "process database 1",
+      "sourceSiteId": "site2",
+      "sourceSiteName": "site 2",
+      "destinationSiteId": "site-3",
+      "destinationSiteName": "site 3",
       "protocol": "tcp"
     },
     {
@@ -105,8 +125,22 @@
       "destinationSiteId": "site-1",
       "destinationSiteName": "site 1",
       "protocol": "tcp"
+    },
+    {
+      "identity": "process-catalog-to-process-cart-1-tcp",
+      "startTime": 1674202485242353,
+      "endTime": 0,
+      "sourceId": "process-catalog",
+      "sourceName": "process catalog",
+      "destinationId": "process-cart-1",
+      "destinationName": "process cart 1",
+      "sourceSiteId": "site-1",
+      "sourceSiteName": "site 1",
+      "destinationSiteId": "site-2",
+      "destinationSiteName": "site 2",
+      "protocol": "tcp"
     }
   ],
-  "count": 8,
-  "timeRangeCount": 8
+  "count": 10,
+  "timeRangeCount": 10
 }

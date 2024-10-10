@@ -2,7 +2,7 @@ import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
 
-import { Direction, Protocols } from '@API/REST.enum';
+import { Direction } from '@API/REST.enum';
 import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
 import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { QueryMetricsParams, ExpandedMetricSections } from '@sk-types/Metrics.interfaces';
@@ -15,7 +15,6 @@ const mockQueryMetricsParams: QueryMetricsParams = {
   sourceComponent: 'ComponentA',
   destComponent: 'ComponentB',
   service: 'ServiceA',
-  protocol: Protocols.Tcp,
   start: 1620000000,
   end: 1620003600,
   duration: 3600,

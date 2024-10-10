@@ -20,7 +20,7 @@ interface ServiceBiFlowProps {
   showAppplicationFlows?: boolean;
 }
 
-const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
+const ServiceBiFlowList: FC<ServiceBiFlowProps> = function ({
   columns,
   filters,
   options,
@@ -30,14 +30,14 @@ const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
   const [queryParams, setQueryParams] = useState({});
 
   const { data: transportFlows } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetBiFlowByService, { ...filters, ...queryParams }],
-    queryFn: () => RESTApi.fetchTransportFlows({ ...filters, ...queryParams }),
+    queryKey: [QueriesServices.GetTransportFlows, { ...filters, ...queryParams }],
+    queryFn: () => (!showAppplicationFlows ? RESTApi.fetchTransportFlows({ ...filters, ...queryParams }) : null),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: applicationFlows } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetBiFlowByService, { ...filters, ...queryParams }],
-    queryFn: () => RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }),
+    queryKey: [QueriesServices.GetApplicationFlows, { ...filters, ...queryParams }],
+    queryFn: () => (showAppplicationFlows ? RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }) : null),
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -65,4 +65,4 @@ const ServiceBiFlow: FC<ServiceBiFlowProps> = function ({
   );
 };
 
-export default ServiceBiFlow;
+export default ServiceBiFlowList;

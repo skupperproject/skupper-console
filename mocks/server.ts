@@ -356,14 +356,33 @@ export const MockApi = {
   getBiflows: (_: unknown, { queryParams }: ApiProps) => {
     const queryProcessSourceId = queryParams.sourceProcessId;
     const queryProcessDestinationId = queryParams.destProcessId;
+    const queryProcessSourceName = queryParams.sourceProcessName;
+    const queryProcessDestinationName = queryParams.destProcessName;
     const queryProtocol = queryParams.protocol;
+    const queryStatus = queryParams.status;
+    const queryMethod = queryParams.method;
     const queryRoutingKey = queryParams.routingKey;
 
     const results = biFlow.results.filter(
-      ({ protocol, routingKey, endTime, sourceProcessId, destProcessId }) =>
-        (queryProcessSourceId ? sourceProcessId === queryProcessSourceId : true) &&
-        (queryProcessDestinationId ? destProcessId === queryProcessDestinationId : true) &&
+      ({
+        protocol,
+        endTime,
+        sourceProcessId,
+        destProcessId,
+        sourceProcessName,
+        destProcessName,
+        status,
+        method,
+        routingKey
+      }) =>
+        (!queryRoutingKey && queryProcessSourceId ? sourceProcessId === queryProcessSourceId : true) &&
+        (!queryRoutingKey && queryProcessDestinationId ? destProcessId === queryProcessDestinationId : true) &&
         (queryProtocol ? protocol === queryProtocol : true) &&
+        (queryProcessSourceName ? sourceProcessName.startsWith(queryProcessSourceName as string) : true) &&
+        (queryProcessDestinationId ? destProcessName.startsWith(queryProcessDestinationName as string) : true) &&
+        (queryMethod ? !!method?.startsWith(queryMethod as string) : true) &&
+        (queryStatus ? !!status?.startsWith(queryStatus as string) : true) &&
+        (queryProtocol ? protocol.startsWith(queryProtocol as string) : true) &&
         (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
         (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
     );
