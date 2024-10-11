@@ -39,7 +39,7 @@ import {
   getApplicationFlowPATH,
   getApplicationFlowsPATH
 } from './REST.paths';
-import { aggregatePairs, mapQueryFiltersToQueryParams } from './REST.utils';
+import { aggregateDistinctPairs, mapQueryFiltersToQueryParams } from './REST.utils';
 
 export const RESTApi = {
   //for logout with auth basic the response return 401 but using validateStatus: () => true axios will not throw error
@@ -215,7 +215,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return { ...data, results: aggregatePairs(data.results) };
+    return { ...data, results: aggregateDistinctPairs(data.results) };
   },
 
   fetchSitePairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<PairsResponse>> => {
@@ -231,7 +231,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return { ...data, results: aggregatePairs(data.results) };
+    return { ...data, results: aggregateDistinctPairs(data.results) };
   },
 
   fetchComponentPairs: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<PairsResponse>> => {
@@ -247,7 +247,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return { ...data, results: aggregatePairs(data.results) as ProcessPairsResponse[] };
+    return { ...data, results: aggregateDistinctPairs(data.results) as ProcessPairsResponse[] };
   },
 
   fetchProcessesPair: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<ProcessPairsResponse>> => {
