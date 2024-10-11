@@ -11,22 +11,22 @@ export const SankeyMetricOptions = [
 
 export const ServiceClientResourceOptions: { label: string; id: 'client' | 'clientSite' }[] = [
   {
-    label: 'Client sites',
-    id: 'clientSite'
+    label: 'Clients',
+    id: 'client'
   },
   {
-    label: 'Client processes',
-    id: 'client'
+    label: 'Client sites',
+    id: 'clientSite'
   }
 ];
 
 export const ServiceServerResourceOptions: { label: string; id: 'server' | 'serverSite' }[] = [
   {
-    label: 'Server sites',
-    id: 'serverSite'
+    label: 'Servers',
+    id: 'server'
   },
   {
-    label: 'Server processes',
-    id: 'server'
+    label: 'Server sites',
+    id: 'serverSite'
   }
 ];
