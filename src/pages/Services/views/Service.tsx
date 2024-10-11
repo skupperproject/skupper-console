@@ -48,10 +48,10 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       mainContentChildren={
         <>
           {menuSelected === TAB_0_KEY && <Overview id={id} name={name} />}
-          {menuSelected === TAB_1_KEY && <ProcessServerList id={id} />}
-          {menuSelected === TAB_3_KEY && <TcpConnections name={name} id={id} />}
-          {menuSelected === TAB_4_KEY && <TcpTerminatedConnections name={name} id={id} />}
-          {menuSelected === TAB_2_KEY && <HttpRequests name={name} id={id} />}
+          {menuSelected === TAB_1_KEY && <ProcessServerList id={id} name={name} />}
+          {menuSelected === TAB_3_KEY && <TcpConnections routingKey={name} />}
+          {menuSelected === TAB_4_KEY && <TcpTerminatedConnections routingKey={name} />}
+          {menuSelected === TAB_2_KEY && <HttpRequests routingKey={name} />}
         </>
       }
     />
