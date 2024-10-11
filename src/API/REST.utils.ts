@@ -1,4 +1,4 @@
-import { QueryParams, QueryFilters, PairsResponse, ProcessPairsResponse } from '@sk-types/REST.interfaces';
+import { QueryParams, QueryFilters, PairsResponse } from '@sk-types/REST.interfaces';
 
 import { Protocols, SortDirection } from './REST.enum';
 
@@ -29,13 +29,16 @@ export function composePath(elements: string[]): string {
 }
 
 // Function to aggregate the pairs by sourceId and destinationId, updating only the protocol
-export const aggregateDistinctPairs = (
-  pairs: PairsResponse[] | ProcessPairsResponse[]
-): PairsResponse[] | ProcessPairsResponse[] => {
-  const map = new Map<string, PairsResponse | ProcessPairsResponse>();
+export const aggregateDistinctPairs = <T extends PairsResponse>(pairs: T[]): T[] => {
+  const map = new Map<string, T>();
 
   pairs
     .filter(({ sourceId, destinationId }) => sourceId !== destinationId)
+    // We assure that the transport protocols are the first to be iterated during the following forEach/
+    // At the moment we support only TCP as a transport protocol
+    .sort((a, b) =>
+      a.protocol === Protocols.Tcp ? -1 : b.protocol === Protocols.Tcp ? 1 : a.protocol.localeCompare(b.protocol)
+    )
     .forEach((pair) => {
       const { sourceId, destinationId, protocol } = pair;
 
@@ -43,13 +46,12 @@ export const aggregateDistinctPairs = (
       const entry = map.get(key);
 
       if (entry) {
-        // If entry exists, update the protocol if not already present
-        if (!entry.protocol.split(', ').includes(protocol)) {
-          entry.protocol = [entry.protocol, protocol].sort().join(', ') as Protocols;
-        }
+        // always catch application protocols
+        entry.observedApplicationProtocols = [entry.observedApplicationProtocols, protocol].filter(Boolean).join(', ');
       } else {
-        // If no entry exists, create a new one and retain all original properties
-        map.set(key, { ...pair });
+        const observedApplicationProtocols = protocol !== Protocols.Tcp ? protocol : '';
+        // protocol always TCP because the pairs are sorted by the transport protocol
+        map.set(key, { ...pair, observedApplicationProtocols });
       }
     });
 

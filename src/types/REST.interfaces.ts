@@ -124,24 +124,27 @@ export interface BasePairs {
   destinationName: string;
 }
 
-export interface PairsResponse extends BaseResponse, BasePairs {
+export interface BasePairsResponse extends BaseResponse, BasePairs {
   protocol: Protocols;
+  observedApplicationProtocols?: string;
 }
 
-export interface ProcessPairsResponse extends PairsResponse {
+export interface ProcessPairsResponse extends BasePairsResponse {
   sourceSiteId: string;
   sourceSiteName: string;
   destinationSiteId: string;
   destinationSiteName: string;
 }
 
+export type PairsResponse = BasePairsResponse | ProcessPairsResponse;
+
 export interface ServiceResponse extends BaseResponse {
   name: string;
   protocol: Protocols;
+  observedApplicationProtocols: string[];
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
-  observedApplicationProtocols: string[];
 }
 
 interface BaseFlow extends BaseResponse {
@@ -193,8 +196,8 @@ export interface PairsWithMetrics<T> {
   metrics?: TopologyMetrics;
 }
 
-export interface PairsWithInstantMetrics extends PairsResponse {
+export type PairsWithInstantMetrics = PairsResponse & {
   bytes: number;
   byteRate: number;
   latency: number;
-}
+};

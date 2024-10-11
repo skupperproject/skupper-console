@@ -67,7 +67,7 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                     <span
                       class="pf-v5-c-menu-toggle__text"
                     >
-                      Client sites
+                      Clients
                     </span>
                     <span
                       class="pf-v5-c-menu-toggle__controls"
@@ -106,7 +106,7 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                     <span
                       class="pf-v5-c-menu-toggle__text"
                     >
-                      Server sites
+                      Servers
                     </span>
                     <span
                       class="pf-v5-c-menu-toggle__controls"
@@ -257,7 +257,7 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                   <span
                     class="pf-v5-c-menu-toggle__text"
                   >
-                    Client sites
+                    Clients
                   </span>
                   <span
                     class="pf-v5-c-menu-toggle__controls"
@@ -296,7 +296,7 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                   <span
                     class="pf-v5-c-menu-toggle__text"
                   >
-                    Server sites
+                    Servers
                   </span>
                   <span
                     class="pf-v5-c-menu-toggle__controls"

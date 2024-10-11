@@ -79,8 +79,8 @@ export const TopologyProcessController = {
     }
 
     const protocolByProcessPairsMap = (processesPairs || []).reduce(
-      (acc, { sourceId, destinationId, protocol }) => {
-        acc[`${sourceId}${destinationId}`] = protocol || '';
+      (acc, { sourceId, destinationId, observedApplicationProtocols }) => {
+        acc[`${sourceId}${destinationId}`] = observedApplicationProtocols || '';
 
         return acc;
       },
