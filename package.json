@@ -19,6 +19,7 @@
     "url": "https://github.com/skupperproject/skupper-console/issues"
   },
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
@@ -43,9 +44,9 @@
     "@patternfly/react-core": "^5.4.1",
     "@patternfly/react-icons": "^5.4.0",
     "@patternfly/react-table": "5.4.1",
-    "@tanstack/react-query": "^5.59.0",
+    "@tanstack/react-query": "^5.59.9",
     "axios": "^1.7.7",
-    "framer-motion": "^11.11.1",
+    "framer-motion": "^11.11.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
@@ -91,7 +92,7 @@
     "ts-node": "^10.9.2",
     "ts-prune": "^0.10.3",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "^5.6.2",
+    "typescript": "^5.6.3",
     "webpack": "^5.95.0",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
