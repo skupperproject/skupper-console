@@ -2,7 +2,8 @@ import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
 import SkLinkStatusCell from '@core/components/SkLinkStatusCell';
 import SkValueOrPlaceHolderCell from '@core/components/SkValueOrPlacholderCell';
-import { RouterLinkResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { CustomPairMetricCells } from '@pages/Processes/Processes.constants';
+import { PairsResponse, RouterLinkResponse, SiteResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { SiteLabels, SitesRoutesPaths } from './Sites.enum';
@@ -35,6 +36,16 @@ export const customSiteCells = {
   isHACell: (props: SkLinkCellProps<RouterLinkResponse>) => (Number(props.value) > 1 ? SiteLabels.YES : SiteLabels.NO),
   SkStatusLinkCell: SkLinkStatusCell,
   SkValueOrPlaceHolderCell
+};
+
+export const CustomSitePairCells = {
+  ...CustomPairMetricCells,
+  ConnectedLinkCell: (props: SkLinkCellProps<PairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.destinationName}@${props.data.destinationId}?type=${SiteLabels.Pairs}`
+    })
 };
 
 export const siteColumns: SKTableColumn<SiteResponse>[] = [

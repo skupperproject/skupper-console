@@ -13,7 +13,7 @@ import { PairsWithInstantMetrics, ProcessResponse } from '@sk-types/REST.interfa
 import { SKTableColumn } from '@sk-types/SkTable.interfaces';
 
 import { useProcessPairsListData } from '../hooks/useProcessPairsListData';
-import { CustomPairsCells, PairsListColumnsWithLinkDetails } from '../Processes.constants';
+import { CustomProcessPairCells, PairsListColumnsWithLinkDetails } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
 
 interface PairsListProps {
@@ -72,6 +72,6 @@ const renderTable = (
       rows={rows}
       pagination={true}
       paginationPageSize={SMALL_PAGINATION_SIZE}
-      customCells={CustomPairsCells}
+      customCells={CustomProcessPairCells}
     />
   );

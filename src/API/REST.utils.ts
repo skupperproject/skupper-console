@@ -29,27 +29,29 @@ export function composePath(elements: string[]): string {
 }
 
 // Function to aggregate the pairs by sourceId and destinationId, updating only the protocol
-export const aggregatePairs = (
+export const aggregateDistinctPairs = (
   pairs: PairsResponse[] | ProcessPairsResponse[]
 ): PairsResponse[] | ProcessPairsResponse[] => {
   const map = new Map<string, PairsResponse | ProcessPairsResponse>();
 
-  pairs.forEach((pair) => {
-    const { sourceId, destinationId, protocol } = pair;
+  pairs
+    .filter(({ sourceId, destinationId }) => sourceId !== destinationId)
+    .forEach((pair) => {
+      const { sourceId, destinationId, protocol } = pair;
 
-    const key = `${sourceId}-${destinationId}`;
-    const entry = map.get(key);
+      const key = `${sourceId}-${destinationId}`;
+      const entry = map.get(key);
 
-    if (entry) {
-      // If entry exists, update the protocol if not already present
-      if (!entry.protocol.split(', ').includes(protocol)) {
-        entry.protocol = [entry.protocol, protocol].sort().join(', ') as Protocols;
+      if (entry) {
+        // If entry exists, update the protocol if not already present
+        if (!entry.protocol.split(', ').includes(protocol)) {
+          entry.protocol = [entry.protocol, protocol].sort().join(', ') as Protocols;
+        }
+      } else {
+        // If no entry exists, create a new one and retain all original properties
+        map.set(key, { ...pair });
       }
-    } else {
-      // If no entry exists, create a new one and retain all original properties
-      map.set(key, { ...pair });
-    }
-  });
+    });
 
   return Array.from(map.values());
 };

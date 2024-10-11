@@ -9,11 +9,12 @@ import SKEmptyData from '@core/components/SkEmptyData';
 import SkTable from '@core/components/SkTable';
 import { combineInstantMetricsToPairs } from '@core/utils/combineInstantMetricsToPairs';
 import { invertPairs } from '@core/utils/invertPairs';
-import { CustomPairsCells, PairsListColumns } from '@pages/Processes/Processes.constants';
+import { PairsListColumns } from '@pages/Processes/Processes.constants';
 import { PairsWithInstantMetrics, SiteResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from '@sk-types/SkTable.interfaces';
 
 import { useSitePairsListData } from '../hooks/useSitePairsData';
+import { CustomSitePairCells } from '../Sites.constants';
 import { SiteLabels } from '../Sites.enum';
 
 interface PairsListProps {
@@ -72,6 +73,6 @@ const renderTable = (
       rows={rows}
       pagination={true}
       paginationPageSize={SMALL_PAGINATION_SIZE}
-      customCells={CustomPairsCells}
+      customCells={CustomSitePairCells}
     />
   );

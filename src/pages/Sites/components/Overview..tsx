@@ -23,6 +23,9 @@ const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) 
     ...mapDataToMetricFilterOptions<PairsResponse>(pairsRx, 'sourceName')
   ]);
   const uniqueProtocols = extractUniqueValues([...pairsTx, ...pairsRx], 'protocol');
+  // Default destination site for Prometheus queries, representing the sum of all destination sites.
+  // We explicitly set this prop to ensure the destination site is included in the Prometheus query; otherwise, the result will also include values from the source site itself.
+  const destSite = destSites.map(({ destinationName }) => destinationName).join('|');
 
   return (
     <Metrics
@@ -33,6 +36,7 @@ const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) 
       defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
         sourceSite: name,
+        destSite,
         ...selectedFilters
       }}
       configFilters={{

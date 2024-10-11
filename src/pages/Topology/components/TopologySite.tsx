@@ -68,7 +68,7 @@ const TopologySite: FC<{
     (id: string) => {
       const link = routerLinks?.find(({ identity }) => identity === id);
 
-      if (SHOW_ROUTER_LINKS && link) {
+      if (link) {
         navigate(`${SitesRoutesPaths.Sites}/${link.sourceSiteName}@${link.sourceSiteId}?type=${SiteLabels.Links}`);
       }
     },

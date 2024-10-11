@@ -1,6 +1,7 @@
 import SkEndTimeCell from '@core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { ComponentResponse } from '@sk-types/REST.interfaces';
+import { CustomPairMetricCells } from '@pages/Processes/Processes.constants';
+import { ComponentResponse, PairsResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ComponentLabels, ComponentRoutesPaths } from './Components.enum';
@@ -23,6 +24,16 @@ export const CustomComponentCells = {
       ...props,
       fitContent: true,
       link: `${ComponentRoutesPaths.Components}/${props.data.name}@${props.data.identity}?type=${ComponentLabels.Processes}`
+    })
+};
+
+export const CustomComponentPairCells = {
+  ...CustomPairMetricCells,
+  ConnectedLinkCell: (props: SkLinkCellProps<PairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'component',
+      link: `${ComponentRoutesPaths.Components}/${props.data.destinationName}@${props.data.destinationId}?type=${ComponentLabels.Pairs}`
     })
 };
 
