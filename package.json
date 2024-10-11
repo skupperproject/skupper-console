@@ -19,7 +19,6 @@
     "url": "https://github.com/skupperproject/skupper-console/issues"
   },
   "private": true,
-  "sideEffects": false,
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",

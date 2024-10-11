@@ -31,9 +31,9 @@ const useMetricFiltersState = ({ defaultMetricFilterValues, onSelectFilters }: U
 
   const handleSelectDestSite = useCallback(
     (selection: string | number | undefined) => {
-      handleSelect({ destSite: selection as string, destProcess: undefined });
+      handleSelect({ destSite: (selection as string) || defaultMetricFilterValues.destSite, destProcess: undefined });
     },
-    [handleSelect]
+    [handleSelect, defaultMetricFilterValues]
   );
 
   const handleSelectSourceProcess = useCallback(
