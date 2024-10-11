@@ -56,7 +56,9 @@ const prodConfig = {
   optimization: {
     chunkIds: 'named',
     minimizer: [
-      new TerserJSPlugin({}),
+      new TerserJSPlugin({
+        parallel: true
+      }),
       new CssMinimizerPlugin({
         minimizerOptions: {
           preset: ['default', { mergeLonghand: false }]

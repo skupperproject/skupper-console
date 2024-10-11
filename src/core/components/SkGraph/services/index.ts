@@ -204,7 +204,7 @@ export const GraphController = {
 
     // Process edges with metric-based styling
     const transformedEdges = processedEdges.map(
-      ({ id, source, target, label, hasPair, type, metricValue, ...rest }) => ({
+      ({ id, source, target, label, secondarylabel, hasPair, type, metricValue, ...rest }) => ({
         type,
         id,
         source,
@@ -218,6 +218,7 @@ export const GraphController = {
               : 0,
           label: true,
           labelText: label,
+          badgeText: secondarylabel,
           curveOffset: hasPair ? 30 : 0
         }
       })

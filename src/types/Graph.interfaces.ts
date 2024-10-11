@@ -56,6 +56,7 @@ export interface GraphEdge {
   sourceName?: string;
   targetName?: string;
   label?: string;
+  secondarylabel?: string;
   metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }
