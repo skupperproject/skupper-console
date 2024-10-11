@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
+import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
+
 import SkLinkCell from '../../src/core/components/SkLinkCell';
 import { Wrapper } from '../../src/core/components/Wrapper';
 
@@ -24,7 +26,7 @@ describe('SkLinkCell', () => {
 
   it('should render an empty cell', () => {
     render(<SkLinkCell data={data} value="" link="/some-link" />);
-    const emptyElement = screen.getByText('');
+    const emptyElement = screen.getByText(EMPTY_VALUE_PLACEHOLDER);
     expect(emptyElement).toBeInTheDocument();
   });
 
@@ -40,7 +42,7 @@ describe('SkLinkCell', () => {
 
   it('should handle non-string values', () => {
     render(<SkLinkCell data={data} value={undefined} link="/some-link" />);
-    const emptyElement = screen.getByText('');
+    const emptyElement = screen.getByText(EMPTY_VALUE_PLACEHOLDER);
     expect(emptyElement).toBeInTheDocument();
   });
 });

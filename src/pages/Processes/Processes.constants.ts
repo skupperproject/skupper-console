@@ -111,8 +111,13 @@ export const PairsListColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
     customCellName: 'ConnectedLinkCell'
   },
   {
-    name: ProcessesLabels.Protocols,
+    name: ProcessesLabels.TransportProtocol,
     prop: 'protocol',
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.ApplicationProtocols,
+    prop: 'observedApplicationProtocols',
     modifier: 'fitContent'
   },
   {

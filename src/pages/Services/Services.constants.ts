@@ -36,7 +36,7 @@ export const customServiceCells = {
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}?type=${ServicesLabels.Servers}`
     }),
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
-    data?.observedApplicationProtocols.join(',') || EMPTY_VALUE_PLACEHOLDER
+    data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_PLACEHOLDER
 };
 
 // Services Table
@@ -54,6 +54,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
     name: ServicesLabels.ApplicationProtocols,
     prop: 'observedApplicationProtocols',
+    customCellName: 'ApplicationProtocolCell',
     width: 15
   },
   {

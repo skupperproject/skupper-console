@@ -15,6 +15,7 @@ import {
   Tr
 } from '@patternfly/react-table';
 
+import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
 import { NonNullableValue, SKTableColumn } from '@sk-types/SkTable.interfaces';
 
@@ -241,7 +242,11 @@ const SkTable = function <T>({
                           >
                             {Component && (
                               <Component
-                                value={value}
+                                value={
+                                  value === '' || value === undefined || value === null
+                                    ? EMPTY_VALUE_PLACEHOLDER
+                                    : value
+                                }
                                 data={data}
                                 callback={callback}
                                 format={format && format(value)}
@@ -251,7 +256,11 @@ const SkTable = function <T>({
 
                             {!Component && (
                               <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
-                                {(format && format(value)) || value}
+                                {format && value
+                                  ? format(value)
+                                  : value === '' || value === undefined || value === null
+                                    ? EMPTY_VALUE_PLACEHOLDER
+                                    : value}
                               </TableText>
                             )}
                           </Td>

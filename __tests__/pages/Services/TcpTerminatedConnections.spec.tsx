@@ -33,7 +33,7 @@ describe('Begin testing the TCP connections component', () => {
     const { queryByTestId, getByText, getAllByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpTerminatedConnections id={servicesResults[4].identity} name={servicesResults[4].name} />
+          <TcpTerminatedConnections routingKey={servicesResults[4].name} />
         </Suspense>
       </Wrapper>
     );

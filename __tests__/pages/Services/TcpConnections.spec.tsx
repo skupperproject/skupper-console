@@ -33,7 +33,7 @@ describe('Begin testing the TCP connections component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpConnections id={servicesResults[4].identity} name={servicesResults[4].name} />
+          <TcpConnections routingKey={servicesResults[4].name} />
         </Suspense>
       </Wrapper>
     );

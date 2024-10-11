@@ -33,7 +33,7 @@ describe('Begin testing the Http requests component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <HttpRequests id={servicesResults[0].identity} name={servicesResults[0].name} />
+          <HttpRequests routingKey={servicesResults[0].name} />
         </Suspense>
       </Wrapper>
     );
