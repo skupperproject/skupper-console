@@ -49,7 +49,7 @@ const Metrics: FC<MetricsProps> = function (props) {
       onGetExpandedSectionsConfig
     });
 
-  const showHttp = !!availableProtocols?.includes(Protocols.Http || Protocols.Http2);
+  const showHttp = !!availableProtocols?.includes(Protocols.Http) || !!availableProtocols?.includes(Protocols.Http2);
 
   return (
     <Stack hasGutter>

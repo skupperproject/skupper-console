@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { Protocols } from '@API/REST.enum';
 import { extractUniqueValues } from '@core/utils/extractUniqueValues';
 import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
@@ -22,7 +23,10 @@ const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) 
     ...mapDataToMetricFilterOptions<PairsResponse>(pairsTx, 'destinationName'),
     ...mapDataToMetricFilterOptions<PairsResponse>(pairsRx, 'sourceName')
   ]);
-  const uniqueProtocols = extractUniqueValues([...pairsTx, ...pairsRx], 'protocol');
+  const uniqueProtocols = extractUniqueValues([...pairsTx, ...pairsRx], 'observedApplicationProtocols').join();
+  const uniqueProtocolsAarray = (
+    uniqueProtocols.length && uniqueProtocols.includes(',') ? uniqueProtocols.split(',') : uniqueProtocols
+  ) as Protocols[];
   // Default destination site for Prometheus queries, representing the sum of all destination sites.
   // We explicitly set this prop to ensure the destination site is included in the Prometheus query; otherwise, the result will also include values from the source site itself.
   const destSite = destSites.map(({ destinationName }) => destinationName).join('|');
@@ -32,7 +36,7 @@ const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) 
       key={id}
       sourceSites={sourceSites}
       destSites={destSites}
-      availableProtocols={uniqueProtocols}
+      availableProtocols={uniqueProtocolsAarray}
       defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
         sourceSite: name,

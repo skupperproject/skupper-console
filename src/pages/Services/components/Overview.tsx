@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { Protocols } from '@API/REST.enum';
 import { extractUniqueValues } from '@core/utils/extractUniqueValues';
 import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
 import Metrics from '@pages/shared/Metrics';
@@ -21,7 +22,10 @@ const Overview: FC<OverviewProps> = function ({ id, name }) {
   const sourceSites = mapDataToMetricFilterOptions(pairs, 'sourceSiteName');
   const destSites = mapDataToMetricFilterOptions(pairs, 'destinationSiteName');
 
-  const uniqueProtocols = extractUniqueValues(pairs, 'protocol');
+  const uniqueProtocols = extractUniqueValues(pairs, 'observedApplicationProtocols').join();
+  const uniqueProtocolsAarray = (
+    uniqueProtocols.length && uniqueProtocols.includes(',') ? uniqueProtocols.split(',') : uniqueProtocols
+  ) as Protocols[];
 
   return (
     <Metrics
@@ -30,7 +34,7 @@ const Overview: FC<OverviewProps> = function ({ id, name }) {
       destSites={destSites}
       sourceProcesses={sourceProcesses}
       destProcesses={destProcesses}
-      availableProtocols={uniqueProtocols}
+      availableProtocols={uniqueProtocolsAarray}
       defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
         service: name,
