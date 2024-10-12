@@ -5,6 +5,10 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
+import { convertSiteToNode } from '@pages/Topology/services/topologySiteController';
+import { PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+
+import sitePairsData from '../../../mocks/data/SITE_PAIRS.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
@@ -16,7 +20,8 @@ import { TopologyController } from '../../../src/pages/Topology/services';
 import { SHOW_DATA_LINKS } from '../../../src/pages/Topology/Topology.constants';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';
 
-const sitesResults = sitesData.results;
+const sitesResults = sitesData.results as SiteResponse[];
+const sitePairsResults = sitePairsData.results as PairsResponse[];
 
 const MockGraphComponent: FC<SkGraphProps> = memo(
   forwardRef(({ onClickEdge, onClickNode }, ref) => {
@@ -28,9 +33,11 @@ const MockGraphComponent: FC<SkGraphProps> = memo(
 
     return (
       <>
-        <Button onClick={() => onClickNode && onClickNode(sitesResults[0].identity)}>onClickNode</Button>
+        <Button onClick={() => onClickNode && onClickNode(convertSiteToNode(sitesResults[0]))}>onClickNode</Button>
         <Button
-          onClick={() => onClickEdge && onClickEdge(`${sitesResults[2].identity}-to-${sitesResults[1].identity}`)}
+          onClick={() =>
+            onClickEdge && onClickEdge(TopologyController.convertPairToEdge(sitePairsResults[0], 'SkDataEdge'))
+          }
         >
           onClickEdge
         </Button>

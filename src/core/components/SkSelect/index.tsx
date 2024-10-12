@@ -71,6 +71,8 @@ const SkSelect: FC<SkSelectProps> = function ({
       role="menu"
       isOpen={isOpen}
       onSelect={handleSelect}
+      onOpenChange={handleToggle}
+      shouldFocusToggleOnSelect
       style={{
         maxHeight: `${FILTER_BY_SERVICE_MAX_HEIGHT}px`,
         overflow: 'auto'

@@ -13,11 +13,11 @@ import { getTestsIds } from '../../../src/config/testIds';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import ProcessPair, { ProcessPairContent } from '../../../src/pages/Processes/views/ProcessPair';
 import LoadingPage from '../../../src/pages/shared/Loading';
-import { ProcessPairsResponse, PairsResponse } from '../../../src/types/REST.interfaces';
+import { PairsResponse } from '../../../src/types/REST.interfaces';
 
-const processPairsResultOpToCart = processPairsData.results[0] as ProcessPairsResponse | PairsResponse; // HTTP2 flow
-const processPairsResultDatabaseToPayment = processPairsData.results[6] as ProcessPairsResponse | PairsResponse; // old TCP flow and active TCP flow
-const processPairsResultPayment2ToOp = processPairsData.results[4] as ProcessPairsResponse | PairsResponse; // old TCP flow
+const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
+const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
+const processPairsResultPayment2toCatalog = processPairsData.results[4] as PairsResponse; // old TCP flow
 
 describe('Begin testing the Processes component', () => {
   let server: Server;
@@ -86,7 +86,7 @@ describe('Begin testing the Processes component', () => {
     const { queryByTestId, getByText, getByTestId } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessPairContent id={processPairsResultPayment2ToOp.identity} />
+          <ProcessPairContent id={processPairsResultPayment2toCatalog.identity} />
         </Suspense>
       </Wrapper>
     );

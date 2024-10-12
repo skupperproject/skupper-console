@@ -8,7 +8,6 @@ export const TopologyPaths = {
   name: TopologyLabels.Topology
 };
 
-export const SHOW_LINK_PROTOCOL = 'show-link-protocol';
 export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';
 export const SHOW_LINK_LATENCY = 'show-link-latency';
@@ -28,10 +27,6 @@ export const displayOptionsForProcesses: SkSelectGroupedOptions[] = [
       {
         id: SHOW_LINK_METRIC_VALUE,
         label: TopologyLabels.CheckboxShowMetricValue
-      },
-      {
-        id: SHOW_INBOUND_METRICS,
-        label: TopologyLabels.CheckboxShowLabelReverse
       }
     ]
   },
@@ -56,11 +51,6 @@ export const displayOptionsForProcesses: SkSelectGroupedOptions[] = [
   {
     title: TopologyLabels.TitleGroupDisplayOptionsMenuOther,
     items: [
-      {
-        id: SHOW_LINK_PROTOCOL,
-        label: TopologyLabels.CheckboxShowProtocol
-      },
-
       {
         id: SHOW_DEPLOYMENTS,
         label: TopologyLabels.ShowDeployments
@@ -96,10 +86,6 @@ export const displayOptionsForSites: SkSelectGroupedOptions[] = [
       {
         id: SHOW_LINK_METRIC_VALUE,
         label: TopologyLabels.CheckboxShowMetricValue
-      },
-      {
-        id: SHOW_INBOUND_METRICS,
-        label: TopologyLabels.CheckboxShowLabelReverse
       }
     ]
   },

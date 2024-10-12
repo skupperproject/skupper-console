@@ -111,13 +111,17 @@ const SkGraph: FC<SkGraphProps> = memo(
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
           // if the node is already selected , set id = undefined to deleselect it
-          const node = graph.getElementDataByState('node', GraphElementStates.Select);
-          onClickNode?.(target.id === (node.length && node[0].id) ? '' : target.id);
+          const selected = graph.getElementDataByState('node', GraphElementStates.Select);
+          const data = graph.getElementData(target.id).data as unknown as GraphNode;
+
+          onClickNode?.(target.id === (selected.length && selected[0].id) ? null : data);
         });
         graph.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target }) => {
           // if the edge is already selected , set id = undefined to deleselect it
-          const edge = graph.getElementDataByState('edge', GraphElementStates.Select);
-          onClickEdge?.(target.id === (edge.length && edge[0].id) ? '' : target.id);
+          const selected = graph.getElementDataByState('edge', GraphElementStates.Select);
+          const data = graph.getElementData(target.id).data as unknown as GraphEdge;
+
+          onClickEdge?.(target.id === (selected.length && selected[0].id) ? null : data);
         });
 
         await graph.render();

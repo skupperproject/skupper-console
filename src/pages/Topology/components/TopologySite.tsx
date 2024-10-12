@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import SkGraph from '@core/components/SkGraph';
 import { SiteLabels, SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { SkGraphProps } from 'types/Graph.interfaces';
+import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
 import useTopologySiteData from '../hooks/useTopologySiteData';
@@ -21,7 +21,6 @@ import {
   SHOW_ROUTER_LINKS,
   SHOW_LINK_METRIC_VALUE,
   SHOW_DEPLOYMENTS,
-  SHOW_LINK_PROTOCOL,
   SHOW_LINK_METRIC_DISTRIBUTION
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
@@ -54,26 +53,22 @@ const TopologySite: FC<{
   });
 
   const handleShowDetails = useCallback(
-    (id: string) => {
-      const site = sites.find(({ identity }) => identity === id);
+    (data: GraphNode | null) => {
+      const id = data?.id;
 
-      if (site) {
-        navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${id}`);
+      if (id) {
+        navigate(`${SitesRoutesPaths.Sites}/${data.name}@${id}`);
       }
     },
-    [navigate, sites]
+    [navigate]
   );
 
-  const handleShowLinkDetails = useCallback(
-    (id: string) => {
-      const link = routerLinks?.find(({ identity }) => identity === id);
-
-      if (link) {
-        navigate(`${SitesRoutesPaths.Sites}/${link.sourceSiteName}@${link.sourceSiteId}?type=${SiteLabels.Links}`);
-      }
-    },
-    [navigate, routerLinks]
-  );
+  const handleShowLinkDetails = (data: GraphEdge | null) => {
+    if (data) {
+      const type = data.type === 'SkSiteEdge' ? SiteLabels.Links : SiteLabels.Pairs;
+      navigate(`${SitesRoutesPaths.Sites}/${data.sourceName}@${data.source}?type=${type}`);
+    }
+  };
 
   const { nodes, edges, nodeIdSelected, nodeIdsToHighLight } = TopologySiteController.siteDataTransformer({
     idsSelected,
@@ -86,7 +81,6 @@ const TopologySite: FC<{
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
       showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),

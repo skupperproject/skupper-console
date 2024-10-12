@@ -124,7 +124,7 @@ export interface BasePairs {
   destinationName: string;
 }
 
-export interface BasePairsResponse extends BaseResponse, BasePairs {
+interface BasePairsResponse extends BaseResponse, BasePairs {
   protocol: Protocols;
   observedApplicationProtocols?: string;
 }

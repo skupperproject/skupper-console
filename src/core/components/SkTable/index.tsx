@@ -256,7 +256,7 @@ const SkTable = function <T>({
 
                             {!Component && (
                               <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
-                                {format && value
+                                {format
                                   ? format(value)
                                   : value === '' || value === undefined || value === null
                                     ? EMPTY_VALUE_PLACEHOLDER

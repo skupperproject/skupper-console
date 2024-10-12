@@ -4,6 +4,10 @@ import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { convertComponentToNode } from '@pages/Topology/services/topologyComponentController';
+import { ComponentResponse, PairsResponse } from '@sk-types/REST.interfaces';
+
+import componentPairsData from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
 import componentData from '../../../mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
@@ -14,7 +18,8 @@ import TopologyComponent from '../../../src/pages/Topology/components/TopologyCo
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';
 
-const componentResult = componentData.results;
+const componentResult = componentData.results as ComponentResponse[];
+const componentPairsResult = componentPairsData.results as PairsResponse[];
 
 const MockGraphComponent: FC<SkGraphProps> = memo(
   forwardRef(({ onClickEdge, onClickNode }, ref) => {
@@ -26,9 +31,13 @@ const MockGraphComponent: FC<SkGraphProps> = memo(
 
     return (
       <>
-        <Button onClick={() => onClickNode && onClickNode(componentResult[0].identity)}>onClickNode</Button>
+        <Button onClick={() => onClickNode && onClickNode(convertComponentToNode(componentResult[0]))}>
+          onClickNode
+        </Button>
         <Button
-          onClick={() => onClickEdge && onClickEdge(`${componentResult[2].identity}-to-${componentResult[1].identity}`)}
+          onClick={() =>
+            onClickEdge && onClickEdge(TopologyController.convertPairToEdge(componentPairsResult[2], 'SkDataEdge'))
+          }
         >
           onClickEdge
         </Button>

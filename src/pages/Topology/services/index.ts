@@ -37,18 +37,22 @@ export const TopologyController = {
     return removeDuplicatesFromArrayOfObjects(uniqueNodes);
   },
 
-  convertPairsToEdges: (
-    processesPairs: ProcessPairsResponse[] | PairsResponse[] | PairsResponse[],
+  convertPairToEdge: (
+    { identity, sourceId, destinationId, sourceName, destinationName }: PairsResponse,
     type: GraphElementNames
-  ): GraphEdge[] =>
-    processesPairs.map(({ identity, sourceId, destinationId, sourceName, destinationName }) => ({
-      type,
-      id: identity,
-      source: sourceId,
-      target: destinationId,
-      sourceName,
-      targetName: destinationName
-    })),
+  ): GraphEdge => ({
+    type,
+    id: identity,
+    source: sourceId,
+    target: destinationId,
+    sourceName,
+    targetName: destinationName
+  }),
+
+  convertPairsToEdges: (
+    processesPairs: ProcessPairsResponse[] | PairsResponse[],
+    type: GraphElementNames
+  ): GraphEdge[] => processesPairs.map((pair) => TopologyController.convertPairToEdge(pair, type)),
 
   getAllTopologyMetrics: async ({
     showBytes = false,
@@ -84,7 +88,6 @@ export const TopologyController = {
     edges: GraphEdge[],
     metricSourceLabel: PrometheusLabelsV2, // Prometheus metric label to compare with the metricDestLabel
     metricDestLabel: PrometheusLabelsV2,
-    protocolPairsMap: Record<string, string> | undefined, //
     metrics: TopologyMetrics | null
   ): GraphEdge[] => {
     const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined) =>
@@ -127,7 +130,6 @@ export const TopologyController = {
       return {
         ...edge,
         metrics: {
-          protocol: protocolPairsMap ? protocolPairsMap[`${edge.source}${edge.target}`] : '',
           bytes: sourceToDestBytesMap[pairKey],
           byteRate: sourceToDestByteRateMap[pairKey],
           latency: latencyByPairsMapIn[pairKey],
@@ -173,7 +175,6 @@ export const TopologyController = {
       return {
         ...edge,
         label,
-        secondarylabel: options?.showLinkProtocol ? edge?.metrics?.protocol : undefined,
         metricValue: options?.showMetricDistribution ? bytes || byteRate || latency || 0 : undefined
       };
     }),
@@ -266,7 +267,6 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
         ...edge,
         id: '', // The 'id' string will be concatenated with the process ID
         metrics: {
-          protocol: '',
           bytes: 0,
           byteRate: 0,
           latency: 0,
@@ -286,10 +286,6 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
 
       if (edge.metrics) {
         acc[group].metrics = {
-          protocol:
-            edge.metrics.protocol && acc[group]?.metrics?.protocol?.includes(edge.metrics.protocol)
-              ? acc[group]?.metrics?.protocol || ''
-              : [acc[group]?.metrics?.protocol, edge.metrics.protocol].filter(Boolean).join(','),
           bytes: (acc[group]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
           byteRate: (acc[group]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),
           latency: (acc[group]?.metrics?.latency || 0) + (edge.metrics.latency || 0),

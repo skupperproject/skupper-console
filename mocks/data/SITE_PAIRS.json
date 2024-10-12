@@ -8,7 +8,8 @@
       "sourceId": "site-1",
       "sourceName": "site 1",
       "destinationId": "site-2",
-      "destinationName": "site-2"
+      "destinationName": "site-2",
+      "protocol": "tcp"
     },
     {
       "identity": "site-2-to-site-3",
@@ -18,7 +19,8 @@
       "sourceId": "site-2",
       "sourceName": "site 2",
       "destinationId": "site-3",
-      "destinationName": "site 3"
+      "destinationName": "site 3",
+      "protocol": "tcp"
     }
   ],
   "count": 2,

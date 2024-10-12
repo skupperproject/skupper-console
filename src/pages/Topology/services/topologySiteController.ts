@@ -15,24 +15,28 @@ interface TopologySiteControllerProps {
   options: TopologyShowOptionsSelected;
 }
 
-const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, siteVersion, platform, routerCount }) => ({
-    type: 'SkNode',
-    id: identity,
-    label: siteVersion ? `${name} (${siteVersion})` : name,
-    iconName: platform || 'site',
-    info: {
-      secondary: routerCount > 1 ? 'HA' : ''
-    }
-  }));
+export const convertSiteToNode = ({ identity, name, siteVersion, platform, routerCount }: SiteResponse): GraphNode => ({
+  type: 'SkNode',
+  id: identity,
+  name,
+  label: siteVersion ? `${name} (${siteVersion})` : name,
+  iconName: platform || 'site',
+  info: {
+    secondary: routerCount > 1 ? 'HA' : ''
+  }
+});
+
+const convertSitesToNodes = (entities: SiteResponse[]): GraphNode[] => entities.map(convertSiteToNode);
 
 const convertRouterLinksToEdges = (links: RouterLinkResponse[]): GraphEdge[] =>
   // Convert links to GraphEdge format
-  links.map(({ sourceSiteId, destinationSiteId, identity, status }) => ({
+  links.map(({ sourceSiteId, destinationSiteId, sourceSiteName, destinationSiteName, identity, status }) => ({
     type: status === 'down' ? 'SkSiteEdgeDown' : status === 'partially_up' ? 'SkSiteEdgePartialDown' : 'SkSiteEdge',
     id: identity,
     source: sourceSiteId,
-    target: destinationSiteId || 'unknown'
+    sourceName: sourceSiteName,
+    target: destinationSiteId || 'unknown',
+    targetName: destinationSiteName
   }));
 export const TopologySiteController = {
   siteDataTransformer: ({
@@ -52,7 +56,6 @@ export const TopologySiteController = {
         edges,
         PrometheusLabelsV2.SourceSiteName,
         PrometheusLabelsV2.DestSiteName,
-        undefined, // no need to retrieve protocols
         metrics
       );
       edges = TopologyController.addLabelToEdges(edges, options);

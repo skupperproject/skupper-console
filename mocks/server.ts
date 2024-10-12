@@ -11,7 +11,8 @@ import {
   SiteResponse,
   BiFlowResponse,
   ResponseWrapper,
-  PairsResponse
+  PairsResponse,
+  ApplicationFlowResponse
 } from '@sk-types/REST.interfaces';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
@@ -363,7 +364,7 @@ export const MockApi = {
     const queryMethod = queryParams.method;
     const queryRoutingKey = queryParams.routingKey;
 
-    const results = biFlow.results.filter(
+    const results = (biFlow.results as ApplicationFlowResponse[]).filter(
       ({
         protocol,
         endTime,
@@ -378,10 +379,14 @@ export const MockApi = {
         (!queryRoutingKey && queryProcessSourceId ? sourceProcessId === queryProcessSourceId : true) &&
         (!queryRoutingKey && queryProcessDestinationId ? destProcessId === queryProcessDestinationId : true) &&
         (queryProtocol ? protocol === queryProtocol : true) &&
-        (queryProcessSourceName ? sourceProcessName.startsWith(queryProcessSourceName as string) : true) &&
-        (queryProcessDestinationId ? destProcessName.startsWith(queryProcessDestinationName as string) : true) &&
+        (queryRoutingKey && queryProcessSourceName
+          ? sourceProcessName.startsWith(queryProcessSourceName as string)
+          : true) &&
+        (queryRoutingKey && queryProcessDestinationId
+          ? destProcessName.startsWith(queryProcessDestinationName as string)
+          : true) &&
         (queryMethod ? !!method?.startsWith(queryMethod as string) : true) &&
-        (queryStatus ? !!status?.startsWith(queryStatus as string) : true) &&
+        (queryStatus ? !!status?.toString()?.startsWith(queryStatus as string) : true) &&
         (queryProtocol ? protocol.startsWith(queryProtocol as string) : true) &&
         (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
         (queryParams.state === 'active' ? endTime === 0 : endTime > 0)

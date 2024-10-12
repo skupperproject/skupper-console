@@ -10,7 +10,8 @@
       "sourceName": "cart",
       "destinationId": "group-payment",
       "destinationName": "payment",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -22,7 +23,8 @@
       "sourceName": "payment",
       "destinationId": "group-op",
       "destinationName": "op",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -34,7 +36,8 @@
       "sourceName": "op",
       "destinationId": "group-cart",
       "destinationName": "cart",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -46,7 +49,8 @@
       "sourceName": "op",
       "destinationId": "group-cash-desk",
       "destinationName": "cash-desk",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -58,7 +62,8 @@
       "sourceName": "database",
       "destinationId": "group-payment",
       "destinationName": "payment",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -70,7 +75,8 @@
       "sourceName": "payment",
       "destinationId": "group-cash-desk",
       "destinationName": "cash-desk",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     },
     {
       "recType": "FLOWAGGREGATE",
@@ -82,7 +88,8 @@
       "sourceName": "mm",
       "destinationId": "group-database",
       "destinationName": "database",
-      "processGroupRole": "external"
+      "processGroupRole": "external",
+      "protocol": "tcp"
     }
   ],
   "count": 7,
