@@ -18,6 +18,7 @@ export type GraphIconsMap = {
 
 export interface GraphNode {
   id: string;
+  name: string;
   type: GraphElementNames;
   label: string;
   combo?: string;
@@ -39,7 +40,6 @@ export interface GraphCombo {
 }
 
 interface GraphEdgeMetrics {
-  protocol: string | undefined;
   bytes: number | undefined;
   byteRate: number | undefined;
   latency: number | undefined;
@@ -53,10 +53,9 @@ export interface GraphEdge {
   type: GraphElementNames;
   source: string;
   target: string | 'unknown';
-  sourceName?: string;
-  targetName?: string;
+  sourceName: string;
+  targetName: string | null;
   label?: string;
-  secondarylabel?: string;
   metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }
@@ -72,8 +71,8 @@ export interface SkGraphProps {
   combos?: GraphCombo[];
   itemsToHighlight?: string[];
   itemSelected?: string;
-  onClickNode?: (id: string) => void;
-  onClickEdge?: (id: string) => void;
+  onClickNode?: (data: GraphNode | null) => void;
+  onClickEdge?: (data: GraphEdge | null) => void;
   layout?: keyof GraphLayouts;
   moveToSelectedNode?: boolean;
   savePositions?: boolean;

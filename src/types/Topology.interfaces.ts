@@ -31,7 +31,6 @@ export interface TopologyShowOptionsSelected {
   showLinkBytes: boolean;
   showLinkByteRate: boolean;
   showLinkLatency: boolean;
-  showLinkProtocol: boolean;
   showDeployments: boolean;
   showInboundMetrics: boolean;
   showMetricDistribution: boolean;

@@ -7,6 +7,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { TopoloyDetailsProps } from '@pages/Topology/components/TopologyDetails';
+import { convertProcessToNode } from '@pages/Topology/services/topologyProcessController';
 
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
@@ -46,18 +47,28 @@ const mockUseTopologyStateResults = {
   handleDisplaySelected: jest.fn()
 };
 
+const groupedIds = `${processesResults[0].identity}~${processesResults[2].identity}`;
 const MockGraphComponent: FC<SkGraphProps> = memo(({ onClickEdge, onClickNode }) => (
   <>
-    <Button onClick={() => onClickNode && onClickNode(processesResults[0].identity)}>onClickNode</Button>
+    <Button onClick={() => onClickNode && onClickNode(convertProcessToNode(processesResults[0]))}>onClickNode</Button>
     <Button
-      onClick={() => onClickNode && onClickNode(`${processesResults[0].identity}~${processesResults[2].identity}`)}
+      onClick={() => onClickNode && onClickNode(convertProcessToNode({ ...processesResults[0], identity: groupedIds }))}
     >
       onClickNodeDeployment
     </Button>
-    <Button onClick={() => onClickEdge && onClickEdge(processesPairsResults[0].identity)}>onClickEdge</Button>
     <Button
       onClick={() =>
-        onClickEdge && onClickEdge(`${processesPairsResults[0].identity}~${processesPairsResults[2].identity}`)
+        onClickEdge && onClickEdge(TopologyController.convertPairToEdge(processesPairsResults[0], 'SkDataEdge'))
+      }
+    >
+      onClickEdge
+    </Button>
+    <Button
+      onClick={() =>
+        onClickEdge &&
+        onClickEdge(
+          TopologyController.convertPairToEdge({ ...processesPairsResults[0], identity: groupedIds }, 'SkDataEdge')
+        )
       }
     >
       onClickEdgeDeployment
@@ -134,6 +145,20 @@ describe('Topology Process', () => {
     );
   });
 
+  it('should clicking on a node with a group of pairIDs', async () => {
+    jest.spyOn(useTopologyState, 'default').mockImplementation(() => mockUseTopologyStateResults);
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
+
+    const mockClick = screen.getByText('onClickNodeDeployment');
+
+    await eventUser.click(mockClick);
+
+    expect(mockHandleSelected).toHaveBeenCalledWith([groupedIds]);
+  });
+
   it('should clicking on a edge with a group of pairIDs', async () => {
     jest.spyOn(useTopologyState, 'default').mockImplementation(() => mockUseTopologyStateResults);
 
@@ -145,8 +170,6 @@ describe('Topology Process', () => {
 
     await eventUser.click(mockClick);
 
-    expect(mockHandleSelected).toHaveBeenCalledWith([
-      `${processesPairsResults[0].identity}~${processesPairsResults[2].identity}`
-    ]);
+    expect(mockHandleSelected).toHaveBeenCalledWith([groupedIds]);
   });
 });

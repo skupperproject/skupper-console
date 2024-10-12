@@ -14,11 +14,11 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import PairsList from '../../../src/pages/Processes/components/PairsList';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import LoadingPage from '../../../src/pages/shared/Loading';
-import { ProcessPairsResponse, ProcessResponse, PairsResponse } from '../../../src/types/REST.interfaces';
+import { ProcessResponse, PairsResponse } from '../../../src/types/REST.interfaces';
 
 const data = processesData.results[7] as ProcessResponse;
 const dataNoPairs = processesData.results[9] as ProcessResponse;
-const processPairsResult = processesPairsData.results[6] as ProcessPairsResponse | PairsResponse;
+const processPairsResult = processesPairsData.results[6] as PairsResponse;
 
 describe('Process Pairs List component', () => {
   let server: Server;

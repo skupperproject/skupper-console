@@ -14,6 +14,7 @@ import {
 import { LaptopIcon, ServerIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
+import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 import ResourceIcon from '@core/components/ResourceIcon';
 import { formatBytes } from '@core/utils/formatBytes';
 import { formatLatency } from '@core/utils/formatLatency';
@@ -63,10 +64,10 @@ const FlowDetailsBase: FC<FlowDetailsBaseProps> = function ({
             </DescriptionListDescription>
 
             <DescriptionListTerm>{BiFlowLabels.BytesTransferred}</DescriptionListTerm>
-            <DescriptionListDescription>{formatBytes(octets)}</DescriptionListDescription>
+            <DescriptionListDescription>{formatBytes(octets) || EMPTY_VALUE_PLACEHOLDER}</DescriptionListDescription>
 
             <DescriptionListTerm>{BiFlowLabels.Latency}</DescriptionListTerm>
-            <DescriptionListDescription>{formatLatency(latency)}</DescriptionListDescription>
+            <DescriptionListDescription>{formatLatency(latency) || EMPTY_VALUE_PLACEHOLDER}</DescriptionListDescription>
 
             {additionalDetails}
           </DescriptionListGroup>

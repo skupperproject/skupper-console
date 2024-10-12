@@ -185,6 +185,7 @@ export const GraphController = {
         combo: combo && comboIds?.includes(combo) ? combo : undefined,
         type,
         data: {
+          id,
           ...rest,
           fullLabelText: label,
           partialLabelText: ellipsisInTheMiddle(label),
@@ -204,12 +205,12 @@ export const GraphController = {
 
     // Process edges with metric-based styling
     const transformedEdges = processedEdges.map(
-      ({ id, source, target, label, secondarylabel, hasPair, type, metricValue, ...rest }) => ({
+      ({ id, source, target, sourceName, targetName, label, hasPair, type, metricValue }) => ({
         type,
         id,
         source,
         target,
-        data: rest,
+        data: { id, source, target, sourceName, targetName, label, hasPair, type, metricValue },
         style: {
           halo: true,
           haloLineWidth:
@@ -218,7 +219,6 @@ export const GraphController = {
               : 0,
           label: true,
           labelText: label,
-          badgeText: secondarylabel,
           curveOffset: hasPair ? 30 : 0
         }
       })

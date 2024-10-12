@@ -12,6 +12,7 @@ import {
   MenuFooter
 } from '@patternfly/react-core';
 
+import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
 import { TopologyLabels } from '@pages/Topology/Topology.enum';
 
 import {
@@ -109,7 +110,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
             key={option.value}
             isFocused={focusedItemIndex === index}
             className={option.className}
-            id={`select-multi-typeahead-${option.value.replace(' ', '-')}`}
+            id={`select-multi-typeahead-${option.value.replace(' ', EMPTY_VALUE_PLACEHOLDER)}`}
             {...option}
             ref={null}
           >

@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
 import SkGraph from '@core/components/SkGraph';
 import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { SkGraphProps } from 'types/Graph.interfaces';
+import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
@@ -35,7 +35,6 @@ import {
   SHOW_LINK_LATENCY,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
-  SHOW_LINK_PROTOCOL,
   SHOW_INBOUND_METRICS,
   displayOptionsForProcesses
 } from '../Topology.constants';
@@ -64,7 +63,9 @@ const TopologyProcesses: FC<{
   const { processes, processesPairs, metrics } = useTopologyProcessData();
 
   const handleShowProcessDetails = useCallback(
-    (id: string) => {
+    (data: GraphNode | null) => {
+      const id = data?.id;
+
       if (!id) {
         return handleSelected();
       }
@@ -74,17 +75,17 @@ const TopologyProcesses: FC<{
       }
 
       //handle a single process selection
-      const process = processes.find(({ identity }) => identity === id);
-
-      if (process) {
-        navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${process?.identity}`);
+      if (id) {
+        navigate(`${ProcessesRoutesPaths.Processes}/${data.name}@${id}`);
       }
     },
-    [handleSelected, navigate, processes]
+    [handleSelected, navigate]
   );
 
   const handleShowProcessPairDetails = useCallback(
-    (id: string) => {
+    (data: GraphEdge | null) => {
+      const id = data?.id;
+
       if (!id) {
         return handleSelected();
       }
@@ -93,12 +94,11 @@ const TopologyProcesses: FC<{
         return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
-      const pair = processesPairs.find(({ identity }) => identity === id);
       navigate(
-        `${ProcessesRoutesPaths.Processes}/${pair?.sourceName}@${pair?.sourceId}/${ProcessesLabels.ProcessPairs}@${pair?.identity}`
+        `${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.source}/${ProcessesLabels.ProcessPairs}@${id}`
       );
     },
-    [handleSelected, navigate, processesPairs]
+    [handleSelected, navigate]
   );
 
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
@@ -112,7 +112,6 @@ const TopologyProcesses: FC<{
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
       showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),

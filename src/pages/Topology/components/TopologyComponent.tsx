@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import SkGraph from '@core/components/SkGraph';
 import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
-import { SkGraphProps } from 'types/Graph.interfaces';
+import { GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
 import useTopologyComponentData from '../hooks/useTopologyComponentData';
@@ -23,14 +23,14 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkG
   const { components, componentsPairs } = useTopologyComponentData();
 
   const handleShowDetails = useCallback(
-    (componentId: string) => {
-      const component = components.find(({ identity }) => identity === componentId);
+    (data: GraphNode | null) => {
+      const id = data?.id;
 
-      if (component) {
-        navigate(`${ComponentRoutesPaths.Components}/${component?.name}@${componentId}`);
+      if (id) {
+        navigate(`${ComponentRoutesPaths.Components}/${data?.name}@${id}`);
       }
     },
-    [navigate, components]
+    [navigate]
   );
 
   const { nodeIdSelected, nodes, edges, nodeIdsToHighLight } = TopologyComponentController.dataTransformer({

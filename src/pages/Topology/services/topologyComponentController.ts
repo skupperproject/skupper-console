@@ -13,14 +13,21 @@ interface TopologyComponentControllerProps {
   componentsPairs: PairsResponse[];
 }
 
-const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, processGroupRole: role, processCount }) => ({
-    id: identity,
-    label: name,
-    iconName: role === Role.Internal ? 'skupper' : 'component',
-    type: role === Role.Remote ? shape.remote : shape.bound,
-    info: { primary: processCount.toString() }
-  }));
+export const convertComponentToNode = ({
+  identity,
+  name,
+  processGroupRole: role,
+  processCount
+}: ComponentResponse): GraphNode => ({
+  id: identity,
+  name,
+  label: name,
+  iconName: role === Role.Internal ? 'skupper' : 'component',
+  type: role === Role.Remote ? shape.remote : shape.bound,
+  info: { primary: processCount.toString() }
+});
+
+const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] => entities.map(convertComponentToNode);
 
 export const TopologyComponentController = {
   dataTransformer: ({ idsSelected, components, componentsPairs, searchText }: TopologyComponentControllerProps) => {

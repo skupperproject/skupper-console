@@ -19,7 +19,6 @@ interface TopologyProcessControllerProps {
     showLinkBytes: boolean;
     showLinkByteRate: boolean;
     showLinkLatency: boolean;
-    showLinkProtocol: boolean;
     showDeployments: boolean;
     showInboundMetrics: boolean;
     showMetricDistribution: boolean;
@@ -27,28 +26,28 @@ interface TopologyProcessControllerProps {
   };
 }
 
-const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
-  processes?.map(
-    ({
-      identity,
-      name: label,
-      parent: combo,
-      parentName: comboName,
-      groupIdentity,
-      groupName,
-      processRole: role,
-      processBinding
-    }) => ({
-      type: shape[role === Role.Remote ? role : processBinding],
-      id: identity,
-      label,
-      iconName: role === Role.Internal ? 'skupper' : 'process',
-      combo,
-      comboName,
-      groupId: groupIdentity,
-      groupName
-    })
-  );
+export const convertProcessToNode = ({
+  identity,
+  name,
+  parent: combo,
+  parentName: comboName,
+  groupIdentity,
+  groupName,
+  processRole: role,
+  processBinding
+}: ProcessResponse): GraphNode => ({
+  type: shape[role === Role.Remote ? role : processBinding],
+  id: identity,
+  name,
+  label: name,
+  iconName: role === Role.Internal ? 'skupper' : 'process',
+  combo,
+  comboName,
+  groupId: groupIdentity,
+  groupName
+});
+
+const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] => processes?.map(convertProcessToNode);
 
 export const TopologyProcessController = {
   dataTransformer: ({
@@ -78,21 +77,11 @@ export const TopologyProcessController = {
       p = p.filter(({ identity }) => processIdsFromService.includes(identity));
     }
 
-    const protocolByProcessPairsMap = (processesPairs || []).reduce(
-      (acc, { sourceId, destinationId, observedApplicationProtocols }) => {
-        acc[`${sourceId}${destinationId}`] = observedApplicationProtocols || '';
-
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
     let processNodes = convertProcessesToNodes(p);
     let processPairEdges = TopologyController.addMetricsToEdges(
       TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
       PrometheusLabelsV2.SourceProcessName,
       PrometheusLabelsV2.DestProcessName,
-      protocolByProcessPairsMap,
       metrics
     );
 
