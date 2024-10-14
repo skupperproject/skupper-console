@@ -45,7 +45,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_name: "dev-release"
+          tag_name: "dev-build"
+          release_name: "Dev Release"
           body: |
             Skupper-console (Dev) build is available as a tar ball:
             - console-dev.tgz
