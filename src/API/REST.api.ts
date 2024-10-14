@@ -170,7 +170,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return data;
+    return { ...data, results: aggregateDistinctPairs(data.results) };
   },
 
   // BIFLOW APIs
