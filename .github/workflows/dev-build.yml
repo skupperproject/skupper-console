@@ -1,5 +1,4 @@
-name: Build and Release Artifact
-
+name: build-dev
 on:
   push:
     branches:
@@ -7,15 +6,15 @@ on:
       - v2
 
 jobs:
-  build-and-upload:
-    name: Build and Upload Artifact
+  build-and-release:
+    name: Build and release skupper-console (Dev)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node.js ⚙️
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -23,18 +22,45 @@ jobs:
           cache-dependency-path: yarn.lock
           cache-path: ~/.cache/yarn
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Set env 📋
+        run: echo "RELEASE_VERSION=dev-build" >> $GITHUB_ENV
 
-      - name: Build the project
-        run: yarn build --mode development
+      - name: Install 📦
+        run: |
+          yarn install --frozen-lockfile
 
-      - name: Package the build into a tarball
+      - name: Build 🚧
+        run: |
+          yarn build --mode development
+        env:
+          CI: false
+
+      - name: Package 📦
         run: |
           cd build/ && tar -zcvf ../console-dev.tgz --exclude='./data' .
 
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v3
+      - name: Create Release ✅
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: console-dev-artifact
-          path: ./console-dev.tgz
+          tag_name: "dev-build"  # Using a proper tag name here
+          release_name: "Dev build"
+          body: |
+            Skupper-console (Dev) build is available as a tar ball:
+            - console-dev.tgz
+            Issues fixed in this release
+            - https://github.com/skupperproject/skupper-console/issues?q=is:issue+milestone:dev
+          draft: false  # Set to `false` to make the release public
+
+      - name: Upload Release Asset ⬆️
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./console-dev.tgz
+          asset_name: console-dev.tgz
+          asset_content_type: application/tar+gzip
