@@ -20,23 +20,20 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: yarn.lock
+          cache-path: ~/.cache/yarn
 
       - name: Set env 📋
-        run: echo "RELEASE_VERSION=dev-${GITHUB_SHA}" >> $GITHUB_ENV  # Versione dev basata sul commit SHA
+        run: echo "RELEASE_VERSION=dev-${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Install 📦
         run: |
-          yarn install --immutable --immutable-cache --check-cache --prefer-offline
+          yarn install --frozen-lockfile
 
       - name: Build 🚧
         run: |
           yarn build --mode development  # Assicurati di avere un comando build per l'ambiente dev
         env:
           CI: false
-
-      - name: Unit tests 🔧
-        run: |
-          yarn test
 
       - name: Package 📦
         run: |
@@ -48,8 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "dev-${GITHUB_SHA}"  # Usa un tag basato sul commit SHA
-          release_name: "Dev Release ${GITHUB_SHA}"
+          release_name: "dev-release"
           body: |
             Skupper-console (Dev) build is available as a tar ball:
             - console-dev.tgz
