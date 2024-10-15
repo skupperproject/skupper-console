@@ -12,14 +12,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Node.js ⚙️
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.X'
           cache: 'yarn'
 
       - name: Install 📦
         run: |
-          yarn install --prefer-offline --immutable --immutable-cache --check-cache
+          HUSKY=0 yarn install --prefer-offline --immutable --immutable-cache --check-cache
 
       - name: Lint 🎨
         run: |
