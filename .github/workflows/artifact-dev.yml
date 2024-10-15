@@ -27,4 +27,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: skupper-console-build
-          path: skupper-console/skupper-console-2/build/
+          path: build/
