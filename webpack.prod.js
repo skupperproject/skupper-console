@@ -53,6 +53,9 @@ const prodConfig = {
     })
   ],
 
+  cache: {
+    type: 'filesystem'
+  },
   optimization: {
     chunkIds: 'named',
     minimizer: [
