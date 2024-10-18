@@ -1,9 +1,8 @@
 import { FC } from 'react';
 
-import { tcpBiFlowColumns, tcpSelectOptions } from '@core/components/SkBiFlowList/BiFlowList.constants';
-import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
-
 import ServiceBiFlowList from './ServiceBiFlowList';
+import { tcpBiFlowColumns, tcpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
+import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
 import { initActiveConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {

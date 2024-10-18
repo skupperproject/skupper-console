@@ -2,11 +2,10 @@ import { FC, useState } from 'react';
 
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { getTestsIds } from '@config/testIds';
-import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import MainContainer from '@layout/MainContainer';
-import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
-
+import { getTestsIds } from '../../../config/testIds';
+import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
+import MainContainer from '../../../layout/MainContainer';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import HttpRequests from '../components/HttpRequests';
 import NavigationMenu from '../components/NavigationMenu';
 import Overview from '../components/Overview';

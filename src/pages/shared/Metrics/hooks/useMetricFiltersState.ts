@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
-import { Protocols } from '@API/REST.enum';
-import { QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { Protocols } from '../../../../API/REST.enum';
+import { QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 
 interface UseMetricFiltersStateProps {
   defaultMetricFilterValues: QueryMetricsParams;

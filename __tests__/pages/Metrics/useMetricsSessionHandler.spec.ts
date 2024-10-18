@@ -2,10 +2,10 @@ import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
 
-import { Direction } from '@API/REST.enum';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
-import { QueryMetricsParams, ExpandedMetricSections } from '@sk-types/Metrics.interfaces';
+import { Direction } from '../../../src/API/REST.enum';
+import { getDataFromSession, storeDataToSession } from '../../../src/core/utils/persistData';
+import { useMetricSessionHandlers } from '../../../src/pages/shared/Metrics/hooks/useMetricsSessionHandler';
+import { QueryMetricsParams, ExpandedMetricSections } from '../../../src/types/Metrics.interfaces';
 
 const mockQueryMetricsParams: QueryMetricsParams = {
   sourceSite: 'SiteA',
@@ -30,7 +30,7 @@ const mockExpandedMetricSections: ExpandedMetricSections = {
 };
 
 // Mock the utility functions
-jest.mock('@core/utils/persistData', () => ({
+jest.mock('../../../src/core/utils/persistData', () => ({
   getDataFromSession: jest.fn(),
   storeDataToSession: jest.fn()
 }));

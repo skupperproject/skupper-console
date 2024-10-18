@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
-import SkLinkStatusCell from '@core/components/SkLinkStatusCell';
+import SkLinkStatusCell from '../../src/core/components/SkLinkStatusCell';
 
 describe('SkLinkStatusCell', () => {
   const mockRouterLinkResponseUp: { destinationSiteId: string; status: 'up' } = {

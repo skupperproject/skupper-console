@@ -4,18 +4,17 @@ import { Card, CardBody, Tab, Tabs, TabTitleText } from '@patternfly/react-core'
 import { ResourcesEmptyIcon } from '@patternfly/react-icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { Protocols, SortDirection, TcpStatus } from '@API/REST.enum';
-import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import SkBiFlowList from '@core/components/SkBiFlowList';
-import { httpBiFlowColumns, tcpBiFlowColumns } from '@core/components/SkBiFlowList/BiFlowList.constants';
-import SKEmptyData from '@core/components/SkEmptyData';
-import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
-import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
-import { QueryFiltersProtocolMap } from '@sk-types/Processes.interfaces';
-import { QueryFilters } from '@sk-types/REST.interfaces';
-import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
-
+import { RESTApi } from '../../../API/REST.api';
+import { Protocols, SortDirection, TcpStatus } from '../../../API/REST.enum';
+import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/config';
+import SkBiFlowList from '../../../core/components/SkBiFlowList';
+import { httpBiFlowColumns, tcpBiFlowColumns } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
+import SKEmptyData from '../../../core/components/SkEmptyData';
+import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
+import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
+import { QueryFiltersProtocolMap } from '../../../types/Processes.interfaces';
+import { QueryFilters } from '../../../types/REST.interfaces';
+import { TopologyURLQueyParams } from '../../Topology/Topology.enum';
 import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
 
 const TAB_1_KEY = 'liveConnections';

@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 
-import { Binding } from '@API/REST.enum';
-import SkExposedCell from '@core/components/SkExposedCell';
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
+import { Binding } from '../../src/API/REST.enum';
+import SkExposedCell from '../../src/core/components/SkExposedCell';
+import { ProcessesLabels } from '../../src/pages/Processes/Processes.enum';
 
 describe('SkExposedCell', () => {
   it('should renders "IsExposed" label when value is Binding.Exposed', () => {

@@ -4,7 +4,7 @@ const commonConfig = require('./webpack.common');
 
 const devConfig = {
   mode: 'development',
-  devtool: 'eval-source-map',
+  devtool: 'cheap-module-source-map',
   devServer: {
     port: 3000,
     historyApiFallback: true,

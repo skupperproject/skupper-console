@@ -2,11 +2,10 @@ import { startTransition, useCallback, useState } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { PrometheusApi } from '@API/Prometheus.api';
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import { QueryFilters } from '@sk-types/REST.interfaces';
-
+import { PrometheusApi } from '../../../API/Prometheus.api';
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
+import { QueryFilters } from '../../../types/REST.interfaces';
 import { ServicesController } from '../services';
 import { QueriesServices } from '../Services.enum';
 

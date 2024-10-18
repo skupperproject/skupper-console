@@ -22,15 +22,14 @@ import {
 import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import ResourceIcon from '@core/components/ResourceIcon';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatLatency';
-import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
-import { TopologyMetrics } from '@sk-types/Topology.interfaces';
-
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import ResourceIcon from '../../../core/components/ResourceIcon';
+import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
+import { formatLatency } from '../../../core/utils/formatLatency';
+import { ProcessPairsResponse } from '../../../types/REST.interfaces';
+import { TopologyMetrics } from '../../../types/Topology.interfaces';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 import { TopologyLabels } from '../Topology.enum';
 
 const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }> = function ({ data, metrics }) {

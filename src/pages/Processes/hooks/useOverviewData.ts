@@ -1,9 +1,8 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
-
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
+import { ProcessPairsResponse } from '../../../types/REST.interfaces';
 import { QueriesProcesses } from '../Processes.enum';
 
 export const useProcessOverviewData = (id: string) => {

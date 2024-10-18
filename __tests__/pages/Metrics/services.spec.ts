@@ -2,9 +2,9 @@ import {
   MetricsController,
   alignDataSeriesWithZeros,
   normalizeResponsesFromSeries
-} from '@pages/shared/Metrics/services';
-import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
-import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
+} from '../../../src/pages/shared/Metrics/services';
+import { PrometheusMetric } from '../../../src/types/Prometheus.interfaces';
+import { skAxisXY } from '../../../src/types/SkChartArea.interfaces';
 
 import * as PrometheusAPIModule from '../../../src/API/Prometheus.api';
 

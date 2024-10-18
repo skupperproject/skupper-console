@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Tooltip } from '@patternfly/react-core';
 import { TableText } from '@patternfly/react-table';
 
-import { formatLatency } from '@core/utils/formatLatency';
+import { formatLatency } from '../../utils/formatLatency';
 
 interface SKDurationCellProps<T> {
   data: T;

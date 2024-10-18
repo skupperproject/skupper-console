@@ -1,15 +1,14 @@
-import { PrometheusLabelsV2 } from '@config/prometheus';
+import { axiosFetch } from './apiMiddleware';
+import { queries } from './Prometheus.queries';
+import { convertToPrometheusQueryParams, gePrometheusQueryPATH } from './Prometheus.utils';
+import { PrometheusLabelsV2 } from '../config/prometheus';
 import {
   PrometheusQueryParams,
   PrometheusResponse,
   PrometheusLabels,
   PrometheusQueryParamsLatency,
   PrometheusMetric
-} from '@sk-types/Prometheus.interfaces';
-
-import { axiosFetch } from './apiMiddleware';
-import { queries } from './Prometheus.queries';
-import { convertToPrometheusQueryParams, gePrometheusQueryPATH } from './Prometheus.utils';
+} from '../types/Prometheus.interfaces';
 
 export const PrometheusApi = {
   fetchByteRateInTimeRange: async (

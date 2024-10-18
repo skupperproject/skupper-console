@@ -4,12 +4,11 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { VarColors } from '@config/colors';
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { QueriesMetrics, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-
 import TrafficCharts from './TrafficCharts';
+import { VarColors } from '../../../../config/colors';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { QueriesMetrics, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 

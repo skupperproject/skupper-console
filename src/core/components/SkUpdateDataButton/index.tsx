@@ -4,8 +4,7 @@ import { Button, debounce } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-
+import { getDataFromSession, storeDataToSession } from '../../utils/persistData';
 import SkSelect, { SkSelectOption } from '../SkSelect';
 
 export const refreshDataIntervalMap: SkSelectOption[] = [

@@ -12,13 +12,12 @@ import {
   MenuFooter
 } from '@patternfly/react-core';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import { TopologyLabels } from '@pages/Topology/Topology.enum';
-
 import {
   SkSelectTypeHeadWithCheckboxUseData,
   SkSelectTypeHeadWithCheckboxUseDataUseDataProps
 } from './SkSelectTypeHeadWithCheckboxUseData';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { TopologyLabels } from '../../../pages/Topology/Topology.enum';
 
 interface SkSelectTypeHeadwithCheckboxProps extends SkSelectTypeHeadWithCheckboxUseDataUseDataProps {
   initIdsSelected: string[];

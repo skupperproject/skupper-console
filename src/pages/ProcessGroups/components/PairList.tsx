@@ -3,16 +3,15 @@ import { FC } from 'react';
 import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
-import { SMALL_PAGINATION_SIZE } from '@config/config';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkTable from '@core/components/SkTable';
-import { combineInstantMetricsToPairs } from '@core/utils/combineInstantMetricsToPairs';
-import { invertPairs } from '@core/utils/invertPairs';
-import { PairsListColumns } from '@pages/Processes/Processes.constants';
-import { ComponentResponse, PairsWithInstantMetrics } from '@sk-types/REST.interfaces';
-import { SKTableColumn } from '@sk-types/SkTable.interfaces';
-
+import { SMALL_PAGINATION_SIZE } from '../../../config/config';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import SKEmptyData from '../../../core/components/SkEmptyData';
+import SkTable from '../../../core/components/SkTable';
+import { combineInstantMetricsToPairs } from '../../../core/utils/combineInstantMetricsToPairs';
+import { invertPairs } from '../../../core/utils/invertPairs';
+import { ComponentResponse, PairsWithInstantMetrics } from '../../../types/REST.interfaces';
+import { SKTableColumn } from '../../../types/SkTable.interfaces';
+import { PairsListColumns } from '../../Processes/Processes.constants';
 import { CustomComponentPairCells } from '../Components.constants';
 import { ComponentLabels } from '../Components.enum';
 import { useComponensPairsListData } from '../hooks/useComponentPairsData';

@@ -2,10 +2,9 @@ import { FC } from 'react';
 
 import { DescriptionListDescription, DescriptionListTerm } from '@patternfly/react-core';
 
-import { ApplicationFlowResponse } from '@sk-types/REST.interfaces';
-
 import { BiFlowLabels } from './BiFlow.enum';
 import FlowDetailsBase from './FlowDetailsBase';
+import { ApplicationFlowResponse } from '../../../types/REST.interfaces';
 
 interface HttpFlowDetailsProps {
   title: string;

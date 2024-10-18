@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, startTransition } from 'react';
 
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { ExpandedMetricSections, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 
 interface UseMetricsProps {
   defaultMetricFilterValues: QueryMetricsParams;

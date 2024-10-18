@@ -3,12 +3,11 @@ import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { getTestsIds } from '@config/testIds';
-import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import MainContainer from '@layout/MainContainer';
-import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
-import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
-
+import { getTestsIds } from '../../../config/testIds';
+import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
+import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
+import MainContainer from '../../../layout/MainContainer';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import Overview from '../components/Overview.';
 import PairsList from '../components/PairList';
 import ProcessList from '../components/ProcessList';

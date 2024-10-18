@@ -2,11 +2,10 @@ import { FC, useCallback, useState } from 'react';
 
 import { Modal, ModalVariant } from '@patternfly/react-core';
 
-import { SkLinkCellProps } from '@core/components/SkLinkCell';
-import SkTable, { SKTableProps } from '@core/components/SkTable';
-import SkViewDetailCell from '@core/components/SkViewDetailsCell';
-import { BiFlowResponse } from '@sk-types/REST.interfaces';
-
+import { BiFlowResponse } from '../../../types/REST.interfaces';
+import { SkLinkCellProps } from '../SkLinkCell';
+import SkTable, { SKTableProps } from '../SkTable';
+import SkViewDetailCell from '../SkViewDetailsCell';
 import { customCells } from './BiFlowList.constants';
 import SkBiFlowDetails from '../SkBiFlowDetails';
 

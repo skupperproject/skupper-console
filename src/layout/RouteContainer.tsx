@@ -2,7 +2,7 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRoutes, RouteObject } from 'react-router-dom';
 
-import ErrorConsole from '@pages/shared/Errors/Console';
+import ErrorConsole from '../pages/shared/Errors/Console';
 
 interface RouteProps {
   children: RouteObject[];

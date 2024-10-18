@@ -1,14 +1,14 @@
-import { SortDirection, TcpStatus } from '@API/REST.enum';
-import { BIG_PAGINATION_SIZE, EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import SkEndTimeCell from '@core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { SankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { SkSelectOption } from '@core/components/SkSelect';
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { ServiceResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
+import { SortDirection, TcpStatus } from '../../API/REST.enum';
+import { BIG_PAGINATION_SIZE, EMPTY_VALUE_PLACEHOLDER } from '../../config/config';
+import SkEndTimeCell from '../../core/components/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
+import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
+import { SkSelectOption } from '../../core/components/SkSelect';
+import { ServiceResponse, QueryFilters } from '../../types/REST.interfaces';
+import { ProcessesLabels } from '../Processes/Processes.enum';
 
 export const ServicesPaths = {
   path: ServicesRoutesPaths.Services,

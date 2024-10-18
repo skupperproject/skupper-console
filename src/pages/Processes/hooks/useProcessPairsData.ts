@@ -1,7 +1,6 @@
 import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-
+import { RESTApi } from '../../../API/REST.api';
 import { QueriesProcesses } from '../Processes.enum';
 
 interface useProcessPairDataProps {

@@ -4,8 +4,8 @@ import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { convertComponentToNode } from '@pages/Topology/services/topologyComponentController';
-import { ComponentResponse, PairsResponse } from '@sk-types/REST.interfaces';
+import { convertComponentToNode } from '../../../src/pages/Topology/services/topologyComponentController';
+import { ComponentResponse, PairsResponse } from '../../../src/types/REST.interfaces';
 
 import componentPairsData from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
 import componentData from '../../../mocks/data/PROCESS_GROUPS.json';

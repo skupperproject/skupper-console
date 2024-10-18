@@ -3,11 +3,11 @@ import { FC, useCallback, ComponentType } from 'react';
 import { Divider, Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import SkGraph from '@core/components/SkGraph';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
 import { GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
+import SkGraph from '../../../core/components/SkGraph';
+import { ComponentRoutesPaths } from '../../ProcessGroups/Components.enum';
 import useTopologyComponentData from '../hooks/useTopologyComponentData';
 import useTopologyState from '../hooks/useTopologyState';
 import { TopologyComponentController } from '../services/topologyComponentController';

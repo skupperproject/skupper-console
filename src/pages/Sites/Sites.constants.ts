@@ -1,11 +1,11 @@
-import SkEndTimeCell from '@core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import SkLinkStatusCell from '@core/components/SkLinkStatusCell';
-import { CustomPairMetricCells } from '@pages/Processes/Processes.constants';
-import { PairsResponse, RouterLinkResponse, SiteResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { SiteLabels, SitesRoutesPaths } from './Sites.enum';
+import SkEndTimeCell from '../../core/components/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
+import SkLinkStatusCell from '../../core/components/SkLinkStatusCell';
+import { PairsResponse, RouterLinkResponse, SiteResponse } from '../../types/REST.interfaces';
+import { CustomPairMetricCells } from '../Processes/Processes.constants';
 
 export const SitesPaths = {
   path: SitesRoutesPaths.Sites,

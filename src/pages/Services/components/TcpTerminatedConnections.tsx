@@ -1,8 +1,7 @@
 import { FC } from 'react';
 
-import { tcpBiFlowColumns, tcpSelectOptions } from '@core/components/SkBiFlowList/BiFlowList.constants';
-
 import ServiceBiFlowList from './ServiceBiFlowList';
+import { tcpBiFlowColumns, tcpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
 import { initOldConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {

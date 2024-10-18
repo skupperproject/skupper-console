@@ -3,11 +3,10 @@ import { FC } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useParams } from 'react-router-dom';
 
-import { getTestsIds } from '@config/testIds';
-import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import MainContainer from '@layout/MainContainer';
-import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
-
+import { getTestsIds } from '../../../config/testIds';
+import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
+import MainContainer from '../../../layout/MainContainer';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import BiFlowList from '../components/ProcessBiFlowList';
 import ProcessPairDetails from '../components/ProcessPairDetails';
 import { useProcessPairData } from '../hooks/useProcessPairsData';

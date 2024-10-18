@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 
-import { VarColors } from '@config/colors';
+import { VarColors } from '../../../config/colors';
 
 export interface SkHighlightValueCellProps<T> {
   data: T;

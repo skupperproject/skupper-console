@@ -2,14 +2,14 @@ import { FC, useCallback, useState, startTransition } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import SkBiFlowList from '@core/components/SkBiFlowList';
-import { SkSelectOption } from '@core/components/SkSelect';
-import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
-import { BiFlowResponse, QueryFilters } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
+import { RESTApi } from '../../../API/REST.api';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/config';
+import SkBiFlowList from '../../../core/components/SkBiFlowList';
+import { SkSelectOption } from '../../../core/components/SkSelect';
+import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
+import { BiFlowResponse, QueryFilters } from '../../../types/REST.interfaces';
 import { QueriesServices } from '../Services.enum';
 
 interface ServiceBiFlowProps {

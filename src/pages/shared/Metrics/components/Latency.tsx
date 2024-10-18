@@ -13,11 +13,10 @@ import {
 import { QuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
-
 import LatencyCharts from './LatencyCharts';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 

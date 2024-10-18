@@ -13,8 +13,7 @@ import {
   Title
 } from '@patternfly/react-core';
 
-import { SiteResponse } from '@sk-types/REST.interfaces';
-
+import { SiteResponse } from '../../../types/REST.interfaces';
 import { SiteLabels } from '../Sites.enum';
 
 interface DetailsProps {

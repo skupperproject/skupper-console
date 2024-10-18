@@ -1,4 +1,4 @@
-import Logo from '@assets/skupper-logo.svg';
+import Logo from '../assets/skupper-logo.svg';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
 const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;

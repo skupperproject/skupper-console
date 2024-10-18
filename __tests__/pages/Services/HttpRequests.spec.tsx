@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import HttpRequests from '@pages/Services/components/HttpRequests';
+import HttpRequests from '../../../src/pages/Services/components/HttpRequests';
 
 import biFlowData from '../../../mocks/data/FLOW_PAIRS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';

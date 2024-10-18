@@ -16,8 +16,8 @@ const prodConfig = {
   devtool: 'source-map',
   output: {
     path: path.join(ROOT, '/build'),
-    filename: '[name]-[contenthash].js',
-    chunkFilename: 'js/[name]-[contenthash].bundle.js',
+    filename: '[name]-[contenthash].min.js',
+    chunkFilename: 'js/[name]-[chunkhash].min.js',
     publicPath: '/',
     clean: true
   },
@@ -48,19 +48,38 @@ const prodConfig = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
-      chunkFilename: 'css/[name].[contenthash].bundle.css',
+      chunkFilename: 'css/[name].[chunkhash].min.css',
       ignoreOrder: true
     })
   ],
 
-  cache: {
-    type: 'filesystem'
-  },
   optimization: {
     chunkIds: 'named',
+    minimize: true,
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: 6,
+      maxAsyncRequests: 8,
+      cacheGroups: {
+        vendors: {
+          test: /\/node_modules\//,
+          priority: -10,
+          enforce: true
+        }
+      }
+    },
+    runtimeChunk: 'single',
     minimizer: [
       new TerserJSPlugin({
-        parallel: true
+        test: /\.js$/,
+        terserOptions: {
+          compress: false,
+          mangle: true,
+          format: {
+            comments: false
+          }
+        },
+        extractComments: false
       }),
       new CssMinimizerPlugin({
         minimizerOptions: {

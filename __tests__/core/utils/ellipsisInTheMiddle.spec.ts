@@ -1,4 +1,4 @@
-import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
+import { ellipsisInTheMiddle } from '../../../src/core/utils/EllipsisInTheMiddle';
 
 describe('ellipsisInTheMiddle', () => {
   it('returns the original string if its length is less than or equal to maxLength', () => {

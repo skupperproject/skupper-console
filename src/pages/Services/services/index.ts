@@ -1,9 +1,9 @@
-import { VarColors } from '@config/colors';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
-import { ServiceResponse } from '@sk-types/REST.interfaces';
-import { SkSankeyChartLink, SkSankeyChartNode } from '@sk-types/SkSankeyChart.interfaces';
+import { VarColors } from '../../../config/colors';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
+import { PrometheusMetric } from '../../../types/Prometheus.interfaces';
+import { ServiceResponse } from '../../../types/REST.interfaces';
+import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
   extendServicesWithOpenAndTotalConnections: (

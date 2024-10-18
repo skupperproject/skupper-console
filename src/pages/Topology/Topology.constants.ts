@@ -1,7 +1,7 @@
-import { SkSelectGroupedOptions } from '@core/components/SkSelect';
 import { GraphElementNames } from 'types/Graph.interfaces';
 
 import { TopologyLabels, TopologyRoutesPaths } from './Topology.enum';
+import { SkSelectGroupedOptions } from '../../core/components/SkSelect';
 
 export const TopologyPaths = {
   path: TopologyRoutesPaths.Topology,

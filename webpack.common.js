@@ -4,14 +4,12 @@ const ROOT = process.cwd();
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { version } = require(path.join(ROOT, '/package.json'));
 
 module.exports = {
   entry: path.join(ROOT, 'src/index.tsx'),
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-    plugins: [new TsConfigPathsPlugin({ configFile: path.join(ROOT, 'tsconfig.json') })]
+    extensions: ['.ts', '.tsx', '.js']
   },
 
   module: {
@@ -19,6 +17,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'mocks')],
         options: {
           transpileOnly: true,
           happyPackMode: true

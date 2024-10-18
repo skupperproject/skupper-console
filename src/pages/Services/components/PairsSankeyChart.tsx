@@ -3,16 +3,15 @@ import { FC, useCallback, useState, startTransition } from 'react';
 import { Card, CardBody, CardHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { PrometheusApi } from '@API/Prometheus.api';
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import { prometheusProcessNameseparator } from '@config/prometheus';
-import SkSankeyChart from '@core/components/SKSanckeyChart';
+import { PrometheusApi } from '../../../API/Prometheus.api';
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
+import { prometheusProcessNameseparator } from '../../../config/prometheus';
+import SkSankeyChart from '../../../core/components/SKSanckeyChart';
 import {
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
-} from '@core/components/SKSanckeyChart/SkSankey.constants';
-
+} from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
 import { ServicesLabels, QueriesServices } from '../Services.enum';

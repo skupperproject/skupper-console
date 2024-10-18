@@ -1,5 +1,5 @@
-import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
-import { NonNullableValue, SKTableColumn } from '@sk-types/SkTable.interfaces';
+import { NonNullableValue, SKTableColumn } from '../../../types/SkTable.interfaces';
+import { getValueFromNestedProperty } from '../../utils/getValueFromNestedProperty';
 
 type ColumnVisibilityConfig<T> = {
   [key in keyof T]?: boolean;

@@ -1,4 +1,4 @@
-import { PairsWithInstantMetrics } from '@sk-types/REST.interfaces';
+import { PairsWithInstantMetrics } from '../../types/REST.interfaces';
 
 export function invertPairs<T extends PairsWithInstantMetrics>(pairs: T[]): T[] {
   return pairs.map((pair) => ({

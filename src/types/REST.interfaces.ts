@@ -1,9 +1,8 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { Protocols, Binding, Role, SortDirection } from '@API/REST.enum';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-
 import { TopologyMetrics } from './Topology.interfaces';
+import { Protocols, Binding, Role, SortDirection } from '../API/REST.enum';
+import { PrometheusLabelsV2 } from '../config/prometheus';
 
 export type FetchWithOptions = AxiosRequestConfig;
 

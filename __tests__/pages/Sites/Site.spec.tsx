@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
+import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 
 import processesData from '../../../mocks/data/PROCESSES.json';
 import sitesData from '../../../mocks/data/SITES.json';

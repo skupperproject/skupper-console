@@ -1,4 +1,4 @@
-import { SkSelectOption } from '@core/components/SkSelect';
+import { SkSelectOption } from '../core/components/SkSelect';
 
 export interface FilterTypeWithSearchText extends SkSelectOption {
   searchValue: string;

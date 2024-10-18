@@ -1,4 +1,4 @@
-import { getTestsIds } from '@config/testIds';
+import { getTestsIds } from '../../../../src/config/testIds';
 
 context('Navigation', () => {
   beforeEach(() => {

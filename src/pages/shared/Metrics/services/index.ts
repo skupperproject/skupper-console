@@ -1,13 +1,13 @@
-import { PrometheusApi } from '@API/Prometheus.api';
+import { PrometheusApi } from '../../../../API/Prometheus.api';
 import {
   getTimeSeriesLabelsFromPrometheusData,
   getTimeSeriesValuesFromPrometheusData,
   getTimeSeriesFromPrometheusData
-} from '@API/Prometheus.utils';
-import { Quantiles } from '@API/REST.enum';
-import { calculateStep, defaultTimeInterval } from '@config/prometheus';
-import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-import { getCurrentAndPastTimestamps } from '@core/utils/getCurrentAndPastTimestamps';
+} from '../../../../API/Prometheus.utils';
+import { Quantiles } from '../../../../API/REST.enum';
+import { calculateStep, defaultTimeInterval } from '../../../../config/prometheus';
+import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
+import { getCurrentAndPastTimestamps } from '../../../../core/utils/getCurrentAndPastTimestamps';
 import {
   LatencyMetricsProps,
   ByteRateMetrics,
@@ -18,10 +18,9 @@ import {
   ConnectionMetrics,
   QueryMetricsParams,
   getDataTrafficMetrics
-} from '@sk-types/Metrics.interfaces';
-import { PrometheusMetric, PrometheusQueryParams } from '@sk-types/Prometheus.interfaces';
-import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
-
+} from '../../../../types/Metrics.interfaces';
+import { PrometheusMetric, PrometheusQueryParams } from '../../../../types/Prometheus.interfaces';
+import { skAxisXY } from '../../../../types/SkChartArea.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 
 export const MetricsController = {

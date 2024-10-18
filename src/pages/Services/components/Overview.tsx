@@ -1,11 +1,10 @@
 import { FC } from 'react';
 
-import { Protocols } from '@API/REST.enum';
-import { extractUniqueValues } from '@core/utils/extractUniqueValues';
-import { mapDataToMetricFilterOptions } from '@core/utils/getResourcesFromPairs';
-import Metrics from '@pages/shared/Metrics';
-import { useMetricSessionHandlers } from '@pages/shared/Metrics/hooks/useMetricsSessionHandler';
-
+import { Protocols } from '../../../API/REST.enum';
+import { extractUniqueValues } from '../../../core/utils/extractUniqueValues';
+import { mapDataToMetricFilterOptions } from '../../../core/utils/getResourcesFromPairs';
+import Metrics from '../../shared/Metrics';
+import { useMetricSessionHandlers } from '../../shared/Metrics/hooks/useMetricsSessionHandler';
 import { useServiceOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {

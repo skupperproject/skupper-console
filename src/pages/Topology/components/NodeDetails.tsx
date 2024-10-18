@@ -20,19 +20,18 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { VarColors } from '@config/colors';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import ResourceIcon from '@core/components/ResourceIcon';
-import SkExposedCell from '@core/components/SkExposedCell';
-import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
-import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessResponse } from '@sk-types/REST.interfaces';
-import { TopologyMetrics } from '@sk-types/Topology.interfaces';
-
+import { VarColors } from '../../../config/colors';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import ResourceIcon from '../../../core/components/ResourceIcon';
+import SkExposedCell from '../../../core/components/SkExposedCell';
+import { ellipsisInTheMiddle } from '../../../core/utils/EllipsisInTheMiddle';
+import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
+import { ProcessResponse } from '../../../types/REST.interfaces';
+import { TopologyMetrics } from '../../../types/Topology.interfaces';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
+import { ComponentRoutesPaths } from '../../ProcessGroups/Components.enum';
+import { MetricsLabels } from '../../shared/Metrics/Metrics.enum';
+import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 import { TopologyLabels } from '../Topology.enum';
 
 type Totals = {

@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Tooltip } from '@patternfly/react-core';
 
-import skupperProcessSVG from '@assets/skupper.svg';
+import skupperProcessSVG from '../../../assets/skupper.svg';
 
 import './ResourceIcon.css';
 

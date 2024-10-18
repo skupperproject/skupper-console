@@ -1,7 +1,6 @@
-import { defaultTimeInterval } from '@config/prometheus';
-import { ConfigMetricFilters } from '@sk-types/Metrics.interfaces';
-
 import { MetricsLabels } from './Metrics.enum';
+import { defaultTimeInterval } from '../../../config/prometheus';
+import { ConfigMetricFilters } from '../../../types/Metrics.interfaces';
 
 // default values to enable/disable filters
 export const configDefaultFilters: ConfigMetricFilters = {

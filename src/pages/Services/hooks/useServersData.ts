@@ -1,8 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-
+import { RESTApi } from '../../../API/REST.api';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/config';
 import { QueriesServices } from '../Services.enum';
 
 const initServersQueryParams = { limit: BIG_PAGINATION_SIZE };

@@ -1,6 +1,6 @@
 import { createServer, Response } from 'miragejs';
 
-import { PrometheusMetricsV2 } from '@config/prometheus';
+import { PrometheusMetricsV2 } from '../src/config/prometheus';
 import {
   ServiceResponse,
   ProcessPairsResponse,
@@ -13,7 +13,7 @@ import {
   ResponseWrapper,
   PairsResponse,
   ApplicationFlowResponse
-} from '@sk-types/REST.interfaces';
+} from '../src/types/REST.interfaces';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
 const ITEM_COUNT = Number(process.env.MOCK_ITEM_COUNT) || 0;

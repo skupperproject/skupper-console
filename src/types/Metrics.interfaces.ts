@@ -1,7 +1,6 @@
-import { Protocols, Direction } from '@API/REST.enum';
-
 import { PrometheusMetric } from './Prometheus.interfaces';
 import { skAxisXY } from './SkChartArea.interfaces';
+import { Protocols, Direction } from '../API/REST.enum';
 
 export interface ConfigMetricFilters {
   sourceSites?: { disabled?: boolean; placeholder?: string; hide?: boolean };

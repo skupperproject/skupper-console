@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import TcpTerminatedConnections from '@pages/Services/components/TcpTerminatedConnections';
+import TcpTerminatedConnections from '../../../src/pages/Services/components/TcpTerminatedConnections';
 
 import BiflowData from '../../../mocks/data/FLOW_PAIRS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';

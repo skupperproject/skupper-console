@@ -1,7 +1,7 @@
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import { GraphEdge, GraphNode } from '@sk-types/Graph.interfaces';
-import { RouterLinkResponse, PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
-import { TopologyShowOptionsSelected, TopologyMetrics } from '@sk-types/Topology.interfaces';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { GraphEdge, GraphNode } from '../../../types/Graph.interfaces';
+import { RouterLinkResponse, PairsResponse, SiteResponse } from '../../../types/REST.interfaces';
+import { TopologyShowOptionsSelected, TopologyMetrics } from '../../../types/Topology.interfaces';
 
 import { TopologyController } from '.';
 

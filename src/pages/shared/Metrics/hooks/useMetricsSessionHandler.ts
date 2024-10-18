@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
+import { getDataFromSession, storeDataToSession } from '../../../../core/utils/persistData';
+import { ExpandedMetricSections, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 
 const PREFIX_METRIC_FILTERS_KEY = 'metric-filters';
 const PREFIX_VISIBLE_METRICS_KEY = `metric-sections`;
