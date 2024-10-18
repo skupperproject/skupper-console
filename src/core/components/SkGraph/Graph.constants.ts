@@ -1,4 +1,4 @@
-import { HexColors } from '@config/colors';
+import { HexColors } from '../../../config/colors';
 
 export const GRAPH_BG_COLOR = HexColors.White;
 export const NODE_BACKGROUND_COLOR = HexColors.White;

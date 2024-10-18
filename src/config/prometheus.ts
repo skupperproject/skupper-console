@@ -1,4 +1,4 @@
-import { IntervalTimeMap } from '@sk-types/Prometheus.interfaces';
+import { IntervalTimeMap } from '../types/Prometheus.interfaces';
 
 export const prometheusProcessNameseparator = '|';
 

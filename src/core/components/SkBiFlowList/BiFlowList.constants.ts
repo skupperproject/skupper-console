@@ -1,15 +1,15 @@
-import SkDurationCell from '@core/components/SKDurationCell';
-import SkEndTimeCell from '@core/components/SkEndTimeCell';
-import SkHighlightValueCell, { SkHighlightValueCellProps } from '@core/components/SkHighlightValueCell';
-import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { formatBytes } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatLatency';
-import { ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { BiFlowResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { BiFlowListLabels } from './BiFlowList.enum';
+import { ProcessesRoutesPaths } from '../../../pages/Processes/Processes.enum';
+import { SitesRoutesPaths } from '../../../pages/Sites/Sites.enum';
+import { BiFlowResponse } from '../../../types/REST.interfaces';
+import { formatBytes } from '../../utils/formatBytes';
+import { formatLatency } from '../../utils/formatLatency';
+import SkDurationCell from '../SKDurationCell';
+import SkEndTimeCell from '../SkEndTimeCell';
+import SkHighlightValueCell, { SkHighlightValueCellProps } from '../SkHighlightValueCell';
+import SkLinkCell, { SkLinkCellProps } from '../SkLinkCell';
 import { SkSelectOption } from '../SkSelect';
 
 export const customCells = {

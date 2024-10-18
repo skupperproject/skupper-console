@@ -4,10 +4,9 @@ import { ChartThemeColor } from '@patternfly/react-charts';
 import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import SkChartArea from '@core/components/SkChartArea';
-import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-import { RequestMetrics } from '@sk-types/Metrics.interfaces';
-
+import SkChartArea from '../../../../core/components/SkChartArea';
+import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
+import { RequestMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 
 const RequestCharts: FC<{

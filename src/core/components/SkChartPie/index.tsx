@@ -3,7 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { ChartDonut, ChartDonutProps, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 
-import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
+import { formatToDecimalPlacesIfCents } from '../../utils/formatToDecimalPlacesIfCents';
 
 const DEFAULT_CHART_PADDING = {
   bottom: 65,

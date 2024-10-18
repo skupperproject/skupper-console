@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
 
-import { useMetricsState } from '@pages/shared/Metrics/hooks/useMetricsState';
+import { useMetricsState } from '../../../src/pages/shared/Metrics/hooks/useMetricsState';
 
 import { Protocols } from '../../../src/API/REST.enum';
 import { Wrapper } from '../../../src/core/components/Wrapper';

@@ -1,4 +1,4 @@
-import { Protocols } from '@API/REST.enum';
+import { Protocols } from '../../API/REST.enum';
 
 export function getIdAndNameFromUrlParams(urlParams: string) {
   const params = urlParams.split('@');

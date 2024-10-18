@@ -2,10 +2,10 @@ import { FC, useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import SkSelectTypeHeadWithCheckbox from '@core/components/SkSelectTypeHeadWithCheckbox';
-import { QueriesServices } from '@pages/Services/Services.enum';
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
+import SkSelectTypeHeadWithCheckbox from '../../../core/components/SkSelectTypeHeadWithCheckbox';
+import { QueriesServices } from '../../Services/Services.enum';
 
 interface DisplayServicesProps {
   initialIdsSelected?: string[];

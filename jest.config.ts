@@ -4,7 +4,6 @@ const ROOT_PROJECT = `${ROOT}`;
 const SRC_PATH = `${ROOT_PROJECT}/src`;
 const TESTS_PATH = `${ROOT_PROJECT}/__tests__`;
 const MODE_MODULES_PATH = `${ROOT_PROJECT}/node_modules`;
-const TS_CONFIG_PATH = './tsconfig.paths.json';
 const FILE_MOCK = 'jest.config.fileMock.ts';
 
 const extensionsAllowed = {
@@ -12,25 +11,11 @@ const extensionsAllowed = {
   '\\.(css|scss)$': `${TESTS_PATH}/${FILE_MOCK}`
 };
 
-function makeModuleNameMapper(srcPath: string, tsconfigPath: string) {
-  const { paths } = require(tsconfigPath).compilerOptions;
-  const aliases: { [key: string]: string } = {};
-
-  Object.keys(paths).forEach((item) => {
-    const key = item.replace('/*', '/(.*)');
-    const path = paths[item][0].replace('/*', '/$1');
-
-    aliases[key] = `${srcPath}/${path}`;
-  });
-
-  return { ...extensionsAllowed, ...aliases };
-}
-
 const config = {
   preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
-  moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
+  moduleNameMapper: extensionsAllowed,
   moduleDirectories: [MODE_MODULES_PATH, SRC_PATH],
   roots: [TESTS_PATH],
   // We need to include 'd3' or 'internmap' for the @nivo/sankey library

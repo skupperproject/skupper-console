@@ -15,12 +15,11 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
-import SkChartArea from '@core/components/SkChartArea';
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { formatNumber } from '@core/utils/formatNumber';
-import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
-
+import SkChartArea from '../../../../core/components/SkChartArea';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { formatNumber } from '../../../../core/utils/formatNumber';
+import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 

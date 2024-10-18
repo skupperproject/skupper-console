@@ -1,7 +1,6 @@
-import { PrometheusLabelsV2, PrometheusMetricsV2 } from '@config/prometheus';
-import { IntervalTimePropValue } from '@sk-types/Prometheus.interfaces';
-
 import { Protocols, Quantiles } from './REST.enum';
+import { PrometheusLabelsV2, PrometheusMetricsV2 } from '../config/prometheus';
+import { IntervalTimePropValue } from '../types/Prometheus.interfaces';
 
 export const queries = {
   // data transfer queries

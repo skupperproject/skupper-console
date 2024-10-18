@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Card, CardBody, TextContent, TextVariants, Text, Flex } from '@patternfly/react-core';
 
-import { Colors } from '@config/colors';
+import { Colors } from '../../../config/colors';
 
 interface SkCounterCardProps {
   title?: string;

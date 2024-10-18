@@ -1,6 +1,5 @@
-import { Protocols } from '@API/REST.enum';
-
 import { QueryFilters } from './REST.interfaces';
+import { Protocols } from '../API/REST.enum';
 
 export interface QueryFiltersProtocolMap {
   [Protocols.Http]: QueryFilters;

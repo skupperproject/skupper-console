@@ -1,9 +1,8 @@
-import { BIG_PAGINATION_SIZE } from '@config/config';
-import { getTestsIds } from '@config/testIds';
-import SkTable from '@core/components/SkTable';
-import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
-import MainContainer from '@layout/MainContainer';
-
+import { BIG_PAGINATION_SIZE } from '../../../config/config';
+import { getTestsIds } from '../../../config/testIds';
+import SkTable from '../../../core/components/SkTable';
+import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
+import MainContainer from '../../../layout/MainContainer';
 import useServicesData from '../hooks/useServicesData';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
 import { ServicesLabels } from '../Services.enum';

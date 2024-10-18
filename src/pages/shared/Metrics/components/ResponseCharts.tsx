@@ -3,14 +3,13 @@ import { FC, memo } from 'react';
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 
-import { Colors } from '@config/colors';
-import SkChartArea from '@core/components/SkChartArea';
-import SkChartPie from '@core/components/SkChartPie';
-import SkCounterCard from '@core/components/SkCounterCard';
-import { convertToPercentage } from '@core/utils/convertToPercentage';
-import { formatToDecimalPlacesIfCents } from '@core/utils/formatToDecimalPlacesIfCents';
-import { ResponseMetrics } from '@sk-types/Metrics.interfaces';
-
+import { Colors } from '../../../../config/colors';
+import SkChartArea from '../../../../core/components/SkChartArea';
+import SkChartPie from '../../../../core/components/SkChartPie';
+import SkCounterCard from '../../../../core/components/SkCounterCard';
+import { convertToPercentage } from '../../../../core/utils/convertToPercentage';
+import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
+import { ResponseMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 
 const errorDistributionPadding = { left: 0, bottom: 65, top: 50, right: 0 };

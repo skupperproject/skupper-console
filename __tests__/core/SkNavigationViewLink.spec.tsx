@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import SkNavigationViewLink from '@core/components/SkNavigationViewLink';
+import SkNavigationViewLink from '../../src/core/components/SkNavigationViewLink';
 
 describe('NavigationViewLink', () => {
   it('renders the link with the correct label and default icon', () => {

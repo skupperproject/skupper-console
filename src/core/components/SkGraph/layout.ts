@@ -1,8 +1,7 @@
 import { ForceLayoutOptions } from '@antv/g6';
 
-import { GraphLayouts } from '@sk-types/Graph.interfaces';
-
 import { NODE_SIZE } from './Graph.constants';
+import { GraphLayouts } from '../../../types/Graph.interfaces';
 
 const LAYOUT_TOPOLOGY_DEFAULT: ForceLayoutOptions & { type: 'force' } = {
   type: 'force',

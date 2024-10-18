@@ -2,11 +2,10 @@ import { startTransition, useCallback, useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { Role } from '@API/REST.enum';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '@config/config';
-import { QueryFilters } from '@sk-types/REST.interfaces';
-
+import { RESTApi } from '../../../API/REST.api';
+import { Role } from '../../../API/REST.enum';
+import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/config';
+import { QueryFilters } from '../../../types/REST.interfaces';
 import { QueriesProcesses } from '../Processes.enum';
 
 const defaultQueryParams = {

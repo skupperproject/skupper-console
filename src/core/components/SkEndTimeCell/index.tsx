@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Icon, Text, Tooltip, Truncate } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
-import { timeAgo } from '@core/utils/timeAgo';
+import { timeAgo } from '../../utils/timeAgo';
 
 interface EndTimeProps<T> {
   data: T;

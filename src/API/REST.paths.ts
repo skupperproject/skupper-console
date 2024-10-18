@@ -1,6 +1,5 @@
-import { API_URL } from '@config/config';
-
 import { composePath } from './REST.utils';
+import { API_URL } from '../config/config';
 
 export const getUser = () => `${API_URL}/user`;
 export const logout = () => `${API_URL}/logout?nonce=${Date.now()}`;

@@ -6,8 +6,8 @@ import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { TopoloyDetailsProps } from '@pages/Topology/components/TopologyDetails';
-import { convertProcessToNode } from '@pages/Topology/services/topologyProcessController';
+import { TopoloyDetailsProps } from '../../../src/pages/Topology/components/TopologyDetails';
+import { convertProcessToNode } from '../../../src/pages/Topology/services/topologyProcessController';
 
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';

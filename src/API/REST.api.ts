@@ -1,18 +1,3 @@
-import {
-  ComponentResponse,
-  ServiceResponse,
-  ProcessResponse,
-  BiFlowResponse,
-  SiteResponse,
-  RouterLinkResponse,
-  ProcessPairsResponse,
-  QueryFilters,
-  ResponseWrapper,
-  PairsResponse,
-  UserResponse,
-  ApplicationFlowResponse
-} from '@sk-types/REST.interfaces';
-
 import { axiosFetch } from './apiMiddleware';
 import {
   getSitePATH,
@@ -40,6 +25,20 @@ import {
   getApplicationFlowsPATH
 } from './REST.paths';
 import { aggregateDistinctPairs, mapQueryFiltersToQueryParams } from './REST.utils';
+import {
+  ComponentResponse,
+  ServiceResponse,
+  ProcessResponse,
+  BiFlowResponse,
+  SiteResponse,
+  RouterLinkResponse,
+  ProcessPairsResponse,
+  QueryFilters,
+  ResponseWrapper,
+  PairsResponse,
+  UserResponse,
+  ApplicationFlowResponse
+} from '../types/REST.interfaces';
 
 export const RESTApi = {
   //for logout with auth basic the response return 401 but using validateStatus: () => true axios will not throw error

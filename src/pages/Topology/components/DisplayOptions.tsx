@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
-import SkSelect, { SkSelectGroupedOptions } from '@core/components/SkSelect';
-
+import SkSelect, { SkSelectGroupedOptions } from '../../../core/components/SkSelect';
 import { DisplayUseOptionsStateProps, useDisplayOptionsState } from '../hooks/useDisplayOptionsState';
 import { TopologyLabels } from '../Topology.enum';
 

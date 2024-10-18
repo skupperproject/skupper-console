@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
+import { ProcessesLabels } from '../../../src/pages/Processes/Processes.enum';
 
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';

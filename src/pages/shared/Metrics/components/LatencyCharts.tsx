@@ -4,12 +4,15 @@ import { ChartThemeColor } from '@patternfly/react-charts';
 import { Grid, GridItem, Title } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import SkChartArea from '@core/components/SkChartArea';
-import SkChartBar from '@core/components/SkChartBar';
-import { formatLatency } from '@core/utils/formatLatency';
-import { formatNumber } from '@core/utils/formatNumber';
-import { LatencyBucketDistributionData, LatencyBucketSummary, LatencyMetrics } from '@sk-types/Metrics.interfaces';
-
+import SkChartArea from '../../../../core/components/SkChartArea';
+import SkChartBar from '../../../../core/components/SkChartBar';
+import { formatLatency } from '../../../../core/utils/formatLatency';
+import { formatNumber } from '../../../../core/utils/formatNumber';
+import {
+  LatencyBucketDistributionData,
+  LatencyBucketSummary,
+  LatencyMetrics
+} from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 
 const LatencyCharts: FC<{

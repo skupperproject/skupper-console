@@ -1,6 +1,5 @@
-import { QueryParams, QueryFilters, PairsResponse } from '@sk-types/REST.interfaces';
-
 import { Protocols, SortDirection } from './REST.enum';
+import { QueryParams, QueryFilters, PairsResponse } from '../types/REST.interfaces';
 
 export function mapQueryFiltersToQueryParams({
   filter,

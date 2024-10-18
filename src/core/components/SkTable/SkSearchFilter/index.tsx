@@ -14,14 +14,13 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 
-import SkSelect, { SkSelectOption } from '@core/components/SkSelect';
-import { FilterSelected, FilterTypeWithSearchText } from '@sk-types/SkFilter.interfaces';
-import useDebounce from 'hooks/useDebounce';
-
 import { SkSearchFilterController } from './services';
 import { DEBOUNCE_TIME_MS } from './SkSearchFilter.constants';
 import { SkSearchFilterLabels } from './SkSearchFilter.enum';
 import { testIds } from './SkSearchFilter.testIds';
+import useDebounce from '../../../../hooks/useDebounce';
+import { FilterSelected, FilterTypeWithSearchText } from '../../../../types/SkFilter.interfaces';
+import SkSelect, { SkSelectOption } from '../../SkSelect';
 
 import './SkSearchFilter.css';
 

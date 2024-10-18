@@ -1,9 +1,8 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import { PairsResponse } from '@sk-types/REST.interfaces';
-
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
+import { PairsResponse } from '../../../types/REST.interfaces';
 import { QueriesSites } from '../Sites.enum';
 
 export const useSiteOverviewData = (id: string) => {

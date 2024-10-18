@@ -1,10 +1,10 @@
-import SkEndTimeCell from '@core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { CustomPairMetricCells } from '@pages/Processes/Processes.constants';
-import { ComponentResponse, PairsResponse } from '@sk-types/REST.interfaces';
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ComponentLabels, ComponentRoutesPaths } from './Components.enum';
+import SkEndTimeCell from '../../core/components/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
+import { ComponentResponse, PairsResponse } from '../../types/REST.interfaces';
+import { CustomPairMetricCells } from '../Processes/Processes.constants';
 
 export const ComponentsPaths = {
   path: ComponentRoutesPaths.Components,

@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { SkEmptyDataLabels } from '@core/components/SkEmptyData';
+import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';

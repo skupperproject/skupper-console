@@ -1,6 +1,6 @@
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
-import { getTestsIds } from '@config/testIds';
+import { getTestsIds } from '../../../config/testIds';
 
 const SkIsLoading = function ({ customSize = '150px' }) {
   return (

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { Protocols } from '@API/REST.enum';
-import { getTestsIds } from '@config/testIds';
-import { BiFlowLabels } from '@core/components/SkBiFlowDetails/BiFlow.enum';
+import { Protocols } from '../../src/API/REST.enum';
+import { getTestsIds } from '../../src/config/testIds';
+import { BiFlowLabels } from '../../src/core/components/SkBiFlowDetails/BiFlow.enum';
 
 import biFlowData from '../../mocks/data/FLOW_PAIRS.json';
 import { loadMockServer } from '../../mocks/server';

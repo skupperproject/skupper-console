@@ -1,12 +1,11 @@
 import { useQueries, useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import { TopologyController } from '@pages/Topology/services';
-import { QueriesPairs } from '@pages/Topology/Topology.enum';
-import { ProcessPairsResponse } from '@sk-types/REST.interfaces';
-
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { ProcessPairsResponse } from '../../../types/REST.interfaces';
+import { TopologyController } from '../../Topology/services';
+import { QueriesPairs } from '../../Topology/Topology.enum';
 import { QueriesProcesses } from '../Processes.enum';
 
 const metricQueryParams = {

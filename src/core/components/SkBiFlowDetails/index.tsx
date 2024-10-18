@@ -11,15 +11,14 @@ import {
   GridItem
 } from '@patternfly/react-core';
 
-import { Protocols } from '@API/REST.enum';
-import { getTestsIds } from '@config/testIds';
-import { formatLatency } from '@core/utils/formatLatency';
-import { renderTraceBySites } from '@core/utils/renderTraceBySites';
-import { TransportFlowResponse, BiFlowResponse, ApplicationFlowResponse } from '@sk-types/REST.interfaces';
-
 import { BiFlowLabels } from './BiFlow.enum';
 import HttpFlowDetails from './HttpFlowDetails';
 import TcpFlowDetails from './TcpFlowDetails';
+import { Protocols } from '../../../API/REST.enum';
+import { getTestsIds } from '../../../config/testIds';
+import { TransportFlowResponse, BiFlowResponse, ApplicationFlowResponse } from '../../../types/REST.interfaces';
+import { formatLatency } from '../../utils/formatLatency';
+import { renderTraceBySites } from '../../utils/renderTraceBySites';
 
 interface SkBiFlowDetailsProp {
   biflow: BiFlowResponse;

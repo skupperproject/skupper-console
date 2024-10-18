@@ -1,11 +1,11 @@
-import { PROMETHEUS_URL } from '@config/config';
-import { PrometheusLabelsV2 } from '@config/prometheus';
+import { PROMETHEUS_URL } from '../config/config';
+import { PrometheusLabelsV2 } from '../config/prometheus';
 import {
   MetricData as MetricValuesAndLabels,
   PrometheusLabels,
   PrometheusMetric
-} from '@sk-types/Prometheus.interfaces';
-import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
+} from '../types/Prometheus.interfaces';
+import { skAxisXY } from '../types/SkChartArea.interfaces';
 
 export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
   queryType === 'range' ? `${PROMETHEUS_URL}/rangequery/` : `${PROMETHEUS_URL}/query/`;

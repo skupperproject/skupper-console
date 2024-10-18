@@ -1,20 +1,20 @@
-import { PrometheusApi } from '@API/Prometheus.api';
-import { Direction } from '@API/REST.enum';
-import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '@config/config';
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { formatLatency } from '@core/utils/formatLatency';
-import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
-import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
-import { ProcessPairsResponse, PairsResponse } from '@sk-types/REST.interfaces';
+import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph.interfaces';
+
+import { PrometheusApi } from '../../../API/Prometheus.api';
+import { Direction } from '../../../API/REST.enum';
+import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '../../../config/config';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
+import { formatLatency } from '../../../core/utils/formatLatency';
+import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
+import { PrometheusMetric } from '../../../types/Prometheus.interfaces';
+import { ProcessPairsResponse, PairsResponse } from '../../../types/REST.interfaces';
 import {
   TopologyMetrics,
   TopologyConfigMetrics,
   TopologyShowOptionsSelected,
   TopologyConfigMetricsParams
-} from '@sk-types/Topology.interfaces';
-import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph.interfaces';
-
+} from '../../../types/Topology.interfaces';
 import { shape } from '../Topology.constants';
 
 export const TopologyController = {

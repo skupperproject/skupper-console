@@ -1,6 +1,5 @@
 import { ComboData, CornerPlacement, EdgeData, NodeData } from '@antv/g6';
 
-import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
 import {
   GraphCombo,
   GraphEdge,
@@ -8,8 +7,8 @@ import {
   LocalStorageData,
   LocalStorageDataSaved,
   LocalStorageDataSavedPayload
-} from '@sk-types/Graph.interfaces';
-
+} from '../../../../types/Graph.interfaces';
+import { ellipsisInTheMiddle } from '../../../utils/EllipsisInTheMiddle';
 import { graphIconsMap } from '../Graph.config';
 import { NODE_SIZE } from '../Graph.constants';
 

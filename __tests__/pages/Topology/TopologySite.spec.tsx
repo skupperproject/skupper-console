@@ -5,8 +5,8 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
-import { convertSiteToNode } from '@pages/Topology/services/topologySiteController';
-import { PairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
+import { convertSiteToNode } from '../../../src/pages/Topology/services/topologySiteController';
+import { PairsResponse, SiteResponse } from '../../../src/types/REST.interfaces';
 
 import sitePairsData from '../../../mocks/data/SITE_PAIRS.json';
 import sitesData from '../../../mocks/data/SITES.json';

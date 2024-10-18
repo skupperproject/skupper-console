@@ -1,9 +1,8 @@
-import { BIG_PAGINATION_SIZE } from '@config/config';
-import { getTestsIds } from '@config/testIds';
-import SkTable from '@core/components/SkTable';
-import MainContainer from '@layout/MainContainer';
-import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
-
+import { BIG_PAGINATION_SIZE } from '../../../config/config';
+import { getTestsIds } from '../../../config/testIds';
+import SkTable from '../../../core/components/SkTable';
+import MainContainer from '../../../layout/MainContainer';
+import { TopologyRoutesPaths, TopologyViews } from '../../Topology/Topology.enum';
 import { useSitesData } from '../hooks/useSitesData';
 import { customSiteCells, siteColumns } from '../Sites.constants';
 import { SiteLabels } from '../Sites.enum';

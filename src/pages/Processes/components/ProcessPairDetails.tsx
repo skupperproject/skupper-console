@@ -3,11 +3,10 @@ import { FC } from 'react';
 import { Bullseye, Grid, GridItem, Icon } from '@patternfly/react-core';
 import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 
-import { VarColors } from '@config/colors';
-import SkLinkCell from '@core/components/SkLinkCell';
-import { ProcessResponse } from '@sk-types/REST.interfaces';
-
 import Details from './Details';
+import { VarColors } from '../../../config/colors';
+import SkLinkCell from '../../../core/components/SkLinkCell';
+import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ProcessesRoutesPaths } from '../Processes.enum';
 
 interface ProcessPairDetailsProps {

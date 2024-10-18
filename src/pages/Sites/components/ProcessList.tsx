@@ -1,10 +1,9 @@
 import { FC } from 'react';
 
-import SkTable from '@core/components/SkTable';
-import { setColumnVisibility } from '@core/components/SkTable/SkTable.utils';
-import { CustomProcessCells, processesTableColumns } from '@pages/Processes/Processes.constants';
-import { SiteResponse } from '@sk-types/REST.interfaces';
-
+import SkTable from '../../../core/components/SkTable';
+import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
+import { SiteResponse } from '../../../types/REST.interfaces';
+import { CustomProcessCells, processesTableColumns } from '../../Processes/Processes.constants';
 import { useSiteProcessListData } from '../hooks/useSiteProcessListData';
 
 interface ProcessListProps {

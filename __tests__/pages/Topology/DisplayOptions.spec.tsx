@@ -1,7 +1,7 @@
 import { renderHook, render, act } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
 
-import { useDisplayOptionsState } from '@pages/Topology/hooks/useDisplayOptionsState';
+import { useDisplayOptionsState } from '../../../src/pages/Topology/hooks/useDisplayOptionsState';
 
 import DisplayOptions from '../../../src/pages/Topology/components/DisplayOptions';
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../../../src/pages/Topology/Topology.constants';

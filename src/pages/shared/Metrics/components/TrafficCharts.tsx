@@ -4,11 +4,10 @@ import { ChartThemeColor } from '@patternfly/react-charts';
 import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import SkChartArea from '@core/components/SkChartArea';
-import SkChartPie from '@core/components/SkChartPie';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { ByteRateMetrics } from '@sk-types/Metrics.interfaces';
-
+import SkChartArea from '../../../../core/components/SkChartArea';
+import SkChartPie from '../../../../core/components/SkChartPie';
+import { formatByteRate, formatBytes } from '../../../../core/utils/formatBytes';
+import { ByteRateMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 

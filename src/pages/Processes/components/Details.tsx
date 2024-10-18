@@ -17,15 +17,14 @@ import {
 } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import ResourceIcon from '@core/components/ResourceIcon';
-import SkExposedCell from '@core/components/SkExposedCell';
-import { timeAgo } from '@core/utils/timeAgo';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/Components.enum';
-import { ServicesRoutesPaths } from '@pages/Services/Services.enum';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessResponse } from '@sk-types/REST.interfaces';
-
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import ResourceIcon from '../../../core/components/ResourceIcon';
+import SkExposedCell from '../../../core/components/SkExposedCell';
+import { timeAgo } from '../../../core/utils/timeAgo';
+import { ProcessResponse } from '../../../types/REST.interfaces';
+import { ComponentRoutesPaths } from '../../ProcessGroups/Components.enum';
+import { ServicesRoutesPaths } from '../../Services/Services.enum';
+import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 import { ProcessesLabels } from '../Processes.enum';
 
 interface DetailsProps {

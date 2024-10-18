@@ -16,13 +16,13 @@ import {
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
-import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
-import SkGraph from '@core/components/SkGraph';
-import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
 import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
+import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../../../config/config';
+import SkGraph from '../../../core/components/SkGraph';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 import useTopologyProcessData from '../hooks/useTopologyProcessData';
 import useServiceState from '../hooks/useTopologyServiceState';
 import useTopologyState from '../hooks/useTopologyState';

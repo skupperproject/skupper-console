@@ -1,8 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
 import { QueriesServices } from '../Services.enum';
 
 export const useServiceOverviewData = (id: string) => {

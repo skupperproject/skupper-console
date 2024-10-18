@@ -2,9 +2,6 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
-import { Protocols, Direction } from '@API/REST.enum';
-import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-
 import MetricFilters from './components/Filters';
 import Latency from './components/Latency';
 import Request from './components/Request';
@@ -13,6 +10,8 @@ import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
 import { useMetricsState } from './hooks/useMetricsState';
 import { MetricsLabels } from './Metrics.enum';
+import { Protocols, Direction } from '../../../API/REST.enum';
+import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '../../../types/Metrics.interfaces';
 
 export interface MetricsProps {
   defaultMetricFilterValues: QueryMetricsParams;

@@ -15,13 +15,12 @@ import {
   Tr
 } from '@patternfly/react-table';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
-import { NonNullableValue, SKTableColumn } from '@sk-types/SkTable.interfaces';
-
 import SkPagination from './SkPagination';
-import SKEmptyData from '../SkEmptyData';
 import { sortRowsByColumnName } from './SkTable.utils';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { NonNullableValue, SKTableColumn } from '../../../types/SkTable.interfaces';
+import { getValueFromNestedProperty } from '../../utils/getValueFromNestedProperty';
+import SKEmptyData from '../SkEmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
 const PAGINATION_PAGE_SIZE = 10;

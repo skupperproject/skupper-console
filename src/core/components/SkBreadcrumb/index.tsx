@@ -1,8 +1,8 @@
 import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem } from '@patternfly/react-core';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
-import { getTestsIds } from '@config/testIds';
-import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
+import { getTestsIds } from '../../../config/testIds';
+import { getIdAndNameFromUrlParams } from '../../utils/getIdAndNameFromUrlParams';
 
 const SkBreadcrumb = function () {
   const { pathname } = useLocation();

@@ -2,11 +2,10 @@ import { FC } from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 
-import { SkSelectGroupedOptions } from '@core/components/SkSelect';
-
 import DisplayOptions from './DisplayOptions';
 import DisplayResources from './DisplayResources';
 import DisplayServices from './DisplayServices';
+import { SkSelectGroupedOptions } from '../../../core/components/SkSelect';
 import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,

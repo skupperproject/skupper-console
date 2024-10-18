@@ -1,8 +1,7 @@
 import { FC } from 'react';
 
-import { httpBiFlowColumns, httpSelectOptions } from '@core/components/SkBiFlowList/BiFlowList.constants';
-
 import ServiceBiFlowList from './ServiceBiFlowList';
+import { httpBiFlowColumns, httpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
 import { initRequestsQueryParams } from '../Services.constants';
 
 interface HttpRequestsProps {

@@ -1,8 +1,7 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-
+import { RESTApi } from '../../../API/REST.api';
+import { UPDATE_INTERVAL } from '../../../config/config';
 import { QueriesComponent } from '../Components.enum';
 
 export const useComponentData = (id: string) => {

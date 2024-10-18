@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import SkDurationCell from '../../src/core/components/SKDurationCell';
 import { formatLatency } from '../../src/core/utils/formatLatency';
 
-jest.mock('@core/utils/formatLatency', () => ({
+jest.mock('../../src/core/utils/formatLatency', () => ({
   formatLatency: jest.fn()
 }));
 

@@ -1,6 +1,6 @@
-import { PrometheusLabelsV2 } from '@config/prometheus';
-import { PrometheusMetric } from '@sk-types/Prometheus.interfaces';
-import { BasePairs, PairsWithMetrics } from '@sk-types/REST.interfaces';
+import { PrometheusLabelsV2 } from '../../config/prometheus';
+import { PrometheusMetric } from '../../types/Prometheus.interfaces';
+import { BasePairs, PairsWithMetrics } from '../../types/REST.interfaces';
 
 export function combineInstantMetricsToPairs<T extends BasePairs>({
   processesPairs,

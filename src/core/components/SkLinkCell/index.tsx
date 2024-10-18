@@ -1,8 +1,8 @@
 import { Truncate } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '@config/config';
-import ResourceIcon from '@core/components/ResourceIcon';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import ResourceIcon from '../ResourceIcon';
 
 export interface SkLinkCellProps<T> {
   data: T;

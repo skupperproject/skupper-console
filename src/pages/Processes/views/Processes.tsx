@@ -1,10 +1,9 @@
-import { BIG_PAGINATION_SIZE } from '@config/config';
-import { getTestsIds } from '@config/testIds';
-import SkTable from '@core/components/SkTable';
-import SkSearchFilter from '@core/components/SkTable/SkSearchFilter';
-import MainContainer from '@layout/MainContainer';
-import { TopologyRoutesPaths, TopologyViews } from '@pages/Topology/Topology.enum';
-
+import { BIG_PAGINATION_SIZE } from '../../../config/config';
+import { getTestsIds } from '../../../config/testIds';
+import SkTable from '../../../core/components/SkTable';
+import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
+import MainContainer from '../../../layout/MainContainer';
+import { TopologyRoutesPaths, TopologyViews } from '../../Topology/Topology.enum';
 import { useProcessesData } from '../hooks/useProcessesData';
 import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';

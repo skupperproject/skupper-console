@@ -2,15 +2,14 @@ import { FC } from 'react';
 
 import { ResponsiveSankey } from '@nivo/sankey';
 
-import { HexColors, VarColors } from '@config/colors';
-import { DEFAULT_FONT_VAR } from '@config/config';
-import { formatByteRate } from '@core/utils/formatBytes';
-import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
-import { SkSankeyChartLink, SkSankeyChartNode } from '@sk-types/SkSankeyChart.interfaces';
-
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
-import SKEmptyData from '../SkEmptyData';
 import SankeyFilter from './SkSankeyFilter';
+import { HexColors, VarColors } from '../../../config/colors';
+import { DEFAULT_FONT_VAR } from '../../../config/config';
+import { MetricsLabels } from '../../../pages/shared/Metrics/Metrics.enum';
+import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
+import { formatByteRate } from '../../utils/formatBytes';
+import SKEmptyData from '../SkEmptyData';
 
 export function addThemeChangeListener(callback: Function) {
   const observer = new MutationObserver((mutations) => {

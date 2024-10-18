@@ -2,8 +2,7 @@ import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
 
-import { Protocols } from '@API/REST.enum';
-
+import { Protocols } from '../../../src/API/REST.enum';
 import useMetricFiltersState from '../../../src/pages/shared/Metrics/hooks/useMetricFiltersState';
 import { QueryMetricsParams } from '../../../src/types/Metrics.interfaces';
 

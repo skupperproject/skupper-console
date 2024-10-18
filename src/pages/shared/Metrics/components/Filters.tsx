@@ -3,13 +3,12 @@ import { FC, memo } from 'react';
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, PageSection } from '@patternfly/react-core';
 import { OutlinedClockIcon } from '@patternfly/react-icons';
 
-import { Protocols } from '@API/REST.enum';
-import { timeIntervalMap } from '@config/prometheus';
-import ResourceIcon from '@core/components/ResourceIcon';
-import SkSelect from '@core/components/SkSelect';
-import { deepMergeJSONObjects } from '@core/utils/deepMergeWithJSONObjects';
-import { ConfigMetricFilters, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-
+import { Protocols } from '../../../../API/REST.enum';
+import { timeIntervalMap } from '../../../../config/prometheus';
+import ResourceIcon from '../../../../core/components/ResourceIcon';
+import SkSelect from '../../../../core/components/SkSelect';
+import { deepMergeJSONObjects } from '../../../../core/utils/deepMergeWithJSONObjects';
+import { ConfigMetricFilters, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 import useMetricFiltersState from '../hooks/useMetricFiltersState';
 import { configDefaultFilters } from '../Metrics.constants';
 import { generateFilterItems } from '../services';

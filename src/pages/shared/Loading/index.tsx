@@ -3,10 +3,9 @@ import { CSSProperties, FC } from 'react';
 import { Bullseye, Card, CardBody, CardHeader, PageSection, Text, TextContent } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
-import { getTestsIds } from '@config/testIds';
-import TransitionPage from '@core/components/TransitionPages/Fade';
-
 import { LoadingLabels } from './Loading.enum';
+import { getTestsIds } from '../../../config/testIds';
+import TransitionPage from '../../../core/components/TransitionPages/Fade';
 
 import './Loading.css';
 
