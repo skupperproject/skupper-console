@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: '20.X'
           cache: 'yarn'
+          cache-dependency-path: yarn.lock
 
       - name: Install 📦
         run: |
