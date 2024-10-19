@@ -3,15 +3,15 @@ import { Suspense } from 'react';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import TcpTerminatedConnections from '../../../src/pages/Services/components/TcpTerminatedConnections';
 
 import BiflowData from '../../../mocks/data/FLOW_PAIRS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
+import TcpTerminatedConnections from '../../../src/pages/Services/components/TcpTerminatedConnections';
 
 const servicesResults = servicesData.results;
 const tcpBiFlowTerminated = BiflowData.results[6];

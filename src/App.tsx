@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react';
 import { Page, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
 
-import LoadingPage from './pages/shared/Loading';
+import LoadingPage from './core/components/SkLoading';
 import { routes } from './routes';
 
 const SkBreadcrumb = lazy(() => import('./core/components/SkBreadcrumb'));

@@ -4,10 +4,10 @@ import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { loadMockServer } from '../../mocks/server';
+import LoadingPage from '../../src/core/components/SkLoading';
 import { Wrapper } from '../../src/core/components/Wrapper';
 import NotFound from '../../src/pages/shared/Errors/NotFound';
 import { NotFoundLabels } from '../../src/pages/shared/Errors/NotFound/NotFound.enum';
-import LoadingPage from '../../src/pages/shared/Loading';
 
 describe('Begin testing the NotFound view', () => {
   let server: Server;

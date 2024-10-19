@@ -3,16 +3,16 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 
 import pairsList from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
 import components from '../../../mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import PairsList from '../../../src/pages/ProcessGroups/components/PairList';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import { ComponentResponse, BasePairs } from '../../../src/types/REST.interfaces';
 
 const data = components.results[0] as ComponentResponse;

@@ -9,10 +9,10 @@ import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import { ComponentLabels } from '../../../src/pages/ProcessGroups/Components.enum';
 import Component from '../../../src/pages/ProcessGroups/views/Component';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 import { ProcessResponse, ComponentResponse } from '../../../src/types/REST.interfaces';
 

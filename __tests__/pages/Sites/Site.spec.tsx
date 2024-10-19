@@ -4,15 +4,15 @@ import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 
 import processesData from '../../../mocks/data/PROCESSES.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
+import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { SiteLabels } from '../../../src/pages/Sites/Sites.enum';
 import Site from '../../../src/pages/Sites/views/Site';
 import { ProcessResponse, SiteResponse } from '../../../src/types/REST.interfaces';

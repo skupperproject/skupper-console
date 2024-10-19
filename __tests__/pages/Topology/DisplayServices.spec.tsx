@@ -4,8 +4,8 @@ import { render } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 import { loadMockServer } from '../../../mocks/server';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import DisplayServices from '../../../src/pages/Topology/components/DisplayServices';
 
 describe('DisplayServices', () => {

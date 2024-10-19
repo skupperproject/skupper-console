@@ -8,10 +8,10 @@ import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import { ServicesLabels } from '../../../src/pages/Services/Services.enum';
 import Service from '../../../src/pages/Services/views/Service';
-import LoadingPage from '../../../src/pages/shared/Loading';
 
 const servicesResults = servicesData.results;
 

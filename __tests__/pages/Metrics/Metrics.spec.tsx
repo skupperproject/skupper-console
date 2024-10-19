@@ -2,12 +2,12 @@ import { Suspense } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
 
-import { useMetricsState } from '../../../src/pages/shared/Metrics/hooks/useMetricsState';
 
 import { Protocols } from '../../../src/API/REST.enum';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import Metrics, { MetricsProps } from '../../../src/pages/shared/Metrics';
+import { useMetricsState } from '../../../src/pages/shared/Metrics/hooks/useMetricsState';
 import { configDefaultFilters } from '../../../src/pages/shared/Metrics/Metrics.constants';
 
 describe('useMetrics', () => {

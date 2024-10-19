@@ -3,15 +3,15 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 
 import pairsList from '../../../mocks/data/SITE_PAIRS.json';
 import sites from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import PairsList from '../../../src/pages/Sites/components/PairList';
 import { BasePairs, SiteResponse } from '../../../src/types/REST.interfaces';
 

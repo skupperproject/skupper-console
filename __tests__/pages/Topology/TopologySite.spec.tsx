@@ -5,20 +5,20 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
-import { convertSiteToNode } from '../../../src/pages/Topology/services/topologySiteController';
-import { PairsResponse, SiteResponse } from '../../../src/types/REST.interfaces';
-
 import sitePairsData from '../../../mocks/data/SITE_PAIRS.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import TopologySite from '../../../src/pages/Topology/components/TopologySite';
 import { TopologyController } from '../../../src/pages/Topology/services';
+import { convertSiteToNode } from '../../../src/pages/Topology/services/topologySiteController';
 import { SHOW_DATA_LINKS } from '../../../src/pages/Topology/Topology.constants';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';
+import { PairsResponse, SiteResponse } from '../../../src/types/REST.interfaces';
+
 
 const sitesResults = sitesData.results as SiteResponse[];
 const sitePairsResults = sitePairsData.results as PairsResponse[];
