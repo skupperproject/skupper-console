@@ -5,8 +5,8 @@ import { Server } from 'miragejs';
 
 import { loadMockServer } from '../../../mocks/server';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import { TopologyViews } from '../../../src/pages/Topology/Topology.enum';
 import Topology from '../../../src/pages/Topology/views/Topology';
 

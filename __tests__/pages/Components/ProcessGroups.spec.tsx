@@ -7,9 +7,9 @@ import componentsData from '../../../mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import Components from '../../../src/pages/ProcessGroups/views/Components';
-import LoadingPage from '../../../src/pages/shared/Loading';
 
 const componentResults = componentsData.results;
 

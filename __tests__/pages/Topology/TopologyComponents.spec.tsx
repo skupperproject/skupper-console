@@ -4,19 +4,19 @@ import { Button } from '@patternfly/react-core';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { convertComponentToNode } from '../../../src/pages/Topology/services/topologyComponentController';
-import { ComponentResponse, PairsResponse } from '../../../src/types/REST.interfaces';
 
 import componentPairsData from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
 import componentData from '../../../mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import TopologyComponent from '../../../src/pages/Topology/components/TopologyComponent';
 import { TopologyController } from '../../../src/pages/Topology/services';
+import { convertComponentToNode } from '../../../src/pages/Topology/services/topologyComponentController';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';
+import { ComponentResponse, PairsResponse } from '../../../src/types/REST.interfaces';
 
 const componentResult = componentData.results as ComponentResponse[];
 const componentPairsResult = componentPairsData.results as PairsResponse[];

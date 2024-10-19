@@ -17,10 +17,10 @@ import {
   ToolbarItem
 } from '@patternfly/react-core';
 
+import LoadingPage from '../core/components/SkLoading';
 import SkNavigationViewLink from '../core/components/SkNavigationViewLink';
 import SkUpdateDataButton from '../core/components/SkUpdateDataButton';
 import TransitionPage from '../core/components/TransitionPages/Fade';
-import LoadingPage from '../pages/shared/Loading';
 import { TopologyLabels } from '../pages/Topology/Topology.enum';
 
 import '@patternfly/patternfly/patternfly-addons.css';

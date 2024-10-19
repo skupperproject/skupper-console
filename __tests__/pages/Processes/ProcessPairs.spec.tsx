@@ -4,15 +4,15 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { ProcessesLabels } from '../../../src/pages/Processes/Processes.enum';
 
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
+import { ProcessesLabels } from '../../../src/pages/Processes/Processes.enum';
 import ProcessPair, { ProcessPairContent } from '../../../src/pages/Processes/views/ProcessPair';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import { PairsResponse } from '../../../src/types/REST.interfaces';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow

@@ -5,7 +5,7 @@ import { CogIcon } from '@patternfly/react-icons';
 
 import { LoadingLabels } from './Loading.enum';
 import { getTestsIds } from '../../../config/testIds';
-import TransitionPage from '../../../core/components/TransitionPages/Fade';
+import TransitionPage from '../TransitionPages/Fade';
 
 import './Loading.css';
 

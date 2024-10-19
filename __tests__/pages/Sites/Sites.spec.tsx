@@ -8,9 +8,9 @@ import sitesData from '../../../mocks/data/SITES.json';
 import { MockApiPaths, MockApi, loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import ErrorConsole from '../../../src/pages/shared/Errors/Console';
-import LoadingPage from '../../../src/pages/shared/Loading';
 import Sites from '../../../src/pages/Sites/views/Sites';
 
 const siteResults = sitesData.results;

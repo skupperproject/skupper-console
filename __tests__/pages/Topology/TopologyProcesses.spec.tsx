@@ -6,8 +6,6 @@ import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import { TopoloyDetailsProps } from '../../../src/pages/Topology/components/TopologyDetails';
-import { convertProcessToNode } from '../../../src/pages/Topology/services/topologyProcessController';
 
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
@@ -15,12 +13,14 @@ import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
+import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
-import LoadingPage from '../../../src/pages/shared/Loading';
+import { TopoloyDetailsProps } from '../../../src/pages/Topology/components/TopologyDetails';
 import TopologyProcesses from '../../../src/pages/Topology/components/TopologyProcesses';
 import * as useTopologyState from '../../../src/pages/Topology/hooks/useTopologyState';
 import { TopologyController } from '../../../src/pages/Topology/services';
+import { convertProcessToNode } from '../../../src/pages/Topology/services/topologyProcessController';
 import { TopologyLabels } from '../../../src/pages/Topology/Topology.enum';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';
 import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '../../../src/types/REST.interfaces';
