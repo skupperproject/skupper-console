@@ -49,7 +49,7 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     name: BiFlowListLabels.Closed,
     prop: 'endTime',
     customCellName: 'TimestampCell',
-    width: 15
+    modifier: 'nowrap'
   },
   {
     name: BiFlowListLabels.Duration,
@@ -124,7 +124,7 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     name: BiFlowListLabels.Completed,
     prop: 'endTime',
     customCellName: 'TimestampCell',
-    width: 15
+    modifier: 'nowrap'
   },
   {
     name: BiFlowListLabels.Protocol,
@@ -160,12 +160,6 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: BiFlowListLabels.TxLatency,
-    prop: 'latency',
-    format: formatLatency,
-    modifier: 'nowrap'
-  },
-  {
     name: BiFlowListLabels.To,
     prop: 'destProcessName',
     customCellName: 'TargetProcessNameLinkCell',
@@ -181,12 +175,6 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     name: BiFlowListLabels.RxBytes,
     prop: 'octetsReverse',
     format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: BiFlowListLabels.RxLatency,
-    prop: 'latencyReverse',
-    format: formatLatency,
     modifier: 'nowrap'
   },
   {

@@ -177,16 +177,6 @@ export const PrometheusApi = {
     return result;
   },
 
-  fetchOpenConnectionsByService: async (): Promise<PrometheusMetric<'vector'>[]> => {
-    const {
-      data: { result }
-    } = await axiosFetch<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getOpenConnectionsByService() }
-    });
-
-    return result;
-  },
-
   fetchOpenConnectionsInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'matrix'>[]> => {
     const { start, end, step, ...queryParams } = params;
     const queryFilterString = convertToPrometheusQueryParams(queryParams);

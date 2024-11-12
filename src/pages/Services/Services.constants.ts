@@ -7,6 +7,7 @@ import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
 import { SkSelectOption } from '../../core/components/SkSelect';
+import SkTrueFalseStatusCell from '../../core/components/SkTrueFalseStatusCell';
 import { ServiceResponse, QueryFilters } from '../../types/REST.interfaces';
 import { ProcessesLabels } from '../Processes/Processes.enum';
 
@@ -29,22 +30,18 @@ export const customServiceCells = {
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
     }),
   TimestampCell: SkEndTimeCell,
-  ProcessCountCell: (props: SkLinkCellProps<ServiceResponse>) =>
-    SkLinkCell({
-      ...props,
-      fitContent: true,
-      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}?type=${ServicesLabels.Servers}`
-    }),
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
-    data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_PLACEHOLDER
+    data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_PLACEHOLDER,
+  isBoundCell: SkTrueFalseStatusCell
 };
 
 // Services Table
 export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
-    name: ServicesLabels.RoutingKey,
+    name: ServicesLabels.Name,
     prop: 'name',
-    customCellName: 'ServiceNameLinkCell'
+    customCellName: 'ServiceNameLinkCell',
+    modifier: 'nowrap'
   },
   {
     name: ServicesLabels.TransportProtocol,
@@ -58,19 +55,14 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     width: 15
   },
   {
-    name: ServicesLabels.Servers,
-    prop: 'connectorCount' as keyof ServiceResponse,
-    customCellName: 'ProcessCountCell',
-    width: 15
-  },
-  {
-    name: ServicesLabels.OpenConnections,
-    prop: 'currentFlows' as keyof ServiceResponse,
+    name: ServicesLabels.IsBound,
+    prop: 'isBound',
+    customCellName: 'isBoundCell',
     width: 15
   },
   {
     name: ProcessesLabels.Created,
-    prop: 'startTime' as keyof ServiceResponse,
+    prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent',
     width: 15
@@ -79,7 +71,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
 
 export const servicesSelectOptions: SkSelectOption[] = [
   {
-    label: ServicesLabels.RoutingKey,
+    label: ServicesLabels.Name,
     id: 'name'
   }
 ];
