@@ -33,7 +33,7 @@ export enum ProcessesLabels {
   Image = 'Image',
   Created = 'Created',
   SourceIP = 'IP',
-  Host = 'Host',
+  Host = 'Node',
   TrafficInOutDistribution = 'Traffic distribution',
   ChartProcessLatencySeriesAxisYLabel = 'Latency',
   RequestsPerSecondsSeriesAxisYLabel = 'Request rate',

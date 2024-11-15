@@ -1,15 +1,25 @@
-import { SKTableColumn } from 'types/SkTable.interfaces';
-
+import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
 import { SortDirection, TcpStatus } from '../../API/REST.enum';
 import { BIG_PAGINATION_SIZE, EMPTY_VALUE_PLACEHOLDER } from '../../config/config';
+import { BiFlowListLabels } from '../../core/components/SkBiFlowList/BiFlowList.enum';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import SkTrueFalseStatusCell from '../../core/components/SkTrueFalseStatusCell';
-import { ServiceResponse, QueryFilters } from '../../types/REST.interfaces';
-import { ProcessesLabels } from '../Processes/Processes.enum';
+import {
+  ServiceResponse,
+  QueryFilters,
+  ListenerResponse,
+  ConnectorResponse,
+  ProcessPairsResponse,
+  PairsWithInstantMetrics
+} from '../../types/REST.interfaces';
+import { SKTableColumn } from '../../types/SkTable.interfaces';
+import { CustomPairMetricCells } from '../Processes/Processes.constants';
+import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes/Processes.enum';
+import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
 export const ServicesPaths = {
   path: ServicesRoutesPaths.Services,
@@ -17,22 +27,61 @@ export const ServicesPaths = {
 };
 
 export const TAB_0_KEY = ServicesLabels.Overview;
-export const TAB_1_KEY = ServicesLabels.Servers;
+export const TAB_1_KEY = ServicesLabels.Pairs;
 export const TAB_2_KEY = ServicesLabels.Requests;
 export const TAB_3_KEY = ServicesLabels.OpenConnections;
 export const TAB_4_KEY = ServicesLabels.OldConnections;
+export const TAB_5_KEY = ServicesLabels.ListenersAndConnectors;
 
 export const customServiceCells = {
+  ...CustomPairMetricCells,
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
     SkLinkCell({
       ...props,
       type: 'service',
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
     }),
+  ProcessNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'process',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.target}@${props.data.processId}`
+    }),
+  SiteNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'process',
+      link: `${SitesRoutesPaths.Sites}/${props.data.siteName}@${props.data.siteId}`
+    }),
+  SourceProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}`
+    }),
+  DestProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}`
+    }),
+  SourceSiteNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteName}@${props.data.sourceSiteId}`
+    }),
+  DestSiteNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
+    }),
   TimestampCell: SkEndTimeCell,
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
     data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_PLACEHOLDER,
-  isBoundCell: SkTrueFalseStatusCell
+  IsBoundCell: SkTrueFalseStatusCell,
+  ConnectorProcessCountCell
 };
 
 // Services Table
@@ -45,27 +94,110 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   },
   {
     name: ServicesLabels.TransportProtocol,
-    prop: 'protocol',
-    width: 15
+    prop: 'protocol'
   },
   {
     name: ServicesLabels.ApplicationProtocols,
     prop: 'observedApplicationProtocols',
-    customCellName: 'ApplicationProtocolCell',
-    width: 15
+    customCellName: 'ApplicationProtocolCell'
   },
   {
     name: ServicesLabels.IsBound,
     prop: 'isBound',
-    customCellName: 'isBoundCell',
-    width: 15
+    customCellName: 'IsBoundCell'
   },
   {
     name: ProcessesLabels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
-    modifier: 'fitContent',
-    width: 15
+    modifier: 'fitContent'
+  }
+];
+
+// Listeners Table
+export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
+  {
+    name: ServicesLabels.Name,
+    prop: 'name',
+    modifier: 'nowrap'
+  },
+  {
+    name: ServicesLabels.DestHost,
+    prop: 'destHost'
+  },
+  {
+    name: ServicesLabels.DestPort,
+    prop: 'destPort'
+  },
+  {
+    name: ProcessesLabels.Created,
+    prop: 'startTime',
+    customCellName: 'TimestampCell',
+    modifier: 'fitContent'
+  }
+];
+
+// Connectors Table
+export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
+  {
+    name: ServicesLabels.Name,
+    prop: 'name',
+    modifier: 'nowrap'
+  },
+  {
+    name: ServicesLabels.DestPort,
+    prop: 'destPort'
+  },
+  {
+    name: ServicesLabels.Processes,
+    prop: 'count',
+    customCellName: 'ConnectorProcessCountCell'
+  },
+  {
+    name: ServicesLabels.Site,
+    prop: 'siteName',
+    customCellName: 'SiteNameLinkCell'
+  },
+  {
+    name: ProcessesLabels.Created,
+    prop: 'startTime',
+    customCellName: 'TimestampCell',
+    modifier: 'fitContent'
+  }
+];
+
+export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
+  {
+    name: BiFlowListLabels.Client,
+    prop: 'sourceName',
+    customCellName: 'SourceProcessNameLinkCell'
+  },
+  {
+    name: BiFlowListLabels.Site,
+    prop: 'sourceSiteName' as keyof PairsWithInstantMetrics,
+    customCellName: 'SourceSiteNameLinkCell'
+  },
+  {
+    name: BiFlowListLabels.Server,
+    prop: 'destinationName',
+    customCellName: 'DestProcessNameLinkCell'
+  },
+  {
+    name: BiFlowListLabels.ServerSite,
+    prop: 'destinationSiteName' as keyof PairsWithInstantMetrics,
+    customCellName: 'DestSiteNameLinkCell'
+  },
+  {
+    name: ProcessesLabels.Bytes,
+    prop: 'bytes',
+    customCellName: 'ByteFormatCell',
+    modifier: 'fitContent'
+  },
+  {
+    name: ProcessesLabels.ByteRate,
+    prop: 'byteRate',
+    customCellName: 'ByteRateFormatCell',
+    modifier: 'fitContent'
   }
 ];
 

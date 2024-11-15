@@ -55,13 +55,27 @@ const useServiceData = (serviceId: string) => {
     refetchInterval: UPDATE_INTERVAL
   });
 
+  const { data: listenersData } = useQuery({
+    queryKey: [QueriesServices.GetListeners, initServersQueryParams],
+    queryFn: () => RESTApi.fetchListeners({ ...initServersQueryParams, addressId: serviceId }),
+    refetchInterval: UPDATE_INTERVAL
+  });
+
+  const { data: connectorsData } = useQuery({
+    queryKey: [QueriesServices.GetConnectors, initServersQueryParams],
+    queryFn: () => RESTApi.fetchConnectors({ ...initServersQueryParams, addressId: serviceId }),
+    refetchInterval: UPDATE_INTERVAL
+  });
+
   return {
     service: service.results,
     summary: {
       serverCount: serversData?.timeRangeCount || 0,
       requestsCount: requestsData?.timeRangeCount || 0,
       activeConnectionCount: activeConnectionsData?.timeRangeCount || 0,
-      terminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0
+      terminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0,
+      listenerCount: listenersData?.timeRangeCount || 0,
+      connectorCount: connectorsData?.timeRangeCount || 0
     }
   };
 };

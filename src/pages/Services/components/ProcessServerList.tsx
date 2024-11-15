@@ -3,10 +3,11 @@ import { FC } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 import PairsSankeyChart from './PairsSankeyChart';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import SkTable from '../../../core/components/SkTable';
-import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
-import { CustomProcessCells, processesTableColumns } from '../../Processes/Processes.constants';
+import { combineInstantMetricsToPairs } from '../../../core/utils/combineInstantMetricsToPairs';
 import { useServersData } from '../hooks/useServersData';
+import { customServiceCells, PairColumns } from '../Services.constants';
 
 interface ProcessServerListProps {
   id: string;
@@ -14,25 +15,22 @@ interface ProcessServerListProps {
 }
 
 const ProcessServerList: FC<ProcessServerListProps> = function ({ id, name }) {
-  const { processes } = useServersData(id);
+  const { processPairs, metrics } = useServersData(id, name);
+
+  const pairs = combineInstantMetricsToPairs({
+    processesPairs: processPairs,
+    metrics,
+    prometheusKey: PrometheusLabelsV2.SourceProcessName,
+    processPairsKey: 'sourceName'
+  });
 
   return (
     <Stack hasGutter>
       <StackItem>
-        <PairsSankeyChart serviceId={id} serviceName={name} />
+        <PairsSankeyChart pairs={pairs} />
       </StackItem>
       <StackItem>
-        <SkTable
-          columns={setColumnVisibility(processesTableColumns, { processBinding: false })}
-          rows={processes}
-          customCells={{
-            linkCell: CustomProcessCells.linkCell,
-            linkCellSite: CustomProcessCells.linkCellSite,
-            linkComponentCell: CustomProcessCells.linkComponentCell,
-            TimestampCell: CustomProcessCells.TimestampCell,
-            ExposureCell: CustomProcessCells.ExposureCell
-          }}
-        />
+        <SkTable columns={PairColumns} rows={pairs} customCells={customServiceCells} />
       </StackItem>
     </Stack>
   );

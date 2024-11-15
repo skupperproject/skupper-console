@@ -7,13 +7,14 @@ import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromU
 import MainContainer from '../../../layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import HttpRequests from '../components/HttpRequests';
+import ListenerAndConnectorList from '../components/ListenerAndConnectorList';
 import NavigationMenu from '../components/NavigationMenu';
 import Overview from '../components/Overview';
 import ProcessServerList from '../components/ProcessServerList';
 import TcpConnections from '../components/TcpConnections';
 import TcpTerminatedConnections from '../components/TcpTerminatedConnections';
 import useServiceData from '../hooks/useServiceData';
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, TAB_4_KEY } from '../Services.constants';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, TAB_4_KEY, TAB_5_KEY } from '../Services.constants';
 
 interface ServiceProps {
   id: string;
@@ -25,7 +26,14 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
 
   const {
     service: { name, observedApplicationProtocols },
-    summary: { serverCount, requestsCount, activeConnectionCount, terminatedConnectionCount }
+    summary: {
+      serverCount,
+      requestsCount,
+      activeConnectionCount,
+      terminatedConnectionCount,
+      listenerCount,
+      connectorCount
+    }
   } = useServiceData(id);
 
   return (
@@ -35,6 +43,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.ServiceId}=${id}`}
       navigationComponent={
         <NavigationMenu
+          hasListenersOrConnectors={!!(listenerCount || connectorCount)}
           serverCount={serverCount}
           hasApplicationProtocol={!!observedApplicationProtocols.length}
           requestsCount={requestsCount}
@@ -47,6 +56,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       mainContentChildren={
         <>
           {menuSelected === TAB_0_KEY && <Overview id={id} name={name} />}
+          {menuSelected === TAB_5_KEY && <ListenerAndConnectorList id={id} />}
           {menuSelected === TAB_1_KEY && <ProcessServerList id={id} name={name} />}
           {menuSelected === TAB_3_KEY && <TcpConnections routingKey={name} />}
           {menuSelected === TAB_4_KEY && <TcpTerminatedConnections routingKey={name} />}

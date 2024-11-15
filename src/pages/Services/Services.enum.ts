@@ -10,10 +10,12 @@ export enum QueriesServices {
   GetTcpByteRateByService = 'tcp-byterate-by-service-query',
   GetServices = 'services-query',
   GetService = 'service-query',
+  GetListeners = 'listeners-query',
+  GetConnectors = 'connectors-query',
   GetPrometheusActiveFlows = 'services-get-prometheus-active-flows',
   GetPrometheusTcpTotalFlows = 'services-get-tcp-prometheus-total-flows',
   GetPrometheusHttpTotalFlows = 'services-get-http-prometheus-total-flows',
-  GetResourcePairsByService = 'services-get-resource-pair-by-service',
+  GetPrometheusPairsByService = 'services-get-prometheus-pair-by-service',
   GetProcessPairsByService = 'services-get-process-pairs-by-service'
 }
 
@@ -36,12 +38,19 @@ export enum ServicesLabels {
   AvgByteRateRx = 'Avg. rate responses',
   AvgByteRateTx = 'Avg. rate requests',
   Overview = 'Overview',
-  Servers = 'Servers',
+  Pairs = 'Pairs',
+  Listeners = 'Listeners',
+  Connectors = 'Connectors',
+  ListenersAndConnectors = 'Listeners and Connectors',
   IsBound = 'Bound',
-  SankeyChartTitle = 'Pairs relationship',
-  SankeyChartDescription = 'Visualizing relationships and the distribution',
+  SankeyChartTitle = '',
+  SankeyChartDescription = '',
   Name = 'Name',
   TransportProtocol = 'Transport protocol',
   ApplicationProtocols = 'Application protocols',
-  TotalBiFlows = 'Total'
+  DestHost = 'Host',
+  DestPort = 'Port',
+  Site = 'Site',
+  TotalBiFlows = 'Total',
+  Processes = 'Processes'
 }

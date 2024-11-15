@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useState } from 'react';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '../../../API/REST.api';
 import { UPDATE_INTERVAL } from '../../../config/config';
@@ -14,14 +14,10 @@ interface useServicesDataProps {
 const useServicesData = ({ limit }: useServicesDataProps) => {
   const [servicesQueryParams, setServicesQueryParams] = useState<QueryFilters>({ limit });
 
-  const [{ data: services }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesServices.GetServices, { ...servicesQueryParams }],
-        queryFn: () => RESTApi.fetchServices({ ...servicesQueryParams }),
-        refetchInterval: UPDATE_INTERVAL
-      }
-    ]
+  const { data: services } = useSuspenseQuery({
+    queryKey: [QueriesServices.GetServices, { ...servicesQueryParams }],
+    queryFn: () => RESTApi.fetchServices({ ...servicesQueryParams }),
+    refetchInterval: UPDATE_INTERVAL
   });
 
   const handleSetServiceFilters = useCallback((params: QueryFilters) => {

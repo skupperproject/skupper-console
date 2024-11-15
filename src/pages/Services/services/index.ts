@@ -34,7 +34,7 @@ export const ServicesController = {
     }));
   },
 
-  convertToSankeyChartData: (servicePairs: PrometheusMetric<'vector'>[], withMetric = false) => {
+  convertMetricsToSankeyChartData: (servicePairs: PrometheusMetric<'vector'>[]) => {
     const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
 
     const clients: SkSankeyChartNode[] =
@@ -58,7 +58,47 @@ export const ServicesController = {
         .map(({ metric, value }) => ({
           source: `${metric[PrometheusLabelsV2.SourceProcessName] || metric[PrometheusLabelsV2.SourceSiteName]} ${sourceProcessSuffix}`,
           target: metric[PrometheusLabelsV2.DestProcessName] || metric[PrometheusLabelsV2.DestSiteName],
-          value: withMetric ? Number(value[1]) : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
+          value: Number(value[1]) || DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
+        }))
+        .filter(({ source, target }) => source && target) as SkSankeyChartLink[]) || [];
+
+    return { nodes, links };
+  },
+
+  convertPairsToSankeyChartData: (
+    servicePairs: {
+      sourceName: string;
+      sourceSiteName?: string;
+      destinationName: string;
+      destinationSiteName?: string;
+      byteRate?: number;
+      color?: string;
+    }[],
+    showMetrics: boolean
+  ) => {
+    const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
+    const clients: SkSankeyChartNode[] =
+      servicePairs?.map(({ sourceName, sourceSiteName, color = VarColors.Blue400 }) => ({
+        id: sourceName || `${sourceSiteName} ${sourceProcessSuffix}`,
+        nodeColor: sourceSiteName ? VarColors.Black400 : color
+      })) || [];
+
+    const servers =
+      servicePairs?.map(({ destinationName, destinationSiteName, color = VarColors.Blue400 }) => ({
+        id: destinationName || destinationSiteName,
+        nodeColor: destinationSiteName ? VarColors.Black400 : color
+      })) || [];
+
+    const nodes = [...clients, ...servers]
+      .filter(({ id }) => id)
+      .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i) as SkSankeyChartNode[];
+
+    const links =
+      (servicePairs
+        .map(({ sourceName, sourceSiteName, destinationName, destinationSiteName, byteRate }) => ({
+          source: sourceName || `${sourceSiteName} ${sourceProcessSuffix}`,
+          target: destinationName || destinationSiteName,
+          value: showMetrics ? byteRate || DEFAULT_SANKEY_CHART_FLOW_VALUE : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
         }))
         .filter(({ source, target }) => source && target) as SkSankeyChartLink[]) || [];
 
