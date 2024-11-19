@@ -4,7 +4,6 @@ import {
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
   SHOW_ROUTER_LINKS
@@ -19,7 +18,7 @@ const toggleOption = (selectedOption: string, options: string[], isOptionSelecte
   isOptionSelected ? options.filter((option) => option !== selectedOption) : [...options, selectedOption];
 
 const filterLinkMetrics = (options: string[]) =>
-  options.filter((option) => ![SHOW_LINK_BYTES, SHOW_LINK_BYTERATE, SHOW_LINK_LATENCY].includes(option));
+  options.filter((option) => ![SHOW_LINK_BYTES, SHOW_LINK_BYTERATE].includes(option));
 
 const shouldAddMetricDistribution = (isOptionSelected: boolean, options: string[]) =>
   !isOptionSelected && !options.includes(SHOW_LINK_METRIC_DISTRIBUTION) && !options.includes(SHOW_LINK_METRIC_VALUE);
@@ -55,7 +54,7 @@ export const useDisplayOptionsState = ({ defaultSelected = [], onSelected }: Dis
 
       let updatedDisplayOptions = toggleOption(selected, displayOptionsSelected, isOptionSelected);
 
-      if ([SHOW_LINK_BYTES, SHOW_LINK_BYTERATE, SHOW_LINK_LATENCY].includes(selected)) {
+      if ([SHOW_LINK_BYTES, SHOW_LINK_BYTERATE].includes(selected)) {
         updatedDisplayOptions = handleLinkMetrics(selected, isOptionSelected, displayOptionsSelected);
       }
 

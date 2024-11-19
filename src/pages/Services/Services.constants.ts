@@ -122,14 +122,6 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: ServicesLabels.DestHost,
-    prop: 'destHost'
-  },
-  {
-    name: ServicesLabels.DestPort,
-    prop: 'destPort'
-  },
-  {
     name: ProcessesLabels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
@@ -143,6 +135,10 @@ export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
     name: ServicesLabels.Name,
     prop: 'name',
     modifier: 'nowrap'
+  },
+  {
+    name: ServicesLabels.DestHost,
+    prop: 'destHost'
   },
   {
     name: ServicesLabels.DestPort,

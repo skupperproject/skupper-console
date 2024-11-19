@@ -32,7 +32,6 @@ import {
   SHOW_DEPLOYMENTS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
   SHOW_INBOUND_METRICS,
@@ -110,7 +109,6 @@ const TopologyProcesses: FC<{
     metrics,
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
       showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),

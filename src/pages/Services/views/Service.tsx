@@ -56,7 +56,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       mainContentChildren={
         <>
           {menuSelected === TAB_0_KEY && <Overview id={id} name={name} />}
-          {menuSelected === TAB_5_KEY && <ListenerAndConnectorList id={id} />}
+          {menuSelected === TAB_5_KEY && <ListenerAndConnectorList id={id} name={name} />}
           {menuSelected === TAB_1_KEY && <ProcessServerList id={id} name={name} />}
           {menuSelected === TAB_3_KEY && <TcpConnections routingKey={name} />}
           {menuSelected === TAB_4_KEY && <TcpTerminatedConnections routingKey={name} />}

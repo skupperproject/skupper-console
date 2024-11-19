@@ -16,7 +16,6 @@ import {
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
   SHOW_INBOUND_METRICS,
   SHOW_ROUTER_LINKS,
   SHOW_LINK_METRIC_VALUE,
@@ -48,8 +47,7 @@ const TopologySite: FC<{
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
     showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
     showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
+    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE)
   });
 
   const handleShowDetails = useCallback(
@@ -79,7 +77,6 @@ const TopologySite: FC<{
     metrics,
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
       showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),

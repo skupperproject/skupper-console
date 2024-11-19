@@ -7,7 +7,6 @@ import {
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
   SHOW_ROUTER_LINKS
@@ -39,22 +38,17 @@ describe('useDisplayOptionsState', () => {
       SHOW_LINK_BYTERATE
     );
 
-    act(() => {
-      result.current.selectDisplayOptions(SHOW_LINK_LATENCY);
-    });
-    expect(result.current.displayOptionsSelected).toEqual([SHOW_LINK_METRIC_DISTRIBUTION, SHOW_LINK_LATENCY]);
-    expect(onSelectedMock).toHaveBeenCalledWith([SHOW_LINK_METRIC_DISTRIBUTION, SHOW_LINK_LATENCY], SHOW_LINK_LATENCY);
 
     act(() => {
       result.current.selectDisplayOptions(SHOW_LINK_METRIC_VALUE);
     });
     expect(result.current.displayOptionsSelected).toEqual([
       SHOW_LINK_METRIC_DISTRIBUTION,
-      SHOW_LINK_LATENCY,
+      SHOW_LINK_BYTERATE,
       SHOW_LINK_METRIC_VALUE
     ]);
     expect(onSelectedMock).toHaveBeenCalledWith(
-      [SHOW_LINK_METRIC_DISTRIBUTION, SHOW_LINK_LATENCY, SHOW_LINK_METRIC_VALUE],
+      [SHOW_LINK_METRIC_DISTRIBUTION, SHOW_LINK_BYTERATE, SHOW_LINK_METRIC_VALUE],
       SHOW_LINK_METRIC_VALUE
     );
   });

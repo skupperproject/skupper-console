@@ -7,6 +7,8 @@ import {
   EdgeOptions,
   ExtensionCategory,
   NodeOptions,
+  Polyline,
+  PolylineStyleProps,
   Quadratic,
   QuadraticStyleProps,
   RectCombo,
@@ -213,6 +215,18 @@ class SkNode extends Circle {
   }
 }
 
+class SkEmptyNode extends Circle {
+  render(attrs: Required<CircleStyleProps>) {
+    super.render({
+      ...attrs,
+      opacity: 1,
+      stroke: 'transparent',
+      size: NODE_SIZE / 2,
+      icon: true
+    });
+  }
+}
+
 class SkNodeRemote extends SkNode {
   render(attrs: Required<CircleStyleProps>) {
     super.render({
@@ -278,6 +292,25 @@ class SkSiteEdgePartialUp extends SkSiteEdge {
   }
 }
 
+class SkListenerConnectorEdge extends Polyline {
+  render(attrs: Required<PolylineStyleProps>) {
+    const extendedProps = {
+      lineDash: 4,
+      radius: 20,
+      endArrow: false,
+      labelBackgroundRadius: 2,
+      router: {
+        type: 'orth'
+      }
+    };
+
+    super.render({
+      ...attrs,
+      ...extendedProps
+    });
+  }
+}
+
 class SkCombo extends RectCombo {
   render(attrs: Required<RectComboStyleProps>) {
     super.render(attrs);
@@ -292,11 +325,13 @@ export const defaultConfigElements = {
 
 export function registerElements() {
   register(ExtensionCategory.NODE, 'SkNode', SkNode);
+  register(ExtensionCategory.NODE, 'SkEmptyNode', SkEmptyNode);
   register(ExtensionCategory.NODE, 'SkNodeUnexposed', SkNodeUnexposed);
   register(ExtensionCategory.NODE, 'SkNodeRemote', SkNodeRemote);
   register(ExtensionCategory.EDGE, 'SkDataEdge', SkDataEdge);
   register(ExtensionCategory.EDGE, 'SkSiteEdge', SkSiteEdge);
   register(ExtensionCategory.EDGE, 'SkSiteEdgeDown', SkSiteEdgeDown);
   register(ExtensionCategory.EDGE, 'SkSiteEdgePartialDown', SkSiteEdgePartialUp);
+  register(ExtensionCategory.EDGE, 'SkListenerConnectorEdge', SkListenerConnectorEdge);
   register(ExtensionCategory.COMBO, 'SkCombo', SkCombo);
 }

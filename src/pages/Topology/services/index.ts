@@ -5,7 +5,6 @@ import { Direction } from '../../../API/REST.enum';
 import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '../../../config/config';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
-import { formatLatency } from '../../../core/utils/formatLatency';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { PrometheusMetric } from '../../../types/Prometheus.interfaces';
 import { ProcessPairsResponse, PairsResponse } from '../../../types/REST.interfaces';
@@ -145,27 +144,23 @@ export const TopologyController = {
     edges.map((edge) => {
       const byteRate = options?.showLinkByteRate ? edge?.metrics?.byteRate || 0 : undefined;
       const bytes = options?.showLinkBytes ? edge?.metrics?.bytes || 0 : undefined;
-      const latency = options?.showLinkLatency ? edge?.metrics?.latency || 0 : undefined;
 
       // The same edge has RX === Tx
       const showRxMetric = !!options?.showInboundMetrics && !(edge.source === edge.target);
 
       const byteRateRx = showRxMetric && byteRate !== undefined ? edge?.metrics?.byteRateReverse || 0 : undefined;
       const bytesRx = showRxMetric && bytes !== undefined ? edge?.metrics?.bytesReverse || 0 : undefined;
-      const latencyRx = showRxMetric && latency !== undefined ? edge?.metrics?.latencyReverse || 0 : undefined;
 
       const metricsString = [
         bytes !== undefined && `${formatBytes(bytes)}`,
-        byteRate !== undefined && `${formatByteRate(byteRate)}`,
-        latency !== undefined && `${formatLatency(latency)}`
+        byteRate !== undefined && `${formatByteRate(byteRate)}`
       ]
         .filter(Boolean)
         .join(', ');
 
       const metricsRxString = [
         bytesRx !== undefined && `(${formatBytes(bytesRx)})`,
-        byteRateRx !== undefined && `(${formatByteRate(byteRateRx)})`,
-        latencyRx !== undefined && `(${formatLatency(latencyRx)})`
+        byteRateRx !== undefined && `(${formatByteRate(byteRateRx)})`
       ]
         .filter(Boolean)
         .join(', ');
@@ -175,7 +170,7 @@ export const TopologyController = {
       return {
         ...edge,
         label,
-        metricValue: options?.showMetricDistribution ? bytes || byteRate || latency || 0 : undefined
+        metricValue: options?.showMetricDistribution ? bytes || byteRate || 0 : undefined
       };
     }),
 

@@ -1,13 +1,24 @@
 import { LayoutOptions } from '@antv/g6';
 
-type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
+export type GraphIconKeys =
+  | 'component'
+  | 'process'
+  | 'site'
+  | 'podman'
+  | 'kubernetes'
+  | 'skupper'
+  | 'connector'
+  | 'listener'
+  | 'routingKey';
 
 export type GraphElementNames =
   | 'SkDataEdge'
   | 'SkSiteEdge'
   | 'SkSiteEdgeDown'
   | 'SkSiteEdgePartialDown'
+  | 'SkListenerConnectorEdge'
   | 'SkNode'
+  | 'SkEmptyNode'
   | 'SkNodeUnexposed'
   | 'SkNodeRemote'
   | 'SkCombo';
@@ -63,6 +74,7 @@ export interface GraphEdge {
 export interface GraphLayouts {
   combo: LayoutOptions;
   default: LayoutOptions;
+  dagre: LayoutOptions;
 }
 
 export interface SkGraphProps {
