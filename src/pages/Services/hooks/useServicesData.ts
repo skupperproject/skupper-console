@@ -26,7 +26,12 @@ const useServicesData = ({ limit }: useServicesDataProps) => {
     });
   }, []);
 
-  return { services: services.results, summary: { serviceCount: services.timeRangeCount }, handleSetServiceFilters };
+  return {
+    // We consider services with more than one listener
+    services: services.results.filter(({ listenerCount }) => listenerCount > 0),
+    summary: { serviceCount: services.timeRangeCount },
+    handleSetServiceFilters
+  };
 };
 
 export default useServicesData;

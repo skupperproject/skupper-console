@@ -14,7 +14,9 @@ export enum QueriesSites {
 export enum SiteLabels {
   Section = 'Sites',
   Overview = 'Overview',
-  Links = 'Links',
+  Links = 'Router links',
+  InLinks = 'Incoming',
+  OutLinks = 'Outgoing',
   Description = 'A site is a location where components of your application are running and they are linked together to form a network',
   Details = 'Details',
   SourceSite = 'From',
@@ -29,12 +31,12 @@ export enum SiteLabels {
   Cost = 'Cost',
   Platform = 'Platform',
   Created = 'Created',
-  Pairs = 'Pairs',
+  Pairs = 'Data links',
   Clients = 'Clients',
   Servers = 'Servers',
   LinkStatus = 'Status',
   Routers = 'Routers',
   HA = 'High availability',
-  YES = 'Yes',
-  NO = 'No'
+  YES = 'True',
+  NO = 'False'
 }

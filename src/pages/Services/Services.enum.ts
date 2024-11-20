@@ -1,5 +1,5 @@
 export enum ServicesRoutesPaths {
-  Services = '/routingkeys'
+  Services = '/services'
 }
 
 export enum QueriesServices {
@@ -21,7 +21,7 @@ export enum QueriesServices {
 
 // LABELS
 export enum ServicesLabels {
-  Section = 'Routing Keys',
+  Section = 'Services',
   HTTP = ' HTTP/2',
   TCP = 'TCP',
   Description = 'Collection of processes (servers) that are exposed across the Application network, along with their respective connections to the processes (clients) they communicate with',
@@ -38,7 +38,7 @@ export enum ServicesLabels {
   AvgByteRateRx = 'Avg. rate responses',
   AvgByteRateTx = 'Avg. rate requests',
   Overview = 'Overview',
-  Pairs = 'Pairs',
+  Pairs = 'Data links',
   Listeners = 'Listeners',
   Connectors = 'Connectors',
   ListenersAndConnectors = 'Listeners and Connectors',

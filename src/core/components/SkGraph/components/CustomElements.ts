@@ -191,7 +191,7 @@ const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
 const DEFAULT_COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
-    lineWidth: 3,
+    lineWidth: 2,
     fill: COMBO__BG_COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 10,
@@ -259,9 +259,7 @@ class SkSiteEdge extends SkDataEdge {
     super.render({
       ...attrs,
       lineDash: 3,
-      endArrow: true,
-      endArrowType: 'circle',
-      endArrowOffset: -5,
+      endArrow: false,
       badgeFontSize: EDGE_BADGE_FONT_SIZE,
       badgeFill: EDGE_BADGE_PRIMARY_TEXT,
       badgeBackgroundFill: EDGE_BADGE_PRIMARY_BACKGROUND,

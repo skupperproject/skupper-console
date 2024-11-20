@@ -26,8 +26,8 @@ context('Navigation', () => {
   });
 
   it('should navigate to the Services', () => {
-    cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Routing Keys').click({ force: true });
-    cy.location('hash').should('include', 'routingkeys');
+    cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Services').click({ force: true });
+    cy.location('hash').should('include', 'services');
   });
 
   it('should redirect to the Not found page when url not exists', () => {
