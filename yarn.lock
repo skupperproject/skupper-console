@@ -1370,15 +1370,15 @@
     victory-voronoi-container "^37.1.1"
     victory-zoom-container "^37.1.1"
 
-"@patternfly/react-core@^5.4.9":
-  version "5.4.9"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-5.4.9.tgz#cdab9d182f539dcfb165d899d335e68cc9c03aed"
-  integrity sha512-BPWwAYEa7yLV+lgi0WT6fTgd1Ru8yonuPhvG3hZkSP/Oaom3+Ck2DJAX6jZarvKeK2cYdPzxSel6Pep1YSpmuA==
+"@patternfly/react-core@^5.4.10":
+  version "5.4.10"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-5.4.10.tgz#77cb9d548a8a826040ca94f2e61cd5f2d6f9fe0a"
+  integrity sha512-lThdXKqHc9sN5AqPskZa1YmUmSwbjdkaT8neTCdMjfnBaBanYCmSCNUMYUsoB0L/2siu2Vlcp12RRaG5hZeN2g==
   dependencies:
     "@patternfly/react-icons" "^5.4.2"
     "@patternfly/react-styles" "^5.4.1"
     "@patternfly/react-tokens" "^5.4.1"
-    focus-trap "7.6.0"
+    focus-trap "7.6.2"
     react-dropzone "^14.2.3"
     tslib "^2.7.0"
 
@@ -1392,12 +1392,12 @@
   resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-5.4.1.tgz#c101419917bcf309dfa7469820cd7320dd0c5120"
   integrity sha512-XA8PXksD8uiA3RTwxdUwJXOCf+V6sVd+2HKapWAdRLvtSV+Sdk7NgCvalb4IAQncsddLopjPQD8gAHA298+N8w==
 
-"@patternfly/react-table@5.4.10":
-  version "5.4.10"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-table/-/react-table-5.4.10.tgz#43957f342692971a4a690088810589a6d045aaf2"
-  integrity sha512-5p95UZer+4GJyS9pXUEqYal/bixuyNn4GhH/Hyk3dj/MeLKZrQWD6hmRaj7/SqJiVC2FhZBoQoDGEeXElqkc0g==
+"@patternfly/react-table@5.4.11":
+  version "5.4.11"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-table/-/react-table-5.4.11.tgz#68c567036106df8e330d4fcd59d68bd0c51014d1"
+  integrity sha512-TlEPx4G+49QYZxk649WUIHkRPA/JB//i29fUosrJdI6EEzpTe8keHLXe5wA9KkhCxOtna7iHPTPWv5qRiDJKSg==
   dependencies:
-    "@patternfly/react-core" "^5.4.9"
+    "@patternfly/react-core" "^5.4.10"
     "@patternfly/react-icons" "^5.4.2"
     "@patternfly/react-styles" "^5.4.1"
     "@patternfly/react-tokens" "^5.4.1"
@@ -5451,10 +5451,10 @@ flatted@^3.2.9:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.1.tgz#21db470729a6734d4997002f439cb308987f567a"
   integrity sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==
 
-focus-trap@7.6.0:
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.6.0.tgz#7f3edab8135eaca92ab59b6e963eb5cc42ded715"
-  integrity sha512-1td0l3pMkWJLFipobUcGaf+5DTY4PLDDrcqoSaKP8ediO/CoWCCYk/fT/Y2A4e6TNB+Sh6clRJCjOPPnKoNHnQ==
+focus-trap@7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.6.2.tgz#a501988821ca23d0150a7229eb7a20a3695bdf0e"
+  integrity sha512-9FhUxK1hVju2+AiQIDJ5Dd//9R2n2RAfJ0qfhF4IHGHgcoEUTMpbTeG/zbEuwaiYXfuAH6XE0/aCyxDdRM+W5w==
   dependencies:
     tabbable "^6.2.0"
 

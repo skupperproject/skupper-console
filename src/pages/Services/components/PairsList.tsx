@@ -9,12 +9,12 @@ import { combineInstantMetricsToPairs } from '../../../core/utils/combineInstant
 import { useServersData } from '../hooks/useServersData';
 import { customServiceCells, PairColumns } from '../Services.constants';
 
-interface ProcessServerListProps {
+interface PairsListProps {
   id: string;
   name: string;
 }
 
-const ProcessServerList: FC<ProcessServerListProps> = function ({ id, name }) {
+const PairsList: FC<PairsListProps> = function ({ id, name }) {
   const { processPairs, metrics } = useServersData(id, name);
 
   const pairs = combineInstantMetricsToPairs({
@@ -36,4 +36,4 @@ const ProcessServerList: FC<ProcessServerListProps> = function ({ id, name }) {
   );
 };
 
-export default ProcessServerList;
+export default PairsList;

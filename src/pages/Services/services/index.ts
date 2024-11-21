@@ -1,41 +1,10 @@
 import { VarColors } from '../../../config/colors';
-import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
-import { PrometheusMetric } from '../../../types/Prometheus.interfaces';
-import { ServiceResponse } from '../../../types/REST.interfaces';
-import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
+import { SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
-  extendServicesWithOpenAndTotalConnections: (
-    services: ServiceResponse[],
-    {
-      tcpActiveFlows
-    }: {
-      tcpActiveFlows?: PrometheusMetric<'vector'>[];
-    }
-  ) => {
-    const tcpOpenConnectionsMap =
-      tcpActiveFlows?.length &&
-      tcpActiveFlows.reduce(
-        (acc, flow) => {
-          acc[flow.metric[PrometheusLabelsV2.RoutingKey]] = Number(flow.value[1]);
-
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-    return services.map((service) => ({
-      ...service,
-      currentFlows:
-        tcpOpenConnectionsMap && tcpOpenConnectionsMap[service.name]
-          ? Math.round(tcpOpenConnectionsMap[service.name])
-          : ''
-    }));
-  },
-
   convertPairsToSankeyChartData: (
     servicePairs: {
       sourceName: string;
@@ -47,36 +16,16 @@ export const ServicesController = {
     }[],
     showMetrics: boolean
   ) => {
-    const sourceProcessSuffix = 'client'; // The Sankey chart crashes when the same site is present in both the client and server positions. No circular dependency are allowed for this kind of chart
-    const clients: SkSankeyChartNode[] =
-      servicePairs?.map(({ sourceName, sourceSiteName, destinationName, color = VarColors.Blue400 }) => ({
-        id: sourceName === destinationName ? `${sourceName} ${sourceProcessSuffix}` : sourceName,
-        nodeColor: sourceSiteName ? VarColors.Black400 : color
-      })) || [];
+    const sourceProcessSuffix = 'client';
 
-    const servers =
-      servicePairs?.map(({ destinationName, destinationSiteName, color = VarColors.Blue400 }) => ({
-        id: destinationName || destinationSiteName,
-        nodeColor: destinationSiteName ? VarColors.Black400 : color
-      })) || [];
+    // Generate nodes and links
+    const nodes = generateSankeyNodes(servicePairs, sourceProcessSuffix);
+    const links = generateSankeyLinks(servicePairs, sourceProcessSuffix, showMetrics);
 
-    const nodes = [...clients, ...servers]
-      .filter(({ id }) => id)
-      .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i) as SkSankeyChartNode[];
-
-    const links =
-      (servicePairs
-        .map(({ sourceName, destinationName, byteRate }) => ({
-          source: sourceName === destinationName ? `${sourceName} ${sourceProcessSuffix}` : sourceName,
-          target: destinationName,
-          value: showMetrics ? byteRate || DEFAULT_SANKEY_CHART_FLOW_VALUE : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
-        }))
-        .filter(({ source, target }) => source && target) as SkSankeyChartLink[]) || [];
-
-    return { nodes, links: removeDuplicatesFromArrayOfObjects(links) };
+    return { nodes, links };
   },
 
-  convertPairsToListenerConnectorsTopologyData: (
+  convertPairsTopologyData: (
     servicePairs: {
       sourceId: string;
       sourceName: string;
@@ -88,30 +37,28 @@ export const ServicesController = {
       type: GraphElementNames;
     }[]
   ): { nodes: GraphNode[]; edges: GraphEdge[] } => {
-    const clients =
-      servicePairs?.map(({ type, iconName, sourceId, sourceName }) => ({
+    const generateTopologyNodes = (pairs: typeof servicePairs) => {
+      const clients = pairs.map(({ type, iconName, sourceId, sourceName }) => ({
         type,
         id: sourceId,
         name: sourceName,
         label: sourceName,
         iconName
-      })) || [];
+      }));
 
-    const servers =
-      servicePairs?.map(({ destinationId, destinationName }) => ({
+      const servers = pairs.map(({ destinationId, destinationName }) => ({
         id: destinationId,
         name: destinationName,
         label: destinationName,
         type: 'SkEmptyNode' as GraphElementNames,
         iconName: 'process' as GraphIconKeys
-      })) || [];
+      }));
 
-    const nodes = [...clients, ...servers]
-      .filter(({ id }) => id)
-      .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i);
+      return removeDuplicates([...clients, ...servers], 'id');
+    };
 
-    const edges =
-      servicePairs
+    const generateTopologyEdges = (pairs: typeof servicePairs) =>
+      pairs
         .map(({ sourceId, sourceName, destinationId, destinationName }) => ({
           type: 'SkListenerConnectorEdge' as GraphElementNames,
           id: `${sourceId}-${destinationId}`,
@@ -119,10 +66,67 @@ export const ServicesController = {
           sourceName,
           target: destinationId,
           targetName: destinationName
-          // value: showMetrics ? byteRate || DEFAULT_SANKEY_CHART_FLOW_VALUE : DEFAULT_SANKEY_CHART_FLOW_VALUE // The Nivo sankey chart restricts the usage of the value 0 for maintaining the height of each flow. We use a value near 0
         }))
-        .filter(({ source, target }) => source && target) || [];
+        .filter(({ source, target }) => source && target);
+
+    // Generate nodes and edges
+    const nodes = generateTopologyNodes(servicePairs);
+    const edges = generateTopologyEdges(servicePairs);
 
     return { nodes, edges };
   }
 };
+
+/**
+ * Removes duplicate objects from an array based on a given key.
+ */
+const removeDuplicates = <T>(items: T[], key: keyof T): T[] =>
+  items.filter((item, index, array) => array.findIndex((v) => v[key] === item[key]) === index);
+
+/**
+ * Generates Sankey nodes based on source and destination data.
+ */
+const generateSankeyNodes = (
+  servicePairs: {
+    sourceName: string;
+    sourceSiteName?: string;
+    destinationName: string;
+    destinationSiteName?: string;
+    color?: string;
+  }[],
+  sourceProcessSuffix: string
+): SkSankeyChartNode[] => {
+  const clients = servicePairs.map(({ sourceName, sourceSiteName, destinationName, color = VarColors.Blue400 }) => ({
+    id: sourceName === destinationName ? `${sourceName} ${sourceProcessSuffix}` : sourceName,
+    nodeColor: sourceSiteName ? VarColors.Black400 : color
+  }));
+
+  const servers = servicePairs.map(({ destinationName, destinationSiteName, color = VarColors.Blue400 }) => ({
+    id: destinationName,
+    nodeColor: destinationSiteName ? VarColors.Black400 : color
+  }));
+
+  return removeDuplicates([...clients, ...servers], 'id');
+};
+
+/**
+ * Generates Sankey links based on service pairs.
+ */
+const generateSankeyLinks = (
+  servicePairs: {
+    sourceName: string;
+    destinationName: string;
+    byteRate?: number;
+  }[],
+  sourceProcessSuffix: string,
+  showMetrics: boolean
+) =>
+  removeDuplicatesFromArrayOfObjects(
+    servicePairs
+      .map(({ sourceName, destinationName, byteRate }) => ({
+        source: sourceName === destinationName ? `${sourceName} ${sourceProcessSuffix}` : sourceName,
+        target: destinationName,
+        value: showMetrics ? byteRate || DEFAULT_SANKEY_CHART_FLOW_VALUE : DEFAULT_SANKEY_CHART_FLOW_VALUE
+      }))
+      .filter(({ source, target }) => source && target)
+  );

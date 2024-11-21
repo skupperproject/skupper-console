@@ -63,7 +63,7 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
     iconName: 'connector' as GraphIconKeys
   }));
 
-  const { nodes, edges } = ServicesController.convertPairsToListenerConnectorsTopologyData([
+  const { nodes, edges } = ServicesController.convertPairsTopologyData([
     ...clientsPairs,
     ...serversPairs,
     ...serversProcessesPairs

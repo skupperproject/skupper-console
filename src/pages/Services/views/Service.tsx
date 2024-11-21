@@ -10,7 +10,7 @@ import HttpRequests from '../components/HttpRequests';
 import ListenerAndConnectorList from '../components/ListenerAndConnectorList';
 import NavigationMenu from '../components/NavigationMenu';
 import Overview from '../components/Overview';
-import ProcessServerList from '../components/ProcessServerList';
+import PairsList from '../components/PairsList';
 import TcpConnections from '../components/TcpConnections';
 import TcpTerminatedConnections from '../components/TcpTerminatedConnections';
 import useServiceData from '../hooks/useServiceData';
@@ -57,7 +57,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
         <>
           {menuSelected === TAB_0_KEY && <Overview id={id} name={name} />}
           {menuSelected === TAB_5_KEY && <ListenerAndConnectorList id={id} name={name} />}
-          {menuSelected === TAB_1_KEY && <ProcessServerList id={id} name={name} />}
+          {menuSelected === TAB_1_KEY && <PairsList id={id} name={name} />}
           {menuSelected === TAB_3_KEY && <TcpConnections routingKey={name} />}
           {menuSelected === TAB_4_KEY && <TcpTerminatedConnections routingKey={name} />}
           {menuSelected === TAB_2_KEY && <HttpRequests routingKey={name} />}
