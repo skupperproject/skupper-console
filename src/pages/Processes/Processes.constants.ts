@@ -3,17 +3,10 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkExposedCell from '../../core/components/SkExposedCell';
-import SkHighlightValueCell, { SkHighlightValueCellProps } from '../../core/components/SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
-import { formatLatency } from '../../core/utils/formatLatency';
-import {
-  ProcessPairsResponse,
-  BiFlowResponse,
-  ProcessResponse,
-  PairsWithInstantMetrics
-} from '../../types/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse, PairsWithInstantMetrics } from '../../types/REST.interfaces';
 import { ComponentRoutesPaths } from '../ProcessGroups/Components.enum';
 import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
@@ -41,25 +34,11 @@ export const CustomProcessCells = {
       type: 'component',
       link: `${ComponentRoutesPaths.Components}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
-  ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatBytes }),
-  ByteRateFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatByteRate }),
   TimestampCell: SkEndTimeCell,
   ExposureCell: SkExposedCell
 };
 
-export const CustomPairMetricCells = {
-  ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatBytes }),
-  ByteRateFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatByteRate }),
-  LatencyFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatLatency })
-};
-
 export const CustomProcessPairCells = {
-  ...CustomPairMetricCells,
   ConnectedLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
     SkLinkCell({
       ...props,
@@ -123,19 +102,13 @@ export const PairsListColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
     name: ProcessesLabels.Bytes,
     prop: 'bytes',
-    customCellName: 'ByteFormatCell',
+    format: formatBytes,
     modifier: 'fitContent'
   },
   {
     name: ProcessesLabels.ByteRate,
     prop: 'byteRate',
-    customCellName: 'ByteRateFormatCell',
-    modifier: 'fitContent'
-  },
-  {
-    name: ProcessesLabels.Latency,
-    prop: 'latency',
-    customCellName: 'LatencyFormatCell',
+    format: formatByteRate,
     modifier: 'fitContent'
   }
 ];

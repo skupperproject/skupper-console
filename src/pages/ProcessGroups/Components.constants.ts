@@ -4,7 +4,6 @@ import { ComponentLabels, ComponentRoutesPaths } from './Components.enum';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { ComponentResponse, PairsResponse } from '../../types/REST.interfaces';
-import { CustomPairMetricCells } from '../Processes/Processes.constants';
 
 export const ComponentsPaths = {
   path: ComponentRoutesPaths.Components,
@@ -28,7 +27,6 @@ export const CustomComponentCells = {
 };
 
 export const CustomComponentPairCells = {
-  ...CustomPairMetricCells,
   ConnectedLinkCell: (props: SkLinkCellProps<PairsResponse>) =>
     SkLinkCell({
       ...props,

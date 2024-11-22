@@ -8,6 +8,7 @@ import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import SkTrueFalseStatusCell from '../../core/components/SkTrueFalseStatusCell';
+import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
 import {
   ServiceResponse,
   QueryFilters,
@@ -17,7 +18,6 @@ import {
   PairsWithInstantMetrics
 } from '../../types/REST.interfaces';
 import { SKTableColumn } from '../../types/SkTable.interfaces';
-import { CustomPairMetricCells } from '../Processes/Processes.constants';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes/Processes.enum';
 import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
@@ -34,7 +34,6 @@ export const TAB_4_KEY = ServicesLabels.OldConnections;
 export const TAB_5_KEY = ServicesLabels.ListenersAndConnectors;
 
 export const customServiceCells = {
-  ...CustomPairMetricCells,
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
     SkLinkCell({
       ...props,
@@ -186,13 +185,13 @@ export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
     name: ProcessesLabels.Bytes,
     prop: 'bytes',
-    customCellName: 'ByteFormatCell',
+    format: formatBytes,
     modifier: 'fitContent'
   },
   {
     name: ProcessesLabels.ByteRate,
     prop: 'byteRate',
-    customCellName: 'ByteRateFormatCell',
+    format: formatByteRate,
     modifier: 'fitContent'
   }
 ];
