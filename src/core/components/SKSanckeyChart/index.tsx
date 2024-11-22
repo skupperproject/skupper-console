@@ -40,53 +40,53 @@ interface SkSankeyChartProps {
 }
 
 const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function }> = function ({ data, onSearch }) {
-  if (!data.links.length) {
-    return (
-      <SKEmptyData
-        message={MetricsLabels.NoMetricFoundTitleMessage}
-        description={MetricsLabels.NoMetricFoundDescriptionMessage}
-      />
-    );
-  }
-
   return (
     <>
-      {onSearch && <SankeyFilter onSearch={onSearch} />}
+      {!!onSearch && <SankeyFilter onSearch={onSearch} />}
 
-      <div style={{ height: DEFAULT_SANKEY_CHART_HEIGHT }}>
-        <ResponsiveSankey
-          data={data}
-          margin={{ top: 10, right: 0, bottom: 10, left: 15 }}
-          layout="horizontal"
-          align="justify"
-          nodeOpacity={0.6}
-          nodeHoverOpacity={1}
-          nodeHoverOthersOpacity={0.6}
-          nodeThickness={15}
-          nodeSpacing={24}
-          nodeBorderWidth={0}
-          animate={true}
-          linkBlendMode="normal"
-          linkOpacity={0.75}
-          linkHoverOpacity={0.6}
-          linkHoverOthersOpacity={0.3}
-          linkContract={0}
-          enableLinkGradient={true}
-          labelPosition="inside"
-          labelOrientation="horizontal"
-          labelPadding={16}
-          theme={{
-            text: {
-              fontSize: 14,
-              fontFamily: DEFAULT_FONT_VAR
-            },
-            tooltip: { container: { color: VarColors.Black900 } }
-          }}
-          labelTextColor={HexColors.Black900}
-          valueFormat={valueFormat}
-          colors={getColors}
+      {!data.links.length && (
+        <SKEmptyData
+          message={MetricsLabels.NoMetricFoundTitleMessage}
+          description={MetricsLabels.NoMetricFoundDescriptionMessage}
         />
-      </div>
+      )}
+
+      {!!data.links.length && (
+        <div style={{ height: DEFAULT_SANKEY_CHART_HEIGHT }}>
+          <ResponsiveSankey
+            data={data}
+            margin={{ top: 10, right: 0, bottom: 10, left: 15 }}
+            layout="horizontal"
+            align="justify"
+            nodeOpacity={0.6}
+            nodeHoverOpacity={1}
+            nodeHoverOthersOpacity={0.6}
+            nodeThickness={15}
+            nodeSpacing={24}
+            nodeBorderWidth={0}
+            animate={true}
+            linkBlendMode="normal"
+            linkOpacity={0.75}
+            linkHoverOpacity={0.6}
+            linkHoverOthersOpacity={0.3}
+            linkContract={0}
+            enableLinkGradient={true}
+            labelPosition="inside"
+            labelOrientation="horizontal"
+            labelPadding={16}
+            theme={{
+              text: {
+                fontSize: 14,
+                fontFamily: DEFAULT_FONT_VAR
+              },
+              tooltip: { container: { color: VarColors.Black900 } }
+            }}
+            labelTextColor={HexColors.Black900}
+            valueFormat={valueFormat}
+            colors={getColors}
+          />
+        </div>
+      )}
     </>
   );
 };

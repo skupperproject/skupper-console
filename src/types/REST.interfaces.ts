@@ -137,6 +137,30 @@ export interface ProcessPairsResponse extends BasePairsResponse {
 
 export type PairsResponse = BasePairsResponse | ProcessPairsResponse;
 
+export interface ListenerResponse extends BaseResponse {
+  name: string;
+  parent: string;
+  addressId: string;
+  address: string;
+  destHost: string;
+  destPort: number;
+  processId: string;
+}
+
+export interface ConnectorResponse extends BaseResponse {
+  name: string;
+  parent: string;
+  addressId: string;
+  address: string;
+  destHost: string;
+  destPort: number;
+  processId: string;
+  target: string; //process name associated,
+  count?: number;
+  siteName: string;
+  siteId: string;
+  processes?: ConnectorResponse[];
+}
 export interface ServiceResponse extends BaseResponse {
   name: string;
   protocol: Protocols;

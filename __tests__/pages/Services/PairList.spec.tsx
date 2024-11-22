@@ -11,7 +11,7 @@ import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import ProcessServerList from '../../../src/pages/Services/components/ProcessServerList';
+import PairsList from '../../../src/pages/Services/components/PairsList';
 
 const servicesResults = servicesData.results;
 const biFlowResults = biFlowData.results;
@@ -33,7 +33,7 @@ describe('Begin testing the Http requests component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <ProcessServerList id={servicesResults[0].identity} name={servicesResults[0].name} />
+          <PairsList id={servicesResults[0].identity} name={servicesResults[0].name} />
         </Suspense>
       </Wrapper>
     );

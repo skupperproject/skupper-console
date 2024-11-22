@@ -25,6 +25,12 @@ export const getServicesPATH = () => SERVICES_PATH;
 export const getServicePATH = (id: string) => composePath([SERVICES_PATH, id]);
 export const getProcessPairsByServicePATH = (id: string) => composePath([SERVICES_PATH, id, 'processpairs']);
 
+const LISTENERS_PATH = `${API_URL}/listeners`;
+export const getListenersPATH = () => LISTENERS_PATH;
+
+const CONNECTORS_PATH = `${API_URL}/connectors`;
+export const getConnectorsPATH = () => CONNECTORS_PATH;
+
 const TRANSPORT_FLOWS_PATH = `${API_URL}/connections`; // L4 flows
 export const getTransportFlowsPATH = () => TRANSPORT_FLOWS_PATH;
 export const getTransportFlow = (id: string) => composePath([TRANSPORT_FLOWS_PATH, id]);

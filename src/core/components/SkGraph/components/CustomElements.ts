@@ -7,6 +7,8 @@ import {
   EdgeOptions,
   ExtensionCategory,
   NodeOptions,
+  Polyline,
+  PolylineStyleProps,
   Quadratic,
   QuadraticStyleProps,
   RectCombo,
@@ -189,7 +191,7 @@ const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
 const DEFAULT_COMBO_CONFIG: ComboOptions = {
   style: {
     fillOpacity: 1,
-    lineWidth: 3,
+    lineWidth: 2,
     fill: COMBO__BG_COLOR_DEFAULT,
     stroke: COMBO_BORDER_COLOR_DEFAULT,
     radius: 10,
@@ -210,6 +212,18 @@ const DEFAULT_COMBO_CONFIG: ComboOptions = {
 class SkNode extends Circle {
   render(attrs: Required<CircleStyleProps>) {
     super.render(attrs);
+  }
+}
+
+class SkEmptyNode extends Circle {
+  render(attrs: Required<CircleStyleProps>) {
+    super.render({
+      ...attrs,
+      opacity: 1,
+      stroke: 'transparent',
+      size: NODE_SIZE / 2,
+      icon: true
+    });
   }
 }
 
@@ -245,9 +259,7 @@ class SkSiteEdge extends SkDataEdge {
     super.render({
       ...attrs,
       lineDash: 3,
-      endArrow: true,
-      endArrowType: 'circle',
-      endArrowOffset: -5,
+      endArrow: false,
       badgeFontSize: EDGE_BADGE_FONT_SIZE,
       badgeFill: EDGE_BADGE_PRIMARY_TEXT,
       badgeBackgroundFill: EDGE_BADGE_PRIMARY_BACKGROUND,
@@ -278,6 +290,25 @@ class SkSiteEdgePartialUp extends SkSiteEdge {
   }
 }
 
+class SkListenerConnectorEdge extends Polyline {
+  render(attrs: Required<PolylineStyleProps>) {
+    const extendedProps = {
+      lineDash: 4,
+      radius: 20,
+      endArrow: false,
+      labelBackgroundRadius: 2,
+      router: {
+        type: 'orth'
+      }
+    };
+
+    super.render({
+      ...attrs,
+      ...extendedProps
+    });
+  }
+}
+
 class SkCombo extends RectCombo {
   render(attrs: Required<RectComboStyleProps>) {
     super.render(attrs);
@@ -292,11 +323,13 @@ export const defaultConfigElements = {
 
 export function registerElements() {
   register(ExtensionCategory.NODE, 'SkNode', SkNode);
+  register(ExtensionCategory.NODE, 'SkEmptyNode', SkEmptyNode);
   register(ExtensionCategory.NODE, 'SkNodeUnexposed', SkNodeUnexposed);
   register(ExtensionCategory.NODE, 'SkNodeRemote', SkNodeRemote);
   register(ExtensionCategory.EDGE, 'SkDataEdge', SkDataEdge);
   register(ExtensionCategory.EDGE, 'SkSiteEdge', SkSiteEdge);
   register(ExtensionCategory.EDGE, 'SkSiteEdgeDown', SkSiteEdgeDown);
   register(ExtensionCategory.EDGE, 'SkSiteEdgePartialDown', SkSiteEdgePartialUp);
+  register(ExtensionCategory.EDGE, 'SkListenerConnectorEdge', SkListenerConnectorEdge);
   register(ExtensionCategory.COMBO, 'SkCombo', SkCombo);
 }

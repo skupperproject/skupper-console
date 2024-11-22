@@ -22,7 +22,7 @@ const metricQueryParams = {
   }
 };
 
-const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatency }: UseTopologySiteDataProps) => {
+const useTopologySiteData = ({ showDataLink, showBytes, showByteRate }: UseTopologySiteDataProps) => {
   const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
@@ -41,13 +41,12 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, showBytes, showByteRate, showLatency, showDataLink],
+        queryKey: [QueriesPairs.GetMetricsByPairs, showBytes, showByteRate, showDataLink],
         queryFn: () =>
           showDataLink
             ? TopologyController.getAllTopologyMetrics({
                 showBytes,
                 showByteRate,
-                showLatency,
                 metricQueryParams
               })
             : null,

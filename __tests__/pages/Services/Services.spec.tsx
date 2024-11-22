@@ -3,6 +3,8 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { ServicesRoutesPaths } from 'pages/Services/Services.enum';
+
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
@@ -49,7 +51,6 @@ describe('Begin testing the Service component', () => {
 
     expect(screen.getByText(service.name)).toBeInTheDocument();
     expect(screen.getAllByText(service.protocol)[0]).toBeInTheDocument();
-    expect(screen.getAllByText(service.connectorCount)[0]).toBeInTheDocument();
   });
 
   it('Should ensure the Services component renders with correct Name link href after loading page', async () => {
@@ -59,7 +60,7 @@ describe('Begin testing the Service component', () => {
 
     expect(screen.getByRole('link', { name: service.name })).toHaveAttribute(
       'href',
-      `#/services/${service.name}@${service.identity}`
+      `#${ServicesRoutesPaths.Services}/${service.name}@${service.identity}`
     );
   });
 });

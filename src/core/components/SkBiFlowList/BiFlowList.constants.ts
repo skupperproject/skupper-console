@@ -8,7 +8,6 @@ import { formatBytes } from '../../utils/formatBytes';
 import { formatLatency } from '../../utils/formatLatency';
 import SkDurationCell from '../SKDurationCell';
 import SkEndTimeCell from '../SkEndTimeCell';
-import SkHighlightValueCell, { SkHighlightValueCellProps } from '../SkHighlightValueCell';
 import SkLinkCell, { SkLinkCellProps } from '../SkLinkCell';
 import { SkSelectOption } from '../SkSelect';
 
@@ -38,9 +37,7 @@ export const customCells = {
       link: `${ProcessesRoutesPaths.Processes}/${props.data.destProcessName}@${props.data.destSiteId}`
     }),
   TimestampCell: SkEndTimeCell,
-  DurationCell: SkDurationCell,
-  ByteFormatCell: (props: SkHighlightValueCellProps<BiFlowResponse>) =>
-    SkHighlightValueCell({ ...props, format: formatBytes })
+  DurationCell: SkDurationCell
 };
 
 // no wrap fix the column
@@ -49,7 +46,7 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     name: BiFlowListLabels.Closed,
     prop: 'endTime',
     customCellName: 'TimestampCell',
-    width: 15
+    modifier: 'nowrap'
   },
   {
     name: BiFlowListLabels.Duration,
@@ -77,7 +74,7 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
     name: BiFlowListLabels.TxBytes,
     prop: 'octets',
-    customCellName: 'ByteFormatCell',
+    format: formatBytes,
     modifier: 'nowrap'
   },
   {
@@ -102,7 +99,7 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
     name: BiFlowListLabels.RxBytes,
     prop: 'octetsReverse',
-    customCellName: 'ByteFormatCell',
+    format: formatBytes,
     modifier: 'nowrap'
   },
   {
@@ -124,7 +121,7 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     name: BiFlowListLabels.Completed,
     prop: 'endTime',
     customCellName: 'TimestampCell',
-    width: 15
+    modifier: 'nowrap'
   },
   {
     name: BiFlowListLabels.Protocol,
@@ -160,12 +157,6 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     modifier: 'nowrap'
   },
   {
-    name: BiFlowListLabels.TxLatency,
-    prop: 'latency',
-    format: formatLatency,
-    modifier: 'nowrap'
-  },
-  {
     name: BiFlowListLabels.To,
     prop: 'destProcessName',
     customCellName: 'TargetProcessNameLinkCell',
@@ -181,12 +172,6 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     name: BiFlowListLabels.RxBytes,
     prop: 'octetsReverse',
     format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: BiFlowListLabels.RxLatency,
-    prop: 'latencyReverse',
-    format: formatLatency,
     modifier: 'nowrap'
   },
   {

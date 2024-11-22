@@ -107,7 +107,11 @@ const SkGraph: FC<SkGraphProps> = memo(
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_LEAVE, (e) => setLabelText(e.target.id, 'partialLabelText'));
         // Enable the graphic behavior ActivateNodeRelation for the drag and drop event
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_DOWN, () => toggleHover(false));
-        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, () => toggleHover(true));
+        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, (e) => {
+          toggleHover(true);
+          // fix an issue with drop events where node labels are positioned behind edges
+          graph.setElementZIndex(e.target.id, 1);
+        });
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
           // if the node is already selected , set id = undefined to deleselect it

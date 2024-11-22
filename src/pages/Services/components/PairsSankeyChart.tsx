@@ -1,12 +1,7 @@
 import { FC, useCallback, useState, startTransition } from 'react';
 
 import { Card, CardBody, CardHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { PrometheusApi } from '../../../API/Prometheus.api';
-import { RESTApi } from '../../../API/REST.api';
-import { UPDATE_INTERVAL } from '../../../config/config';
-import { prometheusProcessNameseparator } from '../../../config/prometheus';
 import SkSankeyChart from '../../../core/components/SKSanckeyChart';
 import {
   ServiceClientResourceOptions,
@@ -14,14 +9,23 @@ import {
 } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
-import { ServicesLabels, QueriesServices } from '../Services.enum';
+import { ServicesLabels } from '../Services.enum';
 
-interface PairsSankeyChartProps {
-  serviceId: string;
-  serviceName: string;
+interface Pairs {
+  sourceName: string;
+  sourceSiteName?: string;
+  destinationName: string;
+  destinationSiteName?: string;
+  byteRate?: number;
+  color?: string;
 }
 
-const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ serviceId, serviceName }) {
+interface PairsSankeyChartProps {
+  pairs: Pairs[];
+  showFilter?: boolean;
+}
+
+const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ pairs, showFilter = true }) {
   const [metricSelected, setMetricSelected] = useState(defaultMetric);
   const [clientResourceSelected, setClientResourceSelected] = useState<'client' | 'clientSite'>(
     ServiceClientResourceOptions[0].id
@@ -30,38 +34,7 @@ const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ serviceId, servi
     ServiceServerResourceOptions[0].id
   );
 
-  const { data: processPairs } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
-    queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: resourcePairs } = useSuspenseQuery({
-    queryKey: [
-      QueriesServices.GetResourcePairsByService,
-      serviceName,
-      clientResourceSelected,
-      serverResourceSelected,
-      processPairs
-    ],
-    queryFn: () =>
-      processPairs.results?.length
-        ? PrometheusApi.fethResourcePairsByService({
-            serviceName,
-            clientType: clientResourceSelected,
-            serverType: serverResourceSelected,
-            sourceProcesses: processPairs.results
-              .map(({ sourceName }) => sourceName)
-              .join(prometheusProcessNameseparator),
-            destProcesses: processPairs.results
-              .map(({ destinationName }) => destinationName)
-              .join(prometheusProcessNameseparator)
-          })
-        : null,
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const handleGetPairType = useCallback(
+  const handleFindPairType = useCallback(
     ({
       clientType,
       serverType,
@@ -80,8 +53,8 @@ const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ serviceId, servi
     []
   );
 
-  const { nodes, links } = ServicesController.convertToSankeyChartData(
-    resourcePairs || [],
+  const { nodes, links } = ServicesController.convertPairsToSankeyChartData(
+    normalizePairs(pairs, clientResourceSelected, serverResourceSelected),
     metricSelected !== defaultMetric
   );
 
@@ -94,10 +67,20 @@ const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ serviceId, servi
         </TextContent>
       </CardHeader>
       <CardBody>
-        <SkSankeyChart data={{ nodes, links }} onSearch={handleGetPairType} />
+        <SkSankeyChart data={{ nodes, links }} onSearch={showFilter ? handleFindPairType : undefined} />
       </CardBody>
     </Card>
   );
 };
 
 export default PairsSankeyChart;
+
+function normalizePairs(pairs: Pairs[], clientType: 'client' | 'clientSite', serverType: 'server' | 'serverSite') {
+  return pairs.map((pair) => ({
+    ...pair,
+    sourceName: clientType === 'client' ? pair.sourceName : (pair.sourceSiteName as string),
+    destinationName: serverType === 'server' ? pair.destinationName : (pair.destinationSiteName as string),
+    sourceSiteName: clientType === 'clientSite' ? pair.sourceSiteName : '',
+    destinationSiteName: serverType === 'serverSite' ? pair.destinationSiteName : ''
+  }));
+}

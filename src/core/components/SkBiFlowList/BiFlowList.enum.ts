@@ -11,8 +11,6 @@ export enum BiFlowListLabels {
   To = 'To server',
   TxBytes = 'Data Out',
   RxBytes = 'Data In',
-  TxByteRate = 'Rate Out',
-  RxByteRate = 'Rate In',
   TxLatency = 'Latency Out',
   RxLatency = 'Latency In',
   Completed = 'Completed',

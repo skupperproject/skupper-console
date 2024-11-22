@@ -7,6 +7,7 @@ import { SMALL_PAGINATION_SIZE } from '../../../config/config';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import SkTable from '../../../core/components/SkTable';
+import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
 import { combineInstantMetricsToPairs } from '../../../core/utils/combineInstantMetricsToPairs';
 import { invertPairs } from '../../../core/utils/invertPairs';
 import { PairsWithInstantMetrics, SiteResponse } from '../../../types/REST.interfaces';
@@ -51,8 +52,16 @@ const PairsList: FC<PairsListProps> = function ({ site: { identity: id, name } }
 
   return (
     <Flex direction={{ default: 'column' }}>
-      {renderTable(SiteLabels.Clients, clients, PairsListColumns)}
-      {renderTable(SiteLabels.Servers, servers, PairsListColumns)}
+      {renderTable(
+        SiteLabels.Clients,
+        clients,
+        setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
+      )}
+      {renderTable(
+        SiteLabels.Servers,
+        servers,
+        setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
+      )}
     </Flex>
   );
 };

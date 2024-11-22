@@ -10,7 +10,6 @@ export const TopologyPaths = {
 
 export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';
-export const SHOW_LINK_LATENCY = 'show-link-latency';
 export const SHOW_DEPLOYMENTS = 'show-deployments';
 export const SHOW_INBOUND_METRICS = 'show-inbound-metrics';
 export const SHOW_LINK_METRIC_DISTRIBUTION = 'show-metric-distribution';
@@ -40,10 +39,6 @@ export const displayOptionsForProcesses: SkSelectGroupedOptions[] = [
       {
         id: SHOW_LINK_BYTERATE,
         label: TopologyLabels.CheckboxShowCurrentByteRate
-      },
-      {
-        id: SHOW_LINK_LATENCY,
-        label: TopologyLabels.CheckboxShowLatency
       }
     ]
   },
@@ -99,10 +94,6 @@ export const displayOptionsForSites: SkSelectGroupedOptions[] = [
       {
         id: SHOW_LINK_BYTERATE,
         label: TopologyLabels.CheckboxShowCurrentByteRate
-      },
-      {
-        id: SHOW_LINK_LATENCY,
-        label: TopologyLabels.CheckboxShowLatency
       }
     ]
   }

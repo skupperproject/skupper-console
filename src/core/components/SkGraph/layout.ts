@@ -1,4 +1,4 @@
-import { ForceLayoutOptions } from '@antv/g6';
+import { ForceLayoutOptions, LayoutOptions } from '@antv/g6';
 
 import { NODE_SIZE } from './Graph.constants';
 import { GraphLayouts } from '../../../types/Graph.interfaces';
@@ -26,7 +26,14 @@ const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
   factor: 1000
 };
 
+const LAYOUT_TOPOLOGY_DAGRE: LayoutOptions & { type: 'antv-dagre' } = {
+  type: 'antv-dagre',
+  rankdir: 'TB',
+  ranksep: 30,
+  nodesep: 30
+};
 export const LAYOUT_MAP: GraphLayouts = {
   default: LAYOUT_TOPOLOGY_DEFAULT,
-  combo: LAYOUT_TOPOLOGY_COMBO
+  combo: LAYOUT_TOPOLOGY_COMBO,
+  dagre: LAYOUT_TOPOLOGY_DAGRE
 };

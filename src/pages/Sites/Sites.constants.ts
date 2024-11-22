@@ -5,7 +5,6 @@ import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import SkLinkStatusCell from '../../core/components/SkLinkStatusCell';
 import { PairsResponse, RouterLinkResponse, SiteResponse } from '../../types/REST.interfaces';
-import { CustomPairMetricCells } from '../Processes/Processes.constants';
 
 export const SitesPaths = {
   path: SitesRoutesPaths.Sites,
@@ -37,7 +36,6 @@ export const customSiteCells = {
 };
 
 export const CustomSitePairCells = {
-  ...CustomPairMetricCells,
   ConnectedLinkCell: (props: SkLinkCellProps<PairsResponse>) =>
     SkLinkCell({
       ...props,

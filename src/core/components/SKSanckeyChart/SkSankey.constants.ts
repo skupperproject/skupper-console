@@ -6,7 +6,7 @@ export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 //Filters
 export const SankeyMetricOptions = [
   { id: 'none', label: 'Display only pairs' },
-  { id: 'byterate', label: 'Display avg. byterate (last hour)' }
+  { id: 'byterate', label: 'Display byterate' }
 ];
 
 export const ServiceClientResourceOptions: { label: string; id: 'client' | 'clientSite' }[] = [

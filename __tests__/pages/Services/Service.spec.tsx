@@ -46,7 +46,7 @@ describe('Begin testing the Service component', () => {
     });
 
     expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.Pairs}`)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.OpenConnections}`)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.OldConnections}`)).toBeInTheDocument();
   });
@@ -61,7 +61,7 @@ describe('Begin testing the Service component', () => {
     });
 
     expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.Servers}`)).toBeInTheDocument();
+    expect(screen.getByText(`${ServicesLabels.Pairs}`)).toBeInTheDocument();
     expect(screen.getByText(`${ServicesLabels.Requests}`)).toBeInTheDocument();
   });
 
@@ -70,9 +70,9 @@ describe('Begin testing the Service component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(ServicesLabels.Servers));
+    fireEvent.click(screen.getByText(ServicesLabels.Pairs));
 
-    expect(screen.getByText(`${ServicesLabels.Servers}`).parentNode?.parentNode).toHaveClass(
+    expect(screen.getByText(`${ServicesLabels.Pairs}`).parentNode?.parentNode).toHaveClass(
       'pf-v5-c-tabs__item pf-m-current'
     );
   });

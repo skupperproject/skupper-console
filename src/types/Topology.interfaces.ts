@@ -30,7 +30,6 @@ export interface TopologyConfigMetrics {
 export interface TopologyShowOptionsSelected {
   showLinkBytes: boolean;
   showLinkByteRate: boolean;
-  showLinkLatency: boolean;
   showDeployments: boolean;
   showInboundMetrics: boolean;
   showMetricDistribution: boolean;

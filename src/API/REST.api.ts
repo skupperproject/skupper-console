@@ -22,7 +22,9 @@ import {
   getUser,
   getServicePATH,
   getApplicationFlowPATH,
-  getApplicationFlowsPATH
+  getApplicationFlowsPATH,
+  getConnectorsPATH,
+  getListenersPATH
 } from './REST.paths';
 import { aggregateDistinctPairs, mapQueryFiltersToQueryParams } from './REST.utils';
 import {
@@ -37,7 +39,9 @@ import {
   ResponseWrapper,
   PairsResponse,
   UserResponse,
-  ApplicationFlowResponse
+  ApplicationFlowResponse,
+  ListenerResponse,
+  ConnectorResponse
 } from '../types/REST.interfaces';
 
 export const RESTApi = {
@@ -138,6 +142,23 @@ export const RESTApi = {
 
   fetchLink: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<RouterLinkResponse>> => {
     const data = await axiosFetch<ResponseWrapper<RouterLinkResponse>>(getLinkPATH(id), {
+      params: options ? mapQueryFiltersToQueryParams(options) : null
+    });
+
+    return data;
+  },
+
+  // LISTENERS AND CONNECTORS
+  fetchListeners: async (options?: QueryFilters): Promise<ResponseWrapper<ListenerResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ListenerResponse[]>>(getListenersPATH(), {
+      params: options ? mapQueryFiltersToQueryParams(options) : null
+    });
+
+    return data;
+  },
+
+  fetchConnectors: async (options?: QueryFilters): Promise<ResponseWrapper<ConnectorResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<ConnectorResponse[]>>(getConnectorsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 

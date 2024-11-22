@@ -9,6 +9,7 @@ import SkTable from '../../../core/components/SkTable';
 import { SiteResponse } from '../../../types/REST.interfaces';
 import { useSiteLinksData } from '../hooks/useSiteLinksData';
 import { customSiteCells, linksColumns, linksRemoteColumns } from '../Sites.constants';
+import { SiteLabels } from '../Sites.enum';
 
 interface PairsListProps {
   site: SiteResponse;
@@ -32,10 +33,10 @@ const Links: FC<PairsListProps> = function ({ site: { identity: id } }) {
       {!!links.length && (
         <StackItem>
           <SkTable
-            title="Links"
+            title={SiteLabels.OutLinks}
             columns={linksColumns}
             rows={links}
-            pagination={false}
+            pagination={true}
             alwaysShowPagination={false}
             paginationPageSize={SMALL_PAGINATION_SIZE}
             customCells={customSiteCells}
@@ -46,10 +47,10 @@ const Links: FC<PairsListProps> = function ({ site: { identity: id } }) {
       {!!remoteLinks.length && (
         <StackItem>
           <SkTable
-            title="Remote links"
+            title={SiteLabels.InLinks}
             columns={linksRemoteColumns}
             rows={remoteLinks}
-            pagination={false}
+            pagination={true}
             alwaysShowPagination={false}
             paginationPageSize={SMALL_PAGINATION_SIZE}
             customCells={customSiteCells}
