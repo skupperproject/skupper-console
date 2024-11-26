@@ -49,7 +49,7 @@ export const customServiceCells = {
   SiteNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
     SkLinkCell({
       ...props,
-      type: 'process',
+      type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.siteName}@${props.data.siteId}`
     }),
   SourceProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
@@ -119,6 +119,11 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
     name: ServicesLabels.Name,
     prop: 'name',
     modifier: 'nowrap'
+  },
+  {
+    name: ServicesLabels.Site,
+    prop: 'siteName',
+    customCellName: 'SiteNameLinkCell'
   },
   {
     name: ProcessesLabels.Created,
