@@ -8,7 +8,6 @@ import SkGraph from '../../../core/components/SkGraph';
 import SkTable from '../../../core/components/SkTable';
 import useListenersAndConnectorsData, {
   aggregateConnectorResponses,
-  extendConnectorResponses,
   getBaseName
 } from '../hooks/useListenersAndConnectorsData';
 import { ServicesController } from '../services';
@@ -21,24 +20,26 @@ interface ListenerAndConnectorListProps {
 }
 
 const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ id, name }) {
-  const { listeners, connectors, processes } = useListenersAndConnectorsData(id);
-  const extendedConnectors = extendConnectorResponses(connectors, processes);
-  const aggregatedConnectors = aggregateConnectorResponses(extendedConnectors);
+  const { listeners, connectors } = useListenersAndConnectorsData(id);
 
-  const clientsPairs = listeners.map((item) => ({
+  const listenerPairs = listeners.map((item) => ({
     sourceId: item.identity,
-    sourceName: `${item.name}`,
+    sourceName: item.name,
+    siteId: `${item.siteId}-listener`, //-listener avoid to include connectors and processes in the combo
+    siteName: item.siteName,
     destinationId: item.addressId,
     destinationName: item.address,
     type: 'SkEmptyNode' as GraphElementNames,
     iconName: 'listener' as GraphIconKeys
   }));
 
-  const serversPairs = aggregatedConnectors.length
+  const aggregatedConnectors = aggregateConnectorResponses(connectors);
+
+  const connectorPairs = aggregatedConnectors.length
     ? aggregatedConnectors.map((item) => ({
         sourceId: item.addressId,
         sourceName: item.address,
-        destinationId: `${getBaseName(item.name)}:${item.destPort}`,
+        destinationId: `${getBaseName(item.name)}-${item.siteId}-${item.destPort}`,
         destinationName: `${item.name}:${item.destPort}`,
         type: 'SkEmptyNode' as GraphElementNames,
         iconName: 'routingKey' as GraphIconKeys
@@ -54,25 +55,27 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
         }
       ];
 
-  const serversProcessesPairs = extendedConnectors.map((item) => ({
-    sourceId: `${getBaseName(item.name)}:${item.destPort}`,
+  const processPairs = connectors.map((item) => ({
+    sourceId: `${getBaseName(item.name)}-${item.siteId}-${item.destPort}`,
     sourceName: `${getBaseName(item.name)}:${item.destPort}`,
+    siteId: item.siteId,
+    siteName: item.siteName,
     destinationId: item.processId,
     destinationName: `${item.target}`,
     type: 'SkEmptyNode' as GraphElementNames,
     iconName: 'connector' as GraphIconKeys
   }));
 
-  const { nodes, edges } = ServicesController.convertPairsTopologyData([
-    ...clientsPairs,
-    ...serversPairs,
-    ...serversProcessesPairs
+  const { nodes, edges, combos } = ServicesController.convertPairsTopologyData([
+    ...listenerPairs,
+    ...connectorPairs,
+    ...processPairs
   ]);
 
   return (
     <Stack hasGutter>
       <StackItem style={{ height: 700 }}>
-        <SkGraph nodes={nodes} edges={edges} layout="dagre" />
+        <SkGraph nodes={nodes} edges={edges} combos={combos} layout="dagre" />
       </StackItem>
 
       <StackItem>

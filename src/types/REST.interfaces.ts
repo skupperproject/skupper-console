@@ -145,6 +145,8 @@ export interface ListenerResponse extends BaseResponse {
   destHost: string;
   destPort: number;
   processId: string;
+  siteId: string;
+  siteName: string;
 }
 
 export interface ConnectorResponse extends BaseResponse {

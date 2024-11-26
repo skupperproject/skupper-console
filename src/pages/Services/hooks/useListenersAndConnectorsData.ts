@@ -1,6 +1,6 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { ConnectorResponse, ProcessResponse } from 'types/REST.interfaces';
+import { ConnectorResponse } from 'types/REST.interfaces';
 
 import { RESTApi } from '../../../API/REST.api';
 import { UPDATE_INTERVAL } from '../../../config/config';
@@ -39,27 +39,6 @@ const useListenersAndConnectorsData = (serviceId: string) => {
 };
 
 export default useListenersAndConnectorsData;
-
-export function extendConnectorResponses(
-  connectorArray: ConnectorResponse[],
-  processArray: ProcessResponse[]
-): ConnectorResponse[] {
-  const processMap = new Map<string, ProcessResponse>();
-
-  processArray.forEach((process) => {
-    processMap.set(process.identity, process);
-  });
-
-  return connectorArray.map((connector) => {
-    const process = processMap.get(connector.processId);
-
-    if (process) {
-      return { ...process, ...connector, siteName: process.parentName, siteId: process.parent };
-    }
-
-    return connector;
-  });
-}
 
 export function getBaseName(name: string): string {
   const ipSuffixRegex = /-\d{1,3}(\.\d{1,3}){3}$/;

@@ -1,7 +1,7 @@
 import { VarColors } from '../../../config/colors';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
-import { GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
+import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
 import { SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
@@ -29,6 +29,8 @@ export const ServicesController = {
     servicePairs: {
       sourceId: string;
       sourceName: string;
+      siteId?: string;
+      siteName?: string;
       destinationId: string;
       destinationName: string;
       byteRate?: number;
@@ -36,29 +38,31 @@ export const ServicesController = {
       iconName: GraphIconKeys;
       type: GraphElementNames;
     }[]
-  ): { nodes: GraphNode[]; edges: GraphEdge[] } => {
+  ): { nodes: GraphNode[]; edges: GraphEdge[]; combos: GraphCombo[] } => {
     const generateTopologyNodes = (pairs: typeof servicePairs) => {
-      const clients = pairs.map(({ type, iconName, sourceId, sourceName }) => ({
+      const clients = pairs.map(({ type, iconName, sourceId, sourceName, siteId }) => ({
         type,
         id: sourceId,
         name: sourceName,
         label: sourceName,
-        iconName
+        iconName,
+        combo: siteId
       }));
 
-      const servers = pairs.map(({ destinationId, destinationName }) => ({
+      const servers = pairs.map(({ destinationId, destinationName, siteId }) => ({
         id: destinationId,
         name: destinationName,
         label: destinationName,
         type: 'SkEmptyNode' as GraphElementNames,
-        iconName: 'process' as GraphIconKeys
+        iconName: 'process' as GraphIconKeys,
+        combo: siteId
       }));
 
       return removeDuplicates([...clients, ...servers], 'id');
     };
 
-    const generateTopologyEdges = (pairs: typeof servicePairs) =>
-      pairs
+    const generateTopologyEdges = (pairs: typeof servicePairs) => {
+      const links = pairs
         .map(({ sourceId, sourceName, destinationId, destinationName }) => ({
           type: 'SkListenerConnectorEdge' as GraphElementNames,
           id: `${sourceId}-${destinationId}`,
@@ -69,11 +73,27 @@ export const ServicesController = {
         }))
         .filter(({ source, target }) => source && target);
 
+      return removeDuplicates(links, 'id');
+    };
+
+    const generateTopologyCombos = (pairs: typeof servicePairs) => {
+      const combos = pairs
+        .map(({ siteId, siteName }) => ({
+          type: 'SkCombo' as GraphElementNames,
+          id: siteId || '',
+          label: siteName || ''
+        }))
+        .filter(({ id }) => id);
+
+      return removeDuplicates(combos, 'id');
+    };
+
     // Generate nodes and edges
     const nodes = generateTopologyNodes(servicePairs);
     const edges = generateTopologyEdges(servicePairs);
+    const combos = generateTopologyCombos(servicePairs);
 
-    return { nodes, edges };
+    return { nodes, edges, combos };
   }
 };
 
