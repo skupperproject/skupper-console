@@ -2,6 +2,7 @@ import { VarColors } from '../../../config/colors';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
+import { ConnectorResponse, ListenerResponse } from '../../../types/REST.interfaces';
 import { SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
@@ -24,6 +25,51 @@ export const ServicesController = {
 
     return { nodes, links };
   },
+
+  mapListenersToRoutingKey: (listeners: ListenerResponse[]) =>
+    listeners.map((item) => ({
+      sourceId: item.identity,
+      sourceName: item.name,
+      siteId: `${item.siteId}-listener`, // Avoids including connectors and processes in the combo
+      siteName: item.siteName,
+      destinationId: item.addressId,
+      destinationName: item.address,
+      type: 'SkEmptyNode' as GraphElementNames,
+      iconName: 'listener' as GraphIconKeys
+    })),
+
+  mapConnectorsToProcesses: (connectors: ConnectorResponse[]) =>
+    connectors.map((item) => ({
+      sourceId: `${getBaseName(item.name)}-${item.siteId}-${item.destPort}`,
+      sourceName: `${getBaseName(item.name)}:${item.destPort}`,
+      siteId: item.siteId,
+      siteName: item.siteName,
+      destinationId: item.processId,
+      destinationName: `${item.target}`,
+      type: 'SkEmptyNode' as GraphElementNames,
+      iconName: 'connector' as GraphIconKeys
+    })),
+
+  mapRoutingKeyToAggregatedConnectors: (aggregatedConnectors: ConnectorResponse[], id: string, name: string) =>
+    aggregatedConnectors.length
+      ? aggregatedConnectors.map((item) => ({
+          sourceId: item.addressId,
+          sourceName: item.address,
+          destinationId: `${item.name}-${item.siteId}-${item.destPort}`,
+          destinationName: `${item.name}:${item.destPort}`,
+          type: 'SkEmptyNode' as GraphElementNames,
+          iconName: 'routingKey' as GraphIconKeys
+        }))
+      : [
+          {
+            sourceId: id,
+            sourceName: name,
+            destinationId: ``,
+            destinationName: ``,
+            type: 'SkEmptyNode' as GraphElementNames,
+            iconName: 'routingKey' as GraphIconKeys
+          }
+        ],
 
   convertPairsTopologyData: (
     servicePairs: {
@@ -150,3 +196,28 @@ const generateSankeyLinks = (
       }))
       .filter(({ source, target }) => source && target)
   );
+
+function getBaseName(name: string): string {
+  const ipSuffixRegex = /-\d{1,3}(\.\d{1,3}){3}$/;
+
+  return name.replace(ipSuffixRegex, '');
+}
+
+// Utility function for aggregating connector responses
+export function aggregateConnectorResponses(connectors: ConnectorResponse[]) {
+  const aggregatedResults: Record<string, ConnectorResponse> = {};
+
+  connectors.forEach((connector) => {
+    const baseName = getBaseName(connector.name);
+    const key = `${connector.parent}-${baseName}`;
+
+    if (!aggregatedResults[key]) {
+      aggregatedResults[key] = { ...connector, name: baseName, count: 1, processes: [connector] };
+    } else {
+      aggregatedResults[key].count!++;
+      aggregatedResults[key].processes!.push(connector);
+    }
+  });
+
+  return Object.values(aggregatedResults);
+}
