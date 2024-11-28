@@ -99,6 +99,7 @@ const TopologyProcesses: FC<{
     },
     [handleSelected, navigate]
   );
+
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
     idsSelected,
     searchText,
