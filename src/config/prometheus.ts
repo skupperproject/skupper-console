@@ -1,7 +1,5 @@
 import { IntervalTimeMap } from '../types/Prometheus.interfaces';
 
-export const prometheusProcessNameseparator = '|';
-
 export function calculateStep(seconds: number) {
   if (seconds <= 60) {
     return '5s';

@@ -171,7 +171,7 @@ export const RESTApi = {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
-    return data;
+    return { ...data, results: data.results.filter(({ listenerCount }) => listenerCount > 0) };
   },
 
   fetchService: async (id: string, options?: QueryFilters): Promise<ResponseWrapper<ServiceResponse>> => {
