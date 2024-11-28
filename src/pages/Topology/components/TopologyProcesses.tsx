@@ -99,7 +99,6 @@ const TopologyProcesses: FC<{
     },
     [handleSelected, navigate]
   );
-
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
     idsSelected,
     searchText,
@@ -168,6 +167,7 @@ const TopologyProcesses: FC<{
                 itemSelected={nodeIdSelected}
                 itemsToHighlight={nodeIdsToHighLight}
                 layout="combo"
+                forceFitView={!!serviceIdsSelected}
                 onClickNode={handleShowProcessDetails}
                 onClickEdge={handleShowProcessPairDetails}
               />
