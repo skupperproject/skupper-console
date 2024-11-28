@@ -58,27 +58,32 @@ export const TopologyProcessController = {
     serviceIdsSelected,
     options
   }: TopologyProcessControllerProps) => {
-    let pPairs = processesPairs;
-    let p = processes;
+    let pairsSelectedByService = processesPairs;
+    let processesSelected = processes;
 
     // a process can be filered by services
     if (serviceIdsSelected) {
-      const serverIds = p
+      const serverIds = processesSelected
         // the format of one address is  serviceName@seviceId@protocol
         .filter(({ addresses }) =>
           addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
         )
         .map(({ identity }) => identity);
 
-      pPairs = pPairs.filter((pair) => serverIds.includes(pair.destinationId));
+      pairsSelectedByService = pairsSelectedByService.filter((pair) => serverIds.includes(pair.destinationId));
+      const processIdsFromProcessPairsByService = pairsSelectedByService?.flatMap(({ sourceId, destinationId }) => [
+        sourceId,
+        destinationId
+      ]);
 
-      const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      p = p.filter(({ identity }) => processIdsFromService.includes(identity));
+      processesSelected = [
+        ...filterProcessesBySelectedServices(processes, [...serviceIdsSelected, ...processIdsFromProcessPairsByService])
+      ];
     }
 
-    let processNodes = convertProcessesToNodes(p);
+    let processNodes = convertProcessesToNodes(processesSelected);
     let processPairEdges = TopologyController.addMetricsToEdges(
-      TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
+      TopologyController.convertPairsToEdges(pairsSelectedByService, 'SkDataEdge'),
       PrometheusLabelsV2.SourceProcessName,
       PrometheusLabelsV2.DestProcessName,
       metrics
@@ -120,4 +125,12 @@ function findMatched(processNodes: GraphNode[] | GraphEdge[], idsSelected?: stri
   });
 
   return processNode?.id;
+}
+
+function filterProcessesBySelectedServices(processes: ProcessResponse[], serviceIdSelected: string[]) {
+  return processes.filter(
+    (process) =>
+      process.addresses?.some((address) => serviceIdSelected.some((serviceId) => address.includes(`@${serviceId}`))) ||
+      serviceIdSelected.includes(process.identity)
+  );
 }

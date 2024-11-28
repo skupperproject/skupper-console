@@ -36,9 +36,9 @@ const SkGraph: FC<SkGraphProps> = memo(
     onClickEdge,
     onClickNode,
     itemsToHighlight,
+    forceFitView = false,
     itemSelected,
     layout = 'default',
-    moveToSelectedNode = false,
     savePositions = true
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
@@ -132,7 +132,6 @@ const SkGraph: FC<SkGraphProps> = memo(
         graph.fitView();
 
         topologyGraphRef.current = graph;
-        save();
         setIsGraphLoaded(true);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,14 +139,6 @@ const SkGraph: FC<SkGraphProps> = memo(
 
     const updateData = useCallback(async () => {
       if (!isGraphLoaded) {
-        return;
-      }
-
-      if (
-        JSON.stringify(prevNodesRef.current) === JSON.stringify(nodesWithoutPosition) &&
-        JSON.stringify(prevEdgesRef.current) === JSON.stringify(edges) &&
-        JSON.stringify(prevCombosRef.current) === JSON.stringify(combos)
-      ) {
         return;
       }
 
@@ -161,11 +152,10 @@ const SkGraph: FC<SkGraphProps> = memo(
       const newNodesIds = nodesWithoutPosition.map((node) => node.id).join(',');
       const prevNodeIds = prevNodesRef.current.map((node) => node.id).join(',');
 
-      if (JSON.stringify(newNodesIds) !== JSON.stringify(prevNodeIds)) {
-        await graphInstance.render();
+      await graphInstance.render();
+
+      if (JSON.stringify(newNodesIds) !== JSON.stringify(prevNodeIds) || forceFitView) {
         graphInstance.fitView({ when: 'overflow' });
-      } else {
-        await graphInstance.draw();
       }
 
       save();
@@ -173,19 +163,12 @@ const SkGraph: FC<SkGraphProps> = memo(
       prevNodesRef.current = nodesWithoutPosition;
       prevEdgesRef.current = edges;
       prevCombosRef.current = combos;
-    }, [combos, edges, isGraphLoaded, nodesWithoutPosition, save]);
+    }, [combos, edges, forceFitView, isGraphLoaded, nodesWithoutPosition, save]);
 
     // This effect updates the topology when there are changes to the nodes, edges.
     useEffect(() => {
       updateData();
     }, [updateData]);
-
-    // Center the node selected
-    useEffect(() => {
-      if (isGraphLoaded && itemSelected && moveToSelectedNode) {
-        topologyGraphRef.current?.focusElement(itemSelected);
-      }
-    }, [isGraphLoaded, itemSelected, moveToSelectedNode]);
 
     // highlight nodes
     useEffect(() => {

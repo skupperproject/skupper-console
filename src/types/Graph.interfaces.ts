@@ -83,10 +83,10 @@ export interface SkGraphProps {
   combos?: GraphCombo[];
   itemsToHighlight?: string[];
   itemSelected?: string;
+  forceFitView?: boolean;
   onClickNode?: (data: GraphNode | null) => void;
   onClickEdge?: (data: GraphEdge | null) => void;
   layout?: keyof GraphLayouts;
-  moveToSelectedNode?: boolean;
   savePositions?: boolean;
 }
 
