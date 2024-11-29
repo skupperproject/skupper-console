@@ -29,7 +29,7 @@ const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
 const LAYOUT_TOPOLOGY_DAGRE: LayoutOptions & { type: 'antv-dagre' } = {
   type: 'antv-dagre',
   rankdir: 'TB',
-  ranksep: 30,
+  ranksep: 45,
   nodesep: 30
 };
 export const LAYOUT_MAP: GraphLayouts = {

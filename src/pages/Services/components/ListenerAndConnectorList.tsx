@@ -35,7 +35,7 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
   return (
     <Stack hasGutter>
       <StackItem style={{ height: 700 }}>
-        <SkGraph nodes={nodes} edges={edges} combos={combos} layout="dagre" />
+        <SkGraph nodes={nodes} edges={edges} combos={combos} layout="dagre" savePositions={false} />
       </StackItem>
 
       <StackItem>

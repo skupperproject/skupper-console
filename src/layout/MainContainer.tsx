@@ -60,7 +60,7 @@ const MainContainer: FC<MainContainerProps> = function ({
             >
               <TextContent>
                 <Title headingLevel="h1">{title}</Title>
-                {description && <Text component={TextVariants.p}>{description}</Text>}
+                {description && <Text component={TextVariants.p} dangerouslySetInnerHTML={{ __html: description }} />}
               </TextContent>
               <Flex>
                 <FlexItem>

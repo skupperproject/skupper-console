@@ -22,7 +22,7 @@ export enum QueriesProcesses {
 export enum ProcessesLabels {
   Section = 'Processes',
   Overview = 'Overview',
-  Description = 'A process represents running application code. On Kubernetes, a process is a pod. On Docker or Podman, a process is a container. On virtual machines or bare metal hosts',
+  Description = 'A process represents running application code.<br>On Kubernetes, a process is a pod. On Docker or Podman, a process is a container. On virtual machines or bare metal hosts',
   Details = 'Details',
   ProcessPairs = 'Data links',
   Processes = 'Processes',

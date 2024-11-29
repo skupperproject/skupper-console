@@ -87,7 +87,7 @@ export const TopologyController = {
     edges: GraphEdge[],
     metricSourceLabel: PrometheusLabelsV2, // Prometheus metric label to compare with the metricDestLabel
     metricDestLabel: PrometheusLabelsV2,
-    metrics: TopologyMetrics | null
+    metrics?: TopologyMetrics | null
   ): GraphEdge[] => {
     const getPairsMap = (metricPairs: PrometheusMetric<'vector'>[] | undefined) =>
       (metricPairs || []).reduce(
