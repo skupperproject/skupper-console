@@ -135,45 +135,40 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   },
   {
     name: BiFlowListLabels.Method,
-    prop: 'method' as keyof BiFlowResponse,
-    modifier: 'fitContent'
+    prop: 'method' as keyof BiFlowResponse
   },
   {
     name: BiFlowListLabels.From,
     prop: 'sourceProcessName',
-    customCellName: 'ProcessNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'ProcessNameLinkCell'
   },
   {
     name: BiFlowListLabels.Site,
     prop: 'sourceSiteName',
-    customCellName: 'SiteNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'SiteNameLinkCell'
   },
-  {
-    name: BiFlowListLabels.TxBytes,
-    prop: 'octets',
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
+  // {
+  //   name: BiFlowListLabels.TxBytes,
+  //   prop: 'octets',
+  //   format: formatBytes,
+  //   modifier: 'nowrap'
+  // },
   {
     name: BiFlowListLabels.To,
     prop: 'destProcessName',
-    customCellName: 'TargetProcessNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'TargetProcessNameLinkCell'
   },
   {
     name: BiFlowListLabels.ServerSite,
     prop: 'destSiteName',
-    customCellName: 'TargetSiteNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'TargetSiteNameLinkCell'
   },
-  {
-    name: BiFlowListLabels.RxBytes,
-    prop: 'octetsReverse',
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
+  // {
+  //   name: BiFlowListLabels.RxBytes,
+  //   prop: 'octetsReverse',
+  //   format: formatBytes,
+  //   modifier: 'nowrap'
+  // },
   {
     name: '',
     customCellName: 'viewDetailsLinkCell',
