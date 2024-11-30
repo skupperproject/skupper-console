@@ -1,21 +1,21 @@
-const path = require('path');
-const ROOT = process.cwd();
+const pathProd = require('path');
+const ROOT_PROD = process.cwd();
 
-const { merge } = require('webpack-merge');
-const webpack = require('webpack');
+const { merge: mergeProd } = require('webpack-merge');
+const webpackProd = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const TerserJSPlugin = require('terser-webpack-plugin');
 
-const commonConfig = require('./webpack.common');
+const commonConfigProd = require('./webpack.common');
 
 const prodConfig = {
   mode: 'production',
   devtool: 'source-map',
   output: {
-    path: path.join(ROOT, '/build'),
+    path: pathProd.join(ROOT_PROD, '/build'),
     filename: '[name]-[contenthash].min.js',
     chunkFilename: 'js/[name]-[chunkhash].min.js',
     publicPath: '/',
@@ -27,7 +27,7 @@ const prodConfig = {
   },
 
   plugins: [
-    new webpack.DefinePlugin({
+    new webpackProd.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
       'process.env.ENABLE_MOCK_SERVER': JSON.stringify(process.env.ENABLE_MOCK_SERVER || false)
     }),
@@ -35,14 +35,14 @@ const prodConfig = {
       analyzerMode: process.env.STATS || 'disabled',
       generateStatsFile: false,
       statsOptions: { source: false },
-      reportFilename: path.join(ROOT, '/reports/bundle-size.html')
+      reportFilename: pathProd.join(ROOT_PROD, '/reports/bundle-size.html')
     }),
     new CopyWebpackPlugin({
       patterns: [
-        path.resolve(ROOT, 'public', 'manifest.json'),
+        pathProd.resolve(ROOT_PROD, 'public', 'manifest.json'),
         {
-          from: process.env.BRAND_FAVICON || path.resolve(ROOT, 'public', 'favicon.ico'),
-          to: path.resolve(ROOT, 'build', 'favicon.v.ico')
+          from: process.env.BRAND_FAVICON || pathProd.resolve(ROOT_PROD, 'public', 'favicon.ico'),
+          to: pathProd.resolve(ROOT_PROD, 'build', 'favicon.v.ico')
         }
       ]
     }),
@@ -99,4 +99,4 @@ const prodConfig = {
   }
 };
 
-module.exports = merge(commonConfig, prodConfig);
+module.exports = mergeProd(commonConfigProd, prodConfig);
