@@ -229,7 +229,7 @@ export function groupNodes(nodes: GraphNode[]): GraphNode[] {
     groupedNodes[group].groupCount! += 1;
 
     if (groupedNodes[group].groupCount! > 1) {
-      groupedNodes[group].label = `${item.groupName}-${item.comboName}` || '';
+      groupedNodes[group].label = `${item.groupName}-${item.comboName}`;
       groupedNodes[group].type = type;
       groupedNodes[group].info = { primary: groupedNodes[group].groupCount?.toString() };
     }

@@ -1,7 +1,9 @@
-# Javascript builds
+# app
 .DS_Store
 build
 node_modules
+public
+cypress
 coverage
 
 # package managers
@@ -10,6 +12,7 @@ yarn-error.log*
 package-lock.json
 
 .eslintcache
+
 # IDEs and editors
 .idea
 .project
@@ -22,3 +25,5 @@ package-lock.json
 .vscode
 # For vim
 *.swp
+
+
