@@ -12,7 +12,7 @@ interface useServicesDataProps {
 }
 
 const useServicesData = ({ limit }: useServicesDataProps) => {
-  const [servicesQueryParams, setServicesQueryParams] = useState<QueryFilters>({ limit });
+  const [servicesQueryParams, setServicesQueryParams] = useState<QueryFilters>({ limit, hasListener: true });
 
   const { data: services } = useSuspenseQuery({
     queryKey: [QueriesServices.GetServices, { ...servicesQueryParams }],

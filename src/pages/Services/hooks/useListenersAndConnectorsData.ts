@@ -5,7 +5,7 @@ import { UPDATE_INTERVAL } from '../../../config/config';
 import { QueriesServices } from '../Services.enum';
 
 const useListenersAndConnectorsData = (serviceId: string) => {
-  const [{ data: listenersData }, { data: connectorsData }, { data: processesData }] = useSuspenseQueries({
+  const [{ data: listenersData }, { data: connectorsData }] = useSuspenseQueries({
     queries: [
       {
         queryKey: [QueriesServices.GetListeners, serviceId],
@@ -16,11 +16,6 @@ const useListenersAndConnectorsData = (serviceId: string) => {
         queryKey: [QueriesServices.GetConnectors, serviceId],
         queryFn: () => RESTApi.fetchConnectors({ addressId: serviceId }),
         refetchInterval: UPDATE_INTERVAL
-      },
-      {
-        queryKey: [QueriesServices.GetProcessesByService, { addresses: [serviceId] }],
-        queryFn: () => RESTApi.fetchProcesses({ addresses: [serviceId] }),
-        refetchInterval: UPDATE_INTERVAL
       }
     ]
   });
@@ -28,7 +23,6 @@ const useListenersAndConnectorsData = (serviceId: string) => {
   return {
     listeners: listenersData.results,
     connectors: connectorsData.results,
-    processes: processesData.results,
     summary: {
       listenerCount: listenersData.timeRangeCount || 0,
       connectorCount: connectorsData.timeRangeCount || 0

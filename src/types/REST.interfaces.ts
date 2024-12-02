@@ -170,6 +170,7 @@ export interface ServiceResponse extends BaseResponse {
   connectorCount: number;
   listenerCount: number;
   isBound: boolean;
+  hasListener: boolean;
 }
 
 interface BaseFlow extends BaseResponse {
