@@ -104,7 +104,7 @@ export const ServicesController = {
         combo: siteId
       }));
 
-      return removeDuplicates([...clients, ...servers], 'id');
+      return removeDuplicates([...clients, ...servers], 'id').filter(({ id }) => id);
     };
 
     const generateTopologyEdges = (pairs: typeof servicePairs) => {
