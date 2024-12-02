@@ -12,7 +12,9 @@ import {
   BiFlowResponse,
   ResponseWrapper,
   PairsResponse,
-  ApplicationFlowResponse
+  ApplicationFlowResponse,
+  ConnectorResponse,
+  ListenerResponse
 } from '../src/types/REST.interfaces';
 
 const DELAY_RESPONSE = Number(process.env.MOCK_DELAY_RESPONSE) || 0; // in ms
@@ -32,6 +34,8 @@ const processPairs: ResponseWrapper<ProcessPairsResponse[]> = require(`${path}/P
 const services: ResponseWrapper<ServiceResponse[]> = require(`${path}/SERVICES.json`);
 const biFlow: ResponseWrapper<BiFlowResponse[]> = require(`${path}/FLOW_PAIRS.json`);
 const links: ResponseWrapper<RouterLinkResponse[]> = require(`${path}/LINKS.json`);
+const listeners: ResponseWrapper<ListenerResponse[]> = require(`${path}/LISTENERS.json`);
+const connectors: ResponseWrapper<ConnectorResponse[]> = require(`${path}/CONNECTORS.json`);
 
 interface ApiProps {
   params: Record<string, string>;
@@ -216,6 +220,7 @@ export const MockApi = {
       timeRangeCount: filteredResults.length
     };
   },
+
   getComponents: (_: unknown, { queryParams }: ApiProps) => {
     const results = [...components.results];
     if (queryParams && !Object.keys(queryParams).length) {
@@ -273,7 +278,7 @@ export const MockApi = {
 
     const paginatedResults = filteredResults.slice(
       Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || filteredResults.length - 1)
+      Number(queryParams.offset || 0) + Number(queryParams.limit || filteredResults.length)
     );
 
     return {
@@ -281,6 +286,49 @@ export const MockApi = {
       results: paginatedResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length
+    };
+  },
+
+  getProcess: (_: unknown, { params: { id } }: ApiProps) => {
+    const results = processes.results.find(({ identity }: ProcessResponse) => identity === id);
+
+    return { results };
+  },
+
+  getListeners: (_: unknown, { queryParams }: ApiProps) => {
+    let results = listeners.results;
+    if (queryParams.addressId) {
+      results = results.filter(({ addressId }) => addressId === queryParams.addressId);
+    }
+
+    const paginatedResults = results.slice(
+      Number(queryParams.offset || 0),
+      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length)
+    );
+
+    return {
+      results: paginatedResults,
+      count: results.length,
+      timeRangeCount: results.length
+    };
+  },
+
+  getConnectors: (_: unknown, { queryParams }: ApiProps) => {
+    let results = connectors.results;
+
+    if (queryParams.addressId) {
+      results = results.filter(({ addressId }) => addressId.startsWith(queryParams.addressId as string));
+    }
+
+    const paginatedResults = results.slice(
+      Number(queryParams.offset || 0),
+      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length)
+    );
+
+    return {
+      results: paginatedResults,
+      count: results.length,
+      timeRangeCount: results.length
     };
   },
 
@@ -296,7 +344,7 @@ export const MockApi = {
 
     const paginatedResults = results.slice(
       Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length - 1)
+      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length)
     );
 
     return {
@@ -304,6 +352,12 @@ export const MockApi = {
       count: results.length,
       timeRangeCount: results.length
     };
+  },
+
+  getService: (_: unknown, { params: { id } }: ApiProps) => {
+    const results = services.results.find(({ identity }) => identity === id);
+
+    return { results };
   },
 
   getSitePairs: (_: unknown, { queryParams }: ApiProps) => {
@@ -399,12 +453,6 @@ export const MockApi = {
     results: biFlow.results.find(({ identity }) => identity === id)
   }),
 
-  getService: (_: unknown, { params: { id } }: ApiProps) => {
-    const results = services.results.find(({ identity }) => identity === id);
-
-    return { results };
-  },
-
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
     if (
       (queryParams.query as string)?.includes(
@@ -481,9 +529,12 @@ export const MockApiPaths = {
   Components: `${prefix}/processgroups`,
   Component: `${prefix}/processgroups/:id`,
   ComponentPairs: `${prefix}/processgrouppairs`,
+  Connectors: `${prefix}/connectors`,
+  Listeners: `${prefix}/listeners`,
   Services: `${prefix}/addresses`,
   Service: `${prefix}/addresses/:id`,
   Processes: `${prefix}/processes`,
+  Process: `${prefix}/processes/:id`,
   ProcessPairs: `${prefix}/processpairs`,
   ProcessPair: `${prefix}/processpairs/:id`,
   Connections: `${prefix}/connections`,
@@ -517,9 +568,12 @@ export function loadMockServer() {
       this.get(MockApiPaths.Links, MockApi.getLinks);
       this.get(MockApiPaths.Components, MockApi.getComponents);
       this.get(MockApiPaths.Component, MockApi.getComponent);
+      this.get(MockApiPaths.Connectors, MockApi.getConnectors);
+      this.get(MockApiPaths.Listeners, MockApi.getListeners);
       this.get(MockApiPaths.Services, MockApi.getServices);
       this.get(MockApiPaths.Service, MockApi.getService);
       this.get(MockApiPaths.Processes, MockApi.getProcesses);
+      this.get(MockApiPaths.Process, MockApi.getProcess);
       this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
       this.get(MockApiPaths.ComponentPairs, MockApi.getComponentPairs);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
@@ -533,12 +587,6 @@ export function loadMockServer() {
 
       this.get(`${prefix}/processgrouppairs/:id`, (_, { params: { id } }) => ({
         results: componentPairs.results.find(({ identity }) => identity === id)
-      }));
-
-      this.get(`${prefix}/processes/:id`, (_, { params: { id } }) => ({
-        results: MockApi.getProcesses(null, { params: {}, queryParams: {} }).results.find(
-          ({ identity }) => identity === id
-        )
       }));
 
       this.get(`${prefix}/addresses/:id/processpairs`, () => processPairs);

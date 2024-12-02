@@ -1,0 +1,20 @@
+{
+  "results": [
+    {
+      "address": "cart:3000",
+      "addressId": "cart:3000",
+      "destHost": "127.0.0.1",
+      "destPort": "8080",
+      "endTime": 0,
+      "identity": "Tib+p:1",
+      "name": "cart:3000-127.0.0.1",
+      "parent": "Tib+p:0",
+      "processId": "process-cart-1",
+      "protocol": "tcp",
+      "siteId": "site-2",
+      "siteName": "site 2",
+      "startTime": 1732998040556549,
+      "target": "process cart 1"
+    }
+  ]
+}
