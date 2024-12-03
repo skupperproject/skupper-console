@@ -1,8 +1,6 @@
 .sk-topology-controls {
-  position: absolute !important;
+  position: fixed;
   bottom: 0;
-  left: 0;
-  background-color: transparent !important;
 }
 
 .sk-topology-control-bar__button {
