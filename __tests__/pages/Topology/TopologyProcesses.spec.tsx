@@ -6,7 +6,6 @@ import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';

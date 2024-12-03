@@ -4,50 +4,50 @@
       "identity": "site-1",
       "startTime": 1674048683000000,
       "endTime": 0,
-      "name": "site 1",
-      "nameSpace": "config-grpc-site-1-test",
+      "name": "US East - Site 1",
+      "nameSpace": "us-east-site-1-dev",
       "platform": "kubernetes",
-      "siteVersion": "X.X.X",
-      "routerCount": 2
+      "siteVersion": "1.8.2",
+      "routerCount": 3
     },
     {
       "identity": "site-2",
       "startTime": 1674048662000000,
       "endTime": 0,
-      "name": "site 2",
-      "nameSpace": "config-grpc-site-2-test",
+      "name": "US West - Site 2",
+      "nameSpace": "us-west-site-2-prod",
       "platform": "kubernetes",
-      "siteVersion": "X.X.X",
-      "routerCount": 1
+      "siteVersion": "2.0.0",
+      "routerCount": 2
     },
     {
       "identity": "site-3",
       "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "site 3",
-      "nameSpace": "config-grpc-site-3-test",
-      "platform": "kubernetes",
-      "siteVersion": "X.X.X",
-      "routerCount": 1
+      "name": "EU Central - Site 3",
+      "nameSpace": "eu-central-site-3-dev",
+      "platform": "docker",
+      "siteVersion": "2.1.0",
+      "routerCount": 4
     },
     {
       "identity": "site-4",
       "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "site 4",
-      "nameSpace": "config-grpc-site-4-test",
+      "name": "AP South - Site 4",
+      "nameSpace": "ap-south-site-4-prod",
       "platform": "kubernetes",
-      "siteVersion": "X.X.X",
-      "routerCount": 1
+      "siteVersion": "1.5.4",
+      "routerCount": 2
     },
     {
       "identity": "site-5",
       "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "site 5",
-      "nameSpace": "config-grpc-site-5-test",
+      "name": "SA East - Site 5",
+      "nameSpace": "sa-east-site-5-prod",
       "platform": "podman",
-      "siteVersion": "X.X.X",
+      "siteVersion": "2.0.0",
       "routerCount": 1
     }
   ],
