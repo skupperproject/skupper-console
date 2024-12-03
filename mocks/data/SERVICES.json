@@ -8,7 +8,8 @@
       "protocol": "tcp",
       "observedApplicationProtocols": [],
       "connectorCount": 2,
-      "listenerCount": 2
+      "listenerCount": 2,
+      "hasListener": true
     },
     {
       "identity": "payment:5000",
@@ -17,7 +18,9 @@
       "name": "payment:5000",
       "protocol": "tcp",
       "observedApplicationProtocols": ["http2"],
-      "connectorCount": 2
+      "connectorCount": 2,
+      "listenerCount": 0,
+      "hasListener": false
     },
     {
       "identity": "cash-desk-http2:3000",
@@ -27,7 +30,8 @@
       "protocol": "tcp",
       "observedApplicationProtocols": ["http2"],
       "connectorCount": 2,
-      "listenerCount": 2
+      "listenerCount": 2,
+      "hasListener": true
     },
     {
       "identity": "cash-desk-http1:3000",
@@ -37,7 +41,8 @@
       "protocol": "tcp",
       "observedApplicationProtocols": ["http1"],
       "connectorCount": 2,
-      "listenerCount": 2
+      "listenerCount": 2,
+      "hasListener": true
     },
 
     {
@@ -48,7 +53,8 @@
       "protocol": "tcp",
       "observedApplicationProtocols": [],
       "connectorCount": 0,
-      "listenerCount": 2
+      "listenerCount": 2,
+      "hasListener": true
     },
     {
       "identity": "database:8000",
@@ -58,7 +64,8 @@
       "protocol": "tcp",
       "observedApplicationProtocols": [],
       "connectorCount": 1,
-      "listenerCount": 2
+      "listenerCount": 2,
+      "hasListener": true
     }
   ],
   "count": 6,

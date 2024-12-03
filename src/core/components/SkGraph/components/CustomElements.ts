@@ -86,8 +86,7 @@ const DEFAULT_NODE_CONFIG: NodeOptions = {
     labelBackgroundShadowColor: NODE_BORDER_COLOR,
     labelBackgroundShadowBlur: 0,
     labelBackgroundShadowOffsetX: 0,
-    labelBackgroundShadowOffsetY: 4,
-    zIndex: 3
+    labelBackgroundShadowOffsetY: 4
   },
 
   state: {
@@ -130,7 +129,7 @@ const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
   style: {
     visibility: 'visible',
     opacity: 1,
-    haloOpacity: 0.15,
+    haloOpacity: 0.2,
     haloStroke: EDGE_LINE_COLOR,
     lineWidth: 0.5,
     increasedLineWidthForHitTesting: 20,
@@ -182,8 +181,7 @@ const DEFAULT_DATA_EDGE_CONFIG: EdgeOptions = {
     [GraphElementStates.HoverEdge]: {
       cursor: 'pointer',
       lineWidth: 2,
-      haloOpacity: 0.35,
-      zIndex: 2
+      haloOpacity: 0.35
     }
   }
 };

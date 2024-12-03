@@ -27,7 +27,7 @@ export const COMBO_COLOR_DEFAULT_LABEL = HexColors.DarkThemeText;
 export const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.DarkThemeBackground;
 
 export const FONT_FAMILY = 'RedHatText';
-export const NODE_SIZE = 50;
+export const NODE_SIZE = 44;
 export const ICON_SIZE = NODE_SIZE / 2;
 export const LABEL_FONT_SIZE = 9;
 export const INACTIVE_OPACITY_VALUE = 0.35;

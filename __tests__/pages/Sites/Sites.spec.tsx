@@ -5,13 +5,15 @@ import { Server } from 'miragejs';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import sitesData from '../../../mocks/data/SITES.json';
-import { MockApiPaths, MockApi, loadMockServer } from '../../../mocks/server';
+import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import ErrorConsole from '../../../src/pages/shared/Errors/Console';
 import Sites from '../../../src/pages/Sites/views/Sites';
+import { MockApiPaths } from '../../../mocks/server.PATH';
+import { MockApi } from '../../../mocks/server.API';
 
 const siteResults = sitesData.results;
 

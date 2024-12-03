@@ -1,17 +1,6 @@
 import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import {
-  Combo,
-  ComboEvent,
-  Edge,
-  EdgeEvent,
-  Graph,
-  GraphOptions,
-  IDragEvent,
-  IPointerEvent,
-  Node,
-  NodeEvent
-} from '@antv/g6';
+import { Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
 import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
@@ -102,16 +91,11 @@ const SkGraph: FC<SkGraphProps> = memo(
 
         const graph = new Graph(options);
 
-        graph.on<IDragEvent<Combo>>(ComboEvent.DRAG_END, (e) => graph.setElementZIndex(e.target.id, 0));
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_ENTER, (e) => setLabelText(e.target.id, 'fullLabelText'));
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_LEAVE, (e) => setLabelText(e.target.id, 'partialLabelText'));
         // Enable the graphic behavior ActivateNodeRelation for the drag and drop event
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_DOWN, () => toggleHover(false));
-        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, (e) => {
-          toggleHover(true);
-          // fix an issue with drop events where node labels are positioned behind edges
-          graph.setElementZIndex(e.target.id, 1);
-        });
+        graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, () => toggleHover(true));
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
           // if the node is already selected , set id = undefined to deleselect it
@@ -172,59 +156,63 @@ const SkGraph: FC<SkGraphProps> = memo(
 
     // highlight nodes
     useEffect(() => {
+      if (!isGraphLoaded) {
+        return;
+      }
+
       const graphInstance = topologyGraphRef.current!;
 
-      if (isGraphLoaded) {
-        const allElemetsStateMap: Record<string, string[]> = {};
-        [...graphInstance.getNodeData(), ...graphInstance.getEdgeData()].forEach(({ id, states }) => {
-          const filteredStates =
-            states?.filter(
-              (state) => state !== GraphElementStates.HighlightNode && state !== GraphElementStates.Exclude
-            ) || [];
+      const allElemetsStateMap: Record<string, string[]> = {};
+      [...graphInstance.getNodeData(), ...graphInstance.getEdgeData()].forEach(({ id, states }) => {
+        const filteredStates =
+          states?.filter(
+            (state) => state !== GraphElementStates.HighlightNode && state !== GraphElementStates.Exclude
+          ) || [];
 
-          if (id) {
-            const selectedState = itemsToHighlight?.length
-              ? itemsToHighlight.includes(id)
-                ? GraphElementStates.HighlightNode
-                : GraphElementStates.Exclude
-              : '';
-            allElemetsStateMap[id] = selectedState ? [selectedState, ...filteredStates] : filteredStates;
-          }
-        });
+        if (id) {
+          const selectedState = itemsToHighlight?.length
+            ? itemsToHighlight.includes(id)
+              ? GraphElementStates.HighlightNode
+              : GraphElementStates.Exclude
+            : '';
+          allElemetsStateMap[id] = selectedState ? [selectedState, ...filteredStates] : filteredStates;
+        }
+      });
 
-        graphInstance.setElementState(allElemetsStateMap);
-      }
+      graphInstance.setElementState(allElemetsStateMap);
     }, [isGraphLoaded, itemsToHighlight]);
 
     // select node
     useEffect(() => {
+      if (!isGraphLoaded) {
+        return;
+      }
+
       const graphInstance = topologyGraphRef.current!;
 
-      if (isGraphLoaded) {
-        if (itemSelected) {
-          graphInstance.setElementState(itemSelected, GraphElementStates.Select);
+      if (itemSelected) {
+        graphInstance.setElementState(itemSelected, GraphElementStates.Select);
 
-          return;
-        }
+        return;
+      }
 
-        const nodes = graphInstance?.getElementDataByState('node', GraphElementStates.Select);
-        if (nodes.length) {
-          graphInstance.setElementState(
-            nodes[0].id,
-            nodes[0].states?.filter((state) => state !== GraphElementStates.Select) || []
-          );
+      const nodes = graphInstance?.getElementDataByState('node', GraphElementStates.Select);
+      if (nodes.length) {
+        graphInstance.setElementState(
+          nodes[0].id,
+          nodes[0].states?.filter((state) => state !== GraphElementStates.Select) || []
+        );
 
-          return;
-        }
+        return;
+      }
 
-        const activeEdges = graphInstance?.getElementDataByState('edge', GraphElementStates.Select);
+      const activeEdges = graphInstance?.getElementDataByState('edge', GraphElementStates.Select);
 
-        if (activeEdges.length && activeEdges[0].id) {
-          graphInstance.setElementState(
-            activeEdges[0].id,
-            activeEdges[0].states?.filter((state) => state !== GraphElementStates.Select) || []
-          );
-        }
+      if (activeEdges.length && activeEdges[0].id) {
+        graphInstance.setElementState(
+          activeEdges[0].id,
+          activeEdges[0].states?.filter((state) => state !== GraphElementStates.Select) || []
+        );
       }
     }, [isGraphLoaded, itemSelected]);
 
@@ -232,6 +220,10 @@ const SkGraph: FC<SkGraphProps> = memo(
 
     // handle the resize from the  browers window
     useLayoutEffect(() => {
+      if (!isGraphLoaded) {
+        return;
+      }
+
       const handleResizeGraph = async () => {
         const graphInstance = topologyGraphRef.current;
         const container = GraphController.getParent();
@@ -249,15 +241,16 @@ const SkGraph: FC<SkGraphProps> = memo(
       return () => {
         window.removeEventListener('resize', debouncedHandleResize);
       };
-    }, []);
+    }, [isGraphLoaded]);
 
     // handle resize from the Graph parent.
     useLayoutEffect(() => {
+      if (!isGraphLoaded) {
+        return;
+      }
+
       const handleTranslateGraph = () => {
-        const graphInstance = topologyGraphRef.current;
-        if (!graphInstance) {
-          return;
-        }
+        const graphInstance = topologyGraphRef.current!;
 
         const container = GraphController.getParent()!.getBoundingClientRect();
         const nodes = graphInstance.getElementDataByState('node', GraphElementStates.Select);
@@ -281,7 +274,7 @@ const SkGraph: FC<SkGraphProps> = memo(
       return () => {
         resizeObserver.disconnect();
       };
-    }, []);
+    }, [isGraphLoaded]);
 
     return (
       <div
