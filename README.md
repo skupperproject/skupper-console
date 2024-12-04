@@ -2,9 +2,9 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml) [![codecov](https://codecov.io/github/skupperproject/skupper-console/graph/badge.svg?token=42RWX7XAHH)](https://codecov.io/github/skupperproject/skupper-console) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Table of Contents
+## Table of Contents for the Network console V2
 
-- [Skupper Console](#skupper-console)
+- [Network Console](#skupper-console)
   - [Status](#status)
   - [Enable the console from Skupper](#enable-the-console-from-skupper)
 - [Development](#development)
@@ -113,6 +113,7 @@ Note that the above commands assume that you have the necessary dependencies ins
 
 The project has the following directory structure:
 
+- `tests`: Contains the unit tests code using jest library.
 - `build`: Contains the output of the production build, which is the compiled and optimized version of the application that can be deployed to a server.
 - `config`: Contains the configuration files for the development tools used in the project, such as webpack, jest, typescript paths, eslint, etc.
 - `cypress`: Contains the integration testing code using Cypress framework, which is used to test the application's user interface and user interactions.
@@ -128,11 +129,10 @@ The project has the following directory structure:
     - `<page>/components`: Contains the components of a particular view, such as the list and details.
     - `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
     - `<page>/views`: Contains a collection of views for a particular page, such as the list view or details view.
+  - `types`: Includes interfaces.
   - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
   - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
 
 ### Page sections
-
-Each page section includes constants, interfaces, and enums that are specific to the React views and components used in that section. If you require more generic modules or API-related items, we recommend accessing them from the services folder modules.
 
 Please note that the `services` folder contains utilities for data normalization, sanitization, and manipulation for a specific page, while other generic app functionalities such as date and formatting utilities can be found in the `core/utils` folder.
