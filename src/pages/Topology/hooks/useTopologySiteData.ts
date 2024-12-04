@@ -11,7 +11,6 @@ interface UseTopologySiteDataProps {
   showDataLink: boolean;
   showBytes: boolean;
   showByteRate: boolean;
-  showLatency: boolean;
 }
 
 const metricQueryParams = {

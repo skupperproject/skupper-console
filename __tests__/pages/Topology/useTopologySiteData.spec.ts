@@ -28,8 +28,7 @@ describe('useTopologySiteData', () => {
       useTopologySiteData({
         showDataLink: true,
         showBytes: true,
-        showByteRate: true,
-        showLatency: true
+        showByteRate: true
       })
     );
 
@@ -63,8 +62,7 @@ describe('useTopologySiteData', () => {
       useTopologySiteData({
         showDataLink: false,
         showBytes: false,
-        showByteRate: false,
-        showLatency: false
+        showByteRate: false
       })
     );
 
@@ -91,8 +89,7 @@ describe('useTopologySiteData', () => {
       useTopologySiteData({
         showDataLink: true,
         showBytes: false,
-        showByteRate: false,
-        showLatency: false
+        showByteRate: false
       })
     );
 

@@ -1,39 +1,41 @@
-export enum Colors {
-  White = '--pf-v5-global--palette--white',
-  Black900 = '--pf-v5-global--palette--black-900',
-  Black600 = '--pf-v5-global--palette--black-600',
-  Black500 = '--pf-v5-global--palette--black-500',
-  Black400 = '--pf-v5-global--palette--black-400',
-  Black200 = '--pf-v5-global--palette--black-200',
-  Black100 = '--pf-v5-global--palette--black-100',
-  Green500 = '--pf-v5-global--palette--green-500',
-  Blue400 = '--pf-v5-global--palette--blue-400',
-  Purple100 = '--pf-v5-global--palette--purple-100',
-  Purple400 = '--pf-v5-global--palette--purple-400',
-  Purple500 = '--pf-v5-global--palette--purple-500',
-  Cyan300 = '--pf-v5-global--palette--cyan-300',
-  Orange100 = '--pf-v5-global--palette--orange-100',
-  Orange200 = '--pf-v5-global--palette--orange-200',
-  Orange400 = '--pf-v5-global--palette--orange-400',
-  Red200 = '--pf-v5-global--palette--red-200'
-}
+import { PATTERNFLY_VERSION } from './config';
 
-export enum VarColors {
-  White = `var(${Colors.White})`,
-  Black100 = `var(${Colors.Black100})`,
-  Black200 = `var(${Colors.Black200})`,
-  Black400 = `var(${Colors.Black400})`,
-  Black500 = `var(${Colors.Black500})`,
-  Black600 = `var(${Colors.Black600})`,
-  Black900 = `var(${Colors.Black900})`,
-  Green500 = `var(${Colors.Green500})`,
-  Blue400 = `var(${Colors.Blue400})`,
-  Orange100 = `var(${Colors.Orange100})`,
-  Orange200 = `var(${Colors.Orange200})`,
-  Orange400 = `var(${Colors.Orange400})`,
-  Purple100 = `var(${Colors.Purple100})`,
-  Purple400 = `var(${Colors.Purple400})`
-}
+export const Colors = {
+  White: `--pf-${PATTERNFLY_VERSION}-global--palette--white`,
+  Black900: `--pf-${PATTERNFLY_VERSION}-global--palette--black-900`,
+  Black600: `--pf-${PATTERNFLY_VERSION}-global--palette--black-600`,
+  Black500: `--pf-${PATTERNFLY_VERSION}-global--palette--black-500`,
+  Black400: `--pf-${PATTERNFLY_VERSION}-global--palette--black-400`,
+  Black200: `--pf-${PATTERNFLY_VERSION}-global--palette--black-200`,
+  Black100: `--pf-${PATTERNFLY_VERSION}-global--palette--black-100`,
+  Green500: `--pf-${PATTERNFLY_VERSION}-global--palette--green-500`,
+  Blue400: `--pf-${PATTERNFLY_VERSION}-global--palette--blue-400`,
+  Purple100: `--pf-${PATTERNFLY_VERSION}-global--palette--purple-100`,
+  Purple400: `--pf-${PATTERNFLY_VERSION}-global--palette--purple-400`,
+  Purple500: `--pf-${PATTERNFLY_VERSION}-global--palette--purple-500`,
+  Cyan300: `--pf-${PATTERNFLY_VERSION}-global--palette--cyan-300`,
+  Orange100: `--pf-${PATTERNFLY_VERSION}-global--palette--orange-100`,
+  Orange200: `--pf-${PATTERNFLY_VERSION}-global--palette--orange-200`,
+  Orange400: `--pf-${PATTERNFLY_VERSION}-global--palette--orange-400`,
+  Red200: `--pf-${PATTERNFLY_VERSION}-global--palette--red-200`
+};
+
+export const VarColors = {
+  White: `var(${Colors.White})`,
+  Black100: `var(${Colors.Black100})`,
+  Black200: `var(${Colors.Black200})`,
+  Black400: `var(${Colors.Black400})`,
+  Black500: `var(${Colors.Black500})`,
+  Black600: `var(${Colors.Black600})`,
+  Black900: `var(${Colors.Black900})`,
+  Green500: `var(${Colors.Green500})`,
+  Blue400: `var(${Colors.Blue400})`,
+  Orange100: `var(${Colors.Orange100})`,
+  Orange200: `var(${Colors.Orange200})`,
+  Orange400: `var(${Colors.Orange400})`,
+  Purple100: `var(${Colors.Purple100})`,
+  Purple400: `var(${Colors.Purple400})`
+};
 
 export enum HexColors {
   White = '#FFFFFF',

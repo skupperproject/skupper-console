@@ -17,6 +17,7 @@ import {
   ToolbarItem
 } from '@patternfly/react-core';
 
+import { PATTERNFLY_VERSION } from '../config/config';
 import LoadingPage from '../core/components/SkLoading';
 import SkNavigationViewLink from '../core/components/SkNavigationViewLink';
 import SkUpdateDataButton from '../core/components/SkUpdateDataButton';
@@ -85,7 +86,7 @@ const MainContainer: FC<MainContainerProps> = function ({
 
         {navigationComponent && (
           <>
-            <PageNavigation className="pf-v5-u-py-0 pf-v5-u-px-xl">
+            <PageNavigation className={`-${PATTERNFLY_VERSION}-u-py-0 pf-${PATTERNFLY_VERSION}-u-px-xl`}>
               <Flex>{navigationComponent}</Flex>
             </PageNavigation>
             <Divider />

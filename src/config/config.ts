@@ -24,7 +24,8 @@ export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 /** Tests */
 export const waitForElementToBeRemovedTimeout = 10000;
 
-export const DEFAULT_FONT_VAR = 'var(--pf-v5-global--FontFamily--text)';
+export const PATTERNFLY_VERSION = 'v5';
+export const DEFAULT_FONT_VAR = `var(--pf-${PATTERNFLY_VERSION}-global--FontFamily--text)`;
 
 export const EMPTY_VALUE_PLACEHOLDER = '-';
 export const IDS_GROUP_SEPARATOR = '~';

@@ -4,6 +4,7 @@ import SvgCircle from './Shapes/Circle';
 import SvgDiamond from './Shapes/Diamond';
 import SvgHorizontalLine from './Shapes/HorizontalLine';
 import SvgSquare from './Shapes/Square';
+import { PATTERNFLY_VERSION } from '../../../../../config/config';
 
 enum Labels {
   EntitiesTitle = ' Entities',
@@ -20,11 +21,11 @@ enum Labels {
 const ProcessLegend = function () {
   return (
     <>
-      <Title headingLevel="h3" className="pf-v5-u-my-sm ">
+      <Title headingLevel="h3" className={`pf-${PATTERNFLY_VERSION}-u-my-sm`}>
         {Labels.EntitiesTitle}
       </Title>
 
-      <Flex className="pf-v5-u-mb-md pf-v5-u-mx-md">
+      <Flex className={`pf-${PATTERNFLY_VERSION}-u-mb-md pf-${PATTERNFLY_VERSION}-u-mx-md"`}>
         <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
           <FlexItem>
             <SvgCircle />
@@ -52,11 +53,11 @@ const ProcessLegend = function () {
       </Flex>
 
       <Divider />
-      <Title headingLevel="h3" className="pf-v5-u-my-sm ">
+      <Title headingLevel="h3" className={`pf-${PATTERNFLY_VERSION}-u-my-sm`}>
         {Labels.LinksTitle}
       </Title>
 
-      <Flex className="pf-v5-u-mb-md pf-v5-u-mx-md">
+      <Flex className={`pf-${PATTERNFLY_VERSION}-u-mb-md pf-${PATTERNFLY_VERSION}-u-mx-md`}>
         <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
           <FlexItem>
             <SvgHorizontalLine />
