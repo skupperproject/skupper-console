@@ -7,7 +7,6 @@ import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
 import { SkSelectOption } from '../../core/components/SkSelect';
-import SkTrueFalseStatusCell from '../../core/components/SkTrueFalseStatusCell';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
 import {
   ServiceResponse,
@@ -79,7 +78,6 @@ export const customServiceCells = {
   TimestampCell: SkEndTimeCell,
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
     data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_PLACEHOLDER,
-  IsBoundCell: SkTrueFalseStatusCell,
   ConnectorProcessCountCell
 };
 
@@ -102,8 +100,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   },
   {
     name: ServicesLabels.IsBound,
-    prop: 'isBound',
-    customCellName: 'IsBoundCell'
+    prop: 'isBound'
   },
   {
     name: ProcessesLabels.Created,

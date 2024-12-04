@@ -1,6 +1,6 @@
 import { FC, useCallback, ComponentType } from 'react';
 
-import { Divider, Stack, StackItem } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
 
 import { GraphNode, SkGraphProps } from 'types/Graph.interfaces';
@@ -47,7 +47,6 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkG
           resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
           onResourceSelected={handleSearchText}
         />
-        <Divider />
       </StackItem>
 
       <StackItem isFilled>

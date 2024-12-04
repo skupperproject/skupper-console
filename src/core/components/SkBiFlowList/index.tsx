@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 
-import { Modal, ModalVariant } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 
 import { BiFlowResponse } from '../../../types/REST.interfaces';
 import { SkLinkCellProps } from '../SkLinkCell';

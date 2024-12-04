@@ -48,11 +48,14 @@ const DisplayResources: FC<DisplayResourcesProps> = function ({
           </>
         }
       >
-        <Button variant="plain">
-          <Icon status="info">
-            <InfoCircleIcon />
-          </Icon>
-        </Button>
+        <Button
+          icon={
+            <Icon status="info">
+              <InfoCircleIcon />
+            </Icon>
+          }
+          variant="plain"
+        />
       </Popover>
     </>
   );

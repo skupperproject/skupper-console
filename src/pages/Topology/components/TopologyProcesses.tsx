@@ -1,7 +1,6 @@
 import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
 
 import {
-  Divider,
   Drawer,
   DrawerActions,
   DrawerCloseButton,
@@ -152,7 +151,6 @@ const TopologyProcesses: FC<{
           resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
           onResourceSelected={handleSearchText}
         />
-        <Divider />
       </StackItem>
       <StackItem isFilled>
         <Drawer

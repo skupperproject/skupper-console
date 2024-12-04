@@ -85,7 +85,6 @@ const Metrics: FC<MetricsProps> = function (props) {
       <StackItem>
         <Latency
           title={MetricsLabels.LatencyTitleOut}
-          description={MetricsLabels.LatencyDescriptionOut}
           selectedFilters={{ ...queryParams, direction: Direction.Incoming }}
           openSections={defaultOpenSections?.latency}
           forceUpdate={shouldUpdateData}
@@ -96,7 +95,6 @@ const Metrics: FC<MetricsProps> = function (props) {
       <StackItem>
         <Latency
           title={MetricsLabels.LatencyTitleIn}
-          description={MetricsLabels.LatencyDescriptionIn}
           selectedFilters={{ ...queryParams, direction: Direction.Outgoing }}
           openSections={defaultOpenSections?.latency}
           forceUpdate={shouldUpdateData}

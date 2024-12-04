@@ -74,7 +74,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={MetricsLabels.ConnectionTitle}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.ConnectionTitle}</CardTitle>
       </CardHeader>

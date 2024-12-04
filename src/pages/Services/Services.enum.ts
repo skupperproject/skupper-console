@@ -24,7 +24,7 @@ export enum ServicesLabels {
   Section = 'Services',
   HTTP = ' HTTP/2',
   TCP = 'TCP',
-  Description = 'List of routing keys that contain at least one listener.<br>A routing key matches listeners, which connect local endpoints to remote connectors, and connectors, which link local workloads to remote listeners.',
+  Description = 'List of routing keys that contain at least one listener.<br>A routing key matches listeners, which connect local endpoints to remote connectors.',
   NoMetricSourceProcessFilter = 'No Clients',
   OpenConnections = 'Open connections',
   OldConnections = 'Connection history',

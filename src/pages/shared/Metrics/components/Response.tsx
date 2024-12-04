@@ -95,7 +95,7 @@ const Response: FC<ResponseProps> = function ({
     : response?.responseRateData || null;
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={MetricsLabels.ResposeTitle}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.ResposeTitle}</CardTitle>
       </CardHeader>

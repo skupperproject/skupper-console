@@ -22,7 +22,12 @@ const QueryClientContext = function ({
 
 export const Wrapper = function ({ children, config }: { config?: QueryClientConfig; children: ReactElement }) {
   return (
-    <HashRouter>
+    <HashRouter
+      future={{
+        v7_relativeSplatPath: true,
+        v7_startTransition: true
+      }}
+    >
       <QueryClientContext config={config}>{children}</QueryClientContext>
     </HashRouter>
   );

@@ -92,7 +92,7 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
     <>
       <Card isPlain>
         <CardHeader>
-          <CardTitle>Summary</CardTitle>
+          <CardTitle>{TopologyLabels.Summary}</CardTitle>
         </CardHeader>
         <CardBody>
           <Table borders={false} variant="compact">

@@ -1,4 +1,5 @@
-import { VarColors } from '../../../config/colors';
+import { HexColors } from '../../../config/colors';
+import { CONNECTOR_NAME_IP_SEPARATOR } from '../../../config/config';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
@@ -17,11 +18,9 @@ export const ServicesController = {
     }[],
     showMetrics: boolean
   ) => {
-    const sourceProcessSuffix = 'client';
-
     // Generate nodes and links
-    const nodes = generateSankeyNodes(servicePairs, sourceProcessSuffix);
-    const links = generateSankeyLinks(servicePairs, sourceProcessSuffix, showMetrics);
+    const nodes = generateSankeyNodes(servicePairs);
+    const links = generateSankeyLinks(servicePairs, showMetrics);
 
     return { nodes, links };
   },
@@ -159,17 +158,16 @@ const generateSankeyNodes = (
     destinationName: string;
     destinationSiteName?: string;
     color?: string;
-  }[],
-  sourceProcessSuffix: string
+  }[]
 ): SkSankeyChartNode[] => {
-  const clients = servicePairs.map(({ sourceName, sourceSiteName, destinationName, color = VarColors.Blue400 }) => ({
-    id: sourceName === destinationName ? `${sourceName} ${sourceProcessSuffix}` : sourceName,
-    nodeColor: sourceSiteName ? VarColors.Black400 : color
+  const clients = servicePairs.map(({ sourceName, sourceSiteName, color = HexColors.Blue400 }) => ({
+    id: `${sourceName}.`,
+    nodeColor: sourceSiteName ? HexColors.Black400 : color
   }));
 
-  const servers = servicePairs.map(({ destinationName, destinationSiteName, color = VarColors.Blue400 }) => ({
+  const servers = servicePairs.map(({ destinationName, destinationSiteName, color = HexColors.Blue400 }) => ({
     id: destinationName,
-    nodeColor: destinationSiteName ? VarColors.Black400 : color
+    nodeColor: destinationSiteName ? HexColors.Black400 : color
   }));
 
   return removeDuplicates([...clients, ...servers], 'id');
@@ -184,13 +182,12 @@ const generateSankeyLinks = (
     destinationName: string;
     byteRate?: number;
   }[],
-  sourceProcessSuffix: string,
   showMetrics: boolean
 ) =>
   removeDuplicatesFromArrayOfObjects(
     servicePairs
       .map(({ sourceName, destinationName, byteRate }) => ({
-        source: sourceName === destinationName ? `${sourceName} ${sourceProcessSuffix}` : sourceName,
+        source: `${sourceName}.`,
         target: destinationName,
         value: showMetrics ? byteRate || DEFAULT_SANKEY_CHART_FLOW_VALUE : DEFAULT_SANKEY_CHART_FLOW_VALUE
       }))
@@ -198,9 +195,14 @@ const generateSankeyLinks = (
   );
 
 function getBaseName(name: string): string {
-  const ipSuffixRegex = /-\d{1,3}(\.\d{1,3}){3}$/;
+  const partialName = name.split('@');
 
-  return name.replace(ipSuffixRegex, '');
+  if (partialName.length) {
+    // the name of a connector as this format name@IP
+    return name.split(CONNECTOR_NAME_IP_SEPARATOR)[0];
+  }
+
+  return name;
 }
 
 // Utility function for aggregating connector responses

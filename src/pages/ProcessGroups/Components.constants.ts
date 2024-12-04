@@ -15,7 +15,7 @@ export const CustomComponentCells = {
   ComponentNameLinkCell: (props: SkLinkCellProps<ComponentResponse>) =>
     SkLinkCell({
       ...props,
-      type: 'process',
+      type: 'component',
       link: `${ComponentRoutesPaths.Components}/${props.data.name}@${props.data.identity}`
     }),
   ProcessCountCell: (props: SkLinkCellProps<ComponentResponse>) =>

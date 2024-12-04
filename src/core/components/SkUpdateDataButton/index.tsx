@@ -1,6 +1,6 @@
 import { FC, useMemo, useState, useCallback, useRef, useEffect } from 'react';
 
-import { Button, debounce } from '@patternfly/react-core';
+import { Button, ButtonVariant, debounce, Flex, FlexItem } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 
@@ -100,23 +100,26 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   const isLoading = useMemo(() => fetchNumber > 0, [fetchNumber]);
 
   return (
-    <div id="sk-update-data-button">
-      <SkSelect
-        selected={refreshIntervalSelected || refreshDataIntervalMap[0].id}
-        items={refreshDataIntervalMap}
-        onSelect={handleSelectRefreshInterval}
-      />
+    <Flex id="sk-update-data-button">
+      <FlexItem>
+        <SkSelect
+          selected={refreshIntervalSelected || refreshDataIntervalMap[0].id}
+          items={refreshDataIntervalMap}
+          onSelect={handleSelectRefreshInterval}
+        />
+      </FlexItem>
 
-      <Button
-        key="split-action-primary"
-        data-testid="update-data-click"
-        onClick={debounce(revalidateLiveQueries, 750)}
-        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        isLoading={isLoading}
-      >
-        <SyncIcon />
-      </Button>
-    </div>
+      <FlexItem>
+        <Button
+          icon={<SyncIcon />}
+          key="split-action-primary"
+          data-testid="update-data-click"
+          onClick={debounce(revalidateLiveQueries, 750)}
+          variant={ButtonVariant.control}
+          isLoading={isLoading}
+        />
+      </FlexItem>
+    </Flex>
   );
 };
 

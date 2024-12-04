@@ -54,7 +54,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     });
 
     return (
-      <PageSection padding={{ default: 'noPadding' }}>
+      <PageSection hasBodyWrapper={false} padding={{ default: 'noPadding' }}>
         <Toolbar>
           <ToolbarContent>
             <ToolbarGroup>
@@ -131,7 +131,7 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
               )} */}
             </ToolbarGroup>
 
-            <ToolbarGroup align={{ default: 'alignRight' }}>
+            <ToolbarGroup align={{ default: 'alignEnd' }}>
               <ToolbarItem>
                 <SkSelect
                   selected={selectedFilters.duration}

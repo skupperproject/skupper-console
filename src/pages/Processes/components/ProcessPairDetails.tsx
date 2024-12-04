@@ -4,7 +4,7 @@ import { Bullseye, Grid, GridItem, Icon } from '@patternfly/react-core';
 import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 
 import Details from './Details';
-import { VarColors } from '../../../config/colors';
+import { HexColors } from '../../../config/colors';
 import SkLinkCell from '../../../core/components/SkLinkCell';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ProcessesRoutesPaths } from '../Processes.enum';
@@ -30,8 +30,8 @@ const ProcessPairDetails: FC<ProcessPairDetailsProps> = function ({ source, dest
 
       <GridItem sm={12} md={2}>
         <Bullseye>
-          <Icon size="xl">
-            <LongArrowAltRightIcon color={VarColors.Black500} />
+          <Icon size="2xl">
+            <LongArrowAltRightIcon color={HexColors.Black500} />
           </Icon>
         </Bullseye>
       </GridItem>

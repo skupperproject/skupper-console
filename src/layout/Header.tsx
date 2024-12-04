@@ -6,10 +6,11 @@ import {
   DropdownItem,
   DropdownList,
   Masthead,
-  MastheadBrand,
+  MastheadLogo,
   MastheadContent,
   MastheadMain,
   MastheadToggle,
+  MastheadBrand,
   MenuToggle,
   MenuToggleElement,
   PageToggleButton,
@@ -37,22 +38,23 @@ export enum HeaderLabels {
 const SkHeader = function () {
   return (
     <Masthead className="sk-header" data-testid="sk-header">
-      <MastheadToggle>
-        <PageToggleButton variant="plain">
-          <BarsIcon />
-        </PageToggleButton>
-      </MastheadToggle>
-
       <MastheadMain>
-        <MastheadBrand>
-          <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }} />
+        <MastheadToggle>
+          <PageToggleButton variant="plain">
+            <BarsIcon />
+          </PageToggleButton>
+        </MastheadToggle>
+        <MastheadBrand data-codemods>
+          <MastheadLogo data-codemods>
+            <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }} />
+          </MastheadLogo>
         </MastheadBrand>
       </MastheadMain>
 
       <MastheadContent>
         <Toolbar isFullHeight>
           <ToolbarContent>
-            <ToolbarGroup align={{ default: 'alignRight' }} spacer={{ default: 'spacerMd' }}>
+            <ToolbarGroup align={{ default: 'alignEnd' }} gap={{ default: 'gapMd' }}>
               <ToolbarItem>
                 <Suspense fallback={null}>
                   <UserDropdown />

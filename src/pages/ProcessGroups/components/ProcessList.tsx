@@ -17,8 +17,7 @@ const ProcessList: FC<ProcessListProps> = function ({ processes }) {
       customCells={{
         linkCell: CustomProcessCells.linkCell,
         linkCellSite: CustomProcessCells.linkCellSite,
-        TimestampCell: CustomProcessCells.TimestampCell,
-        ExposureCell: CustomProcessCells.ExposureCell
+        TimestampCell: CustomProcessCells.TimestampCell
       }}
     />
   );

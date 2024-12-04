@@ -1,12 +1,12 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
 import {
+  ChartProps,
   Chart,
   ChartAxis,
   ChartBar,
   ChartGroup,
   ChartLegendTooltip,
-  ChartProps,
   ChartThemeColor,
   createContainer
 } from '@patternfly/react-charts';

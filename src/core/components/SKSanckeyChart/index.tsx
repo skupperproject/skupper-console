@@ -4,7 +4,7 @@ import { ResponsiveSankey } from '@nivo/sankey';
 
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
 import SankeyFilter from './SkSankeyFilter';
-import { HexColors, VarColors } from '../../../config/colors';
+import { HexColors } from '../../../config/colors';
 import { DEFAULT_FONT_VAR } from '../../../config/config';
 import { MetricsLabels } from '../../../pages/shared/Metrics/Metrics.enum';
 import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
@@ -27,7 +27,7 @@ export function addThemeChangeListener(callback: Function) {
 }
 
 export function getColors({ nodeColor }: SkSankeyChartNode): string {
-  return nodeColor || VarColors.Black500;
+  return nodeColor || HexColors.Black500;
 }
 
 export function valueFormat(value: number): string {
@@ -79,7 +79,7 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function }> = fun
                 fontSize: 14,
                 fontFamily: DEFAULT_FONT_VAR
               },
-              tooltip: { container: { color: VarColors.Black900 } }
+              tooltip: { container: { color: HexColors.Black900 } }
             }}
             labelTextColor={HexColors.Black900}
             valueFormat={valueFormat}

@@ -1,17 +1,6 @@
 import { FC, MouseEventHandler } from 'react';
 
-import {
-  Button,
-  Divider,
-  List,
-  ListItem,
-  PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
-  TextVariants,
-  Title
-} from '@patternfly/react-core';
+import { Button, Divider, List, ListItem, PageSection, Content, ContentVariants, Title } from '@patternfly/react-core';
 
 import { HttpErrorLabels } from './Http.enum';
 
@@ -21,15 +10,15 @@ const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandl
   onReset
 }) {
   return (
-    <PageSection variant={PageSectionVariants.light}>
-      <TextContent>
+    <PageSection hasBodyWrapper={false}>
+      <Content>
         <Title headingLevel="h1">{message || HttpErrorLabels.ErrorTitle}</Title>
         <Title headingLevel="h2">{code || ''}</Title>
         <Divider />
 
-        <Text component={TextVariants.h2}>
+        <Content component={ContentVariants.h2}>
           To help us resolve the issue quickly, we recommend following these steps using the DevTool browser
-        </Text>
+        </Content>
 
         <List>
           <ListItem>Open the DevTool browser (F12)</ListItem>
@@ -50,7 +39,7 @@ const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandl
             </Button>
           </ListItem>
         </List>
-      </TextContent>
+      </Content>
     </PageSection>
   );
 };

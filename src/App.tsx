@@ -12,12 +12,12 @@ const SkSidebar = lazy(() => import('./layout/SideBar'));
 const RouteContainer = lazy(() => import('./layout/RouteContainer'));
 
 import '@patternfly/react-core/dist/styles/base.css';
-import './App.css';
 
 const App = function () {
   return (
     <Page
-      header={<SkHeader />}
+      isContentFilled
+      masthead={<SkHeader />}
       sidebar={<SkSidebar />}
       breadcrumb={
         <Toolbar style={{ padding: 0 }}>
