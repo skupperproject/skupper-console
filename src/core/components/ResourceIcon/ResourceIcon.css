@@ -1,8 +1,8 @@
 /* Resource icon */
 .sk-resource-icon {
-  background-color: var(--pf-v5-global--palette--black-500);
+  background-color: gray;
   border-radius: 20px;
-  color: var(--pf-v5-global--palette--white);
+  color: white;
   display: inline-block;
   flex-shrink: 0;
   font-size: 12px;
@@ -13,26 +13,4 @@
   padding: 0 4px;
   text-align: center;
   white-space: nowrap;
-}
-
-.sk-resource-site {
-  background-color: var(--pf-v5-global--palette--green-600);
-}
-
-.sk-resource-process-group {
-  background-color: var(--pf-v5-global--palette--light-green-500);
-}
-
-.sk-resource-service {
-  background-color: var(--pf-v5-global--palette--purple-500);
-}
-
-.sk-resource-process {
-  background-color: var(--pf-v5-global--palette--cyan-300);
-}
-
-.sk-resource-skupper {
-  margin-left: -5px;
-  min-width: 32px;
-  background-color: transparent;
 }

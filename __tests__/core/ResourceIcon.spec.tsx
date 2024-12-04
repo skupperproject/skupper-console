@@ -15,7 +15,7 @@ describe('ResourceIcon', () => {
     const el = screen.getByRole('site-resource-icon');
 
     expect(el).toBeInTheDocument();
-    expect(el).toHaveClass('sk-resource-icon', 'sk-resource-site');
+    expect(el).toHaveClass('sk-resource-icon');
     expect(el).toHaveTextContent('S');
   });
 
@@ -25,7 +25,7 @@ describe('ResourceIcon', () => {
     const el = screen.getByRole('process-resource-icon');
 
     expect(el).toBeInTheDocument();
-    expect(el).toHaveClass('sk-resource-icon', 'sk-resource-process');
+    expect(el).toHaveClass('sk-resource-icon');
     expect(el).toHaveTextContent('P');
   });
 
@@ -35,7 +35,7 @@ describe('ResourceIcon', () => {
     const el = screen.getByRole('component-resource-icon');
 
     expect(el).toBeInTheDocument();
-    expect(el).toHaveClass('sk-resource-icon', 'sk-resource-process-group');
+    expect(el).toHaveClass('sk-resource-icon');
     expect(el).toHaveTextContent('C');
   });
 
@@ -44,7 +44,7 @@ describe('ResourceIcon', () => {
 
     const el = screen.getByRole('service-resource-icon');
     expect(el).toBeInTheDocument();
-    expect(el).toHaveClass('sk-resource-icon', 'sk-resource-service');
+    expect(el).toHaveClass('sk-resource-icon');
     expect(el).toHaveTextContent('RK');
   });
 });

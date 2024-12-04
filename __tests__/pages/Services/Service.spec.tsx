@@ -6,7 +6,7 @@ import * as router from 'react-router';
 
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { PATTERNFLY_VERSION, waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -73,7 +73,7 @@ describe('Begin testing the Service component', () => {
     fireEvent.click(screen.getByText(ServicesLabels.Pairs));
 
     expect(screen.getByText(`${ServicesLabels.Pairs}`).parentNode?.parentNode).toHaveClass(
-      'pf-v5-c-tabs__item pf-m-current'
+      `pf-${PATTERNFLY_VERSION}-c-tabs__item pf-m-current`
     );
   });
 });

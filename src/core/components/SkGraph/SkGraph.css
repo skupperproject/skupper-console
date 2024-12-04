@@ -10,9 +10,7 @@
   border-radius: var(--pf-v5-global--BorderRadius--sm);
   box-shadow: var(--pf-v5-global--BoxShadow--sm);
 }
-.sk-topology-control-bar__button:not(.pf-v5-m-disabled) {
-  background-color: var(--pf-v5-global--BackgroundColor--100);
-}
+
 .sk-topology-control-bar__button:after {
   display: none;
 }

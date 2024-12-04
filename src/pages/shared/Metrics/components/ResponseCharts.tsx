@@ -23,7 +23,7 @@ function createStatusLabel(label: string) {
 const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseData: ResponseMetrics }> = memo(
   ({ responseRateData, responseData }) => (
     <>
-      <Grid hasGutter className={`pf-${PATTERNFLY_VERSION}-u-m-md`}>
+      <Grid hasGutter>
         {/* HTTP stats */}
         <GridItem span={3}>
           <SkCounterCard

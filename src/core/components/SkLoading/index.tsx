@@ -4,6 +4,7 @@ import { Bullseye, Card, CardBody, CardHeader, PageSection, Text, TextContent } 
 import { CogIcon } from '@patternfly/react-icons';
 
 import { LoadingLabels } from './Loading.enum';
+import { PATTERNFLY_VERSION } from '../../../config/config';
 import { getTestsIds } from '../../../config/testIds';
 import TransitionPage from '../TransitionPages/Fade';
 
@@ -12,7 +13,10 @@ import './Loading.css';
 const PleaseWait = function () {
   return (
     <Card isPlain>
-      <CardHeader className="cog-wrapper">
+      <CardHeader
+        className="cog-wrapper"
+        style={{ color: `var(--pf-${PATTERNFLY_VERSION}-global--palette--black-500)` }}
+      >
         <CogIcon className="cog cog-main spinning-clockwise" />
         <CogIcon className="cog cog-secondary cog-upper spinning-clockwise--reverse" />
         <CogIcon className="cog cog-secondary cog-lower spinning-clockwise--reverse" />

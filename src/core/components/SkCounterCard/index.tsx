@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { Card, CardBody, TextContent, TextVariants, Text, Flex } from '@patternfly/react-core';
 
 import { Colors } from '../../../config/colors';
-import { PATTERNFLY_VERSION } from '../../../config/config';
 
 interface SkCounterCardProps {
   title?: string;
@@ -27,16 +26,15 @@ const SkCounterCard: FC<SkCounterCardProps> = function ({
     >
       <CardBody>
         <Flex alignItems={{ default: 'alignItemsCenter' }} justifyContent={{ default: 'justifyContentCenter' }}>
-          <TextContent
-            style={{ color: `var(${fontColor})` }}
-            className={`pf-${PATTERNFLY_VERSION}-u-text-align-center`}
-          >
-            <Text component={TextVariants.p} style={{ margin: 0 }}>
-              {title}
-            </Text>
-            <Text component={TextVariants.h1} style={{ margin: 0 }}>
-              {value}
-            </Text>
+          <TextContent style={{ color: `var(${fontColor})` }}>
+            <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
+              <Text component={TextVariants.p} style={{ margin: 0 }}>
+                {title}
+              </Text>
+              <Text component={TextVariants.h1} style={{ margin: 0 }}>
+                {value}
+              </Text>
+            </Flex>
           </TextContent>
         </Flex>
       </CardBody>
