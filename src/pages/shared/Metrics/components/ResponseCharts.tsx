@@ -4,6 +4,7 @@ import { ChartThemeColor } from '@patternfly/react-charts';
 import { Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 
 import { Colors } from '../../../../config/colors';
+import { PATTERNFLY_VERSION } from '../../../../config/config';
 import SkChartArea from '../../../../core/components/SkChartArea';
 import SkChartPie from '../../../../core/components/SkChartPie';
 import SkCounterCard from '../../../../core/components/SkCounterCard';
@@ -22,7 +23,7 @@ function createStatusLabel(label: string) {
 const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseData: ResponseMetrics }> = memo(
   ({ responseRateData, responseData }) => (
     <>
-      <Grid hasGutter className="pf-v5-u-m-md">
+      <Grid hasGutter className={`pf-${PATTERNFLY_VERSION}-u-m-md`}>
         {/* HTTP stats */}
         <GridItem span={3}>
           <SkCounterCard
@@ -57,7 +58,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
       <Flex
         alignItems={{ default: 'alignItemsStretch', md: 'alignItemsStretch' }}
         direction={{ md: 'column', xl: 'row' }}
-        className="pf-v5-u-mt-2xl "
+        className={`pf-${PATTERNFLY_VERSION}-u-mt-2xl`}
       >
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea

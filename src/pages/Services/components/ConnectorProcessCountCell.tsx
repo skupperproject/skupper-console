@@ -2,6 +2,7 @@ import { Button, List, ListItem, Popover } from '@patternfly/react-core';
 
 import { ConnectorResponse } from 'types/REST.interfaces';
 
+import { PATTERNFLY_VERSION } from '../../../config/config';
 import SkLinkCell, { SkLinkCellProps } from '../../../core/components/SkLinkCell';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 
@@ -23,7 +24,7 @@ const ConnectorProcessCountCell = function (props: SkLinkCellProps<ConnectorResp
         </List>
       }
     >
-      <Button variant="link" className="pf-v5-u-p-0">
+      <Button variant="link" className={`pf-${PATTERNFLY_VERSION}-u-p-0`}>
         {props.value}
       </Button>
     </Popover>

@@ -21,6 +21,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { VarColors } from '../../../config/colors';
+import { PATTERNFLY_VERSION } from '../../../config/config';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import SkExposedCell from '../../../core/components/SkExposedCell';
@@ -141,7 +142,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
               const goToLink = `${ProcessesRoutesPaths.Processes}/${itemSelected.name}@${itemSelected.identity}`;
 
               return (
-                <StackItem key={itemSelected.identity} className="pf-u-v5-mb-md">
+                <StackItem key={itemSelected.identity} className={`pf-u-${PATTERNFLY_VERSION}-mb-md`}>
                   <Card isFlat style={{ backgroundColor: VarColors.Black100 }}>
                     <CardBody>
                       <Flex>
