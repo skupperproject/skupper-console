@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
 
 import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
 import ResourceIcon from '../../../core/components/ResourceIcon';
-import SkExposedCell from '../../../core/components/SkExposedCell';
 import { timeAgo } from '../../../core/utils/timeAgo';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ComponentRoutesPaths } from '../../ProcessGroups/Components.enum';
@@ -113,10 +112,8 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
 
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.ExposedTitle}</DescriptionListTerm>
-                <DescriptionListDescription>
-                  <SkExposedCell value={processBinding} />
-                </DescriptionListDescription>
+                <DescriptionListTerm>{ProcessesLabels.BindingState}</DescriptionListTerm>
+                <DescriptionListDescription>{processBinding}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 

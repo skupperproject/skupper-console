@@ -71,7 +71,8 @@ export enum TopologyLabels {
   TitleGroupDisplayOptionsLinkType = 'Link type',
   TitleGroupDisplayOptionsMenuMetrics = 'Metrics',
   TitleGroupDisplayOptionsMenuMetricVisualization = 'Metric Visualization',
-  TitleGroupDisplayOptionsMenuOther = 'Other'
+  TitleGroupDisplayOptionsMenuOther = 'Other',
+  Summary = 'Summary'
 }
 
 export enum TopologyURLQueyParams {

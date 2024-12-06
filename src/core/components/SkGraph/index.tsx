@@ -2,13 +2,14 @@ import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 
 import { Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
+import { t_global_border_radius_large, t_global_border_width_100 } from '@patternfly/react-tokens';
 
 import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
 
 import ControlBar from './components/ControlBar';
 import { registerElements } from './components/CustomElements';
 import { DEFAULT_GRAPH_CONFIG } from './Graph.config';
-import { GRAPH_BG_COLOR } from './Graph.constants';
+import { GRAPH_BORDER_COLOR } from './Graph.constants';
 import { GraphElementStates } from './Graph.enum';
 import { LAYOUT_MAP } from './layout';
 import { GraphController } from './services';
@@ -226,10 +227,10 @@ const SkGraph: FC<SkGraphProps> = memo(
 
       const handleResizeGraph = async () => {
         const graphInstance = topologyGraphRef.current;
-        const container = GraphController.getParent();
+        const container = GraphController.getParent().getBoundingClientRect();
 
         try {
-          graphInstance?.resize(container.clientWidth, container.clientHeight);
+          graphInstance?.resize(container.width, container.height);
         } catch {
           return;
         }
@@ -282,8 +283,11 @@ const SkGraph: FC<SkGraphProps> = memo(
         ref={graphRef}
         style={{
           overflow: 'hidden',
-          height: '99.5%',
-          background: GRAPH_BG_COLOR
+          height: '99%',
+          borderStyle: 'solid',
+          borderWidth: t_global_border_width_100.value,
+          borderColor: GRAPH_BORDER_COLOR,
+          borderRadius: t_global_border_radius_large.value
         }}
       >
         {topologyGraphRef.current && <ControlBar graphInstance={topologyGraphRef.current} />}

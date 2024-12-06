@@ -1,14 +1,14 @@
 import { useState, FC, FormEvent, useEffect, memo } from 'react';
 
 import {
+  Label,
+  LabelGroup,
   Toolbar,
   ToolbarItem,
   ToolbarContent,
   ToolbarToggleGroup,
   ToolbarGroup,
   SearchInput,
-  ChipGroup,
-  Chip,
   ToolbarFilter,
   Button
 } from '@patternfly/react-core';
@@ -21,8 +21,6 @@ import { testIds } from './SkSearchFilter.testIds';
 import useDebounce from '../../../../hooks/useDebounce';
 import { FilterSelected, FilterTypeWithSearchText } from '../../../../types/SkFilter.interfaces';
 import SkSelect, { SkSelectOption } from '../../SkSelect';
-
-import './SkSearchFilter.css';
 
 interface SkSearchFilterProps {
   text?: string;
@@ -94,7 +92,7 @@ const SkSearchFilter: FC<SkSearchFilterProps> = memo(({ text = '', onSearch, sel
               />
             </ToolbarItem>
 
-            <ToolbarItem variant="search-filter" data-testid={testIds.searchBox}>
+            <ToolbarItem data-testid={testIds.searchBox}>
               <SearchInput
                 className="sk-search-filter"
                 placeholder={`${SkSearchFilterLabels.PlaceHolderInputSearchPrefix} ${selectedFilter?.toString().toLocaleLowerCase()}`}
@@ -132,9 +130,11 @@ interface ActiveFilterProps {
 const ActiveFilter: FC<ActiveFilterProps> = function ({ id, label, searchValue, onDelete }) {
   return (
     <ToolbarFilter key={`${id}${label}${searchValue}`} categoryName={`${label}`}>
-      <ChipGroup categoryName={`${label}`}>
-        <Chip onClick={onDelete}>{searchValue}</Chip>
-      </ChipGroup>
+      <LabelGroup categoryName={`${label}`}>
+        <Label variant="outline" onClose={onDelete}>
+          {searchValue}
+        </Label>
+      </LabelGroup>
     </ToolbarFilter>
   );
 };
@@ -147,7 +147,7 @@ interface ActiveFiltersProps {
 
 const ActiveFilters: FC<ActiveFiltersProps> = function ({ filterSelected, onDeleteFilter, onDeleteAll }) {
   return (
-    <ToolbarGroup spaceItems={{ default: 'spaceItemsSm' }}>
+    <ToolbarGroup>
       <ToolbarItem data-testid={testIds.groupFilterLabels}>
         {filterSelected.map((filter) => (
           <ActiveFilter

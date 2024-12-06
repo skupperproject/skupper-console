@@ -37,6 +37,6 @@ export enum SiteLabels {
   LinkStatus = 'Status',
   Routers = 'Routers',
   HA = 'High availability',
-  YES = 'True',
-  NO = 'False'
+  YES = 'true',
+  NO = 'false'
 }

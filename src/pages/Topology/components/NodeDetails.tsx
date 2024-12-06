@@ -3,28 +3,27 @@ import { FC, Fragment } from 'react';
 import {
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   CardTitle,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Divider,
   Flex,
   FlexItem,
+  Label,
   Split,
   SplitItem,
   Stack,
-  StackItem,
-  Title
+  StackItem
 } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { VarColors } from '../../../config/colors';
-import { PATTERNFLY_VERSION } from '../../../config/config';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
-import SkExposedCell from '../../../core/components/SkExposedCell';
 import { ellipsisInTheMiddle } from '../../../core/utils/EllipsisInTheMiddle';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
 import { ProcessResponse } from '../../../types/REST.interfaces';
@@ -95,7 +94,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     <>
       <Card isPlain>
         <CardHeader>
-          <CardTitle>Summary</CardTitle>
+          <CardTitle>{TopologyLabels.Summary}</CardTitle>
         </CardHeader>
         <CardBody>
           <Table borders={false} variant="compact">
@@ -142,42 +141,26 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
               const goToLink = `${ProcessesRoutesPaths.Processes}/${itemSelected.name}@${itemSelected.identity}`;
 
               return (
-                <StackItem key={itemSelected.identity} className={`pf-u-${PATTERNFLY_VERSION}-mb-md`}>
-                  <Card isFlat style={{ backgroundColor: VarColors.Black100 }}>
-                    <CardBody>
+                <StackItem key={itemSelected.identity}>
+                  <Card>
+                    <CardHeader>
                       <Flex>
                         <FlexItem>
-                          <Title headingLevel="h3" title={itemSelected.name}>
+                          <CardTitle title={itemSelected.name}>
                             <ResourceIcon type="process" />
                             {ellipsisInTheMiddle(itemSelected.name, { rightPartLength: 10 })}
-                          </Title>
+                          </CardTitle>
                         </FlexItem>
                         <FlexItem>
-                          <SkExposedCell value={itemSelected.processBinding} />
+                          <Label variant="outline" color="teal">
+                            {itemSelected.processBinding}
+                          </Label>
                         </FlexItem>
                       </Flex>
+                    </CardHeader>
 
-                      <Split hasGutter>
-                        <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.Details}`}>
-                            {TopologyLabels.TopologyModalAction1}
-                          </Link>
-                        </SplitItem>
-
-                        <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.ProcessPairs}`}>
-                            {TopologyLabels.TopologyModalAction2}
-                          </Link>
-                        </SplitItem>
-
-                        <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.Overview}`}>
-                            {TopologyLabels.TopologyModalAction3}
-                          </Link>
-                        </SplitItem>
-                      </Split>
-
-                      <Table borders={false} variant="compact" style={{ backgroundColor: VarColors.Black100 }}>
+                    <CardBody>
+                      <Table borders={false} variant="compact">
                         <Thead noWrap>
                           <Tr>
                             <Th aria-label="metric" />
@@ -245,6 +228,30 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                         </DescriptionListGroup>
                       </DescriptionList>
                     </CardBody>
+
+                    <Divider />
+
+                    <CardFooter>
+                      <Split hasGutter>
+                        <SplitItem>
+                          <Link to={`${goToLink}?type=${ProcessesLabels.Details}`}>
+                            {TopologyLabels.TopologyModalAction1}
+                          </Link>
+                        </SplitItem>
+
+                        <SplitItem>
+                          <Link to={`${goToLink}?type=${ProcessesLabels.ProcessPairs}`}>
+                            {TopologyLabels.TopologyModalAction2}
+                          </Link>
+                        </SplitItem>
+
+                        <SplitItem>
+                          <Link to={`${goToLink}?type=${ProcessesLabels.Overview}`}>
+                            {TopologyLabels.TopologyModalAction3}
+                          </Link>
+                        </SplitItem>
+                      </Split>
+                    </CardFooter>
                   </Card>
                 </StackItem>
               );

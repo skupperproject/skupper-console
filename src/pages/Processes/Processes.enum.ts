@@ -42,7 +42,7 @@ export enum ProcessesLabels {
   Servers = 'Servers',
   Http2Requests = 'Http2 requests',
   HttpRequests = 'Http requests',
-  ExposedTitle = 'Exposure status',
+  BindingState = 'Binding State',
   IsExposed = 'Exposed',
   IsNotExposed = 'Unexposed',
   OpenConnections = 'Open connections',

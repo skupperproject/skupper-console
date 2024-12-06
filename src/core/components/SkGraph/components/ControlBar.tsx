@@ -1,10 +1,20 @@
 import { useRef } from 'react';
 
 import { Graph } from '@antv/g6';
-import { Button, Popover, Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { ExpandArrowsAltIcon, UndoIcon, SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
+import {
+  Button,
+  ButtonVariant,
+  Popover,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem,
+  Tooltip
+} from '@patternfly/react-core';
+import { ExpandArrowsAltIcon, SearchMinusIcon, SearchPlusIcon, ExpandIcon } from '@patternfly/react-icons';
 
 import ProcessLegend from './Legend';
+import { GraphLabels } from '../Graph.enum';
 import { GraphController } from '../services';
 
 type ZoomControlsProps = {
@@ -46,12 +56,12 @@ const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
   return (
     <Toolbar className="sk-topology-controls">
       <ToolbarContent>
-        <ToolbarGroup spaceItems={{ default: 'spaceItemsNone' }}>
+        <ToolbarGroup gap={{ default: 'gapNone' }}>
           <ToolbarItem>
-            <Tooltip content={'zoom in'}>
+            <Tooltip content={GraphLabels.ZoomIn}>
               <Button
                 size="sm"
-                variant="tertiary"
+                variant={ButtonVariant.tertiary}
                 onClick={handleIncreaseZoom}
                 icon={<SearchPlusIcon />}
                 className="sk-topology-control-bar__button"
@@ -60,10 +70,10 @@ const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
           </ToolbarItem>
 
           <ToolbarItem>
-            <Tooltip content={'zoom out'}>
+            <Tooltip content={GraphLabels.ZoomOut}>
               <Button
                 size="sm"
-                variant="tertiary"
+                variant={ButtonVariant.tertiary}
                 onClick={handleDecreaseZoom}
                 icon={<SearchMinusIcon />}
                 className="sk-topology-control-bar__button"
@@ -72,10 +82,10 @@ const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
           </ToolbarItem>
 
           <ToolbarItem>
-            <Tooltip content={'fit view'}>
+            <Tooltip content={GraphLabels.Fit}>
               <Button
                 size="sm"
-                variant="tertiary"
+                variant={ButtonVariant.tertiary}
                 onClick={handleFitView}
                 icon={<ExpandArrowsAltIcon />}
                 className="sk-topology-control-bar__button"
@@ -84,12 +94,12 @@ const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
           </ToolbarItem>
 
           <ToolbarItem>
-            <Tooltip content={'reset'}>
+            <Tooltip content={GraphLabels.Reset}>
               <Button
                 size="sm"
-                variant="tertiary"
+                variant={ButtonVariant.tertiary}
                 onClick={handleCleanAllGraphConfigurations}
-                icon={<UndoIcon />}
+                icon={<ExpandIcon />}
                 className="sk-topology-control-bar__button"
               />
             </Tooltip>
@@ -102,7 +112,12 @@ const ControlBar = function ({ graphInstance }: ZoomControlsProps) {
               bodyContent={<ProcessLegend />}
               triggerRef={popoverRef}
             />
-            <Button ref={popoverRef} size="sm" variant="tertiary" className="sk-topology-control-bar__button">
+            <Button
+              ref={popoverRef}
+              size="sm"
+              variant={ButtonVariant.tertiary}
+              className="sk-topology-control-bar__button"
+            >
               {LEGEND_LABEL_NAME}
             </Button>
           </ToolbarItem>

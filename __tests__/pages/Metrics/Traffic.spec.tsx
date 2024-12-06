@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { PATTERNFLY_VERSION, waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -52,9 +52,7 @@ describe('Traffic component', () => {
 
     expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
 
-    fireEvent.click(
-      document.querySelector(`.pf-${PATTERNFLY_VERSION}-c-card__header-toggle`)?.querySelector('button')!
-    );
+    fireEvent.click(screen.getByLabelText(MetricsLabels.DataTransferTitle)?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 

@@ -5,7 +5,7 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import TrafficCharts from './TrafficCharts';
-import { VarColors } from '../../../../config/colors';
+import { HexColors } from '../../../../config/colors';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { QueriesMetrics, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
@@ -65,7 +65,7 @@ const Traffic: FC<TrafficProps> = function ({
   const isOnlyClientOrServer = dataSeverAvailable && dataClientAvailable;
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={MetricsLabels.DataTransferTitle}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.DataTransferTitle}</CardTitle>
       </CardHeader>
@@ -90,7 +90,7 @@ const Traffic: FC<TrafficProps> = function ({
                 <small>{MetricsLabels.ByteRateDataSentDescription} </small>
                 <TrafficCharts
                   byteRateData={data.trafficClient}
-                  colorScale={[VarColors.Orange100, VarColors.Orange400]}
+                  colorScale={[HexColors.Orange100, HexColors.Orange400]}
                 />
               </>
             )}
@@ -103,7 +103,7 @@ const Traffic: FC<TrafficProps> = function ({
                 <small>{MetricsLabels.ByteRateDataReceivedDescription} </small>
                 <TrafficCharts
                   byteRateData={data.trafficServer}
-                  colorScale={[VarColors.Purple100, VarColors.Purple400]}
+                  colorScale={[HexColors.Purple100, HexColors.Purple400]}
                 />
               </>
             )}

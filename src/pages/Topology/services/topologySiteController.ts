@@ -20,7 +20,7 @@ export const convertSiteToNode = ({ identity, name, siteVersion, platform, route
   id: identity,
   name,
   label: siteVersion ? `${name} (${siteVersion})` : name,
-  iconName: platform || 'site',
+  iconName: platform !== 'podman' && platform !== 'kubernetes' ? 'site' : platform,
   info: {
     secondary: routerCount > 1 ? 'HA' : ''
   }

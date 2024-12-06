@@ -1,6 +1,6 @@
 import { FC, useCallback, useState, startTransition } from 'react';
 
-import { Card, CardBody, CardHeader, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Content, ContentVariants } from '@patternfly/react-core';
 
 import SkSankeyChart from '../../../core/components/SKSanckeyChart';
 import {
@@ -61,10 +61,10 @@ const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ pairs, showFilte
   return (
     <Card>
       <CardHeader>
-        <TextContent>
-          <Text component={TextVariants.h1}>{ServicesLabels.SankeyChartTitle}</Text>
-          <Text>{ServicesLabels.SankeyChartDescription}</Text>
-        </TextContent>
+        <Content>
+          <Content component={ContentVariants.h1}>{ServicesLabels.SankeyChartTitle}</Content>
+          <Content component="p">{ServicesLabels.SankeyChartDescription}</Content>
+        </Content>
       </CardHeader>
       <CardBody>
         <SkSankeyChart data={{ nodes, links }} onSearch={showFilter ? handleFindPairType : undefined} />

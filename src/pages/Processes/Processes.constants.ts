@@ -2,7 +2,6 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
-import SkExposedCell from '../../core/components/SkExposedCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
@@ -34,8 +33,7 @@ export const CustomProcessCells = {
       type: 'component',
       link: `${ComponentRoutesPaths.Components}/${props.data.groupName}@${props.data.groupIdentity}`
     }),
-  TimestampCell: SkEndTimeCell,
-  ExposureCell: SkExposedCell
+  TimestampCell: SkEndTimeCell
 };
 
 export const CustomProcessPairCells = {
@@ -62,17 +60,18 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Component,
     prop: 'groupName' as keyof ProcessResponse,
-    customCellName: 'linkComponentCell'
+    customCellName: 'linkComponentCell',
+    modifier: 'truncate'
   },
   {
     name: ProcessesLabels.Site,
     prop: 'parentName' as keyof ProcessResponse,
-    customCellName: 'linkCellSite'
+    customCellName: 'linkCellSite',
+    modifier: 'truncate'
   },
   {
-    name: ProcessesLabels.ExposedTitle,
-    prop: 'processBinding' as keyof ProcessResponse,
-    customCellName: 'ExposureCell'
+    name: ProcessesLabels.BindingState,
+    prop: 'processBinding' as keyof ProcessResponse
   },
   {
     name: ProcessesLabels.Created,

@@ -64,7 +64,7 @@ const Request: FC<RequestProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={MetricsLabels.RequestsTitle}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
       </CardHeader>

@@ -1,4 +1,4 @@
-import { Button, Icon, Popover, Text } from '@patternfly/react-core';
+import { Button, Icon, Popover, Content } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
 const WarningMessage =
@@ -53,21 +53,24 @@ const SkLinkStatusCell = function ({ data }: SkLinkStatusCellProps) {
   const { icon, status, text } = statusMap[linkStatus];
 
   return (
-    <Text component="h4">
+    <Content component="h4">
       <Icon isInline size="md" status={status}>
         {icon}
       </Icon>{' '}
       {text}
       {status === 'warning' && (
         <Popover position={'right'} bodyContent={WarningMessage}>
-          <Button variant="plain">
-            <Icon>
-              <InfoCircleIcon />
-            </Icon>
-          </Button>
+          <Button
+            icon={
+              <Icon>
+                <InfoCircleIcon />
+              </Icon>
+            }
+            variant="plain"
+          />
         </Popover>
       )}
-    </Text>
+    </Content>
   );
 };
 

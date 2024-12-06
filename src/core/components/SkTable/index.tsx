@@ -1,6 +1,6 @@
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, useMemo, FC } from 'react';
 
-import { Card, CardBody, CardHeader, Flex, Text, TextContent, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Flex, Content, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import {
   InnerScrollContainer,
@@ -173,14 +173,14 @@ const SkTable = function <T>({
     <Card isFullHeight={isFullHeight}>
       {title && (
         <CardHeader>
-          <TextContent>
+          <Content>
             <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
               <Title headingLevel="h3">{title}</Title>
               {!isPaginationEnabled && (
-                <Text>{`${paginationTotalRows || rows.length} ${rows.length === 1 ? 'item' : 'items'}`}</Text>
+                <Content component="p">{`${paginationTotalRows || rows.length} ${rows.length === 1 ? 'item' : 'items'}`}</Content>
               )}
             </Flex>
-          </TextContent>
+          </Content>
         </CardHeader>
       )}
 
@@ -244,7 +244,7 @@ const SkTable = function <T>({
                                 value={
                                   value === '' || value === undefined || value === null
                                     ? EMPTY_VALUE_PLACEHOLDER
-                                    : value
+                                    : `${value}`
                                 }
                                 data={data}
                                 callback={callback}
@@ -259,7 +259,7 @@ const SkTable = function <T>({
                                   ? format(value)
                                   : value === '' || value === undefined || value === null
                                     ? EMPTY_VALUE_PLACEHOLDER
-                                    : value}
+                                    : `${value}`}
                               </TableText>
                             )}
                           </Td>

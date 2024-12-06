@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
 import {
+  ChartProps,
   Chart,
   ChartAxis,
   createContainer,
@@ -8,8 +9,7 @@ import {
   ChartLegendTooltip,
   ChartThemeColor,
   ChartArea,
-  ChartLine,
-  ChartProps
+  ChartLine
 } from '@patternfly/react-charts';
 import { getResizeObserver } from '@patternfly/react-core';
 

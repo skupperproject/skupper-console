@@ -79,7 +79,6 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   },
   {
     name: BiFlowListLabels.TxLatency,
-    columnDescription: 'The TCP latency primarily concerns the start of data transmission',
     prop: 'latency',
     format: formatLatency,
     modifier: 'nowrap'
@@ -104,7 +103,6 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   },
   {
     name: BiFlowListLabels.RxLatency,
-    columnDescription: 'The TCP latency primarily concerns the start of data transmission',
     prop: 'latencyReverse',
     format: formatLatency,
     modifier: 'nowrap'

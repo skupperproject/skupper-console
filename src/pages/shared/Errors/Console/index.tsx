@@ -5,10 +5,8 @@ import {
   ClipboardCopyVariant,
   Divider,
   PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
-  TextVariants,
+  Content,
+  ContentVariants,
   Title
 } from '@patternfly/react-core';
 
@@ -35,17 +33,17 @@ const ErrorConsole: FC<ErrorConsoleProps> = function ({ error, resetErrorBoundar
 
   // It handles app errors
   return (
-    <PageSection variant={PageSectionVariants.light} data-testid="sk-js-error-view">
-      <TextContent>
+    <PageSection hasBodyWrapper={false} data-testid="sk-js-error-view">
+      <Content>
         <Title headingLevel="h1">{ConsoleErrorLabels.ErrorTitle}</Title>
-        <Text component={TextVariants.h3}>{message}</Text>
+        <Content component={ContentVariants.h3}>{message}</Content>
 
         <Divider />
 
         <ClipboardCopy isExpanded hoverTip="Copy" clickTip="Copied" variant={ClipboardCopyVariant.expansion}>
           {error.stack || ''}
         </ClipboardCopy>
-      </TextContent>
+      </Content>
     </PageSection>
   );
 };

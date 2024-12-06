@@ -5,19 +5,15 @@ import {
   Flex,
   FlexItem,
   PageGroup,
-  PageNavigation,
   PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
-  TextVariants,
+  Content,
+  ContentVariants,
   Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem
 } from '@patternfly/react-core';
 
-import { PATTERNFLY_VERSION } from '../config/config';
 import LoadingPage from '../core/components/SkLoading';
 import SkNavigationViewLink from '../core/components/SkNavigationViewLink';
 import SkUpdateDataButton from '../core/components/SkUpdateDataButton';
@@ -25,7 +21,6 @@ import TransitionPage from '../core/components/TransitionPages/Fade';
 import { TopologyLabels } from '../pages/Topology/Topology.enum';
 
 import '@patternfly/patternfly/patternfly-addons.css';
-import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
 
 interface MainContainerProps {
   dataTestId?: string;
@@ -54,15 +49,17 @@ const MainContainer: FC<MainContainerProps> = function ({
     <TransitionPage>
       <PageGroup data-testid={dataTestId}>
         {title && (
-          <PageSection role="sk-heading" variant={PageSectionVariants.light}>
+          <PageSection hasBodyWrapper={false} role="sk-heading">
             <Flex
               justifyContent={{ default: 'justifyContentSpaceBetween' }}
               alignItems={{ default: 'alignItemsFlexStart' }}
             >
-              <TextContent>
+              <Content>
                 <Title headingLevel="h1">{title}</Title>
-                {description && <Text component={TextVariants.p} dangerouslySetInnerHTML={{ __html: description }} />}
-              </TextContent>
+                {description && (
+                  <Content component={ContentVariants.p} dangerouslySetInnerHTML={{ __html: description }} />
+                )}
+              </Content>
               <Flex>
                 <FlexItem>
                   <Toolbar style={{ padding: 0 }}>
@@ -86,14 +83,17 @@ const MainContainer: FC<MainContainerProps> = function ({
 
         {navigationComponent && (
           <>
-            <PageNavigation className={`-${PATTERNFLY_VERSION}-u-py-0 pf-${PATTERNFLY_VERSION}-u-px-xl`}>
-              <Flex>{navigationComponent}</Flex>
-            </PageNavigation>
+            <Flex>{navigationComponent}</Flex>
+
             <Divider />
           </>
         )}
         {mainContentChildren && (
-          <PageSection padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }} isFilled={true}>
+          <PageSection
+            hasBodyWrapper={false}
+            padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }}
+            isFilled={true}
+          >
             <Suspense fallback={<LoadingPage />}>{mainContentChildren} </Suspense>
           </PageSection>
         )}

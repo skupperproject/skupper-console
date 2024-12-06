@@ -7,3 +7,10 @@ export enum GraphElementStates {
   Visible = 'visible-element',
   Hidden = 'hidden-element'
 }
+
+export enum GraphLabels {
+  ZoomOut = 'Zoom out',
+  ZoomIn = 'Zoom in',
+  Fit = 'Fit view',
+  Reset = 'Reset layout'
+}

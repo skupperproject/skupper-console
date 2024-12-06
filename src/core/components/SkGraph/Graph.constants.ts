@@ -1,6 +1,8 @@
 import { HexColors } from '../../../config/colors';
+import { DEFAULT_FONT_VAR } from '../../../config/config';
 
-export const GRAPH_BG_COLOR = HexColors.White;
+export const GRAPH_BORDER_COLOR = HexColors.DefaultBorder;
+
 export const NODE_BACKGROUND_COLOR = HexColors.White;
 export const NODE_BORDER_COLOR = HexColors.DefaultBorder;
 export const NODE_LABEL_TEXT_COLOR = HexColors.Black900;
@@ -26,7 +28,7 @@ export const COMBO_BORDER_COLOR_DEFAULT = HexColors.DefaultBorder;
 export const COMBO_COLOR_DEFAULT_LABEL = HexColors.DarkThemeText;
 export const COMBO_COLOR_DEFAULT_LABEL_BG = HexColors.DarkThemeBackground;
 
-export const FONT_FAMILY = 'RedHatText';
+export const FONT_FAMILY = DEFAULT_FONT_VAR;
 export const NODE_SIZE = 44;
 export const ICON_SIZE = NODE_SIZE / 2;
 export const LABEL_FONT_SIZE = 9;

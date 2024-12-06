@@ -6,78 +6,82 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="pf-v5-c-toolbar"
+        class="pf-v6-c-toolbar"
         data-ouia-component-id="OUIA-Generated-Toolbar-1"
-        data-ouia-component-type="PF5/Toolbar"
+        data-ouia-component-type="PF6/Toolbar"
         data-ouia-safe="true"
         data-testid="sankey-filter"
         id="pf-random-id-0"
       >
         <div
-          class="pf-v5-c-toolbar__content"
+          class="pf-v6-c-toolbar__content"
         >
           <div
-            class="pf-v5-c-toolbar__content-section"
+            class="pf-v6-c-toolbar__content-section"
           >
             <div
-              class="pf-v5-c-toolbar__group pf-m-toggle-group pf-m-show-on-xl"
+              class="pf-v6-c-toolbar__group pf-m-toggle-group pf-m-show-on-xl"
             >
               <div
-                class="pf-v5-c-toolbar__toggle"
+                class="pf-v6-c-toolbar__toggle"
               >
                 <button
                   aria-disabled="false"
                   aria-haspopup="false"
                   aria-label="Show Filters"
-                  class="pf-v5-c-button pf-m-plain"
+                  class="pf-v6-c-button pf-m-plain"
                   data-ouia-component-id="OUIA-Generated-Button-plain-1"
-                  data-ouia-component-type="PF5/Button"
+                  data-ouia-component-type="PF6/Button"
                   data-ouia-safe="true"
                   type="button"
                 >
-                  <svg
-                    aria-hidden="true"
-                    class="pf-v5-svg"
-                    fill="currentColor"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 512 512"
-                    width="1em"
+                  <span
+                    class="pf-v6-c-button__icon"
                   >
-                    <path
-                      d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
-                    />
-                  </svg>
+                    <svg
+                      aria-hidden="true"
+                      class="pf-v6-svg"
+                      fill="currentColor"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
+                      />
+                    </svg>
+                  </span>
                 </button>
               </div>
               <div
-                class="pf-v5-c-toolbar__group pf-m-filter-group"
+                class="pf-v6-c-toolbar__group pf-m-filter-group"
               >
                 <div
-                  class="pf-v5-c-toolbar__item"
+                  class="pf-v6-c-toolbar__item"
                 >
                   <button
                     aria-expanded="false"
-                    class="pf-v5-c-menu-toggle"
+                    class="pf-v6-c-menu-toggle"
                     data-ouia-component-id="OUIA-Generated-MenuToggle-1"
-                    data-ouia-component-type="PF5/MenuToggle"
+                    data-ouia-component-type="PF6/MenuToggle"
                     data-ouia-safe="true"
                     type="button"
                   >
                     <span
-                      class="pf-v5-c-menu-toggle__text"
+                      class="pf-v6-c-menu-toggle__text"
                     >
                       Clients
                     </span>
                     <span
-                      class="pf-v5-c-menu-toggle__controls"
+                      class="pf-v6-c-menu-toggle__controls"
                     >
                       <span
-                        class="pf-v5-c-menu-toggle__toggle-icon"
+                        class="pf-v6-c-menu-toggle__toggle-icon"
                       >
                         <svg
                           aria-hidden="true"
-                          class="pf-v5-svg"
+                          class="pf-v6-svg"
                           fill="currentColor"
                           height="1em"
                           role="img"
@@ -93,30 +97,30 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                   </button>
                 </div>
                 <div
-                  class="pf-v5-c-toolbar__item"
+                  class="pf-v6-c-toolbar__item"
                 >
                   <button
                     aria-expanded="false"
-                    class="pf-v5-c-menu-toggle"
+                    class="pf-v6-c-menu-toggle"
                     data-ouia-component-id="OUIA-Generated-MenuToggle-2"
-                    data-ouia-component-type="PF5/MenuToggle"
+                    data-ouia-component-type="PF6/MenuToggle"
                     data-ouia-safe="true"
                     type="button"
                   >
                     <span
-                      class="pf-v5-c-menu-toggle__text"
+                      class="pf-v6-c-menu-toggle__text"
                     >
                       Servers
                     </span>
                     <span
-                      class="pf-v5-c-menu-toggle__controls"
+                      class="pf-v6-c-menu-toggle__controls"
                     >
                       <span
-                        class="pf-v5-c-menu-toggle__toggle-icon"
+                        class="pf-v6-c-menu-toggle__toggle-icon"
                       >
                         <svg
                           aria-hidden="true"
-                          class="pf-v5-svg"
+                          class="pf-v6-svg"
                           fill="currentColor"
                           height="1em"
                           role="img"
@@ -133,30 +137,30 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                 </div>
               </div>
               <div
-                class="pf-v5-c-toolbar__item"
+                class="pf-v6-c-toolbar__item"
               >
                 <button
                   aria-expanded="false"
-                  class="pf-v5-c-menu-toggle"
+                  class="pf-v6-c-menu-toggle"
                   data-ouia-component-id="OUIA-Generated-MenuToggle-3"
-                  data-ouia-component-type="PF5/MenuToggle"
+                  data-ouia-component-type="PF6/MenuToggle"
                   data-ouia-safe="true"
                   type="button"
                 >
                   <span
-                    class="pf-v5-c-menu-toggle__text"
+                    class="pf-v6-c-menu-toggle__text"
                   >
                     Display only pairs
                   </span>
                   <span
-                    class="pf-v5-c-menu-toggle__controls"
+                    class="pf-v6-c-menu-toggle__controls"
                   >
                     <span
-                      class="pf-v5-c-menu-toggle__toggle-icon"
+                      class="pf-v6-c-menu-toggle__toggle-icon"
                     >
                       <svg
                         aria-hidden="true"
-                        class="pf-v5-svg"
+                        class="pf-v6-svg"
                         fill="currentColor"
                         height="1em"
                         role="img"
@@ -175,12 +179,12 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
           </div>
         </div>
         <div
-          class="pf-v5-c-toolbar__content pf-m-hidden"
+          class="pf-v6-c-toolbar__content pf-m-hidden"
           hidden=""
         >
           <div
             aria-hidden="true"
-            class="pf-v5-c-toolbar__group pf-m-hidden"
+            class="pf-v6-c-toolbar__group pf-m-hidden"
             hidden=""
           />
         </div>
@@ -196,78 +200,82 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
   </body>,
   "container": <div>
     <div
-      class="pf-v5-c-toolbar"
+      class="pf-v6-c-toolbar"
       data-ouia-component-id="OUIA-Generated-Toolbar-1"
-      data-ouia-component-type="PF5/Toolbar"
+      data-ouia-component-type="PF6/Toolbar"
       data-ouia-safe="true"
       data-testid="sankey-filter"
       id="pf-random-id-0"
     >
       <div
-        class="pf-v5-c-toolbar__content"
+        class="pf-v6-c-toolbar__content"
       >
         <div
-          class="pf-v5-c-toolbar__content-section"
+          class="pf-v6-c-toolbar__content-section"
         >
           <div
-            class="pf-v5-c-toolbar__group pf-m-toggle-group pf-m-show-on-xl"
+            class="pf-v6-c-toolbar__group pf-m-toggle-group pf-m-show-on-xl"
           >
             <div
-              class="pf-v5-c-toolbar__toggle"
+              class="pf-v6-c-toolbar__toggle"
             >
               <button
                 aria-disabled="false"
                 aria-haspopup="false"
                 aria-label="Show Filters"
-                class="pf-v5-c-button pf-m-plain"
+                class="pf-v6-c-button pf-m-plain"
                 data-ouia-component-id="OUIA-Generated-Button-plain-1"
-                data-ouia-component-type="PF5/Button"
+                data-ouia-component-type="PF6/Button"
                 data-ouia-safe="true"
                 type="button"
               >
-                <svg
-                  aria-hidden="true"
-                  class="pf-v5-svg"
-                  fill="currentColor"
-                  height="1em"
-                  role="img"
-                  viewBox="0 0 512 512"
-                  width="1em"
+                <span
+                  class="pf-v6-c-button__icon"
                 >
-                  <path
-                    d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
-                  />
-                </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="pf-v6-svg"
+                    fill="currentColor"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 512 512"
+                    width="1em"
+                  >
+                    <path
+                      d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
+                    />
+                  </svg>
+                </span>
               </button>
             </div>
             <div
-              class="pf-v5-c-toolbar__group pf-m-filter-group"
+              class="pf-v6-c-toolbar__group pf-m-filter-group"
             >
               <div
-                class="pf-v5-c-toolbar__item"
+                class="pf-v6-c-toolbar__item"
               >
                 <button
                   aria-expanded="false"
-                  class="pf-v5-c-menu-toggle"
+                  class="pf-v6-c-menu-toggle"
                   data-ouia-component-id="OUIA-Generated-MenuToggle-1"
-                  data-ouia-component-type="PF5/MenuToggle"
+                  data-ouia-component-type="PF6/MenuToggle"
                   data-ouia-safe="true"
                   type="button"
                 >
                   <span
-                    class="pf-v5-c-menu-toggle__text"
+                    class="pf-v6-c-menu-toggle__text"
                   >
                     Clients
                   </span>
                   <span
-                    class="pf-v5-c-menu-toggle__controls"
+                    class="pf-v6-c-menu-toggle__controls"
                   >
                     <span
-                      class="pf-v5-c-menu-toggle__toggle-icon"
+                      class="pf-v6-c-menu-toggle__toggle-icon"
                     >
                       <svg
                         aria-hidden="true"
-                        class="pf-v5-svg"
+                        class="pf-v6-svg"
                         fill="currentColor"
                         height="1em"
                         role="img"
@@ -283,30 +291,30 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                 </button>
               </div>
               <div
-                class="pf-v5-c-toolbar__item"
+                class="pf-v6-c-toolbar__item"
               >
                 <button
                   aria-expanded="false"
-                  class="pf-v5-c-menu-toggle"
+                  class="pf-v6-c-menu-toggle"
                   data-ouia-component-id="OUIA-Generated-MenuToggle-2"
-                  data-ouia-component-type="PF5/MenuToggle"
+                  data-ouia-component-type="PF6/MenuToggle"
                   data-ouia-safe="true"
                   type="button"
                 >
                   <span
-                    class="pf-v5-c-menu-toggle__text"
+                    class="pf-v6-c-menu-toggle__text"
                   >
                     Servers
                   </span>
                   <span
-                    class="pf-v5-c-menu-toggle__controls"
+                    class="pf-v6-c-menu-toggle__controls"
                   >
                     <span
-                      class="pf-v5-c-menu-toggle__toggle-icon"
+                      class="pf-v6-c-menu-toggle__toggle-icon"
                     >
                       <svg
                         aria-hidden="true"
-                        class="pf-v5-svg"
+                        class="pf-v6-svg"
                         fill="currentColor"
                         height="1em"
                         role="img"
@@ -323,30 +331,30 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
               </div>
             </div>
             <div
-              class="pf-v5-c-toolbar__item"
+              class="pf-v6-c-toolbar__item"
             >
               <button
                 aria-expanded="false"
-                class="pf-v5-c-menu-toggle"
+                class="pf-v6-c-menu-toggle"
                 data-ouia-component-id="OUIA-Generated-MenuToggle-3"
-                data-ouia-component-type="PF5/MenuToggle"
+                data-ouia-component-type="PF6/MenuToggle"
                 data-ouia-safe="true"
                 type="button"
               >
                 <span
-                  class="pf-v5-c-menu-toggle__text"
+                  class="pf-v6-c-menu-toggle__text"
                 >
                   Display only pairs
                 </span>
                 <span
-                  class="pf-v5-c-menu-toggle__controls"
+                  class="pf-v6-c-menu-toggle__controls"
                 >
                   <span
-                    class="pf-v5-c-menu-toggle__toggle-icon"
+                    class="pf-v6-c-menu-toggle__toggle-icon"
                   >
                     <svg
                       aria-hidden="true"
-                      class="pf-v5-svg"
+                      class="pf-v6-svg"
                       fill="currentColor"
                       height="1em"
                       role="img"
@@ -365,12 +373,12 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
         </div>
       </div>
       <div
-        class="pf-v5-c-toolbar__content pf-m-hidden"
+        class="pf-v6-c-toolbar__content pf-m-hidden"
         hidden=""
       >
         <div
           aria-hidden="true"
-          class="pf-v5-c-toolbar__group pf-m-hidden"
+          class="pf-v6-c-toolbar__group pf-m-hidden"
           hidden=""
         />
       </div>

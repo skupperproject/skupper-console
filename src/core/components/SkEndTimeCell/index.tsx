@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { Icon, Text, Tooltip, Truncate } from '@patternfly/react-core';
+import { Icon, Content, Tooltip } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
 import { timeAgo } from '../../utils/timeAgo';
@@ -19,12 +19,12 @@ const SkEndTimeCell = function <T>({ value }: EndTimeProps<T>) {
 
   return (
     <Tooltip content={timeAgo(value as number)}>
-      <Text component="h4">
+      <Content>
         <Icon size="md" isInline>
           <GlobeAmericasIcon />
         </Icon>{' '}
-        <Truncate content={timeAgo(value as number)} position={'middle'} />
-      </Text>
+        {timeAgo(value as number)}
+      </Content>
     </Tooltip>
   );
 };

@@ -63,7 +63,7 @@ export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;
   siteVersion: string;
-  platform: 'kubernetes' | 'podman' | undefined;
+  platform: 'kubernetes' | 'podman' | string | undefined;
   routerCount: number;
 }
 

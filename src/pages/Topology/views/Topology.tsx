@@ -1,6 +1,6 @@
 import { MouseEvent as ReactMouseEvent, useRef, useState } from 'react';
 
-import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
+import { Card, CardBody, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
 import { getTestsIds } from '../../../config/testIds';
@@ -23,7 +23,7 @@ const links: Record<string, { linkToPage: string; linkLabel: string }> = {
 const Topology = function () {
   const [searchParams] = useSearchParams();
 
-  const serviceIdsString = searchParams.get(TopologyURLQueyParams.ServiceId) || undefined;
+  const serviceIdsString = useRef(searchParams.get(TopologyURLQueyParams.ServiceId) || undefined);
   const idsString = useRef(searchParams.get(TopologyURLQueyParams.IdSelected) || undefined);
   const type = searchParams.get(TopologyURLQueyParams.Type);
 
@@ -34,9 +34,10 @@ const Topology = function () {
   function handleChangeTab(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
     setTabSelected(tabIndex as string);
     idsString.current = undefined;
+    serviceIdsString.current = undefined;
   }
 
-  const serviceIds = TopologyController.transformStringIdsToIds(serviceIdsString);
+  const serviceIds = TopologyController.transformStringIdsToIds(serviceIdsString.current);
   // IdsSting can be a site,component, process or a pairs. Avoid pairs IDS to be selected from URL
   const ids = TopologyController.transformStringIdsToIds(idsString.current);
 
@@ -58,9 +59,27 @@ const Topology = function () {
       }
       mainContentChildren={
         <>
-          {tabSelected === TopologyViews.Sites && <TopologySite ids={ids} />}
-          {tabSelected === TopologyViews.Components && <TopologyComponent ids={ids} />}
-          {tabSelected === TopologyViews.Processes && <TopologyProcesses serviceIds={serviceIds} ids={ids} />}
+          {tabSelected === TopologyViews.Sites && (
+            <Card isFullHeight isPlain>
+              <CardBody>
+                <TopologySite ids={ids} />
+              </CardBody>
+            </Card>
+          )}
+          {tabSelected === TopologyViews.Components && (
+            <Card isFullHeight isPlain>
+              <CardBody>
+                <TopologyComponent ids={ids} />
+              </CardBody>
+            </Card>
+          )}
+          {tabSelected === TopologyViews.Processes && (
+            <Card isFullHeight isPlain>
+              <CardBody>
+                <TopologyProcesses serviceIds={serviceIds} ids={ids} />
+              </CardBody>
+            </Card>
+          )}
         </>
       }
     />
