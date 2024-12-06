@@ -1,8 +1,8 @@
-import { FC, useCallback, useState, startTransition } from 'react';
+import { useCallback, useState, startTransition } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { SKTableColumn } from 'types/SkTable.interfaces';
+import { NonNullableValue, SKTableColumn } from 'types/SkTable.interfaces';
 
 import { RESTApi } from '../../../API/REST.api';
 import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/config';
@@ -12,21 +12,21 @@ import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
 import { BiFlowResponse, QueryFilters } from '../../../types/REST.interfaces';
 import { QueriesServices } from '../Services.enum';
 
-interface ServiceBiFlowProps {
-  columns: SKTableColumn<BiFlowResponse>[];
+interface ServiceBiFlowProps<T extends BiFlowResponse> {
+  columns: SKTableColumn<NonNullableValue<T>>[];
   filters: QueryFilters;
   options: SkSelectOption[];
   pagination?: number;
   showAppplicationFlows?: boolean;
 }
 
-const ServiceBiFlowList: FC<ServiceBiFlowProps> = function ({
+const ServiceBiFlowList = function <T extends BiFlowResponse>({
   columns,
   filters,
   options,
   pagination = BIG_PAGINATION_SIZE,
   showAppplicationFlows = false
-}) {
+}: ServiceBiFlowProps<T>) {
   const [queryParams, setQueryParams] = useState({});
 
   const { data: transportFlows } = useSuspenseQuery({
@@ -55,7 +55,7 @@ const ServiceBiFlowList: FC<ServiceBiFlowProps> = function ({
 
       <SkBiFlowList
         columns={columns}
-        rows={biFlows?.results || []}
+        rows={(biFlows?.results as NonNullableValue<T>[]) || []}
         paginationTotalRows={biFlows?.timeRangeCount}
         pagination={true}
         paginationPageSize={pagination}

@@ -187,8 +187,6 @@ interface BaseFlow extends BaseResponse {
   duration: number | null;
   octets: number;
   octetsReverse: number;
-  latency: number;
-  latencyReverse: number;
   traceRouters: string[];
   traceSites: string[];
   protocol: Protocols;
@@ -199,6 +197,8 @@ interface BaseFlow extends BaseResponse {
 }
 
 export interface TransportFlowResponse extends BaseFlow {
+  latency: number;
+  latencyReverse: number;
   proxyHost: string; //what the service will see as the client.  ie: 172.17.44.249
   proxyPort: string; //ie: 56956
   destHost: string; //what the service will see as the

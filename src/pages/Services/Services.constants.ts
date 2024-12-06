@@ -84,7 +84,7 @@ export const customServiceCells = {
 // Services Table
 export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
-    name: ServicesLabels.Name,
+    name: ServicesLabels.RoutingKey,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell',
     modifier: 'nowrap'

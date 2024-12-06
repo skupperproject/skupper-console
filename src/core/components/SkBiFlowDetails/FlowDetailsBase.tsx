@@ -26,7 +26,7 @@ interface FlowDetailsBaseProps {
   processName: string;
   processId: string | number;
   octets: number;
-  latency: number;
+  latency?: number;
   isCounterflow?: boolean;
   additionalDetails?: ReactNode; // for any flow-specific details like HTTP method, status, etc.
 }
@@ -65,8 +65,12 @@ const FlowDetailsBase: FC<FlowDetailsBaseProps> = function ({
             <DescriptionListTerm>{BiFlowLabels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(octets) || EMPTY_VALUE_PLACEHOLDER}</DescriptionListDescription>
 
-            <DescriptionListTerm>{BiFlowLabels.Latency}</DescriptionListTerm>
-            <DescriptionListDescription>{formatLatency(latency) || EMPTY_VALUE_PLACEHOLDER}</DescriptionListDescription>
+            {latency !== undefined && <DescriptionListTerm>{BiFlowLabels.Latency}</DescriptionListTerm>}
+            {latency !== undefined && (
+              <DescriptionListDescription>
+                {formatLatency(latency) || EMPTY_VALUE_PLACEHOLDER}
+              </DescriptionListDescription>
+            )}
 
             {additionalDetails}
           </DescriptionListGroup>

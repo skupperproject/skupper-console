@@ -41,7 +41,8 @@ import {
   UserResponse,
   ApplicationFlowResponse,
   ListenerResponse,
-  ConnectorResponse
+  ConnectorResponse,
+  TransportFlowResponse
 } from '../types/REST.interfaces';
 
 export const RESTApi = {
@@ -194,8 +195,8 @@ export const RESTApi = {
   },
 
   // BIFLOW APIs
-  fetchTransportFlows: async (options?: QueryFilters): Promise<ResponseWrapper<BiFlowResponse[]>> => {
-    const data = await axiosFetch<ResponseWrapper<BiFlowResponse[]>>(getTransportFlowsPATH(), {
+  fetchTransportFlows: async (options?: QueryFilters): Promise<ResponseWrapper<TransportFlowResponse[]>> => {
+    const data = await axiosFetch<ResponseWrapper<TransportFlowResponse[]>>(getTransportFlowsPATH(), {
       params: options ? mapQueryFiltersToQueryParams(options) : null
     });
 
