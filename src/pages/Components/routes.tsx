@@ -5,7 +5,7 @@ import { ComponentRoutesPaths } from './Components.enum';
 const Components = lazy(() => import(/* webpackChunkName: "components" */ './views/Components'));
 const Component = lazy(() => import(/* webpackChunkName: "component" */ './views/Component'));
 
-export const processGroupsRoutes = [
+export const componentsRoutes = [
   {
     path: ComponentRoutesPaths.Components,
     element: <Components />

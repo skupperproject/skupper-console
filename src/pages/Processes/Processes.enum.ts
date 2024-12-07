@@ -29,7 +29,7 @@ export enum ProcessesLabels {
   Services = 'Routing keys',
   Process = 'Process',
   Site = 'Site',
-  ProcessGroup = 'Component',
+  Component = 'Component',
   Image = 'Image',
   Created = 'Created',
   SourceIP = 'IP',
@@ -58,7 +58,6 @@ export enum ProcessesLabels {
   ByteRate = 'Byterate',
   Latency = 'Latency',
   Name = 'Name',
-  Component = 'Component',
   ByteRateRx = 'Byte rate In',
   Exposed = 'Exposed'
 }

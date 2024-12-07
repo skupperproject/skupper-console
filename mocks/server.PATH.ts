@@ -6,6 +6,7 @@ export const MockApiPaths = {
   Sites: `${API_PREFIX}/sites`,
   Site: `${API_PREFIX}/sites/:id`,
   SitePairs: `${API_PREFIX}/sitepairs`,
+  Links: `${API_PREFIX}/routerlinks`,
   Components: `${API_PREFIX}/processgroups`,
   Component: `${API_PREFIX}/processgroups/:id`,
   ComponentPairs: `${API_PREFIX}/processgrouppairs`,
@@ -23,8 +24,6 @@ export const MockApiPaths = {
   Connection: `${API_PREFIX}/connections/:id`,
   ApplicationFlows: `${API_PREFIX}/applicationflows`,
   ApplicationFlow: `${API_PREFIX}/applicationflows/:id`,
-  Routers: `${API_PREFIX}/routers`,
-  Links: `${API_PREFIX}/routerlinks`,
   PrometheusQuery: `${API_PREFIX}/internal/prom/query/`,
   PrometheusRangeQuery: `${API_PREFIX}/internal/prom/rangequery/`
 };

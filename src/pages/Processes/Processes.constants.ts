@@ -6,7 +6,7 @@ import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
 import { ProcessPairsResponse, ProcessResponse, PairsWithInstantMetrics } from '../../types/REST.interfaces';
-import { ComponentRoutesPaths } from '../ProcessGroups/Components.enum';
+import { ComponentRoutesPaths } from '../Components/Components.enum';
 import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
 export const ProcessesPaths = {

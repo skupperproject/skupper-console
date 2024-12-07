@@ -24,7 +24,7 @@
     "noUnusedLocals": false,
     "strictPropertyInitialization": true
   },
-  "include": ["src", "__tests__", "jest.config.ts", "mocks/*.ts"],
+  "include": ["src", "__tests__", "jest.config.ts", "mocks"],
   // cypress.config.ts -> https://github.com/cypress-io/cypress/issues/22059
   "exclude": ["node_modules", "build", "cypress.config.ts"]
 }

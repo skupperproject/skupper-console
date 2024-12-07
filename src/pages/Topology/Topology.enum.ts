@@ -27,7 +27,7 @@ export enum TopologyLabels {
   DisplayProcessesDefaultLabel = `Find processes`,
   DisplaySitesDefaultLabel = `Find sites`,
   DisplayComponentsDefaultLabel = `Find components`,
-  ShowProcessGroups = 'Group by components',
+  ShowComponents = 'Group by components',
   Process = 'Process',
   Processes = 'Processes',
   ServerSite = 'Server site',

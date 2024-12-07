@@ -7,7 +7,7 @@ import { GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
 import SkGraph from '../../../core/components/SkGraph';
-import { ComponentRoutesPaths } from '../../ProcessGroups/Components.enum';
+import { ComponentRoutesPaths } from '../../Components/Components.enum';
 import useTopologyComponentData from '../hooks/useTopologyComponentData';
 import useTopologyState from '../hooks/useTopologyState';
 import { TopologyComponentController } from '../services/topologyComponentController';

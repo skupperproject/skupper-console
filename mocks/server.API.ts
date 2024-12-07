@@ -1,4 +1,4 @@
-import { createServer, Response } from 'miragejs';
+import { Response } from 'miragejs';
 
 import { PrometheusMetricsV2 } from '../src/config/prometheus';
 import {
@@ -10,7 +10,6 @@ import {
   RouterResponse,
   SiteResponse,
   BiFlowResponse,
-  ResponseWrapper,
   PairsResponse,
   ApplicationFlowResponse,
   ConnectorResponse,

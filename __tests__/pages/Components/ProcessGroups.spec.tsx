@@ -9,7 +9,7 @@ import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import Components from '../../../src/pages/ProcessGroups/views/Components';
+import Components from '../../../src/pages/Components/views/Components';
 
 const componentResults = componentsData.results;
 
