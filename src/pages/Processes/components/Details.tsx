@@ -21,7 +21,7 @@ import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { timeAgo } from '../../../core/utils/timeAgo';
 import { ProcessResponse } from '../../../types/REST.interfaces';
-import { ComponentRoutesPaths } from '../../ProcessGroups/Components.enum';
+import { ComponentRoutesPaths } from '../../Components/Components.enum';
 import { ServicesRoutesPaths } from '../../Services/Services.enum';
 import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 import { ProcessesLabels } from '../Processes.enum';
@@ -66,7 +66,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             </GridItem>
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.ProcessGroup}</DescriptionListTerm>
+                <DescriptionListTerm>{ProcessesLabels.Component}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="component" />
                   <Link to={`${ComponentRoutesPaths.Components}/${groupName}@${groupIdentity}`}>{groupName}</Link>

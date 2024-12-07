@@ -2,19 +2,21 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml) [![codecov](https://codecov.io/github/skupperproject/skupper-console/graph/badge.svg?token=42RWX7XAHH)](https://codecov.io/github/skupperproject/skupper-console) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Table of Contents for the Network console V2
+## Table of Contents
 
-- [Network Console](#skupper-console)
+- [Network console V2](#network-console-v2)
   - [Status](#status)
   - [Enable the console from Skupper](#enable-the-console-from-skupper)
 - [Development](#development)
   - [Quick start](#quick-start)
   - [Run the console with demo routes](#run-the-console-with-demo-routes)
-  - [Run the console with Skupper](#run-the-console-with-skupper)
+  - [Run the console from Skupper](#run-the-console-from-skupper)
   - [Testing](#testing)
 - [Project structure](#project-structure)
   - [Page sections](#page-sections)
 - [ENV variables](#env-variables)
+
+## Network console V2
 
 Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
 

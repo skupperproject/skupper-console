@@ -12,7 +12,7 @@ import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import PairsList from '../../../src/pages/ProcessGroups/components/PairList';
+import PairsList from '../../../src/pages/Components/components/PairList';
 import { ComponentResponse, BasePairs } from '../../../src/types/REST.interfaces';
 
 const data = components.results[0] as ComponentResponse;

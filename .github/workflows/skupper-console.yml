@@ -1,4 +1,4 @@
-name: skupper-console
+name: network-console
 on:
   push:
     branches: [main, v2]

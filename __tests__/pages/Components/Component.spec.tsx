@@ -4,19 +4,19 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 import * as router from 'react-router';
 
-import processGroupsData from '../../../mocks/data/PROCESS_GROUPS.json';
+import componentsData from '../../../mocks/data/PROCESS_GROUPS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
-import { ComponentLabels } from '../../../src/pages/ProcessGroups/Components.enum';
-import Component from '../../../src/pages/ProcessGroups/views/Component';
+import { ComponentLabels } from '../../../src/pages/Components/Components.enum';
+import Component from '../../../src/pages/Components/views/Component';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 import { ProcessResponse, ComponentResponse } from '../../../src/types/REST.interfaces';
 
-const processGroupResults = processGroupsData.results as ComponentResponse[];
+const componentResults = componentsData.results as ComponentResponse[];
 const processResults = processesData.results as ProcessResponse[];
 
 describe('Component component', () => {
@@ -27,7 +27,7 @@ describe('Component component', () => {
     // Mock URL query parameters and inject them into the component
     jest
       .spyOn(router, 'useParams')
-      .mockReturnValue({ id: `${processGroupResults[0].name}@${processGroupResults[0].identity}` });
+      .mockReturnValue({ id: `${componentResults[0].name}@${componentResults[0].identity}` });
 
     render(
       <Wrapper>
@@ -48,7 +48,7 @@ describe('Component component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByTestId(getTestsIds.componentView(processGroupResults[0].identity))).toBeInTheDocument();
+    expect(screen.getByTestId(getTestsIds.componentView(componentResults[0].identity))).toBeInTheDocument();
   });
 
   it('should render the default view and show the message for empty metrics', async () => {
@@ -66,7 +66,7 @@ describe('Component component', () => {
 
     fireEvent.click(screen.getAllByText(ComponentLabels.Processes)[0]);
 
-    expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processGroupResults[0].name);
+    expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(componentResults[0].name);
     expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
   });
 
